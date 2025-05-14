@@ -1,24 +1,21 @@
 import { Module } from '@nestjs/common';
-import { TypeOrmModule } from '@nestjs/typeorm';
-// import { WhatsappModule } from './modules/whatsapp/whatsapp.module';
-import { OrderModule } from './modules/order/order.module';
-// import { ProductModule } from './modules/product/product.module';
-// import { CrmModule } from './modules/crm/crm.module';
+import { ConfigModule } from '@nestjs/config';
+import { PrismaModule } from './prisma/prisma.module';
+import { UserModule } from './modules/user/user.module';
+import { WhatsappModule } from './integration/communication/whatsapp/whatsapp.module';
+import twilioConfig from './config/twilio.config';
 
 @Module({
   imports: [
-    TypeOrmModule.forRoot({
-      type: 'postgres',
-      host: 'localhost',
-      port: 5432,
-      username: 'postgres',
-      password: 'postgres',
-      database: 'ordersdb',
-      autoLoadEntities: true,
-      synchronize: true,
+    ConfigModule.forRoot({
+      isGlobal: true,
+      load: [twilioConfig],
+      envFilePath: '.env'
     }),
-    // WhatsappModule,
-    OrderModule,
+    PrismaModule,
+    WhatsappModule,
+    UserModule,
+    // OrderModule,
     // ProductModule,	
     // CrmModule
   ],
