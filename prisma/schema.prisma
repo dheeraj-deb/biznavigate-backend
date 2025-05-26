@@ -9,13 +9,13 @@ datasource db {
 }
 
 model shops {
-  id         Int                  @id @default(autoincrement())
-  shop_name  String               @db.VarChar(50)
-  gst_number String               @db.Char(15)
+  id         Int     @id @default(autoincrement())
+  shop_name  String  @db.VarChar(50)
+  gst_number String  @db.Char(15)
   address    String
-  location   Unsupported("point")
-  pan        String?              @db.Char(10)
-  mobile_num String?              @db.VarChar(15)
+  pan        String? @db.Char(10)
+  mobile_num String? @db.VarChar(15)
+  language   String? @default("en") @db.VarChar
 }
 
 model whatsapp_templates {
@@ -27,4 +27,26 @@ model whatsapp_templates {
   is_active  Boolean  @default(true)
   created_at DateTime @default(now()) @db.Date
   updated_at DateTime @default(now()) @db.Date
+}
+
+model business_user {
+  id                     Int    @id @default(autoincrement())
+  businessName           String @db.VarChar(100)
+  gstin                  String @db.VarChar(15)
+  contactEmail           String @db.VarChar(100)
+  contactPhone           String @db.VarChar(15)
+  address                String
+  notificationPreference String @db.VarChar(20)
+  tallyNetId             String @db.VarChar(100)
+  tallyNetPassword       String
+}
+
+model OnboardingSession {
+  id           Int      @id @default(autoincrement())
+  phone_number String
+  step_index   Int
+  session_id   String   @unique
+  created_at   DateTime @default(now())
+  updated_at   DateTime @updatedAt
+  status       String
 }
