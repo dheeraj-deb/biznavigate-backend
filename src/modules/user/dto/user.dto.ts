@@ -1,4 +1,11 @@
-import { IsNotEmpty, IsString } from "class-validator";
+import {
+  IsNotEmpty,
+  IsString,
+  IsEmail,
+  ValidateNested,
+  IsOptional,
+} from "class-validator";
+import { Type } from "class-transformer";
 
 class Address {
   @IsString()
@@ -25,16 +32,28 @@ class Address {
   zip: string;
 }
 
-class CreateContact {
+export class CreateContact {
   @IsNotEmpty()
+  @IsString()
   contact_name: string;
 
   @IsNotEmpty()
+  @IsEmail()
   contact_email: string;
 
+  @IsNotEmpty()
+  @ValidateNested()
+  @Type(() => Address)
   billing_address: Address;
 
+  @IsOptional()
+  @ValidateNested()
+  @Type(() => Address)
   shipping_address?: Address;
 
-  
+  @IsNotEmpty()
+  @IsString()
+  tax_id: string;
+
+
 }

@@ -26,7 +26,7 @@ export class ZohoController {
 
   @Get("get-authorization-code")
   async getAuthorizationCode(@Query("clientId") clientId: string) {
-    return await this.Zoho.getAuthorizationCode(clientId);
+    return await this.Zoho.getAuthorizationCodeLink(clientId);
   }
 
   // Example method

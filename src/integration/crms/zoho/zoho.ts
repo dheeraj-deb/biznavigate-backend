@@ -41,32 +41,23 @@ export class Zoho {
     }
   }
 
-  async getAuthorizationCode(clientId: string) {
-    console.log("clientId", clientId);
+  async getAuthorizationCodeLink(clientId: string, userId: string) {
     try {
-      //   const response = await axios.get(`https://accounts.zoho.com/oauth/v2/auth?response_type=code&client_id=${clientId}`, {
-      //     params: {
-      //       response_type: "code",
-      //       client_id: clientId,
-      //       scope: "ZohoInventory.fullaccess.all",
-      //       redirect_uri: this.authCallbackUrl,
-      //       access_type: "offline",
-      //       prompt: "consent",
-      //     },
-      //   });
-
-      const response = await axios.get(
+      if (!clientId || !userId) {
+        throw new Error("Client ID and User ID are required");
+      }
+      const link = new URL(
         `https://accounts.zoho.in/oauth/v2/auth
         ?response_type=code
-        &client_id=1000.NIIO305M71RIEIS6GP0HKL9OQM10HP
-        &scope=ZohoInventory.fullaccess.all
+        &client_id=${clientId}
+        &scope=ZohoInventory.items.READ,ZohoInventory.inventoryadjustments.CREATE,ZohoInventory.contacts.READ
         &redirect_uri=https://9a85-103-70-197-68.ngrok-free.app/zoho/auth/callback
         &access_type=offline
-        &prompt=consent&`
+        &prompt=consent
+        &state=${userId}`
       );
 
-      //   console.log("Authorization code URL:", response.data);
-      return response.data;
+      return link.toString();
     } catch (error) {
       console.error("Error getting authorization code:", error);
       throw new Error("Error getting authorization code");
