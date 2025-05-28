@@ -8,7 +8,7 @@ export class MessageHandler {
   private accountSid: string;
   private authToken: string;
   private client: Twilio;
-
+  
   constructor(
     private prisma: PrismaService,
     private readonly configService: ConfigService
@@ -36,6 +36,10 @@ export class MessageHandler {
     }
   }
 
+  async sendMessage(to: string, from: string, body: string, contentSid: string, contentVariables: any) {
+    return this.client.messages.create({ to, from, body, contentSid, contentVariables });
+  }
+
   async generateMessage(body: any) {
     const { SmsStatus, Body, From, To } = body;
     try {
@@ -54,18 +58,11 @@ export class MessageHandler {
         )
       );
 
-      console.log("variable", variable);
+      //   console.log("variable", variable);
 
-      await this.client.messages
-        .create({
-          // body: `You said ${Body}`,
-          contentSid: template.sid,
-          contentVariables: variable,
-          from: To,
-          to: From,
-        })
+      await this.sendMessage(From, To, null, template.sid, variable)
         .then((message) => {
-          console.log("message", message);
+          //   console.log("message", message);
         })
         .catch((err) => {
           console.log("err", err);
@@ -75,22 +72,7 @@ export class MessageHandler {
     }
   }
 
-  async createShop(body: any) {
-    const { From } = body;
-    const phoneNumber = From.split(":")[1];
-    console.log("phoneNumber", phoneNumber);
 
-    try {
-      const shop = await this.prisma.shops.findFirst({
-        where: {
-          mobile_num: phoneNumber,
-        },
-      });
 
-      if(!shop){
-        
-      }
 
-    } catch (error) {}
-  }
 }

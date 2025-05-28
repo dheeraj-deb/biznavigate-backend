@@ -6,7 +6,12 @@ export class UserController {
     }
 
     @Post('/create-shop')
-    async registerShop() {
+    async registerShop(@Body() body: any): Promise<any> {
+        
+        return {
+            message: "Shop registered successfully",
+            data: body,
+        };
         
     }
 }
