@@ -126,7 +126,8 @@ exports.Prisma.ShopsScalarFieldEnum = {
   gst_number: 'gst_number',
   address: 'address',
   pan: 'pan',
-  mobile_num: 'mobile_num'
+  mobile_num: 'mobile_num',
+  language: 'language'
 };
 
 exports.Prisma.Whatsapp_templatesScalarFieldEnum = {
@@ -138,6 +139,42 @@ exports.Prisma.Whatsapp_templatesScalarFieldEnum = {
   is_active: 'is_active',
   created_at: 'created_at',
   updated_at: 'updated_at'
+};
+
+exports.Prisma.OnboardingSessionScalarFieldEnum = {
+  id: 'id',
+  phone_number: 'phone_number',
+  step_index: 'step_index',
+  session_id: 'session_id',
+  created_at: 'created_at',
+  updated_at: 'updated_at',
+  status: 'status'
+};
+
+exports.Prisma.Business_userScalarFieldEnum = {
+  businessName: 'businessName',
+  gstin: 'gstin',
+  contactEmail: 'contactEmail',
+  contactPhone: 'contactPhone',
+  address: 'address',
+  notificationPreference: 'notificationPreference',
+  customerId: 'customerId',
+  id: 'id',
+  platformId: 'platformId'
+};
+
+exports.Prisma.IntegrationsScalarFieldEnum = {
+  name: 'name',
+  id: 'id'
+};
+
+exports.Prisma.Zoho_user_credentialScalarFieldEnum = {
+  access_token: 'access_token',
+  refresh_token: 'refresh_token',
+  organization_id: 'organization_id',
+  business_user_id: 'business_user_id',
+  id: 'id',
+  client_id: 'client_id'
 };
 
 exports.Prisma.SortOrder = {
@@ -168,7 +205,11 @@ exports.Prisma.JsonNullValueFilter = {
 
 exports.Prisma.ModelName = {
   shops: 'shops',
-  whatsapp_templates: 'whatsapp_templates'
+  whatsapp_templates: 'whatsapp_templates',
+  OnboardingSession: 'OnboardingSession',
+  business_user: 'business_user',
+  integrations: 'integrations',
+  zoho_user_credential: 'zoho_user_credential'
 };
 
 /**

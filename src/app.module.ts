@@ -4,6 +4,7 @@ import { PrismaModule } from './prisma/prisma.module';
 import { UserModule } from './modules/user/user.module';
 import { WhatsappModule } from './integration/communication/whatsapp/whatsapp.module';
 import twilioConfig from './config/twilio.config';
+import { BusinessUserModule } from './modules/business_user/business_user.module';
 
 @Module({
   imports: [
@@ -15,6 +16,8 @@ import twilioConfig from './config/twilio.config';
     PrismaModule,
     WhatsappModule,
     UserModule,
+    BusinessUserModule
+    
     // OrderModule,
     // ProductModule,	
     // CrmModule
