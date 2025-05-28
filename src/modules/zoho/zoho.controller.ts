@@ -18,16 +18,12 @@ export class ZohoController {
       "authorization_code"
     );
     return this.Zoho.getItems("60041288016", access_token);
-    // const items = []
-    // return { access_token, items };
-    // Handle the authorization callback from Zoho
-    // This is where you would exchange the authorization code for an access token
   }
 
-  @Get("get-authorization-code")
-  async getAuthorizationCode(@Query("clientId") clientId: string) {
-    return await this.Zoho.getAuthorizationCodeLink(clientId);
-  }
+  //   @Get("get-authorization-code")
+  //   async getAuthorizationCode(@Query("clientId") clientId: string) {
+  //     return await this.Zoho.getAuthorizationCodeLink(clientId);
+  //   }
 
   // Example method
   @Get()

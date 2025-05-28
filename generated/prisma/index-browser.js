@@ -174,7 +174,8 @@ exports.Prisma.Zoho_user_credentialScalarFieldEnum = {
   organization_id: 'organization_id',
   business_user_id: 'business_user_id',
   id: 'id',
-  client_id: 'client_id'
+  client_id: 'client_id',
+  client_secret: 'client_secret'
 };
 
 exports.Prisma.SortOrder = {

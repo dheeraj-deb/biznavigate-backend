@@ -6606,6 +6606,7 @@ export namespace Prisma {
     business_user_id: number | null
     id: number | null
     client_id: string | null
+    client_secret: string | null
   }
 
   export type Zoho_user_credentialMaxAggregateOutputType = {
@@ -6615,6 +6616,7 @@ export namespace Prisma {
     business_user_id: number | null
     id: number | null
     client_id: string | null
+    client_secret: string | null
   }
 
   export type Zoho_user_credentialCountAggregateOutputType = {
@@ -6624,6 +6626,7 @@ export namespace Prisma {
     business_user_id: number
     id: number
     client_id: number
+    client_secret: number
     _all: number
   }
 
@@ -6645,6 +6648,7 @@ export namespace Prisma {
     business_user_id?: true
     id?: true
     client_id?: true
+    client_secret?: true
   }
 
   export type Zoho_user_credentialMaxAggregateInputType = {
@@ -6654,6 +6658,7 @@ export namespace Prisma {
     business_user_id?: true
     id?: true
     client_id?: true
+    client_secret?: true
   }
 
   export type Zoho_user_credentialCountAggregateInputType = {
@@ -6663,6 +6668,7 @@ export namespace Prisma {
     business_user_id?: true
     id?: true
     client_id?: true
+    client_secret?: true
     _all?: true
   }
 
@@ -6759,6 +6765,7 @@ export namespace Prisma {
     business_user_id: number
     id: number
     client_id: string | null
+    client_secret: string | null
     _count: Zoho_user_credentialCountAggregateOutputType | null
     _avg: Zoho_user_credentialAvgAggregateOutputType | null
     _sum: Zoho_user_credentialSumAggregateOutputType | null
@@ -6787,6 +6794,7 @@ export namespace Prisma {
     business_user_id?: boolean
     id?: boolean
     client_id?: boolean
+    client_secret?: boolean
   }, ExtArgs["result"]["zoho_user_credential"]>
 
   export type zoho_user_credentialSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -6796,6 +6804,7 @@ export namespace Prisma {
     business_user_id?: boolean
     id?: boolean
     client_id?: boolean
+    client_secret?: boolean
   }, ExtArgs["result"]["zoho_user_credential"]>
 
   export type zoho_user_credentialSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -6805,6 +6814,7 @@ export namespace Prisma {
     business_user_id?: boolean
     id?: boolean
     client_id?: boolean
+    client_secret?: boolean
   }, ExtArgs["result"]["zoho_user_credential"]>
 
   export type zoho_user_credentialSelectScalar = {
@@ -6814,9 +6824,10 @@ export namespace Prisma {
     business_user_id?: boolean
     id?: boolean
     client_id?: boolean
+    client_secret?: boolean
   }
 
-  export type zoho_user_credentialOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"access_token" | "refresh_token" | "organization_id" | "business_user_id" | "id" | "client_id", ExtArgs["result"]["zoho_user_credential"]>
+  export type zoho_user_credentialOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"access_token" | "refresh_token" | "organization_id" | "business_user_id" | "id" | "client_id" | "client_secret", ExtArgs["result"]["zoho_user_credential"]>
 
   export type $zoho_user_credentialPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "zoho_user_credential"
@@ -6828,6 +6839,7 @@ export namespace Prisma {
       business_user_id: number
       id: number
       client_id: string | null
+      client_secret: string | null
     }, ExtArgs["result"]["zoho_user_credential"]>
     composites: {}
   }
@@ -7257,6 +7269,7 @@ export namespace Prisma {
     readonly business_user_id: FieldRef<"zoho_user_credential", 'Int'>
     readonly id: FieldRef<"zoho_user_credential", 'Int'>
     readonly client_id: FieldRef<"zoho_user_credential", 'String'>
+    readonly client_secret: FieldRef<"zoho_user_credential", 'String'>
   }
     
 
@@ -7706,7 +7719,8 @@ export namespace Prisma {
     organization_id: 'organization_id',
     business_user_id: 'business_user_id',
     id: 'id',
-    client_id: 'client_id'
+    client_id: 'client_id',
+    client_secret: 'client_secret'
   };
 
   export type Zoho_user_credentialScalarFieldEnum = (typeof Zoho_user_credentialScalarFieldEnum)[keyof typeof Zoho_user_credentialScalarFieldEnum]
@@ -8171,6 +8185,7 @@ export namespace Prisma {
     business_user_id?: IntFilter<"zoho_user_credential"> | number
     id?: IntFilter<"zoho_user_credential"> | number
     client_id?: StringNullableFilter<"zoho_user_credential"> | string | null
+    client_secret?: StringNullableFilter<"zoho_user_credential"> | string | null
   }
 
   export type zoho_user_credentialOrderByWithRelationInput = {
@@ -8180,19 +8195,21 @@ export namespace Prisma {
     business_user_id?: SortOrder
     id?: SortOrder
     client_id?: SortOrderInput | SortOrder
+    client_secret?: SortOrderInput | SortOrder
   }
 
   export type zoho_user_credentialWhereUniqueInput = Prisma.AtLeast<{
     business_user_id?: number
     id?: number
+    client_id?: string
     AND?: zoho_user_credentialWhereInput | zoho_user_credentialWhereInput[]
     OR?: zoho_user_credentialWhereInput[]
     NOT?: zoho_user_credentialWhereInput | zoho_user_credentialWhereInput[]
     access_token?: StringNullableFilter<"zoho_user_credential"> | string | null
     refresh_token?: StringNullableFilter<"zoho_user_credential"> | string | null
     organization_id?: StringFilter<"zoho_user_credential"> | string
-    client_id?: StringNullableFilter<"zoho_user_credential"> | string | null
-  }, "id" | "business_user_id">
+    client_secret?: StringNullableFilter<"zoho_user_credential"> | string | null
+  }, "id" | "business_user_id" | "client_id">
 
   export type zoho_user_credentialOrderByWithAggregationInput = {
     access_token?: SortOrderInput | SortOrder
@@ -8201,6 +8218,7 @@ export namespace Prisma {
     business_user_id?: SortOrder
     id?: SortOrder
     client_id?: SortOrderInput | SortOrder
+    client_secret?: SortOrderInput | SortOrder
     _count?: zoho_user_credentialCountOrderByAggregateInput
     _avg?: zoho_user_credentialAvgOrderByAggregateInput
     _max?: zoho_user_credentialMaxOrderByAggregateInput
@@ -8218,6 +8236,7 @@ export namespace Prisma {
     business_user_id?: IntWithAggregatesFilter<"zoho_user_credential"> | number
     id?: IntWithAggregatesFilter<"zoho_user_credential"> | number
     client_id?: StringNullableWithAggregatesFilter<"zoho_user_credential"> | string | null
+    client_secret?: StringNullableWithAggregatesFilter<"zoho_user_credential"> | string | null
   }
 
   export type shopsCreateInput = {
@@ -8547,6 +8566,7 @@ export namespace Prisma {
     organization_id: string
     business_user_id: number
     client_id?: string | null
+    client_secret?: string | null
   }
 
   export type zoho_user_credentialUncheckedCreateInput = {
@@ -8556,6 +8576,7 @@ export namespace Prisma {
     business_user_id: number
     id?: number
     client_id?: string | null
+    client_secret?: string | null
   }
 
   export type zoho_user_credentialUpdateInput = {
@@ -8564,6 +8585,7 @@ export namespace Prisma {
     organization_id?: StringFieldUpdateOperationsInput | string
     business_user_id?: IntFieldUpdateOperationsInput | number
     client_id?: NullableStringFieldUpdateOperationsInput | string | null
+    client_secret?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type zoho_user_credentialUncheckedUpdateInput = {
@@ -8573,6 +8595,7 @@ export namespace Prisma {
     business_user_id?: IntFieldUpdateOperationsInput | number
     id?: IntFieldUpdateOperationsInput | number
     client_id?: NullableStringFieldUpdateOperationsInput | string | null
+    client_secret?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type zoho_user_credentialCreateManyInput = {
@@ -8582,6 +8605,7 @@ export namespace Prisma {
     business_user_id: number
     id?: number
     client_id?: string | null
+    client_secret?: string | null
   }
 
   export type zoho_user_credentialUpdateManyMutationInput = {
@@ -8590,6 +8614,7 @@ export namespace Prisma {
     organization_id?: StringFieldUpdateOperationsInput | string
     business_user_id?: IntFieldUpdateOperationsInput | number
     client_id?: NullableStringFieldUpdateOperationsInput | string | null
+    client_secret?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type zoho_user_credentialUncheckedUpdateManyInput = {
@@ -8599,6 +8624,7 @@ export namespace Prisma {
     business_user_id?: IntFieldUpdateOperationsInput | number
     id?: IntFieldUpdateOperationsInput | number
     client_id?: NullableStringFieldUpdateOperationsInput | string | null
+    client_secret?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type IntFilter<$PrismaModel = never> = {
@@ -9006,6 +9032,7 @@ export namespace Prisma {
     business_user_id?: SortOrder
     id?: SortOrder
     client_id?: SortOrder
+    client_secret?: SortOrder
   }
 
   export type zoho_user_credentialAvgOrderByAggregateInput = {
@@ -9020,6 +9047,7 @@ export namespace Prisma {
     business_user_id?: SortOrder
     id?: SortOrder
     client_id?: SortOrder
+    client_secret?: SortOrder
   }
 
   export type zoho_user_credentialMinOrderByAggregateInput = {
@@ -9029,6 +9057,7 @@ export namespace Prisma {
     business_user_id?: SortOrder
     id?: SortOrder
     client_id?: SortOrder
+    client_secret?: SortOrder
   }
 
   export type zoho_user_credentialSumOrderByAggregateInput = {

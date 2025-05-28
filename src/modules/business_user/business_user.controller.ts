@@ -1,4 +1,4 @@
-import { Body, Controller, Post } from "@nestjs/common";
+import { Body, Controller, Get, Post, Query } from "@nestjs/common";
 import { BusinessUserService } from "./business_user.service";
 import { CreateBusinessUserDto } from "./dto/business_user_onboard.dto";
 
@@ -9,5 +9,13 @@ export class BusinessUserController {
   @Post()
   async createBusinessUser(@Body() dto: CreateBusinessUserDto) {
     return this.businessUserService.createBusinessUser(dto);
+  }
+
+  @Get("auth/callback")
+  async handleAuthCallback(
+    @Query("code") code: string,
+    @Query("state") state: string
+  ) {
+    return this.businessUserService.saveZohoCredentials(code, state);
   }
 }

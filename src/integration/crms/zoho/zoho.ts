@@ -12,7 +12,7 @@ export class Zoho {
     this.zohoInventoryUrl = this.ConfigService.get<string>("zoho.InventoryUrl");
     this.zohoAuthUrl = this.ConfigService.get<string>("zoho.AuthUrl");
     this.authCallbackUrl =
-      "https://9a85-103-70-197-68.ngrok-free.app/zoho/auth/callback";
+      "https://9a85-103-70-197-68.ngrok-free.app/business-user/auth/callback";
     // axios.defaults.headers.common[
     //   "Authorization"
     // ] = `Zoho-oauthtoken ${}`;
@@ -41,23 +41,20 @@ export class Zoho {
     }
   }
 
-  async getAuthorizationCodeLink(clientId: string, userId: string) {
+  async getAuthorizationCodeLink(clientId: string, clientSecret: string) {
     try {
-      if (!clientId || !userId) {
+      if (!clientId) {
         throw new Error("Client ID and User ID are required");
       }
-      const link = new URL(
-        `https://accounts.zoho.in/oauth/v2/auth
+      const link = `https://accounts.zoho.in/oauth/v2/auth
         ?response_type=code
         &client_id=${clientId}
         &scope=ZohoInventory.items.READ,ZohoInventory.inventoryadjustments.CREATE,ZohoInventory.contacts.READ
-        &redirect_uri=https://9a85-103-70-197-68.ngrok-free.app/zoho/auth/callback
+        &redirect_uri=${this.authCallbackUrl}
         &access_type=offline
         &prompt=consent
-        &state=${userId}`
-      );
-
-      return link.toString();
+        &state=${clientId},${clientSecret}`;
+      return link;
     } catch (error) {
       console.error("Error getting authorization code:", error);
       throw new Error("Error getting authorization code");

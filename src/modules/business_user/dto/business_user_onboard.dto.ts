@@ -9,7 +9,9 @@ export class ZohoIntegrationDto {
   @IsString()
   clientId: string;
 
-  
+  @IsNotEmpty()
+  @IsString()
+  clientSecret: string;
 
   @IsNotEmpty()
   @IsString()

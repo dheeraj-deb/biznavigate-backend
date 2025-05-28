@@ -64,5 +64,6 @@ model zoho_user_credential {
   organization_id  String  @db.VarChar
   business_user_id Int     @unique
   id               Int     @id @default(autoincrement())
-  client_id        String? @db.VarChar
+  client_id        String? @unique(map: "client_id") @db.VarChar
+  client_secret    String? @db.VarChar
 }
