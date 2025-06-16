@@ -1,10 +1,15 @@
+export enum ContactType {
+  customer = "customer",
+  vendor = "vendor",
+}
+
 export interface Contact {
   contact_name: string;
   company_name: string;
   payment_terms?: number;
   currency_id: string;
   website?: string;
-  contact_type: "customer" | "vendor";
+  contact_type: ContactType;
   billing_address: {
     attention: string;
     address: string;
@@ -63,4 +68,19 @@ export interface Contact {
   gst_treatment?: "business_gst" | "business_gst" | "business_gst" | "consumer";
   tax_authority_name?: string;
   tax_exemption_code?: string;
+}
+
+export interface Currency {
+  currency_id: string;
+  currency_code: string;
+  currency_name: string;
+  currency_symbol: string;
+  price_precision: number;
+  is_base_currency: boolean;
+}
+
+export interface ZohoApiResponse<T> {
+  code: number;
+  message: string;
+  [key: string]: T | any;
 }

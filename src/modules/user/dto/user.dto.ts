@@ -4,6 +4,8 @@ import {
   IsEmail,
   ValidateNested,
   IsOptional,
+  MaxLength,
+  isNotEmpty,
 } from "class-validator";
 import { Type } from "class-transformer";
 
@@ -33,15 +35,21 @@ class Address {
 }
 
 export class CreateContact {
-  @IsNotEmpty()
+  // @IsNotEmpty()
   @IsString()
+  // @MaxLength(200, { message: "Contact name must be less than 200 characters" })
   contact_name: string;
 
-  @IsNotEmpty()
-  @IsEmail()
-  contact_email: string;
+  // @IsNotEmpty()
+  @IsString()
+  // @MaxLength(200, { message: "Company name must be less than 200 characters" })
+  company_name: string;
 
-  @IsNotEmpty()
+  // @IsNotEmpty()
+  // @IsEmail()
+  // contact_email: string;
+
+  // @IsNotEmpty()
   @ValidateNested()
   @Type(() => Address)
   billing_address: Address;
@@ -51,9 +59,15 @@ export class CreateContact {
   @Type(() => Address)
   shipping_address?: Address;
 
-  @IsNotEmpty()
+  @IsOptional()
   @IsString()
-  tax_id: string;
+  vat_reg_number: string;
 
+  @IsOptional()
+  @IsString()
+  tax_reg_number: string;
 
+  // @IsNotEmpty()
+  // @IsString()
+  gst_number: string;
 }

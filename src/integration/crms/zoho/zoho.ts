@@ -12,7 +12,7 @@ export class Zoho {
     this.zohoInventoryUrl = this.ConfigService.get<string>("zoho.InventoryUrl");
     this.zohoAuthUrl = this.ConfigService.get<string>("zoho.AuthUrl");
     this.authCallbackUrl =
-      "https://9a85-103-70-197-68.ngrok-free.app/business-user/auth/callback";
+      "https://489a-103-70-197-101.ngrok-free.app/business-user/auth/callback";
     // axios.defaults.headers.common[
     //   "Authorization"
     // ] = `Zoho-oauthtoken ${}`;
@@ -49,7 +49,7 @@ export class Zoho {
       const link = `https://accounts.zoho.in/oauth/v2/auth
         ?response_type=code
         &client_id=${clientId}
-        &scope=ZohoInventory.items.READ,ZohoInventory.inventoryadjustments.CREATE,ZohoInventory.contacts.READ
+        &scope=ZohoInventory.items.READ,ZohoInventory.inventoryadjustments.CREATE,ZohoInventory.contacts.READ,ZohoInventory.contacts.CREATE,ZohoInventory.settings.READ
         &redirect_uri=${this.authCallbackUrl}
         &access_type=offline
         &prompt=consent
@@ -109,9 +109,6 @@ export class Zoho {
           },
         }
       );
-
-      console.log("Customer data fetched successfully:", customer.data);
-
       //   console.log("Items fetched successfully:", response.data);
       return response.data.items || [];
     } catch (error) {
@@ -120,11 +117,45 @@ export class Zoho {
     }
   }
 
+  /**
+   * Fetches the list of currencies for a given organization.
+   * @param organizationId The ID of the Zoho organization.
+   * @param accessToken Your Zoho OAuth access token.
+   * @returns A promise that resolves to the array of currencies.
+   */
+  async getCurrencies(
+    organizationId: string,
+    accessToken: string
+  ): Promise<any> {
+    const url = `${this.zohoInventoryUrl}/settings/currencies`;
+
+    try {
+      const response = await axios.get(url, {
+        params: {
+          organization_id: organizationId,
+        },
+        headers: {
+          Authorization: `Zoho-oauthtoken ${accessToken}`,
+        },
+      });
+      return response.data.currencies || [];
+    } catch (error) {
+      // The original error handling structure is preserved.
+      if (axios.isAxiosError(error) && error.response) {
+        console.error("Error fetching currencies:", error.response.data);
+      } else {
+        console.error("An unexpected error occurred:", error);
+      }
+      throw new Error("Failed to fetch currencies from Zoho Inventory.");
+    }
+  }
+
   async createContact(
     data: Contact,
     organizationId: string,
     accessToken: string
   ) {
+    console.log("Creating contact with data:", data);
     try {
       const response = await axios.post(
         `${this.zohoInventoryUrl}/contacts?organization_id=${organizationId}`,
@@ -132,13 +163,40 @@ export class Zoho {
         {
           headers: {
             Authorization: `Zoho-oauthtoken ${accessToken}`,
+            "Content-Type": "application/json",
           },
         }
       );
+      console.log("response", response);
       return response.data || {};
     } catch (error) {
       console.error("Error creating contact:", error);
-      throw new Error("Error creating contact");
+      throw new Error(error);
+    }
+  }
+
+  async createSalesOrder(
+    data: any,
+    organizationId: string,
+    accessToken: string
+  ) {
+    console.log("Creating sales order with data:", data);
+    try {
+      const response = await axios.post(
+        `${this.zohoInventoryUrl}/salesorders?organization_id=${organizationId}`,
+        data,
+        {
+          headers: {
+            Authorization: `Zoho-oauthtoken ${accessToken}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      console.log("response", response);
+      return response.data || {};
+    } catch (error) {
+      console.error("Error creating sales order:", error);
+      throw new Error(error);
     }
   }
 }
