@@ -59,11 +59,32 @@ model integrations {
 
 /// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
 model zoho_user_credential {
-  access_token     String? @db.VarChar
-  refresh_token    String? @db.VarChar
-  organization_id  String  @db.VarChar
-  business_user_id Int     @unique
-  id               Int     @id @default(autoincrement())
-  client_id        String? @unique(map: "client_id") @db.VarChar
-  client_secret    String? @db.VarChar
+  access_token      String? @db.VarChar
+  refresh_token     String? @db.VarChar
+  organization_id   String  @db.VarChar
+  business_user_id  Int     @unique
+  id                Int     @id @default(autoincrement())
+  client_id         String? @unique(map: "client_id") @db.VarChar
+  client_secret     String? @db.VarChar
+  expires_in        Int?
+  token_acquired_at String? @db.VarChar
+}
+
+model ConversationSession {
+  id          String   @id @default(uuid())
+  sessionId   String   @unique
+  userId      String
+  phoneNumber String
+  context     Json
+  currentStep String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model ConversationMessage {
+  id        String   @id @default(uuid())
+  sessionId String
+  message   String
+  fromUser  Boolean
+  createdAt DateTime @default(now())
 }

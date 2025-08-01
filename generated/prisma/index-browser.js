@@ -175,7 +175,28 @@ exports.Prisma.Zoho_user_credentialScalarFieldEnum = {
   business_user_id: 'business_user_id',
   id: 'id',
   client_id: 'client_id',
-  client_secret: 'client_secret'
+  client_secret: 'client_secret',
+  expires_in: 'expires_in',
+  token_acquired_at: 'token_acquired_at'
+};
+
+exports.Prisma.ConversationSessionScalarFieldEnum = {
+  id: 'id',
+  sessionId: 'sessionId',
+  userId: 'userId',
+  phoneNumber: 'phoneNumber',
+  context: 'context',
+  currentStep: 'currentStep',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.ConversationMessageScalarFieldEnum = {
+  id: 'id',
+  sessionId: 'sessionId',
+  message: 'message',
+  fromUser: 'fromUser',
+  createdAt: 'createdAt'
 };
 
 exports.Prisma.SortOrder = {
@@ -210,7 +231,9 @@ exports.Prisma.ModelName = {
   OnboardingSession: 'OnboardingSession',
   business_user: 'business_user',
   integrations: 'integrations',
-  zoho_user_credential: 'zoho_user_credential'
+  zoho_user_credential: 'zoho_user_credential',
+  ConversationSession: 'ConversationSession',
+  ConversationMessage: 'ConversationMessage'
 };
 
 /**

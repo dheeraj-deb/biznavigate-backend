@@ -1,7 +1,21 @@
 import { registerAs } from "@nestjs/config";
 
-export default registerAs('zoho', () => ({
-    InventoryUrl: process.env.ZOHO_INVENTORY_API_URL,
-    AuthUrl: process.env.ZOHO_AUTH_API_URL,
-    // add more
-}))
+export default registerAs('zoho', () => {
+  const config = {
+    clientId: process.env.ZOHO_CLIENT_ID,
+    clientSecret: process.env.ZOHO_CLIENT_SECRET,
+    redirectUri: process.env.ZOHO_REDIRECT_URI || 'https://489a-103-70-197-101.ngrok-free.app/business-user/auth/callback',
+    scope: process.env.ZOHO_SCOPE || 'ZohoInventory.items.READ,ZohoInventory.inventoryadjustments.CREATE,ZohoInventory.contacts.READ,ZohoInventory.contacts.CREATE,ZohoInventory.settings.READ',
+    apiDomain: process.env.ZOHO_API_DOMAIN || 'https://www.zohoapis.com',
+    authUrl: process.env.ZOHO_AUTH_URL || 'https://accounts.zoho.com/oauth/v2/auth',
+    tokenUrl: process.env.ZOHO_TOKEN_URL || 'https://accounts.zoho.com/oauth/v2/token',
+    inventoryUrl: process.env.ZOHO_INVENTORY_URL || 'https://www.zohoapis.com/inventory/v1',
+  };
+
+  // Validate required fields
+//   if (!config.clientId || !config.clientSecret) {
+//     throw new Error('Zoho Client ID and Client Secret are required');
+//   }
+
+  return config;
+});

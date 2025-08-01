@@ -1,28 +1,30 @@
-import { Module } from '@nestjs/common';
-import { ConfigModule } from '@nestjs/config';
-import { PrismaModule } from './prisma/prisma.module';
-import { UserModule } from './modules/user/user.module';
-import { WhatsappModule } from './integration/communication/whatsapp/whatsapp.module';
-import twilioConfig from './config/twilio.config';
-import { BusinessUserModule } from './modules/business_user/business_user.module';
-import { ZohoModule } from './modules/zoho/zoho.module';
-import zohoConfig from './config/zoho.config';
+import { Module } from "@nestjs/common";
+import { APP_FILTER } from "@nestjs/core";
+import { AppConfigModule } from "./core/config/config.module";
+// import { PrismaModule } from "./core/prisma/prisma.module";
+import { LoggerModule } from "./core/logging/logger.module";
+import { UsersModule } from "./features/users/users.module";
+import { GlobalExceptionFilter } from "./common/filters/global-exception.filter";
+import { WhatsAppModule } from "./integrations/whatsapp/whatsapp.module";
+import { CrmModule } from "./integrations/crm/crm.module";
+import { PrismaModule } from "./prisma/prisma.module";
+import { CustomersModule } from "./features/customers/customers.module";
 
 @Module({
   imports: [
-    ConfigModule.forRoot({
-      isGlobal: true,
-      load: [twilioConfig, zohoConfig],
-      envFilePath: '.env'
-    }),
+    AppConfigModule,
+    LoggerModule,
     PrismaModule,
-    WhatsappModule,
-    UserModule,
-    BusinessUserModule,
-    ZohoModule,
-    // OrderModule,
-    // ProductModule,	
-    // CrmModule
+    UsersModule,
+    // CustomersModule,
+    WhatsAppModule,
+    CrmModule,
+  ],
+  providers: [
+    {
+      provide: APP_FILTER,
+      useClass: GlobalExceptionFilter,
+    },
   ],
 })
-export class AppModule { }
+export class AppModule {}
