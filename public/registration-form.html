@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Shop Registration</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: #f6f9fc;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: start;
+            min-height: 100vh;
+        }
+
+        .container {
+            background: #fff;
+            padding: 30px;
+            margin-top: 40px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 600px;
+        }
+
+        h2 {
+            text-align: center;
+            color: #333;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        label {
+            display: flex;
+            flex-direction: column;
+            font-weight: 500;
+            color: #333;
+        }
+
+        input {
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            font-size: 1rem;
+            margin-top: 5px;
+            transition: border-color 0.2s;
+        }
+
+        input:focus {
+            border-color: #007BFF;
+            outline: none;
+        }
+
+        fieldset {
+            border: 1px solid #ddd;
+            padding: 15px;
+            border-radius: 8px;
+        }
+
+        legend {
+            font-weight: bold;
+            color: #007BFF;
+            padding: 0 10px;
+        }
+
+        button {
+            background-color: #007BFF;
+            color: white;
+            padding: 12px;
+            font-size: 1rem;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        .note {
+            text-align: center;
+            margin-top: 10px;
+            font-size: 0.9rem;
+            color: #555;
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h2>Register Your Shop</h2>
+        <form id="shopForm">
+            <label>
+                Contact Name:
+                <input type="text" name="contact_name" required />
+            </label>
+
+            <label>
+                Business Name:
+                <input type="text" name="company_name" required />
+            </label>
+
+            <fieldset>
+                <legend>Billing Address</legend>
+                <label>
+                    Street:
+                    <input type="text" name="billing_address.street" required />
+                </label>
+                <label>
+                    City:
+                    <input type="text" name="billing_address.city" required />
+                </label>
+                <label>
+                    State:
+                    <input type="text" name="billing_address.state" required />
+                </label>
+                <label>
+                    Zip:
+                    <input type="text" name="billing_address.zip" required />
+                </label>
+                <label>
+                    Country:
+                    <input type="text" name="billing_address.country" required />
+                </label>
+            </fieldset>
+
+            <label>
+                VAT Reg. Number:
+                <input type="text" name="vat_reg_number" />
+            </label>
+
+            <label>
+                Tax Reg. Number:
+                <input type="text" name="tax_reg_number" />
+            </label>
+
+            <label>
+                GST Number:
+                <input type="text" name="gst_number" maxlength="15" minlength="15" />
+            </label>
+
+            <button type="submit">Register</button>
+            <div class="note">We'll never share your information with anyone.</div>
+        </form>
+    </div>
+
+    <script>
+        const form = document.getElementById('shopForm');
+        const params = new URLSearchParams(window.location.search);
+        const clientId = params.get('code');
+        const platform = params.get('platform');
+
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const formData = new FormData(form);
+            const data = {
+                contact_name: formData.get('contact_name'),
+                company_name: formData.get('company_name'),
+                billing_address: {
+                    street: formData.get('billing_address.street'),
+                    city: formData.get('billing_address.city'),
+                    state: formData.get('billing_address.state'),
+                    zipCode: formData.get('billing_address.zip'),
+                    country: formData.get('billing_address.country'),
+                },
+                vat_reg_number: formData.get('vat_reg_number'),
+                tax_reg_number: formData.get('tax_reg_number'),
+                gst_number: formData.get('gst_number'),
+            };
+
+            try {
+                const res = await fetch(`http://localhost:3000/customers/register-shop?clientId=${clientId}&platform=${platform}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(data),
+                });
+
+                const result = await res.json();
+                alert('Registration successful!');
+            } catch (error) {
+                alert('Registration failed!');
+                console.error(error);
+            }
+        });
+    </script>
+
+
+</body>
+
+</html>

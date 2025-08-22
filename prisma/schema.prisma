@@ -68,17 +68,8 @@ model zoho_user_credential {
   client_secret     String? @db.VarChar
   expires_in        Int?
   token_acquired_at String? @db.VarChar
-}
-
-model ConversationSession {
-  id          String   @id @default(uuid())
-  sessionId   String   @unique
-  userId      String
-  phoneNumber String
-  context     Json
-  currentStep String
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  whatsapp_number   String? @unique
+  code              String?
 }
 
 model ConversationMessage {
@@ -87,4 +78,161 @@ model ConversationMessage {
   message   String
   fromUser  Boolean
   createdAt DateTime @default(now())
+}
+
+model ConversationSession {
+  id          String              @id @default(uuid())
+  userId      String
+  phoneNumber String
+  context     Json
+  currentStep String
+  createdAt   DateTime            @default(now())
+  updatedAt   DateTime            @updatedAt
+  lastEvent   String?
+  events      ConversationEvent[]
+}
+
+model ConversationEvent {
+  id        String              @id @default(uuid())
+  sessionId String
+  eventType String
+  stepFrom  String?
+  stepTo    String?
+  payload   Json?
+  createdAt DateTime            @default(now())
+  session   ConversationSession @relation(fields: [sessionId], references: [id])
+}
+
+model inventory_current {
+  id                    String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  organization_id       String?   @db.Uuid
+  product_id            String    @db.VarChar(100)
+  location_code         String?   @default("MAIN") @db.VarChar(100)
+  location_name         String?   @default("Main Location") @db.VarChar(200)
+  quantity_on_hand      Decimal   @default(0) @db.Decimal(15, 6)
+  available_stock       Decimal   @default(0) @db.Decimal(15, 6)
+  reserved_stock        Decimal   @default(0) @db.Decimal(15, 6)
+  on_order_stock        Decimal   @default(0) @db.Decimal(15, 6)
+  minimum_stock         Decimal   @default(0) @db.Decimal(15, 6)
+  maximum_stock         Decimal?  @db.Decimal(15, 6)
+  reorder_point         Decimal?  @db.Decimal(15, 6)
+  average_cost          Decimal   @default(0) @db.Decimal(18, 6)
+  last_purchase_cost    Decimal   @default(0) @db.Decimal(18, 6)
+  standard_cost         Decimal   @default(0) @db.Decimal(18, 6)
+  total_value           Decimal?  @default(dbgenerated("(quantity_on_hand * average_cost)")) @db.Decimal(20, 6)
+  is_low_stock          Boolean   @default(false)
+  is_out_of_stock       Boolean   @default(false)
+  needs_reorder         Boolean   @default(false)
+  last_synced_zoho      DateTime? @db.Timestamp(6)
+  last_synced_tally     DateTime? @db.Timestamp(6)
+  last_synced_custom    DateTime? @db.Timestamp(6)
+  last_movement_date    DateTime? @default(now()) @db.Timestamp(6)
+  last_stock_count_date DateTime? @db.Date
+  version_number        BigInt    @default(1)
+  created_at            DateTime? @default(now()) @db.Timestamp(6)
+  updated_at            DateTime? @default(now()) @db.Timestamp(6)
+
+  @@unique([organization_id, product_id, location_code], map: "uq_inventory")
+  @@index([organization_id, location_code], map: "idx_inventory_location")
+  @@index([organization_id, product_id], map: "idx_inventory_org_product")
+}
+
+model organizations {
+  id           String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name         String    @db.VarChar(200)
+  code         String?   @unique @db.VarChar(50)
+  tax_id       String?   @db.VarChar(50)
+  address      Json?
+  contact_info Json?
+  settings     Json?
+  created_at   DateTime? @default(now()) @db.Timestamp(6)
+  updated_at   DateTime? @default(now()) @db.Timestamp(6)
+}
+
+model product_categories {
+  id                       String               @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  organization_id          String               @db.Uuid
+  name                     String               @db.VarChar(300)
+  code                     String?              @db.VarChar(100)
+  description              String?
+  parent_id                String?              @db.Uuid
+  level                    Int?                 @default(1)
+  sort_order               Int?                 @default(0)
+  is_active                Boolean?             @default(true)
+  zoho_group_id            String?              @db.VarChar(50)
+  tally_category           String?              @db.VarChar(100)
+  custom_category_id       String?              @db.VarChar(100)
+  created_at               DateTime?            @default(now()) @db.Timestamp(6)
+  updated_at               DateTime?            @default(now()) @db.Timestamp(6)
+  product_categories       product_categories?  @relation("product_categoriesToproduct_categories", fields: [parent_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  other_product_categories product_categories[] @relation("product_categoriesToproduct_categories")
+  products                 products[]
+
+  @@unique([organization_id, name], map: "uq_org_name")
+}
+
+model products {
+  id                 String               @id @db.Uuid
+  organization_id    String
+  category_id        String?              @db.Uuid
+  name               String               @db.VarChar(500)
+  description        String?
+  status             String?              @default("active") @db.VarChar(20)
+  product_type       String?              @default("goods") @db.VarChar(50)
+  sku                String?              @db.VarChar(200)
+  part_number        String?              @db.VarChar(100)
+  hsn_code           String?              @db.VarChar(20)
+  selling_price      Decimal?             @default(0) @db.Decimal(15, 4)
+  purchase_price     Decimal?             @default(0) @db.Decimal(15, 4)
+  mrp                Decimal?             @db.Decimal(15, 4)
+  is_taxable         Boolean?             @default(true)
+  tax_rate           Decimal?             @default(0) @db.Decimal(5, 2)
+  tax_name           String?              @db.VarChar(100)
+  reorder_level      Decimal?             @default(0) @db.Decimal(12, 3)
+  maximum_stock      Decimal?             @db.Decimal(12, 3)
+  attributes         Json?
+  images             Json?
+  zoho_item_id       String?              @db.VarChar(50)
+  tally_item_name    String?              @db.VarChar(300)
+  custom_item_id     String?              @db.VarChar(100)
+  last_synced_zoho   DateTime?            @db.Timestamp(6)
+  last_synced_tally  DateTime?            @db.Timestamp(6)
+  last_synced_custom DateTime?            @db.Timestamp(6)
+  sync_errors        Json?
+  created_at         DateTime?            @default(now()) @db.Timestamp(6)
+  updated_at         DateTime?            @default(now()) @db.Timestamp(6)
+  created_by         String?              @db.VarChar(100)
+  source_type        product_source_type?
+  product_categories product_categories?  @relation(fields: [category_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model inventory_movements {
+  id                      String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  organization_id         String    @db.Uuid
+  product_id              String    @db.Uuid
+  location_code           String?   @default("MAIN") @db.VarChar(100)
+  movement_type           String    @db.VarChar(30)
+  transaction_type        String    @db.VarChar(40)
+  quantity_before         Decimal   @db.Decimal(15, 6)
+  quantity_change         Decimal   @db.Decimal(15, 6)
+  quantity_after          Decimal   @db.Decimal(15, 6)
+  unit_cost               Decimal?  @db.Decimal(18, 6)
+  total_cost              Decimal?  @db.Decimal(20, 6)
+  reference_type          String?   @db.VarChar(50)
+  reference_id            String?   @db.VarChar(200)
+  reference_number        String?   @db.VarChar(200)
+  source_system           String?   @db.VarChar(30)
+  external_transaction_id String?   @db.VarChar(200)
+  external_data           Json?
+  movement_date           DateTime? @default(now()) @db.Timestamp(6)
+  posting_date            DateTime? @default(dbgenerated("CURRENT_DATE")) @db.Date
+  created_by              String?   @db.VarChar(100)
+  notes                   String?
+  created_at              DateTime? @default(now()) @db.Timestamp(6)
+}
+
+enum product_source_type {
+  zoho
+  tally
+  custom
 }

@@ -3,43 +3,53 @@ import { ConversationStateMachineService } from "./conversation-state-machine.se
 import { ConversationContextService } from "./conversation-context.service";
 import { WhatsAppService } from "./whatsapp.service";
 import { ZohoService } from "src/integrations/crm/zoho/zoho.service";
-import { AdvancedSessionService } from "./advanced-session.service";
 import {
   ConversationEvent,
   ConversationStep,
-} from "../interfaces/converstation-state-machine.enum";
+} from "../interfaces/conversation-state-machine.enum";
 import { ConversationContext } from "../interfaces/session.interface";
-import { SessionStoreService } from "./session-store.service";
+import { SessionService } from "./session.service";
+import { PrismaService } from "src/prisma/prisma.service";
+import { WhatsAppResponseWithTemplate } from "../interfaces/whatsapp-response-template.interface";
+import { ZohoSyncService } from "src/integrations/crm/zoho/zoho-sync.service";
 
 @Injectable()
 export class ConversationHandlerService {
   constructor(
     private stateMachineService: ConversationStateMachineService,
     private contextService: ConversationContextService,
-    private sessionService: AdvancedSessionService,
-    private sessionStoreService: SessionStoreService,
+    private sessionService: SessionService,
     @Inject(forwardRef(() => WhatsAppService))
     private whatsappService: WhatsAppService,
-    private zohoService: ZohoService
+    private zohoService: ZohoService,
+    private prisma: PrismaService,
+    private zohoSync: ZohoSyncService
   ) {}
 
   async handleMessage(
-    phoneNumber: string,
+    distributorPhoneNumber: string,
+    userPhoneNumber: string,
     body: string
-  ): Promise<string | void> {
+  ): Promise<WhatsAppResponseWithTemplate | void> {
     try {
-      await this.contextService.initializeContext(phoneNumber);
+      await this.contextService.initializeContext(userPhoneNumber);
 
-      const session = await this.sessionStoreService.getSession(phoneNumber)!;
+      const session = await this.sessionService.getSession(userPhoneNumber)!;
 
       const currentStep = session.currentStep;
-      const context = session.context;
-
+      let context = session.context;
+      context.distributorPhoneNumber = distributorPhoneNumber.split(":")[1];
       if (!currentStep || currentStep === ConversationStep.GREETING) {
         await this.contextService.transitionToStep(ConversationStep.GREETING);
-
+        const existingUser = false;
+        let STEP = null;
+        if (existingUser) {
+          STEP = ConversationStep.GREETING;
+        } else {
+          STEP = ConversationStep.REGISTRATION;
+        }
         const greetingMessage = await this.generateStepResponse(
-          ConversationStep.GREETING,
+          STEP,
           session.context
         );
 
@@ -52,6 +62,8 @@ export class ConversationHandlerService {
         if (newStep) {
           await this.contextService.transitionToStep(newStep);
         }
+
+        console.log("Greeting message:", greetingMessage);
 
         return greetingMessage;
       }
@@ -98,13 +110,13 @@ export class ConversationHandlerService {
   ): Promise<ConversationEvent> {
     const lowerInput = input.toLowerCase().trim();
 
-    if (lowerInput.includes("help") || lowerInput.includes("support")) {
-      return ConversationEvent.HELP_REQUESTED;
-    }
+    // if (lowerInput.includes("help") || lowerInput.includes("support")) {
+    //   return ConversationEvent.HELP_REQUESTED;
+    // }
 
-    if (lowerInput.includes("restart") || lowerInput.includes("reset")) {
-      return ConversationEvent.RESET_REQUESTED;
-    }
+    // if (lowerInput.includes("restart") || lowerInput.includes("reset")) {
+    //   return ConversationEvent.RESET_REQUESTED;
+    // }
 
     switch (currentStep) {
       case ConversationStep.GREETING:
@@ -117,9 +129,9 @@ export class ConversationHandlerService {
         }
         break;
 
-      case ConversationStep.AWAITING_CATEGORY:
+      case ConversationStep.REGISTRATION:
         if (lowerInput === "1") {
-          return ConversationEvent.CATEGORY_SELECTED;
+          return ConversationEvent.REGISTRATION_COMPLETED;
         }
         break;
       // add more cases for other steps as needed
@@ -129,16 +141,61 @@ export class ConversationHandlerService {
   private async generateStepResponse(
     step: ConversationStep,
     context: ConversationContext
-  ): Promise<string> {
+  ): Promise<WhatsAppResponseWithTemplate> {
     switch (step) {
       case ConversationStep.GREETING:
-        return "Welcome! How can I assist you today? Reply with '1' to start.";
+        return {
+          message: "Welcome! How can I assist you today?",
+        };
+      case ConversationStep.REGISTRATION:
+        const registrationTemplate =
+          await this.prisma.whatsapp_templates.findFirst({
+            where: { key: "client_registration" },
+          });
 
-      case ConversationStep.AWAITING_CATEGORY:
-        return "Please select a category by replying with '2'.";
+        const distributorCredential =
+          await this.prisma.zoho_user_credential.findFirst({
+            where: {
+              whatsapp_number: context.distributorPhoneNumber,
+            },
+          });
+
+        await this.zohoSync.syncZohoProduct(context.distributorPhoneNumber);
+
+        const variable = JSON.stringify(registrationTemplate.variables).replace(
+          "{{code}}",
+          distributorCredential?.client_id.toString()
+        );
+
+        const data = {
+          contentVariables: variable,
+          contentSid: registrationTemplate.sid,
+          message: "Please provide your details to register.",
+        };
+        return data;
+      case ConversationStep.AWAITING_ORDER:
+        const awaitingOrderTemplate =
+          await this.prisma.whatsapp_templates.findFirst({
+            where: { key: "awaiting_order" },
+          });
+
+        const orderDetails = context.distributorPhoneNumber;
+
+        const orderVariable = JSON.stringify(
+          awaitingOrderTemplate.variables
+        ).replace("{{order_id}}", orderDetails?.id.toString());
+
+        const orderData = {
+          contentVariables: orderVariable,
+          contentSid: awaitingOrderTemplate.sid,
+          message: "Your order is being processed.",
+        };
+        return orderData;
       default:
         // console.log("Generating response for step:", step);
-        return "I'm not sure how to help with that. Please try again.";
+        return {
+          message: "I'm not sure how to help with that. Please try again.",
+        };
     }
   }
 }

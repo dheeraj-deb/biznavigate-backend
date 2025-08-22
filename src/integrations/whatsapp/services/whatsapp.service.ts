@@ -12,6 +12,7 @@ import {
 import { PrismaService } from "src/prisma/prisma.service";
 import { Twilio } from "twilio";
 import { ConversationHandlerService } from "./conversation-handler.service";
+import { WhatsAppResponseWithTemplate } from "../interfaces/whatsapp-response-template.interface";
 
 export interface WhatsAppWebhookPayload {
   SmsMessageSid: string;
@@ -62,6 +63,7 @@ export class WhatsAppService {
 
       if (payload.SmsStatus === "received") {
         const response = await this.conversationHandler.handleMessage(
+          payload.To,
           payload.From,
           payload.Body
         );
@@ -85,16 +87,14 @@ export class WhatsAppService {
   async sendMessage(
     to: string,
     from: string,
-    message: string,
-    mediaUrl?: string,
-    mediaType?: string
+    data: WhatsAppResponseWithTemplate
   ): Promise<boolean> {
     try {
       // Implement actual WhatsApp message sending logic here
       // This would typically use Twilio WhatsApp API or similar service
 
       this.logger.log(
-        `Sending WhatsApp message to ${to}: ${message.substring(0, 50)}...`
+        `Sending WhatsApp message to ${to}: ${data.message.substring(0, 50)}...`
       );
 
       // Call the WhatsApp API to send the message
@@ -102,15 +102,19 @@ export class WhatsAppService {
       const authToken = this.configService.get<string>("TWILIO.AUTH_TOKEN");
       const client = new Twilio(accountSid, authToken);
 
+      console.log("Sending message with data:", data.contentVariables);
+
       const messageOptions: any = {
-        body: message,
+        contentSid: data.contentSid,
+        contentVariables: data.contentVariables,
+        body: data.message,
         from,
         to,
       };
 
-      if (mediaUrl) {
-        messageOptions.mediaUrl = [mediaUrl];
-      }
+      // if (mediaUrl) {
+      //   messageOptions.mediaUrl = [mediaUrl];
+      // }
 
       await client.messages.create(messageOptions);
 

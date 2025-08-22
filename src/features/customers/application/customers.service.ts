@@ -8,9 +8,9 @@ import {
   ExternalServiceException,
 } from "../../../common/exceptions/base.exception";
 import { ZohoService } from "../../../integrations/crm/zoho/zoho.service";
-import { PrismaService } from "../../../core/prisma/prisma.service";
 import { v4 as uuidv4 } from "uuid";
 import { CustomerResponseDto } from "./dto/customer-response.dto";
+import { PrismaService } from "src/prisma/prisma.service";
 
 @Injectable()
 export class CustomersService {
@@ -40,10 +40,18 @@ export class CustomersService {
     }
 
     // Get business user credentials
-    const platformCredential = await this.validatePlatformCredentials(
+    let platformCredential = await this.validatePlatformCredentials(
       clientId,
       platform
     );
+
+    const { access_token } = await this.zohoService.refreshAccessToken(
+      clientId,
+      platformCredential.client_secret,
+      platformCredential.refresh_token
+    );
+
+    platformCredential.access_token = access_token;
 
     // Ensure country is present in addresses
     const billingAddress = {
@@ -78,8 +86,8 @@ export class CustomersService {
     }
 
     // For other platforms, just save locally
-    const savedCustomer = await this.customerRepository.create(customer);
-    return CustomerResponseDto.fromEntity(savedCustomer);
+    // const savedCustomer = await this.customerRepository.create(customer);
+    return CustomerResponseDto.fromEntity(customer);
   }
 
   private async validatePlatformCredentials(
@@ -159,40 +167,55 @@ export class CustomersService {
           ...customer.shippingAddress,
           country: customer.shippingAddress?.country || "India",
         },
-        vat_reg_no: customer.vatRegNo,
-        tax_reg_no: customer.taxRegNo,
-        gst_no: customer.gstNo,
+        // vat_reg_no: customer.vatRegNo,
+        // tax_reg_no: customer.taxRegNo,
+        // gst_no: customer.gstNo,
       };
 
       // Create contact in Zoho
-      const zohoResponse = await this.zohoService.createContact(
+      const zohoResponse:
+        | { contact: any }
+        | { message: string; status: boolean }
+        | void = await this.zohoService.createContact(
         zohoContactData,
         organizationId,
         accessToken
       );
 
-      if (!zohoResponse || !zohoResponse.contact) {
+      if (
+        !zohoResponse ||
+        typeof zohoResponse !== "object" ||
+        !("contact" in zohoResponse)
+      ) {
         throw new ExternalServiceException(
           "Zoho",
-          "Failed to create contact in Zoho"
+          zohoResponse &&
+          "message" in zohoResponse &&
+          typeof zohoResponse.message === "string"
+            ? zohoResponse.message
+            : "Failed to create contact in Zoho"
         );
       }
 
-      // Update customer with external ID (remove currencyId if not supported)
-      const updatedCustomer = customer
-        .setExternalId(zohoResponse.contact.contact_id)
-        .updateProfile({});
-
       // Save to local database
-      const savedCustomer = await this.customerRepository.create(
-        updatedCustomer
-      );
+      // const savedCustomer = await this.customerRepository.create(customer);
+      // await this.prisma.shops.create({
+      //   data: {
+      //     id: Number(customer.id),
+      //     shop_name: customer.companyName,
+      //     gst_number: customer.gstNo,
+      //     address: JSON.stringify(customer.shippingAddress),
+      //     language: "en",
+      //     // mobile_num: customer.billingAddress?.phone || "",
+      //     // pan_number: customer.vatRegNo,
+      //   },
+      // });
 
       this.logger.log(
         `Shop registered successfully in Zoho with ID: ${zohoResponse.contact.contact_id}`
       );
 
-      return CustomerResponseDto.fromEntity(savedCustomer, {
+      return CustomerResponseDto.fromEntity(customer, {
         zohoContactId: zohoResponse.contact.contact_id,
         zohoData: zohoResponse.contact,
       });
@@ -277,9 +300,8 @@ export class CustomersService {
   async getCustomersByBusinessUser(
     businessUserId: string
   ): Promise<CustomerResponseDto[]> {
-    const customers = await this.customerRepository.findByBusinessUserId(
-      businessUserId
-    );
+    const customers =
+      await this.customerRepository.findByBusinessUserId(businessUserId);
     return customers.map((customer) =>
       CustomerResponseDto.fromEntity(customer)
     );

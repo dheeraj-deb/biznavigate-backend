@@ -6,7 +6,7 @@ import {
 import {
   ConversationEvent,
   ConversationStep,
-} from "../interfaces/converstation-state-machine.enum";
+} from "../interfaces/conversation-state-machine.enum";
 import { ConversationContext } from "../interfaces/session.interface";
 
 @Injectable()

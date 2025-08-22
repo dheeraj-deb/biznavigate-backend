@@ -1,18 +1,22 @@
-import { Injectable, Logger } from '@nestjs/common';
-import { UserRepository } from '../domain/repositories/user.repository';
-import { User } from '../domain/entities/user.entity';
-import { CreateUserDto } from './dto/create-user.dto';
-import { UpdateUserDto } from './dto/update-user.dto';
-import { UserResponseDto, ZohoAuthResponseDto, ZohoCredentialsSaveResponseDto } from './dto/user-response.dto';
-import { 
-  ResourceNotFoundException, 
+import { Injectable, Logger } from "@nestjs/common";
+import { UserRepository } from "../domain/repositories/user.repository";
+import { User } from "../domain/entities/user.entity";
+import { CreateUserDto } from "./dto/create-user.dto";
+import { UpdateUserDto } from "./dto/update-user.dto";
+import {
+  UserResponseDto,
+  ZohoAuthResponseDto,
+  ZohoCredentialsSaveResponseDto,
+} from "./dto/user-response.dto";
+import {
+  ResourceNotFoundException,
   DuplicateResourceException,
   BusinessLogicException,
-  ExternalServiceException
-} from '../../../common/exceptions/base.exception';
-import { ZohoService } from '../../../integrations/crm/zoho/zoho.service';
-import { v4 as uuidv4 } from 'uuid';
-import { PrismaService } from 'src/prisma/prisma.service';
+  ExternalServiceException,
+} from "../../../common/exceptions/base.exception";
+import { ZohoService } from "../../../integrations/crm/zoho/zoho.service";
+import { v4 as uuidv4 } from "uuid";
+import { PrismaService } from "src/prisma/prisma.service";
 
 @Injectable()
 export class UsersService {
@@ -21,7 +25,7 @@ export class UsersService {
   constructor(
     private readonly userRepository: UserRepository,
     private readonly zohoService: ZohoService,
-    private readonly prisma: PrismaService,
+    private readonly prisma: PrismaService
   ) {}
 
   // Domain entities are used here to encapsulate business logic
@@ -32,14 +36,24 @@ export class UsersService {
   // 4. Testability - pure business logic can be tested without database
   // 5. Framework Independence - business rules don't depend on Prisma
 
-  async createUser(createUserDto: CreateUserDto): Promise<UserResponseDto | ZohoAuthResponseDto> {
-    this.logger.log(`Creating user with customerId: ${createUserDto.customerId}`);
+  async createUser(
+    createUserDto: CreateUserDto
+  ): Promise<UserResponseDto | ZohoAuthResponseDto> {
+    this.logger.log(
+      `Creating user with customerId: ${createUserDto.customerId}`
+    );
 
     // Check if user with customerId already exists
-    const existingUser = await this.userRepository.findByCustomerId(createUserDto.customerId);
-    console.log('Existing user found:', existingUser);
+    const existingUser = await this.userRepository.findByCustomerId(
+      createUserDto.customerId
+    );
+    console.log("Existing user found:", existingUser);
     if (existingUser) {
-      throw new DuplicateResourceException('User', 'customerId', createUserDto.customerId);
+      throw new DuplicateResourceException(
+        "User",
+        "customerId",
+        createUserDto.customerId
+      );
     }
 
     console.log("createUserDto.platformId:", createUserDto);
@@ -49,7 +63,10 @@ export class UsersService {
     });
 
     if (!integration) {
-      throw new ResourceNotFoundException('Integration', createUserDto.platformId);
+      throw new ResourceNotFoundException(
+        "Integration",
+        createUserDto.platformId
+      );
     }
 
     // Create user entity
@@ -65,25 +82,31 @@ export class UsersService {
       platformId: createUserDto.platformId,
     });
 
-    console.log('User entity created:', user);
+    console.log("User entity created:", user);
 
     // Save user to database
     const createdUser = await this.userRepository.create(user);
     this.logger.log(`User created successfully with ID: ${createdUser.id}`);
 
     // Handle Zoho integration
-    if (integration.name.toLowerCase() === 'zoho') {
-      return await this.handleZohoIntegration(createdUser, createUserDto.integrationConfig);
+    if (integration.name.toLowerCase() === "zoho") {
+      return await this.handleZohoIntegration(
+        createdUser,
+        createUserDto.integrationConfig
+      );
     }
 
     return UserResponseDto.fromEntity(createdUser);
   }
 
-  private async handleZohoIntegration(user: User, integrationConfig: any): Promise<ZohoAuthResponseDto> {
+  private async handleZohoIntegration(
+    user: User,
+    integrationConfig: any
+  ): Promise<ZohoAuthResponseDto> {
     const { clientId, clientSecret, organizationId } = integrationConfig;
 
     if (!clientId || !organizationId || !clientSecret) {
-      throw new BusinessLogicException('Missing Zoho integration credentials');
+      throw new BusinessLogicException("Missing Zoho integration credentials");
     }
 
     // Save Zoho credentials
@@ -98,54 +121,64 @@ export class UsersService {
 
     // Generate authorization URL
     const authorizationUrl = await this.zohoService.getAuthorizationCodeLink(
-      clientId, 
+      clientId,
       clientSecret
     );
 
     return {
       authorizationUrl,
-      message: 'User created successfully. Please complete Zoho authorization.',
+      message: "User created successfully. Please complete Zoho authorization.",
     };
   }
 
-  async saveZohoCredentials(code: string, state: string): Promise<ZohoCredentialsSaveResponseDto> {
-    this.logger.log('Saving Zoho credentials');
+  async saveZohoCredentials(
+    code: string,
+    state: string
+  ): Promise<ZohoCredentialsSaveResponseDto> {
+    this.logger.log("Saving Zoho credentials");
 
-    const [clientId, clientSecret] = state.split(',');
+    const [clientId, clientSecret] = state.split(",");
 
     if (!clientId || !clientSecret) {
-      throw new BusinessLogicException('Invalid state parameter');
+      throw new BusinessLogicException("Invalid state parameter");
     }
 
     try {
-      const { access_token, refresh_token } = await this.zohoService.getAccessToken(
-        clientId,
-        clientSecret,
-        code,
-        'authorization_code'
-      );
+      const { access_token, refresh_token, expires_in } =
+        await this.zohoService.getAccessToken(
+          clientId,
+          clientSecret,
+          code,
+          "authorization_code"
+        );
 
       await this.prisma.zoho_user_credential.update({
         where: { client_id: clientId },
-        data: { access_token, refresh_token },
+        data: {
+          access_token,
+          refresh_token,
+          code,
+          expires_in,
+          token_acquired_at: new Date().toISOString(),
+        },
       });
 
-      this.logger.log('Zoho credentials saved successfully');
+      this.logger.log("Zoho credentials saved successfully");
 
       return {
-        message: 'Zoho credentials saved successfully',
+        message: "Zoho credentials saved successfully",
         status: 200,
       };
     } catch (error) {
-      this.logger.error('Error saving Zoho credentials:', error);
-      throw new ExternalServiceException('Zoho', error.message);
+      this.logger.error("Error saving Zoho credentials:", error);
+      throw new ExternalServiceException("Zoho", error.message);
     }
   }
 
   async getUserById(id: string): Promise<UserResponseDto> {
     const user = await this.userRepository.findById(id);
     if (!user) {
-      throw new ResourceNotFoundException('User', id);
+      throw new ResourceNotFoundException("User", id);
     }
     return UserResponseDto.fromEntity(user);
   }
@@ -153,7 +186,7 @@ export class UsersService {
   async getUserByCustomerId(customerId: string): Promise<UserResponseDto> {
     const user = await this.userRepository.findByCustomerId(customerId);
     if (!user) {
-      throw new ResourceNotFoundException('User', customerId);
+      throw new ResourceNotFoundException("User", customerId);
     }
     return UserResponseDto.fromEntity(user);
   }
@@ -163,17 +196,20 @@ export class UsersService {
     return UserResponseDto.fromEntities(users);
   }
 
-  async updateUser(id: string, updateUserDto: UpdateUserDto): Promise<UserResponseDto> {
+  async updateUser(
+    id: string,
+    updateUserDto: UpdateUserDto
+  ): Promise<UserResponseDto> {
     this.logger.log(`Updating user with ID: ${id}`);
 
     const existingUser = await this.userRepository.findById(id);
     if (!existingUser) {
-      throw new ResourceNotFoundException('User', id);
+      throw new ResourceNotFoundException("User", id);
     }
 
     const updatedUser = existingUser.updateProfile(updateUserDto);
     const result = await this.userRepository.update(id, updatedUser);
-    
+
     this.logger.log(`User updated successfully: ${id}`);
     return UserResponseDto.fromEntity(result);
   }
@@ -183,12 +219,12 @@ export class UsersService {
 
     const existingUser = await this.userRepository.findById(id);
     if (!existingUser) {
-      throw new ResourceNotFoundException('User', id);
+      throw new ResourceNotFoundException("User", id);
     }
 
     const deactivatedUser = existingUser.deactivate();
     const result = await this.userRepository.update(id, deactivatedUser);
-    
+
     this.logger.log(`User deactivated successfully: ${id}`);
     return UserResponseDto.fromEntity(result);
   }
@@ -198,7 +234,7 @@ export class UsersService {
 
     const existingUser = await this.userRepository.findById(id);
     if (!existingUser) {
-      throw new ResourceNotFoundException('User', id);
+      throw new ResourceNotFoundException("User", id);
     }
 
     await this.userRepository.delete(id);

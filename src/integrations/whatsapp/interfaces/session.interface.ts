@@ -1,6 +1,7 @@
-import { ConversationStep } from "./converstation-state-machine.enum";
+import { ConversationStep } from "./conversation-state-machine.enum";
 
 export interface ConversationContext {
+  distributorPhoneNumber?: string;
   cart: { product: any; quantity: number; price: number }[];
   userDetails: any;
   paymentMethod: string | null;
@@ -9,7 +10,7 @@ export interface ConversationContext {
   errorCount: number;
 }
 
-export interface ConverstationSession {
+export interface ConversationSession {
   sessionId: string;
   userId: string;
   phoneNumber: string;

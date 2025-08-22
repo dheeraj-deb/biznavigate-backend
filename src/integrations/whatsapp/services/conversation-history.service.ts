@@ -2,19 +2,19 @@ import { Injectable } from "@nestjs/common";
 import { PrismaService } from "src/prisma/prisma.service";
 import {
   ConversationContext,
-  ConverstationSession,
+  ConversationSession,
 } from "../interfaces/session.interface";
 
 @Injectable()
 export class ConversationHistoryService {
   constructor(private readonly prisma: PrismaService) {}
 
-  async saveSessionSnapshot(session: ConverstationSession): Promise<void> {
+  async saveSessionSnapshot(session: ConversationSession): Promise<void> {
     try {
       await this.prisma.conversationSession.upsert({
-        where: { sessionId: session.sessionId },
+        where: { id: session.sessionId },
         create: {
-          sessionId: session.sessionId,
+          id: session.sessionId,
           userId: session.userId,
           phoneNumber: session.phoneNumber,
           context: JSON.stringify(session.context),
@@ -34,7 +34,7 @@ export class ConversationHistoryService {
 
   async getLatestSession(
     phoneNumber: string
-  ): Promise<ConverstationSession | null> {
+  ): Promise<ConversationSession | null> {
     const entity = await this.prisma.conversationSession.findFirst({
       where: { phoneNumber },
       orderBy: { updatedAt: "desc" },
@@ -43,7 +43,7 @@ export class ConversationHistoryService {
     if (!entity) return null;
 
     return {
-      sessionId: entity.sessionId,
+      sessionId: entity.id,
       userId: entity.userId,
       phoneNumber: entity.phoneNumber,
       context:

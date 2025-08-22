@@ -1,17 +1,17 @@
 import { Injectable, Scope } from "@nestjs/common";
-import { ConverstationSession } from "../interfaces/session.interface";
-import { SessionStoreService } from "./session-store.service";
+import { ConversationSession } from "../interfaces/session.interface";
 import { ConversationLoggerService } from "./conversation-logger.service";
 import { v4 as uuidv4 } from "uuid";
-import { ConversationStep } from "../interfaces/converstation-state-machine.enum";
+import { ConversationStep } from "../interfaces/conversation-state-machine.enum";
+import { SessionService } from "./session.service";
 
 @Injectable({ scope: Scope.REQUEST })
 export class ConversationContextService {
-  private session: ConverstationSession | null = null;
+  private session: ConversationSession | null = null;
   private isInitialized: boolean = false;
 
   constructor(
-    private sessionStore: SessionStoreService,
+    private sessionStore: SessionService,
     private conversationLogger: ConversationLoggerService
   ) {}
 
@@ -19,7 +19,7 @@ export class ConversationContextService {
     if (this.isInitialized) return;
     this.session = await this.sessionStore.getSession(phoneNumber);
     if (!this.session) {
-      this.session = this.createNewSession(phoneNumber);
+      this.session = await this.createNewSession(phoneNumber);
       await this.sessionStore.setSession(phoneNumber, this.session);
     } else {
       await this.sessionStore.extendSession(phoneNumber);
@@ -28,13 +28,16 @@ export class ConversationContextService {
     this.isInitialized = true;
   }
 
-  private createNewSession(phoneNumber: string): ConverstationSession {
-    return {
+  private async createNewSession(
+    phoneNumber: string
+  ): Promise<ConversationSession> {
+    const session: ConversationSession = {
       sessionId: this.generateSessionId(),
       userId: this.generateUserId(phoneNumber),
       phoneNumber,
       currentStep: ConversationStep.GREETING,
       context: {
+        distributorPhoneNumber: null,
         cart: [],
         userDetails: null,
         paymentMethod: null,
@@ -51,21 +54,12 @@ export class ConversationContextService {
       updatedAt: new Date(),
       expiresAt: new Date(Date.now() + 24 * 60 * 60 * 1000), // 24 hours
     };
-  }
 
-  async updateContext(updates: Partial<ConverstationSession>): Promise<void> {
-    if (!this.session) {
-      throw new Error("Context not initialized.");
-    }
+    await this.sessionStore.setSession(phoneNumber, session).catch((error) => {
+      console.error("Failed to set new session:", error);
+    });
 
-    this.session.context = {
-      ...this.session.context,
-      ...updates,
-    };
-    await this.sessionStore.updateSession(
-      this.session.phoneNumber,
-      this.session
-    );
+    return session;
   }
 
   async transitionToStep(newStep: ConversationStep): Promise<void> {
@@ -79,10 +73,7 @@ export class ConversationContextService {
 
     // console.log("Transitioning from", oldStep, "to", newStep);
 
-    await this.sessionStore.updateSession(
-      this.session.phoneNumber,
-      this.session
-    );
+    await this.sessionStore.persistSession(this.session);
 
     // console.log("SESSION UPDATED:", this.session , newStep);
 
