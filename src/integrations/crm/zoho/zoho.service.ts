@@ -69,7 +69,7 @@ export class ZohoService {
     this.tokenUrl = this.configService.get("zoho.tokenUrl");
     this.inventoryUrl = this.configService.get("zoho.inventoryUrl");
     this.authCallbackUrl = this.configService.get("zoho.redirectUri");
-    ("https://489a-103-70-197-101.ngrok-free.app/business-user/auth/callback");
+    ("https://efce2582845f.ngrok-free.app/business-user/auth/callback");
   }
 
   async getAuthorizationCodeLink(
@@ -316,13 +316,13 @@ export class ZohoService {
     orderData: ZohoSalesOrder,
     organizationId: string,
     accessToken: string
-  ): Promise<{ salesorder: any }> {
+  ): Promise<any> {
     try {
       this.logger.log(
         `Creating sales order with data: ${JSON.stringify(orderData)}`
       );
 
-      const response = await firstValueFrom(
+      await firstValueFrom(
         this.httpService.post<{ salesorder: any }>(
           `${this.inventoryUrl}/salesorders`,
           orderData,
@@ -336,12 +336,17 @@ export class ZohoService {
             },
           }
         )
-      );
+      )
+        .then((res) => {
+          return res.data;
+        })
+        .catch((error) => console.error("Zoho salesorder error", error));
 
-      this.logger.log(
-        `Successfully created sales order in Zoho: ${response.data.salesorder?.salesorder_id}`
-      );
-      return response.data;
+      // this.logger.log(
+      //   `Successfully created sales order in Zoho: ${response.data.salesorder?.salesorder_id}`
+      // );
+      // return response.data;
+      // return { salesorder: null };
     } catch (error) {
       this.logger.error(
         `Failed to create sales order in Zoho: ${error.message}`

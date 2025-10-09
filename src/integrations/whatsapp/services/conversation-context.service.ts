@@ -3,7 +3,8 @@ import { ConversationSession } from "../interfaces/session.interface";
 import { ConversationLoggerService } from "./conversation-logger.service";
 import { v4 as uuidv4 } from "uuid";
 import { ConversationStep } from "../interfaces/conversation-state-machine.enum";
-import { SessionService } from "./session.service";
+import { RedisSessionService } from "./redis-session.service";
+import { PrismaService } from "src/prisma/prisma.service";
 
 @Injectable({ scope: Scope.REQUEST })
 export class ConversationContextService {
@@ -11,7 +12,8 @@ export class ConversationContextService {
   private isInitialized: boolean = false;
 
   constructor(
-    private sessionStore: SessionService,
+    private prisma: PrismaService,
+    private sessionStore: RedisSessionService,
     private conversationLogger: ConversationLoggerService
   ) {}
 
@@ -38,27 +40,25 @@ export class ConversationContextService {
       currentStep: ConversationStep.GREETING,
       context: {
         distributorPhoneNumber: null,
-        cart: [],
+        productList: [],
         userDetails: null,
-        paymentMethod: null,
         lastMessageTimestamp: new Date(),
         messageCount: 0,
         errorCount: 0,
+        isNewUser: true,
+        orderTotal: 0,
       },
       metadata: {
         platform: "whatsapp",
         language: "en",
-        timezone: Intl.DateTimeFormat().resolvedOptions().timeZone, // UTC
+        timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
       },
       createdAt: new Date(),
       updatedAt: new Date(),
-      expiresAt: new Date(Date.now() + 24 * 60 * 60 * 1000), // 24 hours
+      expiresAt: new Date(Date.now() + 24 * 60 * 60 * 1000),
     };
 
-    await this.sessionStore.setSession(phoneNumber, session).catch((error) => {
-      console.error("Failed to set new session:", error);
-    });
-
+    await this.sessionStore.setSession(phoneNumber, session);
     return session;
   }
 
@@ -92,4 +92,12 @@ export class ConversationContextService {
     // Option 1: Use phone number directly (beware of privacy/persistence)
     return phoneNumber;
   }
+
+  getSession(): ConversationSession | null {
+    if (!this.isInitialized) {
+      throw new Error("Context not initialized. Call initializeContext first.");
+    }
+    return this.session;
+  }
 }
+

@@ -19,6 +19,7 @@ export class ConversationHistoryService {
           phoneNumber: session.phoneNumber,
           context: JSON.stringify(session.context),
           currentStep: session.currentStep,
+          updatedAt: new Date(),
         },
         update: {
           context: JSON.stringify(session.context),
@@ -60,7 +61,12 @@ export class ConversationHistoryService {
 
   async logMessage(sessionId: string, message: string, fromUser = true) {
     await this.prisma.conversationMessage.create({
-      data: { sessionId, message, fromUser },
+      data: {
+        id: `${sessionId}_${Date.now()}`,
+        sessionId,
+        message,
+        fromUser
+      },
     });
   }
 

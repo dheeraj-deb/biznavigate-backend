@@ -29,15 +29,29 @@ export class ConversationStateMachineService {
     });
   }
 
+
   async canTransition(
     currentStep: ConversationStep,
     event: ConversationEvent,
     context: ConversationContext
   ): Promise<boolean> {
     const transitions = this.getValidTransitions(currentStep, event);
-    return transitions.some((transition) => {
-      return !transition.guard || transition.guard(context);
+    console.log(`[DEBUG] Found ${transitions.length} transitions for ${currentStep} -> ${event}`);
+
+    const result = transitions.some((transition) => {
+      const guardResult = !transition.guard || transition.guard(context);
+      console.log(`[DEBUG] Guard check - guard exists: ${!!transition.guard}, result: ${guardResult}`);
+      if (transition.guard) {
+        console.log(`[DEBUG] Context productList:`, context.productList);
+        console.log(`[DEBUG] Guard condition: !!context.productList && context.productList.length > 0`);
+        console.log(`[DEBUG] !!context.productList:`, !!context.productList);
+        console.log(`[DEBUG] context.productList.length:`, context.productList?.length);
+      }
+      return guardResult;
     });
+
+    console.log(`[DEBUG] Final canTransition result: ${result}`);
+    return result;
   }
 
   async executeTransition(
@@ -45,15 +59,43 @@ export class ConversationStateMachineService {
     event: ConversationEvent,
     context: ConversationContext
   ): Promise<ConversationStep | null> {
+    console.log("\n========== EXECUTE TRANSITION ==========");
+    console.log("Current Step:", currentStep);
+    console.log("Event:", event);
+    console.log("Context productList:", context.productList);
+    console.log("Context originalParsedProducts:", context.originalParsedProducts);
+    console.log("Context unmatchedProducts:", context.unmatchedProducts);
+    console.log("========================================\n");
+
     const transitions = this.getValidTransitions(currentStep, event);
-    for (const transition of transitions) {
-      if (!transition.guard || transition.guard(context)) {
+    console.log(`Found ${transitions.length} possible transitions`);
+
+    for (let i = 0; i < transitions.length; i++) {
+      const transition = transitions[i];
+      console.log(`\nEvaluating transition ${i + 1}/${transitions.length}: ${currentStep} -> ${transition.to}`);
+
+      if (!transition.guard) {
+        console.log("  No guard - transition allowed");
         if (transition.action) {
           await transition.action(context);
         }
+        console.log(`  ✓ Transitioning to: ${transition.to}`);
+        return transition.to;
+      }
+
+      const guardResult = transition.guard(context);
+      console.log(`  Guard result: ${guardResult}`);
+
+      if (guardResult) {
+        if (transition.action) {
+          await transition.action(context);
+        }
+        console.log(`  ✓ Transitioning to: ${transition.to}`);
         return transition.to;
       }
     }
+
+    console.log("\n❌ No valid transition found - staying at current step\n");
     return null;
   }
 

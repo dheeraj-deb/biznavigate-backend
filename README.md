@@ -57,7 +57,7 @@ WHATSAPP_VERIFY_TOKEN=your_verify_token_here
 # Zoho Configuration
 ZOHO_CLIENT_ID=1000.NIIO305M71RIEIS6GP0HKL9OQM10HP
 ZOHO_CLIENT_SECRET=f9e61cf16c55a874fec0a97f7f345109a32a362304
-ZOHO_REDIRECT_URI=https://0465fb375596.ngrok-free.app/business-user/auth/callback
+ZOHO_REDIRECT_URI=https://40183065fcf8.ngrok-free.app/business-user/auth/callback
 ZOHO_SCOPE=ZohoInventory.items.READ,ZohoInventory.inventoryadjustments.CREATE,ZohoInventory.contacts.READ,ZohoInventory.contacts.CREATE,ZohoInventory.settings.READ
 ZOHO_API_DOMAIN=https://www.zohoapis.in
 ZOHO_AUTH_URL=https://accounts.zoho.in/oauth/v2/auth

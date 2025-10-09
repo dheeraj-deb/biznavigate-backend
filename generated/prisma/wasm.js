@@ -120,25 +120,33 @@ exports.Prisma.TransactionIsolationLevel = makeStrictEnum({
   Serializable: 'Serializable'
 });
 
-exports.Prisma.ShopsScalarFieldEnum = {
+exports.Prisma.ConversationEventScalarFieldEnum = {
   id: 'id',
-  shop_name: 'shop_name',
-  gst_number: 'gst_number',
-  address: 'address',
-  pan: 'pan',
-  mobile_num: 'mobile_num',
-  language: 'language'
+  sessionId: 'sessionId',
+  eventType: 'eventType',
+  stepFrom: 'stepFrom',
+  stepTo: 'stepTo',
+  payload: 'payload',
+  createdAt: 'createdAt'
 };
 
-exports.Prisma.Whatsapp_templatesScalarFieldEnum = {
+exports.Prisma.ConversationMessageScalarFieldEnum = {
   id: 'id',
-  sid: 'sid',
-  key: 'key',
-  language: 'language',
-  variables: 'variables',
-  is_active: 'is_active',
-  created_at: 'created_at',
-  updated_at: 'updated_at'
+  sessionId: 'sessionId',
+  message: 'message',
+  fromUser: 'fromUser',
+  createdAt: 'createdAt'
+};
+
+exports.Prisma.ConversationSessionScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  phoneNumber: 'phoneNumber',
+  context: 'context',
+  currentStep: 'currentStep',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  lastEvent: 'lastEvent'
 };
 
 exports.Prisma.OnboardingSessionScalarFieldEnum = {
@@ -166,49 +174,6 @@ exports.Prisma.Business_userScalarFieldEnum = {
 exports.Prisma.IntegrationsScalarFieldEnum = {
   name: 'name',
   id: 'id'
-};
-
-exports.Prisma.Zoho_user_credentialScalarFieldEnum = {
-  access_token: 'access_token',
-  refresh_token: 'refresh_token',
-  organization_id: 'organization_id',
-  business_user_id: 'business_user_id',
-  id: 'id',
-  client_id: 'client_id',
-  client_secret: 'client_secret',
-  expires_in: 'expires_in',
-  token_acquired_at: 'token_acquired_at',
-  whatsapp_number: 'whatsapp_number',
-  code: 'code'
-};
-
-exports.Prisma.ConversationMessageScalarFieldEnum = {
-  id: 'id',
-  sessionId: 'sessionId',
-  message: 'message',
-  fromUser: 'fromUser',
-  createdAt: 'createdAt'
-};
-
-exports.Prisma.ConversationSessionScalarFieldEnum = {
-  id: 'id',
-  userId: 'userId',
-  phoneNumber: 'phoneNumber',
-  context: 'context',
-  currentStep: 'currentStep',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt',
-  lastEvent: 'lastEvent'
-};
-
-exports.Prisma.ConversationEventScalarFieldEnum = {
-  id: 'id',
-  sessionId: 'sessionId',
-  eventType: 'eventType',
-  stepFrom: 'stepFrom',
-  stepTo: 'stepTo',
-  payload: 'payload',
-  createdAt: 'createdAt'
 };
 
 exports.Prisma.Inventory_currentScalarFieldEnum = {
@@ -241,6 +206,31 @@ exports.Prisma.Inventory_currentScalarFieldEnum = {
   updated_at: 'updated_at'
 };
 
+exports.Prisma.Inventory_movementsScalarFieldEnum = {
+  id: 'id',
+  organization_id: 'organization_id',
+  product_id: 'product_id',
+  location_code: 'location_code',
+  movement_type: 'movement_type',
+  transaction_type: 'transaction_type',
+  quantity_before: 'quantity_before',
+  quantity_change: 'quantity_change',
+  quantity_after: 'quantity_after',
+  unit_cost: 'unit_cost',
+  total_cost: 'total_cost',
+  reference_type: 'reference_type',
+  reference_id: 'reference_id',
+  reference_number: 'reference_number',
+  source_system: 'source_system',
+  external_transaction_id: 'external_transaction_id',
+  external_data: 'external_data',
+  movement_date: 'movement_date',
+  posting_date: 'posting_date',
+  created_by: 'created_by',
+  notes: 'notes',
+  created_at: 'created_at'
+};
+
 exports.Prisma.OrganizationsScalarFieldEnum = {
   id: 'id',
   name: 'name',
@@ -266,6 +256,15 @@ exports.Prisma.Product_categoriesScalarFieldEnum = {
   zoho_group_id: 'zoho_group_id',
   tally_category: 'tally_category',
   custom_category_id: 'custom_category_id',
+  created_at: 'created_at',
+  updated_at: 'updated_at'
+};
+
+exports.Prisma.Product_embeddingsScalarFieldEnum = {
+  id: 'id',
+  product_id: 'product_id',
+  organization_id: 'organization_id',
+  metadata: 'metadata',
   created_at: 'created_at',
   updated_at: 'updated_at'
 };
@@ -304,29 +303,54 @@ exports.Prisma.ProductsScalarFieldEnum = {
   source_type: 'source_type'
 };
 
-exports.Prisma.Inventory_movementsScalarFieldEnum = {
+exports.Prisma.ShopsScalarFieldEnum = {
   id: 'id',
+  shop_name: 'shop_name',
+  gst_number: 'gst_number',
+  address: 'address',
+  pan: 'pan',
+  mobile_num: 'mobile_num',
+  language: 'language',
+  zoho_contact_id: 'zoho_contact_id'
+};
+
+exports.Prisma.WhatsappMessageScalarFieldEnum = {
+  id: 'id',
+  messageSid: 'messageSid',
+  refInboundSid: 'refInboundSid',
+  to: 'to',
+  from: 'from',
+  body: 'body',
+  providerResponse: 'providerResponse',
+  direction: 'direction',
+  sentAt: 'sentAt',
+  receivedAt: 'receivedAt',
+  createdAt: 'createdAt'
+};
+
+exports.Prisma.Whatsapp_templatesScalarFieldEnum = {
+  id: 'id',
+  sid: 'sid',
+  key: 'key',
+  language: 'language',
+  variables: 'variables',
+  is_active: 'is_active',
+  created_at: 'created_at',
+  updated_at: 'updated_at'
+};
+
+exports.Prisma.Zoho_user_credentialScalarFieldEnum = {
+  access_token: 'access_token',
+  refresh_token: 'refresh_token',
   organization_id: 'organization_id',
-  product_id: 'product_id',
-  location_code: 'location_code',
-  movement_type: 'movement_type',
-  transaction_type: 'transaction_type',
-  quantity_before: 'quantity_before',
-  quantity_change: 'quantity_change',
-  quantity_after: 'quantity_after',
-  unit_cost: 'unit_cost',
-  total_cost: 'total_cost',
-  reference_type: 'reference_type',
-  reference_id: 'reference_id',
-  reference_number: 'reference_number',
-  source_system: 'source_system',
-  external_transaction_id: 'external_transaction_id',
-  external_data: 'external_data',
-  movement_date: 'movement_date',
-  posting_date: 'posting_date',
-  created_by: 'created_by',
-  notes: 'notes',
-  created_at: 'created_at'
+  business_user_id: 'business_user_id',
+  id: 'id',
+  client_id: 'client_id',
+  client_secret: 'client_secret',
+  expires_in: 'expires_in',
+  token_acquired_at: 'token_acquired_at',
+  whatsapp_number: 'whatsapp_number',
+  code: 'code'
 };
 
 exports.Prisma.SortOrder = {
@@ -334,12 +358,12 @@ exports.Prisma.SortOrder = {
   desc: 'desc'
 };
 
-exports.Prisma.JsonNullValueInput = {
+exports.Prisma.NullableJsonNullValueInput = {
+  DbNull: Prisma.DbNull,
   JsonNull: Prisma.JsonNull
 };
 
-exports.Prisma.NullableJsonNullValueInput = {
-  DbNull: Prisma.DbNull,
+exports.Prisma.JsonNullValueInput = {
   JsonNull: Prisma.JsonNull
 };
 
@@ -348,15 +372,15 @@ exports.Prisma.QueryMode = {
   insensitive: 'insensitive'
 };
 
-exports.Prisma.NullsOrder = {
-  first: 'first',
-  last: 'last'
-};
-
 exports.Prisma.JsonNullValueFilter = {
   DbNull: Prisma.DbNull,
   JsonNull: Prisma.JsonNull,
   AnyNull: Prisma.AnyNull
+};
+
+exports.Prisma.NullsOrder = {
+  first: 'first',
+  last: 'last'
 };
 exports.product_source_type = exports.$Enums.product_source_type = {
   zoho: 'zoho',
@@ -365,20 +389,22 @@ exports.product_source_type = exports.$Enums.product_source_type = {
 };
 
 exports.Prisma.ModelName = {
-  shops: 'shops',
-  whatsapp_templates: 'whatsapp_templates',
+  ConversationEvent: 'ConversationEvent',
+  ConversationMessage: 'ConversationMessage',
+  ConversationSession: 'ConversationSession',
   OnboardingSession: 'OnboardingSession',
   business_user: 'business_user',
   integrations: 'integrations',
-  zoho_user_credential: 'zoho_user_credential',
-  ConversationMessage: 'ConversationMessage',
-  ConversationSession: 'ConversationSession',
-  ConversationEvent: 'ConversationEvent',
   inventory_current: 'inventory_current',
+  inventory_movements: 'inventory_movements',
   organizations: 'organizations',
   product_categories: 'product_categories',
+  product_embeddings: 'product_embeddings',
   products: 'products',
-  inventory_movements: 'inventory_movements'
+  shops: 'shops',
+  whatsappMessage: 'whatsappMessage',
+  whatsapp_templates: 'whatsapp_templates',
+  zoho_user_credential: 'zoho_user_credential'
 };
 
 /**

@@ -20,7 +20,7 @@ export class CustomersService {
     private readonly customerRepository: CustomerRepository,
     private readonly zohoService: ZohoService,
     private readonly prisma: PrismaService
-  ) {}
+  ) { }
 
   async registerShop(
     createCustomerDto: CreateCustomerDto,
@@ -60,9 +60,9 @@ export class CustomersService {
     };
     const shippingAddress = createCustomerDto.shipping_address
       ? {
-          ...createCustomerDto.shipping_address,
-          country: createCustomerDto.shipping_address.country || "India",
-        }
+        ...createCustomerDto.shipping_address,
+        country: createCustomerDto.shipping_address.country || "India",
+      }
       : billingAddress;
 
     // Create customer entity
@@ -78,6 +78,19 @@ export class CustomersService {
       gstNo: createCustomerDto.gst_number,
       businessUserId: clientId,
       platform: platform.toLowerCase(),
+    });
+
+    await this.prisma.shops.create({
+      data: {
+        shop_name: customer.companyName?.substring(0, 50) || "Unknown Shop", // Max 50 chars
+        gst_number: customer.gstNo?.substring(0, 15) || "", // Max 15 chars
+        address: "",
+        pan: customer.vatRegNo?.substring(0, 10) || null, // Max 10 chars
+        mobile_num: "9539192684", // 10 chars, within limit
+        language: "en",
+      },
+    }).catch((error) => {
+      this.logger.error("Error creating shop in database:", error);
     });
 
     // Handle platform-specific logic
@@ -177,10 +190,10 @@ export class CustomersService {
         | { contact: any }
         | { message: string; status: boolean }
         | void = await this.zohoService.createContact(
-        zohoContactData,
-        organizationId,
-        accessToken
-      );
+          zohoContactData,
+          organizationId,
+          accessToken
+        );
 
       if (
         !zohoResponse ||
@@ -190,8 +203,8 @@ export class CustomersService {
         throw new ExternalServiceException(
           "Zoho",
           zohoResponse &&
-          "message" in zohoResponse &&
-          typeof zohoResponse.message === "string"
+            "message" in zohoResponse &&
+            typeof zohoResponse.message === "string"
             ? zohoResponse.message
             : "Failed to create contact in Zoho"
         );

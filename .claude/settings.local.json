@@ -1,0 +1,24 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(find:*)",
+      "Bash(npm run start:dev:*)",
+      "Bash(npx tsc:*)",
+      "Bash(npm run build:*)",
+      "Read(//d/**)",
+      "Bash(npx prisma db pull:*)",
+      "Bash(npx prisma generate:*)",
+      "Bash(timeout 30 bash -c 'while ! curl -s http://localhost:3000/health > /dev/null 2>&1; do sleep 2; done; echo \"\"Server is ready\"\"')",
+      "Bash(npx prisma migrate dev:*)",
+      "Bash(npx prisma db push:*)",
+      "Bash(curl:*)",
+      "Bash(timeout:*)",
+      "Bash(psql:*)",
+      "Bash(netstat:*)",
+      "Bash(findstr:*)",
+      "Bash(taskkill:*)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}

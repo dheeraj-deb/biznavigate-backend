@@ -8,25 +8,35 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model shops {
-  id         Int     @id @default(autoincrement())
-  shop_name  String  @db.VarChar(50)
-  gst_number String  @db.Char(15)
-  address    String
-  pan        String? @db.Char(10)
-  mobile_num String? @db.VarChar(15)
-  language   String? @default("en") @db.VarChar
+model ConversationEvent {
+  id                  String              @id
+  sessionId           String
+  eventType           String
+  stepFrom            String?
+  stepTo              String?
+  payload             Json?
+  createdAt           DateTime            @default(now())
+  ConversationSession ConversationSession @relation(fields: [sessionId], references: [id])
 }
 
-model whatsapp_templates {
-  id         Int      @id @default(autoincrement())
-  sid        String   @db.VarChar(1000)
-  key        String   @db.Char(50)
-  language   String   @db.Char(5)
-  variables  Json
-  is_active  Boolean  @default(true)
-  created_at DateTime @default(now()) @db.Date
-  updated_at DateTime @default(now()) @db.Date
+model ConversationMessage {
+  id        String   @id
+  sessionId String
+  message   String
+  fromUser  Boolean
+  createdAt DateTime @default(now())
+}
+
+model ConversationSession {
+  id                String              @id
+  userId            String
+  phoneNumber       String
+  context           Json
+  currentStep       String
+  createdAt         DateTime            @default(now())
+  updatedAt         DateTime
+  lastEvent         String?
+  ConversationEvent ConversationEvent[]
 }
 
 model OnboardingSession {
@@ -39,7 +49,6 @@ model OnboardingSession {
   status       String
 }
 
-/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
 model business_user {
   businessName           String   @db.VarChar(100)
   gstin                  String   @db.VarChar(15)
@@ -57,55 +66,9 @@ model integrations {
   id   Int    @id @default(autoincrement())
 }
 
-/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
-model zoho_user_credential {
-  access_token      String? @db.VarChar
-  refresh_token     String? @db.VarChar
-  organization_id   String  @db.VarChar
-  business_user_id  Int     @unique
-  id                Int     @id @default(autoincrement())
-  client_id         String? @unique(map: "client_id") @db.VarChar
-  client_secret     String? @db.VarChar
-  expires_in        Int?
-  token_acquired_at String? @db.VarChar
-  whatsapp_number   String? @unique
-  code              String?
-}
-
-model ConversationMessage {
-  id        String   @id @default(uuid())
-  sessionId String
-  message   String
-  fromUser  Boolean
-  createdAt DateTime @default(now())
-}
-
-model ConversationSession {
-  id          String              @id @default(uuid())
-  userId      String
-  phoneNumber String
-  context     Json
-  currentStep String
-  createdAt   DateTime            @default(now())
-  updatedAt   DateTime            @updatedAt
-  lastEvent   String?
-  events      ConversationEvent[]
-}
-
-model ConversationEvent {
-  id        String              @id @default(uuid())
-  sessionId String
-  eventType String
-  stepFrom  String?
-  stepTo    String?
-  payload   Json?
-  createdAt DateTime            @default(now())
-  session   ConversationSession @relation(fields: [sessionId], references: [id])
-}
-
 model inventory_current {
   id                    String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  organization_id       String?   @db.Uuid
+  organization_id       String?   @db.VarChar(100)
   product_id            String    @db.VarChar(100)
   location_code         String?   @default("MAIN") @db.VarChar(100)
   location_name         String?   @default("Main Location") @db.VarChar(200)
@@ -135,6 +98,31 @@ model inventory_current {
   @@unique([organization_id, product_id, location_code], map: "uq_inventory")
   @@index([organization_id, location_code], map: "idx_inventory_location")
   @@index([organization_id, product_id], map: "idx_inventory_org_product")
+}
+
+model inventory_movements {
+  id                      String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  organization_id         String    @db.Uuid
+  product_id              String    @db.Uuid
+  location_code           String?   @default("MAIN") @db.VarChar(100)
+  movement_type           String    @db.VarChar(30)
+  transaction_type        String    @db.VarChar(40)
+  quantity_before         Decimal   @db.Decimal(15, 6)
+  quantity_change         Decimal   @db.Decimal(15, 6)
+  quantity_after          Decimal   @db.Decimal(15, 6)
+  unit_cost               Decimal?  @db.Decimal(18, 6)
+  total_cost              Decimal?  @db.Decimal(20, 6)
+  reference_type          String?   @db.VarChar(50)
+  reference_id            String?   @db.VarChar(200)
+  reference_number        String?   @db.VarChar(200)
+  source_system           String?   @db.VarChar(30)
+  external_transaction_id String?   @db.VarChar(200)
+  external_data           Json?
+  movement_date           DateTime? @default(now()) @db.Timestamp(6)
+  posting_date            DateTime? @default(dbgenerated("CURRENT_DATE")) @db.Date
+  created_by              String?   @db.VarChar(100)
+  notes                   String?
+  created_at              DateTime? @default(now()) @db.Timestamp(6)
 }
 
 model organizations {
@@ -169,6 +157,20 @@ model product_categories {
   products                 products[]
 
   @@unique([organization_id, name], map: "uq_org_name")
+}
+
+model product_embeddings {
+  id              Int                    @id @default(autoincrement())
+  product_id      String                 @db.VarChar(255)
+  organization_id String                 @db.VarChar(255)
+  embedding       Unsupported("vector")?
+  metadata        Json?
+  created_at      DateTime?              @default(now()) @db.Timestamp(6)
+  updated_at      DateTime?              @default(now()) @db.Timestamp(6)
+
+  @@unique([product_id, organization_id])
+  @@index([organization_id], map: "idx_embeddings_org")
+  @@index([embedding], map: "idx_embeddings_vector")
 }
 
 model products {
@@ -206,29 +208,54 @@ model products {
   product_categories product_categories?  @relation(fields: [category_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
 }
 
-model inventory_movements {
-  id                      String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  organization_id         String    @db.Uuid
-  product_id              String    @db.Uuid
-  location_code           String?   @default("MAIN") @db.VarChar(100)
-  movement_type           String    @db.VarChar(30)
-  transaction_type        String    @db.VarChar(40)
-  quantity_before         Decimal   @db.Decimal(15, 6)
-  quantity_change         Decimal   @db.Decimal(15, 6)
-  quantity_after          Decimal   @db.Decimal(15, 6)
-  unit_cost               Decimal?  @db.Decimal(18, 6)
-  total_cost              Decimal?  @db.Decimal(20, 6)
-  reference_type          String?   @db.VarChar(50)
-  reference_id            String?   @db.VarChar(200)
-  reference_number        String?   @db.VarChar(200)
-  source_system           String?   @db.VarChar(30)
-  external_transaction_id String?   @db.VarChar(200)
-  external_data           Json?
-  movement_date           DateTime? @default(now()) @db.Timestamp(6)
-  posting_date            DateTime? @default(dbgenerated("CURRENT_DATE")) @db.Date
-  created_by              String?   @db.VarChar(100)
-  notes                   String?
-  created_at              DateTime? @default(now()) @db.Timestamp(6)
+model shops {
+  id              Int     @id @default(autoincrement())
+  shop_name       String  @db.VarChar(50)
+  gst_number      String  @db.Char(15)
+  address         String
+  pan             String? @db.Char(10)
+  mobile_num      String? @db.VarChar(15)
+  language        String? @default("en") @db.VarChar
+  zoho_contact_id String? @db.VarChar(100)
+}
+
+model whatsappMessage {
+  id               Int       @id @default(autoincrement())
+  messageSid       String?   @unique
+  refInboundSid    String?
+  to               String
+  from             String
+  body             String?
+  providerResponse Json?
+  direction        String
+  sentAt           DateTime? @db.Timestamp(6)
+  receivedAt       DateTime? @db.Timestamp(6)
+  createdAt        DateTime  @default(now()) @db.Timestamp(6)
+}
+
+model whatsapp_templates {
+  id         Int      @id @default(autoincrement())
+  sid        String   @db.VarChar(1000)
+  key        String   @db.Char(50)
+  language   String   @db.Char(5)
+  variables  Json
+  is_active  Boolean  @default(true)
+  created_at DateTime @default(now()) @db.Date
+  updated_at DateTime @default(now()) @db.Date
+}
+
+model zoho_user_credential {
+  access_token      String? @db.VarChar
+  refresh_token     String? @db.VarChar
+  organization_id   String  @db.VarChar
+  business_user_id  Int     @unique
+  id                Int     @id @default(autoincrement())
+  client_id         String? @unique(map: "client_id") @db.VarChar
+  client_secret     String? @db.VarChar
+  expires_in        Int?
+  token_acquired_at String? @db.VarChar
+  whatsapp_number   String? @unique
+  code              String?
 }
 
 enum product_source_type {

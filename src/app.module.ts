@@ -13,6 +13,11 @@ import { CacheModule } from "@nestjs/cache-manager";
 // import { RedisOptions } from "./config/redis.config";
 import * as redisStore from "cache-manager-ioredis";
 import { ServeStaticModule } from "@nestjs/serve-static";
+import { BullMQModule } from "./config/bullmq.module";
+import { ZohoSyncService } from "./integrations/crm/zoho/zoho-sync.service";
+import { InventoryDatabaseService } from "./integrations/dbsync/inventory-database.service";
+import { ProductsModule } from "./features/products/products.module";
+import { AIModule } from "./features/ai/ai.module";
 
 @Module({
   imports: [
@@ -29,12 +34,17 @@ import { ServeStaticModule } from "@nestjs/serve-static";
     CustomersModule,
     WhatsAppModule,
     CrmModule,
+    ProductsModule,
+    AIModule,
+    BullMQModule,
   ],
   providers: [
     {
       provide: APP_FILTER,
       useClass: GlobalExceptionFilter,
     },
+    ZohoSyncService,
+    InventoryDatabaseService,
   ],
 })
 export class AppModule {

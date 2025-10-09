@@ -30,9 +30,14 @@ export class SessionService {
       orderBy: { updatedAt: "desc" },
     });
     if (dbSession) {
+      // Ensure context is an object
+      if (typeof dbSession.context === "string") {
+        dbSession.context = JSON.parse(dbSession.context);
+      }
+
       // Hydrate cache for next time
       await this.cache.set(redisKey, JSON.stringify(dbSession), 86400);
-      return dbSession as any; // Cast to ConverstationSession
+      return dbSession as any;
     }
     return null;
   }
@@ -51,6 +56,7 @@ export class SessionService {
         phoneNumber: session.phoneNumber,
         context: JSON.stringify(session.context),
         currentStep: session.currentStep,
+        updatedAt: new Date(),
       },
       update: {
         context: JSON.stringify(session.context),
@@ -104,7 +110,10 @@ export class SessionService {
     payload?: any;
   }) {
     await this.prisma.conversationEvent.create({
-      data: { ...params },
+      data: {
+        id: `${params.sessionId}_${params.eventType}_${Date.now()}`,
+        ...params
+      },
     });
   }
 

@@ -1,13 +1,35 @@
 import { ConversationStep } from "./conversation-state-machine.enum";
+import { IntentDetectionResult } from "../services/intent-detection.service";
 
 export interface ConversationContext {
   distributorPhoneNumber?: string;
-  cart: { product: any; quantity: number; price: number }[];
+  phoneNumber?: string;
+  productList: {
+    name: string;
+    quantity: number;
+    price?: number;
+    productId?: string;
+    available?: boolean;
+    confidence?: number;
+  }[];
   userDetails: any;
-  paymentMethod: string | null;
   lastMessageTimestamp: Date;
   messageCount: number;
   errorCount: number;
+  isNewUser: boolean;
+  orderTotal?: number;
+  unmatchedProducts?: any[];
+  originalParsedProducts?: any[];
+  productMatchingError?: boolean;
+  catalogPage?: number;
+  catalogTotalPages?: number;
+  lastUserInput?: string;
+  lastDetectedIntent?: IntentDetectionResult;
+  // Zoho Sales Order fields
+  zohoSalesOrderId?: string;
+  zohoSalesOrderNumber?: string;
+  zohoSalesOrderStatus?: string;
+  zohoSalesOrderError?: string;
 }
 
 export interface ConversationSession {
