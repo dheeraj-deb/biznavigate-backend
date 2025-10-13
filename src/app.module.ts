@@ -3,21 +3,13 @@ import { APP_FILTER } from "@nestjs/core";
 import { AppConfigModule } from "./core/config/config.module";
 // import { PrismaModule } from "./core/prisma/prisma.module";
 import { LoggerModule } from "./core/logging/logger.module";
-import { UsersModule } from "./features/users/users.module";
 import { GlobalExceptionFilter } from "./common/filters/global-exception.filter";
-import { WhatsAppModule } from "./integrations/whatsapp/whatsapp.module";
-import { CrmModule } from "./integrations/crm/crm.module";
+
 import { PrismaModule } from "./prisma/prisma.module";
-import { CustomersModule } from "./features/customers/customers.module";
 import { CacheModule } from "@nestjs/cache-manager";
 // import { RedisOptions } from "./config/redis.config";
 import * as redisStore from "cache-manager-ioredis";
-import { ServeStaticModule } from "@nestjs/serve-static";
 import { BullMQModule } from "./config/bullmq.module";
-import { ZohoSyncService } from "./integrations/crm/zoho/zoho-sync.service";
-import { InventoryDatabaseService } from "./integrations/dbsync/inventory-database.service";
-import { ProductsModule } from "./features/products/products.module";
-import { AIModule } from "./features/ai/ai.module";
 
 @Module({
   imports: [
@@ -30,12 +22,6 @@ import { AIModule } from "./features/ai/ai.module";
     }),
     LoggerModule,
     PrismaModule,
-    UsersModule,
-    CustomersModule,
-    WhatsAppModule,
-    CrmModule,
-    ProductsModule,
-    AIModule,
     BullMQModule,
   ],
   providers: [
@@ -43,8 +29,6 @@ import { AIModule } from "./features/ai/ai.module";
       provide: APP_FILTER,
       useClass: GlobalExceptionFilter,
     },
-    ZohoSyncService,
-    InventoryDatabaseService,
   ],
 })
 export class AppModule {

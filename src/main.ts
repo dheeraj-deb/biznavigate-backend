@@ -13,7 +13,7 @@ async function bootstrap() {
       forbidUnknownValues: true,
     })
   );
-
+  
   app.use("/public", express.static(join(__dirname, "..", "public")));
 
   await app.listen(3000);
