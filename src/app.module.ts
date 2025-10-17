@@ -10,6 +10,11 @@ import { CacheModule } from "@nestjs/cache-manager";
 // import { RedisOptions } from "./config/redis.config";
 import * as redisStore from "cache-manager-ioredis";
 import { BullMQModule } from "./config/bullmq.module";
+import { TenantsModule } from "./features/tenants/tenants.module";
+import { BusinessesModule } from "./features/business/business.module";
+import { SubscriptionsModule } from "./features/subscriptions/subscription.module";
+import { RolesModule } from "./features/roles/role.module";
+import { UsersModule } from "./features/users/user.module";
 
 @Module({
   imports: [
@@ -23,6 +28,11 @@ import { BullMQModule } from "./config/bullmq.module";
     LoggerModule,
     PrismaModule,
     BullMQModule,
+    TenantsModule,
+    BusinessesModule,
+    SubscriptionsModule,
+    RolesModule,
+    UsersModule,
   ],
   providers: [
     {

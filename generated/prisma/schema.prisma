@@ -8,257 +8,119 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model ConversationEvent {
-  id                  String              @id
-  sessionId           String
-  eventType           String
-  stepFrom            String?
-  stepTo              String?
-  payload             Json?
-  createdAt           DateTime            @default(now())
-  ConversationSession ConversationSession @relation(fields: [sessionId], references: [id])
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+model businesses {
+  business_id          String              @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  tenant_id            String              @db.Uuid
+  business_name        String              @db.VarChar(255)
+  business_type        String?             @db.VarChar(50)
+  subscription_plan_id String?             @db.Uuid
+  whatsapp_number      String?             @db.VarChar(20)
+  brand_colors         Json?
+  logo_url             String?
+  working_hours        Json?
+  created_at           DateTime?           @default(now()) @db.Timestamptz(6)
+  updated_at           DateTime?           @default(now()) @db.Timestamptz(6)
+  subscription_plans   subscription_plans? @relation(fields: [subscription_plan_id], references: [subscription_plan_id])
+  tenants              tenants             @relation(fields: [tenant_id], references: [tenant_id], onDelete: Cascade)
+  social_accounts      social_accounts[]
+  users                users[]
+
+  @@index([tenant_id], map: "idx_businesses_tenant_id")
 }
 
-model ConversationMessage {
-  id        String   @id
-  sessionId String
-  message   String
-  fromUser  Boolean
-  createdAt DateTime @default(now())
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+model social_accounts {
+  account_id       String     @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  business_id      String     @db.Uuid
+  platform         String     @db.VarChar(50)
+  platform_user_id String     @db.VarChar(255)
+  page_id          String?    @db.VarChar(255)
+  access_token     String
+  permissions      Json?
+  token_expiry     DateTime?  @db.Timestamptz(6)
+  is_active        Boolean?   @default(true)
+  created_at       DateTime?  @default(now()) @db.Timestamptz(6)
+  businesses       businesses @relation(fields: [business_id], references: [business_id], onDelete: Cascade, onUpdate: NoAction)
+
+  @@index([business_id], map: "idx_social_accounts_business_id")
+  @@index([platform_user_id], map: "idx_social_accounts_platform_user")
 }
 
-model ConversationSession {
-  id                String              @id
-  userId            String
-  phoneNumber       String
-  context           Json
-  currentStep       String
-  createdAt         DateTime            @default(now())
-  updatedAt         DateTime
-  lastEvent         String?
-  ConversationEvent ConversationEvent[]
+model subscription_plans {
+  subscription_plan_id String       @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  plan_name            String       @db.VarChar(100)
+  price                Decimal?     @db.Decimal(10, 2)
+  duration_in_days     Int?
+  created_at           DateTime?    @default(now()) @db.Timestamptz(6)
+  businesses           businesses[]
 }
 
-model OnboardingSession {
-  id           Int      @id @default(autoincrement())
-  phone_number String
-  step_index   Int
-  session_id   String   @unique
-  created_at   DateTime @default(now())
-  updated_at   DateTime
-  status       String
+model tenants {
+  tenant_id       String       @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  tenant_name     String       @db.VarChar(255)
+  email           String       @unique
+  phone_number    String?      @db.VarChar(20)
+  created_at      DateTime?    @default(now()) @db.Timestamptz(6)
+  updated_at      DateTime?    @default(now()) @db.Timestamptz(6)
+  address         String?      @db.VarChar(255)
+  gst_number      String?      @db.VarChar(20)
+  pan_number      String?      @db.VarChar(20)
+  registration_no String?      @db.VarChar(50)
+  businesses      businesses[]
 }
 
-model business_user {
-  businessName           String   @db.VarChar(100)
-  gstin                  String   @db.VarChar(15)
-  contactEmail           String   @db.VarChar(100)
-  contactPhone           String   @db.VarChar(15)
-  address                String
-  notificationPreference String   @db.VarChar(20)
-  customerId             String   @unique
-  id                     Int      @id @default(autoincrement())
-  platformId             Decimal? @db.Decimal
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+
+model roles {
+  role_id     String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  role_name   String   @unique
+  permissions Json?
+  created_at  DateTime @default(now())
+  users       users[]
 }
 
-model integrations {
-  name String @db.VarChar
-  id   Int    @id @default(autoincrement())
+model role_intents {
+  role_id    String    @db.Uuid
+  intent_id  String    @db.Uuid
+  created_at DateTime? @default(now()) @db.Timestamptz(6)
+
+  intent intents @relation(fields: [intent_id], references: [intent_id])
+
+  @@id([role_id, intent_id])
 }
 
-model inventory_current {
-  id                    String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  organization_id       String?   @db.Uuid
-  product_id            String    @db.VarChar(100)
-  location_code         String?   @default("MAIN") @db.VarChar(100)
-  location_name         String?   @default("Main Location") @db.VarChar(200)
-  quantity_on_hand      Decimal   @default(0) @db.Decimal(15, 6)
-  available_stock       Decimal   @default(0) @db.Decimal(15, 6)
-  reserved_stock        Decimal   @default(0) @db.Decimal(15, 6)
-  on_order_stock        Decimal   @default(0) @db.Decimal(15, 6)
-  minimum_stock         Decimal   @default(0) @db.Decimal(15, 6)
-  maximum_stock         Decimal?  @db.Decimal(15, 6)
-  reorder_point         Decimal?  @db.Decimal(15, 6)
-  average_cost          Decimal   @default(0) @db.Decimal(18, 6)
-  last_purchase_cost    Decimal   @default(0) @db.Decimal(18, 6)
-  standard_cost         Decimal   @default(0) @db.Decimal(18, 6)
-  total_value           Decimal?  @default(dbgenerated("(quantity_on_hand * average_cost)")) @db.Decimal(20, 6)
-  is_low_stock          Boolean   @default(false)
-  is_out_of_stock       Boolean   @default(false)
-  needs_reorder         Boolean   @default(false)
-  last_synced_zoho      DateTime? @db.Timestamp(6)
-  last_synced_tally     DateTime? @db.Timestamp(6)
-  last_synced_custom    DateTime? @db.Timestamp(6)
-  last_movement_date    DateTime? @default(now()) @db.Timestamp(6)
-  last_stock_count_date DateTime? @db.Date
-  version_number        BigInt    @default(1)
-  created_at            DateTime? @default(now()) @db.Timestamp(6)
-  updated_at            DateTime? @default(now()) @db.Timestamp(6)
+model intents {
+  intent_id   String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  intent_name String    @db.VarChar(100)
+  created_at  DateTime? @default(now()) @db.Timestamptz(6)
 
-  @@unique([organization_id, product_id, location_code], map: "uq_inventory")
-  @@index([organization_id, location_code], map: "idx_inventory_location")
-  @@index([organization_id, product_id], map: "idx_inventory_org_product")
+  role_intents  role_intents[]
+  notifications notifications[]
 }
 
-model inventory_movements {
-  id                      String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  organization_id         String    @db.Uuid
-  product_id              String    @db.Uuid
-  location_code           String?   @default("MAIN") @db.VarChar(100)
-  movement_type           String    @db.VarChar(30)
-  transaction_type        String    @db.VarChar(40)
-  quantity_before         Decimal   @db.Decimal(15, 6)
-  quantity_change         Decimal   @db.Decimal(15, 6)
-  quantity_after          Decimal   @db.Decimal(15, 6)
-  unit_cost               Decimal?  @db.Decimal(18, 6)
-  total_cost              Decimal?  @db.Decimal(20, 6)
-  reference_type          String?   @db.VarChar(50)
-  reference_id            String?   @db.VarChar(200)
-  reference_number        String?   @db.VarChar(200)
-  source_system           String?   @db.VarChar(30)
-  external_transaction_id String?   @db.VarChar(200)
-  external_data           Json?
-  movement_date           DateTime? @default(now()) @db.Timestamp(6)
-  posting_date            DateTime? @default(dbgenerated("CURRENT_DATE")) @db.Date
-  created_by              String?   @db.VarChar(100)
-  notes                   String?
-  created_at              DateTime? @default(now()) @db.Timestamp(6)
+model notifications {
+  notification_id String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  user_id         String    @db.Uuid
+  intent_id       String    @db.Uuid
+  message         String
+  read_status     Boolean   @default(false)
+  created_at      DateTime? @default(now()) @db.Timestamptz(6)
+
+  user   users   @relation(fields: [user_id], references: [user_id])
+  intent intents @relation(fields: [intent_id], references: [intent_id])
 }
 
-model organizations {
-  id           String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  name         String    @db.VarChar(200)
-  code         String?   @unique @db.VarChar(50)
-  tax_id       String?   @db.VarChar(50)
-  address      Json?
-  contact_info Json?
-  settings     Json?
-  created_at   DateTime? @default(now()) @db.Timestamp(6)
-  updated_at   DateTime? @default(now()) @db.Timestamp(6)
-}
+model users {
+  user_id     String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  business_id String    @db.Uuid
+  role_id     String    @db.Uuid // ✅ matches roles.role_id
+  email       String    @unique @db.VarChar(255)
+  name        String    @db.VarChar(255)
+  is_active   Boolean?  @default(true)
+  created_at  DateTime? @default(now()) @db.Timestamptz(6)
 
-model product_categories {
-  id                       String               @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  organization_id          String               @db.Uuid
-  name                     String               @db.VarChar(300)
-  code                     String?              @db.VarChar(100)
-  description              String?
-  parent_id                String?              @db.Uuid
-  level                    Int?                 @default(1)
-  sort_order               Int?                 @default(0)
-  is_active                Boolean?             @default(true)
-  zoho_group_id            String?              @db.VarChar(50)
-  tally_category           String?              @db.VarChar(100)
-  custom_category_id       String?              @db.VarChar(100)
-  created_at               DateTime?            @default(now()) @db.Timestamp(6)
-  updated_at               DateTime?            @default(now()) @db.Timestamp(6)
-  product_categories       product_categories?  @relation("product_categoriesToproduct_categories", fields: [parent_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  other_product_categories product_categories[] @relation("product_categoriesToproduct_categories")
-  products                 products[]
-
-  @@unique([organization_id, name], map: "uq_org_name")
-}
-
-model product_embeddings {
-  id              Int                    @id @default(autoincrement())
-  product_id      String                 @db.VarChar(255)
-  organization_id String                 @db.VarChar(255)
-  embedding       Unsupported("vector")?
-  metadata        Json?
-  created_at      DateTime?              @default(now()) @db.Timestamp(6)
-  updated_at      DateTime?              @default(now()) @db.Timestamp(6)
-
-  @@unique([product_id, organization_id])
-  @@index([organization_id], map: "idx_embeddings_org")
-  @@index([embedding], map: "idx_embeddings_vector")
-}
-
-model products {
-  id                 String               @id @db.Uuid
-  organization_id    String
-  category_id        String?              @db.Uuid
-  name               String               @db.VarChar(500)
-  description        String?
-  status             String?              @default("active") @db.VarChar(20)
-  product_type       String?              @default("goods") @db.VarChar(50)
-  sku                String?              @db.VarChar(200)
-  part_number        String?              @db.VarChar(100)
-  hsn_code           String?              @db.VarChar(20)
-  selling_price      Decimal?             @default(0) @db.Decimal(15, 4)
-  purchase_price     Decimal?             @default(0) @db.Decimal(15, 4)
-  mrp                Decimal?             @db.Decimal(15, 4)
-  is_taxable         Boolean?             @default(true)
-  tax_rate           Decimal?             @default(0) @db.Decimal(5, 2)
-  tax_name           String?              @db.VarChar(100)
-  reorder_level      Decimal?             @default(0) @db.Decimal(12, 3)
-  maximum_stock      Decimal?             @db.Decimal(12, 3)
-  attributes         Json?
-  images             Json?
-  zoho_item_id       String?              @db.VarChar(50)
-  tally_item_name    String?              @db.VarChar(300)
-  custom_item_id     String?              @db.VarChar(100)
-  last_synced_zoho   DateTime?            @db.Timestamp(6)
-  last_synced_tally  DateTime?            @db.Timestamp(6)
-  last_synced_custom DateTime?            @db.Timestamp(6)
-  sync_errors        Json?
-  created_at         DateTime?            @default(now()) @db.Timestamp(6)
-  updated_at         DateTime?            @default(now()) @db.Timestamp(6)
-  created_by         String?              @db.VarChar(100)
-  source_type        product_source_type?
-  product_categories product_categories?  @relation(fields: [category_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
-}
-
-model shops {
-  id         Int     @id @default(autoincrement())
-  shop_name  String  @db.VarChar(50)
-  gst_number String  @db.Char(15)
-  address    String
-  pan        String? @db.Char(10)
-  mobile_num String? @db.VarChar(15)
-  language   String? @default("en") @db.VarChar
-}
-
-model whatsappMessage {
-  id               Int       @id @default(autoincrement())
-  messageSid       String?   @unique
-  refInboundSid    String?
-  to               String
-  from             String
-  body             String?
-  providerResponse Json?
-  direction        String
-  sentAt           DateTime? @db.Timestamp(6)
-  receivedAt       DateTime? @db.Timestamp(6)
-  createdAt        DateTime  @default(now()) @db.Timestamp(6)
-}
-
-model whatsapp_templates {
-  id         Int      @id @default(autoincrement())
-  sid        String   @db.VarChar(1000)
-  key        String   @db.Char(50)
-  language   String   @db.Char(5)
-  variables  Json
-  is_active  Boolean  @default(true)
-  created_at DateTime @default(now()) @db.Date
-  updated_at DateTime @default(now()) @db.Date
-}
-
-model zoho_user_credential {
-  access_token      String? @db.VarChar
-  refresh_token     String? @db.VarChar
-  organization_id   String  @db.VarChar
-  business_user_id  Int     @unique
-  id                Int     @id @default(autoincrement())
-  client_id         String? @unique(map: "client_id") @db.VarChar
-  client_secret     String? @db.VarChar
-  expires_in        Int?
-  token_acquired_at String? @db.VarChar
-  whatsapp_number   String? @unique
-  code              String?
-}
-
-enum product_source_type {
-  zoho
-  tally
-  custom
+  businesses    businesses      @relation(fields: [business_id], references: [business_id], onDelete: Cascade)
+  role          roles           @relation(fields: [role_id], references: [role_id])
+  notifications notifications[]
 }

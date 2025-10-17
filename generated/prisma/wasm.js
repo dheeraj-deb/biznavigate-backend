@@ -20,12 +20,12 @@ exports.Prisma = Prisma
 exports.$Enums = {}
 
 /**
- * Prisma Client JS version: 6.7.0
- * Query Engine version: 3cff47a7f5d65c3ea74883f1d736e41d68ce91ed
+ * Prisma Client JS version: 6.15.0
+ * Query Engine version: 85179d7826409ee107a6ba334b5e305ae3fba9fb
  */
 Prisma.prismaVersion = {
-  client: "6.7.0",
-  engine: "3cff47a7f5d65c3ea74883f1d736e41d68ce91ed"
+  client: "6.15.0",
+  engine: "85179d7826409ee107a6ba334b5e305ae3fba9fb"
 }
 
 Prisma.PrismaClientKnownRequestError = () => {
@@ -120,237 +120,90 @@ exports.Prisma.TransactionIsolationLevel = makeStrictEnum({
   Serializable: 'Serializable'
 });
 
-exports.Prisma.ConversationEventScalarFieldEnum = {
-  id: 'id',
-  sessionId: 'sessionId',
-  eventType: 'eventType',
-  stepFrom: 'stepFrom',
-  stepTo: 'stepTo',
-  payload: 'payload',
-  createdAt: 'createdAt'
-};
-
-exports.Prisma.ConversationMessageScalarFieldEnum = {
-  id: 'id',
-  sessionId: 'sessionId',
-  message: 'message',
-  fromUser: 'fromUser',
-  createdAt: 'createdAt'
-};
-
-exports.Prisma.ConversationSessionScalarFieldEnum = {
-  id: 'id',
-  userId: 'userId',
-  phoneNumber: 'phoneNumber',
-  context: 'context',
-  currentStep: 'currentStep',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt',
-  lastEvent: 'lastEvent'
-};
-
-exports.Prisma.OnboardingSessionScalarFieldEnum = {
-  id: 'id',
-  phone_number: 'phone_number',
-  step_index: 'step_index',
-  session_id: 'session_id',
-  created_at: 'created_at',
-  updated_at: 'updated_at',
-  status: 'status'
-};
-
-exports.Prisma.Business_userScalarFieldEnum = {
-  businessName: 'businessName',
-  gstin: 'gstin',
-  contactEmail: 'contactEmail',
-  contactPhone: 'contactPhone',
-  address: 'address',
-  notificationPreference: 'notificationPreference',
-  customerId: 'customerId',
-  id: 'id',
-  platformId: 'platformId'
-};
-
-exports.Prisma.IntegrationsScalarFieldEnum = {
-  name: 'name',
-  id: 'id'
-};
-
-exports.Prisma.Inventory_currentScalarFieldEnum = {
-  id: 'id',
-  organization_id: 'organization_id',
-  product_id: 'product_id',
-  location_code: 'location_code',
-  location_name: 'location_name',
-  quantity_on_hand: 'quantity_on_hand',
-  available_stock: 'available_stock',
-  reserved_stock: 'reserved_stock',
-  on_order_stock: 'on_order_stock',
-  minimum_stock: 'minimum_stock',
-  maximum_stock: 'maximum_stock',
-  reorder_point: 'reorder_point',
-  average_cost: 'average_cost',
-  last_purchase_cost: 'last_purchase_cost',
-  standard_cost: 'standard_cost',
-  total_value: 'total_value',
-  is_low_stock: 'is_low_stock',
-  is_out_of_stock: 'is_out_of_stock',
-  needs_reorder: 'needs_reorder',
-  last_synced_zoho: 'last_synced_zoho',
-  last_synced_tally: 'last_synced_tally',
-  last_synced_custom: 'last_synced_custom',
-  last_movement_date: 'last_movement_date',
-  last_stock_count_date: 'last_stock_count_date',
-  version_number: 'version_number',
+exports.Prisma.BusinessesScalarFieldEnum = {
+  business_id: 'business_id',
+  tenant_id: 'tenant_id',
+  business_name: 'business_name',
+  business_type: 'business_type',
+  subscription_plan_id: 'subscription_plan_id',
+  whatsapp_number: 'whatsapp_number',
+  brand_colors: 'brand_colors',
+  logo_url: 'logo_url',
+  working_hours: 'working_hours',
   created_at: 'created_at',
   updated_at: 'updated_at'
 };
 
-exports.Prisma.Inventory_movementsScalarFieldEnum = {
-  id: 'id',
-  organization_id: 'organization_id',
-  product_id: 'product_id',
-  location_code: 'location_code',
-  movement_type: 'movement_type',
-  transaction_type: 'transaction_type',
-  quantity_before: 'quantity_before',
-  quantity_change: 'quantity_change',
-  quantity_after: 'quantity_after',
-  unit_cost: 'unit_cost',
-  total_cost: 'total_cost',
-  reference_type: 'reference_type',
-  reference_id: 'reference_id',
-  reference_number: 'reference_number',
-  source_system: 'source_system',
-  external_transaction_id: 'external_transaction_id',
-  external_data: 'external_data',
-  movement_date: 'movement_date',
-  posting_date: 'posting_date',
-  created_by: 'created_by',
-  notes: 'notes',
+exports.Prisma.Social_accountsScalarFieldEnum = {
+  account_id: 'account_id',
+  business_id: 'business_id',
+  platform: 'platform',
+  platform_user_id: 'platform_user_id',
+  page_id: 'page_id',
+  access_token: 'access_token',
+  permissions: 'permissions',
+  token_expiry: 'token_expiry',
+  is_active: 'is_active',
   created_at: 'created_at'
 };
 
-exports.Prisma.OrganizationsScalarFieldEnum = {
-  id: 'id',
-  name: 'name',
-  code: 'code',
-  tax_id: 'tax_id',
-  address: 'address',
-  contact_info: 'contact_info',
-  settings: 'settings',
-  created_at: 'created_at',
-  updated_at: 'updated_at'
+exports.Prisma.Subscription_plansScalarFieldEnum = {
+  subscription_plan_id: 'subscription_plan_id',
+  plan_name: 'plan_name',
+  price: 'price',
+  duration_in_days: 'duration_in_days',
+  created_at: 'created_at'
 };
 
-exports.Prisma.Product_categoriesScalarFieldEnum = {
-  id: 'id',
-  organization_id: 'organization_id',
-  name: 'name',
-  code: 'code',
-  description: 'description',
-  parent_id: 'parent_id',
-  level: 'level',
-  sort_order: 'sort_order',
-  is_active: 'is_active',
-  zoho_group_id: 'zoho_group_id',
-  tally_category: 'tally_category',
-  custom_category_id: 'custom_category_id',
-  created_at: 'created_at',
-  updated_at: 'updated_at'
-};
-
-exports.Prisma.Product_embeddingsScalarFieldEnum = {
-  id: 'id',
-  product_id: 'product_id',
-  organization_id: 'organization_id',
-  metadata: 'metadata',
-  created_at: 'created_at',
-  updated_at: 'updated_at'
-};
-
-exports.Prisma.ProductsScalarFieldEnum = {
-  id: 'id',
-  organization_id: 'organization_id',
-  category_id: 'category_id',
-  name: 'name',
-  description: 'description',
-  status: 'status',
-  product_type: 'product_type',
-  sku: 'sku',
-  part_number: 'part_number',
-  hsn_code: 'hsn_code',
-  selling_price: 'selling_price',
-  purchase_price: 'purchase_price',
-  mrp: 'mrp',
-  is_taxable: 'is_taxable',
-  tax_rate: 'tax_rate',
-  tax_name: 'tax_name',
-  reorder_level: 'reorder_level',
-  maximum_stock: 'maximum_stock',
-  attributes: 'attributes',
-  images: 'images',
-  zoho_item_id: 'zoho_item_id',
-  tally_item_name: 'tally_item_name',
-  custom_item_id: 'custom_item_id',
-  last_synced_zoho: 'last_synced_zoho',
-  last_synced_tally: 'last_synced_tally',
-  last_synced_custom: 'last_synced_custom',
-  sync_errors: 'sync_errors',
+exports.Prisma.TenantsScalarFieldEnum = {
+  tenant_id: 'tenant_id',
+  tenant_name: 'tenant_name',
+  email: 'email',
+  phone_number: 'phone_number',
   created_at: 'created_at',
   updated_at: 'updated_at',
-  created_by: 'created_by',
-  source_type: 'source_type'
-};
-
-exports.Prisma.ShopsScalarFieldEnum = {
-  id: 'id',
-  shop_name: 'shop_name',
-  gst_number: 'gst_number',
   address: 'address',
-  pan: 'pan',
-  mobile_num: 'mobile_num',
-  language: 'language',
-  zoho_contact_id: 'zoho_contact_id'
+  gst_number: 'gst_number',
+  pan_number: 'pan_number',
+  registration_no: 'registration_no'
 };
 
-exports.Prisma.WhatsappMessageScalarFieldEnum = {
-  id: 'id',
-  messageSid: 'messageSid',
-  refInboundSid: 'refInboundSid',
-  to: 'to',
-  from: 'from',
-  body: 'body',
-  providerResponse: 'providerResponse',
-  direction: 'direction',
-  sentAt: 'sentAt',
-  receivedAt: 'receivedAt',
-  createdAt: 'createdAt'
+exports.Prisma.RolesScalarFieldEnum = {
+  role_id: 'role_id',
+  role_name: 'role_name',
+  permissions: 'permissions',
+  created_at: 'created_at'
 };
 
-exports.Prisma.Whatsapp_templatesScalarFieldEnum = {
-  id: 'id',
-  sid: 'sid',
-  key: 'key',
-  language: 'language',
-  variables: 'variables',
+exports.Prisma.Role_intentsScalarFieldEnum = {
+  role_id: 'role_id',
+  intent_id: 'intent_id',
+  created_at: 'created_at'
+};
+
+exports.Prisma.IntentsScalarFieldEnum = {
+  intent_id: 'intent_id',
+  intent_name: 'intent_name',
+  created_at: 'created_at'
+};
+
+exports.Prisma.NotificationsScalarFieldEnum = {
+  notification_id: 'notification_id',
+  user_id: 'user_id',
+  intent_id: 'intent_id',
+  message: 'message',
+  read_status: 'read_status',
+  created_at: 'created_at'
+};
+
+exports.Prisma.UsersScalarFieldEnum = {
+  user_id: 'user_id',
+  business_id: 'business_id',
+  role_id: 'role_id',
+  email: 'email',
+  name: 'name',
   is_active: 'is_active',
-  created_at: 'created_at',
-  updated_at: 'updated_at'
-};
-
-exports.Prisma.Zoho_user_credentialScalarFieldEnum = {
-  access_token: 'access_token',
-  refresh_token: 'refresh_token',
-  organization_id: 'organization_id',
-  business_user_id: 'business_user_id',
-  id: 'id',
-  client_id: 'client_id',
-  client_secret: 'client_secret',
-  expires_in: 'expires_in',
-  token_acquired_at: 'token_acquired_at',
-  whatsapp_number: 'whatsapp_number',
-  code: 'code'
+  created_at: 'created_at'
 };
 
 exports.Prisma.SortOrder = {
@@ -360,10 +213,6 @@ exports.Prisma.SortOrder = {
 
 exports.Prisma.NullableJsonNullValueInput = {
   DbNull: Prisma.DbNull,
-  JsonNull: Prisma.JsonNull
-};
-
-exports.Prisma.JsonNullValueInput = {
   JsonNull: Prisma.JsonNull
 };
 
@@ -382,29 +231,18 @@ exports.Prisma.NullsOrder = {
   first: 'first',
   last: 'last'
 };
-exports.product_source_type = exports.$Enums.product_source_type = {
-  zoho: 'zoho',
-  tally: 'tally',
-  custom: 'custom'
-};
+
 
 exports.Prisma.ModelName = {
-  ConversationEvent: 'ConversationEvent',
-  ConversationMessage: 'ConversationMessage',
-  ConversationSession: 'ConversationSession',
-  OnboardingSession: 'OnboardingSession',
-  business_user: 'business_user',
-  integrations: 'integrations',
-  inventory_current: 'inventory_current',
-  inventory_movements: 'inventory_movements',
-  organizations: 'organizations',
-  product_categories: 'product_categories',
-  product_embeddings: 'product_embeddings',
-  products: 'products',
-  shops: 'shops',
-  whatsappMessage: 'whatsappMessage',
-  whatsapp_templates: 'whatsapp_templates',
-  zoho_user_credential: 'zoho_user_credential'
+  businesses: 'businesses',
+  social_accounts: 'social_accounts',
+  subscription_plans: 'subscription_plans',
+  tenants: 'tenants',
+  roles: 'roles',
+  role_intents: 'role_intents',
+  intents: 'intents',
+  notifications: 'notifications',
+  users: 'users'
 };
 
 /**
