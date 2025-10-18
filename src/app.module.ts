@@ -1,9 +1,10 @@
 import { Module } from "@nestjs/common";
-import { APP_FILTER } from "@nestjs/core";
+import { APP_FILTER, APP_INTERCEPTOR } from "@nestjs/core";
 import { AppConfigModule } from "./core/config/config.module";
 // import { PrismaModule } from "./core/prisma/prisma.module";
 import { LoggerModule } from "./core/logging/logger.module";
 import { GlobalExceptionFilter } from "./common/filters/global-exception.filter";
+import { TransformResponseInterceptor } from "./common/interceptors/transform-response.interceptor";
 
 import { PrismaModule } from "./prisma/prisma.module";
 import { CacheModule } from "@nestjs/cache-manager";
@@ -15,6 +16,7 @@ import { BusinessesModule } from "./features/business/business.module";
 import { SubscriptionsModule } from "./features/subscriptions/subscription.module";
 import { RolesModule } from "./features/roles/role.module";
 import { UsersModule } from "./features/users/user.module";
+import { LeadModule } from "./features/lead/lead.module";
 
 @Module({
   imports: [
@@ -33,11 +35,16 @@ import { UsersModule } from "./features/users/user.module";
     SubscriptionsModule,
     RolesModule,
     UsersModule,
+    LeadModule,
   ],
   providers: [
     {
       provide: APP_FILTER,
       useClass: GlobalExceptionFilter,
+    },
+    {
+      provide: APP_INTERCEPTOR,
+      useClass: TransformResponseInterceptor,
     },
   ],
 })
