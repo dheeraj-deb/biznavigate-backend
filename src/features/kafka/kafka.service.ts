@@ -16,7 +16,7 @@ export class KafkaService implements OnModuleInit, OnModuleDestroy {
 
   constructor(private readonly configService: ConfigService) {
     const brokers = this.configService
-      .get<string>('KAFKA_BROKERS', 'localhost:9092')
+      .get<string>('KAFKA_BROKERS', 'localhost:9093')
       .split(',');
 
     const clientId = this.configService.get<string>(
@@ -112,6 +112,11 @@ export class KafkaService implements OnModuleInit, OnModuleDestroy {
         {
           topic: 'ai.error',
           numPartitions: 1,
+          replicationFactor: 1,
+        },
+        {
+          topic: 'workflow-event',
+          numPartitions: 3,
           replicationFactor: 1,
         },
       ];

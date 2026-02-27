@@ -23,7 +23,7 @@ export class WhatsAppCatalogService {
     private readonly prisma: PrismaService,
     private readonly whatsappApiClient: WhatsAppApiClientService,
     private readonly configService: ConfigService,
-  ) {}
+  ) { }
 
   /**
    * Toggle product in WhatsApp catalog
@@ -78,22 +78,34 @@ export class WhatsAppCatalogService {
   /**
    * Get all catalog products for a business
    */
-  async getCatalogProducts(businessId: string) {
-    return this.prisma.products.findMany({
-      where: {
+  async getCatalogProducts(businessId: string, filters?: Record<string, any>) {
+    try {
+      const whereClause: any = {
         business_id: businessId,
         in_whatsapp_catalog: true,
         is_active: true,
-      },
-      include: {
-        product_images: {
-          where: { is_primary: true },
-          take: 1,
+      };
+
+      // Apply additional filters if provided
+      if (filters) {
+        Object.assign(whereClause, filters);
+        console.log('getCatalogProducts where clause:', whereClause);
+      }
+
+      return await this.prisma.products.findMany({
+        where: whereClause,
+        include: {
+          product_images: {
+            where: { is_primary: true },
+            take: 1,
+          },
+          product_categories: true,
         },
-        product_categories: true,
-      },
-      orderBy: { created_at: 'desc' },
-    });
+        orderBy: { created_at: 'desc' },
+      });
+    } catch (error) {
+      throw new BadRequestException('Failed to fetch catalog products');
+    }
   }
 
   /**
@@ -325,6 +337,23 @@ export class WhatsAppCatalogService {
         `Failed to remove product: ${error.message}`,
       );
     }
+  }
+
+
+  async getCatalogId(business_id: string): Promise<string> {
+    const account = await this.prisma.social_accounts.findFirst({
+      where: {
+        business_id: business_id,
+        platform: 'whatsapp',
+        is_active: true,
+      },
+    });
+
+    if (!account || !account.whatsapp_catalog_id) {
+      throw new Error(`No WhatsApp catalog ID found for business ${business_id}`);
+    }
+
+    return account.whatsapp_catalog_id;
   }
 
   /**

@@ -5,9 +5,11 @@ import { WhatsAppApiClientService } from './infrastructure/whatsapp-api-client.s
 import { CircuitBreakerService } from './infrastructure/circuit-breaker.service';
 import { KafkaProducerService } from '../kafka/kafka-producer.service';
 import { KafkaConsumerService } from '../kafka/kafka-consumer.service';
-import { ConversationStateService, OnboardingStep } from './services/conversation-state.service';
-import { SendWhatsAppMessageDto, SendMessageType, TextDto, InteractiveSendType } from './dto/whatsapp-message.dto';
+import { ConversationStateService } from './services/conversation-state.service';
+import { SendWhatsAppMessageDto, SendMessageType, InteractiveSendType } from './dto/whatsapp-message.dto';
 import * as crypto from 'crypto';
+import { WhatsAppCatalogOrderService } from './services/whatsapp-catalog-order.service';
+import { ConversationService } from '../conversation/conversation.service';
 
 interface PendingContext {
   messageId: string;
@@ -32,7 +34,9 @@ export class WhatsAppService {
     private readonly kafkaConsumer: KafkaConsumerService,
     private readonly conversationState: ConversationStateService,
     private readonly configService: ConfigService,
-  ) {}
+    private readonly catalogOrderService: WhatsAppCatalogOrderService,
+    private readonly conversationService: ConversationService,
+  ) { }
 
   /**
    * Connect WhatsApp account to business
@@ -44,7 +48,6 @@ export class WhatsAppService {
     businessId: string,
   ): Promise<any> {
     try {
-      // Get business and tenant info
       const business = await this.prisma.businesses.findUnique({
         where: { business_id: businessId },
       });
@@ -53,27 +56,24 @@ export class WhatsAppService {
         throw new NotFoundException('Business not found');
       }
 
-      // Get phone number details from WhatsApp API
       const phoneDetails = await this.circuitBreaker.execute(
         `whatsapp-phone-details-${phoneNumberId}`,
         () => this.apiClient.getPhoneNumberDetails(phoneNumberId, accessToken),
       );
 
-      // Calculate token expiry (long-lived tokens last 60 days)
       const tokenExpiry = new Date();
       tokenExpiry.setDate(tokenExpiry.getDate() + 60);
 
-      // Save to database (using page_id for phone_number_id since it's not in schema)
       const account = await this.prisma.social_accounts.create({
         data: {
           business_id: businessId,
           platform: 'whatsapp',
           platform_user_id: phoneDetails.id,
           username: phoneDetails.display_phone_number,
-          page_id: phoneNumberId, // Store phone number ID here
+          page_id: phoneNumberId,
           access_token: this.encryptToken(accessToken),
           token_expiry: tokenExpiry,
-          instagram_business_account_id: whatsappBusinessAccountId, // Reuse for WhatsApp Business Account ID
+          instagram_business_account_id: whatsappBusinessAccountId,
           is_active: true,
         },
       });
@@ -97,16 +97,12 @@ export class WhatsAppService {
    */
   async getWhatsAppAccounts(businessId: string): Promise<any[]> {
     const accounts = await this.prisma.social_accounts.findMany({
-      where: {
-        business_id: businessId,
-        platform: 'whatsapp',
-        is_active: true,
-      },
+      where: { business_id: businessId, platform: 'whatsapp', is_active: true },
       select: {
         account_id: true,
         username: true,
-        page_id: true, // This stores phone_number_id
-        instagram_business_account_id: true, // This stores whatsapp_business_account_id
+        page_id: true,
+        instagram_business_account_id: true,
         is_active: true,
         created_at: true,
       },
@@ -124,11 +120,7 @@ export class WhatsAppService {
    */
   async disconnectAccount(accountId: string, businessId: string): Promise<void> {
     const account = await this.prisma.social_accounts.findFirst({
-      where: {
-        account_id: accountId,
-        business_id: businessId,
-        platform: 'whatsapp',
-      },
+      where: { account_id: accountId, business_id: businessId, platform: 'whatsapp' },
     });
 
     if (!account) {
@@ -152,15 +144,9 @@ export class WhatsAppService {
       const phoneNumberId = metadata.phone_number_id;
       const from = message.from;
       const messageId = message.id;
-      const timestamp = parseInt(message.timestamp) * 1000; // Convert to milliseconds
 
       // 🔒 DEDUPLICATION: Check if this message has already been processed
-      const existingMessage = await this.prisma.lead_messages.findFirst({
-        where: {
-          platform_message_id: messageId,
-        },
-      });
-
+      const existingMessage = await this.conversationService.findMessageByPlatformId(messageId);
       if (existingMessage) {
         this.logger.debug(`⏭️ Message ${messageId} already processed, skipping duplicate`);
         return;
@@ -168,16 +154,10 @@ export class WhatsAppService {
 
       this.logger.log(`📱 WhatsApp message received from ${from}`);
 
-      // Find business by phone number ID (stored in page_id field)
+      // Find business by phone number ID
       const account = await this.prisma.social_accounts.findFirst({
-        where: {
-          platform: 'whatsapp',
-          page_id: phoneNumberId, // phone_number_id is stored in page_id field
-          is_active: true,
-        },
-        include: {
-          businesses: true,
-        },
+        where: { platform: 'whatsapp', page_id: phoneNumberId, is_active: true },
+        include: { businesses: true },
       });
 
       if (!account) {
@@ -189,13 +169,9 @@ export class WhatsAppService {
       const contact = contacts?.find(c => c.wa_id === from);
       const contactName = contact?.profile?.name || from;
 
-      // Create or find existing lead
+      // Create or find existing lead (leads stay in Postgres)
       let lead = await this.prisma.leads.findFirst({
-        where: {
-          business_id: account.business_id,
-          platform_user_id: from,
-          source: 'whatsapp',
-        },
+        where: { business_id: account.business_id, platform_user_id: from, source: 'whatsapp' },
       });
 
       if (!lead) {
@@ -213,7 +189,6 @@ export class WhatsAppService {
             lead_score: 5,
           },
         });
-
         this.logger.log(`New lead created from WhatsApp: ${lead.lead_id}`);
       }
 
@@ -221,6 +196,8 @@ export class WhatsAppService {
       let messageText = '';
       let messageType = message.type;
       let mediaData: any = null;
+
+      console.log('message.type==>', message.type);
 
       switch (message.type) {
         case 'text':
@@ -239,14 +216,15 @@ export class WhatsAppService {
         case 'interactive':
           if (message.interactive?.type === 'button_reply') {
             messageText = message.interactive.button_reply?.title || '';
-            // Store button ID for direct intent mapping
             (message as any).buttonId = message.interactive.button_reply?.id;
           } else if (message.interactive?.type === 'list_reply') {
             messageText = message.interactive.list_reply?.title || '';
-            // Store list item ID for direct intent mapping
             (message as any).buttonId = message.interactive.list_reply?.id;
           }
           break;
+        case 'order':
+          await this.catalogOrderService.handleCatalogOrder(message, metadata, contacts);
+          return;
         case 'reaction':
           messageText = `Reacted with ${message.reaction?.emoji || 'removed reaction'}`;
           break;
@@ -254,45 +232,40 @@ export class WhatsAppService {
           messageText = `[Unsupported message type: ${message.type}]`;
       }
 
-      // Find or create conversation
-      let conversation = await this.prisma.lead_conversations.findFirst({
-        where: {
-          lead_id: lead.lead_id,
-          channel: 'whatsapp',
-          status: 'active',
-        },
-      });
+      // Find or create conversation in MongoDB
+      let conversation = await this.conversationService.findActiveConversation(lead.lead_id, 'whatsapp');
 
       if (!conversation) {
-        conversation = await this.prisma.lead_conversations.create({
-          data: {
-            lead_id: lead.lead_id,
-            business_id: account.business_id,
-            tenant_id: account.businesses.tenant_id,
-            channel: 'whatsapp',
-            status: 'active',
-            started_at: new Date(),
-          },
+        conversation = await this.conversationService.createConversation({
+          conversation_id: crypto.randomUUID(),
+          lead_id: lead.lead_id,
+          customer_id: from,
+          business_id: account.business_id,
+          tenant_id: account.businesses.tenant_id,
+          channel: 'whatsapp',
+          status: 'active',
+          sender_id: phoneNumberId,
+          sender_name: contactName,
         });
       }
 
-      // Store message in database using lead_messages
-      const leadMessage = await this.prisma.lead_messages.create({
-        data: {
-          conversation_id: conversation.conversation_id,
-          lead_id: lead.lead_id,
-          business_id: account.business_id,
-          tenant_id: account.businesses.tenant_id,
-          sender_type: 'lead',
-          sender_name: contactName,
-          message_text: messageText,
-          message_type: messageType,
-          platform_message_id: messageId,
-          delivery_status: 'received',
-        },
+      // Store inbound message in MongoDB
+      const leadMessage = await this.conversationService.createMessage({
+        conversation_id: conversation.conversation_id,
+        lead_id: lead.lead_id,
+        business_id: account.business_id,
+        tenant_id: account.businesses.tenant_id,
+        sender_type: 'lead',
+        sender_id: phoneNumberId,
+        sender_name: contactName,
+        message_text: messageText,
+        message_type: messageType,
+        platform_message_id: messageId,
+        delivery_status: 'received',
       });
 
-      // commenting out mark as read for now
+      const leadMessageId = (leadMessage._id as any).toString();
+
       // Mark as read
       const accessToken = this.decryptToken(account.access_token);
       await this.circuitBreaker.execute(
@@ -310,51 +283,98 @@ export class WhatsAppService {
         'Education': 'education',
       };
 
-      console.log("account.businesses.business_type", account.businesses.business_type);
       const mappedBusinessType = account.businesses.business_type
         ? businessTypeMap[account.businesses.business_type] || 'service'
         : 'service';
 
-      console.log("mappedBusinessType", mappedBusinessType);
+      // Get conversation history for context continuity from MongoDB
+      const conversationHistory = await this.getConversationHistory(conversation.conversation_id, 10);
 
-      // Get conversation history for context continuity
-      const conversationHistory = await this.getConversationHistory(
-        conversation.conversation_id,
-        10, // Last 10 messages
-      );
+      // Check if message is interactive (button/list reply)
+      if (messageType === 'interactive' && (message as any).buttonId) {
+        this.logger.log(`📲 Interactive message detected, bypassing AI processing`);
 
-      // Send to AI processor via Kafka for NLU processing
-      await this.kafkaProducer.requestAiProcessing({
-        lead_id: lead.lead_id,
-        business_id: account.business_id,
-        text: messageText,
-        business_type: mappedBusinessType,
-        conversation_history: conversationHistory, // Include chat history for continuity
-        context: {
-          message_id: leadMessage.message_id,
-          conversation_id: conversation.conversation_id,
-          channel: 'whatsapp',
-          contactName,
-          phoneNumberId,
-          from,
-          business_name: account.businesses.business_name,
-          lead_info: {
-            lead_id: lead.lead_id,
-            first_name: lead.first_name,
-            last_name: lead.last_name,
-            status: lead.status,
-            lead_score: lead.lead_score,
+        const buttonId = (message as any).buttonId;
+
+        const workflowContext = {
+          lead_id: lead.lead_id,
+          business_id: account.business_id,
+          tenant_id: account.businesses.tenant_id,
+          processing_id: `interactive-${messageId}`,
+          user_input: buttonId,
+          intent: {
+            intent: 'INTERACTIVE_SELECTION',
+            confidence: 1.0,
+            suggested_actions: [],
+            method: 'interactive' as const,
+            processing_time_ms: 0,
+            cached: false,
           },
-          // Include button/list selection ID if available
-          interactive_selection: (message as any).buttonId,
-          message_type: messageType,
-        },
-        priority: 'normal',
-      });
+          entities: {},
+          structured_data: {
+            type: 'interactive_selection',
+            entities: {
+              selection_id: [buttonId],
+              selection_text: [messageText],
+            },
+          },
+          suggested_actions: [],
+          suggested_response: null,
+          processing_time_ms: 0,
+          context: {
+            message_id: leadMessageId,
+            conversation_id: conversation.conversation_id,
+            channel: 'whatsapp' as const,
+            contactName,
+            phoneNumberId,
+            from,
+            business_name: account.businesses.business_name,
+            lead_info: {
+              lead_id: lead.lead_id,
+              first_name: lead.first_name,
+              last_name: lead.last_name,
+              status: lead.status,
+              lead_score: lead.lead_score,
+            },
+            interactive_selection: buttonId,
+            message_type: messageType,
+          },
+        };
+
+        await this.kafkaProducer.publishInteractiveSelection(workflowContext);
+
+      } else {
+        await this.kafkaProducer.requestAiProcessing({
+          lead_id: lead.lead_id,
+          business_id: account.business_id,
+          text: messageText,
+          business_type: mappedBusinessType,
+          conversation_history: conversationHistory,
+          context: {
+            message_id: leadMessageId,
+            conversation_id: conversation.conversation_id,
+            channel: 'whatsapp',
+            contactName,
+            phoneNumberId,
+            from,
+            business_name: account.businesses.business_name,
+            lead_info: {
+              lead_id: lead.lead_id,
+              first_name: lead.first_name,
+              last_name: lead.last_name,
+              status: lead.status,
+              lead_score: lead.lead_score,
+            },
+            interactive_selection: (message as any).buttonId,
+            message_type: messageType,
+          },
+          priority: 'normal',
+        });
+      }
 
       // Store pending context for AI response
-      this.pendingMessages.set(leadMessage.message_id, {
-        messageId: leadMessage.message_id,
+      this.pendingMessages.set(leadMessageId, {
+        messageId: leadMessageId,
         conversationId: conversation.conversation_id,
         from: phoneNumberId,
         to: from,
@@ -363,20 +383,9 @@ export class WhatsAppService {
         type: messageType,
       });
 
-      // ⚠️ DEPRECATED: Per-lead handlers are now replaced by workflow orchestration
-      // The workflow orchestration system will handle ALL AI responses globally
-      // This ensures consistent, business-type-specific workflows for all channels
-
-      // LEGACY CODE - Keeping for reference, but NOT registering handler anymore
-      // this.kafkaConsumer.registerMessageHandler(lead.lead_id, {
-      //   handleAiResponse: async (aiResult: any) => {
-      //     await this.handleAiResponse(aiResult, leadMessage.message_id);
-      //   },
-      // });
-
       // Auto-cleanup after 10 minutes
       setTimeout(() => {
-        this.pendingMessages.delete(leadMessage.message_id);
+        this.pendingMessages.delete(leadMessageId);
       }, 600000);
 
     } catch (error) {
@@ -391,11 +400,9 @@ export class WhatsAppService {
     try {
       const messageId = status.id;
       const statusType = status.status;
-      const recipientId = status.recipient_id;
 
       this.logger.log(`📊 Message ${messageId} status: ${statusType}`);
 
-      // Map WhatsApp status to our delivery_status
       const deliveryStatusMap: Record<string, string> = {
         sent: 'sent',
         delivered: 'delivered',
@@ -405,7 +412,6 @@ export class WhatsAppService {
 
       const timestamp = new Date(parseInt(status.timestamp) * 1000);
 
-      // Build update data based on status
       const updateData: any = {
         delivery_status: deliveryStatusMap[statusType] || statusType,
       };
@@ -418,15 +424,9 @@ export class WhatsAppService {
         updateData.failed_reason = status.errors?.[0]?.message || 'Unknown error';
       }
 
-      // Update message status in database
-      await this.prisma.lead_messages.updateMany({
-        where: {
-          platform_message_id: messageId,
-        },
-        data: updateData,
-      });
+      // Update message status in MongoDB
+      await this.conversationService.updateMessageStatus(messageId, updateData);
 
-      // Handle errors if any
       if (status.errors && status.errors.length > 0) {
         this.logger.error(`Message ${messageId} failed:`, status.errors);
       }
@@ -445,91 +445,63 @@ export class WhatsAppService {
     message: SendWhatsAppMessageDto,
   ): Promise<any> {
     try {
-      // Get account and access token
       const account = await this.prisma.social_accounts.findFirst({
-        where: {
-          page_id: phoneNumberId, // phone_number_id is stored in page_id
-          platform: 'whatsapp',
-          is_active: true,
-        },
-        include: {
-          businesses: true,
-        },
+        where: { page_id: phoneNumberId, platform: 'whatsapp', is_active: true },
+        include: { businesses: true },
       });
 
       if (!account) {
         throw new NotFoundException('WhatsApp account not found');
       }
 
-      let result: any;
-      let messageText: string;
-
-      // Extract message text first
-      messageText = this.extractMessageText(message);
-
-      // Use WhatsApp Business API to send messages
+      const messageText = this.extractMessageText(message);
       const accessToken = this.decryptToken(account.access_token);
 
       this.logger.log('Sending message via WhatsApp Business API');
-      result = await this.circuitBreaker.execute(
+      const result = await this.circuitBreaker.execute(
         `whatsapp-send-${phoneNumberId}`,
         () => this.apiClient.sendMessage(phoneNumberId, accessToken, message),
       );
 
-      // Find or get lead for this recipient
-      let lead = await this.prisma.leads.findFirst({
-        where: {
-          business_id: account.business_id,
-          platform_user_id: to,
-          source: 'whatsapp',
-        },
+      // Find lead (stays in Postgres)
+      const lead = await this.prisma.leads.findFirst({
+        where: { business_id: account.business_id, platform_user_id: to, source: 'whatsapp' },
       });
 
-      // If lead exists and message was sent successfully, store the outbound message
+      // If lead exists and send was successful, persist outbound message in MongoDB
       if (lead && result?.messageId) {
-        // Find or create conversation
-        let conversation = await this.prisma.lead_conversations.findFirst({
-          where: {
-            lead_id: lead.lead_id,
-            channel: 'whatsapp',
-            status: 'active',
-          },
-        });
+        let conversation = await this.conversationService.findActiveConversation(lead.lead_id, 'whatsapp');
 
         if (!conversation) {
-          conversation = await this.prisma.lead_conversations.create({
-            data: {
-              lead_id: lead.lead_id,
-              business_id: account.business_id,
-              tenant_id: account.businesses.tenant_id,
-              channel: 'whatsapp',
-              status: 'active',
-              started_at: new Date(),
-            },
+          conversation = await this.conversationService.createConversation({
+            conversation_id: crypto.randomUUID(),
+            lead_id: lead.lead_id,
+            customer_id: to,
+            business_id: account.business_id,
+            tenant_id: account.businesses.tenant_id,
+            channel: 'whatsapp',
+            status: 'active',
+            sender_id: phoneNumberId,
           });
         }
 
-        // Store message in lead_messages
-        await this.prisma.lead_messages.create({
-          data: {
-            conversation_id: conversation.conversation_id,
-            lead_id: lead.lead_id,
-            business_id: account.business_id,
-            tenant_id: account.businesses.tenant_id,
-            sender_type: 'business',
-            message_text: messageText,
-            message_type: message.type,
-            platform_message_id: result.messageId, // WhatsApp API message ID
-            delivery_status: 'sent',
-          },
+        await this.conversationService.createMessage({
+          conversation_id: conversation.conversation_id,
+          lead_id: lead.lead_id,
+          business_id: account.business_id,
+          tenant_id: account.businesses.tenant_id,
+          sender_type: 'business',
+          sender_id: phoneNumberId,
+          message_text: messageText,
+          message_type: message.type,
+          platform_message_id: result.messageId,
+          delivery_status: 'sent',
         });
       }
 
       return {
         success: true,
-        messages: result?.messageId ? [{
-          id: result.messageId,
-        }] : [],
+        messages: result?.messageId ? [{ id: result.messageId }] : [],
         ...result,
       };
     } catch (error) {
@@ -539,42 +511,20 @@ export class WhatsAppService {
   }
 
   /**
-   * Get conversation history for context continuity
-   * Retrieves the last N messages from the conversation
+   * Get conversation history for context continuity (reads from MongoDB)
    */
-  private async getConversationHistory(
-    conversationId: string,
-    limit: number = 10,
-  ): Promise<any[]> {
+  private async getConversationHistory(conversationId: string, limit: number = 10): Promise<any[]> {
     try {
-      const messages = await this.prisma.lead_messages.findMany({
-        where: {
-          conversation_id: conversationId,
-        },
-        orderBy: {
-          created_at: 'desc',
-        },
-        take: limit,
-        select: {
-          message_id: true,
-          sender_type: true,
-          sender_name: true,
-          message_text: true,
-          message_type: true,
-          created_at: true,
-        },
-      });
-
-      // Reverse to get chronological order (oldest first)
-      return messages.reverse().map((msg) => ({
+      const messages = await this.conversationService.getConversationHistory(conversationId, limit);
+      return messages.map(msg => ({
         role: msg.sender_type === 'lead' ? 'user' : 'assistant',
         content: msg.message_text,
-        timestamp: msg.created_at,
+        timestamp: msg.timestamp,
         message_type: msg.message_type,
       }));
     } catch (error) {
       this.logger.error('Failed to get conversation history:', error);
-      return []; // Return empty array if history retrieval fails
+      return [];
     }
   }
 
@@ -597,21 +547,14 @@ export class WhatsAppService {
         type: InteractiveSendType.BUTTON,
         body: { text: bodyText },
         action: {
-          buttons: buttons.map(btn => ({
-            type: 'reply',
-            reply: btn,
-          })),
+          buttons: buttons.map(btn => ({ type: 'reply', reply: btn })),
         },
       },
     };
 
     if (headerText) {
-      message.interactive!.header = {
-        type: 'text',
-        text: headerText,
-      };
+      message.interactive!.header = { type: 'text', text: headerText };
     }
-
     if (footerText) {
       message.interactive!.footer = { text: footerText };
     }
@@ -638,20 +581,13 @@ export class WhatsAppService {
       interactive: {
         type: InteractiveSendType.LIST,
         body: { text: bodyText },
-        action: {
-          button: buttonText,
-          sections,
-        },
+        action: { button: buttonText, sections },
       },
     };
 
     if (headerText) {
-      message.interactive!.header = {
-        type: 'text',
-        text: headerText,
-      };
+      message.interactive!.header = { type: 'text', text: headerText };
     }
-
     if (footerText) {
       message.interactive!.footer = { text: footerText };
     }
@@ -659,20 +595,68 @@ export class WhatsAppService {
     return this.sendMessage(phoneNumberId, to, message);
   }
 
+  /**
+   * Close a conversation
+   */
+  async closeConversation(conversationId: string): Promise<void> {
+    try {
+      await this.conversationService.updateConversation(conversationId, { status: 'ended' });
+      this.logger.log(`Conversation ${conversationId} closed`);
+    } catch (error) {
+      this.logger.error('Failed to close conversation:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Get conversation summary statistics
+   */
+  async getConversationStats(conversationId: string): Promise<any> {
+    try {
+      const [conversation, messageCount, { first: firstMessage, last: lastMessage }] = await Promise.all([
+        this.conversationService.findConversationById(conversationId),
+        this.conversationService.countMessages(conversationId),
+        this.conversationService.getFirstAndLastMessage(conversationId),
+      ]);
+
+      if (!conversation) {
+        throw new NotFoundException('Conversation not found');
+      }
+
+      // Lead info still fetched from Postgres
+      const lead = await this.prisma.leads.findUnique({
+        where: { lead_id: conversation.lead_id },
+        select: { first_name: true, last_name: true },
+      });
+
+      const duration = firstMessage && lastMessage
+        ? new Date(lastMessage.timestamp).getTime() - new Date(firstMessage.timestamp).getTime()
+        : 0;
+
+      return {
+        conversation_id: conversationId,
+        lead_name: `${lead?.first_name || ''} ${lead?.last_name || ''}`.trim(),
+        channel: conversation.channel,
+        status: conversation.status,
+        message_count: messageCount,
+        started_at: (conversation as any).created_at,
+        last_message_at: lastMessage?.timestamp,
+        duration_ms: duration,
+        duration_minutes: Math.round(duration / 60000),
+      };
+    } catch (error) {
+      this.logger.error('Failed to get conversation stats:', error);
+      throw error;
+    }
+  }
 
   /**
    * Extract message text from send message DTO
    */
   private extractMessageText(message: SendWhatsAppMessageDto): string {
-    if (message.text) {
-      return message.text.body;
-    }
-    if (message.template) {
-      return `Template: ${message.template.name}`;
-    }
-    if (message.interactive) {
-      return message.interactive.body.text;
-    }
+    if (message.text) return message.text.body;
+    if (message.template) return `Template: ${message.template.name}`;
+    if (message.interactive) return message.interactive.body.text;
     return `[${message.type}]`;
   }
 
@@ -683,11 +667,7 @@ export class WhatsAppService {
     try {
       const algorithm = 'aes-256-cbc';
       const encryptionKey = this.configService.get<string>('encryption.key');
-
-      if (!encryptionKey) {
-        throw new Error('ENCRYPTION_KEY not configured. Please set ENCRYPTION_KEY in your .env file.');
-      }
-
+      if (!encryptionKey) throw new Error('ENCRYPTION_KEY not configured.');
       const key = Buffer.from(encryptionKey, 'hex');
       const iv = crypto.randomBytes(16);
       const cipher = crypto.createCipheriv(algorithm, key, iv);
@@ -707,15 +687,8 @@ export class WhatsAppService {
     try {
       const algorithm = 'aes-256-cbc';
       const encryptionKey = this.configService.get<string>('encryption.key');
-
-      if (!encryptionKey) {
-        throw new Error('ENCRYPTION_KEY not configured. Please set ENCRYPTION_KEY in your .env file.');
-      }
-
-      if (!encryptedToken || !encryptedToken.includes(':')) {
-        throw new Error('Invalid encrypted token format');
-      }
-
+      if (!encryptionKey) throw new Error('ENCRYPTION_KEY not configured.');
+      if (!encryptedToken || !encryptedToken.includes(':')) throw new Error('Invalid encrypted token format');
       const key = Buffer.from(encryptionKey, 'hex');
       const parts = encryptedToken.split(':');
       const iv = Buffer.from(parts[0], 'hex');
@@ -729,132 +702,4 @@ export class WhatsAppService {
       throw new BadRequestException('Token decryption failed. The stored token may be corrupted or the encryption key has changed.');
     }
   }
-
-  /**
-   * Handle order tracking when user sends an order ID
-   */
-  private async handleOrderTracking(
-    phoneNumberId: string,
-    to: string,
-    orderId: string,
-    _businessId: string, // Will be used for database lookup when order system is integrated
-  ): Promise<void> {
-    try {
-      // TODO: Replace with actual database lookup when order system is integrated
-      // TODO: Use businessId to query orders table: await this.prisma.orders.findFirst({ where: { order_id: orderId, business_id: businessId }})
-      // For now, return mock data
-      const mockOrderStatuses = [
-        { status: 'Processing', delivery: 'Tomorrow, 3:00 PM - 5:00 PM' },
-        { status: 'Shipped', delivery: 'Today, 6:00 PM - 8:00 PM' },
-        { status: 'Out for Delivery', delivery: 'Today, by 5:00 PM' },
-        { status: 'Delivered', delivery: 'Already delivered on Dec 1, 2025' },
-      ];
-
-      // Simulate order lookup with random status
-      const randomStatus = mockOrderStatuses[Math.floor(Math.random() * mockOrderStatuses.length)];
-
-      const trackingMessage = `Here's the latest update for Order ${orderId} 📦
-
-Status: ${randomStatus.status}
-Estimated Delivery: ${randomStatus.delivery}
-
-Tap the link below to view more details 👇
-https://example.com/track/${orderId}
-
-_Note: Order tracking integration coming soon!_`;
-
-      await this.sendMessage(phoneNumberId, to, {
-        messaging_product: 'whatsapp',
-        to,
-        type: SendMessageType.TEXT,
-        text: { body: trackingMessage, preview_url: true },
-      });
-
-      this.logger.log(`Order tracking info sent for ${orderId}`);
-    } catch (error) {
-      this.logger.error('Failed to handle order tracking:', error);
-
-      // Send error message to user
-      await this.sendMessage(phoneNumberId, to, {
-        messaging_product: 'whatsapp',
-        to,
-        type: SendMessageType.TEXT,
-        text: {
-          body: `Sorry, I couldn't find order ${orderId}. Please check the Order ID and try again.`,
-          preview_url: false,
-        },
-      });
-    }
-  }
-
-  /**
-   * Close a conversation
-   * Useful for ending long conversations and starting fresh context
-   */
-  async closeConversation(conversationId: string): Promise<void> {
-    try {
-      await this.prisma.lead_conversations.update({
-        where: { conversation_id: conversationId },
-        data: {
-          status: 'closed',
-          is_resolved: true,
-        },
-      });
-
-      this.logger.log(`Conversation ${conversationId} closed`);
-    } catch (error) {
-      this.logger.error('Failed to close conversation:', error);
-      throw error;
-    }
-  }
-
-  /**
-   * Get conversation summary statistics
-   */
-  async getConversationStats(conversationId: string): Promise<any> {
-    try {
-      const [conversation, messageCount, firstMessage, lastMessage] = await Promise.all([
-        this.prisma.lead_conversations.findUnique({
-          where: { conversation_id: conversationId },
-          include: { leads: true },
-        }),
-        this.prisma.lead_messages.count({
-          where: { conversation_id: conversationId },
-        }),
-        this.prisma.lead_messages.findFirst({
-          where: { conversation_id: conversationId },
-          orderBy: { created_at: 'asc' },
-        }),
-        this.prisma.lead_messages.findFirst({
-          where: { conversation_id: conversationId },
-          orderBy: { created_at: 'desc' },
-        }),
-      ]);
-
-      if (!conversation) {
-        throw new NotFoundException('Conversation not found');
-      }
-
-      const duration = firstMessage && lastMessage
-        ? new Date(lastMessage.created_at).getTime() - new Date(firstMessage.created_at).getTime()
-        : 0;
-
-      return {
-        conversation_id: conversationId,
-        lead_name: `${conversation.leads.first_name || ''} ${conversation.leads.last_name || ''}`.trim(),
-        channel: conversation.channel,
-        status: conversation.status,
-        is_resolved: conversation.is_resolved,
-        message_count: messageCount,
-        started_at: conversation.started_at,
-        last_message_at: lastMessage?.created_at,
-        duration_ms: duration,
-        duration_minutes: Math.round(duration / 60000),
-      };
-    } catch (error) {
-      this.logger.error('Failed to get conversation stats:', error);
-      throw error;
-    }
-  }
-
 }

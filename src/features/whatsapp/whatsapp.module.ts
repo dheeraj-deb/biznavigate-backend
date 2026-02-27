@@ -6,18 +6,23 @@ import { WhatsAppCatalogController } from './whatsapp-catalog.controller';
 import { WhatsAppService } from './whatsapp.service';
 import { WhatsAppOAuthService } from './services/whatsapp-oauth.service';
 import { WhatsAppCatalogService } from './services/whatsapp-catalog.service';
+import { WhatsAppCatalogOrderService } from './services/whatsapp-catalog-order.service';
 import { WhatsAppApiClientService } from './infrastructure/whatsapp-api-client.service';
 import { WebhookValidatorService } from './infrastructure/webhook-validator.service';
 import { CircuitBreakerService } from './infrastructure/circuit-breaker.service';
 import { ConversationStateService } from './services/conversation-state.service';
 import { PrismaModule } from '../../prisma/prisma.module';
 import { KafkaModule } from '../kafka/kafka.module';
+import { CartModule } from '../cart/cart.module';
+import { ConversationModule } from '../conversation/conversation.module';
 
 @Module({
   imports: [
     ConfigModule,
     PrismaModule,
     KafkaModule,
+    CartModule,
+    ConversationModule,
   ],
   controllers: [
     WhatsAppController,
@@ -28,6 +33,7 @@ import { KafkaModule } from '../kafka/kafka.module';
     WhatsAppService,
     WhatsAppOAuthService,
     WhatsAppCatalogService,
+    WhatsAppCatalogOrderService,
     WhatsAppApiClientService,
     WebhookValidatorService,
     CircuitBreakerService,
@@ -35,4 +41,4 @@ import { KafkaModule } from '../kafka/kafka.module';
   ],
   exports: [WhatsAppService, WhatsAppApiClientService, WhatsAppCatalogService],
 })
-export class WhatsAppModule {}
+export class WhatsAppModule { }

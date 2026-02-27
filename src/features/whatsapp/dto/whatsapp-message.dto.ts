@@ -223,16 +223,30 @@ export class RowDto {
   description?: string;
 }
 
+export class ProductItemDto {
+  @ApiProperty()
+  @IsString()
+  product_retailer_id: string;
+}
+
 export class SectionDto {
   @ApiProperty()
   @IsString()
   title: string;
 
-  @ApiProperty({ type: [RowDto] })
+  @ApiPropertyOptional({ type: [RowDto] })
   @IsArray()
   @ValidateNested({ each: true })
   @Type(() => RowDto)
-  rows: RowDto[];
+  @IsOptional()
+  rows?: RowDto[];
+
+  @ApiPropertyOptional({ type: [ProductItemDto] })
+  @IsArray()
+  @ValidateNested({ each: true })
+  @Type(() => ProductItemDto)
+  @IsOptional()
+  product_items?: ProductItemDto[];
 }
 
 export class ActionDto {
@@ -247,6 +261,11 @@ export class ActionDto {
   @IsString()
   @IsOptional()
   button?: string; // For list
+
+  @ApiPropertyOptional()
+  @IsString()
+  @IsOptional()
+  catalog_id?: string; // For product_list
 
   @ApiPropertyOptional({ type: [SectionDto] })
   @IsArray()

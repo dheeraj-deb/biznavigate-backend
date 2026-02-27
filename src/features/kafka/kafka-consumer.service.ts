@@ -39,7 +39,7 @@ export class KafkaConsumerService {
 
     // Subscribe to topics
     await consumer.subscribe({
-      topics: ["ai.process.result", "ai.error"],
+      topics: ["ai.process.result", "ai.error", "workflow-event"],
       fromBeginning: false,
     });
 
@@ -86,6 +86,12 @@ export class KafkaConsumerService {
     switch (event.event_type) {
       case "ai.process.result":
         await this.handleAiProcessResult(event);
+        break;
+      case "workflow.interactive.selection":
+        await this.handleInteractiveSelection(event);
+        break;
+      case "workflow.catalog.order.completed":
+        await this.handleCatalogOrderCompleted(event);
         break;
       case "ai.error":
         await this.handleAiError(event);
@@ -134,6 +140,164 @@ export class KafkaConsumerService {
           this.logger.error(`Error in message handler '${handlerKey}':`, error);
         }
       }
+    }
+  }
+
+  /**
+   * Handle interactive selection (bypassed AI processing)
+   */
+  private async handleInteractiveSelection(event: any) {
+    const { payload } = event;
+    const { lead_id, user_input } = payload;
+
+    this.logger.log(
+      `Processing interactive selection for lead ${lead_id}: ${user_input}`
+    );
+
+    console.dir(payload, { depth: null });
+
+    // Store the selection as an activity
+    await this.storeInteractiveSelection(payload);
+
+    // Call ALL registered handlers (same as AI results, to workflow orchestration)
+    const allHandlers = Array.from(this.messageHandlers.entries());
+
+    console.log("allHandlers (interactive)", allHandlers);
+
+    for (const [handlerKey, handler] of allHandlers) {
+      if (handler && typeof handler.handleAiResponse === 'function') {
+        try {
+          const isGlobalHandler = handlerKey.includes('global');
+          const isMatchingLeadHandler = handlerKey === lead_id;
+
+          if (isGlobalHandler || isMatchingLeadHandler) {
+            console.log('Interactive selection - handlerKey', handlerKey, handler);
+            await handler.handleAiResponse(payload);
+          }
+        } catch (error) {
+          this.logger.error(`Error in message handler '${handlerKey}':`, error);
+        }
+      }
+    }
+  }
+
+  /**
+   * Handle catalog order completed (resume workflow)
+   */
+  private async handleCatalogOrderCompleted(event: any) {
+    const { payload } = event;
+    const { lead_id, execution_id, cart_info } = payload;
+
+    this.logger.log(
+      `Processing catalog order completed for lead ${lead_id}, execution ${execution_id}`
+    );
+
+    console.dir(payload, { depth: null });
+
+    // Store catalog order activity
+    await this.storeCatalogOrderActivity(payload);
+
+    // Call ALL registered handlers to resume workflow
+    const allHandlers = Array.from(this.messageHandlers.entries());
+
+    console.log("allHandlers (catalog order)", allHandlers);
+
+    for (const [handlerKey, handler] of allHandlers) {
+      if (handler && typeof handler.handleAiResponse === 'function') {
+        try {
+          const isGlobalHandler = handlerKey.includes('global');
+          const isMatchingLeadHandler = handlerKey === lead_id;
+
+          if (isGlobalHandler || isMatchingLeadHandler) {
+            console.log('Catalog order - handlerKey', handlerKey, handler);
+            await handler.handleAiResponse(payload);
+          }
+        } catch (error) {
+          this.logger.error(`Error in message handler '${handlerKey}':`, error);
+        }
+      }
+    }
+  }
+
+  /**
+   * Store catalog order activity
+   */
+  private async storeCatalogOrderActivity(payload: any) {
+    try {
+      let tenantId = payload.tenant_id;
+      if (!tenantId) {
+        const lead = await this.prisma.leads.findUnique({
+          where: { lead_id: payload.lead_id },
+          select: { tenant_id: true },
+        });
+        tenantId = lead?.tenant_id;
+      }
+
+      if (!tenantId) {
+        this.logger.warn(`No tenant_id found for lead ${payload.lead_id}, skipping catalog order activity storage`);
+        return;
+      }
+
+      await this.prisma.lead_activities.create({
+        data: {
+          lead_id: payload.lead_id,
+          business_id: payload.business_id,
+          tenant_id: tenantId,
+          activity_type: "catalog_order",
+          activity_description: `Added items to cart from catalog`,
+          actor_type: "lead",
+          channel: payload.context?.channel || "whatsapp",
+          metadata: {
+            execution_id: payload.execution_id,
+            cart_info: payload.cart_info,
+          } as any,
+          activity_timestamp: new Date(),
+        },
+      });
+    } catch (error) {
+      this.logger.error(`Failed to store catalog order activity:`, error);
+    }
+  }
+
+  /**
+   * Store interactive selection activity
+   */
+  private async storeInteractiveSelection(payload: any) {
+    try {
+      let tenantId = payload.tenant_id;
+      if (!tenantId) {
+        const lead = await this.prisma.leads.findUnique({
+          where: { lead_id: payload.lead_id },
+          select: { tenant_id: true },
+        });
+        tenantId = lead?.tenant_id;
+      }
+
+      if (!tenantId) {
+        this.logger.warn(`No tenant_id found for lead ${payload.lead_id}, skipping interactive selection storage`);
+        return;
+      }
+
+      await this.prisma.lead_activities.create({
+        data: {
+          lead_id: payload.lead_id,
+          business_id: payload.business_id,
+          tenant_id: tenantId,
+          activity_type: "interactive_selection",
+          activity_description: `User selected: ${payload.user_input}`,
+          actor_type: "lead",
+          channel: payload.context?.channel || "whatsapp",
+          metadata: {
+            processing_id: payload.processing_id,
+            selection_id: payload.user_input,
+            selection_text: payload.structured_data?.entities?.selection_text?.[0],
+            intent: payload.intent,
+          } as any,
+          activity_timestamp: new Date(),
+        },
+      });
+    } catch (error) {
+      this.logger.error(`Failed to store interactive selection:`, error);
     }
   }
 

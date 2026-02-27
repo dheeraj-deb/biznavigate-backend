@@ -8,10 +8,6 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
-/// business_type options: retail, ecommerce, education, healthcare, real_estate, hospitality, consulting, technology, manufacturing, other
-/// working_hours format: { "monday": { "open": "09:00", "close": "17:00", "closed": false }, ... }
-/// web_presence_type: "no_website", "static_website", "functional_website"
 model businesses {
   business_id              String                     @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   tenant_id                String                     @db.Uuid
@@ -24,8 +20,10 @@ model businesses {
   working_hours            Json?
   created_at               DateTime?                  @default(now()) @db.Timestamptz(6)
   updated_at               DateTime?                  @default(now()) @db.Timestamptz(6)
+  business_workflows       business_workflows[]
   subscription_plans       subscription_plans?        @relation(fields: [subscription_plan_id], references: [subscription_plan_id])
   tenants                  tenants                    @relation(fields: [tenant_id], references: [tenant_id], onDelete: Cascade)
+  carts                    carts[]
   inventory_levels         inventory_levels[]         @relation("inventory_levels_business")
   leads                    leads[]
   notification_messages    notification_messages[]    @relation("notification_messages_business")
@@ -44,7 +42,6 @@ model businesses {
   tags                     tags[]
   users                    users[]
   warehouses               warehouses[]               @relation("warehouses_business")
-  business_workflows       business_workflows[]
   workflow_executions      workflow_executions[]
 
   @@index([tenant_id], map: "idx_businesses_tenant_id")
@@ -106,6 +103,8 @@ model social_accounts {
   profile_picture               String?
   updated_at                    DateTime?         @default(now()) @db.Timestamptz(6)
   username                      String?           @db.VarChar(255)
+  instagram_catalog_id          String?           @db.VarChar(255)
+  whatsapp_catalog_id           String?           @db.VarChar(255)
   instagram_media               instagram_media[]
   businesses                    businesses        @relation(fields: [business_id], references: [business_id], onDelete: Cascade, onUpdate: NoAction)
 
@@ -133,7 +132,9 @@ model tenants {
   gst_number             String?                  @db.VarChar(20)
   pan_number             String?                  @db.VarChar(20)
   registration_no        String?                  @db.VarChar(50)
+  business_workflows     business_workflows[]
   businesses             businesses[]
+  carts                  carts[]
   inventory_levels       inventory_levels[]       @relation("inventory_levels_tenant")
   leads                  leads[]
   notification_messages  notification_messages[]  @relation("notification_messages_tenant")
@@ -144,7 +145,6 @@ model tenants {
   stock_movements        stock_movements[]        @relation("stock_movements_tenant")
   stock_transfers        stock_transfers[]        @relation("stock_transfers_tenant")
   warehouses             warehouses[]             @relation("warehouses_tenant")
-  business_workflows     business_workflows[]
 }
 
 model users {
@@ -244,7 +244,9 @@ model leads {
   deleted_at               DateTime?              @db.Timestamptz(6)
   deleted_by               String?                @db.Uuid
   onboarding_completed     Boolean                @default(false)
+  delivery_address         String?
   campaign_recipients      campaign_recipients[]
+  carts                    carts[]
   lead_activities          lead_activities[]
   lead_conversations       lead_conversations[]
   lead_duplicates_1        lead_duplicates[]      @relation("lead_1")
@@ -353,7 +355,7 @@ model lead_messages {
   message_type            String             @default("text") @db.VarChar(30)
   media_url               String?            @db.VarChar(500)
   media_type              String?            @db.VarChar(50)
-  platform_message_id     String?            @db.VarChar(255)
+  platform_message_id     String?            @unique(map: "unique_platform_message_id") @db.VarChar(255)
   delivery_status         String             @default("sent") @db.VarChar(20)
   delivered_at            DateTime?          @db.Timestamptz(6)
   read_at                 DateTime?          @db.Timestamptz(6)
@@ -374,7 +376,6 @@ model lead_messages {
   reply_to_message        lead_messages?     @relation("message_replies", fields: [reply_to_message_id], references: [message_id])
   message_replies         lead_messages[]    @relation("message_replies")
 
-  @@unique([platform_message_id], map: "unique_platform_message_id")
   @@index([conversation_id, timestamp(sort: Desc)], map: "idx_lead_messages_conversation_timestamp")
   @@index([lead_id, timestamp(sort: Desc)], map: "idx_lead_messages_lead_timestamp")
   @@index([business_id, timestamp(sort: Desc)], map: "idx_lead_messages_business_timestamp")
@@ -542,12 +543,19 @@ model products {
   whatsapp_sync_status    String?              @default("not_synced") @db.VarChar(50)
   whatsapp_sync_error     String?
   whatsapp_synced_at      DateTime?            @db.Timestamptz(6)
+  in_instagram_catalog    Boolean?             @default(false)
+  instagram_catalog_id    String?              @db.VarChar(255)
+  instagram_sync_status   String?              @default("not_synced") @db.VarChar(50)
+  instagram_sync_error    String?
+  instagram_synced_at     DateTime?            @db.Timestamptz(6)
+  instagram_retailer_id   String?              @db.VarChar(255)
   campaigns               campaigns[]
+  cart_items              cart_items[]
   course_batches          course_batches[]
   order_items             order_items[]
   product_images          product_images[]
-  product_variants        product_variants[]
   product_reviews         product_reviews[]
+  product_variants        product_variants[]
   businesses              businesses           @relation(fields: [business_id], references: [business_id])
   product_categories      product_categories?  @relation(fields: [category_id], references: [category_id])
   stock_reservations      stock_reservations[]
@@ -560,6 +568,7 @@ model products {
   @@index([category_id], map: "idx_products_category_id")
   @@index([business_id, in_whatsapp_catalog], map: "idx_products_whatsapp_catalog")
   @@index([business_id, whatsapp_sync_status], map: "idx_products_whatsapp_sync_status")
+  @@index([business_id, in_instagram_catalog], map: "idx_products_instagram_catalog")
 }
 
 /// Product Variants - product variations (sizes, colors, etc.)
@@ -576,6 +585,7 @@ model product_variants {
   variant_options  Json?
   created_at       DateTime           @default(now()) @db.Timestamptz(6)
   updated_at       DateTime           @default(now()) @db.Timestamptz(6)
+  cart_items       cart_items[]
   inventory_levels inventory_levels[]
   product          products           @relation(fields: [product_id], references: [product_id], onDelete: Cascade)
   stock_alerts     stock_alerts[]
@@ -712,11 +722,11 @@ model orders {
   billing_address     String?
   cancellation_reason String?
   order_items         order_items[]
-  product_reviews     product_reviews[]
   batch               course_batches?     @relation(fields: [batch_id], references: [batch_id])
   customers           customers?          @relation(fields: [customer_id], references: [customer_id])
   leads               leads?              @relation(fields: [lead_id], references: [lead_id])
   payments            payments[]
+  product_reviews     product_reviews[]
   stock_reservations  stock_reservations?
 
   @@index([business_id, payment_status], map: "idx_orders_business_payment_status")
@@ -1452,43 +1462,31 @@ model product_categories {
 
 /// Product Reviews - Customer reviews and ratings for products
 model product_reviews {
-  review_id   String  @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  business_id String  @db.Uuid
-  tenant_id   String  @db.Uuid
-  product_id  String  @db.Uuid
-  customer_id String  @db.Uuid
-  order_id    String? @db.Uuid
-
-  // Review content
-  rating  Int // 1-5 stars
-  title   String? @db.VarChar(255)
-  comment String? @db.Text
-
-  // Media attachments
-  photo_urls Json? // Array of photo URLs uploaded by customer
-  video_url  String? @db.VarChar(500)
-
-  // Review metadata
-  is_verified    Boolean @default(false) // Verified purchase
-  is_featured    Boolean @default(false) // Featured/highlighted review
-  is_published   Boolean @default(true) // Moderation status
-  helpful_count  Int     @default(0) // Number of users who found this helpful
-  reported_count Int     @default(0) // Number of reports
-
-  // Business response
-  response_text String?   @db.Text
-  response_date DateTime? @db.Timestamptz(6)
-  responded_by  String?   @db.Uuid
-
-  // Timestamps
-  created_at DateTime @default(now()) @db.Timestamptz(6)
-  updated_at DateTime @default(now()) @db.Timestamptz(6)
-
-  // Relations
-  product   products  @relation(fields: [product_id], references: [product_id], onDelete: Cascade)
-  customer  customers @relation(fields: [customer_id], references: [customer_id], onDelete: Cascade)
-  order     orders?   @relation(fields: [order_id], references: [order_id], onDelete: SetNull)
-  responder users?    @relation("ReviewResponder", fields: [responded_by], references: [user_id])
+  review_id      String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  business_id    String    @db.Uuid
+  tenant_id      String    @db.Uuid
+  product_id     String    @db.Uuid
+  customer_id    String    @db.Uuid
+  order_id       String?   @db.Uuid
+  rating         Int
+  title          String?   @db.VarChar(255)
+  comment        String?
+  photo_urls     Json?
+  video_url      String?   @db.VarChar(500)
+  is_verified    Boolean   @default(false)
+  is_featured    Boolean   @default(false)
+  is_published   Boolean   @default(true)
+  helpful_count  Int       @default(0)
+  reported_count Int       @default(0)
+  response_text  String?
+  response_date  DateTime? @db.Timestamptz(6)
+  responded_by   String?   @db.Uuid
+  created_at     DateTime  @default(now()) @db.Timestamptz(6)
+  updated_at     DateTime  @default(now()) @db.Timestamptz(6)
+  customer       customers @relation(fields: [customer_id], references: [customer_id], onDelete: Cascade)
+  order          orders?   @relation(fields: [order_id], references: [order_id])
+  product        products  @relation(fields: [product_id], references: [product_id], onDelete: Cascade)
+  responder      users?    @relation("ReviewResponder", fields: [responded_by], references: [user_id])
 
   @@index([business_id], map: "idx_reviews_business_id")
   @@index([product_id], map: "idx_reviews_product_id")
@@ -1498,45 +1496,23 @@ model product_reviews {
   @@index([created_at], map: "idx_reviews_created_at")
 }
 
-// ============================================================================
-// WORKFLOW AUTOMATION SYSTEM
-// ============================================================================
-
-// ============================================================================
-// WORKFLOW ORCHESTRATION TABLES
-// ============================================================================
-
 /// Workflow Definitions - Default workflows per business_type + intent
 model workflow_definitions {
-  workflow_id String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-
-  // Identification
-  workflow_key  String @db.VarChar(100)
-  workflow_name String @db.VarChar(100)
-  version       String @default("1.0.0") @db.VarChar(20)
-
-  // Scope
-  business_type String @db.VarChar(50)
-  intent_name   String @db.VarChar(100)
-
-  // Workflow stored as JSONB
+  workflow_id         String                @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  workflow_key        String                @db.VarChar(100)
+  workflow_name       String                @db.VarChar(100)
+  version             String                @default("1.0.0") @db.VarChar(20)
+  business_type       String                @db.VarChar(50)
+  intent_name         String                @db.VarChar(100)
   workflow_definition Json
-
-  // Metadata
-  description String?
-  is_active   Boolean @default(true)
-
-  // Timestamps
-  created_at DateTime @default(now()) @db.Timestamptz(6)
-  updated_at DateTime @default(now()) @db.Timestamptz(6)
-
-  // Relations
+  description         String?
+  is_active           Boolean               @default(true)
+  created_at          DateTime              @default(now()) @db.Timestamptz(6)
+  updated_at          DateTime              @default(now()) @db.Timestamptz(6)
   business_workflows  business_workflows[]
   workflow_executions workflow_executions[]
 
-  // Unique constraint: one workflow per business_type + intent
   @@unique([business_type, intent_name], map: "unique_business_type_intent")
-  // Indexes
   @@index([business_type], map: "idx_workflow_definitions_business_type")
   @@index([intent_name], map: "idx_workflow_definitions_intent")
   @@index([is_active], map: "idx_workflow_definitions_active")
@@ -1544,70 +1520,96 @@ model workflow_definitions {
 
 /// Business Workflows - Workflows assigned to each business
 model business_workflows {
-  id String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-
-  business_id String @db.Uuid
-  tenant_id   String @db.Uuid
-  intent_name String @db.VarChar(100)
-  workflow_id String @db.Uuid
-
-  is_active Boolean @default(true)
-
-  created_at DateTime @default(now()) @db.Timestamptz(6)
-  updated_at DateTime @default(now()) @db.Timestamptz(6)
-
-  // Relations
+  id                   String               @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  business_id          String               @db.Uuid
+  tenant_id            String               @db.Uuid
+  intent_name          String               @db.VarChar(100)
+  workflow_id          String               @db.Uuid
+  is_active            Boolean              @default(true)
+  created_at           DateTime             @default(now()) @db.Timestamptz(6)
+  updated_at           DateTime             @default(now()) @db.Timestamptz(6)
   businesses           businesses           @relation(fields: [business_id], references: [business_id], onDelete: Cascade)
   tenants              tenants              @relation(fields: [tenant_id], references: [tenant_id])
   workflow_definitions workflow_definitions @relation(fields: [workflow_id], references: [workflow_id])
 
-  // One workflow per business per intent
   @@unique([business_id, intent_name], map: "unique_business_intent")
-  // Indexes
   @@index([business_id], map: "idx_business_workflows_business_id")
   @@index([intent_name], map: "idx_business_workflows_intent")
   @@index([workflow_id], map: "idx_business_workflows_workflow_id")
 }
 
-/// Workflow Executions - Track execution history
 model workflow_executions {
-  execution_id String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-
-  // References
-  workflow_id String @db.Uuid
-  business_id String @db.Uuid
-  lead_id     String @db.Uuid
-
-  // Workflow info
-  workflow_key String @db.VarChar(100)
-  intent_name  String @db.VarChar(100)
-
-  // Execution state
-  status        String  @db.VarChar(50)
-  current_state String? @db.VarChar(100)
-
-  // Full context stored as JSONB
-  execution_context Json
-
-  // Error info
-  error_message String?
-
-  // Timing
-  started_at   DateTime  @default(now()) @db.Timestamptz(6)
-  completed_at DateTime? @db.Timestamptz(6)
-
-  created_at DateTime @default(now()) @db.Timestamptz(6)
-  updated_at DateTime @default(now()) @db.Timestamptz(6)
-
-  // Relations
-  workflow_definitions workflow_definitions @relation(fields: [workflow_id], references: [workflow_id])
+  execution_id         String               @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  workflow_id          String               @db.Uuid
+  business_id          String               @db.Uuid
+  lead_id              String               @db.Uuid
+  status               String               @db.VarChar(50)
+  started_at           DateTime             @default(now()) @db.Timestamptz(6)
+  completed_at         DateTime?            @db.Timestamptz(6)
+  created_at           DateTime             @default(now()) @db.Timestamptz(6)
+  updated_at           DateTime             @default(now()) @db.Timestamptz(6)
+  current_node_id      String?              @db.VarChar(100)
+  waiting_for_input    Boolean              @default(false)
+  channel              String?              @db.VarChar(50)
+  context              Json?
+  intent               String?              @db.VarChar(100)
+  message_id           String?              @db.VarChar(255)
+  chat_id              String?              @db.VarChar(255)
   businesses           businesses           @relation(fields: [business_id], references: [business_id])
   leads                leads                @relation(fields: [lead_id], references: [lead_id])
+  workflow_definitions workflow_definitions @relation(fields: [workflow_id], references: [workflow_id])
 
-  // Indexes
-  @@index([workflow_id], map: "idx_workflow_executions_workflow_id")
   @@index([business_id], map: "idx_workflow_executions_business_id")
   @@index([lead_id], map: "idx_workflow_executions_lead_id")
-  @@index([status], map: "idx_workflow_executions_status")
   @@index([started_at(sort: Desc)], map: "idx_workflow_executions_started_at")
+  @@index([status], map: "idx_workflow_executions_status")
+  @@index([workflow_id], map: "idx_workflow_executions_workflow_id")
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model cart_items {
+  cart_item_id     String            @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  cart_id          String            @db.Uuid
+  product_id       String            @db.Uuid
+  variant_id       String?           @db.Uuid
+  product_name     String            @db.VarChar(255)
+  variant_name     String?           @db.VarChar(255)
+  quantity         Int?              @default(1)
+  unit_price       Decimal           @db.Decimal(10, 2)
+  total_price      Decimal           @db.Decimal(10, 2)
+  snapshot         Json?             @db.Json
+  created_at       DateTime?         @default(now()) @db.Timestamptz(6)
+  updated_at       DateTime?         @default(now()) @db.Timestamptz(6)
+  carts            carts             @relation(fields: [cart_id], references: [cart_id], onDelete: Cascade, onUpdate: NoAction)
+  products         products          @relation(fields: [product_id], references: [product_id], onDelete: Cascade, onUpdate: NoAction)
+  product_variants product_variants? @relation(fields: [variant_id], references: [variant_id], onUpdate: NoAction)
+
+  @@unique([cart_id, product_id, variant_id])
+  @@index([cart_id], map: "idx_cart_items_cart_id")
+  @@index([product_id], map: "idx_cart_items_product_id")
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model carts {
+  cart_id      String       @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  business_id  String       @db.Uuid
+  tenant_id    String       @db.Uuid
+  lead_id      String       @db.Uuid
+  status       String?      @default("active") @db.VarChar(20)
+  total_amount Decimal?     @default(0) @db.Decimal(10, 2)
+  total_items  Int?         @default(0)
+  expires_at   DateTime?    @db.Timestamptz(6)
+  created_at   DateTime?    @default(now()) @db.Timestamptz(6)
+  updated_at   DateTime?    @default(now()) @db.Timestamptz(6)
+  cart_items   cart_items[]
+  businesses   businesses   @relation(fields: [business_id], references: [business_id], onDelete: Cascade, onUpdate: NoAction)
+  leads        leads        @relation(fields: [lead_id], references: [lead_id], onDelete: Cascade, onUpdate: NoAction)
+  tenants      tenants      @relation(fields: [tenant_id], references: [tenant_id], onDelete: Cascade, onUpdate: NoAction)
+
+  @@index([business_id], map: "idx_carts_business_id")
+  @@index([created_at], map: "idx_carts_created_at")
+  @@index([lead_id], map: "idx_carts_lead_id")
+  @@index([status], map: "idx_carts_status")
 }

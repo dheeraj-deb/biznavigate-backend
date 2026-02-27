@@ -1,0 +1,4 @@
+interface SendPaymentRequestParams {
+    header?: string;
+    
+}

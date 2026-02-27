@@ -110,13 +110,50 @@ export class KafkaProducerService {
   }
 
   /**
+   * Publish interactive selection directly to workflow (bypass AI)
+   */
+  async publishInteractiveSelection(payload: any) {
+    const event = {
+      event_id: uuidv4(),
+      event_type: 'workflow.interactive.selection',
+      timestamp: new Date().toISOString(),
+      payload,
+    };
+
+    await this.publishEvent('workflow-event', event, payload.lead_id);
+    this.logger.log(`Published workflow-event for interactive selection from lead: ${payload.lead_id}`);
+  }
+
+  /**
+   * Publish catalog order completed event to resume workflow
+   */
+  async publishCatalogOrderCompleted(payload: {
+    execution_id: string;
+    lead_id: string;
+    business_id: string;
+    tenant_id: string | null;
+    cart_info: any;
+    context: any;
+  }) {
+    const event = {
+      event_id: uuidv4(),
+      event_type: 'workflow.catalog.order.completed',
+      timestamp: new Date().toISOString(),
+      payload,
+    };
+
+    await this.publishEvent('workflow-event', event, payload.lead_id);
+    this.logger.log(`Published catalog order completed event for lead: ${payload.lead_id}`);
+  }
+
+  /**
    * Generic event publisher
    */
   private async publishEvent(topic: string, event: any, key?: string) {
     try {
       const producer = this.kafkaService.getProducer();
       
-      await producer.send({
+      const kafkaevt = await producer.send({
         topic,
         messages: [
           {
@@ -129,6 +166,9 @@ export class KafkaProducerService {
           },
         ],
       });
+
+      console.log("kafkaEvt", kafkaevt)
+
     } catch (error) {
       this.logger.error(`Failed to publish event to ${topic}:`, error);
       throw error;

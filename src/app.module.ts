@@ -23,6 +23,7 @@ import { KafkaModule } from "./features/kafka/kafka.module";
 import { WhatsAppModule } from "./features/whatsapp/whatsapp.module";
 import { InstagramModule } from "./features/instagram/instagram.module";
 import { ChatWidgetModule } from "./features/chat-widget/chat-widget.module";
+import { WorkflowsModule } from "./features/workflows/workflows.module";
 import { ProductsModule } from "./features/products/products.module";
 import { CategoriesModule } from "./features/categories/categories.module";
 // import { UploadsModule } from "./features/uploads/uploads.module";
@@ -36,9 +37,10 @@ import { AnalyticsModule } from "./features/analytics/analytics.module";
 import { CampaignsModule } from "./features/campaigns/campaigns.module";
 import { TemplatesModule } from "./features/notification-templates/templates.module";
 import { MessagesModule } from "./features/messages/messages.module";
-import { OrchestrationModule } from "./features/orchestration/orchestration.module";
 import { ServeStaticModule } from "@nestjs/serve-static";
 import { join } from "path";
+import { MongooseModule } from "@nestjs/mongoose";
+import { ConfigModule, ConfigService } from "@nestjs/config";
 
 @Module({
   imports: [
@@ -61,6 +63,15 @@ import { join } from "path";
         limit: 1000, // 1000 requests per 15 minutes
       },
     ]),
+    MongooseModule.forRootAsync({
+      imports: [ConfigModule],
+      useFactory: async (config: ConfigService) => ({
+        uri: config.get<string>('MONGODB_URI'),
+        maxPoolSize: 10,
+        serverSelectionTimeoutMS: 5000
+      }),
+      inject: [ConfigService]
+    }),
     // Static file serving for uploaded images
     ServeStaticModule.forRoot({
       rootPath: join(__dirname, '..', '..', 'public'),
@@ -96,12 +107,12 @@ import { join } from "path";
     TemplatesModule,
     MessagesModule,
     // KafkaModule, // Kafka integration for AI services
-   // WhatsAppModule//
+    // WhatsAppModule//
     KafkaModule, // Kafka integration for AI services
     WhatsAppModule,
     InstagramModule, // Instagram Graph API integration
     ChatWidgetModule, // Chat widget for website integration
-    OrchestrationModule, // Workflow orchestration engine
+    WorkflowsModule, // Workflow orchestration and automation
   ],
   providers: [
     {

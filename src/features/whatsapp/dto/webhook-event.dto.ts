@@ -15,6 +15,7 @@ export enum WhatsAppMessageType {
   BUTTON = 'button',
   REACTION = 'reaction',
   STICKER = 'sticker',
+  ORDER = 'order',
 }
 
 // Interactive Message Types
@@ -160,6 +161,45 @@ export class ReactionMessageDto {
   emoji?: string;
 }
 
+// Order Message (for catalog orders)
+export class OrderProductItemDto {
+  @ApiProperty()
+  @IsString()
+  product_retailer_id: string;
+
+  @ApiPropertyOptional()
+  @IsNumber()
+  @IsOptional()
+  quantity?: number;
+
+  @ApiPropertyOptional()
+  @IsNumber()
+  @IsOptional()
+  item_price?: number;
+
+  @ApiPropertyOptional()
+  @IsString()
+  @IsOptional()
+  currency?: string;
+}
+
+export class OrderMessageDto {
+  @ApiProperty()
+  @IsString()
+  catalog_id: string;
+
+  @ApiPropertyOptional()
+  @IsString()
+  @IsOptional()
+  text?: string;
+
+  @ApiProperty({ type: [OrderProductItemDto] })
+  @IsArray()
+  @ValidateNested({ each: true })
+  @Type(() => OrderProductItemDto)
+  product_items: OrderProductItemDto[];
+}
+
 // Profile
 export class ProfileDto {
   @ApiProperty()
@@ -252,6 +292,12 @@ export class WhatsAppMessageDto {
   @Type(() => ReactionMessageDto)
   @IsOptional()
   reaction?: ReactionMessageDto;
+
+  @ApiPropertyOptional({ type: OrderMessageDto })
+  @ValidateNested()
+  @Type(() => OrderMessageDto)
+  @IsOptional()
+  order?: OrderMessageDto;
 }
 
 // Status

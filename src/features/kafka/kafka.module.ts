@@ -1,12 +1,13 @@
-import { Module, OnModuleInit, OnModuleDestroy } from '@nestjs/common';
+import { Module, OnApplicationBootstrap, OnModuleDestroy } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { KafkaController } from './kafka.controller';
 import { KafkaService } from './kafka.service';
 import { KafkaProducerService } from './kafka-producer.service';
 import { KafkaConsumerService } from './kafka-consumer.service';
+import { ConversationModule } from '../conversation/conversation.module';
 
 @Module({
-  imports: [ConfigModule],
+  imports: [ConfigModule, ConversationModule],
   controllers: [KafkaController],
   providers: [
     KafkaService,
@@ -19,13 +20,13 @@ import { KafkaConsumerService } from './kafka-consumer.service';
     KafkaConsumerService,
   ],
 })
-export class KafkaModule implements OnModuleInit, OnModuleDestroy {
+export class KafkaModule implements OnApplicationBootstrap, OnModuleDestroy {
   constructor(
     private readonly kafkaConsumerService: KafkaConsumerService,
   ) {}
 
-  async onModuleInit() {
-    // Start consuming messages when module initializes
+  async onApplicationBootstrap() {
+    // Start consuming messages AFTER all modules have initialized their handlers
     await this.kafkaConsumerService.consume();
   }
 

@@ -68,24 +68,12 @@ services:
     networks:
       - biznavigate-network
 
-  # Redis - For caching and session management
-  redis:
-    image: redis:7-alpine
-    container_name: biznavigate-redis
-    ports:
-      - "6379:6379"
-    volumes:
-      - redis-data:/data
-    networks:
-      - biznavigate-network
-    command: redis-server --appendonly yes
-
 volumes:
   zookeeper-data:
   zookeeper-logs:
   kafka-data:
-  redis-data:
 
 networks:
   biznavigate-network:
-    driver: bridge
+    external: true
+    name: biznavigate-backend_biznavigate-network
