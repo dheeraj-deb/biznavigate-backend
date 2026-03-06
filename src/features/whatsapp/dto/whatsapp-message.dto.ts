@@ -21,6 +21,7 @@ export enum InteractiveSendType {
   LIST = 'list',
   PRODUCT = 'product',
   PRODUCT_LIST = 'product_list',
+  ORDER_DETAILS = 'order_details',
 }
 
 // ==================== Text Message ====================
@@ -453,16 +454,28 @@ export class SendWhatsAppMessageDto {
 
 // ==================== Mark as Read DTO ====================
 
+class TypingIndicatorDto {
+  @ApiProperty({ example: 'text' })
+  @IsString()
+  type: string;
+}
+
 export class MarkAsReadDto {
-  @ApiProperty()
+  @ApiProperty({ example: 'whatsapp' })
   @IsString()
   messaging_product: string = 'whatsapp';
 
-  @ApiProperty()
+  @ApiProperty({ example: 'read' })
   @IsString()
   status: string = 'read';
 
   @ApiProperty()
   @IsString()
   message_id: string;
+
+  @ApiPropertyOptional({ type: TypingIndicatorDto })
+  @IsOptional()
+  @ValidateNested()
+  @Type(() => TypingIndicatorDto)
+  typing_indicator?: TypingIndicatorDto;
 }

@@ -340,6 +340,60 @@ export class WhatsAppCatalogService {
   }
 
 
+  /**
+   * Push a single product's current availability (in stock / out of stock)
+   * to the WhatsApp Commerce Manager catalog.
+   * Reads `in_stock` from the DB so it always reflects the latest value.
+   * Call this after any stock_quantity change that may flip availability.
+   */
+  async syncProductAvailabilityToCatalog(productId: string): Promise<void> {
+    const product = await this.prisma.products.findUnique({
+      where: { product_id: productId },
+      include: {
+        product_images: { where: { is_primary: true }, take: 1 },
+      },
+    });
+
+    if (!product?.in_whatsapp_catalog || !product.whatsapp_catalog_id) {
+      this.logger.debug(`Product ${productId} not in catalog — skipping availability sync`);
+      return;
+    }
+
+    const account = await this.prisma.social_accounts.findFirst({
+      where: { business_id: product.business_id, platform: 'whatsapp', is_active: true },
+    });
+
+    if (!account) {
+      this.logger.warn(`No active WhatsApp account for business ${product.business_id}`);
+      return;
+    }
+
+    const accessToken = this.decryptToken(account.access_token);
+    const availability: 'in stock' | 'out of stock' = product.in_stock ? 'in stock' : 'out of stock';
+
+    await this.whatsappApiClient.syncCatalogProduct(
+      account.whatsapp_catalog_id ?? account.instagram_business_account_id,
+      accessToken,
+      {
+        retailer_id: product.product_id,
+        name: product.name,
+        description: product.description || '',
+        price: Number(product.price) * 100,
+        currency: product.currency || 'INR',
+        availability,
+        image_url: product.primary_image_url || product.product_images[0]?.file_path,
+      },
+      product.whatsapp_catalog_id,
+    );
+
+    await this.prisma.products.update({
+      where: { product_id: productId },
+      data: { whatsapp_sync_status: 'synced', whatsapp_synced_at: new Date(), whatsapp_sync_error: null },
+    });
+
+    this.logger.log(`Catalog availability synced for product ${productId}: ${availability}`);
+  }
+
   async getCatalogId(business_id: string): Promise<string> {
     const account = await this.prisma.social_accounts.findFirst({
       where: {

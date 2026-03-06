@@ -36,7 +36,7 @@ export class WaitForTextNode extends ActionNode<WaitForTextParams, string> {
                 to: from,
                 type: SendMessageType.TEXT,
                 text: { body: promptText },
-            });
+            }, this.id);
         }
 
         // Workflow pauses here until user sends text input

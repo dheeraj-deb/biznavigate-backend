@@ -6,29 +6,27 @@ import { Cart, CartItem, CartWithItems, CartStatus } from '../domain/entities/ca
 export class CartRepositoryPrisma {
   private readonly logger = new Logger(CartRepositoryPrisma.name);
 
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(private readonly prisma: PrismaService) { }
 
   /**
    * Get or create active cart for a lead
    */
-  async getOrCreateCart(leadId: string, businessId: string, tenantId: string): Promise<Cart> {
-    // Try to find existing active cart
+  async getOrCreateCart(customer_id: string, businessId: string, tenantId: string): Promise<Cart> {
     let cart = await this.prisma.carts.findFirst({
       where: {
-        lead_id: leadId,
+        customer_id: customer_id,
         business_id: businessId,
         status: CartStatus.ACTIVE,
       },
     });
 
-    // Create new cart if none exists
     if (!cart) {
       const expiresAt = new Date();
-      expiresAt.setDate(expiresAt.getDate() + 7); // Cart expires in 7 days
+      expiresAt.setDate(expiresAt.getDate() + 7);
 
       cart = await this.prisma.carts.create({
         data: {
-          lead_id: leadId,
+          customer_id: customer_id,
           business_id: businessId,
           tenant_id: tenantId,
           status: CartStatus.ACTIVE,
@@ -36,7 +34,7 @@ export class CartRepositoryPrisma {
         },
       });
 
-      this.logger.log(`Created new cart ${cart.cart_id} for lead ${leadId}`);
+      this.logger.log(`Created new cart ${cart.cart_id} for customer ${customer_id}`);
     }
 
     return {
@@ -298,10 +296,10 @@ export class CartRepositoryPrisma {
   /**
    * Get cart by lead ID
    */
-  async getActiveCartByLeadId(leadId: string, businessId: string): Promise<CartWithItems | null> {
+  async getActiveCartByCustomerId(customer_id: string, businessId: string): Promise<CartWithItems | null> {
     const cart = await this.prisma.carts.findFirst({
       where: {
-        lead_id: leadId,
+        customer_id: customer_id,
         business_id: businessId,
         status: CartStatus.ACTIVE,
       },

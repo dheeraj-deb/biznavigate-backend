@@ -14,6 +14,7 @@ import {
   HttpStatus,
   Res,
 } from '@nestjs/common';
+import * as fs from "fs"
 import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth } from '@nestjs/swagger';
 import { Request, Response } from 'express';
 import { WhatsAppService } from './whatsapp.service';
@@ -30,6 +31,8 @@ import {
   DisconnectWhatsAppAccountDto,
   GetAccountsDto,
 } from './dto/whatsapp-auth.dto';
+import * as path from 'path';
+import { WhatsAppTemplatesService } from '../whatsapp-templates/whatsapp-templates.service';
 
 interface RawBodyRequest<T> extends Request {
   rawBody?: Buffer;
@@ -42,8 +45,9 @@ export class WhatsAppController {
 
   constructor(
     private readonly whatsappService: WhatsAppService,
+    private readonly whatsappTemplatesService: WhatsAppTemplatesService,
     private readonly webhookValidator: WebhookValidatorService,
-  ) {}
+  ) { }
 
   // ==================== Account Management ====================
 
@@ -150,7 +154,7 @@ export class WhatsAppController {
 
     setImmediate(() => this.processWebhook(body));
 
-    return { success: true };
+    res.status(200).json({ success: 200 })
   }
 
   // ==================== Messaging ====================
@@ -224,17 +228,19 @@ export class WhatsAppController {
   /**
    * Process webhook events (Meta WhatsApp)
    */
-  private async processWebhook(webhookData: WhatsAppWebhookDto): Promise<void> {    
+  private async processWebhook(webhookData: WhatsAppWebhookDto): Promise<void> {
     try {
       for (const entry of webhookData.entry) {
         const changes = this.webhookValidator.extractChanges(entry);
 
-        console.log("changes", changes);
-
         for (const change of changes) {
           const { value } = change;
 
-          // Handle incoming messages
+          if (change.filed = 'message_template_status_update') {
+            await this.whatsappTemplatesService.handleMetaWebhook(value);
+            continue;
+          }
+
           const messages = this.webhookValidator.extractMessages(value);
           if (messages.length > 0) {
             for (const message of messages) {

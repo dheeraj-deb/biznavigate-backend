@@ -23,7 +23,7 @@ export class ConversationService {
   }
 
   async findActiveConversation(lead_id: string, channel: string): Promise<ConversationDocument | null> {
-    return this.conversationModel.findOne({ lead_id, channel, status: 'active' }).exec();
+    return this.conversationModel.findOne({ lead_id, channel, status: { $in: ['active', 'waiting'] } }).exec();
   }
 
   async findConversationById(conversation_id: string): Promise<ConversationDocument | null> {

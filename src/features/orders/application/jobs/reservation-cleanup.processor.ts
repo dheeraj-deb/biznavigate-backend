@@ -2,6 +2,7 @@ import { Processor, WorkerHost } from '@nestjs/bullmq';
 import { Logger } from '@nestjs/common';
 import { Job } from 'bullmq';
 import { StockReservationService } from '../services/stock-reservation.service';
+import { WhatsAppCatalogService } from '../../../whatsapp/services/whatsapp-catalog.service';
 
 /**
  * Background Job Processor for Expired Stock Reservations
@@ -9,11 +10,16 @@ import { StockReservationService } from '../services/stock-reservation.service';
  */
 @Processor('reservation-cleanup', {
   concurrency: 1, // Only one cleanup job at a time
+  lockDuration: 60000,   // 60s — cleanup can be slow on large datasets
+  lockRenewTime: 15000,
 })
 export class ReservationCleanupProcessor extends WorkerHost {
   private readonly logger = new Logger(ReservationCleanupProcessor.name);
 
-  constructor(private readonly stockReservationService: StockReservationService) {
+  constructor(
+    private readonly stockReservationService: StockReservationService,
+    private readonly whatsappCatalogService: WhatsAppCatalogService,
+  ) {
     super();
   }
 
@@ -21,13 +27,31 @@ export class ReservationCleanupProcessor extends WorkerHost {
     this.logger.log('Starting expired reservation cleanup job');
 
     try {
-      const cleanedCount = await this.stockReservationService.cleanupExpiredReservations();
+      const [cleanedCount, { count: cartHoldsReleased, restoredProductIds }] = await Promise.all([
+        this.stockReservationService.cleanupExpiredReservations(),
+        this.stockReservationService.cleanupExpiredCartHolds(),
+      ]);
 
-      this.logger.log(`Cleanup job completed. Cleaned ${cleanedCount} expired reservations`);
+      // Push availability updates to WhatsApp catalog for all products whose stock was restored.
+      // Run in parallel, fire-and-forget per product so one failure doesn't block the rest.
+      if (restoredProductIds.length > 0) {
+        await Promise.allSettled(
+          restoredProductIds.map((productId) =>
+            this.whatsappCatalogService
+              .syncProductAvailabilityToCatalog(productId)
+              .catch((err) => this.logger.warn(`Catalog sync failed for ${productId}: ${err.message}`)),
+          ),
+        );
+      }
+
+      this.logger.log(
+        `Cleanup job completed. Order reservations: ${cleanedCount}, cart holds: ${cartHoldsReleased}`,
+      );
 
       return {
         success: true,
         cleanedCount,
+        cartHoldsReleased,
         timestamp: new Date(),
       };
     } catch (error) {

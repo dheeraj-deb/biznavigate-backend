@@ -38,6 +38,7 @@ export class WhatsAppService {
     private readonly conversationService: ConversationService,
   ) { }
 
+
   /**
    * Connect WhatsApp account to business
    */
@@ -139,11 +140,18 @@ export class WhatsAppService {
    * Handle incoming message webhook
    */
   async handleMessageWebhook(message: any, metadata: any, contacts: any[]): Promise<void> {
-    console.log('Handling WhatsApp message webhook:', message, metadata, contacts);
     try {
       const phoneNumberId = metadata.phone_number_id;
       const from = message.from;
       const messageId = message.id;
+
+      // 🕐 STALE MESSAGE CHECK: Skip messages older than 5 minutes (Meta replays queued webhooks on restart)
+      const messageTimestampMs = parseInt(message.timestamp) * 1000;
+      const ageMs = Date.now() - messageTimestampMs;
+      if (ageMs > 5 * 60 * 1000) {
+        this.logger.warn(`⏭️ Skipping stale message ${messageId} (${Math.round(ageMs / 60000)}min old)`);
+        return;
+      }
 
       // 🔒 DEDUPLICATION: Check if this message has already been processed
       const existingMessage = await this.conversationService.findMessageByPlatformId(messageId);
@@ -151,8 +159,6 @@ export class WhatsAppService {
         this.logger.debug(`⏭️ Message ${messageId} already processed, skipping duplicate`);
         return;
       }
-
-      this.logger.log(`📱 WhatsApp message received from ${from}`);
 
       // Find business by phone number ID
       const account = await this.prisma.social_accounts.findFirst({
@@ -169,7 +175,23 @@ export class WhatsAppService {
       const contact = contacts?.find(c => c.wa_id === from);
       const contactName = contact?.profile?.name || from;
 
-      // Create or find existing lead (leads stay in Postgres)
+      let customer = await this.prisma.customers.findFirst({
+        where: { business_id: account.business_id, platform_user_id: from }
+      })
+
+      if (!customer) {
+        await this.prisma.customers.create({
+          data: {
+            business_id: account.business_id,
+            tenant_id: account.businesses.tenant_id,
+            name: contactName,
+            platform_user_id: from,
+            whatsapp_number: from,
+            phone: from
+          }
+        })
+      }
+
       let lead = await this.prisma.leads.findFirst({
         where: { business_id: account.business_id, platform_user_id: from, source: 'whatsapp' },
       });
@@ -232,7 +254,6 @@ export class WhatsAppService {
           messageText = `[Unsupported message type: ${message.type}]`;
       }
 
-      // Find or create conversation in MongoDB
       let conversation = await this.conversationService.findActiveConversation(lead.lead_id, 'whatsapp');
 
       if (!conversation) {
@@ -249,24 +270,42 @@ export class WhatsAppService {
         });
       }
 
-      // Store inbound message in MongoDB
-      const leadMessage = await this.conversationService.createMessage({
-        conversation_id: conversation.conversation_id,
-        lead_id: lead.lead_id,
-        business_id: account.business_id,
-        tenant_id: account.businesses.tenant_id,
-        sender_type: 'lead',
-        sender_id: phoneNumberId,
-        sender_name: contactName,
-        message_text: messageText,
-        message_type: messageType,
-        platform_message_id: messageId,
-        delivery_status: 'received',
+      // Look up the current waiting workflow node (if any) to tag this inbound message
+      const waitingExecution = await this.prisma.workflow_executions.findFirst({
+        where: { lead_id: lead.lead_id, waiting_for_input: true, channel: 'whatsapp' },
+        select: { current_node_id: true },
       });
+
+      // Store inbound message in MongoDB — unique index on platform_message_id prevents duplicates atomically
+      let leadMessage: any;
+      try {
+        leadMessage = await this.conversationService.createMessage({
+          conversation_id: conversation.conversation_id,
+          lead_id: lead.lead_id,
+          business_id: account.business_id,
+          tenant_id: account.businesses.tenant_id,
+          sender_type: 'lead',
+          sender_id: phoneNumberId,
+          sender_name: contactName,
+          message_text: messageText,
+          message_type: messageType,
+          message_response_based_on_type: messageType === "interactive" ? message.buttonId : null,
+          platform_message_id: messageId,
+          delivery_status: 'received',
+          workflow_node_id: waitingExecution?.current_node_id ?? undefined,
+        });
+      } catch (err: any) {
+        if (err?.code === 11000) {
+          // Duplicate key — Meta sent the same webhook twice, skip
+          this.logger.debug(`⏭️ Duplicate insert for message ${messageId}, skipping`);
+          return;
+        }
+        throw err;
+      }
 
       const leadMessageId = (leadMessage._id as any).toString();
 
-      // Mark as read
+      // Mark as read + show typing indicator while AI processes
       const accessToken = this.decryptToken(account.access_token);
       await this.circuitBreaker.execute(
         `whatsapp-mark-read-${phoneNumberId}`,
@@ -443,6 +482,7 @@ export class WhatsAppService {
     phoneNumberId: string,
     to: string,
     message: SendWhatsAppMessageDto,
+    nodeId?: string,
   ): Promise<any> {
     try {
       const account = await this.prisma.social_accounts.findFirst({
@@ -468,8 +508,11 @@ export class WhatsAppService {
         where: { business_id: account.business_id, platform_user_id: to, source: 'whatsapp' },
       });
 
-      // If lead exists and send was successful, persist outbound message in MongoDB
-      if (lead && result?.messageId) {
+      // Extract message ID from WhatsApp API response (format: { messages: [{id: "wamid..."}] })
+      const platformMessageId = result?.messages?.[0]?.id;
+
+      // Persist outbound message in MongoDB
+      if (lead && platformMessageId) {
         let conversation = await this.conversationService.findActiveConversation(lead.lead_id, 'whatsapp');
 
         if (!conversation) {
@@ -494,14 +537,15 @@ export class WhatsAppService {
           sender_id: phoneNumberId,
           message_text: messageText,
           message_type: message.type,
-          platform_message_id: result.messageId,
+          platform_message_id: platformMessageId,
           delivery_status: 'sent',
+          workflow_node_id: nodeId,
         });
       }
 
       return {
         success: true,
-        messages: result?.messageId ? [{ id: result.messageId }] : [],
+        messages: platformMessageId ? [{ id: platformMessageId }] : [],
         ...result,
       };
     } catch (error) {
@@ -538,6 +582,7 @@ export class WhatsAppService {
     buttons: { id: string; title: string }[],
     headerText?: string,
     footerText?: string,
+    nodeId?: string,
   ): Promise<any> {
     const message: SendWhatsAppMessageDto = {
       messaging_product: 'whatsapp',
@@ -559,7 +604,7 @@ export class WhatsAppService {
       message.interactive!.footer = { text: footerText };
     }
 
-    return this.sendMessage(phoneNumberId, to, message);
+    return this.sendMessage(phoneNumberId, to, message, nodeId);
   }
 
   /**
@@ -573,6 +618,7 @@ export class WhatsAppService {
     sections: { title: string; rows: { id: string; title: string; description?: string }[] }[],
     headerText?: string,
     footerText?: string,
+    nodeId?: string,
   ): Promise<any> {
     const message: SendWhatsAppMessageDto = {
       messaging_product: 'whatsapp',
@@ -592,7 +638,7 @@ export class WhatsAppService {
       message.interactive!.footer = { text: footerText };
     }
 
-    return this.sendMessage(phoneNumberId, to, message);
+    return this.sendMessage(phoneNumberId, to, message, nodeId);
   }
 
   /**

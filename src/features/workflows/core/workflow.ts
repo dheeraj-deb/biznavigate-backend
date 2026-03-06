@@ -17,6 +17,8 @@ export class Workflow {
     private waitForInput: boolean = false;
 
     onPause?: (state: any) => Promise<void>;
+    onComplete?: (state: any) => Promise<void>;
+    onError?: (nodeId: string, error: Error) => Promise<void>;
 
     constructor(private readonly nodeFactory: NodeFactory) { }
 
@@ -108,19 +110,28 @@ export class Workflow {
                     continue;
                 }
                 const nextNode = this.getNode(conn.to);
-                console.log('nextNode', nextNode)
+                console.log('nextNode', nextNode?.params?.items)
                 if (nextNode) {
                     await this.executeNode(nextNode);
                     return;
                 }
             } else {
                 const nextNode = this.getNode(conn.to);
-                console.log('nextNode', nextNode)
+                console.log("nextNode=>", nextNode?.params?.items)
                 if (nextNode) {
                     await this.executeNode(nextNode);
                     return;
                 }
             }
+        }
+
+        // No more nodes to traverse — workflow completed
+        if (!this.waitForInput && this.onComplete) {
+            await this.onComplete({
+                workflowId: this.id,
+                currentNodeId: nodeId,
+                context: this.nodeContext,
+            });
         }
     }
 
@@ -170,9 +181,33 @@ export class Workflow {
 
         console.log(`Resuming workflow from node ${this.currentNodeId} with input:`, userInput);
 
-        this.nodeContext.user_input = userInput;
-
         const currentNode = this.getNode(this.currentNodeId);
+
+        // Validate input against the waiting node's accepted options
+        if (currentNode && !currentNode.validateInput(userInput)) {
+            await currentNode.reprompt(this.nodeContext);
+            // Stay paused — waitForInput remains true, DB state unchanged
+            return;
+        }
+
+        // Exit — end the workflow cleanly
+        if (userInput === 'exit') {
+            this.waitForInput = false;
+            this.currentNodeId = null;
+            if (currentNode) {
+                await currentNode.onExit(this.nodeContext);
+            }
+            if (this.onComplete) {
+                await this.onComplete({
+                    workflowId: this.id,
+                    currentNodeId: currentNode?.id,
+                    context: this.nodeContext,
+                });
+            }
+            return;
+        }
+
+        this.nodeContext.user_input = userInput;
 
         // Handle filter node selections BEFORE overwriting
         if (currentNode?.type === 'action.collect_filter' && currentNode.outputVariable) {
@@ -257,6 +292,11 @@ export class Workflow {
                 await this.executeNode(nextNode);
                 return;
             }
+        }
+
+        // No error/fallback connections — workflow failed
+        if (this.onError) {
+            await this.onError(nodeId, error);
         }
     }
 

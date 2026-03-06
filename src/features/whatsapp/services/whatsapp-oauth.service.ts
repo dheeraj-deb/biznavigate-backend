@@ -140,6 +140,10 @@ export class WhatsAppOAuthService {
       account = await this.prisma.social_accounts.update({
         where: { account_id: existingAccount.account_id },
         data: {
+          platform_user_id: phoneNumber.id,
+          username: phoneNumber.display_phone_number,
+          page_id: phoneNumber.id,
+          instagram_business_account_id: waba.id,
           access_token: this.encryptToken(tokenData.access_token),
           token_expiry: tokenExpiry,
           is_active: true,

@@ -4,7 +4,10 @@ import { Job } from 'bullmq';
 import { InstagramService } from '../instagram.service';
 import { PrismaService } from '../../../prisma/prisma.service';
 
-@Processor('instagram-token-refresh')
+@Processor('instagram-token-refresh', {
+  lockDuration: 120000,  // 2 min — iterates all accounts
+  lockRenewTime: 30000,
+})
 export class TokenRefreshProcessor extends WorkerHost {
   private readonly logger = new Logger(TokenRefreshProcessor.name);
 

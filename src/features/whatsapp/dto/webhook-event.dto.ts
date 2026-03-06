@@ -338,14 +338,16 @@ export class MetadataDto {
 
 // Value (contains messages or statuses)
 export class ValueDto {
-  @ApiProperty()
+  @ApiPropertyOptional()
   @IsString()
-  messaging_product: string;
+  @IsOptional()
+  messaging_product?: string;
 
-  @ApiProperty({ type: MetadataDto })
+  @ApiPropertyOptional({ type: MetadataDto })
   @ValidateNested()
   @Type(() => MetadataDto)
-  metadata: MetadataDto;
+  @IsOptional()
+  metadata?: MetadataDto;
 
   @ApiPropertyOptional({ type: [ContactDto] })
   @IsArray()

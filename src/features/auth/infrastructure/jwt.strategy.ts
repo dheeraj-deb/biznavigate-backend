@@ -37,7 +37,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     // Try to get user status from cache first
     let isUserActive: boolean | undefined = await this.cacheManager.get(cacheKey);
 
-    if (isUserActive === undefined) {
+    if (isUserActive == null) {
       // Cache miss - query database
       const user = await this.prisma.users.findUnique({
         where: { user_id: payload.user_id },

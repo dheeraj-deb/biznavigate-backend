@@ -7,7 +7,10 @@ import { CircuitBreakerService } from '../infrastructure/circuit-breaker.service
 import { PrismaService } from '../../../prisma/prisma.service';
 import * as crypto from 'crypto';
 
-@Processor('instagram-insights-sync')
+@Processor('instagram-insights-sync', {
+  lockDuration: 300000,  // 5 min — syncs media for all accounts
+  lockRenewTime: 60000,
+})
 export class InsightsSyncProcessor extends WorkerHost {
   private readonly logger = new Logger(InsightsSyncProcessor.name);
 

@@ -553,6 +553,7 @@ exports.Prisma.CustomersScalarFieldEnum = {
   phone: 'phone',
   email: 'email',
   whatsapp_number: 'whatsapp_number',
+  platform_user_id: 'platform_user_id',
   total_orders: 'total_orders',
   total_spent: 'total_spent',
   last_order_date: 'last_order_date',
@@ -627,6 +628,18 @@ exports.Prisma.Stock_reservationsScalarFieldEnum = {
   variant_id: 'variant_id',
   quantity: 'quantity',
   reserved_at: 'reserved_at',
+  expires_at: 'expires_at',
+  status: 'status',
+  created_at: 'created_at',
+  updated_at: 'updated_at'
+};
+
+exports.Prisma.Cart_reservationsScalarFieldEnum = {
+  reservation_id: 'reservation_id',
+  lead_id: 'lead_id',
+  product_id: 'product_id',
+  variant_id: 'variant_id',
+  quantity: 'quantity',
   expires_at: 'expires_at',
   status: 'status',
   created_at: 'created_at',
@@ -1190,6 +1203,7 @@ exports.Prisma.CartsScalarFieldEnum = {
   business_id: 'business_id',
   tenant_id: 'tenant_id',
   lead_id: 'lead_id',
+  customer_id: 'customer_id',
   status: 'status',
   total_amount: 'total_amount',
   total_items: 'total_items',
@@ -1257,6 +1271,7 @@ exports.Prisma.ModelName = {
   orders: 'orders',
   order_items: 'order_items',
   stock_reservations: 'stock_reservations',
+  cart_reservations: 'cart_reservations',
   campaigns: 'campaigns',
   campaign_recipients: 'campaign_recipients',
   lead_scoring_rules: 'lead_scoring_rules',

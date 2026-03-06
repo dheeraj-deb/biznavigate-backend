@@ -1,5 +1,6 @@
 import { Injectable, Logger, BadRequestException, ConflictException } from '@nestjs/common';
 import { PrismaService } from '../../../../prisma/prisma.service';
+import { Prisma } from '../../../../../generated/prisma';
 
 /**
  * Stock Reservation Service
@@ -371,6 +372,79 @@ export class StockReservationService {
         ? product.stock_quantity - quantityToDeduct > 0
         : false;
     }
+  }
+
+  /**
+   * Release expired cart holds (pre-order reservations without an order FK).
+   *
+   * For each expired reservation:
+   *  1. Marks cart_reservations row as 'released'
+   *  2. Restores stock_quantity on the product + flips in_stock
+   *  3. Deletes the cart item so the lead's cart is clean
+   *
+   * Runs inside a single transaction for atomicity.
+   * Returns { count, restoredProductIds } so the caller can push catalog updates.
+   */
+  async cleanupExpiredCartHolds(): Promise<{ count: number; restoredProductIds: string[] }> {
+    return await this.prisma.$transaction(async (tx) => {
+      // 1. Mark expired holds released and grab the details we need
+      const expired = await tx.$queryRaw<{ product_id: string; quantity: number; lead_id: string }[]>(
+        Prisma.sql`
+          UPDATE cart_reservations
+          SET    status     = 'released',
+                 updated_at = NOW()
+          WHERE  status     = 'active'
+            AND  expires_at < NOW()
+          RETURNING product_id, quantity::integer, lead_id
+        `,
+      );
+
+      if (expired.length === 0) return { count: 0, restoredProductIds: [] };
+
+      // 2. Restore stock_quantity per product (aggregate quantities first to handle
+      //    multiple holds for the same product in one UPDATE)
+      const productQtyMap = new Map<string, number>();
+      for (const row of expired) {
+        productQtyMap.set(row.product_id, (productQtyMap.get(row.product_id) ?? 0) + Number(row.quantity));
+      }
+
+      for (const [productId, totalQty] of productQtyMap) {
+        await tx.$executeRaw(
+          Prisma.sql`
+            UPDATE products
+            SET stock_quantity = stock_quantity + ${totalQty}::integer,
+                in_stock       = (stock_quantity + ${totalQty}::integer > 0),
+                version        = version + 1,
+                updated_at     = NOW()
+            WHERE product_id = ${productId}::uuid
+          `,
+        );
+      }
+
+      // 3. Remove the cart items so expired products disappear from the lead's cart.
+      //    De-duplicate lead+product pairs before issuing DELETEs.
+      const seen = new Set<string>();
+      for (const { lead_id, product_id } of expired) {
+        const key = `${lead_id}:${product_id}`;
+        if (seen.has(key)) continue;
+        seen.add(key);
+
+        await tx.$executeRaw(
+          Prisma.sql`
+            DELETE FROM cart_items ci
+            USING  carts c
+            WHERE  c.cart_id     = ci.cart_id
+              AND  c.lead_id     = ${lead_id}::uuid
+              AND  c.status      = 'active'
+              AND  ci.product_id = ${product_id}::uuid
+          `,
+        );
+      }
+
+      const restoredProductIds = [...productQtyMap.keys()];
+      this.logger.log(`Released ${expired.length} expired cart holds, restored stock for ${restoredProductIds.length} product(s)`);
+      return { count: expired.length, restoredProductIds };
+    });
   }
 
   /**

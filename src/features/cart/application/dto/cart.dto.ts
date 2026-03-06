@@ -7,9 +7,9 @@ export class AddToCartDto {
   @IsUUID()
   business_id: string;
 
-  @ApiProperty({ description: 'Lead ID (customer)' })
+  @ApiProperty({ description: 'ID (customer)' })
   @IsUUID()
-  lead_id: string;
+  customer_id: string;
 
   @ApiProperty({ description: 'Product ID from WhatsApp catalog' })
   @IsUUID()

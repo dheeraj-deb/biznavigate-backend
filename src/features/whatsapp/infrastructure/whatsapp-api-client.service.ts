@@ -86,6 +86,9 @@ export class WhatsAppApiClientService {
         messaging_product: 'whatsapp',
         status: 'read',
         message_id: messageId,
+        typing_indicator : {
+          type : "text"
+        }
       };
 
       const response = await this.apiClient.post(
@@ -217,6 +220,9 @@ export class WhatsAppApiClientService {
     accessToken: string,
     template: any
   ): Promise<any> {
+
+    console.log("template==>", template);
+
     try {
       const response = await this.apiClient.post(
         `/${whatsappBusinessAccountId}/message_templates`,
@@ -227,6 +233,8 @@ export class WhatsAppApiClientService {
           },
         }
       );
+
+      console.log("submission res", response)
 
       this.logger.log(`Template created: ${template.name}`);
       return response.data;
@@ -427,6 +435,29 @@ export class WhatsAppApiClientService {
       return response.data.data || [];
     } catch (error) {
       this.logger.error('Failed to get catalog products:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Get message template status
+   */
+  async getTemplateStatus(
+    metaTemplateId: string,
+    accessToken: string,
+  ): Promise<{ status: string; rejectedReason?: string }> {
+    try {
+      const response = await this.apiClient.get(`/${metaTemplateId}`, {
+        headers: { Authorization: `Bearer ${accessToken}` },
+        params: { fields: 'status,quality_score,rejected_reason' },
+      });
+
+      return {
+        status: response.data.status,
+        rejectedReason: response.data.rejected_reason,
+      };
+    } catch (error) {
+      this.logger.error('Failed to get template status:', error);
       throw error;
     }
   }

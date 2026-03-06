@@ -16,30 +16,26 @@ export class CartService {
   constructor(
     private readonly cartRepository: CartRepositoryPrisma,
     private readonly prisma: PrismaService,
-  ) {}
+  ) { }
 
-  /**
-   * Add product to cart from WhatsApp catalog
-   * Validates inventory and reserves stock
-   */
+
   async addToCart(dto: AddToCartDto): Promise<CartWithItems> {
     try {
-      // Get or create active cart for this lead
-      const lead = await this.prisma.leads.findUnique({
-        where: { lead_id: dto.lead_id },
+
+      const customer = await this.prisma.customers.findUnique({
+        where: { customer_id: dto.customer_id, business_id: dto.business_id },
       });
 
-      if (!lead) {
-        throw new NotFoundException(`Lead not found: ${dto.lead_id}`);
+      if (!customer) {
+        throw new NotFoundException(`Customer not found: ${dto.customer_id}`);
       }
 
       const cart = await this.cartRepository.getOrCreateCart(
-        dto.lead_id,
+        dto.customer_id,
         dto.business_id,
-        lead.tenant_id,
+        customer.tenant_id,
       );
 
-      // Validate product exists and is in WhatsApp catalog
       const product = await this.prisma.products.findUnique({
         where: { product_id: dto.product_id },
         include: {
@@ -60,7 +56,7 @@ export class CartService {
       }
 
       if (!product.is_active) {
-        throw new BadRequestException(`Product ${product.name} is not active`);
+        throw new BadRequestException(`Product ${product.name} is not available`);
       }
 
       // Determine price and stock based on variant or product
@@ -93,9 +89,7 @@ export class CartService {
         availableStock = product.stock_quantity || 0;
       }
 
-      // Check if we have enough stock
       if (product.track_inventory) {
-        // Get current cart quantity for this product
         const existingCartItem = await this.prisma.cart_items.findFirst({
           where: {
             cart_id: cart.cart_id,
@@ -126,7 +120,7 @@ export class CartService {
       );
 
       this.logger.log(
-        `Added to cart: ${productName}${variantName ? ` - ${variantName}` : ''} x${dto.quantity} for lead ${dto.lead_id}`,
+        `Added to cart: ${productName}${variantName ? ` - ${variantName}` : ''} x${dto.quantity} for lead ${dto.customer_id}`,
       );
 
       // Return updated cart with items
@@ -140,8 +134,8 @@ export class CartService {
   /**
    * Get active cart for a lead
    */
-  async getCart(leadId: string, businessId: string): Promise<CartWithItems | null> {
-    return await this.cartRepository.getActiveCartByLeadId(leadId, businessId);
+  async getCart(customer_id: string, businessId: string): Promise<CartWithItems | null> {
+    return await this.cartRepository.getActiveCartByCustomerId(customer_id, businessId);
   }
 
   /**

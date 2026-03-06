@@ -1,19 +1,28 @@
-import { Injectable, Logger, OnModuleInit } from '@nestjs/common';
+import { Injectable, Logger, NotFoundException, OnModuleInit } from '@nestjs/common';
+import { InjectModel } from '@nestjs/mongoose';
+import { Model } from 'mongoose';
 import { KafkaConsumerService } from '../kafka/kafka-consumer.service';
 import { PrismaService } from '../../prisma/prisma.service';
 import { Workflow } from './core/workflow';
-import { WorkflowParameters, WorkflowProcessingContext } from './interfaces';
+import { WorkflowNodeExecutionContext, WorkflowParameters, WorkflowProcessingContext } from './interfaces';
 import { KafkaProducerService } from '../kafka/kafka-producer.service';
 import { WhatsAppService } from '../whatsapp/whatsapp.service';
 import { WhatsAppCatalogService } from '../whatsapp/services/whatsapp-catalog.service';
 import { NodeFactory } from './factories/node-factory';
+import { ConversationService } from '../conversation/conversation.service';
+import { CreateWorkflowDto, InitiateWorkflowDto, UpdateWorkflowDto } from './dto/save-workflow.dto';
+import { WorkflowDefinition, WorkflowDefinitionDocument } from './schema/workflow-definition.schema';
+import { BusinessWorkflow, BusinessWorkflowDocument } from './schema/business-workflow.schema';
+import { WorkflowExecution, WorkflowExecutionDocument } from './schema/workflow-execution.schema';
 
 @Injectable()
 export class WorkflowsService implements OnModuleInit {
   private readonly logger = new Logger(WorkflowsService.name);
+  // Map of execution_id → drop timeout handle (cleared on resume)
+  private readonly dropTimers = new Map<string, NodeJS.Timeout>();
 
   workflowDefinition = {
-    id: "00000000-0000-0000-0000-000000000001", // Valid UUID for test workflow
+    id: "00000000-0000-0000-0000-000000000001",
     name: "Test Workflow",
     active: true,
     nodes: [
@@ -22,36 +31,36 @@ export class WorkflowsService implements OnModuleInit {
         type: "trigger.whatsapp.intent",
         name: "Trigger",
         position: { x: 0, y: 0 },
-        params: {
-          intent: "GENERAL_INQUIRY"
-        }
+        params: { intent: "GENERAL_INQUIRY" }
       },
       {
         id: "trigger_purchase",
         type: "trigger.whatsapp.intent",
         name: "Trigger",
         position: { x: 0, y: 0 },
-        params: {
-          intent: "PURCHASE_INTENT"
-        }
+        params: { intent: "PURCHASE_INTENT" }
       },
       {
         id: "trigger_support",
         type: "trigger.whatsapp.intent",
         name: "Trigger",
         position: { x: 0, y: 0 },
-        params: {
-          intent: "SUPPORT_INTENT"
-        }
+        params: { intent: "SUPPORT_INTENT" }
       },
       {
         id: "trigger_traking",
         type: "trigger.whatsapp.intent",
         name: "Trigger",
         position: { x: 0, y: 0 },
-        params: {
-          intent: "TRACKING_INTENT"
-        }
+        params: { intent: "TRACKING_INTENT" }
+      },
+      {
+        id: "greet_node",
+        type: "action.send_message",
+        name: "Send Greet",
+        position: { x: 200, y: 0 },
+        output_variable: null,
+        params: { message: "Hello! ${contactName}! 👋 Welcome!" }
       },
       {
         id: "send_1",
@@ -150,28 +159,11 @@ export class WorkflowsService implements OnModuleInit {
         }
       },
       {
-        id: "send_3",
-        type: "action.send_message_with_btns",
-        name: "Send Post-Selection Message",
-        position: { x: 800, y: 0 },
-        output_variable: "button_selection",
-        params: {
-          message: "Thank you for your selection!",
-          buttons: [
-            { id: "option_1", title: "Confirm Selection" },
-            { id: "option_2", title: "Cancel Selection" },
-            { id: "option_3", title: "View More Products" }
-          ]
-        }
-      },
-      {
         id: "send_4",
         type: "action.wait_for_text",
         name: "Send Final Message",
         position: { x: 1000, y: 0 },
-        params: {
-          prompt: "Please send your address to confirm delivery."
-        }
+        params: { prompt: "Please send your address to confirm delivery." }
       },
       {
         id: "send_5",
@@ -191,205 +183,48 @@ export class WorkflowsService implements OnModuleInit {
         type: "action.send_message",
         name: "Send Payment Placeholder",
         position: { x: 1400, y: 0 },
-        params: {
-          message: "Payment of $100 USD will be processed. (Payment node coming soon)"
-        }
+        params: { message: "Payment of $100 USD will be processed. (Payment node coming soon)" }
       },
       {
         id: "send_7",
         type: "action.send_message",
         name: "Send Payment Confirmation",
         position: { x: 1600, y: 0 },
-        params: {
-          message: "Your order has been processed successfully!"
-        }
+        params: { message: "Your order has been processed successfully!" }
       }
     ],
     connections: {
-      "trigger_1": {
-        main: [
-          {
-            to: "send_1",
-          }
-        ]
-      },
+      "trigger_1": { main: [{ to: "greet_node" }] },
+      "greet_node": { main: [{ to: "send_1" }] },
       "send_1": {
         main: [
-          {
-            to: "filter_category",
-            condition: {
-              operator: "equals",
-              value: "option_1",
-              variable: "user_input"
-            }
-          },
-          {
-            to: "contact_support",
-            condition: {
-              operator: "equals",
-              value: "option_2",
-              variable: "user_input"
-            }
-          },
-          {
-            to: "leave_feedback",
-            condition: {
-              operator: "equals",
-              value: "option_3",
-              variable: "user_input"
-            }
-          }
+          { to: "filter_category", condition: { operator: "equals", value: "option_1", variable: "user_input" } },
+          { to: "contact_support", condition: { operator: "equals", value: "option_2", variable: "user_input" } },
+          { to: "leave_feedback", condition: { operator: "equals", value: "option_3", variable: "user_input" } }
         ]
       },
-      // "filter_gender": {
-      //   main: [
-      //     {
-      //       to: "filter_category"
-      //     }
-      //   ]
-      // },
-      "filter_category": {
-        main: [
-          {
-            to: "send_2"
-          }
-        ]
-      },
+      "filter_category": { main: [{ to: "send_2" }] },
       "send_11": {
         main: [
-          {
-            to: "send_2",
-            condition: {
-              operator: "equals",
-              value: "option_1",
-              variable: "user_input"
-            }
-          },
-          {
-            to: "send_2",
-            condition: {
-              operator: "equals",
-              value: "option_2",
-              variable: "user_input"
-            }
-          },
-          {
-            to: "send_2",
-            condition: {
-              operator: "equals",
-              value: "option_3",
-              variable: "user_input"
-            }
-          }
+          { to: "send_2", condition: { operator: "equals", value: "option_1", variable: "user_input" } },
+          { to: "send_2", condition: { operator: "equals", value: "option_2", variable: "user_input" } },
+          { to: "send_2", condition: { operator: "equals", value: "option_3", variable: "user_input" } }
         ]
       },
       "send_12": {
         main: [
-          {
-            to: "send_11",
-            condition: {
-              operator: "equals",
-              value: "option_1",
-              variable: "user_input"
-            }
-          },
-          {
-            to: "send_11",
-            condition: {
-              operator: "equals",
-              value: "option_2",
-              variable: "user_input"
-            }
-          },
-          {
-            to: "send_11",
-            condition: {
-              operator: "equals",
-              value: "option_3",
-              variable: "user_input"
-            }
-          }
+          { to: "send_11", condition: { operator: "equals", value: "option_1", variable: "user_input" } },
+          { to: "send_11", condition: { operator: "equals", value: "option_2", variable: "user_input" } },
+          { to: "send_11", condition: { operator: "equals", value: "option_3", variable: "user_input" } }
         ]
       },
-      "send_2": {
-        main: [
-          {
-            to: "send_3",
-            condition: {
-              operator: "exists",
-              variable: "user_input"
-            }
-          }
-        ]
-      },
-      send_3: {
-        main: [
-
-          {
-            to: "send_4",
-            condition: {
-              operator: "equals",
-              variable: "user_input",
-              value: "option_1"
-            }
-          },
-
-          {
-            to: "send_2",
-            condition: {
-              operator: "equals",
-              variable: "user_input",
-              value: "option_2"
-            }
-          },
-
-          {
-            to: "send_1",
-            condition: {
-              operator: "equals",
-              variable: "user_input",
-              value: "option_3"
-            }
-          }
-
-        ]
-      },
-      send_4: {
-        main: [
-          {
-            to: "send_5",
-            condition: {
-              operator: "exists",
-              variable: "user_input"
-            }
-          }
-        ]
-      },
-      send_5: {
-        main: [
-          {
-            to: "send_6",
-            condition: {
-              operator: "equals",
-              variable: "user_input",
-              value: "option_1"
-            }
-          }
-        ]
-      },
-
-      send_6: {
-        main: [
-          { to: "send_7" }
-        ]
-      },
-
-      send_7: {
-        main: []
-      }
+      "send_2": { main: [{ to: "send_4", condition: { operator: "exists", variable: "user_input" } }] },
+      "send_4": { main: [{ to: "send_5", condition: { operator: "exists", variable: "user_input" } }] },
+      "send_5": { main: [{ to: "send_6", condition: { operator: "equals", variable: "user_input", value: "option_1" } }] },
+      "send_6": { main: [{ to: "send_7" }] },
+      "send_7": { main: [] }
     }
   } satisfies WorkflowParameters;
-
 
   constructor(
     private readonly kafkaConsumer: KafkaConsumerService,
@@ -399,8 +234,166 @@ export class WorkflowsService implements OnModuleInit {
     private readonly whatsappService: WhatsAppService,
     private readonly whatsappCatalogService: WhatsAppCatalogService,
     private readonly nodeFactory: NodeFactory,
-
+    private readonly conversationService: ConversationService,
+    @InjectModel(WorkflowDefinition.name) private readonly workflowDefinitionModel: Model<WorkflowDefinitionDocument>,
+    @InjectModel(BusinessWorkflow.name) private readonly businessWorkflowModel: Model<BusinessWorkflowDocument>,
+    @InjectModel(WorkflowExecution.name) private readonly workflowExecutionModel: Model<WorkflowExecutionDocument>,
   ) {
+  }
+
+  getNodeDefinitions() {
+    return this.nodeFactory.getNodeDefinitions();
+  }
+
+  async initiateWorkflow(dto: InitiateWorkflowDto) {
+    const { workflow_name, business_id, description } = dto;
+
+    const business = await this.prisma.businesses.findUnique({
+      where: { business_id },
+      select: { business_type: true, tenant_id: true },
+    });
+    if (!business) throw new NotFoundException(`Business ${business_id} not found`);
+
+    const workflow_id = crypto.randomUUID();
+    const workflow_key = `${workflow_name.toLowerCase().replace(/\s+/g, '_')}_${Date.now()}`;
+
+    await this.workflowDefinitionModel.create({
+      workflow_id,
+      workflow_name,
+      business_type: business.business_type ?? 'general',
+      description,
+      version: '1.0.0',
+      workflow_definition: { nodes: [], connections: {} },
+      is_active: false,
+    });
+
+    await this.businessWorkflowModel.create({
+      business_id,
+      tenant_id: business.tenant_id,
+      workflow_id,
+      is_active: false,
+    });
+
+    return { workflow_id };
+  }
+
+  async createWorkflow(dto: CreateWorkflowDto) {
+    const { workflow_id, workflow_name, business_id, nodes, connections, description, is_active } = dto;
+
+    const business = await this.prisma.businesses.findUnique({
+      where: { business_id },
+      select: { business_type: true, tenant_id: true },
+    });
+    if (!business) throw new NotFoundException(`Business ${business_id} not found`);
+
+    const business_type: string = business.business_type ?? 'general';
+
+    const enrichedConnections = this.enrichConnectionsWithConditions(nodes, connections);
+
+    if (workflow_id) {
+      const workflowDef = await this.workflowDefinitionModel.findOneAndUpdate(
+        { workflow_id },
+        {
+          $set: {
+            workflow_name,
+            business_type,
+            description,
+            workflow_definition: { nodes, connections: enrichedConnections },
+            is_active: is_active ?? true,
+          }
+        },
+        { new: true },
+      );
+
+      await this.businessWorkflowModel.findOneAndUpdate(
+        { workflow_id },
+        { $set: { is_active: is_active ?? true } },
+        { upsert: true, new: true },
+      );
+
+      return workflowDef;
+    }
+
+    const existingLink = await this.businessWorkflowModel.findOne({ business_id });
+
+    if (existingLink) {
+      const workflowDef = await this.workflowDefinitionModel.findOneAndUpdate(
+        { workflow_id: existingLink.workflow_id },
+        {
+          $set: {
+            workflow_name,
+            description,
+            workflow_definition: { nodes, connections: enrichedConnections },
+            is_active: is_active ?? true,
+          }
+        },
+        { new: true },
+      );
+      await this.businessWorkflowModel.findOneAndUpdate(
+        { _id: existingLink._id },
+        { $set: { is_active: is_active ?? true } },
+      );
+      return workflowDef;
+    }
+
+    const new_workflow_id = crypto.randomUUID();
+    const workflowDef = await this.workflowDefinitionModel.create({
+      workflow_id: new_workflow_id,
+      workflow_name,
+      business_type,
+      description,
+      version: '1.0.0',
+      workflow_definition: { nodes, connections: enrichedConnections },
+      is_active: is_active ?? true,
+    });
+
+    await this.businessWorkflowModel.create({
+      business_id,
+      tenant_id: business.tenant_id,
+      workflow_id: new_workflow_id,
+      is_active: is_active ?? true,
+    });
+
+    return workflowDef;
+  }
+
+  async updateWorkflow(dto: UpdateWorkflowDto) {
+    const { workflow_id, workflow_name, nodes, connections, description, is_active } = dto;
+
+    return this.workflowDefinitionModel.findOneAndUpdate(
+      { workflow_id },
+      {
+        $set: {
+          ...(workflow_name && { workflow_name }),
+          ...(description !== undefined && { description }),
+          ...(nodes && connections && { workflow_definition: { nodes, connections } }),
+          ...(is_active !== undefined && { is_active }),
+        }
+      },
+      { new: true },
+    );
+  }
+
+  async getWorkflowsByBusiness(businessId: string) {
+    const links = await this.businessWorkflowModel.find({ business_id: businessId }).sort({ created_at: -1 }).lean();
+    const workflowIds = links.map((l) => l.workflow_id);
+    const defs = await this.workflowDefinitionModel.find({ workflow_id: { $in: workflowIds } }).lean();
+    const defMap = new Map(defs.map((d) => [d.workflow_id, d]));
+    return links.map((l) => ({ ...l, workflow_definition: defMap.get(l.workflow_id) ?? null }));
+  }
+
+  async getWorkflow(workflowId: string) {
+    const record = await this.workflowDefinitionModel.findOne({ workflow_id: workflowId }).lean();
+    if (!record) throw new NotFoundException(`Workflow ${workflowId} not found`);
+    return record;
+  }
+
+  private clearDropTimer(execution_id: string) {
+    const existing = this.dropTimers.get(execution_id);
+    if (existing) {
+      clearTimeout(existing);
+      this.dropTimers.delete(execution_id);
+    }
   }
 
   async onModuleInit() {
@@ -413,7 +406,7 @@ export class WorkflowsService implements OnModuleInit {
   }
 
 
-  async startWorkflow(lead_id: string, workflowId: string, chat_id: string, channel: 'whatsapp' | 'instagram', workflowInput: WorkflowProcessingContext) {
+  async startWorkflow(lead_id: string, chat_id: string, channel: 'whatsapp' | 'instagram', workflowInput: WorkflowProcessingContext) {
     let business_id = workflowInput.business_id;
     if (!business_id) {
       const lead = await this.prisma.leads.findUnique({ where: { lead_id } });
@@ -424,34 +417,88 @@ export class WorkflowsService implements OnModuleInit {
       throw new Error(`Cannot start workflow: business_id not found for lead ${lead_id}`);
     }
 
-    const workflowExecution = await this.prisma.workflow_executions.create({
-      data: {
-        workflow_id: workflowId,
-        business_id: business_id,
-        lead_id: lead_id,
-        channel: channel,
-        chat_id: chat_id,
-        status: 'running',
-        waiting_for_input: false,
-        current_node_id: null,
-        context: workflowInput as any,
-      },
-    });
+    const intent = workflowInput.intent?.intent ?? '';
+    const activeWorkflow = await this.getActiveWorkflowForBusiness(business_id, intent);
+    if (!activeWorkflow) {
+      this.logger.warn(`No active workflow found for business ${business_id} intent "${intent}"`);
+      return;
+    }
 
-    const execution_id = workflowExecution.execution_id;
+    console.log("activeWrokflow", activeWorkflow)
+
+    const execution_id = crypto.randomUUID();
+    await this.workflowExecutionModel.create({
+      execution_id,
+      workflow_id: activeWorkflow.workflowId,
+      business_id,
+      lead_id,
+      channel,
+      chat_id,
+      status: 'running',
+      waiting_for_input: false,
+      current_node_id: null,
+      context: workflowInput,
+    });
     this.logger.log(`Created workflow execution: ${execution_id}`);
 
     const workflow = new Workflow(this.nodeFactory);
-    workflow.init(await this.getWorkflowDefinition(workflowId));
-
+    workflow.init(activeWorkflow.definition);
+    const conversation_id = workflowInput.context?.conversation_id;
 
     workflow.onPause = async (state) => {
-      await this.saveExecutionState({
-        execution_id,
-        ...state,
-        lead_id,
-        chat_id
-      });
+      await this.saveExecutionState({ execution_id, ...state, lead_id, chat_id });
+
+      // Update conversation with current node
+      if (conversation_id) {
+        await this.conversationService.updateConversation(conversation_id, {
+          current_node_id: state.currentNodeId,
+          status: 'waiting',
+        });
+      }
+
+      // 30-min inactivity → mark as dropped
+      this.clearDropTimer(execution_id);
+      this.dropTimers.set(execution_id, setTimeout(async () => {
+        this.logger.warn(`Workflow ${execution_id} dropped after 30min inactivity`);
+        await this.workflowExecutionModel.findOneAndUpdate(
+          { execution_id },
+          { $set: { status: 'dropped', waiting_for_input: false } },
+        );
+        if (conversation_id) {
+          await this.conversationService.updateConversation(conversation_id, {
+            status: 'dropped',
+            current_node_id: state.currentNodeId,
+          });
+        }
+        this.dropTimers.delete(execution_id);
+      }, 30 * 60 * 1000));
+    };
+
+    workflow.onComplete = async (state) => {
+      await this.workflowExecutionModel.findOneAndUpdate(
+        { execution_id },
+        { $set: { status: 'completed', waiting_for_input: false } },
+      );
+      if (conversation_id) {
+        await this.conversationService.updateConversation(conversation_id, {
+          status: 'ended',
+          current_node_id: state.currentNodeId,
+        });
+      }
+    };
+
+    workflow.onError = async (nodeId, error) => {
+      await this.workflowExecutionModel.findOneAndUpdate(
+        { execution_id },
+        { $set: { status: 'failed', waiting_for_input: false } },
+      );
+      if (conversation_id) {
+        await this.conversationService.updateConversation(conversation_id, {
+          status: 'failed',
+          current_node_id: nodeId,
+          failed_reason: error.message,
+        });
+      }
     };
 
     await workflow.execute(workflowInput);
@@ -462,7 +509,7 @@ export class WorkflowsService implements OnModuleInit {
 
   private async resumeWorkflow(executionId: string, workflow_id: string, currentNodeId: string, savedContext: any, lead_id: string, chat_id: string, waitingForInput: boolean, newInput: WorkflowProcessingContext) {
     const workflow = new Workflow(this.nodeFactory);
-    workflow.init(this.getWorkflowDefinition(workflow_id));
+    workflow.init(await this.getWorkflowDefinition(workflow_id));
 
     // Determine the actual user input based on message type
     let actualInput: any;
@@ -477,77 +524,208 @@ export class WorkflowsService implements OnModuleInit {
       actualInput = newInput;
     }
 
+    const conversation_id = newInput.context?.conversation_id;
+
+    // User replied — cancel any pending drop timer
+    this.clearDropTimer(executionId);
+
     workflow.restoreState({
       currentNodeId,
       context: {
         ...savedContext,
         user_input: actualInput,
-        cart_info: newInput.cart_info,
+        ...(newInput.cart_info !== undefined && { cart_info: newInput.cart_info }),
         intent: newInput.intent,
         entities: newInput.entities,
       },
       waitingForInput: waitingForInput,
-    })
+    });
 
     workflow.onPause = async (state) => {
-      await this.saveExecutionState({
-        execution_id: executionId,
-        ...state,
-        lead_id,
-        chat_id
-      });
+      await this.saveExecutionState({ execution_id: executionId, ...state, lead_id, chat_id });
+
+      if (conversation_id) {
+        await this.conversationService.updateConversation(conversation_id, {
+          current_node_id: state.currentNodeId,
+          status: 'waiting',
+        });
+      }
+
+      this.clearDropTimer(executionId);
+      this.dropTimers.set(executionId, setTimeout(async () => {
+        this.logger.warn(`Workflow ${executionId} dropped after 30min inactivity`);
+        await this.workflowExecutionModel.findOneAndUpdate(
+          { execution_id: executionId },
+          { $set: { status: 'dropped', waiting_for_input: false } },
+        );
+        if (conversation_id) {
+          await this.conversationService.updateConversation(conversation_id, {
+            status: 'dropped',
+            current_node_id: state.currentNodeId,
+          });
+        }
+        this.dropTimers.delete(executionId);
+      }, 30 * 60 * 1000));
+    };
+
+    workflow.onComplete = async (state) => {
+      this.clearDropTimer(executionId);
+      await this.workflowExecutionModel.findOneAndUpdate(
+        { execution_id: executionId },
+        { $set: { status: 'completed', waiting_for_input: false } },
+      );
+      if (conversation_id) {
+        await this.conversationService.updateConversation(conversation_id, {
+          status: 'ended',
+          current_node_id: state.currentNodeId,
+        });
+      }
+    };
+
+    workflow.onError = async (nodeId, error) => {
+      this.clearDropTimer(executionId);
+      await this.workflowExecutionModel.findOneAndUpdate(
+        { execution_id: executionId },
+        { $set: { status: 'failed', waiting_for_input: false } },
+      );
+      if (conversation_id) {
+        await this.conversationService.updateConversation(conversation_id, {
+          status: 'failed',
+          current_node_id: nodeId,
+          failed_reason: error.message,
+        });
+      }
     };
 
     workflow.resume(actualInput);
-
-    if (!workflow.getExecutionState().waitingForInput) {
-      await this.prisma.workflow_executions.update({
-        where: { execution_id: executionId },
-        data: { waiting_for_input: false },
-      });
-    }
 
     return workflow.getExecutionState();
 
   }
 
+  private enrichConnectionsWithConditions(nodes: any[], connections: Record<string, any>): Record<string, any> {
+    const nodeMap = new Map(nodes.map((n) => [n.id, n]));
+    const result: Record<string, any> = {};
+
+    for (const [sourceId, conn] of Object.entries(connections)) {
+      const node = nodeMap.get(sourceId);
+      const edges: any[] = conn?.main ?? [];
+
+      if (!node?.waitForInput || edges.length === 0) {
+        result[sourceId] = conn;
+        continue;
+      }
+
+      const type: string = node.type ?? '';
+
+      if (type === 'action.wait_for_text') {
+        result[sourceId] = {
+          main: edges.map((e) => ({
+            ...e,
+            condition: { operator: 'exists', variable: 'user_input' },
+          })),
+        };
+        continue;
+      }
+
+      if (type === 'action.send_catalog') {
+        result[sourceId] = {
+          main: edges.map((e) => ({
+            ...e,
+            condition: { operator: 'exists', variable: 'cart_info' },
+          })),
+        };
+        continue;
+      }
+
+      let optionIds: string[] = [];
+
+      if (type === 'action.send_message_withmenu') {
+        optionIds = (node.params?.menu ?? []).map((item: any) => item.id);
+      } else if (type === 'action.send_message_with_btns') {
+        optionIds = (node.params?.buttons ?? []).map((btn: any) => btn.id);
+      } else if (type === 'action.collect_filter') {
+        optionIds = (node.params?.filterOptions ?? []).map((opt: any) => opt.id);
+      }
+
+      if (optionIds.length > 0) {
+        result[sourceId] = {
+          main: edges.map((e, idx) => ({
+            ...e,
+            condition: { operator: 'equals', variable: 'user_input', value: optionIds[idx] },
+          })),
+        };
+      } else {
+        result[sourceId] = conn;
+      }
+    }
+
+    return result;
+  }
+
   private async saveExecutionState({ execution_id, currentNodeId, context, waitingForInput }) {
     try {
-      const response = await this.prisma.workflow_executions.update({
-        where: { execution_id: execution_id },
-        data: {
-          current_node_id: currentNodeId,
-          context,
-          waiting_for_input: waitingForInput,
-          status: waitingForInput ? 'paused' : 'running',
-          updated_at: new Date()
-        }
-      })
-      console.log('Workflow execution state saved:', response);
+      await this.workflowExecutionModel.findOneAndUpdate(
+        { execution_id },
+        {
+          $set: {
+            current_node_id: currentNodeId,
+            context,
+            waiting_for_input: waitingForInput,
+            status: waitingForInput ? 'paused' : 'running',
+          }
+        },
+      );
     } catch (error) {
       this.logger.error('Failed to save workflow execution state:', error);
     }
   }
 
-  private getWorkflowDefinition(workflowId: string): WorkflowParameters | null {
-    return this.workflowDefinition;
+  private async getWorkflowDefinition(workflowId: string): Promise<WorkflowParameters | null> {
+    const record = await this.workflowDefinitionModel.findOne({ workflow_id: workflowId }).lean();
+    if (record?.workflow_definition) {
+      return record.workflow_definition as unknown as WorkflowParameters;
+    }
+    return null;
+  }
+
+  private async getActiveWorkflowForBusiness(businessId: string, intentName: string): Promise<{ workflowId: string; definition: WorkflowParameters } | null> {
+    const link = await this.businessWorkflowModel.findOne({ business_id: businessId, is_active: true }).lean();
+    if (!link) return null;
+
+    const def = await this.workflowDefinitionModel.findOne({ workflow_id: link.workflow_id }).lean();
+    if (!def?.workflow_definition) return null;
+
+    const raw = def.workflow_definition as any;
+
+    if (Array.isArray(raw.nodes)) {
+      raw.nodes = raw.nodes.map((node: any) => {
+        if (node.type?.startsWith('trigger.') && !node.params?.intent) {
+          return { ...node, params: { ...node.params } };
+        }
+        return node;
+      });
+    }
+
+    return {
+      workflowId: def.workflow_id,
+      definition: raw as WorkflowParameters,
+    };
   }
 
 
   async handleIncomingMessage(incomingParams: WorkflowProcessingContext) {
     const channel = 'whatsapp';
 
-    const { phoneNumberId, from } = incomingParams.context;
+    const { phoneNumberId } = incomingParams.context;
 
-    const hasWaitingWorkflow = await this.prisma.workflow_executions.findFirst({
-      where: {
-        channel: channel,
-        chat_id: phoneNumberId,
-        waiting_for_input: true,
-        business_id: incomingParams.business_id,
-        lead_id: incomingParams.lead_id,
-      },
-    })
+    const hasWaitingWorkflow = await this.workflowExecutionModel.findOne({
+      channel,
+      chat_id: phoneNumberId,
+      waiting_for_input: true,
+      business_id: incomingParams.business_id,
+      lead_id: incomingParams.lead_id,
+    }).lean();
 
     console.log("hasWaitingWorkflow", hasWaitingWorkflow);
 
@@ -563,22 +741,61 @@ export class WorkflowsService implements OnModuleInit {
         hasWaitingWorkflow.waiting_for_input,
         incomingParams
       );
+      return;
+    }
+
+    const intent = incomingParams.intent?.intent ?? '';
+    const messageType = incomingParams.context.message_type;
+    const isGreetingOrSupport = /GENERAL_INQUIRY|GREETING|SUPPORT/i.test(intent);
+    const isInteractive = messageType === 'interactive';
+
+    if (!isGreetingOrSupport && !isInteractive) {
+      console.log(`RAG chat triggered for intent="${intent}", messageType="${messageType}"`);
+      await this.callRagChat(incomingParams);
     } else {
-      const { intent } = incomingParams.intent;
-      const { lead_id, business_id } = incomingParams;
-      const startNode = this.workflowDefinition.nodes.find(node => node.type === `trigger.${channel}.intent` && node.params.intent === intent);
-
       console.log('Starting new workflow for intent:', intent);
-
       this.startWorkflow(
-        lead_id,
-        this.workflowDefinition.id,
+        incomingParams.lead_id,
         phoneNumberId,
         channel,
         incomingParams
       );
     }
+  }
 
+  private async callRagChat(incomingParams: WorkflowProcessingContext): Promise<void> {
+    const { conversation_id } = incomingParams.context;
+
+    const messages = await this.conversationService.getConversationHistory(conversation_id, 10);
+    const conversationHistory = messages.map(msg => ({
+      role: msg.sender_type === 'lead' ? 'user' : 'assistant' as 'user' | 'assistant',
+      content: msg.message_text,
+    }));
+
+    const nodeContext: WorkflowNodeExecutionContext = {
+      ...incomingParams.context as any,
+      user_input: incomingParams.user_input,
+      business_id: incomingParams.business_id,
+      lead_id: incomingParams.lead_id,
+      tenant_id: incomingParams.tenant_id,
+      intent: incomingParams.intent,
+      entities: incomingParams.entities,
+      structured_data: incomingParams.structured_data,
+    };
+
+    const ragNode = this.nodeFactory.createNode({
+      id: 'rag_chat_fallback',
+      type: 'action.rag_chat',
+      name: 'RAG Chat',
+      position: { x: 0, y: 0 },
+      params: {
+        context_limit: 10,
+        sendResults: true,
+        conversation_history: conversationHistory as any,
+      },
+    });
+
+    await ragNode.execute(nodeContext);
   }
 
 }

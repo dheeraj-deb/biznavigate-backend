@@ -54,6 +54,20 @@ export class SendCatalogNode extends ActionNode<SendCatalogParams, string> {
         let products = await this.catalogService.getCatalogProducts(business_id, dbFilters);
         console.log('Products from database:', products.length);
 
+        const hasActiveFilters = Object.keys(dbFilters).length > 0;
+
+        // No results for the applied filter — notify user and fall back to full catalog
+        if (hasActiveFilters && products.length === 0) {
+            await this.whatsappService.sendMessage(phoneNumberId, from, {
+                messaging_product: 'whatsapp',
+                to: from,
+                type: SendMessageType.TEXT,
+                text: { body: '😕 No products found for your selected filter. Showing all available products instead:' },
+            });
+            products = await this.catalogService.getCatalogProducts(business_id, {});
+            console.log('Fallback products from database:', products.length);
+        }
+
         const limitedProducts = products.slice(0, this.params.limit);
 
         const catalogSections = [{

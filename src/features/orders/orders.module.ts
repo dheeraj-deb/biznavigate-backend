@@ -9,6 +9,7 @@ import { ReservationCleanupProcessor } from './application/jobs/reservation-clea
 import { PrismaModule } from '../../prisma/prisma.module';
 import { CustomersModule } from '../customers/customers.module';
 import { NotificationsModule } from '../notifications/notifications.module';
+import { WhatsAppModule } from '../whatsapp/whatsapp.module';
 
 /**
  * Orders Module
@@ -20,6 +21,7 @@ import { NotificationsModule } from '../notifications/notifications.module';
     PrismaModule,
     CustomersModule,
     NotificationsModule,
+    WhatsAppModule,
     BullModule.registerQueue({
       name: 'reservation-cleanup',
     }),

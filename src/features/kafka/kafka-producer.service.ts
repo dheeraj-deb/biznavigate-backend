@@ -128,7 +128,7 @@ export class KafkaProducerService {
    * Publish catalog order completed event to resume workflow
    */
   async publishCatalogOrderCompleted(payload: {
-    execution_id: string;
+    execution_id: string | null;
     lead_id: string;
     business_id: string;
     tenant_id: string | null;

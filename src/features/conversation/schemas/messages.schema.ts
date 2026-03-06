@@ -15,8 +15,9 @@ export class Messages {
     @Prop({ required: true, enum: ['text', 'location', 'interactive', 'button', 'image', 'video', 'audio', 'document', 'order'] }) message_type: string;
     @Prop() message_response_based_on_type: string;
     @Prop() message_text: string;
-    @Prop({ index: true, sparse: true }) platform_message_id: string; // WhatsApp message ID for deduplication
+    @Prop({ index: true, unique: true, sparse: true }) platform_message_id: string; // WhatsApp message ID for deduplication
     @Prop() assigned_to: string; // workflow / bot / agent
+    @Prop() workflow_node_id: string; // node ID that sent this message or was waiting when message was received
     @Prop({ default: 'sent' }) delivery_status: string;
     @Prop() delivered_at: Date;
     @Prop() read_at: Date;

@@ -15,6 +15,7 @@ import { PrismaModule } from '../../prisma/prisma.module';
 import { KafkaModule } from '../kafka/kafka.module';
 import { CartModule } from '../cart/cart.module';
 import { ConversationModule } from '../conversation/conversation.module';
+import { WhatsAppTemplatesModule } from '../whatsapp-templates/whatsapp-templates.module';
 
 @Module({
   imports: [
@@ -23,6 +24,7 @@ import { ConversationModule } from '../conversation/conversation.module';
     KafkaModule,
     CartModule,
     ConversationModule,
+    WhatsAppTemplatesModule,
   ],
   controllers: [
     WhatsAppController,

@@ -1,4 +1,4 @@
-import { MessageProcessingContext, NodeConfig, WorkflowNodeExecutionContext } from "../../interfaces";
+import { NodeConfig, WorkflowNodeExecutionContext } from "../../interfaces";
 
 
 export abstract class BaseNode<TParams = any, TResult = any> {
@@ -17,7 +17,8 @@ export abstract class BaseNode<TParams = any, TResult = any> {
         this.name = config.name;
         this.position = config.position;
         this.disabled = config.disabled;
-        this.outputVariable = config.outputVariable;
+        // Support both camelCase (NodeConfig) and snake_case (Node/workflow definition)
+        this.outputVariable = config.outputVariable ?? (config as any).output_variable;
         this.params = this.validateAndParseParams(config.params);
     }
 
@@ -29,6 +30,21 @@ export abstract class BaseNode<TParams = any, TResult = any> {
 
     getType(): string {
         return this.type;
+    }
+
+    /** Override in nodes that present fixed options (menu/buttons/list). */
+    validateInput(_input: string): boolean {
+        return true;
+    }
+
+    /** Called when validateInput returns false. Re-sends the prompt with an error prefix. */
+    async reprompt(_context: WorkflowNodeExecutionContext): Promise<void> {
+        // no-op by default
+    }
+
+    /** Called when the user selects "exit". Override to send a farewell message. */
+    async onExit(_context: WorkflowNodeExecutionContext): Promise<void> {
+        // no-op by default
     }
 
     protected interpolateString(template: string, context: WorkflowNodeExecutionContext): string {

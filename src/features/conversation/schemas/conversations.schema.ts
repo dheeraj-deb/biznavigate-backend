@@ -14,7 +14,8 @@ export class Conversation {
     @Prop({ required: true }) sender_id: string; // phoneNumberId
     @Prop() sender_name: string;
     @Prop() assigned_to: string;
-    @Prop({ required: true, enum: ['active', 'waiting', 'ended', 'failed'] }) status: string;
+    @Prop({ required: true, enum: ['active', 'waiting', 'ended', 'failed', 'dropped'] }) status: string;
+    @Prop() current_node_id: string; // workflow node the conversation is currently at
     @Prop() message_text: string;
     @Prop() intent: string;
     @Prop() workflowId: string;

@@ -265,6 +265,7 @@ model leads {
   tenants                  tenants                @relation(fields: [tenant_id], references: [tenant_id])
   orders                   orders[]
   workflow_executions      workflow_executions[]
+  cart_reservations        cart_reservations[]
 
   @@index([business_id, status], map: "idx_leads_business_status")
   @@index([tenant_id], map: "idx_leads_tenant_id")
@@ -559,6 +560,7 @@ model products {
   businesses              businesses           @relation(fields: [business_id], references: [business_id])
   product_categories      product_categories?  @relation(fields: [category_id], references: [category_id])
   stock_reservations      stock_reservations[]
+  cart_reservations       cart_reservations[]
 
   @@index([business_id, is_active], map: "idx_products_business_active")
   @@index([tenant_id], map: "idx_products_tenant_id")
@@ -657,12 +659,14 @@ model customers {
   phone                    String                     @db.VarChar(20)
   email                    String?                    @db.VarChar(255)
   whatsapp_number          String?                    @db.VarChar(20)
+  platform_user_id         String?                    @db.VarChar(255)
   total_orders             Int                        @default(0)
   total_spent              Decimal                    @default(0) @db.Decimal(10, 2)
   last_order_date          DateTime?                  @db.Timestamptz(6)
   engagement_score         Int                        @default(10)
   created_at               DateTime                   @default(now()) @db.Timestamptz(6)
   updated_at               DateTime                   @default(now()) @db.Timestamptz(6)
+  carts                    carts[]
   notification_messages    notification_messages[]    @relation("notification_messages_customer")
   notification_preferences notification_preferences[] @relation("notification_prefs_customer")
   orders                   orders[]
@@ -782,6 +786,27 @@ model stock_reservations {
   @@index([variant_id], map: "idx_reservations_variant_id")
   @@index([expires_at], map: "idx_reservations_expires_at")
   @@index([status], map: "idx_reservations_status")
+}
+
+/// Cart-level stock holds — created when a lead adds to cart, before an order exists
+model cart_reservations {
+  reservation_id String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  lead_id        String   @db.Uuid
+  product_id     String   @db.Uuid
+  variant_id     String?  @db.Uuid
+  quantity       Int
+  expires_at     DateTime @db.Timestamptz(6)
+  status         String   @default("active") @db.VarChar(20) // active, released, converted
+  created_at     DateTime @default(now()) @db.Timestamptz(6)
+  updated_at     DateTime @default(now()) @db.Timestamptz(6)
+
+  leads    leads    @relation(fields: [lead_id], references: [lead_id], onDelete: Cascade)
+  products products @relation(fields: [product_id], references: [product_id])
+
+  @@index([lead_id], map: "idx_cart_reservations_lead_id")
+  @@index([product_id], map: "idx_cart_reservations_product_id")
+  @@index([expires_at], map: "idx_cart_reservations_expires_at")
+  @@index([status], map: "idx_cart_reservations_status")
 }
 
 /// Campaigns - marketing campaigns
@@ -1596,7 +1621,8 @@ model carts {
   cart_id      String       @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   business_id  String       @db.Uuid
   tenant_id    String       @db.Uuid
-  lead_id      String       @db.Uuid
+  lead_id      String?      @db.Uuid
+  customer_id  String?      @db.Uuid
   status       String?      @default("active") @db.VarChar(20)
   total_amount Decimal?     @default(0) @db.Decimal(10, 2)
   total_items  Int?         @default(0)
@@ -1605,11 +1631,13 @@ model carts {
   updated_at   DateTime?    @default(now()) @db.Timestamptz(6)
   cart_items   cart_items[]
   businesses   businesses   @relation(fields: [business_id], references: [business_id], onDelete: Cascade, onUpdate: NoAction)
-  leads        leads        @relation(fields: [lead_id], references: [lead_id], onDelete: Cascade, onUpdate: NoAction)
+  customers    customers?   @relation(fields: [customer_id], references: [customer_id], onDelete: SetNull, onUpdate: NoAction)
+  leads        leads?       @relation(fields: [lead_id], references: [lead_id], onDelete: Cascade, onUpdate: NoAction)
   tenants      tenants      @relation(fields: [tenant_id], references: [tenant_id], onDelete: Cascade, onUpdate: NoAction)
 
   @@index([business_id], map: "idx_carts_business_id")
   @@index([created_at], map: "idx_carts_created_at")
+  @@index([customer_id], map: "idx_carts_customer_id")
   @@index([lead_id], map: "idx_carts_lead_id")
   @@index([status], map: "idx_carts_status")
 }

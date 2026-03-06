@@ -46,7 +46,7 @@ export class SendMessageNode extends ActionNode<SendMessageParams> {
                 to: from,
                 type: SendMessageType.TEXT,
                 text: { body: messageText },
-            });
+            }, this.id);
         } else if (channel === 'instagram') {
             // Instagram implementation
         }
