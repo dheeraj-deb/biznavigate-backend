@@ -238,7 +238,16 @@ export class Workflow {
 
         // Add the user input to the context (NOW after filter handling)
         if (currentNode?.outputVariable) {
-            this.nodeContext[currentNode.outputVariable] = userInput;
+            if (currentNode.type === 'action.send_flow') {
+                // Parse the flow response JSON so downstream nodes can access fields directly
+                try {
+                    this.nodeContext[currentNode.outputVariable] = JSON.parse(userInput);
+                } catch {
+                    this.nodeContext[currentNode.outputVariable] = userInput;
+                }
+            } else {
+                this.nodeContext[currentNode.outputVariable] = userInput;
+            }
         }
 
         // Reset the waiting state

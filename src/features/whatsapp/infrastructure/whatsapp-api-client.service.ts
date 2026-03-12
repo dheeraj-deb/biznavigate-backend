@@ -54,6 +54,8 @@ export class WhatsAppApiClientService {
     accessToken: string,
     message: SendWhatsAppMessageDto
   ): Promise<any> {
+
+    console.dir(message, { depth: null })
     try {
       const response = await this.apiClient.post(
         `/${phoneNumberId}/messages`,
@@ -64,6 +66,8 @@ export class WhatsAppApiClientService {
           },
         }
       );
+
+      console.dir(response.data, { depth: null })
 
       this.logger.log(`Message sent successfully: ${response.data.messages?.[0]?.id}`);
       return response.data;
@@ -86,8 +90,8 @@ export class WhatsAppApiClientService {
         messaging_product: 'whatsapp',
         status: 'read',
         message_id: messageId,
-        typing_indicator : {
-          type : "text"
+        typing_indicator: {
+          type: "text"
         }
       };
 
@@ -461,6 +465,86 @@ export class WhatsAppApiClientService {
       throw error;
     }
   }
+
+  // ─── Flows API ────────────────────────────────────────────────────────────
+
+  async createFlow(wabaId: string, accessToken: string, name: string, categories: string[]): Promise<{ id: string }> {
+    const response = await this.apiClient.post(
+      `/${wabaId}/flows`,
+      { name, categories },
+      { headers: { Authorization: `Bearer ${accessToken}` } },
+    );
+    return response.data;
+  }
+
+  async uploadFlowAsset(flowId: string, accessToken: string, flowJson: object, endpointUri?: string): Promise<any> {
+    const formData = new FormData();
+    const jsonBlob = new Blob([JSON.stringify(flowJson)], { type: 'application/json' });
+    formData.append('file', jsonBlob, 'flow.json');
+    formData.append('name', 'flow.json');
+    formData.append('asset_type', 'FLOW_JSON');
+
+    if (endpointUri) {
+      formData.append('endpoint_uri', endpointUri);
+    }
+
+    const response = await this.apiClient.post(
+      `/${flowId}/assets`,
+      formData,
+      { headers: { Authorization: `Bearer ${accessToken}`, 'Content-Type': 'multipart/form-data' } },
+    );
+    return response.data;
+  }
+
+  async publishFlow(flowId: string, accessToken: string): Promise<any> {
+    const response = await this.apiClient.post(
+      `/${flowId}/publish`,
+      {},
+      { headers: { Authorization: `Bearer ${accessToken}` } },
+    );
+    return response.data;
+  }
+
+  async deprecateFlow(flowId: string, accessToken: string): Promise<any> {
+    const response = await this.apiClient.post(
+      `/${flowId}/deprecate`,
+      {},
+      { headers: { Authorization: `Bearer ${accessToken}` } },
+    );
+    return response.data;
+  }
+
+  async deleteFlow(flowId: string, accessToken: string): Promise<any> {
+    const response = await this.apiClient.delete(
+      `/${flowId}`,
+      { headers: { Authorization: `Bearer ${accessToken}` } },
+    );
+    return response.data;
+  }
+
+  async listFlows(wabaId: string, accessToken: string): Promise<any[]> {
+    const response = await this.apiClient.get(
+      `/${wabaId}/flows`,
+      {
+        headers: { Authorization: `Bearer ${accessToken}` },
+        params: { fields: 'id,name,status,categories,validation_errors,endpoint_uri' },
+      },
+    );
+    return response.data.data || [];
+  }
+
+  async getFlow(flowId: string, accessToken: string): Promise<any> {
+    const response = await this.apiClient.get(
+      `/${flowId}`,
+      {
+        headers: { Authorization: `Bearer ${accessToken}` },
+        params: { fields: 'id,name,status,categories,validation_errors,endpoint_uri,json_version,data_api_version' },
+      },
+    );
+    return response.data;
+  }
+
+  // ──────────────────────────────────────────────────────────────────────────
 
   /**
    * Handle API errors

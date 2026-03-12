@@ -245,7 +245,6 @@ model leads {
   deleted_by               String?                @db.Uuid
   onboarding_completed     Boolean                @default(false)
   delivery_address         String?
-  campaign_recipients      campaign_recipients[]
   carts                    carts[]
   lead_activities          lead_activities[]
   lead_conversations       lead_conversations[]
@@ -840,7 +839,6 @@ model campaigns {
   updated_at                 DateTime?               @default(now()) @db.Timestamptz(6)
   whatsapp_template_language String?                 @default("en") @db.VarChar(10)
   whatsapp_template_name     String?                 @db.VarChar(100)
-  campaign_recipients        campaign_recipients[]
   products                   products?               @relation(fields: [product_id], references: [product_id], onDelete: NoAction, onUpdate: NoAction)
   notification_templates     notification_templates? @relation(fields: [template_id], references: [template_id], onDelete: NoAction, onUpdate: NoAction)
 
@@ -853,25 +851,31 @@ model campaigns {
   @@index([template_id], map: "idx_campaigns_template_id")
 }
 
-/// Campaign recipients - tracks campaign delivery and engagement
+/// Campaign recipients - tracks WhatsApp campaign delivery and engagement
 model campaign_recipients {
-  recipient_id        String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  campaign_id         String    @db.Uuid
-  lead_id             String    @db.Uuid
+  id                  BigInt    @id @default(autoincrement())
+  campaign_id         String    @db.VarChar(24)
+  business_id         String    @db.VarChar(36)
+  phone_number        String    @db.VarChar(30)
+  contact_id          String?   @db.VarChar(36)
+  resolved_variables  Json      @default("{}")
+  status              String    @default("PENDING") @db.VarChar(20)
+  whatsapp_message_id String?   @db.VarChar(100)
   sent_at             DateTime? @db.Timestamptz(6)
   delivered_at        DateTime? @db.Timestamptz(6)
-  clicked_at          DateTime? @db.Timestamptz(6)
-  converted_at        DateTime? @db.Timestamptz(6)
-  status              String?   @db.VarChar(20)
+  read_at             DateTime? @db.Timestamptz(6)
+  failed_at           DateTime? @db.Timestamptz(6)
+  error_code          String?   @db.VarChar(50)
   error_message       String?
-  updated_at          DateTime? @default(now()) @db.Timestamptz(6)
-  whatsapp_message_id String?   @db.VarChar(255)
-  campaign            campaigns @relation(fields: [campaign_id], references: [campaign_id])
-  lead                leads     @relation(fields: [lead_id], references: [lead_id])
+  retry_count         Int       @default(0)
+  next_retry_at       DateTime? @db.Timestamptz(6)
+  created_at          DateTime  @default(now()) @db.Timestamptz(6)
+  updated_at          DateTime  @default(now()) @db.Timestamptz(6)
 
-  @@index([campaign_id, status], map: "idx_campaign_recipients_campaign_status")
-  @@index([lead_id], map: "idx_campaign_recipients_lead_id")
-  @@index([status, sent_at(sort: Desc)], map: "idx_campaign_recipients_status_sent")
+  @@index([campaign_id], map: "idx_campaign_recipients_campaign")
+  @@index([business_id], map: "idx_campaign_recipients_business")
+  @@index([campaign_id, status], map: "idx_campaign_recipients_status")
+  @@index([whatsapp_message_id], map: "idx_campaign_recipients_wa_msg_id")
 }
 
 /// Lead scoring rules - defines scoring logic
@@ -1640,4 +1644,35 @@ model carts {
   @@index([customer_id], map: "idx_carts_customer_id")
   @@index([lead_id], map: "idx_carts_lead_id")
   @@index([status], map: "idx_carts_status")
+}
+
+model whatsapp_optouts {
+  id           BigInt   @id @default(autoincrement())
+  business_id  String   @db.VarChar(24)
+  phone_number String   @db.VarChar(20)
+  opted_out_at DateTime @default(now()) @db.Timestamptz(6)
+  reason       String?  @db.VarChar(100)
+
+  @@unique([business_id, phone_number], map: "whatsapp_optouts_business_id_phone_number_key")
+  @@index([business_id, phone_number], map: "idx_optouts_lookup")
+}
+
+model campaign_analytics {
+  id             BigInt   @id @default(autoincrement())
+  campaign_id    String   @unique @db.VarChar(36)
+  business_id    String   @db.VarChar(36)
+  total          Int      @default(0)
+  pending        Int      @default(0)
+  sent           Int      @default(0)
+  delivered      Int      @default(0)
+  read           Int      @default(0)
+  failed         Int      @default(0)
+  skipped        Int      @default(0)
+  delivery_rate  Decimal  @default(0) @db.Decimal(5, 2)
+  read_rate      Decimal  @default(0) @db.Decimal(5, 2)
+  estimated_cost Decimal  @default(0) @db.Decimal(10, 4)
+  last_synced_at DateTime @default(now()) @db.Timestamptz(6)
+  updated_at     DateTime @default(now()) @db.Timestamptz(6)
+
+  @@index([business_id], map: "idx_analytics_business")
 }

@@ -37,11 +37,6 @@ export class WebhookValidatorService {
     hmac.update(payload);
     const calculatedHash = hmac.digest('hex');
 
-    this.logger.debug(`Expected hash: ${expectedHash}`);
-    this.logger.debug(`Calculated hash: ${calculatedHash}`);
-    this.logger.debug(`App secret: ${this.appSecret?.substring(0, 10)}...`);
-    this.logger.debug(`Payload length: ${payload?.length}`);
-
     // Compare using timing-safe comparison
     const isValid = crypto.timingSafeEqual(
       Buffer.from(expectedHash, 'hex'),

@@ -10,12 +10,9 @@ import { BullModule } from "@nestjs/bullmq";
       },
     }),
     BullModule.registerQueue(
-      {
-        name: "inbound-messages",
-      },
-      {
-        name: "outbound-messages",
-      }
+      { name: "inbound-messages" },
+      { name: "outbound-messages" },
+      { name: "message-debounce" },
     ),
   ],
   exports: [BullModule],

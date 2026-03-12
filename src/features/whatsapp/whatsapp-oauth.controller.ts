@@ -24,7 +24,6 @@ export class WhatsAppOAuthController {
   ) {}
 
   /**
-   * Step 1: Generate OAuth URL
    * Frontend calls this to get the Facebook OAuth URL
    */
   @Get('url')

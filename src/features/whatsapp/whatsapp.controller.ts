@@ -13,6 +13,7 @@ import {
   HttpCode,
   HttpStatus,
   Res,
+  UseGuards,
 } from '@nestjs/common';
 import * as fs from "fs"
 import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth } from '@nestjs/swagger';
@@ -33,6 +34,7 @@ import {
 } from './dto/whatsapp-auth.dto';
 import * as path from 'path';
 import { WhatsAppTemplatesService } from '../whatsapp-templates/whatsapp-templates.service';
+import { WhatsAppSignatureGuard } from './guards/whatsapp-signature.guard';
 
 interface RawBodyRequest<T> extends Request {
   rawBody?: Buffer;
@@ -45,7 +47,6 @@ export class WhatsAppController {
 
   constructor(
     private readonly whatsappService: WhatsAppService,
-    private readonly whatsappTemplatesService: WhatsAppTemplatesService,
     private readonly webhookValidator: WebhookValidatorService,
   ) { }
 
@@ -129,35 +130,17 @@ export class WhatsAppController {
 
   @Post('webhook')
   @HttpCode(HttpStatus.OK)
+  @UseGuards(WhatsAppSignatureGuard)
   @ApiOperation({ summary: 'Receive webhook events (POST)' })
   @ApiResponse({ status: 200, description: 'Webhook processed' })
   async handleWebhook(
-    @Req() req: RawBodyRequest<Request>,
     @Res() res: Response,
     @Body() body: WhatsAppWebhookDto,
-    @Headers('x-hub-signature-256') signature: string,
   ) {
-
-    const rawBody = req.rawBody
-      ? req.rawBody.toString('utf8')
-      : JSON.stringify(body);
-
-    const isValid = this.webhookValidator.verifySignature(rawBody, signature);
-
-    if (!isValid) {
-      throw new BadRequestException('Invalid webhook signature');
-    }
-
-    if (!this.webhookValidator.validateWebhookEvent(body)) {
-      throw new BadRequestException('Invalid webhook event structure');
-    }
-
-    setImmediate(() => this.processWebhook(body));
-
+    setImmediate(() => this.whatsappService.processWebhook(body));
     res.status(200).json({ success: 200 })
   }
 
-  // ==================== Messaging ====================
 
   @Post('messages/send')
   @ApiBearerAuth()
@@ -223,48 +206,5 @@ export class WhatsAppController {
     );
   }
 
-  // ==================== Private Methods ====================
-
-  /**
-   * Process webhook events (Meta WhatsApp)
-   */
-  private async processWebhook(webhookData: WhatsAppWebhookDto): Promise<void> {
-    try {
-      for (const entry of webhookData.entry) {
-        const changes = this.webhookValidator.extractChanges(entry);
-
-        for (const change of changes) {
-          const { value } = change;
-
-          if (change.filed = 'message_template_status_update') {
-            await this.whatsappTemplatesService.handleMetaWebhook(value);
-            continue;
-          }
-
-          const messages = this.webhookValidator.extractMessages(value);
-          if (messages.length > 0) {
-            for (const message of messages) {
-              await this.whatsappService.handleMessageWebhook(
-                message,
-                value.metadata,
-                value.contacts || [],
-              );
-            }
-          }
-
-          // Handle message statuses (sent, delivered, read, failed)
-          const statuses = this.webhookValidator.extractStatuses(value);
-          if (statuses.length > 0) {
-            for (const status of statuses) {
-              await this.whatsappService.handleStatusWebhook(status);
-            }
-          }
-        }
-      }
-    } catch (error) {
-      console.log("error", error);
-      this.logger.error('Error processing webhook:', error);
-    }
-  }
 
 }

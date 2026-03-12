@@ -1,4 +1,4 @@
-import { IsString, IsOptional, IsObject, ValidateNested, IsArray, IsNumber, IsEnum } from 'class-validator';
+import { IsString, IsOptional, ValidateNested, IsArray, IsNumber, IsEnum } from 'class-validator';
 import { Type } from 'class-transformer';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
@@ -22,6 +22,7 @@ export enum WhatsAppMessageType {
 export enum InteractiveType {
   BUTTON_REPLY = 'button_reply',
   LIST_REPLY = 'list_reply',
+  NFM_REPLY = 'nfm_reply',
 }
 
 // Status Types
@@ -131,6 +132,22 @@ export class ListReplyDto {
   description?: string;
 }
 
+export class NfmReplyDto {
+  @ApiProperty()
+  @IsString()
+  response_json: string;
+
+  @ApiPropertyOptional()
+  @IsString()
+  @IsOptional()
+  body?: string;
+
+  @ApiPropertyOptional()
+  @IsString()
+  @IsOptional()
+  name?: string;
+}
+
 export class InteractiveMessageDto {
   @ApiProperty()
   @IsEnum(InteractiveType)
@@ -147,6 +164,12 @@ export class InteractiveMessageDto {
   @Type(() => ListReplyDto)
   @IsOptional()
   list_reply?: ListReplyDto;
+
+  @ApiPropertyOptional({ type: NfmReplyDto })
+  @ValidateNested()
+  @Type(() => NfmReplyDto)
+  @IsOptional()
+  nfm_reply?: NfmReplyDto;
 }
 
 // Reaction Message
@@ -320,7 +343,7 @@ export class StatusDto {
   recipient_id: string;
 
   @ApiPropertyOptional()
-  @IsObject()
+  @IsArray()
   @IsOptional()
   errors?: any[];
 }

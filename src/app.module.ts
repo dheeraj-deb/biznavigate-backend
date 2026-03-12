@@ -34,13 +34,16 @@ import { ReviewsModule } from "./features/reviews/reviews.module";
 import { NotificationsModule } from "./features/notifications/notifications.module";
 import { InventoryModule } from "./features/inventory/inventory.module";
 import { AnalyticsModule } from "./features/analytics/analytics.module";
-import { CampaignsModule } from "./features/campaigns/campaigns.module";
 import { TemplatesModule } from "./features/notification-templates/templates.module";
 import { MessagesModule } from "./features/messages/messages.module";
+import { ContactsModule } from "./features/contacts/contacts.module";
 import { ServeStaticModule } from "@nestjs/serve-static";
 import { join } from "path";
 import { MongooseModule } from "@nestjs/mongoose";
 import { ConfigModule, ConfigService } from "@nestjs/config";
+import { CampaignModule } from "./features/campaign/campaign.module";
+import { InboxModule } from "./features/inbox/inbox.module";
+import { GatewayModule } from "./features/inbox/gateway/gateway.module";
 
 @Module({
   imports: [
@@ -103,9 +106,12 @@ import { ConfigModule, ConfigService } from "@nestjs/config";
     NotificationsModule,
     InventoryModule,
     AnalyticsModule,
-    CampaignsModule,
     TemplatesModule,
     MessagesModule,
+    ContactsModule,
+    CampaignModule,
+    InboxModule,
+    GatewayModule,
     // KafkaModule, // Kafka integration for AI services
     // WhatsAppModule//
     KafkaModule, // Kafka integration for AI services

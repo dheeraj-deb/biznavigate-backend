@@ -1,5 +1,7 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
+import { BullModule } from '@nestjs/bullmq';
+import { MessageDebounceProcessor } from './processors/message-debounce.processor';
 import { WhatsAppController } from './whatsapp.controller';
 import { WhatsAppOAuthController } from './whatsapp-oauth.controller';
 import { WhatsAppCatalogController } from './whatsapp-catalog.controller';
@@ -16,6 +18,8 @@ import { KafkaModule } from '../kafka/kafka.module';
 import { CartModule } from '../cart/cart.module';
 import { ConversationModule } from '../conversation/conversation.module';
 import { WhatsAppTemplatesModule } from '../whatsapp-templates/whatsapp-templates.module';
+import { WhatsAppFlowsModule } from '../whatsapp-flows/whatsapp-flows.module';
+import { GatewayModule } from '../inbox/gateway/gateway.module';
 
 @Module({
   imports: [
@@ -25,6 +29,9 @@ import { WhatsAppTemplatesModule } from '../whatsapp-templates/whatsapp-template
     CartModule,
     ConversationModule,
     WhatsAppTemplatesModule,
+    WhatsAppFlowsModule,
+    GatewayModule,
+    BullModule.registerQueue({ name: 'message-debounce' }),
   ],
   controllers: [
     WhatsAppController,
@@ -33,6 +40,7 @@ import { WhatsAppTemplatesModule } from '../whatsapp-templates/whatsapp-template
   ],
   providers: [
     WhatsAppService,
+    MessageDebounceProcessor,
     WhatsAppOAuthService,
     WhatsAppCatalogService,
     WhatsAppCatalogOrderService,

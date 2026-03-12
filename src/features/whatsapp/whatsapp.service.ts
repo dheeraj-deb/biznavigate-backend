@@ -1,5 +1,7 @@
 import { Injectable, Logger, NotFoundException, BadRequestException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
+import { InjectQueue } from '@nestjs/bullmq';
+import { Queue } from 'bullmq';
 import { PrismaService } from '../../prisma/prisma.service';
 import { WhatsAppApiClientService } from './infrastructure/whatsapp-api-client.service';
 import { CircuitBreakerService } from './infrastructure/circuit-breaker.service';
@@ -10,6 +12,11 @@ import { SendWhatsAppMessageDto, SendMessageType, InteractiveSendType } from './
 import * as crypto from 'crypto';
 import { WhatsAppCatalogOrderService } from './services/whatsapp-catalog-order.service';
 import { ConversationService } from '../conversation/conversation.service';
+import { InboxGateway } from '../inbox/gateway/inbox.gateway';
+import { getRedis } from 'src/utils/redis';
+import { WhatsAppWebhookDto } from './dto/webhook-event.dto';
+import { WebhookValidatorService } from './infrastructure/webhook-validator.service';
+import { WhatsAppTemplatesService } from '../whatsapp-templates/whatsapp-templates.service';
 
 interface PendingContext {
   messageId: string;
@@ -36,6 +43,11 @@ export class WhatsAppService {
     private readonly configService: ConfigService,
     private readonly catalogOrderService: WhatsAppCatalogOrderService,
     private readonly conversationService: ConversationService,
+    private readonly inboxGateway: InboxGateway,
+    private readonly webhookValidator: WebhookValidatorService,
+    private readonly whatsappTemplatesService: WhatsAppTemplatesService,
+
+    @InjectQueue('message-debounce') private readonly debounceQueue: Queue,
   ) { }
 
 
@@ -90,6 +102,48 @@ export class WhatsAppService {
     } catch (error) {
       this.logger.error('Failed to connect WhatsApp account:', error);
       throw error;
+    }
+  }
+
+  async processWebhook(webhookData: WhatsAppWebhookDto): Promise<void> {
+
+    if (!this.webhookValidator.validateWebhookEvent(webhookData)) {
+      throw new BadRequestException('Invalid webhook event structure');
+    }
+
+    try {
+      for (const entry of webhookData.entry) {
+        const changes = this.webhookValidator.extractChanges(entry);
+
+        for (const change of changes) {
+          const { value } = change;
+
+          if (change.field === 'message_template_status_update') {
+            await this.whatsappTemplatesService.handleMetaWebhook(value);
+            continue;
+          }
+
+          const messages = this.webhookValidator.extractMessages(value);
+          if (messages.length > 0) {
+            await Promise.all(
+              messages.map(msg =>
+                this.handleMessageWebhook(msg, value.metadata, value.contacts || [])
+              )
+            );
+          }
+
+          // Handle message statuses (sent, delivered, read, failed)
+          const statuses = this.webhookValidator.extractStatuses(value);
+          if (statuses.length > 0) {
+            for (const status of statuses) {
+              await this.handleStatusWebhook(status);
+            }
+          }
+        }
+      }
+    } catch (error) {
+      console.log("error", error);
+      this.logger.error('Error processing webhook:', error);
     }
   }
 
@@ -242,6 +296,9 @@ export class WhatsAppService {
           } else if (message.interactive?.type === 'list_reply') {
             messageText = message.interactive.list_reply?.title || '';
             (message as any).buttonId = message.interactive.list_reply?.id;
+          } else if (message.interactive?.type === 'nfm_reply') {
+            messageText = 'Flow completed';
+            (message as any).buttonId = message.interactive.nfm_reply?.response_json;
           }
           break;
         case 'order':
@@ -304,6 +361,19 @@ export class WhatsAppService {
       }
 
       const leadMessageId = (leadMessage._id as any).toString();
+
+      // Notify inbox in real-time
+      this.inboxGateway.notifyNewMessage(account.business_id, conversation.conversation_id, {
+        _id: leadMessageId,
+        conversation_id: conversation.conversation_id,
+        sender_type: 'lead',
+        sender_name: contactName,
+        message_type: messageType,
+        message_text: messageText,
+        platform_message_id: messageId,
+        delivery_status: 'received',
+        timestamp: new Date(),
+      });
 
       // Mark as read + show typing indicator while AI processes
       const accessToken = this.decryptToken(account.access_token);
@@ -383,7 +453,9 @@ export class WhatsAppService {
         await this.kafkaProducer.publishInteractiveSelection(workflowContext);
 
       } else {
-        await this.kafkaProducer.requestAiProcessing({
+        // Buffer the AI payload and debounce — handles rapid multi-message bursts
+        const bufferKey = `msg_buffer:${conversation.conversation_id}`;
+        const payload = {
           lead_id: lead.lead_id,
           business_id: account.business_id,
           text: messageText,
@@ -408,7 +480,22 @@ export class WhatsAppService {
             message_type: messageType,
           },
           priority: 'normal',
-        });
+        };
+
+        const redis = getRedis();
+        await redis.rpush(bufferKey, JSON.stringify(payload));
+        await redis.expire(bufferKey, 30); // auto-clean buffer after 30s
+
+        await this.debounceQueue.add(
+          'process-messages',
+          { conversationId: conversation.conversation_id },
+          {
+            jobId: `conv:${conversation.conversation_id}`,
+            delay: 10000,
+            removeOnComplete: true,
+            removeOnFail: true,
+          },
+        );
       }
 
       // Store pending context for AI response
@@ -463,16 +550,102 @@ export class WhatsAppService {
         updateData.failed_reason = status.errors?.[0]?.message || 'Unknown error';
       }
 
-      // Update message status in MongoDB
+      // Update conversation message status in MongoDB
       await this.conversationService.updateMessageStatus(messageId, updateData);
 
       if (status.errors && status.errors.length > 0) {
         this.logger.error(`Message ${messageId} failed:`, status.errors);
       }
 
+      // Emit real-time status update to inbox
+      const msg = await this.conversationService.findMessageByPlatformId(messageId);
+      if (msg) {
+        const conv = await this.conversationService.findConversationById(msg.conversation_id);
+        if (conv) {
+          this.inboxGateway.notifyStatusUpdate(conv.business_id, conv.conversation_id, messageId, statusType);
+        }
+      }
+
+      // Campaign delivery tracking
+      await this.updateCampaignRecipientStatus(messageId, statusType, timestamp, status.errors);
+
     } catch (error) {
       this.logger.error('Error processing status webhook:', error);
     }
+  }
+
+  /**
+   * Update campaign_recipients + campaign_analytics when WhatsApp sends delivery/read/failed events
+   */
+  private async updateCampaignRecipientStatus(
+    waMessageId: string,
+    statusType: string,
+    timestamp: Date,
+    errors?: any[],
+  ): Promise<void> {
+    const campaignStatusMap: Record<string, string> = {
+      delivered: 'DELIVERED',
+      read: 'READ',
+      failed: 'FAILED',
+    };
+
+    const campaignStatus = campaignStatusMap[statusType];
+    if (!campaignStatus) return; // ignore 'sent' — already set by dispatch processor
+
+    const recipient = await this.prisma.campaign_recipients.findFirst({
+      where: { whatsapp_message_id: waMessageId },
+      select: { id: true, campaign_id: true },
+    });
+
+    if (!recipient) return; // not a campaign message
+
+    const recipientUpdate: any = { status: campaignStatus, updated_at: timestamp };
+    if (statusType === 'delivered') recipientUpdate.delivered_at = timestamp;
+    else if (statusType === 'read') recipientUpdate.read_at = timestamp;
+    else if (statusType === 'failed') {
+      const err = errors?.[0];
+      recipientUpdate.failed_at = timestamp;
+      recipientUpdate.error_code = String(err?.code ?? 'UNKNOWN');
+      // Prefer the detailed explanation over the short title
+      recipientUpdate.error_message = err?.error_data?.details || err?.message || err?.title || 'Unknown error';
+    }
+
+    await this.prisma.campaign_recipients.update({
+      where: { id: recipient.id },
+      data: recipientUpdate,
+    });
+
+    // Increment the analytics counter for this status
+    const analyticsIncrement: any = { updated_at: new Date() };
+    if (statusType === 'delivered') analyticsIncrement.delivered = { increment: 1 };
+    else if (statusType === 'read') analyticsIncrement.read = { increment: 1 };
+    else if (statusType === 'failed') analyticsIncrement.failed = { increment: 1 };
+
+    await this.prisma.campaign_analytics.updateMany({
+      where: { campaign_id: recipient.campaign_id },
+      data: analyticsIncrement,
+    });
+
+    // Recompute rates after incrementing
+    const analytics = await this.prisma.campaign_analytics.findUnique({
+      where: { campaign_id: recipient.campaign_id },
+    });
+
+    if (analytics) {
+      const deliveryRate = Number(analytics.sent) > 0
+        ? (Number(analytics.delivered) / Number(analytics.sent)) * 100
+        : 0;
+      const readRate = Number(analytics.delivered) > 0
+        ? (Number(analytics.read) / Number(analytics.delivered)) * 100
+        : 0;
+
+      await this.prisma.campaign_analytics.update({
+        where: { campaign_id: recipient.campaign_id },
+        data: { delivery_rate: deliveryRate, read_rate: readRate, last_synced_at: new Date() },
+      });
+    }
+
+    this.logger.log(`[Campaign ${recipient.campaign_id}] Recipient ${waMessageId} → ${campaignStatus}`);
   }
 
   /**
@@ -636,6 +809,56 @@ export class WhatsAppService {
     }
     if (footerText) {
       message.interactive!.footer = { text: footerText };
+    }
+
+    return this.sendMessage(phoneNumberId, to, message, nodeId);
+  }
+
+  /**
+   * Send a WhatsApp Flow message
+   */
+  async sendFlowMessage(
+    phoneNumberId: string,
+    to: string,
+    bodyText: string,
+    cta: string,
+    flowId: string,
+    headerText?: string,
+    footerText?: string,
+    screen?: string,
+    flowToken?: string,
+    nodeId?: string,
+  ): Promise<any> {
+    const token = flowToken ?? `flow-${nodeId ?? Date.now()}`;
+    const message: any = {
+      messaging_product: 'whatsapp',
+      recipient_type: 'individual',
+      to,
+      type: 'interactive',
+      interactive: {
+        type: 'flow',
+        body: { text: bodyText },
+        action: {
+          name: 'flow',
+          parameters: {
+            flow_message_version: '3',
+            flow_token: token,
+            flow_id: flowId,
+            flow_cta: cta,
+            flow_action: 'navigate',
+            flow_action_payload: {
+              screen: screen ?? 'INIT',
+            },
+          },
+        },
+      },
+    };
+
+    if (headerText) {
+      message.interactive.header = { type: 'text', text: headerText };
+    }
+    if (footerText) {
+      message.interactive.footer = { text: footerText };
     }
 
     return this.sendMessage(phoneNumberId, to, message, nodeId);

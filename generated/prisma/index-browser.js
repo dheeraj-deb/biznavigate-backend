@@ -679,17 +679,24 @@ exports.Prisma.CampaignsScalarFieldEnum = {
 };
 
 exports.Prisma.Campaign_recipientsScalarFieldEnum = {
-  recipient_id: 'recipient_id',
+  id: 'id',
   campaign_id: 'campaign_id',
-  lead_id: 'lead_id',
+  business_id: 'business_id',
+  phone_number: 'phone_number',
+  contact_id: 'contact_id',
+  resolved_variables: 'resolved_variables',
+  status: 'status',
+  whatsapp_message_id: 'whatsapp_message_id',
   sent_at: 'sent_at',
   delivered_at: 'delivered_at',
-  clicked_at: 'clicked_at',
-  converted_at: 'converted_at',
-  status: 'status',
+  read_at: 'read_at',
+  failed_at: 'failed_at',
+  error_code: 'error_code',
   error_message: 'error_message',
-  updated_at: 'updated_at',
-  whatsapp_message_id: 'whatsapp_message_id'
+  retry_count: 'retry_count',
+  next_retry_at: 'next_retry_at',
+  created_at: 'created_at',
+  updated_at: 'updated_at'
 };
 
 exports.Prisma.Lead_scoring_rulesScalarFieldEnum = {
@@ -1212,6 +1219,32 @@ exports.Prisma.CartsScalarFieldEnum = {
   updated_at: 'updated_at'
 };
 
+exports.Prisma.Whatsapp_optoutsScalarFieldEnum = {
+  id: 'id',
+  business_id: 'business_id',
+  phone_number: 'phone_number',
+  opted_out_at: 'opted_out_at',
+  reason: 'reason'
+};
+
+exports.Prisma.Campaign_analyticsScalarFieldEnum = {
+  id: 'id',
+  campaign_id: 'campaign_id',
+  business_id: 'business_id',
+  total: 'total',
+  pending: 'pending',
+  sent: 'sent',
+  delivered: 'delivered',
+  read: 'read',
+  failed: 'failed',
+  skipped: 'skipped',
+  delivery_rate: 'delivery_rate',
+  read_rate: 'read_rate',
+  estimated_cost: 'estimated_cost',
+  last_synced_at: 'last_synced_at',
+  updated_at: 'updated_at'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -1299,7 +1332,9 @@ exports.Prisma.ModelName = {
   business_workflows: 'business_workflows',
   workflow_executions: 'workflow_executions',
   cart_items: 'cart_items',
-  carts: 'carts'
+  carts: 'carts',
+  whatsapp_optouts: 'whatsapp_optouts',
+  campaign_analytics: 'campaign_analytics'
 };
 
 /**

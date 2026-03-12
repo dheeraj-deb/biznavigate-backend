@@ -12,7 +12,6 @@ import { JwtAuthGuard } from '../../common/guards/jwt-auth.guard';
 export class WhatsAppTemplatesController {
     constructor(private readonly service: WhatsAppTemplatesService) { }
 
-    // POST /whatsapp/templates — create draft
     @Post()
     create(@Req() req, @Body() dto: CreateTemplateDto) {
         const businessId = req.user.business_id; // from JWT

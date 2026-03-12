@@ -162,7 +162,7 @@ export type cart_reservations = $Result.DefaultSelection<Prisma.$cart_reservatio
 export type campaigns = $Result.DefaultSelection<Prisma.$campaignsPayload>
 /**
  * Model campaign_recipients
- * Campaign recipients - tracks campaign delivery and engagement
+ * Campaign recipients - tracks WhatsApp campaign delivery and engagement
  */
 export type campaign_recipients = $Result.DefaultSelection<Prisma.$campaign_recipientsPayload>
 /**
@@ -297,6 +297,16 @@ export type cart_items = $Result.DefaultSelection<Prisma.$cart_itemsPayload>
  * This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
  */
 export type carts = $Result.DefaultSelection<Prisma.$cartsPayload>
+/**
+ * Model whatsapp_optouts
+ * 
+ */
+export type whatsapp_optouts = $Result.DefaultSelection<Prisma.$whatsapp_optoutsPayload>
+/**
+ * Model campaign_analytics
+ * 
+ */
+export type campaign_analytics = $Result.DefaultSelection<Prisma.$campaign_analyticsPayload>
 
 /**
  * ##  Prisma Client ʲˢ
@@ -982,6 +992,26 @@ export class PrismaClient<
     * ```
     */
   get carts(): Prisma.cartsDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.whatsapp_optouts`: Exposes CRUD operations for the **whatsapp_optouts** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more Whatsapp_optouts
+    * const whatsapp_optouts = await prisma.whatsapp_optouts.findMany()
+    * ```
+    */
+  get whatsapp_optouts(): Prisma.whatsapp_optoutsDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.campaign_analytics`: Exposes CRUD operations for the **campaign_analytics** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more Campaign_analytics
+    * const campaign_analytics = await prisma.campaign_analytics.findMany()
+    * ```
+    */
+  get campaign_analytics(): Prisma.campaign_analyticsDelegate<ExtArgs, ClientOptions>;
 }
 
 export namespace Prisma {
@@ -1477,7 +1507,9 @@ export namespace Prisma {
     business_workflows: 'business_workflows',
     workflow_executions: 'workflow_executions',
     cart_items: 'cart_items',
-    carts: 'carts'
+    carts: 'carts',
+    whatsapp_optouts: 'whatsapp_optouts',
+    campaign_analytics: 'campaign_analytics'
   };
 
   export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -1496,7 +1528,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "businesses" | "intents" | "notifications" | "role_intents" | "roles" | "social_accounts" | "subscription_plans" | "tenants" | "users" | "leads" | "lead_activities" | "lead_conversations" | "lead_messages" | "tags" | "lead_tag_assignments" | "lead_notes" | "lead_status_history" | "lead_followups" | "lead_duplicates" | "products" | "product_variants" | "product_images" | "course_batches" | "customers" | "orders" | "order_items" | "stock_reservations" | "cart_reservations" | "campaigns" | "campaign_recipients" | "lead_scoring_rules" | "lead_score_history" | "tasks" | "warehouses" | "inventory_levels" | "stock_movements" | "stock_transfers" | "stock_alerts" | "stock_counts" | "notification_templates" | "notification_messages" | "notification_preferences" | "payments" | "payment_reconciliation" | "conversations" | "messages" | "notification_events" | "payment_webhooks" | "instagram_media" | "product_categories" | "product_reviews" | "workflow_definitions" | "business_workflows" | "workflow_executions" | "cart_items" | "carts"
+      modelProps: "businesses" | "intents" | "notifications" | "role_intents" | "roles" | "social_accounts" | "subscription_plans" | "tenants" | "users" | "leads" | "lead_activities" | "lead_conversations" | "lead_messages" | "tags" | "lead_tag_assignments" | "lead_notes" | "lead_status_history" | "lead_followups" | "lead_duplicates" | "products" | "product_variants" | "product_images" | "course_batches" | "customers" | "orders" | "order_items" | "stock_reservations" | "cart_reservations" | "campaigns" | "campaign_recipients" | "lead_scoring_rules" | "lead_score_history" | "tasks" | "warehouses" | "inventory_levels" | "stock_movements" | "stock_transfers" | "stock_alerts" | "stock_counts" | "notification_templates" | "notification_messages" | "notification_preferences" | "payments" | "payment_reconciliation" | "conversations" | "messages" | "notification_events" | "payment_webhooks" | "instagram_media" | "product_categories" | "product_reviews" | "workflow_definitions" | "business_workflows" | "workflow_executions" | "cart_items" | "carts" | "whatsapp_optouts" | "campaign_analytics"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -5644,6 +5676,154 @@ export namespace Prisma {
           }
         }
       }
+      whatsapp_optouts: {
+        payload: Prisma.$whatsapp_optoutsPayload<ExtArgs>
+        fields: Prisma.whatsapp_optoutsFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.whatsapp_optoutsFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$whatsapp_optoutsPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.whatsapp_optoutsFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$whatsapp_optoutsPayload>
+          }
+          findFirst: {
+            args: Prisma.whatsapp_optoutsFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$whatsapp_optoutsPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.whatsapp_optoutsFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$whatsapp_optoutsPayload>
+          }
+          findMany: {
+            args: Prisma.whatsapp_optoutsFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$whatsapp_optoutsPayload>[]
+          }
+          create: {
+            args: Prisma.whatsapp_optoutsCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$whatsapp_optoutsPayload>
+          }
+          createMany: {
+            args: Prisma.whatsapp_optoutsCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.whatsapp_optoutsCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$whatsapp_optoutsPayload>[]
+          }
+          delete: {
+            args: Prisma.whatsapp_optoutsDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$whatsapp_optoutsPayload>
+          }
+          update: {
+            args: Prisma.whatsapp_optoutsUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$whatsapp_optoutsPayload>
+          }
+          deleteMany: {
+            args: Prisma.whatsapp_optoutsDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.whatsapp_optoutsUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.whatsapp_optoutsUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$whatsapp_optoutsPayload>[]
+          }
+          upsert: {
+            args: Prisma.whatsapp_optoutsUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$whatsapp_optoutsPayload>
+          }
+          aggregate: {
+            args: Prisma.Whatsapp_optoutsAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateWhatsapp_optouts>
+          }
+          groupBy: {
+            args: Prisma.whatsapp_optoutsGroupByArgs<ExtArgs>
+            result: $Utils.Optional<Whatsapp_optoutsGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.whatsapp_optoutsCountArgs<ExtArgs>
+            result: $Utils.Optional<Whatsapp_optoutsCountAggregateOutputType> | number
+          }
+        }
+      }
+      campaign_analytics: {
+        payload: Prisma.$campaign_analyticsPayload<ExtArgs>
+        fields: Prisma.campaign_analyticsFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.campaign_analyticsFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$campaign_analyticsPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.campaign_analyticsFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$campaign_analyticsPayload>
+          }
+          findFirst: {
+            args: Prisma.campaign_analyticsFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$campaign_analyticsPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.campaign_analyticsFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$campaign_analyticsPayload>
+          }
+          findMany: {
+            args: Prisma.campaign_analyticsFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$campaign_analyticsPayload>[]
+          }
+          create: {
+            args: Prisma.campaign_analyticsCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$campaign_analyticsPayload>
+          }
+          createMany: {
+            args: Prisma.campaign_analyticsCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.campaign_analyticsCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$campaign_analyticsPayload>[]
+          }
+          delete: {
+            args: Prisma.campaign_analyticsDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$campaign_analyticsPayload>
+          }
+          update: {
+            args: Prisma.campaign_analyticsUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$campaign_analyticsPayload>
+          }
+          deleteMany: {
+            args: Prisma.campaign_analyticsDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.campaign_analyticsUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.campaign_analyticsUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$campaign_analyticsPayload>[]
+          }
+          upsert: {
+            args: Prisma.campaign_analyticsUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$campaign_analyticsPayload>
+          }
+          aggregate: {
+            args: Prisma.Campaign_analyticsAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateCampaign_analytics>
+          }
+          groupBy: {
+            args: Prisma.campaign_analyticsGroupByArgs<ExtArgs>
+            result: $Utils.Optional<Campaign_analyticsGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.campaign_analyticsCountArgs<ExtArgs>
+            result: $Utils.Optional<Campaign_analyticsCountAggregateOutputType> | number
+          }
+        }
+      }
     }
   } & {
     other: {
@@ -5784,6 +5964,8 @@ export namespace Prisma {
     workflow_executions?: workflow_executionsOmit
     cart_items?: cart_itemsOmit
     carts?: cartsOmit
+    whatsapp_optouts?: whatsapp_optoutsOmit
+    campaign_analytics?: campaign_analyticsOmit
   }
 
   /* Types for Logging */
@@ -6464,7 +6646,6 @@ export namespace Prisma {
    */
 
   export type LeadsCountOutputType = {
-    campaign_recipients: number
     carts: number
     lead_activities: number
     lead_conversations: number
@@ -6484,7 +6665,6 @@ export namespace Prisma {
   }
 
   export type LeadsCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    campaign_recipients?: boolean | LeadsCountOutputTypeCountCampaign_recipientsArgs
     carts?: boolean | LeadsCountOutputTypeCountCartsArgs
     lead_activities?: boolean | LeadsCountOutputTypeCountLead_activitiesArgs
     lead_conversations?: boolean | LeadsCountOutputTypeCountLead_conversationsArgs
@@ -6512,13 +6692,6 @@ export namespace Prisma {
      * Select specific fields to fetch from the LeadsCountOutputType
      */
     select?: LeadsCountOutputTypeSelect<ExtArgs> | null
-  }
-
-  /**
-   * LeadsCountOutputType without action
-   */
-  export type LeadsCountOutputTypeCountCampaign_recipientsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: campaign_recipientsWhereInput
   }
 
   /**
@@ -7041,37 +7214,6 @@ export namespace Prisma {
    */
   export type OrdersCountOutputTypeCountProduct_reviewsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: product_reviewsWhereInput
-  }
-
-
-  /**
-   * Count Type CampaignsCountOutputType
-   */
-
-  export type CampaignsCountOutputType = {
-    campaign_recipients: number
-  }
-
-  export type CampaignsCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    campaign_recipients?: boolean | CampaignsCountOutputTypeCountCampaign_recipientsArgs
-  }
-
-  // Custom InputTypes
-  /**
-   * CampaignsCountOutputType without action
-   */
-  export type CampaignsCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the CampaignsCountOutputType
-     */
-    select?: CampaignsCountOutputTypeSelect<ExtArgs> | null
-  }
-
-  /**
-   * CampaignsCountOutputType without action
-   */
-  export type CampaignsCountOutputTypeCountCampaign_recipientsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: campaign_recipientsWhereInput
   }
 
 
@@ -19548,7 +19690,6 @@ export namespace Prisma {
     deleted_by?: boolean
     onboarding_completed?: boolean
     delivery_address?: boolean
-    campaign_recipients?: boolean | leads$campaign_recipientsArgs<ExtArgs>
     carts?: boolean | leads$cartsArgs<ExtArgs>
     lead_activities?: boolean | leads$lead_activitiesArgs<ExtArgs>
     lead_conversations?: boolean | leads$lead_conversationsArgs<ExtArgs>
@@ -19768,7 +19909,6 @@ export namespace Prisma {
 
   export type leadsOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"lead_id" | "business_id" | "tenant_id" | "source" | "source_reference_id" | "platform_user_id" | "post_id" | "page_id" | "first_name" | "last_name" | "phone" | "email" | "alternate_phone" | "city" | "state" | "country" | "pincode" | "status" | "intent_type" | "lead_quality" | "lead_score" | "assigned_agent_id" | "assigned_at" | "assigned_by" | "first_contact_at" | "last_contact_at" | "last_activity_at" | "next_followup_at" | "followup_count" | "is_converted" | "converted_at" | "conversion_value" | "interested_products" | "interested_courses" | "tags" | "custom_fields" | "extracted_entities" | "sentiment_score" | "preferred_contact_method" | "preferred_contact_time" | "language_preference" | "utm_source" | "utm_medium" | "utm_campaign" | "referral_source" | "lost_reason" | "lost_at" | "invalid_reason" | "is_active" | "is_duplicate" | "duplicate_of_lead_id" | "created_at" | "updated_at" | "created_by" | "updated_by" | "deleted_at" | "deleted_by" | "onboarding_completed" | "delivery_address", ExtArgs["result"]["leads"]>
   export type leadsInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    campaign_recipients?: boolean | leads$campaign_recipientsArgs<ExtArgs>
     carts?: boolean | leads$cartsArgs<ExtArgs>
     lead_activities?: boolean | leads$lead_activitiesArgs<ExtArgs>
     lead_conversations?: boolean | leads$lead_conversationsArgs<ExtArgs>
@@ -19807,7 +19947,6 @@ export namespace Prisma {
   export type $leadsPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "leads"
     objects: {
-      campaign_recipients: Prisma.$campaign_recipientsPayload<ExtArgs>[]
       carts: Prisma.$cartsPayload<ExtArgs>[]
       lead_activities: Prisma.$lead_activitiesPayload<ExtArgs>[]
       lead_conversations: Prisma.$lead_conversationsPayload<ExtArgs>[]
@@ -20283,7 +20422,6 @@ export namespace Prisma {
    */
   export interface Prisma__leadsClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
-    campaign_recipients<T extends leads$campaign_recipientsArgs<ExtArgs> = {}>(args?: Subset<T, leads$campaign_recipientsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$campaign_recipientsPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     carts<T extends leads$cartsArgs<ExtArgs> = {}>(args?: Subset<T, leads$cartsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$cartsPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     lead_activities<T extends leads$lead_activitiesArgs<ExtArgs> = {}>(args?: Subset<T, leads$lead_activitiesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$lead_activitiesPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     lead_conversations<T extends leads$lead_conversationsArgs<ExtArgs> = {}>(args?: Subset<T, leads$lead_conversationsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$lead_conversationsPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
@@ -20785,30 +20923,6 @@ export namespace Prisma {
      * Limit how many leads to delete.
      */
     limit?: number
-  }
-
-  /**
-   * leads.campaign_recipients
-   */
-  export type leads$campaign_recipientsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the campaign_recipients
-     */
-    select?: campaign_recipientsSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the campaign_recipients
-     */
-    omit?: campaign_recipientsOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: campaign_recipientsInclude<ExtArgs> | null
-    where?: campaign_recipientsWhereInput
-    orderBy?: campaign_recipientsOrderByWithRelationInput | campaign_recipientsOrderByWithRelationInput[]
-    cursor?: campaign_recipientsWhereUniqueInput
-    take?: number
-    skip?: number
-    distinct?: Campaign_recipientsScalarFieldEnum | Campaign_recipientsScalarFieldEnum[]
   }
 
   /**
@@ -44958,10 +45072,8 @@ export namespace Prisma {
     updated_at?: boolean
     whatsapp_template_language?: boolean
     whatsapp_template_name?: boolean
-    campaign_recipients?: boolean | campaigns$campaign_recipientsArgs<ExtArgs>
     products?: boolean | campaigns$productsArgs<ExtArgs>
     notification_templates?: boolean | campaigns$notification_templatesArgs<ExtArgs>
-    _count?: boolean | CampaignsCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["campaigns"]>
 
   export type campaignsSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -45066,10 +45178,8 @@ export namespace Prisma {
 
   export type campaignsOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"campaign_id" | "business_id" | "scheduled_at" | "status" | "created_at" | "campaign_name" | "campaign_type" | "channel" | "content_template" | "sent_at" | "target_segment" | "tenant_id" | "audience_filter" | "audience_type" | "clicked_count" | "completed_at" | "converted_count" | "delivered_count" | "failed_count" | "media_type" | "media_url" | "product_id" | "sent_count" | "template_id" | "template_parameters" | "total_recipients" | "updated_at" | "whatsapp_template_language" | "whatsapp_template_name", ExtArgs["result"]["campaigns"]>
   export type campaignsInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    campaign_recipients?: boolean | campaigns$campaign_recipientsArgs<ExtArgs>
     products?: boolean | campaigns$productsArgs<ExtArgs>
     notification_templates?: boolean | campaigns$notification_templatesArgs<ExtArgs>
-    _count?: boolean | CampaignsCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type campaignsIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     products?: boolean | campaigns$productsArgs<ExtArgs>
@@ -45083,7 +45193,6 @@ export namespace Prisma {
   export type $campaignsPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "campaigns"
     objects: {
-      campaign_recipients: Prisma.$campaign_recipientsPayload<ExtArgs>[]
       products: Prisma.$productsPayload<ExtArgs> | null
       notification_templates: Prisma.$notification_templatesPayload<ExtArgs> | null
     }
@@ -45511,7 +45620,6 @@ export namespace Prisma {
    */
   export interface Prisma__campaignsClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
-    campaign_recipients<T extends campaigns$campaign_recipientsArgs<ExtArgs> = {}>(args?: Subset<T, campaigns$campaign_recipientsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$campaign_recipientsPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     products<T extends campaigns$productsArgs<ExtArgs> = {}>(args?: Subset<T, campaigns$productsArgs<ExtArgs>>): Prisma__productsClient<$Result.GetResult<Prisma.$productsPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     notification_templates<T extends campaigns$notification_templatesArgs<ExtArgs> = {}>(args?: Subset<T, campaigns$notification_templatesArgs<ExtArgs>>): Prisma__notification_templatesClient<$Result.GetResult<Prisma.$notification_templatesPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     /**
@@ -45968,30 +46076,6 @@ export namespace Prisma {
   }
 
   /**
-   * campaigns.campaign_recipients
-   */
-  export type campaigns$campaign_recipientsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the campaign_recipients
-     */
-    select?: campaign_recipientsSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the campaign_recipients
-     */
-    omit?: campaign_recipientsOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: campaign_recipientsInclude<ExtArgs> | null
-    where?: campaign_recipientsWhereInput
-    orderBy?: campaign_recipientsOrderByWithRelationInput | campaign_recipientsOrderByWithRelationInput[]
-    cursor?: campaign_recipientsWhereUniqueInput
-    take?: number
-    skip?: number
-    distinct?: Campaign_recipientsScalarFieldEnum | Campaign_recipientsScalarFieldEnum[]
-  }
-
-  /**
    * campaigns.products
    */
   export type campaigns$productsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -46054,94 +46138,154 @@ export namespace Prisma {
 
   export type AggregateCampaign_recipients = {
     _count: Campaign_recipientsCountAggregateOutputType | null
+    _avg: Campaign_recipientsAvgAggregateOutputType | null
+    _sum: Campaign_recipientsSumAggregateOutputType | null
     _min: Campaign_recipientsMinAggregateOutputType | null
     _max: Campaign_recipientsMaxAggregateOutputType | null
   }
 
+  export type Campaign_recipientsAvgAggregateOutputType = {
+    id: number | null
+    retry_count: number | null
+  }
+
+  export type Campaign_recipientsSumAggregateOutputType = {
+    id: bigint | null
+    retry_count: number | null
+  }
+
   export type Campaign_recipientsMinAggregateOutputType = {
-    recipient_id: string | null
+    id: bigint | null
     campaign_id: string | null
-    lead_id: string | null
+    business_id: string | null
+    phone_number: string | null
+    contact_id: string | null
+    status: string | null
+    whatsapp_message_id: string | null
     sent_at: Date | null
     delivered_at: Date | null
-    clicked_at: Date | null
-    converted_at: Date | null
-    status: string | null
+    read_at: Date | null
+    failed_at: Date | null
+    error_code: string | null
     error_message: string | null
+    retry_count: number | null
+    next_retry_at: Date | null
+    created_at: Date | null
     updated_at: Date | null
-    whatsapp_message_id: string | null
   }
 
   export type Campaign_recipientsMaxAggregateOutputType = {
-    recipient_id: string | null
+    id: bigint | null
     campaign_id: string | null
-    lead_id: string | null
+    business_id: string | null
+    phone_number: string | null
+    contact_id: string | null
+    status: string | null
+    whatsapp_message_id: string | null
     sent_at: Date | null
     delivered_at: Date | null
-    clicked_at: Date | null
-    converted_at: Date | null
-    status: string | null
+    read_at: Date | null
+    failed_at: Date | null
+    error_code: string | null
     error_message: string | null
+    retry_count: number | null
+    next_retry_at: Date | null
+    created_at: Date | null
     updated_at: Date | null
-    whatsapp_message_id: string | null
   }
 
   export type Campaign_recipientsCountAggregateOutputType = {
-    recipient_id: number
+    id: number
     campaign_id: number
-    lead_id: number
+    business_id: number
+    phone_number: number
+    contact_id: number
+    resolved_variables: number
+    status: number
+    whatsapp_message_id: number
     sent_at: number
     delivered_at: number
-    clicked_at: number
-    converted_at: number
-    status: number
+    read_at: number
+    failed_at: number
+    error_code: number
     error_message: number
+    retry_count: number
+    next_retry_at: number
+    created_at: number
     updated_at: number
-    whatsapp_message_id: number
     _all: number
   }
 
 
+  export type Campaign_recipientsAvgAggregateInputType = {
+    id?: true
+    retry_count?: true
+  }
+
+  export type Campaign_recipientsSumAggregateInputType = {
+    id?: true
+    retry_count?: true
+  }
+
   export type Campaign_recipientsMinAggregateInputType = {
-    recipient_id?: true
+    id?: true
     campaign_id?: true
-    lead_id?: true
+    business_id?: true
+    phone_number?: true
+    contact_id?: true
+    status?: true
+    whatsapp_message_id?: true
     sent_at?: true
     delivered_at?: true
-    clicked_at?: true
-    converted_at?: true
-    status?: true
+    read_at?: true
+    failed_at?: true
+    error_code?: true
     error_message?: true
+    retry_count?: true
+    next_retry_at?: true
+    created_at?: true
     updated_at?: true
-    whatsapp_message_id?: true
   }
 
   export type Campaign_recipientsMaxAggregateInputType = {
-    recipient_id?: true
+    id?: true
     campaign_id?: true
-    lead_id?: true
+    business_id?: true
+    phone_number?: true
+    contact_id?: true
+    status?: true
+    whatsapp_message_id?: true
     sent_at?: true
     delivered_at?: true
-    clicked_at?: true
-    converted_at?: true
-    status?: true
+    read_at?: true
+    failed_at?: true
+    error_code?: true
     error_message?: true
+    retry_count?: true
+    next_retry_at?: true
+    created_at?: true
     updated_at?: true
-    whatsapp_message_id?: true
   }
 
   export type Campaign_recipientsCountAggregateInputType = {
-    recipient_id?: true
+    id?: true
     campaign_id?: true
-    lead_id?: true
+    business_id?: true
+    phone_number?: true
+    contact_id?: true
+    resolved_variables?: true
+    status?: true
+    whatsapp_message_id?: true
     sent_at?: true
     delivered_at?: true
-    clicked_at?: true
-    converted_at?: true
-    status?: true
+    read_at?: true
+    failed_at?: true
+    error_code?: true
     error_message?: true
+    retry_count?: true
+    next_retry_at?: true
+    created_at?: true
     updated_at?: true
-    whatsapp_message_id?: true
     _all?: true
   }
 
@@ -46183,6 +46327,18 @@ export namespace Prisma {
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
      * 
+     * Select which fields to average
+    **/
+    _avg?: Campaign_recipientsAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: Campaign_recipientsSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
      * Select which fields to find the minimum value
     **/
     _min?: Campaign_recipientsMinAggregateInputType
@@ -46213,23 +46369,34 @@ export namespace Prisma {
     take?: number
     skip?: number
     _count?: Campaign_recipientsCountAggregateInputType | true
+    _avg?: Campaign_recipientsAvgAggregateInputType
+    _sum?: Campaign_recipientsSumAggregateInputType
     _min?: Campaign_recipientsMinAggregateInputType
     _max?: Campaign_recipientsMaxAggregateInputType
   }
 
   export type Campaign_recipientsGroupByOutputType = {
-    recipient_id: string
+    id: bigint
     campaign_id: string
-    lead_id: string
+    business_id: string
+    phone_number: string
+    contact_id: string | null
+    resolved_variables: JsonValue
+    status: string
+    whatsapp_message_id: string | null
     sent_at: Date | null
     delivered_at: Date | null
-    clicked_at: Date | null
-    converted_at: Date | null
-    status: string | null
+    read_at: Date | null
+    failed_at: Date | null
+    error_code: string | null
     error_message: string | null
-    updated_at: Date | null
-    whatsapp_message_id: string | null
+    retry_count: number
+    next_retry_at: Date | null
+    created_at: Date
+    updated_at: Date
     _count: Campaign_recipientsCountAggregateOutputType | null
+    _avg: Campaign_recipientsAvgAggregateOutputType | null
+    _sum: Campaign_recipientsSumAggregateOutputType | null
     _min: Campaign_recipientsMinAggregateOutputType | null
     _max: Campaign_recipientsMaxAggregateOutputType | null
   }
@@ -46249,99 +46416,113 @@ export namespace Prisma {
 
 
   export type campaign_recipientsSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
-    recipient_id?: boolean
+    id?: boolean
     campaign_id?: boolean
-    lead_id?: boolean
+    business_id?: boolean
+    phone_number?: boolean
+    contact_id?: boolean
+    resolved_variables?: boolean
+    status?: boolean
+    whatsapp_message_id?: boolean
     sent_at?: boolean
     delivered_at?: boolean
-    clicked_at?: boolean
-    converted_at?: boolean
-    status?: boolean
+    read_at?: boolean
+    failed_at?: boolean
+    error_code?: boolean
     error_message?: boolean
+    retry_count?: boolean
+    next_retry_at?: boolean
+    created_at?: boolean
     updated_at?: boolean
-    whatsapp_message_id?: boolean
-    campaign?: boolean | campaignsDefaultArgs<ExtArgs>
-    lead?: boolean | leadsDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["campaign_recipients"]>
 
   export type campaign_recipientsSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
-    recipient_id?: boolean
+    id?: boolean
     campaign_id?: boolean
-    lead_id?: boolean
+    business_id?: boolean
+    phone_number?: boolean
+    contact_id?: boolean
+    resolved_variables?: boolean
+    status?: boolean
+    whatsapp_message_id?: boolean
     sent_at?: boolean
     delivered_at?: boolean
-    clicked_at?: boolean
-    converted_at?: boolean
-    status?: boolean
+    read_at?: boolean
+    failed_at?: boolean
+    error_code?: boolean
     error_message?: boolean
+    retry_count?: boolean
+    next_retry_at?: boolean
+    created_at?: boolean
     updated_at?: boolean
-    whatsapp_message_id?: boolean
-    campaign?: boolean | campaignsDefaultArgs<ExtArgs>
-    lead?: boolean | leadsDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["campaign_recipients"]>
 
   export type campaign_recipientsSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
-    recipient_id?: boolean
+    id?: boolean
     campaign_id?: boolean
-    lead_id?: boolean
+    business_id?: boolean
+    phone_number?: boolean
+    contact_id?: boolean
+    resolved_variables?: boolean
+    status?: boolean
+    whatsapp_message_id?: boolean
     sent_at?: boolean
     delivered_at?: boolean
-    clicked_at?: boolean
-    converted_at?: boolean
-    status?: boolean
+    read_at?: boolean
+    failed_at?: boolean
+    error_code?: boolean
     error_message?: boolean
+    retry_count?: boolean
+    next_retry_at?: boolean
+    created_at?: boolean
     updated_at?: boolean
-    whatsapp_message_id?: boolean
-    campaign?: boolean | campaignsDefaultArgs<ExtArgs>
-    lead?: boolean | leadsDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["campaign_recipients"]>
 
   export type campaign_recipientsSelectScalar = {
-    recipient_id?: boolean
+    id?: boolean
     campaign_id?: boolean
-    lead_id?: boolean
+    business_id?: boolean
+    phone_number?: boolean
+    contact_id?: boolean
+    resolved_variables?: boolean
+    status?: boolean
+    whatsapp_message_id?: boolean
     sent_at?: boolean
     delivered_at?: boolean
-    clicked_at?: boolean
-    converted_at?: boolean
-    status?: boolean
+    read_at?: boolean
+    failed_at?: boolean
+    error_code?: boolean
     error_message?: boolean
+    retry_count?: boolean
+    next_retry_at?: boolean
+    created_at?: boolean
     updated_at?: boolean
-    whatsapp_message_id?: boolean
   }
 
-  export type campaign_recipientsOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"recipient_id" | "campaign_id" | "lead_id" | "sent_at" | "delivered_at" | "clicked_at" | "converted_at" | "status" | "error_message" | "updated_at" | "whatsapp_message_id", ExtArgs["result"]["campaign_recipients"]>
-  export type campaign_recipientsInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    campaign?: boolean | campaignsDefaultArgs<ExtArgs>
-    lead?: boolean | leadsDefaultArgs<ExtArgs>
-  }
-  export type campaign_recipientsIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    campaign?: boolean | campaignsDefaultArgs<ExtArgs>
-    lead?: boolean | leadsDefaultArgs<ExtArgs>
-  }
-  export type campaign_recipientsIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    campaign?: boolean | campaignsDefaultArgs<ExtArgs>
-    lead?: boolean | leadsDefaultArgs<ExtArgs>
-  }
+  export type campaign_recipientsOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "campaign_id" | "business_id" | "phone_number" | "contact_id" | "resolved_variables" | "status" | "whatsapp_message_id" | "sent_at" | "delivered_at" | "read_at" | "failed_at" | "error_code" | "error_message" | "retry_count" | "next_retry_at" | "created_at" | "updated_at", ExtArgs["result"]["campaign_recipients"]>
 
   export type $campaign_recipientsPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "campaign_recipients"
-    objects: {
-      campaign: Prisma.$campaignsPayload<ExtArgs>
-      lead: Prisma.$leadsPayload<ExtArgs>
-    }
+    objects: {}
     scalars: $Extensions.GetPayloadResult<{
-      recipient_id: string
+      id: bigint
       campaign_id: string
-      lead_id: string
+      business_id: string
+      phone_number: string
+      contact_id: string | null
+      resolved_variables: Prisma.JsonValue
+      status: string
+      whatsapp_message_id: string | null
       sent_at: Date | null
       delivered_at: Date | null
-      clicked_at: Date | null
-      converted_at: Date | null
-      status: string | null
+      read_at: Date | null
+      failed_at: Date | null
+      error_code: string | null
       error_message: string | null
-      updated_at: Date | null
-      whatsapp_message_id: string | null
+      retry_count: number
+      next_retry_at: Date | null
+      created_at: Date
+      updated_at: Date
     }, ExtArgs["result"]["campaign_recipients"]>
     composites: {}
   }
@@ -46425,8 +46606,8 @@ export namespace Prisma {
      * // Get first 10 Campaign_recipients
      * const campaign_recipients = await prisma.campaign_recipients.findMany({ take: 10 })
      * 
-     * // Only select the `recipient_id`
-     * const campaign_recipientsWithRecipient_idOnly = await prisma.campaign_recipients.findMany({ select: { recipient_id: true } })
+     * // Only select the `id`
+     * const campaign_recipientsWithIdOnly = await prisma.campaign_recipients.findMany({ select: { id: true } })
      * 
      */
     findMany<T extends campaign_recipientsFindManyArgs>(args?: SelectSubset<T, campaign_recipientsFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$campaign_recipientsPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
@@ -46470,9 +46651,9 @@ export namespace Prisma {
      *   ]
      * })
      * 
-     * // Create many Campaign_recipients and only return the `recipient_id`
-     * const campaign_recipientsWithRecipient_idOnly = await prisma.campaign_recipients.createManyAndReturn({
-     *   select: { recipient_id: true },
+     * // Create many Campaign_recipients and only return the `id`
+     * const campaign_recipientsWithIdOnly = await prisma.campaign_recipients.createManyAndReturn({
+     *   select: { id: true },
      *   data: [
      *     // ... provide data here
      *   ]
@@ -46561,9 +46742,9 @@ export namespace Prisma {
      *   ]
      * })
      * 
-     * // Update zero or more Campaign_recipients and only return the `recipient_id`
-     * const campaign_recipientsWithRecipient_idOnly = await prisma.campaign_recipients.updateManyAndReturn({
-     *   select: { recipient_id: true },
+     * // Update zero or more Campaign_recipients and only return the `id`
+     * const campaign_recipientsWithIdOnly = await prisma.campaign_recipients.updateManyAndReturn({
+     *   select: { id: true },
      *   where: {
      *     // ... provide filter here
      *   },
@@ -46736,8 +46917,6 @@ export namespace Prisma {
    */
   export interface Prisma__campaign_recipientsClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
-    campaign<T extends campaignsDefaultArgs<ExtArgs> = {}>(args?: Subset<T, campaignsDefaultArgs<ExtArgs>>): Prisma__campaignsClient<$Result.GetResult<Prisma.$campaignsPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
-    lead<T extends leadsDefaultArgs<ExtArgs> = {}>(args?: Subset<T, leadsDefaultArgs<ExtArgs>>): Prisma__leadsClient<$Result.GetResult<Prisma.$leadsPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -46767,17 +46946,24 @@ export namespace Prisma {
    * Fields of the campaign_recipients model
    */
   interface campaign_recipientsFieldRefs {
-    readonly recipient_id: FieldRef<"campaign_recipients", 'String'>
+    readonly id: FieldRef<"campaign_recipients", 'BigInt'>
     readonly campaign_id: FieldRef<"campaign_recipients", 'String'>
-    readonly lead_id: FieldRef<"campaign_recipients", 'String'>
+    readonly business_id: FieldRef<"campaign_recipients", 'String'>
+    readonly phone_number: FieldRef<"campaign_recipients", 'String'>
+    readonly contact_id: FieldRef<"campaign_recipients", 'String'>
+    readonly resolved_variables: FieldRef<"campaign_recipients", 'Json'>
+    readonly status: FieldRef<"campaign_recipients", 'String'>
+    readonly whatsapp_message_id: FieldRef<"campaign_recipients", 'String'>
     readonly sent_at: FieldRef<"campaign_recipients", 'DateTime'>
     readonly delivered_at: FieldRef<"campaign_recipients", 'DateTime'>
-    readonly clicked_at: FieldRef<"campaign_recipients", 'DateTime'>
-    readonly converted_at: FieldRef<"campaign_recipients", 'DateTime'>
-    readonly status: FieldRef<"campaign_recipients", 'String'>
+    readonly read_at: FieldRef<"campaign_recipients", 'DateTime'>
+    readonly failed_at: FieldRef<"campaign_recipients", 'DateTime'>
+    readonly error_code: FieldRef<"campaign_recipients", 'String'>
     readonly error_message: FieldRef<"campaign_recipients", 'String'>
+    readonly retry_count: FieldRef<"campaign_recipients", 'Int'>
+    readonly next_retry_at: FieldRef<"campaign_recipients", 'DateTime'>
+    readonly created_at: FieldRef<"campaign_recipients", 'DateTime'>
     readonly updated_at: FieldRef<"campaign_recipients", 'DateTime'>
-    readonly whatsapp_message_id: FieldRef<"campaign_recipients", 'String'>
   }
     
 
@@ -46794,10 +46980,6 @@ export namespace Prisma {
      * Omit specific fields from the campaign_recipients
      */
     omit?: campaign_recipientsOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: campaign_recipientsInclude<ExtArgs> | null
     /**
      * Filter, which campaign_recipients to fetch.
      */
@@ -46817,10 +46999,6 @@ export namespace Prisma {
      */
     omit?: campaign_recipientsOmit<ExtArgs> | null
     /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: campaign_recipientsInclude<ExtArgs> | null
-    /**
      * Filter, which campaign_recipients to fetch.
      */
     where: campaign_recipientsWhereUniqueInput
@@ -46838,10 +47016,6 @@ export namespace Prisma {
      * Omit specific fields from the campaign_recipients
      */
     omit?: campaign_recipientsOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: campaign_recipientsInclude<ExtArgs> | null
     /**
      * Filter, which campaign_recipients to fetch.
      */
@@ -46891,10 +47065,6 @@ export namespace Prisma {
      */
     omit?: campaign_recipientsOmit<ExtArgs> | null
     /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: campaign_recipientsInclude<ExtArgs> | null
-    /**
      * Filter, which campaign_recipients to fetch.
      */
     where?: campaign_recipientsWhereInput
@@ -46943,10 +47113,6 @@ export namespace Prisma {
      */
     omit?: campaign_recipientsOmit<ExtArgs> | null
     /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: campaign_recipientsInclude<ExtArgs> | null
-    /**
      * Filter, which campaign_recipients to fetch.
      */
     where?: campaign_recipientsWhereInput
@@ -46990,10 +47156,6 @@ export namespace Prisma {
      */
     omit?: campaign_recipientsOmit<ExtArgs> | null
     /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: campaign_recipientsInclude<ExtArgs> | null
-    /**
      * The data needed to create a campaign_recipients.
      */
     data: XOR<campaign_recipientsCreateInput, campaign_recipientsUncheckedCreateInput>
@@ -47027,10 +47189,6 @@ export namespace Prisma {
      */
     data: campaign_recipientsCreateManyInput | campaign_recipientsCreateManyInput[]
     skipDuplicates?: boolean
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: campaign_recipientsIncludeCreateManyAndReturn<ExtArgs> | null
   }
 
   /**
@@ -47045,10 +47203,6 @@ export namespace Prisma {
      * Omit specific fields from the campaign_recipients
      */
     omit?: campaign_recipientsOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: campaign_recipientsInclude<ExtArgs> | null
     /**
      * The data needed to update a campaign_recipients.
      */
@@ -47101,10 +47255,6 @@ export namespace Prisma {
      * Limit how many campaign_recipients to update.
      */
     limit?: number
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: campaign_recipientsIncludeUpdateManyAndReturn<ExtArgs> | null
   }
 
   /**
@@ -47119,10 +47269,6 @@ export namespace Prisma {
      * Omit specific fields from the campaign_recipients
      */
     omit?: campaign_recipientsOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: campaign_recipientsInclude<ExtArgs> | null
     /**
      * The filter to search for the campaign_recipients to update in case it exists.
      */
@@ -47149,10 +47295,6 @@ export namespace Prisma {
      * Omit specific fields from the campaign_recipients
      */
     omit?: campaign_recipientsOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: campaign_recipientsInclude<ExtArgs> | null
     /**
      * Filter which campaign_recipients to delete.
      */
@@ -47185,10 +47327,6 @@ export namespace Prisma {
      * Omit specific fields from the campaign_recipients
      */
     omit?: campaign_recipientsOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: campaign_recipientsInclude<ExtArgs> | null
   }
 
 
@@ -80411,6 +80549,2234 @@ export namespace Prisma {
 
 
   /**
+   * Model whatsapp_optouts
+   */
+
+  export type AggregateWhatsapp_optouts = {
+    _count: Whatsapp_optoutsCountAggregateOutputType | null
+    _avg: Whatsapp_optoutsAvgAggregateOutputType | null
+    _sum: Whatsapp_optoutsSumAggregateOutputType | null
+    _min: Whatsapp_optoutsMinAggregateOutputType | null
+    _max: Whatsapp_optoutsMaxAggregateOutputType | null
+  }
+
+  export type Whatsapp_optoutsAvgAggregateOutputType = {
+    id: number | null
+  }
+
+  export type Whatsapp_optoutsSumAggregateOutputType = {
+    id: bigint | null
+  }
+
+  export type Whatsapp_optoutsMinAggregateOutputType = {
+    id: bigint | null
+    business_id: string | null
+    phone_number: string | null
+    opted_out_at: Date | null
+    reason: string | null
+  }
+
+  export type Whatsapp_optoutsMaxAggregateOutputType = {
+    id: bigint | null
+    business_id: string | null
+    phone_number: string | null
+    opted_out_at: Date | null
+    reason: string | null
+  }
+
+  export type Whatsapp_optoutsCountAggregateOutputType = {
+    id: number
+    business_id: number
+    phone_number: number
+    opted_out_at: number
+    reason: number
+    _all: number
+  }
+
+
+  export type Whatsapp_optoutsAvgAggregateInputType = {
+    id?: true
+  }
+
+  export type Whatsapp_optoutsSumAggregateInputType = {
+    id?: true
+  }
+
+  export type Whatsapp_optoutsMinAggregateInputType = {
+    id?: true
+    business_id?: true
+    phone_number?: true
+    opted_out_at?: true
+    reason?: true
+  }
+
+  export type Whatsapp_optoutsMaxAggregateInputType = {
+    id?: true
+    business_id?: true
+    phone_number?: true
+    opted_out_at?: true
+    reason?: true
+  }
+
+  export type Whatsapp_optoutsCountAggregateInputType = {
+    id?: true
+    business_id?: true
+    phone_number?: true
+    opted_out_at?: true
+    reason?: true
+    _all?: true
+  }
+
+  export type Whatsapp_optoutsAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which whatsapp_optouts to aggregate.
+     */
+    where?: whatsapp_optoutsWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of whatsapp_optouts to fetch.
+     */
+    orderBy?: whatsapp_optoutsOrderByWithRelationInput | whatsapp_optoutsOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: whatsapp_optoutsWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` whatsapp_optouts from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` whatsapp_optouts.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned whatsapp_optouts
+    **/
+    _count?: true | Whatsapp_optoutsCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: Whatsapp_optoutsAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: Whatsapp_optoutsSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: Whatsapp_optoutsMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: Whatsapp_optoutsMaxAggregateInputType
+  }
+
+  export type GetWhatsapp_optoutsAggregateType<T extends Whatsapp_optoutsAggregateArgs> = {
+        [P in keyof T & keyof AggregateWhatsapp_optouts]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateWhatsapp_optouts[P]>
+      : GetScalarType<T[P], AggregateWhatsapp_optouts[P]>
+  }
+
+
+
+
+  export type whatsapp_optoutsGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: whatsapp_optoutsWhereInput
+    orderBy?: whatsapp_optoutsOrderByWithAggregationInput | whatsapp_optoutsOrderByWithAggregationInput[]
+    by: Whatsapp_optoutsScalarFieldEnum[] | Whatsapp_optoutsScalarFieldEnum
+    having?: whatsapp_optoutsScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: Whatsapp_optoutsCountAggregateInputType | true
+    _avg?: Whatsapp_optoutsAvgAggregateInputType
+    _sum?: Whatsapp_optoutsSumAggregateInputType
+    _min?: Whatsapp_optoutsMinAggregateInputType
+    _max?: Whatsapp_optoutsMaxAggregateInputType
+  }
+
+  export type Whatsapp_optoutsGroupByOutputType = {
+    id: bigint
+    business_id: string
+    phone_number: string
+    opted_out_at: Date
+    reason: string | null
+    _count: Whatsapp_optoutsCountAggregateOutputType | null
+    _avg: Whatsapp_optoutsAvgAggregateOutputType | null
+    _sum: Whatsapp_optoutsSumAggregateOutputType | null
+    _min: Whatsapp_optoutsMinAggregateOutputType | null
+    _max: Whatsapp_optoutsMaxAggregateOutputType | null
+  }
+
+  type GetWhatsapp_optoutsGroupByPayload<T extends whatsapp_optoutsGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<Whatsapp_optoutsGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof Whatsapp_optoutsGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], Whatsapp_optoutsGroupByOutputType[P]>
+            : GetScalarType<T[P], Whatsapp_optoutsGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type whatsapp_optoutsSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    business_id?: boolean
+    phone_number?: boolean
+    opted_out_at?: boolean
+    reason?: boolean
+  }, ExtArgs["result"]["whatsapp_optouts"]>
+
+  export type whatsapp_optoutsSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    business_id?: boolean
+    phone_number?: boolean
+    opted_out_at?: boolean
+    reason?: boolean
+  }, ExtArgs["result"]["whatsapp_optouts"]>
+
+  export type whatsapp_optoutsSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    business_id?: boolean
+    phone_number?: boolean
+    opted_out_at?: boolean
+    reason?: boolean
+  }, ExtArgs["result"]["whatsapp_optouts"]>
+
+  export type whatsapp_optoutsSelectScalar = {
+    id?: boolean
+    business_id?: boolean
+    phone_number?: boolean
+    opted_out_at?: boolean
+    reason?: boolean
+  }
+
+  export type whatsapp_optoutsOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "business_id" | "phone_number" | "opted_out_at" | "reason", ExtArgs["result"]["whatsapp_optouts"]>
+
+  export type $whatsapp_optoutsPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "whatsapp_optouts"
+    objects: {}
+    scalars: $Extensions.GetPayloadResult<{
+      id: bigint
+      business_id: string
+      phone_number: string
+      opted_out_at: Date
+      reason: string | null
+    }, ExtArgs["result"]["whatsapp_optouts"]>
+    composites: {}
+  }
+
+  type whatsapp_optoutsGetPayload<S extends boolean | null | undefined | whatsapp_optoutsDefaultArgs> = $Result.GetResult<Prisma.$whatsapp_optoutsPayload, S>
+
+  type whatsapp_optoutsCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<whatsapp_optoutsFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: Whatsapp_optoutsCountAggregateInputType | true
+    }
+
+  export interface whatsapp_optoutsDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['whatsapp_optouts'], meta: { name: 'whatsapp_optouts' } }
+    /**
+     * Find zero or one Whatsapp_optouts that matches the filter.
+     * @param {whatsapp_optoutsFindUniqueArgs} args - Arguments to find a Whatsapp_optouts
+     * @example
+     * // Get one Whatsapp_optouts
+     * const whatsapp_optouts = await prisma.whatsapp_optouts.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends whatsapp_optoutsFindUniqueArgs>(args: SelectSubset<T, whatsapp_optoutsFindUniqueArgs<ExtArgs>>): Prisma__whatsapp_optoutsClient<$Result.GetResult<Prisma.$whatsapp_optoutsPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one Whatsapp_optouts that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {whatsapp_optoutsFindUniqueOrThrowArgs} args - Arguments to find a Whatsapp_optouts
+     * @example
+     * // Get one Whatsapp_optouts
+     * const whatsapp_optouts = await prisma.whatsapp_optouts.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends whatsapp_optoutsFindUniqueOrThrowArgs>(args: SelectSubset<T, whatsapp_optoutsFindUniqueOrThrowArgs<ExtArgs>>): Prisma__whatsapp_optoutsClient<$Result.GetResult<Prisma.$whatsapp_optoutsPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Whatsapp_optouts that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {whatsapp_optoutsFindFirstArgs} args - Arguments to find a Whatsapp_optouts
+     * @example
+     * // Get one Whatsapp_optouts
+     * const whatsapp_optouts = await prisma.whatsapp_optouts.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends whatsapp_optoutsFindFirstArgs>(args?: SelectSubset<T, whatsapp_optoutsFindFirstArgs<ExtArgs>>): Prisma__whatsapp_optoutsClient<$Result.GetResult<Prisma.$whatsapp_optoutsPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Whatsapp_optouts that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {whatsapp_optoutsFindFirstOrThrowArgs} args - Arguments to find a Whatsapp_optouts
+     * @example
+     * // Get one Whatsapp_optouts
+     * const whatsapp_optouts = await prisma.whatsapp_optouts.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends whatsapp_optoutsFindFirstOrThrowArgs>(args?: SelectSubset<T, whatsapp_optoutsFindFirstOrThrowArgs<ExtArgs>>): Prisma__whatsapp_optoutsClient<$Result.GetResult<Prisma.$whatsapp_optoutsPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more Whatsapp_optouts that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {whatsapp_optoutsFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all Whatsapp_optouts
+     * const whatsapp_optouts = await prisma.whatsapp_optouts.findMany()
+     * 
+     * // Get first 10 Whatsapp_optouts
+     * const whatsapp_optouts = await prisma.whatsapp_optouts.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const whatsapp_optoutsWithIdOnly = await prisma.whatsapp_optouts.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends whatsapp_optoutsFindManyArgs>(args?: SelectSubset<T, whatsapp_optoutsFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$whatsapp_optoutsPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a Whatsapp_optouts.
+     * @param {whatsapp_optoutsCreateArgs} args - Arguments to create a Whatsapp_optouts.
+     * @example
+     * // Create one Whatsapp_optouts
+     * const Whatsapp_optouts = await prisma.whatsapp_optouts.create({
+     *   data: {
+     *     // ... data to create a Whatsapp_optouts
+     *   }
+     * })
+     * 
+     */
+    create<T extends whatsapp_optoutsCreateArgs>(args: SelectSubset<T, whatsapp_optoutsCreateArgs<ExtArgs>>): Prisma__whatsapp_optoutsClient<$Result.GetResult<Prisma.$whatsapp_optoutsPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many Whatsapp_optouts.
+     * @param {whatsapp_optoutsCreateManyArgs} args - Arguments to create many Whatsapp_optouts.
+     * @example
+     * // Create many Whatsapp_optouts
+     * const whatsapp_optouts = await prisma.whatsapp_optouts.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends whatsapp_optoutsCreateManyArgs>(args?: SelectSubset<T, whatsapp_optoutsCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many Whatsapp_optouts and returns the data saved in the database.
+     * @param {whatsapp_optoutsCreateManyAndReturnArgs} args - Arguments to create many Whatsapp_optouts.
+     * @example
+     * // Create many Whatsapp_optouts
+     * const whatsapp_optouts = await prisma.whatsapp_optouts.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many Whatsapp_optouts and only return the `id`
+     * const whatsapp_optoutsWithIdOnly = await prisma.whatsapp_optouts.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends whatsapp_optoutsCreateManyAndReturnArgs>(args?: SelectSubset<T, whatsapp_optoutsCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$whatsapp_optoutsPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a Whatsapp_optouts.
+     * @param {whatsapp_optoutsDeleteArgs} args - Arguments to delete one Whatsapp_optouts.
+     * @example
+     * // Delete one Whatsapp_optouts
+     * const Whatsapp_optouts = await prisma.whatsapp_optouts.delete({
+     *   where: {
+     *     // ... filter to delete one Whatsapp_optouts
+     *   }
+     * })
+     * 
+     */
+    delete<T extends whatsapp_optoutsDeleteArgs>(args: SelectSubset<T, whatsapp_optoutsDeleteArgs<ExtArgs>>): Prisma__whatsapp_optoutsClient<$Result.GetResult<Prisma.$whatsapp_optoutsPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one Whatsapp_optouts.
+     * @param {whatsapp_optoutsUpdateArgs} args - Arguments to update one Whatsapp_optouts.
+     * @example
+     * // Update one Whatsapp_optouts
+     * const whatsapp_optouts = await prisma.whatsapp_optouts.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends whatsapp_optoutsUpdateArgs>(args: SelectSubset<T, whatsapp_optoutsUpdateArgs<ExtArgs>>): Prisma__whatsapp_optoutsClient<$Result.GetResult<Prisma.$whatsapp_optoutsPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more Whatsapp_optouts.
+     * @param {whatsapp_optoutsDeleteManyArgs} args - Arguments to filter Whatsapp_optouts to delete.
+     * @example
+     * // Delete a few Whatsapp_optouts
+     * const { count } = await prisma.whatsapp_optouts.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends whatsapp_optoutsDeleteManyArgs>(args?: SelectSubset<T, whatsapp_optoutsDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Whatsapp_optouts.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {whatsapp_optoutsUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many Whatsapp_optouts
+     * const whatsapp_optouts = await prisma.whatsapp_optouts.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends whatsapp_optoutsUpdateManyArgs>(args: SelectSubset<T, whatsapp_optoutsUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Whatsapp_optouts and returns the data updated in the database.
+     * @param {whatsapp_optoutsUpdateManyAndReturnArgs} args - Arguments to update many Whatsapp_optouts.
+     * @example
+     * // Update many Whatsapp_optouts
+     * const whatsapp_optouts = await prisma.whatsapp_optouts.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more Whatsapp_optouts and only return the `id`
+     * const whatsapp_optoutsWithIdOnly = await prisma.whatsapp_optouts.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends whatsapp_optoutsUpdateManyAndReturnArgs>(args: SelectSubset<T, whatsapp_optoutsUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$whatsapp_optoutsPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one Whatsapp_optouts.
+     * @param {whatsapp_optoutsUpsertArgs} args - Arguments to update or create a Whatsapp_optouts.
+     * @example
+     * // Update or create a Whatsapp_optouts
+     * const whatsapp_optouts = await prisma.whatsapp_optouts.upsert({
+     *   create: {
+     *     // ... data to create a Whatsapp_optouts
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the Whatsapp_optouts we want to update
+     *   }
+     * })
+     */
+    upsert<T extends whatsapp_optoutsUpsertArgs>(args: SelectSubset<T, whatsapp_optoutsUpsertArgs<ExtArgs>>): Prisma__whatsapp_optoutsClient<$Result.GetResult<Prisma.$whatsapp_optoutsPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of Whatsapp_optouts.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {whatsapp_optoutsCountArgs} args - Arguments to filter Whatsapp_optouts to count.
+     * @example
+     * // Count the number of Whatsapp_optouts
+     * const count = await prisma.whatsapp_optouts.count({
+     *   where: {
+     *     // ... the filter for the Whatsapp_optouts we want to count
+     *   }
+     * })
+    **/
+    count<T extends whatsapp_optoutsCountArgs>(
+      args?: Subset<T, whatsapp_optoutsCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], Whatsapp_optoutsCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a Whatsapp_optouts.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {Whatsapp_optoutsAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends Whatsapp_optoutsAggregateArgs>(args: Subset<T, Whatsapp_optoutsAggregateArgs>): Prisma.PrismaPromise<GetWhatsapp_optoutsAggregateType<T>>
+
+    /**
+     * Group by Whatsapp_optouts.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {whatsapp_optoutsGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends whatsapp_optoutsGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: whatsapp_optoutsGroupByArgs['orderBy'] }
+        : { orderBy?: whatsapp_optoutsGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, whatsapp_optoutsGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetWhatsapp_optoutsGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the whatsapp_optouts model
+   */
+  readonly fields: whatsapp_optoutsFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for whatsapp_optouts.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__whatsapp_optoutsClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the whatsapp_optouts model
+   */
+  interface whatsapp_optoutsFieldRefs {
+    readonly id: FieldRef<"whatsapp_optouts", 'BigInt'>
+    readonly business_id: FieldRef<"whatsapp_optouts", 'String'>
+    readonly phone_number: FieldRef<"whatsapp_optouts", 'String'>
+    readonly opted_out_at: FieldRef<"whatsapp_optouts", 'DateTime'>
+    readonly reason: FieldRef<"whatsapp_optouts", 'String'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * whatsapp_optouts findUnique
+   */
+  export type whatsapp_optoutsFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the whatsapp_optouts
+     */
+    select?: whatsapp_optoutsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the whatsapp_optouts
+     */
+    omit?: whatsapp_optoutsOmit<ExtArgs> | null
+    /**
+     * Filter, which whatsapp_optouts to fetch.
+     */
+    where: whatsapp_optoutsWhereUniqueInput
+  }
+
+  /**
+   * whatsapp_optouts findUniqueOrThrow
+   */
+  export type whatsapp_optoutsFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the whatsapp_optouts
+     */
+    select?: whatsapp_optoutsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the whatsapp_optouts
+     */
+    omit?: whatsapp_optoutsOmit<ExtArgs> | null
+    /**
+     * Filter, which whatsapp_optouts to fetch.
+     */
+    where: whatsapp_optoutsWhereUniqueInput
+  }
+
+  /**
+   * whatsapp_optouts findFirst
+   */
+  export type whatsapp_optoutsFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the whatsapp_optouts
+     */
+    select?: whatsapp_optoutsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the whatsapp_optouts
+     */
+    omit?: whatsapp_optoutsOmit<ExtArgs> | null
+    /**
+     * Filter, which whatsapp_optouts to fetch.
+     */
+    where?: whatsapp_optoutsWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of whatsapp_optouts to fetch.
+     */
+    orderBy?: whatsapp_optoutsOrderByWithRelationInput | whatsapp_optoutsOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for whatsapp_optouts.
+     */
+    cursor?: whatsapp_optoutsWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` whatsapp_optouts from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` whatsapp_optouts.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of whatsapp_optouts.
+     */
+    distinct?: Whatsapp_optoutsScalarFieldEnum | Whatsapp_optoutsScalarFieldEnum[]
+  }
+
+  /**
+   * whatsapp_optouts findFirstOrThrow
+   */
+  export type whatsapp_optoutsFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the whatsapp_optouts
+     */
+    select?: whatsapp_optoutsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the whatsapp_optouts
+     */
+    omit?: whatsapp_optoutsOmit<ExtArgs> | null
+    /**
+     * Filter, which whatsapp_optouts to fetch.
+     */
+    where?: whatsapp_optoutsWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of whatsapp_optouts to fetch.
+     */
+    orderBy?: whatsapp_optoutsOrderByWithRelationInput | whatsapp_optoutsOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for whatsapp_optouts.
+     */
+    cursor?: whatsapp_optoutsWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` whatsapp_optouts from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` whatsapp_optouts.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of whatsapp_optouts.
+     */
+    distinct?: Whatsapp_optoutsScalarFieldEnum | Whatsapp_optoutsScalarFieldEnum[]
+  }
+
+  /**
+   * whatsapp_optouts findMany
+   */
+  export type whatsapp_optoutsFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the whatsapp_optouts
+     */
+    select?: whatsapp_optoutsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the whatsapp_optouts
+     */
+    omit?: whatsapp_optoutsOmit<ExtArgs> | null
+    /**
+     * Filter, which whatsapp_optouts to fetch.
+     */
+    where?: whatsapp_optoutsWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of whatsapp_optouts to fetch.
+     */
+    orderBy?: whatsapp_optoutsOrderByWithRelationInput | whatsapp_optoutsOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing whatsapp_optouts.
+     */
+    cursor?: whatsapp_optoutsWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` whatsapp_optouts from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` whatsapp_optouts.
+     */
+    skip?: number
+    distinct?: Whatsapp_optoutsScalarFieldEnum | Whatsapp_optoutsScalarFieldEnum[]
+  }
+
+  /**
+   * whatsapp_optouts create
+   */
+  export type whatsapp_optoutsCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the whatsapp_optouts
+     */
+    select?: whatsapp_optoutsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the whatsapp_optouts
+     */
+    omit?: whatsapp_optoutsOmit<ExtArgs> | null
+    /**
+     * The data needed to create a whatsapp_optouts.
+     */
+    data: XOR<whatsapp_optoutsCreateInput, whatsapp_optoutsUncheckedCreateInput>
+  }
+
+  /**
+   * whatsapp_optouts createMany
+   */
+  export type whatsapp_optoutsCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many whatsapp_optouts.
+     */
+    data: whatsapp_optoutsCreateManyInput | whatsapp_optoutsCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * whatsapp_optouts createManyAndReturn
+   */
+  export type whatsapp_optoutsCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the whatsapp_optouts
+     */
+    select?: whatsapp_optoutsSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the whatsapp_optouts
+     */
+    omit?: whatsapp_optoutsOmit<ExtArgs> | null
+    /**
+     * The data used to create many whatsapp_optouts.
+     */
+    data: whatsapp_optoutsCreateManyInput | whatsapp_optoutsCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * whatsapp_optouts update
+   */
+  export type whatsapp_optoutsUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the whatsapp_optouts
+     */
+    select?: whatsapp_optoutsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the whatsapp_optouts
+     */
+    omit?: whatsapp_optoutsOmit<ExtArgs> | null
+    /**
+     * The data needed to update a whatsapp_optouts.
+     */
+    data: XOR<whatsapp_optoutsUpdateInput, whatsapp_optoutsUncheckedUpdateInput>
+    /**
+     * Choose, which whatsapp_optouts to update.
+     */
+    where: whatsapp_optoutsWhereUniqueInput
+  }
+
+  /**
+   * whatsapp_optouts updateMany
+   */
+  export type whatsapp_optoutsUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update whatsapp_optouts.
+     */
+    data: XOR<whatsapp_optoutsUpdateManyMutationInput, whatsapp_optoutsUncheckedUpdateManyInput>
+    /**
+     * Filter which whatsapp_optouts to update
+     */
+    where?: whatsapp_optoutsWhereInput
+    /**
+     * Limit how many whatsapp_optouts to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * whatsapp_optouts updateManyAndReturn
+   */
+  export type whatsapp_optoutsUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the whatsapp_optouts
+     */
+    select?: whatsapp_optoutsSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the whatsapp_optouts
+     */
+    omit?: whatsapp_optoutsOmit<ExtArgs> | null
+    /**
+     * The data used to update whatsapp_optouts.
+     */
+    data: XOR<whatsapp_optoutsUpdateManyMutationInput, whatsapp_optoutsUncheckedUpdateManyInput>
+    /**
+     * Filter which whatsapp_optouts to update
+     */
+    where?: whatsapp_optoutsWhereInput
+    /**
+     * Limit how many whatsapp_optouts to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * whatsapp_optouts upsert
+   */
+  export type whatsapp_optoutsUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the whatsapp_optouts
+     */
+    select?: whatsapp_optoutsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the whatsapp_optouts
+     */
+    omit?: whatsapp_optoutsOmit<ExtArgs> | null
+    /**
+     * The filter to search for the whatsapp_optouts to update in case it exists.
+     */
+    where: whatsapp_optoutsWhereUniqueInput
+    /**
+     * In case the whatsapp_optouts found by the `where` argument doesn't exist, create a new whatsapp_optouts with this data.
+     */
+    create: XOR<whatsapp_optoutsCreateInput, whatsapp_optoutsUncheckedCreateInput>
+    /**
+     * In case the whatsapp_optouts was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<whatsapp_optoutsUpdateInput, whatsapp_optoutsUncheckedUpdateInput>
+  }
+
+  /**
+   * whatsapp_optouts delete
+   */
+  export type whatsapp_optoutsDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the whatsapp_optouts
+     */
+    select?: whatsapp_optoutsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the whatsapp_optouts
+     */
+    omit?: whatsapp_optoutsOmit<ExtArgs> | null
+    /**
+     * Filter which whatsapp_optouts to delete.
+     */
+    where: whatsapp_optoutsWhereUniqueInput
+  }
+
+  /**
+   * whatsapp_optouts deleteMany
+   */
+  export type whatsapp_optoutsDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which whatsapp_optouts to delete
+     */
+    where?: whatsapp_optoutsWhereInput
+    /**
+     * Limit how many whatsapp_optouts to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * whatsapp_optouts without action
+   */
+  export type whatsapp_optoutsDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the whatsapp_optouts
+     */
+    select?: whatsapp_optoutsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the whatsapp_optouts
+     */
+    omit?: whatsapp_optoutsOmit<ExtArgs> | null
+  }
+
+
+  /**
+   * Model campaign_analytics
+   */
+
+  export type AggregateCampaign_analytics = {
+    _count: Campaign_analyticsCountAggregateOutputType | null
+    _avg: Campaign_analyticsAvgAggregateOutputType | null
+    _sum: Campaign_analyticsSumAggregateOutputType | null
+    _min: Campaign_analyticsMinAggregateOutputType | null
+    _max: Campaign_analyticsMaxAggregateOutputType | null
+  }
+
+  export type Campaign_analyticsAvgAggregateOutputType = {
+    id: number | null
+    total: number | null
+    pending: number | null
+    sent: number | null
+    delivered: number | null
+    read: number | null
+    failed: number | null
+    skipped: number | null
+    delivery_rate: Decimal | null
+    read_rate: Decimal | null
+    estimated_cost: Decimal | null
+  }
+
+  export type Campaign_analyticsSumAggregateOutputType = {
+    id: bigint | null
+    total: number | null
+    pending: number | null
+    sent: number | null
+    delivered: number | null
+    read: number | null
+    failed: number | null
+    skipped: number | null
+    delivery_rate: Decimal | null
+    read_rate: Decimal | null
+    estimated_cost: Decimal | null
+  }
+
+  export type Campaign_analyticsMinAggregateOutputType = {
+    id: bigint | null
+    campaign_id: string | null
+    business_id: string | null
+    total: number | null
+    pending: number | null
+    sent: number | null
+    delivered: number | null
+    read: number | null
+    failed: number | null
+    skipped: number | null
+    delivery_rate: Decimal | null
+    read_rate: Decimal | null
+    estimated_cost: Decimal | null
+    last_synced_at: Date | null
+    updated_at: Date | null
+  }
+
+  export type Campaign_analyticsMaxAggregateOutputType = {
+    id: bigint | null
+    campaign_id: string | null
+    business_id: string | null
+    total: number | null
+    pending: number | null
+    sent: number | null
+    delivered: number | null
+    read: number | null
+    failed: number | null
+    skipped: number | null
+    delivery_rate: Decimal | null
+    read_rate: Decimal | null
+    estimated_cost: Decimal | null
+    last_synced_at: Date | null
+    updated_at: Date | null
+  }
+
+  export type Campaign_analyticsCountAggregateOutputType = {
+    id: number
+    campaign_id: number
+    business_id: number
+    total: number
+    pending: number
+    sent: number
+    delivered: number
+    read: number
+    failed: number
+    skipped: number
+    delivery_rate: number
+    read_rate: number
+    estimated_cost: number
+    last_synced_at: number
+    updated_at: number
+    _all: number
+  }
+
+
+  export type Campaign_analyticsAvgAggregateInputType = {
+    id?: true
+    total?: true
+    pending?: true
+    sent?: true
+    delivered?: true
+    read?: true
+    failed?: true
+    skipped?: true
+    delivery_rate?: true
+    read_rate?: true
+    estimated_cost?: true
+  }
+
+  export type Campaign_analyticsSumAggregateInputType = {
+    id?: true
+    total?: true
+    pending?: true
+    sent?: true
+    delivered?: true
+    read?: true
+    failed?: true
+    skipped?: true
+    delivery_rate?: true
+    read_rate?: true
+    estimated_cost?: true
+  }
+
+  export type Campaign_analyticsMinAggregateInputType = {
+    id?: true
+    campaign_id?: true
+    business_id?: true
+    total?: true
+    pending?: true
+    sent?: true
+    delivered?: true
+    read?: true
+    failed?: true
+    skipped?: true
+    delivery_rate?: true
+    read_rate?: true
+    estimated_cost?: true
+    last_synced_at?: true
+    updated_at?: true
+  }
+
+  export type Campaign_analyticsMaxAggregateInputType = {
+    id?: true
+    campaign_id?: true
+    business_id?: true
+    total?: true
+    pending?: true
+    sent?: true
+    delivered?: true
+    read?: true
+    failed?: true
+    skipped?: true
+    delivery_rate?: true
+    read_rate?: true
+    estimated_cost?: true
+    last_synced_at?: true
+    updated_at?: true
+  }
+
+  export type Campaign_analyticsCountAggregateInputType = {
+    id?: true
+    campaign_id?: true
+    business_id?: true
+    total?: true
+    pending?: true
+    sent?: true
+    delivered?: true
+    read?: true
+    failed?: true
+    skipped?: true
+    delivery_rate?: true
+    read_rate?: true
+    estimated_cost?: true
+    last_synced_at?: true
+    updated_at?: true
+    _all?: true
+  }
+
+  export type Campaign_analyticsAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which campaign_analytics to aggregate.
+     */
+    where?: campaign_analyticsWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of campaign_analytics to fetch.
+     */
+    orderBy?: campaign_analyticsOrderByWithRelationInput | campaign_analyticsOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: campaign_analyticsWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` campaign_analytics from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` campaign_analytics.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned campaign_analytics
+    **/
+    _count?: true | Campaign_analyticsCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: Campaign_analyticsAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: Campaign_analyticsSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: Campaign_analyticsMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: Campaign_analyticsMaxAggregateInputType
+  }
+
+  export type GetCampaign_analyticsAggregateType<T extends Campaign_analyticsAggregateArgs> = {
+        [P in keyof T & keyof AggregateCampaign_analytics]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateCampaign_analytics[P]>
+      : GetScalarType<T[P], AggregateCampaign_analytics[P]>
+  }
+
+
+
+
+  export type campaign_analyticsGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: campaign_analyticsWhereInput
+    orderBy?: campaign_analyticsOrderByWithAggregationInput | campaign_analyticsOrderByWithAggregationInput[]
+    by: Campaign_analyticsScalarFieldEnum[] | Campaign_analyticsScalarFieldEnum
+    having?: campaign_analyticsScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: Campaign_analyticsCountAggregateInputType | true
+    _avg?: Campaign_analyticsAvgAggregateInputType
+    _sum?: Campaign_analyticsSumAggregateInputType
+    _min?: Campaign_analyticsMinAggregateInputType
+    _max?: Campaign_analyticsMaxAggregateInputType
+  }
+
+  export type Campaign_analyticsGroupByOutputType = {
+    id: bigint
+    campaign_id: string
+    business_id: string
+    total: number
+    pending: number
+    sent: number
+    delivered: number
+    read: number
+    failed: number
+    skipped: number
+    delivery_rate: Decimal
+    read_rate: Decimal
+    estimated_cost: Decimal
+    last_synced_at: Date
+    updated_at: Date
+    _count: Campaign_analyticsCountAggregateOutputType | null
+    _avg: Campaign_analyticsAvgAggregateOutputType | null
+    _sum: Campaign_analyticsSumAggregateOutputType | null
+    _min: Campaign_analyticsMinAggregateOutputType | null
+    _max: Campaign_analyticsMaxAggregateOutputType | null
+  }
+
+  type GetCampaign_analyticsGroupByPayload<T extends campaign_analyticsGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<Campaign_analyticsGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof Campaign_analyticsGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], Campaign_analyticsGroupByOutputType[P]>
+            : GetScalarType<T[P], Campaign_analyticsGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type campaign_analyticsSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    campaign_id?: boolean
+    business_id?: boolean
+    total?: boolean
+    pending?: boolean
+    sent?: boolean
+    delivered?: boolean
+    read?: boolean
+    failed?: boolean
+    skipped?: boolean
+    delivery_rate?: boolean
+    read_rate?: boolean
+    estimated_cost?: boolean
+    last_synced_at?: boolean
+    updated_at?: boolean
+  }, ExtArgs["result"]["campaign_analytics"]>
+
+  export type campaign_analyticsSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    campaign_id?: boolean
+    business_id?: boolean
+    total?: boolean
+    pending?: boolean
+    sent?: boolean
+    delivered?: boolean
+    read?: boolean
+    failed?: boolean
+    skipped?: boolean
+    delivery_rate?: boolean
+    read_rate?: boolean
+    estimated_cost?: boolean
+    last_synced_at?: boolean
+    updated_at?: boolean
+  }, ExtArgs["result"]["campaign_analytics"]>
+
+  export type campaign_analyticsSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    campaign_id?: boolean
+    business_id?: boolean
+    total?: boolean
+    pending?: boolean
+    sent?: boolean
+    delivered?: boolean
+    read?: boolean
+    failed?: boolean
+    skipped?: boolean
+    delivery_rate?: boolean
+    read_rate?: boolean
+    estimated_cost?: boolean
+    last_synced_at?: boolean
+    updated_at?: boolean
+  }, ExtArgs["result"]["campaign_analytics"]>
+
+  export type campaign_analyticsSelectScalar = {
+    id?: boolean
+    campaign_id?: boolean
+    business_id?: boolean
+    total?: boolean
+    pending?: boolean
+    sent?: boolean
+    delivered?: boolean
+    read?: boolean
+    failed?: boolean
+    skipped?: boolean
+    delivery_rate?: boolean
+    read_rate?: boolean
+    estimated_cost?: boolean
+    last_synced_at?: boolean
+    updated_at?: boolean
+  }
+
+  export type campaign_analyticsOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "campaign_id" | "business_id" | "total" | "pending" | "sent" | "delivered" | "read" | "failed" | "skipped" | "delivery_rate" | "read_rate" | "estimated_cost" | "last_synced_at" | "updated_at", ExtArgs["result"]["campaign_analytics"]>
+
+  export type $campaign_analyticsPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "campaign_analytics"
+    objects: {}
+    scalars: $Extensions.GetPayloadResult<{
+      id: bigint
+      campaign_id: string
+      business_id: string
+      total: number
+      pending: number
+      sent: number
+      delivered: number
+      read: number
+      failed: number
+      skipped: number
+      delivery_rate: Prisma.Decimal
+      read_rate: Prisma.Decimal
+      estimated_cost: Prisma.Decimal
+      last_synced_at: Date
+      updated_at: Date
+    }, ExtArgs["result"]["campaign_analytics"]>
+    composites: {}
+  }
+
+  type campaign_analyticsGetPayload<S extends boolean | null | undefined | campaign_analyticsDefaultArgs> = $Result.GetResult<Prisma.$campaign_analyticsPayload, S>
+
+  type campaign_analyticsCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<campaign_analyticsFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: Campaign_analyticsCountAggregateInputType | true
+    }
+
+  export interface campaign_analyticsDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['campaign_analytics'], meta: { name: 'campaign_analytics' } }
+    /**
+     * Find zero or one Campaign_analytics that matches the filter.
+     * @param {campaign_analyticsFindUniqueArgs} args - Arguments to find a Campaign_analytics
+     * @example
+     * // Get one Campaign_analytics
+     * const campaign_analytics = await prisma.campaign_analytics.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends campaign_analyticsFindUniqueArgs>(args: SelectSubset<T, campaign_analyticsFindUniqueArgs<ExtArgs>>): Prisma__campaign_analyticsClient<$Result.GetResult<Prisma.$campaign_analyticsPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one Campaign_analytics that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {campaign_analyticsFindUniqueOrThrowArgs} args - Arguments to find a Campaign_analytics
+     * @example
+     * // Get one Campaign_analytics
+     * const campaign_analytics = await prisma.campaign_analytics.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends campaign_analyticsFindUniqueOrThrowArgs>(args: SelectSubset<T, campaign_analyticsFindUniqueOrThrowArgs<ExtArgs>>): Prisma__campaign_analyticsClient<$Result.GetResult<Prisma.$campaign_analyticsPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Campaign_analytics that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {campaign_analyticsFindFirstArgs} args - Arguments to find a Campaign_analytics
+     * @example
+     * // Get one Campaign_analytics
+     * const campaign_analytics = await prisma.campaign_analytics.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends campaign_analyticsFindFirstArgs>(args?: SelectSubset<T, campaign_analyticsFindFirstArgs<ExtArgs>>): Prisma__campaign_analyticsClient<$Result.GetResult<Prisma.$campaign_analyticsPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Campaign_analytics that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {campaign_analyticsFindFirstOrThrowArgs} args - Arguments to find a Campaign_analytics
+     * @example
+     * // Get one Campaign_analytics
+     * const campaign_analytics = await prisma.campaign_analytics.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends campaign_analyticsFindFirstOrThrowArgs>(args?: SelectSubset<T, campaign_analyticsFindFirstOrThrowArgs<ExtArgs>>): Prisma__campaign_analyticsClient<$Result.GetResult<Prisma.$campaign_analyticsPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more Campaign_analytics that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {campaign_analyticsFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all Campaign_analytics
+     * const campaign_analytics = await prisma.campaign_analytics.findMany()
+     * 
+     * // Get first 10 Campaign_analytics
+     * const campaign_analytics = await prisma.campaign_analytics.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const campaign_analyticsWithIdOnly = await prisma.campaign_analytics.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends campaign_analyticsFindManyArgs>(args?: SelectSubset<T, campaign_analyticsFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$campaign_analyticsPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a Campaign_analytics.
+     * @param {campaign_analyticsCreateArgs} args - Arguments to create a Campaign_analytics.
+     * @example
+     * // Create one Campaign_analytics
+     * const Campaign_analytics = await prisma.campaign_analytics.create({
+     *   data: {
+     *     // ... data to create a Campaign_analytics
+     *   }
+     * })
+     * 
+     */
+    create<T extends campaign_analyticsCreateArgs>(args: SelectSubset<T, campaign_analyticsCreateArgs<ExtArgs>>): Prisma__campaign_analyticsClient<$Result.GetResult<Prisma.$campaign_analyticsPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many Campaign_analytics.
+     * @param {campaign_analyticsCreateManyArgs} args - Arguments to create many Campaign_analytics.
+     * @example
+     * // Create many Campaign_analytics
+     * const campaign_analytics = await prisma.campaign_analytics.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends campaign_analyticsCreateManyArgs>(args?: SelectSubset<T, campaign_analyticsCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many Campaign_analytics and returns the data saved in the database.
+     * @param {campaign_analyticsCreateManyAndReturnArgs} args - Arguments to create many Campaign_analytics.
+     * @example
+     * // Create many Campaign_analytics
+     * const campaign_analytics = await prisma.campaign_analytics.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many Campaign_analytics and only return the `id`
+     * const campaign_analyticsWithIdOnly = await prisma.campaign_analytics.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends campaign_analyticsCreateManyAndReturnArgs>(args?: SelectSubset<T, campaign_analyticsCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$campaign_analyticsPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a Campaign_analytics.
+     * @param {campaign_analyticsDeleteArgs} args - Arguments to delete one Campaign_analytics.
+     * @example
+     * // Delete one Campaign_analytics
+     * const Campaign_analytics = await prisma.campaign_analytics.delete({
+     *   where: {
+     *     // ... filter to delete one Campaign_analytics
+     *   }
+     * })
+     * 
+     */
+    delete<T extends campaign_analyticsDeleteArgs>(args: SelectSubset<T, campaign_analyticsDeleteArgs<ExtArgs>>): Prisma__campaign_analyticsClient<$Result.GetResult<Prisma.$campaign_analyticsPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one Campaign_analytics.
+     * @param {campaign_analyticsUpdateArgs} args - Arguments to update one Campaign_analytics.
+     * @example
+     * // Update one Campaign_analytics
+     * const campaign_analytics = await prisma.campaign_analytics.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends campaign_analyticsUpdateArgs>(args: SelectSubset<T, campaign_analyticsUpdateArgs<ExtArgs>>): Prisma__campaign_analyticsClient<$Result.GetResult<Prisma.$campaign_analyticsPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more Campaign_analytics.
+     * @param {campaign_analyticsDeleteManyArgs} args - Arguments to filter Campaign_analytics to delete.
+     * @example
+     * // Delete a few Campaign_analytics
+     * const { count } = await prisma.campaign_analytics.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends campaign_analyticsDeleteManyArgs>(args?: SelectSubset<T, campaign_analyticsDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Campaign_analytics.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {campaign_analyticsUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many Campaign_analytics
+     * const campaign_analytics = await prisma.campaign_analytics.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends campaign_analyticsUpdateManyArgs>(args: SelectSubset<T, campaign_analyticsUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Campaign_analytics and returns the data updated in the database.
+     * @param {campaign_analyticsUpdateManyAndReturnArgs} args - Arguments to update many Campaign_analytics.
+     * @example
+     * // Update many Campaign_analytics
+     * const campaign_analytics = await prisma.campaign_analytics.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more Campaign_analytics and only return the `id`
+     * const campaign_analyticsWithIdOnly = await prisma.campaign_analytics.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends campaign_analyticsUpdateManyAndReturnArgs>(args: SelectSubset<T, campaign_analyticsUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$campaign_analyticsPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one Campaign_analytics.
+     * @param {campaign_analyticsUpsertArgs} args - Arguments to update or create a Campaign_analytics.
+     * @example
+     * // Update or create a Campaign_analytics
+     * const campaign_analytics = await prisma.campaign_analytics.upsert({
+     *   create: {
+     *     // ... data to create a Campaign_analytics
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the Campaign_analytics we want to update
+     *   }
+     * })
+     */
+    upsert<T extends campaign_analyticsUpsertArgs>(args: SelectSubset<T, campaign_analyticsUpsertArgs<ExtArgs>>): Prisma__campaign_analyticsClient<$Result.GetResult<Prisma.$campaign_analyticsPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of Campaign_analytics.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {campaign_analyticsCountArgs} args - Arguments to filter Campaign_analytics to count.
+     * @example
+     * // Count the number of Campaign_analytics
+     * const count = await prisma.campaign_analytics.count({
+     *   where: {
+     *     // ... the filter for the Campaign_analytics we want to count
+     *   }
+     * })
+    **/
+    count<T extends campaign_analyticsCountArgs>(
+      args?: Subset<T, campaign_analyticsCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], Campaign_analyticsCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a Campaign_analytics.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {Campaign_analyticsAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends Campaign_analyticsAggregateArgs>(args: Subset<T, Campaign_analyticsAggregateArgs>): Prisma.PrismaPromise<GetCampaign_analyticsAggregateType<T>>
+
+    /**
+     * Group by Campaign_analytics.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {campaign_analyticsGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends campaign_analyticsGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: campaign_analyticsGroupByArgs['orderBy'] }
+        : { orderBy?: campaign_analyticsGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, campaign_analyticsGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetCampaign_analyticsGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the campaign_analytics model
+   */
+  readonly fields: campaign_analyticsFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for campaign_analytics.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__campaign_analyticsClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the campaign_analytics model
+   */
+  interface campaign_analyticsFieldRefs {
+    readonly id: FieldRef<"campaign_analytics", 'BigInt'>
+    readonly campaign_id: FieldRef<"campaign_analytics", 'String'>
+    readonly business_id: FieldRef<"campaign_analytics", 'String'>
+    readonly total: FieldRef<"campaign_analytics", 'Int'>
+    readonly pending: FieldRef<"campaign_analytics", 'Int'>
+    readonly sent: FieldRef<"campaign_analytics", 'Int'>
+    readonly delivered: FieldRef<"campaign_analytics", 'Int'>
+    readonly read: FieldRef<"campaign_analytics", 'Int'>
+    readonly failed: FieldRef<"campaign_analytics", 'Int'>
+    readonly skipped: FieldRef<"campaign_analytics", 'Int'>
+    readonly delivery_rate: FieldRef<"campaign_analytics", 'Decimal'>
+    readonly read_rate: FieldRef<"campaign_analytics", 'Decimal'>
+    readonly estimated_cost: FieldRef<"campaign_analytics", 'Decimal'>
+    readonly last_synced_at: FieldRef<"campaign_analytics", 'DateTime'>
+    readonly updated_at: FieldRef<"campaign_analytics", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * campaign_analytics findUnique
+   */
+  export type campaign_analyticsFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the campaign_analytics
+     */
+    select?: campaign_analyticsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the campaign_analytics
+     */
+    omit?: campaign_analyticsOmit<ExtArgs> | null
+    /**
+     * Filter, which campaign_analytics to fetch.
+     */
+    where: campaign_analyticsWhereUniqueInput
+  }
+
+  /**
+   * campaign_analytics findUniqueOrThrow
+   */
+  export type campaign_analyticsFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the campaign_analytics
+     */
+    select?: campaign_analyticsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the campaign_analytics
+     */
+    omit?: campaign_analyticsOmit<ExtArgs> | null
+    /**
+     * Filter, which campaign_analytics to fetch.
+     */
+    where: campaign_analyticsWhereUniqueInput
+  }
+
+  /**
+   * campaign_analytics findFirst
+   */
+  export type campaign_analyticsFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the campaign_analytics
+     */
+    select?: campaign_analyticsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the campaign_analytics
+     */
+    omit?: campaign_analyticsOmit<ExtArgs> | null
+    /**
+     * Filter, which campaign_analytics to fetch.
+     */
+    where?: campaign_analyticsWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of campaign_analytics to fetch.
+     */
+    orderBy?: campaign_analyticsOrderByWithRelationInput | campaign_analyticsOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for campaign_analytics.
+     */
+    cursor?: campaign_analyticsWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` campaign_analytics from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` campaign_analytics.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of campaign_analytics.
+     */
+    distinct?: Campaign_analyticsScalarFieldEnum | Campaign_analyticsScalarFieldEnum[]
+  }
+
+  /**
+   * campaign_analytics findFirstOrThrow
+   */
+  export type campaign_analyticsFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the campaign_analytics
+     */
+    select?: campaign_analyticsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the campaign_analytics
+     */
+    omit?: campaign_analyticsOmit<ExtArgs> | null
+    /**
+     * Filter, which campaign_analytics to fetch.
+     */
+    where?: campaign_analyticsWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of campaign_analytics to fetch.
+     */
+    orderBy?: campaign_analyticsOrderByWithRelationInput | campaign_analyticsOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for campaign_analytics.
+     */
+    cursor?: campaign_analyticsWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` campaign_analytics from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` campaign_analytics.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of campaign_analytics.
+     */
+    distinct?: Campaign_analyticsScalarFieldEnum | Campaign_analyticsScalarFieldEnum[]
+  }
+
+  /**
+   * campaign_analytics findMany
+   */
+  export type campaign_analyticsFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the campaign_analytics
+     */
+    select?: campaign_analyticsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the campaign_analytics
+     */
+    omit?: campaign_analyticsOmit<ExtArgs> | null
+    /**
+     * Filter, which campaign_analytics to fetch.
+     */
+    where?: campaign_analyticsWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of campaign_analytics to fetch.
+     */
+    orderBy?: campaign_analyticsOrderByWithRelationInput | campaign_analyticsOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing campaign_analytics.
+     */
+    cursor?: campaign_analyticsWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` campaign_analytics from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` campaign_analytics.
+     */
+    skip?: number
+    distinct?: Campaign_analyticsScalarFieldEnum | Campaign_analyticsScalarFieldEnum[]
+  }
+
+  /**
+   * campaign_analytics create
+   */
+  export type campaign_analyticsCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the campaign_analytics
+     */
+    select?: campaign_analyticsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the campaign_analytics
+     */
+    omit?: campaign_analyticsOmit<ExtArgs> | null
+    /**
+     * The data needed to create a campaign_analytics.
+     */
+    data: XOR<campaign_analyticsCreateInput, campaign_analyticsUncheckedCreateInput>
+  }
+
+  /**
+   * campaign_analytics createMany
+   */
+  export type campaign_analyticsCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many campaign_analytics.
+     */
+    data: campaign_analyticsCreateManyInput | campaign_analyticsCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * campaign_analytics createManyAndReturn
+   */
+  export type campaign_analyticsCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the campaign_analytics
+     */
+    select?: campaign_analyticsSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the campaign_analytics
+     */
+    omit?: campaign_analyticsOmit<ExtArgs> | null
+    /**
+     * The data used to create many campaign_analytics.
+     */
+    data: campaign_analyticsCreateManyInput | campaign_analyticsCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * campaign_analytics update
+   */
+  export type campaign_analyticsUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the campaign_analytics
+     */
+    select?: campaign_analyticsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the campaign_analytics
+     */
+    omit?: campaign_analyticsOmit<ExtArgs> | null
+    /**
+     * The data needed to update a campaign_analytics.
+     */
+    data: XOR<campaign_analyticsUpdateInput, campaign_analyticsUncheckedUpdateInput>
+    /**
+     * Choose, which campaign_analytics to update.
+     */
+    where: campaign_analyticsWhereUniqueInput
+  }
+
+  /**
+   * campaign_analytics updateMany
+   */
+  export type campaign_analyticsUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update campaign_analytics.
+     */
+    data: XOR<campaign_analyticsUpdateManyMutationInput, campaign_analyticsUncheckedUpdateManyInput>
+    /**
+     * Filter which campaign_analytics to update
+     */
+    where?: campaign_analyticsWhereInput
+    /**
+     * Limit how many campaign_analytics to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * campaign_analytics updateManyAndReturn
+   */
+  export type campaign_analyticsUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the campaign_analytics
+     */
+    select?: campaign_analyticsSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the campaign_analytics
+     */
+    omit?: campaign_analyticsOmit<ExtArgs> | null
+    /**
+     * The data used to update campaign_analytics.
+     */
+    data: XOR<campaign_analyticsUpdateManyMutationInput, campaign_analyticsUncheckedUpdateManyInput>
+    /**
+     * Filter which campaign_analytics to update
+     */
+    where?: campaign_analyticsWhereInput
+    /**
+     * Limit how many campaign_analytics to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * campaign_analytics upsert
+   */
+  export type campaign_analyticsUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the campaign_analytics
+     */
+    select?: campaign_analyticsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the campaign_analytics
+     */
+    omit?: campaign_analyticsOmit<ExtArgs> | null
+    /**
+     * The filter to search for the campaign_analytics to update in case it exists.
+     */
+    where: campaign_analyticsWhereUniqueInput
+    /**
+     * In case the campaign_analytics found by the `where` argument doesn't exist, create a new campaign_analytics with this data.
+     */
+    create: XOR<campaign_analyticsCreateInput, campaign_analyticsUncheckedCreateInput>
+    /**
+     * In case the campaign_analytics was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<campaign_analyticsUpdateInput, campaign_analyticsUncheckedUpdateInput>
+  }
+
+  /**
+   * campaign_analytics delete
+   */
+  export type campaign_analyticsDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the campaign_analytics
+     */
+    select?: campaign_analyticsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the campaign_analytics
+     */
+    omit?: campaign_analyticsOmit<ExtArgs> | null
+    /**
+     * Filter which campaign_analytics to delete.
+     */
+    where: campaign_analyticsWhereUniqueInput
+  }
+
+  /**
+   * campaign_analytics deleteMany
+   */
+  export type campaign_analyticsDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which campaign_analytics to delete
+     */
+    where?: campaign_analyticsWhereInput
+    /**
+     * Limit how many campaign_analytics to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * campaign_analytics without action
+   */
+  export type campaign_analyticsDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the campaign_analytics
+     */
+    select?: campaign_analyticsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the campaign_analytics
+     */
+    omit?: campaign_analyticsOmit<ExtArgs> | null
+  }
+
+
+  /**
    * Enums
    */
 
@@ -81070,17 +83436,24 @@ export namespace Prisma {
 
 
   export const Campaign_recipientsScalarFieldEnum: {
-    recipient_id: 'recipient_id',
+    id: 'id',
     campaign_id: 'campaign_id',
-    lead_id: 'lead_id',
+    business_id: 'business_id',
+    phone_number: 'phone_number',
+    contact_id: 'contact_id',
+    resolved_variables: 'resolved_variables',
+    status: 'status',
+    whatsapp_message_id: 'whatsapp_message_id',
     sent_at: 'sent_at',
     delivered_at: 'delivered_at',
-    clicked_at: 'clicked_at',
-    converted_at: 'converted_at',
-    status: 'status',
+    read_at: 'read_at',
+    failed_at: 'failed_at',
+    error_code: 'error_code',
     error_message: 'error_message',
-    updated_at: 'updated_at',
-    whatsapp_message_id: 'whatsapp_message_id'
+    retry_count: 'retry_count',
+    next_retry_at: 'next_retry_at',
+    created_at: 'created_at',
+    updated_at: 'updated_at'
   };
 
   export type Campaign_recipientsScalarFieldEnum = (typeof Campaign_recipientsScalarFieldEnum)[keyof typeof Campaign_recipientsScalarFieldEnum]
@@ -81684,6 +84057,38 @@ export namespace Prisma {
   export type CartsScalarFieldEnum = (typeof CartsScalarFieldEnum)[keyof typeof CartsScalarFieldEnum]
 
 
+  export const Whatsapp_optoutsScalarFieldEnum: {
+    id: 'id',
+    business_id: 'business_id',
+    phone_number: 'phone_number',
+    opted_out_at: 'opted_out_at',
+    reason: 'reason'
+  };
+
+  export type Whatsapp_optoutsScalarFieldEnum = (typeof Whatsapp_optoutsScalarFieldEnum)[keyof typeof Whatsapp_optoutsScalarFieldEnum]
+
+
+  export const Campaign_analyticsScalarFieldEnum: {
+    id: 'id',
+    campaign_id: 'campaign_id',
+    business_id: 'business_id',
+    total: 'total',
+    pending: 'pending',
+    sent: 'sent',
+    delivered: 'delivered',
+    read: 'read',
+    failed: 'failed',
+    skipped: 'skipped',
+    delivery_rate: 'delivery_rate',
+    read_rate: 'read_rate',
+    estimated_cost: 'estimated_cost',
+    last_synced_at: 'last_synced_at',
+    updated_at: 'updated_at'
+  };
+
+  export type Campaign_analyticsScalarFieldEnum = (typeof Campaign_analyticsScalarFieldEnum)[keyof typeof Campaign_analyticsScalarFieldEnum]
+
+
   export const SortOrder: {
     asc: 'asc',
     desc: 'desc'
@@ -81811,6 +84216,20 @@ export namespace Prisma {
    * Reference to a field of type 'Decimal[]'
    */
   export type ListDecimalFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Decimal[]'>
+    
+
+
+  /**
+   * Reference to a field of type 'BigInt'
+   */
+  export type BigIntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'BigInt'>
+    
+
+
+  /**
+   * Reference to a field of type 'BigInt[]'
+   */
+  export type ListBigIntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'BigInt[]'>
     
 
 
@@ -82732,7 +85151,6 @@ export namespace Prisma {
     deleted_by?: UuidNullableFilter<"leads"> | string | null
     onboarding_completed?: BoolFilter<"leads"> | boolean
     delivery_address?: StringNullableFilter<"leads"> | string | null
-    campaign_recipients?: Campaign_recipientsListRelationFilter
     carts?: CartsListRelationFilter
     lead_activities?: Lead_activitiesListRelationFilter
     lead_conversations?: Lead_conversationsListRelationFilter
@@ -82815,7 +85233,6 @@ export namespace Prisma {
     deleted_by?: SortOrderInput | SortOrder
     onboarding_completed?: SortOrder
     delivery_address?: SortOrderInput | SortOrder
-    campaign_recipients?: campaign_recipientsOrderByRelationAggregateInput
     carts?: cartsOrderByRelationAggregateInput
     lead_activities?: lead_activitiesOrderByRelationAggregateInput
     lead_conversations?: lead_conversationsOrderByRelationAggregateInput
@@ -82901,7 +85318,6 @@ export namespace Prisma {
     deleted_by?: UuidNullableFilter<"leads"> | string | null
     onboarding_completed?: BoolFilter<"leads"> | boolean
     delivery_address?: StringNullableFilter<"leads"> | string | null
-    campaign_recipients?: Campaign_recipientsListRelationFilter
     carts?: CartsListRelationFilter
     lead_activities?: Lead_activitiesListRelationFilter
     lead_conversations?: Lead_conversationsListRelationFilter
@@ -85283,7 +87699,6 @@ export namespace Prisma {
     updated_at?: DateTimeNullableFilter<"campaigns"> | Date | string | null
     whatsapp_template_language?: StringNullableFilter<"campaigns"> | string | null
     whatsapp_template_name?: StringNullableFilter<"campaigns"> | string | null
-    campaign_recipients?: Campaign_recipientsListRelationFilter
     products?: XOR<ProductsNullableScalarRelationFilter, productsWhereInput> | null
     notification_templates?: XOR<Notification_templatesNullableScalarRelationFilter, notification_templatesWhereInput> | null
   }
@@ -85318,7 +87733,6 @@ export namespace Prisma {
     updated_at?: SortOrderInput | SortOrder
     whatsapp_template_language?: SortOrderInput | SortOrder
     whatsapp_template_name?: SortOrderInput | SortOrder
-    campaign_recipients?: campaign_recipientsOrderByRelationAggregateInput
     products?: productsOrderByWithRelationInput
     notification_templates?: notification_templatesOrderByWithRelationInput
   }
@@ -85356,7 +87770,6 @@ export namespace Prisma {
     updated_at?: DateTimeNullableFilter<"campaigns"> | Date | string | null
     whatsapp_template_language?: StringNullableFilter<"campaigns"> | string | null
     whatsapp_template_name?: StringNullableFilter<"campaigns"> | string | null
-    campaign_recipients?: Campaign_recipientsListRelationFilter
     products?: XOR<ProductsNullableScalarRelationFilter, productsWhereInput> | null
     notification_templates?: XOR<Notification_templatesNullableScalarRelationFilter, notification_templatesWhereInput> | null
   }, "campaign_id">
@@ -85437,88 +87850,119 @@ export namespace Prisma {
     AND?: campaign_recipientsWhereInput | campaign_recipientsWhereInput[]
     OR?: campaign_recipientsWhereInput[]
     NOT?: campaign_recipientsWhereInput | campaign_recipientsWhereInput[]
-    recipient_id?: UuidFilter<"campaign_recipients"> | string
-    campaign_id?: UuidFilter<"campaign_recipients"> | string
-    lead_id?: UuidFilter<"campaign_recipients"> | string
+    id?: BigIntFilter<"campaign_recipients"> | bigint | number
+    campaign_id?: StringFilter<"campaign_recipients"> | string
+    business_id?: StringFilter<"campaign_recipients"> | string
+    phone_number?: StringFilter<"campaign_recipients"> | string
+    contact_id?: StringNullableFilter<"campaign_recipients"> | string | null
+    resolved_variables?: JsonFilter<"campaign_recipients">
+    status?: StringFilter<"campaign_recipients"> | string
+    whatsapp_message_id?: StringNullableFilter<"campaign_recipients"> | string | null
     sent_at?: DateTimeNullableFilter<"campaign_recipients"> | Date | string | null
     delivered_at?: DateTimeNullableFilter<"campaign_recipients"> | Date | string | null
-    clicked_at?: DateTimeNullableFilter<"campaign_recipients"> | Date | string | null
-    converted_at?: DateTimeNullableFilter<"campaign_recipients"> | Date | string | null
-    status?: StringNullableFilter<"campaign_recipients"> | string | null
+    read_at?: DateTimeNullableFilter<"campaign_recipients"> | Date | string | null
+    failed_at?: DateTimeNullableFilter<"campaign_recipients"> | Date | string | null
+    error_code?: StringNullableFilter<"campaign_recipients"> | string | null
     error_message?: StringNullableFilter<"campaign_recipients"> | string | null
-    updated_at?: DateTimeNullableFilter<"campaign_recipients"> | Date | string | null
-    whatsapp_message_id?: StringNullableFilter<"campaign_recipients"> | string | null
-    campaign?: XOR<CampaignsScalarRelationFilter, campaignsWhereInput>
-    lead?: XOR<LeadsScalarRelationFilter, leadsWhereInput>
+    retry_count?: IntFilter<"campaign_recipients"> | number
+    next_retry_at?: DateTimeNullableFilter<"campaign_recipients"> | Date | string | null
+    created_at?: DateTimeFilter<"campaign_recipients"> | Date | string
+    updated_at?: DateTimeFilter<"campaign_recipients"> | Date | string
   }
 
   export type campaign_recipientsOrderByWithRelationInput = {
-    recipient_id?: SortOrder
+    id?: SortOrder
     campaign_id?: SortOrder
-    lead_id?: SortOrder
+    business_id?: SortOrder
+    phone_number?: SortOrder
+    contact_id?: SortOrderInput | SortOrder
+    resolved_variables?: SortOrder
+    status?: SortOrder
+    whatsapp_message_id?: SortOrderInput | SortOrder
     sent_at?: SortOrderInput | SortOrder
     delivered_at?: SortOrderInput | SortOrder
-    clicked_at?: SortOrderInput | SortOrder
-    converted_at?: SortOrderInput | SortOrder
-    status?: SortOrderInput | SortOrder
+    read_at?: SortOrderInput | SortOrder
+    failed_at?: SortOrderInput | SortOrder
+    error_code?: SortOrderInput | SortOrder
     error_message?: SortOrderInput | SortOrder
-    updated_at?: SortOrderInput | SortOrder
-    whatsapp_message_id?: SortOrderInput | SortOrder
-    campaign?: campaignsOrderByWithRelationInput
-    lead?: leadsOrderByWithRelationInput
+    retry_count?: SortOrder
+    next_retry_at?: SortOrderInput | SortOrder
+    created_at?: SortOrder
+    updated_at?: SortOrder
   }
 
   export type campaign_recipientsWhereUniqueInput = Prisma.AtLeast<{
-    recipient_id?: string
+    id?: bigint | number
     AND?: campaign_recipientsWhereInput | campaign_recipientsWhereInput[]
     OR?: campaign_recipientsWhereInput[]
     NOT?: campaign_recipientsWhereInput | campaign_recipientsWhereInput[]
-    campaign_id?: UuidFilter<"campaign_recipients"> | string
-    lead_id?: UuidFilter<"campaign_recipients"> | string
+    campaign_id?: StringFilter<"campaign_recipients"> | string
+    business_id?: StringFilter<"campaign_recipients"> | string
+    phone_number?: StringFilter<"campaign_recipients"> | string
+    contact_id?: StringNullableFilter<"campaign_recipients"> | string | null
+    resolved_variables?: JsonFilter<"campaign_recipients">
+    status?: StringFilter<"campaign_recipients"> | string
+    whatsapp_message_id?: StringNullableFilter<"campaign_recipients"> | string | null
     sent_at?: DateTimeNullableFilter<"campaign_recipients"> | Date | string | null
     delivered_at?: DateTimeNullableFilter<"campaign_recipients"> | Date | string | null
-    clicked_at?: DateTimeNullableFilter<"campaign_recipients"> | Date | string | null
-    converted_at?: DateTimeNullableFilter<"campaign_recipients"> | Date | string | null
-    status?: StringNullableFilter<"campaign_recipients"> | string | null
+    read_at?: DateTimeNullableFilter<"campaign_recipients"> | Date | string | null
+    failed_at?: DateTimeNullableFilter<"campaign_recipients"> | Date | string | null
+    error_code?: StringNullableFilter<"campaign_recipients"> | string | null
     error_message?: StringNullableFilter<"campaign_recipients"> | string | null
-    updated_at?: DateTimeNullableFilter<"campaign_recipients"> | Date | string | null
-    whatsapp_message_id?: StringNullableFilter<"campaign_recipients"> | string | null
-    campaign?: XOR<CampaignsScalarRelationFilter, campaignsWhereInput>
-    lead?: XOR<LeadsScalarRelationFilter, leadsWhereInput>
-  }, "recipient_id">
+    retry_count?: IntFilter<"campaign_recipients"> | number
+    next_retry_at?: DateTimeNullableFilter<"campaign_recipients"> | Date | string | null
+    created_at?: DateTimeFilter<"campaign_recipients"> | Date | string
+    updated_at?: DateTimeFilter<"campaign_recipients"> | Date | string
+  }, "id">
 
   export type campaign_recipientsOrderByWithAggregationInput = {
-    recipient_id?: SortOrder
+    id?: SortOrder
     campaign_id?: SortOrder
-    lead_id?: SortOrder
+    business_id?: SortOrder
+    phone_number?: SortOrder
+    contact_id?: SortOrderInput | SortOrder
+    resolved_variables?: SortOrder
+    status?: SortOrder
+    whatsapp_message_id?: SortOrderInput | SortOrder
     sent_at?: SortOrderInput | SortOrder
     delivered_at?: SortOrderInput | SortOrder
-    clicked_at?: SortOrderInput | SortOrder
-    converted_at?: SortOrderInput | SortOrder
-    status?: SortOrderInput | SortOrder
+    read_at?: SortOrderInput | SortOrder
+    failed_at?: SortOrderInput | SortOrder
+    error_code?: SortOrderInput | SortOrder
     error_message?: SortOrderInput | SortOrder
-    updated_at?: SortOrderInput | SortOrder
-    whatsapp_message_id?: SortOrderInput | SortOrder
+    retry_count?: SortOrder
+    next_retry_at?: SortOrderInput | SortOrder
+    created_at?: SortOrder
+    updated_at?: SortOrder
     _count?: campaign_recipientsCountOrderByAggregateInput
+    _avg?: campaign_recipientsAvgOrderByAggregateInput
     _max?: campaign_recipientsMaxOrderByAggregateInput
     _min?: campaign_recipientsMinOrderByAggregateInput
+    _sum?: campaign_recipientsSumOrderByAggregateInput
   }
 
   export type campaign_recipientsScalarWhereWithAggregatesInput = {
     AND?: campaign_recipientsScalarWhereWithAggregatesInput | campaign_recipientsScalarWhereWithAggregatesInput[]
     OR?: campaign_recipientsScalarWhereWithAggregatesInput[]
     NOT?: campaign_recipientsScalarWhereWithAggregatesInput | campaign_recipientsScalarWhereWithAggregatesInput[]
-    recipient_id?: UuidWithAggregatesFilter<"campaign_recipients"> | string
-    campaign_id?: UuidWithAggregatesFilter<"campaign_recipients"> | string
-    lead_id?: UuidWithAggregatesFilter<"campaign_recipients"> | string
+    id?: BigIntWithAggregatesFilter<"campaign_recipients"> | bigint | number
+    campaign_id?: StringWithAggregatesFilter<"campaign_recipients"> | string
+    business_id?: StringWithAggregatesFilter<"campaign_recipients"> | string
+    phone_number?: StringWithAggregatesFilter<"campaign_recipients"> | string
+    contact_id?: StringNullableWithAggregatesFilter<"campaign_recipients"> | string | null
+    resolved_variables?: JsonWithAggregatesFilter<"campaign_recipients">
+    status?: StringWithAggregatesFilter<"campaign_recipients"> | string
+    whatsapp_message_id?: StringNullableWithAggregatesFilter<"campaign_recipients"> | string | null
     sent_at?: DateTimeNullableWithAggregatesFilter<"campaign_recipients"> | Date | string | null
     delivered_at?: DateTimeNullableWithAggregatesFilter<"campaign_recipients"> | Date | string | null
-    clicked_at?: DateTimeNullableWithAggregatesFilter<"campaign_recipients"> | Date | string | null
-    converted_at?: DateTimeNullableWithAggregatesFilter<"campaign_recipients"> | Date | string | null
-    status?: StringNullableWithAggregatesFilter<"campaign_recipients"> | string | null
+    read_at?: DateTimeNullableWithAggregatesFilter<"campaign_recipients"> | Date | string | null
+    failed_at?: DateTimeNullableWithAggregatesFilter<"campaign_recipients"> | Date | string | null
+    error_code?: StringNullableWithAggregatesFilter<"campaign_recipients"> | string | null
     error_message?: StringNullableWithAggregatesFilter<"campaign_recipients"> | string | null
-    updated_at?: DateTimeNullableWithAggregatesFilter<"campaign_recipients"> | Date | string | null
-    whatsapp_message_id?: StringNullableWithAggregatesFilter<"campaign_recipients"> | string | null
+    retry_count?: IntWithAggregatesFilter<"campaign_recipients"> | number
+    next_retry_at?: DateTimeNullableWithAggregatesFilter<"campaign_recipients"> | Date | string | null
+    created_at?: DateTimeWithAggregatesFilter<"campaign_recipients"> | Date | string
+    updated_at?: DateTimeWithAggregatesFilter<"campaign_recipients"> | Date | string
   }
 
   export type lead_scoring_rulesWhereInput = {
@@ -88720,6 +91164,165 @@ export namespace Prisma {
     updated_at?: DateTimeNullableWithAggregatesFilter<"carts"> | Date | string | null
   }
 
+  export type whatsapp_optoutsWhereInput = {
+    AND?: whatsapp_optoutsWhereInput | whatsapp_optoutsWhereInput[]
+    OR?: whatsapp_optoutsWhereInput[]
+    NOT?: whatsapp_optoutsWhereInput | whatsapp_optoutsWhereInput[]
+    id?: BigIntFilter<"whatsapp_optouts"> | bigint | number
+    business_id?: StringFilter<"whatsapp_optouts"> | string
+    phone_number?: StringFilter<"whatsapp_optouts"> | string
+    opted_out_at?: DateTimeFilter<"whatsapp_optouts"> | Date | string
+    reason?: StringNullableFilter<"whatsapp_optouts"> | string | null
+  }
+
+  export type whatsapp_optoutsOrderByWithRelationInput = {
+    id?: SortOrder
+    business_id?: SortOrder
+    phone_number?: SortOrder
+    opted_out_at?: SortOrder
+    reason?: SortOrderInput | SortOrder
+  }
+
+  export type whatsapp_optoutsWhereUniqueInput = Prisma.AtLeast<{
+    id?: bigint | number
+    business_id_phone_number?: whatsapp_optoutsBusiness_idPhone_numberCompoundUniqueInput
+    AND?: whatsapp_optoutsWhereInput | whatsapp_optoutsWhereInput[]
+    OR?: whatsapp_optoutsWhereInput[]
+    NOT?: whatsapp_optoutsWhereInput | whatsapp_optoutsWhereInput[]
+    business_id?: StringFilter<"whatsapp_optouts"> | string
+    phone_number?: StringFilter<"whatsapp_optouts"> | string
+    opted_out_at?: DateTimeFilter<"whatsapp_optouts"> | Date | string
+    reason?: StringNullableFilter<"whatsapp_optouts"> | string | null
+  }, "id" | "business_id_phone_number">
+
+  export type whatsapp_optoutsOrderByWithAggregationInput = {
+    id?: SortOrder
+    business_id?: SortOrder
+    phone_number?: SortOrder
+    opted_out_at?: SortOrder
+    reason?: SortOrderInput | SortOrder
+    _count?: whatsapp_optoutsCountOrderByAggregateInput
+    _avg?: whatsapp_optoutsAvgOrderByAggregateInput
+    _max?: whatsapp_optoutsMaxOrderByAggregateInput
+    _min?: whatsapp_optoutsMinOrderByAggregateInput
+    _sum?: whatsapp_optoutsSumOrderByAggregateInput
+  }
+
+  export type whatsapp_optoutsScalarWhereWithAggregatesInput = {
+    AND?: whatsapp_optoutsScalarWhereWithAggregatesInput | whatsapp_optoutsScalarWhereWithAggregatesInput[]
+    OR?: whatsapp_optoutsScalarWhereWithAggregatesInput[]
+    NOT?: whatsapp_optoutsScalarWhereWithAggregatesInput | whatsapp_optoutsScalarWhereWithAggregatesInput[]
+    id?: BigIntWithAggregatesFilter<"whatsapp_optouts"> | bigint | number
+    business_id?: StringWithAggregatesFilter<"whatsapp_optouts"> | string
+    phone_number?: StringWithAggregatesFilter<"whatsapp_optouts"> | string
+    opted_out_at?: DateTimeWithAggregatesFilter<"whatsapp_optouts"> | Date | string
+    reason?: StringNullableWithAggregatesFilter<"whatsapp_optouts"> | string | null
+  }
+
+  export type campaign_analyticsWhereInput = {
+    AND?: campaign_analyticsWhereInput | campaign_analyticsWhereInput[]
+    OR?: campaign_analyticsWhereInput[]
+    NOT?: campaign_analyticsWhereInput | campaign_analyticsWhereInput[]
+    id?: BigIntFilter<"campaign_analytics"> | bigint | number
+    campaign_id?: StringFilter<"campaign_analytics"> | string
+    business_id?: StringFilter<"campaign_analytics"> | string
+    total?: IntFilter<"campaign_analytics"> | number
+    pending?: IntFilter<"campaign_analytics"> | number
+    sent?: IntFilter<"campaign_analytics"> | number
+    delivered?: IntFilter<"campaign_analytics"> | number
+    read?: IntFilter<"campaign_analytics"> | number
+    failed?: IntFilter<"campaign_analytics"> | number
+    skipped?: IntFilter<"campaign_analytics"> | number
+    delivery_rate?: DecimalFilter<"campaign_analytics"> | Decimal | DecimalJsLike | number | string
+    read_rate?: DecimalFilter<"campaign_analytics"> | Decimal | DecimalJsLike | number | string
+    estimated_cost?: DecimalFilter<"campaign_analytics"> | Decimal | DecimalJsLike | number | string
+    last_synced_at?: DateTimeFilter<"campaign_analytics"> | Date | string
+    updated_at?: DateTimeFilter<"campaign_analytics"> | Date | string
+  }
+
+  export type campaign_analyticsOrderByWithRelationInput = {
+    id?: SortOrder
+    campaign_id?: SortOrder
+    business_id?: SortOrder
+    total?: SortOrder
+    pending?: SortOrder
+    sent?: SortOrder
+    delivered?: SortOrder
+    read?: SortOrder
+    failed?: SortOrder
+    skipped?: SortOrder
+    delivery_rate?: SortOrder
+    read_rate?: SortOrder
+    estimated_cost?: SortOrder
+    last_synced_at?: SortOrder
+    updated_at?: SortOrder
+  }
+
+  export type campaign_analyticsWhereUniqueInput = Prisma.AtLeast<{
+    id?: bigint | number
+    campaign_id?: string
+    AND?: campaign_analyticsWhereInput | campaign_analyticsWhereInput[]
+    OR?: campaign_analyticsWhereInput[]
+    NOT?: campaign_analyticsWhereInput | campaign_analyticsWhereInput[]
+    business_id?: StringFilter<"campaign_analytics"> | string
+    total?: IntFilter<"campaign_analytics"> | number
+    pending?: IntFilter<"campaign_analytics"> | number
+    sent?: IntFilter<"campaign_analytics"> | number
+    delivered?: IntFilter<"campaign_analytics"> | number
+    read?: IntFilter<"campaign_analytics"> | number
+    failed?: IntFilter<"campaign_analytics"> | number
+    skipped?: IntFilter<"campaign_analytics"> | number
+    delivery_rate?: DecimalFilter<"campaign_analytics"> | Decimal | DecimalJsLike | number | string
+    read_rate?: DecimalFilter<"campaign_analytics"> | Decimal | DecimalJsLike | number | string
+    estimated_cost?: DecimalFilter<"campaign_analytics"> | Decimal | DecimalJsLike | number | string
+    last_synced_at?: DateTimeFilter<"campaign_analytics"> | Date | string
+    updated_at?: DateTimeFilter<"campaign_analytics"> | Date | string
+  }, "id" | "campaign_id">
+
+  export type campaign_analyticsOrderByWithAggregationInput = {
+    id?: SortOrder
+    campaign_id?: SortOrder
+    business_id?: SortOrder
+    total?: SortOrder
+    pending?: SortOrder
+    sent?: SortOrder
+    delivered?: SortOrder
+    read?: SortOrder
+    failed?: SortOrder
+    skipped?: SortOrder
+    delivery_rate?: SortOrder
+    read_rate?: SortOrder
+    estimated_cost?: SortOrder
+    last_synced_at?: SortOrder
+    updated_at?: SortOrder
+    _count?: campaign_analyticsCountOrderByAggregateInput
+    _avg?: campaign_analyticsAvgOrderByAggregateInput
+    _max?: campaign_analyticsMaxOrderByAggregateInput
+    _min?: campaign_analyticsMinOrderByAggregateInput
+    _sum?: campaign_analyticsSumOrderByAggregateInput
+  }
+
+  export type campaign_analyticsScalarWhereWithAggregatesInput = {
+    AND?: campaign_analyticsScalarWhereWithAggregatesInput | campaign_analyticsScalarWhereWithAggregatesInput[]
+    OR?: campaign_analyticsScalarWhereWithAggregatesInput[]
+    NOT?: campaign_analyticsScalarWhereWithAggregatesInput | campaign_analyticsScalarWhereWithAggregatesInput[]
+    id?: BigIntWithAggregatesFilter<"campaign_analytics"> | bigint | number
+    campaign_id?: StringWithAggregatesFilter<"campaign_analytics"> | string
+    business_id?: StringWithAggregatesFilter<"campaign_analytics"> | string
+    total?: IntWithAggregatesFilter<"campaign_analytics"> | number
+    pending?: IntWithAggregatesFilter<"campaign_analytics"> | number
+    sent?: IntWithAggregatesFilter<"campaign_analytics"> | number
+    delivered?: IntWithAggregatesFilter<"campaign_analytics"> | number
+    read?: IntWithAggregatesFilter<"campaign_analytics"> | number
+    failed?: IntWithAggregatesFilter<"campaign_analytics"> | number
+    skipped?: IntWithAggregatesFilter<"campaign_analytics"> | number
+    delivery_rate?: DecimalWithAggregatesFilter<"campaign_analytics"> | Decimal | DecimalJsLike | number | string
+    read_rate?: DecimalWithAggregatesFilter<"campaign_analytics"> | Decimal | DecimalJsLike | number | string
+    estimated_cost?: DecimalWithAggregatesFilter<"campaign_analytics"> | Decimal | DecimalJsLike | number | string
+    last_synced_at?: DateTimeWithAggregatesFilter<"campaign_analytics"> | Date | string
+    updated_at?: DateTimeWithAggregatesFilter<"campaign_analytics"> | Date | string
+  }
+
   export type businessesCreateInput = {
     business_id?: string
     business_name: string
@@ -89737,7 +92340,6 @@ export namespace Prisma {
     deleted_by?: string | null
     onboarding_completed?: boolean
     delivery_address?: string | null
-    campaign_recipients?: campaign_recipientsCreateNestedManyWithoutLeadInput
     carts?: cartsCreateNestedManyWithoutLeadsInput
     lead_activities?: lead_activitiesCreateNestedManyWithoutLeadsInput
     lead_conversations?: lead_conversationsCreateNestedManyWithoutLeadsInput
@@ -89820,7 +92422,6 @@ export namespace Prisma {
     deleted_by?: string | null
     onboarding_completed?: boolean
     delivery_address?: string | null
-    campaign_recipients?: campaign_recipientsUncheckedCreateNestedManyWithoutLeadInput
     carts?: cartsUncheckedCreateNestedManyWithoutLeadsInput
     lead_activities?: lead_activitiesUncheckedCreateNestedManyWithoutLeadsInput
     lead_conversations?: lead_conversationsUncheckedCreateNestedManyWithoutLeadsInput
@@ -89895,7 +92496,6 @@ export namespace Prisma {
     deleted_by?: NullableStringFieldUpdateOperationsInput | string | null
     onboarding_completed?: BoolFieldUpdateOperationsInput | boolean
     delivery_address?: NullableStringFieldUpdateOperationsInput | string | null
-    campaign_recipients?: campaign_recipientsUpdateManyWithoutLeadNestedInput
     carts?: cartsUpdateManyWithoutLeadsNestedInput
     lead_activities?: lead_activitiesUpdateManyWithoutLeadsNestedInput
     lead_conversations?: lead_conversationsUpdateManyWithoutLeadsNestedInput
@@ -89978,7 +92578,6 @@ export namespace Prisma {
     deleted_by?: NullableStringFieldUpdateOperationsInput | string | null
     onboarding_completed?: BoolFieldUpdateOperationsInput | boolean
     delivery_address?: NullableStringFieldUpdateOperationsInput | string | null
-    campaign_recipients?: campaign_recipientsUncheckedUpdateManyWithoutLeadNestedInput
     carts?: cartsUncheckedUpdateManyWithoutLeadsNestedInput
     lead_activities?: lead_activitiesUncheckedUpdateManyWithoutLeadsNestedInput
     lead_conversations?: lead_conversationsUncheckedUpdateManyWithoutLeadsNestedInput
@@ -92752,7 +95351,6 @@ export namespace Prisma {
     updated_at?: Date | string | null
     whatsapp_template_language?: string | null
     whatsapp_template_name?: string | null
-    campaign_recipients?: campaign_recipientsCreateNestedManyWithoutCampaignInput
     products?: productsCreateNestedOneWithoutCampaignsInput
     notification_templates?: notification_templatesCreateNestedOneWithoutCampaignsInput
   }
@@ -92787,7 +95385,6 @@ export namespace Prisma {
     updated_at?: Date | string | null
     whatsapp_template_language?: string | null
     whatsapp_template_name?: string | null
-    campaign_recipients?: campaign_recipientsUncheckedCreateNestedManyWithoutCampaignInput
   }
 
   export type campaignsUpdateInput = {
@@ -92818,7 +95415,6 @@ export namespace Prisma {
     updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     whatsapp_template_language?: NullableStringFieldUpdateOperationsInput | string | null
     whatsapp_template_name?: NullableStringFieldUpdateOperationsInput | string | null
-    campaign_recipients?: campaign_recipientsUpdateManyWithoutCampaignNestedInput
     products?: productsUpdateOneWithoutCampaignsNestedInput
     notification_templates?: notification_templatesUpdateOneWithoutCampaignsNestedInput
   }
@@ -92853,7 +95449,6 @@ export namespace Prisma {
     updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     whatsapp_template_language?: NullableStringFieldUpdateOperationsInput | string | null
     whatsapp_template_name?: NullableStringFieldUpdateOperationsInput | string | null
-    campaign_recipients?: campaign_recipientsUncheckedUpdateManyWithoutCampaignNestedInput
   }
 
   export type campaignsCreateManyInput = {
@@ -92951,99 +95546,150 @@ export namespace Prisma {
   }
 
   export type campaign_recipientsCreateInput = {
-    recipient_id?: string
+    id?: bigint | number
+    campaign_id: string
+    business_id: string
+    phone_number: string
+    contact_id?: string | null
+    resolved_variables?: JsonNullValueInput | InputJsonValue
+    status?: string
+    whatsapp_message_id?: string | null
     sent_at?: Date | string | null
     delivered_at?: Date | string | null
-    clicked_at?: Date | string | null
-    converted_at?: Date | string | null
-    status?: string | null
+    read_at?: Date | string | null
+    failed_at?: Date | string | null
+    error_code?: string | null
     error_message?: string | null
-    updated_at?: Date | string | null
-    whatsapp_message_id?: string | null
-    campaign: campaignsCreateNestedOneWithoutCampaign_recipientsInput
-    lead: leadsCreateNestedOneWithoutCampaign_recipientsInput
+    retry_count?: number
+    next_retry_at?: Date | string | null
+    created_at?: Date | string
+    updated_at?: Date | string
   }
 
   export type campaign_recipientsUncheckedCreateInput = {
-    recipient_id?: string
+    id?: bigint | number
     campaign_id: string
-    lead_id: string
+    business_id: string
+    phone_number: string
+    contact_id?: string | null
+    resolved_variables?: JsonNullValueInput | InputJsonValue
+    status?: string
+    whatsapp_message_id?: string | null
     sent_at?: Date | string | null
     delivered_at?: Date | string | null
-    clicked_at?: Date | string | null
-    converted_at?: Date | string | null
-    status?: string | null
+    read_at?: Date | string | null
+    failed_at?: Date | string | null
+    error_code?: string | null
     error_message?: string | null
-    updated_at?: Date | string | null
-    whatsapp_message_id?: string | null
+    retry_count?: number
+    next_retry_at?: Date | string | null
+    created_at?: Date | string
+    updated_at?: Date | string
   }
 
   export type campaign_recipientsUpdateInput = {
-    recipient_id?: StringFieldUpdateOperationsInput | string
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    campaign_id?: StringFieldUpdateOperationsInput | string
+    business_id?: StringFieldUpdateOperationsInput | string
+    phone_number?: StringFieldUpdateOperationsInput | string
+    contact_id?: NullableStringFieldUpdateOperationsInput | string | null
+    resolved_variables?: JsonNullValueInput | InputJsonValue
+    status?: StringFieldUpdateOperationsInput | string
+    whatsapp_message_id?: NullableStringFieldUpdateOperationsInput | string | null
     sent_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     delivered_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    clicked_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    converted_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    status?: NullableStringFieldUpdateOperationsInput | string | null
+    read_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    failed_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    error_code?: NullableStringFieldUpdateOperationsInput | string | null
     error_message?: NullableStringFieldUpdateOperationsInput | string | null
-    updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    whatsapp_message_id?: NullableStringFieldUpdateOperationsInput | string | null
-    campaign?: campaignsUpdateOneRequiredWithoutCampaign_recipientsNestedInput
-    lead?: leadsUpdateOneRequiredWithoutCampaign_recipientsNestedInput
+    retry_count?: IntFieldUpdateOperationsInput | number
+    next_retry_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type campaign_recipientsUncheckedUpdateInput = {
-    recipient_id?: StringFieldUpdateOperationsInput | string
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
     campaign_id?: StringFieldUpdateOperationsInput | string
-    lead_id?: StringFieldUpdateOperationsInput | string
+    business_id?: StringFieldUpdateOperationsInput | string
+    phone_number?: StringFieldUpdateOperationsInput | string
+    contact_id?: NullableStringFieldUpdateOperationsInput | string | null
+    resolved_variables?: JsonNullValueInput | InputJsonValue
+    status?: StringFieldUpdateOperationsInput | string
+    whatsapp_message_id?: NullableStringFieldUpdateOperationsInput | string | null
     sent_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     delivered_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    clicked_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    converted_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    status?: NullableStringFieldUpdateOperationsInput | string | null
+    read_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    failed_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    error_code?: NullableStringFieldUpdateOperationsInput | string | null
     error_message?: NullableStringFieldUpdateOperationsInput | string | null
-    updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    whatsapp_message_id?: NullableStringFieldUpdateOperationsInput | string | null
+    retry_count?: IntFieldUpdateOperationsInput | number
+    next_retry_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type campaign_recipientsCreateManyInput = {
-    recipient_id?: string
+    id?: bigint | number
     campaign_id: string
-    lead_id: string
+    business_id: string
+    phone_number: string
+    contact_id?: string | null
+    resolved_variables?: JsonNullValueInput | InputJsonValue
+    status?: string
+    whatsapp_message_id?: string | null
     sent_at?: Date | string | null
     delivered_at?: Date | string | null
-    clicked_at?: Date | string | null
-    converted_at?: Date | string | null
-    status?: string | null
+    read_at?: Date | string | null
+    failed_at?: Date | string | null
+    error_code?: string | null
     error_message?: string | null
-    updated_at?: Date | string | null
-    whatsapp_message_id?: string | null
+    retry_count?: number
+    next_retry_at?: Date | string | null
+    created_at?: Date | string
+    updated_at?: Date | string
   }
 
   export type campaign_recipientsUpdateManyMutationInput = {
-    recipient_id?: StringFieldUpdateOperationsInput | string
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    campaign_id?: StringFieldUpdateOperationsInput | string
+    business_id?: StringFieldUpdateOperationsInput | string
+    phone_number?: StringFieldUpdateOperationsInput | string
+    contact_id?: NullableStringFieldUpdateOperationsInput | string | null
+    resolved_variables?: JsonNullValueInput | InputJsonValue
+    status?: StringFieldUpdateOperationsInput | string
+    whatsapp_message_id?: NullableStringFieldUpdateOperationsInput | string | null
     sent_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     delivered_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    clicked_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    converted_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    status?: NullableStringFieldUpdateOperationsInput | string | null
+    read_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    failed_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    error_code?: NullableStringFieldUpdateOperationsInput | string | null
     error_message?: NullableStringFieldUpdateOperationsInput | string | null
-    updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    whatsapp_message_id?: NullableStringFieldUpdateOperationsInput | string | null
+    retry_count?: IntFieldUpdateOperationsInput | number
+    next_retry_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type campaign_recipientsUncheckedUpdateManyInput = {
-    recipient_id?: StringFieldUpdateOperationsInput | string
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
     campaign_id?: StringFieldUpdateOperationsInput | string
-    lead_id?: StringFieldUpdateOperationsInput | string
+    business_id?: StringFieldUpdateOperationsInput | string
+    phone_number?: StringFieldUpdateOperationsInput | string
+    contact_id?: NullableStringFieldUpdateOperationsInput | string | null
+    resolved_variables?: JsonNullValueInput | InputJsonValue
+    status?: StringFieldUpdateOperationsInput | string
+    whatsapp_message_id?: NullableStringFieldUpdateOperationsInput | string | null
     sent_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     delivered_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    clicked_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    converted_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    status?: NullableStringFieldUpdateOperationsInput | string | null
+    read_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    failed_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    error_code?: NullableStringFieldUpdateOperationsInput | string | null
     error_message?: NullableStringFieldUpdateOperationsInput | string | null
-    updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    whatsapp_message_id?: NullableStringFieldUpdateOperationsInput | string | null
+    retry_count?: IntFieldUpdateOperationsInput | number
+    next_retry_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type lead_scoring_rulesCreateInput = {
@@ -96700,6 +99346,188 @@ export namespace Prisma {
     updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
+  export type whatsapp_optoutsCreateInput = {
+    id?: bigint | number
+    business_id: string
+    phone_number: string
+    opted_out_at?: Date | string
+    reason?: string | null
+  }
+
+  export type whatsapp_optoutsUncheckedCreateInput = {
+    id?: bigint | number
+    business_id: string
+    phone_number: string
+    opted_out_at?: Date | string
+    reason?: string | null
+  }
+
+  export type whatsapp_optoutsUpdateInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    business_id?: StringFieldUpdateOperationsInput | string
+    phone_number?: StringFieldUpdateOperationsInput | string
+    opted_out_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    reason?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type whatsapp_optoutsUncheckedUpdateInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    business_id?: StringFieldUpdateOperationsInput | string
+    phone_number?: StringFieldUpdateOperationsInput | string
+    opted_out_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    reason?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type whatsapp_optoutsCreateManyInput = {
+    id?: bigint | number
+    business_id: string
+    phone_number: string
+    opted_out_at?: Date | string
+    reason?: string | null
+  }
+
+  export type whatsapp_optoutsUpdateManyMutationInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    business_id?: StringFieldUpdateOperationsInput | string
+    phone_number?: StringFieldUpdateOperationsInput | string
+    opted_out_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    reason?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type whatsapp_optoutsUncheckedUpdateManyInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    business_id?: StringFieldUpdateOperationsInput | string
+    phone_number?: StringFieldUpdateOperationsInput | string
+    opted_out_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    reason?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type campaign_analyticsCreateInput = {
+    id?: bigint | number
+    campaign_id: string
+    business_id: string
+    total?: number
+    pending?: number
+    sent?: number
+    delivered?: number
+    read?: number
+    failed?: number
+    skipped?: number
+    delivery_rate?: Decimal | DecimalJsLike | number | string
+    read_rate?: Decimal | DecimalJsLike | number | string
+    estimated_cost?: Decimal | DecimalJsLike | number | string
+    last_synced_at?: Date | string
+    updated_at?: Date | string
+  }
+
+  export type campaign_analyticsUncheckedCreateInput = {
+    id?: bigint | number
+    campaign_id: string
+    business_id: string
+    total?: number
+    pending?: number
+    sent?: number
+    delivered?: number
+    read?: number
+    failed?: number
+    skipped?: number
+    delivery_rate?: Decimal | DecimalJsLike | number | string
+    read_rate?: Decimal | DecimalJsLike | number | string
+    estimated_cost?: Decimal | DecimalJsLike | number | string
+    last_synced_at?: Date | string
+    updated_at?: Date | string
+  }
+
+  export type campaign_analyticsUpdateInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    campaign_id?: StringFieldUpdateOperationsInput | string
+    business_id?: StringFieldUpdateOperationsInput | string
+    total?: IntFieldUpdateOperationsInput | number
+    pending?: IntFieldUpdateOperationsInput | number
+    sent?: IntFieldUpdateOperationsInput | number
+    delivered?: IntFieldUpdateOperationsInput | number
+    read?: IntFieldUpdateOperationsInput | number
+    failed?: IntFieldUpdateOperationsInput | number
+    skipped?: IntFieldUpdateOperationsInput | number
+    delivery_rate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    read_rate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    estimated_cost?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    last_synced_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type campaign_analyticsUncheckedUpdateInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    campaign_id?: StringFieldUpdateOperationsInput | string
+    business_id?: StringFieldUpdateOperationsInput | string
+    total?: IntFieldUpdateOperationsInput | number
+    pending?: IntFieldUpdateOperationsInput | number
+    sent?: IntFieldUpdateOperationsInput | number
+    delivered?: IntFieldUpdateOperationsInput | number
+    read?: IntFieldUpdateOperationsInput | number
+    failed?: IntFieldUpdateOperationsInput | number
+    skipped?: IntFieldUpdateOperationsInput | number
+    delivery_rate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    read_rate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    estimated_cost?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    last_synced_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type campaign_analyticsCreateManyInput = {
+    id?: bigint | number
+    campaign_id: string
+    business_id: string
+    total?: number
+    pending?: number
+    sent?: number
+    delivered?: number
+    read?: number
+    failed?: number
+    skipped?: number
+    delivery_rate?: Decimal | DecimalJsLike | number | string
+    read_rate?: Decimal | DecimalJsLike | number | string
+    estimated_cost?: Decimal | DecimalJsLike | number | string
+    last_synced_at?: Date | string
+    updated_at?: Date | string
+  }
+
+  export type campaign_analyticsUpdateManyMutationInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    campaign_id?: StringFieldUpdateOperationsInput | string
+    business_id?: StringFieldUpdateOperationsInput | string
+    total?: IntFieldUpdateOperationsInput | number
+    pending?: IntFieldUpdateOperationsInput | number
+    sent?: IntFieldUpdateOperationsInput | number
+    delivered?: IntFieldUpdateOperationsInput | number
+    read?: IntFieldUpdateOperationsInput | number
+    failed?: IntFieldUpdateOperationsInput | number
+    skipped?: IntFieldUpdateOperationsInput | number
+    delivery_rate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    read_rate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    estimated_cost?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    last_synced_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type campaign_analyticsUncheckedUpdateManyInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    campaign_id?: StringFieldUpdateOperationsInput | string
+    business_id?: StringFieldUpdateOperationsInput | string
+    total?: IntFieldUpdateOperationsInput | number
+    pending?: IntFieldUpdateOperationsInput | number
+    sent?: IntFieldUpdateOperationsInput | number
+    delivered?: IntFieldUpdateOperationsInput | number
+    read?: IntFieldUpdateOperationsInput | number
+    failed?: IntFieldUpdateOperationsInput | number
+    skipped?: IntFieldUpdateOperationsInput | number
+    delivery_rate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    read_rate?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    estimated_cost?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    last_synced_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type UuidFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel>
     in?: string[] | ListStringFieldRefInput<$PrismaModel>
@@ -97694,12 +100522,6 @@ export namespace Prisma {
     failed_login_attempts?: SortOrder
   }
 
-  export type Campaign_recipientsListRelationFilter = {
-    every?: campaign_recipientsWhereInput
-    some?: campaign_recipientsWhereInput
-    none?: campaign_recipientsWhereInput
-  }
-
   export type Lead_activitiesListRelationFilter = {
     every?: lead_activitiesWhereInput
     some?: lead_activitiesWhereInput
@@ -97756,10 +100578,6 @@ export namespace Prisma {
     every?: cart_reservationsWhereInput
     some?: cart_reservationsWhereInput
     none?: cart_reservationsWhereInput
-  }
-
-  export type campaign_recipientsOrderByRelationAggregateInput = {
-    _count?: SortOrder
   }
 
   export type lead_activitiesOrderByRelationAggregateInput = {
@@ -99473,51 +102291,15 @@ export namespace Prisma {
     total_recipients?: SortOrder
   }
 
-  export type CampaignsScalarRelationFilter = {
-    is?: campaignsWhereInput
-    isNot?: campaignsWhereInput
-  }
-
-  export type campaign_recipientsCountOrderByAggregateInput = {
-    recipient_id?: SortOrder
-    campaign_id?: SortOrder
-    lead_id?: SortOrder
-    sent_at?: SortOrder
-    delivered_at?: SortOrder
-    clicked_at?: SortOrder
-    converted_at?: SortOrder
-    status?: SortOrder
-    error_message?: SortOrder
-    updated_at?: SortOrder
-    whatsapp_message_id?: SortOrder
-  }
-
-  export type campaign_recipientsMaxOrderByAggregateInput = {
-    recipient_id?: SortOrder
-    campaign_id?: SortOrder
-    lead_id?: SortOrder
-    sent_at?: SortOrder
-    delivered_at?: SortOrder
-    clicked_at?: SortOrder
-    converted_at?: SortOrder
-    status?: SortOrder
-    error_message?: SortOrder
-    updated_at?: SortOrder
-    whatsapp_message_id?: SortOrder
-  }
-
-  export type campaign_recipientsMinOrderByAggregateInput = {
-    recipient_id?: SortOrder
-    campaign_id?: SortOrder
-    lead_id?: SortOrder
-    sent_at?: SortOrder
-    delivered_at?: SortOrder
-    clicked_at?: SortOrder
-    converted_at?: SortOrder
-    status?: SortOrder
-    error_message?: SortOrder
-    updated_at?: SortOrder
-    whatsapp_message_id?: SortOrder
+  export type BigIntFilter<$PrismaModel = never> = {
+    equals?: bigint | number | BigIntFieldRefInput<$PrismaModel>
+    in?: bigint[] | number[] | ListBigIntFieldRefInput<$PrismaModel>
+    notIn?: bigint[] | number[] | ListBigIntFieldRefInput<$PrismaModel>
+    lt?: bigint | number | BigIntFieldRefInput<$PrismaModel>
+    lte?: bigint | number | BigIntFieldRefInput<$PrismaModel>
+    gt?: bigint | number | BigIntFieldRefInput<$PrismaModel>
+    gte?: bigint | number | BigIntFieldRefInput<$PrismaModel>
+    not?: NestedBigIntFilter<$PrismaModel> | bigint | number
   }
   export type JsonFilter<$PrismaModel = never> =
     | PatchUndefined<
@@ -99541,6 +102323,119 @@ export namespace Prisma {
     gt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
     gte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
     not?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+  }
+
+  export type campaign_recipientsCountOrderByAggregateInput = {
+    id?: SortOrder
+    campaign_id?: SortOrder
+    business_id?: SortOrder
+    phone_number?: SortOrder
+    contact_id?: SortOrder
+    resolved_variables?: SortOrder
+    status?: SortOrder
+    whatsapp_message_id?: SortOrder
+    sent_at?: SortOrder
+    delivered_at?: SortOrder
+    read_at?: SortOrder
+    failed_at?: SortOrder
+    error_code?: SortOrder
+    error_message?: SortOrder
+    retry_count?: SortOrder
+    next_retry_at?: SortOrder
+    created_at?: SortOrder
+    updated_at?: SortOrder
+  }
+
+  export type campaign_recipientsAvgOrderByAggregateInput = {
+    id?: SortOrder
+    retry_count?: SortOrder
+  }
+
+  export type campaign_recipientsMaxOrderByAggregateInput = {
+    id?: SortOrder
+    campaign_id?: SortOrder
+    business_id?: SortOrder
+    phone_number?: SortOrder
+    contact_id?: SortOrder
+    status?: SortOrder
+    whatsapp_message_id?: SortOrder
+    sent_at?: SortOrder
+    delivered_at?: SortOrder
+    read_at?: SortOrder
+    failed_at?: SortOrder
+    error_code?: SortOrder
+    error_message?: SortOrder
+    retry_count?: SortOrder
+    next_retry_at?: SortOrder
+    created_at?: SortOrder
+    updated_at?: SortOrder
+  }
+
+  export type campaign_recipientsMinOrderByAggregateInput = {
+    id?: SortOrder
+    campaign_id?: SortOrder
+    business_id?: SortOrder
+    phone_number?: SortOrder
+    contact_id?: SortOrder
+    status?: SortOrder
+    whatsapp_message_id?: SortOrder
+    sent_at?: SortOrder
+    delivered_at?: SortOrder
+    read_at?: SortOrder
+    failed_at?: SortOrder
+    error_code?: SortOrder
+    error_message?: SortOrder
+    retry_count?: SortOrder
+    next_retry_at?: SortOrder
+    created_at?: SortOrder
+    updated_at?: SortOrder
+  }
+
+  export type campaign_recipientsSumOrderByAggregateInput = {
+    id?: SortOrder
+    retry_count?: SortOrder
+  }
+
+  export type BigIntWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: bigint | number | BigIntFieldRefInput<$PrismaModel>
+    in?: bigint[] | number[] | ListBigIntFieldRefInput<$PrismaModel>
+    notIn?: bigint[] | number[] | ListBigIntFieldRefInput<$PrismaModel>
+    lt?: bigint | number | BigIntFieldRefInput<$PrismaModel>
+    lte?: bigint | number | BigIntFieldRefInput<$PrismaModel>
+    gt?: bigint | number | BigIntFieldRefInput<$PrismaModel>
+    gte?: bigint | number | BigIntFieldRefInput<$PrismaModel>
+    not?: NestedBigIntWithAggregatesFilter<$PrismaModel> | bigint | number
+    _count?: NestedIntFilter<$PrismaModel>
+    _avg?: NestedFloatFilter<$PrismaModel>
+    _sum?: NestedBigIntFilter<$PrismaModel>
+    _min?: NestedBigIntFilter<$PrismaModel>
+    _max?: NestedBigIntFilter<$PrismaModel>
+  }
+  export type JsonWithAggregatesFilter<$PrismaModel = never> =
+    | PatchUndefined<
+        Either<Required<JsonWithAggregatesFilterBase<$PrismaModel>>, Exclude<keyof Required<JsonWithAggregatesFilterBase<$PrismaModel>>, 'path'>>,
+        Required<JsonWithAggregatesFilterBase<$PrismaModel>>
+      >
+    | OptionalFlat<Omit<Required<JsonWithAggregatesFilterBase<$PrismaModel>>, 'path'>>
+
+  export type JsonWithAggregatesFilterBase<$PrismaModel = never> = {
+    equals?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+    path?: string[]
+    mode?: QueryMode | EnumQueryModeFieldRefInput<$PrismaModel>
+    string_contains?: string | StringFieldRefInput<$PrismaModel>
+    string_starts_with?: string | StringFieldRefInput<$PrismaModel>
+    string_ends_with?: string | StringFieldRefInput<$PrismaModel>
+    array_starts_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_ends_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_contains?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    lt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    lte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    gt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    gte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    not?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedJsonFilter<$PrismaModel>
+    _max?: NestedJsonFilter<$PrismaModel>
   }
 
   export type lead_scoring_rulesCountOrderByAggregateInput = {
@@ -99591,32 +102486,6 @@ export namespace Prisma {
   export type lead_scoring_rulesSumOrderByAggregateInput = {
     score_impact?: SortOrder
     priority?: SortOrder
-  }
-  export type JsonWithAggregatesFilter<$PrismaModel = never> =
-    | PatchUndefined<
-        Either<Required<JsonWithAggregatesFilterBase<$PrismaModel>>, Exclude<keyof Required<JsonWithAggregatesFilterBase<$PrismaModel>>, 'path'>>,
-        Required<JsonWithAggregatesFilterBase<$PrismaModel>>
-      >
-    | OptionalFlat<Omit<Required<JsonWithAggregatesFilterBase<$PrismaModel>>, 'path'>>
-
-  export type JsonWithAggregatesFilterBase<$PrismaModel = never> = {
-    equals?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
-    path?: string[]
-    mode?: QueryMode | EnumQueryModeFieldRefInput<$PrismaModel>
-    string_contains?: string | StringFieldRefInput<$PrismaModel>
-    string_starts_with?: string | StringFieldRefInput<$PrismaModel>
-    string_ends_with?: string | StringFieldRefInput<$PrismaModel>
-    array_starts_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
-    array_ends_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
-    array_contains?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
-    lt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
-    lte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
-    gt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
-    gte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
-    not?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
-    _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedJsonFilter<$PrismaModel>
-    _max?: NestedJsonFilter<$PrismaModel>
   }
 
   export type Lead_scoring_rulesNullableScalarRelationFilter = {
@@ -101445,6 +104314,125 @@ export namespace Prisma {
   export type cartsSumOrderByAggregateInput = {
     total_amount?: SortOrder
     total_items?: SortOrder
+  }
+
+  export type whatsapp_optoutsBusiness_idPhone_numberCompoundUniqueInput = {
+    business_id: string
+    phone_number: string
+  }
+
+  export type whatsapp_optoutsCountOrderByAggregateInput = {
+    id?: SortOrder
+    business_id?: SortOrder
+    phone_number?: SortOrder
+    opted_out_at?: SortOrder
+    reason?: SortOrder
+  }
+
+  export type whatsapp_optoutsAvgOrderByAggregateInput = {
+    id?: SortOrder
+  }
+
+  export type whatsapp_optoutsMaxOrderByAggregateInput = {
+    id?: SortOrder
+    business_id?: SortOrder
+    phone_number?: SortOrder
+    opted_out_at?: SortOrder
+    reason?: SortOrder
+  }
+
+  export type whatsapp_optoutsMinOrderByAggregateInput = {
+    id?: SortOrder
+    business_id?: SortOrder
+    phone_number?: SortOrder
+    opted_out_at?: SortOrder
+    reason?: SortOrder
+  }
+
+  export type whatsapp_optoutsSumOrderByAggregateInput = {
+    id?: SortOrder
+  }
+
+  export type campaign_analyticsCountOrderByAggregateInput = {
+    id?: SortOrder
+    campaign_id?: SortOrder
+    business_id?: SortOrder
+    total?: SortOrder
+    pending?: SortOrder
+    sent?: SortOrder
+    delivered?: SortOrder
+    read?: SortOrder
+    failed?: SortOrder
+    skipped?: SortOrder
+    delivery_rate?: SortOrder
+    read_rate?: SortOrder
+    estimated_cost?: SortOrder
+    last_synced_at?: SortOrder
+    updated_at?: SortOrder
+  }
+
+  export type campaign_analyticsAvgOrderByAggregateInput = {
+    id?: SortOrder
+    total?: SortOrder
+    pending?: SortOrder
+    sent?: SortOrder
+    delivered?: SortOrder
+    read?: SortOrder
+    failed?: SortOrder
+    skipped?: SortOrder
+    delivery_rate?: SortOrder
+    read_rate?: SortOrder
+    estimated_cost?: SortOrder
+  }
+
+  export type campaign_analyticsMaxOrderByAggregateInput = {
+    id?: SortOrder
+    campaign_id?: SortOrder
+    business_id?: SortOrder
+    total?: SortOrder
+    pending?: SortOrder
+    sent?: SortOrder
+    delivered?: SortOrder
+    read?: SortOrder
+    failed?: SortOrder
+    skipped?: SortOrder
+    delivery_rate?: SortOrder
+    read_rate?: SortOrder
+    estimated_cost?: SortOrder
+    last_synced_at?: SortOrder
+    updated_at?: SortOrder
+  }
+
+  export type campaign_analyticsMinOrderByAggregateInput = {
+    id?: SortOrder
+    campaign_id?: SortOrder
+    business_id?: SortOrder
+    total?: SortOrder
+    pending?: SortOrder
+    sent?: SortOrder
+    delivered?: SortOrder
+    read?: SortOrder
+    failed?: SortOrder
+    skipped?: SortOrder
+    delivery_rate?: SortOrder
+    read_rate?: SortOrder
+    estimated_cost?: SortOrder
+    last_synced_at?: SortOrder
+    updated_at?: SortOrder
+  }
+
+  export type campaign_analyticsSumOrderByAggregateInput = {
+    id?: SortOrder
+    total?: SortOrder
+    pending?: SortOrder
+    sent?: SortOrder
+    delivered?: SortOrder
+    read?: SortOrder
+    failed?: SortOrder
+    skipped?: SortOrder
+    delivery_rate?: SortOrder
+    read_rate?: SortOrder
+    estimated_cost?: SortOrder
   }
 
   export type business_workflowsCreateNestedManyWithoutBusinessesInput = {
@@ -103617,13 +106605,6 @@ export namespace Prisma {
     deleteMany?: product_reviewsScalarWhereInput | product_reviewsScalarWhereInput[]
   }
 
-  export type campaign_recipientsCreateNestedManyWithoutLeadInput = {
-    create?: XOR<campaign_recipientsCreateWithoutLeadInput, campaign_recipientsUncheckedCreateWithoutLeadInput> | campaign_recipientsCreateWithoutLeadInput[] | campaign_recipientsUncheckedCreateWithoutLeadInput[]
-    connectOrCreate?: campaign_recipientsCreateOrConnectWithoutLeadInput | campaign_recipientsCreateOrConnectWithoutLeadInput[]
-    createMany?: campaign_recipientsCreateManyLeadInputEnvelope
-    connect?: campaign_recipientsWhereUniqueInput | campaign_recipientsWhereUniqueInput[]
-  }
-
   export type cartsCreateNestedManyWithoutLeadsInput = {
     create?: XOR<cartsCreateWithoutLeadsInput, cartsUncheckedCreateWithoutLeadsInput> | cartsCreateWithoutLeadsInput[] | cartsUncheckedCreateWithoutLeadsInput[]
     connectOrCreate?: cartsCreateOrConnectWithoutLeadsInput | cartsCreateOrConnectWithoutLeadsInput[]
@@ -103760,13 +106741,6 @@ export namespace Prisma {
     connect?: cart_reservationsWhereUniqueInput | cart_reservationsWhereUniqueInput[]
   }
 
-  export type campaign_recipientsUncheckedCreateNestedManyWithoutLeadInput = {
-    create?: XOR<campaign_recipientsCreateWithoutLeadInput, campaign_recipientsUncheckedCreateWithoutLeadInput> | campaign_recipientsCreateWithoutLeadInput[] | campaign_recipientsUncheckedCreateWithoutLeadInput[]
-    connectOrCreate?: campaign_recipientsCreateOrConnectWithoutLeadInput | campaign_recipientsCreateOrConnectWithoutLeadInput[]
-    createMany?: campaign_recipientsCreateManyLeadInputEnvelope
-    connect?: campaign_recipientsWhereUniqueInput | campaign_recipientsWhereUniqueInput[]
-  }
-
   export type cartsUncheckedCreateNestedManyWithoutLeadsInput = {
     create?: XOR<cartsCreateWithoutLeadsInput, cartsUncheckedCreateWithoutLeadsInput> | cartsCreateWithoutLeadsInput[] | cartsUncheckedCreateWithoutLeadsInput[]
     connectOrCreate?: cartsCreateOrConnectWithoutLeadsInput | cartsCreateOrConnectWithoutLeadsInput[]
@@ -103877,20 +106851,6 @@ export namespace Prisma {
     connectOrCreate?: cart_reservationsCreateOrConnectWithoutLeadsInput | cart_reservationsCreateOrConnectWithoutLeadsInput[]
     createMany?: cart_reservationsCreateManyLeadsInputEnvelope
     connect?: cart_reservationsWhereUniqueInput | cart_reservationsWhereUniqueInput[]
-  }
-
-  export type campaign_recipientsUpdateManyWithoutLeadNestedInput = {
-    create?: XOR<campaign_recipientsCreateWithoutLeadInput, campaign_recipientsUncheckedCreateWithoutLeadInput> | campaign_recipientsCreateWithoutLeadInput[] | campaign_recipientsUncheckedCreateWithoutLeadInput[]
-    connectOrCreate?: campaign_recipientsCreateOrConnectWithoutLeadInput | campaign_recipientsCreateOrConnectWithoutLeadInput[]
-    upsert?: campaign_recipientsUpsertWithWhereUniqueWithoutLeadInput | campaign_recipientsUpsertWithWhereUniqueWithoutLeadInput[]
-    createMany?: campaign_recipientsCreateManyLeadInputEnvelope
-    set?: campaign_recipientsWhereUniqueInput | campaign_recipientsWhereUniqueInput[]
-    disconnect?: campaign_recipientsWhereUniqueInput | campaign_recipientsWhereUniqueInput[]
-    delete?: campaign_recipientsWhereUniqueInput | campaign_recipientsWhereUniqueInput[]
-    connect?: campaign_recipientsWhereUniqueInput | campaign_recipientsWhereUniqueInput[]
-    update?: campaign_recipientsUpdateWithWhereUniqueWithoutLeadInput | campaign_recipientsUpdateWithWhereUniqueWithoutLeadInput[]
-    updateMany?: campaign_recipientsUpdateManyWithWhereWithoutLeadInput | campaign_recipientsUpdateManyWithWhereWithoutLeadInput[]
-    deleteMany?: campaign_recipientsScalarWhereInput | campaign_recipientsScalarWhereInput[]
   }
 
   export type cartsUpdateManyWithoutLeadsNestedInput = {
@@ -104151,20 +107111,6 @@ export namespace Prisma {
     update?: cart_reservationsUpdateWithWhereUniqueWithoutLeadsInput | cart_reservationsUpdateWithWhereUniqueWithoutLeadsInput[]
     updateMany?: cart_reservationsUpdateManyWithWhereWithoutLeadsInput | cart_reservationsUpdateManyWithWhereWithoutLeadsInput[]
     deleteMany?: cart_reservationsScalarWhereInput | cart_reservationsScalarWhereInput[]
-  }
-
-  export type campaign_recipientsUncheckedUpdateManyWithoutLeadNestedInput = {
-    create?: XOR<campaign_recipientsCreateWithoutLeadInput, campaign_recipientsUncheckedCreateWithoutLeadInput> | campaign_recipientsCreateWithoutLeadInput[] | campaign_recipientsUncheckedCreateWithoutLeadInput[]
-    connectOrCreate?: campaign_recipientsCreateOrConnectWithoutLeadInput | campaign_recipientsCreateOrConnectWithoutLeadInput[]
-    upsert?: campaign_recipientsUpsertWithWhereUniqueWithoutLeadInput | campaign_recipientsUpsertWithWhereUniqueWithoutLeadInput[]
-    createMany?: campaign_recipientsCreateManyLeadInputEnvelope
-    set?: campaign_recipientsWhereUniqueInput | campaign_recipientsWhereUniqueInput[]
-    disconnect?: campaign_recipientsWhereUniqueInput | campaign_recipientsWhereUniqueInput[]
-    delete?: campaign_recipientsWhereUniqueInput | campaign_recipientsWhereUniqueInput[]
-    connect?: campaign_recipientsWhereUniqueInput | campaign_recipientsWhereUniqueInput[]
-    update?: campaign_recipientsUpdateWithWhereUniqueWithoutLeadInput | campaign_recipientsUpdateWithWhereUniqueWithoutLeadInput[]
-    updateMany?: campaign_recipientsUpdateManyWithWhereWithoutLeadInput | campaign_recipientsUpdateManyWithWhereWithoutLeadInput[]
-    deleteMany?: campaign_recipientsScalarWhereInput | campaign_recipientsScalarWhereInput[]
   }
 
   export type cartsUncheckedUpdateManyWithoutLeadsNestedInput = {
@@ -106023,13 +108969,6 @@ export namespace Prisma {
     update?: XOR<XOR<productsUpdateToOneWithWhereWithoutCart_reservationsInput, productsUpdateWithoutCart_reservationsInput>, productsUncheckedUpdateWithoutCart_reservationsInput>
   }
 
-  export type campaign_recipientsCreateNestedManyWithoutCampaignInput = {
-    create?: XOR<campaign_recipientsCreateWithoutCampaignInput, campaign_recipientsUncheckedCreateWithoutCampaignInput> | campaign_recipientsCreateWithoutCampaignInput[] | campaign_recipientsUncheckedCreateWithoutCampaignInput[]
-    connectOrCreate?: campaign_recipientsCreateOrConnectWithoutCampaignInput | campaign_recipientsCreateOrConnectWithoutCampaignInput[]
-    createMany?: campaign_recipientsCreateManyCampaignInputEnvelope
-    connect?: campaign_recipientsWhereUniqueInput | campaign_recipientsWhereUniqueInput[]
-  }
-
   export type productsCreateNestedOneWithoutCampaignsInput = {
     create?: XOR<productsCreateWithoutCampaignsInput, productsUncheckedCreateWithoutCampaignsInput>
     connectOrCreate?: productsCreateOrConnectWithoutCampaignsInput
@@ -106040,27 +108979,6 @@ export namespace Prisma {
     create?: XOR<notification_templatesCreateWithoutCampaignsInput, notification_templatesUncheckedCreateWithoutCampaignsInput>
     connectOrCreate?: notification_templatesCreateOrConnectWithoutCampaignsInput
     connect?: notification_templatesWhereUniqueInput
-  }
-
-  export type campaign_recipientsUncheckedCreateNestedManyWithoutCampaignInput = {
-    create?: XOR<campaign_recipientsCreateWithoutCampaignInput, campaign_recipientsUncheckedCreateWithoutCampaignInput> | campaign_recipientsCreateWithoutCampaignInput[] | campaign_recipientsUncheckedCreateWithoutCampaignInput[]
-    connectOrCreate?: campaign_recipientsCreateOrConnectWithoutCampaignInput | campaign_recipientsCreateOrConnectWithoutCampaignInput[]
-    createMany?: campaign_recipientsCreateManyCampaignInputEnvelope
-    connect?: campaign_recipientsWhereUniqueInput | campaign_recipientsWhereUniqueInput[]
-  }
-
-  export type campaign_recipientsUpdateManyWithoutCampaignNestedInput = {
-    create?: XOR<campaign_recipientsCreateWithoutCampaignInput, campaign_recipientsUncheckedCreateWithoutCampaignInput> | campaign_recipientsCreateWithoutCampaignInput[] | campaign_recipientsUncheckedCreateWithoutCampaignInput[]
-    connectOrCreate?: campaign_recipientsCreateOrConnectWithoutCampaignInput | campaign_recipientsCreateOrConnectWithoutCampaignInput[]
-    upsert?: campaign_recipientsUpsertWithWhereUniqueWithoutCampaignInput | campaign_recipientsUpsertWithWhereUniqueWithoutCampaignInput[]
-    createMany?: campaign_recipientsCreateManyCampaignInputEnvelope
-    set?: campaign_recipientsWhereUniqueInput | campaign_recipientsWhereUniqueInput[]
-    disconnect?: campaign_recipientsWhereUniqueInput | campaign_recipientsWhereUniqueInput[]
-    delete?: campaign_recipientsWhereUniqueInput | campaign_recipientsWhereUniqueInput[]
-    connect?: campaign_recipientsWhereUniqueInput | campaign_recipientsWhereUniqueInput[]
-    update?: campaign_recipientsUpdateWithWhereUniqueWithoutCampaignInput | campaign_recipientsUpdateWithWhereUniqueWithoutCampaignInput[]
-    updateMany?: campaign_recipientsUpdateManyWithWhereWithoutCampaignInput | campaign_recipientsUpdateManyWithWhereWithoutCampaignInput[]
-    deleteMany?: campaign_recipientsScalarWhereInput | campaign_recipientsScalarWhereInput[]
   }
 
   export type productsUpdateOneWithoutCampaignsNestedInput = {
@@ -106083,46 +109001,12 @@ export namespace Prisma {
     update?: XOR<XOR<notification_templatesUpdateToOneWithWhereWithoutCampaignsInput, notification_templatesUpdateWithoutCampaignsInput>, notification_templatesUncheckedUpdateWithoutCampaignsInput>
   }
 
-  export type campaign_recipientsUncheckedUpdateManyWithoutCampaignNestedInput = {
-    create?: XOR<campaign_recipientsCreateWithoutCampaignInput, campaign_recipientsUncheckedCreateWithoutCampaignInput> | campaign_recipientsCreateWithoutCampaignInput[] | campaign_recipientsUncheckedCreateWithoutCampaignInput[]
-    connectOrCreate?: campaign_recipientsCreateOrConnectWithoutCampaignInput | campaign_recipientsCreateOrConnectWithoutCampaignInput[]
-    upsert?: campaign_recipientsUpsertWithWhereUniqueWithoutCampaignInput | campaign_recipientsUpsertWithWhereUniqueWithoutCampaignInput[]
-    createMany?: campaign_recipientsCreateManyCampaignInputEnvelope
-    set?: campaign_recipientsWhereUniqueInput | campaign_recipientsWhereUniqueInput[]
-    disconnect?: campaign_recipientsWhereUniqueInput | campaign_recipientsWhereUniqueInput[]
-    delete?: campaign_recipientsWhereUniqueInput | campaign_recipientsWhereUniqueInput[]
-    connect?: campaign_recipientsWhereUniqueInput | campaign_recipientsWhereUniqueInput[]
-    update?: campaign_recipientsUpdateWithWhereUniqueWithoutCampaignInput | campaign_recipientsUpdateWithWhereUniqueWithoutCampaignInput[]
-    updateMany?: campaign_recipientsUpdateManyWithWhereWithoutCampaignInput | campaign_recipientsUpdateManyWithWhereWithoutCampaignInput[]
-    deleteMany?: campaign_recipientsScalarWhereInput | campaign_recipientsScalarWhereInput[]
-  }
-
-  export type campaignsCreateNestedOneWithoutCampaign_recipientsInput = {
-    create?: XOR<campaignsCreateWithoutCampaign_recipientsInput, campaignsUncheckedCreateWithoutCampaign_recipientsInput>
-    connectOrCreate?: campaignsCreateOrConnectWithoutCampaign_recipientsInput
-    connect?: campaignsWhereUniqueInput
-  }
-
-  export type leadsCreateNestedOneWithoutCampaign_recipientsInput = {
-    create?: XOR<leadsCreateWithoutCampaign_recipientsInput, leadsUncheckedCreateWithoutCampaign_recipientsInput>
-    connectOrCreate?: leadsCreateOrConnectWithoutCampaign_recipientsInput
-    connect?: leadsWhereUniqueInput
-  }
-
-  export type campaignsUpdateOneRequiredWithoutCampaign_recipientsNestedInput = {
-    create?: XOR<campaignsCreateWithoutCampaign_recipientsInput, campaignsUncheckedCreateWithoutCampaign_recipientsInput>
-    connectOrCreate?: campaignsCreateOrConnectWithoutCampaign_recipientsInput
-    upsert?: campaignsUpsertWithoutCampaign_recipientsInput
-    connect?: campaignsWhereUniqueInput
-    update?: XOR<XOR<campaignsUpdateToOneWithWhereWithoutCampaign_recipientsInput, campaignsUpdateWithoutCampaign_recipientsInput>, campaignsUncheckedUpdateWithoutCampaign_recipientsInput>
-  }
-
-  export type leadsUpdateOneRequiredWithoutCampaign_recipientsNestedInput = {
-    create?: XOR<leadsCreateWithoutCampaign_recipientsInput, leadsUncheckedCreateWithoutCampaign_recipientsInput>
-    connectOrCreate?: leadsCreateOrConnectWithoutCampaign_recipientsInput
-    upsert?: leadsUpsertWithoutCampaign_recipientsInput
-    connect?: leadsWhereUniqueInput
-    update?: XOR<XOR<leadsUpdateToOneWithWhereWithoutCampaign_recipientsInput, leadsUpdateWithoutCampaign_recipientsInput>, leadsUncheckedUpdateWithoutCampaign_recipientsInput>
+  export type BigIntFieldUpdateOperationsInput = {
+    set?: bigint | number
+    increment?: bigint | number
+    decrement?: bigint | number
+    multiply?: bigint | number
+    divide?: bigint | number
   }
 
   export type lead_score_historyCreateNestedManyWithoutRuleInput = {
@@ -108170,6 +111054,33 @@ export namespace Prisma {
     _min?: NestedDecimalFilter<$PrismaModel>
     _max?: NestedDecimalFilter<$PrismaModel>
   }
+
+  export type NestedBigIntFilter<$PrismaModel = never> = {
+    equals?: bigint | number | BigIntFieldRefInput<$PrismaModel>
+    in?: bigint[] | number[] | ListBigIntFieldRefInput<$PrismaModel>
+    notIn?: bigint[] | number[] | ListBigIntFieldRefInput<$PrismaModel>
+    lt?: bigint | number | BigIntFieldRefInput<$PrismaModel>
+    lte?: bigint | number | BigIntFieldRefInput<$PrismaModel>
+    gt?: bigint | number | BigIntFieldRefInput<$PrismaModel>
+    gte?: bigint | number | BigIntFieldRefInput<$PrismaModel>
+    not?: NestedBigIntFilter<$PrismaModel> | bigint | number
+  }
+
+  export type NestedBigIntWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: bigint | number | BigIntFieldRefInput<$PrismaModel>
+    in?: bigint[] | number[] | ListBigIntFieldRefInput<$PrismaModel>
+    notIn?: bigint[] | number[] | ListBigIntFieldRefInput<$PrismaModel>
+    lt?: bigint | number | BigIntFieldRefInput<$PrismaModel>
+    lte?: bigint | number | BigIntFieldRefInput<$PrismaModel>
+    gt?: bigint | number | BigIntFieldRefInput<$PrismaModel>
+    gte?: bigint | number | BigIntFieldRefInput<$PrismaModel>
+    not?: NestedBigIntWithAggregatesFilter<$PrismaModel> | bigint | number
+    _count?: NestedIntFilter<$PrismaModel>
+    _avg?: NestedFloatFilter<$PrismaModel>
+    _sum?: NestedBigIntFilter<$PrismaModel>
+    _min?: NestedBigIntFilter<$PrismaModel>
+    _max?: NestedBigIntFilter<$PrismaModel>
+  }
   export type NestedJsonFilter<$PrismaModel = never> =
     | PatchUndefined<
         Either<Required<NestedJsonFilterBase<$PrismaModel>>, Exclude<keyof Required<NestedJsonFilterBase<$PrismaModel>>, 'path'>>,
@@ -108460,7 +111371,6 @@ export namespace Prisma {
     deleted_by?: string | null
     onboarding_completed?: boolean
     delivery_address?: string | null
-    campaign_recipients?: campaign_recipientsCreateNestedManyWithoutLeadInput
     carts?: cartsCreateNestedManyWithoutLeadsInput
     lead_activities?: lead_activitiesCreateNestedManyWithoutLeadsInput
     lead_conversations?: lead_conversationsCreateNestedManyWithoutLeadsInput
@@ -108541,7 +111451,6 @@ export namespace Prisma {
     deleted_by?: string | null
     onboarding_completed?: boolean
     delivery_address?: string | null
-    campaign_recipients?: campaign_recipientsUncheckedCreateNestedManyWithoutLeadInput
     carts?: cartsUncheckedCreateNestedManyWithoutLeadsInput
     lead_activities?: lead_activitiesUncheckedCreateNestedManyWithoutLeadsInput
     lead_conversations?: lead_conversationsUncheckedCreateNestedManyWithoutLeadsInput
@@ -111643,7 +114552,6 @@ export namespace Prisma {
     deleted_by?: string | null
     onboarding_completed?: boolean
     delivery_address?: string | null
-    campaign_recipients?: campaign_recipientsCreateNestedManyWithoutLeadInput
     carts?: cartsCreateNestedManyWithoutLeadsInput
     lead_activities?: lead_activitiesCreateNestedManyWithoutLeadsInput
     lead_conversations?: lead_conversationsCreateNestedManyWithoutLeadsInput
@@ -111724,7 +114632,6 @@ export namespace Prisma {
     deleted_by?: string | null
     onboarding_completed?: boolean
     delivery_address?: string | null
-    campaign_recipients?: campaign_recipientsUncheckedCreateNestedManyWithoutLeadInput
     carts?: cartsUncheckedCreateNestedManyWithoutLeadsInput
     lead_activities?: lead_activitiesUncheckedCreateNestedManyWithoutLeadsInput
     lead_conversations?: lead_conversationsUncheckedCreateNestedManyWithoutLeadsInput
@@ -112771,7 +115678,6 @@ export namespace Prisma {
     deleted_by?: string | null
     onboarding_completed?: boolean
     delivery_address?: string | null
-    campaign_recipients?: campaign_recipientsCreateNestedManyWithoutLeadInput
     carts?: cartsCreateNestedManyWithoutLeadsInput
     lead_activities?: lead_activitiesCreateNestedManyWithoutLeadsInput
     lead_conversations?: lead_conversationsCreateNestedManyWithoutLeadsInput
@@ -112852,7 +115758,6 @@ export namespace Prisma {
     deleted_by?: string | null
     onboarding_completed?: boolean
     delivery_address?: string | null
-    campaign_recipients?: campaign_recipientsUncheckedCreateNestedManyWithoutLeadInput
     carts?: cartsUncheckedCreateNestedManyWithoutLeadsInput
     lead_activities?: lead_activitiesUncheckedCreateNestedManyWithoutLeadsInput
     lead_conversations?: lead_conversationsUncheckedCreateNestedManyWithoutLeadsInput
@@ -113478,42 +116383,6 @@ export namespace Prisma {
     permissions?: NullableJsonNullValueInput | InputJsonValue
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     role_id?: StringFieldUpdateOperationsInput | string
-  }
-
-  export type campaign_recipientsCreateWithoutLeadInput = {
-    recipient_id?: string
-    sent_at?: Date | string | null
-    delivered_at?: Date | string | null
-    clicked_at?: Date | string | null
-    converted_at?: Date | string | null
-    status?: string | null
-    error_message?: string | null
-    updated_at?: Date | string | null
-    whatsapp_message_id?: string | null
-    campaign: campaignsCreateNestedOneWithoutCampaign_recipientsInput
-  }
-
-  export type campaign_recipientsUncheckedCreateWithoutLeadInput = {
-    recipient_id?: string
-    campaign_id: string
-    sent_at?: Date | string | null
-    delivered_at?: Date | string | null
-    clicked_at?: Date | string | null
-    converted_at?: Date | string | null
-    status?: string | null
-    error_message?: string | null
-    updated_at?: Date | string | null
-    whatsapp_message_id?: string | null
-  }
-
-  export type campaign_recipientsCreateOrConnectWithoutLeadInput = {
-    where: campaign_recipientsWhereUniqueInput
-    create: XOR<campaign_recipientsCreateWithoutLeadInput, campaign_recipientsUncheckedCreateWithoutLeadInput>
-  }
-
-  export type campaign_recipientsCreateManyLeadInputEnvelope = {
-    data: campaign_recipientsCreateManyLeadInput | campaign_recipientsCreateManyLeadInput[]
-    skipDuplicates?: boolean
   }
 
   export type cartsCreateWithoutLeadsInput = {
@@ -114238,7 +117107,6 @@ export namespace Prisma {
     deleted_by?: string | null
     onboarding_completed?: boolean
     delivery_address?: string | null
-    campaign_recipients?: campaign_recipientsCreateNestedManyWithoutLeadInput
     carts?: cartsCreateNestedManyWithoutLeadsInput
     lead_activities?: lead_activitiesCreateNestedManyWithoutLeadsInput
     lead_conversations?: lead_conversationsCreateNestedManyWithoutLeadsInput
@@ -114320,7 +117188,6 @@ export namespace Prisma {
     deleted_by?: string | null
     onboarding_completed?: boolean
     delivery_address?: string | null
-    campaign_recipients?: campaign_recipientsUncheckedCreateNestedManyWithoutLeadInput
     carts?: cartsUncheckedCreateNestedManyWithoutLeadsInput
     lead_activities?: lead_activitiesUncheckedCreateNestedManyWithoutLeadsInput
     lead_conversations?: lead_conversationsUncheckedCreateNestedManyWithoutLeadsInput
@@ -114399,7 +117266,6 @@ export namespace Prisma {
     deleted_by?: string | null
     onboarding_completed?: boolean
     delivery_address?: string | null
-    campaign_recipients?: campaign_recipientsCreateNestedManyWithoutLeadInput
     carts?: cartsCreateNestedManyWithoutLeadsInput
     lead_activities?: lead_activitiesCreateNestedManyWithoutLeadsInput
     lead_conversations?: lead_conversationsCreateNestedManyWithoutLeadsInput
@@ -114480,7 +117346,6 @@ export namespace Prisma {
     deleted_by?: string | null
     onboarding_completed?: boolean
     delivery_address?: string | null
-    campaign_recipients?: campaign_recipientsUncheckedCreateNestedManyWithoutLeadInput
     carts?: cartsUncheckedCreateNestedManyWithoutLeadsInput
     lead_activities?: lead_activitiesUncheckedCreateNestedManyWithoutLeadsInput
     lead_conversations?: lead_conversationsUncheckedCreateNestedManyWithoutLeadsInput
@@ -114740,39 +117605,6 @@ export namespace Prisma {
   export type cart_reservationsCreateManyLeadsInputEnvelope = {
     data: cart_reservationsCreateManyLeadsInput | cart_reservationsCreateManyLeadsInput[]
     skipDuplicates?: boolean
-  }
-
-  export type campaign_recipientsUpsertWithWhereUniqueWithoutLeadInput = {
-    where: campaign_recipientsWhereUniqueInput
-    update: XOR<campaign_recipientsUpdateWithoutLeadInput, campaign_recipientsUncheckedUpdateWithoutLeadInput>
-    create: XOR<campaign_recipientsCreateWithoutLeadInput, campaign_recipientsUncheckedCreateWithoutLeadInput>
-  }
-
-  export type campaign_recipientsUpdateWithWhereUniqueWithoutLeadInput = {
-    where: campaign_recipientsWhereUniqueInput
-    data: XOR<campaign_recipientsUpdateWithoutLeadInput, campaign_recipientsUncheckedUpdateWithoutLeadInput>
-  }
-
-  export type campaign_recipientsUpdateManyWithWhereWithoutLeadInput = {
-    where: campaign_recipientsScalarWhereInput
-    data: XOR<campaign_recipientsUpdateManyMutationInput, campaign_recipientsUncheckedUpdateManyWithoutLeadInput>
-  }
-
-  export type campaign_recipientsScalarWhereInput = {
-    AND?: campaign_recipientsScalarWhereInput | campaign_recipientsScalarWhereInput[]
-    OR?: campaign_recipientsScalarWhereInput[]
-    NOT?: campaign_recipientsScalarWhereInput | campaign_recipientsScalarWhereInput[]
-    recipient_id?: UuidFilter<"campaign_recipients"> | string
-    campaign_id?: UuidFilter<"campaign_recipients"> | string
-    lead_id?: UuidFilter<"campaign_recipients"> | string
-    sent_at?: DateTimeNullableFilter<"campaign_recipients"> | Date | string | null
-    delivered_at?: DateTimeNullableFilter<"campaign_recipients"> | Date | string | null
-    clicked_at?: DateTimeNullableFilter<"campaign_recipients"> | Date | string | null
-    converted_at?: DateTimeNullableFilter<"campaign_recipients"> | Date | string | null
-    status?: StringNullableFilter<"campaign_recipients"> | string | null
-    error_message?: StringNullableFilter<"campaign_recipients"> | string | null
-    updated_at?: DateTimeNullableFilter<"campaign_recipients"> | Date | string | null
-    whatsapp_message_id?: StringNullableFilter<"campaign_recipients"> | string | null
   }
 
   export type cartsUpsertWithWhereUniqueWithoutLeadsInput = {
@@ -115309,7 +118141,6 @@ export namespace Prisma {
     deleted_by?: NullableStringFieldUpdateOperationsInput | string | null
     onboarding_completed?: BoolFieldUpdateOperationsInput | boolean
     delivery_address?: NullableStringFieldUpdateOperationsInput | string | null
-    campaign_recipients?: campaign_recipientsUpdateManyWithoutLeadNestedInput
     carts?: cartsUpdateManyWithoutLeadsNestedInput
     lead_activities?: lead_activitiesUpdateManyWithoutLeadsNestedInput
     lead_conversations?: lead_conversationsUpdateManyWithoutLeadsNestedInput
@@ -115391,7 +118222,6 @@ export namespace Prisma {
     deleted_by?: NullableStringFieldUpdateOperationsInput | string | null
     onboarding_completed?: BoolFieldUpdateOperationsInput | boolean
     delivery_address?: NullableStringFieldUpdateOperationsInput | string | null
-    campaign_recipients?: campaign_recipientsUncheckedUpdateManyWithoutLeadNestedInput
     carts?: cartsUncheckedUpdateManyWithoutLeadsNestedInput
     lead_activities?: lead_activitiesUncheckedUpdateManyWithoutLeadsNestedInput
     lead_conversations?: lead_conversationsUncheckedUpdateManyWithoutLeadsNestedInput
@@ -115650,7 +118480,6 @@ export namespace Prisma {
     deleted_by?: string | null
     onboarding_completed?: boolean
     delivery_address?: string | null
-    campaign_recipients?: campaign_recipientsCreateNestedManyWithoutLeadInput
     carts?: cartsCreateNestedManyWithoutLeadsInput
     lead_conversations?: lead_conversationsCreateNestedManyWithoutLeadsInput
     lead_duplicates_1?: lead_duplicatesCreateNestedManyWithoutLead_1Input
@@ -115732,7 +118561,6 @@ export namespace Prisma {
     deleted_by?: string | null
     onboarding_completed?: boolean
     delivery_address?: string | null
-    campaign_recipients?: campaign_recipientsUncheckedCreateNestedManyWithoutLeadInput
     carts?: cartsUncheckedCreateNestedManyWithoutLeadsInput
     lead_conversations?: lead_conversationsUncheckedCreateNestedManyWithoutLeadsInput
     lead_duplicates_1?: lead_duplicatesUncheckedCreateNestedManyWithoutLead_1Input
@@ -115822,7 +118650,6 @@ export namespace Prisma {
     deleted_by?: NullableStringFieldUpdateOperationsInput | string | null
     onboarding_completed?: BoolFieldUpdateOperationsInput | boolean
     delivery_address?: NullableStringFieldUpdateOperationsInput | string | null
-    campaign_recipients?: campaign_recipientsUpdateManyWithoutLeadNestedInput
     carts?: cartsUpdateManyWithoutLeadsNestedInput
     lead_conversations?: lead_conversationsUpdateManyWithoutLeadsNestedInput
     lead_duplicates_1?: lead_duplicatesUpdateManyWithoutLead_1NestedInput
@@ -115904,7 +118731,6 @@ export namespace Prisma {
     deleted_by?: NullableStringFieldUpdateOperationsInput | string | null
     onboarding_completed?: BoolFieldUpdateOperationsInput | boolean
     delivery_address?: NullableStringFieldUpdateOperationsInput | string | null
-    campaign_recipients?: campaign_recipientsUncheckedUpdateManyWithoutLeadNestedInput
     carts?: cartsUncheckedUpdateManyWithoutLeadsNestedInput
     lead_conversations?: lead_conversationsUncheckedUpdateManyWithoutLeadsNestedInput
     lead_duplicates_1?: lead_duplicatesUncheckedUpdateManyWithoutLead_1NestedInput
@@ -116051,7 +118877,6 @@ export namespace Prisma {
     deleted_by?: string | null
     onboarding_completed?: boolean
     delivery_address?: string | null
-    campaign_recipients?: campaign_recipientsCreateNestedManyWithoutLeadInput
     carts?: cartsCreateNestedManyWithoutLeadsInput
     lead_activities?: lead_activitiesCreateNestedManyWithoutLeadsInput
     lead_duplicates_1?: lead_duplicatesCreateNestedManyWithoutLead_1Input
@@ -116133,7 +118958,6 @@ export namespace Prisma {
     deleted_by?: string | null
     onboarding_completed?: boolean
     delivery_address?: string | null
-    campaign_recipients?: campaign_recipientsUncheckedCreateNestedManyWithoutLeadInput
     carts?: cartsUncheckedCreateNestedManyWithoutLeadsInput
     lead_activities?: lead_activitiesUncheckedCreateNestedManyWithoutLeadsInput
     lead_duplicates_1?: lead_duplicatesUncheckedCreateNestedManyWithoutLead_1Input
@@ -116374,7 +119198,6 @@ export namespace Prisma {
     deleted_by?: NullableStringFieldUpdateOperationsInput | string | null
     onboarding_completed?: BoolFieldUpdateOperationsInput | boolean
     delivery_address?: NullableStringFieldUpdateOperationsInput | string | null
-    campaign_recipients?: campaign_recipientsUpdateManyWithoutLeadNestedInput
     carts?: cartsUpdateManyWithoutLeadsNestedInput
     lead_activities?: lead_activitiesUpdateManyWithoutLeadsNestedInput
     lead_duplicates_1?: lead_duplicatesUpdateManyWithoutLead_1NestedInput
@@ -116456,7 +119279,6 @@ export namespace Prisma {
     deleted_by?: NullableStringFieldUpdateOperationsInput | string | null
     onboarding_completed?: BoolFieldUpdateOperationsInput | boolean
     delivery_address?: NullableStringFieldUpdateOperationsInput | string | null
-    campaign_recipients?: campaign_recipientsUncheckedUpdateManyWithoutLeadNestedInput
     carts?: cartsUncheckedUpdateManyWithoutLeadsNestedInput
     lead_activities?: lead_activitiesUncheckedUpdateManyWithoutLeadsNestedInput
     lead_duplicates_1?: lead_duplicatesUncheckedUpdateManyWithoutLead_1NestedInput
@@ -116611,7 +119433,6 @@ export namespace Prisma {
     deleted_by?: string | null
     onboarding_completed?: boolean
     delivery_address?: string | null
-    campaign_recipients?: campaign_recipientsCreateNestedManyWithoutLeadInput
     carts?: cartsCreateNestedManyWithoutLeadsInput
     lead_activities?: lead_activitiesCreateNestedManyWithoutLeadsInput
     lead_conversations?: lead_conversationsCreateNestedManyWithoutLeadsInput
@@ -116693,7 +119514,6 @@ export namespace Prisma {
     deleted_by?: string | null
     onboarding_completed?: boolean
     delivery_address?: string | null
-    campaign_recipients?: campaign_recipientsUncheckedCreateNestedManyWithoutLeadInput
     carts?: cartsUncheckedCreateNestedManyWithoutLeadsInput
     lead_activities?: lead_activitiesUncheckedCreateNestedManyWithoutLeadsInput
     lead_conversations?: lead_conversationsUncheckedCreateNestedManyWithoutLeadsInput
@@ -116993,7 +119813,6 @@ export namespace Prisma {
     deleted_by?: NullableStringFieldUpdateOperationsInput | string | null
     onboarding_completed?: BoolFieldUpdateOperationsInput | boolean
     delivery_address?: NullableStringFieldUpdateOperationsInput | string | null
-    campaign_recipients?: campaign_recipientsUpdateManyWithoutLeadNestedInput
     carts?: cartsUpdateManyWithoutLeadsNestedInput
     lead_activities?: lead_activitiesUpdateManyWithoutLeadsNestedInput
     lead_conversations?: lead_conversationsUpdateManyWithoutLeadsNestedInput
@@ -117075,7 +119894,6 @@ export namespace Prisma {
     deleted_by?: NullableStringFieldUpdateOperationsInput | string | null
     onboarding_completed?: BoolFieldUpdateOperationsInput | boolean
     delivery_address?: NullableStringFieldUpdateOperationsInput | string | null
-    campaign_recipients?: campaign_recipientsUncheckedUpdateManyWithoutLeadNestedInput
     carts?: cartsUncheckedUpdateManyWithoutLeadsNestedInput
     lead_activities?: lead_activitiesUncheckedUpdateManyWithoutLeadsNestedInput
     lead_conversations?: lead_conversationsUncheckedUpdateManyWithoutLeadsNestedInput
@@ -117430,7 +120248,6 @@ export namespace Prisma {
     deleted_by?: string | null
     onboarding_completed?: boolean
     delivery_address?: string | null
-    campaign_recipients?: campaign_recipientsCreateNestedManyWithoutLeadInput
     carts?: cartsCreateNestedManyWithoutLeadsInput
     lead_activities?: lead_activitiesCreateNestedManyWithoutLeadsInput
     lead_conversations?: lead_conversationsCreateNestedManyWithoutLeadsInput
@@ -117512,7 +120329,6 @@ export namespace Prisma {
     deleted_by?: string | null
     onboarding_completed?: boolean
     delivery_address?: string | null
-    campaign_recipients?: campaign_recipientsUncheckedCreateNestedManyWithoutLeadInput
     carts?: cartsUncheckedCreateNestedManyWithoutLeadsInput
     lead_activities?: lead_activitiesUncheckedCreateNestedManyWithoutLeadsInput
     lead_conversations?: lead_conversationsUncheckedCreateNestedManyWithoutLeadsInput
@@ -117629,7 +120445,6 @@ export namespace Prisma {
     deleted_by?: NullableStringFieldUpdateOperationsInput | string | null
     onboarding_completed?: BoolFieldUpdateOperationsInput | boolean
     delivery_address?: NullableStringFieldUpdateOperationsInput | string | null
-    campaign_recipients?: campaign_recipientsUpdateManyWithoutLeadNestedInput
     carts?: cartsUpdateManyWithoutLeadsNestedInput
     lead_activities?: lead_activitiesUpdateManyWithoutLeadsNestedInput
     lead_conversations?: lead_conversationsUpdateManyWithoutLeadsNestedInput
@@ -117711,7 +120526,6 @@ export namespace Prisma {
     deleted_by?: NullableStringFieldUpdateOperationsInput | string | null
     onboarding_completed?: BoolFieldUpdateOperationsInput | boolean
     delivery_address?: NullableStringFieldUpdateOperationsInput | string | null
-    campaign_recipients?: campaign_recipientsUncheckedUpdateManyWithoutLeadNestedInput
     carts?: cartsUncheckedUpdateManyWithoutLeadsNestedInput
     lead_activities?: lead_activitiesUncheckedUpdateManyWithoutLeadsNestedInput
     lead_conversations?: lead_conversationsUncheckedUpdateManyWithoutLeadsNestedInput
@@ -117891,7 +120705,6 @@ export namespace Prisma {
     deleted_by?: string | null
     onboarding_completed?: boolean
     delivery_address?: string | null
-    campaign_recipients?: campaign_recipientsCreateNestedManyWithoutLeadInput
     carts?: cartsCreateNestedManyWithoutLeadsInput
     lead_activities?: lead_activitiesCreateNestedManyWithoutLeadsInput
     lead_conversations?: lead_conversationsCreateNestedManyWithoutLeadsInput
@@ -117973,7 +120786,6 @@ export namespace Prisma {
     deleted_by?: string | null
     onboarding_completed?: boolean
     delivery_address?: string | null
-    campaign_recipients?: campaign_recipientsUncheckedCreateNestedManyWithoutLeadInput
     carts?: cartsUncheckedCreateNestedManyWithoutLeadsInput
     lead_activities?: lead_activitiesUncheckedCreateNestedManyWithoutLeadsInput
     lead_conversations?: lead_conversationsUncheckedCreateNestedManyWithoutLeadsInput
@@ -118142,7 +120954,6 @@ export namespace Prisma {
     deleted_by?: NullableStringFieldUpdateOperationsInput | string | null
     onboarding_completed?: BoolFieldUpdateOperationsInput | boolean
     delivery_address?: NullableStringFieldUpdateOperationsInput | string | null
-    campaign_recipients?: campaign_recipientsUpdateManyWithoutLeadNestedInput
     carts?: cartsUpdateManyWithoutLeadsNestedInput
     lead_activities?: lead_activitiesUpdateManyWithoutLeadsNestedInput
     lead_conversations?: lead_conversationsUpdateManyWithoutLeadsNestedInput
@@ -118224,7 +121035,6 @@ export namespace Prisma {
     deleted_by?: NullableStringFieldUpdateOperationsInput | string | null
     onboarding_completed?: BoolFieldUpdateOperationsInput | boolean
     delivery_address?: NullableStringFieldUpdateOperationsInput | string | null
-    campaign_recipients?: campaign_recipientsUncheckedUpdateManyWithoutLeadNestedInput
     carts?: cartsUncheckedUpdateManyWithoutLeadsNestedInput
     lead_activities?: lead_activitiesUncheckedUpdateManyWithoutLeadsNestedInput
     lead_conversations?: lead_conversationsUncheckedUpdateManyWithoutLeadsNestedInput
@@ -118298,7 +121108,6 @@ export namespace Prisma {
     deleted_by?: string | null
     onboarding_completed?: boolean
     delivery_address?: string | null
-    campaign_recipients?: campaign_recipientsCreateNestedManyWithoutLeadInput
     carts?: cartsCreateNestedManyWithoutLeadsInput
     lead_activities?: lead_activitiesCreateNestedManyWithoutLeadsInput
     lead_conversations?: lead_conversationsCreateNestedManyWithoutLeadsInput
@@ -118380,7 +121189,6 @@ export namespace Prisma {
     deleted_by?: string | null
     onboarding_completed?: boolean
     delivery_address?: string | null
-    campaign_recipients?: campaign_recipientsUncheckedCreateNestedManyWithoutLeadInput
     carts?: cartsUncheckedCreateNestedManyWithoutLeadsInput
     lead_activities?: lead_activitiesUncheckedCreateNestedManyWithoutLeadsInput
     lead_conversations?: lead_conversationsUncheckedCreateNestedManyWithoutLeadsInput
@@ -118470,7 +121278,6 @@ export namespace Prisma {
     deleted_by?: NullableStringFieldUpdateOperationsInput | string | null
     onboarding_completed?: BoolFieldUpdateOperationsInput | boolean
     delivery_address?: NullableStringFieldUpdateOperationsInput | string | null
-    campaign_recipients?: campaign_recipientsUpdateManyWithoutLeadNestedInput
     carts?: cartsUpdateManyWithoutLeadsNestedInput
     lead_activities?: lead_activitiesUpdateManyWithoutLeadsNestedInput
     lead_conversations?: lead_conversationsUpdateManyWithoutLeadsNestedInput
@@ -118552,7 +121359,6 @@ export namespace Prisma {
     deleted_by?: NullableStringFieldUpdateOperationsInput | string | null
     onboarding_completed?: BoolFieldUpdateOperationsInput | boolean
     delivery_address?: NullableStringFieldUpdateOperationsInput | string | null
-    campaign_recipients?: campaign_recipientsUncheckedUpdateManyWithoutLeadNestedInput
     carts?: cartsUncheckedUpdateManyWithoutLeadsNestedInput
     lead_activities?: lead_activitiesUncheckedUpdateManyWithoutLeadsNestedInput
     lead_conversations?: lead_conversationsUncheckedUpdateManyWithoutLeadsNestedInput
@@ -118699,7 +121505,6 @@ export namespace Prisma {
     deleted_by?: string | null
     onboarding_completed?: boolean
     delivery_address?: string | null
-    campaign_recipients?: campaign_recipientsCreateNestedManyWithoutLeadInput
     carts?: cartsCreateNestedManyWithoutLeadsInput
     lead_activities?: lead_activitiesCreateNestedManyWithoutLeadsInput
     lead_conversations?: lead_conversationsCreateNestedManyWithoutLeadsInput
@@ -118781,7 +121586,6 @@ export namespace Prisma {
     deleted_by?: string | null
     onboarding_completed?: boolean
     delivery_address?: string | null
-    campaign_recipients?: campaign_recipientsUncheckedCreateNestedManyWithoutLeadInput
     carts?: cartsUncheckedCreateNestedManyWithoutLeadsInput
     lead_activities?: lead_activitiesUncheckedCreateNestedManyWithoutLeadsInput
     lead_conversations?: lead_conversationsUncheckedCreateNestedManyWithoutLeadsInput
@@ -119023,7 +121827,6 @@ export namespace Prisma {
     deleted_by?: NullableStringFieldUpdateOperationsInput | string | null
     onboarding_completed?: BoolFieldUpdateOperationsInput | boolean
     delivery_address?: NullableStringFieldUpdateOperationsInput | string | null
-    campaign_recipients?: campaign_recipientsUpdateManyWithoutLeadNestedInput
     carts?: cartsUpdateManyWithoutLeadsNestedInput
     lead_activities?: lead_activitiesUpdateManyWithoutLeadsNestedInput
     lead_conversations?: lead_conversationsUpdateManyWithoutLeadsNestedInput
@@ -119105,7 +121908,6 @@ export namespace Prisma {
     deleted_by?: NullableStringFieldUpdateOperationsInput | string | null
     onboarding_completed?: BoolFieldUpdateOperationsInput | boolean
     delivery_address?: NullableStringFieldUpdateOperationsInput | string | null
-    campaign_recipients?: campaign_recipientsUncheckedUpdateManyWithoutLeadNestedInput
     carts?: cartsUncheckedUpdateManyWithoutLeadsNestedInput
     lead_activities?: lead_activitiesUncheckedUpdateManyWithoutLeadsNestedInput
     lead_conversations?: lead_conversationsUncheckedUpdateManyWithoutLeadsNestedInput
@@ -119258,7 +122060,6 @@ export namespace Prisma {
     deleted_by?: string | null
     onboarding_completed?: boolean
     delivery_address?: string | null
-    campaign_recipients?: campaign_recipientsCreateNestedManyWithoutLeadInput
     carts?: cartsCreateNestedManyWithoutLeadsInput
     lead_activities?: lead_activitiesCreateNestedManyWithoutLeadsInput
     lead_conversations?: lead_conversationsCreateNestedManyWithoutLeadsInput
@@ -119340,7 +122141,6 @@ export namespace Prisma {
     deleted_by?: string | null
     onboarding_completed?: boolean
     delivery_address?: string | null
-    campaign_recipients?: campaign_recipientsUncheckedCreateNestedManyWithoutLeadInput
     carts?: cartsUncheckedCreateNestedManyWithoutLeadsInput
     lead_activities?: lead_activitiesUncheckedCreateNestedManyWithoutLeadsInput
     lead_conversations?: lead_conversationsUncheckedCreateNestedManyWithoutLeadsInput
@@ -119419,7 +122219,6 @@ export namespace Prisma {
     deleted_by?: string | null
     onboarding_completed?: boolean
     delivery_address?: string | null
-    campaign_recipients?: campaign_recipientsCreateNestedManyWithoutLeadInput
     carts?: cartsCreateNestedManyWithoutLeadsInput
     lead_activities?: lead_activitiesCreateNestedManyWithoutLeadsInput
     lead_conversations?: lead_conversationsCreateNestedManyWithoutLeadsInput
@@ -119501,7 +122300,6 @@ export namespace Prisma {
     deleted_by?: string | null
     onboarding_completed?: boolean
     delivery_address?: string | null
-    campaign_recipients?: campaign_recipientsUncheckedCreateNestedManyWithoutLeadInput
     carts?: cartsUncheckedCreateNestedManyWithoutLeadsInput
     lead_activities?: lead_activitiesUncheckedCreateNestedManyWithoutLeadsInput
     lead_conversations?: lead_conversationsUncheckedCreateNestedManyWithoutLeadsInput
@@ -119580,7 +122378,6 @@ export namespace Prisma {
     deleted_by?: string | null
     onboarding_completed?: boolean
     delivery_address?: string | null
-    campaign_recipients?: campaign_recipientsCreateNestedManyWithoutLeadInput
     carts?: cartsCreateNestedManyWithoutLeadsInput
     lead_activities?: lead_activitiesCreateNestedManyWithoutLeadsInput
     lead_conversations?: lead_conversationsCreateNestedManyWithoutLeadsInput
@@ -119662,7 +122459,6 @@ export namespace Prisma {
     deleted_by?: string | null
     onboarding_completed?: boolean
     delivery_address?: string | null
-    campaign_recipients?: campaign_recipientsUncheckedCreateNestedManyWithoutLeadInput
     carts?: cartsUncheckedCreateNestedManyWithoutLeadsInput
     lead_activities?: lead_activitiesUncheckedCreateNestedManyWithoutLeadsInput
     lead_conversations?: lead_conversationsUncheckedCreateNestedManyWithoutLeadsInput
@@ -119752,7 +122548,6 @@ export namespace Prisma {
     deleted_by?: NullableStringFieldUpdateOperationsInput | string | null
     onboarding_completed?: BoolFieldUpdateOperationsInput | boolean
     delivery_address?: NullableStringFieldUpdateOperationsInput | string | null
-    campaign_recipients?: campaign_recipientsUpdateManyWithoutLeadNestedInput
     carts?: cartsUpdateManyWithoutLeadsNestedInput
     lead_activities?: lead_activitiesUpdateManyWithoutLeadsNestedInput
     lead_conversations?: lead_conversationsUpdateManyWithoutLeadsNestedInput
@@ -119834,7 +122629,6 @@ export namespace Prisma {
     deleted_by?: NullableStringFieldUpdateOperationsInput | string | null
     onboarding_completed?: BoolFieldUpdateOperationsInput | boolean
     delivery_address?: NullableStringFieldUpdateOperationsInput | string | null
-    campaign_recipients?: campaign_recipientsUncheckedUpdateManyWithoutLeadNestedInput
     carts?: cartsUncheckedUpdateManyWithoutLeadsNestedInput
     lead_activities?: lead_activitiesUncheckedUpdateManyWithoutLeadsNestedInput
     lead_conversations?: lead_conversationsUncheckedUpdateManyWithoutLeadsNestedInput
@@ -119919,7 +122713,6 @@ export namespace Prisma {
     deleted_by?: NullableStringFieldUpdateOperationsInput | string | null
     onboarding_completed?: BoolFieldUpdateOperationsInput | boolean
     delivery_address?: NullableStringFieldUpdateOperationsInput | string | null
-    campaign_recipients?: campaign_recipientsUpdateManyWithoutLeadNestedInput
     carts?: cartsUpdateManyWithoutLeadsNestedInput
     lead_activities?: lead_activitiesUpdateManyWithoutLeadsNestedInput
     lead_conversations?: lead_conversationsUpdateManyWithoutLeadsNestedInput
@@ -120001,7 +122794,6 @@ export namespace Prisma {
     deleted_by?: NullableStringFieldUpdateOperationsInput | string | null
     onboarding_completed?: BoolFieldUpdateOperationsInput | boolean
     delivery_address?: NullableStringFieldUpdateOperationsInput | string | null
-    campaign_recipients?: campaign_recipientsUncheckedUpdateManyWithoutLeadNestedInput
     carts?: cartsUncheckedUpdateManyWithoutLeadsNestedInput
     lead_activities?: lead_activitiesUncheckedUpdateManyWithoutLeadsNestedInput
     lead_conversations?: lead_conversationsUncheckedUpdateManyWithoutLeadsNestedInput
@@ -120086,7 +122878,6 @@ export namespace Prisma {
     deleted_by?: NullableStringFieldUpdateOperationsInput | string | null
     onboarding_completed?: BoolFieldUpdateOperationsInput | boolean
     delivery_address?: NullableStringFieldUpdateOperationsInput | string | null
-    campaign_recipients?: campaign_recipientsUpdateManyWithoutLeadNestedInput
     carts?: cartsUpdateManyWithoutLeadsNestedInput
     lead_activities?: lead_activitiesUpdateManyWithoutLeadsNestedInput
     lead_conversations?: lead_conversationsUpdateManyWithoutLeadsNestedInput
@@ -120168,7 +122959,6 @@ export namespace Prisma {
     deleted_by?: NullableStringFieldUpdateOperationsInput | string | null
     onboarding_completed?: BoolFieldUpdateOperationsInput | boolean
     delivery_address?: NullableStringFieldUpdateOperationsInput | string | null
-    campaign_recipients?: campaign_recipientsUncheckedUpdateManyWithoutLeadNestedInput
     carts?: cartsUncheckedUpdateManyWithoutLeadsNestedInput
     lead_activities?: lead_activitiesUncheckedUpdateManyWithoutLeadsNestedInput
     lead_conversations?: lead_conversationsUncheckedUpdateManyWithoutLeadsNestedInput
@@ -120214,7 +123004,6 @@ export namespace Prisma {
     updated_at?: Date | string | null
     whatsapp_template_language?: string | null
     whatsapp_template_name?: string | null
-    campaign_recipients?: campaign_recipientsCreateNestedManyWithoutCampaignInput
     notification_templates?: notification_templatesCreateNestedOneWithoutCampaignsInput
   }
 
@@ -120247,7 +123036,6 @@ export namespace Prisma {
     updated_at?: Date | string | null
     whatsapp_template_language?: string | null
     whatsapp_template_name?: string | null
-    campaign_recipients?: campaign_recipientsUncheckedCreateNestedManyWithoutCampaignInput
   }
 
   export type campaignsCreateOrConnectWithoutProductsInput = {
@@ -123111,7 +125899,6 @@ export namespace Prisma {
     deleted_by?: string | null
     onboarding_completed?: boolean
     delivery_address?: string | null
-    campaign_recipients?: campaign_recipientsCreateNestedManyWithoutLeadInput
     carts?: cartsCreateNestedManyWithoutLeadsInput
     lead_activities?: lead_activitiesCreateNestedManyWithoutLeadsInput
     lead_conversations?: lead_conversationsCreateNestedManyWithoutLeadsInput
@@ -123193,7 +125980,6 @@ export namespace Prisma {
     deleted_by?: string | null
     onboarding_completed?: boolean
     delivery_address?: string | null
-    campaign_recipients?: campaign_recipientsUncheckedCreateNestedManyWithoutLeadInput
     carts?: cartsUncheckedCreateNestedManyWithoutLeadsInput
     lead_activities?: lead_activitiesUncheckedCreateNestedManyWithoutLeadsInput
     lead_conversations?: lead_conversationsUncheckedCreateNestedManyWithoutLeadsInput
@@ -123556,7 +126342,6 @@ export namespace Prisma {
     deleted_by?: NullableStringFieldUpdateOperationsInput | string | null
     onboarding_completed?: BoolFieldUpdateOperationsInput | boolean
     delivery_address?: NullableStringFieldUpdateOperationsInput | string | null
-    campaign_recipients?: campaign_recipientsUpdateManyWithoutLeadNestedInput
     carts?: cartsUpdateManyWithoutLeadsNestedInput
     lead_activities?: lead_activitiesUpdateManyWithoutLeadsNestedInput
     lead_conversations?: lead_conversationsUpdateManyWithoutLeadsNestedInput
@@ -123638,7 +126423,6 @@ export namespace Prisma {
     deleted_by?: NullableStringFieldUpdateOperationsInput | string | null
     onboarding_completed?: BoolFieldUpdateOperationsInput | boolean
     delivery_address?: NullableStringFieldUpdateOperationsInput | string | null
-    campaign_recipients?: campaign_recipientsUncheckedUpdateManyWithoutLeadNestedInput
     carts?: cartsUncheckedUpdateManyWithoutLeadsNestedInput
     lead_activities?: lead_activitiesUncheckedUpdateManyWithoutLeadsNestedInput
     lead_conversations?: lead_conversationsUncheckedUpdateManyWithoutLeadsNestedInput
@@ -124587,7 +127371,6 @@ export namespace Prisma {
     deleted_by?: string | null
     onboarding_completed?: boolean
     delivery_address?: string | null
-    campaign_recipients?: campaign_recipientsCreateNestedManyWithoutLeadInput
     carts?: cartsCreateNestedManyWithoutLeadsInput
     lead_activities?: lead_activitiesCreateNestedManyWithoutLeadsInput
     lead_conversations?: lead_conversationsCreateNestedManyWithoutLeadsInput
@@ -124669,7 +127452,6 @@ export namespace Prisma {
     deleted_by?: string | null
     onboarding_completed?: boolean
     delivery_address?: string | null
-    campaign_recipients?: campaign_recipientsUncheckedCreateNestedManyWithoutLeadInput
     carts?: cartsUncheckedCreateNestedManyWithoutLeadsInput
     lead_activities?: lead_activitiesUncheckedCreateNestedManyWithoutLeadsInput
     lead_conversations?: lead_conversationsUncheckedCreateNestedManyWithoutLeadsInput
@@ -124860,7 +127642,6 @@ export namespace Prisma {
     deleted_by?: NullableStringFieldUpdateOperationsInput | string | null
     onboarding_completed?: BoolFieldUpdateOperationsInput | boolean
     delivery_address?: NullableStringFieldUpdateOperationsInput | string | null
-    campaign_recipients?: campaign_recipientsUpdateManyWithoutLeadNestedInput
     carts?: cartsUpdateManyWithoutLeadsNestedInput
     lead_activities?: lead_activitiesUpdateManyWithoutLeadsNestedInput
     lead_conversations?: lead_conversationsUpdateManyWithoutLeadsNestedInput
@@ -124942,7 +127723,6 @@ export namespace Prisma {
     deleted_by?: NullableStringFieldUpdateOperationsInput | string | null
     onboarding_completed?: BoolFieldUpdateOperationsInput | boolean
     delivery_address?: NullableStringFieldUpdateOperationsInput | string | null
-    campaign_recipients?: campaign_recipientsUncheckedUpdateManyWithoutLeadNestedInput
     carts?: cartsUncheckedUpdateManyWithoutLeadsNestedInput
     lead_activities?: lead_activitiesUncheckedUpdateManyWithoutLeadsNestedInput
     lead_conversations?: lead_conversationsUncheckedUpdateManyWithoutLeadsNestedInput
@@ -125065,42 +127845,6 @@ export namespace Prisma {
     product_reviews?: product_reviewsUncheckedUpdateManyWithoutProductNestedInput
     product_variants?: product_variantsUncheckedUpdateManyWithoutProductNestedInput
     stock_reservations?: stock_reservationsUncheckedUpdateManyWithoutProductsNestedInput
-  }
-
-  export type campaign_recipientsCreateWithoutCampaignInput = {
-    recipient_id?: string
-    sent_at?: Date | string | null
-    delivered_at?: Date | string | null
-    clicked_at?: Date | string | null
-    converted_at?: Date | string | null
-    status?: string | null
-    error_message?: string | null
-    updated_at?: Date | string | null
-    whatsapp_message_id?: string | null
-    lead: leadsCreateNestedOneWithoutCampaign_recipientsInput
-  }
-
-  export type campaign_recipientsUncheckedCreateWithoutCampaignInput = {
-    recipient_id?: string
-    lead_id: string
-    sent_at?: Date | string | null
-    delivered_at?: Date | string | null
-    clicked_at?: Date | string | null
-    converted_at?: Date | string | null
-    status?: string | null
-    error_message?: string | null
-    updated_at?: Date | string | null
-    whatsapp_message_id?: string | null
-  }
-
-  export type campaign_recipientsCreateOrConnectWithoutCampaignInput = {
-    where: campaign_recipientsWhereUniqueInput
-    create: XOR<campaign_recipientsCreateWithoutCampaignInput, campaign_recipientsUncheckedCreateWithoutCampaignInput>
-  }
-
-  export type campaign_recipientsCreateManyCampaignInputEnvelope = {
-    data: campaign_recipientsCreateManyCampaignInput | campaign_recipientsCreateManyCampaignInput[]
-    skipDuplicates?: boolean
   }
 
   export type productsCreateWithoutCampaignsInput = {
@@ -125255,22 +127999,6 @@ export namespace Prisma {
   export type notification_templatesCreateOrConnectWithoutCampaignsInput = {
     where: notification_templatesWhereUniqueInput
     create: XOR<notification_templatesCreateWithoutCampaignsInput, notification_templatesUncheckedCreateWithoutCampaignsInput>
-  }
-
-  export type campaign_recipientsUpsertWithWhereUniqueWithoutCampaignInput = {
-    where: campaign_recipientsWhereUniqueInput
-    update: XOR<campaign_recipientsUpdateWithoutCampaignInput, campaign_recipientsUncheckedUpdateWithoutCampaignInput>
-    create: XOR<campaign_recipientsCreateWithoutCampaignInput, campaign_recipientsUncheckedCreateWithoutCampaignInput>
-  }
-
-  export type campaign_recipientsUpdateWithWhereUniqueWithoutCampaignInput = {
-    where: campaign_recipientsWhereUniqueInput
-    data: XOR<campaign_recipientsUpdateWithoutCampaignInput, campaign_recipientsUncheckedUpdateWithoutCampaignInput>
-  }
-
-  export type campaign_recipientsUpdateManyWithWhereWithoutCampaignInput = {
-    where: campaign_recipientsScalarWhereInput
-    data: XOR<campaign_recipientsUpdateManyMutationInput, campaign_recipientsUncheckedUpdateManyWithoutCampaignInput>
   }
 
   export type productsUpsertWithoutCampaignsInput = {
@@ -125439,478 +128167,6 @@ export namespace Prisma {
     notification_messages?: notification_messagesUncheckedUpdateManyWithoutNotification_templatesNestedInput
   }
 
-  export type campaignsCreateWithoutCampaign_recipientsInput = {
-    campaign_id?: string
-    business_id: string
-    scheduled_at?: Date | string | null
-    status?: string
-    created_at?: Date | string
-    campaign_name: string
-    campaign_type?: string | null
-    channel: string
-    content_template?: string | null
-    sent_at?: Date | string | null
-    target_segment?: NullableJsonNullValueInput | InputJsonValue
-    tenant_id: string
-    audience_filter?: NullableJsonNullValueInput | InputJsonValue
-    audience_type?: string | null
-    clicked_count?: number | null
-    completed_at?: Date | string | null
-    converted_count?: number | null
-    delivered_count?: number | null
-    failed_count?: number | null
-    media_type?: string | null
-    media_url?: string | null
-    sent_count?: number | null
-    template_parameters?: NullableJsonNullValueInput | InputJsonValue
-    total_recipients?: number | null
-    updated_at?: Date | string | null
-    whatsapp_template_language?: string | null
-    whatsapp_template_name?: string | null
-    products?: productsCreateNestedOneWithoutCampaignsInput
-    notification_templates?: notification_templatesCreateNestedOneWithoutCampaignsInput
-  }
-
-  export type campaignsUncheckedCreateWithoutCampaign_recipientsInput = {
-    campaign_id?: string
-    business_id: string
-    scheduled_at?: Date | string | null
-    status?: string
-    created_at?: Date | string
-    campaign_name: string
-    campaign_type?: string | null
-    channel: string
-    content_template?: string | null
-    sent_at?: Date | string | null
-    target_segment?: NullableJsonNullValueInput | InputJsonValue
-    tenant_id: string
-    audience_filter?: NullableJsonNullValueInput | InputJsonValue
-    audience_type?: string | null
-    clicked_count?: number | null
-    completed_at?: Date | string | null
-    converted_count?: number | null
-    delivered_count?: number | null
-    failed_count?: number | null
-    media_type?: string | null
-    media_url?: string | null
-    product_id?: string | null
-    sent_count?: number | null
-    template_id?: string | null
-    template_parameters?: NullableJsonNullValueInput | InputJsonValue
-    total_recipients?: number | null
-    updated_at?: Date | string | null
-    whatsapp_template_language?: string | null
-    whatsapp_template_name?: string | null
-  }
-
-  export type campaignsCreateOrConnectWithoutCampaign_recipientsInput = {
-    where: campaignsWhereUniqueInput
-    create: XOR<campaignsCreateWithoutCampaign_recipientsInput, campaignsUncheckedCreateWithoutCampaign_recipientsInput>
-  }
-
-  export type leadsCreateWithoutCampaign_recipientsInput = {
-    lead_id?: string
-    source: string
-    source_reference_id?: string | null
-    platform_user_id?: string | null
-    post_id?: string | null
-    page_id?: string | null
-    first_name?: string | null
-    last_name?: string | null
-    phone?: string | null
-    email?: string | null
-    alternate_phone?: string | null
-    city?: string | null
-    state?: string | null
-    country?: string | null
-    pincode?: string | null
-    status?: string
-    intent_type?: string | null
-    lead_quality?: string | null
-    lead_score?: number | null
-    assigned_at?: Date | string | null
-    assigned_by?: string | null
-    first_contact_at?: Date | string | null
-    last_contact_at?: Date | string | null
-    last_activity_at?: Date | string | null
-    next_followup_at?: Date | string | null
-    followup_count?: number | null
-    is_converted?: boolean
-    converted_at?: Date | string | null
-    conversion_value?: Decimal | DecimalJsLike | number | string | null
-    interested_products?: NullableJsonNullValueInput | InputJsonValue
-    interested_courses?: NullableJsonNullValueInput | InputJsonValue
-    tags?: NullableJsonNullValueInput | InputJsonValue
-    custom_fields?: NullableJsonNullValueInput | InputJsonValue
-    extracted_entities?: NullableJsonNullValueInput | InputJsonValue
-    sentiment_score?: Decimal | DecimalJsLike | number | string | null
-    preferred_contact_method?: string | null
-    preferred_contact_time?: string | null
-    language_preference?: string | null
-    utm_source?: string | null
-    utm_medium?: string | null
-    utm_campaign?: string | null
-    referral_source?: string | null
-    lost_reason?: string | null
-    lost_at?: Date | string | null
-    invalid_reason?: string | null
-    is_active?: boolean
-    is_duplicate?: boolean
-    created_at?: Date | string
-    updated_at?: Date | string
-    created_by?: string | null
-    updated_by?: string | null
-    deleted_at?: Date | string | null
-    deleted_by?: string | null
-    onboarding_completed?: boolean
-    delivery_address?: string | null
-    carts?: cartsCreateNestedManyWithoutLeadsInput
-    lead_activities?: lead_activitiesCreateNestedManyWithoutLeadsInput
-    lead_conversations?: lead_conversationsCreateNestedManyWithoutLeadsInput
-    lead_duplicates_1?: lead_duplicatesCreateNestedManyWithoutLead_1Input
-    lead_duplicates_2?: lead_duplicatesCreateNestedManyWithoutLead_2Input
-    merged_leads?: lead_duplicatesCreateNestedManyWithoutMerged_into_leadInput
-    lead_followups?: lead_followupsCreateNestedManyWithoutLeadsInput
-    lead_messages?: lead_messagesCreateNestedManyWithoutLeadsInput
-    lead_notes?: lead_notesCreateNestedManyWithoutLeadsInput
-    lead_score_history?: lead_score_historyCreateNestedManyWithoutLeadsInput
-    lead_status_history?: lead_status_historyCreateNestedManyWithoutLeadsInput
-    lead_tag_assignments?: lead_tag_assignmentsCreateNestedManyWithoutLeadsInput
-    assigned_agent?: usersCreateNestedOneWithoutLeads_assignedInput
-    businesses: businessesCreateNestedOneWithoutLeadsInput
-    duplicate_of_lead?: leadsCreateNestedOneWithoutDuplicate_leadsInput
-    duplicate_leads?: leadsCreateNestedManyWithoutDuplicate_of_leadInput
-    tenants: tenantsCreateNestedOneWithoutLeadsInput
-    orders?: ordersCreateNestedManyWithoutLeadsInput
-    workflow_executions?: workflow_executionsCreateNestedManyWithoutLeadsInput
-    cart_reservations?: cart_reservationsCreateNestedManyWithoutLeadsInput
-  }
-
-  export type leadsUncheckedCreateWithoutCampaign_recipientsInput = {
-    lead_id?: string
-    business_id: string
-    tenant_id: string
-    source: string
-    source_reference_id?: string | null
-    platform_user_id?: string | null
-    post_id?: string | null
-    page_id?: string | null
-    first_name?: string | null
-    last_name?: string | null
-    phone?: string | null
-    email?: string | null
-    alternate_phone?: string | null
-    city?: string | null
-    state?: string | null
-    country?: string | null
-    pincode?: string | null
-    status?: string
-    intent_type?: string | null
-    lead_quality?: string | null
-    lead_score?: number | null
-    assigned_agent_id?: string | null
-    assigned_at?: Date | string | null
-    assigned_by?: string | null
-    first_contact_at?: Date | string | null
-    last_contact_at?: Date | string | null
-    last_activity_at?: Date | string | null
-    next_followup_at?: Date | string | null
-    followup_count?: number | null
-    is_converted?: boolean
-    converted_at?: Date | string | null
-    conversion_value?: Decimal | DecimalJsLike | number | string | null
-    interested_products?: NullableJsonNullValueInput | InputJsonValue
-    interested_courses?: NullableJsonNullValueInput | InputJsonValue
-    tags?: NullableJsonNullValueInput | InputJsonValue
-    custom_fields?: NullableJsonNullValueInput | InputJsonValue
-    extracted_entities?: NullableJsonNullValueInput | InputJsonValue
-    sentiment_score?: Decimal | DecimalJsLike | number | string | null
-    preferred_contact_method?: string | null
-    preferred_contact_time?: string | null
-    language_preference?: string | null
-    utm_source?: string | null
-    utm_medium?: string | null
-    utm_campaign?: string | null
-    referral_source?: string | null
-    lost_reason?: string | null
-    lost_at?: Date | string | null
-    invalid_reason?: string | null
-    is_active?: boolean
-    is_duplicate?: boolean
-    duplicate_of_lead_id?: string | null
-    created_at?: Date | string
-    updated_at?: Date | string
-    created_by?: string | null
-    updated_by?: string | null
-    deleted_at?: Date | string | null
-    deleted_by?: string | null
-    onboarding_completed?: boolean
-    delivery_address?: string | null
-    carts?: cartsUncheckedCreateNestedManyWithoutLeadsInput
-    lead_activities?: lead_activitiesUncheckedCreateNestedManyWithoutLeadsInput
-    lead_conversations?: lead_conversationsUncheckedCreateNestedManyWithoutLeadsInput
-    lead_duplicates_1?: lead_duplicatesUncheckedCreateNestedManyWithoutLead_1Input
-    lead_duplicates_2?: lead_duplicatesUncheckedCreateNestedManyWithoutLead_2Input
-    merged_leads?: lead_duplicatesUncheckedCreateNestedManyWithoutMerged_into_leadInput
-    lead_followups?: lead_followupsUncheckedCreateNestedManyWithoutLeadsInput
-    lead_messages?: lead_messagesUncheckedCreateNestedManyWithoutLeadsInput
-    lead_notes?: lead_notesUncheckedCreateNestedManyWithoutLeadsInput
-    lead_score_history?: lead_score_historyUncheckedCreateNestedManyWithoutLeadsInput
-    lead_status_history?: lead_status_historyUncheckedCreateNestedManyWithoutLeadsInput
-    lead_tag_assignments?: lead_tag_assignmentsUncheckedCreateNestedManyWithoutLeadsInput
-    duplicate_leads?: leadsUncheckedCreateNestedManyWithoutDuplicate_of_leadInput
-    orders?: ordersUncheckedCreateNestedManyWithoutLeadsInput
-    workflow_executions?: workflow_executionsUncheckedCreateNestedManyWithoutLeadsInput
-    cart_reservations?: cart_reservationsUncheckedCreateNestedManyWithoutLeadsInput
-  }
-
-  export type leadsCreateOrConnectWithoutCampaign_recipientsInput = {
-    where: leadsWhereUniqueInput
-    create: XOR<leadsCreateWithoutCampaign_recipientsInput, leadsUncheckedCreateWithoutCampaign_recipientsInput>
-  }
-
-  export type campaignsUpsertWithoutCampaign_recipientsInput = {
-    update: XOR<campaignsUpdateWithoutCampaign_recipientsInput, campaignsUncheckedUpdateWithoutCampaign_recipientsInput>
-    create: XOR<campaignsCreateWithoutCampaign_recipientsInput, campaignsUncheckedCreateWithoutCampaign_recipientsInput>
-    where?: campaignsWhereInput
-  }
-
-  export type campaignsUpdateToOneWithWhereWithoutCampaign_recipientsInput = {
-    where?: campaignsWhereInput
-    data: XOR<campaignsUpdateWithoutCampaign_recipientsInput, campaignsUncheckedUpdateWithoutCampaign_recipientsInput>
-  }
-
-  export type campaignsUpdateWithoutCampaign_recipientsInput = {
-    campaign_id?: StringFieldUpdateOperationsInput | string
-    business_id?: StringFieldUpdateOperationsInput | string
-    scheduled_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    status?: StringFieldUpdateOperationsInput | string
-    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    campaign_name?: StringFieldUpdateOperationsInput | string
-    campaign_type?: NullableStringFieldUpdateOperationsInput | string | null
-    channel?: StringFieldUpdateOperationsInput | string
-    content_template?: NullableStringFieldUpdateOperationsInput | string | null
-    sent_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    target_segment?: NullableJsonNullValueInput | InputJsonValue
-    tenant_id?: StringFieldUpdateOperationsInput | string
-    audience_filter?: NullableJsonNullValueInput | InputJsonValue
-    audience_type?: NullableStringFieldUpdateOperationsInput | string | null
-    clicked_count?: NullableIntFieldUpdateOperationsInput | number | null
-    completed_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    converted_count?: NullableIntFieldUpdateOperationsInput | number | null
-    delivered_count?: NullableIntFieldUpdateOperationsInput | number | null
-    failed_count?: NullableIntFieldUpdateOperationsInput | number | null
-    media_type?: NullableStringFieldUpdateOperationsInput | string | null
-    media_url?: NullableStringFieldUpdateOperationsInput | string | null
-    sent_count?: NullableIntFieldUpdateOperationsInput | number | null
-    template_parameters?: NullableJsonNullValueInput | InputJsonValue
-    total_recipients?: NullableIntFieldUpdateOperationsInput | number | null
-    updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    whatsapp_template_language?: NullableStringFieldUpdateOperationsInput | string | null
-    whatsapp_template_name?: NullableStringFieldUpdateOperationsInput | string | null
-    products?: productsUpdateOneWithoutCampaignsNestedInput
-    notification_templates?: notification_templatesUpdateOneWithoutCampaignsNestedInput
-  }
-
-  export type campaignsUncheckedUpdateWithoutCampaign_recipientsInput = {
-    campaign_id?: StringFieldUpdateOperationsInput | string
-    business_id?: StringFieldUpdateOperationsInput | string
-    scheduled_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    status?: StringFieldUpdateOperationsInput | string
-    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    campaign_name?: StringFieldUpdateOperationsInput | string
-    campaign_type?: NullableStringFieldUpdateOperationsInput | string | null
-    channel?: StringFieldUpdateOperationsInput | string
-    content_template?: NullableStringFieldUpdateOperationsInput | string | null
-    sent_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    target_segment?: NullableJsonNullValueInput | InputJsonValue
-    tenant_id?: StringFieldUpdateOperationsInput | string
-    audience_filter?: NullableJsonNullValueInput | InputJsonValue
-    audience_type?: NullableStringFieldUpdateOperationsInput | string | null
-    clicked_count?: NullableIntFieldUpdateOperationsInput | number | null
-    completed_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    converted_count?: NullableIntFieldUpdateOperationsInput | number | null
-    delivered_count?: NullableIntFieldUpdateOperationsInput | number | null
-    failed_count?: NullableIntFieldUpdateOperationsInput | number | null
-    media_type?: NullableStringFieldUpdateOperationsInput | string | null
-    media_url?: NullableStringFieldUpdateOperationsInput | string | null
-    product_id?: NullableStringFieldUpdateOperationsInput | string | null
-    sent_count?: NullableIntFieldUpdateOperationsInput | number | null
-    template_id?: NullableStringFieldUpdateOperationsInput | string | null
-    template_parameters?: NullableJsonNullValueInput | InputJsonValue
-    total_recipients?: NullableIntFieldUpdateOperationsInput | number | null
-    updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    whatsapp_template_language?: NullableStringFieldUpdateOperationsInput | string | null
-    whatsapp_template_name?: NullableStringFieldUpdateOperationsInput | string | null
-  }
-
-  export type leadsUpsertWithoutCampaign_recipientsInput = {
-    update: XOR<leadsUpdateWithoutCampaign_recipientsInput, leadsUncheckedUpdateWithoutCampaign_recipientsInput>
-    create: XOR<leadsCreateWithoutCampaign_recipientsInput, leadsUncheckedCreateWithoutCampaign_recipientsInput>
-    where?: leadsWhereInput
-  }
-
-  export type leadsUpdateToOneWithWhereWithoutCampaign_recipientsInput = {
-    where?: leadsWhereInput
-    data: XOR<leadsUpdateWithoutCampaign_recipientsInput, leadsUncheckedUpdateWithoutCampaign_recipientsInput>
-  }
-
-  export type leadsUpdateWithoutCampaign_recipientsInput = {
-    lead_id?: StringFieldUpdateOperationsInput | string
-    source?: StringFieldUpdateOperationsInput | string
-    source_reference_id?: NullableStringFieldUpdateOperationsInput | string | null
-    platform_user_id?: NullableStringFieldUpdateOperationsInput | string | null
-    post_id?: NullableStringFieldUpdateOperationsInput | string | null
-    page_id?: NullableStringFieldUpdateOperationsInput | string | null
-    first_name?: NullableStringFieldUpdateOperationsInput | string | null
-    last_name?: NullableStringFieldUpdateOperationsInput | string | null
-    phone?: NullableStringFieldUpdateOperationsInput | string | null
-    email?: NullableStringFieldUpdateOperationsInput | string | null
-    alternate_phone?: NullableStringFieldUpdateOperationsInput | string | null
-    city?: NullableStringFieldUpdateOperationsInput | string | null
-    state?: NullableStringFieldUpdateOperationsInput | string | null
-    country?: NullableStringFieldUpdateOperationsInput | string | null
-    pincode?: NullableStringFieldUpdateOperationsInput | string | null
-    status?: StringFieldUpdateOperationsInput | string
-    intent_type?: NullableStringFieldUpdateOperationsInput | string | null
-    lead_quality?: NullableStringFieldUpdateOperationsInput | string | null
-    lead_score?: NullableIntFieldUpdateOperationsInput | number | null
-    assigned_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    assigned_by?: NullableStringFieldUpdateOperationsInput | string | null
-    first_contact_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    last_contact_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    last_activity_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    next_followup_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    followup_count?: NullableIntFieldUpdateOperationsInput | number | null
-    is_converted?: BoolFieldUpdateOperationsInput | boolean
-    converted_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    conversion_value?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    interested_products?: NullableJsonNullValueInput | InputJsonValue
-    interested_courses?: NullableJsonNullValueInput | InputJsonValue
-    tags?: NullableJsonNullValueInput | InputJsonValue
-    custom_fields?: NullableJsonNullValueInput | InputJsonValue
-    extracted_entities?: NullableJsonNullValueInput | InputJsonValue
-    sentiment_score?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    preferred_contact_method?: NullableStringFieldUpdateOperationsInput | string | null
-    preferred_contact_time?: NullableStringFieldUpdateOperationsInput | string | null
-    language_preference?: NullableStringFieldUpdateOperationsInput | string | null
-    utm_source?: NullableStringFieldUpdateOperationsInput | string | null
-    utm_medium?: NullableStringFieldUpdateOperationsInput | string | null
-    utm_campaign?: NullableStringFieldUpdateOperationsInput | string | null
-    referral_source?: NullableStringFieldUpdateOperationsInput | string | null
-    lost_reason?: NullableStringFieldUpdateOperationsInput | string | null
-    lost_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    invalid_reason?: NullableStringFieldUpdateOperationsInput | string | null
-    is_active?: BoolFieldUpdateOperationsInput | boolean
-    is_duplicate?: BoolFieldUpdateOperationsInput | boolean
-    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    created_by?: NullableStringFieldUpdateOperationsInput | string | null
-    updated_by?: NullableStringFieldUpdateOperationsInput | string | null
-    deleted_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    deleted_by?: NullableStringFieldUpdateOperationsInput | string | null
-    onboarding_completed?: BoolFieldUpdateOperationsInput | boolean
-    delivery_address?: NullableStringFieldUpdateOperationsInput | string | null
-    carts?: cartsUpdateManyWithoutLeadsNestedInput
-    lead_activities?: lead_activitiesUpdateManyWithoutLeadsNestedInput
-    lead_conversations?: lead_conversationsUpdateManyWithoutLeadsNestedInput
-    lead_duplicates_1?: lead_duplicatesUpdateManyWithoutLead_1NestedInput
-    lead_duplicates_2?: lead_duplicatesUpdateManyWithoutLead_2NestedInput
-    merged_leads?: lead_duplicatesUpdateManyWithoutMerged_into_leadNestedInput
-    lead_followups?: lead_followupsUpdateManyWithoutLeadsNestedInput
-    lead_messages?: lead_messagesUpdateManyWithoutLeadsNestedInput
-    lead_notes?: lead_notesUpdateManyWithoutLeadsNestedInput
-    lead_score_history?: lead_score_historyUpdateManyWithoutLeadsNestedInput
-    lead_status_history?: lead_status_historyUpdateManyWithoutLeadsNestedInput
-    lead_tag_assignments?: lead_tag_assignmentsUpdateManyWithoutLeadsNestedInput
-    assigned_agent?: usersUpdateOneWithoutLeads_assignedNestedInput
-    businesses?: businessesUpdateOneRequiredWithoutLeadsNestedInput
-    duplicate_of_lead?: leadsUpdateOneWithoutDuplicate_leadsNestedInput
-    duplicate_leads?: leadsUpdateManyWithoutDuplicate_of_leadNestedInput
-    tenants?: tenantsUpdateOneRequiredWithoutLeadsNestedInput
-    orders?: ordersUpdateManyWithoutLeadsNestedInput
-    workflow_executions?: workflow_executionsUpdateManyWithoutLeadsNestedInput
-    cart_reservations?: cart_reservationsUpdateManyWithoutLeadsNestedInput
-  }
-
-  export type leadsUncheckedUpdateWithoutCampaign_recipientsInput = {
-    lead_id?: StringFieldUpdateOperationsInput | string
-    business_id?: StringFieldUpdateOperationsInput | string
-    tenant_id?: StringFieldUpdateOperationsInput | string
-    source?: StringFieldUpdateOperationsInput | string
-    source_reference_id?: NullableStringFieldUpdateOperationsInput | string | null
-    platform_user_id?: NullableStringFieldUpdateOperationsInput | string | null
-    post_id?: NullableStringFieldUpdateOperationsInput | string | null
-    page_id?: NullableStringFieldUpdateOperationsInput | string | null
-    first_name?: NullableStringFieldUpdateOperationsInput | string | null
-    last_name?: NullableStringFieldUpdateOperationsInput | string | null
-    phone?: NullableStringFieldUpdateOperationsInput | string | null
-    email?: NullableStringFieldUpdateOperationsInput | string | null
-    alternate_phone?: NullableStringFieldUpdateOperationsInput | string | null
-    city?: NullableStringFieldUpdateOperationsInput | string | null
-    state?: NullableStringFieldUpdateOperationsInput | string | null
-    country?: NullableStringFieldUpdateOperationsInput | string | null
-    pincode?: NullableStringFieldUpdateOperationsInput | string | null
-    status?: StringFieldUpdateOperationsInput | string
-    intent_type?: NullableStringFieldUpdateOperationsInput | string | null
-    lead_quality?: NullableStringFieldUpdateOperationsInput | string | null
-    lead_score?: NullableIntFieldUpdateOperationsInput | number | null
-    assigned_agent_id?: NullableStringFieldUpdateOperationsInput | string | null
-    assigned_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    assigned_by?: NullableStringFieldUpdateOperationsInput | string | null
-    first_contact_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    last_contact_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    last_activity_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    next_followup_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    followup_count?: NullableIntFieldUpdateOperationsInput | number | null
-    is_converted?: BoolFieldUpdateOperationsInput | boolean
-    converted_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    conversion_value?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    interested_products?: NullableJsonNullValueInput | InputJsonValue
-    interested_courses?: NullableJsonNullValueInput | InputJsonValue
-    tags?: NullableJsonNullValueInput | InputJsonValue
-    custom_fields?: NullableJsonNullValueInput | InputJsonValue
-    extracted_entities?: NullableJsonNullValueInput | InputJsonValue
-    sentiment_score?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    preferred_contact_method?: NullableStringFieldUpdateOperationsInput | string | null
-    preferred_contact_time?: NullableStringFieldUpdateOperationsInput | string | null
-    language_preference?: NullableStringFieldUpdateOperationsInput | string | null
-    utm_source?: NullableStringFieldUpdateOperationsInput | string | null
-    utm_medium?: NullableStringFieldUpdateOperationsInput | string | null
-    utm_campaign?: NullableStringFieldUpdateOperationsInput | string | null
-    referral_source?: NullableStringFieldUpdateOperationsInput | string | null
-    lost_reason?: NullableStringFieldUpdateOperationsInput | string | null
-    lost_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    invalid_reason?: NullableStringFieldUpdateOperationsInput | string | null
-    is_active?: BoolFieldUpdateOperationsInput | boolean
-    is_duplicate?: BoolFieldUpdateOperationsInput | boolean
-    duplicate_of_lead_id?: NullableStringFieldUpdateOperationsInput | string | null
-    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    created_by?: NullableStringFieldUpdateOperationsInput | string | null
-    updated_by?: NullableStringFieldUpdateOperationsInput | string | null
-    deleted_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    deleted_by?: NullableStringFieldUpdateOperationsInput | string | null
-    onboarding_completed?: BoolFieldUpdateOperationsInput | boolean
-    delivery_address?: NullableStringFieldUpdateOperationsInput | string | null
-    carts?: cartsUncheckedUpdateManyWithoutLeadsNestedInput
-    lead_activities?: lead_activitiesUncheckedUpdateManyWithoutLeadsNestedInput
-    lead_conversations?: lead_conversationsUncheckedUpdateManyWithoutLeadsNestedInput
-    lead_duplicates_1?: lead_duplicatesUncheckedUpdateManyWithoutLead_1NestedInput
-    lead_duplicates_2?: lead_duplicatesUncheckedUpdateManyWithoutLead_2NestedInput
-    merged_leads?: lead_duplicatesUncheckedUpdateManyWithoutMerged_into_leadNestedInput
-    lead_followups?: lead_followupsUncheckedUpdateManyWithoutLeadsNestedInput
-    lead_messages?: lead_messagesUncheckedUpdateManyWithoutLeadsNestedInput
-    lead_notes?: lead_notesUncheckedUpdateManyWithoutLeadsNestedInput
-    lead_score_history?: lead_score_historyUncheckedUpdateManyWithoutLeadsNestedInput
-    lead_status_history?: lead_status_historyUncheckedUpdateManyWithoutLeadsNestedInput
-    lead_tag_assignments?: lead_tag_assignmentsUncheckedUpdateManyWithoutLeadsNestedInput
-    duplicate_leads?: leadsUncheckedUpdateManyWithoutDuplicate_of_leadNestedInput
-    orders?: ordersUncheckedUpdateManyWithoutLeadsNestedInput
-    workflow_executions?: workflow_executionsUncheckedUpdateManyWithoutLeadsNestedInput
-    cart_reservations?: cart_reservationsUncheckedUpdateManyWithoutLeadsNestedInput
-  }
-
   export type lead_score_historyCreateWithoutRuleInput = {
     score_history_id?: string
     business_id: string
@@ -126017,7 +128273,6 @@ export namespace Prisma {
     deleted_by?: string | null
     onboarding_completed?: boolean
     delivery_address?: string | null
-    campaign_recipients?: campaign_recipientsCreateNestedManyWithoutLeadInput
     carts?: cartsCreateNestedManyWithoutLeadsInput
     lead_activities?: lead_activitiesCreateNestedManyWithoutLeadsInput
     lead_conversations?: lead_conversationsCreateNestedManyWithoutLeadsInput
@@ -126099,7 +128354,6 @@ export namespace Prisma {
     deleted_by?: string | null
     onboarding_completed?: boolean
     delivery_address?: string | null
-    campaign_recipients?: campaign_recipientsUncheckedCreateNestedManyWithoutLeadInput
     carts?: cartsUncheckedCreateNestedManyWithoutLeadsInput
     lead_activities?: lead_activitiesUncheckedCreateNestedManyWithoutLeadsInput
     lead_conversations?: lead_conversationsUncheckedCreateNestedManyWithoutLeadsInput
@@ -126222,7 +128476,6 @@ export namespace Prisma {
     deleted_by?: NullableStringFieldUpdateOperationsInput | string | null
     onboarding_completed?: BoolFieldUpdateOperationsInput | boolean
     delivery_address?: NullableStringFieldUpdateOperationsInput | string | null
-    campaign_recipients?: campaign_recipientsUpdateManyWithoutLeadNestedInput
     carts?: cartsUpdateManyWithoutLeadsNestedInput
     lead_activities?: lead_activitiesUpdateManyWithoutLeadsNestedInput
     lead_conversations?: lead_conversationsUpdateManyWithoutLeadsNestedInput
@@ -126304,7 +128557,6 @@ export namespace Prisma {
     deleted_by?: NullableStringFieldUpdateOperationsInput | string | null
     onboarding_completed?: BoolFieldUpdateOperationsInput | boolean
     delivery_address?: NullableStringFieldUpdateOperationsInput | string | null
-    campaign_recipients?: campaign_recipientsUncheckedUpdateManyWithoutLeadNestedInput
     carts?: cartsUncheckedUpdateManyWithoutLeadsNestedInput
     lead_activities?: lead_activitiesUncheckedUpdateManyWithoutLeadsNestedInput
     lead_conversations?: lead_conversationsUncheckedUpdateManyWithoutLeadsNestedInput
@@ -129987,7 +132239,6 @@ export namespace Prisma {
     updated_at?: Date | string | null
     whatsapp_template_language?: string | null
     whatsapp_template_name?: string | null
-    campaign_recipients?: campaign_recipientsCreateNestedManyWithoutCampaignInput
     products?: productsCreateNestedOneWithoutCampaignsInput
   }
 
@@ -130020,7 +132271,6 @@ export namespace Prisma {
     updated_at?: Date | string | null
     whatsapp_template_language?: string | null
     whatsapp_template_name?: string | null
-    campaign_recipients?: campaign_recipientsUncheckedCreateNestedManyWithoutCampaignInput
   }
 
   export type campaignsCreateOrConnectWithoutNotification_templatesInput = {
@@ -134427,7 +136677,6 @@ export namespace Prisma {
     deleted_by?: string | null
     onboarding_completed?: boolean
     delivery_address?: string | null
-    campaign_recipients?: campaign_recipientsCreateNestedManyWithoutLeadInput
     carts?: cartsCreateNestedManyWithoutLeadsInput
     lead_activities?: lead_activitiesCreateNestedManyWithoutLeadsInput
     lead_conversations?: lead_conversationsCreateNestedManyWithoutLeadsInput
@@ -134509,7 +136758,6 @@ export namespace Prisma {
     deleted_by?: string | null
     onboarding_completed?: boolean
     delivery_address?: string | null
-    campaign_recipients?: campaign_recipientsUncheckedCreateNestedManyWithoutLeadInput
     carts?: cartsUncheckedCreateNestedManyWithoutLeadsInput
     lead_activities?: lead_activitiesUncheckedCreateNestedManyWithoutLeadsInput
     lead_conversations?: lead_conversationsUncheckedCreateNestedManyWithoutLeadsInput
@@ -134713,7 +136961,6 @@ export namespace Prisma {
     deleted_by?: NullableStringFieldUpdateOperationsInput | string | null
     onboarding_completed?: BoolFieldUpdateOperationsInput | boolean
     delivery_address?: NullableStringFieldUpdateOperationsInput | string | null
-    campaign_recipients?: campaign_recipientsUpdateManyWithoutLeadNestedInput
     carts?: cartsUpdateManyWithoutLeadsNestedInput
     lead_activities?: lead_activitiesUpdateManyWithoutLeadsNestedInput
     lead_conversations?: lead_conversationsUpdateManyWithoutLeadsNestedInput
@@ -134795,7 +137042,6 @@ export namespace Prisma {
     deleted_by?: NullableStringFieldUpdateOperationsInput | string | null
     onboarding_completed?: BoolFieldUpdateOperationsInput | boolean
     delivery_address?: NullableStringFieldUpdateOperationsInput | string | null
-    campaign_recipients?: campaign_recipientsUncheckedUpdateManyWithoutLeadNestedInput
     carts?: cartsUncheckedUpdateManyWithoutLeadsNestedInput
     lead_activities?: lead_activitiesUncheckedUpdateManyWithoutLeadsNestedInput
     lead_conversations?: lead_conversationsUncheckedUpdateManyWithoutLeadsNestedInput
@@ -135438,7 +137684,6 @@ export namespace Prisma {
     deleted_by?: string | null
     onboarding_completed?: boolean
     delivery_address?: string | null
-    campaign_recipients?: campaign_recipientsCreateNestedManyWithoutLeadInput
     lead_activities?: lead_activitiesCreateNestedManyWithoutLeadsInput
     lead_conversations?: lead_conversationsCreateNestedManyWithoutLeadsInput
     lead_duplicates_1?: lead_duplicatesCreateNestedManyWithoutLead_1Input
@@ -135520,7 +137765,6 @@ export namespace Prisma {
     deleted_by?: string | null
     onboarding_completed?: boolean
     delivery_address?: string | null
-    campaign_recipients?: campaign_recipientsUncheckedCreateNestedManyWithoutLeadInput
     lead_activities?: lead_activitiesUncheckedCreateNestedManyWithoutLeadsInput
     lead_conversations?: lead_conversationsUncheckedCreateNestedManyWithoutLeadsInput
     lead_duplicates_1?: lead_duplicatesUncheckedCreateNestedManyWithoutLead_1Input
@@ -135815,7 +138059,6 @@ export namespace Prisma {
     deleted_by?: NullableStringFieldUpdateOperationsInput | string | null
     onboarding_completed?: BoolFieldUpdateOperationsInput | boolean
     delivery_address?: NullableStringFieldUpdateOperationsInput | string | null
-    campaign_recipients?: campaign_recipientsUpdateManyWithoutLeadNestedInput
     lead_activities?: lead_activitiesUpdateManyWithoutLeadsNestedInput
     lead_conversations?: lead_conversationsUpdateManyWithoutLeadsNestedInput
     lead_duplicates_1?: lead_duplicatesUpdateManyWithoutLead_1NestedInput
@@ -135897,7 +138140,6 @@ export namespace Prisma {
     deleted_by?: NullableStringFieldUpdateOperationsInput | string | null
     onboarding_completed?: BoolFieldUpdateOperationsInput | boolean
     delivery_address?: NullableStringFieldUpdateOperationsInput | string | null
-    campaign_recipients?: campaign_recipientsUncheckedUpdateManyWithoutLeadNestedInput
     lead_activities?: lead_activitiesUncheckedUpdateManyWithoutLeadsNestedInput
     lead_conversations?: lead_conversationsUncheckedUpdateManyWithoutLeadsNestedInput
     lead_duplicates_1?: lead_duplicatesUncheckedUpdateManyWithoutLead_1NestedInput
@@ -136688,7 +138930,6 @@ export namespace Prisma {
     deleted_by?: NullableStringFieldUpdateOperationsInput | string | null
     onboarding_completed?: BoolFieldUpdateOperationsInput | boolean
     delivery_address?: NullableStringFieldUpdateOperationsInput | string | null
-    campaign_recipients?: campaign_recipientsUpdateManyWithoutLeadNestedInput
     carts?: cartsUpdateManyWithoutLeadsNestedInput
     lead_activities?: lead_activitiesUpdateManyWithoutLeadsNestedInput
     lead_conversations?: lead_conversationsUpdateManyWithoutLeadsNestedInput
@@ -136769,7 +139010,6 @@ export namespace Prisma {
     deleted_by?: NullableStringFieldUpdateOperationsInput | string | null
     onboarding_completed?: BoolFieldUpdateOperationsInput | boolean
     delivery_address?: NullableStringFieldUpdateOperationsInput | string | null
-    campaign_recipients?: campaign_recipientsUncheckedUpdateManyWithoutLeadNestedInput
     carts?: cartsUncheckedUpdateManyWithoutLeadsNestedInput
     lead_activities?: lead_activitiesUncheckedUpdateManyWithoutLeadsNestedInput
     lead_conversations?: lead_conversationsUncheckedUpdateManyWithoutLeadsNestedInput
@@ -139035,7 +141275,6 @@ export namespace Prisma {
     deleted_by?: NullableStringFieldUpdateOperationsInput | string | null
     onboarding_completed?: BoolFieldUpdateOperationsInput | boolean
     delivery_address?: NullableStringFieldUpdateOperationsInput | string | null
-    campaign_recipients?: campaign_recipientsUpdateManyWithoutLeadNestedInput
     carts?: cartsUpdateManyWithoutLeadsNestedInput
     lead_activities?: lead_activitiesUpdateManyWithoutLeadsNestedInput
     lead_conversations?: lead_conversationsUpdateManyWithoutLeadsNestedInput
@@ -139116,7 +141355,6 @@ export namespace Prisma {
     deleted_by?: NullableStringFieldUpdateOperationsInput | string | null
     onboarding_completed?: BoolFieldUpdateOperationsInput | boolean
     delivery_address?: NullableStringFieldUpdateOperationsInput | string | null
-    campaign_recipients?: campaign_recipientsUncheckedUpdateManyWithoutLeadNestedInput
     carts?: cartsUncheckedUpdateManyWithoutLeadsNestedInput
     lead_activities?: lead_activitiesUncheckedUpdateManyWithoutLeadsNestedInput
     lead_conversations?: lead_conversationsUncheckedUpdateManyWithoutLeadsNestedInput
@@ -140385,7 +142623,6 @@ export namespace Prisma {
     deleted_by?: NullableStringFieldUpdateOperationsInput | string | null
     onboarding_completed?: BoolFieldUpdateOperationsInput | boolean
     delivery_address?: NullableStringFieldUpdateOperationsInput | string | null
-    campaign_recipients?: campaign_recipientsUpdateManyWithoutLeadNestedInput
     carts?: cartsUpdateManyWithoutLeadsNestedInput
     lead_activities?: lead_activitiesUpdateManyWithoutLeadsNestedInput
     lead_conversations?: lead_conversationsUpdateManyWithoutLeadsNestedInput
@@ -140466,7 +142703,6 @@ export namespace Prisma {
     deleted_by?: NullableStringFieldUpdateOperationsInput | string | null
     onboarding_completed?: BoolFieldUpdateOperationsInput | boolean
     delivery_address?: NullableStringFieldUpdateOperationsInput | string | null
-    campaign_recipients?: campaign_recipientsUncheckedUpdateManyWithoutLeadNestedInput
     carts?: cartsUncheckedUpdateManyWithoutLeadsNestedInput
     lead_activities?: lead_activitiesUncheckedUpdateManyWithoutLeadsNestedInput
     lead_conversations?: lead_conversationsUncheckedUpdateManyWithoutLeadsNestedInput
@@ -140704,19 +142940,6 @@ export namespace Prisma {
     response_date?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type campaign_recipientsCreateManyLeadInput = {
-    recipient_id?: string
-    campaign_id: string
-    sent_at?: Date | string | null
-    delivered_at?: Date | string | null
-    clicked_at?: Date | string | null
-    converted_at?: Date | string | null
-    status?: string | null
-    error_message?: string | null
-    updated_at?: Date | string | null
-    whatsapp_message_id?: string | null
   }
 
   export type cartsCreateManyLeadsInput = {
@@ -141045,45 +143268,6 @@ export namespace Prisma {
     status?: string
     created_at?: Date | string
     updated_at?: Date | string
-  }
-
-  export type campaign_recipientsUpdateWithoutLeadInput = {
-    recipient_id?: StringFieldUpdateOperationsInput | string
-    sent_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    delivered_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    clicked_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    converted_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    status?: NullableStringFieldUpdateOperationsInput | string | null
-    error_message?: NullableStringFieldUpdateOperationsInput | string | null
-    updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    whatsapp_message_id?: NullableStringFieldUpdateOperationsInput | string | null
-    campaign?: campaignsUpdateOneRequiredWithoutCampaign_recipientsNestedInput
-  }
-
-  export type campaign_recipientsUncheckedUpdateWithoutLeadInput = {
-    recipient_id?: StringFieldUpdateOperationsInput | string
-    campaign_id?: StringFieldUpdateOperationsInput | string
-    sent_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    delivered_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    clicked_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    converted_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    status?: NullableStringFieldUpdateOperationsInput | string | null
-    error_message?: NullableStringFieldUpdateOperationsInput | string | null
-    updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    whatsapp_message_id?: NullableStringFieldUpdateOperationsInput | string | null
-  }
-
-  export type campaign_recipientsUncheckedUpdateManyWithoutLeadInput = {
-    recipient_id?: StringFieldUpdateOperationsInput | string
-    campaign_id?: StringFieldUpdateOperationsInput | string
-    sent_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    delivered_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    clicked_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    converted_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    status?: NullableStringFieldUpdateOperationsInput | string | null
-    error_message?: NullableStringFieldUpdateOperationsInput | string | null
-    updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    whatsapp_message_id?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type cartsUpdateWithoutLeadsInput = {
@@ -141739,7 +143923,6 @@ export namespace Prisma {
     deleted_by?: NullableStringFieldUpdateOperationsInput | string | null
     onboarding_completed?: BoolFieldUpdateOperationsInput | boolean
     delivery_address?: NullableStringFieldUpdateOperationsInput | string | null
-    campaign_recipients?: campaign_recipientsUpdateManyWithoutLeadNestedInput
     carts?: cartsUpdateManyWithoutLeadsNestedInput
     lead_activities?: lead_activitiesUpdateManyWithoutLeadsNestedInput
     lead_conversations?: lead_conversationsUpdateManyWithoutLeadsNestedInput
@@ -141820,7 +144003,6 @@ export namespace Prisma {
     deleted_by?: NullableStringFieldUpdateOperationsInput | string | null
     onboarding_completed?: BoolFieldUpdateOperationsInput | boolean
     delivery_address?: NullableStringFieldUpdateOperationsInput | string | null
-    campaign_recipients?: campaign_recipientsUncheckedUpdateManyWithoutLeadNestedInput
     carts?: cartsUncheckedUpdateManyWithoutLeadsNestedInput
     lead_activities?: lead_activitiesUncheckedUpdateManyWithoutLeadsNestedInput
     lead_conversations?: lead_conversationsUncheckedUpdateManyWithoutLeadsNestedInput
@@ -142573,7 +144755,6 @@ export namespace Prisma {
     updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     whatsapp_template_language?: NullableStringFieldUpdateOperationsInput | string | null
     whatsapp_template_name?: NullableStringFieldUpdateOperationsInput | string | null
-    campaign_recipients?: campaign_recipientsUpdateManyWithoutCampaignNestedInput
     notification_templates?: notification_templatesUpdateOneWithoutCampaignsNestedInput
   }
 
@@ -142606,7 +144787,6 @@ export namespace Prisma {
     updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     whatsapp_template_language?: NullableStringFieldUpdateOperationsInput | string | null
     whatsapp_template_name?: NullableStringFieldUpdateOperationsInput | string | null
-    campaign_recipients?: campaign_recipientsUncheckedUpdateManyWithoutCampaignNestedInput
   }
 
   export type campaignsUncheckedUpdateManyWithoutProductsInput = {
@@ -144470,58 +146650,6 @@ export namespace Prisma {
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
-  export type campaign_recipientsCreateManyCampaignInput = {
-    recipient_id?: string
-    lead_id: string
-    sent_at?: Date | string | null
-    delivered_at?: Date | string | null
-    clicked_at?: Date | string | null
-    converted_at?: Date | string | null
-    status?: string | null
-    error_message?: string | null
-    updated_at?: Date | string | null
-    whatsapp_message_id?: string | null
-  }
-
-  export type campaign_recipientsUpdateWithoutCampaignInput = {
-    recipient_id?: StringFieldUpdateOperationsInput | string
-    sent_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    delivered_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    clicked_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    converted_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    status?: NullableStringFieldUpdateOperationsInput | string | null
-    error_message?: NullableStringFieldUpdateOperationsInput | string | null
-    updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    whatsapp_message_id?: NullableStringFieldUpdateOperationsInput | string | null
-    lead?: leadsUpdateOneRequiredWithoutCampaign_recipientsNestedInput
-  }
-
-  export type campaign_recipientsUncheckedUpdateWithoutCampaignInput = {
-    recipient_id?: StringFieldUpdateOperationsInput | string
-    lead_id?: StringFieldUpdateOperationsInput | string
-    sent_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    delivered_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    clicked_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    converted_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    status?: NullableStringFieldUpdateOperationsInput | string | null
-    error_message?: NullableStringFieldUpdateOperationsInput | string | null
-    updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    whatsapp_message_id?: NullableStringFieldUpdateOperationsInput | string | null
-  }
-
-  export type campaign_recipientsUncheckedUpdateManyWithoutCampaignInput = {
-    recipient_id?: StringFieldUpdateOperationsInput | string
-    lead_id?: StringFieldUpdateOperationsInput | string
-    sent_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    delivered_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    clicked_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    converted_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    status?: NullableStringFieldUpdateOperationsInput | string | null
-    error_message?: NullableStringFieldUpdateOperationsInput | string | null
-    updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    whatsapp_message_id?: NullableStringFieldUpdateOperationsInput | string | null
-  }
-
   export type lead_score_historyCreateManyRuleInput = {
     score_history_id?: string
     lead_id: string
@@ -145457,7 +147585,6 @@ export namespace Prisma {
     updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     whatsapp_template_language?: NullableStringFieldUpdateOperationsInput | string | null
     whatsapp_template_name?: NullableStringFieldUpdateOperationsInput | string | null
-    campaign_recipients?: campaign_recipientsUpdateManyWithoutCampaignNestedInput
     products?: productsUpdateOneWithoutCampaignsNestedInput
   }
 
@@ -145490,7 +147617,6 @@ export namespace Prisma {
     updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     whatsapp_template_language?: NullableStringFieldUpdateOperationsInput | string | null
     whatsapp_template_name?: NullableStringFieldUpdateOperationsInput | string | null
-    campaign_recipients?: campaign_recipientsUncheckedUpdateManyWithoutCampaignNestedInput
   }
 
   export type campaignsUncheckedUpdateManyWithoutNotification_templatesInput = {
