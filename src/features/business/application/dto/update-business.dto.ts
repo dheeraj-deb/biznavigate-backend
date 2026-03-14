@@ -1,4 +1,4 @@
-import { IsOptional, IsString, IsUUID } from "class-validator";
+import { IsEmail, IsOptional, IsString } from "class-validator";
 
 export class UpdateBusinessDto {
   @IsOptional()
@@ -10,20 +10,38 @@ export class UpdateBusinessDto {
   business_type?: string;
 
   @IsOptional()
-  @IsUUID()
-  subscription_plan_id?: string;
+  @IsEmail()
+  email?: string;
+
+  @IsOptional()
+  @IsString()
+  phone?: string;
+
+  @IsOptional()
+  @IsString()
+  website?: string;
+
+  @IsOptional()
+  @IsString()
+  city?: string;
+
+  @IsOptional()
+  @IsString()
+  address?: string;
+
+  @IsOptional()
+  @IsString()
+  country?: string;
+
+  @IsOptional()
+  @IsString()
+  gst_number?: string;
+
+  @IsOptional()
+  @IsString()
+  pan_number?: string;
 
   @IsOptional()
   @IsString()
   whatsapp_number?: string;
-
-  @IsOptional()
-  brand_colors?: any;
-
-  @IsOptional()
-  working_hours?: any;
-
-  @IsOptional()
-  @IsString()
-  logo_url?: string;
 }

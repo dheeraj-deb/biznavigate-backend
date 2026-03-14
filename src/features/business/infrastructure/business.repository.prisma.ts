@@ -11,25 +11,40 @@ export class BusinessesRepositoryPrisma implements BusinessesRepository {
   constructor(private readonly prisma: PrismaService) {}
 
   async create(dto: CreateBusinessDto): Promise<Business> {
-    return this.prisma.businesses.create({ data: dto });
+    const { employees, ...businessData } = dto;
+    return this.prisma.businesses.create({
+      data: {
+        ...businessData,
+        ...(employees?.length && {
+          business_employees: {
+            create: employees,
+          },
+        }),
+      },
+      include: { business_employees: true },
+    });
   }
 
   async findAll(): Promise<Business[]> {
-    return this.prisma.businesses.findMany();
+    return this.prisma.businesses.findMany({ include: { business_employees: true } });
   }
 
   async findById(id: string): Promise<Business> {
-    return this.prisma.businesses.findUnique({ where: { business_id: id } });
+    return this.prisma.businesses.findUnique({
+      where: { business_id: id },
+      include: { business_employees: true },
+    });
   }
 
   async findByTenant(tenant_id: string): Promise<Business[]> {
-    return this.prisma.businesses.findMany({ where: { tenant_id } });
+    return this.prisma.businesses.findMany({ where: { tenant_id }, include: { business_employees: true } });
   }
 
   async update(id: string, dto: UpdateBusinessDto): Promise<Business> {
     return this.prisma.businesses.update({
       where: { business_id: id },
       data: dto,
+      include: { business_employees: true },
     });
   }
 

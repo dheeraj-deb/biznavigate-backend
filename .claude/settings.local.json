@@ -18,7 +18,12 @@
       "Bash(findstr:*)",
       "Bash(taskkill:*)",
       "Bash(dir:*)",
-      "Bash(node -e:*)"
+      "Bash(node -e:*)",
+      "Bash(docker ps -a --filter \"name=kafka\" --format \"{{.Names}} {{.Status}}\")",
+      "Bash(docker ps -a --format \"{{.Names}} {{.Status}}\")",
+      "Bash(docker-compose -f docker-compose.kafka.yml restart)",
+      "Bash(docker ps --filter \"name=biznavigate-kafka\" --format \"{{.Names}} {{.Status}}\")",
+      "Bash(docker exec biznavigate-kafka kafka-broker-api-versions --bootstrap-server localhost:9093)"
     ],
     "deny": [],
     "ask": []

@@ -13,15 +13,19 @@ model businesses {
   tenant_id                String                     @db.Uuid
   business_name            String                     @db.VarChar(255)
   business_type            String?                    @db.VarChar(50)
-  subscription_plan_id     String?                    @db.Uuid
+  email                    String?                    @db.VarChar(255)
+  phone                    String?                    @db.VarChar(20)
+  website                  String?                    @db.VarChar(255)
+  city                     String?                    @db.VarChar(100)
+  address                  String?                    @db.VarChar(500)
+  country                  String?                    @db.VarChar(100)
+  gst_number               String?                    @db.VarChar(50)
+  pan_number               String?                    @db.VarChar(20)
   whatsapp_number          String?                    @db.VarChar(20)
-  brand_colors             Json?
-  logo_url                 String?
-  working_hours            Json?
   created_at               DateTime?                  @default(now()) @db.Timestamptz(6)
   updated_at               DateTime?                  @default(now()) @db.Timestamptz(6)
+  business_employees       business_employees[]
   business_workflows       business_workflows[]
-  subscription_plans       subscription_plans?        @relation(fields: [subscription_plan_id], references: [subscription_plan_id])
   tenants                  tenants                    @relation(fields: [tenant_id], references: [tenant_id], onDelete: Cascade)
   carts                    carts[]
   inventory_levels         inventory_levels[]         @relation("inventory_levels_business")
@@ -43,8 +47,19 @@ model businesses {
   users                    users[]
   warehouses               warehouses[]               @relation("warehouses_business")
   workflow_executions      workflow_executions[]
+}
 
-  @@index([tenant_id], map: "idx_businesses_tenant_id")
+model business_employees {
+  employee_id String     @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  business_id String     @db.Uuid
+  name        String     @db.VarChar(255)
+  email       String?    @db.VarChar(255)
+  phone       String?    @db.VarChar(20)
+  role        String?    @db.VarChar(100)
+  created_at  DateTime?  @default(now()) @db.Timestamptz(6)
+  businesses  businesses @relation(fields: [business_id], references: [business_id], onDelete: Cascade)
+
+  @@index([business_id], map: "idx_business_employees_business_id")
 }
 
 model intents {
@@ -113,12 +128,11 @@ model social_accounts {
 }
 
 model subscription_plans {
-  subscription_plan_id String       @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  plan_name            String       @db.VarChar(100)
-  price                Decimal?     @db.Decimal(10, 2)
+  subscription_plan_id String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  plan_name            String    @db.VarChar(100)
+  price                Decimal?  @db.Decimal(10, 2)
   duration_in_days     Int?
-  created_at           DateTime?    @default(now()) @db.Timestamptz(6)
-  businesses           businesses[]
+  created_at           DateTime? @default(now()) @db.Timestamptz(6)
 }
 
 model tenants {
@@ -132,8 +146,8 @@ model tenants {
   gst_number             String?                  @db.VarChar(20)
   pan_number             String?                  @db.VarChar(20)
   registration_no        String?                  @db.VarChar(50)
-  business_workflows     business_workflows[]
   businesses             businesses[]
+  business_workflows     business_workflows[]
   carts                  carts[]
   inventory_levels       inventory_levels[]       @relation("inventory_levels_tenant")
   leads                  leads[]

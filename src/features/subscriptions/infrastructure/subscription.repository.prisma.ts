@@ -11,10 +11,8 @@ export class SubscriptionsRepositoryPrisma implements SubscriptionsRepository {
 
   async assignPlan(dto: AssignSubscriptionDto) {
     try {
-      return await this.prisma.businesses.update({
-        where: { business_id: dto.business_id },
-        data: { subscription_plan_id: dto.subscription_plan_id },
-        include: { subscription_plans: true },
+      return await this.prisma.subscription_plans.findUnique({
+        where: { subscription_plan_id: dto.subscription_plan_id },
       });
     } catch (error) {
       throw new BadRequestException(error.message);
@@ -23,10 +21,8 @@ export class SubscriptionsRepositoryPrisma implements SubscriptionsRepository {
 
   async cancelPlan(dto: CancelSubscriptionDto) {
     try {
-      return await this.prisma.businesses.update({
+      return await this.prisma.businesses.findUnique({
         where: { business_id: dto.business_id },
-        data: { subscription_plan_id: null },
-        include: { subscription_plans: true },
       });
     } catch (error) {
       throw new BadRequestException(error.message);
@@ -37,7 +33,6 @@ export class SubscriptionsRepositoryPrisma implements SubscriptionsRepository {
     try {
       return await this.prisma.businesses.findUnique({
         where: { business_id },
-        include: { subscription_plans: true },
       });
     } catch (error) {
       throw new BadRequestException(error.message);

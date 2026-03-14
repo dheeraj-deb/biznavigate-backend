@@ -66,15 +66,17 @@ import { GatewayModule } from "./features/inbox/gateway/gateway.module";
         limit: 1000, // 1000 requests per 15 minutes
       },
     ]),
-    MongooseModule.forRootAsync({
-      imports: [ConfigModule],
-      useFactory: async (config: ConfigService) => ({
-        uri: config.get<string>('MONGODB_URI'),
-        maxPoolSize: 10,
-        serverSelectionTimeoutMS: 5000
-      }),
-      inject: [ConfigService]
-    }),
+    ...(process.env.MONGODB_URI
+      ? [MongooseModule.forRootAsync({
+          imports: [ConfigModule],
+          useFactory: async (config: ConfigService) => ({
+            uri: config.get<string>('MONGODB_URI'),
+            maxPoolSize: 10,
+            serverSelectionTimeoutMS: 5000,
+          }),
+          inject: [ConfigService],
+        })]
+      : []),
     // Static file serving for uploaded images
     ServeStaticModule.forRoot({
       rootPath: join(__dirname, '..', '..', 'public'),
@@ -109,16 +111,10 @@ import { GatewayModule } from "./features/inbox/gateway/gateway.module";
     TemplatesModule,
     MessagesModule,
     ContactsModule,
-    CampaignModule,
-    InboxModule,
-    GatewayModule,
-    // KafkaModule, // Kafka integration for AI services
-    // WhatsAppModule//
-    KafkaModule, // Kafka integration for AI services
-    WhatsAppModule,
-    InstagramModule, // Instagram Graph API integration
-    ChatWidgetModule, // Chat widget for website integration
-    WorkflowsModule, // Workflow orchestration and automation
+    InstagramModule,
+    ...(process.env.MONGODB_URI
+      ? [CampaignModule, InboxModule, GatewayModule, WhatsAppModule, ChatWidgetModule, WorkflowsModule]
+      : []),
   ],
   providers: [
     {

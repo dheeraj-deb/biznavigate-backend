@@ -1,4 +1,31 @@
-import { IsNotEmpty, IsOptional, IsString, IsUUID, IsIn } from "class-validator";
+import { Type } from "class-transformer";
+import {
+  IsEmail,
+  IsNotEmpty,
+  IsOptional,
+  IsString,
+  IsArray,
+  IsUUID,
+  ValidateNested,
+} from "class-validator";
+
+export class CreateEmployeeDto {
+  @IsNotEmpty()
+  @IsString()
+  name: string;
+
+  @IsOptional()
+  @IsEmail()
+  email?: string;
+
+  @IsOptional()
+  @IsString()
+  phone?: string;
+
+  @IsOptional()
+  @IsString()
+  role?: string;
+}
 
 export class CreateBusinessDto {
   @IsNotEmpty()
@@ -11,24 +38,47 @@ export class CreateBusinessDto {
 
   @IsOptional()
   @IsString()
-  @IsIn(["Retail", "Beauty", "Restaurant", "Service"]) // <-- update with your allowed types
   business_type?: string;
 
   @IsOptional()
-  @IsUUID()
-  subscription_plan_id?: string;
+  @IsEmail()
+  email?: string;
+
+  @IsOptional()
+  @IsString()
+  phone?: string;
+
+  @IsOptional()
+  @IsString()
+  website?: string;
+
+  @IsOptional()
+  @IsString()
+  city?: string;
+
+  @IsOptional()
+  @IsString()
+  address?: string;
+
+  @IsOptional()
+  @IsString()
+  country?: string;
+
+  @IsOptional()
+  @IsString()
+  gst_number?: string;
+
+  @IsOptional()
+  @IsString()
+  pan_number?: string;
 
   @IsOptional()
   @IsString()
   whatsapp_number?: string;
 
   @IsOptional()
-  brand_colors?: any;
-
-  @IsOptional()
-  working_hours?: any;
-
-  @IsOptional()
-  @IsString()
-  logo_url?: string;
+  @IsArray()
+  @ValidateNested({ each: true })
+  @Type(() => CreateEmployeeDto)
+  employees?: CreateEmployeeDto[];
 }

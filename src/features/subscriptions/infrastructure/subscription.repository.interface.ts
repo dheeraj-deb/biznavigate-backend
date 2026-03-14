@@ -4,10 +4,8 @@ import { CancelSubscriptionDto } from "../application/dto/cancel-subscription.dt
 import { SubscriptionResponseDto } from "../application/dto/subscription-response.dto";
 
 export interface SubscriptionsRepository {
-  assignPlan(dto: AssignSubscriptionDto): Promise<SubscriptionResponseDto>;
-  cancelPlan(dto: CancelSubscriptionDto): Promise<SubscriptionResponseDto>;
-  getBusinessSubscription(
-    business_id: string
-  ): Promise<SubscriptionResponseDto>;
+  assignPlan(dto: AssignSubscriptionDto): Promise<any>;
+  cancelPlan(dto: CancelSubscriptionDto): Promise<any>;
+  getBusinessSubscription(business_id: string): Promise<any>;
   listPlans(): Promise<any[]>;
 }

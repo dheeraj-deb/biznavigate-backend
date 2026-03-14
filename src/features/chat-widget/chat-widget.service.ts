@@ -371,12 +371,7 @@ export class ChatWidgetService {
         throw new NotFoundException('Business not found');
       }
 
-      // Extract primary color from brand_colors if available
-      let primaryColor = '#0084FF';
-      if (business.brand_colors && typeof business.brand_colors === 'object') {
-        const brandColors = business.brand_colors as any;
-        primaryColor = brandColors.primary || brandColors.primaryColor || '#0084FF';
-      }
+      const primaryColor = '#0084FF';
 
       return {
         businessId,

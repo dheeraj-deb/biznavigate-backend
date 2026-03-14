@@ -86,19 +86,12 @@ export class UsersService {
       }
 
       // Update business profile fields if provided
-      if (
-        dto.whatsapp_number ||
-        dto.business_type ||
-        dto.logo_url ||
-        dto.working_hours
-      ) {
+      if (dto.whatsapp_number || dto.business_type) {
         await this.prisma.businesses.update({
           where: { business_id: user.business_id },
           data: {
             whatsapp_number: dto.whatsapp_number,
             business_type: dto.business_type,
-            logo_url: dto.logo_url,
-            working_hours: dto.working_hours,
             updated_at: new Date(),
           },
         });
