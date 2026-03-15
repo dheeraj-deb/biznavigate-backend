@@ -23,7 +23,9 @@
       "Bash(docker ps -a --format \"{{.Names}} {{.Status}}\")",
       "Bash(docker-compose -f docker-compose.kafka.yml restart)",
       "Bash(docker ps --filter \"name=biznavigate-kafka\" --format \"{{.Names}} {{.Status}}\")",
-      "Bash(docker exec biznavigate-kafka kafka-broker-api-versions --bootstrap-server localhost:9093)"
+      "Bash(docker exec biznavigate-kafka kafka-broker-api-versions --bootstrap-server localhost:9093)",
+      "WebFetch(domain:xotelo.com)",
+      "WebFetch(domain:rapidapi.com)"
     ],
     "deny": [],
     "ask": []

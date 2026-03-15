@@ -13,6 +13,9 @@ model businesses {
   tenant_id                String                     @db.Uuid
   business_name            String                     @db.VarChar(255)
   business_type            String?                    @db.VarChar(50)
+  whatsapp_number          String?                    @db.VarChar(20)
+  created_at               DateTime?                  @default(now()) @db.Timestamptz(6)
+  updated_at               DateTime?                  @default(now()) @db.Timestamptz(6)
   email                    String?                    @db.VarChar(255)
   phone                    String?                    @db.VarChar(20)
   website                  String?                    @db.VarChar(255)
@@ -21,9 +24,6 @@ model businesses {
   country                  String?                    @db.VarChar(100)
   gst_number               String?                    @db.VarChar(50)
   pan_number               String?                    @db.VarChar(20)
-  whatsapp_number          String?                    @db.VarChar(20)
-  created_at               DateTime?                  @default(now()) @db.Timestamptz(6)
-  updated_at               DateTime?                  @default(now()) @db.Timestamptz(6)
   business_employees       business_employees[]
   business_workflows       business_workflows[]
   tenants                  tenants                    @relation(fields: [tenant_id], references: [tenant_id], onDelete: Cascade)
@@ -50,13 +50,13 @@ model businesses {
 }
 
 model business_employees {
-  employee_id String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  business_id String    @db.Uuid
-  name        String    @db.VarChar(255)
-  email       String?   @db.VarChar(255)
-  phone       String?   @db.VarChar(20)
-  role        String?   @db.VarChar(100)
-  created_at  DateTime? @default(now()) @db.Timestamptz(6)
+  employee_id String     @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  business_id String     @db.Uuid
+  name        String     @db.VarChar(255)
+  email       String?    @db.VarChar(255)
+  phone       String?    @db.VarChar(20)
+  role        String?    @db.VarChar(100)
+  created_at  DateTime?  @default(now()) @db.Timestamptz(6)
   businesses  businesses @relation(fields: [business_id], references: [business_id], onDelete: Cascade)
 
   @@index([business_id], map: "idx_business_employees_business_id")
@@ -128,11 +128,11 @@ model social_accounts {
 }
 
 model subscription_plans {
-  subscription_plan_id String       @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  plan_name            String       @db.VarChar(100)
-  price                Decimal?     @db.Decimal(10, 2)
+  subscription_plan_id String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  plan_name            String    @db.VarChar(100)
+  price                Decimal?  @db.Decimal(10, 2)
   duration_in_days     Int?
-  created_at           DateTime?    @default(now()) @db.Timestamptz(6)
+  created_at           DateTime? @default(now()) @db.Timestamptz(6)
 }
 
 model tenants {
@@ -146,8 +146,8 @@ model tenants {
   gst_number             String?                  @db.VarChar(20)
   pan_number             String?                  @db.VarChar(20)
   registration_no        String?                  @db.VarChar(50)
-  businesses             businesses[]
   business_workflows     business_workflows[]
+  businesses             businesses[]
   carts                  carts[]
   inventory_levels       inventory_levels[]       @relation("inventory_levels_tenant")
   leads                  leads[]
@@ -259,6 +259,7 @@ model leads {
   deleted_by               String?                @db.Uuid
   onboarding_completed     Boolean                @default(false)
   delivery_address         String?
+  cart_reservations        cart_reservations[]
   carts                    carts[]
   lead_activities          lead_activities[]
   lead_conversations       lead_conversations[]
@@ -278,7 +279,6 @@ model leads {
   tenants                  tenants                @relation(fields: [tenant_id], references: [tenant_id])
   orders                   orders[]
   workflow_executions      workflow_executions[]
-  cart_reservations        cart_reservations[]
 
   @@index([business_id, status], map: "idx_leads_business_status")
   @@index([tenant_id], map: "idx_leads_tenant_id")
@@ -565,6 +565,7 @@ model products {
   instagram_retailer_id   String?              @db.VarChar(255)
   campaigns               campaigns[]
   cart_items              cart_items[]
+  cart_reservations       cart_reservations[]
   course_batches          course_batches[]
   order_items             order_items[]
   product_images          product_images[]
@@ -573,7 +574,6 @@ model products {
   businesses              businesses           @relation(fields: [business_id], references: [business_id])
   product_categories      product_categories?  @relation(fields: [category_id], references: [category_id])
   stock_reservations      stock_reservations[]
-  cart_reservations       cart_reservations[]
 
   @@index([business_id, is_active], map: "idx_products_business_active")
   @@index([tenant_id], map: "idx_products_tenant_id")
@@ -672,13 +672,13 @@ model customers {
   phone                    String                     @db.VarChar(20)
   email                    String?                    @db.VarChar(255)
   whatsapp_number          String?                    @db.VarChar(20)
-  platform_user_id         String?                    @db.VarChar(255)
   total_orders             Int                        @default(0)
   total_spent              Decimal                    @default(0) @db.Decimal(10, 2)
   last_order_date          DateTime?                  @db.Timestamptz(6)
   engagement_score         Int                        @default(10)
   created_at               DateTime                   @default(now()) @db.Timestamptz(6)
   updated_at               DateTime                   @default(now()) @db.Timestamptz(6)
+  platform_user_id         String?                    @db.VarChar(255)
   carts                    carts[]
   notification_messages    notification_messages[]    @relation("notification_messages_customer")
   notification_preferences notification_preferences[] @relation("notification_prefs_customer")
@@ -809,17 +809,16 @@ model cart_reservations {
   variant_id     String?  @db.Uuid
   quantity       Int
   expires_at     DateTime @db.Timestamptz(6)
-  status         String   @default("active") @db.VarChar(20) // active, released, converted
+  status         String   @default("active") @db.VarChar(20)
   created_at     DateTime @default(now()) @db.Timestamptz(6)
   updated_at     DateTime @default(now()) @db.Timestamptz(6)
-
-  leads    leads    @relation(fields: [lead_id], references: [lead_id], onDelete: Cascade)
-  products products @relation(fields: [product_id], references: [product_id])
+  leads          leads    @relation(fields: [lead_id], references: [lead_id], onDelete: Cascade)
+  products       products @relation(fields: [product_id], references: [product_id])
 
   @@index([lead_id], map: "idx_cart_reservations_lead_id")
   @@index([product_id], map: "idx_cart_reservations_product_id")
-  @@index([expires_at], map: "idx_cart_reservations_expires_at")
   @@index([status], map: "idx_cart_reservations_status")
+  @@index([expires_at], map: "idx_cart_reservations_expires_at")
 }
 
 /// Campaigns - marketing campaigns
@@ -1640,16 +1639,16 @@ model carts {
   business_id  String       @db.Uuid
   tenant_id    String       @db.Uuid
   lead_id      String?      @db.Uuid
-  customer_id  String?      @db.Uuid
   status       String?      @default("active") @db.VarChar(20)
   total_amount Decimal?     @default(0) @db.Decimal(10, 2)
   total_items  Int?         @default(0)
   expires_at   DateTime?    @db.Timestamptz(6)
   created_at   DateTime?    @default(now()) @db.Timestamptz(6)
   updated_at   DateTime?    @default(now()) @db.Timestamptz(6)
+  customer_id  String?      @db.Uuid
   cart_items   cart_items[]
   businesses   businesses   @relation(fields: [business_id], references: [business_id], onDelete: Cascade, onUpdate: NoAction)
-  customers    customers?   @relation(fields: [customer_id], references: [customer_id], onDelete: SetNull, onUpdate: NoAction)
+  customers    customers?   @relation(fields: [customer_id], references: [customer_id], onUpdate: NoAction)
   leads        leads?       @relation(fields: [lead_id], references: [lead_id], onDelete: Cascade, onUpdate: NoAction)
   tenants      tenants      @relation(fields: [tenant_id], references: [tenant_id], onDelete: Cascade, onUpdate: NoAction)
 
@@ -1660,7 +1659,6 @@ model carts {
   @@index([status], map: "idx_carts_status")
 }
 
-
 model whatsapp_optouts {
   id           BigInt   @id @default(autoincrement())
   business_id  String   @db.VarChar(24)
@@ -1668,7 +1666,7 @@ model whatsapp_optouts {
   opted_out_at DateTime @default(now()) @db.Timestamptz(6)
   reason       String?  @db.VarChar(100)
 
-  @@unique([business_id, phone_number], map: "whatsapp_optouts_business_id_phone_number_key")
+  @@unique([business_id, phone_number])
   @@index([business_id, phone_number], map: "idx_optouts_lookup")
 }
 
@@ -1690,4 +1688,62 @@ model campaign_analytics {
   updated_at     DateTime @default(now()) @db.Timestamptz(6)
 
   @@index([business_id], map: "idx_analytics_business")
+}
+
+// ─── Hotel Pricing Engine ────────────────────────────────────────────────────
+
+model hotel_pricing_recommendations {
+  id                   String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  hotel_id             String   @db.VarChar(50)
+  org_id               String   @db.VarChar(255)
+  room_type            String   @db.VarChar(100)
+  checkin_date         DateTime @db.Date
+  suggested_price      Int
+  demand_score         Float
+  confidence           Float
+  competitor_avg_price Int
+  current_price        Int
+  price_range_low      Int
+  price_range_high     Int
+  claude_narrative     String?
+  xotelo_snapshot      Json?
+  seven_day_forecast   Json?
+  created_at           DateTime @default(now()) @db.Timestamptz(6)
+  booking_outcomes     hotel_booking_outcomes[]
+
+  @@index([hotel_id, checkin_date])
+  @@index([org_id])
+}
+
+model hotel_booking_outcomes {
+  id                String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  recommendation_id String   @db.Uuid
+  hotel_id          String   @db.VarChar(50)
+  org_id            String   @db.VarChar(255)
+  actual_price_used Int
+  rooms_booked      Int
+  total_rooms       Int
+  actual_occupancy  Float
+  revenue           Int
+  checkin_date      DateTime @db.Date
+  recorded_at       DateTime @default(now()) @db.Timestamptz(6)
+  recommendation    hotel_pricing_recommendations @relation(fields: [recommendation_id], references: [id])
+
+  @@index([hotel_id])
+  @@index([recommendation_id])
+}
+
+model hotel_pricing_notifications {
+  id         String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  org_id     String    @db.VarChar(255)
+  hotel_id   String    @db.VarChar(50)
+  type       String    @db.VarChar(50)
+  title      String    @db.VarChar(255)
+  body       String
+  metadata   Json?
+  read_at    DateTime?
+  created_at DateTime  @default(now()) @db.Timestamptz(6)
+
+  @@index([org_id, created_at(sort: Desc)])
+  @@index([hotel_id])
 }

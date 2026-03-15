@@ -125,13 +125,27 @@ exports.Prisma.BusinessesScalarFieldEnum = {
   tenant_id: 'tenant_id',
   business_name: 'business_name',
   business_type: 'business_type',
-  subscription_plan_id: 'subscription_plan_id',
   whatsapp_number: 'whatsapp_number',
-  brand_colors: 'brand_colors',
-  logo_url: 'logo_url',
-  working_hours: 'working_hours',
   created_at: 'created_at',
-  updated_at: 'updated_at'
+  updated_at: 'updated_at',
+  email: 'email',
+  phone: 'phone',
+  website: 'website',
+  city: 'city',
+  address: 'address',
+  country: 'country',
+  gst_number: 'gst_number',
+  pan_number: 'pan_number'
+};
+
+exports.Prisma.Business_employeesScalarFieldEnum = {
+  employee_id: 'employee_id',
+  business_id: 'business_id',
+  name: 'name',
+  email: 'email',
+  phone: 'phone',
+  role: 'role',
+  created_at: 'created_at'
 };
 
 exports.Prisma.IntentsScalarFieldEnum = {
@@ -553,13 +567,13 @@ exports.Prisma.CustomersScalarFieldEnum = {
   phone: 'phone',
   email: 'email',
   whatsapp_number: 'whatsapp_number',
-  platform_user_id: 'platform_user_id',
   total_orders: 'total_orders',
   total_spent: 'total_spent',
   last_order_date: 'last_order_date',
   engagement_score: 'engagement_score',
   created_at: 'created_at',
-  updated_at: 'updated_at'
+  updated_at: 'updated_at',
+  platform_user_id: 'platform_user_id'
 };
 
 exports.Prisma.OrdersScalarFieldEnum = {
@@ -1210,13 +1224,13 @@ exports.Prisma.CartsScalarFieldEnum = {
   business_id: 'business_id',
   tenant_id: 'tenant_id',
   lead_id: 'lead_id',
-  customer_id: 'customer_id',
   status: 'status',
   total_amount: 'total_amount',
   total_items: 'total_items',
   expires_at: 'expires_at',
   created_at: 'created_at',
-  updated_at: 'updated_at'
+  updated_at: 'updated_at',
+  customer_id: 'customer_id'
 };
 
 exports.Prisma.Whatsapp_optoutsScalarFieldEnum = {
@@ -1245,6 +1259,51 @@ exports.Prisma.Campaign_analyticsScalarFieldEnum = {
   updated_at: 'updated_at'
 };
 
+exports.Prisma.Hotel_pricing_recommendationsScalarFieldEnum = {
+  id: 'id',
+  hotel_id: 'hotel_id',
+  org_id: 'org_id',
+  room_type: 'room_type',
+  checkin_date: 'checkin_date',
+  suggested_price: 'suggested_price',
+  demand_score: 'demand_score',
+  confidence: 'confidence',
+  competitor_avg_price: 'competitor_avg_price',
+  current_price: 'current_price',
+  price_range_low: 'price_range_low',
+  price_range_high: 'price_range_high',
+  claude_narrative: 'claude_narrative',
+  xotelo_snapshot: 'xotelo_snapshot',
+  seven_day_forecast: 'seven_day_forecast',
+  created_at: 'created_at'
+};
+
+exports.Prisma.Hotel_booking_outcomesScalarFieldEnum = {
+  id: 'id',
+  recommendation_id: 'recommendation_id',
+  hotel_id: 'hotel_id',
+  org_id: 'org_id',
+  actual_price_used: 'actual_price_used',
+  rooms_booked: 'rooms_booked',
+  total_rooms: 'total_rooms',
+  actual_occupancy: 'actual_occupancy',
+  revenue: 'revenue',
+  checkin_date: 'checkin_date',
+  recorded_at: 'recorded_at'
+};
+
+exports.Prisma.Hotel_pricing_notificationsScalarFieldEnum = {
+  id: 'id',
+  org_id: 'org_id',
+  hotel_id: 'hotel_id',
+  type: 'type',
+  title: 'title',
+  body: 'body',
+  metadata: 'metadata',
+  read_at: 'read_at',
+  created_at: 'created_at'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -1264,20 +1323,21 @@ exports.Prisma.QueryMode = {
   insensitive: 'insensitive'
 };
 
+exports.Prisma.NullsOrder = {
+  first: 'first',
+  last: 'last'
+};
+
 exports.Prisma.JsonNullValueFilter = {
   DbNull: Prisma.DbNull,
   JsonNull: Prisma.JsonNull,
   AnyNull: Prisma.AnyNull
 };
 
-exports.Prisma.NullsOrder = {
-  first: 'first',
-  last: 'last'
-};
-
 
 exports.Prisma.ModelName = {
   businesses: 'businesses',
+  business_employees: 'business_employees',
   intents: 'intents',
   notifications: 'notifications',
   role_intents: 'role_intents',
@@ -1334,7 +1394,10 @@ exports.Prisma.ModelName = {
   cart_items: 'cart_items',
   carts: 'carts',
   whatsapp_optouts: 'whatsapp_optouts',
-  campaign_analytics: 'campaign_analytics'
+  campaign_analytics: 'campaign_analytics',
+  hotel_pricing_recommendations: 'hotel_pricing_recommendations',
+  hotel_booking_outcomes: 'hotel_booking_outcomes',
+  hotel_pricing_notifications: 'hotel_pricing_notifications'
 };
 
 /**

@@ -19,6 +19,11 @@ export type PrismaPromise<T> = $Public.PrismaPromise<T>
  */
 export type businesses = $Result.DefaultSelection<Prisma.$businessesPayload>
 /**
+ * Model business_employees
+ * 
+ */
+export type business_employees = $Result.DefaultSelection<Prisma.$business_employeesPayload>
+/**
  * Model intents
  * 
  */
@@ -307,6 +312,21 @@ export type whatsapp_optouts = $Result.DefaultSelection<Prisma.$whatsapp_optouts
  * 
  */
 export type campaign_analytics = $Result.DefaultSelection<Prisma.$campaign_analyticsPayload>
+/**
+ * Model hotel_pricing_recommendations
+ * 
+ */
+export type hotel_pricing_recommendations = $Result.DefaultSelection<Prisma.$hotel_pricing_recommendationsPayload>
+/**
+ * Model hotel_booking_outcomes
+ * 
+ */
+export type hotel_booking_outcomes = $Result.DefaultSelection<Prisma.$hotel_booking_outcomesPayload>
+/**
+ * Model hotel_pricing_notifications
+ * 
+ */
+export type hotel_pricing_notifications = $Result.DefaultSelection<Prisma.$hotel_pricing_notificationsPayload>
 
 /**
  * ##  Prisma Client ʲˢ
@@ -442,6 +462,16 @@ export class PrismaClient<
     * ```
     */
   get businesses(): Prisma.businessesDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.business_employees`: Exposes CRUD operations for the **business_employees** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more Business_employees
+    * const business_employees = await prisma.business_employees.findMany()
+    * ```
+    */
+  get business_employees(): Prisma.business_employeesDelegate<ExtArgs, ClientOptions>;
 
   /**
    * `prisma.intents`: Exposes CRUD operations for the **intents** model.
@@ -1012,6 +1042,36 @@ export class PrismaClient<
     * ```
     */
   get campaign_analytics(): Prisma.campaign_analyticsDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.hotel_pricing_recommendations`: Exposes CRUD operations for the **hotel_pricing_recommendations** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more Hotel_pricing_recommendations
+    * const hotel_pricing_recommendations = await prisma.hotel_pricing_recommendations.findMany()
+    * ```
+    */
+  get hotel_pricing_recommendations(): Prisma.hotel_pricing_recommendationsDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.hotel_booking_outcomes`: Exposes CRUD operations for the **hotel_booking_outcomes** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more Hotel_booking_outcomes
+    * const hotel_booking_outcomes = await prisma.hotel_booking_outcomes.findMany()
+    * ```
+    */
+  get hotel_booking_outcomes(): Prisma.hotel_booking_outcomesDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.hotel_pricing_notifications`: Exposes CRUD operations for the **hotel_pricing_notifications** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more Hotel_pricing_notifications
+    * const hotel_pricing_notifications = await prisma.hotel_pricing_notifications.findMany()
+    * ```
+    */
+  get hotel_pricing_notifications(): Prisma.hotel_pricing_notificationsDelegate<ExtArgs, ClientOptions>;
 }
 
 export namespace Prisma {
@@ -1453,6 +1513,7 @@ export namespace Prisma {
 
   export const ModelName: {
     businesses: 'businesses',
+    business_employees: 'business_employees',
     intents: 'intents',
     notifications: 'notifications',
     role_intents: 'role_intents',
@@ -1509,7 +1570,10 @@ export namespace Prisma {
     cart_items: 'cart_items',
     carts: 'carts',
     whatsapp_optouts: 'whatsapp_optouts',
-    campaign_analytics: 'campaign_analytics'
+    campaign_analytics: 'campaign_analytics',
+    hotel_pricing_recommendations: 'hotel_pricing_recommendations',
+    hotel_booking_outcomes: 'hotel_booking_outcomes',
+    hotel_pricing_notifications: 'hotel_pricing_notifications'
   };
 
   export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -1528,7 +1592,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "businesses" | "intents" | "notifications" | "role_intents" | "roles" | "social_accounts" | "subscription_plans" | "tenants" | "users" | "leads" | "lead_activities" | "lead_conversations" | "lead_messages" | "tags" | "lead_tag_assignments" | "lead_notes" | "lead_status_history" | "lead_followups" | "lead_duplicates" | "products" | "product_variants" | "product_images" | "course_batches" | "customers" | "orders" | "order_items" | "stock_reservations" | "cart_reservations" | "campaigns" | "campaign_recipients" | "lead_scoring_rules" | "lead_score_history" | "tasks" | "warehouses" | "inventory_levels" | "stock_movements" | "stock_transfers" | "stock_alerts" | "stock_counts" | "notification_templates" | "notification_messages" | "notification_preferences" | "payments" | "payment_reconciliation" | "conversations" | "messages" | "notification_events" | "payment_webhooks" | "instagram_media" | "product_categories" | "product_reviews" | "workflow_definitions" | "business_workflows" | "workflow_executions" | "cart_items" | "carts" | "whatsapp_optouts" | "campaign_analytics"
+      modelProps: "businesses" | "business_employees" | "intents" | "notifications" | "role_intents" | "roles" | "social_accounts" | "subscription_plans" | "tenants" | "users" | "leads" | "lead_activities" | "lead_conversations" | "lead_messages" | "tags" | "lead_tag_assignments" | "lead_notes" | "lead_status_history" | "lead_followups" | "lead_duplicates" | "products" | "product_variants" | "product_images" | "course_batches" | "customers" | "orders" | "order_items" | "stock_reservations" | "cart_reservations" | "campaigns" | "campaign_recipients" | "lead_scoring_rules" | "lead_score_history" | "tasks" | "warehouses" | "inventory_levels" | "stock_movements" | "stock_transfers" | "stock_alerts" | "stock_counts" | "notification_templates" | "notification_messages" | "notification_preferences" | "payments" | "payment_reconciliation" | "conversations" | "messages" | "notification_events" | "payment_webhooks" | "instagram_media" | "product_categories" | "product_reviews" | "workflow_definitions" | "business_workflows" | "workflow_executions" | "cart_items" | "carts" | "whatsapp_optouts" | "campaign_analytics" | "hotel_pricing_recommendations" | "hotel_booking_outcomes" | "hotel_pricing_notifications"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -1603,6 +1667,80 @@ export namespace Prisma {
           count: {
             args: Prisma.businessesCountArgs<ExtArgs>
             result: $Utils.Optional<BusinessesCountAggregateOutputType> | number
+          }
+        }
+      }
+      business_employees: {
+        payload: Prisma.$business_employeesPayload<ExtArgs>
+        fields: Prisma.business_employeesFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.business_employeesFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$business_employeesPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.business_employeesFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$business_employeesPayload>
+          }
+          findFirst: {
+            args: Prisma.business_employeesFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$business_employeesPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.business_employeesFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$business_employeesPayload>
+          }
+          findMany: {
+            args: Prisma.business_employeesFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$business_employeesPayload>[]
+          }
+          create: {
+            args: Prisma.business_employeesCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$business_employeesPayload>
+          }
+          createMany: {
+            args: Prisma.business_employeesCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.business_employeesCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$business_employeesPayload>[]
+          }
+          delete: {
+            args: Prisma.business_employeesDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$business_employeesPayload>
+          }
+          update: {
+            args: Prisma.business_employeesUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$business_employeesPayload>
+          }
+          deleteMany: {
+            args: Prisma.business_employeesDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.business_employeesUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.business_employeesUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$business_employeesPayload>[]
+          }
+          upsert: {
+            args: Prisma.business_employeesUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$business_employeesPayload>
+          }
+          aggregate: {
+            args: Prisma.Business_employeesAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateBusiness_employees>
+          }
+          groupBy: {
+            args: Prisma.business_employeesGroupByArgs<ExtArgs>
+            result: $Utils.Optional<Business_employeesGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.business_employeesCountArgs<ExtArgs>
+            result: $Utils.Optional<Business_employeesCountAggregateOutputType> | number
           }
         }
       }
@@ -5824,6 +5962,228 @@ export namespace Prisma {
           }
         }
       }
+      hotel_pricing_recommendations: {
+        payload: Prisma.$hotel_pricing_recommendationsPayload<ExtArgs>
+        fields: Prisma.hotel_pricing_recommendationsFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.hotel_pricing_recommendationsFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$hotel_pricing_recommendationsPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.hotel_pricing_recommendationsFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$hotel_pricing_recommendationsPayload>
+          }
+          findFirst: {
+            args: Prisma.hotel_pricing_recommendationsFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$hotel_pricing_recommendationsPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.hotel_pricing_recommendationsFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$hotel_pricing_recommendationsPayload>
+          }
+          findMany: {
+            args: Prisma.hotel_pricing_recommendationsFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$hotel_pricing_recommendationsPayload>[]
+          }
+          create: {
+            args: Prisma.hotel_pricing_recommendationsCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$hotel_pricing_recommendationsPayload>
+          }
+          createMany: {
+            args: Prisma.hotel_pricing_recommendationsCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.hotel_pricing_recommendationsCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$hotel_pricing_recommendationsPayload>[]
+          }
+          delete: {
+            args: Prisma.hotel_pricing_recommendationsDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$hotel_pricing_recommendationsPayload>
+          }
+          update: {
+            args: Prisma.hotel_pricing_recommendationsUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$hotel_pricing_recommendationsPayload>
+          }
+          deleteMany: {
+            args: Prisma.hotel_pricing_recommendationsDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.hotel_pricing_recommendationsUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.hotel_pricing_recommendationsUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$hotel_pricing_recommendationsPayload>[]
+          }
+          upsert: {
+            args: Prisma.hotel_pricing_recommendationsUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$hotel_pricing_recommendationsPayload>
+          }
+          aggregate: {
+            args: Prisma.Hotel_pricing_recommendationsAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateHotel_pricing_recommendations>
+          }
+          groupBy: {
+            args: Prisma.hotel_pricing_recommendationsGroupByArgs<ExtArgs>
+            result: $Utils.Optional<Hotel_pricing_recommendationsGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.hotel_pricing_recommendationsCountArgs<ExtArgs>
+            result: $Utils.Optional<Hotel_pricing_recommendationsCountAggregateOutputType> | number
+          }
+        }
+      }
+      hotel_booking_outcomes: {
+        payload: Prisma.$hotel_booking_outcomesPayload<ExtArgs>
+        fields: Prisma.hotel_booking_outcomesFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.hotel_booking_outcomesFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$hotel_booking_outcomesPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.hotel_booking_outcomesFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$hotel_booking_outcomesPayload>
+          }
+          findFirst: {
+            args: Prisma.hotel_booking_outcomesFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$hotel_booking_outcomesPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.hotel_booking_outcomesFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$hotel_booking_outcomesPayload>
+          }
+          findMany: {
+            args: Prisma.hotel_booking_outcomesFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$hotel_booking_outcomesPayload>[]
+          }
+          create: {
+            args: Prisma.hotel_booking_outcomesCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$hotel_booking_outcomesPayload>
+          }
+          createMany: {
+            args: Prisma.hotel_booking_outcomesCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.hotel_booking_outcomesCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$hotel_booking_outcomesPayload>[]
+          }
+          delete: {
+            args: Prisma.hotel_booking_outcomesDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$hotel_booking_outcomesPayload>
+          }
+          update: {
+            args: Prisma.hotel_booking_outcomesUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$hotel_booking_outcomesPayload>
+          }
+          deleteMany: {
+            args: Prisma.hotel_booking_outcomesDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.hotel_booking_outcomesUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.hotel_booking_outcomesUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$hotel_booking_outcomesPayload>[]
+          }
+          upsert: {
+            args: Prisma.hotel_booking_outcomesUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$hotel_booking_outcomesPayload>
+          }
+          aggregate: {
+            args: Prisma.Hotel_booking_outcomesAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateHotel_booking_outcomes>
+          }
+          groupBy: {
+            args: Prisma.hotel_booking_outcomesGroupByArgs<ExtArgs>
+            result: $Utils.Optional<Hotel_booking_outcomesGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.hotel_booking_outcomesCountArgs<ExtArgs>
+            result: $Utils.Optional<Hotel_booking_outcomesCountAggregateOutputType> | number
+          }
+        }
+      }
+      hotel_pricing_notifications: {
+        payload: Prisma.$hotel_pricing_notificationsPayload<ExtArgs>
+        fields: Prisma.hotel_pricing_notificationsFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.hotel_pricing_notificationsFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$hotel_pricing_notificationsPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.hotel_pricing_notificationsFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$hotel_pricing_notificationsPayload>
+          }
+          findFirst: {
+            args: Prisma.hotel_pricing_notificationsFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$hotel_pricing_notificationsPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.hotel_pricing_notificationsFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$hotel_pricing_notificationsPayload>
+          }
+          findMany: {
+            args: Prisma.hotel_pricing_notificationsFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$hotel_pricing_notificationsPayload>[]
+          }
+          create: {
+            args: Prisma.hotel_pricing_notificationsCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$hotel_pricing_notificationsPayload>
+          }
+          createMany: {
+            args: Prisma.hotel_pricing_notificationsCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.hotel_pricing_notificationsCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$hotel_pricing_notificationsPayload>[]
+          }
+          delete: {
+            args: Prisma.hotel_pricing_notificationsDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$hotel_pricing_notificationsPayload>
+          }
+          update: {
+            args: Prisma.hotel_pricing_notificationsUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$hotel_pricing_notificationsPayload>
+          }
+          deleteMany: {
+            args: Prisma.hotel_pricing_notificationsDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.hotel_pricing_notificationsUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.hotel_pricing_notificationsUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$hotel_pricing_notificationsPayload>[]
+          }
+          upsert: {
+            args: Prisma.hotel_pricing_notificationsUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$hotel_pricing_notificationsPayload>
+          }
+          aggregate: {
+            args: Prisma.Hotel_pricing_notificationsAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateHotel_pricing_notifications>
+          }
+          groupBy: {
+            args: Prisma.hotel_pricing_notificationsGroupByArgs<ExtArgs>
+            result: $Utils.Optional<Hotel_pricing_notificationsGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.hotel_pricing_notificationsCountArgs<ExtArgs>
+            result: $Utils.Optional<Hotel_pricing_notificationsCountAggregateOutputType> | number
+          }
+        }
+      }
     }
   } & {
     other: {
@@ -5909,6 +6269,7 @@ export namespace Prisma {
   }
   export type GlobalOmitConfig = {
     businesses?: businessesOmit
+    business_employees?: business_employeesOmit
     intents?: intentsOmit
     notifications?: notificationsOmit
     role_intents?: role_intentsOmit
@@ -5966,6 +6327,9 @@ export namespace Prisma {
     carts?: cartsOmit
     whatsapp_optouts?: whatsapp_optoutsOmit
     campaign_analytics?: campaign_analyticsOmit
+    hotel_pricing_recommendations?: hotel_pricing_recommendationsOmit
+    hotel_booking_outcomes?: hotel_booking_outcomesOmit
+    hotel_pricing_notifications?: hotel_pricing_notificationsOmit
   }
 
   /* Types for Logging */
@@ -6060,6 +6424,7 @@ export namespace Prisma {
    */
 
   export type BusinessesCountOutputType = {
+    business_employees: number
     business_workflows: number
     carts: number
     inventory_levels: number
@@ -6084,6 +6449,7 @@ export namespace Prisma {
   }
 
   export type BusinessesCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    business_employees?: boolean | BusinessesCountOutputTypeCountBusiness_employeesArgs
     business_workflows?: boolean | BusinessesCountOutputTypeCountBusiness_workflowsArgs
     carts?: boolean | BusinessesCountOutputTypeCountCartsArgs
     inventory_levels?: boolean | BusinessesCountOutputTypeCountInventory_levelsArgs
@@ -6116,6 +6482,13 @@ export namespace Prisma {
      * Select specific fields to fetch from the BusinessesCountOutputType
      */
     select?: BusinessesCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * BusinessesCountOutputType without action
+   */
+  export type BusinessesCountOutputTypeCountBusiness_employeesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: business_employeesWhereInput
   }
 
   /**
@@ -6369,37 +6742,6 @@ export namespace Prisma {
 
 
   /**
-   * Count Type Subscription_plansCountOutputType
-   */
-
-  export type Subscription_plansCountOutputType = {
-    businesses: number
-  }
-
-  export type Subscription_plansCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    businesses?: boolean | Subscription_plansCountOutputTypeCountBusinessesArgs
-  }
-
-  // Custom InputTypes
-  /**
-   * Subscription_plansCountOutputType without action
-   */
-  export type Subscription_plansCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Subscription_plansCountOutputType
-     */
-    select?: Subscription_plansCountOutputTypeSelect<ExtArgs> | null
-  }
-
-  /**
-   * Subscription_plansCountOutputType without action
-   */
-  export type Subscription_plansCountOutputTypeCountBusinessesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: businessesWhereInput
-  }
-
-
-  /**
    * Count Type TenantsCountOutputType
    */
 
@@ -6646,6 +6988,7 @@ export namespace Prisma {
    */
 
   export type LeadsCountOutputType = {
+    cart_reservations: number
     carts: number
     lead_activities: number
     lead_conversations: number
@@ -6661,10 +7004,10 @@ export namespace Prisma {
     duplicate_leads: number
     orders: number
     workflow_executions: number
-    cart_reservations: number
   }
 
   export type LeadsCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    cart_reservations?: boolean | LeadsCountOutputTypeCountCart_reservationsArgs
     carts?: boolean | LeadsCountOutputTypeCountCartsArgs
     lead_activities?: boolean | LeadsCountOutputTypeCountLead_activitiesArgs
     lead_conversations?: boolean | LeadsCountOutputTypeCountLead_conversationsArgs
@@ -6680,7 +7023,6 @@ export namespace Prisma {
     duplicate_leads?: boolean | LeadsCountOutputTypeCountDuplicate_leadsArgs
     orders?: boolean | LeadsCountOutputTypeCountOrdersArgs
     workflow_executions?: boolean | LeadsCountOutputTypeCountWorkflow_executionsArgs
-    cart_reservations?: boolean | LeadsCountOutputTypeCountCart_reservationsArgs
   }
 
   // Custom InputTypes
@@ -6692,6 +7034,13 @@ export namespace Prisma {
      * Select specific fields to fetch from the LeadsCountOutputType
      */
     select?: LeadsCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * LeadsCountOutputType without action
+   */
+  export type LeadsCountOutputTypeCountCart_reservationsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: cart_reservationsWhereInput
   }
 
   /**
@@ -6799,13 +7148,6 @@ export namespace Prisma {
     where?: workflow_executionsWhereInput
   }
 
-  /**
-   * LeadsCountOutputType without action
-   */
-  export type LeadsCountOutputTypeCountCart_reservationsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: cart_reservationsWhereInput
-  }
-
 
   /**
    * Count Type Lead_conversationsCountOutputType
@@ -6907,25 +7249,25 @@ export namespace Prisma {
   export type ProductsCountOutputType = {
     campaigns: number
     cart_items: number
+    cart_reservations: number
     course_batches: number
     order_items: number
     product_images: number
     product_reviews: number
     product_variants: number
     stock_reservations: number
-    cart_reservations: number
   }
 
   export type ProductsCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     campaigns?: boolean | ProductsCountOutputTypeCountCampaignsArgs
     cart_items?: boolean | ProductsCountOutputTypeCountCart_itemsArgs
+    cart_reservations?: boolean | ProductsCountOutputTypeCountCart_reservationsArgs
     course_batches?: boolean | ProductsCountOutputTypeCountCourse_batchesArgs
     order_items?: boolean | ProductsCountOutputTypeCountOrder_itemsArgs
     product_images?: boolean | ProductsCountOutputTypeCountProduct_imagesArgs
     product_reviews?: boolean | ProductsCountOutputTypeCountProduct_reviewsArgs
     product_variants?: boolean | ProductsCountOutputTypeCountProduct_variantsArgs
     stock_reservations?: boolean | ProductsCountOutputTypeCountStock_reservationsArgs
-    cart_reservations?: boolean | ProductsCountOutputTypeCountCart_reservationsArgs
   }
 
   // Custom InputTypes
@@ -6951,6 +7293,13 @@ export namespace Prisma {
    */
   export type ProductsCountOutputTypeCountCart_itemsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: cart_itemsWhereInput
+  }
+
+  /**
+   * ProductsCountOutputType without action
+   */
+  export type ProductsCountOutputTypeCountCart_reservationsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: cart_reservationsWhereInput
   }
 
   /**
@@ -6993,13 +7342,6 @@ export namespace Prisma {
    */
   export type ProductsCountOutputTypeCountStock_reservationsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: stock_reservationsWhereInput
-  }
-
-  /**
-   * ProductsCountOutputType without action
-   */
-  export type ProductsCountOutputTypeCountCart_reservationsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: cart_reservationsWhereInput
   }
 
 
@@ -7609,6 +7951,37 @@ export namespace Prisma {
 
 
   /**
+   * Count Type Hotel_pricing_recommendationsCountOutputType
+   */
+
+  export type Hotel_pricing_recommendationsCountOutputType = {
+    booking_outcomes: number
+  }
+
+  export type Hotel_pricing_recommendationsCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    booking_outcomes?: boolean | Hotel_pricing_recommendationsCountOutputTypeCountBooking_outcomesArgs
+  }
+
+  // Custom InputTypes
+  /**
+   * Hotel_pricing_recommendationsCountOutputType without action
+   */
+  export type Hotel_pricing_recommendationsCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Hotel_pricing_recommendationsCountOutputType
+     */
+    select?: Hotel_pricing_recommendationsCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * Hotel_pricing_recommendationsCountOutputType without action
+   */
+  export type Hotel_pricing_recommendationsCountOutputTypeCountBooking_outcomesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: hotel_booking_outcomesWhereInput
+  }
+
+
+  /**
    * Models
    */
 
@@ -7627,11 +8000,17 @@ export namespace Prisma {
     tenant_id: string | null
     business_name: string | null
     business_type: string | null
-    subscription_plan_id: string | null
     whatsapp_number: string | null
-    logo_url: string | null
     created_at: Date | null
     updated_at: Date | null
+    email: string | null
+    phone: string | null
+    website: string | null
+    city: string | null
+    address: string | null
+    country: string | null
+    gst_number: string | null
+    pan_number: string | null
   }
 
   export type BusinessesMaxAggregateOutputType = {
@@ -7639,11 +8018,17 @@ export namespace Prisma {
     tenant_id: string | null
     business_name: string | null
     business_type: string | null
-    subscription_plan_id: string | null
     whatsapp_number: string | null
-    logo_url: string | null
     created_at: Date | null
     updated_at: Date | null
+    email: string | null
+    phone: string | null
+    website: string | null
+    city: string | null
+    address: string | null
+    country: string | null
+    gst_number: string | null
+    pan_number: string | null
   }
 
   export type BusinessesCountAggregateOutputType = {
@@ -7651,13 +8036,17 @@ export namespace Prisma {
     tenant_id: number
     business_name: number
     business_type: number
-    subscription_plan_id: number
     whatsapp_number: number
-    brand_colors: number
-    logo_url: number
-    working_hours: number
     created_at: number
     updated_at: number
+    email: number
+    phone: number
+    website: number
+    city: number
+    address: number
+    country: number
+    gst_number: number
+    pan_number: number
     _all: number
   }
 
@@ -7667,11 +8056,17 @@ export namespace Prisma {
     tenant_id?: true
     business_name?: true
     business_type?: true
-    subscription_plan_id?: true
     whatsapp_number?: true
-    logo_url?: true
     created_at?: true
     updated_at?: true
+    email?: true
+    phone?: true
+    website?: true
+    city?: true
+    address?: true
+    country?: true
+    gst_number?: true
+    pan_number?: true
   }
 
   export type BusinessesMaxAggregateInputType = {
@@ -7679,11 +8074,17 @@ export namespace Prisma {
     tenant_id?: true
     business_name?: true
     business_type?: true
-    subscription_plan_id?: true
     whatsapp_number?: true
-    logo_url?: true
     created_at?: true
     updated_at?: true
+    email?: true
+    phone?: true
+    website?: true
+    city?: true
+    address?: true
+    country?: true
+    gst_number?: true
+    pan_number?: true
   }
 
   export type BusinessesCountAggregateInputType = {
@@ -7691,13 +8092,17 @@ export namespace Prisma {
     tenant_id?: true
     business_name?: true
     business_type?: true
-    subscription_plan_id?: true
     whatsapp_number?: true
-    brand_colors?: true
-    logo_url?: true
-    working_hours?: true
     created_at?: true
     updated_at?: true
+    email?: true
+    phone?: true
+    website?: true
+    city?: true
+    address?: true
+    country?: true
+    gst_number?: true
+    pan_number?: true
     _all?: true
   }
 
@@ -7778,13 +8183,17 @@ export namespace Prisma {
     tenant_id: string
     business_name: string
     business_type: string | null
-    subscription_plan_id: string | null
     whatsapp_number: string | null
-    brand_colors: JsonValue | null
-    logo_url: string | null
-    working_hours: JsonValue | null
     created_at: Date | null
     updated_at: Date | null
+    email: string | null
+    phone: string | null
+    website: string | null
+    city: string | null
+    address: string | null
+    country: string | null
+    gst_number: string | null
+    pan_number: string | null
     _count: BusinessesCountAggregateOutputType | null
     _min: BusinessesMinAggregateOutputType | null
     _max: BusinessesMaxAggregateOutputType | null
@@ -7809,15 +8218,19 @@ export namespace Prisma {
     tenant_id?: boolean
     business_name?: boolean
     business_type?: boolean
-    subscription_plan_id?: boolean
     whatsapp_number?: boolean
-    brand_colors?: boolean
-    logo_url?: boolean
-    working_hours?: boolean
     created_at?: boolean
     updated_at?: boolean
+    email?: boolean
+    phone?: boolean
+    website?: boolean
+    city?: boolean
+    address?: boolean
+    country?: boolean
+    gst_number?: boolean
+    pan_number?: boolean
+    business_employees?: boolean | businesses$business_employeesArgs<ExtArgs>
     business_workflows?: boolean | businesses$business_workflowsArgs<ExtArgs>
-    subscription_plans?: boolean | businesses$subscription_plansArgs<ExtArgs>
     tenants?: boolean | tenantsDefaultArgs<ExtArgs>
     carts?: boolean | businesses$cartsArgs<ExtArgs>
     inventory_levels?: boolean | businesses$inventory_levelsArgs<ExtArgs>
@@ -7847,14 +8260,17 @@ export namespace Prisma {
     tenant_id?: boolean
     business_name?: boolean
     business_type?: boolean
-    subscription_plan_id?: boolean
     whatsapp_number?: boolean
-    brand_colors?: boolean
-    logo_url?: boolean
-    working_hours?: boolean
     created_at?: boolean
     updated_at?: boolean
-    subscription_plans?: boolean | businesses$subscription_plansArgs<ExtArgs>
+    email?: boolean
+    phone?: boolean
+    website?: boolean
+    city?: boolean
+    address?: boolean
+    country?: boolean
+    gst_number?: boolean
+    pan_number?: boolean
     tenants?: boolean | tenantsDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["businesses"]>
 
@@ -7863,14 +8279,17 @@ export namespace Prisma {
     tenant_id?: boolean
     business_name?: boolean
     business_type?: boolean
-    subscription_plan_id?: boolean
     whatsapp_number?: boolean
-    brand_colors?: boolean
-    logo_url?: boolean
-    working_hours?: boolean
     created_at?: boolean
     updated_at?: boolean
-    subscription_plans?: boolean | businesses$subscription_plansArgs<ExtArgs>
+    email?: boolean
+    phone?: boolean
+    website?: boolean
+    city?: boolean
+    address?: boolean
+    country?: boolean
+    gst_number?: boolean
+    pan_number?: boolean
     tenants?: boolean | tenantsDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["businesses"]>
 
@@ -7879,19 +8298,23 @@ export namespace Prisma {
     tenant_id?: boolean
     business_name?: boolean
     business_type?: boolean
-    subscription_plan_id?: boolean
     whatsapp_number?: boolean
-    brand_colors?: boolean
-    logo_url?: boolean
-    working_hours?: boolean
     created_at?: boolean
     updated_at?: boolean
+    email?: boolean
+    phone?: boolean
+    website?: boolean
+    city?: boolean
+    address?: boolean
+    country?: boolean
+    gst_number?: boolean
+    pan_number?: boolean
   }
 
-  export type businessesOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"business_id" | "tenant_id" | "business_name" | "business_type" | "subscription_plan_id" | "whatsapp_number" | "brand_colors" | "logo_url" | "working_hours" | "created_at" | "updated_at", ExtArgs["result"]["businesses"]>
+  export type businessesOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"business_id" | "tenant_id" | "business_name" | "business_type" | "whatsapp_number" | "created_at" | "updated_at" | "email" | "phone" | "website" | "city" | "address" | "country" | "gst_number" | "pan_number", ExtArgs["result"]["businesses"]>
   export type businessesInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    business_employees?: boolean | businesses$business_employeesArgs<ExtArgs>
     business_workflows?: boolean | businesses$business_workflowsArgs<ExtArgs>
-    subscription_plans?: boolean | businesses$subscription_plansArgs<ExtArgs>
     tenants?: boolean | tenantsDefaultArgs<ExtArgs>
     carts?: boolean | businesses$cartsArgs<ExtArgs>
     inventory_levels?: boolean | businesses$inventory_levelsArgs<ExtArgs>
@@ -7916,19 +8339,17 @@ export namespace Prisma {
     _count?: boolean | BusinessesCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type businessesIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    subscription_plans?: boolean | businesses$subscription_plansArgs<ExtArgs>
     tenants?: boolean | tenantsDefaultArgs<ExtArgs>
   }
   export type businessesIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    subscription_plans?: boolean | businesses$subscription_plansArgs<ExtArgs>
     tenants?: boolean | tenantsDefaultArgs<ExtArgs>
   }
 
   export type $businessesPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "businesses"
     objects: {
+      business_employees: Prisma.$business_employeesPayload<ExtArgs>[]
       business_workflows: Prisma.$business_workflowsPayload<ExtArgs>[]
-      subscription_plans: Prisma.$subscription_plansPayload<ExtArgs> | null
       tenants: Prisma.$tenantsPayload<ExtArgs>
       carts: Prisma.$cartsPayload<ExtArgs>[]
       inventory_levels: Prisma.$inventory_levelsPayload<ExtArgs>[]
@@ -7956,13 +8377,17 @@ export namespace Prisma {
       tenant_id: string
       business_name: string
       business_type: string | null
-      subscription_plan_id: string | null
       whatsapp_number: string | null
-      brand_colors: Prisma.JsonValue | null
-      logo_url: string | null
-      working_hours: Prisma.JsonValue | null
       created_at: Date | null
       updated_at: Date | null
+      email: string | null
+      phone: string | null
+      website: string | null
+      city: string | null
+      address: string | null
+      country: string | null
+      gst_number: string | null
+      pan_number: string | null
     }, ExtArgs["result"]["businesses"]>
     composites: {}
   }
@@ -8357,8 +8782,8 @@ export namespace Prisma {
    */
   export interface Prisma__businessesClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
+    business_employees<T extends businesses$business_employeesArgs<ExtArgs> = {}>(args?: Subset<T, businesses$business_employeesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$business_employeesPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     business_workflows<T extends businesses$business_workflowsArgs<ExtArgs> = {}>(args?: Subset<T, businesses$business_workflowsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$business_workflowsPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-    subscription_plans<T extends businesses$subscription_plansArgs<ExtArgs> = {}>(args?: Subset<T, businesses$subscription_plansArgs<ExtArgs>>): Prisma__subscription_plansClient<$Result.GetResult<Prisma.$subscription_plansPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     tenants<T extends tenantsDefaultArgs<ExtArgs> = {}>(args?: Subset<T, tenantsDefaultArgs<ExtArgs>>): Prisma__tenantsClient<$Result.GetResult<Prisma.$tenantsPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     carts<T extends businesses$cartsArgs<ExtArgs> = {}>(args?: Subset<T, businesses$cartsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$cartsPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     inventory_levels<T extends businesses$inventory_levelsArgs<ExtArgs> = {}>(args?: Subset<T, businesses$inventory_levelsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$inventory_levelsPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
@@ -8413,13 +8838,17 @@ export namespace Prisma {
     readonly tenant_id: FieldRef<"businesses", 'String'>
     readonly business_name: FieldRef<"businesses", 'String'>
     readonly business_type: FieldRef<"businesses", 'String'>
-    readonly subscription_plan_id: FieldRef<"businesses", 'String'>
     readonly whatsapp_number: FieldRef<"businesses", 'String'>
-    readonly brand_colors: FieldRef<"businesses", 'Json'>
-    readonly logo_url: FieldRef<"businesses", 'String'>
-    readonly working_hours: FieldRef<"businesses", 'Json'>
     readonly created_at: FieldRef<"businesses", 'DateTime'>
     readonly updated_at: FieldRef<"businesses", 'DateTime'>
+    readonly email: FieldRef<"businesses", 'String'>
+    readonly phone: FieldRef<"businesses", 'String'>
+    readonly website: FieldRef<"businesses", 'String'>
+    readonly city: FieldRef<"businesses", 'String'>
+    readonly address: FieldRef<"businesses", 'String'>
+    readonly country: FieldRef<"businesses", 'String'>
+    readonly gst_number: FieldRef<"businesses", 'String'>
+    readonly pan_number: FieldRef<"businesses", 'String'>
   }
     
 
@@ -8816,6 +9245,30 @@ export namespace Prisma {
   }
 
   /**
+   * businesses.business_employees
+   */
+  export type businesses$business_employeesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the business_employees
+     */
+    select?: business_employeesSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the business_employees
+     */
+    omit?: business_employeesOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: business_employeesInclude<ExtArgs> | null
+    where?: business_employeesWhereInput
+    orderBy?: business_employeesOrderByWithRelationInput | business_employeesOrderByWithRelationInput[]
+    cursor?: business_employeesWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: Business_employeesScalarFieldEnum | Business_employeesScalarFieldEnum[]
+  }
+
+  /**
    * businesses.business_workflows
    */
   export type businesses$business_workflowsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -8837,25 +9290,6 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: Business_workflowsScalarFieldEnum | Business_workflowsScalarFieldEnum[]
-  }
-
-  /**
-   * businesses.subscription_plans
-   */
-  export type businesses$subscription_plansArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the subscription_plans
-     */
-    select?: subscription_plansSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the subscription_plans
-     */
-    omit?: subscription_plansOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: subscription_plansInclude<ExtArgs> | null
-    where?: subscription_plansWhereInput
   }
 
   /**
@@ -9354,6 +9788,1090 @@ export namespace Prisma {
      * Choose, which related nodes to fetch as well
      */
     include?: businessesInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model business_employees
+   */
+
+  export type AggregateBusiness_employees = {
+    _count: Business_employeesCountAggregateOutputType | null
+    _min: Business_employeesMinAggregateOutputType | null
+    _max: Business_employeesMaxAggregateOutputType | null
+  }
+
+  export type Business_employeesMinAggregateOutputType = {
+    employee_id: string | null
+    business_id: string | null
+    name: string | null
+    email: string | null
+    phone: string | null
+    role: string | null
+    created_at: Date | null
+  }
+
+  export type Business_employeesMaxAggregateOutputType = {
+    employee_id: string | null
+    business_id: string | null
+    name: string | null
+    email: string | null
+    phone: string | null
+    role: string | null
+    created_at: Date | null
+  }
+
+  export type Business_employeesCountAggregateOutputType = {
+    employee_id: number
+    business_id: number
+    name: number
+    email: number
+    phone: number
+    role: number
+    created_at: number
+    _all: number
+  }
+
+
+  export type Business_employeesMinAggregateInputType = {
+    employee_id?: true
+    business_id?: true
+    name?: true
+    email?: true
+    phone?: true
+    role?: true
+    created_at?: true
+  }
+
+  export type Business_employeesMaxAggregateInputType = {
+    employee_id?: true
+    business_id?: true
+    name?: true
+    email?: true
+    phone?: true
+    role?: true
+    created_at?: true
+  }
+
+  export type Business_employeesCountAggregateInputType = {
+    employee_id?: true
+    business_id?: true
+    name?: true
+    email?: true
+    phone?: true
+    role?: true
+    created_at?: true
+    _all?: true
+  }
+
+  export type Business_employeesAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which business_employees to aggregate.
+     */
+    where?: business_employeesWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of business_employees to fetch.
+     */
+    orderBy?: business_employeesOrderByWithRelationInput | business_employeesOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: business_employeesWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` business_employees from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` business_employees.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned business_employees
+    **/
+    _count?: true | Business_employeesCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: Business_employeesMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: Business_employeesMaxAggregateInputType
+  }
+
+  export type GetBusiness_employeesAggregateType<T extends Business_employeesAggregateArgs> = {
+        [P in keyof T & keyof AggregateBusiness_employees]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateBusiness_employees[P]>
+      : GetScalarType<T[P], AggregateBusiness_employees[P]>
+  }
+
+
+
+
+  export type business_employeesGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: business_employeesWhereInput
+    orderBy?: business_employeesOrderByWithAggregationInput | business_employeesOrderByWithAggregationInput[]
+    by: Business_employeesScalarFieldEnum[] | Business_employeesScalarFieldEnum
+    having?: business_employeesScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: Business_employeesCountAggregateInputType | true
+    _min?: Business_employeesMinAggregateInputType
+    _max?: Business_employeesMaxAggregateInputType
+  }
+
+  export type Business_employeesGroupByOutputType = {
+    employee_id: string
+    business_id: string
+    name: string
+    email: string | null
+    phone: string | null
+    role: string | null
+    created_at: Date | null
+    _count: Business_employeesCountAggregateOutputType | null
+    _min: Business_employeesMinAggregateOutputType | null
+    _max: Business_employeesMaxAggregateOutputType | null
+  }
+
+  type GetBusiness_employeesGroupByPayload<T extends business_employeesGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<Business_employeesGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof Business_employeesGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], Business_employeesGroupByOutputType[P]>
+            : GetScalarType<T[P], Business_employeesGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type business_employeesSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    employee_id?: boolean
+    business_id?: boolean
+    name?: boolean
+    email?: boolean
+    phone?: boolean
+    role?: boolean
+    created_at?: boolean
+    businesses?: boolean | businessesDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["business_employees"]>
+
+  export type business_employeesSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    employee_id?: boolean
+    business_id?: boolean
+    name?: boolean
+    email?: boolean
+    phone?: boolean
+    role?: boolean
+    created_at?: boolean
+    businesses?: boolean | businessesDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["business_employees"]>
+
+  export type business_employeesSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    employee_id?: boolean
+    business_id?: boolean
+    name?: boolean
+    email?: boolean
+    phone?: boolean
+    role?: boolean
+    created_at?: boolean
+    businesses?: boolean | businessesDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["business_employees"]>
+
+  export type business_employeesSelectScalar = {
+    employee_id?: boolean
+    business_id?: boolean
+    name?: boolean
+    email?: boolean
+    phone?: boolean
+    role?: boolean
+    created_at?: boolean
+  }
+
+  export type business_employeesOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"employee_id" | "business_id" | "name" | "email" | "phone" | "role" | "created_at", ExtArgs["result"]["business_employees"]>
+  export type business_employeesInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    businesses?: boolean | businessesDefaultArgs<ExtArgs>
+  }
+  export type business_employeesIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    businesses?: boolean | businessesDefaultArgs<ExtArgs>
+  }
+  export type business_employeesIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    businesses?: boolean | businessesDefaultArgs<ExtArgs>
+  }
+
+  export type $business_employeesPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "business_employees"
+    objects: {
+      businesses: Prisma.$businessesPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      employee_id: string
+      business_id: string
+      name: string
+      email: string | null
+      phone: string | null
+      role: string | null
+      created_at: Date | null
+    }, ExtArgs["result"]["business_employees"]>
+    composites: {}
+  }
+
+  type business_employeesGetPayload<S extends boolean | null | undefined | business_employeesDefaultArgs> = $Result.GetResult<Prisma.$business_employeesPayload, S>
+
+  type business_employeesCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<business_employeesFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: Business_employeesCountAggregateInputType | true
+    }
+
+  export interface business_employeesDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['business_employees'], meta: { name: 'business_employees' } }
+    /**
+     * Find zero or one Business_employees that matches the filter.
+     * @param {business_employeesFindUniqueArgs} args - Arguments to find a Business_employees
+     * @example
+     * // Get one Business_employees
+     * const business_employees = await prisma.business_employees.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends business_employeesFindUniqueArgs>(args: SelectSubset<T, business_employeesFindUniqueArgs<ExtArgs>>): Prisma__business_employeesClient<$Result.GetResult<Prisma.$business_employeesPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one Business_employees that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {business_employeesFindUniqueOrThrowArgs} args - Arguments to find a Business_employees
+     * @example
+     * // Get one Business_employees
+     * const business_employees = await prisma.business_employees.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends business_employeesFindUniqueOrThrowArgs>(args: SelectSubset<T, business_employeesFindUniqueOrThrowArgs<ExtArgs>>): Prisma__business_employeesClient<$Result.GetResult<Prisma.$business_employeesPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Business_employees that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {business_employeesFindFirstArgs} args - Arguments to find a Business_employees
+     * @example
+     * // Get one Business_employees
+     * const business_employees = await prisma.business_employees.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends business_employeesFindFirstArgs>(args?: SelectSubset<T, business_employeesFindFirstArgs<ExtArgs>>): Prisma__business_employeesClient<$Result.GetResult<Prisma.$business_employeesPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Business_employees that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {business_employeesFindFirstOrThrowArgs} args - Arguments to find a Business_employees
+     * @example
+     * // Get one Business_employees
+     * const business_employees = await prisma.business_employees.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends business_employeesFindFirstOrThrowArgs>(args?: SelectSubset<T, business_employeesFindFirstOrThrowArgs<ExtArgs>>): Prisma__business_employeesClient<$Result.GetResult<Prisma.$business_employeesPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more Business_employees that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {business_employeesFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all Business_employees
+     * const business_employees = await prisma.business_employees.findMany()
+     * 
+     * // Get first 10 Business_employees
+     * const business_employees = await prisma.business_employees.findMany({ take: 10 })
+     * 
+     * // Only select the `employee_id`
+     * const business_employeesWithEmployee_idOnly = await prisma.business_employees.findMany({ select: { employee_id: true } })
+     * 
+     */
+    findMany<T extends business_employeesFindManyArgs>(args?: SelectSubset<T, business_employeesFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$business_employeesPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a Business_employees.
+     * @param {business_employeesCreateArgs} args - Arguments to create a Business_employees.
+     * @example
+     * // Create one Business_employees
+     * const Business_employees = await prisma.business_employees.create({
+     *   data: {
+     *     // ... data to create a Business_employees
+     *   }
+     * })
+     * 
+     */
+    create<T extends business_employeesCreateArgs>(args: SelectSubset<T, business_employeesCreateArgs<ExtArgs>>): Prisma__business_employeesClient<$Result.GetResult<Prisma.$business_employeesPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many Business_employees.
+     * @param {business_employeesCreateManyArgs} args - Arguments to create many Business_employees.
+     * @example
+     * // Create many Business_employees
+     * const business_employees = await prisma.business_employees.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends business_employeesCreateManyArgs>(args?: SelectSubset<T, business_employeesCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many Business_employees and returns the data saved in the database.
+     * @param {business_employeesCreateManyAndReturnArgs} args - Arguments to create many Business_employees.
+     * @example
+     * // Create many Business_employees
+     * const business_employees = await prisma.business_employees.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many Business_employees and only return the `employee_id`
+     * const business_employeesWithEmployee_idOnly = await prisma.business_employees.createManyAndReturn({
+     *   select: { employee_id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends business_employeesCreateManyAndReturnArgs>(args?: SelectSubset<T, business_employeesCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$business_employeesPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a Business_employees.
+     * @param {business_employeesDeleteArgs} args - Arguments to delete one Business_employees.
+     * @example
+     * // Delete one Business_employees
+     * const Business_employees = await prisma.business_employees.delete({
+     *   where: {
+     *     // ... filter to delete one Business_employees
+     *   }
+     * })
+     * 
+     */
+    delete<T extends business_employeesDeleteArgs>(args: SelectSubset<T, business_employeesDeleteArgs<ExtArgs>>): Prisma__business_employeesClient<$Result.GetResult<Prisma.$business_employeesPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one Business_employees.
+     * @param {business_employeesUpdateArgs} args - Arguments to update one Business_employees.
+     * @example
+     * // Update one Business_employees
+     * const business_employees = await prisma.business_employees.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends business_employeesUpdateArgs>(args: SelectSubset<T, business_employeesUpdateArgs<ExtArgs>>): Prisma__business_employeesClient<$Result.GetResult<Prisma.$business_employeesPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more Business_employees.
+     * @param {business_employeesDeleteManyArgs} args - Arguments to filter Business_employees to delete.
+     * @example
+     * // Delete a few Business_employees
+     * const { count } = await prisma.business_employees.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends business_employeesDeleteManyArgs>(args?: SelectSubset<T, business_employeesDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Business_employees.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {business_employeesUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many Business_employees
+     * const business_employees = await prisma.business_employees.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends business_employeesUpdateManyArgs>(args: SelectSubset<T, business_employeesUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Business_employees and returns the data updated in the database.
+     * @param {business_employeesUpdateManyAndReturnArgs} args - Arguments to update many Business_employees.
+     * @example
+     * // Update many Business_employees
+     * const business_employees = await prisma.business_employees.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more Business_employees and only return the `employee_id`
+     * const business_employeesWithEmployee_idOnly = await prisma.business_employees.updateManyAndReturn({
+     *   select: { employee_id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends business_employeesUpdateManyAndReturnArgs>(args: SelectSubset<T, business_employeesUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$business_employeesPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one Business_employees.
+     * @param {business_employeesUpsertArgs} args - Arguments to update or create a Business_employees.
+     * @example
+     * // Update or create a Business_employees
+     * const business_employees = await prisma.business_employees.upsert({
+     *   create: {
+     *     // ... data to create a Business_employees
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the Business_employees we want to update
+     *   }
+     * })
+     */
+    upsert<T extends business_employeesUpsertArgs>(args: SelectSubset<T, business_employeesUpsertArgs<ExtArgs>>): Prisma__business_employeesClient<$Result.GetResult<Prisma.$business_employeesPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of Business_employees.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {business_employeesCountArgs} args - Arguments to filter Business_employees to count.
+     * @example
+     * // Count the number of Business_employees
+     * const count = await prisma.business_employees.count({
+     *   where: {
+     *     // ... the filter for the Business_employees we want to count
+     *   }
+     * })
+    **/
+    count<T extends business_employeesCountArgs>(
+      args?: Subset<T, business_employeesCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], Business_employeesCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a Business_employees.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {Business_employeesAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends Business_employeesAggregateArgs>(args: Subset<T, Business_employeesAggregateArgs>): Prisma.PrismaPromise<GetBusiness_employeesAggregateType<T>>
+
+    /**
+     * Group by Business_employees.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {business_employeesGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends business_employeesGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: business_employeesGroupByArgs['orderBy'] }
+        : { orderBy?: business_employeesGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, business_employeesGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetBusiness_employeesGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the business_employees model
+   */
+  readonly fields: business_employeesFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for business_employees.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__business_employeesClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    businesses<T extends businessesDefaultArgs<ExtArgs> = {}>(args?: Subset<T, businessesDefaultArgs<ExtArgs>>): Prisma__businessesClient<$Result.GetResult<Prisma.$businessesPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the business_employees model
+   */
+  interface business_employeesFieldRefs {
+    readonly employee_id: FieldRef<"business_employees", 'String'>
+    readonly business_id: FieldRef<"business_employees", 'String'>
+    readonly name: FieldRef<"business_employees", 'String'>
+    readonly email: FieldRef<"business_employees", 'String'>
+    readonly phone: FieldRef<"business_employees", 'String'>
+    readonly role: FieldRef<"business_employees", 'String'>
+    readonly created_at: FieldRef<"business_employees", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * business_employees findUnique
+   */
+  export type business_employeesFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the business_employees
+     */
+    select?: business_employeesSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the business_employees
+     */
+    omit?: business_employeesOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: business_employeesInclude<ExtArgs> | null
+    /**
+     * Filter, which business_employees to fetch.
+     */
+    where: business_employeesWhereUniqueInput
+  }
+
+  /**
+   * business_employees findUniqueOrThrow
+   */
+  export type business_employeesFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the business_employees
+     */
+    select?: business_employeesSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the business_employees
+     */
+    omit?: business_employeesOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: business_employeesInclude<ExtArgs> | null
+    /**
+     * Filter, which business_employees to fetch.
+     */
+    where: business_employeesWhereUniqueInput
+  }
+
+  /**
+   * business_employees findFirst
+   */
+  export type business_employeesFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the business_employees
+     */
+    select?: business_employeesSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the business_employees
+     */
+    omit?: business_employeesOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: business_employeesInclude<ExtArgs> | null
+    /**
+     * Filter, which business_employees to fetch.
+     */
+    where?: business_employeesWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of business_employees to fetch.
+     */
+    orderBy?: business_employeesOrderByWithRelationInput | business_employeesOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for business_employees.
+     */
+    cursor?: business_employeesWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` business_employees from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` business_employees.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of business_employees.
+     */
+    distinct?: Business_employeesScalarFieldEnum | Business_employeesScalarFieldEnum[]
+  }
+
+  /**
+   * business_employees findFirstOrThrow
+   */
+  export type business_employeesFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the business_employees
+     */
+    select?: business_employeesSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the business_employees
+     */
+    omit?: business_employeesOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: business_employeesInclude<ExtArgs> | null
+    /**
+     * Filter, which business_employees to fetch.
+     */
+    where?: business_employeesWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of business_employees to fetch.
+     */
+    orderBy?: business_employeesOrderByWithRelationInput | business_employeesOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for business_employees.
+     */
+    cursor?: business_employeesWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` business_employees from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` business_employees.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of business_employees.
+     */
+    distinct?: Business_employeesScalarFieldEnum | Business_employeesScalarFieldEnum[]
+  }
+
+  /**
+   * business_employees findMany
+   */
+  export type business_employeesFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the business_employees
+     */
+    select?: business_employeesSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the business_employees
+     */
+    omit?: business_employeesOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: business_employeesInclude<ExtArgs> | null
+    /**
+     * Filter, which business_employees to fetch.
+     */
+    where?: business_employeesWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of business_employees to fetch.
+     */
+    orderBy?: business_employeesOrderByWithRelationInput | business_employeesOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing business_employees.
+     */
+    cursor?: business_employeesWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` business_employees from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` business_employees.
+     */
+    skip?: number
+    distinct?: Business_employeesScalarFieldEnum | Business_employeesScalarFieldEnum[]
+  }
+
+  /**
+   * business_employees create
+   */
+  export type business_employeesCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the business_employees
+     */
+    select?: business_employeesSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the business_employees
+     */
+    omit?: business_employeesOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: business_employeesInclude<ExtArgs> | null
+    /**
+     * The data needed to create a business_employees.
+     */
+    data: XOR<business_employeesCreateInput, business_employeesUncheckedCreateInput>
+  }
+
+  /**
+   * business_employees createMany
+   */
+  export type business_employeesCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many business_employees.
+     */
+    data: business_employeesCreateManyInput | business_employeesCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * business_employees createManyAndReturn
+   */
+  export type business_employeesCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the business_employees
+     */
+    select?: business_employeesSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the business_employees
+     */
+    omit?: business_employeesOmit<ExtArgs> | null
+    /**
+     * The data used to create many business_employees.
+     */
+    data: business_employeesCreateManyInput | business_employeesCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: business_employeesIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * business_employees update
+   */
+  export type business_employeesUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the business_employees
+     */
+    select?: business_employeesSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the business_employees
+     */
+    omit?: business_employeesOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: business_employeesInclude<ExtArgs> | null
+    /**
+     * The data needed to update a business_employees.
+     */
+    data: XOR<business_employeesUpdateInput, business_employeesUncheckedUpdateInput>
+    /**
+     * Choose, which business_employees to update.
+     */
+    where: business_employeesWhereUniqueInput
+  }
+
+  /**
+   * business_employees updateMany
+   */
+  export type business_employeesUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update business_employees.
+     */
+    data: XOR<business_employeesUpdateManyMutationInput, business_employeesUncheckedUpdateManyInput>
+    /**
+     * Filter which business_employees to update
+     */
+    where?: business_employeesWhereInput
+    /**
+     * Limit how many business_employees to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * business_employees updateManyAndReturn
+   */
+  export type business_employeesUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the business_employees
+     */
+    select?: business_employeesSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the business_employees
+     */
+    omit?: business_employeesOmit<ExtArgs> | null
+    /**
+     * The data used to update business_employees.
+     */
+    data: XOR<business_employeesUpdateManyMutationInput, business_employeesUncheckedUpdateManyInput>
+    /**
+     * Filter which business_employees to update
+     */
+    where?: business_employeesWhereInput
+    /**
+     * Limit how many business_employees to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: business_employeesIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * business_employees upsert
+   */
+  export type business_employeesUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the business_employees
+     */
+    select?: business_employeesSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the business_employees
+     */
+    omit?: business_employeesOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: business_employeesInclude<ExtArgs> | null
+    /**
+     * The filter to search for the business_employees to update in case it exists.
+     */
+    where: business_employeesWhereUniqueInput
+    /**
+     * In case the business_employees found by the `where` argument doesn't exist, create a new business_employees with this data.
+     */
+    create: XOR<business_employeesCreateInput, business_employeesUncheckedCreateInput>
+    /**
+     * In case the business_employees was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<business_employeesUpdateInput, business_employeesUncheckedUpdateInput>
+  }
+
+  /**
+   * business_employees delete
+   */
+  export type business_employeesDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the business_employees
+     */
+    select?: business_employeesSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the business_employees
+     */
+    omit?: business_employeesOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: business_employeesInclude<ExtArgs> | null
+    /**
+     * Filter which business_employees to delete.
+     */
+    where: business_employeesWhereUniqueInput
+  }
+
+  /**
+   * business_employees deleteMany
+   */
+  export type business_employeesDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which business_employees to delete
+     */
+    where?: business_employeesWhereInput
+    /**
+     * Limit how many business_employees to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * business_employees without action
+   */
+  export type business_employeesDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the business_employees
+     */
+    select?: business_employeesSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the business_employees
+     */
+    omit?: business_employeesOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: business_employeesInclude<ExtArgs> | null
   }
 
 
@@ -15103,8 +16621,6 @@ export namespace Prisma {
     price?: boolean
     duration_in_days?: boolean
     created_at?: boolean
-    businesses?: boolean | subscription_plans$businessesArgs<ExtArgs>
-    _count?: boolean | Subscription_plansCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["subscription_plans"]>
 
   export type subscription_plansSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -15132,18 +16648,10 @@ export namespace Prisma {
   }
 
   export type subscription_plansOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"subscription_plan_id" | "plan_name" | "price" | "duration_in_days" | "created_at", ExtArgs["result"]["subscription_plans"]>
-  export type subscription_plansInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    businesses?: boolean | subscription_plans$businessesArgs<ExtArgs>
-    _count?: boolean | Subscription_plansCountOutputTypeDefaultArgs<ExtArgs>
-  }
-  export type subscription_plansIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
-  export type subscription_plansIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
 
   export type $subscription_plansPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "subscription_plans"
-    objects: {
-      businesses: Prisma.$businessesPayload<ExtArgs>[]
-    }
+    objects: {}
     scalars: $Extensions.GetPayloadResult<{
       subscription_plan_id: string
       plan_name: string
@@ -15544,7 +17052,6 @@ export namespace Prisma {
    */
   export interface Prisma__subscription_plansClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
-    businesses<T extends subscription_plans$businessesArgs<ExtArgs> = {}>(args?: Subset<T, subscription_plans$businessesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$businessesPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -15596,10 +17103,6 @@ export namespace Prisma {
      */
     omit?: subscription_plansOmit<ExtArgs> | null
     /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: subscription_plansInclude<ExtArgs> | null
-    /**
      * Filter, which subscription_plans to fetch.
      */
     where: subscription_plansWhereUniqueInput
@@ -15618,10 +17121,6 @@ export namespace Prisma {
      */
     omit?: subscription_plansOmit<ExtArgs> | null
     /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: subscription_plansInclude<ExtArgs> | null
-    /**
      * Filter, which subscription_plans to fetch.
      */
     where: subscription_plansWhereUniqueInput
@@ -15639,10 +17138,6 @@ export namespace Prisma {
      * Omit specific fields from the subscription_plans
      */
     omit?: subscription_plansOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: subscription_plansInclude<ExtArgs> | null
     /**
      * Filter, which subscription_plans to fetch.
      */
@@ -15692,10 +17187,6 @@ export namespace Prisma {
      */
     omit?: subscription_plansOmit<ExtArgs> | null
     /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: subscription_plansInclude<ExtArgs> | null
-    /**
      * Filter, which subscription_plans to fetch.
      */
     where?: subscription_plansWhereInput
@@ -15744,10 +17235,6 @@ export namespace Prisma {
      */
     omit?: subscription_plansOmit<ExtArgs> | null
     /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: subscription_plansInclude<ExtArgs> | null
-    /**
      * Filter, which subscription_plans to fetch.
      */
     where?: subscription_plansWhereInput
@@ -15790,10 +17277,6 @@ export namespace Prisma {
      * Omit specific fields from the subscription_plans
      */
     omit?: subscription_plansOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: subscription_plansInclude<ExtArgs> | null
     /**
      * The data needed to create a subscription_plans.
      */
@@ -15842,10 +17325,6 @@ export namespace Prisma {
      * Omit specific fields from the subscription_plans
      */
     omit?: subscription_plansOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: subscription_plansInclude<ExtArgs> | null
     /**
      * The data needed to update a subscription_plans.
      */
@@ -15913,10 +17392,6 @@ export namespace Prisma {
      */
     omit?: subscription_plansOmit<ExtArgs> | null
     /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: subscription_plansInclude<ExtArgs> | null
-    /**
      * The filter to search for the subscription_plans to update in case it exists.
      */
     where: subscription_plansWhereUniqueInput
@@ -15943,10 +17418,6 @@ export namespace Prisma {
      */
     omit?: subscription_plansOmit<ExtArgs> | null
     /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: subscription_plansInclude<ExtArgs> | null
-    /**
      * Filter which subscription_plans to delete.
      */
     where: subscription_plansWhereUniqueInput
@@ -15967,30 +17438,6 @@ export namespace Prisma {
   }
 
   /**
-   * subscription_plans.businesses
-   */
-  export type subscription_plans$businessesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the businesses
-     */
-    select?: businessesSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the businesses
-     */
-    omit?: businessesOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: businessesInclude<ExtArgs> | null
-    where?: businessesWhereInput
-    orderBy?: businessesOrderByWithRelationInput | businessesOrderByWithRelationInput[]
-    cursor?: businessesWhereUniqueInput
-    take?: number
-    skip?: number
-    distinct?: BusinessesScalarFieldEnum | BusinessesScalarFieldEnum[]
-  }
-
-  /**
    * subscription_plans without action
    */
   export type subscription_plansDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -16002,10 +17449,6 @@ export namespace Prisma {
      * Omit specific fields from the subscription_plans
      */
     omit?: subscription_plansOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: subscription_plansInclude<ExtArgs> | null
   }
 
 
@@ -19690,6 +21133,7 @@ export namespace Prisma {
     deleted_by?: boolean
     onboarding_completed?: boolean
     delivery_address?: boolean
+    cart_reservations?: boolean | leads$cart_reservationsArgs<ExtArgs>
     carts?: boolean | leads$cartsArgs<ExtArgs>
     lead_activities?: boolean | leads$lead_activitiesArgs<ExtArgs>
     lead_conversations?: boolean | leads$lead_conversationsArgs<ExtArgs>
@@ -19709,7 +21153,6 @@ export namespace Prisma {
     tenants?: boolean | tenantsDefaultArgs<ExtArgs>
     orders?: boolean | leads$ordersArgs<ExtArgs>
     workflow_executions?: boolean | leads$workflow_executionsArgs<ExtArgs>
-    cart_reservations?: boolean | leads$cart_reservationsArgs<ExtArgs>
     _count?: boolean | LeadsCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["leads"]>
 
@@ -19909,6 +21352,7 @@ export namespace Prisma {
 
   export type leadsOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"lead_id" | "business_id" | "tenant_id" | "source" | "source_reference_id" | "platform_user_id" | "post_id" | "page_id" | "first_name" | "last_name" | "phone" | "email" | "alternate_phone" | "city" | "state" | "country" | "pincode" | "status" | "intent_type" | "lead_quality" | "lead_score" | "assigned_agent_id" | "assigned_at" | "assigned_by" | "first_contact_at" | "last_contact_at" | "last_activity_at" | "next_followup_at" | "followup_count" | "is_converted" | "converted_at" | "conversion_value" | "interested_products" | "interested_courses" | "tags" | "custom_fields" | "extracted_entities" | "sentiment_score" | "preferred_contact_method" | "preferred_contact_time" | "language_preference" | "utm_source" | "utm_medium" | "utm_campaign" | "referral_source" | "lost_reason" | "lost_at" | "invalid_reason" | "is_active" | "is_duplicate" | "duplicate_of_lead_id" | "created_at" | "updated_at" | "created_by" | "updated_by" | "deleted_at" | "deleted_by" | "onboarding_completed" | "delivery_address", ExtArgs["result"]["leads"]>
   export type leadsInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    cart_reservations?: boolean | leads$cart_reservationsArgs<ExtArgs>
     carts?: boolean | leads$cartsArgs<ExtArgs>
     lead_activities?: boolean | leads$lead_activitiesArgs<ExtArgs>
     lead_conversations?: boolean | leads$lead_conversationsArgs<ExtArgs>
@@ -19928,7 +21372,6 @@ export namespace Prisma {
     tenants?: boolean | tenantsDefaultArgs<ExtArgs>
     orders?: boolean | leads$ordersArgs<ExtArgs>
     workflow_executions?: boolean | leads$workflow_executionsArgs<ExtArgs>
-    cart_reservations?: boolean | leads$cart_reservationsArgs<ExtArgs>
     _count?: boolean | LeadsCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type leadsIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -19947,6 +21390,7 @@ export namespace Prisma {
   export type $leadsPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "leads"
     objects: {
+      cart_reservations: Prisma.$cart_reservationsPayload<ExtArgs>[]
       carts: Prisma.$cartsPayload<ExtArgs>[]
       lead_activities: Prisma.$lead_activitiesPayload<ExtArgs>[]
       lead_conversations: Prisma.$lead_conversationsPayload<ExtArgs>[]
@@ -19966,7 +21410,6 @@ export namespace Prisma {
       tenants: Prisma.$tenantsPayload<ExtArgs>
       orders: Prisma.$ordersPayload<ExtArgs>[]
       workflow_executions: Prisma.$workflow_executionsPayload<ExtArgs>[]
-      cart_reservations: Prisma.$cart_reservationsPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       lead_id: string
@@ -20422,6 +21865,7 @@ export namespace Prisma {
    */
   export interface Prisma__leadsClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
+    cart_reservations<T extends leads$cart_reservationsArgs<ExtArgs> = {}>(args?: Subset<T, leads$cart_reservationsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$cart_reservationsPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     carts<T extends leads$cartsArgs<ExtArgs> = {}>(args?: Subset<T, leads$cartsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$cartsPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     lead_activities<T extends leads$lead_activitiesArgs<ExtArgs> = {}>(args?: Subset<T, leads$lead_activitiesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$lead_activitiesPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     lead_conversations<T extends leads$lead_conversationsArgs<ExtArgs> = {}>(args?: Subset<T, leads$lead_conversationsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$lead_conversationsPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
@@ -20441,7 +21885,6 @@ export namespace Prisma {
     tenants<T extends tenantsDefaultArgs<ExtArgs> = {}>(args?: Subset<T, tenantsDefaultArgs<ExtArgs>>): Prisma__tenantsClient<$Result.GetResult<Prisma.$tenantsPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     orders<T extends leads$ordersArgs<ExtArgs> = {}>(args?: Subset<T, leads$ordersArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ordersPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     workflow_executions<T extends leads$workflow_executionsArgs<ExtArgs> = {}>(args?: Subset<T, leads$workflow_executionsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$workflow_executionsPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-    cart_reservations<T extends leads$cart_reservationsArgs<ExtArgs> = {}>(args?: Subset<T, leads$cart_reservationsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$cart_reservationsPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -20926,6 +22369,30 @@ export namespace Prisma {
   }
 
   /**
+   * leads.cart_reservations
+   */
+  export type leads$cart_reservationsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the cart_reservations
+     */
+    select?: cart_reservationsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the cart_reservations
+     */
+    omit?: cart_reservationsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: cart_reservationsInclude<ExtArgs> | null
+    where?: cart_reservationsWhereInput
+    orderBy?: cart_reservationsOrderByWithRelationInput | cart_reservationsOrderByWithRelationInput[]
+    cursor?: cart_reservationsWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: Cart_reservationsScalarFieldEnum | Cart_reservationsScalarFieldEnum[]
+  }
+
+  /**
    * leads.carts
    */
   export type leads$cartsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -21321,30 +22788,6 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: Workflow_executionsScalarFieldEnum | Workflow_executionsScalarFieldEnum[]
-  }
-
-  /**
-   * leads.cart_reservations
-   */
-  export type leads$cart_reservationsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the cart_reservations
-     */
-    select?: cart_reservationsSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the cart_reservations
-     */
-    omit?: cart_reservationsOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: cart_reservationsInclude<ExtArgs> | null
-    where?: cart_reservationsWhereInput
-    orderBy?: cart_reservationsOrderByWithRelationInput | cart_reservationsOrderByWithRelationInput[]
-    cursor?: cart_reservationsWhereUniqueInput
-    take?: number
-    skip?: number
-    distinct?: Cart_reservationsScalarFieldEnum | Cart_reservationsScalarFieldEnum[]
   }
 
   /**
@@ -32876,6 +34319,7 @@ export namespace Prisma {
     instagram_retailer_id?: boolean
     campaigns?: boolean | products$campaignsArgs<ExtArgs>
     cart_items?: boolean | products$cart_itemsArgs<ExtArgs>
+    cart_reservations?: boolean | products$cart_reservationsArgs<ExtArgs>
     course_batches?: boolean | products$course_batchesArgs<ExtArgs>
     order_items?: boolean | products$order_itemsArgs<ExtArgs>
     product_images?: boolean | products$product_imagesArgs<ExtArgs>
@@ -32884,7 +34328,6 @@ export namespace Prisma {
     businesses?: boolean | businessesDefaultArgs<ExtArgs>
     product_categories?: boolean | products$product_categoriesArgs<ExtArgs>
     stock_reservations?: boolean | products$stock_reservationsArgs<ExtArgs>
-    cart_reservations?: boolean | products$cart_reservationsArgs<ExtArgs>
     _count?: boolean | ProductsCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["products"]>
 
@@ -33016,6 +34459,7 @@ export namespace Prisma {
   export type productsInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     campaigns?: boolean | products$campaignsArgs<ExtArgs>
     cart_items?: boolean | products$cart_itemsArgs<ExtArgs>
+    cart_reservations?: boolean | products$cart_reservationsArgs<ExtArgs>
     course_batches?: boolean | products$course_batchesArgs<ExtArgs>
     order_items?: boolean | products$order_itemsArgs<ExtArgs>
     product_images?: boolean | products$product_imagesArgs<ExtArgs>
@@ -33024,7 +34468,6 @@ export namespace Prisma {
     businesses?: boolean | businessesDefaultArgs<ExtArgs>
     product_categories?: boolean | products$product_categoriesArgs<ExtArgs>
     stock_reservations?: boolean | products$stock_reservationsArgs<ExtArgs>
-    cart_reservations?: boolean | products$cart_reservationsArgs<ExtArgs>
     _count?: boolean | ProductsCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type productsIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -33041,6 +34484,7 @@ export namespace Prisma {
     objects: {
       campaigns: Prisma.$campaignsPayload<ExtArgs>[]
       cart_items: Prisma.$cart_itemsPayload<ExtArgs>[]
+      cart_reservations: Prisma.$cart_reservationsPayload<ExtArgs>[]
       course_batches: Prisma.$course_batchesPayload<ExtArgs>[]
       order_items: Prisma.$order_itemsPayload<ExtArgs>[]
       product_images: Prisma.$product_imagesPayload<ExtArgs>[]
@@ -33049,7 +34493,6 @@ export namespace Prisma {
       businesses: Prisma.$businessesPayload<ExtArgs>
       product_categories: Prisma.$product_categoriesPayload<ExtArgs> | null
       stock_reservations: Prisma.$stock_reservationsPayload<ExtArgs>[]
-      cart_reservations: Prisma.$cart_reservationsPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       product_id: string
@@ -33485,6 +34928,7 @@ export namespace Prisma {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     campaigns<T extends products$campaignsArgs<ExtArgs> = {}>(args?: Subset<T, products$campaignsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$campaignsPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     cart_items<T extends products$cart_itemsArgs<ExtArgs> = {}>(args?: Subset<T, products$cart_itemsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$cart_itemsPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    cart_reservations<T extends products$cart_reservationsArgs<ExtArgs> = {}>(args?: Subset<T, products$cart_reservationsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$cart_reservationsPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     course_batches<T extends products$course_batchesArgs<ExtArgs> = {}>(args?: Subset<T, products$course_batchesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$course_batchesPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     order_items<T extends products$order_itemsArgs<ExtArgs> = {}>(args?: Subset<T, products$order_itemsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$order_itemsPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     product_images<T extends products$product_imagesArgs<ExtArgs> = {}>(args?: Subset<T, products$product_imagesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$product_imagesPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
@@ -33493,7 +34937,6 @@ export namespace Prisma {
     businesses<T extends businessesDefaultArgs<ExtArgs> = {}>(args?: Subset<T, businessesDefaultArgs<ExtArgs>>): Prisma__businessesClient<$Result.GetResult<Prisma.$businessesPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     product_categories<T extends products$product_categoriesArgs<ExtArgs> = {}>(args?: Subset<T, products$product_categoriesArgs<ExtArgs>>): Prisma__product_categoriesClient<$Result.GetResult<Prisma.$product_categoriesPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     stock_reservations<T extends products$stock_reservationsArgs<ExtArgs> = {}>(args?: Subset<T, products$stock_reservationsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$stock_reservationsPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-    cart_reservations<T extends products$cart_reservationsArgs<ExtArgs> = {}>(args?: Subset<T, products$cart_reservationsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$cart_reservationsPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -34004,6 +35447,30 @@ export namespace Prisma {
   }
 
   /**
+   * products.cart_reservations
+   */
+  export type products$cart_reservationsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the cart_reservations
+     */
+    select?: cart_reservationsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the cart_reservations
+     */
+    omit?: cart_reservationsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: cart_reservationsInclude<ExtArgs> | null
+    where?: cart_reservationsWhereInput
+    orderBy?: cart_reservationsOrderByWithRelationInput | cart_reservationsOrderByWithRelationInput[]
+    cursor?: cart_reservationsWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: Cart_reservationsScalarFieldEnum | Cart_reservationsScalarFieldEnum[]
+  }
+
+  /**
    * products.course_batches
    */
   export type products$course_batchesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -34164,30 +35631,6 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: Stock_reservationsScalarFieldEnum | Stock_reservationsScalarFieldEnum[]
-  }
-
-  /**
-   * products.cart_reservations
-   */
-  export type products$cart_reservationsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the cart_reservations
-     */
-    select?: cart_reservationsSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the cart_reservations
-     */
-    omit?: cart_reservationsOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: cart_reservationsInclude<ExtArgs> | null
-    where?: cart_reservationsWhereInput
-    orderBy?: cart_reservationsOrderByWithRelationInput | cart_reservationsOrderByWithRelationInput[]
-    cursor?: cart_reservationsWhereUniqueInput
-    take?: number
-    skip?: number
-    distinct?: Cart_reservationsScalarFieldEnum | Cart_reservationsScalarFieldEnum[]
   }
 
   /**
@@ -38067,13 +39510,13 @@ export namespace Prisma {
     phone: string | null
     email: string | null
     whatsapp_number: string | null
-    platform_user_id: string | null
     total_orders: number | null
     total_spent: Decimal | null
     last_order_date: Date | null
     engagement_score: number | null
     created_at: Date | null
     updated_at: Date | null
+    platform_user_id: string | null
   }
 
   export type CustomersMaxAggregateOutputType = {
@@ -38084,13 +39527,13 @@ export namespace Prisma {
     phone: string | null
     email: string | null
     whatsapp_number: string | null
-    platform_user_id: string | null
     total_orders: number | null
     total_spent: Decimal | null
     last_order_date: Date | null
     engagement_score: number | null
     created_at: Date | null
     updated_at: Date | null
+    platform_user_id: string | null
   }
 
   export type CustomersCountAggregateOutputType = {
@@ -38101,13 +39544,13 @@ export namespace Prisma {
     phone: number
     email: number
     whatsapp_number: number
-    platform_user_id: number
     total_orders: number
     total_spent: number
     last_order_date: number
     engagement_score: number
     created_at: number
     updated_at: number
+    platform_user_id: number
     _all: number
   }
 
@@ -38132,13 +39575,13 @@ export namespace Prisma {
     phone?: true
     email?: true
     whatsapp_number?: true
-    platform_user_id?: true
     total_orders?: true
     total_spent?: true
     last_order_date?: true
     engagement_score?: true
     created_at?: true
     updated_at?: true
+    platform_user_id?: true
   }
 
   export type CustomersMaxAggregateInputType = {
@@ -38149,13 +39592,13 @@ export namespace Prisma {
     phone?: true
     email?: true
     whatsapp_number?: true
-    platform_user_id?: true
     total_orders?: true
     total_spent?: true
     last_order_date?: true
     engagement_score?: true
     created_at?: true
     updated_at?: true
+    platform_user_id?: true
   }
 
   export type CustomersCountAggregateInputType = {
@@ -38166,13 +39609,13 @@ export namespace Prisma {
     phone?: true
     email?: true
     whatsapp_number?: true
-    platform_user_id?: true
     total_orders?: true
     total_spent?: true
     last_order_date?: true
     engagement_score?: true
     created_at?: true
     updated_at?: true
+    platform_user_id?: true
     _all?: true
   }
 
@@ -38270,13 +39713,13 @@ export namespace Prisma {
     phone: string
     email: string | null
     whatsapp_number: string | null
-    platform_user_id: string | null
     total_orders: number
     total_spent: Decimal
     last_order_date: Date | null
     engagement_score: number
     created_at: Date
     updated_at: Date
+    platform_user_id: string | null
     _count: CustomersCountAggregateOutputType | null
     _avg: CustomersAvgAggregateOutputType | null
     _sum: CustomersSumAggregateOutputType | null
@@ -38306,13 +39749,13 @@ export namespace Prisma {
     phone?: boolean
     email?: boolean
     whatsapp_number?: boolean
-    platform_user_id?: boolean
     total_orders?: boolean
     total_spent?: boolean
     last_order_date?: boolean
     engagement_score?: boolean
     created_at?: boolean
     updated_at?: boolean
+    platform_user_id?: boolean
     carts?: boolean | customers$cartsArgs<ExtArgs>
     notification_messages?: boolean | customers$notification_messagesArgs<ExtArgs>
     notification_preferences?: boolean | customers$notification_preferencesArgs<ExtArgs>
@@ -38330,13 +39773,13 @@ export namespace Prisma {
     phone?: boolean
     email?: boolean
     whatsapp_number?: boolean
-    platform_user_id?: boolean
     total_orders?: boolean
     total_spent?: boolean
     last_order_date?: boolean
     engagement_score?: boolean
     created_at?: boolean
     updated_at?: boolean
+    platform_user_id?: boolean
   }, ExtArgs["result"]["customers"]>
 
   export type customersSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -38347,13 +39790,13 @@ export namespace Prisma {
     phone?: boolean
     email?: boolean
     whatsapp_number?: boolean
-    platform_user_id?: boolean
     total_orders?: boolean
     total_spent?: boolean
     last_order_date?: boolean
     engagement_score?: boolean
     created_at?: boolean
     updated_at?: boolean
+    platform_user_id?: boolean
   }, ExtArgs["result"]["customers"]>
 
   export type customersSelectScalar = {
@@ -38364,16 +39807,16 @@ export namespace Prisma {
     phone?: boolean
     email?: boolean
     whatsapp_number?: boolean
-    platform_user_id?: boolean
     total_orders?: boolean
     total_spent?: boolean
     last_order_date?: boolean
     engagement_score?: boolean
     created_at?: boolean
     updated_at?: boolean
+    platform_user_id?: boolean
   }
 
-  export type customersOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"customer_id" | "business_id" | "tenant_id" | "name" | "phone" | "email" | "whatsapp_number" | "platform_user_id" | "total_orders" | "total_spent" | "last_order_date" | "engagement_score" | "created_at" | "updated_at", ExtArgs["result"]["customers"]>
+  export type customersOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"customer_id" | "business_id" | "tenant_id" | "name" | "phone" | "email" | "whatsapp_number" | "total_orders" | "total_spent" | "last_order_date" | "engagement_score" | "created_at" | "updated_at" | "platform_user_id", ExtArgs["result"]["customers"]>
   export type customersInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     carts?: boolean | customers$cartsArgs<ExtArgs>
     notification_messages?: boolean | customers$notification_messagesArgs<ExtArgs>
@@ -38404,13 +39847,13 @@ export namespace Prisma {
       phone: string
       email: string | null
       whatsapp_number: string | null
-      platform_user_id: string | null
       total_orders: number
       total_spent: Prisma.Decimal
       last_order_date: Date | null
       engagement_score: number
       created_at: Date
       updated_at: Date
+      platform_user_id: string | null
     }, ExtArgs["result"]["customers"]>
     composites: {}
   }
@@ -38847,13 +40290,13 @@ export namespace Prisma {
     readonly phone: FieldRef<"customers", 'String'>
     readonly email: FieldRef<"customers", 'String'>
     readonly whatsapp_number: FieldRef<"customers", 'String'>
-    readonly platform_user_id: FieldRef<"customers", 'String'>
     readonly total_orders: FieldRef<"customers", 'Int'>
     readonly total_spent: FieldRef<"customers", 'Decimal'>
     readonly last_order_date: FieldRef<"customers", 'DateTime'>
     readonly engagement_score: FieldRef<"customers", 'Int'>
     readonly created_at: FieldRef<"customers", 'DateTime'>
     readonly updated_at: FieldRef<"customers", 'DateTime'>
+    readonly platform_user_id: FieldRef<"customers", 'String'>
   }
     
 
@@ -79309,13 +80752,13 @@ export namespace Prisma {
     business_id: string | null
     tenant_id: string | null
     lead_id: string | null
-    customer_id: string | null
     status: string | null
     total_amount: Decimal | null
     total_items: number | null
     expires_at: Date | null
     created_at: Date | null
     updated_at: Date | null
+    customer_id: string | null
   }
 
   export type CartsMaxAggregateOutputType = {
@@ -79323,13 +80766,13 @@ export namespace Prisma {
     business_id: string | null
     tenant_id: string | null
     lead_id: string | null
-    customer_id: string | null
     status: string | null
     total_amount: Decimal | null
     total_items: number | null
     expires_at: Date | null
     created_at: Date | null
     updated_at: Date | null
+    customer_id: string | null
   }
 
   export type CartsCountAggregateOutputType = {
@@ -79337,13 +80780,13 @@ export namespace Prisma {
     business_id: number
     tenant_id: number
     lead_id: number
-    customer_id: number
     status: number
     total_amount: number
     total_items: number
     expires_at: number
     created_at: number
     updated_at: number
+    customer_id: number
     _all: number
   }
 
@@ -79363,13 +80806,13 @@ export namespace Prisma {
     business_id?: true
     tenant_id?: true
     lead_id?: true
-    customer_id?: true
     status?: true
     total_amount?: true
     total_items?: true
     expires_at?: true
     created_at?: true
     updated_at?: true
+    customer_id?: true
   }
 
   export type CartsMaxAggregateInputType = {
@@ -79377,13 +80820,13 @@ export namespace Prisma {
     business_id?: true
     tenant_id?: true
     lead_id?: true
-    customer_id?: true
     status?: true
     total_amount?: true
     total_items?: true
     expires_at?: true
     created_at?: true
     updated_at?: true
+    customer_id?: true
   }
 
   export type CartsCountAggregateInputType = {
@@ -79391,13 +80834,13 @@ export namespace Prisma {
     business_id?: true
     tenant_id?: true
     lead_id?: true
-    customer_id?: true
     status?: true
     total_amount?: true
     total_items?: true
     expires_at?: true
     created_at?: true
     updated_at?: true
+    customer_id?: true
     _all?: true
   }
 
@@ -79492,13 +80935,13 @@ export namespace Prisma {
     business_id: string
     tenant_id: string
     lead_id: string | null
-    customer_id: string | null
     status: string | null
     total_amount: Decimal | null
     total_items: number | null
     expires_at: Date | null
     created_at: Date | null
     updated_at: Date | null
+    customer_id: string | null
     _count: CartsCountAggregateOutputType | null
     _avg: CartsAvgAggregateOutputType | null
     _sum: CartsSumAggregateOutputType | null
@@ -79525,13 +80968,13 @@ export namespace Prisma {
     business_id?: boolean
     tenant_id?: boolean
     lead_id?: boolean
-    customer_id?: boolean
     status?: boolean
     total_amount?: boolean
     total_items?: boolean
     expires_at?: boolean
     created_at?: boolean
     updated_at?: boolean
+    customer_id?: boolean
     cart_items?: boolean | carts$cart_itemsArgs<ExtArgs>
     businesses?: boolean | businessesDefaultArgs<ExtArgs>
     customers?: boolean | carts$customersArgs<ExtArgs>
@@ -79545,13 +80988,13 @@ export namespace Prisma {
     business_id?: boolean
     tenant_id?: boolean
     lead_id?: boolean
-    customer_id?: boolean
     status?: boolean
     total_amount?: boolean
     total_items?: boolean
     expires_at?: boolean
     created_at?: boolean
     updated_at?: boolean
+    customer_id?: boolean
     businesses?: boolean | businessesDefaultArgs<ExtArgs>
     customers?: boolean | carts$customersArgs<ExtArgs>
     leads?: boolean | carts$leadsArgs<ExtArgs>
@@ -79563,13 +81006,13 @@ export namespace Prisma {
     business_id?: boolean
     tenant_id?: boolean
     lead_id?: boolean
-    customer_id?: boolean
     status?: boolean
     total_amount?: boolean
     total_items?: boolean
     expires_at?: boolean
     created_at?: boolean
     updated_at?: boolean
+    customer_id?: boolean
     businesses?: boolean | businessesDefaultArgs<ExtArgs>
     customers?: boolean | carts$customersArgs<ExtArgs>
     leads?: boolean | carts$leadsArgs<ExtArgs>
@@ -79581,16 +81024,16 @@ export namespace Prisma {
     business_id?: boolean
     tenant_id?: boolean
     lead_id?: boolean
-    customer_id?: boolean
     status?: boolean
     total_amount?: boolean
     total_items?: boolean
     expires_at?: boolean
     created_at?: boolean
     updated_at?: boolean
+    customer_id?: boolean
   }
 
-  export type cartsOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"cart_id" | "business_id" | "tenant_id" | "lead_id" | "customer_id" | "status" | "total_amount" | "total_items" | "expires_at" | "created_at" | "updated_at", ExtArgs["result"]["carts"]>
+  export type cartsOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"cart_id" | "business_id" | "tenant_id" | "lead_id" | "status" | "total_amount" | "total_items" | "expires_at" | "created_at" | "updated_at" | "customer_id", ExtArgs["result"]["carts"]>
   export type cartsInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     cart_items?: boolean | carts$cart_itemsArgs<ExtArgs>
     businesses?: boolean | businessesDefaultArgs<ExtArgs>
@@ -79626,13 +81069,13 @@ export namespace Prisma {
       business_id: string
       tenant_id: string
       lead_id: string | null
-      customer_id: string | null
       status: string | null
       total_amount: Prisma.Decimal | null
       total_items: number | null
       expires_at: Date | null
       created_at: Date | null
       updated_at: Date | null
+      customer_id: string | null
     }, ExtArgs["result"]["carts"]>
     composites: {}
   }
@@ -80065,13 +81508,13 @@ export namespace Prisma {
     readonly business_id: FieldRef<"carts", 'String'>
     readonly tenant_id: FieldRef<"carts", 'String'>
     readonly lead_id: FieldRef<"carts", 'String'>
-    readonly customer_id: FieldRef<"carts", 'String'>
     readonly status: FieldRef<"carts", 'String'>
     readonly total_amount: FieldRef<"carts", 'Decimal'>
     readonly total_items: FieldRef<"carts", 'Int'>
     readonly expires_at: FieldRef<"carts", 'DateTime'>
     readonly created_at: FieldRef<"carts", 'DateTime'>
     readonly updated_at: FieldRef<"carts", 'DateTime'>
+    readonly customer_id: FieldRef<"carts", 'String'>
   }
     
 
@@ -82777,6 +84220,3498 @@ export namespace Prisma {
 
 
   /**
+   * Model hotel_pricing_recommendations
+   */
+
+  export type AggregateHotel_pricing_recommendations = {
+    _count: Hotel_pricing_recommendationsCountAggregateOutputType | null
+    _avg: Hotel_pricing_recommendationsAvgAggregateOutputType | null
+    _sum: Hotel_pricing_recommendationsSumAggregateOutputType | null
+    _min: Hotel_pricing_recommendationsMinAggregateOutputType | null
+    _max: Hotel_pricing_recommendationsMaxAggregateOutputType | null
+  }
+
+  export type Hotel_pricing_recommendationsAvgAggregateOutputType = {
+    suggested_price: number | null
+    demand_score: number | null
+    confidence: number | null
+    competitor_avg_price: number | null
+    current_price: number | null
+    price_range_low: number | null
+    price_range_high: number | null
+  }
+
+  export type Hotel_pricing_recommendationsSumAggregateOutputType = {
+    suggested_price: number | null
+    demand_score: number | null
+    confidence: number | null
+    competitor_avg_price: number | null
+    current_price: number | null
+    price_range_low: number | null
+    price_range_high: number | null
+  }
+
+  export type Hotel_pricing_recommendationsMinAggregateOutputType = {
+    id: string | null
+    hotel_id: string | null
+    org_id: string | null
+    room_type: string | null
+    checkin_date: Date | null
+    suggested_price: number | null
+    demand_score: number | null
+    confidence: number | null
+    competitor_avg_price: number | null
+    current_price: number | null
+    price_range_low: number | null
+    price_range_high: number | null
+    claude_narrative: string | null
+    created_at: Date | null
+  }
+
+  export type Hotel_pricing_recommendationsMaxAggregateOutputType = {
+    id: string | null
+    hotel_id: string | null
+    org_id: string | null
+    room_type: string | null
+    checkin_date: Date | null
+    suggested_price: number | null
+    demand_score: number | null
+    confidence: number | null
+    competitor_avg_price: number | null
+    current_price: number | null
+    price_range_low: number | null
+    price_range_high: number | null
+    claude_narrative: string | null
+    created_at: Date | null
+  }
+
+  export type Hotel_pricing_recommendationsCountAggregateOutputType = {
+    id: number
+    hotel_id: number
+    org_id: number
+    room_type: number
+    checkin_date: number
+    suggested_price: number
+    demand_score: number
+    confidence: number
+    competitor_avg_price: number
+    current_price: number
+    price_range_low: number
+    price_range_high: number
+    claude_narrative: number
+    xotelo_snapshot: number
+    seven_day_forecast: number
+    created_at: number
+    _all: number
+  }
+
+
+  export type Hotel_pricing_recommendationsAvgAggregateInputType = {
+    suggested_price?: true
+    demand_score?: true
+    confidence?: true
+    competitor_avg_price?: true
+    current_price?: true
+    price_range_low?: true
+    price_range_high?: true
+  }
+
+  export type Hotel_pricing_recommendationsSumAggregateInputType = {
+    suggested_price?: true
+    demand_score?: true
+    confidence?: true
+    competitor_avg_price?: true
+    current_price?: true
+    price_range_low?: true
+    price_range_high?: true
+  }
+
+  export type Hotel_pricing_recommendationsMinAggregateInputType = {
+    id?: true
+    hotel_id?: true
+    org_id?: true
+    room_type?: true
+    checkin_date?: true
+    suggested_price?: true
+    demand_score?: true
+    confidence?: true
+    competitor_avg_price?: true
+    current_price?: true
+    price_range_low?: true
+    price_range_high?: true
+    claude_narrative?: true
+    created_at?: true
+  }
+
+  export type Hotel_pricing_recommendationsMaxAggregateInputType = {
+    id?: true
+    hotel_id?: true
+    org_id?: true
+    room_type?: true
+    checkin_date?: true
+    suggested_price?: true
+    demand_score?: true
+    confidence?: true
+    competitor_avg_price?: true
+    current_price?: true
+    price_range_low?: true
+    price_range_high?: true
+    claude_narrative?: true
+    created_at?: true
+  }
+
+  export type Hotel_pricing_recommendationsCountAggregateInputType = {
+    id?: true
+    hotel_id?: true
+    org_id?: true
+    room_type?: true
+    checkin_date?: true
+    suggested_price?: true
+    demand_score?: true
+    confidence?: true
+    competitor_avg_price?: true
+    current_price?: true
+    price_range_low?: true
+    price_range_high?: true
+    claude_narrative?: true
+    xotelo_snapshot?: true
+    seven_day_forecast?: true
+    created_at?: true
+    _all?: true
+  }
+
+  export type Hotel_pricing_recommendationsAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which hotel_pricing_recommendations to aggregate.
+     */
+    where?: hotel_pricing_recommendationsWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of hotel_pricing_recommendations to fetch.
+     */
+    orderBy?: hotel_pricing_recommendationsOrderByWithRelationInput | hotel_pricing_recommendationsOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: hotel_pricing_recommendationsWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` hotel_pricing_recommendations from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` hotel_pricing_recommendations.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned hotel_pricing_recommendations
+    **/
+    _count?: true | Hotel_pricing_recommendationsCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: Hotel_pricing_recommendationsAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: Hotel_pricing_recommendationsSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: Hotel_pricing_recommendationsMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: Hotel_pricing_recommendationsMaxAggregateInputType
+  }
+
+  export type GetHotel_pricing_recommendationsAggregateType<T extends Hotel_pricing_recommendationsAggregateArgs> = {
+        [P in keyof T & keyof AggregateHotel_pricing_recommendations]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateHotel_pricing_recommendations[P]>
+      : GetScalarType<T[P], AggregateHotel_pricing_recommendations[P]>
+  }
+
+
+
+
+  export type hotel_pricing_recommendationsGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: hotel_pricing_recommendationsWhereInput
+    orderBy?: hotel_pricing_recommendationsOrderByWithAggregationInput | hotel_pricing_recommendationsOrderByWithAggregationInput[]
+    by: Hotel_pricing_recommendationsScalarFieldEnum[] | Hotel_pricing_recommendationsScalarFieldEnum
+    having?: hotel_pricing_recommendationsScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: Hotel_pricing_recommendationsCountAggregateInputType | true
+    _avg?: Hotel_pricing_recommendationsAvgAggregateInputType
+    _sum?: Hotel_pricing_recommendationsSumAggregateInputType
+    _min?: Hotel_pricing_recommendationsMinAggregateInputType
+    _max?: Hotel_pricing_recommendationsMaxAggregateInputType
+  }
+
+  export type Hotel_pricing_recommendationsGroupByOutputType = {
+    id: string
+    hotel_id: string
+    org_id: string
+    room_type: string
+    checkin_date: Date
+    suggested_price: number
+    demand_score: number
+    confidence: number
+    competitor_avg_price: number
+    current_price: number
+    price_range_low: number
+    price_range_high: number
+    claude_narrative: string | null
+    xotelo_snapshot: JsonValue | null
+    seven_day_forecast: JsonValue | null
+    created_at: Date
+    _count: Hotel_pricing_recommendationsCountAggregateOutputType | null
+    _avg: Hotel_pricing_recommendationsAvgAggregateOutputType | null
+    _sum: Hotel_pricing_recommendationsSumAggregateOutputType | null
+    _min: Hotel_pricing_recommendationsMinAggregateOutputType | null
+    _max: Hotel_pricing_recommendationsMaxAggregateOutputType | null
+  }
+
+  type GetHotel_pricing_recommendationsGroupByPayload<T extends hotel_pricing_recommendationsGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<Hotel_pricing_recommendationsGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof Hotel_pricing_recommendationsGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], Hotel_pricing_recommendationsGroupByOutputType[P]>
+            : GetScalarType<T[P], Hotel_pricing_recommendationsGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type hotel_pricing_recommendationsSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    hotel_id?: boolean
+    org_id?: boolean
+    room_type?: boolean
+    checkin_date?: boolean
+    suggested_price?: boolean
+    demand_score?: boolean
+    confidence?: boolean
+    competitor_avg_price?: boolean
+    current_price?: boolean
+    price_range_low?: boolean
+    price_range_high?: boolean
+    claude_narrative?: boolean
+    xotelo_snapshot?: boolean
+    seven_day_forecast?: boolean
+    created_at?: boolean
+    booking_outcomes?: boolean | hotel_pricing_recommendations$booking_outcomesArgs<ExtArgs>
+    _count?: boolean | Hotel_pricing_recommendationsCountOutputTypeDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["hotel_pricing_recommendations"]>
+
+  export type hotel_pricing_recommendationsSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    hotel_id?: boolean
+    org_id?: boolean
+    room_type?: boolean
+    checkin_date?: boolean
+    suggested_price?: boolean
+    demand_score?: boolean
+    confidence?: boolean
+    competitor_avg_price?: boolean
+    current_price?: boolean
+    price_range_low?: boolean
+    price_range_high?: boolean
+    claude_narrative?: boolean
+    xotelo_snapshot?: boolean
+    seven_day_forecast?: boolean
+    created_at?: boolean
+  }, ExtArgs["result"]["hotel_pricing_recommendations"]>
+
+  export type hotel_pricing_recommendationsSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    hotel_id?: boolean
+    org_id?: boolean
+    room_type?: boolean
+    checkin_date?: boolean
+    suggested_price?: boolean
+    demand_score?: boolean
+    confidence?: boolean
+    competitor_avg_price?: boolean
+    current_price?: boolean
+    price_range_low?: boolean
+    price_range_high?: boolean
+    claude_narrative?: boolean
+    xotelo_snapshot?: boolean
+    seven_day_forecast?: boolean
+    created_at?: boolean
+  }, ExtArgs["result"]["hotel_pricing_recommendations"]>
+
+  export type hotel_pricing_recommendationsSelectScalar = {
+    id?: boolean
+    hotel_id?: boolean
+    org_id?: boolean
+    room_type?: boolean
+    checkin_date?: boolean
+    suggested_price?: boolean
+    demand_score?: boolean
+    confidence?: boolean
+    competitor_avg_price?: boolean
+    current_price?: boolean
+    price_range_low?: boolean
+    price_range_high?: boolean
+    claude_narrative?: boolean
+    xotelo_snapshot?: boolean
+    seven_day_forecast?: boolean
+    created_at?: boolean
+  }
+
+  export type hotel_pricing_recommendationsOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "hotel_id" | "org_id" | "room_type" | "checkin_date" | "suggested_price" | "demand_score" | "confidence" | "competitor_avg_price" | "current_price" | "price_range_low" | "price_range_high" | "claude_narrative" | "xotelo_snapshot" | "seven_day_forecast" | "created_at", ExtArgs["result"]["hotel_pricing_recommendations"]>
+  export type hotel_pricing_recommendationsInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    booking_outcomes?: boolean | hotel_pricing_recommendations$booking_outcomesArgs<ExtArgs>
+    _count?: boolean | Hotel_pricing_recommendationsCountOutputTypeDefaultArgs<ExtArgs>
+  }
+  export type hotel_pricing_recommendationsIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
+  export type hotel_pricing_recommendationsIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
+
+  export type $hotel_pricing_recommendationsPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "hotel_pricing_recommendations"
+    objects: {
+      booking_outcomes: Prisma.$hotel_booking_outcomesPayload<ExtArgs>[]
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      hotel_id: string
+      org_id: string
+      room_type: string
+      checkin_date: Date
+      suggested_price: number
+      demand_score: number
+      confidence: number
+      competitor_avg_price: number
+      current_price: number
+      price_range_low: number
+      price_range_high: number
+      claude_narrative: string | null
+      xotelo_snapshot: Prisma.JsonValue | null
+      seven_day_forecast: Prisma.JsonValue | null
+      created_at: Date
+    }, ExtArgs["result"]["hotel_pricing_recommendations"]>
+    composites: {}
+  }
+
+  type hotel_pricing_recommendationsGetPayload<S extends boolean | null | undefined | hotel_pricing_recommendationsDefaultArgs> = $Result.GetResult<Prisma.$hotel_pricing_recommendationsPayload, S>
+
+  type hotel_pricing_recommendationsCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<hotel_pricing_recommendationsFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: Hotel_pricing_recommendationsCountAggregateInputType | true
+    }
+
+  export interface hotel_pricing_recommendationsDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['hotel_pricing_recommendations'], meta: { name: 'hotel_pricing_recommendations' } }
+    /**
+     * Find zero or one Hotel_pricing_recommendations that matches the filter.
+     * @param {hotel_pricing_recommendationsFindUniqueArgs} args - Arguments to find a Hotel_pricing_recommendations
+     * @example
+     * // Get one Hotel_pricing_recommendations
+     * const hotel_pricing_recommendations = await prisma.hotel_pricing_recommendations.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends hotel_pricing_recommendationsFindUniqueArgs>(args: SelectSubset<T, hotel_pricing_recommendationsFindUniqueArgs<ExtArgs>>): Prisma__hotel_pricing_recommendationsClient<$Result.GetResult<Prisma.$hotel_pricing_recommendationsPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one Hotel_pricing_recommendations that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {hotel_pricing_recommendationsFindUniqueOrThrowArgs} args - Arguments to find a Hotel_pricing_recommendations
+     * @example
+     * // Get one Hotel_pricing_recommendations
+     * const hotel_pricing_recommendations = await prisma.hotel_pricing_recommendations.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends hotel_pricing_recommendationsFindUniqueOrThrowArgs>(args: SelectSubset<T, hotel_pricing_recommendationsFindUniqueOrThrowArgs<ExtArgs>>): Prisma__hotel_pricing_recommendationsClient<$Result.GetResult<Prisma.$hotel_pricing_recommendationsPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Hotel_pricing_recommendations that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {hotel_pricing_recommendationsFindFirstArgs} args - Arguments to find a Hotel_pricing_recommendations
+     * @example
+     * // Get one Hotel_pricing_recommendations
+     * const hotel_pricing_recommendations = await prisma.hotel_pricing_recommendations.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends hotel_pricing_recommendationsFindFirstArgs>(args?: SelectSubset<T, hotel_pricing_recommendationsFindFirstArgs<ExtArgs>>): Prisma__hotel_pricing_recommendationsClient<$Result.GetResult<Prisma.$hotel_pricing_recommendationsPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Hotel_pricing_recommendations that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {hotel_pricing_recommendationsFindFirstOrThrowArgs} args - Arguments to find a Hotel_pricing_recommendations
+     * @example
+     * // Get one Hotel_pricing_recommendations
+     * const hotel_pricing_recommendations = await prisma.hotel_pricing_recommendations.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends hotel_pricing_recommendationsFindFirstOrThrowArgs>(args?: SelectSubset<T, hotel_pricing_recommendationsFindFirstOrThrowArgs<ExtArgs>>): Prisma__hotel_pricing_recommendationsClient<$Result.GetResult<Prisma.$hotel_pricing_recommendationsPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more Hotel_pricing_recommendations that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {hotel_pricing_recommendationsFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all Hotel_pricing_recommendations
+     * const hotel_pricing_recommendations = await prisma.hotel_pricing_recommendations.findMany()
+     * 
+     * // Get first 10 Hotel_pricing_recommendations
+     * const hotel_pricing_recommendations = await prisma.hotel_pricing_recommendations.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const hotel_pricing_recommendationsWithIdOnly = await prisma.hotel_pricing_recommendations.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends hotel_pricing_recommendationsFindManyArgs>(args?: SelectSubset<T, hotel_pricing_recommendationsFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$hotel_pricing_recommendationsPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a Hotel_pricing_recommendations.
+     * @param {hotel_pricing_recommendationsCreateArgs} args - Arguments to create a Hotel_pricing_recommendations.
+     * @example
+     * // Create one Hotel_pricing_recommendations
+     * const Hotel_pricing_recommendations = await prisma.hotel_pricing_recommendations.create({
+     *   data: {
+     *     // ... data to create a Hotel_pricing_recommendations
+     *   }
+     * })
+     * 
+     */
+    create<T extends hotel_pricing_recommendationsCreateArgs>(args: SelectSubset<T, hotel_pricing_recommendationsCreateArgs<ExtArgs>>): Prisma__hotel_pricing_recommendationsClient<$Result.GetResult<Prisma.$hotel_pricing_recommendationsPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many Hotel_pricing_recommendations.
+     * @param {hotel_pricing_recommendationsCreateManyArgs} args - Arguments to create many Hotel_pricing_recommendations.
+     * @example
+     * // Create many Hotel_pricing_recommendations
+     * const hotel_pricing_recommendations = await prisma.hotel_pricing_recommendations.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends hotel_pricing_recommendationsCreateManyArgs>(args?: SelectSubset<T, hotel_pricing_recommendationsCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many Hotel_pricing_recommendations and returns the data saved in the database.
+     * @param {hotel_pricing_recommendationsCreateManyAndReturnArgs} args - Arguments to create many Hotel_pricing_recommendations.
+     * @example
+     * // Create many Hotel_pricing_recommendations
+     * const hotel_pricing_recommendations = await prisma.hotel_pricing_recommendations.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many Hotel_pricing_recommendations and only return the `id`
+     * const hotel_pricing_recommendationsWithIdOnly = await prisma.hotel_pricing_recommendations.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends hotel_pricing_recommendationsCreateManyAndReturnArgs>(args?: SelectSubset<T, hotel_pricing_recommendationsCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$hotel_pricing_recommendationsPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a Hotel_pricing_recommendations.
+     * @param {hotel_pricing_recommendationsDeleteArgs} args - Arguments to delete one Hotel_pricing_recommendations.
+     * @example
+     * // Delete one Hotel_pricing_recommendations
+     * const Hotel_pricing_recommendations = await prisma.hotel_pricing_recommendations.delete({
+     *   where: {
+     *     // ... filter to delete one Hotel_pricing_recommendations
+     *   }
+     * })
+     * 
+     */
+    delete<T extends hotel_pricing_recommendationsDeleteArgs>(args: SelectSubset<T, hotel_pricing_recommendationsDeleteArgs<ExtArgs>>): Prisma__hotel_pricing_recommendationsClient<$Result.GetResult<Prisma.$hotel_pricing_recommendationsPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one Hotel_pricing_recommendations.
+     * @param {hotel_pricing_recommendationsUpdateArgs} args - Arguments to update one Hotel_pricing_recommendations.
+     * @example
+     * // Update one Hotel_pricing_recommendations
+     * const hotel_pricing_recommendations = await prisma.hotel_pricing_recommendations.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends hotel_pricing_recommendationsUpdateArgs>(args: SelectSubset<T, hotel_pricing_recommendationsUpdateArgs<ExtArgs>>): Prisma__hotel_pricing_recommendationsClient<$Result.GetResult<Prisma.$hotel_pricing_recommendationsPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more Hotel_pricing_recommendations.
+     * @param {hotel_pricing_recommendationsDeleteManyArgs} args - Arguments to filter Hotel_pricing_recommendations to delete.
+     * @example
+     * // Delete a few Hotel_pricing_recommendations
+     * const { count } = await prisma.hotel_pricing_recommendations.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends hotel_pricing_recommendationsDeleteManyArgs>(args?: SelectSubset<T, hotel_pricing_recommendationsDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Hotel_pricing_recommendations.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {hotel_pricing_recommendationsUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many Hotel_pricing_recommendations
+     * const hotel_pricing_recommendations = await prisma.hotel_pricing_recommendations.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends hotel_pricing_recommendationsUpdateManyArgs>(args: SelectSubset<T, hotel_pricing_recommendationsUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Hotel_pricing_recommendations and returns the data updated in the database.
+     * @param {hotel_pricing_recommendationsUpdateManyAndReturnArgs} args - Arguments to update many Hotel_pricing_recommendations.
+     * @example
+     * // Update many Hotel_pricing_recommendations
+     * const hotel_pricing_recommendations = await prisma.hotel_pricing_recommendations.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more Hotel_pricing_recommendations and only return the `id`
+     * const hotel_pricing_recommendationsWithIdOnly = await prisma.hotel_pricing_recommendations.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends hotel_pricing_recommendationsUpdateManyAndReturnArgs>(args: SelectSubset<T, hotel_pricing_recommendationsUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$hotel_pricing_recommendationsPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one Hotel_pricing_recommendations.
+     * @param {hotel_pricing_recommendationsUpsertArgs} args - Arguments to update or create a Hotel_pricing_recommendations.
+     * @example
+     * // Update or create a Hotel_pricing_recommendations
+     * const hotel_pricing_recommendations = await prisma.hotel_pricing_recommendations.upsert({
+     *   create: {
+     *     // ... data to create a Hotel_pricing_recommendations
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the Hotel_pricing_recommendations we want to update
+     *   }
+     * })
+     */
+    upsert<T extends hotel_pricing_recommendationsUpsertArgs>(args: SelectSubset<T, hotel_pricing_recommendationsUpsertArgs<ExtArgs>>): Prisma__hotel_pricing_recommendationsClient<$Result.GetResult<Prisma.$hotel_pricing_recommendationsPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of Hotel_pricing_recommendations.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {hotel_pricing_recommendationsCountArgs} args - Arguments to filter Hotel_pricing_recommendations to count.
+     * @example
+     * // Count the number of Hotel_pricing_recommendations
+     * const count = await prisma.hotel_pricing_recommendations.count({
+     *   where: {
+     *     // ... the filter for the Hotel_pricing_recommendations we want to count
+     *   }
+     * })
+    **/
+    count<T extends hotel_pricing_recommendationsCountArgs>(
+      args?: Subset<T, hotel_pricing_recommendationsCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], Hotel_pricing_recommendationsCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a Hotel_pricing_recommendations.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {Hotel_pricing_recommendationsAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends Hotel_pricing_recommendationsAggregateArgs>(args: Subset<T, Hotel_pricing_recommendationsAggregateArgs>): Prisma.PrismaPromise<GetHotel_pricing_recommendationsAggregateType<T>>
+
+    /**
+     * Group by Hotel_pricing_recommendations.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {hotel_pricing_recommendationsGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends hotel_pricing_recommendationsGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: hotel_pricing_recommendationsGroupByArgs['orderBy'] }
+        : { orderBy?: hotel_pricing_recommendationsGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, hotel_pricing_recommendationsGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetHotel_pricing_recommendationsGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the hotel_pricing_recommendations model
+   */
+  readonly fields: hotel_pricing_recommendationsFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for hotel_pricing_recommendations.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__hotel_pricing_recommendationsClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    booking_outcomes<T extends hotel_pricing_recommendations$booking_outcomesArgs<ExtArgs> = {}>(args?: Subset<T, hotel_pricing_recommendations$booking_outcomesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$hotel_booking_outcomesPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the hotel_pricing_recommendations model
+   */
+  interface hotel_pricing_recommendationsFieldRefs {
+    readonly id: FieldRef<"hotel_pricing_recommendations", 'String'>
+    readonly hotel_id: FieldRef<"hotel_pricing_recommendations", 'String'>
+    readonly org_id: FieldRef<"hotel_pricing_recommendations", 'String'>
+    readonly room_type: FieldRef<"hotel_pricing_recommendations", 'String'>
+    readonly checkin_date: FieldRef<"hotel_pricing_recommendations", 'DateTime'>
+    readonly suggested_price: FieldRef<"hotel_pricing_recommendations", 'Int'>
+    readonly demand_score: FieldRef<"hotel_pricing_recommendations", 'Float'>
+    readonly confidence: FieldRef<"hotel_pricing_recommendations", 'Float'>
+    readonly competitor_avg_price: FieldRef<"hotel_pricing_recommendations", 'Int'>
+    readonly current_price: FieldRef<"hotel_pricing_recommendations", 'Int'>
+    readonly price_range_low: FieldRef<"hotel_pricing_recommendations", 'Int'>
+    readonly price_range_high: FieldRef<"hotel_pricing_recommendations", 'Int'>
+    readonly claude_narrative: FieldRef<"hotel_pricing_recommendations", 'String'>
+    readonly xotelo_snapshot: FieldRef<"hotel_pricing_recommendations", 'Json'>
+    readonly seven_day_forecast: FieldRef<"hotel_pricing_recommendations", 'Json'>
+    readonly created_at: FieldRef<"hotel_pricing_recommendations", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * hotel_pricing_recommendations findUnique
+   */
+  export type hotel_pricing_recommendationsFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the hotel_pricing_recommendations
+     */
+    select?: hotel_pricing_recommendationsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the hotel_pricing_recommendations
+     */
+    omit?: hotel_pricing_recommendationsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: hotel_pricing_recommendationsInclude<ExtArgs> | null
+    /**
+     * Filter, which hotel_pricing_recommendations to fetch.
+     */
+    where: hotel_pricing_recommendationsWhereUniqueInput
+  }
+
+  /**
+   * hotel_pricing_recommendations findUniqueOrThrow
+   */
+  export type hotel_pricing_recommendationsFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the hotel_pricing_recommendations
+     */
+    select?: hotel_pricing_recommendationsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the hotel_pricing_recommendations
+     */
+    omit?: hotel_pricing_recommendationsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: hotel_pricing_recommendationsInclude<ExtArgs> | null
+    /**
+     * Filter, which hotel_pricing_recommendations to fetch.
+     */
+    where: hotel_pricing_recommendationsWhereUniqueInput
+  }
+
+  /**
+   * hotel_pricing_recommendations findFirst
+   */
+  export type hotel_pricing_recommendationsFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the hotel_pricing_recommendations
+     */
+    select?: hotel_pricing_recommendationsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the hotel_pricing_recommendations
+     */
+    omit?: hotel_pricing_recommendationsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: hotel_pricing_recommendationsInclude<ExtArgs> | null
+    /**
+     * Filter, which hotel_pricing_recommendations to fetch.
+     */
+    where?: hotel_pricing_recommendationsWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of hotel_pricing_recommendations to fetch.
+     */
+    orderBy?: hotel_pricing_recommendationsOrderByWithRelationInput | hotel_pricing_recommendationsOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for hotel_pricing_recommendations.
+     */
+    cursor?: hotel_pricing_recommendationsWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` hotel_pricing_recommendations from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` hotel_pricing_recommendations.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of hotel_pricing_recommendations.
+     */
+    distinct?: Hotel_pricing_recommendationsScalarFieldEnum | Hotel_pricing_recommendationsScalarFieldEnum[]
+  }
+
+  /**
+   * hotel_pricing_recommendations findFirstOrThrow
+   */
+  export type hotel_pricing_recommendationsFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the hotel_pricing_recommendations
+     */
+    select?: hotel_pricing_recommendationsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the hotel_pricing_recommendations
+     */
+    omit?: hotel_pricing_recommendationsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: hotel_pricing_recommendationsInclude<ExtArgs> | null
+    /**
+     * Filter, which hotel_pricing_recommendations to fetch.
+     */
+    where?: hotel_pricing_recommendationsWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of hotel_pricing_recommendations to fetch.
+     */
+    orderBy?: hotel_pricing_recommendationsOrderByWithRelationInput | hotel_pricing_recommendationsOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for hotel_pricing_recommendations.
+     */
+    cursor?: hotel_pricing_recommendationsWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` hotel_pricing_recommendations from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` hotel_pricing_recommendations.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of hotel_pricing_recommendations.
+     */
+    distinct?: Hotel_pricing_recommendationsScalarFieldEnum | Hotel_pricing_recommendationsScalarFieldEnum[]
+  }
+
+  /**
+   * hotel_pricing_recommendations findMany
+   */
+  export type hotel_pricing_recommendationsFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the hotel_pricing_recommendations
+     */
+    select?: hotel_pricing_recommendationsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the hotel_pricing_recommendations
+     */
+    omit?: hotel_pricing_recommendationsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: hotel_pricing_recommendationsInclude<ExtArgs> | null
+    /**
+     * Filter, which hotel_pricing_recommendations to fetch.
+     */
+    where?: hotel_pricing_recommendationsWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of hotel_pricing_recommendations to fetch.
+     */
+    orderBy?: hotel_pricing_recommendationsOrderByWithRelationInput | hotel_pricing_recommendationsOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing hotel_pricing_recommendations.
+     */
+    cursor?: hotel_pricing_recommendationsWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` hotel_pricing_recommendations from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` hotel_pricing_recommendations.
+     */
+    skip?: number
+    distinct?: Hotel_pricing_recommendationsScalarFieldEnum | Hotel_pricing_recommendationsScalarFieldEnum[]
+  }
+
+  /**
+   * hotel_pricing_recommendations create
+   */
+  export type hotel_pricing_recommendationsCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the hotel_pricing_recommendations
+     */
+    select?: hotel_pricing_recommendationsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the hotel_pricing_recommendations
+     */
+    omit?: hotel_pricing_recommendationsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: hotel_pricing_recommendationsInclude<ExtArgs> | null
+    /**
+     * The data needed to create a hotel_pricing_recommendations.
+     */
+    data: XOR<hotel_pricing_recommendationsCreateInput, hotel_pricing_recommendationsUncheckedCreateInput>
+  }
+
+  /**
+   * hotel_pricing_recommendations createMany
+   */
+  export type hotel_pricing_recommendationsCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many hotel_pricing_recommendations.
+     */
+    data: hotel_pricing_recommendationsCreateManyInput | hotel_pricing_recommendationsCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * hotel_pricing_recommendations createManyAndReturn
+   */
+  export type hotel_pricing_recommendationsCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the hotel_pricing_recommendations
+     */
+    select?: hotel_pricing_recommendationsSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the hotel_pricing_recommendations
+     */
+    omit?: hotel_pricing_recommendationsOmit<ExtArgs> | null
+    /**
+     * The data used to create many hotel_pricing_recommendations.
+     */
+    data: hotel_pricing_recommendationsCreateManyInput | hotel_pricing_recommendationsCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * hotel_pricing_recommendations update
+   */
+  export type hotel_pricing_recommendationsUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the hotel_pricing_recommendations
+     */
+    select?: hotel_pricing_recommendationsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the hotel_pricing_recommendations
+     */
+    omit?: hotel_pricing_recommendationsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: hotel_pricing_recommendationsInclude<ExtArgs> | null
+    /**
+     * The data needed to update a hotel_pricing_recommendations.
+     */
+    data: XOR<hotel_pricing_recommendationsUpdateInput, hotel_pricing_recommendationsUncheckedUpdateInput>
+    /**
+     * Choose, which hotel_pricing_recommendations to update.
+     */
+    where: hotel_pricing_recommendationsWhereUniqueInput
+  }
+
+  /**
+   * hotel_pricing_recommendations updateMany
+   */
+  export type hotel_pricing_recommendationsUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update hotel_pricing_recommendations.
+     */
+    data: XOR<hotel_pricing_recommendationsUpdateManyMutationInput, hotel_pricing_recommendationsUncheckedUpdateManyInput>
+    /**
+     * Filter which hotel_pricing_recommendations to update
+     */
+    where?: hotel_pricing_recommendationsWhereInput
+    /**
+     * Limit how many hotel_pricing_recommendations to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * hotel_pricing_recommendations updateManyAndReturn
+   */
+  export type hotel_pricing_recommendationsUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the hotel_pricing_recommendations
+     */
+    select?: hotel_pricing_recommendationsSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the hotel_pricing_recommendations
+     */
+    omit?: hotel_pricing_recommendationsOmit<ExtArgs> | null
+    /**
+     * The data used to update hotel_pricing_recommendations.
+     */
+    data: XOR<hotel_pricing_recommendationsUpdateManyMutationInput, hotel_pricing_recommendationsUncheckedUpdateManyInput>
+    /**
+     * Filter which hotel_pricing_recommendations to update
+     */
+    where?: hotel_pricing_recommendationsWhereInput
+    /**
+     * Limit how many hotel_pricing_recommendations to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * hotel_pricing_recommendations upsert
+   */
+  export type hotel_pricing_recommendationsUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the hotel_pricing_recommendations
+     */
+    select?: hotel_pricing_recommendationsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the hotel_pricing_recommendations
+     */
+    omit?: hotel_pricing_recommendationsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: hotel_pricing_recommendationsInclude<ExtArgs> | null
+    /**
+     * The filter to search for the hotel_pricing_recommendations to update in case it exists.
+     */
+    where: hotel_pricing_recommendationsWhereUniqueInput
+    /**
+     * In case the hotel_pricing_recommendations found by the `where` argument doesn't exist, create a new hotel_pricing_recommendations with this data.
+     */
+    create: XOR<hotel_pricing_recommendationsCreateInput, hotel_pricing_recommendationsUncheckedCreateInput>
+    /**
+     * In case the hotel_pricing_recommendations was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<hotel_pricing_recommendationsUpdateInput, hotel_pricing_recommendationsUncheckedUpdateInput>
+  }
+
+  /**
+   * hotel_pricing_recommendations delete
+   */
+  export type hotel_pricing_recommendationsDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the hotel_pricing_recommendations
+     */
+    select?: hotel_pricing_recommendationsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the hotel_pricing_recommendations
+     */
+    omit?: hotel_pricing_recommendationsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: hotel_pricing_recommendationsInclude<ExtArgs> | null
+    /**
+     * Filter which hotel_pricing_recommendations to delete.
+     */
+    where: hotel_pricing_recommendationsWhereUniqueInput
+  }
+
+  /**
+   * hotel_pricing_recommendations deleteMany
+   */
+  export type hotel_pricing_recommendationsDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which hotel_pricing_recommendations to delete
+     */
+    where?: hotel_pricing_recommendationsWhereInput
+    /**
+     * Limit how many hotel_pricing_recommendations to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * hotel_pricing_recommendations.booking_outcomes
+   */
+  export type hotel_pricing_recommendations$booking_outcomesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the hotel_booking_outcomes
+     */
+    select?: hotel_booking_outcomesSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the hotel_booking_outcomes
+     */
+    omit?: hotel_booking_outcomesOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: hotel_booking_outcomesInclude<ExtArgs> | null
+    where?: hotel_booking_outcomesWhereInput
+    orderBy?: hotel_booking_outcomesOrderByWithRelationInput | hotel_booking_outcomesOrderByWithRelationInput[]
+    cursor?: hotel_booking_outcomesWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: Hotel_booking_outcomesScalarFieldEnum | Hotel_booking_outcomesScalarFieldEnum[]
+  }
+
+  /**
+   * hotel_pricing_recommendations without action
+   */
+  export type hotel_pricing_recommendationsDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the hotel_pricing_recommendations
+     */
+    select?: hotel_pricing_recommendationsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the hotel_pricing_recommendations
+     */
+    omit?: hotel_pricing_recommendationsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: hotel_pricing_recommendationsInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model hotel_booking_outcomes
+   */
+
+  export type AggregateHotel_booking_outcomes = {
+    _count: Hotel_booking_outcomesCountAggregateOutputType | null
+    _avg: Hotel_booking_outcomesAvgAggregateOutputType | null
+    _sum: Hotel_booking_outcomesSumAggregateOutputType | null
+    _min: Hotel_booking_outcomesMinAggregateOutputType | null
+    _max: Hotel_booking_outcomesMaxAggregateOutputType | null
+  }
+
+  export type Hotel_booking_outcomesAvgAggregateOutputType = {
+    actual_price_used: number | null
+    rooms_booked: number | null
+    total_rooms: number | null
+    actual_occupancy: number | null
+    revenue: number | null
+  }
+
+  export type Hotel_booking_outcomesSumAggregateOutputType = {
+    actual_price_used: number | null
+    rooms_booked: number | null
+    total_rooms: number | null
+    actual_occupancy: number | null
+    revenue: number | null
+  }
+
+  export type Hotel_booking_outcomesMinAggregateOutputType = {
+    id: string | null
+    recommendation_id: string | null
+    hotel_id: string | null
+    org_id: string | null
+    actual_price_used: number | null
+    rooms_booked: number | null
+    total_rooms: number | null
+    actual_occupancy: number | null
+    revenue: number | null
+    checkin_date: Date | null
+    recorded_at: Date | null
+  }
+
+  export type Hotel_booking_outcomesMaxAggregateOutputType = {
+    id: string | null
+    recommendation_id: string | null
+    hotel_id: string | null
+    org_id: string | null
+    actual_price_used: number | null
+    rooms_booked: number | null
+    total_rooms: number | null
+    actual_occupancy: number | null
+    revenue: number | null
+    checkin_date: Date | null
+    recorded_at: Date | null
+  }
+
+  export type Hotel_booking_outcomesCountAggregateOutputType = {
+    id: number
+    recommendation_id: number
+    hotel_id: number
+    org_id: number
+    actual_price_used: number
+    rooms_booked: number
+    total_rooms: number
+    actual_occupancy: number
+    revenue: number
+    checkin_date: number
+    recorded_at: number
+    _all: number
+  }
+
+
+  export type Hotel_booking_outcomesAvgAggregateInputType = {
+    actual_price_used?: true
+    rooms_booked?: true
+    total_rooms?: true
+    actual_occupancy?: true
+    revenue?: true
+  }
+
+  export type Hotel_booking_outcomesSumAggregateInputType = {
+    actual_price_used?: true
+    rooms_booked?: true
+    total_rooms?: true
+    actual_occupancy?: true
+    revenue?: true
+  }
+
+  export type Hotel_booking_outcomesMinAggregateInputType = {
+    id?: true
+    recommendation_id?: true
+    hotel_id?: true
+    org_id?: true
+    actual_price_used?: true
+    rooms_booked?: true
+    total_rooms?: true
+    actual_occupancy?: true
+    revenue?: true
+    checkin_date?: true
+    recorded_at?: true
+  }
+
+  export type Hotel_booking_outcomesMaxAggregateInputType = {
+    id?: true
+    recommendation_id?: true
+    hotel_id?: true
+    org_id?: true
+    actual_price_used?: true
+    rooms_booked?: true
+    total_rooms?: true
+    actual_occupancy?: true
+    revenue?: true
+    checkin_date?: true
+    recorded_at?: true
+  }
+
+  export type Hotel_booking_outcomesCountAggregateInputType = {
+    id?: true
+    recommendation_id?: true
+    hotel_id?: true
+    org_id?: true
+    actual_price_used?: true
+    rooms_booked?: true
+    total_rooms?: true
+    actual_occupancy?: true
+    revenue?: true
+    checkin_date?: true
+    recorded_at?: true
+    _all?: true
+  }
+
+  export type Hotel_booking_outcomesAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which hotel_booking_outcomes to aggregate.
+     */
+    where?: hotel_booking_outcomesWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of hotel_booking_outcomes to fetch.
+     */
+    orderBy?: hotel_booking_outcomesOrderByWithRelationInput | hotel_booking_outcomesOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: hotel_booking_outcomesWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` hotel_booking_outcomes from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` hotel_booking_outcomes.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned hotel_booking_outcomes
+    **/
+    _count?: true | Hotel_booking_outcomesCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: Hotel_booking_outcomesAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: Hotel_booking_outcomesSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: Hotel_booking_outcomesMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: Hotel_booking_outcomesMaxAggregateInputType
+  }
+
+  export type GetHotel_booking_outcomesAggregateType<T extends Hotel_booking_outcomesAggregateArgs> = {
+        [P in keyof T & keyof AggregateHotel_booking_outcomes]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateHotel_booking_outcomes[P]>
+      : GetScalarType<T[P], AggregateHotel_booking_outcomes[P]>
+  }
+
+
+
+
+  export type hotel_booking_outcomesGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: hotel_booking_outcomesWhereInput
+    orderBy?: hotel_booking_outcomesOrderByWithAggregationInput | hotel_booking_outcomesOrderByWithAggregationInput[]
+    by: Hotel_booking_outcomesScalarFieldEnum[] | Hotel_booking_outcomesScalarFieldEnum
+    having?: hotel_booking_outcomesScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: Hotel_booking_outcomesCountAggregateInputType | true
+    _avg?: Hotel_booking_outcomesAvgAggregateInputType
+    _sum?: Hotel_booking_outcomesSumAggregateInputType
+    _min?: Hotel_booking_outcomesMinAggregateInputType
+    _max?: Hotel_booking_outcomesMaxAggregateInputType
+  }
+
+  export type Hotel_booking_outcomesGroupByOutputType = {
+    id: string
+    recommendation_id: string
+    hotel_id: string
+    org_id: string
+    actual_price_used: number
+    rooms_booked: number
+    total_rooms: number
+    actual_occupancy: number
+    revenue: number
+    checkin_date: Date
+    recorded_at: Date
+    _count: Hotel_booking_outcomesCountAggregateOutputType | null
+    _avg: Hotel_booking_outcomesAvgAggregateOutputType | null
+    _sum: Hotel_booking_outcomesSumAggregateOutputType | null
+    _min: Hotel_booking_outcomesMinAggregateOutputType | null
+    _max: Hotel_booking_outcomesMaxAggregateOutputType | null
+  }
+
+  type GetHotel_booking_outcomesGroupByPayload<T extends hotel_booking_outcomesGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<Hotel_booking_outcomesGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof Hotel_booking_outcomesGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], Hotel_booking_outcomesGroupByOutputType[P]>
+            : GetScalarType<T[P], Hotel_booking_outcomesGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type hotel_booking_outcomesSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    recommendation_id?: boolean
+    hotel_id?: boolean
+    org_id?: boolean
+    actual_price_used?: boolean
+    rooms_booked?: boolean
+    total_rooms?: boolean
+    actual_occupancy?: boolean
+    revenue?: boolean
+    checkin_date?: boolean
+    recorded_at?: boolean
+    recommendation?: boolean | hotel_pricing_recommendationsDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["hotel_booking_outcomes"]>
+
+  export type hotel_booking_outcomesSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    recommendation_id?: boolean
+    hotel_id?: boolean
+    org_id?: boolean
+    actual_price_used?: boolean
+    rooms_booked?: boolean
+    total_rooms?: boolean
+    actual_occupancy?: boolean
+    revenue?: boolean
+    checkin_date?: boolean
+    recorded_at?: boolean
+    recommendation?: boolean | hotel_pricing_recommendationsDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["hotel_booking_outcomes"]>
+
+  export type hotel_booking_outcomesSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    recommendation_id?: boolean
+    hotel_id?: boolean
+    org_id?: boolean
+    actual_price_used?: boolean
+    rooms_booked?: boolean
+    total_rooms?: boolean
+    actual_occupancy?: boolean
+    revenue?: boolean
+    checkin_date?: boolean
+    recorded_at?: boolean
+    recommendation?: boolean | hotel_pricing_recommendationsDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["hotel_booking_outcomes"]>
+
+  export type hotel_booking_outcomesSelectScalar = {
+    id?: boolean
+    recommendation_id?: boolean
+    hotel_id?: boolean
+    org_id?: boolean
+    actual_price_used?: boolean
+    rooms_booked?: boolean
+    total_rooms?: boolean
+    actual_occupancy?: boolean
+    revenue?: boolean
+    checkin_date?: boolean
+    recorded_at?: boolean
+  }
+
+  export type hotel_booking_outcomesOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "recommendation_id" | "hotel_id" | "org_id" | "actual_price_used" | "rooms_booked" | "total_rooms" | "actual_occupancy" | "revenue" | "checkin_date" | "recorded_at", ExtArgs["result"]["hotel_booking_outcomes"]>
+  export type hotel_booking_outcomesInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    recommendation?: boolean | hotel_pricing_recommendationsDefaultArgs<ExtArgs>
+  }
+  export type hotel_booking_outcomesIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    recommendation?: boolean | hotel_pricing_recommendationsDefaultArgs<ExtArgs>
+  }
+  export type hotel_booking_outcomesIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    recommendation?: boolean | hotel_pricing_recommendationsDefaultArgs<ExtArgs>
+  }
+
+  export type $hotel_booking_outcomesPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "hotel_booking_outcomes"
+    objects: {
+      recommendation: Prisma.$hotel_pricing_recommendationsPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      recommendation_id: string
+      hotel_id: string
+      org_id: string
+      actual_price_used: number
+      rooms_booked: number
+      total_rooms: number
+      actual_occupancy: number
+      revenue: number
+      checkin_date: Date
+      recorded_at: Date
+    }, ExtArgs["result"]["hotel_booking_outcomes"]>
+    composites: {}
+  }
+
+  type hotel_booking_outcomesGetPayload<S extends boolean | null | undefined | hotel_booking_outcomesDefaultArgs> = $Result.GetResult<Prisma.$hotel_booking_outcomesPayload, S>
+
+  type hotel_booking_outcomesCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<hotel_booking_outcomesFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: Hotel_booking_outcomesCountAggregateInputType | true
+    }
+
+  export interface hotel_booking_outcomesDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['hotel_booking_outcomes'], meta: { name: 'hotel_booking_outcomes' } }
+    /**
+     * Find zero or one Hotel_booking_outcomes that matches the filter.
+     * @param {hotel_booking_outcomesFindUniqueArgs} args - Arguments to find a Hotel_booking_outcomes
+     * @example
+     * // Get one Hotel_booking_outcomes
+     * const hotel_booking_outcomes = await prisma.hotel_booking_outcomes.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends hotel_booking_outcomesFindUniqueArgs>(args: SelectSubset<T, hotel_booking_outcomesFindUniqueArgs<ExtArgs>>): Prisma__hotel_booking_outcomesClient<$Result.GetResult<Prisma.$hotel_booking_outcomesPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one Hotel_booking_outcomes that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {hotel_booking_outcomesFindUniqueOrThrowArgs} args - Arguments to find a Hotel_booking_outcomes
+     * @example
+     * // Get one Hotel_booking_outcomes
+     * const hotel_booking_outcomes = await prisma.hotel_booking_outcomes.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends hotel_booking_outcomesFindUniqueOrThrowArgs>(args: SelectSubset<T, hotel_booking_outcomesFindUniqueOrThrowArgs<ExtArgs>>): Prisma__hotel_booking_outcomesClient<$Result.GetResult<Prisma.$hotel_booking_outcomesPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Hotel_booking_outcomes that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {hotel_booking_outcomesFindFirstArgs} args - Arguments to find a Hotel_booking_outcomes
+     * @example
+     * // Get one Hotel_booking_outcomes
+     * const hotel_booking_outcomes = await prisma.hotel_booking_outcomes.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends hotel_booking_outcomesFindFirstArgs>(args?: SelectSubset<T, hotel_booking_outcomesFindFirstArgs<ExtArgs>>): Prisma__hotel_booking_outcomesClient<$Result.GetResult<Prisma.$hotel_booking_outcomesPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Hotel_booking_outcomes that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {hotel_booking_outcomesFindFirstOrThrowArgs} args - Arguments to find a Hotel_booking_outcomes
+     * @example
+     * // Get one Hotel_booking_outcomes
+     * const hotel_booking_outcomes = await prisma.hotel_booking_outcomes.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends hotel_booking_outcomesFindFirstOrThrowArgs>(args?: SelectSubset<T, hotel_booking_outcomesFindFirstOrThrowArgs<ExtArgs>>): Prisma__hotel_booking_outcomesClient<$Result.GetResult<Prisma.$hotel_booking_outcomesPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more Hotel_booking_outcomes that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {hotel_booking_outcomesFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all Hotel_booking_outcomes
+     * const hotel_booking_outcomes = await prisma.hotel_booking_outcomes.findMany()
+     * 
+     * // Get first 10 Hotel_booking_outcomes
+     * const hotel_booking_outcomes = await prisma.hotel_booking_outcomes.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const hotel_booking_outcomesWithIdOnly = await prisma.hotel_booking_outcomes.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends hotel_booking_outcomesFindManyArgs>(args?: SelectSubset<T, hotel_booking_outcomesFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$hotel_booking_outcomesPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a Hotel_booking_outcomes.
+     * @param {hotel_booking_outcomesCreateArgs} args - Arguments to create a Hotel_booking_outcomes.
+     * @example
+     * // Create one Hotel_booking_outcomes
+     * const Hotel_booking_outcomes = await prisma.hotel_booking_outcomes.create({
+     *   data: {
+     *     // ... data to create a Hotel_booking_outcomes
+     *   }
+     * })
+     * 
+     */
+    create<T extends hotel_booking_outcomesCreateArgs>(args: SelectSubset<T, hotel_booking_outcomesCreateArgs<ExtArgs>>): Prisma__hotel_booking_outcomesClient<$Result.GetResult<Prisma.$hotel_booking_outcomesPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many Hotel_booking_outcomes.
+     * @param {hotel_booking_outcomesCreateManyArgs} args - Arguments to create many Hotel_booking_outcomes.
+     * @example
+     * // Create many Hotel_booking_outcomes
+     * const hotel_booking_outcomes = await prisma.hotel_booking_outcomes.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends hotel_booking_outcomesCreateManyArgs>(args?: SelectSubset<T, hotel_booking_outcomesCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many Hotel_booking_outcomes and returns the data saved in the database.
+     * @param {hotel_booking_outcomesCreateManyAndReturnArgs} args - Arguments to create many Hotel_booking_outcomes.
+     * @example
+     * // Create many Hotel_booking_outcomes
+     * const hotel_booking_outcomes = await prisma.hotel_booking_outcomes.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many Hotel_booking_outcomes and only return the `id`
+     * const hotel_booking_outcomesWithIdOnly = await prisma.hotel_booking_outcomes.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends hotel_booking_outcomesCreateManyAndReturnArgs>(args?: SelectSubset<T, hotel_booking_outcomesCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$hotel_booking_outcomesPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a Hotel_booking_outcomes.
+     * @param {hotel_booking_outcomesDeleteArgs} args - Arguments to delete one Hotel_booking_outcomes.
+     * @example
+     * // Delete one Hotel_booking_outcomes
+     * const Hotel_booking_outcomes = await prisma.hotel_booking_outcomes.delete({
+     *   where: {
+     *     // ... filter to delete one Hotel_booking_outcomes
+     *   }
+     * })
+     * 
+     */
+    delete<T extends hotel_booking_outcomesDeleteArgs>(args: SelectSubset<T, hotel_booking_outcomesDeleteArgs<ExtArgs>>): Prisma__hotel_booking_outcomesClient<$Result.GetResult<Prisma.$hotel_booking_outcomesPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one Hotel_booking_outcomes.
+     * @param {hotel_booking_outcomesUpdateArgs} args - Arguments to update one Hotel_booking_outcomes.
+     * @example
+     * // Update one Hotel_booking_outcomes
+     * const hotel_booking_outcomes = await prisma.hotel_booking_outcomes.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends hotel_booking_outcomesUpdateArgs>(args: SelectSubset<T, hotel_booking_outcomesUpdateArgs<ExtArgs>>): Prisma__hotel_booking_outcomesClient<$Result.GetResult<Prisma.$hotel_booking_outcomesPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more Hotel_booking_outcomes.
+     * @param {hotel_booking_outcomesDeleteManyArgs} args - Arguments to filter Hotel_booking_outcomes to delete.
+     * @example
+     * // Delete a few Hotel_booking_outcomes
+     * const { count } = await prisma.hotel_booking_outcomes.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends hotel_booking_outcomesDeleteManyArgs>(args?: SelectSubset<T, hotel_booking_outcomesDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Hotel_booking_outcomes.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {hotel_booking_outcomesUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many Hotel_booking_outcomes
+     * const hotel_booking_outcomes = await prisma.hotel_booking_outcomes.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends hotel_booking_outcomesUpdateManyArgs>(args: SelectSubset<T, hotel_booking_outcomesUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Hotel_booking_outcomes and returns the data updated in the database.
+     * @param {hotel_booking_outcomesUpdateManyAndReturnArgs} args - Arguments to update many Hotel_booking_outcomes.
+     * @example
+     * // Update many Hotel_booking_outcomes
+     * const hotel_booking_outcomes = await prisma.hotel_booking_outcomes.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more Hotel_booking_outcomes and only return the `id`
+     * const hotel_booking_outcomesWithIdOnly = await prisma.hotel_booking_outcomes.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends hotel_booking_outcomesUpdateManyAndReturnArgs>(args: SelectSubset<T, hotel_booking_outcomesUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$hotel_booking_outcomesPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one Hotel_booking_outcomes.
+     * @param {hotel_booking_outcomesUpsertArgs} args - Arguments to update or create a Hotel_booking_outcomes.
+     * @example
+     * // Update or create a Hotel_booking_outcomes
+     * const hotel_booking_outcomes = await prisma.hotel_booking_outcomes.upsert({
+     *   create: {
+     *     // ... data to create a Hotel_booking_outcomes
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the Hotel_booking_outcomes we want to update
+     *   }
+     * })
+     */
+    upsert<T extends hotel_booking_outcomesUpsertArgs>(args: SelectSubset<T, hotel_booking_outcomesUpsertArgs<ExtArgs>>): Prisma__hotel_booking_outcomesClient<$Result.GetResult<Prisma.$hotel_booking_outcomesPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of Hotel_booking_outcomes.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {hotel_booking_outcomesCountArgs} args - Arguments to filter Hotel_booking_outcomes to count.
+     * @example
+     * // Count the number of Hotel_booking_outcomes
+     * const count = await prisma.hotel_booking_outcomes.count({
+     *   where: {
+     *     // ... the filter for the Hotel_booking_outcomes we want to count
+     *   }
+     * })
+    **/
+    count<T extends hotel_booking_outcomesCountArgs>(
+      args?: Subset<T, hotel_booking_outcomesCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], Hotel_booking_outcomesCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a Hotel_booking_outcomes.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {Hotel_booking_outcomesAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends Hotel_booking_outcomesAggregateArgs>(args: Subset<T, Hotel_booking_outcomesAggregateArgs>): Prisma.PrismaPromise<GetHotel_booking_outcomesAggregateType<T>>
+
+    /**
+     * Group by Hotel_booking_outcomes.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {hotel_booking_outcomesGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends hotel_booking_outcomesGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: hotel_booking_outcomesGroupByArgs['orderBy'] }
+        : { orderBy?: hotel_booking_outcomesGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, hotel_booking_outcomesGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetHotel_booking_outcomesGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the hotel_booking_outcomes model
+   */
+  readonly fields: hotel_booking_outcomesFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for hotel_booking_outcomes.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__hotel_booking_outcomesClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    recommendation<T extends hotel_pricing_recommendationsDefaultArgs<ExtArgs> = {}>(args?: Subset<T, hotel_pricing_recommendationsDefaultArgs<ExtArgs>>): Prisma__hotel_pricing_recommendationsClient<$Result.GetResult<Prisma.$hotel_pricing_recommendationsPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the hotel_booking_outcomes model
+   */
+  interface hotel_booking_outcomesFieldRefs {
+    readonly id: FieldRef<"hotel_booking_outcomes", 'String'>
+    readonly recommendation_id: FieldRef<"hotel_booking_outcomes", 'String'>
+    readonly hotel_id: FieldRef<"hotel_booking_outcomes", 'String'>
+    readonly org_id: FieldRef<"hotel_booking_outcomes", 'String'>
+    readonly actual_price_used: FieldRef<"hotel_booking_outcomes", 'Int'>
+    readonly rooms_booked: FieldRef<"hotel_booking_outcomes", 'Int'>
+    readonly total_rooms: FieldRef<"hotel_booking_outcomes", 'Int'>
+    readonly actual_occupancy: FieldRef<"hotel_booking_outcomes", 'Float'>
+    readonly revenue: FieldRef<"hotel_booking_outcomes", 'Int'>
+    readonly checkin_date: FieldRef<"hotel_booking_outcomes", 'DateTime'>
+    readonly recorded_at: FieldRef<"hotel_booking_outcomes", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * hotel_booking_outcomes findUnique
+   */
+  export type hotel_booking_outcomesFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the hotel_booking_outcomes
+     */
+    select?: hotel_booking_outcomesSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the hotel_booking_outcomes
+     */
+    omit?: hotel_booking_outcomesOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: hotel_booking_outcomesInclude<ExtArgs> | null
+    /**
+     * Filter, which hotel_booking_outcomes to fetch.
+     */
+    where: hotel_booking_outcomesWhereUniqueInput
+  }
+
+  /**
+   * hotel_booking_outcomes findUniqueOrThrow
+   */
+  export type hotel_booking_outcomesFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the hotel_booking_outcomes
+     */
+    select?: hotel_booking_outcomesSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the hotel_booking_outcomes
+     */
+    omit?: hotel_booking_outcomesOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: hotel_booking_outcomesInclude<ExtArgs> | null
+    /**
+     * Filter, which hotel_booking_outcomes to fetch.
+     */
+    where: hotel_booking_outcomesWhereUniqueInput
+  }
+
+  /**
+   * hotel_booking_outcomes findFirst
+   */
+  export type hotel_booking_outcomesFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the hotel_booking_outcomes
+     */
+    select?: hotel_booking_outcomesSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the hotel_booking_outcomes
+     */
+    omit?: hotel_booking_outcomesOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: hotel_booking_outcomesInclude<ExtArgs> | null
+    /**
+     * Filter, which hotel_booking_outcomes to fetch.
+     */
+    where?: hotel_booking_outcomesWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of hotel_booking_outcomes to fetch.
+     */
+    orderBy?: hotel_booking_outcomesOrderByWithRelationInput | hotel_booking_outcomesOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for hotel_booking_outcomes.
+     */
+    cursor?: hotel_booking_outcomesWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` hotel_booking_outcomes from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` hotel_booking_outcomes.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of hotel_booking_outcomes.
+     */
+    distinct?: Hotel_booking_outcomesScalarFieldEnum | Hotel_booking_outcomesScalarFieldEnum[]
+  }
+
+  /**
+   * hotel_booking_outcomes findFirstOrThrow
+   */
+  export type hotel_booking_outcomesFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the hotel_booking_outcomes
+     */
+    select?: hotel_booking_outcomesSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the hotel_booking_outcomes
+     */
+    omit?: hotel_booking_outcomesOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: hotel_booking_outcomesInclude<ExtArgs> | null
+    /**
+     * Filter, which hotel_booking_outcomes to fetch.
+     */
+    where?: hotel_booking_outcomesWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of hotel_booking_outcomes to fetch.
+     */
+    orderBy?: hotel_booking_outcomesOrderByWithRelationInput | hotel_booking_outcomesOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for hotel_booking_outcomes.
+     */
+    cursor?: hotel_booking_outcomesWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` hotel_booking_outcomes from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` hotel_booking_outcomes.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of hotel_booking_outcomes.
+     */
+    distinct?: Hotel_booking_outcomesScalarFieldEnum | Hotel_booking_outcomesScalarFieldEnum[]
+  }
+
+  /**
+   * hotel_booking_outcomes findMany
+   */
+  export type hotel_booking_outcomesFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the hotel_booking_outcomes
+     */
+    select?: hotel_booking_outcomesSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the hotel_booking_outcomes
+     */
+    omit?: hotel_booking_outcomesOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: hotel_booking_outcomesInclude<ExtArgs> | null
+    /**
+     * Filter, which hotel_booking_outcomes to fetch.
+     */
+    where?: hotel_booking_outcomesWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of hotel_booking_outcomes to fetch.
+     */
+    orderBy?: hotel_booking_outcomesOrderByWithRelationInput | hotel_booking_outcomesOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing hotel_booking_outcomes.
+     */
+    cursor?: hotel_booking_outcomesWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` hotel_booking_outcomes from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` hotel_booking_outcomes.
+     */
+    skip?: number
+    distinct?: Hotel_booking_outcomesScalarFieldEnum | Hotel_booking_outcomesScalarFieldEnum[]
+  }
+
+  /**
+   * hotel_booking_outcomes create
+   */
+  export type hotel_booking_outcomesCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the hotel_booking_outcomes
+     */
+    select?: hotel_booking_outcomesSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the hotel_booking_outcomes
+     */
+    omit?: hotel_booking_outcomesOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: hotel_booking_outcomesInclude<ExtArgs> | null
+    /**
+     * The data needed to create a hotel_booking_outcomes.
+     */
+    data: XOR<hotel_booking_outcomesCreateInput, hotel_booking_outcomesUncheckedCreateInput>
+  }
+
+  /**
+   * hotel_booking_outcomes createMany
+   */
+  export type hotel_booking_outcomesCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many hotel_booking_outcomes.
+     */
+    data: hotel_booking_outcomesCreateManyInput | hotel_booking_outcomesCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * hotel_booking_outcomes createManyAndReturn
+   */
+  export type hotel_booking_outcomesCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the hotel_booking_outcomes
+     */
+    select?: hotel_booking_outcomesSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the hotel_booking_outcomes
+     */
+    omit?: hotel_booking_outcomesOmit<ExtArgs> | null
+    /**
+     * The data used to create many hotel_booking_outcomes.
+     */
+    data: hotel_booking_outcomesCreateManyInput | hotel_booking_outcomesCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: hotel_booking_outcomesIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * hotel_booking_outcomes update
+   */
+  export type hotel_booking_outcomesUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the hotel_booking_outcomes
+     */
+    select?: hotel_booking_outcomesSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the hotel_booking_outcomes
+     */
+    omit?: hotel_booking_outcomesOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: hotel_booking_outcomesInclude<ExtArgs> | null
+    /**
+     * The data needed to update a hotel_booking_outcomes.
+     */
+    data: XOR<hotel_booking_outcomesUpdateInput, hotel_booking_outcomesUncheckedUpdateInput>
+    /**
+     * Choose, which hotel_booking_outcomes to update.
+     */
+    where: hotel_booking_outcomesWhereUniqueInput
+  }
+
+  /**
+   * hotel_booking_outcomes updateMany
+   */
+  export type hotel_booking_outcomesUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update hotel_booking_outcomes.
+     */
+    data: XOR<hotel_booking_outcomesUpdateManyMutationInput, hotel_booking_outcomesUncheckedUpdateManyInput>
+    /**
+     * Filter which hotel_booking_outcomes to update
+     */
+    where?: hotel_booking_outcomesWhereInput
+    /**
+     * Limit how many hotel_booking_outcomes to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * hotel_booking_outcomes updateManyAndReturn
+   */
+  export type hotel_booking_outcomesUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the hotel_booking_outcomes
+     */
+    select?: hotel_booking_outcomesSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the hotel_booking_outcomes
+     */
+    omit?: hotel_booking_outcomesOmit<ExtArgs> | null
+    /**
+     * The data used to update hotel_booking_outcomes.
+     */
+    data: XOR<hotel_booking_outcomesUpdateManyMutationInput, hotel_booking_outcomesUncheckedUpdateManyInput>
+    /**
+     * Filter which hotel_booking_outcomes to update
+     */
+    where?: hotel_booking_outcomesWhereInput
+    /**
+     * Limit how many hotel_booking_outcomes to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: hotel_booking_outcomesIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * hotel_booking_outcomes upsert
+   */
+  export type hotel_booking_outcomesUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the hotel_booking_outcomes
+     */
+    select?: hotel_booking_outcomesSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the hotel_booking_outcomes
+     */
+    omit?: hotel_booking_outcomesOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: hotel_booking_outcomesInclude<ExtArgs> | null
+    /**
+     * The filter to search for the hotel_booking_outcomes to update in case it exists.
+     */
+    where: hotel_booking_outcomesWhereUniqueInput
+    /**
+     * In case the hotel_booking_outcomes found by the `where` argument doesn't exist, create a new hotel_booking_outcomes with this data.
+     */
+    create: XOR<hotel_booking_outcomesCreateInput, hotel_booking_outcomesUncheckedCreateInput>
+    /**
+     * In case the hotel_booking_outcomes was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<hotel_booking_outcomesUpdateInput, hotel_booking_outcomesUncheckedUpdateInput>
+  }
+
+  /**
+   * hotel_booking_outcomes delete
+   */
+  export type hotel_booking_outcomesDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the hotel_booking_outcomes
+     */
+    select?: hotel_booking_outcomesSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the hotel_booking_outcomes
+     */
+    omit?: hotel_booking_outcomesOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: hotel_booking_outcomesInclude<ExtArgs> | null
+    /**
+     * Filter which hotel_booking_outcomes to delete.
+     */
+    where: hotel_booking_outcomesWhereUniqueInput
+  }
+
+  /**
+   * hotel_booking_outcomes deleteMany
+   */
+  export type hotel_booking_outcomesDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which hotel_booking_outcomes to delete
+     */
+    where?: hotel_booking_outcomesWhereInput
+    /**
+     * Limit how many hotel_booking_outcomes to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * hotel_booking_outcomes without action
+   */
+  export type hotel_booking_outcomesDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the hotel_booking_outcomes
+     */
+    select?: hotel_booking_outcomesSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the hotel_booking_outcomes
+     */
+    omit?: hotel_booking_outcomesOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: hotel_booking_outcomesInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model hotel_pricing_notifications
+   */
+
+  export type AggregateHotel_pricing_notifications = {
+    _count: Hotel_pricing_notificationsCountAggregateOutputType | null
+    _min: Hotel_pricing_notificationsMinAggregateOutputType | null
+    _max: Hotel_pricing_notificationsMaxAggregateOutputType | null
+  }
+
+  export type Hotel_pricing_notificationsMinAggregateOutputType = {
+    id: string | null
+    org_id: string | null
+    hotel_id: string | null
+    type: string | null
+    title: string | null
+    body: string | null
+    read_at: Date | null
+    created_at: Date | null
+  }
+
+  export type Hotel_pricing_notificationsMaxAggregateOutputType = {
+    id: string | null
+    org_id: string | null
+    hotel_id: string | null
+    type: string | null
+    title: string | null
+    body: string | null
+    read_at: Date | null
+    created_at: Date | null
+  }
+
+  export type Hotel_pricing_notificationsCountAggregateOutputType = {
+    id: number
+    org_id: number
+    hotel_id: number
+    type: number
+    title: number
+    body: number
+    metadata: number
+    read_at: number
+    created_at: number
+    _all: number
+  }
+
+
+  export type Hotel_pricing_notificationsMinAggregateInputType = {
+    id?: true
+    org_id?: true
+    hotel_id?: true
+    type?: true
+    title?: true
+    body?: true
+    read_at?: true
+    created_at?: true
+  }
+
+  export type Hotel_pricing_notificationsMaxAggregateInputType = {
+    id?: true
+    org_id?: true
+    hotel_id?: true
+    type?: true
+    title?: true
+    body?: true
+    read_at?: true
+    created_at?: true
+  }
+
+  export type Hotel_pricing_notificationsCountAggregateInputType = {
+    id?: true
+    org_id?: true
+    hotel_id?: true
+    type?: true
+    title?: true
+    body?: true
+    metadata?: true
+    read_at?: true
+    created_at?: true
+    _all?: true
+  }
+
+  export type Hotel_pricing_notificationsAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which hotel_pricing_notifications to aggregate.
+     */
+    where?: hotel_pricing_notificationsWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of hotel_pricing_notifications to fetch.
+     */
+    orderBy?: hotel_pricing_notificationsOrderByWithRelationInput | hotel_pricing_notificationsOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: hotel_pricing_notificationsWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` hotel_pricing_notifications from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` hotel_pricing_notifications.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned hotel_pricing_notifications
+    **/
+    _count?: true | Hotel_pricing_notificationsCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: Hotel_pricing_notificationsMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: Hotel_pricing_notificationsMaxAggregateInputType
+  }
+
+  export type GetHotel_pricing_notificationsAggregateType<T extends Hotel_pricing_notificationsAggregateArgs> = {
+        [P in keyof T & keyof AggregateHotel_pricing_notifications]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateHotel_pricing_notifications[P]>
+      : GetScalarType<T[P], AggregateHotel_pricing_notifications[P]>
+  }
+
+
+
+
+  export type hotel_pricing_notificationsGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: hotel_pricing_notificationsWhereInput
+    orderBy?: hotel_pricing_notificationsOrderByWithAggregationInput | hotel_pricing_notificationsOrderByWithAggregationInput[]
+    by: Hotel_pricing_notificationsScalarFieldEnum[] | Hotel_pricing_notificationsScalarFieldEnum
+    having?: hotel_pricing_notificationsScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: Hotel_pricing_notificationsCountAggregateInputType | true
+    _min?: Hotel_pricing_notificationsMinAggregateInputType
+    _max?: Hotel_pricing_notificationsMaxAggregateInputType
+  }
+
+  export type Hotel_pricing_notificationsGroupByOutputType = {
+    id: string
+    org_id: string
+    hotel_id: string
+    type: string
+    title: string
+    body: string
+    metadata: JsonValue | null
+    read_at: Date | null
+    created_at: Date
+    _count: Hotel_pricing_notificationsCountAggregateOutputType | null
+    _min: Hotel_pricing_notificationsMinAggregateOutputType | null
+    _max: Hotel_pricing_notificationsMaxAggregateOutputType | null
+  }
+
+  type GetHotel_pricing_notificationsGroupByPayload<T extends hotel_pricing_notificationsGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<Hotel_pricing_notificationsGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof Hotel_pricing_notificationsGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], Hotel_pricing_notificationsGroupByOutputType[P]>
+            : GetScalarType<T[P], Hotel_pricing_notificationsGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type hotel_pricing_notificationsSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    org_id?: boolean
+    hotel_id?: boolean
+    type?: boolean
+    title?: boolean
+    body?: boolean
+    metadata?: boolean
+    read_at?: boolean
+    created_at?: boolean
+  }, ExtArgs["result"]["hotel_pricing_notifications"]>
+
+  export type hotel_pricing_notificationsSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    org_id?: boolean
+    hotel_id?: boolean
+    type?: boolean
+    title?: boolean
+    body?: boolean
+    metadata?: boolean
+    read_at?: boolean
+    created_at?: boolean
+  }, ExtArgs["result"]["hotel_pricing_notifications"]>
+
+  export type hotel_pricing_notificationsSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    org_id?: boolean
+    hotel_id?: boolean
+    type?: boolean
+    title?: boolean
+    body?: boolean
+    metadata?: boolean
+    read_at?: boolean
+    created_at?: boolean
+  }, ExtArgs["result"]["hotel_pricing_notifications"]>
+
+  export type hotel_pricing_notificationsSelectScalar = {
+    id?: boolean
+    org_id?: boolean
+    hotel_id?: boolean
+    type?: boolean
+    title?: boolean
+    body?: boolean
+    metadata?: boolean
+    read_at?: boolean
+    created_at?: boolean
+  }
+
+  export type hotel_pricing_notificationsOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "org_id" | "hotel_id" | "type" | "title" | "body" | "metadata" | "read_at" | "created_at", ExtArgs["result"]["hotel_pricing_notifications"]>
+
+  export type $hotel_pricing_notificationsPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "hotel_pricing_notifications"
+    objects: {}
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      org_id: string
+      hotel_id: string
+      type: string
+      title: string
+      body: string
+      metadata: Prisma.JsonValue | null
+      read_at: Date | null
+      created_at: Date
+    }, ExtArgs["result"]["hotel_pricing_notifications"]>
+    composites: {}
+  }
+
+  type hotel_pricing_notificationsGetPayload<S extends boolean | null | undefined | hotel_pricing_notificationsDefaultArgs> = $Result.GetResult<Prisma.$hotel_pricing_notificationsPayload, S>
+
+  type hotel_pricing_notificationsCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<hotel_pricing_notificationsFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: Hotel_pricing_notificationsCountAggregateInputType | true
+    }
+
+  export interface hotel_pricing_notificationsDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['hotel_pricing_notifications'], meta: { name: 'hotel_pricing_notifications' } }
+    /**
+     * Find zero or one Hotel_pricing_notifications that matches the filter.
+     * @param {hotel_pricing_notificationsFindUniqueArgs} args - Arguments to find a Hotel_pricing_notifications
+     * @example
+     * // Get one Hotel_pricing_notifications
+     * const hotel_pricing_notifications = await prisma.hotel_pricing_notifications.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends hotel_pricing_notificationsFindUniqueArgs>(args: SelectSubset<T, hotel_pricing_notificationsFindUniqueArgs<ExtArgs>>): Prisma__hotel_pricing_notificationsClient<$Result.GetResult<Prisma.$hotel_pricing_notificationsPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one Hotel_pricing_notifications that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {hotel_pricing_notificationsFindUniqueOrThrowArgs} args - Arguments to find a Hotel_pricing_notifications
+     * @example
+     * // Get one Hotel_pricing_notifications
+     * const hotel_pricing_notifications = await prisma.hotel_pricing_notifications.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends hotel_pricing_notificationsFindUniqueOrThrowArgs>(args: SelectSubset<T, hotel_pricing_notificationsFindUniqueOrThrowArgs<ExtArgs>>): Prisma__hotel_pricing_notificationsClient<$Result.GetResult<Prisma.$hotel_pricing_notificationsPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Hotel_pricing_notifications that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {hotel_pricing_notificationsFindFirstArgs} args - Arguments to find a Hotel_pricing_notifications
+     * @example
+     * // Get one Hotel_pricing_notifications
+     * const hotel_pricing_notifications = await prisma.hotel_pricing_notifications.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends hotel_pricing_notificationsFindFirstArgs>(args?: SelectSubset<T, hotel_pricing_notificationsFindFirstArgs<ExtArgs>>): Prisma__hotel_pricing_notificationsClient<$Result.GetResult<Prisma.$hotel_pricing_notificationsPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Hotel_pricing_notifications that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {hotel_pricing_notificationsFindFirstOrThrowArgs} args - Arguments to find a Hotel_pricing_notifications
+     * @example
+     * // Get one Hotel_pricing_notifications
+     * const hotel_pricing_notifications = await prisma.hotel_pricing_notifications.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends hotel_pricing_notificationsFindFirstOrThrowArgs>(args?: SelectSubset<T, hotel_pricing_notificationsFindFirstOrThrowArgs<ExtArgs>>): Prisma__hotel_pricing_notificationsClient<$Result.GetResult<Prisma.$hotel_pricing_notificationsPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more Hotel_pricing_notifications that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {hotel_pricing_notificationsFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all Hotel_pricing_notifications
+     * const hotel_pricing_notifications = await prisma.hotel_pricing_notifications.findMany()
+     * 
+     * // Get first 10 Hotel_pricing_notifications
+     * const hotel_pricing_notifications = await prisma.hotel_pricing_notifications.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const hotel_pricing_notificationsWithIdOnly = await prisma.hotel_pricing_notifications.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends hotel_pricing_notificationsFindManyArgs>(args?: SelectSubset<T, hotel_pricing_notificationsFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$hotel_pricing_notificationsPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a Hotel_pricing_notifications.
+     * @param {hotel_pricing_notificationsCreateArgs} args - Arguments to create a Hotel_pricing_notifications.
+     * @example
+     * // Create one Hotel_pricing_notifications
+     * const Hotel_pricing_notifications = await prisma.hotel_pricing_notifications.create({
+     *   data: {
+     *     // ... data to create a Hotel_pricing_notifications
+     *   }
+     * })
+     * 
+     */
+    create<T extends hotel_pricing_notificationsCreateArgs>(args: SelectSubset<T, hotel_pricing_notificationsCreateArgs<ExtArgs>>): Prisma__hotel_pricing_notificationsClient<$Result.GetResult<Prisma.$hotel_pricing_notificationsPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many Hotel_pricing_notifications.
+     * @param {hotel_pricing_notificationsCreateManyArgs} args - Arguments to create many Hotel_pricing_notifications.
+     * @example
+     * // Create many Hotel_pricing_notifications
+     * const hotel_pricing_notifications = await prisma.hotel_pricing_notifications.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends hotel_pricing_notificationsCreateManyArgs>(args?: SelectSubset<T, hotel_pricing_notificationsCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many Hotel_pricing_notifications and returns the data saved in the database.
+     * @param {hotel_pricing_notificationsCreateManyAndReturnArgs} args - Arguments to create many Hotel_pricing_notifications.
+     * @example
+     * // Create many Hotel_pricing_notifications
+     * const hotel_pricing_notifications = await prisma.hotel_pricing_notifications.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many Hotel_pricing_notifications and only return the `id`
+     * const hotel_pricing_notificationsWithIdOnly = await prisma.hotel_pricing_notifications.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends hotel_pricing_notificationsCreateManyAndReturnArgs>(args?: SelectSubset<T, hotel_pricing_notificationsCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$hotel_pricing_notificationsPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a Hotel_pricing_notifications.
+     * @param {hotel_pricing_notificationsDeleteArgs} args - Arguments to delete one Hotel_pricing_notifications.
+     * @example
+     * // Delete one Hotel_pricing_notifications
+     * const Hotel_pricing_notifications = await prisma.hotel_pricing_notifications.delete({
+     *   where: {
+     *     // ... filter to delete one Hotel_pricing_notifications
+     *   }
+     * })
+     * 
+     */
+    delete<T extends hotel_pricing_notificationsDeleteArgs>(args: SelectSubset<T, hotel_pricing_notificationsDeleteArgs<ExtArgs>>): Prisma__hotel_pricing_notificationsClient<$Result.GetResult<Prisma.$hotel_pricing_notificationsPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one Hotel_pricing_notifications.
+     * @param {hotel_pricing_notificationsUpdateArgs} args - Arguments to update one Hotel_pricing_notifications.
+     * @example
+     * // Update one Hotel_pricing_notifications
+     * const hotel_pricing_notifications = await prisma.hotel_pricing_notifications.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends hotel_pricing_notificationsUpdateArgs>(args: SelectSubset<T, hotel_pricing_notificationsUpdateArgs<ExtArgs>>): Prisma__hotel_pricing_notificationsClient<$Result.GetResult<Prisma.$hotel_pricing_notificationsPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more Hotel_pricing_notifications.
+     * @param {hotel_pricing_notificationsDeleteManyArgs} args - Arguments to filter Hotel_pricing_notifications to delete.
+     * @example
+     * // Delete a few Hotel_pricing_notifications
+     * const { count } = await prisma.hotel_pricing_notifications.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends hotel_pricing_notificationsDeleteManyArgs>(args?: SelectSubset<T, hotel_pricing_notificationsDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Hotel_pricing_notifications.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {hotel_pricing_notificationsUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many Hotel_pricing_notifications
+     * const hotel_pricing_notifications = await prisma.hotel_pricing_notifications.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends hotel_pricing_notificationsUpdateManyArgs>(args: SelectSubset<T, hotel_pricing_notificationsUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Hotel_pricing_notifications and returns the data updated in the database.
+     * @param {hotel_pricing_notificationsUpdateManyAndReturnArgs} args - Arguments to update many Hotel_pricing_notifications.
+     * @example
+     * // Update many Hotel_pricing_notifications
+     * const hotel_pricing_notifications = await prisma.hotel_pricing_notifications.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more Hotel_pricing_notifications and only return the `id`
+     * const hotel_pricing_notificationsWithIdOnly = await prisma.hotel_pricing_notifications.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends hotel_pricing_notificationsUpdateManyAndReturnArgs>(args: SelectSubset<T, hotel_pricing_notificationsUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$hotel_pricing_notificationsPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one Hotel_pricing_notifications.
+     * @param {hotel_pricing_notificationsUpsertArgs} args - Arguments to update or create a Hotel_pricing_notifications.
+     * @example
+     * // Update or create a Hotel_pricing_notifications
+     * const hotel_pricing_notifications = await prisma.hotel_pricing_notifications.upsert({
+     *   create: {
+     *     // ... data to create a Hotel_pricing_notifications
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the Hotel_pricing_notifications we want to update
+     *   }
+     * })
+     */
+    upsert<T extends hotel_pricing_notificationsUpsertArgs>(args: SelectSubset<T, hotel_pricing_notificationsUpsertArgs<ExtArgs>>): Prisma__hotel_pricing_notificationsClient<$Result.GetResult<Prisma.$hotel_pricing_notificationsPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of Hotel_pricing_notifications.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {hotel_pricing_notificationsCountArgs} args - Arguments to filter Hotel_pricing_notifications to count.
+     * @example
+     * // Count the number of Hotel_pricing_notifications
+     * const count = await prisma.hotel_pricing_notifications.count({
+     *   where: {
+     *     // ... the filter for the Hotel_pricing_notifications we want to count
+     *   }
+     * })
+    **/
+    count<T extends hotel_pricing_notificationsCountArgs>(
+      args?: Subset<T, hotel_pricing_notificationsCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], Hotel_pricing_notificationsCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a Hotel_pricing_notifications.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {Hotel_pricing_notificationsAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends Hotel_pricing_notificationsAggregateArgs>(args: Subset<T, Hotel_pricing_notificationsAggregateArgs>): Prisma.PrismaPromise<GetHotel_pricing_notificationsAggregateType<T>>
+
+    /**
+     * Group by Hotel_pricing_notifications.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {hotel_pricing_notificationsGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends hotel_pricing_notificationsGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: hotel_pricing_notificationsGroupByArgs['orderBy'] }
+        : { orderBy?: hotel_pricing_notificationsGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, hotel_pricing_notificationsGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetHotel_pricing_notificationsGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the hotel_pricing_notifications model
+   */
+  readonly fields: hotel_pricing_notificationsFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for hotel_pricing_notifications.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__hotel_pricing_notificationsClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the hotel_pricing_notifications model
+   */
+  interface hotel_pricing_notificationsFieldRefs {
+    readonly id: FieldRef<"hotel_pricing_notifications", 'String'>
+    readonly org_id: FieldRef<"hotel_pricing_notifications", 'String'>
+    readonly hotel_id: FieldRef<"hotel_pricing_notifications", 'String'>
+    readonly type: FieldRef<"hotel_pricing_notifications", 'String'>
+    readonly title: FieldRef<"hotel_pricing_notifications", 'String'>
+    readonly body: FieldRef<"hotel_pricing_notifications", 'String'>
+    readonly metadata: FieldRef<"hotel_pricing_notifications", 'Json'>
+    readonly read_at: FieldRef<"hotel_pricing_notifications", 'DateTime'>
+    readonly created_at: FieldRef<"hotel_pricing_notifications", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * hotel_pricing_notifications findUnique
+   */
+  export type hotel_pricing_notificationsFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the hotel_pricing_notifications
+     */
+    select?: hotel_pricing_notificationsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the hotel_pricing_notifications
+     */
+    omit?: hotel_pricing_notificationsOmit<ExtArgs> | null
+    /**
+     * Filter, which hotel_pricing_notifications to fetch.
+     */
+    where: hotel_pricing_notificationsWhereUniqueInput
+  }
+
+  /**
+   * hotel_pricing_notifications findUniqueOrThrow
+   */
+  export type hotel_pricing_notificationsFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the hotel_pricing_notifications
+     */
+    select?: hotel_pricing_notificationsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the hotel_pricing_notifications
+     */
+    omit?: hotel_pricing_notificationsOmit<ExtArgs> | null
+    /**
+     * Filter, which hotel_pricing_notifications to fetch.
+     */
+    where: hotel_pricing_notificationsWhereUniqueInput
+  }
+
+  /**
+   * hotel_pricing_notifications findFirst
+   */
+  export type hotel_pricing_notificationsFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the hotel_pricing_notifications
+     */
+    select?: hotel_pricing_notificationsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the hotel_pricing_notifications
+     */
+    omit?: hotel_pricing_notificationsOmit<ExtArgs> | null
+    /**
+     * Filter, which hotel_pricing_notifications to fetch.
+     */
+    where?: hotel_pricing_notificationsWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of hotel_pricing_notifications to fetch.
+     */
+    orderBy?: hotel_pricing_notificationsOrderByWithRelationInput | hotel_pricing_notificationsOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for hotel_pricing_notifications.
+     */
+    cursor?: hotel_pricing_notificationsWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` hotel_pricing_notifications from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` hotel_pricing_notifications.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of hotel_pricing_notifications.
+     */
+    distinct?: Hotel_pricing_notificationsScalarFieldEnum | Hotel_pricing_notificationsScalarFieldEnum[]
+  }
+
+  /**
+   * hotel_pricing_notifications findFirstOrThrow
+   */
+  export type hotel_pricing_notificationsFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the hotel_pricing_notifications
+     */
+    select?: hotel_pricing_notificationsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the hotel_pricing_notifications
+     */
+    omit?: hotel_pricing_notificationsOmit<ExtArgs> | null
+    /**
+     * Filter, which hotel_pricing_notifications to fetch.
+     */
+    where?: hotel_pricing_notificationsWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of hotel_pricing_notifications to fetch.
+     */
+    orderBy?: hotel_pricing_notificationsOrderByWithRelationInput | hotel_pricing_notificationsOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for hotel_pricing_notifications.
+     */
+    cursor?: hotel_pricing_notificationsWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` hotel_pricing_notifications from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` hotel_pricing_notifications.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of hotel_pricing_notifications.
+     */
+    distinct?: Hotel_pricing_notificationsScalarFieldEnum | Hotel_pricing_notificationsScalarFieldEnum[]
+  }
+
+  /**
+   * hotel_pricing_notifications findMany
+   */
+  export type hotel_pricing_notificationsFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the hotel_pricing_notifications
+     */
+    select?: hotel_pricing_notificationsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the hotel_pricing_notifications
+     */
+    omit?: hotel_pricing_notificationsOmit<ExtArgs> | null
+    /**
+     * Filter, which hotel_pricing_notifications to fetch.
+     */
+    where?: hotel_pricing_notificationsWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of hotel_pricing_notifications to fetch.
+     */
+    orderBy?: hotel_pricing_notificationsOrderByWithRelationInput | hotel_pricing_notificationsOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing hotel_pricing_notifications.
+     */
+    cursor?: hotel_pricing_notificationsWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` hotel_pricing_notifications from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` hotel_pricing_notifications.
+     */
+    skip?: number
+    distinct?: Hotel_pricing_notificationsScalarFieldEnum | Hotel_pricing_notificationsScalarFieldEnum[]
+  }
+
+  /**
+   * hotel_pricing_notifications create
+   */
+  export type hotel_pricing_notificationsCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the hotel_pricing_notifications
+     */
+    select?: hotel_pricing_notificationsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the hotel_pricing_notifications
+     */
+    omit?: hotel_pricing_notificationsOmit<ExtArgs> | null
+    /**
+     * The data needed to create a hotel_pricing_notifications.
+     */
+    data: XOR<hotel_pricing_notificationsCreateInput, hotel_pricing_notificationsUncheckedCreateInput>
+  }
+
+  /**
+   * hotel_pricing_notifications createMany
+   */
+  export type hotel_pricing_notificationsCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many hotel_pricing_notifications.
+     */
+    data: hotel_pricing_notificationsCreateManyInput | hotel_pricing_notificationsCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * hotel_pricing_notifications createManyAndReturn
+   */
+  export type hotel_pricing_notificationsCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the hotel_pricing_notifications
+     */
+    select?: hotel_pricing_notificationsSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the hotel_pricing_notifications
+     */
+    omit?: hotel_pricing_notificationsOmit<ExtArgs> | null
+    /**
+     * The data used to create many hotel_pricing_notifications.
+     */
+    data: hotel_pricing_notificationsCreateManyInput | hotel_pricing_notificationsCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * hotel_pricing_notifications update
+   */
+  export type hotel_pricing_notificationsUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the hotel_pricing_notifications
+     */
+    select?: hotel_pricing_notificationsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the hotel_pricing_notifications
+     */
+    omit?: hotel_pricing_notificationsOmit<ExtArgs> | null
+    /**
+     * The data needed to update a hotel_pricing_notifications.
+     */
+    data: XOR<hotel_pricing_notificationsUpdateInput, hotel_pricing_notificationsUncheckedUpdateInput>
+    /**
+     * Choose, which hotel_pricing_notifications to update.
+     */
+    where: hotel_pricing_notificationsWhereUniqueInput
+  }
+
+  /**
+   * hotel_pricing_notifications updateMany
+   */
+  export type hotel_pricing_notificationsUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update hotel_pricing_notifications.
+     */
+    data: XOR<hotel_pricing_notificationsUpdateManyMutationInput, hotel_pricing_notificationsUncheckedUpdateManyInput>
+    /**
+     * Filter which hotel_pricing_notifications to update
+     */
+    where?: hotel_pricing_notificationsWhereInput
+    /**
+     * Limit how many hotel_pricing_notifications to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * hotel_pricing_notifications updateManyAndReturn
+   */
+  export type hotel_pricing_notificationsUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the hotel_pricing_notifications
+     */
+    select?: hotel_pricing_notificationsSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the hotel_pricing_notifications
+     */
+    omit?: hotel_pricing_notificationsOmit<ExtArgs> | null
+    /**
+     * The data used to update hotel_pricing_notifications.
+     */
+    data: XOR<hotel_pricing_notificationsUpdateManyMutationInput, hotel_pricing_notificationsUncheckedUpdateManyInput>
+    /**
+     * Filter which hotel_pricing_notifications to update
+     */
+    where?: hotel_pricing_notificationsWhereInput
+    /**
+     * Limit how many hotel_pricing_notifications to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * hotel_pricing_notifications upsert
+   */
+  export type hotel_pricing_notificationsUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the hotel_pricing_notifications
+     */
+    select?: hotel_pricing_notificationsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the hotel_pricing_notifications
+     */
+    omit?: hotel_pricing_notificationsOmit<ExtArgs> | null
+    /**
+     * The filter to search for the hotel_pricing_notifications to update in case it exists.
+     */
+    where: hotel_pricing_notificationsWhereUniqueInput
+    /**
+     * In case the hotel_pricing_notifications found by the `where` argument doesn't exist, create a new hotel_pricing_notifications with this data.
+     */
+    create: XOR<hotel_pricing_notificationsCreateInput, hotel_pricing_notificationsUncheckedCreateInput>
+    /**
+     * In case the hotel_pricing_notifications was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<hotel_pricing_notificationsUpdateInput, hotel_pricing_notificationsUncheckedUpdateInput>
+  }
+
+  /**
+   * hotel_pricing_notifications delete
+   */
+  export type hotel_pricing_notificationsDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the hotel_pricing_notifications
+     */
+    select?: hotel_pricing_notificationsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the hotel_pricing_notifications
+     */
+    omit?: hotel_pricing_notificationsOmit<ExtArgs> | null
+    /**
+     * Filter which hotel_pricing_notifications to delete.
+     */
+    where: hotel_pricing_notificationsWhereUniqueInput
+  }
+
+  /**
+   * hotel_pricing_notifications deleteMany
+   */
+  export type hotel_pricing_notificationsDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which hotel_pricing_notifications to delete
+     */
+    where?: hotel_pricing_notificationsWhereInput
+    /**
+     * Limit how many hotel_pricing_notifications to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * hotel_pricing_notifications without action
+   */
+  export type hotel_pricing_notificationsDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the hotel_pricing_notifications
+     */
+    select?: hotel_pricing_notificationsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the hotel_pricing_notifications
+     */
+    omit?: hotel_pricing_notificationsOmit<ExtArgs> | null
+  }
+
+
+  /**
    * Enums
    */
 
@@ -82795,16 +87730,33 @@ export namespace Prisma {
     tenant_id: 'tenant_id',
     business_name: 'business_name',
     business_type: 'business_type',
-    subscription_plan_id: 'subscription_plan_id',
     whatsapp_number: 'whatsapp_number',
-    brand_colors: 'brand_colors',
-    logo_url: 'logo_url',
-    working_hours: 'working_hours',
     created_at: 'created_at',
-    updated_at: 'updated_at'
+    updated_at: 'updated_at',
+    email: 'email',
+    phone: 'phone',
+    website: 'website',
+    city: 'city',
+    address: 'address',
+    country: 'country',
+    gst_number: 'gst_number',
+    pan_number: 'pan_number'
   };
 
   export type BusinessesScalarFieldEnum = (typeof BusinessesScalarFieldEnum)[keyof typeof BusinessesScalarFieldEnum]
+
+
+  export const Business_employeesScalarFieldEnum: {
+    employee_id: 'employee_id',
+    business_id: 'business_id',
+    name: 'name',
+    email: 'email',
+    phone: 'phone',
+    role: 'role',
+    created_at: 'created_at'
+  };
+
+  export type Business_employeesScalarFieldEnum = (typeof Business_employeesScalarFieldEnum)[keyof typeof Business_employeesScalarFieldEnum]
 
 
   export const IntentsScalarFieldEnum: {
@@ -83292,13 +88244,13 @@ export namespace Prisma {
     phone: 'phone',
     email: 'email',
     whatsapp_number: 'whatsapp_number',
-    platform_user_id: 'platform_user_id',
     total_orders: 'total_orders',
     total_spent: 'total_spent',
     last_order_date: 'last_order_date',
     engagement_score: 'engagement_score',
     created_at: 'created_at',
-    updated_at: 'updated_at'
+    updated_at: 'updated_at',
+    platform_user_id: 'platform_user_id'
   };
 
   export type CustomersScalarFieldEnum = (typeof CustomersScalarFieldEnum)[keyof typeof CustomersScalarFieldEnum]
@@ -84045,13 +88997,13 @@ export namespace Prisma {
     business_id: 'business_id',
     tenant_id: 'tenant_id',
     lead_id: 'lead_id',
-    customer_id: 'customer_id',
     status: 'status',
     total_amount: 'total_amount',
     total_items: 'total_items',
     expires_at: 'expires_at',
     created_at: 'created_at',
-    updated_at: 'updated_at'
+    updated_at: 'updated_at',
+    customer_id: 'customer_id'
   };
 
   export type CartsScalarFieldEnum = (typeof CartsScalarFieldEnum)[keyof typeof CartsScalarFieldEnum]
@@ -84089,6 +89041,60 @@ export namespace Prisma {
   export type Campaign_analyticsScalarFieldEnum = (typeof Campaign_analyticsScalarFieldEnum)[keyof typeof Campaign_analyticsScalarFieldEnum]
 
 
+  export const Hotel_pricing_recommendationsScalarFieldEnum: {
+    id: 'id',
+    hotel_id: 'hotel_id',
+    org_id: 'org_id',
+    room_type: 'room_type',
+    checkin_date: 'checkin_date',
+    suggested_price: 'suggested_price',
+    demand_score: 'demand_score',
+    confidence: 'confidence',
+    competitor_avg_price: 'competitor_avg_price',
+    current_price: 'current_price',
+    price_range_low: 'price_range_low',
+    price_range_high: 'price_range_high',
+    claude_narrative: 'claude_narrative',
+    xotelo_snapshot: 'xotelo_snapshot',
+    seven_day_forecast: 'seven_day_forecast',
+    created_at: 'created_at'
+  };
+
+  export type Hotel_pricing_recommendationsScalarFieldEnum = (typeof Hotel_pricing_recommendationsScalarFieldEnum)[keyof typeof Hotel_pricing_recommendationsScalarFieldEnum]
+
+
+  export const Hotel_booking_outcomesScalarFieldEnum: {
+    id: 'id',
+    recommendation_id: 'recommendation_id',
+    hotel_id: 'hotel_id',
+    org_id: 'org_id',
+    actual_price_used: 'actual_price_used',
+    rooms_booked: 'rooms_booked',
+    total_rooms: 'total_rooms',
+    actual_occupancy: 'actual_occupancy',
+    revenue: 'revenue',
+    checkin_date: 'checkin_date',
+    recorded_at: 'recorded_at'
+  };
+
+  export type Hotel_booking_outcomesScalarFieldEnum = (typeof Hotel_booking_outcomesScalarFieldEnum)[keyof typeof Hotel_booking_outcomesScalarFieldEnum]
+
+
+  export const Hotel_pricing_notificationsScalarFieldEnum: {
+    id: 'id',
+    org_id: 'org_id',
+    hotel_id: 'hotel_id',
+    type: 'type',
+    title: 'title',
+    body: 'body',
+    metadata: 'metadata',
+    read_at: 'read_at',
+    created_at: 'created_at'
+  };
+
+  export type Hotel_pricing_notificationsScalarFieldEnum = (typeof Hotel_pricing_notificationsScalarFieldEnum)[keyof typeof Hotel_pricing_notificationsScalarFieldEnum]
+
+
   export const SortOrder: {
     asc: 'asc',
     desc: 'desc'
@@ -84120,6 +89126,14 @@ export namespace Prisma {
   export type QueryMode = (typeof QueryMode)[keyof typeof QueryMode]
 
 
+  export const NullsOrder: {
+    first: 'first',
+    last: 'last'
+  };
+
+  export type NullsOrder = (typeof NullsOrder)[keyof typeof NullsOrder]
+
+
   export const JsonNullValueFilter: {
     DbNull: typeof DbNull,
     JsonNull: typeof JsonNull,
@@ -84127,14 +89141,6 @@ export namespace Prisma {
   };
 
   export type JsonNullValueFilter = (typeof JsonNullValueFilter)[keyof typeof JsonNullValueFilter]
-
-
-  export const NullsOrder: {
-    first: 'first',
-    last: 'last'
-  };
-
-  export type NullsOrder = (typeof NullsOrder)[keyof typeof NullsOrder]
 
 
   /**
@@ -84157,20 +89163,6 @@ export namespace Prisma {
 
 
   /**
-   * Reference to a field of type 'Json'
-   */
-  export type JsonFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Json'>
-    
-
-
-  /**
-   * Reference to a field of type 'QueryMode'
-   */
-  export type EnumQueryModeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'QueryMode'>
-    
-
-
-  /**
    * Reference to a field of type 'DateTime'
    */
   export type DateTimeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DateTime'>
@@ -84188,6 +89180,20 @@ export namespace Prisma {
    * Reference to a field of type 'Boolean'
    */
   export type BooleanFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Boolean'>
+    
+
+
+  /**
+   * Reference to a field of type 'Json'
+   */
+  export type JsonFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Json'>
+    
+
+
+  /**
+   * Reference to a field of type 'QueryMode'
+   */
+  export type EnumQueryModeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'QueryMode'>
     
 
 
@@ -84258,15 +89264,19 @@ export namespace Prisma {
     tenant_id?: UuidFilter<"businesses"> | string
     business_name?: StringFilter<"businesses"> | string
     business_type?: StringNullableFilter<"businesses"> | string | null
-    subscription_plan_id?: UuidNullableFilter<"businesses"> | string | null
     whatsapp_number?: StringNullableFilter<"businesses"> | string | null
-    brand_colors?: JsonNullableFilter<"businesses">
-    logo_url?: StringNullableFilter<"businesses"> | string | null
-    working_hours?: JsonNullableFilter<"businesses">
     created_at?: DateTimeNullableFilter<"businesses"> | Date | string | null
     updated_at?: DateTimeNullableFilter<"businesses"> | Date | string | null
+    email?: StringNullableFilter<"businesses"> | string | null
+    phone?: StringNullableFilter<"businesses"> | string | null
+    website?: StringNullableFilter<"businesses"> | string | null
+    city?: StringNullableFilter<"businesses"> | string | null
+    address?: StringNullableFilter<"businesses"> | string | null
+    country?: StringNullableFilter<"businesses"> | string | null
+    gst_number?: StringNullableFilter<"businesses"> | string | null
+    pan_number?: StringNullableFilter<"businesses"> | string | null
+    business_employees?: Business_employeesListRelationFilter
     business_workflows?: Business_workflowsListRelationFilter
-    subscription_plans?: XOR<Subscription_plansNullableScalarRelationFilter, subscription_plansWhereInput> | null
     tenants?: XOR<TenantsScalarRelationFilter, tenantsWhereInput>
     carts?: CartsListRelationFilter
     inventory_levels?: Inventory_levelsListRelationFilter
@@ -84295,15 +89305,19 @@ export namespace Prisma {
     tenant_id?: SortOrder
     business_name?: SortOrder
     business_type?: SortOrderInput | SortOrder
-    subscription_plan_id?: SortOrderInput | SortOrder
     whatsapp_number?: SortOrderInput | SortOrder
-    brand_colors?: SortOrderInput | SortOrder
-    logo_url?: SortOrderInput | SortOrder
-    working_hours?: SortOrderInput | SortOrder
     created_at?: SortOrderInput | SortOrder
     updated_at?: SortOrderInput | SortOrder
+    email?: SortOrderInput | SortOrder
+    phone?: SortOrderInput | SortOrder
+    website?: SortOrderInput | SortOrder
+    city?: SortOrderInput | SortOrder
+    address?: SortOrderInput | SortOrder
+    country?: SortOrderInput | SortOrder
+    gst_number?: SortOrderInput | SortOrder
+    pan_number?: SortOrderInput | SortOrder
+    business_employees?: business_employeesOrderByRelationAggregateInput
     business_workflows?: business_workflowsOrderByRelationAggregateInput
-    subscription_plans?: subscription_plansOrderByWithRelationInput
     tenants?: tenantsOrderByWithRelationInput
     carts?: cartsOrderByRelationAggregateInput
     inventory_levels?: inventory_levelsOrderByRelationAggregateInput
@@ -84335,15 +89349,19 @@ export namespace Prisma {
     tenant_id?: UuidFilter<"businesses"> | string
     business_name?: StringFilter<"businesses"> | string
     business_type?: StringNullableFilter<"businesses"> | string | null
-    subscription_plan_id?: UuidNullableFilter<"businesses"> | string | null
     whatsapp_number?: StringNullableFilter<"businesses"> | string | null
-    brand_colors?: JsonNullableFilter<"businesses">
-    logo_url?: StringNullableFilter<"businesses"> | string | null
-    working_hours?: JsonNullableFilter<"businesses">
     created_at?: DateTimeNullableFilter<"businesses"> | Date | string | null
     updated_at?: DateTimeNullableFilter<"businesses"> | Date | string | null
+    email?: StringNullableFilter<"businesses"> | string | null
+    phone?: StringNullableFilter<"businesses"> | string | null
+    website?: StringNullableFilter<"businesses"> | string | null
+    city?: StringNullableFilter<"businesses"> | string | null
+    address?: StringNullableFilter<"businesses"> | string | null
+    country?: StringNullableFilter<"businesses"> | string | null
+    gst_number?: StringNullableFilter<"businesses"> | string | null
+    pan_number?: StringNullableFilter<"businesses"> | string | null
+    business_employees?: Business_employeesListRelationFilter
     business_workflows?: Business_workflowsListRelationFilter
-    subscription_plans?: XOR<Subscription_plansNullableScalarRelationFilter, subscription_plansWhereInput> | null
     tenants?: XOR<TenantsScalarRelationFilter, tenantsWhereInput>
     carts?: CartsListRelationFilter
     inventory_levels?: Inventory_levelsListRelationFilter
@@ -84372,13 +89390,17 @@ export namespace Prisma {
     tenant_id?: SortOrder
     business_name?: SortOrder
     business_type?: SortOrderInput | SortOrder
-    subscription_plan_id?: SortOrderInput | SortOrder
     whatsapp_number?: SortOrderInput | SortOrder
-    brand_colors?: SortOrderInput | SortOrder
-    logo_url?: SortOrderInput | SortOrder
-    working_hours?: SortOrderInput | SortOrder
     created_at?: SortOrderInput | SortOrder
     updated_at?: SortOrderInput | SortOrder
+    email?: SortOrderInput | SortOrder
+    phone?: SortOrderInput | SortOrder
+    website?: SortOrderInput | SortOrder
+    city?: SortOrderInput | SortOrder
+    address?: SortOrderInput | SortOrder
+    country?: SortOrderInput | SortOrder
+    gst_number?: SortOrderInput | SortOrder
+    pan_number?: SortOrderInput | SortOrder
     _count?: businessesCountOrderByAggregateInput
     _max?: businessesMaxOrderByAggregateInput
     _min?: businessesMinOrderByAggregateInput
@@ -84392,13 +89414,82 @@ export namespace Prisma {
     tenant_id?: UuidWithAggregatesFilter<"businesses"> | string
     business_name?: StringWithAggregatesFilter<"businesses"> | string
     business_type?: StringNullableWithAggregatesFilter<"businesses"> | string | null
-    subscription_plan_id?: UuidNullableWithAggregatesFilter<"businesses"> | string | null
     whatsapp_number?: StringNullableWithAggregatesFilter<"businesses"> | string | null
-    brand_colors?: JsonNullableWithAggregatesFilter<"businesses">
-    logo_url?: StringNullableWithAggregatesFilter<"businesses"> | string | null
-    working_hours?: JsonNullableWithAggregatesFilter<"businesses">
     created_at?: DateTimeNullableWithAggregatesFilter<"businesses"> | Date | string | null
     updated_at?: DateTimeNullableWithAggregatesFilter<"businesses"> | Date | string | null
+    email?: StringNullableWithAggregatesFilter<"businesses"> | string | null
+    phone?: StringNullableWithAggregatesFilter<"businesses"> | string | null
+    website?: StringNullableWithAggregatesFilter<"businesses"> | string | null
+    city?: StringNullableWithAggregatesFilter<"businesses"> | string | null
+    address?: StringNullableWithAggregatesFilter<"businesses"> | string | null
+    country?: StringNullableWithAggregatesFilter<"businesses"> | string | null
+    gst_number?: StringNullableWithAggregatesFilter<"businesses"> | string | null
+    pan_number?: StringNullableWithAggregatesFilter<"businesses"> | string | null
+  }
+
+  export type business_employeesWhereInput = {
+    AND?: business_employeesWhereInput | business_employeesWhereInput[]
+    OR?: business_employeesWhereInput[]
+    NOT?: business_employeesWhereInput | business_employeesWhereInput[]
+    employee_id?: UuidFilter<"business_employees"> | string
+    business_id?: UuidFilter<"business_employees"> | string
+    name?: StringFilter<"business_employees"> | string
+    email?: StringNullableFilter<"business_employees"> | string | null
+    phone?: StringNullableFilter<"business_employees"> | string | null
+    role?: StringNullableFilter<"business_employees"> | string | null
+    created_at?: DateTimeNullableFilter<"business_employees"> | Date | string | null
+    businesses?: XOR<BusinessesScalarRelationFilter, businessesWhereInput>
+  }
+
+  export type business_employeesOrderByWithRelationInput = {
+    employee_id?: SortOrder
+    business_id?: SortOrder
+    name?: SortOrder
+    email?: SortOrderInput | SortOrder
+    phone?: SortOrderInput | SortOrder
+    role?: SortOrderInput | SortOrder
+    created_at?: SortOrderInput | SortOrder
+    businesses?: businessesOrderByWithRelationInput
+  }
+
+  export type business_employeesWhereUniqueInput = Prisma.AtLeast<{
+    employee_id?: string
+    AND?: business_employeesWhereInput | business_employeesWhereInput[]
+    OR?: business_employeesWhereInput[]
+    NOT?: business_employeesWhereInput | business_employeesWhereInput[]
+    business_id?: UuidFilter<"business_employees"> | string
+    name?: StringFilter<"business_employees"> | string
+    email?: StringNullableFilter<"business_employees"> | string | null
+    phone?: StringNullableFilter<"business_employees"> | string | null
+    role?: StringNullableFilter<"business_employees"> | string | null
+    created_at?: DateTimeNullableFilter<"business_employees"> | Date | string | null
+    businesses?: XOR<BusinessesScalarRelationFilter, businessesWhereInput>
+  }, "employee_id">
+
+  export type business_employeesOrderByWithAggregationInput = {
+    employee_id?: SortOrder
+    business_id?: SortOrder
+    name?: SortOrder
+    email?: SortOrderInput | SortOrder
+    phone?: SortOrderInput | SortOrder
+    role?: SortOrderInput | SortOrder
+    created_at?: SortOrderInput | SortOrder
+    _count?: business_employeesCountOrderByAggregateInput
+    _max?: business_employeesMaxOrderByAggregateInput
+    _min?: business_employeesMinOrderByAggregateInput
+  }
+
+  export type business_employeesScalarWhereWithAggregatesInput = {
+    AND?: business_employeesScalarWhereWithAggregatesInput | business_employeesScalarWhereWithAggregatesInput[]
+    OR?: business_employeesScalarWhereWithAggregatesInput[]
+    NOT?: business_employeesScalarWhereWithAggregatesInput | business_employeesScalarWhereWithAggregatesInput[]
+    employee_id?: UuidWithAggregatesFilter<"business_employees"> | string
+    business_id?: UuidWithAggregatesFilter<"business_employees"> | string
+    name?: StringWithAggregatesFilter<"business_employees"> | string
+    email?: StringNullableWithAggregatesFilter<"business_employees"> | string | null
+    phone?: StringNullableWithAggregatesFilter<"business_employees"> | string | null
+    role?: StringNullableWithAggregatesFilter<"business_employees"> | string | null
+    created_at?: DateTimeNullableWithAggregatesFilter<"business_employees"> | Date | string | null
   }
 
   export type intentsWhereInput = {
@@ -84747,7 +89838,6 @@ export namespace Prisma {
     price?: DecimalNullableFilter<"subscription_plans"> | Decimal | DecimalJsLike | number | string | null
     duration_in_days?: IntNullableFilter<"subscription_plans"> | number | null
     created_at?: DateTimeNullableFilter<"subscription_plans"> | Date | string | null
-    businesses?: BusinessesListRelationFilter
   }
 
   export type subscription_plansOrderByWithRelationInput = {
@@ -84756,7 +89846,6 @@ export namespace Prisma {
     price?: SortOrderInput | SortOrder
     duration_in_days?: SortOrderInput | SortOrder
     created_at?: SortOrderInput | SortOrder
-    businesses?: businessesOrderByRelationAggregateInput
   }
 
   export type subscription_plansWhereUniqueInput = Prisma.AtLeast<{
@@ -84768,7 +89857,6 @@ export namespace Prisma {
     price?: DecimalNullableFilter<"subscription_plans"> | Decimal | DecimalJsLike | number | string | null
     duration_in_days?: IntNullableFilter<"subscription_plans"> | number | null
     created_at?: DateTimeNullableFilter<"subscription_plans"> | Date | string | null
-    businesses?: BusinessesListRelationFilter
   }, "subscription_plan_id">
 
   export type subscription_plansOrderByWithAggregationInput = {
@@ -85151,6 +90239,7 @@ export namespace Prisma {
     deleted_by?: UuidNullableFilter<"leads"> | string | null
     onboarding_completed?: BoolFilter<"leads"> | boolean
     delivery_address?: StringNullableFilter<"leads"> | string | null
+    cart_reservations?: Cart_reservationsListRelationFilter
     carts?: CartsListRelationFilter
     lead_activities?: Lead_activitiesListRelationFilter
     lead_conversations?: Lead_conversationsListRelationFilter
@@ -85170,7 +90259,6 @@ export namespace Prisma {
     tenants?: XOR<TenantsScalarRelationFilter, tenantsWhereInput>
     orders?: OrdersListRelationFilter
     workflow_executions?: Workflow_executionsListRelationFilter
-    cart_reservations?: Cart_reservationsListRelationFilter
   }
 
   export type leadsOrderByWithRelationInput = {
@@ -85233,6 +90321,7 @@ export namespace Prisma {
     deleted_by?: SortOrderInput | SortOrder
     onboarding_completed?: SortOrder
     delivery_address?: SortOrderInput | SortOrder
+    cart_reservations?: cart_reservationsOrderByRelationAggregateInput
     carts?: cartsOrderByRelationAggregateInput
     lead_activities?: lead_activitiesOrderByRelationAggregateInput
     lead_conversations?: lead_conversationsOrderByRelationAggregateInput
@@ -85252,7 +90341,6 @@ export namespace Prisma {
     tenants?: tenantsOrderByWithRelationInput
     orders?: ordersOrderByRelationAggregateInput
     workflow_executions?: workflow_executionsOrderByRelationAggregateInput
-    cart_reservations?: cart_reservationsOrderByRelationAggregateInput
   }
 
   export type leadsWhereUniqueInput = Prisma.AtLeast<{
@@ -85318,6 +90406,7 @@ export namespace Prisma {
     deleted_by?: UuidNullableFilter<"leads"> | string | null
     onboarding_completed?: BoolFilter<"leads"> | boolean
     delivery_address?: StringNullableFilter<"leads"> | string | null
+    cart_reservations?: Cart_reservationsListRelationFilter
     carts?: CartsListRelationFilter
     lead_activities?: Lead_activitiesListRelationFilter
     lead_conversations?: Lead_conversationsListRelationFilter
@@ -85337,7 +90426,6 @@ export namespace Prisma {
     tenants?: XOR<TenantsScalarRelationFilter, tenantsWhereInput>
     orders?: OrdersListRelationFilter
     workflow_executions?: Workflow_executionsListRelationFilter
-    cart_reservations?: Cart_reservationsListRelationFilter
   }, "lead_id">
 
   export type leadsOrderByWithAggregationInput = {
@@ -86501,6 +91589,7 @@ export namespace Prisma {
     instagram_retailer_id?: StringNullableFilter<"products"> | string | null
     campaigns?: CampaignsListRelationFilter
     cart_items?: Cart_itemsListRelationFilter
+    cart_reservations?: Cart_reservationsListRelationFilter
     course_batches?: Course_batchesListRelationFilter
     order_items?: Order_itemsListRelationFilter
     product_images?: Product_imagesListRelationFilter
@@ -86509,7 +91598,6 @@ export namespace Prisma {
     businesses?: XOR<BusinessesScalarRelationFilter, businessesWhereInput>
     product_categories?: XOR<Product_categoriesNullableScalarRelationFilter, product_categoriesWhereInput> | null
     stock_reservations?: Stock_reservationsListRelationFilter
-    cart_reservations?: Cart_reservationsListRelationFilter
   }
 
   export type productsOrderByWithRelationInput = {
@@ -86552,6 +91640,7 @@ export namespace Prisma {
     instagram_retailer_id?: SortOrderInput | SortOrder
     campaigns?: campaignsOrderByRelationAggregateInput
     cart_items?: cart_itemsOrderByRelationAggregateInput
+    cart_reservations?: cart_reservationsOrderByRelationAggregateInput
     course_batches?: course_batchesOrderByRelationAggregateInput
     order_items?: order_itemsOrderByRelationAggregateInput
     product_images?: product_imagesOrderByRelationAggregateInput
@@ -86560,7 +91649,6 @@ export namespace Prisma {
     businesses?: businessesOrderByWithRelationInput
     product_categories?: product_categoriesOrderByWithRelationInput
     stock_reservations?: stock_reservationsOrderByRelationAggregateInput
-    cart_reservations?: cart_reservationsOrderByRelationAggregateInput
   }
 
   export type productsWhereUniqueInput = Prisma.AtLeast<{
@@ -86606,6 +91694,7 @@ export namespace Prisma {
     instagram_retailer_id?: StringNullableFilter<"products"> | string | null
     campaigns?: CampaignsListRelationFilter
     cart_items?: Cart_itemsListRelationFilter
+    cart_reservations?: Cart_reservationsListRelationFilter
     course_batches?: Course_batchesListRelationFilter
     order_items?: Order_itemsListRelationFilter
     product_images?: Product_imagesListRelationFilter
@@ -86614,7 +91703,6 @@ export namespace Prisma {
     businesses?: XOR<BusinessesScalarRelationFilter, businessesWhereInput>
     product_categories?: XOR<Product_categoriesNullableScalarRelationFilter, product_categoriesWhereInput> | null
     stock_reservations?: Stock_reservationsListRelationFilter
-    cart_reservations?: Cart_reservationsListRelationFilter
   }, "product_id">
 
   export type productsOrderByWithAggregationInput = {
@@ -87043,13 +92131,13 @@ export namespace Prisma {
     phone?: StringFilter<"customers"> | string
     email?: StringNullableFilter<"customers"> | string | null
     whatsapp_number?: StringNullableFilter<"customers"> | string | null
-    platform_user_id?: StringNullableFilter<"customers"> | string | null
     total_orders?: IntFilter<"customers"> | number
     total_spent?: DecimalFilter<"customers"> | Decimal | DecimalJsLike | number | string
     last_order_date?: DateTimeNullableFilter<"customers"> | Date | string | null
     engagement_score?: IntFilter<"customers"> | number
     created_at?: DateTimeFilter<"customers"> | Date | string
     updated_at?: DateTimeFilter<"customers"> | Date | string
+    platform_user_id?: StringNullableFilter<"customers"> | string | null
     carts?: CartsListRelationFilter
     notification_messages?: Notification_messagesListRelationFilter
     notification_preferences?: Notification_preferencesListRelationFilter
@@ -87066,13 +92154,13 @@ export namespace Prisma {
     phone?: SortOrder
     email?: SortOrderInput | SortOrder
     whatsapp_number?: SortOrderInput | SortOrder
-    platform_user_id?: SortOrderInput | SortOrder
     total_orders?: SortOrder
     total_spent?: SortOrder
     last_order_date?: SortOrderInput | SortOrder
     engagement_score?: SortOrder
     created_at?: SortOrder
     updated_at?: SortOrder
+    platform_user_id?: SortOrderInput | SortOrder
     carts?: cartsOrderByRelationAggregateInput
     notification_messages?: notification_messagesOrderByRelationAggregateInput
     notification_preferences?: notification_preferencesOrderByRelationAggregateInput
@@ -87094,13 +92182,13 @@ export namespace Prisma {
     phone?: StringFilter<"customers"> | string
     email?: StringNullableFilter<"customers"> | string | null
     whatsapp_number?: StringNullableFilter<"customers"> | string | null
-    platform_user_id?: StringNullableFilter<"customers"> | string | null
     total_orders?: IntFilter<"customers"> | number
     total_spent?: DecimalFilter<"customers"> | Decimal | DecimalJsLike | number | string
     last_order_date?: DateTimeNullableFilter<"customers"> | Date | string | null
     engagement_score?: IntFilter<"customers"> | number
     created_at?: DateTimeFilter<"customers"> | Date | string
     updated_at?: DateTimeFilter<"customers"> | Date | string
+    platform_user_id?: StringNullableFilter<"customers"> | string | null
     carts?: CartsListRelationFilter
     notification_messages?: Notification_messagesListRelationFilter
     notification_preferences?: Notification_preferencesListRelationFilter
@@ -87117,13 +92205,13 @@ export namespace Prisma {
     phone?: SortOrder
     email?: SortOrderInput | SortOrder
     whatsapp_number?: SortOrderInput | SortOrder
-    platform_user_id?: SortOrderInput | SortOrder
     total_orders?: SortOrder
     total_spent?: SortOrder
     last_order_date?: SortOrderInput | SortOrder
     engagement_score?: SortOrder
     created_at?: SortOrder
     updated_at?: SortOrder
+    platform_user_id?: SortOrderInput | SortOrder
     _count?: customersCountOrderByAggregateInput
     _avg?: customersAvgOrderByAggregateInput
     _max?: customersMaxOrderByAggregateInput
@@ -87142,13 +92230,13 @@ export namespace Prisma {
     phone?: StringWithAggregatesFilter<"customers"> | string
     email?: StringNullableWithAggregatesFilter<"customers"> | string | null
     whatsapp_number?: StringNullableWithAggregatesFilter<"customers"> | string | null
-    platform_user_id?: StringNullableWithAggregatesFilter<"customers"> | string | null
     total_orders?: IntWithAggregatesFilter<"customers"> | number
     total_spent?: DecimalWithAggregatesFilter<"customers"> | Decimal | DecimalJsLike | number | string
     last_order_date?: DateTimeNullableWithAggregatesFilter<"customers"> | Date | string | null
     engagement_score?: IntWithAggregatesFilter<"customers"> | number
     created_at?: DateTimeWithAggregatesFilter<"customers"> | Date | string
     updated_at?: DateTimeWithAggregatesFilter<"customers"> | Date | string
+    platform_user_id?: StringNullableWithAggregatesFilter<"customers"> | string | null
   }
 
   export type ordersWhereInput = {
@@ -91073,13 +96161,13 @@ export namespace Prisma {
     business_id?: UuidFilter<"carts"> | string
     tenant_id?: UuidFilter<"carts"> | string
     lead_id?: UuidNullableFilter<"carts"> | string | null
-    customer_id?: UuidNullableFilter<"carts"> | string | null
     status?: StringNullableFilter<"carts"> | string | null
     total_amount?: DecimalNullableFilter<"carts"> | Decimal | DecimalJsLike | number | string | null
     total_items?: IntNullableFilter<"carts"> | number | null
     expires_at?: DateTimeNullableFilter<"carts"> | Date | string | null
     created_at?: DateTimeNullableFilter<"carts"> | Date | string | null
     updated_at?: DateTimeNullableFilter<"carts"> | Date | string | null
+    customer_id?: UuidNullableFilter<"carts"> | string | null
     cart_items?: Cart_itemsListRelationFilter
     businesses?: XOR<BusinessesScalarRelationFilter, businessesWhereInput>
     customers?: XOR<CustomersNullableScalarRelationFilter, customersWhereInput> | null
@@ -91092,13 +96180,13 @@ export namespace Prisma {
     business_id?: SortOrder
     tenant_id?: SortOrder
     lead_id?: SortOrderInput | SortOrder
-    customer_id?: SortOrderInput | SortOrder
     status?: SortOrderInput | SortOrder
     total_amount?: SortOrderInput | SortOrder
     total_items?: SortOrderInput | SortOrder
     expires_at?: SortOrderInput | SortOrder
     created_at?: SortOrderInput | SortOrder
     updated_at?: SortOrderInput | SortOrder
+    customer_id?: SortOrderInput | SortOrder
     cart_items?: cart_itemsOrderByRelationAggregateInput
     businesses?: businessesOrderByWithRelationInput
     customers?: customersOrderByWithRelationInput
@@ -91114,13 +96202,13 @@ export namespace Prisma {
     business_id?: UuidFilter<"carts"> | string
     tenant_id?: UuidFilter<"carts"> | string
     lead_id?: UuidNullableFilter<"carts"> | string | null
-    customer_id?: UuidNullableFilter<"carts"> | string | null
     status?: StringNullableFilter<"carts"> | string | null
     total_amount?: DecimalNullableFilter<"carts"> | Decimal | DecimalJsLike | number | string | null
     total_items?: IntNullableFilter<"carts"> | number | null
     expires_at?: DateTimeNullableFilter<"carts"> | Date | string | null
     created_at?: DateTimeNullableFilter<"carts"> | Date | string | null
     updated_at?: DateTimeNullableFilter<"carts"> | Date | string | null
+    customer_id?: UuidNullableFilter<"carts"> | string | null
     cart_items?: Cart_itemsListRelationFilter
     businesses?: XOR<BusinessesScalarRelationFilter, businessesWhereInput>
     customers?: XOR<CustomersNullableScalarRelationFilter, customersWhereInput> | null
@@ -91133,13 +96221,13 @@ export namespace Prisma {
     business_id?: SortOrder
     tenant_id?: SortOrder
     lead_id?: SortOrderInput | SortOrder
-    customer_id?: SortOrderInput | SortOrder
     status?: SortOrderInput | SortOrder
     total_amount?: SortOrderInput | SortOrder
     total_items?: SortOrderInput | SortOrder
     expires_at?: SortOrderInput | SortOrder
     created_at?: SortOrderInput | SortOrder
     updated_at?: SortOrderInput | SortOrder
+    customer_id?: SortOrderInput | SortOrder
     _count?: cartsCountOrderByAggregateInput
     _avg?: cartsAvgOrderByAggregateInput
     _max?: cartsMaxOrderByAggregateInput
@@ -91155,13 +96243,13 @@ export namespace Prisma {
     business_id?: UuidWithAggregatesFilter<"carts"> | string
     tenant_id?: UuidWithAggregatesFilter<"carts"> | string
     lead_id?: UuidNullableWithAggregatesFilter<"carts"> | string | null
-    customer_id?: UuidNullableWithAggregatesFilter<"carts"> | string | null
     status?: StringNullableWithAggregatesFilter<"carts"> | string | null
     total_amount?: DecimalNullableWithAggregatesFilter<"carts"> | Decimal | DecimalJsLike | number | string | null
     total_items?: IntNullableWithAggregatesFilter<"carts"> | number | null
     expires_at?: DateTimeNullableWithAggregatesFilter<"carts"> | Date | string | null
     created_at?: DateTimeNullableWithAggregatesFilter<"carts"> | Date | string | null
     updated_at?: DateTimeNullableWithAggregatesFilter<"carts"> | Date | string | null
+    customer_id?: UuidNullableWithAggregatesFilter<"carts"> | string | null
   }
 
   export type whatsapp_optoutsWhereInput = {
@@ -91323,18 +96411,294 @@ export namespace Prisma {
     updated_at?: DateTimeWithAggregatesFilter<"campaign_analytics"> | Date | string
   }
 
+  export type hotel_pricing_recommendationsWhereInput = {
+    AND?: hotel_pricing_recommendationsWhereInput | hotel_pricing_recommendationsWhereInput[]
+    OR?: hotel_pricing_recommendationsWhereInput[]
+    NOT?: hotel_pricing_recommendationsWhereInput | hotel_pricing_recommendationsWhereInput[]
+    id?: UuidFilter<"hotel_pricing_recommendations"> | string
+    hotel_id?: StringFilter<"hotel_pricing_recommendations"> | string
+    org_id?: StringFilter<"hotel_pricing_recommendations"> | string
+    room_type?: StringFilter<"hotel_pricing_recommendations"> | string
+    checkin_date?: DateTimeFilter<"hotel_pricing_recommendations"> | Date | string
+    suggested_price?: IntFilter<"hotel_pricing_recommendations"> | number
+    demand_score?: FloatFilter<"hotel_pricing_recommendations"> | number
+    confidence?: FloatFilter<"hotel_pricing_recommendations"> | number
+    competitor_avg_price?: IntFilter<"hotel_pricing_recommendations"> | number
+    current_price?: IntFilter<"hotel_pricing_recommendations"> | number
+    price_range_low?: IntFilter<"hotel_pricing_recommendations"> | number
+    price_range_high?: IntFilter<"hotel_pricing_recommendations"> | number
+    claude_narrative?: StringNullableFilter<"hotel_pricing_recommendations"> | string | null
+    xotelo_snapshot?: JsonNullableFilter<"hotel_pricing_recommendations">
+    seven_day_forecast?: JsonNullableFilter<"hotel_pricing_recommendations">
+    created_at?: DateTimeFilter<"hotel_pricing_recommendations"> | Date | string
+    booking_outcomes?: Hotel_booking_outcomesListRelationFilter
+  }
+
+  export type hotel_pricing_recommendationsOrderByWithRelationInput = {
+    id?: SortOrder
+    hotel_id?: SortOrder
+    org_id?: SortOrder
+    room_type?: SortOrder
+    checkin_date?: SortOrder
+    suggested_price?: SortOrder
+    demand_score?: SortOrder
+    confidence?: SortOrder
+    competitor_avg_price?: SortOrder
+    current_price?: SortOrder
+    price_range_low?: SortOrder
+    price_range_high?: SortOrder
+    claude_narrative?: SortOrderInput | SortOrder
+    xotelo_snapshot?: SortOrderInput | SortOrder
+    seven_day_forecast?: SortOrderInput | SortOrder
+    created_at?: SortOrder
+    booking_outcomes?: hotel_booking_outcomesOrderByRelationAggregateInput
+  }
+
+  export type hotel_pricing_recommendationsWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: hotel_pricing_recommendationsWhereInput | hotel_pricing_recommendationsWhereInput[]
+    OR?: hotel_pricing_recommendationsWhereInput[]
+    NOT?: hotel_pricing_recommendationsWhereInput | hotel_pricing_recommendationsWhereInput[]
+    hotel_id?: StringFilter<"hotel_pricing_recommendations"> | string
+    org_id?: StringFilter<"hotel_pricing_recommendations"> | string
+    room_type?: StringFilter<"hotel_pricing_recommendations"> | string
+    checkin_date?: DateTimeFilter<"hotel_pricing_recommendations"> | Date | string
+    suggested_price?: IntFilter<"hotel_pricing_recommendations"> | number
+    demand_score?: FloatFilter<"hotel_pricing_recommendations"> | number
+    confidence?: FloatFilter<"hotel_pricing_recommendations"> | number
+    competitor_avg_price?: IntFilter<"hotel_pricing_recommendations"> | number
+    current_price?: IntFilter<"hotel_pricing_recommendations"> | number
+    price_range_low?: IntFilter<"hotel_pricing_recommendations"> | number
+    price_range_high?: IntFilter<"hotel_pricing_recommendations"> | number
+    claude_narrative?: StringNullableFilter<"hotel_pricing_recommendations"> | string | null
+    xotelo_snapshot?: JsonNullableFilter<"hotel_pricing_recommendations">
+    seven_day_forecast?: JsonNullableFilter<"hotel_pricing_recommendations">
+    created_at?: DateTimeFilter<"hotel_pricing_recommendations"> | Date | string
+    booking_outcomes?: Hotel_booking_outcomesListRelationFilter
+  }, "id">
+
+  export type hotel_pricing_recommendationsOrderByWithAggregationInput = {
+    id?: SortOrder
+    hotel_id?: SortOrder
+    org_id?: SortOrder
+    room_type?: SortOrder
+    checkin_date?: SortOrder
+    suggested_price?: SortOrder
+    demand_score?: SortOrder
+    confidence?: SortOrder
+    competitor_avg_price?: SortOrder
+    current_price?: SortOrder
+    price_range_low?: SortOrder
+    price_range_high?: SortOrder
+    claude_narrative?: SortOrderInput | SortOrder
+    xotelo_snapshot?: SortOrderInput | SortOrder
+    seven_day_forecast?: SortOrderInput | SortOrder
+    created_at?: SortOrder
+    _count?: hotel_pricing_recommendationsCountOrderByAggregateInput
+    _avg?: hotel_pricing_recommendationsAvgOrderByAggregateInput
+    _max?: hotel_pricing_recommendationsMaxOrderByAggregateInput
+    _min?: hotel_pricing_recommendationsMinOrderByAggregateInput
+    _sum?: hotel_pricing_recommendationsSumOrderByAggregateInput
+  }
+
+  export type hotel_pricing_recommendationsScalarWhereWithAggregatesInput = {
+    AND?: hotel_pricing_recommendationsScalarWhereWithAggregatesInput | hotel_pricing_recommendationsScalarWhereWithAggregatesInput[]
+    OR?: hotel_pricing_recommendationsScalarWhereWithAggregatesInput[]
+    NOT?: hotel_pricing_recommendationsScalarWhereWithAggregatesInput | hotel_pricing_recommendationsScalarWhereWithAggregatesInput[]
+    id?: UuidWithAggregatesFilter<"hotel_pricing_recommendations"> | string
+    hotel_id?: StringWithAggregatesFilter<"hotel_pricing_recommendations"> | string
+    org_id?: StringWithAggregatesFilter<"hotel_pricing_recommendations"> | string
+    room_type?: StringWithAggregatesFilter<"hotel_pricing_recommendations"> | string
+    checkin_date?: DateTimeWithAggregatesFilter<"hotel_pricing_recommendations"> | Date | string
+    suggested_price?: IntWithAggregatesFilter<"hotel_pricing_recommendations"> | number
+    demand_score?: FloatWithAggregatesFilter<"hotel_pricing_recommendations"> | number
+    confidence?: FloatWithAggregatesFilter<"hotel_pricing_recommendations"> | number
+    competitor_avg_price?: IntWithAggregatesFilter<"hotel_pricing_recommendations"> | number
+    current_price?: IntWithAggregatesFilter<"hotel_pricing_recommendations"> | number
+    price_range_low?: IntWithAggregatesFilter<"hotel_pricing_recommendations"> | number
+    price_range_high?: IntWithAggregatesFilter<"hotel_pricing_recommendations"> | number
+    claude_narrative?: StringNullableWithAggregatesFilter<"hotel_pricing_recommendations"> | string | null
+    xotelo_snapshot?: JsonNullableWithAggregatesFilter<"hotel_pricing_recommendations">
+    seven_day_forecast?: JsonNullableWithAggregatesFilter<"hotel_pricing_recommendations">
+    created_at?: DateTimeWithAggregatesFilter<"hotel_pricing_recommendations"> | Date | string
+  }
+
+  export type hotel_booking_outcomesWhereInput = {
+    AND?: hotel_booking_outcomesWhereInput | hotel_booking_outcomesWhereInput[]
+    OR?: hotel_booking_outcomesWhereInput[]
+    NOT?: hotel_booking_outcomesWhereInput | hotel_booking_outcomesWhereInput[]
+    id?: UuidFilter<"hotel_booking_outcomes"> | string
+    recommendation_id?: UuidFilter<"hotel_booking_outcomes"> | string
+    hotel_id?: StringFilter<"hotel_booking_outcomes"> | string
+    org_id?: StringFilter<"hotel_booking_outcomes"> | string
+    actual_price_used?: IntFilter<"hotel_booking_outcomes"> | number
+    rooms_booked?: IntFilter<"hotel_booking_outcomes"> | number
+    total_rooms?: IntFilter<"hotel_booking_outcomes"> | number
+    actual_occupancy?: FloatFilter<"hotel_booking_outcomes"> | number
+    revenue?: IntFilter<"hotel_booking_outcomes"> | number
+    checkin_date?: DateTimeFilter<"hotel_booking_outcomes"> | Date | string
+    recorded_at?: DateTimeFilter<"hotel_booking_outcomes"> | Date | string
+    recommendation?: XOR<Hotel_pricing_recommendationsScalarRelationFilter, hotel_pricing_recommendationsWhereInput>
+  }
+
+  export type hotel_booking_outcomesOrderByWithRelationInput = {
+    id?: SortOrder
+    recommendation_id?: SortOrder
+    hotel_id?: SortOrder
+    org_id?: SortOrder
+    actual_price_used?: SortOrder
+    rooms_booked?: SortOrder
+    total_rooms?: SortOrder
+    actual_occupancy?: SortOrder
+    revenue?: SortOrder
+    checkin_date?: SortOrder
+    recorded_at?: SortOrder
+    recommendation?: hotel_pricing_recommendationsOrderByWithRelationInput
+  }
+
+  export type hotel_booking_outcomesWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: hotel_booking_outcomesWhereInput | hotel_booking_outcomesWhereInput[]
+    OR?: hotel_booking_outcomesWhereInput[]
+    NOT?: hotel_booking_outcomesWhereInput | hotel_booking_outcomesWhereInput[]
+    recommendation_id?: UuidFilter<"hotel_booking_outcomes"> | string
+    hotel_id?: StringFilter<"hotel_booking_outcomes"> | string
+    org_id?: StringFilter<"hotel_booking_outcomes"> | string
+    actual_price_used?: IntFilter<"hotel_booking_outcomes"> | number
+    rooms_booked?: IntFilter<"hotel_booking_outcomes"> | number
+    total_rooms?: IntFilter<"hotel_booking_outcomes"> | number
+    actual_occupancy?: FloatFilter<"hotel_booking_outcomes"> | number
+    revenue?: IntFilter<"hotel_booking_outcomes"> | number
+    checkin_date?: DateTimeFilter<"hotel_booking_outcomes"> | Date | string
+    recorded_at?: DateTimeFilter<"hotel_booking_outcomes"> | Date | string
+    recommendation?: XOR<Hotel_pricing_recommendationsScalarRelationFilter, hotel_pricing_recommendationsWhereInput>
+  }, "id">
+
+  export type hotel_booking_outcomesOrderByWithAggregationInput = {
+    id?: SortOrder
+    recommendation_id?: SortOrder
+    hotel_id?: SortOrder
+    org_id?: SortOrder
+    actual_price_used?: SortOrder
+    rooms_booked?: SortOrder
+    total_rooms?: SortOrder
+    actual_occupancy?: SortOrder
+    revenue?: SortOrder
+    checkin_date?: SortOrder
+    recorded_at?: SortOrder
+    _count?: hotel_booking_outcomesCountOrderByAggregateInput
+    _avg?: hotel_booking_outcomesAvgOrderByAggregateInput
+    _max?: hotel_booking_outcomesMaxOrderByAggregateInput
+    _min?: hotel_booking_outcomesMinOrderByAggregateInput
+    _sum?: hotel_booking_outcomesSumOrderByAggregateInput
+  }
+
+  export type hotel_booking_outcomesScalarWhereWithAggregatesInput = {
+    AND?: hotel_booking_outcomesScalarWhereWithAggregatesInput | hotel_booking_outcomesScalarWhereWithAggregatesInput[]
+    OR?: hotel_booking_outcomesScalarWhereWithAggregatesInput[]
+    NOT?: hotel_booking_outcomesScalarWhereWithAggregatesInput | hotel_booking_outcomesScalarWhereWithAggregatesInput[]
+    id?: UuidWithAggregatesFilter<"hotel_booking_outcomes"> | string
+    recommendation_id?: UuidWithAggregatesFilter<"hotel_booking_outcomes"> | string
+    hotel_id?: StringWithAggregatesFilter<"hotel_booking_outcomes"> | string
+    org_id?: StringWithAggregatesFilter<"hotel_booking_outcomes"> | string
+    actual_price_used?: IntWithAggregatesFilter<"hotel_booking_outcomes"> | number
+    rooms_booked?: IntWithAggregatesFilter<"hotel_booking_outcomes"> | number
+    total_rooms?: IntWithAggregatesFilter<"hotel_booking_outcomes"> | number
+    actual_occupancy?: FloatWithAggregatesFilter<"hotel_booking_outcomes"> | number
+    revenue?: IntWithAggregatesFilter<"hotel_booking_outcomes"> | number
+    checkin_date?: DateTimeWithAggregatesFilter<"hotel_booking_outcomes"> | Date | string
+    recorded_at?: DateTimeWithAggregatesFilter<"hotel_booking_outcomes"> | Date | string
+  }
+
+  export type hotel_pricing_notificationsWhereInput = {
+    AND?: hotel_pricing_notificationsWhereInput | hotel_pricing_notificationsWhereInput[]
+    OR?: hotel_pricing_notificationsWhereInput[]
+    NOT?: hotel_pricing_notificationsWhereInput | hotel_pricing_notificationsWhereInput[]
+    id?: UuidFilter<"hotel_pricing_notifications"> | string
+    org_id?: StringFilter<"hotel_pricing_notifications"> | string
+    hotel_id?: StringFilter<"hotel_pricing_notifications"> | string
+    type?: StringFilter<"hotel_pricing_notifications"> | string
+    title?: StringFilter<"hotel_pricing_notifications"> | string
+    body?: StringFilter<"hotel_pricing_notifications"> | string
+    metadata?: JsonNullableFilter<"hotel_pricing_notifications">
+    read_at?: DateTimeNullableFilter<"hotel_pricing_notifications"> | Date | string | null
+    created_at?: DateTimeFilter<"hotel_pricing_notifications"> | Date | string
+  }
+
+  export type hotel_pricing_notificationsOrderByWithRelationInput = {
+    id?: SortOrder
+    org_id?: SortOrder
+    hotel_id?: SortOrder
+    type?: SortOrder
+    title?: SortOrder
+    body?: SortOrder
+    metadata?: SortOrderInput | SortOrder
+    read_at?: SortOrderInput | SortOrder
+    created_at?: SortOrder
+  }
+
+  export type hotel_pricing_notificationsWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: hotel_pricing_notificationsWhereInput | hotel_pricing_notificationsWhereInput[]
+    OR?: hotel_pricing_notificationsWhereInput[]
+    NOT?: hotel_pricing_notificationsWhereInput | hotel_pricing_notificationsWhereInput[]
+    org_id?: StringFilter<"hotel_pricing_notifications"> | string
+    hotel_id?: StringFilter<"hotel_pricing_notifications"> | string
+    type?: StringFilter<"hotel_pricing_notifications"> | string
+    title?: StringFilter<"hotel_pricing_notifications"> | string
+    body?: StringFilter<"hotel_pricing_notifications"> | string
+    metadata?: JsonNullableFilter<"hotel_pricing_notifications">
+    read_at?: DateTimeNullableFilter<"hotel_pricing_notifications"> | Date | string | null
+    created_at?: DateTimeFilter<"hotel_pricing_notifications"> | Date | string
+  }, "id">
+
+  export type hotel_pricing_notificationsOrderByWithAggregationInput = {
+    id?: SortOrder
+    org_id?: SortOrder
+    hotel_id?: SortOrder
+    type?: SortOrder
+    title?: SortOrder
+    body?: SortOrder
+    metadata?: SortOrderInput | SortOrder
+    read_at?: SortOrderInput | SortOrder
+    created_at?: SortOrder
+    _count?: hotel_pricing_notificationsCountOrderByAggregateInput
+    _max?: hotel_pricing_notificationsMaxOrderByAggregateInput
+    _min?: hotel_pricing_notificationsMinOrderByAggregateInput
+  }
+
+  export type hotel_pricing_notificationsScalarWhereWithAggregatesInput = {
+    AND?: hotel_pricing_notificationsScalarWhereWithAggregatesInput | hotel_pricing_notificationsScalarWhereWithAggregatesInput[]
+    OR?: hotel_pricing_notificationsScalarWhereWithAggregatesInput[]
+    NOT?: hotel_pricing_notificationsScalarWhereWithAggregatesInput | hotel_pricing_notificationsScalarWhereWithAggregatesInput[]
+    id?: UuidWithAggregatesFilter<"hotel_pricing_notifications"> | string
+    org_id?: StringWithAggregatesFilter<"hotel_pricing_notifications"> | string
+    hotel_id?: StringWithAggregatesFilter<"hotel_pricing_notifications"> | string
+    type?: StringWithAggregatesFilter<"hotel_pricing_notifications"> | string
+    title?: StringWithAggregatesFilter<"hotel_pricing_notifications"> | string
+    body?: StringWithAggregatesFilter<"hotel_pricing_notifications"> | string
+    metadata?: JsonNullableWithAggregatesFilter<"hotel_pricing_notifications">
+    read_at?: DateTimeNullableWithAggregatesFilter<"hotel_pricing_notifications"> | Date | string | null
+    created_at?: DateTimeWithAggregatesFilter<"hotel_pricing_notifications"> | Date | string
+  }
+
   export type businessesCreateInput = {
     business_id?: string
     business_name: string
     business_type?: string | null
     whatsapp_number?: string | null
-    brand_colors?: NullableJsonNullValueInput | InputJsonValue
-    logo_url?: string | null
-    working_hours?: NullableJsonNullValueInput | InputJsonValue
     created_at?: Date | string | null
     updated_at?: Date | string | null
+    email?: string | null
+    phone?: string | null
+    website?: string | null
+    city?: string | null
+    address?: string | null
+    country?: string | null
+    gst_number?: string | null
+    pan_number?: string | null
+    business_employees?: business_employeesCreateNestedManyWithoutBusinessesInput
     business_workflows?: business_workflowsCreateNestedManyWithoutBusinessesInput
-    subscription_plans?: subscription_plansCreateNestedOneWithoutBusinessesInput
     tenants: tenantsCreateNestedOneWithoutBusinessesInput
     carts?: cartsCreateNestedManyWithoutBusinessesInput
     inventory_levels?: inventory_levelsCreateNestedManyWithoutBusinessesInput
@@ -91363,13 +96727,18 @@ export namespace Prisma {
     tenant_id: string
     business_name: string
     business_type?: string | null
-    subscription_plan_id?: string | null
     whatsapp_number?: string | null
-    brand_colors?: NullableJsonNullValueInput | InputJsonValue
-    logo_url?: string | null
-    working_hours?: NullableJsonNullValueInput | InputJsonValue
     created_at?: Date | string | null
     updated_at?: Date | string | null
+    email?: string | null
+    phone?: string | null
+    website?: string | null
+    city?: string | null
+    address?: string | null
+    country?: string | null
+    gst_number?: string | null
+    pan_number?: string | null
+    business_employees?: business_employeesUncheckedCreateNestedManyWithoutBusinessesInput
     business_workflows?: business_workflowsUncheckedCreateNestedManyWithoutBusinessesInput
     carts?: cartsUncheckedCreateNestedManyWithoutBusinessesInput
     inventory_levels?: inventory_levelsUncheckedCreateNestedManyWithoutBusinessesInput
@@ -91398,13 +96767,18 @@ export namespace Prisma {
     business_name?: StringFieldUpdateOperationsInput | string
     business_type?: NullableStringFieldUpdateOperationsInput | string | null
     whatsapp_number?: NullableStringFieldUpdateOperationsInput | string | null
-    brand_colors?: NullableJsonNullValueInput | InputJsonValue
-    logo_url?: NullableStringFieldUpdateOperationsInput | string | null
-    working_hours?: NullableJsonNullValueInput | InputJsonValue
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    website?: NullableStringFieldUpdateOperationsInput | string | null
+    city?: NullableStringFieldUpdateOperationsInput | string | null
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    country?: NullableStringFieldUpdateOperationsInput | string | null
+    gst_number?: NullableStringFieldUpdateOperationsInput | string | null
+    pan_number?: NullableStringFieldUpdateOperationsInput | string | null
+    business_employees?: business_employeesUpdateManyWithoutBusinessesNestedInput
     business_workflows?: business_workflowsUpdateManyWithoutBusinessesNestedInput
-    subscription_plans?: subscription_plansUpdateOneWithoutBusinessesNestedInput
     tenants?: tenantsUpdateOneRequiredWithoutBusinessesNestedInput
     carts?: cartsUpdateManyWithoutBusinessesNestedInput
     inventory_levels?: inventory_levelsUpdateManyWithoutBusinessesNestedInput
@@ -91433,13 +96807,18 @@ export namespace Prisma {
     tenant_id?: StringFieldUpdateOperationsInput | string
     business_name?: StringFieldUpdateOperationsInput | string
     business_type?: NullableStringFieldUpdateOperationsInput | string | null
-    subscription_plan_id?: NullableStringFieldUpdateOperationsInput | string | null
     whatsapp_number?: NullableStringFieldUpdateOperationsInput | string | null
-    brand_colors?: NullableJsonNullValueInput | InputJsonValue
-    logo_url?: NullableStringFieldUpdateOperationsInput | string | null
-    working_hours?: NullableJsonNullValueInput | InputJsonValue
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    website?: NullableStringFieldUpdateOperationsInput | string | null
+    city?: NullableStringFieldUpdateOperationsInput | string | null
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    country?: NullableStringFieldUpdateOperationsInput | string | null
+    gst_number?: NullableStringFieldUpdateOperationsInput | string | null
+    pan_number?: NullableStringFieldUpdateOperationsInput | string | null
+    business_employees?: business_employeesUncheckedUpdateManyWithoutBusinessesNestedInput
     business_workflows?: business_workflowsUncheckedUpdateManyWithoutBusinessesNestedInput
     carts?: cartsUncheckedUpdateManyWithoutBusinessesNestedInput
     inventory_levels?: inventory_levelsUncheckedUpdateManyWithoutBusinessesNestedInput
@@ -91468,13 +96847,17 @@ export namespace Prisma {
     tenant_id: string
     business_name: string
     business_type?: string | null
-    subscription_plan_id?: string | null
     whatsapp_number?: string | null
-    brand_colors?: NullableJsonNullValueInput | InputJsonValue
-    logo_url?: string | null
-    working_hours?: NullableJsonNullValueInput | InputJsonValue
     created_at?: Date | string | null
     updated_at?: Date | string | null
+    email?: string | null
+    phone?: string | null
+    website?: string | null
+    city?: string | null
+    address?: string | null
+    country?: string | null
+    gst_number?: string | null
+    pan_number?: string | null
   }
 
   export type businessesUpdateManyMutationInput = {
@@ -91482,11 +96865,16 @@ export namespace Prisma {
     business_name?: StringFieldUpdateOperationsInput | string
     business_type?: NullableStringFieldUpdateOperationsInput | string | null
     whatsapp_number?: NullableStringFieldUpdateOperationsInput | string | null
-    brand_colors?: NullableJsonNullValueInput | InputJsonValue
-    logo_url?: NullableStringFieldUpdateOperationsInput | string | null
-    working_hours?: NullableJsonNullValueInput | InputJsonValue
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    website?: NullableStringFieldUpdateOperationsInput | string | null
+    city?: NullableStringFieldUpdateOperationsInput | string | null
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    country?: NullableStringFieldUpdateOperationsInput | string | null
+    gst_number?: NullableStringFieldUpdateOperationsInput | string | null
+    pan_number?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type businessesUncheckedUpdateManyInput = {
@@ -91494,13 +96882,86 @@ export namespace Prisma {
     tenant_id?: StringFieldUpdateOperationsInput | string
     business_name?: StringFieldUpdateOperationsInput | string
     business_type?: NullableStringFieldUpdateOperationsInput | string | null
-    subscription_plan_id?: NullableStringFieldUpdateOperationsInput | string | null
     whatsapp_number?: NullableStringFieldUpdateOperationsInput | string | null
-    brand_colors?: NullableJsonNullValueInput | InputJsonValue
-    logo_url?: NullableStringFieldUpdateOperationsInput | string | null
-    working_hours?: NullableJsonNullValueInput | InputJsonValue
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    website?: NullableStringFieldUpdateOperationsInput | string | null
+    city?: NullableStringFieldUpdateOperationsInput | string | null
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    country?: NullableStringFieldUpdateOperationsInput | string | null
+    gst_number?: NullableStringFieldUpdateOperationsInput | string | null
+    pan_number?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type business_employeesCreateInput = {
+    employee_id?: string
+    name: string
+    email?: string | null
+    phone?: string | null
+    role?: string | null
+    created_at?: Date | string | null
+    businesses: businessesCreateNestedOneWithoutBusiness_employeesInput
+  }
+
+  export type business_employeesUncheckedCreateInput = {
+    employee_id?: string
+    business_id: string
+    name: string
+    email?: string | null
+    phone?: string | null
+    role?: string | null
+    created_at?: Date | string | null
+  }
+
+  export type business_employeesUpdateInput = {
+    employee_id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: NullableStringFieldUpdateOperationsInput | string | null
+    created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    businesses?: businessesUpdateOneRequiredWithoutBusiness_employeesNestedInput
+  }
+
+  export type business_employeesUncheckedUpdateInput = {
+    employee_id?: StringFieldUpdateOperationsInput | string
+    business_id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: NullableStringFieldUpdateOperationsInput | string | null
+    created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
+  export type business_employeesCreateManyInput = {
+    employee_id?: string
+    business_id: string
+    name: string
+    email?: string | null
+    phone?: string | null
+    role?: string | null
+    created_at?: Date | string | null
+  }
+
+  export type business_employeesUpdateManyMutationInput = {
+    employee_id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: NullableStringFieldUpdateOperationsInput | string | null
+    created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
+  export type business_employeesUncheckedUpdateManyInput = {
+    employee_id?: StringFieldUpdateOperationsInput | string
+    business_id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: NullableStringFieldUpdateOperationsInput | string | null
+    created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
   export type intentsCreateInput = {
@@ -91871,7 +97332,6 @@ export namespace Prisma {
     price?: Decimal | DecimalJsLike | number | string | null
     duration_in_days?: number | null
     created_at?: Date | string | null
-    businesses?: businessesCreateNestedManyWithoutSubscription_plansInput
   }
 
   export type subscription_plansUncheckedCreateInput = {
@@ -91880,7 +97340,6 @@ export namespace Prisma {
     price?: Decimal | DecimalJsLike | number | string | null
     duration_in_days?: number | null
     created_at?: Date | string | null
-    businesses?: businessesUncheckedCreateNestedManyWithoutSubscription_plansInput
   }
 
   export type subscription_plansUpdateInput = {
@@ -91889,7 +97348,6 @@ export namespace Prisma {
     price?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     duration_in_days?: NullableIntFieldUpdateOperationsInput | number | null
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    businesses?: businessesUpdateManyWithoutSubscription_plansNestedInput
   }
 
   export type subscription_plansUncheckedUpdateInput = {
@@ -91898,7 +97356,6 @@ export namespace Prisma {
     price?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     duration_in_days?: NullableIntFieldUpdateOperationsInput | number | null
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    businesses?: businessesUncheckedUpdateManyWithoutSubscription_plansNestedInput
   }
 
   export type subscription_plansCreateManyInput = {
@@ -92340,6 +97797,7 @@ export namespace Prisma {
     deleted_by?: string | null
     onboarding_completed?: boolean
     delivery_address?: string | null
+    cart_reservations?: cart_reservationsCreateNestedManyWithoutLeadsInput
     carts?: cartsCreateNestedManyWithoutLeadsInput
     lead_activities?: lead_activitiesCreateNestedManyWithoutLeadsInput
     lead_conversations?: lead_conversationsCreateNestedManyWithoutLeadsInput
@@ -92359,7 +97817,6 @@ export namespace Prisma {
     tenants: tenantsCreateNestedOneWithoutLeadsInput
     orders?: ordersCreateNestedManyWithoutLeadsInput
     workflow_executions?: workflow_executionsCreateNestedManyWithoutLeadsInput
-    cart_reservations?: cart_reservationsCreateNestedManyWithoutLeadsInput
   }
 
   export type leadsUncheckedCreateInput = {
@@ -92422,6 +97879,7 @@ export namespace Prisma {
     deleted_by?: string | null
     onboarding_completed?: boolean
     delivery_address?: string | null
+    cart_reservations?: cart_reservationsUncheckedCreateNestedManyWithoutLeadsInput
     carts?: cartsUncheckedCreateNestedManyWithoutLeadsInput
     lead_activities?: lead_activitiesUncheckedCreateNestedManyWithoutLeadsInput
     lead_conversations?: lead_conversationsUncheckedCreateNestedManyWithoutLeadsInput
@@ -92437,7 +97895,6 @@ export namespace Prisma {
     duplicate_leads?: leadsUncheckedCreateNestedManyWithoutDuplicate_of_leadInput
     orders?: ordersUncheckedCreateNestedManyWithoutLeadsInput
     workflow_executions?: workflow_executionsUncheckedCreateNestedManyWithoutLeadsInput
-    cart_reservations?: cart_reservationsUncheckedCreateNestedManyWithoutLeadsInput
   }
 
   export type leadsUpdateInput = {
@@ -92496,6 +97953,7 @@ export namespace Prisma {
     deleted_by?: NullableStringFieldUpdateOperationsInput | string | null
     onboarding_completed?: BoolFieldUpdateOperationsInput | boolean
     delivery_address?: NullableStringFieldUpdateOperationsInput | string | null
+    cart_reservations?: cart_reservationsUpdateManyWithoutLeadsNestedInput
     carts?: cartsUpdateManyWithoutLeadsNestedInput
     lead_activities?: lead_activitiesUpdateManyWithoutLeadsNestedInput
     lead_conversations?: lead_conversationsUpdateManyWithoutLeadsNestedInput
@@ -92515,7 +97973,6 @@ export namespace Prisma {
     tenants?: tenantsUpdateOneRequiredWithoutLeadsNestedInput
     orders?: ordersUpdateManyWithoutLeadsNestedInput
     workflow_executions?: workflow_executionsUpdateManyWithoutLeadsNestedInput
-    cart_reservations?: cart_reservationsUpdateManyWithoutLeadsNestedInput
   }
 
   export type leadsUncheckedUpdateInput = {
@@ -92578,6 +98035,7 @@ export namespace Prisma {
     deleted_by?: NullableStringFieldUpdateOperationsInput | string | null
     onboarding_completed?: BoolFieldUpdateOperationsInput | boolean
     delivery_address?: NullableStringFieldUpdateOperationsInput | string | null
+    cart_reservations?: cart_reservationsUncheckedUpdateManyWithoutLeadsNestedInput
     carts?: cartsUncheckedUpdateManyWithoutLeadsNestedInput
     lead_activities?: lead_activitiesUncheckedUpdateManyWithoutLeadsNestedInput
     lead_conversations?: lead_conversationsUncheckedUpdateManyWithoutLeadsNestedInput
@@ -92593,7 +98051,6 @@ export namespace Prisma {
     duplicate_leads?: leadsUncheckedUpdateManyWithoutDuplicate_of_leadNestedInput
     orders?: ordersUncheckedUpdateManyWithoutLeadsNestedInput
     workflow_executions?: workflow_executionsUncheckedUpdateManyWithoutLeadsNestedInput
-    cart_reservations?: cart_reservationsUncheckedUpdateManyWithoutLeadsNestedInput
   }
 
   export type leadsCreateManyInput = {
@@ -93937,6 +99394,7 @@ export namespace Prisma {
     instagram_retailer_id?: string | null
     campaigns?: campaignsCreateNestedManyWithoutProductsInput
     cart_items?: cart_itemsCreateNestedManyWithoutProductsInput
+    cart_reservations?: cart_reservationsCreateNestedManyWithoutProductsInput
     course_batches?: course_batchesCreateNestedManyWithoutCourseInput
     order_items?: order_itemsCreateNestedManyWithoutProductsInput
     product_images?: product_imagesCreateNestedManyWithoutProductsInput
@@ -93945,7 +99403,6 @@ export namespace Prisma {
     businesses: businessesCreateNestedOneWithoutProductsInput
     product_categories?: product_categoriesCreateNestedOneWithoutProductsInput
     stock_reservations?: stock_reservationsCreateNestedManyWithoutProductsInput
-    cart_reservations?: cart_reservationsCreateNestedManyWithoutProductsInput
   }
 
   export type productsUncheckedCreateInput = {
@@ -93988,13 +99445,13 @@ export namespace Prisma {
     instagram_retailer_id?: string | null
     campaigns?: campaignsUncheckedCreateNestedManyWithoutProductsInput
     cart_items?: cart_itemsUncheckedCreateNestedManyWithoutProductsInput
+    cart_reservations?: cart_reservationsUncheckedCreateNestedManyWithoutProductsInput
     course_batches?: course_batchesUncheckedCreateNestedManyWithoutCourseInput
     order_items?: order_itemsUncheckedCreateNestedManyWithoutProductsInput
     product_images?: product_imagesUncheckedCreateNestedManyWithoutProductsInput
     product_reviews?: product_reviewsUncheckedCreateNestedManyWithoutProductInput
     product_variants?: product_variantsUncheckedCreateNestedManyWithoutProductInput
     stock_reservations?: stock_reservationsUncheckedCreateNestedManyWithoutProductsInput
-    cart_reservations?: cart_reservationsUncheckedCreateNestedManyWithoutProductsInput
   }
 
   export type productsUpdateInput = {
@@ -94035,6 +99492,7 @@ export namespace Prisma {
     instagram_retailer_id?: NullableStringFieldUpdateOperationsInput | string | null
     campaigns?: campaignsUpdateManyWithoutProductsNestedInput
     cart_items?: cart_itemsUpdateManyWithoutProductsNestedInput
+    cart_reservations?: cart_reservationsUpdateManyWithoutProductsNestedInput
     course_batches?: course_batchesUpdateManyWithoutCourseNestedInput
     order_items?: order_itemsUpdateManyWithoutProductsNestedInput
     product_images?: product_imagesUpdateManyWithoutProductsNestedInput
@@ -94043,7 +99501,6 @@ export namespace Prisma {
     businesses?: businessesUpdateOneRequiredWithoutProductsNestedInput
     product_categories?: product_categoriesUpdateOneWithoutProductsNestedInput
     stock_reservations?: stock_reservationsUpdateManyWithoutProductsNestedInput
-    cart_reservations?: cart_reservationsUpdateManyWithoutProductsNestedInput
   }
 
   export type productsUncheckedUpdateInput = {
@@ -94086,13 +99543,13 @@ export namespace Prisma {
     instagram_retailer_id?: NullableStringFieldUpdateOperationsInput | string | null
     campaigns?: campaignsUncheckedUpdateManyWithoutProductsNestedInput
     cart_items?: cart_itemsUncheckedUpdateManyWithoutProductsNestedInput
+    cart_reservations?: cart_reservationsUncheckedUpdateManyWithoutProductsNestedInput
     course_batches?: course_batchesUncheckedUpdateManyWithoutCourseNestedInput
     order_items?: order_itemsUncheckedUpdateManyWithoutProductsNestedInput
     product_images?: product_imagesUncheckedUpdateManyWithoutProductsNestedInput
     product_reviews?: product_reviewsUncheckedUpdateManyWithoutProductNestedInput
     product_variants?: product_variantsUncheckedUpdateManyWithoutProductNestedInput
     stock_reservations?: stock_reservationsUncheckedUpdateManyWithoutProductsNestedInput
-    cart_reservations?: cart_reservationsUncheckedUpdateManyWithoutProductsNestedInput
   }
 
   export type productsCreateManyInput = {
@@ -94593,13 +100050,13 @@ export namespace Prisma {
     phone: string
     email?: string | null
     whatsapp_number?: string | null
-    platform_user_id?: string | null
     total_orders?: number
     total_spent?: Decimal | DecimalJsLike | number | string
     last_order_date?: Date | string | null
     engagement_score?: number
     created_at?: Date | string
     updated_at?: Date | string
+    platform_user_id?: string | null
     carts?: cartsCreateNestedManyWithoutCustomersInput
     notification_messages?: notification_messagesCreateNestedManyWithoutCustomersInput
     notification_preferences?: notification_preferencesCreateNestedManyWithoutCustomersInput
@@ -94616,13 +100073,13 @@ export namespace Prisma {
     phone: string
     email?: string | null
     whatsapp_number?: string | null
-    platform_user_id?: string | null
     total_orders?: number
     total_spent?: Decimal | DecimalJsLike | number | string
     last_order_date?: Date | string | null
     engagement_score?: number
     created_at?: Date | string
     updated_at?: Date | string
+    platform_user_id?: string | null
     carts?: cartsUncheckedCreateNestedManyWithoutCustomersInput
     notification_messages?: notification_messagesUncheckedCreateNestedManyWithoutCustomersInput
     notification_preferences?: notification_preferencesUncheckedCreateNestedManyWithoutCustomersInput
@@ -94639,13 +100096,13 @@ export namespace Prisma {
     phone?: StringFieldUpdateOperationsInput | string
     email?: NullableStringFieldUpdateOperationsInput | string | null
     whatsapp_number?: NullableStringFieldUpdateOperationsInput | string | null
-    platform_user_id?: NullableStringFieldUpdateOperationsInput | string | null
     total_orders?: IntFieldUpdateOperationsInput | number
     total_spent?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     last_order_date?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     engagement_score?: IntFieldUpdateOperationsInput | number
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    platform_user_id?: NullableStringFieldUpdateOperationsInput | string | null
     carts?: cartsUpdateManyWithoutCustomersNestedInput
     notification_messages?: notification_messagesUpdateManyWithoutCustomersNestedInput
     notification_preferences?: notification_preferencesUpdateManyWithoutCustomersNestedInput
@@ -94662,13 +100119,13 @@ export namespace Prisma {
     phone?: StringFieldUpdateOperationsInput | string
     email?: NullableStringFieldUpdateOperationsInput | string | null
     whatsapp_number?: NullableStringFieldUpdateOperationsInput | string | null
-    platform_user_id?: NullableStringFieldUpdateOperationsInput | string | null
     total_orders?: IntFieldUpdateOperationsInput | number
     total_spent?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     last_order_date?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     engagement_score?: IntFieldUpdateOperationsInput | number
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    platform_user_id?: NullableStringFieldUpdateOperationsInput | string | null
     carts?: cartsUncheckedUpdateManyWithoutCustomersNestedInput
     notification_messages?: notification_messagesUncheckedUpdateManyWithoutCustomersNestedInput
     notification_preferences?: notification_preferencesUncheckedUpdateManyWithoutCustomersNestedInput
@@ -94685,13 +100142,13 @@ export namespace Prisma {
     phone: string
     email?: string | null
     whatsapp_number?: string | null
-    platform_user_id?: string | null
     total_orders?: number
     total_spent?: Decimal | DecimalJsLike | number | string
     last_order_date?: Date | string | null
     engagement_score?: number
     created_at?: Date | string
     updated_at?: Date | string
+    platform_user_id?: string | null
   }
 
   export type customersUpdateManyMutationInput = {
@@ -94702,13 +100159,13 @@ export namespace Prisma {
     phone?: StringFieldUpdateOperationsInput | string
     email?: NullableStringFieldUpdateOperationsInput | string | null
     whatsapp_number?: NullableStringFieldUpdateOperationsInput | string | null
-    platform_user_id?: NullableStringFieldUpdateOperationsInput | string | null
     total_orders?: IntFieldUpdateOperationsInput | number
     total_spent?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     last_order_date?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     engagement_score?: IntFieldUpdateOperationsInput | number
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    platform_user_id?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type customersUncheckedUpdateManyInput = {
@@ -94719,13 +100176,13 @@ export namespace Prisma {
     phone?: StringFieldUpdateOperationsInput | string
     email?: NullableStringFieldUpdateOperationsInput | string | null
     whatsapp_number?: NullableStringFieldUpdateOperationsInput | string | null
-    platform_user_id?: NullableStringFieldUpdateOperationsInput | string | null
     total_orders?: IntFieldUpdateOperationsInput | number
     total_spent?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     last_order_date?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     engagement_score?: IntFieldUpdateOperationsInput | number
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    platform_user_id?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type ordersCreateInput = {
@@ -99268,13 +104725,13 @@ export namespace Prisma {
     business_id: string
     tenant_id: string
     lead_id?: string | null
-    customer_id?: string | null
     status?: string | null
     total_amount?: Decimal | DecimalJsLike | number | string | null
     total_items?: number | null
     expires_at?: Date | string | null
     created_at?: Date | string | null
     updated_at?: Date | string | null
+    customer_id?: string | null
     cart_items?: cart_itemsUncheckedCreateNestedManyWithoutCartsInput
   }
 
@@ -99298,13 +104755,13 @@ export namespace Prisma {
     business_id?: StringFieldUpdateOperationsInput | string
     tenant_id?: StringFieldUpdateOperationsInput | string
     lead_id?: NullableStringFieldUpdateOperationsInput | string | null
-    customer_id?: NullableStringFieldUpdateOperationsInput | string | null
     status?: NullableStringFieldUpdateOperationsInput | string | null
     total_amount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     total_items?: NullableIntFieldUpdateOperationsInput | number | null
     expires_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    customer_id?: NullableStringFieldUpdateOperationsInput | string | null
     cart_items?: cart_itemsUncheckedUpdateManyWithoutCartsNestedInput
   }
 
@@ -99313,13 +104770,13 @@ export namespace Prisma {
     business_id: string
     tenant_id: string
     lead_id?: string | null
-    customer_id?: string | null
     status?: string | null
     total_amount?: Decimal | DecimalJsLike | number | string | null
     total_items?: number | null
     expires_at?: Date | string | null
     created_at?: Date | string | null
     updated_at?: Date | string | null
+    customer_id?: string | null
   }
 
   export type cartsUpdateManyMutationInput = {
@@ -99337,13 +104794,13 @@ export namespace Prisma {
     business_id?: StringFieldUpdateOperationsInput | string
     tenant_id?: StringFieldUpdateOperationsInput | string
     lead_id?: NullableStringFieldUpdateOperationsInput | string | null
-    customer_id?: NullableStringFieldUpdateOperationsInput | string | null
     status?: NullableStringFieldUpdateOperationsInput | string | null
     total_amount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     total_items?: NullableIntFieldUpdateOperationsInput | number | null
     expires_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    customer_id?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type whatsapp_optoutsCreateInput = {
@@ -99528,6 +104985,324 @@ export namespace Prisma {
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type hotel_pricing_recommendationsCreateInput = {
+    id?: string
+    hotel_id: string
+    org_id: string
+    room_type: string
+    checkin_date: Date | string
+    suggested_price: number
+    demand_score: number
+    confidence: number
+    competitor_avg_price: number
+    current_price: number
+    price_range_low: number
+    price_range_high: number
+    claude_narrative?: string | null
+    xotelo_snapshot?: NullableJsonNullValueInput | InputJsonValue
+    seven_day_forecast?: NullableJsonNullValueInput | InputJsonValue
+    created_at?: Date | string
+    booking_outcomes?: hotel_booking_outcomesCreateNestedManyWithoutRecommendationInput
+  }
+
+  export type hotel_pricing_recommendationsUncheckedCreateInput = {
+    id?: string
+    hotel_id: string
+    org_id: string
+    room_type: string
+    checkin_date: Date | string
+    suggested_price: number
+    demand_score: number
+    confidence: number
+    competitor_avg_price: number
+    current_price: number
+    price_range_low: number
+    price_range_high: number
+    claude_narrative?: string | null
+    xotelo_snapshot?: NullableJsonNullValueInput | InputJsonValue
+    seven_day_forecast?: NullableJsonNullValueInput | InputJsonValue
+    created_at?: Date | string
+    booking_outcomes?: hotel_booking_outcomesUncheckedCreateNestedManyWithoutRecommendationInput
+  }
+
+  export type hotel_pricing_recommendationsUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    hotel_id?: StringFieldUpdateOperationsInput | string
+    org_id?: StringFieldUpdateOperationsInput | string
+    room_type?: StringFieldUpdateOperationsInput | string
+    checkin_date?: DateTimeFieldUpdateOperationsInput | Date | string
+    suggested_price?: IntFieldUpdateOperationsInput | number
+    demand_score?: FloatFieldUpdateOperationsInput | number
+    confidence?: FloatFieldUpdateOperationsInput | number
+    competitor_avg_price?: IntFieldUpdateOperationsInput | number
+    current_price?: IntFieldUpdateOperationsInput | number
+    price_range_low?: IntFieldUpdateOperationsInput | number
+    price_range_high?: IntFieldUpdateOperationsInput | number
+    claude_narrative?: NullableStringFieldUpdateOperationsInput | string | null
+    xotelo_snapshot?: NullableJsonNullValueInput | InputJsonValue
+    seven_day_forecast?: NullableJsonNullValueInput | InputJsonValue
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    booking_outcomes?: hotel_booking_outcomesUpdateManyWithoutRecommendationNestedInput
+  }
+
+  export type hotel_pricing_recommendationsUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    hotel_id?: StringFieldUpdateOperationsInput | string
+    org_id?: StringFieldUpdateOperationsInput | string
+    room_type?: StringFieldUpdateOperationsInput | string
+    checkin_date?: DateTimeFieldUpdateOperationsInput | Date | string
+    suggested_price?: IntFieldUpdateOperationsInput | number
+    demand_score?: FloatFieldUpdateOperationsInput | number
+    confidence?: FloatFieldUpdateOperationsInput | number
+    competitor_avg_price?: IntFieldUpdateOperationsInput | number
+    current_price?: IntFieldUpdateOperationsInput | number
+    price_range_low?: IntFieldUpdateOperationsInput | number
+    price_range_high?: IntFieldUpdateOperationsInput | number
+    claude_narrative?: NullableStringFieldUpdateOperationsInput | string | null
+    xotelo_snapshot?: NullableJsonNullValueInput | InputJsonValue
+    seven_day_forecast?: NullableJsonNullValueInput | InputJsonValue
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    booking_outcomes?: hotel_booking_outcomesUncheckedUpdateManyWithoutRecommendationNestedInput
+  }
+
+  export type hotel_pricing_recommendationsCreateManyInput = {
+    id?: string
+    hotel_id: string
+    org_id: string
+    room_type: string
+    checkin_date: Date | string
+    suggested_price: number
+    demand_score: number
+    confidence: number
+    competitor_avg_price: number
+    current_price: number
+    price_range_low: number
+    price_range_high: number
+    claude_narrative?: string | null
+    xotelo_snapshot?: NullableJsonNullValueInput | InputJsonValue
+    seven_day_forecast?: NullableJsonNullValueInput | InputJsonValue
+    created_at?: Date | string
+  }
+
+  export type hotel_pricing_recommendationsUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    hotel_id?: StringFieldUpdateOperationsInput | string
+    org_id?: StringFieldUpdateOperationsInput | string
+    room_type?: StringFieldUpdateOperationsInput | string
+    checkin_date?: DateTimeFieldUpdateOperationsInput | Date | string
+    suggested_price?: IntFieldUpdateOperationsInput | number
+    demand_score?: FloatFieldUpdateOperationsInput | number
+    confidence?: FloatFieldUpdateOperationsInput | number
+    competitor_avg_price?: IntFieldUpdateOperationsInput | number
+    current_price?: IntFieldUpdateOperationsInput | number
+    price_range_low?: IntFieldUpdateOperationsInput | number
+    price_range_high?: IntFieldUpdateOperationsInput | number
+    claude_narrative?: NullableStringFieldUpdateOperationsInput | string | null
+    xotelo_snapshot?: NullableJsonNullValueInput | InputJsonValue
+    seven_day_forecast?: NullableJsonNullValueInput | InputJsonValue
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type hotel_pricing_recommendationsUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    hotel_id?: StringFieldUpdateOperationsInput | string
+    org_id?: StringFieldUpdateOperationsInput | string
+    room_type?: StringFieldUpdateOperationsInput | string
+    checkin_date?: DateTimeFieldUpdateOperationsInput | Date | string
+    suggested_price?: IntFieldUpdateOperationsInput | number
+    demand_score?: FloatFieldUpdateOperationsInput | number
+    confidence?: FloatFieldUpdateOperationsInput | number
+    competitor_avg_price?: IntFieldUpdateOperationsInput | number
+    current_price?: IntFieldUpdateOperationsInput | number
+    price_range_low?: IntFieldUpdateOperationsInput | number
+    price_range_high?: IntFieldUpdateOperationsInput | number
+    claude_narrative?: NullableStringFieldUpdateOperationsInput | string | null
+    xotelo_snapshot?: NullableJsonNullValueInput | InputJsonValue
+    seven_day_forecast?: NullableJsonNullValueInput | InputJsonValue
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type hotel_booking_outcomesCreateInput = {
+    id?: string
+    hotel_id: string
+    org_id: string
+    actual_price_used: number
+    rooms_booked: number
+    total_rooms: number
+    actual_occupancy: number
+    revenue: number
+    checkin_date: Date | string
+    recorded_at?: Date | string
+    recommendation: hotel_pricing_recommendationsCreateNestedOneWithoutBooking_outcomesInput
+  }
+
+  export type hotel_booking_outcomesUncheckedCreateInput = {
+    id?: string
+    recommendation_id: string
+    hotel_id: string
+    org_id: string
+    actual_price_used: number
+    rooms_booked: number
+    total_rooms: number
+    actual_occupancy: number
+    revenue: number
+    checkin_date: Date | string
+    recorded_at?: Date | string
+  }
+
+  export type hotel_booking_outcomesUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    hotel_id?: StringFieldUpdateOperationsInput | string
+    org_id?: StringFieldUpdateOperationsInput | string
+    actual_price_used?: IntFieldUpdateOperationsInput | number
+    rooms_booked?: IntFieldUpdateOperationsInput | number
+    total_rooms?: IntFieldUpdateOperationsInput | number
+    actual_occupancy?: FloatFieldUpdateOperationsInput | number
+    revenue?: IntFieldUpdateOperationsInput | number
+    checkin_date?: DateTimeFieldUpdateOperationsInput | Date | string
+    recorded_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    recommendation?: hotel_pricing_recommendationsUpdateOneRequiredWithoutBooking_outcomesNestedInput
+  }
+
+  export type hotel_booking_outcomesUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    recommendation_id?: StringFieldUpdateOperationsInput | string
+    hotel_id?: StringFieldUpdateOperationsInput | string
+    org_id?: StringFieldUpdateOperationsInput | string
+    actual_price_used?: IntFieldUpdateOperationsInput | number
+    rooms_booked?: IntFieldUpdateOperationsInput | number
+    total_rooms?: IntFieldUpdateOperationsInput | number
+    actual_occupancy?: FloatFieldUpdateOperationsInput | number
+    revenue?: IntFieldUpdateOperationsInput | number
+    checkin_date?: DateTimeFieldUpdateOperationsInput | Date | string
+    recorded_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type hotel_booking_outcomesCreateManyInput = {
+    id?: string
+    recommendation_id: string
+    hotel_id: string
+    org_id: string
+    actual_price_used: number
+    rooms_booked: number
+    total_rooms: number
+    actual_occupancy: number
+    revenue: number
+    checkin_date: Date | string
+    recorded_at?: Date | string
+  }
+
+  export type hotel_booking_outcomesUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    hotel_id?: StringFieldUpdateOperationsInput | string
+    org_id?: StringFieldUpdateOperationsInput | string
+    actual_price_used?: IntFieldUpdateOperationsInput | number
+    rooms_booked?: IntFieldUpdateOperationsInput | number
+    total_rooms?: IntFieldUpdateOperationsInput | number
+    actual_occupancy?: FloatFieldUpdateOperationsInput | number
+    revenue?: IntFieldUpdateOperationsInput | number
+    checkin_date?: DateTimeFieldUpdateOperationsInput | Date | string
+    recorded_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type hotel_booking_outcomesUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    recommendation_id?: StringFieldUpdateOperationsInput | string
+    hotel_id?: StringFieldUpdateOperationsInput | string
+    org_id?: StringFieldUpdateOperationsInput | string
+    actual_price_used?: IntFieldUpdateOperationsInput | number
+    rooms_booked?: IntFieldUpdateOperationsInput | number
+    total_rooms?: IntFieldUpdateOperationsInput | number
+    actual_occupancy?: FloatFieldUpdateOperationsInput | number
+    revenue?: IntFieldUpdateOperationsInput | number
+    checkin_date?: DateTimeFieldUpdateOperationsInput | Date | string
+    recorded_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type hotel_pricing_notificationsCreateInput = {
+    id?: string
+    org_id: string
+    hotel_id: string
+    type: string
+    title: string
+    body: string
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    read_at?: Date | string | null
+    created_at?: Date | string
+  }
+
+  export type hotel_pricing_notificationsUncheckedCreateInput = {
+    id?: string
+    org_id: string
+    hotel_id: string
+    type: string
+    title: string
+    body: string
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    read_at?: Date | string | null
+    created_at?: Date | string
+  }
+
+  export type hotel_pricing_notificationsUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    org_id?: StringFieldUpdateOperationsInput | string
+    hotel_id?: StringFieldUpdateOperationsInput | string
+    type?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    body?: StringFieldUpdateOperationsInput | string
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    read_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type hotel_pricing_notificationsUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    org_id?: StringFieldUpdateOperationsInput | string
+    hotel_id?: StringFieldUpdateOperationsInput | string
+    type?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    body?: StringFieldUpdateOperationsInput | string
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    read_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type hotel_pricing_notificationsCreateManyInput = {
+    id?: string
+    org_id: string
+    hotel_id: string
+    type: string
+    title: string
+    body: string
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    read_at?: Date | string | null
+    created_at?: Date | string
+  }
+
+  export type hotel_pricing_notificationsUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    org_id?: StringFieldUpdateOperationsInput | string
+    hotel_id?: StringFieldUpdateOperationsInput | string
+    type?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    body?: StringFieldUpdateOperationsInput | string
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    read_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type hotel_pricing_notificationsUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    org_id?: StringFieldUpdateOperationsInput | string
+    hotel_id?: StringFieldUpdateOperationsInput | string
+    type?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    body?: StringFieldUpdateOperationsInput | string
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    read_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type UuidFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel>
     in?: string[] | ListStringFieldRefInput<$PrismaModel>
@@ -99570,41 +105345,6 @@ export namespace Prisma {
     not?: NestedStringNullableFilter<$PrismaModel> | string | null
   }
 
-  export type UuidNullableFilter<$PrismaModel = never> = {
-    equals?: string | StringFieldRefInput<$PrismaModel> | null
-    in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
-    notIn?: string[] | ListStringFieldRefInput<$PrismaModel> | null
-    lt?: string | StringFieldRefInput<$PrismaModel>
-    lte?: string | StringFieldRefInput<$PrismaModel>
-    gt?: string | StringFieldRefInput<$PrismaModel>
-    gte?: string | StringFieldRefInput<$PrismaModel>
-    mode?: QueryMode
-    not?: NestedUuidNullableFilter<$PrismaModel> | string | null
-  }
-  export type JsonNullableFilter<$PrismaModel = never> =
-    | PatchUndefined<
-        Either<Required<JsonNullableFilterBase<$PrismaModel>>, Exclude<keyof Required<JsonNullableFilterBase<$PrismaModel>>, 'path'>>,
-        Required<JsonNullableFilterBase<$PrismaModel>>
-      >
-    | OptionalFlat<Omit<Required<JsonNullableFilterBase<$PrismaModel>>, 'path'>>
-
-  export type JsonNullableFilterBase<$PrismaModel = never> = {
-    equals?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
-    path?: string[]
-    mode?: QueryMode | EnumQueryModeFieldRefInput<$PrismaModel>
-    string_contains?: string | StringFieldRefInput<$PrismaModel>
-    string_starts_with?: string | StringFieldRefInput<$PrismaModel>
-    string_ends_with?: string | StringFieldRefInput<$PrismaModel>
-    array_starts_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
-    array_ends_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
-    array_contains?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
-    lt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
-    lte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
-    gt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
-    gte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
-    not?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
-  }
-
   export type DateTimeNullableFilter<$PrismaModel = never> = {
     equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
     in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
@@ -99616,15 +105356,16 @@ export namespace Prisma {
     not?: NestedDateTimeNullableFilter<$PrismaModel> | Date | string | null
   }
 
+  export type Business_employeesListRelationFilter = {
+    every?: business_employeesWhereInput
+    some?: business_employeesWhereInput
+    none?: business_employeesWhereInput
+  }
+
   export type Business_workflowsListRelationFilter = {
     every?: business_workflowsWhereInput
     some?: business_workflowsWhereInput
     none?: business_workflowsWhereInput
-  }
-
-  export type Subscription_plansNullableScalarRelationFilter = {
-    is?: subscription_plansWhereInput | null
-    isNot?: subscription_plansWhereInput | null
   }
 
   export type TenantsScalarRelationFilter = {
@@ -99757,6 +105498,10 @@ export namespace Prisma {
     nulls?: NullsOrder
   }
 
+  export type business_employeesOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
   export type business_workflowsOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
@@ -99846,13 +105591,17 @@ export namespace Prisma {
     tenant_id?: SortOrder
     business_name?: SortOrder
     business_type?: SortOrder
-    subscription_plan_id?: SortOrder
     whatsapp_number?: SortOrder
-    brand_colors?: SortOrder
-    logo_url?: SortOrder
-    working_hours?: SortOrder
     created_at?: SortOrder
     updated_at?: SortOrder
+    email?: SortOrder
+    phone?: SortOrder
+    website?: SortOrder
+    city?: SortOrder
+    address?: SortOrder
+    country?: SortOrder
+    gst_number?: SortOrder
+    pan_number?: SortOrder
   }
 
   export type businessesMaxOrderByAggregateInput = {
@@ -99860,11 +105609,17 @@ export namespace Prisma {
     tenant_id?: SortOrder
     business_name?: SortOrder
     business_type?: SortOrder
-    subscription_plan_id?: SortOrder
     whatsapp_number?: SortOrder
-    logo_url?: SortOrder
     created_at?: SortOrder
     updated_at?: SortOrder
+    email?: SortOrder
+    phone?: SortOrder
+    website?: SortOrder
+    city?: SortOrder
+    address?: SortOrder
+    country?: SortOrder
+    gst_number?: SortOrder
+    pan_number?: SortOrder
   }
 
   export type businessesMinOrderByAggregateInput = {
@@ -99872,11 +105627,17 @@ export namespace Prisma {
     tenant_id?: SortOrder
     business_name?: SortOrder
     business_type?: SortOrder
-    subscription_plan_id?: SortOrder
     whatsapp_number?: SortOrder
-    logo_url?: SortOrder
     created_at?: SortOrder
     updated_at?: SortOrder
+    email?: SortOrder
+    phone?: SortOrder
+    website?: SortOrder
+    city?: SortOrder
+    address?: SortOrder
+    country?: SortOrder
+    gst_number?: SortOrder
+    pan_number?: SortOrder
   }
 
   export type UuidWithAggregatesFilter<$PrismaModel = never> = {
@@ -99930,47 +105691,6 @@ export namespace Prisma {
     _max?: NestedStringNullableFilter<$PrismaModel>
   }
 
-  export type UuidNullableWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: string | StringFieldRefInput<$PrismaModel> | null
-    in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
-    notIn?: string[] | ListStringFieldRefInput<$PrismaModel> | null
-    lt?: string | StringFieldRefInput<$PrismaModel>
-    lte?: string | StringFieldRefInput<$PrismaModel>
-    gt?: string | StringFieldRefInput<$PrismaModel>
-    gte?: string | StringFieldRefInput<$PrismaModel>
-    mode?: QueryMode
-    not?: NestedUuidNullableWithAggregatesFilter<$PrismaModel> | string | null
-    _count?: NestedIntNullableFilter<$PrismaModel>
-    _min?: NestedStringNullableFilter<$PrismaModel>
-    _max?: NestedStringNullableFilter<$PrismaModel>
-  }
-  export type JsonNullableWithAggregatesFilter<$PrismaModel = never> =
-    | PatchUndefined<
-        Either<Required<JsonNullableWithAggregatesFilterBase<$PrismaModel>>, Exclude<keyof Required<JsonNullableWithAggregatesFilterBase<$PrismaModel>>, 'path'>>,
-        Required<JsonNullableWithAggregatesFilterBase<$PrismaModel>>
-      >
-    | OptionalFlat<Omit<Required<JsonNullableWithAggregatesFilterBase<$PrismaModel>>, 'path'>>
-
-  export type JsonNullableWithAggregatesFilterBase<$PrismaModel = never> = {
-    equals?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
-    path?: string[]
-    mode?: QueryMode | EnumQueryModeFieldRefInput<$PrismaModel>
-    string_contains?: string | StringFieldRefInput<$PrismaModel>
-    string_starts_with?: string | StringFieldRefInput<$PrismaModel>
-    string_ends_with?: string | StringFieldRefInput<$PrismaModel>
-    array_starts_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
-    array_ends_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
-    array_contains?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
-    lt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
-    lte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
-    gt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
-    gte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
-    not?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
-    _count?: NestedIntNullableFilter<$PrismaModel>
-    _min?: NestedJsonNullableFilter<$PrismaModel>
-    _max?: NestedJsonNullableFilter<$PrismaModel>
-  }
-
   export type DateTimeNullableWithAggregatesFilter<$PrismaModel = never> = {
     equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
     in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
@@ -99983,6 +105703,41 @@ export namespace Prisma {
     _count?: NestedIntNullableFilter<$PrismaModel>
     _min?: NestedDateTimeNullableFilter<$PrismaModel>
     _max?: NestedDateTimeNullableFilter<$PrismaModel>
+  }
+
+  export type BusinessesScalarRelationFilter = {
+    is?: businessesWhereInput
+    isNot?: businessesWhereInput
+  }
+
+  export type business_employeesCountOrderByAggregateInput = {
+    employee_id?: SortOrder
+    business_id?: SortOrder
+    name?: SortOrder
+    email?: SortOrder
+    phone?: SortOrder
+    role?: SortOrder
+    created_at?: SortOrder
+  }
+
+  export type business_employeesMaxOrderByAggregateInput = {
+    employee_id?: SortOrder
+    business_id?: SortOrder
+    name?: SortOrder
+    email?: SortOrder
+    phone?: SortOrder
+    role?: SortOrder
+    created_at?: SortOrder
+  }
+
+  export type business_employeesMinOrderByAggregateInput = {
+    employee_id?: SortOrder
+    business_id?: SortOrder
+    name?: SortOrder
+    email?: SortOrder
+    phone?: SortOrder
+    role?: SortOrder
+    created_at?: SortOrder
   }
 
   export type NotificationsListRelationFilter = {
@@ -100095,6 +105850,29 @@ export namespace Prisma {
     created_at?: SortOrder
     role_id?: SortOrder
   }
+  export type JsonNullableFilter<$PrismaModel = never> =
+    | PatchUndefined<
+        Either<Required<JsonNullableFilterBase<$PrismaModel>>, Exclude<keyof Required<JsonNullableFilterBase<$PrismaModel>>, 'path'>>,
+        Required<JsonNullableFilterBase<$PrismaModel>>
+      >
+    | OptionalFlat<Omit<Required<JsonNullableFilterBase<$PrismaModel>>, 'path'>>
+
+  export type JsonNullableFilterBase<$PrismaModel = never> = {
+    equals?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+    path?: string[]
+    mode?: QueryMode | EnumQueryModeFieldRefInput<$PrismaModel>
+    string_contains?: string | StringFieldRefInput<$PrismaModel>
+    string_starts_with?: string | StringFieldRefInput<$PrismaModel>
+    string_ends_with?: string | StringFieldRefInput<$PrismaModel>
+    array_starts_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_ends_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_contains?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    lt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    lte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    gt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    gte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    not?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+  }
 
   export type DateTimeFilter<$PrismaModel = never> = {
     equals?: Date | string | DateTimeFieldRefInput<$PrismaModel>
@@ -100124,6 +105902,32 @@ export namespace Prisma {
     role_name?: SortOrder
     created_at?: SortOrder
     role_id?: SortOrder
+  }
+  export type JsonNullableWithAggregatesFilter<$PrismaModel = never> =
+    | PatchUndefined<
+        Either<Required<JsonNullableWithAggregatesFilterBase<$PrismaModel>>, Exclude<keyof Required<JsonNullableWithAggregatesFilterBase<$PrismaModel>>, 'path'>>,
+        Required<JsonNullableWithAggregatesFilterBase<$PrismaModel>>
+      >
+    | OptionalFlat<Omit<Required<JsonNullableWithAggregatesFilterBase<$PrismaModel>>, 'path'>>
+
+  export type JsonNullableWithAggregatesFilterBase<$PrismaModel = never> = {
+    equals?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+    path?: string[]
+    mode?: QueryMode | EnumQueryModeFieldRefInput<$PrismaModel>
+    string_contains?: string | StringFieldRefInput<$PrismaModel>
+    string_starts_with?: string | StringFieldRefInput<$PrismaModel>
+    string_ends_with?: string | StringFieldRefInput<$PrismaModel>
+    array_starts_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_ends_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_contains?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    lt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    lte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    gt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    gte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    not?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedJsonNullableFilter<$PrismaModel>
+    _max?: NestedJsonNullableFilter<$PrismaModel>
   }
 
   export type DateTimeWithAggregatesFilter<$PrismaModel = never> = {
@@ -100160,11 +105964,6 @@ export namespace Prisma {
     every?: instagram_mediaWhereInput
     some?: instagram_mediaWhereInput
     none?: instagram_mediaWhereInput
-  }
-
-  export type BusinessesScalarRelationFilter = {
-    is?: businessesWhereInput
-    isNot?: businessesWhereInput
   }
 
   export type instagram_mediaOrderByRelationAggregateInput = {
@@ -100282,16 +106081,6 @@ export namespace Prisma {
     not?: NestedDecimalNullableFilter<$PrismaModel> | Decimal | DecimalJsLike | number | string | null
   }
 
-  export type BusinessesListRelationFilter = {
-    every?: businessesWhereInput
-    some?: businessesWhereInput
-    none?: businessesWhereInput
-  }
-
-  export type businessesOrderByRelationAggregateInput = {
-    _count?: SortOrder
-  }
-
   export type subscription_plansCountOrderByAggregateInput = {
     subscription_plan_id?: SortOrder
     plan_name?: SortOrder
@@ -100340,6 +106129,16 @@ export namespace Prisma {
     _sum?: NestedDecimalNullableFilter<$PrismaModel>
     _min?: NestedDecimalNullableFilter<$PrismaModel>
     _max?: NestedDecimalNullableFilter<$PrismaModel>
+  }
+
+  export type BusinessesListRelationFilter = {
+    every?: businessesWhereInput
+    some?: businessesWhereInput
+    none?: businessesWhereInput
+  }
+
+  export type businessesOrderByRelationAggregateInput = {
+    _count?: SortOrder
   }
 
   export type tenantsCountOrderByAggregateInput = {
@@ -100522,6 +106321,24 @@ export namespace Prisma {
     failed_login_attempts?: SortOrder
   }
 
+  export type UuidNullableFilter<$PrismaModel = never> = {
+    equals?: string | StringFieldRefInput<$PrismaModel> | null
+    in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    notIn?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    lt?: string | StringFieldRefInput<$PrismaModel>
+    lte?: string | StringFieldRefInput<$PrismaModel>
+    gt?: string | StringFieldRefInput<$PrismaModel>
+    gte?: string | StringFieldRefInput<$PrismaModel>
+    mode?: QueryMode
+    not?: NestedUuidNullableFilter<$PrismaModel> | string | null
+  }
+
+  export type Cart_reservationsListRelationFilter = {
+    every?: cart_reservationsWhereInput
+    some?: cart_reservationsWhereInput
+    none?: cart_reservationsWhereInput
+  }
+
   export type Lead_activitiesListRelationFilter = {
     every?: lead_activitiesWhereInput
     some?: lead_activitiesWhereInput
@@ -100574,10 +106391,8 @@ export namespace Prisma {
     none?: ordersWhereInput
   }
 
-  export type Cart_reservationsListRelationFilter = {
-    every?: cart_reservationsWhereInput
-    some?: cart_reservationsWhereInput
-    none?: cart_reservationsWhereInput
+  export type cart_reservationsOrderByRelationAggregateInput = {
+    _count?: SortOrder
   }
 
   export type lead_activitiesOrderByRelationAggregateInput = {
@@ -100605,10 +106420,6 @@ export namespace Prisma {
   }
 
   export type ordersOrderByRelationAggregateInput = {
-    _count?: SortOrder
-  }
-
-  export type cart_reservationsOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -100800,6 +106611,21 @@ export namespace Prisma {
     followup_count?: SortOrder
     conversion_value?: SortOrder
     sentiment_score?: SortOrder
+  }
+
+  export type UuidNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: string | StringFieldRefInput<$PrismaModel> | null
+    in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    notIn?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    lt?: string | StringFieldRefInput<$PrismaModel>
+    lte?: string | StringFieldRefInput<$PrismaModel>
+    gt?: string | StringFieldRefInput<$PrismaModel>
+    gte?: string | StringFieldRefInput<$PrismaModel>
+    mode?: QueryMode
+    not?: NestedUuidNullableWithAggregatesFilter<$PrismaModel> | string | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedStringNullableFilter<$PrismaModel>
+    _max?: NestedStringNullableFilter<$PrismaModel>
   }
 
   export type LeadsScalarRelationFilter = {
@@ -101804,13 +107630,13 @@ export namespace Prisma {
     phone?: SortOrder
     email?: SortOrder
     whatsapp_number?: SortOrder
-    platform_user_id?: SortOrder
     total_orders?: SortOrder
     total_spent?: SortOrder
     last_order_date?: SortOrder
     engagement_score?: SortOrder
     created_at?: SortOrder
     updated_at?: SortOrder
+    platform_user_id?: SortOrder
   }
 
   export type customersAvgOrderByAggregateInput = {
@@ -101827,13 +107653,13 @@ export namespace Prisma {
     phone?: SortOrder
     email?: SortOrder
     whatsapp_number?: SortOrder
-    platform_user_id?: SortOrder
     total_orders?: SortOrder
     total_spent?: SortOrder
     last_order_date?: SortOrder
     engagement_score?: SortOrder
     created_at?: SortOrder
     updated_at?: SortOrder
+    platform_user_id?: SortOrder
   }
 
   export type customersMinOrderByAggregateInput = {
@@ -101844,13 +107670,13 @@ export namespace Prisma {
     phone?: SortOrder
     email?: SortOrder
     whatsapp_number?: SortOrder
-    platform_user_id?: SortOrder
     total_orders?: SortOrder
     total_spent?: SortOrder
     last_order_date?: SortOrder
     engagement_score?: SortOrder
     created_at?: SortOrder
     updated_at?: SortOrder
+    platform_user_id?: SortOrder
   }
 
   export type customersSumOrderByAggregateInput = {
@@ -104269,13 +110095,13 @@ export namespace Prisma {
     business_id?: SortOrder
     tenant_id?: SortOrder
     lead_id?: SortOrder
-    customer_id?: SortOrder
     status?: SortOrder
     total_amount?: SortOrder
     total_items?: SortOrder
     expires_at?: SortOrder
     created_at?: SortOrder
     updated_at?: SortOrder
+    customer_id?: SortOrder
   }
 
   export type cartsAvgOrderByAggregateInput = {
@@ -104288,13 +110114,13 @@ export namespace Prisma {
     business_id?: SortOrder
     tenant_id?: SortOrder
     lead_id?: SortOrder
-    customer_id?: SortOrder
     status?: SortOrder
     total_amount?: SortOrder
     total_items?: SortOrder
     expires_at?: SortOrder
     created_at?: SortOrder
     updated_at?: SortOrder
+    customer_id?: SortOrder
   }
 
   export type cartsMinOrderByAggregateInput = {
@@ -104302,13 +110128,13 @@ export namespace Prisma {
     business_id?: SortOrder
     tenant_id?: SortOrder
     lead_id?: SortOrder
-    customer_id?: SortOrder
     status?: SortOrder
     total_amount?: SortOrder
     total_items?: SortOrder
     expires_at?: SortOrder
     created_at?: SortOrder
     updated_at?: SortOrder
+    customer_id?: SortOrder
   }
 
   export type cartsSumOrderByAggregateInput = {
@@ -104435,17 +110261,225 @@ export namespace Prisma {
     estimated_cost?: SortOrder
   }
 
+  export type FloatFilter<$PrismaModel = never> = {
+    equals?: number | FloatFieldRefInput<$PrismaModel>
+    in?: number[] | ListFloatFieldRefInput<$PrismaModel>
+    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel>
+    lt?: number | FloatFieldRefInput<$PrismaModel>
+    lte?: number | FloatFieldRefInput<$PrismaModel>
+    gt?: number | FloatFieldRefInput<$PrismaModel>
+    gte?: number | FloatFieldRefInput<$PrismaModel>
+    not?: NestedFloatFilter<$PrismaModel> | number
+  }
+
+  export type Hotel_booking_outcomesListRelationFilter = {
+    every?: hotel_booking_outcomesWhereInput
+    some?: hotel_booking_outcomesWhereInput
+    none?: hotel_booking_outcomesWhereInput
+  }
+
+  export type hotel_booking_outcomesOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type hotel_pricing_recommendationsCountOrderByAggregateInput = {
+    id?: SortOrder
+    hotel_id?: SortOrder
+    org_id?: SortOrder
+    room_type?: SortOrder
+    checkin_date?: SortOrder
+    suggested_price?: SortOrder
+    demand_score?: SortOrder
+    confidence?: SortOrder
+    competitor_avg_price?: SortOrder
+    current_price?: SortOrder
+    price_range_low?: SortOrder
+    price_range_high?: SortOrder
+    claude_narrative?: SortOrder
+    xotelo_snapshot?: SortOrder
+    seven_day_forecast?: SortOrder
+    created_at?: SortOrder
+  }
+
+  export type hotel_pricing_recommendationsAvgOrderByAggregateInput = {
+    suggested_price?: SortOrder
+    demand_score?: SortOrder
+    confidence?: SortOrder
+    competitor_avg_price?: SortOrder
+    current_price?: SortOrder
+    price_range_low?: SortOrder
+    price_range_high?: SortOrder
+  }
+
+  export type hotel_pricing_recommendationsMaxOrderByAggregateInput = {
+    id?: SortOrder
+    hotel_id?: SortOrder
+    org_id?: SortOrder
+    room_type?: SortOrder
+    checkin_date?: SortOrder
+    suggested_price?: SortOrder
+    demand_score?: SortOrder
+    confidence?: SortOrder
+    competitor_avg_price?: SortOrder
+    current_price?: SortOrder
+    price_range_low?: SortOrder
+    price_range_high?: SortOrder
+    claude_narrative?: SortOrder
+    created_at?: SortOrder
+  }
+
+  export type hotel_pricing_recommendationsMinOrderByAggregateInput = {
+    id?: SortOrder
+    hotel_id?: SortOrder
+    org_id?: SortOrder
+    room_type?: SortOrder
+    checkin_date?: SortOrder
+    suggested_price?: SortOrder
+    demand_score?: SortOrder
+    confidence?: SortOrder
+    competitor_avg_price?: SortOrder
+    current_price?: SortOrder
+    price_range_low?: SortOrder
+    price_range_high?: SortOrder
+    claude_narrative?: SortOrder
+    created_at?: SortOrder
+  }
+
+  export type hotel_pricing_recommendationsSumOrderByAggregateInput = {
+    suggested_price?: SortOrder
+    demand_score?: SortOrder
+    confidence?: SortOrder
+    competitor_avg_price?: SortOrder
+    current_price?: SortOrder
+    price_range_low?: SortOrder
+    price_range_high?: SortOrder
+  }
+
+  export type FloatWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | FloatFieldRefInput<$PrismaModel>
+    in?: number[] | ListFloatFieldRefInput<$PrismaModel>
+    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel>
+    lt?: number | FloatFieldRefInput<$PrismaModel>
+    lte?: number | FloatFieldRefInput<$PrismaModel>
+    gt?: number | FloatFieldRefInput<$PrismaModel>
+    gte?: number | FloatFieldRefInput<$PrismaModel>
+    not?: NestedFloatWithAggregatesFilter<$PrismaModel> | number
+    _count?: NestedIntFilter<$PrismaModel>
+    _avg?: NestedFloatFilter<$PrismaModel>
+    _sum?: NestedFloatFilter<$PrismaModel>
+    _min?: NestedFloatFilter<$PrismaModel>
+    _max?: NestedFloatFilter<$PrismaModel>
+  }
+
+  export type Hotel_pricing_recommendationsScalarRelationFilter = {
+    is?: hotel_pricing_recommendationsWhereInput
+    isNot?: hotel_pricing_recommendationsWhereInput
+  }
+
+  export type hotel_booking_outcomesCountOrderByAggregateInput = {
+    id?: SortOrder
+    recommendation_id?: SortOrder
+    hotel_id?: SortOrder
+    org_id?: SortOrder
+    actual_price_used?: SortOrder
+    rooms_booked?: SortOrder
+    total_rooms?: SortOrder
+    actual_occupancy?: SortOrder
+    revenue?: SortOrder
+    checkin_date?: SortOrder
+    recorded_at?: SortOrder
+  }
+
+  export type hotel_booking_outcomesAvgOrderByAggregateInput = {
+    actual_price_used?: SortOrder
+    rooms_booked?: SortOrder
+    total_rooms?: SortOrder
+    actual_occupancy?: SortOrder
+    revenue?: SortOrder
+  }
+
+  export type hotel_booking_outcomesMaxOrderByAggregateInput = {
+    id?: SortOrder
+    recommendation_id?: SortOrder
+    hotel_id?: SortOrder
+    org_id?: SortOrder
+    actual_price_used?: SortOrder
+    rooms_booked?: SortOrder
+    total_rooms?: SortOrder
+    actual_occupancy?: SortOrder
+    revenue?: SortOrder
+    checkin_date?: SortOrder
+    recorded_at?: SortOrder
+  }
+
+  export type hotel_booking_outcomesMinOrderByAggregateInput = {
+    id?: SortOrder
+    recommendation_id?: SortOrder
+    hotel_id?: SortOrder
+    org_id?: SortOrder
+    actual_price_used?: SortOrder
+    rooms_booked?: SortOrder
+    total_rooms?: SortOrder
+    actual_occupancy?: SortOrder
+    revenue?: SortOrder
+    checkin_date?: SortOrder
+    recorded_at?: SortOrder
+  }
+
+  export type hotel_booking_outcomesSumOrderByAggregateInput = {
+    actual_price_used?: SortOrder
+    rooms_booked?: SortOrder
+    total_rooms?: SortOrder
+    actual_occupancy?: SortOrder
+    revenue?: SortOrder
+  }
+
+  export type hotel_pricing_notificationsCountOrderByAggregateInput = {
+    id?: SortOrder
+    org_id?: SortOrder
+    hotel_id?: SortOrder
+    type?: SortOrder
+    title?: SortOrder
+    body?: SortOrder
+    metadata?: SortOrder
+    read_at?: SortOrder
+    created_at?: SortOrder
+  }
+
+  export type hotel_pricing_notificationsMaxOrderByAggregateInput = {
+    id?: SortOrder
+    org_id?: SortOrder
+    hotel_id?: SortOrder
+    type?: SortOrder
+    title?: SortOrder
+    body?: SortOrder
+    read_at?: SortOrder
+    created_at?: SortOrder
+  }
+
+  export type hotel_pricing_notificationsMinOrderByAggregateInput = {
+    id?: SortOrder
+    org_id?: SortOrder
+    hotel_id?: SortOrder
+    type?: SortOrder
+    title?: SortOrder
+    body?: SortOrder
+    read_at?: SortOrder
+    created_at?: SortOrder
+  }
+
+  export type business_employeesCreateNestedManyWithoutBusinessesInput = {
+    create?: XOR<business_employeesCreateWithoutBusinessesInput, business_employeesUncheckedCreateWithoutBusinessesInput> | business_employeesCreateWithoutBusinessesInput[] | business_employeesUncheckedCreateWithoutBusinessesInput[]
+    connectOrCreate?: business_employeesCreateOrConnectWithoutBusinessesInput | business_employeesCreateOrConnectWithoutBusinessesInput[]
+    createMany?: business_employeesCreateManyBusinessesInputEnvelope
+    connect?: business_employeesWhereUniqueInput | business_employeesWhereUniqueInput[]
+  }
+
   export type business_workflowsCreateNestedManyWithoutBusinessesInput = {
     create?: XOR<business_workflowsCreateWithoutBusinessesInput, business_workflowsUncheckedCreateWithoutBusinessesInput> | business_workflowsCreateWithoutBusinessesInput[] | business_workflowsUncheckedCreateWithoutBusinessesInput[]
     connectOrCreate?: business_workflowsCreateOrConnectWithoutBusinessesInput | business_workflowsCreateOrConnectWithoutBusinessesInput[]
     createMany?: business_workflowsCreateManyBusinessesInputEnvelope
     connect?: business_workflowsWhereUniqueInput | business_workflowsWhereUniqueInput[]
-  }
-
-  export type subscription_plansCreateNestedOneWithoutBusinessesInput = {
-    create?: XOR<subscription_plansCreateWithoutBusinessesInput, subscription_plansUncheckedCreateWithoutBusinessesInput>
-    connectOrCreate?: subscription_plansCreateOrConnectWithoutBusinessesInput
-    connect?: subscription_plansWhereUniqueInput
   }
 
   export type tenantsCreateNestedOneWithoutBusinessesInput = {
@@ -104592,6 +110626,13 @@ export namespace Prisma {
     connectOrCreate?: workflow_executionsCreateOrConnectWithoutBusinessesInput | workflow_executionsCreateOrConnectWithoutBusinessesInput[]
     createMany?: workflow_executionsCreateManyBusinessesInputEnvelope
     connect?: workflow_executionsWhereUniqueInput | workflow_executionsWhereUniqueInput[]
+  }
+
+  export type business_employeesUncheckedCreateNestedManyWithoutBusinessesInput = {
+    create?: XOR<business_employeesCreateWithoutBusinessesInput, business_employeesUncheckedCreateWithoutBusinessesInput> | business_employeesCreateWithoutBusinessesInput[] | business_employeesUncheckedCreateWithoutBusinessesInput[]
+    connectOrCreate?: business_employeesCreateOrConnectWithoutBusinessesInput | business_employeesCreateOrConnectWithoutBusinessesInput[]
+    createMany?: business_employeesCreateManyBusinessesInputEnvelope
+    connect?: business_employeesWhereUniqueInput | business_employeesWhereUniqueInput[]
   }
 
   export type business_workflowsUncheckedCreateNestedManyWithoutBusinessesInput = {
@@ -104753,6 +110794,20 @@ export namespace Prisma {
     set?: Date | string | null
   }
 
+  export type business_employeesUpdateManyWithoutBusinessesNestedInput = {
+    create?: XOR<business_employeesCreateWithoutBusinessesInput, business_employeesUncheckedCreateWithoutBusinessesInput> | business_employeesCreateWithoutBusinessesInput[] | business_employeesUncheckedCreateWithoutBusinessesInput[]
+    connectOrCreate?: business_employeesCreateOrConnectWithoutBusinessesInput | business_employeesCreateOrConnectWithoutBusinessesInput[]
+    upsert?: business_employeesUpsertWithWhereUniqueWithoutBusinessesInput | business_employeesUpsertWithWhereUniqueWithoutBusinessesInput[]
+    createMany?: business_employeesCreateManyBusinessesInputEnvelope
+    set?: business_employeesWhereUniqueInput | business_employeesWhereUniqueInput[]
+    disconnect?: business_employeesWhereUniqueInput | business_employeesWhereUniqueInput[]
+    delete?: business_employeesWhereUniqueInput | business_employeesWhereUniqueInput[]
+    connect?: business_employeesWhereUniqueInput | business_employeesWhereUniqueInput[]
+    update?: business_employeesUpdateWithWhereUniqueWithoutBusinessesInput | business_employeesUpdateWithWhereUniqueWithoutBusinessesInput[]
+    updateMany?: business_employeesUpdateManyWithWhereWithoutBusinessesInput | business_employeesUpdateManyWithWhereWithoutBusinessesInput[]
+    deleteMany?: business_employeesScalarWhereInput | business_employeesScalarWhereInput[]
+  }
+
   export type business_workflowsUpdateManyWithoutBusinessesNestedInput = {
     create?: XOR<business_workflowsCreateWithoutBusinessesInput, business_workflowsUncheckedCreateWithoutBusinessesInput> | business_workflowsCreateWithoutBusinessesInput[] | business_workflowsUncheckedCreateWithoutBusinessesInput[]
     connectOrCreate?: business_workflowsCreateOrConnectWithoutBusinessesInput | business_workflowsCreateOrConnectWithoutBusinessesInput[]
@@ -104765,16 +110820,6 @@ export namespace Prisma {
     update?: business_workflowsUpdateWithWhereUniqueWithoutBusinessesInput | business_workflowsUpdateWithWhereUniqueWithoutBusinessesInput[]
     updateMany?: business_workflowsUpdateManyWithWhereWithoutBusinessesInput | business_workflowsUpdateManyWithWhereWithoutBusinessesInput[]
     deleteMany?: business_workflowsScalarWhereInput | business_workflowsScalarWhereInput[]
-  }
-
-  export type subscription_plansUpdateOneWithoutBusinessesNestedInput = {
-    create?: XOR<subscription_plansCreateWithoutBusinessesInput, subscription_plansUncheckedCreateWithoutBusinessesInput>
-    connectOrCreate?: subscription_plansCreateOrConnectWithoutBusinessesInput
-    upsert?: subscription_plansUpsertWithoutBusinessesInput
-    disconnect?: subscription_plansWhereInput | boolean
-    delete?: subscription_plansWhereInput | boolean
-    connect?: subscription_plansWhereUniqueInput
-    update?: XOR<XOR<subscription_plansUpdateToOneWithWhereWithoutBusinessesInput, subscription_plansUpdateWithoutBusinessesInput>, subscription_plansUncheckedUpdateWithoutBusinessesInput>
   }
 
   export type tenantsUpdateOneRequiredWithoutBusinessesNestedInput = {
@@ -105063,6 +111108,20 @@ export namespace Prisma {
     update?: workflow_executionsUpdateWithWhereUniqueWithoutBusinessesInput | workflow_executionsUpdateWithWhereUniqueWithoutBusinessesInput[]
     updateMany?: workflow_executionsUpdateManyWithWhereWithoutBusinessesInput | workflow_executionsUpdateManyWithWhereWithoutBusinessesInput[]
     deleteMany?: workflow_executionsScalarWhereInput | workflow_executionsScalarWhereInput[]
+  }
+
+  export type business_employeesUncheckedUpdateManyWithoutBusinessesNestedInput = {
+    create?: XOR<business_employeesCreateWithoutBusinessesInput, business_employeesUncheckedCreateWithoutBusinessesInput> | business_employeesCreateWithoutBusinessesInput[] | business_employeesUncheckedCreateWithoutBusinessesInput[]
+    connectOrCreate?: business_employeesCreateOrConnectWithoutBusinessesInput | business_employeesCreateOrConnectWithoutBusinessesInput[]
+    upsert?: business_employeesUpsertWithWhereUniqueWithoutBusinessesInput | business_employeesUpsertWithWhereUniqueWithoutBusinessesInput[]
+    createMany?: business_employeesCreateManyBusinessesInputEnvelope
+    set?: business_employeesWhereUniqueInput | business_employeesWhereUniqueInput[]
+    disconnect?: business_employeesWhereUniqueInput | business_employeesWhereUniqueInput[]
+    delete?: business_employeesWhereUniqueInput | business_employeesWhereUniqueInput[]
+    connect?: business_employeesWhereUniqueInput | business_employeesWhereUniqueInput[]
+    update?: business_employeesUpdateWithWhereUniqueWithoutBusinessesInput | business_employeesUpdateWithWhereUniqueWithoutBusinessesInput[]
+    updateMany?: business_employeesUpdateManyWithWhereWithoutBusinessesInput | business_employeesUpdateManyWithWhereWithoutBusinessesInput[]
+    deleteMany?: business_employeesScalarWhereInput | business_employeesScalarWhereInput[]
   }
 
   export type business_workflowsUncheckedUpdateManyWithoutBusinessesNestedInput = {
@@ -105359,6 +111418,20 @@ export namespace Prisma {
     deleteMany?: workflow_executionsScalarWhereInput | workflow_executionsScalarWhereInput[]
   }
 
+  export type businessesCreateNestedOneWithoutBusiness_employeesInput = {
+    create?: XOR<businessesCreateWithoutBusiness_employeesInput, businessesUncheckedCreateWithoutBusiness_employeesInput>
+    connectOrCreate?: businessesCreateOrConnectWithoutBusiness_employeesInput
+    connect?: businessesWhereUniqueInput
+  }
+
+  export type businessesUpdateOneRequiredWithoutBusiness_employeesNestedInput = {
+    create?: XOR<businessesCreateWithoutBusiness_employeesInput, businessesUncheckedCreateWithoutBusiness_employeesInput>
+    connectOrCreate?: businessesCreateOrConnectWithoutBusiness_employeesInput
+    upsert?: businessesUpsertWithoutBusiness_employeesInput
+    connect?: businessesWhereUniqueInput
+    update?: XOR<XOR<businessesUpdateToOneWithWhereWithoutBusiness_employeesInput, businessesUpdateWithoutBusiness_employeesInput>, businessesUncheckedUpdateWithoutBusiness_employeesInput>
+  }
+
   export type notificationsCreateNestedManyWithoutIntentsInput = {
     create?: XOR<notificationsCreateWithoutIntentsInput, notificationsUncheckedCreateWithoutIntentsInput> | notificationsCreateWithoutIntentsInput[] | notificationsUncheckedCreateWithoutIntentsInput[]
     connectOrCreate?: notificationsCreateOrConnectWithoutIntentsInput | notificationsCreateOrConnectWithoutIntentsInput[]
@@ -105603,54 +111676,12 @@ export namespace Prisma {
     deleteMany?: instagram_mediaScalarWhereInput | instagram_mediaScalarWhereInput[]
   }
 
-  export type businessesCreateNestedManyWithoutSubscription_plansInput = {
-    create?: XOR<businessesCreateWithoutSubscription_plansInput, businessesUncheckedCreateWithoutSubscription_plansInput> | businessesCreateWithoutSubscription_plansInput[] | businessesUncheckedCreateWithoutSubscription_plansInput[]
-    connectOrCreate?: businessesCreateOrConnectWithoutSubscription_plansInput | businessesCreateOrConnectWithoutSubscription_plansInput[]
-    createMany?: businessesCreateManySubscription_plansInputEnvelope
-    connect?: businessesWhereUniqueInput | businessesWhereUniqueInput[]
-  }
-
-  export type businessesUncheckedCreateNestedManyWithoutSubscription_plansInput = {
-    create?: XOR<businessesCreateWithoutSubscription_plansInput, businessesUncheckedCreateWithoutSubscription_plansInput> | businessesCreateWithoutSubscription_plansInput[] | businessesUncheckedCreateWithoutSubscription_plansInput[]
-    connectOrCreate?: businessesCreateOrConnectWithoutSubscription_plansInput | businessesCreateOrConnectWithoutSubscription_plansInput[]
-    createMany?: businessesCreateManySubscription_plansInputEnvelope
-    connect?: businessesWhereUniqueInput | businessesWhereUniqueInput[]
-  }
-
   export type NullableDecimalFieldUpdateOperationsInput = {
     set?: Decimal | DecimalJsLike | number | string | null
     increment?: Decimal | DecimalJsLike | number | string
     decrement?: Decimal | DecimalJsLike | number | string
     multiply?: Decimal | DecimalJsLike | number | string
     divide?: Decimal | DecimalJsLike | number | string
-  }
-
-  export type businessesUpdateManyWithoutSubscription_plansNestedInput = {
-    create?: XOR<businessesCreateWithoutSubscription_plansInput, businessesUncheckedCreateWithoutSubscription_plansInput> | businessesCreateWithoutSubscription_plansInput[] | businessesUncheckedCreateWithoutSubscription_plansInput[]
-    connectOrCreate?: businessesCreateOrConnectWithoutSubscription_plansInput | businessesCreateOrConnectWithoutSubscription_plansInput[]
-    upsert?: businessesUpsertWithWhereUniqueWithoutSubscription_plansInput | businessesUpsertWithWhereUniqueWithoutSubscription_plansInput[]
-    createMany?: businessesCreateManySubscription_plansInputEnvelope
-    set?: businessesWhereUniqueInput | businessesWhereUniqueInput[]
-    disconnect?: businessesWhereUniqueInput | businessesWhereUniqueInput[]
-    delete?: businessesWhereUniqueInput | businessesWhereUniqueInput[]
-    connect?: businessesWhereUniqueInput | businessesWhereUniqueInput[]
-    update?: businessesUpdateWithWhereUniqueWithoutSubscription_plansInput | businessesUpdateWithWhereUniqueWithoutSubscription_plansInput[]
-    updateMany?: businessesUpdateManyWithWhereWithoutSubscription_plansInput | businessesUpdateManyWithWhereWithoutSubscription_plansInput[]
-    deleteMany?: businessesScalarWhereInput | businessesScalarWhereInput[]
-  }
-
-  export type businessesUncheckedUpdateManyWithoutSubscription_plansNestedInput = {
-    create?: XOR<businessesCreateWithoutSubscription_plansInput, businessesUncheckedCreateWithoutSubscription_plansInput> | businessesCreateWithoutSubscription_plansInput[] | businessesUncheckedCreateWithoutSubscription_plansInput[]
-    connectOrCreate?: businessesCreateOrConnectWithoutSubscription_plansInput | businessesCreateOrConnectWithoutSubscription_plansInput[]
-    upsert?: businessesUpsertWithWhereUniqueWithoutSubscription_plansInput | businessesUpsertWithWhereUniqueWithoutSubscription_plansInput[]
-    createMany?: businessesCreateManySubscription_plansInputEnvelope
-    set?: businessesWhereUniqueInput | businessesWhereUniqueInput[]
-    disconnect?: businessesWhereUniqueInput | businessesWhereUniqueInput[]
-    delete?: businessesWhereUniqueInput | businessesWhereUniqueInput[]
-    connect?: businessesWhereUniqueInput | businessesWhereUniqueInput[]
-    update?: businessesUpdateWithWhereUniqueWithoutSubscription_plansInput | businessesUpdateWithWhereUniqueWithoutSubscription_plansInput[]
-    updateMany?: businessesUpdateManyWithWhereWithoutSubscription_plansInput | businessesUpdateManyWithWhereWithoutSubscription_plansInput[]
-    deleteMany?: businessesScalarWhereInput | businessesScalarWhereInput[]
   }
 
   export type business_workflowsCreateNestedManyWithoutTenantsInput = {
@@ -106605,6 +112636,13 @@ export namespace Prisma {
     deleteMany?: product_reviewsScalarWhereInput | product_reviewsScalarWhereInput[]
   }
 
+  export type cart_reservationsCreateNestedManyWithoutLeadsInput = {
+    create?: XOR<cart_reservationsCreateWithoutLeadsInput, cart_reservationsUncheckedCreateWithoutLeadsInput> | cart_reservationsCreateWithoutLeadsInput[] | cart_reservationsUncheckedCreateWithoutLeadsInput[]
+    connectOrCreate?: cart_reservationsCreateOrConnectWithoutLeadsInput | cart_reservationsCreateOrConnectWithoutLeadsInput[]
+    createMany?: cart_reservationsCreateManyLeadsInputEnvelope
+    connect?: cart_reservationsWhereUniqueInput | cart_reservationsWhereUniqueInput[]
+  }
+
   export type cartsCreateNestedManyWithoutLeadsInput = {
     create?: XOR<cartsCreateWithoutLeadsInput, cartsUncheckedCreateWithoutLeadsInput> | cartsCreateWithoutLeadsInput[] | cartsUncheckedCreateWithoutLeadsInput[]
     connectOrCreate?: cartsCreateOrConnectWithoutLeadsInput | cartsCreateOrConnectWithoutLeadsInput[]
@@ -106734,7 +112772,7 @@ export namespace Prisma {
     connect?: workflow_executionsWhereUniqueInput | workflow_executionsWhereUniqueInput[]
   }
 
-  export type cart_reservationsCreateNestedManyWithoutLeadsInput = {
+  export type cart_reservationsUncheckedCreateNestedManyWithoutLeadsInput = {
     create?: XOR<cart_reservationsCreateWithoutLeadsInput, cart_reservationsUncheckedCreateWithoutLeadsInput> | cart_reservationsCreateWithoutLeadsInput[] | cart_reservationsUncheckedCreateWithoutLeadsInput[]
     connectOrCreate?: cart_reservationsCreateOrConnectWithoutLeadsInput | cart_reservationsCreateOrConnectWithoutLeadsInput[]
     createMany?: cart_reservationsCreateManyLeadsInputEnvelope
@@ -106846,11 +112884,18 @@ export namespace Prisma {
     connect?: workflow_executionsWhereUniqueInput | workflow_executionsWhereUniqueInput[]
   }
 
-  export type cart_reservationsUncheckedCreateNestedManyWithoutLeadsInput = {
+  export type cart_reservationsUpdateManyWithoutLeadsNestedInput = {
     create?: XOR<cart_reservationsCreateWithoutLeadsInput, cart_reservationsUncheckedCreateWithoutLeadsInput> | cart_reservationsCreateWithoutLeadsInput[] | cart_reservationsUncheckedCreateWithoutLeadsInput[]
     connectOrCreate?: cart_reservationsCreateOrConnectWithoutLeadsInput | cart_reservationsCreateOrConnectWithoutLeadsInput[]
+    upsert?: cart_reservationsUpsertWithWhereUniqueWithoutLeadsInput | cart_reservationsUpsertWithWhereUniqueWithoutLeadsInput[]
     createMany?: cart_reservationsCreateManyLeadsInputEnvelope
+    set?: cart_reservationsWhereUniqueInput | cart_reservationsWhereUniqueInput[]
+    disconnect?: cart_reservationsWhereUniqueInput | cart_reservationsWhereUniqueInput[]
+    delete?: cart_reservationsWhereUniqueInput | cart_reservationsWhereUniqueInput[]
     connect?: cart_reservationsWhereUniqueInput | cart_reservationsWhereUniqueInput[]
+    update?: cart_reservationsUpdateWithWhereUniqueWithoutLeadsInput | cart_reservationsUpdateWithWhereUniqueWithoutLeadsInput[]
+    updateMany?: cart_reservationsUpdateManyWithWhereWithoutLeadsInput | cart_reservationsUpdateManyWithWhereWithoutLeadsInput[]
+    deleteMany?: cart_reservationsScalarWhereInput | cart_reservationsScalarWhereInput[]
   }
 
   export type cartsUpdateManyWithoutLeadsNestedInput = {
@@ -107099,7 +113144,7 @@ export namespace Prisma {
     deleteMany?: workflow_executionsScalarWhereInput | workflow_executionsScalarWhereInput[]
   }
 
-  export type cart_reservationsUpdateManyWithoutLeadsNestedInput = {
+  export type cart_reservationsUncheckedUpdateManyWithoutLeadsNestedInput = {
     create?: XOR<cart_reservationsCreateWithoutLeadsInput, cart_reservationsUncheckedCreateWithoutLeadsInput> | cart_reservationsCreateWithoutLeadsInput[] | cart_reservationsUncheckedCreateWithoutLeadsInput[]
     connectOrCreate?: cart_reservationsCreateOrConnectWithoutLeadsInput | cart_reservationsCreateOrConnectWithoutLeadsInput[]
     upsert?: cart_reservationsUpsertWithWhereUniqueWithoutLeadsInput | cart_reservationsUpsertWithWhereUniqueWithoutLeadsInput[]
@@ -107321,20 +113366,6 @@ export namespace Prisma {
     update?: workflow_executionsUpdateWithWhereUniqueWithoutLeadsInput | workflow_executionsUpdateWithWhereUniqueWithoutLeadsInput[]
     updateMany?: workflow_executionsUpdateManyWithWhereWithoutLeadsInput | workflow_executionsUpdateManyWithWhereWithoutLeadsInput[]
     deleteMany?: workflow_executionsScalarWhereInput | workflow_executionsScalarWhereInput[]
-  }
-
-  export type cart_reservationsUncheckedUpdateManyWithoutLeadsNestedInput = {
-    create?: XOR<cart_reservationsCreateWithoutLeadsInput, cart_reservationsUncheckedCreateWithoutLeadsInput> | cart_reservationsCreateWithoutLeadsInput[] | cart_reservationsUncheckedCreateWithoutLeadsInput[]
-    connectOrCreate?: cart_reservationsCreateOrConnectWithoutLeadsInput | cart_reservationsCreateOrConnectWithoutLeadsInput[]
-    upsert?: cart_reservationsUpsertWithWhereUniqueWithoutLeadsInput | cart_reservationsUpsertWithWhereUniqueWithoutLeadsInput[]
-    createMany?: cart_reservationsCreateManyLeadsInputEnvelope
-    set?: cart_reservationsWhereUniqueInput | cart_reservationsWhereUniqueInput[]
-    disconnect?: cart_reservationsWhereUniqueInput | cart_reservationsWhereUniqueInput[]
-    delete?: cart_reservationsWhereUniqueInput | cart_reservationsWhereUniqueInput[]
-    connect?: cart_reservationsWhereUniqueInput | cart_reservationsWhereUniqueInput[]
-    update?: cart_reservationsUpdateWithWhereUniqueWithoutLeadsInput | cart_reservationsUpdateWithWhereUniqueWithoutLeadsInput[]
-    updateMany?: cart_reservationsUpdateManyWithWhereWithoutLeadsInput | cart_reservationsUpdateManyWithWhereWithoutLeadsInput[]
-    deleteMany?: cart_reservationsScalarWhereInput | cart_reservationsScalarWhereInput[]
   }
 
   export type leadsCreateNestedOneWithoutLead_activitiesInput = {
@@ -107743,6 +113774,13 @@ export namespace Prisma {
     connect?: cart_itemsWhereUniqueInput | cart_itemsWhereUniqueInput[]
   }
 
+  export type cart_reservationsCreateNestedManyWithoutProductsInput = {
+    create?: XOR<cart_reservationsCreateWithoutProductsInput, cart_reservationsUncheckedCreateWithoutProductsInput> | cart_reservationsCreateWithoutProductsInput[] | cart_reservationsUncheckedCreateWithoutProductsInput[]
+    connectOrCreate?: cart_reservationsCreateOrConnectWithoutProductsInput | cart_reservationsCreateOrConnectWithoutProductsInput[]
+    createMany?: cart_reservationsCreateManyProductsInputEnvelope
+    connect?: cart_reservationsWhereUniqueInput | cart_reservationsWhereUniqueInput[]
+  }
+
   export type course_batchesCreateNestedManyWithoutCourseInput = {
     create?: XOR<course_batchesCreateWithoutCourseInput, course_batchesUncheckedCreateWithoutCourseInput> | course_batchesCreateWithoutCourseInput[] | course_batchesUncheckedCreateWithoutCourseInput[]
     connectOrCreate?: course_batchesCreateOrConnectWithoutCourseInput | course_batchesCreateOrConnectWithoutCourseInput[]
@@ -107797,13 +113835,6 @@ export namespace Prisma {
     connect?: stock_reservationsWhereUniqueInput | stock_reservationsWhereUniqueInput[]
   }
 
-  export type cart_reservationsCreateNestedManyWithoutProductsInput = {
-    create?: XOR<cart_reservationsCreateWithoutProductsInput, cart_reservationsUncheckedCreateWithoutProductsInput> | cart_reservationsCreateWithoutProductsInput[] | cart_reservationsUncheckedCreateWithoutProductsInput[]
-    connectOrCreate?: cart_reservationsCreateOrConnectWithoutProductsInput | cart_reservationsCreateOrConnectWithoutProductsInput[]
-    createMany?: cart_reservationsCreateManyProductsInputEnvelope
-    connect?: cart_reservationsWhereUniqueInput | cart_reservationsWhereUniqueInput[]
-  }
-
   export type campaignsUncheckedCreateNestedManyWithoutProductsInput = {
     create?: XOR<campaignsCreateWithoutProductsInput, campaignsUncheckedCreateWithoutProductsInput> | campaignsCreateWithoutProductsInput[] | campaignsUncheckedCreateWithoutProductsInput[]
     connectOrCreate?: campaignsCreateOrConnectWithoutProductsInput | campaignsCreateOrConnectWithoutProductsInput[]
@@ -107816,6 +113847,13 @@ export namespace Prisma {
     connectOrCreate?: cart_itemsCreateOrConnectWithoutProductsInput | cart_itemsCreateOrConnectWithoutProductsInput[]
     createMany?: cart_itemsCreateManyProductsInputEnvelope
     connect?: cart_itemsWhereUniqueInput | cart_itemsWhereUniqueInput[]
+  }
+
+  export type cart_reservationsUncheckedCreateNestedManyWithoutProductsInput = {
+    create?: XOR<cart_reservationsCreateWithoutProductsInput, cart_reservationsUncheckedCreateWithoutProductsInput> | cart_reservationsCreateWithoutProductsInput[] | cart_reservationsUncheckedCreateWithoutProductsInput[]
+    connectOrCreate?: cart_reservationsCreateOrConnectWithoutProductsInput | cart_reservationsCreateOrConnectWithoutProductsInput[]
+    createMany?: cart_reservationsCreateManyProductsInputEnvelope
+    connect?: cart_reservationsWhereUniqueInput | cart_reservationsWhereUniqueInput[]
   }
 
   export type course_batchesUncheckedCreateNestedManyWithoutCourseInput = {
@@ -107860,13 +113898,6 @@ export namespace Prisma {
     connect?: stock_reservationsWhereUniqueInput | stock_reservationsWhereUniqueInput[]
   }
 
-  export type cart_reservationsUncheckedCreateNestedManyWithoutProductsInput = {
-    create?: XOR<cart_reservationsCreateWithoutProductsInput, cart_reservationsUncheckedCreateWithoutProductsInput> | cart_reservationsCreateWithoutProductsInput[] | cart_reservationsUncheckedCreateWithoutProductsInput[]
-    connectOrCreate?: cart_reservationsCreateOrConnectWithoutProductsInput | cart_reservationsCreateOrConnectWithoutProductsInput[]
-    createMany?: cart_reservationsCreateManyProductsInputEnvelope
-    connect?: cart_reservationsWhereUniqueInput | cart_reservationsWhereUniqueInput[]
-  }
-
   export type campaignsUpdateManyWithoutProductsNestedInput = {
     create?: XOR<campaignsCreateWithoutProductsInput, campaignsUncheckedCreateWithoutProductsInput> | campaignsCreateWithoutProductsInput[] | campaignsUncheckedCreateWithoutProductsInput[]
     connectOrCreate?: campaignsCreateOrConnectWithoutProductsInput | campaignsCreateOrConnectWithoutProductsInput[]
@@ -107893,6 +113924,20 @@ export namespace Prisma {
     update?: cart_itemsUpdateWithWhereUniqueWithoutProductsInput | cart_itemsUpdateWithWhereUniqueWithoutProductsInput[]
     updateMany?: cart_itemsUpdateManyWithWhereWithoutProductsInput | cart_itemsUpdateManyWithWhereWithoutProductsInput[]
     deleteMany?: cart_itemsScalarWhereInput | cart_itemsScalarWhereInput[]
+  }
+
+  export type cart_reservationsUpdateManyWithoutProductsNestedInput = {
+    create?: XOR<cart_reservationsCreateWithoutProductsInput, cart_reservationsUncheckedCreateWithoutProductsInput> | cart_reservationsCreateWithoutProductsInput[] | cart_reservationsUncheckedCreateWithoutProductsInput[]
+    connectOrCreate?: cart_reservationsCreateOrConnectWithoutProductsInput | cart_reservationsCreateOrConnectWithoutProductsInput[]
+    upsert?: cart_reservationsUpsertWithWhereUniqueWithoutProductsInput | cart_reservationsUpsertWithWhereUniqueWithoutProductsInput[]
+    createMany?: cart_reservationsCreateManyProductsInputEnvelope
+    set?: cart_reservationsWhereUniqueInput | cart_reservationsWhereUniqueInput[]
+    disconnect?: cart_reservationsWhereUniqueInput | cart_reservationsWhereUniqueInput[]
+    delete?: cart_reservationsWhereUniqueInput | cart_reservationsWhereUniqueInput[]
+    connect?: cart_reservationsWhereUniqueInput | cart_reservationsWhereUniqueInput[]
+    update?: cart_reservationsUpdateWithWhereUniqueWithoutProductsInput | cart_reservationsUpdateWithWhereUniqueWithoutProductsInput[]
+    updateMany?: cart_reservationsUpdateManyWithWhereWithoutProductsInput | cart_reservationsUpdateManyWithWhereWithoutProductsInput[]
+    deleteMany?: cart_reservationsScalarWhereInput | cart_reservationsScalarWhereInput[]
   }
 
   export type course_batchesUpdateManyWithoutCourseNestedInput = {
@@ -107997,20 +114042,6 @@ export namespace Prisma {
     deleteMany?: stock_reservationsScalarWhereInput | stock_reservationsScalarWhereInput[]
   }
 
-  export type cart_reservationsUpdateManyWithoutProductsNestedInput = {
-    create?: XOR<cart_reservationsCreateWithoutProductsInput, cart_reservationsUncheckedCreateWithoutProductsInput> | cart_reservationsCreateWithoutProductsInput[] | cart_reservationsUncheckedCreateWithoutProductsInput[]
-    connectOrCreate?: cart_reservationsCreateOrConnectWithoutProductsInput | cart_reservationsCreateOrConnectWithoutProductsInput[]
-    upsert?: cart_reservationsUpsertWithWhereUniqueWithoutProductsInput | cart_reservationsUpsertWithWhereUniqueWithoutProductsInput[]
-    createMany?: cart_reservationsCreateManyProductsInputEnvelope
-    set?: cart_reservationsWhereUniqueInput | cart_reservationsWhereUniqueInput[]
-    disconnect?: cart_reservationsWhereUniqueInput | cart_reservationsWhereUniqueInput[]
-    delete?: cart_reservationsWhereUniqueInput | cart_reservationsWhereUniqueInput[]
-    connect?: cart_reservationsWhereUniqueInput | cart_reservationsWhereUniqueInput[]
-    update?: cart_reservationsUpdateWithWhereUniqueWithoutProductsInput | cart_reservationsUpdateWithWhereUniqueWithoutProductsInput[]
-    updateMany?: cart_reservationsUpdateManyWithWhereWithoutProductsInput | cart_reservationsUpdateManyWithWhereWithoutProductsInput[]
-    deleteMany?: cart_reservationsScalarWhereInput | cart_reservationsScalarWhereInput[]
-  }
-
   export type campaignsUncheckedUpdateManyWithoutProductsNestedInput = {
     create?: XOR<campaignsCreateWithoutProductsInput, campaignsUncheckedCreateWithoutProductsInput> | campaignsCreateWithoutProductsInput[] | campaignsUncheckedCreateWithoutProductsInput[]
     connectOrCreate?: campaignsCreateOrConnectWithoutProductsInput | campaignsCreateOrConnectWithoutProductsInput[]
@@ -108037,6 +114068,20 @@ export namespace Prisma {
     update?: cart_itemsUpdateWithWhereUniqueWithoutProductsInput | cart_itemsUpdateWithWhereUniqueWithoutProductsInput[]
     updateMany?: cart_itemsUpdateManyWithWhereWithoutProductsInput | cart_itemsUpdateManyWithWhereWithoutProductsInput[]
     deleteMany?: cart_itemsScalarWhereInput | cart_itemsScalarWhereInput[]
+  }
+
+  export type cart_reservationsUncheckedUpdateManyWithoutProductsNestedInput = {
+    create?: XOR<cart_reservationsCreateWithoutProductsInput, cart_reservationsUncheckedCreateWithoutProductsInput> | cart_reservationsCreateWithoutProductsInput[] | cart_reservationsUncheckedCreateWithoutProductsInput[]
+    connectOrCreate?: cart_reservationsCreateOrConnectWithoutProductsInput | cart_reservationsCreateOrConnectWithoutProductsInput[]
+    upsert?: cart_reservationsUpsertWithWhereUniqueWithoutProductsInput | cart_reservationsUpsertWithWhereUniqueWithoutProductsInput[]
+    createMany?: cart_reservationsCreateManyProductsInputEnvelope
+    set?: cart_reservationsWhereUniqueInput | cart_reservationsWhereUniqueInput[]
+    disconnect?: cart_reservationsWhereUniqueInput | cart_reservationsWhereUniqueInput[]
+    delete?: cart_reservationsWhereUniqueInput | cart_reservationsWhereUniqueInput[]
+    connect?: cart_reservationsWhereUniqueInput | cart_reservationsWhereUniqueInput[]
+    update?: cart_reservationsUpdateWithWhereUniqueWithoutProductsInput | cart_reservationsUpdateWithWhereUniqueWithoutProductsInput[]
+    updateMany?: cart_reservationsUpdateManyWithWhereWithoutProductsInput | cart_reservationsUpdateManyWithWhereWithoutProductsInput[]
+    deleteMany?: cart_reservationsScalarWhereInput | cart_reservationsScalarWhereInput[]
   }
 
   export type course_batchesUncheckedUpdateManyWithoutCourseNestedInput = {
@@ -108121,20 +114166,6 @@ export namespace Prisma {
     update?: stock_reservationsUpdateWithWhereUniqueWithoutProductsInput | stock_reservationsUpdateWithWhereUniqueWithoutProductsInput[]
     updateMany?: stock_reservationsUpdateManyWithWhereWithoutProductsInput | stock_reservationsUpdateManyWithWhereWithoutProductsInput[]
     deleteMany?: stock_reservationsScalarWhereInput | stock_reservationsScalarWhereInput[]
-  }
-
-  export type cart_reservationsUncheckedUpdateManyWithoutProductsNestedInput = {
-    create?: XOR<cart_reservationsCreateWithoutProductsInput, cart_reservationsUncheckedCreateWithoutProductsInput> | cart_reservationsCreateWithoutProductsInput[] | cart_reservationsUncheckedCreateWithoutProductsInput[]
-    connectOrCreate?: cart_reservationsCreateOrConnectWithoutProductsInput | cart_reservationsCreateOrConnectWithoutProductsInput[]
-    upsert?: cart_reservationsUpsertWithWhereUniqueWithoutProductsInput | cart_reservationsUpsertWithWhereUniqueWithoutProductsInput[]
-    createMany?: cart_reservationsCreateManyProductsInputEnvelope
-    set?: cart_reservationsWhereUniqueInput | cart_reservationsWhereUniqueInput[]
-    disconnect?: cart_reservationsWhereUniqueInput | cart_reservationsWhereUniqueInput[]
-    delete?: cart_reservationsWhereUniqueInput | cart_reservationsWhereUniqueInput[]
-    connect?: cart_reservationsWhereUniqueInput | cart_reservationsWhereUniqueInput[]
-    update?: cart_reservationsUpdateWithWhereUniqueWithoutProductsInput | cart_reservationsUpdateWithWhereUniqueWithoutProductsInput[]
-    updateMany?: cart_reservationsUpdateManyWithWhereWithoutProductsInput | cart_reservationsUpdateManyWithWhereWithoutProductsInput[]
-    deleteMany?: cart_reservationsScalarWhereInput | cart_reservationsScalarWhereInput[]
   }
 
   export type cart_itemsCreateNestedManyWithoutProduct_variantsInput = {
@@ -110714,6 +116745,70 @@ export namespace Prisma {
     deleteMany?: cart_itemsScalarWhereInput | cart_itemsScalarWhereInput[]
   }
 
+  export type hotel_booking_outcomesCreateNestedManyWithoutRecommendationInput = {
+    create?: XOR<hotel_booking_outcomesCreateWithoutRecommendationInput, hotel_booking_outcomesUncheckedCreateWithoutRecommendationInput> | hotel_booking_outcomesCreateWithoutRecommendationInput[] | hotel_booking_outcomesUncheckedCreateWithoutRecommendationInput[]
+    connectOrCreate?: hotel_booking_outcomesCreateOrConnectWithoutRecommendationInput | hotel_booking_outcomesCreateOrConnectWithoutRecommendationInput[]
+    createMany?: hotel_booking_outcomesCreateManyRecommendationInputEnvelope
+    connect?: hotel_booking_outcomesWhereUniqueInput | hotel_booking_outcomesWhereUniqueInput[]
+  }
+
+  export type hotel_booking_outcomesUncheckedCreateNestedManyWithoutRecommendationInput = {
+    create?: XOR<hotel_booking_outcomesCreateWithoutRecommendationInput, hotel_booking_outcomesUncheckedCreateWithoutRecommendationInput> | hotel_booking_outcomesCreateWithoutRecommendationInput[] | hotel_booking_outcomesUncheckedCreateWithoutRecommendationInput[]
+    connectOrCreate?: hotel_booking_outcomesCreateOrConnectWithoutRecommendationInput | hotel_booking_outcomesCreateOrConnectWithoutRecommendationInput[]
+    createMany?: hotel_booking_outcomesCreateManyRecommendationInputEnvelope
+    connect?: hotel_booking_outcomesWhereUniqueInput | hotel_booking_outcomesWhereUniqueInput[]
+  }
+
+  export type FloatFieldUpdateOperationsInput = {
+    set?: number
+    increment?: number
+    decrement?: number
+    multiply?: number
+    divide?: number
+  }
+
+  export type hotel_booking_outcomesUpdateManyWithoutRecommendationNestedInput = {
+    create?: XOR<hotel_booking_outcomesCreateWithoutRecommendationInput, hotel_booking_outcomesUncheckedCreateWithoutRecommendationInput> | hotel_booking_outcomesCreateWithoutRecommendationInput[] | hotel_booking_outcomesUncheckedCreateWithoutRecommendationInput[]
+    connectOrCreate?: hotel_booking_outcomesCreateOrConnectWithoutRecommendationInput | hotel_booking_outcomesCreateOrConnectWithoutRecommendationInput[]
+    upsert?: hotel_booking_outcomesUpsertWithWhereUniqueWithoutRecommendationInput | hotel_booking_outcomesUpsertWithWhereUniqueWithoutRecommendationInput[]
+    createMany?: hotel_booking_outcomesCreateManyRecommendationInputEnvelope
+    set?: hotel_booking_outcomesWhereUniqueInput | hotel_booking_outcomesWhereUniqueInput[]
+    disconnect?: hotel_booking_outcomesWhereUniqueInput | hotel_booking_outcomesWhereUniqueInput[]
+    delete?: hotel_booking_outcomesWhereUniqueInput | hotel_booking_outcomesWhereUniqueInput[]
+    connect?: hotel_booking_outcomesWhereUniqueInput | hotel_booking_outcomesWhereUniqueInput[]
+    update?: hotel_booking_outcomesUpdateWithWhereUniqueWithoutRecommendationInput | hotel_booking_outcomesUpdateWithWhereUniqueWithoutRecommendationInput[]
+    updateMany?: hotel_booking_outcomesUpdateManyWithWhereWithoutRecommendationInput | hotel_booking_outcomesUpdateManyWithWhereWithoutRecommendationInput[]
+    deleteMany?: hotel_booking_outcomesScalarWhereInput | hotel_booking_outcomesScalarWhereInput[]
+  }
+
+  export type hotel_booking_outcomesUncheckedUpdateManyWithoutRecommendationNestedInput = {
+    create?: XOR<hotel_booking_outcomesCreateWithoutRecommendationInput, hotel_booking_outcomesUncheckedCreateWithoutRecommendationInput> | hotel_booking_outcomesCreateWithoutRecommendationInput[] | hotel_booking_outcomesUncheckedCreateWithoutRecommendationInput[]
+    connectOrCreate?: hotel_booking_outcomesCreateOrConnectWithoutRecommendationInput | hotel_booking_outcomesCreateOrConnectWithoutRecommendationInput[]
+    upsert?: hotel_booking_outcomesUpsertWithWhereUniqueWithoutRecommendationInput | hotel_booking_outcomesUpsertWithWhereUniqueWithoutRecommendationInput[]
+    createMany?: hotel_booking_outcomesCreateManyRecommendationInputEnvelope
+    set?: hotel_booking_outcomesWhereUniqueInput | hotel_booking_outcomesWhereUniqueInput[]
+    disconnect?: hotel_booking_outcomesWhereUniqueInput | hotel_booking_outcomesWhereUniqueInput[]
+    delete?: hotel_booking_outcomesWhereUniqueInput | hotel_booking_outcomesWhereUniqueInput[]
+    connect?: hotel_booking_outcomesWhereUniqueInput | hotel_booking_outcomesWhereUniqueInput[]
+    update?: hotel_booking_outcomesUpdateWithWhereUniqueWithoutRecommendationInput | hotel_booking_outcomesUpdateWithWhereUniqueWithoutRecommendationInput[]
+    updateMany?: hotel_booking_outcomesUpdateManyWithWhereWithoutRecommendationInput | hotel_booking_outcomesUpdateManyWithWhereWithoutRecommendationInput[]
+    deleteMany?: hotel_booking_outcomesScalarWhereInput | hotel_booking_outcomesScalarWhereInput[]
+  }
+
+  export type hotel_pricing_recommendationsCreateNestedOneWithoutBooking_outcomesInput = {
+    create?: XOR<hotel_pricing_recommendationsCreateWithoutBooking_outcomesInput, hotel_pricing_recommendationsUncheckedCreateWithoutBooking_outcomesInput>
+    connectOrCreate?: hotel_pricing_recommendationsCreateOrConnectWithoutBooking_outcomesInput
+    connect?: hotel_pricing_recommendationsWhereUniqueInput
+  }
+
+  export type hotel_pricing_recommendationsUpdateOneRequiredWithoutBooking_outcomesNestedInput = {
+    create?: XOR<hotel_pricing_recommendationsCreateWithoutBooking_outcomesInput, hotel_pricing_recommendationsUncheckedCreateWithoutBooking_outcomesInput>
+    connectOrCreate?: hotel_pricing_recommendationsCreateOrConnectWithoutBooking_outcomesInput
+    upsert?: hotel_pricing_recommendationsUpsertWithoutBooking_outcomesInput
+    connect?: hotel_pricing_recommendationsWhereUniqueInput
+    update?: XOR<XOR<hotel_pricing_recommendationsUpdateToOneWithWhereWithoutBooking_outcomesInput, hotel_pricing_recommendationsUpdateWithoutBooking_outcomesInput>, hotel_pricing_recommendationsUncheckedUpdateWithoutBooking_outcomesInput>
+  }
+
   export type NestedUuidFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel>
     in?: string[] | ListStringFieldRefInput<$PrismaModel>
@@ -110751,17 +116846,6 @@ export namespace Prisma {
     startsWith?: string | StringFieldRefInput<$PrismaModel>
     endsWith?: string | StringFieldRefInput<$PrismaModel>
     not?: NestedStringNullableFilter<$PrismaModel> | string | null
-  }
-
-  export type NestedUuidNullableFilter<$PrismaModel = never> = {
-    equals?: string | StringFieldRefInput<$PrismaModel> | null
-    in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
-    notIn?: string[] | ListStringFieldRefInput<$PrismaModel> | null
-    lt?: string | StringFieldRefInput<$PrismaModel>
-    lte?: string | StringFieldRefInput<$PrismaModel>
-    gt?: string | StringFieldRefInput<$PrismaModel>
-    gte?: string | StringFieldRefInput<$PrismaModel>
-    not?: NestedUuidNullableFilter<$PrismaModel> | string | null
   }
 
   export type NestedDateTimeNullableFilter<$PrismaModel = never> = {
@@ -110845,43 +116929,6 @@ export namespace Prisma {
     not?: NestedIntNullableFilter<$PrismaModel> | number | null
   }
 
-  export type NestedUuidNullableWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: string | StringFieldRefInput<$PrismaModel> | null
-    in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
-    notIn?: string[] | ListStringFieldRefInput<$PrismaModel> | null
-    lt?: string | StringFieldRefInput<$PrismaModel>
-    lte?: string | StringFieldRefInput<$PrismaModel>
-    gt?: string | StringFieldRefInput<$PrismaModel>
-    gte?: string | StringFieldRefInput<$PrismaModel>
-    not?: NestedUuidNullableWithAggregatesFilter<$PrismaModel> | string | null
-    _count?: NestedIntNullableFilter<$PrismaModel>
-    _min?: NestedStringNullableFilter<$PrismaModel>
-    _max?: NestedStringNullableFilter<$PrismaModel>
-  }
-  export type NestedJsonNullableFilter<$PrismaModel = never> =
-    | PatchUndefined<
-        Either<Required<NestedJsonNullableFilterBase<$PrismaModel>>, Exclude<keyof Required<NestedJsonNullableFilterBase<$PrismaModel>>, 'path'>>,
-        Required<NestedJsonNullableFilterBase<$PrismaModel>>
-      >
-    | OptionalFlat<Omit<Required<NestedJsonNullableFilterBase<$PrismaModel>>, 'path'>>
-
-  export type NestedJsonNullableFilterBase<$PrismaModel = never> = {
-    equals?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
-    path?: string[]
-    mode?: QueryMode | EnumQueryModeFieldRefInput<$PrismaModel>
-    string_contains?: string | StringFieldRefInput<$PrismaModel>
-    string_starts_with?: string | StringFieldRefInput<$PrismaModel>
-    string_ends_with?: string | StringFieldRefInput<$PrismaModel>
-    array_starts_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
-    array_ends_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
-    array_contains?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
-    lt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
-    lte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
-    gt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
-    gte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
-    not?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
-  }
-
   export type NestedDateTimeNullableWithAggregatesFilter<$PrismaModel = never> = {
     equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
     in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
@@ -110918,6 +116965,29 @@ export namespace Prisma {
     gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
     gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
     not?: NestedDateTimeFilter<$PrismaModel> | Date | string
+  }
+  export type NestedJsonNullableFilter<$PrismaModel = never> =
+    | PatchUndefined<
+        Either<Required<NestedJsonNullableFilterBase<$PrismaModel>>, Exclude<keyof Required<NestedJsonNullableFilterBase<$PrismaModel>>, 'path'>>,
+        Required<NestedJsonNullableFilterBase<$PrismaModel>>
+      >
+    | OptionalFlat<Omit<Required<NestedJsonNullableFilterBase<$PrismaModel>>, 'path'>>
+
+  export type NestedJsonNullableFilterBase<$PrismaModel = never> = {
+    equals?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+    path?: string[]
+    mode?: QueryMode | EnumQueryModeFieldRefInput<$PrismaModel>
+    string_contains?: string | StringFieldRefInput<$PrismaModel>
+    string_starts_with?: string | StringFieldRefInput<$PrismaModel>
+    string_ends_with?: string | StringFieldRefInput<$PrismaModel>
+    array_starts_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_ends_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_contains?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    lt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    lte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    gt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    gte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    not?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
   }
 
   export type NestedDateTimeWithAggregatesFilter<$PrismaModel = never> = {
@@ -110999,6 +117069,31 @@ export namespace Prisma {
     _sum?: NestedDecimalNullableFilter<$PrismaModel>
     _min?: NestedDecimalNullableFilter<$PrismaModel>
     _max?: NestedDecimalNullableFilter<$PrismaModel>
+  }
+
+  export type NestedUuidNullableFilter<$PrismaModel = never> = {
+    equals?: string | StringFieldRefInput<$PrismaModel> | null
+    in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    notIn?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    lt?: string | StringFieldRefInput<$PrismaModel>
+    lte?: string | StringFieldRefInput<$PrismaModel>
+    gt?: string | StringFieldRefInput<$PrismaModel>
+    gte?: string | StringFieldRefInput<$PrismaModel>
+    not?: NestedUuidNullableFilter<$PrismaModel> | string | null
+  }
+
+  export type NestedUuidNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: string | StringFieldRefInput<$PrismaModel> | null
+    in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    notIn?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    lt?: string | StringFieldRefInput<$PrismaModel>
+    lte?: string | StringFieldRefInput<$PrismaModel>
+    gt?: string | StringFieldRefInput<$PrismaModel>
+    gte?: string | StringFieldRefInput<$PrismaModel>
+    not?: NestedUuidNullableWithAggregatesFilter<$PrismaModel> | string | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedStringNullableFilter<$PrismaModel>
+    _max?: NestedStringNullableFilter<$PrismaModel>
   }
 
   export type NestedIntWithAggregatesFilter<$PrismaModel = never> = {
@@ -111105,6 +117200,50 @@ export namespace Prisma {
     not?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
   }
 
+  export type NestedFloatWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | FloatFieldRefInput<$PrismaModel>
+    in?: number[] | ListFloatFieldRefInput<$PrismaModel>
+    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel>
+    lt?: number | FloatFieldRefInput<$PrismaModel>
+    lte?: number | FloatFieldRefInput<$PrismaModel>
+    gt?: number | FloatFieldRefInput<$PrismaModel>
+    gte?: number | FloatFieldRefInput<$PrismaModel>
+    not?: NestedFloatWithAggregatesFilter<$PrismaModel> | number
+    _count?: NestedIntFilter<$PrismaModel>
+    _avg?: NestedFloatFilter<$PrismaModel>
+    _sum?: NestedFloatFilter<$PrismaModel>
+    _min?: NestedFloatFilter<$PrismaModel>
+    _max?: NestedFloatFilter<$PrismaModel>
+  }
+
+  export type business_employeesCreateWithoutBusinessesInput = {
+    employee_id?: string
+    name: string
+    email?: string | null
+    phone?: string | null
+    role?: string | null
+    created_at?: Date | string | null
+  }
+
+  export type business_employeesUncheckedCreateWithoutBusinessesInput = {
+    employee_id?: string
+    name: string
+    email?: string | null
+    phone?: string | null
+    role?: string | null
+    created_at?: Date | string | null
+  }
+
+  export type business_employeesCreateOrConnectWithoutBusinessesInput = {
+    where: business_employeesWhereUniqueInput
+    create: XOR<business_employeesCreateWithoutBusinessesInput, business_employeesUncheckedCreateWithoutBusinessesInput>
+  }
+
+  export type business_employeesCreateManyBusinessesInputEnvelope = {
+    data: business_employeesCreateManyBusinessesInput | business_employeesCreateManyBusinessesInput[]
+    skipDuplicates?: boolean
+  }
+
   export type business_workflowsCreateWithoutBusinessesInput = {
     id?: string
     intent_name: string
@@ -111133,27 +117272,6 @@ export namespace Prisma {
   export type business_workflowsCreateManyBusinessesInputEnvelope = {
     data: business_workflowsCreateManyBusinessesInput | business_workflowsCreateManyBusinessesInput[]
     skipDuplicates?: boolean
-  }
-
-  export type subscription_plansCreateWithoutBusinessesInput = {
-    subscription_plan_id?: string
-    plan_name: string
-    price?: Decimal | DecimalJsLike | number | string | null
-    duration_in_days?: number | null
-    created_at?: Date | string | null
-  }
-
-  export type subscription_plansUncheckedCreateWithoutBusinessesInput = {
-    subscription_plan_id?: string
-    plan_name: string
-    price?: Decimal | DecimalJsLike | number | string | null
-    duration_in_days?: number | null
-    created_at?: Date | string | null
-  }
-
-  export type subscription_plansCreateOrConnectWithoutBusinessesInput = {
-    where: subscription_plansWhereUniqueInput
-    create: XOR<subscription_plansCreateWithoutBusinessesInput, subscription_plansUncheckedCreateWithoutBusinessesInput>
   }
 
   export type tenantsCreateWithoutBusinessesInput = {
@@ -111229,13 +117347,13 @@ export namespace Prisma {
     cart_id?: string
     tenant_id: string
     lead_id?: string | null
-    customer_id?: string | null
     status?: string | null
     total_amount?: Decimal | DecimalJsLike | number | string | null
     total_items?: number | null
     expires_at?: Date | string | null
     created_at?: Date | string | null
     updated_at?: Date | string | null
+    customer_id?: string | null
     cart_items?: cart_itemsUncheckedCreateNestedManyWithoutCartsInput
   }
 
@@ -111371,6 +117489,7 @@ export namespace Prisma {
     deleted_by?: string | null
     onboarding_completed?: boolean
     delivery_address?: string | null
+    cart_reservations?: cart_reservationsCreateNestedManyWithoutLeadsInput
     carts?: cartsCreateNestedManyWithoutLeadsInput
     lead_activities?: lead_activitiesCreateNestedManyWithoutLeadsInput
     lead_conversations?: lead_conversationsCreateNestedManyWithoutLeadsInput
@@ -111389,7 +117508,6 @@ export namespace Prisma {
     tenants: tenantsCreateNestedOneWithoutLeadsInput
     orders?: ordersCreateNestedManyWithoutLeadsInput
     workflow_executions?: workflow_executionsCreateNestedManyWithoutLeadsInput
-    cart_reservations?: cart_reservationsCreateNestedManyWithoutLeadsInput
   }
 
   export type leadsUncheckedCreateWithoutBusinessesInput = {
@@ -111451,6 +117569,7 @@ export namespace Prisma {
     deleted_by?: string | null
     onboarding_completed?: boolean
     delivery_address?: string | null
+    cart_reservations?: cart_reservationsUncheckedCreateNestedManyWithoutLeadsInput
     carts?: cartsUncheckedCreateNestedManyWithoutLeadsInput
     lead_activities?: lead_activitiesUncheckedCreateNestedManyWithoutLeadsInput
     lead_conversations?: lead_conversationsUncheckedCreateNestedManyWithoutLeadsInput
@@ -111466,7 +117585,6 @@ export namespace Prisma {
     duplicate_leads?: leadsUncheckedCreateNestedManyWithoutDuplicate_of_leadInput
     orders?: ordersUncheckedCreateNestedManyWithoutLeadsInput
     workflow_executions?: workflow_executionsUncheckedCreateNestedManyWithoutLeadsInput
-    cart_reservations?: cart_reservationsUncheckedCreateNestedManyWithoutLeadsInput
   }
 
   export type leadsCreateOrConnectWithoutBusinessesInput = {
@@ -111913,6 +118031,7 @@ export namespace Prisma {
     instagram_retailer_id?: string | null
     campaigns?: campaignsCreateNestedManyWithoutProductsInput
     cart_items?: cart_itemsCreateNestedManyWithoutProductsInput
+    cart_reservations?: cart_reservationsCreateNestedManyWithoutProductsInput
     course_batches?: course_batchesCreateNestedManyWithoutCourseInput
     order_items?: order_itemsCreateNestedManyWithoutProductsInput
     product_images?: product_imagesCreateNestedManyWithoutProductsInput
@@ -111920,7 +118039,6 @@ export namespace Prisma {
     product_variants?: product_variantsCreateNestedManyWithoutProductInput
     product_categories?: product_categoriesCreateNestedOneWithoutProductsInput
     stock_reservations?: stock_reservationsCreateNestedManyWithoutProductsInput
-    cart_reservations?: cart_reservationsCreateNestedManyWithoutProductsInput
   }
 
   export type productsUncheckedCreateWithoutBusinessesInput = {
@@ -111962,13 +118080,13 @@ export namespace Prisma {
     instagram_retailer_id?: string | null
     campaigns?: campaignsUncheckedCreateNestedManyWithoutProductsInput
     cart_items?: cart_itemsUncheckedCreateNestedManyWithoutProductsInput
+    cart_reservations?: cart_reservationsUncheckedCreateNestedManyWithoutProductsInput
     course_batches?: course_batchesUncheckedCreateNestedManyWithoutCourseInput
     order_items?: order_itemsUncheckedCreateNestedManyWithoutProductsInput
     product_images?: product_imagesUncheckedCreateNestedManyWithoutProductsInput
     product_reviews?: product_reviewsUncheckedCreateNestedManyWithoutProductInput
     product_variants?: product_variantsUncheckedCreateNestedManyWithoutProductInput
     stock_reservations?: stock_reservationsUncheckedCreateNestedManyWithoutProductsInput
-    cart_reservations?: cart_reservationsUncheckedCreateNestedManyWithoutProductsInput
   }
 
   export type productsCreateOrConnectWithoutBusinessesInput = {
@@ -112499,6 +118617,35 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type business_employeesUpsertWithWhereUniqueWithoutBusinessesInput = {
+    where: business_employeesWhereUniqueInput
+    update: XOR<business_employeesUpdateWithoutBusinessesInput, business_employeesUncheckedUpdateWithoutBusinessesInput>
+    create: XOR<business_employeesCreateWithoutBusinessesInput, business_employeesUncheckedCreateWithoutBusinessesInput>
+  }
+
+  export type business_employeesUpdateWithWhereUniqueWithoutBusinessesInput = {
+    where: business_employeesWhereUniqueInput
+    data: XOR<business_employeesUpdateWithoutBusinessesInput, business_employeesUncheckedUpdateWithoutBusinessesInput>
+  }
+
+  export type business_employeesUpdateManyWithWhereWithoutBusinessesInput = {
+    where: business_employeesScalarWhereInput
+    data: XOR<business_employeesUpdateManyMutationInput, business_employeesUncheckedUpdateManyWithoutBusinessesInput>
+  }
+
+  export type business_employeesScalarWhereInput = {
+    AND?: business_employeesScalarWhereInput | business_employeesScalarWhereInput[]
+    OR?: business_employeesScalarWhereInput[]
+    NOT?: business_employeesScalarWhereInput | business_employeesScalarWhereInput[]
+    employee_id?: UuidFilter<"business_employees"> | string
+    business_id?: UuidFilter<"business_employees"> | string
+    name?: StringFilter<"business_employees"> | string
+    email?: StringNullableFilter<"business_employees"> | string | null
+    phone?: StringNullableFilter<"business_employees"> | string | null
+    role?: StringNullableFilter<"business_employees"> | string | null
+    created_at?: DateTimeNullableFilter<"business_employees"> | Date | string | null
+  }
+
   export type business_workflowsUpsertWithWhereUniqueWithoutBusinessesInput = {
     where: business_workflowsWhereUniqueInput
     update: XOR<business_workflowsUpdateWithoutBusinessesInput, business_workflowsUncheckedUpdateWithoutBusinessesInput>
@@ -112527,33 +118674,6 @@ export namespace Prisma {
     is_active?: BoolFilter<"business_workflows"> | boolean
     created_at?: DateTimeFilter<"business_workflows"> | Date | string
     updated_at?: DateTimeFilter<"business_workflows"> | Date | string
-  }
-
-  export type subscription_plansUpsertWithoutBusinessesInput = {
-    update: XOR<subscription_plansUpdateWithoutBusinessesInput, subscription_plansUncheckedUpdateWithoutBusinessesInput>
-    create: XOR<subscription_plansCreateWithoutBusinessesInput, subscription_plansUncheckedCreateWithoutBusinessesInput>
-    where?: subscription_plansWhereInput
-  }
-
-  export type subscription_plansUpdateToOneWithWhereWithoutBusinessesInput = {
-    where?: subscription_plansWhereInput
-    data: XOR<subscription_plansUpdateWithoutBusinessesInput, subscription_plansUncheckedUpdateWithoutBusinessesInput>
-  }
-
-  export type subscription_plansUpdateWithoutBusinessesInput = {
-    subscription_plan_id?: StringFieldUpdateOperationsInput | string
-    plan_name?: StringFieldUpdateOperationsInput | string
-    price?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    duration_in_days?: NullableIntFieldUpdateOperationsInput | number | null
-    created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  }
-
-  export type subscription_plansUncheckedUpdateWithoutBusinessesInput = {
-    subscription_plan_id?: StringFieldUpdateOperationsInput | string
-    plan_name?: StringFieldUpdateOperationsInput | string
-    price?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    duration_in_days?: NullableIntFieldUpdateOperationsInput | number | null
-    created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
   export type tenantsUpsertWithoutBusinessesInput = {
@@ -112641,13 +118761,13 @@ export namespace Prisma {
     business_id?: UuidFilter<"carts"> | string
     tenant_id?: UuidFilter<"carts"> | string
     lead_id?: UuidNullableFilter<"carts"> | string | null
-    customer_id?: UuidNullableFilter<"carts"> | string | null
     status?: StringNullableFilter<"carts"> | string | null
     total_amount?: DecimalNullableFilter<"carts"> | Decimal | DecimalJsLike | number | string | null
     total_items?: IntNullableFilter<"carts"> | number | null
     expires_at?: DateTimeNullableFilter<"carts"> | Date | string | null
     created_at?: DateTimeNullableFilter<"carts"> | Date | string | null
     updated_at?: DateTimeNullableFilter<"carts"> | Date | string | null
+    customer_id?: UuidNullableFilter<"carts"> | string | null
   }
 
   export type inventory_levelsUpsertWithWhereUniqueWithoutBusinessesInput = {
@@ -113510,6 +119630,178 @@ export namespace Prisma {
     chat_id?: StringNullableFilter<"workflow_executions"> | string | null
   }
 
+  export type businessesCreateWithoutBusiness_employeesInput = {
+    business_id?: string
+    business_name: string
+    business_type?: string | null
+    whatsapp_number?: string | null
+    created_at?: Date | string | null
+    updated_at?: Date | string | null
+    email?: string | null
+    phone?: string | null
+    website?: string | null
+    city?: string | null
+    address?: string | null
+    country?: string | null
+    gst_number?: string | null
+    pan_number?: string | null
+    business_workflows?: business_workflowsCreateNestedManyWithoutBusinessesInput
+    tenants: tenantsCreateNestedOneWithoutBusinessesInput
+    carts?: cartsCreateNestedManyWithoutBusinessesInput
+    inventory_levels?: inventory_levelsCreateNestedManyWithoutBusinessesInput
+    leads?: leadsCreateNestedManyWithoutBusinessesInput
+    notification_messages?: notification_messagesCreateNestedManyWithoutBusinessesInput
+    notification_preferences?: notification_preferencesCreateNestedManyWithoutBusinessesInput
+    notification_templates?: notification_templatesCreateNestedManyWithoutBusinessesInput
+    payment_reconciliation?: payment_reconciliationCreateNestedManyWithoutBusinessesInput
+    payments?: paymentsCreateNestedManyWithoutBusinessesInput
+    product_categories?: product_categoriesCreateNestedManyWithoutBusinessesInput
+    product_images?: product_imagesCreateNestedManyWithoutBusinessesInput
+    products?: productsCreateNestedManyWithoutBusinessesInput
+    social_accounts?: social_accountsCreateNestedManyWithoutBusinessesInput
+    stock_alerts?: stock_alertsCreateNestedManyWithoutBusinessesInput
+    stock_counts?: stock_countsCreateNestedManyWithoutBusinessesInput
+    stock_movements?: stock_movementsCreateNestedManyWithoutBusinessesInput
+    stock_transfers?: stock_transfersCreateNestedManyWithoutBusinessesInput
+    tags?: tagsCreateNestedManyWithoutBusinessesInput
+    users?: usersCreateNestedManyWithoutBusinessesInput
+    warehouses?: warehousesCreateNestedManyWithoutBusinessesInput
+    workflow_executions?: workflow_executionsCreateNestedManyWithoutBusinessesInput
+  }
+
+  export type businessesUncheckedCreateWithoutBusiness_employeesInput = {
+    business_id?: string
+    tenant_id: string
+    business_name: string
+    business_type?: string | null
+    whatsapp_number?: string | null
+    created_at?: Date | string | null
+    updated_at?: Date | string | null
+    email?: string | null
+    phone?: string | null
+    website?: string | null
+    city?: string | null
+    address?: string | null
+    country?: string | null
+    gst_number?: string | null
+    pan_number?: string | null
+    business_workflows?: business_workflowsUncheckedCreateNestedManyWithoutBusinessesInput
+    carts?: cartsUncheckedCreateNestedManyWithoutBusinessesInput
+    inventory_levels?: inventory_levelsUncheckedCreateNestedManyWithoutBusinessesInput
+    leads?: leadsUncheckedCreateNestedManyWithoutBusinessesInput
+    notification_messages?: notification_messagesUncheckedCreateNestedManyWithoutBusinessesInput
+    notification_preferences?: notification_preferencesUncheckedCreateNestedManyWithoutBusinessesInput
+    notification_templates?: notification_templatesUncheckedCreateNestedManyWithoutBusinessesInput
+    payment_reconciliation?: payment_reconciliationUncheckedCreateNestedManyWithoutBusinessesInput
+    payments?: paymentsUncheckedCreateNestedManyWithoutBusinessesInput
+    product_categories?: product_categoriesUncheckedCreateNestedManyWithoutBusinessesInput
+    product_images?: product_imagesUncheckedCreateNestedManyWithoutBusinessesInput
+    products?: productsUncheckedCreateNestedManyWithoutBusinessesInput
+    social_accounts?: social_accountsUncheckedCreateNestedManyWithoutBusinessesInput
+    stock_alerts?: stock_alertsUncheckedCreateNestedManyWithoutBusinessesInput
+    stock_counts?: stock_countsUncheckedCreateNestedManyWithoutBusinessesInput
+    stock_movements?: stock_movementsUncheckedCreateNestedManyWithoutBusinessesInput
+    stock_transfers?: stock_transfersUncheckedCreateNestedManyWithoutBusinessesInput
+    tags?: tagsUncheckedCreateNestedManyWithoutBusinessesInput
+    users?: usersUncheckedCreateNestedManyWithoutBusinessesInput
+    warehouses?: warehousesUncheckedCreateNestedManyWithoutBusinessesInput
+    workflow_executions?: workflow_executionsUncheckedCreateNestedManyWithoutBusinessesInput
+  }
+
+  export type businessesCreateOrConnectWithoutBusiness_employeesInput = {
+    where: businessesWhereUniqueInput
+    create: XOR<businessesCreateWithoutBusiness_employeesInput, businessesUncheckedCreateWithoutBusiness_employeesInput>
+  }
+
+  export type businessesUpsertWithoutBusiness_employeesInput = {
+    update: XOR<businessesUpdateWithoutBusiness_employeesInput, businessesUncheckedUpdateWithoutBusiness_employeesInput>
+    create: XOR<businessesCreateWithoutBusiness_employeesInput, businessesUncheckedCreateWithoutBusiness_employeesInput>
+    where?: businessesWhereInput
+  }
+
+  export type businessesUpdateToOneWithWhereWithoutBusiness_employeesInput = {
+    where?: businessesWhereInput
+    data: XOR<businessesUpdateWithoutBusiness_employeesInput, businessesUncheckedUpdateWithoutBusiness_employeesInput>
+  }
+
+  export type businessesUpdateWithoutBusiness_employeesInput = {
+    business_id?: StringFieldUpdateOperationsInput | string
+    business_name?: StringFieldUpdateOperationsInput | string
+    business_type?: NullableStringFieldUpdateOperationsInput | string | null
+    whatsapp_number?: NullableStringFieldUpdateOperationsInput | string | null
+    created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    website?: NullableStringFieldUpdateOperationsInput | string | null
+    city?: NullableStringFieldUpdateOperationsInput | string | null
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    country?: NullableStringFieldUpdateOperationsInput | string | null
+    gst_number?: NullableStringFieldUpdateOperationsInput | string | null
+    pan_number?: NullableStringFieldUpdateOperationsInput | string | null
+    business_workflows?: business_workflowsUpdateManyWithoutBusinessesNestedInput
+    tenants?: tenantsUpdateOneRequiredWithoutBusinessesNestedInput
+    carts?: cartsUpdateManyWithoutBusinessesNestedInput
+    inventory_levels?: inventory_levelsUpdateManyWithoutBusinessesNestedInput
+    leads?: leadsUpdateManyWithoutBusinessesNestedInput
+    notification_messages?: notification_messagesUpdateManyWithoutBusinessesNestedInput
+    notification_preferences?: notification_preferencesUpdateManyWithoutBusinessesNestedInput
+    notification_templates?: notification_templatesUpdateManyWithoutBusinessesNestedInput
+    payment_reconciliation?: payment_reconciliationUpdateManyWithoutBusinessesNestedInput
+    payments?: paymentsUpdateManyWithoutBusinessesNestedInput
+    product_categories?: product_categoriesUpdateManyWithoutBusinessesNestedInput
+    product_images?: product_imagesUpdateManyWithoutBusinessesNestedInput
+    products?: productsUpdateManyWithoutBusinessesNestedInput
+    social_accounts?: social_accountsUpdateManyWithoutBusinessesNestedInput
+    stock_alerts?: stock_alertsUpdateManyWithoutBusinessesNestedInput
+    stock_counts?: stock_countsUpdateManyWithoutBusinessesNestedInput
+    stock_movements?: stock_movementsUpdateManyWithoutBusinessesNestedInput
+    stock_transfers?: stock_transfersUpdateManyWithoutBusinessesNestedInput
+    tags?: tagsUpdateManyWithoutBusinessesNestedInput
+    users?: usersUpdateManyWithoutBusinessesNestedInput
+    warehouses?: warehousesUpdateManyWithoutBusinessesNestedInput
+    workflow_executions?: workflow_executionsUpdateManyWithoutBusinessesNestedInput
+  }
+
+  export type businessesUncheckedUpdateWithoutBusiness_employeesInput = {
+    business_id?: StringFieldUpdateOperationsInput | string
+    tenant_id?: StringFieldUpdateOperationsInput | string
+    business_name?: StringFieldUpdateOperationsInput | string
+    business_type?: NullableStringFieldUpdateOperationsInput | string | null
+    whatsapp_number?: NullableStringFieldUpdateOperationsInput | string | null
+    created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    website?: NullableStringFieldUpdateOperationsInput | string | null
+    city?: NullableStringFieldUpdateOperationsInput | string | null
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    country?: NullableStringFieldUpdateOperationsInput | string | null
+    gst_number?: NullableStringFieldUpdateOperationsInput | string | null
+    pan_number?: NullableStringFieldUpdateOperationsInput | string | null
+    business_workflows?: business_workflowsUncheckedUpdateManyWithoutBusinessesNestedInput
+    carts?: cartsUncheckedUpdateManyWithoutBusinessesNestedInput
+    inventory_levels?: inventory_levelsUncheckedUpdateManyWithoutBusinessesNestedInput
+    leads?: leadsUncheckedUpdateManyWithoutBusinessesNestedInput
+    notification_messages?: notification_messagesUncheckedUpdateManyWithoutBusinessesNestedInput
+    notification_preferences?: notification_preferencesUncheckedUpdateManyWithoutBusinessesNestedInput
+    notification_templates?: notification_templatesUncheckedUpdateManyWithoutBusinessesNestedInput
+    payment_reconciliation?: payment_reconciliationUncheckedUpdateManyWithoutBusinessesNestedInput
+    payments?: paymentsUncheckedUpdateManyWithoutBusinessesNestedInput
+    product_categories?: product_categoriesUncheckedUpdateManyWithoutBusinessesNestedInput
+    product_images?: product_imagesUncheckedUpdateManyWithoutBusinessesNestedInput
+    products?: productsUncheckedUpdateManyWithoutBusinessesNestedInput
+    social_accounts?: social_accountsUncheckedUpdateManyWithoutBusinessesNestedInput
+    stock_alerts?: stock_alertsUncheckedUpdateManyWithoutBusinessesNestedInput
+    stock_counts?: stock_countsUncheckedUpdateManyWithoutBusinessesNestedInput
+    stock_movements?: stock_movementsUncheckedUpdateManyWithoutBusinessesNestedInput
+    stock_transfers?: stock_transfersUncheckedUpdateManyWithoutBusinessesNestedInput
+    tags?: tagsUncheckedUpdateManyWithoutBusinessesNestedInput
+    users?: usersUncheckedUpdateManyWithoutBusinessesNestedInput
+    warehouses?: warehousesUncheckedUpdateManyWithoutBusinessesNestedInput
+    workflow_executions?: workflow_executionsUncheckedUpdateManyWithoutBusinessesNestedInput
+  }
+
   export type notificationsCreateWithoutIntentsInput = {
     notification_id?: string
     message: string
@@ -113990,13 +120282,18 @@ export namespace Prisma {
     business_name: string
     business_type?: string | null
     whatsapp_number?: string | null
-    brand_colors?: NullableJsonNullValueInput | InputJsonValue
-    logo_url?: string | null
-    working_hours?: NullableJsonNullValueInput | InputJsonValue
     created_at?: Date | string | null
     updated_at?: Date | string | null
+    email?: string | null
+    phone?: string | null
+    website?: string | null
+    city?: string | null
+    address?: string | null
+    country?: string | null
+    gst_number?: string | null
+    pan_number?: string | null
+    business_employees?: business_employeesCreateNestedManyWithoutBusinessesInput
     business_workflows?: business_workflowsCreateNestedManyWithoutBusinessesInput
-    subscription_plans?: subscription_plansCreateNestedOneWithoutBusinessesInput
     tenants: tenantsCreateNestedOneWithoutBusinessesInput
     carts?: cartsCreateNestedManyWithoutBusinessesInput
     inventory_levels?: inventory_levelsCreateNestedManyWithoutBusinessesInput
@@ -114024,13 +120321,18 @@ export namespace Prisma {
     tenant_id: string
     business_name: string
     business_type?: string | null
-    subscription_plan_id?: string | null
     whatsapp_number?: string | null
-    brand_colors?: NullableJsonNullValueInput | InputJsonValue
-    logo_url?: string | null
-    working_hours?: NullableJsonNullValueInput | InputJsonValue
     created_at?: Date | string | null
     updated_at?: Date | string | null
+    email?: string | null
+    phone?: string | null
+    website?: string | null
+    city?: string | null
+    address?: string | null
+    country?: string | null
+    gst_number?: string | null
+    pan_number?: string | null
+    business_employees?: business_employeesUncheckedCreateNestedManyWithoutBusinessesInput
     business_workflows?: business_workflowsUncheckedCreateNestedManyWithoutBusinessesInput
     carts?: cartsUncheckedCreateNestedManyWithoutBusinessesInput
     inventory_levels?: inventory_levelsUncheckedCreateNestedManyWithoutBusinessesInput
@@ -114110,13 +120412,18 @@ export namespace Prisma {
     business_name?: StringFieldUpdateOperationsInput | string
     business_type?: NullableStringFieldUpdateOperationsInput | string | null
     whatsapp_number?: NullableStringFieldUpdateOperationsInput | string | null
-    brand_colors?: NullableJsonNullValueInput | InputJsonValue
-    logo_url?: NullableStringFieldUpdateOperationsInput | string | null
-    working_hours?: NullableJsonNullValueInput | InputJsonValue
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    website?: NullableStringFieldUpdateOperationsInput | string | null
+    city?: NullableStringFieldUpdateOperationsInput | string | null
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    country?: NullableStringFieldUpdateOperationsInput | string | null
+    gst_number?: NullableStringFieldUpdateOperationsInput | string | null
+    pan_number?: NullableStringFieldUpdateOperationsInput | string | null
+    business_employees?: business_employeesUpdateManyWithoutBusinessesNestedInput
     business_workflows?: business_workflowsUpdateManyWithoutBusinessesNestedInput
-    subscription_plans?: subscription_plansUpdateOneWithoutBusinessesNestedInput
     tenants?: tenantsUpdateOneRequiredWithoutBusinessesNestedInput
     carts?: cartsUpdateManyWithoutBusinessesNestedInput
     inventory_levels?: inventory_levelsUpdateManyWithoutBusinessesNestedInput
@@ -114144,13 +120451,18 @@ export namespace Prisma {
     tenant_id?: StringFieldUpdateOperationsInput | string
     business_name?: StringFieldUpdateOperationsInput | string
     business_type?: NullableStringFieldUpdateOperationsInput | string | null
-    subscription_plan_id?: NullableStringFieldUpdateOperationsInput | string | null
     whatsapp_number?: NullableStringFieldUpdateOperationsInput | string | null
-    brand_colors?: NullableJsonNullValueInput | InputJsonValue
-    logo_url?: NullableStringFieldUpdateOperationsInput | string | null
-    working_hours?: NullableJsonNullValueInput | InputJsonValue
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    website?: NullableStringFieldUpdateOperationsInput | string | null
+    city?: NullableStringFieldUpdateOperationsInput | string | null
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    country?: NullableStringFieldUpdateOperationsInput | string | null
+    gst_number?: NullableStringFieldUpdateOperationsInput | string | null
+    pan_number?: NullableStringFieldUpdateOperationsInput | string | null
+    business_employees?: business_employeesUncheckedUpdateManyWithoutBusinessesNestedInput
     business_workflows?: business_workflowsUncheckedUpdateManyWithoutBusinessesNestedInput
     carts?: cartsUncheckedUpdateManyWithoutBusinessesNestedInput
     inventory_levels?: inventory_levelsUncheckedUpdateManyWithoutBusinessesNestedInput
@@ -114171,117 +120483,6 @@ export namespace Prisma {
     users?: usersUncheckedUpdateManyWithoutBusinessesNestedInput
     warehouses?: warehousesUncheckedUpdateManyWithoutBusinessesNestedInput
     workflow_executions?: workflow_executionsUncheckedUpdateManyWithoutBusinessesNestedInput
-  }
-
-  export type businessesCreateWithoutSubscription_plansInput = {
-    business_id?: string
-    business_name: string
-    business_type?: string | null
-    whatsapp_number?: string | null
-    brand_colors?: NullableJsonNullValueInput | InputJsonValue
-    logo_url?: string | null
-    working_hours?: NullableJsonNullValueInput | InputJsonValue
-    created_at?: Date | string | null
-    updated_at?: Date | string | null
-    business_workflows?: business_workflowsCreateNestedManyWithoutBusinessesInput
-    tenants: tenantsCreateNestedOneWithoutBusinessesInput
-    carts?: cartsCreateNestedManyWithoutBusinessesInput
-    inventory_levels?: inventory_levelsCreateNestedManyWithoutBusinessesInput
-    leads?: leadsCreateNestedManyWithoutBusinessesInput
-    notification_messages?: notification_messagesCreateNestedManyWithoutBusinessesInput
-    notification_preferences?: notification_preferencesCreateNestedManyWithoutBusinessesInput
-    notification_templates?: notification_templatesCreateNestedManyWithoutBusinessesInput
-    payment_reconciliation?: payment_reconciliationCreateNestedManyWithoutBusinessesInput
-    payments?: paymentsCreateNestedManyWithoutBusinessesInput
-    product_categories?: product_categoriesCreateNestedManyWithoutBusinessesInput
-    product_images?: product_imagesCreateNestedManyWithoutBusinessesInput
-    products?: productsCreateNestedManyWithoutBusinessesInput
-    social_accounts?: social_accountsCreateNestedManyWithoutBusinessesInput
-    stock_alerts?: stock_alertsCreateNestedManyWithoutBusinessesInput
-    stock_counts?: stock_countsCreateNestedManyWithoutBusinessesInput
-    stock_movements?: stock_movementsCreateNestedManyWithoutBusinessesInput
-    stock_transfers?: stock_transfersCreateNestedManyWithoutBusinessesInput
-    tags?: tagsCreateNestedManyWithoutBusinessesInput
-    users?: usersCreateNestedManyWithoutBusinessesInput
-    warehouses?: warehousesCreateNestedManyWithoutBusinessesInput
-    workflow_executions?: workflow_executionsCreateNestedManyWithoutBusinessesInput
-  }
-
-  export type businessesUncheckedCreateWithoutSubscription_plansInput = {
-    business_id?: string
-    tenant_id: string
-    business_name: string
-    business_type?: string | null
-    whatsapp_number?: string | null
-    brand_colors?: NullableJsonNullValueInput | InputJsonValue
-    logo_url?: string | null
-    working_hours?: NullableJsonNullValueInput | InputJsonValue
-    created_at?: Date | string | null
-    updated_at?: Date | string | null
-    business_workflows?: business_workflowsUncheckedCreateNestedManyWithoutBusinessesInput
-    carts?: cartsUncheckedCreateNestedManyWithoutBusinessesInput
-    inventory_levels?: inventory_levelsUncheckedCreateNestedManyWithoutBusinessesInput
-    leads?: leadsUncheckedCreateNestedManyWithoutBusinessesInput
-    notification_messages?: notification_messagesUncheckedCreateNestedManyWithoutBusinessesInput
-    notification_preferences?: notification_preferencesUncheckedCreateNestedManyWithoutBusinessesInput
-    notification_templates?: notification_templatesUncheckedCreateNestedManyWithoutBusinessesInput
-    payment_reconciliation?: payment_reconciliationUncheckedCreateNestedManyWithoutBusinessesInput
-    payments?: paymentsUncheckedCreateNestedManyWithoutBusinessesInput
-    product_categories?: product_categoriesUncheckedCreateNestedManyWithoutBusinessesInput
-    product_images?: product_imagesUncheckedCreateNestedManyWithoutBusinessesInput
-    products?: productsUncheckedCreateNestedManyWithoutBusinessesInput
-    social_accounts?: social_accountsUncheckedCreateNestedManyWithoutBusinessesInput
-    stock_alerts?: stock_alertsUncheckedCreateNestedManyWithoutBusinessesInput
-    stock_counts?: stock_countsUncheckedCreateNestedManyWithoutBusinessesInput
-    stock_movements?: stock_movementsUncheckedCreateNestedManyWithoutBusinessesInput
-    stock_transfers?: stock_transfersUncheckedCreateNestedManyWithoutBusinessesInput
-    tags?: tagsUncheckedCreateNestedManyWithoutBusinessesInput
-    users?: usersUncheckedCreateNestedManyWithoutBusinessesInput
-    warehouses?: warehousesUncheckedCreateNestedManyWithoutBusinessesInput
-    workflow_executions?: workflow_executionsUncheckedCreateNestedManyWithoutBusinessesInput
-  }
-
-  export type businessesCreateOrConnectWithoutSubscription_plansInput = {
-    where: businessesWhereUniqueInput
-    create: XOR<businessesCreateWithoutSubscription_plansInput, businessesUncheckedCreateWithoutSubscription_plansInput>
-  }
-
-  export type businessesCreateManySubscription_plansInputEnvelope = {
-    data: businessesCreateManySubscription_plansInput | businessesCreateManySubscription_plansInput[]
-    skipDuplicates?: boolean
-  }
-
-  export type businessesUpsertWithWhereUniqueWithoutSubscription_plansInput = {
-    where: businessesWhereUniqueInput
-    update: XOR<businessesUpdateWithoutSubscription_plansInput, businessesUncheckedUpdateWithoutSubscription_plansInput>
-    create: XOR<businessesCreateWithoutSubscription_plansInput, businessesUncheckedCreateWithoutSubscription_plansInput>
-  }
-
-  export type businessesUpdateWithWhereUniqueWithoutSubscription_plansInput = {
-    where: businessesWhereUniqueInput
-    data: XOR<businessesUpdateWithoutSubscription_plansInput, businessesUncheckedUpdateWithoutSubscription_plansInput>
-  }
-
-  export type businessesUpdateManyWithWhereWithoutSubscription_plansInput = {
-    where: businessesScalarWhereInput
-    data: XOR<businessesUpdateManyMutationInput, businessesUncheckedUpdateManyWithoutSubscription_plansInput>
-  }
-
-  export type businessesScalarWhereInput = {
-    AND?: businessesScalarWhereInput | businessesScalarWhereInput[]
-    OR?: businessesScalarWhereInput[]
-    NOT?: businessesScalarWhereInput | businessesScalarWhereInput[]
-    business_id?: UuidFilter<"businesses"> | string
-    tenant_id?: UuidFilter<"businesses"> | string
-    business_name?: StringFilter<"businesses"> | string
-    business_type?: StringNullableFilter<"businesses"> | string | null
-    subscription_plan_id?: UuidNullableFilter<"businesses"> | string | null
-    whatsapp_number?: StringNullableFilter<"businesses"> | string | null
-    brand_colors?: JsonNullableFilter<"businesses">
-    logo_url?: StringNullableFilter<"businesses"> | string | null
-    working_hours?: JsonNullableFilter<"businesses">
-    created_at?: DateTimeNullableFilter<"businesses"> | Date | string | null
-    updated_at?: DateTimeNullableFilter<"businesses"> | Date | string | null
   }
 
   export type business_workflowsCreateWithoutTenantsInput = {
@@ -114319,13 +120520,18 @@ export namespace Prisma {
     business_name: string
     business_type?: string | null
     whatsapp_number?: string | null
-    brand_colors?: NullableJsonNullValueInput | InputJsonValue
-    logo_url?: string | null
-    working_hours?: NullableJsonNullValueInput | InputJsonValue
     created_at?: Date | string | null
     updated_at?: Date | string | null
+    email?: string | null
+    phone?: string | null
+    website?: string | null
+    city?: string | null
+    address?: string | null
+    country?: string | null
+    gst_number?: string | null
+    pan_number?: string | null
+    business_employees?: business_employeesCreateNestedManyWithoutBusinessesInput
     business_workflows?: business_workflowsCreateNestedManyWithoutBusinessesInput
-    subscription_plans?: subscription_plansCreateNestedOneWithoutBusinessesInput
     carts?: cartsCreateNestedManyWithoutBusinessesInput
     inventory_levels?: inventory_levelsCreateNestedManyWithoutBusinessesInput
     leads?: leadsCreateNestedManyWithoutBusinessesInput
@@ -114352,13 +120558,18 @@ export namespace Prisma {
     business_id?: string
     business_name: string
     business_type?: string | null
-    subscription_plan_id?: string | null
     whatsapp_number?: string | null
-    brand_colors?: NullableJsonNullValueInput | InputJsonValue
-    logo_url?: string | null
-    working_hours?: NullableJsonNullValueInput | InputJsonValue
     created_at?: Date | string | null
     updated_at?: Date | string | null
+    email?: string | null
+    phone?: string | null
+    website?: string | null
+    city?: string | null
+    address?: string | null
+    country?: string | null
+    gst_number?: string | null
+    pan_number?: string | null
+    business_employees?: business_employeesUncheckedCreateNestedManyWithoutBusinessesInput
     business_workflows?: business_workflowsUncheckedCreateNestedManyWithoutBusinessesInput
     carts?: cartsUncheckedCreateNestedManyWithoutBusinessesInput
     inventory_levels?: inventory_levelsUncheckedCreateNestedManyWithoutBusinessesInput
@@ -114410,13 +120621,13 @@ export namespace Prisma {
     cart_id?: string
     business_id: string
     lead_id?: string | null
-    customer_id?: string | null
     status?: string | null
     total_amount?: Decimal | DecimalJsLike | number | string | null
     total_items?: number | null
     expires_at?: Date | string | null
     created_at?: Date | string | null
     updated_at?: Date | string | null
+    customer_id?: string | null
     cart_items?: cart_itemsUncheckedCreateNestedManyWithoutCartsInput
   }
 
@@ -114552,6 +120763,7 @@ export namespace Prisma {
     deleted_by?: string | null
     onboarding_completed?: boolean
     delivery_address?: string | null
+    cart_reservations?: cart_reservationsCreateNestedManyWithoutLeadsInput
     carts?: cartsCreateNestedManyWithoutLeadsInput
     lead_activities?: lead_activitiesCreateNestedManyWithoutLeadsInput
     lead_conversations?: lead_conversationsCreateNestedManyWithoutLeadsInput
@@ -114570,7 +120782,6 @@ export namespace Prisma {
     duplicate_leads?: leadsCreateNestedManyWithoutDuplicate_of_leadInput
     orders?: ordersCreateNestedManyWithoutLeadsInput
     workflow_executions?: workflow_executionsCreateNestedManyWithoutLeadsInput
-    cart_reservations?: cart_reservationsCreateNestedManyWithoutLeadsInput
   }
 
   export type leadsUncheckedCreateWithoutTenantsInput = {
@@ -114632,6 +120843,7 @@ export namespace Prisma {
     deleted_by?: string | null
     onboarding_completed?: boolean
     delivery_address?: string | null
+    cart_reservations?: cart_reservationsUncheckedCreateNestedManyWithoutLeadsInput
     carts?: cartsUncheckedCreateNestedManyWithoutLeadsInput
     lead_activities?: lead_activitiesUncheckedCreateNestedManyWithoutLeadsInput
     lead_conversations?: lead_conversationsUncheckedCreateNestedManyWithoutLeadsInput
@@ -114647,7 +120859,6 @@ export namespace Prisma {
     duplicate_leads?: leadsUncheckedCreateNestedManyWithoutDuplicate_of_leadInput
     orders?: ordersUncheckedCreateNestedManyWithoutLeadsInput
     workflow_executions?: workflow_executionsUncheckedCreateNestedManyWithoutLeadsInput
-    cart_reservations?: cart_reservationsUncheckedCreateNestedManyWithoutLeadsInput
   }
 
   export type leadsCreateOrConnectWithoutTenantsInput = {
@@ -115198,6 +121409,27 @@ export namespace Prisma {
     data: XOR<businessesUpdateManyMutationInput, businessesUncheckedUpdateManyWithoutTenantsInput>
   }
 
+  export type businessesScalarWhereInput = {
+    AND?: businessesScalarWhereInput | businessesScalarWhereInput[]
+    OR?: businessesScalarWhereInput[]
+    NOT?: businessesScalarWhereInput | businessesScalarWhereInput[]
+    business_id?: UuidFilter<"businesses"> | string
+    tenant_id?: UuidFilter<"businesses"> | string
+    business_name?: StringFilter<"businesses"> | string
+    business_type?: StringNullableFilter<"businesses"> | string | null
+    whatsapp_number?: StringNullableFilter<"businesses"> | string | null
+    created_at?: DateTimeNullableFilter<"businesses"> | Date | string | null
+    updated_at?: DateTimeNullableFilter<"businesses"> | Date | string | null
+    email?: StringNullableFilter<"businesses"> | string | null
+    phone?: StringNullableFilter<"businesses"> | string | null
+    website?: StringNullableFilter<"businesses"> | string | null
+    city?: StringNullableFilter<"businesses"> | string | null
+    address?: StringNullableFilter<"businesses"> | string | null
+    country?: StringNullableFilter<"businesses"> | string | null
+    gst_number?: StringNullableFilter<"businesses"> | string | null
+    pan_number?: StringNullableFilter<"businesses"> | string | null
+  }
+
   export type cartsUpsertWithWhereUniqueWithoutTenantsInput = {
     where: cartsWhereUniqueInput
     update: XOR<cartsUpdateWithoutTenantsInput, cartsUncheckedUpdateWithoutTenantsInput>
@@ -115678,6 +121910,7 @@ export namespace Prisma {
     deleted_by?: string | null
     onboarding_completed?: boolean
     delivery_address?: string | null
+    cart_reservations?: cart_reservationsCreateNestedManyWithoutLeadsInput
     carts?: cartsCreateNestedManyWithoutLeadsInput
     lead_activities?: lead_activitiesCreateNestedManyWithoutLeadsInput
     lead_conversations?: lead_conversationsCreateNestedManyWithoutLeadsInput
@@ -115696,7 +121929,6 @@ export namespace Prisma {
     tenants: tenantsCreateNestedOneWithoutLeadsInput
     orders?: ordersCreateNestedManyWithoutLeadsInput
     workflow_executions?: workflow_executionsCreateNestedManyWithoutLeadsInput
-    cart_reservations?: cart_reservationsCreateNestedManyWithoutLeadsInput
   }
 
   export type leadsUncheckedCreateWithoutAssigned_agentInput = {
@@ -115758,6 +121990,7 @@ export namespace Prisma {
     deleted_by?: string | null
     onboarding_completed?: boolean
     delivery_address?: string | null
+    cart_reservations?: cart_reservationsUncheckedCreateNestedManyWithoutLeadsInput
     carts?: cartsUncheckedCreateNestedManyWithoutLeadsInput
     lead_activities?: lead_activitiesUncheckedCreateNestedManyWithoutLeadsInput
     lead_conversations?: lead_conversationsUncheckedCreateNestedManyWithoutLeadsInput
@@ -115773,7 +122006,6 @@ export namespace Prisma {
     duplicate_leads?: leadsUncheckedCreateNestedManyWithoutDuplicate_of_leadInput
     orders?: ordersUncheckedCreateNestedManyWithoutLeadsInput
     workflow_executions?: workflow_executionsUncheckedCreateNestedManyWithoutLeadsInput
-    cart_reservations?: cart_reservationsUncheckedCreateNestedManyWithoutLeadsInput
   }
 
   export type leadsCreateOrConnectWithoutAssigned_agentInput = {
@@ -115929,13 +122161,18 @@ export namespace Prisma {
     business_name: string
     business_type?: string | null
     whatsapp_number?: string | null
-    brand_colors?: NullableJsonNullValueInput | InputJsonValue
-    logo_url?: string | null
-    working_hours?: NullableJsonNullValueInput | InputJsonValue
     created_at?: Date | string | null
     updated_at?: Date | string | null
+    email?: string | null
+    phone?: string | null
+    website?: string | null
+    city?: string | null
+    address?: string | null
+    country?: string | null
+    gst_number?: string | null
+    pan_number?: string | null
+    business_employees?: business_employeesCreateNestedManyWithoutBusinessesInput
     business_workflows?: business_workflowsCreateNestedManyWithoutBusinessesInput
-    subscription_plans?: subscription_plansCreateNestedOneWithoutBusinessesInput
     tenants: tenantsCreateNestedOneWithoutBusinessesInput
     carts?: cartsCreateNestedManyWithoutBusinessesInput
     inventory_levels?: inventory_levelsCreateNestedManyWithoutBusinessesInput
@@ -115963,13 +122200,18 @@ export namespace Prisma {
     tenant_id: string
     business_name: string
     business_type?: string | null
-    subscription_plan_id?: string | null
     whatsapp_number?: string | null
-    brand_colors?: NullableJsonNullValueInput | InputJsonValue
-    logo_url?: string | null
-    working_hours?: NullableJsonNullValueInput | InputJsonValue
     created_at?: Date | string | null
     updated_at?: Date | string | null
+    email?: string | null
+    phone?: string | null
+    website?: string | null
+    city?: string | null
+    address?: string | null
+    country?: string | null
+    gst_number?: string | null
+    pan_number?: string | null
+    business_employees?: business_employeesUncheckedCreateNestedManyWithoutBusinessesInput
     business_workflows?: business_workflowsUncheckedCreateNestedManyWithoutBusinessesInput
     carts?: cartsUncheckedCreateNestedManyWithoutBusinessesInput
     inventory_levels?: inventory_levelsUncheckedCreateNestedManyWithoutBusinessesInput
@@ -116297,13 +122539,18 @@ export namespace Prisma {
     business_name?: StringFieldUpdateOperationsInput | string
     business_type?: NullableStringFieldUpdateOperationsInput | string | null
     whatsapp_number?: NullableStringFieldUpdateOperationsInput | string | null
-    brand_colors?: NullableJsonNullValueInput | InputJsonValue
-    logo_url?: NullableStringFieldUpdateOperationsInput | string | null
-    working_hours?: NullableJsonNullValueInput | InputJsonValue
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    website?: NullableStringFieldUpdateOperationsInput | string | null
+    city?: NullableStringFieldUpdateOperationsInput | string | null
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    country?: NullableStringFieldUpdateOperationsInput | string | null
+    gst_number?: NullableStringFieldUpdateOperationsInput | string | null
+    pan_number?: NullableStringFieldUpdateOperationsInput | string | null
+    business_employees?: business_employeesUpdateManyWithoutBusinessesNestedInput
     business_workflows?: business_workflowsUpdateManyWithoutBusinessesNestedInput
-    subscription_plans?: subscription_plansUpdateOneWithoutBusinessesNestedInput
     tenants?: tenantsUpdateOneRequiredWithoutBusinessesNestedInput
     carts?: cartsUpdateManyWithoutBusinessesNestedInput
     inventory_levels?: inventory_levelsUpdateManyWithoutBusinessesNestedInput
@@ -116331,13 +122578,18 @@ export namespace Prisma {
     tenant_id?: StringFieldUpdateOperationsInput | string
     business_name?: StringFieldUpdateOperationsInput | string
     business_type?: NullableStringFieldUpdateOperationsInput | string | null
-    subscription_plan_id?: NullableStringFieldUpdateOperationsInput | string | null
     whatsapp_number?: NullableStringFieldUpdateOperationsInput | string | null
-    brand_colors?: NullableJsonNullValueInput | InputJsonValue
-    logo_url?: NullableStringFieldUpdateOperationsInput | string | null
-    working_hours?: NullableJsonNullValueInput | InputJsonValue
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    website?: NullableStringFieldUpdateOperationsInput | string | null
+    city?: NullableStringFieldUpdateOperationsInput | string | null
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    country?: NullableStringFieldUpdateOperationsInput | string | null
+    gst_number?: NullableStringFieldUpdateOperationsInput | string | null
+    pan_number?: NullableStringFieldUpdateOperationsInput | string | null
+    business_employees?: business_employeesUncheckedUpdateManyWithoutBusinessesNestedInput
     business_workflows?: business_workflowsUncheckedUpdateManyWithoutBusinessesNestedInput
     carts?: cartsUncheckedUpdateManyWithoutBusinessesNestedInput
     inventory_levels?: inventory_levelsUncheckedUpdateManyWithoutBusinessesNestedInput
@@ -116385,6 +122637,38 @@ export namespace Prisma {
     role_id?: StringFieldUpdateOperationsInput | string
   }
 
+  export type cart_reservationsCreateWithoutLeadsInput = {
+    reservation_id?: string
+    variant_id?: string | null
+    quantity: number
+    expires_at: Date | string
+    status?: string
+    created_at?: Date | string
+    updated_at?: Date | string
+    products: productsCreateNestedOneWithoutCart_reservationsInput
+  }
+
+  export type cart_reservationsUncheckedCreateWithoutLeadsInput = {
+    reservation_id?: string
+    product_id: string
+    variant_id?: string | null
+    quantity: number
+    expires_at: Date | string
+    status?: string
+    created_at?: Date | string
+    updated_at?: Date | string
+  }
+
+  export type cart_reservationsCreateOrConnectWithoutLeadsInput = {
+    where: cart_reservationsWhereUniqueInput
+    create: XOR<cart_reservationsCreateWithoutLeadsInput, cart_reservationsUncheckedCreateWithoutLeadsInput>
+  }
+
+  export type cart_reservationsCreateManyLeadsInputEnvelope = {
+    data: cart_reservationsCreateManyLeadsInput | cart_reservationsCreateManyLeadsInput[]
+    skipDuplicates?: boolean
+  }
+
   export type cartsCreateWithoutLeadsInput = {
     cart_id?: string
     status?: string | null
@@ -116403,13 +122687,13 @@ export namespace Prisma {
     cart_id?: string
     business_id: string
     tenant_id: string
-    customer_id?: string | null
     status?: string | null
     total_amount?: Decimal | DecimalJsLike | number | string | null
     total_items?: number | null
     expires_at?: Date | string | null
     created_at?: Date | string | null
     updated_at?: Date | string | null
+    customer_id?: string | null
     cart_items?: cart_itemsUncheckedCreateNestedManyWithoutCartsInput
   }
 
@@ -116983,13 +123267,18 @@ export namespace Prisma {
     business_name: string
     business_type?: string | null
     whatsapp_number?: string | null
-    brand_colors?: NullableJsonNullValueInput | InputJsonValue
-    logo_url?: string | null
-    working_hours?: NullableJsonNullValueInput | InputJsonValue
     created_at?: Date | string | null
     updated_at?: Date | string | null
+    email?: string | null
+    phone?: string | null
+    website?: string | null
+    city?: string | null
+    address?: string | null
+    country?: string | null
+    gst_number?: string | null
+    pan_number?: string | null
+    business_employees?: business_employeesCreateNestedManyWithoutBusinessesInput
     business_workflows?: business_workflowsCreateNestedManyWithoutBusinessesInput
-    subscription_plans?: subscription_plansCreateNestedOneWithoutBusinessesInput
     tenants: tenantsCreateNestedOneWithoutBusinessesInput
     carts?: cartsCreateNestedManyWithoutBusinessesInput
     inventory_levels?: inventory_levelsCreateNestedManyWithoutBusinessesInput
@@ -117017,13 +123306,18 @@ export namespace Prisma {
     tenant_id: string
     business_name: string
     business_type?: string | null
-    subscription_plan_id?: string | null
     whatsapp_number?: string | null
-    brand_colors?: NullableJsonNullValueInput | InputJsonValue
-    logo_url?: string | null
-    working_hours?: NullableJsonNullValueInput | InputJsonValue
     created_at?: Date | string | null
     updated_at?: Date | string | null
+    email?: string | null
+    phone?: string | null
+    website?: string | null
+    city?: string | null
+    address?: string | null
+    country?: string | null
+    gst_number?: string | null
+    pan_number?: string | null
+    business_employees?: business_employeesUncheckedCreateNestedManyWithoutBusinessesInput
     business_workflows?: business_workflowsUncheckedCreateNestedManyWithoutBusinessesInput
     carts?: cartsUncheckedCreateNestedManyWithoutBusinessesInput
     inventory_levels?: inventory_levelsUncheckedCreateNestedManyWithoutBusinessesInput
@@ -117107,6 +123401,7 @@ export namespace Prisma {
     deleted_by?: string | null
     onboarding_completed?: boolean
     delivery_address?: string | null
+    cart_reservations?: cart_reservationsCreateNestedManyWithoutLeadsInput
     carts?: cartsCreateNestedManyWithoutLeadsInput
     lead_activities?: lead_activitiesCreateNestedManyWithoutLeadsInput
     lead_conversations?: lead_conversationsCreateNestedManyWithoutLeadsInput
@@ -117125,7 +123420,6 @@ export namespace Prisma {
     tenants: tenantsCreateNestedOneWithoutLeadsInput
     orders?: ordersCreateNestedManyWithoutLeadsInput
     workflow_executions?: workflow_executionsCreateNestedManyWithoutLeadsInput
-    cart_reservations?: cart_reservationsCreateNestedManyWithoutLeadsInput
   }
 
   export type leadsUncheckedCreateWithoutDuplicate_leadsInput = {
@@ -117188,6 +123482,7 @@ export namespace Prisma {
     deleted_by?: string | null
     onboarding_completed?: boolean
     delivery_address?: string | null
+    cart_reservations?: cart_reservationsUncheckedCreateNestedManyWithoutLeadsInput
     carts?: cartsUncheckedCreateNestedManyWithoutLeadsInput
     lead_activities?: lead_activitiesUncheckedCreateNestedManyWithoutLeadsInput
     lead_conversations?: lead_conversationsUncheckedCreateNestedManyWithoutLeadsInput
@@ -117202,7 +123497,6 @@ export namespace Prisma {
     lead_tag_assignments?: lead_tag_assignmentsUncheckedCreateNestedManyWithoutLeadsInput
     orders?: ordersUncheckedCreateNestedManyWithoutLeadsInput
     workflow_executions?: workflow_executionsUncheckedCreateNestedManyWithoutLeadsInput
-    cart_reservations?: cart_reservationsUncheckedCreateNestedManyWithoutLeadsInput
   }
 
   export type leadsCreateOrConnectWithoutDuplicate_leadsInput = {
@@ -117266,6 +123560,7 @@ export namespace Prisma {
     deleted_by?: string | null
     onboarding_completed?: boolean
     delivery_address?: string | null
+    cart_reservations?: cart_reservationsCreateNestedManyWithoutLeadsInput
     carts?: cartsCreateNestedManyWithoutLeadsInput
     lead_activities?: lead_activitiesCreateNestedManyWithoutLeadsInput
     lead_conversations?: lead_conversationsCreateNestedManyWithoutLeadsInput
@@ -117284,7 +123579,6 @@ export namespace Prisma {
     tenants: tenantsCreateNestedOneWithoutLeadsInput
     orders?: ordersCreateNestedManyWithoutLeadsInput
     workflow_executions?: workflow_executionsCreateNestedManyWithoutLeadsInput
-    cart_reservations?: cart_reservationsCreateNestedManyWithoutLeadsInput
   }
 
   export type leadsUncheckedCreateWithoutDuplicate_of_leadInput = {
@@ -117346,6 +123640,7 @@ export namespace Prisma {
     deleted_by?: string | null
     onboarding_completed?: boolean
     delivery_address?: string | null
+    cart_reservations?: cart_reservationsUncheckedCreateNestedManyWithoutLeadsInput
     carts?: cartsUncheckedCreateNestedManyWithoutLeadsInput
     lead_activities?: lead_activitiesUncheckedCreateNestedManyWithoutLeadsInput
     lead_conversations?: lead_conversationsUncheckedCreateNestedManyWithoutLeadsInput
@@ -117361,7 +123656,6 @@ export namespace Prisma {
     duplicate_leads?: leadsUncheckedCreateNestedManyWithoutDuplicate_of_leadInput
     orders?: ordersUncheckedCreateNestedManyWithoutLeadsInput
     workflow_executions?: workflow_executionsUncheckedCreateNestedManyWithoutLeadsInput
-    cart_reservations?: cart_reservationsUncheckedCreateNestedManyWithoutLeadsInput
   }
 
   export type leadsCreateOrConnectWithoutDuplicate_of_leadInput = {
@@ -117575,36 +123869,35 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
-  export type cart_reservationsCreateWithoutLeadsInput = {
-    reservation_id?: string
-    variant_id?: string | null
-    quantity: number
-    expires_at: Date | string
-    status?: string
-    created_at?: Date | string
-    updated_at?: Date | string
-    products: productsCreateNestedOneWithoutCart_reservationsInput
-  }
-
-  export type cart_reservationsUncheckedCreateWithoutLeadsInput = {
-    reservation_id?: string
-    product_id: string
-    variant_id?: string | null
-    quantity: number
-    expires_at: Date | string
-    status?: string
-    created_at?: Date | string
-    updated_at?: Date | string
-  }
-
-  export type cart_reservationsCreateOrConnectWithoutLeadsInput = {
+  export type cart_reservationsUpsertWithWhereUniqueWithoutLeadsInput = {
     where: cart_reservationsWhereUniqueInput
+    update: XOR<cart_reservationsUpdateWithoutLeadsInput, cart_reservationsUncheckedUpdateWithoutLeadsInput>
     create: XOR<cart_reservationsCreateWithoutLeadsInput, cart_reservationsUncheckedCreateWithoutLeadsInput>
   }
 
-  export type cart_reservationsCreateManyLeadsInputEnvelope = {
-    data: cart_reservationsCreateManyLeadsInput | cart_reservationsCreateManyLeadsInput[]
-    skipDuplicates?: boolean
+  export type cart_reservationsUpdateWithWhereUniqueWithoutLeadsInput = {
+    where: cart_reservationsWhereUniqueInput
+    data: XOR<cart_reservationsUpdateWithoutLeadsInput, cart_reservationsUncheckedUpdateWithoutLeadsInput>
+  }
+
+  export type cart_reservationsUpdateManyWithWhereWithoutLeadsInput = {
+    where: cart_reservationsScalarWhereInput
+    data: XOR<cart_reservationsUpdateManyMutationInput, cart_reservationsUncheckedUpdateManyWithoutLeadsInput>
+  }
+
+  export type cart_reservationsScalarWhereInput = {
+    AND?: cart_reservationsScalarWhereInput | cart_reservationsScalarWhereInput[]
+    OR?: cart_reservationsScalarWhereInput[]
+    NOT?: cart_reservationsScalarWhereInput | cart_reservationsScalarWhereInput[]
+    reservation_id?: UuidFilter<"cart_reservations"> | string
+    lead_id?: UuidFilter<"cart_reservations"> | string
+    product_id?: UuidFilter<"cart_reservations"> | string
+    variant_id?: UuidNullableFilter<"cart_reservations"> | string | null
+    quantity?: IntFilter<"cart_reservations"> | number
+    expires_at?: DateTimeFilter<"cart_reservations"> | Date | string
+    status?: StringFilter<"cart_reservations"> | string
+    created_at?: DateTimeFilter<"cart_reservations"> | Date | string
+    updated_at?: DateTimeFilter<"cart_reservations"> | Date | string
   }
 
   export type cartsUpsertWithWhereUniqueWithoutLeadsInput = {
@@ -118011,13 +124304,18 @@ export namespace Prisma {
     business_name?: StringFieldUpdateOperationsInput | string
     business_type?: NullableStringFieldUpdateOperationsInput | string | null
     whatsapp_number?: NullableStringFieldUpdateOperationsInput | string | null
-    brand_colors?: NullableJsonNullValueInput | InputJsonValue
-    logo_url?: NullableStringFieldUpdateOperationsInput | string | null
-    working_hours?: NullableJsonNullValueInput | InputJsonValue
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    website?: NullableStringFieldUpdateOperationsInput | string | null
+    city?: NullableStringFieldUpdateOperationsInput | string | null
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    country?: NullableStringFieldUpdateOperationsInput | string | null
+    gst_number?: NullableStringFieldUpdateOperationsInput | string | null
+    pan_number?: NullableStringFieldUpdateOperationsInput | string | null
+    business_employees?: business_employeesUpdateManyWithoutBusinessesNestedInput
     business_workflows?: business_workflowsUpdateManyWithoutBusinessesNestedInput
-    subscription_plans?: subscription_plansUpdateOneWithoutBusinessesNestedInput
     tenants?: tenantsUpdateOneRequiredWithoutBusinessesNestedInput
     carts?: cartsUpdateManyWithoutBusinessesNestedInput
     inventory_levels?: inventory_levelsUpdateManyWithoutBusinessesNestedInput
@@ -118045,13 +124343,18 @@ export namespace Prisma {
     tenant_id?: StringFieldUpdateOperationsInput | string
     business_name?: StringFieldUpdateOperationsInput | string
     business_type?: NullableStringFieldUpdateOperationsInput | string | null
-    subscription_plan_id?: NullableStringFieldUpdateOperationsInput | string | null
     whatsapp_number?: NullableStringFieldUpdateOperationsInput | string | null
-    brand_colors?: NullableJsonNullValueInput | InputJsonValue
-    logo_url?: NullableStringFieldUpdateOperationsInput | string | null
-    working_hours?: NullableJsonNullValueInput | InputJsonValue
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    website?: NullableStringFieldUpdateOperationsInput | string | null
+    city?: NullableStringFieldUpdateOperationsInput | string | null
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    country?: NullableStringFieldUpdateOperationsInput | string | null
+    gst_number?: NullableStringFieldUpdateOperationsInput | string | null
+    pan_number?: NullableStringFieldUpdateOperationsInput | string | null
+    business_employees?: business_employeesUncheckedUpdateManyWithoutBusinessesNestedInput
     business_workflows?: business_workflowsUncheckedUpdateManyWithoutBusinessesNestedInput
     carts?: cartsUncheckedUpdateManyWithoutBusinessesNestedInput
     inventory_levels?: inventory_levelsUncheckedUpdateManyWithoutBusinessesNestedInput
@@ -118141,6 +124444,7 @@ export namespace Prisma {
     deleted_by?: NullableStringFieldUpdateOperationsInput | string | null
     onboarding_completed?: BoolFieldUpdateOperationsInput | boolean
     delivery_address?: NullableStringFieldUpdateOperationsInput | string | null
+    cart_reservations?: cart_reservationsUpdateManyWithoutLeadsNestedInput
     carts?: cartsUpdateManyWithoutLeadsNestedInput
     lead_activities?: lead_activitiesUpdateManyWithoutLeadsNestedInput
     lead_conversations?: lead_conversationsUpdateManyWithoutLeadsNestedInput
@@ -118159,7 +124463,6 @@ export namespace Prisma {
     tenants?: tenantsUpdateOneRequiredWithoutLeadsNestedInput
     orders?: ordersUpdateManyWithoutLeadsNestedInput
     workflow_executions?: workflow_executionsUpdateManyWithoutLeadsNestedInput
-    cart_reservations?: cart_reservationsUpdateManyWithoutLeadsNestedInput
   }
 
   export type leadsUncheckedUpdateWithoutDuplicate_leadsInput = {
@@ -118222,6 +124525,7 @@ export namespace Prisma {
     deleted_by?: NullableStringFieldUpdateOperationsInput | string | null
     onboarding_completed?: BoolFieldUpdateOperationsInput | boolean
     delivery_address?: NullableStringFieldUpdateOperationsInput | string | null
+    cart_reservations?: cart_reservationsUncheckedUpdateManyWithoutLeadsNestedInput
     carts?: cartsUncheckedUpdateManyWithoutLeadsNestedInput
     lead_activities?: lead_activitiesUncheckedUpdateManyWithoutLeadsNestedInput
     lead_conversations?: lead_conversationsUncheckedUpdateManyWithoutLeadsNestedInput
@@ -118236,7 +124540,6 @@ export namespace Prisma {
     lead_tag_assignments?: lead_tag_assignmentsUncheckedUpdateManyWithoutLeadsNestedInput
     orders?: ordersUncheckedUpdateManyWithoutLeadsNestedInput
     workflow_executions?: workflow_executionsUncheckedUpdateManyWithoutLeadsNestedInput
-    cart_reservations?: cart_reservationsUncheckedUpdateManyWithoutLeadsNestedInput
   }
 
   export type leadsUpsertWithWhereUniqueWithoutDuplicate_of_leadInput = {
@@ -118393,37 +124696,6 @@ export namespace Prisma {
     data: XOR<workflow_executionsUpdateManyMutationInput, workflow_executionsUncheckedUpdateManyWithoutLeadsInput>
   }
 
-  export type cart_reservationsUpsertWithWhereUniqueWithoutLeadsInput = {
-    where: cart_reservationsWhereUniqueInput
-    update: XOR<cart_reservationsUpdateWithoutLeadsInput, cart_reservationsUncheckedUpdateWithoutLeadsInput>
-    create: XOR<cart_reservationsCreateWithoutLeadsInput, cart_reservationsUncheckedCreateWithoutLeadsInput>
-  }
-
-  export type cart_reservationsUpdateWithWhereUniqueWithoutLeadsInput = {
-    where: cart_reservationsWhereUniqueInput
-    data: XOR<cart_reservationsUpdateWithoutLeadsInput, cart_reservationsUncheckedUpdateWithoutLeadsInput>
-  }
-
-  export type cart_reservationsUpdateManyWithWhereWithoutLeadsInput = {
-    where: cart_reservationsScalarWhereInput
-    data: XOR<cart_reservationsUpdateManyMutationInput, cart_reservationsUncheckedUpdateManyWithoutLeadsInput>
-  }
-
-  export type cart_reservationsScalarWhereInput = {
-    AND?: cart_reservationsScalarWhereInput | cart_reservationsScalarWhereInput[]
-    OR?: cart_reservationsScalarWhereInput[]
-    NOT?: cart_reservationsScalarWhereInput | cart_reservationsScalarWhereInput[]
-    reservation_id?: UuidFilter<"cart_reservations"> | string
-    lead_id?: UuidFilter<"cart_reservations"> | string
-    product_id?: UuidFilter<"cart_reservations"> | string
-    variant_id?: UuidNullableFilter<"cart_reservations"> | string | null
-    quantity?: IntFilter<"cart_reservations"> | number
-    expires_at?: DateTimeFilter<"cart_reservations"> | Date | string
-    status?: StringFilter<"cart_reservations"> | string
-    created_at?: DateTimeFilter<"cart_reservations"> | Date | string
-    updated_at?: DateTimeFilter<"cart_reservations"> | Date | string
-  }
-
   export type leadsCreateWithoutLead_activitiesInput = {
     lead_id?: string
     source: string
@@ -118480,6 +124752,7 @@ export namespace Prisma {
     deleted_by?: string | null
     onboarding_completed?: boolean
     delivery_address?: string | null
+    cart_reservations?: cart_reservationsCreateNestedManyWithoutLeadsInput
     carts?: cartsCreateNestedManyWithoutLeadsInput
     lead_conversations?: lead_conversationsCreateNestedManyWithoutLeadsInput
     lead_duplicates_1?: lead_duplicatesCreateNestedManyWithoutLead_1Input
@@ -118498,7 +124771,6 @@ export namespace Prisma {
     tenants: tenantsCreateNestedOneWithoutLeadsInput
     orders?: ordersCreateNestedManyWithoutLeadsInput
     workflow_executions?: workflow_executionsCreateNestedManyWithoutLeadsInput
-    cart_reservations?: cart_reservationsCreateNestedManyWithoutLeadsInput
   }
 
   export type leadsUncheckedCreateWithoutLead_activitiesInput = {
@@ -118561,6 +124833,7 @@ export namespace Prisma {
     deleted_by?: string | null
     onboarding_completed?: boolean
     delivery_address?: string | null
+    cart_reservations?: cart_reservationsUncheckedCreateNestedManyWithoutLeadsInput
     carts?: cartsUncheckedCreateNestedManyWithoutLeadsInput
     lead_conversations?: lead_conversationsUncheckedCreateNestedManyWithoutLeadsInput
     lead_duplicates_1?: lead_duplicatesUncheckedCreateNestedManyWithoutLead_1Input
@@ -118575,7 +124848,6 @@ export namespace Prisma {
     duplicate_leads?: leadsUncheckedCreateNestedManyWithoutDuplicate_of_leadInput
     orders?: ordersUncheckedCreateNestedManyWithoutLeadsInput
     workflow_executions?: workflow_executionsUncheckedCreateNestedManyWithoutLeadsInput
-    cart_reservations?: cart_reservationsUncheckedCreateNestedManyWithoutLeadsInput
   }
 
   export type leadsCreateOrConnectWithoutLead_activitiesInput = {
@@ -118650,6 +124922,7 @@ export namespace Prisma {
     deleted_by?: NullableStringFieldUpdateOperationsInput | string | null
     onboarding_completed?: BoolFieldUpdateOperationsInput | boolean
     delivery_address?: NullableStringFieldUpdateOperationsInput | string | null
+    cart_reservations?: cart_reservationsUpdateManyWithoutLeadsNestedInput
     carts?: cartsUpdateManyWithoutLeadsNestedInput
     lead_conversations?: lead_conversationsUpdateManyWithoutLeadsNestedInput
     lead_duplicates_1?: lead_duplicatesUpdateManyWithoutLead_1NestedInput
@@ -118668,7 +124941,6 @@ export namespace Prisma {
     tenants?: tenantsUpdateOneRequiredWithoutLeadsNestedInput
     orders?: ordersUpdateManyWithoutLeadsNestedInput
     workflow_executions?: workflow_executionsUpdateManyWithoutLeadsNestedInput
-    cart_reservations?: cart_reservationsUpdateManyWithoutLeadsNestedInput
   }
 
   export type leadsUncheckedUpdateWithoutLead_activitiesInput = {
@@ -118731,6 +125003,7 @@ export namespace Prisma {
     deleted_by?: NullableStringFieldUpdateOperationsInput | string | null
     onboarding_completed?: BoolFieldUpdateOperationsInput | boolean
     delivery_address?: NullableStringFieldUpdateOperationsInput | string | null
+    cart_reservations?: cart_reservationsUncheckedUpdateManyWithoutLeadsNestedInput
     carts?: cartsUncheckedUpdateManyWithoutLeadsNestedInput
     lead_conversations?: lead_conversationsUncheckedUpdateManyWithoutLeadsNestedInput
     lead_duplicates_1?: lead_duplicatesUncheckedUpdateManyWithoutLead_1NestedInput
@@ -118745,7 +125018,6 @@ export namespace Prisma {
     duplicate_leads?: leadsUncheckedUpdateManyWithoutDuplicate_of_leadNestedInput
     orders?: ordersUncheckedUpdateManyWithoutLeadsNestedInput
     workflow_executions?: workflow_executionsUncheckedUpdateManyWithoutLeadsNestedInput
-    cart_reservations?: cart_reservationsUncheckedUpdateManyWithoutLeadsNestedInput
   }
 
   export type usersCreateWithoutLead_conversationsInput = {
@@ -118877,6 +125149,7 @@ export namespace Prisma {
     deleted_by?: string | null
     onboarding_completed?: boolean
     delivery_address?: string | null
+    cart_reservations?: cart_reservationsCreateNestedManyWithoutLeadsInput
     carts?: cartsCreateNestedManyWithoutLeadsInput
     lead_activities?: lead_activitiesCreateNestedManyWithoutLeadsInput
     lead_duplicates_1?: lead_duplicatesCreateNestedManyWithoutLead_1Input
@@ -118895,7 +125168,6 @@ export namespace Prisma {
     tenants: tenantsCreateNestedOneWithoutLeadsInput
     orders?: ordersCreateNestedManyWithoutLeadsInput
     workflow_executions?: workflow_executionsCreateNestedManyWithoutLeadsInput
-    cart_reservations?: cart_reservationsCreateNestedManyWithoutLeadsInput
   }
 
   export type leadsUncheckedCreateWithoutLead_conversationsInput = {
@@ -118958,6 +125230,7 @@ export namespace Prisma {
     deleted_by?: string | null
     onboarding_completed?: boolean
     delivery_address?: string | null
+    cart_reservations?: cart_reservationsUncheckedCreateNestedManyWithoutLeadsInput
     carts?: cartsUncheckedCreateNestedManyWithoutLeadsInput
     lead_activities?: lead_activitiesUncheckedCreateNestedManyWithoutLeadsInput
     lead_duplicates_1?: lead_duplicatesUncheckedCreateNestedManyWithoutLead_1Input
@@ -118972,7 +125245,6 @@ export namespace Prisma {
     duplicate_leads?: leadsUncheckedCreateNestedManyWithoutDuplicate_of_leadInput
     orders?: ordersUncheckedCreateNestedManyWithoutLeadsInput
     workflow_executions?: workflow_executionsUncheckedCreateNestedManyWithoutLeadsInput
-    cart_reservations?: cart_reservationsUncheckedCreateNestedManyWithoutLeadsInput
   }
 
   export type leadsCreateOrConnectWithoutLead_conversationsInput = {
@@ -119198,6 +125470,7 @@ export namespace Prisma {
     deleted_by?: NullableStringFieldUpdateOperationsInput | string | null
     onboarding_completed?: BoolFieldUpdateOperationsInput | boolean
     delivery_address?: NullableStringFieldUpdateOperationsInput | string | null
+    cart_reservations?: cart_reservationsUpdateManyWithoutLeadsNestedInput
     carts?: cartsUpdateManyWithoutLeadsNestedInput
     lead_activities?: lead_activitiesUpdateManyWithoutLeadsNestedInput
     lead_duplicates_1?: lead_duplicatesUpdateManyWithoutLead_1NestedInput
@@ -119216,7 +125489,6 @@ export namespace Prisma {
     tenants?: tenantsUpdateOneRequiredWithoutLeadsNestedInput
     orders?: ordersUpdateManyWithoutLeadsNestedInput
     workflow_executions?: workflow_executionsUpdateManyWithoutLeadsNestedInput
-    cart_reservations?: cart_reservationsUpdateManyWithoutLeadsNestedInput
   }
 
   export type leadsUncheckedUpdateWithoutLead_conversationsInput = {
@@ -119279,6 +125551,7 @@ export namespace Prisma {
     deleted_by?: NullableStringFieldUpdateOperationsInput | string | null
     onboarding_completed?: BoolFieldUpdateOperationsInput | boolean
     delivery_address?: NullableStringFieldUpdateOperationsInput | string | null
+    cart_reservations?: cart_reservationsUncheckedUpdateManyWithoutLeadsNestedInput
     carts?: cartsUncheckedUpdateManyWithoutLeadsNestedInput
     lead_activities?: lead_activitiesUncheckedUpdateManyWithoutLeadsNestedInput
     lead_duplicates_1?: lead_duplicatesUncheckedUpdateManyWithoutLead_1NestedInput
@@ -119293,7 +125566,6 @@ export namespace Prisma {
     duplicate_leads?: leadsUncheckedUpdateManyWithoutDuplicate_of_leadNestedInput
     orders?: ordersUncheckedUpdateManyWithoutLeadsNestedInput
     workflow_executions?: workflow_executionsUncheckedUpdateManyWithoutLeadsNestedInput
-    cart_reservations?: cart_reservationsUncheckedUpdateManyWithoutLeadsNestedInput
   }
 
   export type lead_messagesUpsertWithWhereUniqueWithoutConversationInput = {
@@ -119433,6 +125705,7 @@ export namespace Prisma {
     deleted_by?: string | null
     onboarding_completed?: boolean
     delivery_address?: string | null
+    cart_reservations?: cart_reservationsCreateNestedManyWithoutLeadsInput
     carts?: cartsCreateNestedManyWithoutLeadsInput
     lead_activities?: lead_activitiesCreateNestedManyWithoutLeadsInput
     lead_conversations?: lead_conversationsCreateNestedManyWithoutLeadsInput
@@ -119451,7 +125724,6 @@ export namespace Prisma {
     tenants: tenantsCreateNestedOneWithoutLeadsInput
     orders?: ordersCreateNestedManyWithoutLeadsInput
     workflow_executions?: workflow_executionsCreateNestedManyWithoutLeadsInput
-    cart_reservations?: cart_reservationsCreateNestedManyWithoutLeadsInput
   }
 
   export type leadsUncheckedCreateWithoutLead_messagesInput = {
@@ -119514,6 +125786,7 @@ export namespace Prisma {
     deleted_by?: string | null
     onboarding_completed?: boolean
     delivery_address?: string | null
+    cart_reservations?: cart_reservationsUncheckedCreateNestedManyWithoutLeadsInput
     carts?: cartsUncheckedCreateNestedManyWithoutLeadsInput
     lead_activities?: lead_activitiesUncheckedCreateNestedManyWithoutLeadsInput
     lead_conversations?: lead_conversationsUncheckedCreateNestedManyWithoutLeadsInput
@@ -119528,7 +125801,6 @@ export namespace Prisma {
     duplicate_leads?: leadsUncheckedCreateNestedManyWithoutDuplicate_of_leadInput
     orders?: ordersUncheckedCreateNestedManyWithoutLeadsInput
     workflow_executions?: workflow_executionsUncheckedCreateNestedManyWithoutLeadsInput
-    cart_reservations?: cart_reservationsUncheckedCreateNestedManyWithoutLeadsInput
   }
 
   export type leadsCreateOrConnectWithoutLead_messagesInput = {
@@ -119813,6 +126085,7 @@ export namespace Prisma {
     deleted_by?: NullableStringFieldUpdateOperationsInput | string | null
     onboarding_completed?: BoolFieldUpdateOperationsInput | boolean
     delivery_address?: NullableStringFieldUpdateOperationsInput | string | null
+    cart_reservations?: cart_reservationsUpdateManyWithoutLeadsNestedInput
     carts?: cartsUpdateManyWithoutLeadsNestedInput
     lead_activities?: lead_activitiesUpdateManyWithoutLeadsNestedInput
     lead_conversations?: lead_conversationsUpdateManyWithoutLeadsNestedInput
@@ -119831,7 +126104,6 @@ export namespace Prisma {
     tenants?: tenantsUpdateOneRequiredWithoutLeadsNestedInput
     orders?: ordersUpdateManyWithoutLeadsNestedInput
     workflow_executions?: workflow_executionsUpdateManyWithoutLeadsNestedInput
-    cart_reservations?: cart_reservationsUpdateManyWithoutLeadsNestedInput
   }
 
   export type leadsUncheckedUpdateWithoutLead_messagesInput = {
@@ -119894,6 +126166,7 @@ export namespace Prisma {
     deleted_by?: NullableStringFieldUpdateOperationsInput | string | null
     onboarding_completed?: BoolFieldUpdateOperationsInput | boolean
     delivery_address?: NullableStringFieldUpdateOperationsInput | string | null
+    cart_reservations?: cart_reservationsUncheckedUpdateManyWithoutLeadsNestedInput
     carts?: cartsUncheckedUpdateManyWithoutLeadsNestedInput
     lead_activities?: lead_activitiesUncheckedUpdateManyWithoutLeadsNestedInput
     lead_conversations?: lead_conversationsUncheckedUpdateManyWithoutLeadsNestedInput
@@ -119908,7 +126181,6 @@ export namespace Prisma {
     duplicate_leads?: leadsUncheckedUpdateManyWithoutDuplicate_of_leadNestedInput
     orders?: ordersUncheckedUpdateManyWithoutLeadsNestedInput
     workflow_executions?: workflow_executionsUncheckedUpdateManyWithoutLeadsNestedInput
-    cart_reservations?: cart_reservationsUncheckedUpdateManyWithoutLeadsNestedInput
   }
 
   export type lead_messagesUpsertWithoutMessage_repliesInput = {
@@ -120029,13 +126301,18 @@ export namespace Prisma {
     business_name: string
     business_type?: string | null
     whatsapp_number?: string | null
-    brand_colors?: NullableJsonNullValueInput | InputJsonValue
-    logo_url?: string | null
-    working_hours?: NullableJsonNullValueInput | InputJsonValue
     created_at?: Date | string | null
     updated_at?: Date | string | null
+    email?: string | null
+    phone?: string | null
+    website?: string | null
+    city?: string | null
+    address?: string | null
+    country?: string | null
+    gst_number?: string | null
+    pan_number?: string | null
+    business_employees?: business_employeesCreateNestedManyWithoutBusinessesInput
     business_workflows?: business_workflowsCreateNestedManyWithoutBusinessesInput
-    subscription_plans?: subscription_plansCreateNestedOneWithoutBusinessesInput
     tenants: tenantsCreateNestedOneWithoutBusinessesInput
     carts?: cartsCreateNestedManyWithoutBusinessesInput
     inventory_levels?: inventory_levelsCreateNestedManyWithoutBusinessesInput
@@ -120063,13 +126340,18 @@ export namespace Prisma {
     tenant_id: string
     business_name: string
     business_type?: string | null
-    subscription_plan_id?: string | null
     whatsapp_number?: string | null
-    brand_colors?: NullableJsonNullValueInput | InputJsonValue
-    logo_url?: string | null
-    working_hours?: NullableJsonNullValueInput | InputJsonValue
     created_at?: Date | string | null
     updated_at?: Date | string | null
+    email?: string | null
+    phone?: string | null
+    website?: string | null
+    city?: string | null
+    address?: string | null
+    country?: string | null
+    gst_number?: string | null
+    pan_number?: string | null
+    business_employees?: business_employeesUncheckedCreateNestedManyWithoutBusinessesInput
     business_workflows?: business_workflowsUncheckedCreateNestedManyWithoutBusinessesInput
     carts?: cartsUncheckedCreateNestedManyWithoutBusinessesInput
     inventory_levels?: inventory_levelsUncheckedCreateNestedManyWithoutBusinessesInput
@@ -120129,13 +126411,18 @@ export namespace Prisma {
     business_name?: StringFieldUpdateOperationsInput | string
     business_type?: NullableStringFieldUpdateOperationsInput | string | null
     whatsapp_number?: NullableStringFieldUpdateOperationsInput | string | null
-    brand_colors?: NullableJsonNullValueInput | InputJsonValue
-    logo_url?: NullableStringFieldUpdateOperationsInput | string | null
-    working_hours?: NullableJsonNullValueInput | InputJsonValue
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    website?: NullableStringFieldUpdateOperationsInput | string | null
+    city?: NullableStringFieldUpdateOperationsInput | string | null
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    country?: NullableStringFieldUpdateOperationsInput | string | null
+    gst_number?: NullableStringFieldUpdateOperationsInput | string | null
+    pan_number?: NullableStringFieldUpdateOperationsInput | string | null
+    business_employees?: business_employeesUpdateManyWithoutBusinessesNestedInput
     business_workflows?: business_workflowsUpdateManyWithoutBusinessesNestedInput
-    subscription_plans?: subscription_plansUpdateOneWithoutBusinessesNestedInput
     tenants?: tenantsUpdateOneRequiredWithoutBusinessesNestedInput
     carts?: cartsUpdateManyWithoutBusinessesNestedInput
     inventory_levels?: inventory_levelsUpdateManyWithoutBusinessesNestedInput
@@ -120163,13 +126450,18 @@ export namespace Prisma {
     tenant_id?: StringFieldUpdateOperationsInput | string
     business_name?: StringFieldUpdateOperationsInput | string
     business_type?: NullableStringFieldUpdateOperationsInput | string | null
-    subscription_plan_id?: NullableStringFieldUpdateOperationsInput | string | null
     whatsapp_number?: NullableStringFieldUpdateOperationsInput | string | null
-    brand_colors?: NullableJsonNullValueInput | InputJsonValue
-    logo_url?: NullableStringFieldUpdateOperationsInput | string | null
-    working_hours?: NullableJsonNullValueInput | InputJsonValue
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    website?: NullableStringFieldUpdateOperationsInput | string | null
+    city?: NullableStringFieldUpdateOperationsInput | string | null
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    country?: NullableStringFieldUpdateOperationsInput | string | null
+    gst_number?: NullableStringFieldUpdateOperationsInput | string | null
+    pan_number?: NullableStringFieldUpdateOperationsInput | string | null
+    business_employees?: business_employeesUncheckedUpdateManyWithoutBusinessesNestedInput
     business_workflows?: business_workflowsUncheckedUpdateManyWithoutBusinessesNestedInput
     carts?: cartsUncheckedUpdateManyWithoutBusinessesNestedInput
     inventory_levels?: inventory_levelsUncheckedUpdateManyWithoutBusinessesNestedInput
@@ -120248,6 +126540,7 @@ export namespace Prisma {
     deleted_by?: string | null
     onboarding_completed?: boolean
     delivery_address?: string | null
+    cart_reservations?: cart_reservationsCreateNestedManyWithoutLeadsInput
     carts?: cartsCreateNestedManyWithoutLeadsInput
     lead_activities?: lead_activitiesCreateNestedManyWithoutLeadsInput
     lead_conversations?: lead_conversationsCreateNestedManyWithoutLeadsInput
@@ -120266,7 +126559,6 @@ export namespace Prisma {
     tenants: tenantsCreateNestedOneWithoutLeadsInput
     orders?: ordersCreateNestedManyWithoutLeadsInput
     workflow_executions?: workflow_executionsCreateNestedManyWithoutLeadsInput
-    cart_reservations?: cart_reservationsCreateNestedManyWithoutLeadsInput
   }
 
   export type leadsUncheckedCreateWithoutLead_tag_assignmentsInput = {
@@ -120329,6 +126621,7 @@ export namespace Prisma {
     deleted_by?: string | null
     onboarding_completed?: boolean
     delivery_address?: string | null
+    cart_reservations?: cart_reservationsUncheckedCreateNestedManyWithoutLeadsInput
     carts?: cartsUncheckedCreateNestedManyWithoutLeadsInput
     lead_activities?: lead_activitiesUncheckedCreateNestedManyWithoutLeadsInput
     lead_conversations?: lead_conversationsUncheckedCreateNestedManyWithoutLeadsInput
@@ -120343,7 +126636,6 @@ export namespace Prisma {
     duplicate_leads?: leadsUncheckedCreateNestedManyWithoutDuplicate_of_leadInput
     orders?: ordersUncheckedCreateNestedManyWithoutLeadsInput
     workflow_executions?: workflow_executionsUncheckedCreateNestedManyWithoutLeadsInput
-    cart_reservations?: cart_reservationsUncheckedCreateNestedManyWithoutLeadsInput
   }
 
   export type leadsCreateOrConnectWithoutLead_tag_assignmentsInput = {
@@ -120445,6 +126737,7 @@ export namespace Prisma {
     deleted_by?: NullableStringFieldUpdateOperationsInput | string | null
     onboarding_completed?: BoolFieldUpdateOperationsInput | boolean
     delivery_address?: NullableStringFieldUpdateOperationsInput | string | null
+    cart_reservations?: cart_reservationsUpdateManyWithoutLeadsNestedInput
     carts?: cartsUpdateManyWithoutLeadsNestedInput
     lead_activities?: lead_activitiesUpdateManyWithoutLeadsNestedInput
     lead_conversations?: lead_conversationsUpdateManyWithoutLeadsNestedInput
@@ -120463,7 +126756,6 @@ export namespace Prisma {
     tenants?: tenantsUpdateOneRequiredWithoutLeadsNestedInput
     orders?: ordersUpdateManyWithoutLeadsNestedInput
     workflow_executions?: workflow_executionsUpdateManyWithoutLeadsNestedInput
-    cart_reservations?: cart_reservationsUpdateManyWithoutLeadsNestedInput
   }
 
   export type leadsUncheckedUpdateWithoutLead_tag_assignmentsInput = {
@@ -120526,6 +126818,7 @@ export namespace Prisma {
     deleted_by?: NullableStringFieldUpdateOperationsInput | string | null
     onboarding_completed?: BoolFieldUpdateOperationsInput | boolean
     delivery_address?: NullableStringFieldUpdateOperationsInput | string | null
+    cart_reservations?: cart_reservationsUncheckedUpdateManyWithoutLeadsNestedInput
     carts?: cartsUncheckedUpdateManyWithoutLeadsNestedInput
     lead_activities?: lead_activitiesUncheckedUpdateManyWithoutLeadsNestedInput
     lead_conversations?: lead_conversationsUncheckedUpdateManyWithoutLeadsNestedInput
@@ -120540,7 +126833,6 @@ export namespace Prisma {
     duplicate_leads?: leadsUncheckedUpdateManyWithoutDuplicate_of_leadNestedInput
     orders?: ordersUncheckedUpdateManyWithoutLeadsNestedInput
     workflow_executions?: workflow_executionsUncheckedUpdateManyWithoutLeadsNestedInput
-    cart_reservations?: cart_reservationsUncheckedUpdateManyWithoutLeadsNestedInput
   }
 
   export type tagsUpsertWithoutLead_tag_assignmentsInput = {
@@ -120705,6 +126997,7 @@ export namespace Prisma {
     deleted_by?: string | null
     onboarding_completed?: boolean
     delivery_address?: string | null
+    cart_reservations?: cart_reservationsCreateNestedManyWithoutLeadsInput
     carts?: cartsCreateNestedManyWithoutLeadsInput
     lead_activities?: lead_activitiesCreateNestedManyWithoutLeadsInput
     lead_conversations?: lead_conversationsCreateNestedManyWithoutLeadsInput
@@ -120723,7 +127016,6 @@ export namespace Prisma {
     tenants: tenantsCreateNestedOneWithoutLeadsInput
     orders?: ordersCreateNestedManyWithoutLeadsInput
     workflow_executions?: workflow_executionsCreateNestedManyWithoutLeadsInput
-    cart_reservations?: cart_reservationsCreateNestedManyWithoutLeadsInput
   }
 
   export type leadsUncheckedCreateWithoutLead_notesInput = {
@@ -120786,6 +127078,7 @@ export namespace Prisma {
     deleted_by?: string | null
     onboarding_completed?: boolean
     delivery_address?: string | null
+    cart_reservations?: cart_reservationsUncheckedCreateNestedManyWithoutLeadsInput
     carts?: cartsUncheckedCreateNestedManyWithoutLeadsInput
     lead_activities?: lead_activitiesUncheckedCreateNestedManyWithoutLeadsInput
     lead_conversations?: lead_conversationsUncheckedCreateNestedManyWithoutLeadsInput
@@ -120800,7 +127093,6 @@ export namespace Prisma {
     duplicate_leads?: leadsUncheckedCreateNestedManyWithoutDuplicate_of_leadInput
     orders?: ordersUncheckedCreateNestedManyWithoutLeadsInput
     workflow_executions?: workflow_executionsUncheckedCreateNestedManyWithoutLeadsInput
-    cart_reservations?: cart_reservationsUncheckedCreateNestedManyWithoutLeadsInput
   }
 
   export type leadsCreateOrConnectWithoutLead_notesInput = {
@@ -120954,6 +127246,7 @@ export namespace Prisma {
     deleted_by?: NullableStringFieldUpdateOperationsInput | string | null
     onboarding_completed?: BoolFieldUpdateOperationsInput | boolean
     delivery_address?: NullableStringFieldUpdateOperationsInput | string | null
+    cart_reservations?: cart_reservationsUpdateManyWithoutLeadsNestedInput
     carts?: cartsUpdateManyWithoutLeadsNestedInput
     lead_activities?: lead_activitiesUpdateManyWithoutLeadsNestedInput
     lead_conversations?: lead_conversationsUpdateManyWithoutLeadsNestedInput
@@ -120972,7 +127265,6 @@ export namespace Prisma {
     tenants?: tenantsUpdateOneRequiredWithoutLeadsNestedInput
     orders?: ordersUpdateManyWithoutLeadsNestedInput
     workflow_executions?: workflow_executionsUpdateManyWithoutLeadsNestedInput
-    cart_reservations?: cart_reservationsUpdateManyWithoutLeadsNestedInput
   }
 
   export type leadsUncheckedUpdateWithoutLead_notesInput = {
@@ -121035,6 +127327,7 @@ export namespace Prisma {
     deleted_by?: NullableStringFieldUpdateOperationsInput | string | null
     onboarding_completed?: BoolFieldUpdateOperationsInput | boolean
     delivery_address?: NullableStringFieldUpdateOperationsInput | string | null
+    cart_reservations?: cart_reservationsUncheckedUpdateManyWithoutLeadsNestedInput
     carts?: cartsUncheckedUpdateManyWithoutLeadsNestedInput
     lead_activities?: lead_activitiesUncheckedUpdateManyWithoutLeadsNestedInput
     lead_conversations?: lead_conversationsUncheckedUpdateManyWithoutLeadsNestedInput
@@ -121049,7 +127342,6 @@ export namespace Prisma {
     duplicate_leads?: leadsUncheckedUpdateManyWithoutDuplicate_of_leadNestedInput
     orders?: ordersUncheckedUpdateManyWithoutLeadsNestedInput
     workflow_executions?: workflow_executionsUncheckedUpdateManyWithoutLeadsNestedInput
-    cart_reservations?: cart_reservationsUncheckedUpdateManyWithoutLeadsNestedInput
   }
 
   export type leadsCreateWithoutLead_status_historyInput = {
@@ -121108,6 +127400,7 @@ export namespace Prisma {
     deleted_by?: string | null
     onboarding_completed?: boolean
     delivery_address?: string | null
+    cart_reservations?: cart_reservationsCreateNestedManyWithoutLeadsInput
     carts?: cartsCreateNestedManyWithoutLeadsInput
     lead_activities?: lead_activitiesCreateNestedManyWithoutLeadsInput
     lead_conversations?: lead_conversationsCreateNestedManyWithoutLeadsInput
@@ -121126,7 +127419,6 @@ export namespace Prisma {
     tenants: tenantsCreateNestedOneWithoutLeadsInput
     orders?: ordersCreateNestedManyWithoutLeadsInput
     workflow_executions?: workflow_executionsCreateNestedManyWithoutLeadsInput
-    cart_reservations?: cart_reservationsCreateNestedManyWithoutLeadsInput
   }
 
   export type leadsUncheckedCreateWithoutLead_status_historyInput = {
@@ -121189,6 +127481,7 @@ export namespace Prisma {
     deleted_by?: string | null
     onboarding_completed?: boolean
     delivery_address?: string | null
+    cart_reservations?: cart_reservationsUncheckedCreateNestedManyWithoutLeadsInput
     carts?: cartsUncheckedCreateNestedManyWithoutLeadsInput
     lead_activities?: lead_activitiesUncheckedCreateNestedManyWithoutLeadsInput
     lead_conversations?: lead_conversationsUncheckedCreateNestedManyWithoutLeadsInput
@@ -121203,7 +127496,6 @@ export namespace Prisma {
     duplicate_leads?: leadsUncheckedCreateNestedManyWithoutDuplicate_of_leadInput
     orders?: ordersUncheckedCreateNestedManyWithoutLeadsInput
     workflow_executions?: workflow_executionsUncheckedCreateNestedManyWithoutLeadsInput
-    cart_reservations?: cart_reservationsUncheckedCreateNestedManyWithoutLeadsInput
   }
 
   export type leadsCreateOrConnectWithoutLead_status_historyInput = {
@@ -121278,6 +127570,7 @@ export namespace Prisma {
     deleted_by?: NullableStringFieldUpdateOperationsInput | string | null
     onboarding_completed?: BoolFieldUpdateOperationsInput | boolean
     delivery_address?: NullableStringFieldUpdateOperationsInput | string | null
+    cart_reservations?: cart_reservationsUpdateManyWithoutLeadsNestedInput
     carts?: cartsUpdateManyWithoutLeadsNestedInput
     lead_activities?: lead_activitiesUpdateManyWithoutLeadsNestedInput
     lead_conversations?: lead_conversationsUpdateManyWithoutLeadsNestedInput
@@ -121296,7 +127589,6 @@ export namespace Prisma {
     tenants?: tenantsUpdateOneRequiredWithoutLeadsNestedInput
     orders?: ordersUpdateManyWithoutLeadsNestedInput
     workflow_executions?: workflow_executionsUpdateManyWithoutLeadsNestedInput
-    cart_reservations?: cart_reservationsUpdateManyWithoutLeadsNestedInput
   }
 
   export type leadsUncheckedUpdateWithoutLead_status_historyInput = {
@@ -121359,6 +127651,7 @@ export namespace Prisma {
     deleted_by?: NullableStringFieldUpdateOperationsInput | string | null
     onboarding_completed?: BoolFieldUpdateOperationsInput | boolean
     delivery_address?: NullableStringFieldUpdateOperationsInput | string | null
+    cart_reservations?: cart_reservationsUncheckedUpdateManyWithoutLeadsNestedInput
     carts?: cartsUncheckedUpdateManyWithoutLeadsNestedInput
     lead_activities?: lead_activitiesUncheckedUpdateManyWithoutLeadsNestedInput
     lead_conversations?: lead_conversationsUncheckedUpdateManyWithoutLeadsNestedInput
@@ -121373,7 +127666,6 @@ export namespace Prisma {
     duplicate_leads?: leadsUncheckedUpdateManyWithoutDuplicate_of_leadNestedInput
     orders?: ordersUncheckedUpdateManyWithoutLeadsNestedInput
     workflow_executions?: workflow_executionsUncheckedUpdateManyWithoutLeadsNestedInput
-    cart_reservations?: cart_reservationsUncheckedUpdateManyWithoutLeadsNestedInput
   }
 
   export type usersCreateWithoutLead_followups_assigned_toInput = {
@@ -121505,6 +127797,7 @@ export namespace Prisma {
     deleted_by?: string | null
     onboarding_completed?: boolean
     delivery_address?: string | null
+    cart_reservations?: cart_reservationsCreateNestedManyWithoutLeadsInput
     carts?: cartsCreateNestedManyWithoutLeadsInput
     lead_activities?: lead_activitiesCreateNestedManyWithoutLeadsInput
     lead_conversations?: lead_conversationsCreateNestedManyWithoutLeadsInput
@@ -121523,7 +127816,6 @@ export namespace Prisma {
     tenants: tenantsCreateNestedOneWithoutLeadsInput
     orders?: ordersCreateNestedManyWithoutLeadsInput
     workflow_executions?: workflow_executionsCreateNestedManyWithoutLeadsInput
-    cart_reservations?: cart_reservationsCreateNestedManyWithoutLeadsInput
   }
 
   export type leadsUncheckedCreateWithoutLead_followupsInput = {
@@ -121586,6 +127878,7 @@ export namespace Prisma {
     deleted_by?: string | null
     onboarding_completed?: boolean
     delivery_address?: string | null
+    cart_reservations?: cart_reservationsUncheckedCreateNestedManyWithoutLeadsInput
     carts?: cartsUncheckedCreateNestedManyWithoutLeadsInput
     lead_activities?: lead_activitiesUncheckedCreateNestedManyWithoutLeadsInput
     lead_conversations?: lead_conversationsUncheckedCreateNestedManyWithoutLeadsInput
@@ -121600,7 +127893,6 @@ export namespace Prisma {
     duplicate_leads?: leadsUncheckedCreateNestedManyWithoutDuplicate_of_leadInput
     orders?: ordersUncheckedCreateNestedManyWithoutLeadsInput
     workflow_executions?: workflow_executionsUncheckedCreateNestedManyWithoutLeadsInput
-    cart_reservations?: cart_reservationsUncheckedCreateNestedManyWithoutLeadsInput
   }
 
   export type leadsCreateOrConnectWithoutLead_followupsInput = {
@@ -121827,6 +128119,7 @@ export namespace Prisma {
     deleted_by?: NullableStringFieldUpdateOperationsInput | string | null
     onboarding_completed?: BoolFieldUpdateOperationsInput | boolean
     delivery_address?: NullableStringFieldUpdateOperationsInput | string | null
+    cart_reservations?: cart_reservationsUpdateManyWithoutLeadsNestedInput
     carts?: cartsUpdateManyWithoutLeadsNestedInput
     lead_activities?: lead_activitiesUpdateManyWithoutLeadsNestedInput
     lead_conversations?: lead_conversationsUpdateManyWithoutLeadsNestedInput
@@ -121845,7 +128138,6 @@ export namespace Prisma {
     tenants?: tenantsUpdateOneRequiredWithoutLeadsNestedInput
     orders?: ordersUpdateManyWithoutLeadsNestedInput
     workflow_executions?: workflow_executionsUpdateManyWithoutLeadsNestedInput
-    cart_reservations?: cart_reservationsUpdateManyWithoutLeadsNestedInput
   }
 
   export type leadsUncheckedUpdateWithoutLead_followupsInput = {
@@ -121908,6 +128200,7 @@ export namespace Prisma {
     deleted_by?: NullableStringFieldUpdateOperationsInput | string | null
     onboarding_completed?: BoolFieldUpdateOperationsInput | boolean
     delivery_address?: NullableStringFieldUpdateOperationsInput | string | null
+    cart_reservations?: cart_reservationsUncheckedUpdateManyWithoutLeadsNestedInput
     carts?: cartsUncheckedUpdateManyWithoutLeadsNestedInput
     lead_activities?: lead_activitiesUncheckedUpdateManyWithoutLeadsNestedInput
     lead_conversations?: lead_conversationsUncheckedUpdateManyWithoutLeadsNestedInput
@@ -121922,7 +128215,6 @@ export namespace Prisma {
     duplicate_leads?: leadsUncheckedUpdateManyWithoutDuplicate_of_leadNestedInput
     orders?: ordersUncheckedUpdateManyWithoutLeadsNestedInput
     workflow_executions?: workflow_executionsUncheckedUpdateManyWithoutLeadsNestedInput
-    cart_reservations?: cart_reservationsUncheckedUpdateManyWithoutLeadsNestedInput
   }
 
   export type usersUpsertWithoutLead_followups_scheduled_byInput = {
@@ -122060,6 +128352,7 @@ export namespace Prisma {
     deleted_by?: string | null
     onboarding_completed?: boolean
     delivery_address?: string | null
+    cart_reservations?: cart_reservationsCreateNestedManyWithoutLeadsInput
     carts?: cartsCreateNestedManyWithoutLeadsInput
     lead_activities?: lead_activitiesCreateNestedManyWithoutLeadsInput
     lead_conversations?: lead_conversationsCreateNestedManyWithoutLeadsInput
@@ -122078,7 +128371,6 @@ export namespace Prisma {
     tenants: tenantsCreateNestedOneWithoutLeadsInput
     orders?: ordersCreateNestedManyWithoutLeadsInput
     workflow_executions?: workflow_executionsCreateNestedManyWithoutLeadsInput
-    cart_reservations?: cart_reservationsCreateNestedManyWithoutLeadsInput
   }
 
   export type leadsUncheckedCreateWithoutLead_duplicates_1Input = {
@@ -122141,6 +128433,7 @@ export namespace Prisma {
     deleted_by?: string | null
     onboarding_completed?: boolean
     delivery_address?: string | null
+    cart_reservations?: cart_reservationsUncheckedCreateNestedManyWithoutLeadsInput
     carts?: cartsUncheckedCreateNestedManyWithoutLeadsInput
     lead_activities?: lead_activitiesUncheckedCreateNestedManyWithoutLeadsInput
     lead_conversations?: lead_conversationsUncheckedCreateNestedManyWithoutLeadsInput
@@ -122155,7 +128448,6 @@ export namespace Prisma {
     duplicate_leads?: leadsUncheckedCreateNestedManyWithoutDuplicate_of_leadInput
     orders?: ordersUncheckedCreateNestedManyWithoutLeadsInput
     workflow_executions?: workflow_executionsUncheckedCreateNestedManyWithoutLeadsInput
-    cart_reservations?: cart_reservationsUncheckedCreateNestedManyWithoutLeadsInput
   }
 
   export type leadsCreateOrConnectWithoutLead_duplicates_1Input = {
@@ -122219,6 +128511,7 @@ export namespace Prisma {
     deleted_by?: string | null
     onboarding_completed?: boolean
     delivery_address?: string | null
+    cart_reservations?: cart_reservationsCreateNestedManyWithoutLeadsInput
     carts?: cartsCreateNestedManyWithoutLeadsInput
     lead_activities?: lead_activitiesCreateNestedManyWithoutLeadsInput
     lead_conversations?: lead_conversationsCreateNestedManyWithoutLeadsInput
@@ -122237,7 +128530,6 @@ export namespace Prisma {
     tenants: tenantsCreateNestedOneWithoutLeadsInput
     orders?: ordersCreateNestedManyWithoutLeadsInput
     workflow_executions?: workflow_executionsCreateNestedManyWithoutLeadsInput
-    cart_reservations?: cart_reservationsCreateNestedManyWithoutLeadsInput
   }
 
   export type leadsUncheckedCreateWithoutLead_duplicates_2Input = {
@@ -122300,6 +128592,7 @@ export namespace Prisma {
     deleted_by?: string | null
     onboarding_completed?: boolean
     delivery_address?: string | null
+    cart_reservations?: cart_reservationsUncheckedCreateNestedManyWithoutLeadsInput
     carts?: cartsUncheckedCreateNestedManyWithoutLeadsInput
     lead_activities?: lead_activitiesUncheckedCreateNestedManyWithoutLeadsInput
     lead_conversations?: lead_conversationsUncheckedCreateNestedManyWithoutLeadsInput
@@ -122314,7 +128607,6 @@ export namespace Prisma {
     duplicate_leads?: leadsUncheckedCreateNestedManyWithoutDuplicate_of_leadInput
     orders?: ordersUncheckedCreateNestedManyWithoutLeadsInput
     workflow_executions?: workflow_executionsUncheckedCreateNestedManyWithoutLeadsInput
-    cart_reservations?: cart_reservationsUncheckedCreateNestedManyWithoutLeadsInput
   }
 
   export type leadsCreateOrConnectWithoutLead_duplicates_2Input = {
@@ -122378,6 +128670,7 @@ export namespace Prisma {
     deleted_by?: string | null
     onboarding_completed?: boolean
     delivery_address?: string | null
+    cart_reservations?: cart_reservationsCreateNestedManyWithoutLeadsInput
     carts?: cartsCreateNestedManyWithoutLeadsInput
     lead_activities?: lead_activitiesCreateNestedManyWithoutLeadsInput
     lead_conversations?: lead_conversationsCreateNestedManyWithoutLeadsInput
@@ -122396,7 +128689,6 @@ export namespace Prisma {
     tenants: tenantsCreateNestedOneWithoutLeadsInput
     orders?: ordersCreateNestedManyWithoutLeadsInput
     workflow_executions?: workflow_executionsCreateNestedManyWithoutLeadsInput
-    cart_reservations?: cart_reservationsCreateNestedManyWithoutLeadsInput
   }
 
   export type leadsUncheckedCreateWithoutMerged_leadsInput = {
@@ -122459,6 +128751,7 @@ export namespace Prisma {
     deleted_by?: string | null
     onboarding_completed?: boolean
     delivery_address?: string | null
+    cart_reservations?: cart_reservationsUncheckedCreateNestedManyWithoutLeadsInput
     carts?: cartsUncheckedCreateNestedManyWithoutLeadsInput
     lead_activities?: lead_activitiesUncheckedCreateNestedManyWithoutLeadsInput
     lead_conversations?: lead_conversationsUncheckedCreateNestedManyWithoutLeadsInput
@@ -122473,7 +128766,6 @@ export namespace Prisma {
     duplicate_leads?: leadsUncheckedCreateNestedManyWithoutDuplicate_of_leadInput
     orders?: ordersUncheckedCreateNestedManyWithoutLeadsInput
     workflow_executions?: workflow_executionsUncheckedCreateNestedManyWithoutLeadsInput
-    cart_reservations?: cart_reservationsUncheckedCreateNestedManyWithoutLeadsInput
   }
 
   export type leadsCreateOrConnectWithoutMerged_leadsInput = {
@@ -122548,6 +128840,7 @@ export namespace Prisma {
     deleted_by?: NullableStringFieldUpdateOperationsInput | string | null
     onboarding_completed?: BoolFieldUpdateOperationsInput | boolean
     delivery_address?: NullableStringFieldUpdateOperationsInput | string | null
+    cart_reservations?: cart_reservationsUpdateManyWithoutLeadsNestedInput
     carts?: cartsUpdateManyWithoutLeadsNestedInput
     lead_activities?: lead_activitiesUpdateManyWithoutLeadsNestedInput
     lead_conversations?: lead_conversationsUpdateManyWithoutLeadsNestedInput
@@ -122566,7 +128859,6 @@ export namespace Prisma {
     tenants?: tenantsUpdateOneRequiredWithoutLeadsNestedInput
     orders?: ordersUpdateManyWithoutLeadsNestedInput
     workflow_executions?: workflow_executionsUpdateManyWithoutLeadsNestedInput
-    cart_reservations?: cart_reservationsUpdateManyWithoutLeadsNestedInput
   }
 
   export type leadsUncheckedUpdateWithoutLead_duplicates_1Input = {
@@ -122629,6 +128921,7 @@ export namespace Prisma {
     deleted_by?: NullableStringFieldUpdateOperationsInput | string | null
     onboarding_completed?: BoolFieldUpdateOperationsInput | boolean
     delivery_address?: NullableStringFieldUpdateOperationsInput | string | null
+    cart_reservations?: cart_reservationsUncheckedUpdateManyWithoutLeadsNestedInput
     carts?: cartsUncheckedUpdateManyWithoutLeadsNestedInput
     lead_activities?: lead_activitiesUncheckedUpdateManyWithoutLeadsNestedInput
     lead_conversations?: lead_conversationsUncheckedUpdateManyWithoutLeadsNestedInput
@@ -122643,7 +128936,6 @@ export namespace Prisma {
     duplicate_leads?: leadsUncheckedUpdateManyWithoutDuplicate_of_leadNestedInput
     orders?: ordersUncheckedUpdateManyWithoutLeadsNestedInput
     workflow_executions?: workflow_executionsUncheckedUpdateManyWithoutLeadsNestedInput
-    cart_reservations?: cart_reservationsUncheckedUpdateManyWithoutLeadsNestedInput
   }
 
   export type leadsUpsertWithoutLead_duplicates_2Input = {
@@ -122713,6 +129005,7 @@ export namespace Prisma {
     deleted_by?: NullableStringFieldUpdateOperationsInput | string | null
     onboarding_completed?: BoolFieldUpdateOperationsInput | boolean
     delivery_address?: NullableStringFieldUpdateOperationsInput | string | null
+    cart_reservations?: cart_reservationsUpdateManyWithoutLeadsNestedInput
     carts?: cartsUpdateManyWithoutLeadsNestedInput
     lead_activities?: lead_activitiesUpdateManyWithoutLeadsNestedInput
     lead_conversations?: lead_conversationsUpdateManyWithoutLeadsNestedInput
@@ -122731,7 +129024,6 @@ export namespace Prisma {
     tenants?: tenantsUpdateOneRequiredWithoutLeadsNestedInput
     orders?: ordersUpdateManyWithoutLeadsNestedInput
     workflow_executions?: workflow_executionsUpdateManyWithoutLeadsNestedInput
-    cart_reservations?: cart_reservationsUpdateManyWithoutLeadsNestedInput
   }
 
   export type leadsUncheckedUpdateWithoutLead_duplicates_2Input = {
@@ -122794,6 +129086,7 @@ export namespace Prisma {
     deleted_by?: NullableStringFieldUpdateOperationsInput | string | null
     onboarding_completed?: BoolFieldUpdateOperationsInput | boolean
     delivery_address?: NullableStringFieldUpdateOperationsInput | string | null
+    cart_reservations?: cart_reservationsUncheckedUpdateManyWithoutLeadsNestedInput
     carts?: cartsUncheckedUpdateManyWithoutLeadsNestedInput
     lead_activities?: lead_activitiesUncheckedUpdateManyWithoutLeadsNestedInput
     lead_conversations?: lead_conversationsUncheckedUpdateManyWithoutLeadsNestedInput
@@ -122808,7 +129101,6 @@ export namespace Prisma {
     duplicate_leads?: leadsUncheckedUpdateManyWithoutDuplicate_of_leadNestedInput
     orders?: ordersUncheckedUpdateManyWithoutLeadsNestedInput
     workflow_executions?: workflow_executionsUncheckedUpdateManyWithoutLeadsNestedInput
-    cart_reservations?: cart_reservationsUncheckedUpdateManyWithoutLeadsNestedInput
   }
 
   export type leadsUpsertWithoutMerged_leadsInput = {
@@ -122878,6 +129170,7 @@ export namespace Prisma {
     deleted_by?: NullableStringFieldUpdateOperationsInput | string | null
     onboarding_completed?: BoolFieldUpdateOperationsInput | boolean
     delivery_address?: NullableStringFieldUpdateOperationsInput | string | null
+    cart_reservations?: cart_reservationsUpdateManyWithoutLeadsNestedInput
     carts?: cartsUpdateManyWithoutLeadsNestedInput
     lead_activities?: lead_activitiesUpdateManyWithoutLeadsNestedInput
     lead_conversations?: lead_conversationsUpdateManyWithoutLeadsNestedInput
@@ -122896,7 +129189,6 @@ export namespace Prisma {
     tenants?: tenantsUpdateOneRequiredWithoutLeadsNestedInput
     orders?: ordersUpdateManyWithoutLeadsNestedInput
     workflow_executions?: workflow_executionsUpdateManyWithoutLeadsNestedInput
-    cart_reservations?: cart_reservationsUpdateManyWithoutLeadsNestedInput
   }
 
   export type leadsUncheckedUpdateWithoutMerged_leadsInput = {
@@ -122959,6 +129251,7 @@ export namespace Prisma {
     deleted_by?: NullableStringFieldUpdateOperationsInput | string | null
     onboarding_completed?: BoolFieldUpdateOperationsInput | boolean
     delivery_address?: NullableStringFieldUpdateOperationsInput | string | null
+    cart_reservations?: cart_reservationsUncheckedUpdateManyWithoutLeadsNestedInput
     carts?: cartsUncheckedUpdateManyWithoutLeadsNestedInput
     lead_activities?: lead_activitiesUncheckedUpdateManyWithoutLeadsNestedInput
     lead_conversations?: lead_conversationsUncheckedUpdateManyWithoutLeadsNestedInput
@@ -122973,7 +129266,6 @@ export namespace Prisma {
     duplicate_leads?: leadsUncheckedUpdateManyWithoutDuplicate_of_leadNestedInput
     orders?: ordersUncheckedUpdateManyWithoutLeadsNestedInput
     workflow_executions?: workflow_executionsUncheckedUpdateManyWithoutLeadsNestedInput
-    cart_reservations?: cart_reservationsUncheckedUpdateManyWithoutLeadsNestedInput
   }
 
   export type campaignsCreateWithoutProductsInput = {
@@ -123083,6 +129375,38 @@ export namespace Prisma {
 
   export type cart_itemsCreateManyProductsInputEnvelope = {
     data: cart_itemsCreateManyProductsInput | cart_itemsCreateManyProductsInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type cart_reservationsCreateWithoutProductsInput = {
+    reservation_id?: string
+    variant_id?: string | null
+    quantity: number
+    expires_at: Date | string
+    status?: string
+    created_at?: Date | string
+    updated_at?: Date | string
+    leads: leadsCreateNestedOneWithoutCart_reservationsInput
+  }
+
+  export type cart_reservationsUncheckedCreateWithoutProductsInput = {
+    reservation_id?: string
+    lead_id: string
+    variant_id?: string | null
+    quantity: number
+    expires_at: Date | string
+    status?: string
+    created_at?: Date | string
+    updated_at?: Date | string
+  }
+
+  export type cart_reservationsCreateOrConnectWithoutProductsInput = {
+    where: cart_reservationsWhereUniqueInput
+    create: XOR<cart_reservationsCreateWithoutProductsInput, cart_reservationsUncheckedCreateWithoutProductsInput>
+  }
+
+  export type cart_reservationsCreateManyProductsInputEnvelope = {
+    data: cart_reservationsCreateManyProductsInput | cart_reservationsCreateManyProductsInput[]
     skipDuplicates?: boolean
   }
 
@@ -123325,13 +129649,18 @@ export namespace Prisma {
     business_name: string
     business_type?: string | null
     whatsapp_number?: string | null
-    brand_colors?: NullableJsonNullValueInput | InputJsonValue
-    logo_url?: string | null
-    working_hours?: NullableJsonNullValueInput | InputJsonValue
     created_at?: Date | string | null
     updated_at?: Date | string | null
+    email?: string | null
+    phone?: string | null
+    website?: string | null
+    city?: string | null
+    address?: string | null
+    country?: string | null
+    gst_number?: string | null
+    pan_number?: string | null
+    business_employees?: business_employeesCreateNestedManyWithoutBusinessesInput
     business_workflows?: business_workflowsCreateNestedManyWithoutBusinessesInput
-    subscription_plans?: subscription_plansCreateNestedOneWithoutBusinessesInput
     tenants: tenantsCreateNestedOneWithoutBusinessesInput
     carts?: cartsCreateNestedManyWithoutBusinessesInput
     inventory_levels?: inventory_levelsCreateNestedManyWithoutBusinessesInput
@@ -123359,13 +129688,18 @@ export namespace Prisma {
     tenant_id: string
     business_name: string
     business_type?: string | null
-    subscription_plan_id?: string | null
     whatsapp_number?: string | null
-    brand_colors?: NullableJsonNullValueInput | InputJsonValue
-    logo_url?: string | null
-    working_hours?: NullableJsonNullValueInput | InputJsonValue
     created_at?: Date | string | null
     updated_at?: Date | string | null
+    email?: string | null
+    phone?: string | null
+    website?: string | null
+    city?: string | null
+    address?: string | null
+    country?: string | null
+    gst_number?: string | null
+    pan_number?: string | null
+    business_employees?: business_employeesUncheckedCreateNestedManyWithoutBusinessesInput
     business_workflows?: business_workflowsUncheckedCreateNestedManyWithoutBusinessesInput
     carts?: cartsUncheckedCreateNestedManyWithoutBusinessesInput
     inventory_levels?: inventory_levelsUncheckedCreateNestedManyWithoutBusinessesInput
@@ -123478,38 +129812,6 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
-  export type cart_reservationsCreateWithoutProductsInput = {
-    reservation_id?: string
-    variant_id?: string | null
-    quantity: number
-    expires_at: Date | string
-    status?: string
-    created_at?: Date | string
-    updated_at?: Date | string
-    leads: leadsCreateNestedOneWithoutCart_reservationsInput
-  }
-
-  export type cart_reservationsUncheckedCreateWithoutProductsInput = {
-    reservation_id?: string
-    lead_id: string
-    variant_id?: string | null
-    quantity: number
-    expires_at: Date | string
-    status?: string
-    created_at?: Date | string
-    updated_at?: Date | string
-  }
-
-  export type cart_reservationsCreateOrConnectWithoutProductsInput = {
-    where: cart_reservationsWhereUniqueInput
-    create: XOR<cart_reservationsCreateWithoutProductsInput, cart_reservationsUncheckedCreateWithoutProductsInput>
-  }
-
-  export type cart_reservationsCreateManyProductsInputEnvelope = {
-    data: cart_reservationsCreateManyProductsInput | cart_reservationsCreateManyProductsInput[]
-    skipDuplicates?: boolean
-  }
-
   export type campaignsUpsertWithWhereUniqueWithoutProductsInput = {
     where: campaignsWhereUniqueInput
     update: XOR<campaignsUpdateWithoutProductsInput, campaignsUncheckedUpdateWithoutProductsInput>
@@ -123593,6 +129895,22 @@ export namespace Prisma {
     snapshot?: JsonNullableFilter<"cart_items">
     created_at?: DateTimeNullableFilter<"cart_items"> | Date | string | null
     updated_at?: DateTimeNullableFilter<"cart_items"> | Date | string | null
+  }
+
+  export type cart_reservationsUpsertWithWhereUniqueWithoutProductsInput = {
+    where: cart_reservationsWhereUniqueInput
+    update: XOR<cart_reservationsUpdateWithoutProductsInput, cart_reservationsUncheckedUpdateWithoutProductsInput>
+    create: XOR<cart_reservationsCreateWithoutProductsInput, cart_reservationsUncheckedCreateWithoutProductsInput>
+  }
+
+  export type cart_reservationsUpdateWithWhereUniqueWithoutProductsInput = {
+    where: cart_reservationsWhereUniqueInput
+    data: XOR<cart_reservationsUpdateWithoutProductsInput, cart_reservationsUncheckedUpdateWithoutProductsInput>
+  }
+
+  export type cart_reservationsUpdateManyWithWhereWithoutProductsInput = {
+    where: cart_reservationsScalarWhereInput
+    data: XOR<cart_reservationsUpdateManyMutationInput, cart_reservationsUncheckedUpdateManyWithoutProductsInput>
   }
 
   export type course_batchesUpsertWithWhereUniqueWithoutCourseInput = {
@@ -123729,13 +130047,18 @@ export namespace Prisma {
     business_name?: StringFieldUpdateOperationsInput | string
     business_type?: NullableStringFieldUpdateOperationsInput | string | null
     whatsapp_number?: NullableStringFieldUpdateOperationsInput | string | null
-    brand_colors?: NullableJsonNullValueInput | InputJsonValue
-    logo_url?: NullableStringFieldUpdateOperationsInput | string | null
-    working_hours?: NullableJsonNullValueInput | InputJsonValue
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    website?: NullableStringFieldUpdateOperationsInput | string | null
+    city?: NullableStringFieldUpdateOperationsInput | string | null
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    country?: NullableStringFieldUpdateOperationsInput | string | null
+    gst_number?: NullableStringFieldUpdateOperationsInput | string | null
+    pan_number?: NullableStringFieldUpdateOperationsInput | string | null
+    business_employees?: business_employeesUpdateManyWithoutBusinessesNestedInput
     business_workflows?: business_workflowsUpdateManyWithoutBusinessesNestedInput
-    subscription_plans?: subscription_plansUpdateOneWithoutBusinessesNestedInput
     tenants?: tenantsUpdateOneRequiredWithoutBusinessesNestedInput
     carts?: cartsUpdateManyWithoutBusinessesNestedInput
     inventory_levels?: inventory_levelsUpdateManyWithoutBusinessesNestedInput
@@ -123763,13 +130086,18 @@ export namespace Prisma {
     tenant_id?: StringFieldUpdateOperationsInput | string
     business_name?: StringFieldUpdateOperationsInput | string
     business_type?: NullableStringFieldUpdateOperationsInput | string | null
-    subscription_plan_id?: NullableStringFieldUpdateOperationsInput | string | null
     whatsapp_number?: NullableStringFieldUpdateOperationsInput | string | null
-    brand_colors?: NullableJsonNullValueInput | InputJsonValue
-    logo_url?: NullableStringFieldUpdateOperationsInput | string | null
-    working_hours?: NullableJsonNullValueInput | InputJsonValue
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    website?: NullableStringFieldUpdateOperationsInput | string | null
+    city?: NullableStringFieldUpdateOperationsInput | string | null
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    country?: NullableStringFieldUpdateOperationsInput | string | null
+    gst_number?: NullableStringFieldUpdateOperationsInput | string | null
+    pan_number?: NullableStringFieldUpdateOperationsInput | string | null
+    business_employees?: business_employeesUncheckedUpdateManyWithoutBusinessesNestedInput
     business_workflows?: business_workflowsUncheckedUpdateManyWithoutBusinessesNestedInput
     carts?: cartsUncheckedUpdateManyWithoutBusinessesNestedInput
     inventory_levels?: inventory_levelsUncheckedUpdateManyWithoutBusinessesNestedInput
@@ -123879,22 +130207,6 @@ export namespace Prisma {
     status?: StringFilter<"stock_reservations"> | string
     created_at?: DateTimeFilter<"stock_reservations"> | Date | string
     updated_at?: DateTimeFilter<"stock_reservations"> | Date | string
-  }
-
-  export type cart_reservationsUpsertWithWhereUniqueWithoutProductsInput = {
-    where: cart_reservationsWhereUniqueInput
-    update: XOR<cart_reservationsUpdateWithoutProductsInput, cart_reservationsUncheckedUpdateWithoutProductsInput>
-    create: XOR<cart_reservationsCreateWithoutProductsInput, cart_reservationsUncheckedCreateWithoutProductsInput>
-  }
-
-  export type cart_reservationsUpdateWithWhereUniqueWithoutProductsInput = {
-    where: cart_reservationsWhereUniqueInput
-    data: XOR<cart_reservationsUpdateWithoutProductsInput, cart_reservationsUncheckedUpdateWithoutProductsInput>
-  }
-
-  export type cart_reservationsUpdateManyWithWhereWithoutProductsInput = {
-    where: cart_reservationsScalarWhereInput
-    data: XOR<cart_reservationsUpdateManyMutationInput, cart_reservationsUncheckedUpdateManyWithoutProductsInput>
   }
 
   export type cart_itemsCreateWithoutProduct_variantsInput = {
@@ -124039,6 +130351,7 @@ export namespace Prisma {
     instagram_retailer_id?: string | null
     campaigns?: campaignsCreateNestedManyWithoutProductsInput
     cart_items?: cart_itemsCreateNestedManyWithoutProductsInput
+    cart_reservations?: cart_reservationsCreateNestedManyWithoutProductsInput
     course_batches?: course_batchesCreateNestedManyWithoutCourseInput
     order_items?: order_itemsCreateNestedManyWithoutProductsInput
     product_images?: product_imagesCreateNestedManyWithoutProductsInput
@@ -124046,7 +130359,6 @@ export namespace Prisma {
     businesses: businessesCreateNestedOneWithoutProductsInput
     product_categories?: product_categoriesCreateNestedOneWithoutProductsInput
     stock_reservations?: stock_reservationsCreateNestedManyWithoutProductsInput
-    cart_reservations?: cart_reservationsCreateNestedManyWithoutProductsInput
   }
 
   export type productsUncheckedCreateWithoutProduct_variantsInput = {
@@ -124089,12 +130401,12 @@ export namespace Prisma {
     instagram_retailer_id?: string | null
     campaigns?: campaignsUncheckedCreateNestedManyWithoutProductsInput
     cart_items?: cart_itemsUncheckedCreateNestedManyWithoutProductsInput
+    cart_reservations?: cart_reservationsUncheckedCreateNestedManyWithoutProductsInput
     course_batches?: course_batchesUncheckedCreateNestedManyWithoutCourseInput
     order_items?: order_itemsUncheckedCreateNestedManyWithoutProductsInput
     product_images?: product_imagesUncheckedCreateNestedManyWithoutProductsInput
     product_reviews?: product_reviewsUncheckedCreateNestedManyWithoutProductInput
     stock_reservations?: stock_reservationsUncheckedCreateNestedManyWithoutProductsInput
-    cart_reservations?: cart_reservationsUncheckedCreateNestedManyWithoutProductsInput
   }
 
   export type productsCreateOrConnectWithoutProduct_variantsInput = {
@@ -124301,6 +130613,7 @@ export namespace Prisma {
     instagram_retailer_id?: NullableStringFieldUpdateOperationsInput | string | null
     campaigns?: campaignsUpdateManyWithoutProductsNestedInput
     cart_items?: cart_itemsUpdateManyWithoutProductsNestedInput
+    cart_reservations?: cart_reservationsUpdateManyWithoutProductsNestedInput
     course_batches?: course_batchesUpdateManyWithoutCourseNestedInput
     order_items?: order_itemsUpdateManyWithoutProductsNestedInput
     product_images?: product_imagesUpdateManyWithoutProductsNestedInput
@@ -124308,7 +130621,6 @@ export namespace Prisma {
     businesses?: businessesUpdateOneRequiredWithoutProductsNestedInput
     product_categories?: product_categoriesUpdateOneWithoutProductsNestedInput
     stock_reservations?: stock_reservationsUpdateManyWithoutProductsNestedInput
-    cart_reservations?: cart_reservationsUpdateManyWithoutProductsNestedInput
   }
 
   export type productsUncheckedUpdateWithoutProduct_variantsInput = {
@@ -124351,12 +130663,12 @@ export namespace Prisma {
     instagram_retailer_id?: NullableStringFieldUpdateOperationsInput | string | null
     campaigns?: campaignsUncheckedUpdateManyWithoutProductsNestedInput
     cart_items?: cart_itemsUncheckedUpdateManyWithoutProductsNestedInput
+    cart_reservations?: cart_reservationsUncheckedUpdateManyWithoutProductsNestedInput
     course_batches?: course_batchesUncheckedUpdateManyWithoutCourseNestedInput
     order_items?: order_itemsUncheckedUpdateManyWithoutProductsNestedInput
     product_images?: product_imagesUncheckedUpdateManyWithoutProductsNestedInput
     product_reviews?: product_reviewsUncheckedUpdateManyWithoutProductNestedInput
     stock_reservations?: stock_reservationsUncheckedUpdateManyWithoutProductsNestedInput
-    cart_reservations?: cart_reservationsUncheckedUpdateManyWithoutProductsNestedInput
   }
 
   export type stock_alertsUpsertWithWhereUniqueWithoutProduct_variantsInput = {
@@ -124396,13 +130708,18 @@ export namespace Prisma {
     business_name: string
     business_type?: string | null
     whatsapp_number?: string | null
-    brand_colors?: NullableJsonNullValueInput | InputJsonValue
-    logo_url?: string | null
-    working_hours?: NullableJsonNullValueInput | InputJsonValue
     created_at?: Date | string | null
     updated_at?: Date | string | null
+    email?: string | null
+    phone?: string | null
+    website?: string | null
+    city?: string | null
+    address?: string | null
+    country?: string | null
+    gst_number?: string | null
+    pan_number?: string | null
+    business_employees?: business_employeesCreateNestedManyWithoutBusinessesInput
     business_workflows?: business_workflowsCreateNestedManyWithoutBusinessesInput
-    subscription_plans?: subscription_plansCreateNestedOneWithoutBusinessesInput
     tenants: tenantsCreateNestedOneWithoutBusinessesInput
     carts?: cartsCreateNestedManyWithoutBusinessesInput
     inventory_levels?: inventory_levelsCreateNestedManyWithoutBusinessesInput
@@ -124430,13 +130747,18 @@ export namespace Prisma {
     tenant_id: string
     business_name: string
     business_type?: string | null
-    subscription_plan_id?: string | null
     whatsapp_number?: string | null
-    brand_colors?: NullableJsonNullValueInput | InputJsonValue
-    logo_url?: string | null
-    working_hours?: NullableJsonNullValueInput | InputJsonValue
     created_at?: Date | string | null
     updated_at?: Date | string | null
+    email?: string | null
+    phone?: string | null
+    website?: string | null
+    city?: string | null
+    address?: string | null
+    country?: string | null
+    gst_number?: string | null
+    pan_number?: string | null
+    business_employees?: business_employeesUncheckedCreateNestedManyWithoutBusinessesInput
     business_workflows?: business_workflowsUncheckedCreateNestedManyWithoutBusinessesInput
     carts?: cartsUncheckedCreateNestedManyWithoutBusinessesInput
     inventory_levels?: inventory_levelsUncheckedCreateNestedManyWithoutBusinessesInput
@@ -124502,6 +130824,7 @@ export namespace Prisma {
     instagram_retailer_id?: string | null
     campaigns?: campaignsCreateNestedManyWithoutProductsInput
     cart_items?: cart_itemsCreateNestedManyWithoutProductsInput
+    cart_reservations?: cart_reservationsCreateNestedManyWithoutProductsInput
     course_batches?: course_batchesCreateNestedManyWithoutCourseInput
     order_items?: order_itemsCreateNestedManyWithoutProductsInput
     product_reviews?: product_reviewsCreateNestedManyWithoutProductInput
@@ -124509,7 +130832,6 @@ export namespace Prisma {
     businesses: businessesCreateNestedOneWithoutProductsInput
     product_categories?: product_categoriesCreateNestedOneWithoutProductsInput
     stock_reservations?: stock_reservationsCreateNestedManyWithoutProductsInput
-    cart_reservations?: cart_reservationsCreateNestedManyWithoutProductsInput
   }
 
   export type productsUncheckedCreateWithoutProduct_imagesInput = {
@@ -124552,12 +130874,12 @@ export namespace Prisma {
     instagram_retailer_id?: string | null
     campaigns?: campaignsUncheckedCreateNestedManyWithoutProductsInput
     cart_items?: cart_itemsUncheckedCreateNestedManyWithoutProductsInput
+    cart_reservations?: cart_reservationsUncheckedCreateNestedManyWithoutProductsInput
     course_batches?: course_batchesUncheckedCreateNestedManyWithoutCourseInput
     order_items?: order_itemsUncheckedCreateNestedManyWithoutProductsInput
     product_reviews?: product_reviewsUncheckedCreateNestedManyWithoutProductInput
     product_variants?: product_variantsUncheckedCreateNestedManyWithoutProductInput
     stock_reservations?: stock_reservationsUncheckedCreateNestedManyWithoutProductsInput
-    cart_reservations?: cart_reservationsUncheckedCreateNestedManyWithoutProductsInput
   }
 
   export type productsCreateOrConnectWithoutProduct_imagesInput = {
@@ -124581,13 +130903,18 @@ export namespace Prisma {
     business_name?: StringFieldUpdateOperationsInput | string
     business_type?: NullableStringFieldUpdateOperationsInput | string | null
     whatsapp_number?: NullableStringFieldUpdateOperationsInput | string | null
-    brand_colors?: NullableJsonNullValueInput | InputJsonValue
-    logo_url?: NullableStringFieldUpdateOperationsInput | string | null
-    working_hours?: NullableJsonNullValueInput | InputJsonValue
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    website?: NullableStringFieldUpdateOperationsInput | string | null
+    city?: NullableStringFieldUpdateOperationsInput | string | null
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    country?: NullableStringFieldUpdateOperationsInput | string | null
+    gst_number?: NullableStringFieldUpdateOperationsInput | string | null
+    pan_number?: NullableStringFieldUpdateOperationsInput | string | null
+    business_employees?: business_employeesUpdateManyWithoutBusinessesNestedInput
     business_workflows?: business_workflowsUpdateManyWithoutBusinessesNestedInput
-    subscription_plans?: subscription_plansUpdateOneWithoutBusinessesNestedInput
     tenants?: tenantsUpdateOneRequiredWithoutBusinessesNestedInput
     carts?: cartsUpdateManyWithoutBusinessesNestedInput
     inventory_levels?: inventory_levelsUpdateManyWithoutBusinessesNestedInput
@@ -124615,13 +130942,18 @@ export namespace Prisma {
     tenant_id?: StringFieldUpdateOperationsInput | string
     business_name?: StringFieldUpdateOperationsInput | string
     business_type?: NullableStringFieldUpdateOperationsInput | string | null
-    subscription_plan_id?: NullableStringFieldUpdateOperationsInput | string | null
     whatsapp_number?: NullableStringFieldUpdateOperationsInput | string | null
-    brand_colors?: NullableJsonNullValueInput | InputJsonValue
-    logo_url?: NullableStringFieldUpdateOperationsInput | string | null
-    working_hours?: NullableJsonNullValueInput | InputJsonValue
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    website?: NullableStringFieldUpdateOperationsInput | string | null
+    city?: NullableStringFieldUpdateOperationsInput | string | null
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    country?: NullableStringFieldUpdateOperationsInput | string | null
+    gst_number?: NullableStringFieldUpdateOperationsInput | string | null
+    pan_number?: NullableStringFieldUpdateOperationsInput | string | null
+    business_employees?: business_employeesUncheckedUpdateManyWithoutBusinessesNestedInput
     business_workflows?: business_workflowsUncheckedUpdateManyWithoutBusinessesNestedInput
     carts?: cartsUncheckedUpdateManyWithoutBusinessesNestedInput
     inventory_levels?: inventory_levelsUncheckedUpdateManyWithoutBusinessesNestedInput
@@ -124693,6 +131025,7 @@ export namespace Prisma {
     instagram_retailer_id?: NullableStringFieldUpdateOperationsInput | string | null
     campaigns?: campaignsUpdateManyWithoutProductsNestedInput
     cart_items?: cart_itemsUpdateManyWithoutProductsNestedInput
+    cart_reservations?: cart_reservationsUpdateManyWithoutProductsNestedInput
     course_batches?: course_batchesUpdateManyWithoutCourseNestedInput
     order_items?: order_itemsUpdateManyWithoutProductsNestedInput
     product_reviews?: product_reviewsUpdateManyWithoutProductNestedInput
@@ -124700,7 +131033,6 @@ export namespace Prisma {
     businesses?: businessesUpdateOneRequiredWithoutProductsNestedInput
     product_categories?: product_categoriesUpdateOneWithoutProductsNestedInput
     stock_reservations?: stock_reservationsUpdateManyWithoutProductsNestedInput
-    cart_reservations?: cart_reservationsUpdateManyWithoutProductsNestedInput
   }
 
   export type productsUncheckedUpdateWithoutProduct_imagesInput = {
@@ -124743,12 +131075,12 @@ export namespace Prisma {
     instagram_retailer_id?: NullableStringFieldUpdateOperationsInput | string | null
     campaigns?: campaignsUncheckedUpdateManyWithoutProductsNestedInput
     cart_items?: cart_itemsUncheckedUpdateManyWithoutProductsNestedInput
+    cart_reservations?: cart_reservationsUncheckedUpdateManyWithoutProductsNestedInput
     course_batches?: course_batchesUncheckedUpdateManyWithoutCourseNestedInput
     order_items?: order_itemsUncheckedUpdateManyWithoutProductsNestedInput
     product_reviews?: product_reviewsUncheckedUpdateManyWithoutProductNestedInput
     product_variants?: product_variantsUncheckedUpdateManyWithoutProductNestedInput
     stock_reservations?: stock_reservationsUncheckedUpdateManyWithoutProductsNestedInput
-    cart_reservations?: cart_reservationsUncheckedUpdateManyWithoutProductsNestedInput
   }
 
   export type productsCreateWithoutCourse_batchesInput = {
@@ -124789,6 +131121,7 @@ export namespace Prisma {
     instagram_retailer_id?: string | null
     campaigns?: campaignsCreateNestedManyWithoutProductsInput
     cart_items?: cart_itemsCreateNestedManyWithoutProductsInput
+    cart_reservations?: cart_reservationsCreateNestedManyWithoutProductsInput
     order_items?: order_itemsCreateNestedManyWithoutProductsInput
     product_images?: product_imagesCreateNestedManyWithoutProductsInput
     product_reviews?: product_reviewsCreateNestedManyWithoutProductInput
@@ -124796,7 +131129,6 @@ export namespace Prisma {
     businesses: businessesCreateNestedOneWithoutProductsInput
     product_categories?: product_categoriesCreateNestedOneWithoutProductsInput
     stock_reservations?: stock_reservationsCreateNestedManyWithoutProductsInput
-    cart_reservations?: cart_reservationsCreateNestedManyWithoutProductsInput
   }
 
   export type productsUncheckedCreateWithoutCourse_batchesInput = {
@@ -124839,12 +131171,12 @@ export namespace Prisma {
     instagram_retailer_id?: string | null
     campaigns?: campaignsUncheckedCreateNestedManyWithoutProductsInput
     cart_items?: cart_itemsUncheckedCreateNestedManyWithoutProductsInput
+    cart_reservations?: cart_reservationsUncheckedCreateNestedManyWithoutProductsInput
     order_items?: order_itemsUncheckedCreateNestedManyWithoutProductsInput
     product_images?: product_imagesUncheckedCreateNestedManyWithoutProductsInput
     product_reviews?: product_reviewsUncheckedCreateNestedManyWithoutProductInput
     product_variants?: product_variantsUncheckedCreateNestedManyWithoutProductInput
     stock_reservations?: stock_reservationsUncheckedCreateNestedManyWithoutProductsInput
-    cart_reservations?: cart_reservationsUncheckedCreateNestedManyWithoutProductsInput
   }
 
   export type productsCreateOrConnectWithoutCourse_batchesInput = {
@@ -125074,6 +131406,7 @@ export namespace Prisma {
     instagram_retailer_id?: NullableStringFieldUpdateOperationsInput | string | null
     campaigns?: campaignsUpdateManyWithoutProductsNestedInput
     cart_items?: cart_itemsUpdateManyWithoutProductsNestedInput
+    cart_reservations?: cart_reservationsUpdateManyWithoutProductsNestedInput
     order_items?: order_itemsUpdateManyWithoutProductsNestedInput
     product_images?: product_imagesUpdateManyWithoutProductsNestedInput
     product_reviews?: product_reviewsUpdateManyWithoutProductNestedInput
@@ -125081,7 +131414,6 @@ export namespace Prisma {
     businesses?: businessesUpdateOneRequiredWithoutProductsNestedInput
     product_categories?: product_categoriesUpdateOneWithoutProductsNestedInput
     stock_reservations?: stock_reservationsUpdateManyWithoutProductsNestedInput
-    cart_reservations?: cart_reservationsUpdateManyWithoutProductsNestedInput
   }
 
   export type productsUncheckedUpdateWithoutCourse_batchesInput = {
@@ -125124,12 +131456,12 @@ export namespace Prisma {
     instagram_retailer_id?: NullableStringFieldUpdateOperationsInput | string | null
     campaigns?: campaignsUncheckedUpdateManyWithoutProductsNestedInput
     cart_items?: cart_itemsUncheckedUpdateManyWithoutProductsNestedInput
+    cart_reservations?: cart_reservationsUncheckedUpdateManyWithoutProductsNestedInput
     order_items?: order_itemsUncheckedUpdateManyWithoutProductsNestedInput
     product_images?: product_imagesUncheckedUpdateManyWithoutProductsNestedInput
     product_reviews?: product_reviewsUncheckedUpdateManyWithoutProductNestedInput
     product_variants?: product_variantsUncheckedUpdateManyWithoutProductNestedInput
     stock_reservations?: stock_reservationsUncheckedUpdateManyWithoutProductsNestedInput
-    cart_reservations?: cart_reservationsUncheckedUpdateManyWithoutProductsNestedInput
   }
 
   export type usersUpsertWithoutCourse_batchesInput = {
@@ -125802,13 +132134,13 @@ export namespace Prisma {
     phone: string
     email?: string | null
     whatsapp_number?: string | null
-    platform_user_id?: string | null
     total_orders?: number
     total_spent?: Decimal | DecimalJsLike | number | string
     last_order_date?: Date | string | null
     engagement_score?: number
     created_at?: Date | string
     updated_at?: Date | string
+    platform_user_id?: string | null
     carts?: cartsCreateNestedManyWithoutCustomersInput
     notification_messages?: notification_messagesCreateNestedManyWithoutCustomersInput
     notification_preferences?: notification_preferencesCreateNestedManyWithoutCustomersInput
@@ -125824,13 +132156,13 @@ export namespace Prisma {
     phone: string
     email?: string | null
     whatsapp_number?: string | null
-    platform_user_id?: string | null
     total_orders?: number
     total_spent?: Decimal | DecimalJsLike | number | string
     last_order_date?: Date | string | null
     engagement_score?: number
     created_at?: Date | string
     updated_at?: Date | string
+    platform_user_id?: string | null
     carts?: cartsUncheckedCreateNestedManyWithoutCustomersInput
     notification_messages?: notification_messagesUncheckedCreateNestedManyWithoutCustomersInput
     notification_preferences?: notification_preferencesUncheckedCreateNestedManyWithoutCustomersInput
@@ -125899,6 +132231,7 @@ export namespace Prisma {
     deleted_by?: string | null
     onboarding_completed?: boolean
     delivery_address?: string | null
+    cart_reservations?: cart_reservationsCreateNestedManyWithoutLeadsInput
     carts?: cartsCreateNestedManyWithoutLeadsInput
     lead_activities?: lead_activitiesCreateNestedManyWithoutLeadsInput
     lead_conversations?: lead_conversationsCreateNestedManyWithoutLeadsInput
@@ -125917,7 +132250,6 @@ export namespace Prisma {
     duplicate_leads?: leadsCreateNestedManyWithoutDuplicate_of_leadInput
     tenants: tenantsCreateNestedOneWithoutLeadsInput
     workflow_executions?: workflow_executionsCreateNestedManyWithoutLeadsInput
-    cart_reservations?: cart_reservationsCreateNestedManyWithoutLeadsInput
   }
 
   export type leadsUncheckedCreateWithoutOrdersInput = {
@@ -125980,6 +132312,7 @@ export namespace Prisma {
     deleted_by?: string | null
     onboarding_completed?: boolean
     delivery_address?: string | null
+    cart_reservations?: cart_reservationsUncheckedCreateNestedManyWithoutLeadsInput
     carts?: cartsUncheckedCreateNestedManyWithoutLeadsInput
     lead_activities?: lead_activitiesUncheckedCreateNestedManyWithoutLeadsInput
     lead_conversations?: lead_conversationsUncheckedCreateNestedManyWithoutLeadsInput
@@ -125994,7 +132327,6 @@ export namespace Prisma {
     lead_tag_assignments?: lead_tag_assignmentsUncheckedCreateNestedManyWithoutLeadsInput
     duplicate_leads?: leadsUncheckedCreateNestedManyWithoutDuplicate_of_leadInput
     workflow_executions?: workflow_executionsUncheckedCreateNestedManyWithoutLeadsInput
-    cart_reservations?: cart_reservationsUncheckedCreateNestedManyWithoutLeadsInput
   }
 
   export type leadsCreateOrConnectWithoutOrdersInput = {
@@ -126239,13 +132571,13 @@ export namespace Prisma {
     phone?: StringFieldUpdateOperationsInput | string
     email?: NullableStringFieldUpdateOperationsInput | string | null
     whatsapp_number?: NullableStringFieldUpdateOperationsInput | string | null
-    platform_user_id?: NullableStringFieldUpdateOperationsInput | string | null
     total_orders?: IntFieldUpdateOperationsInput | number
     total_spent?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     last_order_date?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     engagement_score?: IntFieldUpdateOperationsInput | number
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    platform_user_id?: NullableStringFieldUpdateOperationsInput | string | null
     carts?: cartsUpdateManyWithoutCustomersNestedInput
     notification_messages?: notification_messagesUpdateManyWithoutCustomersNestedInput
     notification_preferences?: notification_preferencesUpdateManyWithoutCustomersNestedInput
@@ -126261,13 +132593,13 @@ export namespace Prisma {
     phone?: StringFieldUpdateOperationsInput | string
     email?: NullableStringFieldUpdateOperationsInput | string | null
     whatsapp_number?: NullableStringFieldUpdateOperationsInput | string | null
-    platform_user_id?: NullableStringFieldUpdateOperationsInput | string | null
     total_orders?: IntFieldUpdateOperationsInput | number
     total_spent?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     last_order_date?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     engagement_score?: IntFieldUpdateOperationsInput | number
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    platform_user_id?: NullableStringFieldUpdateOperationsInput | string | null
     carts?: cartsUncheckedUpdateManyWithoutCustomersNestedInput
     notification_messages?: notification_messagesUncheckedUpdateManyWithoutCustomersNestedInput
     notification_preferences?: notification_preferencesUncheckedUpdateManyWithoutCustomersNestedInput
@@ -126342,6 +132674,7 @@ export namespace Prisma {
     deleted_by?: NullableStringFieldUpdateOperationsInput | string | null
     onboarding_completed?: BoolFieldUpdateOperationsInput | boolean
     delivery_address?: NullableStringFieldUpdateOperationsInput | string | null
+    cart_reservations?: cart_reservationsUpdateManyWithoutLeadsNestedInput
     carts?: cartsUpdateManyWithoutLeadsNestedInput
     lead_activities?: lead_activitiesUpdateManyWithoutLeadsNestedInput
     lead_conversations?: lead_conversationsUpdateManyWithoutLeadsNestedInput
@@ -126360,7 +132693,6 @@ export namespace Prisma {
     duplicate_leads?: leadsUpdateManyWithoutDuplicate_of_leadNestedInput
     tenants?: tenantsUpdateOneRequiredWithoutLeadsNestedInput
     workflow_executions?: workflow_executionsUpdateManyWithoutLeadsNestedInput
-    cart_reservations?: cart_reservationsUpdateManyWithoutLeadsNestedInput
   }
 
   export type leadsUncheckedUpdateWithoutOrdersInput = {
@@ -126423,6 +132755,7 @@ export namespace Prisma {
     deleted_by?: NullableStringFieldUpdateOperationsInput | string | null
     onboarding_completed?: BoolFieldUpdateOperationsInput | boolean
     delivery_address?: NullableStringFieldUpdateOperationsInput | string | null
+    cart_reservations?: cart_reservationsUncheckedUpdateManyWithoutLeadsNestedInput
     carts?: cartsUncheckedUpdateManyWithoutLeadsNestedInput
     lead_activities?: lead_activitiesUncheckedUpdateManyWithoutLeadsNestedInput
     lead_conversations?: lead_conversationsUncheckedUpdateManyWithoutLeadsNestedInput
@@ -126437,7 +132770,6 @@ export namespace Prisma {
     lead_tag_assignments?: lead_tag_assignmentsUncheckedUpdateManyWithoutLeadsNestedInput
     duplicate_leads?: leadsUncheckedUpdateManyWithoutDuplicate_of_leadNestedInput
     workflow_executions?: workflow_executionsUncheckedUpdateManyWithoutLeadsNestedInput
-    cart_reservations?: cart_reservationsUncheckedUpdateManyWithoutLeadsNestedInput
   }
 
   export type paymentsUpsertWithWhereUniqueWithoutOrdersInput = {
@@ -126640,6 +132972,7 @@ export namespace Prisma {
     instagram_retailer_id?: string | null
     campaigns?: campaignsCreateNestedManyWithoutProductsInput
     cart_items?: cart_itemsCreateNestedManyWithoutProductsInput
+    cart_reservations?: cart_reservationsCreateNestedManyWithoutProductsInput
     course_batches?: course_batchesCreateNestedManyWithoutCourseInput
     product_images?: product_imagesCreateNestedManyWithoutProductsInput
     product_reviews?: product_reviewsCreateNestedManyWithoutProductInput
@@ -126647,7 +132980,6 @@ export namespace Prisma {
     businesses: businessesCreateNestedOneWithoutProductsInput
     product_categories?: product_categoriesCreateNestedOneWithoutProductsInput
     stock_reservations?: stock_reservationsCreateNestedManyWithoutProductsInput
-    cart_reservations?: cart_reservationsCreateNestedManyWithoutProductsInput
   }
 
   export type productsUncheckedCreateWithoutOrder_itemsInput = {
@@ -126690,12 +133022,12 @@ export namespace Prisma {
     instagram_retailer_id?: string | null
     campaigns?: campaignsUncheckedCreateNestedManyWithoutProductsInput
     cart_items?: cart_itemsUncheckedCreateNestedManyWithoutProductsInput
+    cart_reservations?: cart_reservationsUncheckedCreateNestedManyWithoutProductsInput
     course_batches?: course_batchesUncheckedCreateNestedManyWithoutCourseInput
     product_images?: product_imagesUncheckedCreateNestedManyWithoutProductsInput
     product_reviews?: product_reviewsUncheckedCreateNestedManyWithoutProductInput
     product_variants?: product_variantsUncheckedCreateNestedManyWithoutProductInput
     stock_reservations?: stock_reservationsUncheckedCreateNestedManyWithoutProductsInput
-    cart_reservations?: cart_reservationsUncheckedCreateNestedManyWithoutProductsInput
   }
 
   export type productsCreateOrConnectWithoutOrder_itemsInput = {
@@ -126853,6 +133185,7 @@ export namespace Prisma {
     instagram_retailer_id?: NullableStringFieldUpdateOperationsInput | string | null
     campaigns?: campaignsUpdateManyWithoutProductsNestedInput
     cart_items?: cart_itemsUpdateManyWithoutProductsNestedInput
+    cart_reservations?: cart_reservationsUpdateManyWithoutProductsNestedInput
     course_batches?: course_batchesUpdateManyWithoutCourseNestedInput
     product_images?: product_imagesUpdateManyWithoutProductsNestedInput
     product_reviews?: product_reviewsUpdateManyWithoutProductNestedInput
@@ -126860,7 +133193,6 @@ export namespace Prisma {
     businesses?: businessesUpdateOneRequiredWithoutProductsNestedInput
     product_categories?: product_categoriesUpdateOneWithoutProductsNestedInput
     stock_reservations?: stock_reservationsUpdateManyWithoutProductsNestedInput
-    cart_reservations?: cart_reservationsUpdateManyWithoutProductsNestedInput
   }
 
   export type productsUncheckedUpdateWithoutOrder_itemsInput = {
@@ -126903,12 +133235,12 @@ export namespace Prisma {
     instagram_retailer_id?: NullableStringFieldUpdateOperationsInput | string | null
     campaigns?: campaignsUncheckedUpdateManyWithoutProductsNestedInput
     cart_items?: cart_itemsUncheckedUpdateManyWithoutProductsNestedInput
+    cart_reservations?: cart_reservationsUncheckedUpdateManyWithoutProductsNestedInput
     course_batches?: course_batchesUncheckedUpdateManyWithoutCourseNestedInput
     product_images?: product_imagesUncheckedUpdateManyWithoutProductsNestedInput
     product_reviews?: product_reviewsUncheckedUpdateManyWithoutProductNestedInput
     product_variants?: product_variantsUncheckedUpdateManyWithoutProductNestedInput
     stock_reservations?: stock_reservationsUncheckedUpdateManyWithoutProductsNestedInput
-    cart_reservations?: cart_reservationsUncheckedUpdateManyWithoutProductsNestedInput
   }
 
   export type ordersCreateWithoutStock_reservationsInput = {
@@ -127044,6 +133376,7 @@ export namespace Prisma {
     instagram_retailer_id?: string | null
     campaigns?: campaignsCreateNestedManyWithoutProductsInput
     cart_items?: cart_itemsCreateNestedManyWithoutProductsInput
+    cart_reservations?: cart_reservationsCreateNestedManyWithoutProductsInput
     course_batches?: course_batchesCreateNestedManyWithoutCourseInput
     order_items?: order_itemsCreateNestedManyWithoutProductsInput
     product_images?: product_imagesCreateNestedManyWithoutProductsInput
@@ -127051,7 +133384,6 @@ export namespace Prisma {
     product_variants?: product_variantsCreateNestedManyWithoutProductInput
     businesses: businessesCreateNestedOneWithoutProductsInput
     product_categories?: product_categoriesCreateNestedOneWithoutProductsInput
-    cart_reservations?: cart_reservationsCreateNestedManyWithoutProductsInput
   }
 
   export type productsUncheckedCreateWithoutStock_reservationsInput = {
@@ -127094,12 +133426,12 @@ export namespace Prisma {
     instagram_retailer_id?: string | null
     campaigns?: campaignsUncheckedCreateNestedManyWithoutProductsInput
     cart_items?: cart_itemsUncheckedCreateNestedManyWithoutProductsInput
+    cart_reservations?: cart_reservationsUncheckedCreateNestedManyWithoutProductsInput
     course_batches?: course_batchesUncheckedCreateNestedManyWithoutCourseInput
     order_items?: order_itemsUncheckedCreateNestedManyWithoutProductsInput
     product_images?: product_imagesUncheckedCreateNestedManyWithoutProductsInput
     product_reviews?: product_reviewsUncheckedCreateNestedManyWithoutProductInput
     product_variants?: product_variantsUncheckedCreateNestedManyWithoutProductInput
-    cart_reservations?: cart_reservationsUncheckedCreateNestedManyWithoutProductsInput
   }
 
   export type productsCreateOrConnectWithoutStock_reservationsInput = {
@@ -127257,6 +133589,7 @@ export namespace Prisma {
     instagram_retailer_id?: NullableStringFieldUpdateOperationsInput | string | null
     campaigns?: campaignsUpdateManyWithoutProductsNestedInput
     cart_items?: cart_itemsUpdateManyWithoutProductsNestedInput
+    cart_reservations?: cart_reservationsUpdateManyWithoutProductsNestedInput
     course_batches?: course_batchesUpdateManyWithoutCourseNestedInput
     order_items?: order_itemsUpdateManyWithoutProductsNestedInput
     product_images?: product_imagesUpdateManyWithoutProductsNestedInput
@@ -127264,7 +133597,6 @@ export namespace Prisma {
     product_variants?: product_variantsUpdateManyWithoutProductNestedInput
     businesses?: businessesUpdateOneRequiredWithoutProductsNestedInput
     product_categories?: product_categoriesUpdateOneWithoutProductsNestedInput
-    cart_reservations?: cart_reservationsUpdateManyWithoutProductsNestedInput
   }
 
   export type productsUncheckedUpdateWithoutStock_reservationsInput = {
@@ -127307,12 +133639,12 @@ export namespace Prisma {
     instagram_retailer_id?: NullableStringFieldUpdateOperationsInput | string | null
     campaigns?: campaignsUncheckedUpdateManyWithoutProductsNestedInput
     cart_items?: cart_itemsUncheckedUpdateManyWithoutProductsNestedInput
+    cart_reservations?: cart_reservationsUncheckedUpdateManyWithoutProductsNestedInput
     course_batches?: course_batchesUncheckedUpdateManyWithoutCourseNestedInput
     order_items?: order_itemsUncheckedUpdateManyWithoutProductsNestedInput
     product_images?: product_imagesUncheckedUpdateManyWithoutProductsNestedInput
     product_reviews?: product_reviewsUncheckedUpdateManyWithoutProductNestedInput
     product_variants?: product_variantsUncheckedUpdateManyWithoutProductNestedInput
-    cart_reservations?: cart_reservationsUncheckedUpdateManyWithoutProductsNestedInput
   }
 
   export type leadsCreateWithoutCart_reservationsInput = {
@@ -127884,6 +134216,7 @@ export namespace Prisma {
     instagram_synced_at?: Date | string | null
     instagram_retailer_id?: string | null
     cart_items?: cart_itemsCreateNestedManyWithoutProductsInput
+    cart_reservations?: cart_reservationsCreateNestedManyWithoutProductsInput
     course_batches?: course_batchesCreateNestedManyWithoutCourseInput
     order_items?: order_itemsCreateNestedManyWithoutProductsInput
     product_images?: product_imagesCreateNestedManyWithoutProductsInput
@@ -127892,7 +134225,6 @@ export namespace Prisma {
     businesses: businessesCreateNestedOneWithoutProductsInput
     product_categories?: product_categoriesCreateNestedOneWithoutProductsInput
     stock_reservations?: stock_reservationsCreateNestedManyWithoutProductsInput
-    cart_reservations?: cart_reservationsCreateNestedManyWithoutProductsInput
   }
 
   export type productsUncheckedCreateWithoutCampaignsInput = {
@@ -127934,13 +134266,13 @@ export namespace Prisma {
     instagram_synced_at?: Date | string | null
     instagram_retailer_id?: string | null
     cart_items?: cart_itemsUncheckedCreateNestedManyWithoutProductsInput
+    cart_reservations?: cart_reservationsUncheckedCreateNestedManyWithoutProductsInput
     course_batches?: course_batchesUncheckedCreateNestedManyWithoutCourseInput
     order_items?: order_itemsUncheckedCreateNestedManyWithoutProductsInput
     product_images?: product_imagesUncheckedCreateNestedManyWithoutProductsInput
     product_reviews?: product_reviewsUncheckedCreateNestedManyWithoutProductInput
     product_variants?: product_variantsUncheckedCreateNestedManyWithoutProductInput
     stock_reservations?: stock_reservationsUncheckedCreateNestedManyWithoutProductsInput
-    cart_reservations?: cart_reservationsUncheckedCreateNestedManyWithoutProductsInput
   }
 
   export type productsCreateOrConnectWithoutCampaignsInput = {
@@ -128049,6 +134381,7 @@ export namespace Prisma {
     instagram_synced_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     instagram_retailer_id?: NullableStringFieldUpdateOperationsInput | string | null
     cart_items?: cart_itemsUpdateManyWithoutProductsNestedInput
+    cart_reservations?: cart_reservationsUpdateManyWithoutProductsNestedInput
     course_batches?: course_batchesUpdateManyWithoutCourseNestedInput
     order_items?: order_itemsUpdateManyWithoutProductsNestedInput
     product_images?: product_imagesUpdateManyWithoutProductsNestedInput
@@ -128057,7 +134390,6 @@ export namespace Prisma {
     businesses?: businessesUpdateOneRequiredWithoutProductsNestedInput
     product_categories?: product_categoriesUpdateOneWithoutProductsNestedInput
     stock_reservations?: stock_reservationsUpdateManyWithoutProductsNestedInput
-    cart_reservations?: cart_reservationsUpdateManyWithoutProductsNestedInput
   }
 
   export type productsUncheckedUpdateWithoutCampaignsInput = {
@@ -128099,13 +134431,13 @@ export namespace Prisma {
     instagram_synced_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     instagram_retailer_id?: NullableStringFieldUpdateOperationsInput | string | null
     cart_items?: cart_itemsUncheckedUpdateManyWithoutProductsNestedInput
+    cart_reservations?: cart_reservationsUncheckedUpdateManyWithoutProductsNestedInput
     course_batches?: course_batchesUncheckedUpdateManyWithoutCourseNestedInput
     order_items?: order_itemsUncheckedUpdateManyWithoutProductsNestedInput
     product_images?: product_imagesUncheckedUpdateManyWithoutProductsNestedInput
     product_reviews?: product_reviewsUncheckedUpdateManyWithoutProductNestedInput
     product_variants?: product_variantsUncheckedUpdateManyWithoutProductNestedInput
     stock_reservations?: stock_reservationsUncheckedUpdateManyWithoutProductsNestedInput
-    cart_reservations?: cart_reservationsUncheckedUpdateManyWithoutProductsNestedInput
   }
 
   export type notification_templatesUpsertWithoutCampaignsInput = {
@@ -128273,6 +134605,7 @@ export namespace Prisma {
     deleted_by?: string | null
     onboarding_completed?: boolean
     delivery_address?: string | null
+    cart_reservations?: cart_reservationsCreateNestedManyWithoutLeadsInput
     carts?: cartsCreateNestedManyWithoutLeadsInput
     lead_activities?: lead_activitiesCreateNestedManyWithoutLeadsInput
     lead_conversations?: lead_conversationsCreateNestedManyWithoutLeadsInput
@@ -128291,7 +134624,6 @@ export namespace Prisma {
     tenants: tenantsCreateNestedOneWithoutLeadsInput
     orders?: ordersCreateNestedManyWithoutLeadsInput
     workflow_executions?: workflow_executionsCreateNestedManyWithoutLeadsInput
-    cart_reservations?: cart_reservationsCreateNestedManyWithoutLeadsInput
   }
 
   export type leadsUncheckedCreateWithoutLead_score_historyInput = {
@@ -128354,6 +134686,7 @@ export namespace Prisma {
     deleted_by?: string | null
     onboarding_completed?: boolean
     delivery_address?: string | null
+    cart_reservations?: cart_reservationsUncheckedCreateNestedManyWithoutLeadsInput
     carts?: cartsUncheckedCreateNestedManyWithoutLeadsInput
     lead_activities?: lead_activitiesUncheckedCreateNestedManyWithoutLeadsInput
     lead_conversations?: lead_conversationsUncheckedCreateNestedManyWithoutLeadsInput
@@ -128368,7 +134701,6 @@ export namespace Prisma {
     duplicate_leads?: leadsUncheckedCreateNestedManyWithoutDuplicate_of_leadInput
     orders?: ordersUncheckedCreateNestedManyWithoutLeadsInput
     workflow_executions?: workflow_executionsUncheckedCreateNestedManyWithoutLeadsInput
-    cart_reservations?: cart_reservationsUncheckedCreateNestedManyWithoutLeadsInput
   }
 
   export type leadsCreateOrConnectWithoutLead_score_historyInput = {
@@ -128476,6 +134808,7 @@ export namespace Prisma {
     deleted_by?: NullableStringFieldUpdateOperationsInput | string | null
     onboarding_completed?: BoolFieldUpdateOperationsInput | boolean
     delivery_address?: NullableStringFieldUpdateOperationsInput | string | null
+    cart_reservations?: cart_reservationsUpdateManyWithoutLeadsNestedInput
     carts?: cartsUpdateManyWithoutLeadsNestedInput
     lead_activities?: lead_activitiesUpdateManyWithoutLeadsNestedInput
     lead_conversations?: lead_conversationsUpdateManyWithoutLeadsNestedInput
@@ -128494,7 +134827,6 @@ export namespace Prisma {
     tenants?: tenantsUpdateOneRequiredWithoutLeadsNestedInput
     orders?: ordersUpdateManyWithoutLeadsNestedInput
     workflow_executions?: workflow_executionsUpdateManyWithoutLeadsNestedInput
-    cart_reservations?: cart_reservationsUpdateManyWithoutLeadsNestedInput
   }
 
   export type leadsUncheckedUpdateWithoutLead_score_historyInput = {
@@ -128557,6 +134889,7 @@ export namespace Prisma {
     deleted_by?: NullableStringFieldUpdateOperationsInput | string | null
     onboarding_completed?: BoolFieldUpdateOperationsInput | boolean
     delivery_address?: NullableStringFieldUpdateOperationsInput | string | null
+    cart_reservations?: cart_reservationsUncheckedUpdateManyWithoutLeadsNestedInput
     carts?: cartsUncheckedUpdateManyWithoutLeadsNestedInput
     lead_activities?: lead_activitiesUncheckedUpdateManyWithoutLeadsNestedInput
     lead_conversations?: lead_conversationsUncheckedUpdateManyWithoutLeadsNestedInput
@@ -128571,7 +134904,6 @@ export namespace Prisma {
     duplicate_leads?: leadsUncheckedUpdateManyWithoutDuplicate_of_leadNestedInput
     orders?: ordersUncheckedUpdateManyWithoutLeadsNestedInput
     workflow_executions?: workflow_executionsUncheckedUpdateManyWithoutLeadsNestedInput
-    cart_reservations?: cart_reservationsUncheckedUpdateManyWithoutLeadsNestedInput
   }
 
   export type lead_scoring_rulesUpsertWithoutLead_score_historyInput = {
@@ -128978,13 +135310,18 @@ export namespace Prisma {
     business_name: string
     business_type?: string | null
     whatsapp_number?: string | null
-    brand_colors?: NullableJsonNullValueInput | InputJsonValue
-    logo_url?: string | null
-    working_hours?: NullableJsonNullValueInput | InputJsonValue
     created_at?: Date | string | null
     updated_at?: Date | string | null
+    email?: string | null
+    phone?: string | null
+    website?: string | null
+    city?: string | null
+    address?: string | null
+    country?: string | null
+    gst_number?: string | null
+    pan_number?: string | null
+    business_employees?: business_employeesCreateNestedManyWithoutBusinessesInput
     business_workflows?: business_workflowsCreateNestedManyWithoutBusinessesInput
-    subscription_plans?: subscription_plansCreateNestedOneWithoutBusinessesInput
     tenants: tenantsCreateNestedOneWithoutBusinessesInput
     carts?: cartsCreateNestedManyWithoutBusinessesInput
     inventory_levels?: inventory_levelsCreateNestedManyWithoutBusinessesInput
@@ -129012,13 +135349,18 @@ export namespace Prisma {
     tenant_id: string
     business_name: string
     business_type?: string | null
-    subscription_plan_id?: string | null
     whatsapp_number?: string | null
-    brand_colors?: NullableJsonNullValueInput | InputJsonValue
-    logo_url?: string | null
-    working_hours?: NullableJsonNullValueInput | InputJsonValue
     created_at?: Date | string | null
     updated_at?: Date | string | null
+    email?: string | null
+    phone?: string | null
+    website?: string | null
+    city?: string | null
+    address?: string | null
+    country?: string | null
+    gst_number?: string | null
+    pan_number?: string | null
+    business_employees?: business_employeesUncheckedCreateNestedManyWithoutBusinessesInput
     business_workflows?: business_workflowsUncheckedCreateNestedManyWithoutBusinessesInput
     carts?: cartsUncheckedCreateNestedManyWithoutBusinessesInput
     inventory_levels?: inventory_levelsUncheckedCreateNestedManyWithoutBusinessesInput
@@ -129213,13 +135555,18 @@ export namespace Prisma {
     business_name?: StringFieldUpdateOperationsInput | string
     business_type?: NullableStringFieldUpdateOperationsInput | string | null
     whatsapp_number?: NullableStringFieldUpdateOperationsInput | string | null
-    brand_colors?: NullableJsonNullValueInput | InputJsonValue
-    logo_url?: NullableStringFieldUpdateOperationsInput | string | null
-    working_hours?: NullableJsonNullValueInput | InputJsonValue
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    website?: NullableStringFieldUpdateOperationsInput | string | null
+    city?: NullableStringFieldUpdateOperationsInput | string | null
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    country?: NullableStringFieldUpdateOperationsInput | string | null
+    gst_number?: NullableStringFieldUpdateOperationsInput | string | null
+    pan_number?: NullableStringFieldUpdateOperationsInput | string | null
+    business_employees?: business_employeesUpdateManyWithoutBusinessesNestedInput
     business_workflows?: business_workflowsUpdateManyWithoutBusinessesNestedInput
-    subscription_plans?: subscription_plansUpdateOneWithoutBusinessesNestedInput
     tenants?: tenantsUpdateOneRequiredWithoutBusinessesNestedInput
     carts?: cartsUpdateManyWithoutBusinessesNestedInput
     inventory_levels?: inventory_levelsUpdateManyWithoutBusinessesNestedInput
@@ -129247,13 +135594,18 @@ export namespace Prisma {
     tenant_id?: StringFieldUpdateOperationsInput | string
     business_name?: StringFieldUpdateOperationsInput | string
     business_type?: NullableStringFieldUpdateOperationsInput | string | null
-    subscription_plan_id?: NullableStringFieldUpdateOperationsInput | string | null
     whatsapp_number?: NullableStringFieldUpdateOperationsInput | string | null
-    brand_colors?: NullableJsonNullValueInput | InputJsonValue
-    logo_url?: NullableStringFieldUpdateOperationsInput | string | null
-    working_hours?: NullableJsonNullValueInput | InputJsonValue
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    website?: NullableStringFieldUpdateOperationsInput | string | null
+    city?: NullableStringFieldUpdateOperationsInput | string | null
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    country?: NullableStringFieldUpdateOperationsInput | string | null
+    gst_number?: NullableStringFieldUpdateOperationsInput | string | null
+    pan_number?: NullableStringFieldUpdateOperationsInput | string | null
+    business_employees?: business_employeesUncheckedUpdateManyWithoutBusinessesNestedInput
     business_workflows?: business_workflowsUncheckedUpdateManyWithoutBusinessesNestedInput
     carts?: cartsUncheckedUpdateManyWithoutBusinessesNestedInput
     inventory_levels?: inventory_levelsUncheckedUpdateManyWithoutBusinessesNestedInput
@@ -129342,13 +135694,18 @@ export namespace Prisma {
     business_name: string
     business_type?: string | null
     whatsapp_number?: string | null
-    brand_colors?: NullableJsonNullValueInput | InputJsonValue
-    logo_url?: string | null
-    working_hours?: NullableJsonNullValueInput | InputJsonValue
     created_at?: Date | string | null
     updated_at?: Date | string | null
+    email?: string | null
+    phone?: string | null
+    website?: string | null
+    city?: string | null
+    address?: string | null
+    country?: string | null
+    gst_number?: string | null
+    pan_number?: string | null
+    business_employees?: business_employeesCreateNestedManyWithoutBusinessesInput
     business_workflows?: business_workflowsCreateNestedManyWithoutBusinessesInput
-    subscription_plans?: subscription_plansCreateNestedOneWithoutBusinessesInput
     tenants: tenantsCreateNestedOneWithoutBusinessesInput
     carts?: cartsCreateNestedManyWithoutBusinessesInput
     leads?: leadsCreateNestedManyWithoutBusinessesInput
@@ -129376,13 +135733,18 @@ export namespace Prisma {
     tenant_id: string
     business_name: string
     business_type?: string | null
-    subscription_plan_id?: string | null
     whatsapp_number?: string | null
-    brand_colors?: NullableJsonNullValueInput | InputJsonValue
-    logo_url?: string | null
-    working_hours?: NullableJsonNullValueInput | InputJsonValue
     created_at?: Date | string | null
     updated_at?: Date | string | null
+    email?: string | null
+    phone?: string | null
+    website?: string | null
+    city?: string | null
+    address?: string | null
+    country?: string | null
+    gst_number?: string | null
+    pan_number?: string | null
+    business_employees?: business_employeesUncheckedCreateNestedManyWithoutBusinessesInput
     business_workflows?: business_workflowsUncheckedCreateNestedManyWithoutBusinessesInput
     carts?: cartsUncheckedCreateNestedManyWithoutBusinessesInput
     leads?: leadsUncheckedCreateNestedManyWithoutBusinessesInput
@@ -129709,13 +136071,18 @@ export namespace Prisma {
     business_name?: StringFieldUpdateOperationsInput | string
     business_type?: NullableStringFieldUpdateOperationsInput | string | null
     whatsapp_number?: NullableStringFieldUpdateOperationsInput | string | null
-    brand_colors?: NullableJsonNullValueInput | InputJsonValue
-    logo_url?: NullableStringFieldUpdateOperationsInput | string | null
-    working_hours?: NullableJsonNullValueInput | InputJsonValue
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    website?: NullableStringFieldUpdateOperationsInput | string | null
+    city?: NullableStringFieldUpdateOperationsInput | string | null
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    country?: NullableStringFieldUpdateOperationsInput | string | null
+    gst_number?: NullableStringFieldUpdateOperationsInput | string | null
+    pan_number?: NullableStringFieldUpdateOperationsInput | string | null
+    business_employees?: business_employeesUpdateManyWithoutBusinessesNestedInput
     business_workflows?: business_workflowsUpdateManyWithoutBusinessesNestedInput
-    subscription_plans?: subscription_plansUpdateOneWithoutBusinessesNestedInput
     tenants?: tenantsUpdateOneRequiredWithoutBusinessesNestedInput
     carts?: cartsUpdateManyWithoutBusinessesNestedInput
     leads?: leadsUpdateManyWithoutBusinessesNestedInput
@@ -129743,13 +136110,18 @@ export namespace Prisma {
     tenant_id?: StringFieldUpdateOperationsInput | string
     business_name?: StringFieldUpdateOperationsInput | string
     business_type?: NullableStringFieldUpdateOperationsInput | string | null
-    subscription_plan_id?: NullableStringFieldUpdateOperationsInput | string | null
     whatsapp_number?: NullableStringFieldUpdateOperationsInput | string | null
-    brand_colors?: NullableJsonNullValueInput | InputJsonValue
-    logo_url?: NullableStringFieldUpdateOperationsInput | string | null
-    working_hours?: NullableJsonNullValueInput | InputJsonValue
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    website?: NullableStringFieldUpdateOperationsInput | string | null
+    city?: NullableStringFieldUpdateOperationsInput | string | null
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    country?: NullableStringFieldUpdateOperationsInput | string | null
+    gst_number?: NullableStringFieldUpdateOperationsInput | string | null
+    pan_number?: NullableStringFieldUpdateOperationsInput | string | null
+    business_employees?: business_employeesUncheckedUpdateManyWithoutBusinessesNestedInput
     business_workflows?: business_workflowsUncheckedUpdateManyWithoutBusinessesNestedInput
     carts?: cartsUncheckedUpdateManyWithoutBusinessesNestedInput
     leads?: leadsUncheckedUpdateManyWithoutBusinessesNestedInput
@@ -129992,13 +136364,18 @@ export namespace Prisma {
     business_name: string
     business_type?: string | null
     whatsapp_number?: string | null
-    brand_colors?: NullableJsonNullValueInput | InputJsonValue
-    logo_url?: string | null
-    working_hours?: NullableJsonNullValueInput | InputJsonValue
     created_at?: Date | string | null
     updated_at?: Date | string | null
+    email?: string | null
+    phone?: string | null
+    website?: string | null
+    city?: string | null
+    address?: string | null
+    country?: string | null
+    gst_number?: string | null
+    pan_number?: string | null
+    business_employees?: business_employeesCreateNestedManyWithoutBusinessesInput
     business_workflows?: business_workflowsCreateNestedManyWithoutBusinessesInput
-    subscription_plans?: subscription_plansCreateNestedOneWithoutBusinessesInput
     tenants: tenantsCreateNestedOneWithoutBusinessesInput
     carts?: cartsCreateNestedManyWithoutBusinessesInput
     inventory_levels?: inventory_levelsCreateNestedManyWithoutBusinessesInput
@@ -130026,13 +136403,18 @@ export namespace Prisma {
     tenant_id: string
     business_name: string
     business_type?: string | null
-    subscription_plan_id?: string | null
     whatsapp_number?: string | null
-    brand_colors?: NullableJsonNullValueInput | InputJsonValue
-    logo_url?: string | null
-    working_hours?: NullableJsonNullValueInput | InputJsonValue
     created_at?: Date | string | null
     updated_at?: Date | string | null
+    email?: string | null
+    phone?: string | null
+    website?: string | null
+    city?: string | null
+    address?: string | null
+    country?: string | null
+    gst_number?: string | null
+    pan_number?: string | null
+    business_employees?: business_employeesUncheckedCreateNestedManyWithoutBusinessesInput
     business_workflows?: business_workflowsUncheckedCreateNestedManyWithoutBusinessesInput
     carts?: cartsUncheckedCreateNestedManyWithoutBusinessesInput
     inventory_levels?: inventory_levelsUncheckedCreateNestedManyWithoutBusinessesInput
@@ -130302,13 +136684,18 @@ export namespace Prisma {
     business_name?: StringFieldUpdateOperationsInput | string
     business_type?: NullableStringFieldUpdateOperationsInput | string | null
     whatsapp_number?: NullableStringFieldUpdateOperationsInput | string | null
-    brand_colors?: NullableJsonNullValueInput | InputJsonValue
-    logo_url?: NullableStringFieldUpdateOperationsInput | string | null
-    working_hours?: NullableJsonNullValueInput | InputJsonValue
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    website?: NullableStringFieldUpdateOperationsInput | string | null
+    city?: NullableStringFieldUpdateOperationsInput | string | null
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    country?: NullableStringFieldUpdateOperationsInput | string | null
+    gst_number?: NullableStringFieldUpdateOperationsInput | string | null
+    pan_number?: NullableStringFieldUpdateOperationsInput | string | null
+    business_employees?: business_employeesUpdateManyWithoutBusinessesNestedInput
     business_workflows?: business_workflowsUpdateManyWithoutBusinessesNestedInput
-    subscription_plans?: subscription_plansUpdateOneWithoutBusinessesNestedInput
     tenants?: tenantsUpdateOneRequiredWithoutBusinessesNestedInput
     carts?: cartsUpdateManyWithoutBusinessesNestedInput
     inventory_levels?: inventory_levelsUpdateManyWithoutBusinessesNestedInput
@@ -130336,13 +136723,18 @@ export namespace Prisma {
     tenant_id?: StringFieldUpdateOperationsInput | string
     business_name?: StringFieldUpdateOperationsInput | string
     business_type?: NullableStringFieldUpdateOperationsInput | string | null
-    subscription_plan_id?: NullableStringFieldUpdateOperationsInput | string | null
     whatsapp_number?: NullableStringFieldUpdateOperationsInput | string | null
-    brand_colors?: NullableJsonNullValueInput | InputJsonValue
-    logo_url?: NullableStringFieldUpdateOperationsInput | string | null
-    working_hours?: NullableJsonNullValueInput | InputJsonValue
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    website?: NullableStringFieldUpdateOperationsInput | string | null
+    city?: NullableStringFieldUpdateOperationsInput | string | null
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    country?: NullableStringFieldUpdateOperationsInput | string | null
+    gst_number?: NullableStringFieldUpdateOperationsInput | string | null
+    pan_number?: NullableStringFieldUpdateOperationsInput | string | null
+    business_employees?: business_employeesUncheckedUpdateManyWithoutBusinessesNestedInput
     business_workflows?: business_workflowsUncheckedUpdateManyWithoutBusinessesNestedInput
     carts?: cartsUncheckedUpdateManyWithoutBusinessesNestedInput
     inventory_levels?: inventory_levelsUncheckedUpdateManyWithoutBusinessesNestedInput
@@ -130620,13 +137012,18 @@ export namespace Prisma {
     business_name: string
     business_type?: string | null
     whatsapp_number?: string | null
-    brand_colors?: NullableJsonNullValueInput | InputJsonValue
-    logo_url?: string | null
-    working_hours?: NullableJsonNullValueInput | InputJsonValue
     created_at?: Date | string | null
     updated_at?: Date | string | null
+    email?: string | null
+    phone?: string | null
+    website?: string | null
+    city?: string | null
+    address?: string | null
+    country?: string | null
+    gst_number?: string | null
+    pan_number?: string | null
+    business_employees?: business_employeesCreateNestedManyWithoutBusinessesInput
     business_workflows?: business_workflowsCreateNestedManyWithoutBusinessesInput
-    subscription_plans?: subscription_plansCreateNestedOneWithoutBusinessesInput
     tenants: tenantsCreateNestedOneWithoutBusinessesInput
     carts?: cartsCreateNestedManyWithoutBusinessesInput
     inventory_levels?: inventory_levelsCreateNestedManyWithoutBusinessesInput
@@ -130654,13 +137051,18 @@ export namespace Prisma {
     tenant_id: string
     business_name: string
     business_type?: string | null
-    subscription_plan_id?: string | null
     whatsapp_number?: string | null
-    brand_colors?: NullableJsonNullValueInput | InputJsonValue
-    logo_url?: string | null
-    working_hours?: NullableJsonNullValueInput | InputJsonValue
     created_at?: Date | string | null
     updated_at?: Date | string | null
+    email?: string | null
+    phone?: string | null
+    website?: string | null
+    city?: string | null
+    address?: string | null
+    country?: string | null
+    gst_number?: string | null
+    pan_number?: string | null
+    business_employees?: business_employeesUncheckedCreateNestedManyWithoutBusinessesInput
     business_workflows?: business_workflowsUncheckedCreateNestedManyWithoutBusinessesInput
     carts?: cartsUncheckedCreateNestedManyWithoutBusinessesInput
     inventory_levels?: inventory_levelsUncheckedCreateNestedManyWithoutBusinessesInput
@@ -130897,13 +137299,18 @@ export namespace Prisma {
     business_name?: StringFieldUpdateOperationsInput | string
     business_type?: NullableStringFieldUpdateOperationsInput | string | null
     whatsapp_number?: NullableStringFieldUpdateOperationsInput | string | null
-    brand_colors?: NullableJsonNullValueInput | InputJsonValue
-    logo_url?: NullableStringFieldUpdateOperationsInput | string | null
-    working_hours?: NullableJsonNullValueInput | InputJsonValue
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    website?: NullableStringFieldUpdateOperationsInput | string | null
+    city?: NullableStringFieldUpdateOperationsInput | string | null
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    country?: NullableStringFieldUpdateOperationsInput | string | null
+    gst_number?: NullableStringFieldUpdateOperationsInput | string | null
+    pan_number?: NullableStringFieldUpdateOperationsInput | string | null
+    business_employees?: business_employeesUpdateManyWithoutBusinessesNestedInput
     business_workflows?: business_workflowsUpdateManyWithoutBusinessesNestedInput
-    subscription_plans?: subscription_plansUpdateOneWithoutBusinessesNestedInput
     tenants?: tenantsUpdateOneRequiredWithoutBusinessesNestedInput
     carts?: cartsUpdateManyWithoutBusinessesNestedInput
     inventory_levels?: inventory_levelsUpdateManyWithoutBusinessesNestedInput
@@ -130931,13 +137338,18 @@ export namespace Prisma {
     tenant_id?: StringFieldUpdateOperationsInput | string
     business_name?: StringFieldUpdateOperationsInput | string
     business_type?: NullableStringFieldUpdateOperationsInput | string | null
-    subscription_plan_id?: NullableStringFieldUpdateOperationsInput | string | null
     whatsapp_number?: NullableStringFieldUpdateOperationsInput | string | null
-    brand_colors?: NullableJsonNullValueInput | InputJsonValue
-    logo_url?: NullableStringFieldUpdateOperationsInput | string | null
-    working_hours?: NullableJsonNullValueInput | InputJsonValue
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    website?: NullableStringFieldUpdateOperationsInput | string | null
+    city?: NullableStringFieldUpdateOperationsInput | string | null
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    country?: NullableStringFieldUpdateOperationsInput | string | null
+    gst_number?: NullableStringFieldUpdateOperationsInput | string | null
+    pan_number?: NullableStringFieldUpdateOperationsInput | string | null
+    business_employees?: business_employeesUncheckedUpdateManyWithoutBusinessesNestedInput
     business_workflows?: business_workflowsUncheckedUpdateManyWithoutBusinessesNestedInput
     carts?: cartsUncheckedUpdateManyWithoutBusinessesNestedInput
     inventory_levels?: inventory_levelsUncheckedUpdateManyWithoutBusinessesNestedInput
@@ -131176,13 +137588,18 @@ export namespace Prisma {
     business_name: string
     business_type?: string | null
     whatsapp_number?: string | null
-    brand_colors?: NullableJsonNullValueInput | InputJsonValue
-    logo_url?: string | null
-    working_hours?: NullableJsonNullValueInput | InputJsonValue
     created_at?: Date | string | null
     updated_at?: Date | string | null
+    email?: string | null
+    phone?: string | null
+    website?: string | null
+    city?: string | null
+    address?: string | null
+    country?: string | null
+    gst_number?: string | null
+    pan_number?: string | null
+    business_employees?: business_employeesCreateNestedManyWithoutBusinessesInput
     business_workflows?: business_workflowsCreateNestedManyWithoutBusinessesInput
-    subscription_plans?: subscription_plansCreateNestedOneWithoutBusinessesInput
     tenants: tenantsCreateNestedOneWithoutBusinessesInput
     carts?: cartsCreateNestedManyWithoutBusinessesInput
     inventory_levels?: inventory_levelsCreateNestedManyWithoutBusinessesInput
@@ -131210,13 +137627,18 @@ export namespace Prisma {
     tenant_id: string
     business_name: string
     business_type?: string | null
-    subscription_plan_id?: string | null
     whatsapp_number?: string | null
-    brand_colors?: NullableJsonNullValueInput | InputJsonValue
-    logo_url?: string | null
-    working_hours?: NullableJsonNullValueInput | InputJsonValue
     created_at?: Date | string | null
     updated_at?: Date | string | null
+    email?: string | null
+    phone?: string | null
+    website?: string | null
+    city?: string | null
+    address?: string | null
+    country?: string | null
+    gst_number?: string | null
+    pan_number?: string | null
+    business_employees?: business_employeesUncheckedCreateNestedManyWithoutBusinessesInput
     business_workflows?: business_workflowsUncheckedCreateNestedManyWithoutBusinessesInput
     carts?: cartsUncheckedCreateNestedManyWithoutBusinessesInput
     inventory_levels?: inventory_levelsUncheckedCreateNestedManyWithoutBusinessesInput
@@ -131486,13 +137908,18 @@ export namespace Prisma {
     business_name?: StringFieldUpdateOperationsInput | string
     business_type?: NullableStringFieldUpdateOperationsInput | string | null
     whatsapp_number?: NullableStringFieldUpdateOperationsInput | string | null
-    brand_colors?: NullableJsonNullValueInput | InputJsonValue
-    logo_url?: NullableStringFieldUpdateOperationsInput | string | null
-    working_hours?: NullableJsonNullValueInput | InputJsonValue
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    website?: NullableStringFieldUpdateOperationsInput | string | null
+    city?: NullableStringFieldUpdateOperationsInput | string | null
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    country?: NullableStringFieldUpdateOperationsInput | string | null
+    gst_number?: NullableStringFieldUpdateOperationsInput | string | null
+    pan_number?: NullableStringFieldUpdateOperationsInput | string | null
+    business_employees?: business_employeesUpdateManyWithoutBusinessesNestedInput
     business_workflows?: business_workflowsUpdateManyWithoutBusinessesNestedInput
-    subscription_plans?: subscription_plansUpdateOneWithoutBusinessesNestedInput
     tenants?: tenantsUpdateOneRequiredWithoutBusinessesNestedInput
     carts?: cartsUpdateManyWithoutBusinessesNestedInput
     inventory_levels?: inventory_levelsUpdateManyWithoutBusinessesNestedInput
@@ -131520,13 +137947,18 @@ export namespace Prisma {
     tenant_id?: StringFieldUpdateOperationsInput | string
     business_name?: StringFieldUpdateOperationsInput | string
     business_type?: NullableStringFieldUpdateOperationsInput | string | null
-    subscription_plan_id?: NullableStringFieldUpdateOperationsInput | string | null
     whatsapp_number?: NullableStringFieldUpdateOperationsInput | string | null
-    brand_colors?: NullableJsonNullValueInput | InputJsonValue
-    logo_url?: NullableStringFieldUpdateOperationsInput | string | null
-    working_hours?: NullableJsonNullValueInput | InputJsonValue
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    website?: NullableStringFieldUpdateOperationsInput | string | null
+    city?: NullableStringFieldUpdateOperationsInput | string | null
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    country?: NullableStringFieldUpdateOperationsInput | string | null
+    gst_number?: NullableStringFieldUpdateOperationsInput | string | null
+    pan_number?: NullableStringFieldUpdateOperationsInput | string | null
+    business_employees?: business_employeesUncheckedUpdateManyWithoutBusinessesNestedInput
     business_workflows?: business_workflowsUncheckedUpdateManyWithoutBusinessesNestedInput
     carts?: cartsUncheckedUpdateManyWithoutBusinessesNestedInput
     inventory_levels?: inventory_levelsUncheckedUpdateManyWithoutBusinessesNestedInput
@@ -131804,13 +138236,18 @@ export namespace Prisma {
     business_name: string
     business_type?: string | null
     whatsapp_number?: string | null
-    brand_colors?: NullableJsonNullValueInput | InputJsonValue
-    logo_url?: string | null
-    working_hours?: NullableJsonNullValueInput | InputJsonValue
     created_at?: Date | string | null
     updated_at?: Date | string | null
+    email?: string | null
+    phone?: string | null
+    website?: string | null
+    city?: string | null
+    address?: string | null
+    country?: string | null
+    gst_number?: string | null
+    pan_number?: string | null
+    business_employees?: business_employeesCreateNestedManyWithoutBusinessesInput
     business_workflows?: business_workflowsCreateNestedManyWithoutBusinessesInput
-    subscription_plans?: subscription_plansCreateNestedOneWithoutBusinessesInput
     tenants: tenantsCreateNestedOneWithoutBusinessesInput
     carts?: cartsCreateNestedManyWithoutBusinessesInput
     inventory_levels?: inventory_levelsCreateNestedManyWithoutBusinessesInput
@@ -131838,13 +138275,18 @@ export namespace Prisma {
     tenant_id: string
     business_name: string
     business_type?: string | null
-    subscription_plan_id?: string | null
     whatsapp_number?: string | null
-    brand_colors?: NullableJsonNullValueInput | InputJsonValue
-    logo_url?: string | null
-    working_hours?: NullableJsonNullValueInput | InputJsonValue
     created_at?: Date | string | null
     updated_at?: Date | string | null
+    email?: string | null
+    phone?: string | null
+    website?: string | null
+    city?: string | null
+    address?: string | null
+    country?: string | null
+    gst_number?: string | null
+    pan_number?: string | null
+    business_employees?: business_employeesUncheckedCreateNestedManyWithoutBusinessesInput
     business_workflows?: business_workflowsUncheckedCreateNestedManyWithoutBusinessesInput
     carts?: cartsUncheckedCreateNestedManyWithoutBusinessesInput
     inventory_levels?: inventory_levelsUncheckedCreateNestedManyWithoutBusinessesInput
@@ -132012,13 +138454,18 @@ export namespace Prisma {
     business_name?: StringFieldUpdateOperationsInput | string
     business_type?: NullableStringFieldUpdateOperationsInput | string | null
     whatsapp_number?: NullableStringFieldUpdateOperationsInput | string | null
-    brand_colors?: NullableJsonNullValueInput | InputJsonValue
-    logo_url?: NullableStringFieldUpdateOperationsInput | string | null
-    working_hours?: NullableJsonNullValueInput | InputJsonValue
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    website?: NullableStringFieldUpdateOperationsInput | string | null
+    city?: NullableStringFieldUpdateOperationsInput | string | null
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    country?: NullableStringFieldUpdateOperationsInput | string | null
+    gst_number?: NullableStringFieldUpdateOperationsInput | string | null
+    pan_number?: NullableStringFieldUpdateOperationsInput | string | null
+    business_employees?: business_employeesUpdateManyWithoutBusinessesNestedInput
     business_workflows?: business_workflowsUpdateManyWithoutBusinessesNestedInput
-    subscription_plans?: subscription_plansUpdateOneWithoutBusinessesNestedInput
     tenants?: tenantsUpdateOneRequiredWithoutBusinessesNestedInput
     carts?: cartsUpdateManyWithoutBusinessesNestedInput
     inventory_levels?: inventory_levelsUpdateManyWithoutBusinessesNestedInput
@@ -132046,13 +138493,18 @@ export namespace Prisma {
     tenant_id?: StringFieldUpdateOperationsInput | string
     business_name?: StringFieldUpdateOperationsInput | string
     business_type?: NullableStringFieldUpdateOperationsInput | string | null
-    subscription_plan_id?: NullableStringFieldUpdateOperationsInput | string | null
     whatsapp_number?: NullableStringFieldUpdateOperationsInput | string | null
-    brand_colors?: NullableJsonNullValueInput | InputJsonValue
-    logo_url?: NullableStringFieldUpdateOperationsInput | string | null
-    working_hours?: NullableJsonNullValueInput | InputJsonValue
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    website?: NullableStringFieldUpdateOperationsInput | string | null
+    city?: NullableStringFieldUpdateOperationsInput | string | null
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    country?: NullableStringFieldUpdateOperationsInput | string | null
+    gst_number?: NullableStringFieldUpdateOperationsInput | string | null
+    pan_number?: NullableStringFieldUpdateOperationsInput | string | null
+    business_employees?: business_employeesUncheckedUpdateManyWithoutBusinessesNestedInput
     business_workflows?: business_workflowsUncheckedUpdateManyWithoutBusinessesNestedInput
     carts?: cartsUncheckedUpdateManyWithoutBusinessesNestedInput
     inventory_levels?: inventory_levelsUncheckedUpdateManyWithoutBusinessesNestedInput
@@ -132372,13 +138824,18 @@ export namespace Prisma {
     business_name: string
     business_type?: string | null
     whatsapp_number?: string | null
-    brand_colors?: NullableJsonNullValueInput | InputJsonValue
-    logo_url?: string | null
-    working_hours?: NullableJsonNullValueInput | InputJsonValue
     created_at?: Date | string | null
     updated_at?: Date | string | null
+    email?: string | null
+    phone?: string | null
+    website?: string | null
+    city?: string | null
+    address?: string | null
+    country?: string | null
+    gst_number?: string | null
+    pan_number?: string | null
+    business_employees?: business_employeesCreateNestedManyWithoutBusinessesInput
     business_workflows?: business_workflowsCreateNestedManyWithoutBusinessesInput
-    subscription_plans?: subscription_plansCreateNestedOneWithoutBusinessesInput
     tenants: tenantsCreateNestedOneWithoutBusinessesInput
     carts?: cartsCreateNestedManyWithoutBusinessesInput
     inventory_levels?: inventory_levelsCreateNestedManyWithoutBusinessesInput
@@ -132406,13 +138863,18 @@ export namespace Prisma {
     tenant_id: string
     business_name: string
     business_type?: string | null
-    subscription_plan_id?: string | null
     whatsapp_number?: string | null
-    brand_colors?: NullableJsonNullValueInput | InputJsonValue
-    logo_url?: string | null
-    working_hours?: NullableJsonNullValueInput | InputJsonValue
     created_at?: Date | string | null
     updated_at?: Date | string | null
+    email?: string | null
+    phone?: string | null
+    website?: string | null
+    city?: string | null
+    address?: string | null
+    country?: string | null
+    gst_number?: string | null
+    pan_number?: string | null
+    business_employees?: business_employeesUncheckedCreateNestedManyWithoutBusinessesInput
     business_workflows?: business_workflowsUncheckedCreateNestedManyWithoutBusinessesInput
     carts?: cartsUncheckedCreateNestedManyWithoutBusinessesInput
     inventory_levels?: inventory_levelsUncheckedCreateNestedManyWithoutBusinessesInput
@@ -132543,13 +139005,18 @@ export namespace Prisma {
     business_name?: StringFieldUpdateOperationsInput | string
     business_type?: NullableStringFieldUpdateOperationsInput | string | null
     whatsapp_number?: NullableStringFieldUpdateOperationsInput | string | null
-    brand_colors?: NullableJsonNullValueInput | InputJsonValue
-    logo_url?: NullableStringFieldUpdateOperationsInput | string | null
-    working_hours?: NullableJsonNullValueInput | InputJsonValue
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    website?: NullableStringFieldUpdateOperationsInput | string | null
+    city?: NullableStringFieldUpdateOperationsInput | string | null
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    country?: NullableStringFieldUpdateOperationsInput | string | null
+    gst_number?: NullableStringFieldUpdateOperationsInput | string | null
+    pan_number?: NullableStringFieldUpdateOperationsInput | string | null
+    business_employees?: business_employeesUpdateManyWithoutBusinessesNestedInput
     business_workflows?: business_workflowsUpdateManyWithoutBusinessesNestedInput
-    subscription_plans?: subscription_plansUpdateOneWithoutBusinessesNestedInput
     tenants?: tenantsUpdateOneRequiredWithoutBusinessesNestedInput
     carts?: cartsUpdateManyWithoutBusinessesNestedInput
     inventory_levels?: inventory_levelsUpdateManyWithoutBusinessesNestedInput
@@ -132577,13 +139044,18 @@ export namespace Prisma {
     tenant_id?: StringFieldUpdateOperationsInput | string
     business_name?: StringFieldUpdateOperationsInput | string
     business_type?: NullableStringFieldUpdateOperationsInput | string | null
-    subscription_plan_id?: NullableStringFieldUpdateOperationsInput | string | null
     whatsapp_number?: NullableStringFieldUpdateOperationsInput | string | null
-    brand_colors?: NullableJsonNullValueInput | InputJsonValue
-    logo_url?: NullableStringFieldUpdateOperationsInput | string | null
-    working_hours?: NullableJsonNullValueInput | InputJsonValue
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    website?: NullableStringFieldUpdateOperationsInput | string | null
+    city?: NullableStringFieldUpdateOperationsInput | string | null
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    country?: NullableStringFieldUpdateOperationsInput | string | null
+    gst_number?: NullableStringFieldUpdateOperationsInput | string | null
+    pan_number?: NullableStringFieldUpdateOperationsInput | string | null
+    business_employees?: business_employeesUncheckedUpdateManyWithoutBusinessesNestedInput
     business_workflows?: business_workflowsUncheckedUpdateManyWithoutBusinessesNestedInput
     carts?: cartsUncheckedUpdateManyWithoutBusinessesNestedInput
     inventory_levels?: inventory_levelsUncheckedUpdateManyWithoutBusinessesNestedInput
@@ -132700,13 +139172,18 @@ export namespace Prisma {
     business_name: string
     business_type?: string | null
     whatsapp_number?: string | null
-    brand_colors?: NullableJsonNullValueInput | InputJsonValue
-    logo_url?: string | null
-    working_hours?: NullableJsonNullValueInput | InputJsonValue
     created_at?: Date | string | null
     updated_at?: Date | string | null
+    email?: string | null
+    phone?: string | null
+    website?: string | null
+    city?: string | null
+    address?: string | null
+    country?: string | null
+    gst_number?: string | null
+    pan_number?: string | null
+    business_employees?: business_employeesCreateNestedManyWithoutBusinessesInput
     business_workflows?: business_workflowsCreateNestedManyWithoutBusinessesInput
-    subscription_plans?: subscription_plansCreateNestedOneWithoutBusinessesInput
     tenants: tenantsCreateNestedOneWithoutBusinessesInput
     carts?: cartsCreateNestedManyWithoutBusinessesInput
     inventory_levels?: inventory_levelsCreateNestedManyWithoutBusinessesInput
@@ -132734,13 +139211,18 @@ export namespace Prisma {
     tenant_id: string
     business_name: string
     business_type?: string | null
-    subscription_plan_id?: string | null
     whatsapp_number?: string | null
-    brand_colors?: NullableJsonNullValueInput | InputJsonValue
-    logo_url?: string | null
-    working_hours?: NullableJsonNullValueInput | InputJsonValue
     created_at?: Date | string | null
     updated_at?: Date | string | null
+    email?: string | null
+    phone?: string | null
+    website?: string | null
+    city?: string | null
+    address?: string | null
+    country?: string | null
+    gst_number?: string | null
+    pan_number?: string | null
+    business_employees?: business_employeesUncheckedCreateNestedManyWithoutBusinessesInput
     business_workflows?: business_workflowsUncheckedCreateNestedManyWithoutBusinessesInput
     carts?: cartsUncheckedCreateNestedManyWithoutBusinessesInput
     inventory_levels?: inventory_levelsUncheckedCreateNestedManyWithoutBusinessesInput
@@ -132776,13 +139258,13 @@ export namespace Prisma {
     phone: string
     email?: string | null
     whatsapp_number?: string | null
-    platform_user_id?: string | null
     total_orders?: number
     total_spent?: Decimal | DecimalJsLike | number | string
     last_order_date?: Date | string | null
     engagement_score?: number
     created_at?: Date | string
     updated_at?: Date | string
+    platform_user_id?: string | null
     carts?: cartsCreateNestedManyWithoutCustomersInput
     notification_preferences?: notification_preferencesCreateNestedManyWithoutCustomersInput
     orders?: ordersCreateNestedManyWithoutCustomersInput
@@ -132798,13 +139280,13 @@ export namespace Prisma {
     phone: string
     email?: string | null
     whatsapp_number?: string | null
-    platform_user_id?: string | null
     total_orders?: number
     total_spent?: Decimal | DecimalJsLike | number | string
     last_order_date?: Date | string | null
     engagement_score?: number
     created_at?: Date | string
     updated_at?: Date | string
+    platform_user_id?: string | null
     carts?: cartsUncheckedCreateNestedManyWithoutCustomersInput
     notification_preferences?: notification_preferencesUncheckedCreateNestedManyWithoutCustomersInput
     orders?: ordersUncheckedCreateNestedManyWithoutCustomersInput
@@ -132970,13 +139452,18 @@ export namespace Prisma {
     business_name?: StringFieldUpdateOperationsInput | string
     business_type?: NullableStringFieldUpdateOperationsInput | string | null
     whatsapp_number?: NullableStringFieldUpdateOperationsInput | string | null
-    brand_colors?: NullableJsonNullValueInput | InputJsonValue
-    logo_url?: NullableStringFieldUpdateOperationsInput | string | null
-    working_hours?: NullableJsonNullValueInput | InputJsonValue
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    website?: NullableStringFieldUpdateOperationsInput | string | null
+    city?: NullableStringFieldUpdateOperationsInput | string | null
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    country?: NullableStringFieldUpdateOperationsInput | string | null
+    gst_number?: NullableStringFieldUpdateOperationsInput | string | null
+    pan_number?: NullableStringFieldUpdateOperationsInput | string | null
+    business_employees?: business_employeesUpdateManyWithoutBusinessesNestedInput
     business_workflows?: business_workflowsUpdateManyWithoutBusinessesNestedInput
-    subscription_plans?: subscription_plansUpdateOneWithoutBusinessesNestedInput
     tenants?: tenantsUpdateOneRequiredWithoutBusinessesNestedInput
     carts?: cartsUpdateManyWithoutBusinessesNestedInput
     inventory_levels?: inventory_levelsUpdateManyWithoutBusinessesNestedInput
@@ -133004,13 +139491,18 @@ export namespace Prisma {
     tenant_id?: StringFieldUpdateOperationsInput | string
     business_name?: StringFieldUpdateOperationsInput | string
     business_type?: NullableStringFieldUpdateOperationsInput | string | null
-    subscription_plan_id?: NullableStringFieldUpdateOperationsInput | string | null
     whatsapp_number?: NullableStringFieldUpdateOperationsInput | string | null
-    brand_colors?: NullableJsonNullValueInput | InputJsonValue
-    logo_url?: NullableStringFieldUpdateOperationsInput | string | null
-    working_hours?: NullableJsonNullValueInput | InputJsonValue
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    website?: NullableStringFieldUpdateOperationsInput | string | null
+    city?: NullableStringFieldUpdateOperationsInput | string | null
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    country?: NullableStringFieldUpdateOperationsInput | string | null
+    gst_number?: NullableStringFieldUpdateOperationsInput | string | null
+    pan_number?: NullableStringFieldUpdateOperationsInput | string | null
+    business_employees?: business_employeesUncheckedUpdateManyWithoutBusinessesNestedInput
     business_workflows?: business_workflowsUncheckedUpdateManyWithoutBusinessesNestedInput
     carts?: cartsUncheckedUpdateManyWithoutBusinessesNestedInput
     inventory_levels?: inventory_levelsUncheckedUpdateManyWithoutBusinessesNestedInput
@@ -133052,13 +139544,13 @@ export namespace Prisma {
     phone?: StringFieldUpdateOperationsInput | string
     email?: NullableStringFieldUpdateOperationsInput | string | null
     whatsapp_number?: NullableStringFieldUpdateOperationsInput | string | null
-    platform_user_id?: NullableStringFieldUpdateOperationsInput | string | null
     total_orders?: IntFieldUpdateOperationsInput | number
     total_spent?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     last_order_date?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     engagement_score?: IntFieldUpdateOperationsInput | number
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    platform_user_id?: NullableStringFieldUpdateOperationsInput | string | null
     carts?: cartsUpdateManyWithoutCustomersNestedInput
     notification_preferences?: notification_preferencesUpdateManyWithoutCustomersNestedInput
     orders?: ordersUpdateManyWithoutCustomersNestedInput
@@ -133074,13 +139566,13 @@ export namespace Prisma {
     phone?: StringFieldUpdateOperationsInput | string
     email?: NullableStringFieldUpdateOperationsInput | string | null
     whatsapp_number?: NullableStringFieldUpdateOperationsInput | string | null
-    platform_user_id?: NullableStringFieldUpdateOperationsInput | string | null
     total_orders?: IntFieldUpdateOperationsInput | number
     total_spent?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     last_order_date?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     engagement_score?: IntFieldUpdateOperationsInput | number
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    platform_user_id?: NullableStringFieldUpdateOperationsInput | string | null
     carts?: cartsUncheckedUpdateManyWithoutCustomersNestedInput
     notification_preferences?: notification_preferencesUncheckedUpdateManyWithoutCustomersNestedInput
     orders?: ordersUncheckedUpdateManyWithoutCustomersNestedInput
@@ -133213,13 +139705,18 @@ export namespace Prisma {
     business_name: string
     business_type?: string | null
     whatsapp_number?: string | null
-    brand_colors?: NullableJsonNullValueInput | InputJsonValue
-    logo_url?: string | null
-    working_hours?: NullableJsonNullValueInput | InputJsonValue
     created_at?: Date | string | null
     updated_at?: Date | string | null
+    email?: string | null
+    phone?: string | null
+    website?: string | null
+    city?: string | null
+    address?: string | null
+    country?: string | null
+    gst_number?: string | null
+    pan_number?: string | null
+    business_employees?: business_employeesCreateNestedManyWithoutBusinessesInput
     business_workflows?: business_workflowsCreateNestedManyWithoutBusinessesInput
-    subscription_plans?: subscription_plansCreateNestedOneWithoutBusinessesInput
     tenants: tenantsCreateNestedOneWithoutBusinessesInput
     carts?: cartsCreateNestedManyWithoutBusinessesInput
     inventory_levels?: inventory_levelsCreateNestedManyWithoutBusinessesInput
@@ -133247,13 +139744,18 @@ export namespace Prisma {
     tenant_id: string
     business_name: string
     business_type?: string | null
-    subscription_plan_id?: string | null
     whatsapp_number?: string | null
-    brand_colors?: NullableJsonNullValueInput | InputJsonValue
-    logo_url?: string | null
-    working_hours?: NullableJsonNullValueInput | InputJsonValue
     created_at?: Date | string | null
     updated_at?: Date | string | null
+    email?: string | null
+    phone?: string | null
+    website?: string | null
+    city?: string | null
+    address?: string | null
+    country?: string | null
+    gst_number?: string | null
+    pan_number?: string | null
+    business_employees?: business_employeesUncheckedCreateNestedManyWithoutBusinessesInput
     business_workflows?: business_workflowsUncheckedCreateNestedManyWithoutBusinessesInput
     carts?: cartsUncheckedCreateNestedManyWithoutBusinessesInput
     inventory_levels?: inventory_levelsUncheckedCreateNestedManyWithoutBusinessesInput
@@ -133289,13 +139791,13 @@ export namespace Prisma {
     phone: string
     email?: string | null
     whatsapp_number?: string | null
-    platform_user_id?: string | null
     total_orders?: number
     total_spent?: Decimal | DecimalJsLike | number | string
     last_order_date?: Date | string | null
     engagement_score?: number
     created_at?: Date | string
     updated_at?: Date | string
+    platform_user_id?: string | null
     carts?: cartsCreateNestedManyWithoutCustomersInput
     notification_messages?: notification_messagesCreateNestedManyWithoutCustomersInput
     orders?: ordersCreateNestedManyWithoutCustomersInput
@@ -133311,13 +139813,13 @@ export namespace Prisma {
     phone: string
     email?: string | null
     whatsapp_number?: string | null
-    platform_user_id?: string | null
     total_orders?: number
     total_spent?: Decimal | DecimalJsLike | number | string
     last_order_date?: Date | string | null
     engagement_score?: number
     created_at?: Date | string
     updated_at?: Date | string
+    platform_user_id?: string | null
     carts?: cartsUncheckedCreateNestedManyWithoutCustomersInput
     notification_messages?: notification_messagesUncheckedCreateNestedManyWithoutCustomersInput
     orders?: ordersUncheckedCreateNestedManyWithoutCustomersInput
@@ -133346,13 +139848,18 @@ export namespace Prisma {
     business_name?: StringFieldUpdateOperationsInput | string
     business_type?: NullableStringFieldUpdateOperationsInput | string | null
     whatsapp_number?: NullableStringFieldUpdateOperationsInput | string | null
-    brand_colors?: NullableJsonNullValueInput | InputJsonValue
-    logo_url?: NullableStringFieldUpdateOperationsInput | string | null
-    working_hours?: NullableJsonNullValueInput | InputJsonValue
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    website?: NullableStringFieldUpdateOperationsInput | string | null
+    city?: NullableStringFieldUpdateOperationsInput | string | null
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    country?: NullableStringFieldUpdateOperationsInput | string | null
+    gst_number?: NullableStringFieldUpdateOperationsInput | string | null
+    pan_number?: NullableStringFieldUpdateOperationsInput | string | null
+    business_employees?: business_employeesUpdateManyWithoutBusinessesNestedInput
     business_workflows?: business_workflowsUpdateManyWithoutBusinessesNestedInput
-    subscription_plans?: subscription_plansUpdateOneWithoutBusinessesNestedInput
     tenants?: tenantsUpdateOneRequiredWithoutBusinessesNestedInput
     carts?: cartsUpdateManyWithoutBusinessesNestedInput
     inventory_levels?: inventory_levelsUpdateManyWithoutBusinessesNestedInput
@@ -133380,13 +139887,18 @@ export namespace Prisma {
     tenant_id?: StringFieldUpdateOperationsInput | string
     business_name?: StringFieldUpdateOperationsInput | string
     business_type?: NullableStringFieldUpdateOperationsInput | string | null
-    subscription_plan_id?: NullableStringFieldUpdateOperationsInput | string | null
     whatsapp_number?: NullableStringFieldUpdateOperationsInput | string | null
-    brand_colors?: NullableJsonNullValueInput | InputJsonValue
-    logo_url?: NullableStringFieldUpdateOperationsInput | string | null
-    working_hours?: NullableJsonNullValueInput | InputJsonValue
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    website?: NullableStringFieldUpdateOperationsInput | string | null
+    city?: NullableStringFieldUpdateOperationsInput | string | null
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    country?: NullableStringFieldUpdateOperationsInput | string | null
+    gst_number?: NullableStringFieldUpdateOperationsInput | string | null
+    pan_number?: NullableStringFieldUpdateOperationsInput | string | null
+    business_employees?: business_employeesUncheckedUpdateManyWithoutBusinessesNestedInput
     business_workflows?: business_workflowsUncheckedUpdateManyWithoutBusinessesNestedInput
     carts?: cartsUncheckedUpdateManyWithoutBusinessesNestedInput
     inventory_levels?: inventory_levelsUncheckedUpdateManyWithoutBusinessesNestedInput
@@ -133428,13 +139940,13 @@ export namespace Prisma {
     phone?: StringFieldUpdateOperationsInput | string
     email?: NullableStringFieldUpdateOperationsInput | string | null
     whatsapp_number?: NullableStringFieldUpdateOperationsInput | string | null
-    platform_user_id?: NullableStringFieldUpdateOperationsInput | string | null
     total_orders?: IntFieldUpdateOperationsInput | number
     total_spent?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     last_order_date?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     engagement_score?: IntFieldUpdateOperationsInput | number
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    platform_user_id?: NullableStringFieldUpdateOperationsInput | string | null
     carts?: cartsUpdateManyWithoutCustomersNestedInput
     notification_messages?: notification_messagesUpdateManyWithoutCustomersNestedInput
     orders?: ordersUpdateManyWithoutCustomersNestedInput
@@ -133450,13 +139962,13 @@ export namespace Prisma {
     phone?: StringFieldUpdateOperationsInput | string
     email?: NullableStringFieldUpdateOperationsInput | string | null
     whatsapp_number?: NullableStringFieldUpdateOperationsInput | string | null
-    platform_user_id?: NullableStringFieldUpdateOperationsInput | string | null
     total_orders?: IntFieldUpdateOperationsInput | number
     total_spent?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     last_order_date?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     engagement_score?: IntFieldUpdateOperationsInput | number
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    platform_user_id?: NullableStringFieldUpdateOperationsInput | string | null
     carts?: cartsUncheckedUpdateManyWithoutCustomersNestedInput
     notification_messages?: notification_messagesUncheckedUpdateManyWithoutCustomersNestedInput
     orders?: ordersUncheckedUpdateManyWithoutCustomersNestedInput
@@ -133507,13 +140019,18 @@ export namespace Prisma {
     business_name: string
     business_type?: string | null
     whatsapp_number?: string | null
-    brand_colors?: NullableJsonNullValueInput | InputJsonValue
-    logo_url?: string | null
-    working_hours?: NullableJsonNullValueInput | InputJsonValue
     created_at?: Date | string | null
     updated_at?: Date | string | null
+    email?: string | null
+    phone?: string | null
+    website?: string | null
+    city?: string | null
+    address?: string | null
+    country?: string | null
+    gst_number?: string | null
+    pan_number?: string | null
+    business_employees?: business_employeesCreateNestedManyWithoutBusinessesInput
     business_workflows?: business_workflowsCreateNestedManyWithoutBusinessesInput
-    subscription_plans?: subscription_plansCreateNestedOneWithoutBusinessesInput
     tenants: tenantsCreateNestedOneWithoutBusinessesInput
     carts?: cartsCreateNestedManyWithoutBusinessesInput
     inventory_levels?: inventory_levelsCreateNestedManyWithoutBusinessesInput
@@ -133541,13 +140058,18 @@ export namespace Prisma {
     tenant_id: string
     business_name: string
     business_type?: string | null
-    subscription_plan_id?: string | null
     whatsapp_number?: string | null
-    brand_colors?: NullableJsonNullValueInput | InputJsonValue
-    logo_url?: string | null
-    working_hours?: NullableJsonNullValueInput | InputJsonValue
     created_at?: Date | string | null
     updated_at?: Date | string | null
+    email?: string | null
+    phone?: string | null
+    website?: string | null
+    city?: string | null
+    address?: string | null
+    country?: string | null
+    gst_number?: string | null
+    pan_number?: string | null
+    business_employees?: business_employeesUncheckedCreateNestedManyWithoutBusinessesInput
     business_workflows?: business_workflowsUncheckedCreateNestedManyWithoutBusinessesInput
     carts?: cartsUncheckedCreateNestedManyWithoutBusinessesInput
     inventory_levels?: inventory_levelsUncheckedCreateNestedManyWithoutBusinessesInput
@@ -133583,13 +140105,13 @@ export namespace Prisma {
     phone: string
     email?: string | null
     whatsapp_number?: string | null
-    platform_user_id?: string | null
     total_orders?: number
     total_spent?: Decimal | DecimalJsLike | number | string
     last_order_date?: Date | string | null
     engagement_score?: number
     created_at?: Date | string
     updated_at?: Date | string
+    platform_user_id?: string | null
     carts?: cartsCreateNestedManyWithoutCustomersInput
     notification_messages?: notification_messagesCreateNestedManyWithoutCustomersInput
     notification_preferences?: notification_preferencesCreateNestedManyWithoutCustomersInput
@@ -133605,13 +140127,13 @@ export namespace Prisma {
     phone: string
     email?: string | null
     whatsapp_number?: string | null
-    platform_user_id?: string | null
     total_orders?: number
     total_spent?: Decimal | DecimalJsLike | number | string
     last_order_date?: Date | string | null
     engagement_score?: number
     created_at?: Date | string
     updated_at?: Date | string
+    platform_user_id?: string | null
     carts?: cartsUncheckedCreateNestedManyWithoutCustomersInput
     notification_messages?: notification_messagesUncheckedCreateNestedManyWithoutCustomersInput
     notification_preferences?: notification_preferencesUncheckedCreateNestedManyWithoutCustomersInput
@@ -133769,13 +140291,18 @@ export namespace Prisma {
     business_name?: StringFieldUpdateOperationsInput | string
     business_type?: NullableStringFieldUpdateOperationsInput | string | null
     whatsapp_number?: NullableStringFieldUpdateOperationsInput | string | null
-    brand_colors?: NullableJsonNullValueInput | InputJsonValue
-    logo_url?: NullableStringFieldUpdateOperationsInput | string | null
-    working_hours?: NullableJsonNullValueInput | InputJsonValue
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    website?: NullableStringFieldUpdateOperationsInput | string | null
+    city?: NullableStringFieldUpdateOperationsInput | string | null
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    country?: NullableStringFieldUpdateOperationsInput | string | null
+    gst_number?: NullableStringFieldUpdateOperationsInput | string | null
+    pan_number?: NullableStringFieldUpdateOperationsInput | string | null
+    business_employees?: business_employeesUpdateManyWithoutBusinessesNestedInput
     business_workflows?: business_workflowsUpdateManyWithoutBusinessesNestedInput
-    subscription_plans?: subscription_plansUpdateOneWithoutBusinessesNestedInput
     tenants?: tenantsUpdateOneRequiredWithoutBusinessesNestedInput
     carts?: cartsUpdateManyWithoutBusinessesNestedInput
     inventory_levels?: inventory_levelsUpdateManyWithoutBusinessesNestedInput
@@ -133803,13 +140330,18 @@ export namespace Prisma {
     tenant_id?: StringFieldUpdateOperationsInput | string
     business_name?: StringFieldUpdateOperationsInput | string
     business_type?: NullableStringFieldUpdateOperationsInput | string | null
-    subscription_plan_id?: NullableStringFieldUpdateOperationsInput | string | null
     whatsapp_number?: NullableStringFieldUpdateOperationsInput | string | null
-    brand_colors?: NullableJsonNullValueInput | InputJsonValue
-    logo_url?: NullableStringFieldUpdateOperationsInput | string | null
-    working_hours?: NullableJsonNullValueInput | InputJsonValue
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    website?: NullableStringFieldUpdateOperationsInput | string | null
+    city?: NullableStringFieldUpdateOperationsInput | string | null
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    country?: NullableStringFieldUpdateOperationsInput | string | null
+    gst_number?: NullableStringFieldUpdateOperationsInput | string | null
+    pan_number?: NullableStringFieldUpdateOperationsInput | string | null
+    business_employees?: business_employeesUncheckedUpdateManyWithoutBusinessesNestedInput
     business_workflows?: business_workflowsUncheckedUpdateManyWithoutBusinessesNestedInput
     carts?: cartsUncheckedUpdateManyWithoutBusinessesNestedInput
     inventory_levels?: inventory_levelsUncheckedUpdateManyWithoutBusinessesNestedInput
@@ -133851,13 +140383,13 @@ export namespace Prisma {
     phone?: StringFieldUpdateOperationsInput | string
     email?: NullableStringFieldUpdateOperationsInput | string | null
     whatsapp_number?: NullableStringFieldUpdateOperationsInput | string | null
-    platform_user_id?: NullableStringFieldUpdateOperationsInput | string | null
     total_orders?: IntFieldUpdateOperationsInput | number
     total_spent?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     last_order_date?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     engagement_score?: IntFieldUpdateOperationsInput | number
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    platform_user_id?: NullableStringFieldUpdateOperationsInput | string | null
     carts?: cartsUpdateManyWithoutCustomersNestedInput
     notification_messages?: notification_messagesUpdateManyWithoutCustomersNestedInput
     notification_preferences?: notification_preferencesUpdateManyWithoutCustomersNestedInput
@@ -133873,13 +140405,13 @@ export namespace Prisma {
     phone?: StringFieldUpdateOperationsInput | string
     email?: NullableStringFieldUpdateOperationsInput | string | null
     whatsapp_number?: NullableStringFieldUpdateOperationsInput | string | null
-    platform_user_id?: NullableStringFieldUpdateOperationsInput | string | null
     total_orders?: IntFieldUpdateOperationsInput | number
     total_spent?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     last_order_date?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     engagement_score?: IntFieldUpdateOperationsInput | number
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    platform_user_id?: NullableStringFieldUpdateOperationsInput | string | null
     carts?: cartsUncheckedUpdateManyWithoutCustomersNestedInput
     notification_messages?: notification_messagesUncheckedUpdateManyWithoutCustomersNestedInput
     notification_preferences?: notification_preferencesUncheckedUpdateManyWithoutCustomersNestedInput
@@ -133993,13 +140525,18 @@ export namespace Prisma {
     business_name: string
     business_type?: string | null
     whatsapp_number?: string | null
-    brand_colors?: NullableJsonNullValueInput | InputJsonValue
-    logo_url?: string | null
-    working_hours?: NullableJsonNullValueInput | InputJsonValue
     created_at?: Date | string | null
     updated_at?: Date | string | null
+    email?: string | null
+    phone?: string | null
+    website?: string | null
+    city?: string | null
+    address?: string | null
+    country?: string | null
+    gst_number?: string | null
+    pan_number?: string | null
+    business_employees?: business_employeesCreateNestedManyWithoutBusinessesInput
     business_workflows?: business_workflowsCreateNestedManyWithoutBusinessesInput
-    subscription_plans?: subscription_plansCreateNestedOneWithoutBusinessesInput
     tenants: tenantsCreateNestedOneWithoutBusinessesInput
     carts?: cartsCreateNestedManyWithoutBusinessesInput
     inventory_levels?: inventory_levelsCreateNestedManyWithoutBusinessesInput
@@ -134027,13 +140564,18 @@ export namespace Prisma {
     tenant_id: string
     business_name: string
     business_type?: string | null
-    subscription_plan_id?: string | null
     whatsapp_number?: string | null
-    brand_colors?: NullableJsonNullValueInput | InputJsonValue
-    logo_url?: string | null
-    working_hours?: NullableJsonNullValueInput | InputJsonValue
     created_at?: Date | string | null
     updated_at?: Date | string | null
+    email?: string | null
+    phone?: string | null
+    website?: string | null
+    city?: string | null
+    address?: string | null
+    country?: string | null
+    gst_number?: string | null
+    pan_number?: string | null
+    business_employees?: business_employeesUncheckedCreateNestedManyWithoutBusinessesInput
     business_workflows?: business_workflowsUncheckedCreateNestedManyWithoutBusinessesInput
     carts?: cartsUncheckedCreateNestedManyWithoutBusinessesInput
     inventory_levels?: inventory_levelsUncheckedCreateNestedManyWithoutBusinessesInput
@@ -134077,13 +140619,18 @@ export namespace Prisma {
     business_name?: StringFieldUpdateOperationsInput | string
     business_type?: NullableStringFieldUpdateOperationsInput | string | null
     whatsapp_number?: NullableStringFieldUpdateOperationsInput | string | null
-    brand_colors?: NullableJsonNullValueInput | InputJsonValue
-    logo_url?: NullableStringFieldUpdateOperationsInput | string | null
-    working_hours?: NullableJsonNullValueInput | InputJsonValue
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    website?: NullableStringFieldUpdateOperationsInput | string | null
+    city?: NullableStringFieldUpdateOperationsInput | string | null
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    country?: NullableStringFieldUpdateOperationsInput | string | null
+    gst_number?: NullableStringFieldUpdateOperationsInput | string | null
+    pan_number?: NullableStringFieldUpdateOperationsInput | string | null
+    business_employees?: business_employeesUpdateManyWithoutBusinessesNestedInput
     business_workflows?: business_workflowsUpdateManyWithoutBusinessesNestedInput
-    subscription_plans?: subscription_plansUpdateOneWithoutBusinessesNestedInput
     tenants?: tenantsUpdateOneRequiredWithoutBusinessesNestedInput
     carts?: cartsUpdateManyWithoutBusinessesNestedInput
     inventory_levels?: inventory_levelsUpdateManyWithoutBusinessesNestedInput
@@ -134111,13 +140658,18 @@ export namespace Prisma {
     tenant_id?: StringFieldUpdateOperationsInput | string
     business_name?: StringFieldUpdateOperationsInput | string
     business_type?: NullableStringFieldUpdateOperationsInput | string | null
-    subscription_plan_id?: NullableStringFieldUpdateOperationsInput | string | null
     whatsapp_number?: NullableStringFieldUpdateOperationsInput | string | null
-    brand_colors?: NullableJsonNullValueInput | InputJsonValue
-    logo_url?: NullableStringFieldUpdateOperationsInput | string | null
-    working_hours?: NullableJsonNullValueInput | InputJsonValue
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    website?: NullableStringFieldUpdateOperationsInput | string | null
+    city?: NullableStringFieldUpdateOperationsInput | string | null
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    country?: NullableStringFieldUpdateOperationsInput | string | null
+    gst_number?: NullableStringFieldUpdateOperationsInput | string | null
+    pan_number?: NullableStringFieldUpdateOperationsInput | string | null
+    business_employees?: business_employeesUncheckedUpdateManyWithoutBusinessesNestedInput
     business_workflows?: business_workflowsUncheckedUpdateManyWithoutBusinessesNestedInput
     carts?: cartsUncheckedUpdateManyWithoutBusinessesNestedInput
     inventory_levels?: inventory_levelsUncheckedUpdateManyWithoutBusinessesNestedInput
@@ -134719,13 +141271,18 @@ export namespace Prisma {
     business_name: string
     business_type?: string | null
     whatsapp_number?: string | null
-    brand_colors?: NullableJsonNullValueInput | InputJsonValue
-    logo_url?: string | null
-    working_hours?: NullableJsonNullValueInput | InputJsonValue
     created_at?: Date | string | null
     updated_at?: Date | string | null
+    email?: string | null
+    phone?: string | null
+    website?: string | null
+    city?: string | null
+    address?: string | null
+    country?: string | null
+    gst_number?: string | null
+    pan_number?: string | null
+    business_employees?: business_employeesCreateNestedManyWithoutBusinessesInput
     business_workflows?: business_workflowsCreateNestedManyWithoutBusinessesInput
-    subscription_plans?: subscription_plansCreateNestedOneWithoutBusinessesInput
     tenants: tenantsCreateNestedOneWithoutBusinessesInput
     carts?: cartsCreateNestedManyWithoutBusinessesInput
     inventory_levels?: inventory_levelsCreateNestedManyWithoutBusinessesInput
@@ -134753,13 +141310,18 @@ export namespace Prisma {
     tenant_id: string
     business_name: string
     business_type?: string | null
-    subscription_plan_id?: string | null
     whatsapp_number?: string | null
-    brand_colors?: NullableJsonNullValueInput | InputJsonValue
-    logo_url?: string | null
-    working_hours?: NullableJsonNullValueInput | InputJsonValue
     created_at?: Date | string | null
     updated_at?: Date | string | null
+    email?: string | null
+    phone?: string | null
+    website?: string | null
+    city?: string | null
+    address?: string | null
+    country?: string | null
+    gst_number?: string | null
+    pan_number?: string | null
+    business_employees?: business_employeesUncheckedCreateNestedManyWithoutBusinessesInput
     business_workflows?: business_workflowsUncheckedCreateNestedManyWithoutBusinessesInput
     carts?: cartsUncheckedCreateNestedManyWithoutBusinessesInput
     inventory_levels?: inventory_levelsUncheckedCreateNestedManyWithoutBusinessesInput
@@ -135060,6 +141622,7 @@ export namespace Prisma {
     instagram_retailer_id?: string | null
     campaigns?: campaignsCreateNestedManyWithoutProductsInput
     cart_items?: cart_itemsCreateNestedManyWithoutProductsInput
+    cart_reservations?: cart_reservationsCreateNestedManyWithoutProductsInput
     course_batches?: course_batchesCreateNestedManyWithoutCourseInput
     order_items?: order_itemsCreateNestedManyWithoutProductsInput
     product_images?: product_imagesCreateNestedManyWithoutProductsInput
@@ -135067,7 +141630,6 @@ export namespace Prisma {
     product_variants?: product_variantsCreateNestedManyWithoutProductInput
     businesses: businessesCreateNestedOneWithoutProductsInput
     stock_reservations?: stock_reservationsCreateNestedManyWithoutProductsInput
-    cart_reservations?: cart_reservationsCreateNestedManyWithoutProductsInput
   }
 
   export type productsUncheckedCreateWithoutProduct_categoriesInput = {
@@ -135109,13 +141671,13 @@ export namespace Prisma {
     instagram_retailer_id?: string | null
     campaigns?: campaignsUncheckedCreateNestedManyWithoutProductsInput
     cart_items?: cart_itemsUncheckedCreateNestedManyWithoutProductsInput
+    cart_reservations?: cart_reservationsUncheckedCreateNestedManyWithoutProductsInput
     course_batches?: course_batchesUncheckedCreateNestedManyWithoutCourseInput
     order_items?: order_itemsUncheckedCreateNestedManyWithoutProductsInput
     product_images?: product_imagesUncheckedCreateNestedManyWithoutProductsInput
     product_reviews?: product_reviewsUncheckedCreateNestedManyWithoutProductInput
     product_variants?: product_variantsUncheckedCreateNestedManyWithoutProductInput
     stock_reservations?: stock_reservationsUncheckedCreateNestedManyWithoutProductsInput
-    cart_reservations?: cart_reservationsUncheckedCreateNestedManyWithoutProductsInput
   }
 
   export type productsCreateOrConnectWithoutProduct_categoriesInput = {
@@ -135144,13 +141706,18 @@ export namespace Prisma {
     business_name?: StringFieldUpdateOperationsInput | string
     business_type?: NullableStringFieldUpdateOperationsInput | string | null
     whatsapp_number?: NullableStringFieldUpdateOperationsInput | string | null
-    brand_colors?: NullableJsonNullValueInput | InputJsonValue
-    logo_url?: NullableStringFieldUpdateOperationsInput | string | null
-    working_hours?: NullableJsonNullValueInput | InputJsonValue
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    website?: NullableStringFieldUpdateOperationsInput | string | null
+    city?: NullableStringFieldUpdateOperationsInput | string | null
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    country?: NullableStringFieldUpdateOperationsInput | string | null
+    gst_number?: NullableStringFieldUpdateOperationsInput | string | null
+    pan_number?: NullableStringFieldUpdateOperationsInput | string | null
+    business_employees?: business_employeesUpdateManyWithoutBusinessesNestedInput
     business_workflows?: business_workflowsUpdateManyWithoutBusinessesNestedInput
-    subscription_plans?: subscription_plansUpdateOneWithoutBusinessesNestedInput
     tenants?: tenantsUpdateOneRequiredWithoutBusinessesNestedInput
     carts?: cartsUpdateManyWithoutBusinessesNestedInput
     inventory_levels?: inventory_levelsUpdateManyWithoutBusinessesNestedInput
@@ -135178,13 +141745,18 @@ export namespace Prisma {
     tenant_id?: StringFieldUpdateOperationsInput | string
     business_name?: StringFieldUpdateOperationsInput | string
     business_type?: NullableStringFieldUpdateOperationsInput | string | null
-    subscription_plan_id?: NullableStringFieldUpdateOperationsInput | string | null
     whatsapp_number?: NullableStringFieldUpdateOperationsInput | string | null
-    brand_colors?: NullableJsonNullValueInput | InputJsonValue
-    logo_url?: NullableStringFieldUpdateOperationsInput | string | null
-    working_hours?: NullableJsonNullValueInput | InputJsonValue
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    website?: NullableStringFieldUpdateOperationsInput | string | null
+    city?: NullableStringFieldUpdateOperationsInput | string | null
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    country?: NullableStringFieldUpdateOperationsInput | string | null
+    gst_number?: NullableStringFieldUpdateOperationsInput | string | null
+    pan_number?: NullableStringFieldUpdateOperationsInput | string | null
+    business_employees?: business_employeesUncheckedUpdateManyWithoutBusinessesNestedInput
     business_workflows?: business_workflowsUncheckedUpdateManyWithoutBusinessesNestedInput
     carts?: cartsUncheckedUpdateManyWithoutBusinessesNestedInput
     inventory_levels?: inventory_levelsUncheckedUpdateManyWithoutBusinessesNestedInput
@@ -135444,13 +142016,13 @@ export namespace Prisma {
     phone: string
     email?: string | null
     whatsapp_number?: string | null
-    platform_user_id?: string | null
     total_orders?: number
     total_spent?: Decimal | DecimalJsLike | number | string
     last_order_date?: Date | string | null
     engagement_score?: number
     created_at?: Date | string
     updated_at?: Date | string
+    platform_user_id?: string | null
     carts?: cartsCreateNestedManyWithoutCustomersInput
     notification_messages?: notification_messagesCreateNestedManyWithoutCustomersInput
     notification_preferences?: notification_preferencesCreateNestedManyWithoutCustomersInput
@@ -135466,13 +142038,13 @@ export namespace Prisma {
     phone: string
     email?: string | null
     whatsapp_number?: string | null
-    platform_user_id?: string | null
     total_orders?: number
     total_spent?: Decimal | DecimalJsLike | number | string
     last_order_date?: Date | string | null
     engagement_score?: number
     created_at?: Date | string
     updated_at?: Date | string
+    platform_user_id?: string | null
     carts?: cartsUncheckedCreateNestedManyWithoutCustomersInput
     notification_messages?: notification_messagesUncheckedCreateNestedManyWithoutCustomersInput
     notification_preferences?: notification_preferencesUncheckedCreateNestedManyWithoutCustomersInput
@@ -135618,6 +142190,7 @@ export namespace Prisma {
     instagram_retailer_id?: string | null
     campaigns?: campaignsCreateNestedManyWithoutProductsInput
     cart_items?: cart_itemsCreateNestedManyWithoutProductsInput
+    cart_reservations?: cart_reservationsCreateNestedManyWithoutProductsInput
     course_batches?: course_batchesCreateNestedManyWithoutCourseInput
     order_items?: order_itemsCreateNestedManyWithoutProductsInput
     product_images?: product_imagesCreateNestedManyWithoutProductsInput
@@ -135625,7 +142198,6 @@ export namespace Prisma {
     businesses: businessesCreateNestedOneWithoutProductsInput
     product_categories?: product_categoriesCreateNestedOneWithoutProductsInput
     stock_reservations?: stock_reservationsCreateNestedManyWithoutProductsInput
-    cart_reservations?: cart_reservationsCreateNestedManyWithoutProductsInput
   }
 
   export type productsUncheckedCreateWithoutProduct_reviewsInput = {
@@ -135668,12 +142240,12 @@ export namespace Prisma {
     instagram_retailer_id?: string | null
     campaigns?: campaignsUncheckedCreateNestedManyWithoutProductsInput
     cart_items?: cart_itemsUncheckedCreateNestedManyWithoutProductsInput
+    cart_reservations?: cart_reservationsUncheckedCreateNestedManyWithoutProductsInput
     course_batches?: course_batchesUncheckedCreateNestedManyWithoutCourseInput
     order_items?: order_itemsUncheckedCreateNestedManyWithoutProductsInput
     product_images?: product_imagesUncheckedCreateNestedManyWithoutProductsInput
     product_variants?: product_variantsUncheckedCreateNestedManyWithoutProductInput
     stock_reservations?: stock_reservationsUncheckedCreateNestedManyWithoutProductsInput
-    cart_reservations?: cart_reservationsUncheckedCreateNestedManyWithoutProductsInput
   }
 
   export type productsCreateOrConnectWithoutProduct_reviewsInput = {
@@ -135773,13 +142345,13 @@ export namespace Prisma {
     phone?: StringFieldUpdateOperationsInput | string
     email?: NullableStringFieldUpdateOperationsInput | string | null
     whatsapp_number?: NullableStringFieldUpdateOperationsInput | string | null
-    platform_user_id?: NullableStringFieldUpdateOperationsInput | string | null
     total_orders?: IntFieldUpdateOperationsInput | number
     total_spent?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     last_order_date?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     engagement_score?: IntFieldUpdateOperationsInput | number
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    platform_user_id?: NullableStringFieldUpdateOperationsInput | string | null
     carts?: cartsUpdateManyWithoutCustomersNestedInput
     notification_messages?: notification_messagesUpdateManyWithoutCustomersNestedInput
     notification_preferences?: notification_preferencesUpdateManyWithoutCustomersNestedInput
@@ -135795,13 +142367,13 @@ export namespace Prisma {
     phone?: StringFieldUpdateOperationsInput | string
     email?: NullableStringFieldUpdateOperationsInput | string | null
     whatsapp_number?: NullableStringFieldUpdateOperationsInput | string | null
-    platform_user_id?: NullableStringFieldUpdateOperationsInput | string | null
     total_orders?: IntFieldUpdateOperationsInput | number
     total_spent?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     last_order_date?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     engagement_score?: IntFieldUpdateOperationsInput | number
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    platform_user_id?: NullableStringFieldUpdateOperationsInput | string | null
     carts?: cartsUncheckedUpdateManyWithoutCustomersNestedInput
     notification_messages?: notification_messagesUncheckedUpdateManyWithoutCustomersNestedInput
     notification_preferences?: notification_preferencesUncheckedUpdateManyWithoutCustomersNestedInput
@@ -135959,6 +142531,7 @@ export namespace Prisma {
     instagram_retailer_id?: NullableStringFieldUpdateOperationsInput | string | null
     campaigns?: campaignsUpdateManyWithoutProductsNestedInput
     cart_items?: cart_itemsUpdateManyWithoutProductsNestedInput
+    cart_reservations?: cart_reservationsUpdateManyWithoutProductsNestedInput
     course_batches?: course_batchesUpdateManyWithoutCourseNestedInput
     order_items?: order_itemsUpdateManyWithoutProductsNestedInput
     product_images?: product_imagesUpdateManyWithoutProductsNestedInput
@@ -135966,7 +142539,6 @@ export namespace Prisma {
     businesses?: businessesUpdateOneRequiredWithoutProductsNestedInput
     product_categories?: product_categoriesUpdateOneWithoutProductsNestedInput
     stock_reservations?: stock_reservationsUpdateManyWithoutProductsNestedInput
-    cart_reservations?: cart_reservationsUpdateManyWithoutProductsNestedInput
   }
 
   export type productsUncheckedUpdateWithoutProduct_reviewsInput = {
@@ -136009,12 +142581,12 @@ export namespace Prisma {
     instagram_retailer_id?: NullableStringFieldUpdateOperationsInput | string | null
     campaigns?: campaignsUncheckedUpdateManyWithoutProductsNestedInput
     cart_items?: cart_itemsUncheckedUpdateManyWithoutProductsNestedInput
+    cart_reservations?: cart_reservationsUncheckedUpdateManyWithoutProductsNestedInput
     course_batches?: course_batchesUncheckedUpdateManyWithoutCourseNestedInput
     order_items?: order_itemsUncheckedUpdateManyWithoutProductsNestedInput
     product_images?: product_imagesUncheckedUpdateManyWithoutProductsNestedInput
     product_variants?: product_variantsUncheckedUpdateManyWithoutProductNestedInput
     stock_reservations?: stock_reservationsUncheckedUpdateManyWithoutProductsNestedInput
-    cart_reservations?: cart_reservationsUncheckedUpdateManyWithoutProductsNestedInput
   }
 
   export type usersUpsertWithoutReview_responsesInput = {
@@ -136209,12 +142781,17 @@ export namespace Prisma {
     business_name: string
     business_type?: string | null
     whatsapp_number?: string | null
-    brand_colors?: NullableJsonNullValueInput | InputJsonValue
-    logo_url?: string | null
-    working_hours?: NullableJsonNullValueInput | InputJsonValue
     created_at?: Date | string | null
     updated_at?: Date | string | null
-    subscription_plans?: subscription_plansCreateNestedOneWithoutBusinessesInput
+    email?: string | null
+    phone?: string | null
+    website?: string | null
+    city?: string | null
+    address?: string | null
+    country?: string | null
+    gst_number?: string | null
+    pan_number?: string | null
+    business_employees?: business_employeesCreateNestedManyWithoutBusinessesInput
     tenants: tenantsCreateNestedOneWithoutBusinessesInput
     carts?: cartsCreateNestedManyWithoutBusinessesInput
     inventory_levels?: inventory_levelsCreateNestedManyWithoutBusinessesInput
@@ -136243,13 +142820,18 @@ export namespace Prisma {
     tenant_id: string
     business_name: string
     business_type?: string | null
-    subscription_plan_id?: string | null
     whatsapp_number?: string | null
-    brand_colors?: NullableJsonNullValueInput | InputJsonValue
-    logo_url?: string | null
-    working_hours?: NullableJsonNullValueInput | InputJsonValue
     created_at?: Date | string | null
     updated_at?: Date | string | null
+    email?: string | null
+    phone?: string | null
+    website?: string | null
+    city?: string | null
+    address?: string | null
+    country?: string | null
+    gst_number?: string | null
+    pan_number?: string | null
+    business_employees?: business_employeesUncheckedCreateNestedManyWithoutBusinessesInput
     carts?: cartsUncheckedCreateNestedManyWithoutBusinessesInput
     inventory_levels?: inventory_levelsUncheckedCreateNestedManyWithoutBusinessesInput
     leads?: leadsUncheckedCreateNestedManyWithoutBusinessesInput
@@ -136383,12 +142965,17 @@ export namespace Prisma {
     business_name?: StringFieldUpdateOperationsInput | string
     business_type?: NullableStringFieldUpdateOperationsInput | string | null
     whatsapp_number?: NullableStringFieldUpdateOperationsInput | string | null
-    brand_colors?: NullableJsonNullValueInput | InputJsonValue
-    logo_url?: NullableStringFieldUpdateOperationsInput | string | null
-    working_hours?: NullableJsonNullValueInput | InputJsonValue
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    subscription_plans?: subscription_plansUpdateOneWithoutBusinessesNestedInput
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    website?: NullableStringFieldUpdateOperationsInput | string | null
+    city?: NullableStringFieldUpdateOperationsInput | string | null
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    country?: NullableStringFieldUpdateOperationsInput | string | null
+    gst_number?: NullableStringFieldUpdateOperationsInput | string | null
+    pan_number?: NullableStringFieldUpdateOperationsInput | string | null
+    business_employees?: business_employeesUpdateManyWithoutBusinessesNestedInput
     tenants?: tenantsUpdateOneRequiredWithoutBusinessesNestedInput
     carts?: cartsUpdateManyWithoutBusinessesNestedInput
     inventory_levels?: inventory_levelsUpdateManyWithoutBusinessesNestedInput
@@ -136417,13 +143004,18 @@ export namespace Prisma {
     tenant_id?: StringFieldUpdateOperationsInput | string
     business_name?: StringFieldUpdateOperationsInput | string
     business_type?: NullableStringFieldUpdateOperationsInput | string | null
-    subscription_plan_id?: NullableStringFieldUpdateOperationsInput | string | null
     whatsapp_number?: NullableStringFieldUpdateOperationsInput | string | null
-    brand_colors?: NullableJsonNullValueInput | InputJsonValue
-    logo_url?: NullableStringFieldUpdateOperationsInput | string | null
-    working_hours?: NullableJsonNullValueInput | InputJsonValue
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    website?: NullableStringFieldUpdateOperationsInput | string | null
+    city?: NullableStringFieldUpdateOperationsInput | string | null
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    country?: NullableStringFieldUpdateOperationsInput | string | null
+    gst_number?: NullableStringFieldUpdateOperationsInput | string | null
+    pan_number?: NullableStringFieldUpdateOperationsInput | string | null
+    business_employees?: business_employeesUncheckedUpdateManyWithoutBusinessesNestedInput
     carts?: cartsUncheckedUpdateManyWithoutBusinessesNestedInput
     inventory_levels?: inventory_levelsUncheckedUpdateManyWithoutBusinessesNestedInput
     leads?: leadsUncheckedUpdateManyWithoutBusinessesNestedInput
@@ -136553,13 +143145,18 @@ export namespace Prisma {
     business_name: string
     business_type?: string | null
     whatsapp_number?: string | null
-    brand_colors?: NullableJsonNullValueInput | InputJsonValue
-    logo_url?: string | null
-    working_hours?: NullableJsonNullValueInput | InputJsonValue
     created_at?: Date | string | null
     updated_at?: Date | string | null
+    email?: string | null
+    phone?: string | null
+    website?: string | null
+    city?: string | null
+    address?: string | null
+    country?: string | null
+    gst_number?: string | null
+    pan_number?: string | null
+    business_employees?: business_employeesCreateNestedManyWithoutBusinessesInput
     business_workflows?: business_workflowsCreateNestedManyWithoutBusinessesInput
-    subscription_plans?: subscription_plansCreateNestedOneWithoutBusinessesInput
     tenants: tenantsCreateNestedOneWithoutBusinessesInput
     carts?: cartsCreateNestedManyWithoutBusinessesInput
     inventory_levels?: inventory_levelsCreateNestedManyWithoutBusinessesInput
@@ -136587,13 +143184,18 @@ export namespace Prisma {
     tenant_id: string
     business_name: string
     business_type?: string | null
-    subscription_plan_id?: string | null
     whatsapp_number?: string | null
-    brand_colors?: NullableJsonNullValueInput | InputJsonValue
-    logo_url?: string | null
-    working_hours?: NullableJsonNullValueInput | InputJsonValue
     created_at?: Date | string | null
     updated_at?: Date | string | null
+    email?: string | null
+    phone?: string | null
+    website?: string | null
+    city?: string | null
+    address?: string | null
+    country?: string | null
+    gst_number?: string | null
+    pan_number?: string | null
+    business_employees?: business_employeesUncheckedCreateNestedManyWithoutBusinessesInput
     business_workflows?: business_workflowsUncheckedCreateNestedManyWithoutBusinessesInput
     carts?: cartsUncheckedCreateNestedManyWithoutBusinessesInput
     inventory_levels?: inventory_levelsUncheckedCreateNestedManyWithoutBusinessesInput
@@ -136677,6 +143279,7 @@ export namespace Prisma {
     deleted_by?: string | null
     onboarding_completed?: boolean
     delivery_address?: string | null
+    cart_reservations?: cart_reservationsCreateNestedManyWithoutLeadsInput
     carts?: cartsCreateNestedManyWithoutLeadsInput
     lead_activities?: lead_activitiesCreateNestedManyWithoutLeadsInput
     lead_conversations?: lead_conversationsCreateNestedManyWithoutLeadsInput
@@ -136695,7 +143298,6 @@ export namespace Prisma {
     duplicate_leads?: leadsCreateNestedManyWithoutDuplicate_of_leadInput
     tenants: tenantsCreateNestedOneWithoutLeadsInput
     orders?: ordersCreateNestedManyWithoutLeadsInput
-    cart_reservations?: cart_reservationsCreateNestedManyWithoutLeadsInput
   }
 
   export type leadsUncheckedCreateWithoutWorkflow_executionsInput = {
@@ -136758,6 +143360,7 @@ export namespace Prisma {
     deleted_by?: string | null
     onboarding_completed?: boolean
     delivery_address?: string | null
+    cart_reservations?: cart_reservationsUncheckedCreateNestedManyWithoutLeadsInput
     carts?: cartsUncheckedCreateNestedManyWithoutLeadsInput
     lead_activities?: lead_activitiesUncheckedCreateNestedManyWithoutLeadsInput
     lead_conversations?: lead_conversationsUncheckedCreateNestedManyWithoutLeadsInput
@@ -136772,7 +143375,6 @@ export namespace Prisma {
     lead_tag_assignments?: lead_tag_assignmentsUncheckedCreateNestedManyWithoutLeadsInput
     duplicate_leads?: leadsUncheckedCreateNestedManyWithoutDuplicate_of_leadInput
     orders?: ordersUncheckedCreateNestedManyWithoutLeadsInput
-    cart_reservations?: cart_reservationsUncheckedCreateNestedManyWithoutLeadsInput
   }
 
   export type leadsCreateOrConnectWithoutWorkflow_executionsInput = {
@@ -136831,13 +143433,18 @@ export namespace Prisma {
     business_name?: StringFieldUpdateOperationsInput | string
     business_type?: NullableStringFieldUpdateOperationsInput | string | null
     whatsapp_number?: NullableStringFieldUpdateOperationsInput | string | null
-    brand_colors?: NullableJsonNullValueInput | InputJsonValue
-    logo_url?: NullableStringFieldUpdateOperationsInput | string | null
-    working_hours?: NullableJsonNullValueInput | InputJsonValue
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    website?: NullableStringFieldUpdateOperationsInput | string | null
+    city?: NullableStringFieldUpdateOperationsInput | string | null
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    country?: NullableStringFieldUpdateOperationsInput | string | null
+    gst_number?: NullableStringFieldUpdateOperationsInput | string | null
+    pan_number?: NullableStringFieldUpdateOperationsInput | string | null
+    business_employees?: business_employeesUpdateManyWithoutBusinessesNestedInput
     business_workflows?: business_workflowsUpdateManyWithoutBusinessesNestedInput
-    subscription_plans?: subscription_plansUpdateOneWithoutBusinessesNestedInput
     tenants?: tenantsUpdateOneRequiredWithoutBusinessesNestedInput
     carts?: cartsUpdateManyWithoutBusinessesNestedInput
     inventory_levels?: inventory_levelsUpdateManyWithoutBusinessesNestedInput
@@ -136865,13 +143472,18 @@ export namespace Prisma {
     tenant_id?: StringFieldUpdateOperationsInput | string
     business_name?: StringFieldUpdateOperationsInput | string
     business_type?: NullableStringFieldUpdateOperationsInput | string | null
-    subscription_plan_id?: NullableStringFieldUpdateOperationsInput | string | null
     whatsapp_number?: NullableStringFieldUpdateOperationsInput | string | null
-    brand_colors?: NullableJsonNullValueInput | InputJsonValue
-    logo_url?: NullableStringFieldUpdateOperationsInput | string | null
-    working_hours?: NullableJsonNullValueInput | InputJsonValue
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    website?: NullableStringFieldUpdateOperationsInput | string | null
+    city?: NullableStringFieldUpdateOperationsInput | string | null
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    country?: NullableStringFieldUpdateOperationsInput | string | null
+    gst_number?: NullableStringFieldUpdateOperationsInput | string | null
+    pan_number?: NullableStringFieldUpdateOperationsInput | string | null
+    business_employees?: business_employeesUncheckedUpdateManyWithoutBusinessesNestedInput
     business_workflows?: business_workflowsUncheckedUpdateManyWithoutBusinessesNestedInput
     carts?: cartsUncheckedUpdateManyWithoutBusinessesNestedInput
     inventory_levels?: inventory_levelsUncheckedUpdateManyWithoutBusinessesNestedInput
@@ -136961,6 +143573,7 @@ export namespace Prisma {
     deleted_by?: NullableStringFieldUpdateOperationsInput | string | null
     onboarding_completed?: BoolFieldUpdateOperationsInput | boolean
     delivery_address?: NullableStringFieldUpdateOperationsInput | string | null
+    cart_reservations?: cart_reservationsUpdateManyWithoutLeadsNestedInput
     carts?: cartsUpdateManyWithoutLeadsNestedInput
     lead_activities?: lead_activitiesUpdateManyWithoutLeadsNestedInput
     lead_conversations?: lead_conversationsUpdateManyWithoutLeadsNestedInput
@@ -136979,7 +143592,6 @@ export namespace Prisma {
     duplicate_leads?: leadsUpdateManyWithoutDuplicate_of_leadNestedInput
     tenants?: tenantsUpdateOneRequiredWithoutLeadsNestedInput
     orders?: ordersUpdateManyWithoutLeadsNestedInput
-    cart_reservations?: cart_reservationsUpdateManyWithoutLeadsNestedInput
   }
 
   export type leadsUncheckedUpdateWithoutWorkflow_executionsInput = {
@@ -137042,6 +143654,7 @@ export namespace Prisma {
     deleted_by?: NullableStringFieldUpdateOperationsInput | string | null
     onboarding_completed?: BoolFieldUpdateOperationsInput | boolean
     delivery_address?: NullableStringFieldUpdateOperationsInput | string | null
+    cart_reservations?: cart_reservationsUncheckedUpdateManyWithoutLeadsNestedInput
     carts?: cartsUncheckedUpdateManyWithoutLeadsNestedInput
     lead_activities?: lead_activitiesUncheckedUpdateManyWithoutLeadsNestedInput
     lead_conversations?: lead_conversationsUncheckedUpdateManyWithoutLeadsNestedInput
@@ -137056,7 +143669,6 @@ export namespace Prisma {
     lead_tag_assignments?: lead_tag_assignmentsUncheckedUpdateManyWithoutLeadsNestedInput
     duplicate_leads?: leadsUncheckedUpdateManyWithoutDuplicate_of_leadNestedInput
     orders?: ordersUncheckedUpdateManyWithoutLeadsNestedInput
-    cart_reservations?: cart_reservationsUncheckedUpdateManyWithoutLeadsNestedInput
   }
 
   export type workflow_definitionsUpsertWithoutWorkflow_executionsInput = {
@@ -137119,13 +143731,13 @@ export namespace Prisma {
     business_id: string
     tenant_id: string
     lead_id?: string | null
-    customer_id?: string | null
     status?: string | null
     total_amount?: Decimal | DecimalJsLike | number | string | null
     total_items?: number | null
     expires_at?: Date | string | null
     created_at?: Date | string | null
     updated_at?: Date | string | null
+    customer_id?: string | null
   }
 
   export type cartsCreateOrConnectWithoutCart_itemsInput = {
@@ -137170,6 +143782,7 @@ export namespace Prisma {
     instagram_synced_at?: Date | string | null
     instagram_retailer_id?: string | null
     campaigns?: campaignsCreateNestedManyWithoutProductsInput
+    cart_reservations?: cart_reservationsCreateNestedManyWithoutProductsInput
     course_batches?: course_batchesCreateNestedManyWithoutCourseInput
     order_items?: order_itemsCreateNestedManyWithoutProductsInput
     product_images?: product_imagesCreateNestedManyWithoutProductsInput
@@ -137178,7 +143791,6 @@ export namespace Prisma {
     businesses: businessesCreateNestedOneWithoutProductsInput
     product_categories?: product_categoriesCreateNestedOneWithoutProductsInput
     stock_reservations?: stock_reservationsCreateNestedManyWithoutProductsInput
-    cart_reservations?: cart_reservationsCreateNestedManyWithoutProductsInput
   }
 
   export type productsUncheckedCreateWithoutCart_itemsInput = {
@@ -137220,13 +143832,13 @@ export namespace Prisma {
     instagram_synced_at?: Date | string | null
     instagram_retailer_id?: string | null
     campaigns?: campaignsUncheckedCreateNestedManyWithoutProductsInput
+    cart_reservations?: cart_reservationsUncheckedCreateNestedManyWithoutProductsInput
     course_batches?: course_batchesUncheckedCreateNestedManyWithoutCourseInput
     order_items?: order_itemsUncheckedCreateNestedManyWithoutProductsInput
     product_images?: product_imagesUncheckedCreateNestedManyWithoutProductsInput
     product_reviews?: product_reviewsUncheckedCreateNestedManyWithoutProductInput
     product_variants?: product_variantsUncheckedCreateNestedManyWithoutProductInput
     stock_reservations?: stock_reservationsUncheckedCreateNestedManyWithoutProductsInput
-    cart_reservations?: cart_reservationsUncheckedCreateNestedManyWithoutProductsInput
   }
 
   export type productsCreateOrConnectWithoutCart_itemsInput = {
@@ -137305,13 +143917,13 @@ export namespace Prisma {
     business_id?: StringFieldUpdateOperationsInput | string
     tenant_id?: StringFieldUpdateOperationsInput | string
     lead_id?: NullableStringFieldUpdateOperationsInput | string | null
-    customer_id?: NullableStringFieldUpdateOperationsInput | string | null
     status?: NullableStringFieldUpdateOperationsInput | string | null
     total_amount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     total_items?: NullableIntFieldUpdateOperationsInput | number | null
     expires_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    customer_id?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type productsUpsertWithoutCart_itemsInput = {
@@ -137362,6 +143974,7 @@ export namespace Prisma {
     instagram_synced_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     instagram_retailer_id?: NullableStringFieldUpdateOperationsInput | string | null
     campaigns?: campaignsUpdateManyWithoutProductsNestedInput
+    cart_reservations?: cart_reservationsUpdateManyWithoutProductsNestedInput
     course_batches?: course_batchesUpdateManyWithoutCourseNestedInput
     order_items?: order_itemsUpdateManyWithoutProductsNestedInput
     product_images?: product_imagesUpdateManyWithoutProductsNestedInput
@@ -137370,7 +143983,6 @@ export namespace Prisma {
     businesses?: businessesUpdateOneRequiredWithoutProductsNestedInput
     product_categories?: product_categoriesUpdateOneWithoutProductsNestedInput
     stock_reservations?: stock_reservationsUpdateManyWithoutProductsNestedInput
-    cart_reservations?: cart_reservationsUpdateManyWithoutProductsNestedInput
   }
 
   export type productsUncheckedUpdateWithoutCart_itemsInput = {
@@ -137412,13 +144024,13 @@ export namespace Prisma {
     instagram_synced_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     instagram_retailer_id?: NullableStringFieldUpdateOperationsInput | string | null
     campaigns?: campaignsUncheckedUpdateManyWithoutProductsNestedInput
+    cart_reservations?: cart_reservationsUncheckedUpdateManyWithoutProductsNestedInput
     course_batches?: course_batchesUncheckedUpdateManyWithoutCourseNestedInput
     order_items?: order_itemsUncheckedUpdateManyWithoutProductsNestedInput
     product_images?: product_imagesUncheckedUpdateManyWithoutProductsNestedInput
     product_reviews?: product_reviewsUncheckedUpdateManyWithoutProductNestedInput
     product_variants?: product_variantsUncheckedUpdateManyWithoutProductNestedInput
     stock_reservations?: stock_reservationsUncheckedUpdateManyWithoutProductsNestedInput
-    cart_reservations?: cart_reservationsUncheckedUpdateManyWithoutProductsNestedInput
   }
 
   export type product_variantsUpsertWithoutCart_itemsInput = {
@@ -137511,13 +144123,18 @@ export namespace Prisma {
     business_name: string
     business_type?: string | null
     whatsapp_number?: string | null
-    brand_colors?: NullableJsonNullValueInput | InputJsonValue
-    logo_url?: string | null
-    working_hours?: NullableJsonNullValueInput | InputJsonValue
     created_at?: Date | string | null
     updated_at?: Date | string | null
+    email?: string | null
+    phone?: string | null
+    website?: string | null
+    city?: string | null
+    address?: string | null
+    country?: string | null
+    gst_number?: string | null
+    pan_number?: string | null
+    business_employees?: business_employeesCreateNestedManyWithoutBusinessesInput
     business_workflows?: business_workflowsCreateNestedManyWithoutBusinessesInput
-    subscription_plans?: subscription_plansCreateNestedOneWithoutBusinessesInput
     tenants: tenantsCreateNestedOneWithoutBusinessesInput
     inventory_levels?: inventory_levelsCreateNestedManyWithoutBusinessesInput
     leads?: leadsCreateNestedManyWithoutBusinessesInput
@@ -137545,13 +144162,18 @@ export namespace Prisma {
     tenant_id: string
     business_name: string
     business_type?: string | null
-    subscription_plan_id?: string | null
     whatsapp_number?: string | null
-    brand_colors?: NullableJsonNullValueInput | InputJsonValue
-    logo_url?: string | null
-    working_hours?: NullableJsonNullValueInput | InputJsonValue
     created_at?: Date | string | null
     updated_at?: Date | string | null
+    email?: string | null
+    phone?: string | null
+    website?: string | null
+    city?: string | null
+    address?: string | null
+    country?: string | null
+    gst_number?: string | null
+    pan_number?: string | null
+    business_employees?: business_employeesUncheckedCreateNestedManyWithoutBusinessesInput
     business_workflows?: business_workflowsUncheckedCreateNestedManyWithoutBusinessesInput
     inventory_levels?: inventory_levelsUncheckedCreateNestedManyWithoutBusinessesInput
     leads?: leadsUncheckedCreateNestedManyWithoutBusinessesInput
@@ -137587,13 +144209,13 @@ export namespace Prisma {
     phone: string
     email?: string | null
     whatsapp_number?: string | null
-    platform_user_id?: string | null
     total_orders?: number
     total_spent?: Decimal | DecimalJsLike | number | string
     last_order_date?: Date | string | null
     engagement_score?: number
     created_at?: Date | string
     updated_at?: Date | string
+    platform_user_id?: string | null
     notification_messages?: notification_messagesCreateNestedManyWithoutCustomersInput
     notification_preferences?: notification_preferencesCreateNestedManyWithoutCustomersInput
     orders?: ordersCreateNestedManyWithoutCustomersInput
@@ -137609,13 +144231,13 @@ export namespace Prisma {
     phone: string
     email?: string | null
     whatsapp_number?: string | null
-    platform_user_id?: string | null
     total_orders?: number
     total_spent?: Decimal | DecimalJsLike | number | string
     last_order_date?: Date | string | null
     engagement_score?: number
     created_at?: Date | string
     updated_at?: Date | string
+    platform_user_id?: string | null
     notification_messages?: notification_messagesUncheckedCreateNestedManyWithoutCustomersInput
     notification_preferences?: notification_preferencesUncheckedCreateNestedManyWithoutCustomersInput
     orders?: ordersUncheckedCreateNestedManyWithoutCustomersInput
@@ -137684,6 +144306,7 @@ export namespace Prisma {
     deleted_by?: string | null
     onboarding_completed?: boolean
     delivery_address?: string | null
+    cart_reservations?: cart_reservationsCreateNestedManyWithoutLeadsInput
     lead_activities?: lead_activitiesCreateNestedManyWithoutLeadsInput
     lead_conversations?: lead_conversationsCreateNestedManyWithoutLeadsInput
     lead_duplicates_1?: lead_duplicatesCreateNestedManyWithoutLead_1Input
@@ -137702,7 +144325,6 @@ export namespace Prisma {
     tenants: tenantsCreateNestedOneWithoutLeadsInput
     orders?: ordersCreateNestedManyWithoutLeadsInput
     workflow_executions?: workflow_executionsCreateNestedManyWithoutLeadsInput
-    cart_reservations?: cart_reservationsCreateNestedManyWithoutLeadsInput
   }
 
   export type leadsUncheckedCreateWithoutCartsInput = {
@@ -137765,6 +144387,7 @@ export namespace Prisma {
     deleted_by?: string | null
     onboarding_completed?: boolean
     delivery_address?: string | null
+    cart_reservations?: cart_reservationsUncheckedCreateNestedManyWithoutLeadsInput
     lead_activities?: lead_activitiesUncheckedCreateNestedManyWithoutLeadsInput
     lead_conversations?: lead_conversationsUncheckedCreateNestedManyWithoutLeadsInput
     lead_duplicates_1?: lead_duplicatesUncheckedCreateNestedManyWithoutLead_1Input
@@ -137779,7 +144402,6 @@ export namespace Prisma {
     duplicate_leads?: leadsUncheckedCreateNestedManyWithoutDuplicate_of_leadInput
     orders?: ordersUncheckedCreateNestedManyWithoutLeadsInput
     workflow_executions?: workflow_executionsUncheckedCreateNestedManyWithoutLeadsInput
-    cart_reservations?: cart_reservationsUncheckedCreateNestedManyWithoutLeadsInput
   }
 
   export type leadsCreateOrConnectWithoutCartsInput = {
@@ -137874,13 +144496,18 @@ export namespace Prisma {
     business_name?: StringFieldUpdateOperationsInput | string
     business_type?: NullableStringFieldUpdateOperationsInput | string | null
     whatsapp_number?: NullableStringFieldUpdateOperationsInput | string | null
-    brand_colors?: NullableJsonNullValueInput | InputJsonValue
-    logo_url?: NullableStringFieldUpdateOperationsInput | string | null
-    working_hours?: NullableJsonNullValueInput | InputJsonValue
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    website?: NullableStringFieldUpdateOperationsInput | string | null
+    city?: NullableStringFieldUpdateOperationsInput | string | null
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    country?: NullableStringFieldUpdateOperationsInput | string | null
+    gst_number?: NullableStringFieldUpdateOperationsInput | string | null
+    pan_number?: NullableStringFieldUpdateOperationsInput | string | null
+    business_employees?: business_employeesUpdateManyWithoutBusinessesNestedInput
     business_workflows?: business_workflowsUpdateManyWithoutBusinessesNestedInput
-    subscription_plans?: subscription_plansUpdateOneWithoutBusinessesNestedInput
     tenants?: tenantsUpdateOneRequiredWithoutBusinessesNestedInput
     inventory_levels?: inventory_levelsUpdateManyWithoutBusinessesNestedInput
     leads?: leadsUpdateManyWithoutBusinessesNestedInput
@@ -137908,13 +144535,18 @@ export namespace Prisma {
     tenant_id?: StringFieldUpdateOperationsInput | string
     business_name?: StringFieldUpdateOperationsInput | string
     business_type?: NullableStringFieldUpdateOperationsInput | string | null
-    subscription_plan_id?: NullableStringFieldUpdateOperationsInput | string | null
     whatsapp_number?: NullableStringFieldUpdateOperationsInput | string | null
-    brand_colors?: NullableJsonNullValueInput | InputJsonValue
-    logo_url?: NullableStringFieldUpdateOperationsInput | string | null
-    working_hours?: NullableJsonNullValueInput | InputJsonValue
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    website?: NullableStringFieldUpdateOperationsInput | string | null
+    city?: NullableStringFieldUpdateOperationsInput | string | null
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    country?: NullableStringFieldUpdateOperationsInput | string | null
+    gst_number?: NullableStringFieldUpdateOperationsInput | string | null
+    pan_number?: NullableStringFieldUpdateOperationsInput | string | null
+    business_employees?: business_employeesUncheckedUpdateManyWithoutBusinessesNestedInput
     business_workflows?: business_workflowsUncheckedUpdateManyWithoutBusinessesNestedInput
     inventory_levels?: inventory_levelsUncheckedUpdateManyWithoutBusinessesNestedInput
     leads?: leadsUncheckedUpdateManyWithoutBusinessesNestedInput
@@ -137956,13 +144588,13 @@ export namespace Prisma {
     phone?: StringFieldUpdateOperationsInput | string
     email?: NullableStringFieldUpdateOperationsInput | string | null
     whatsapp_number?: NullableStringFieldUpdateOperationsInput | string | null
-    platform_user_id?: NullableStringFieldUpdateOperationsInput | string | null
     total_orders?: IntFieldUpdateOperationsInput | number
     total_spent?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     last_order_date?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     engagement_score?: IntFieldUpdateOperationsInput | number
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    platform_user_id?: NullableStringFieldUpdateOperationsInput | string | null
     notification_messages?: notification_messagesUpdateManyWithoutCustomersNestedInput
     notification_preferences?: notification_preferencesUpdateManyWithoutCustomersNestedInput
     orders?: ordersUpdateManyWithoutCustomersNestedInput
@@ -137978,13 +144610,13 @@ export namespace Prisma {
     phone?: StringFieldUpdateOperationsInput | string
     email?: NullableStringFieldUpdateOperationsInput | string | null
     whatsapp_number?: NullableStringFieldUpdateOperationsInput | string | null
-    platform_user_id?: NullableStringFieldUpdateOperationsInput | string | null
     total_orders?: IntFieldUpdateOperationsInput | number
     total_spent?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     last_order_date?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     engagement_score?: IntFieldUpdateOperationsInput | number
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    platform_user_id?: NullableStringFieldUpdateOperationsInput | string | null
     notification_messages?: notification_messagesUncheckedUpdateManyWithoutCustomersNestedInput
     notification_preferences?: notification_preferencesUncheckedUpdateManyWithoutCustomersNestedInput
     orders?: ordersUncheckedUpdateManyWithoutCustomersNestedInput
@@ -138059,6 +144691,7 @@ export namespace Prisma {
     deleted_by?: NullableStringFieldUpdateOperationsInput | string | null
     onboarding_completed?: BoolFieldUpdateOperationsInput | boolean
     delivery_address?: NullableStringFieldUpdateOperationsInput | string | null
+    cart_reservations?: cart_reservationsUpdateManyWithoutLeadsNestedInput
     lead_activities?: lead_activitiesUpdateManyWithoutLeadsNestedInput
     lead_conversations?: lead_conversationsUpdateManyWithoutLeadsNestedInput
     lead_duplicates_1?: lead_duplicatesUpdateManyWithoutLead_1NestedInput
@@ -138077,7 +144710,6 @@ export namespace Prisma {
     tenants?: tenantsUpdateOneRequiredWithoutLeadsNestedInput
     orders?: ordersUpdateManyWithoutLeadsNestedInput
     workflow_executions?: workflow_executionsUpdateManyWithoutLeadsNestedInput
-    cart_reservations?: cart_reservationsUpdateManyWithoutLeadsNestedInput
   }
 
   export type leadsUncheckedUpdateWithoutCartsInput = {
@@ -138140,6 +144772,7 @@ export namespace Prisma {
     deleted_by?: NullableStringFieldUpdateOperationsInput | string | null
     onboarding_completed?: BoolFieldUpdateOperationsInput | boolean
     delivery_address?: NullableStringFieldUpdateOperationsInput | string | null
+    cart_reservations?: cart_reservationsUncheckedUpdateManyWithoutLeadsNestedInput
     lead_activities?: lead_activitiesUncheckedUpdateManyWithoutLeadsNestedInput
     lead_conversations?: lead_conversationsUncheckedUpdateManyWithoutLeadsNestedInput
     lead_duplicates_1?: lead_duplicatesUncheckedUpdateManyWithoutLead_1NestedInput
@@ -138154,7 +144787,6 @@ export namespace Prisma {
     duplicate_leads?: leadsUncheckedUpdateManyWithoutDuplicate_of_leadNestedInput
     orders?: ordersUncheckedUpdateManyWithoutLeadsNestedInput
     workflow_executions?: workflow_executionsUncheckedUpdateManyWithoutLeadsNestedInput
-    cart_reservations?: cart_reservationsUncheckedUpdateManyWithoutLeadsNestedInput
   }
 
   export type tenantsUpsertWithoutCartsInput = {
@@ -138218,6 +144850,176 @@ export namespace Prisma {
     warehouses?: warehousesUncheckedUpdateManyWithoutTenantsNestedInput
   }
 
+  export type hotel_booking_outcomesCreateWithoutRecommendationInput = {
+    id?: string
+    hotel_id: string
+    org_id: string
+    actual_price_used: number
+    rooms_booked: number
+    total_rooms: number
+    actual_occupancy: number
+    revenue: number
+    checkin_date: Date | string
+    recorded_at?: Date | string
+  }
+
+  export type hotel_booking_outcomesUncheckedCreateWithoutRecommendationInput = {
+    id?: string
+    hotel_id: string
+    org_id: string
+    actual_price_used: number
+    rooms_booked: number
+    total_rooms: number
+    actual_occupancy: number
+    revenue: number
+    checkin_date: Date | string
+    recorded_at?: Date | string
+  }
+
+  export type hotel_booking_outcomesCreateOrConnectWithoutRecommendationInput = {
+    where: hotel_booking_outcomesWhereUniqueInput
+    create: XOR<hotel_booking_outcomesCreateWithoutRecommendationInput, hotel_booking_outcomesUncheckedCreateWithoutRecommendationInput>
+  }
+
+  export type hotel_booking_outcomesCreateManyRecommendationInputEnvelope = {
+    data: hotel_booking_outcomesCreateManyRecommendationInput | hotel_booking_outcomesCreateManyRecommendationInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type hotel_booking_outcomesUpsertWithWhereUniqueWithoutRecommendationInput = {
+    where: hotel_booking_outcomesWhereUniqueInput
+    update: XOR<hotel_booking_outcomesUpdateWithoutRecommendationInput, hotel_booking_outcomesUncheckedUpdateWithoutRecommendationInput>
+    create: XOR<hotel_booking_outcomesCreateWithoutRecommendationInput, hotel_booking_outcomesUncheckedCreateWithoutRecommendationInput>
+  }
+
+  export type hotel_booking_outcomesUpdateWithWhereUniqueWithoutRecommendationInput = {
+    where: hotel_booking_outcomesWhereUniqueInput
+    data: XOR<hotel_booking_outcomesUpdateWithoutRecommendationInput, hotel_booking_outcomesUncheckedUpdateWithoutRecommendationInput>
+  }
+
+  export type hotel_booking_outcomesUpdateManyWithWhereWithoutRecommendationInput = {
+    where: hotel_booking_outcomesScalarWhereInput
+    data: XOR<hotel_booking_outcomesUpdateManyMutationInput, hotel_booking_outcomesUncheckedUpdateManyWithoutRecommendationInput>
+  }
+
+  export type hotel_booking_outcomesScalarWhereInput = {
+    AND?: hotel_booking_outcomesScalarWhereInput | hotel_booking_outcomesScalarWhereInput[]
+    OR?: hotel_booking_outcomesScalarWhereInput[]
+    NOT?: hotel_booking_outcomesScalarWhereInput | hotel_booking_outcomesScalarWhereInput[]
+    id?: UuidFilter<"hotel_booking_outcomes"> | string
+    recommendation_id?: UuidFilter<"hotel_booking_outcomes"> | string
+    hotel_id?: StringFilter<"hotel_booking_outcomes"> | string
+    org_id?: StringFilter<"hotel_booking_outcomes"> | string
+    actual_price_used?: IntFilter<"hotel_booking_outcomes"> | number
+    rooms_booked?: IntFilter<"hotel_booking_outcomes"> | number
+    total_rooms?: IntFilter<"hotel_booking_outcomes"> | number
+    actual_occupancy?: FloatFilter<"hotel_booking_outcomes"> | number
+    revenue?: IntFilter<"hotel_booking_outcomes"> | number
+    checkin_date?: DateTimeFilter<"hotel_booking_outcomes"> | Date | string
+    recorded_at?: DateTimeFilter<"hotel_booking_outcomes"> | Date | string
+  }
+
+  export type hotel_pricing_recommendationsCreateWithoutBooking_outcomesInput = {
+    id?: string
+    hotel_id: string
+    org_id: string
+    room_type: string
+    checkin_date: Date | string
+    suggested_price: number
+    demand_score: number
+    confidence: number
+    competitor_avg_price: number
+    current_price: number
+    price_range_low: number
+    price_range_high: number
+    claude_narrative?: string | null
+    xotelo_snapshot?: NullableJsonNullValueInput | InputJsonValue
+    seven_day_forecast?: NullableJsonNullValueInput | InputJsonValue
+    created_at?: Date | string
+  }
+
+  export type hotel_pricing_recommendationsUncheckedCreateWithoutBooking_outcomesInput = {
+    id?: string
+    hotel_id: string
+    org_id: string
+    room_type: string
+    checkin_date: Date | string
+    suggested_price: number
+    demand_score: number
+    confidence: number
+    competitor_avg_price: number
+    current_price: number
+    price_range_low: number
+    price_range_high: number
+    claude_narrative?: string | null
+    xotelo_snapshot?: NullableJsonNullValueInput | InputJsonValue
+    seven_day_forecast?: NullableJsonNullValueInput | InputJsonValue
+    created_at?: Date | string
+  }
+
+  export type hotel_pricing_recommendationsCreateOrConnectWithoutBooking_outcomesInput = {
+    where: hotel_pricing_recommendationsWhereUniqueInput
+    create: XOR<hotel_pricing_recommendationsCreateWithoutBooking_outcomesInput, hotel_pricing_recommendationsUncheckedCreateWithoutBooking_outcomesInput>
+  }
+
+  export type hotel_pricing_recommendationsUpsertWithoutBooking_outcomesInput = {
+    update: XOR<hotel_pricing_recommendationsUpdateWithoutBooking_outcomesInput, hotel_pricing_recommendationsUncheckedUpdateWithoutBooking_outcomesInput>
+    create: XOR<hotel_pricing_recommendationsCreateWithoutBooking_outcomesInput, hotel_pricing_recommendationsUncheckedCreateWithoutBooking_outcomesInput>
+    where?: hotel_pricing_recommendationsWhereInput
+  }
+
+  export type hotel_pricing_recommendationsUpdateToOneWithWhereWithoutBooking_outcomesInput = {
+    where?: hotel_pricing_recommendationsWhereInput
+    data: XOR<hotel_pricing_recommendationsUpdateWithoutBooking_outcomesInput, hotel_pricing_recommendationsUncheckedUpdateWithoutBooking_outcomesInput>
+  }
+
+  export type hotel_pricing_recommendationsUpdateWithoutBooking_outcomesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    hotel_id?: StringFieldUpdateOperationsInput | string
+    org_id?: StringFieldUpdateOperationsInput | string
+    room_type?: StringFieldUpdateOperationsInput | string
+    checkin_date?: DateTimeFieldUpdateOperationsInput | Date | string
+    suggested_price?: IntFieldUpdateOperationsInput | number
+    demand_score?: FloatFieldUpdateOperationsInput | number
+    confidence?: FloatFieldUpdateOperationsInput | number
+    competitor_avg_price?: IntFieldUpdateOperationsInput | number
+    current_price?: IntFieldUpdateOperationsInput | number
+    price_range_low?: IntFieldUpdateOperationsInput | number
+    price_range_high?: IntFieldUpdateOperationsInput | number
+    claude_narrative?: NullableStringFieldUpdateOperationsInput | string | null
+    xotelo_snapshot?: NullableJsonNullValueInput | InputJsonValue
+    seven_day_forecast?: NullableJsonNullValueInput | InputJsonValue
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type hotel_pricing_recommendationsUncheckedUpdateWithoutBooking_outcomesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    hotel_id?: StringFieldUpdateOperationsInput | string
+    org_id?: StringFieldUpdateOperationsInput | string
+    room_type?: StringFieldUpdateOperationsInput | string
+    checkin_date?: DateTimeFieldUpdateOperationsInput | Date | string
+    suggested_price?: IntFieldUpdateOperationsInput | number
+    demand_score?: FloatFieldUpdateOperationsInput | number
+    confidence?: FloatFieldUpdateOperationsInput | number
+    competitor_avg_price?: IntFieldUpdateOperationsInput | number
+    current_price?: IntFieldUpdateOperationsInput | number
+    price_range_low?: IntFieldUpdateOperationsInput | number
+    price_range_high?: IntFieldUpdateOperationsInput | number
+    claude_narrative?: NullableStringFieldUpdateOperationsInput | string | null
+    xotelo_snapshot?: NullableJsonNullValueInput | InputJsonValue
+    seven_day_forecast?: NullableJsonNullValueInput | InputJsonValue
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type business_employeesCreateManyBusinessesInput = {
+    employee_id?: string
+    name: string
+    email?: string | null
+    phone?: string | null
+    role?: string | null
+    created_at?: Date | string | null
+  }
+
   export type business_workflowsCreateManyBusinessesInput = {
     id?: string
     tenant_id: string
@@ -138232,13 +145034,13 @@ export namespace Prisma {
     cart_id?: string
     tenant_id: string
     lead_id?: string | null
-    customer_id?: string | null
     status?: string | null
     total_amount?: Decimal | DecimalJsLike | number | string | null
     total_items?: number | null
     expires_at?: Date | string | null
     created_at?: Date | string | null
     updated_at?: Date | string | null
+    customer_id?: string | null
   }
 
   export type inventory_levelsCreateManyBusinessesInput = {
@@ -138721,6 +145523,33 @@ export namespace Prisma {
     chat_id?: string | null
   }
 
+  export type business_employeesUpdateWithoutBusinessesInput = {
+    employee_id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: NullableStringFieldUpdateOperationsInput | string | null
+    created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
+  export type business_employeesUncheckedUpdateWithoutBusinessesInput = {
+    employee_id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: NullableStringFieldUpdateOperationsInput | string | null
+    created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
+  export type business_employeesUncheckedUpdateManyWithoutBusinessesInput = {
+    employee_id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: NullableStringFieldUpdateOperationsInput | string | null
+    created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
   export type business_workflowsUpdateWithoutBusinessesInput = {
     id?: StringFieldUpdateOperationsInput | string
     intent_name?: StringFieldUpdateOperationsInput | string
@@ -138769,13 +145598,13 @@ export namespace Prisma {
     cart_id?: StringFieldUpdateOperationsInput | string
     tenant_id?: StringFieldUpdateOperationsInput | string
     lead_id?: NullableStringFieldUpdateOperationsInput | string | null
-    customer_id?: NullableStringFieldUpdateOperationsInput | string | null
     status?: NullableStringFieldUpdateOperationsInput | string | null
     total_amount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     total_items?: NullableIntFieldUpdateOperationsInput | number | null
     expires_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    customer_id?: NullableStringFieldUpdateOperationsInput | string | null
     cart_items?: cart_itemsUncheckedUpdateManyWithoutCartsNestedInput
   }
 
@@ -138783,13 +145612,13 @@ export namespace Prisma {
     cart_id?: StringFieldUpdateOperationsInput | string
     tenant_id?: StringFieldUpdateOperationsInput | string
     lead_id?: NullableStringFieldUpdateOperationsInput | string | null
-    customer_id?: NullableStringFieldUpdateOperationsInput | string | null
     status?: NullableStringFieldUpdateOperationsInput | string | null
     total_amount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     total_items?: NullableIntFieldUpdateOperationsInput | number | null
     expires_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    customer_id?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type inventory_levelsUpdateWithoutBusinessesInput = {
@@ -138930,6 +145759,7 @@ export namespace Prisma {
     deleted_by?: NullableStringFieldUpdateOperationsInput | string | null
     onboarding_completed?: BoolFieldUpdateOperationsInput | boolean
     delivery_address?: NullableStringFieldUpdateOperationsInput | string | null
+    cart_reservations?: cart_reservationsUpdateManyWithoutLeadsNestedInput
     carts?: cartsUpdateManyWithoutLeadsNestedInput
     lead_activities?: lead_activitiesUpdateManyWithoutLeadsNestedInput
     lead_conversations?: lead_conversationsUpdateManyWithoutLeadsNestedInput
@@ -138948,7 +145778,6 @@ export namespace Prisma {
     tenants?: tenantsUpdateOneRequiredWithoutLeadsNestedInput
     orders?: ordersUpdateManyWithoutLeadsNestedInput
     workflow_executions?: workflow_executionsUpdateManyWithoutLeadsNestedInput
-    cart_reservations?: cart_reservationsUpdateManyWithoutLeadsNestedInput
   }
 
   export type leadsUncheckedUpdateWithoutBusinessesInput = {
@@ -139010,6 +145839,7 @@ export namespace Prisma {
     deleted_by?: NullableStringFieldUpdateOperationsInput | string | null
     onboarding_completed?: BoolFieldUpdateOperationsInput | boolean
     delivery_address?: NullableStringFieldUpdateOperationsInput | string | null
+    cart_reservations?: cart_reservationsUncheckedUpdateManyWithoutLeadsNestedInput
     carts?: cartsUncheckedUpdateManyWithoutLeadsNestedInput
     lead_activities?: lead_activitiesUncheckedUpdateManyWithoutLeadsNestedInput
     lead_conversations?: lead_conversationsUncheckedUpdateManyWithoutLeadsNestedInput
@@ -139025,7 +145855,6 @@ export namespace Prisma {
     duplicate_leads?: leadsUncheckedUpdateManyWithoutDuplicate_of_leadNestedInput
     orders?: ordersUncheckedUpdateManyWithoutLeadsNestedInput
     workflow_executions?: workflow_executionsUncheckedUpdateManyWithoutLeadsNestedInput
-    cart_reservations?: cart_reservationsUncheckedUpdateManyWithoutLeadsNestedInput
   }
 
   export type leadsUncheckedUpdateManyWithoutBusinessesInput = {
@@ -139610,6 +146439,7 @@ export namespace Prisma {
     instagram_retailer_id?: NullableStringFieldUpdateOperationsInput | string | null
     campaigns?: campaignsUpdateManyWithoutProductsNestedInput
     cart_items?: cart_itemsUpdateManyWithoutProductsNestedInput
+    cart_reservations?: cart_reservationsUpdateManyWithoutProductsNestedInput
     course_batches?: course_batchesUpdateManyWithoutCourseNestedInput
     order_items?: order_itemsUpdateManyWithoutProductsNestedInput
     product_images?: product_imagesUpdateManyWithoutProductsNestedInput
@@ -139617,7 +146447,6 @@ export namespace Prisma {
     product_variants?: product_variantsUpdateManyWithoutProductNestedInput
     product_categories?: product_categoriesUpdateOneWithoutProductsNestedInput
     stock_reservations?: stock_reservationsUpdateManyWithoutProductsNestedInput
-    cart_reservations?: cart_reservationsUpdateManyWithoutProductsNestedInput
   }
 
   export type productsUncheckedUpdateWithoutBusinessesInput = {
@@ -139659,13 +146488,13 @@ export namespace Prisma {
     instagram_retailer_id?: NullableStringFieldUpdateOperationsInput | string | null
     campaigns?: campaignsUncheckedUpdateManyWithoutProductsNestedInput
     cart_items?: cart_itemsUncheckedUpdateManyWithoutProductsNestedInput
+    cart_reservations?: cart_reservationsUncheckedUpdateManyWithoutProductsNestedInput
     course_batches?: course_batchesUncheckedUpdateManyWithoutCourseNestedInput
     order_items?: order_itemsUncheckedUpdateManyWithoutProductsNestedInput
     product_images?: product_imagesUncheckedUpdateManyWithoutProductsNestedInput
     product_reviews?: product_reviewsUncheckedUpdateManyWithoutProductNestedInput
     product_variants?: product_variantsUncheckedUpdateManyWithoutProductNestedInput
     stock_reservations?: stock_reservationsUncheckedUpdateManyWithoutProductsNestedInput
-    cart_reservations?: cart_reservationsUncheckedUpdateManyWithoutProductsNestedInput
   }
 
   export type productsUncheckedUpdateManyWithoutBusinessesInput = {
@@ -140566,100 +147395,6 @@ export namespace Prisma {
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
-  export type businessesCreateManySubscription_plansInput = {
-    business_id?: string
-    tenant_id: string
-    business_name: string
-    business_type?: string | null
-    whatsapp_number?: string | null
-    brand_colors?: NullableJsonNullValueInput | InputJsonValue
-    logo_url?: string | null
-    working_hours?: NullableJsonNullValueInput | InputJsonValue
-    created_at?: Date | string | null
-    updated_at?: Date | string | null
-  }
-
-  export type businessesUpdateWithoutSubscription_plansInput = {
-    business_id?: StringFieldUpdateOperationsInput | string
-    business_name?: StringFieldUpdateOperationsInput | string
-    business_type?: NullableStringFieldUpdateOperationsInput | string | null
-    whatsapp_number?: NullableStringFieldUpdateOperationsInput | string | null
-    brand_colors?: NullableJsonNullValueInput | InputJsonValue
-    logo_url?: NullableStringFieldUpdateOperationsInput | string | null
-    working_hours?: NullableJsonNullValueInput | InputJsonValue
-    created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    business_workflows?: business_workflowsUpdateManyWithoutBusinessesNestedInput
-    tenants?: tenantsUpdateOneRequiredWithoutBusinessesNestedInput
-    carts?: cartsUpdateManyWithoutBusinessesNestedInput
-    inventory_levels?: inventory_levelsUpdateManyWithoutBusinessesNestedInput
-    leads?: leadsUpdateManyWithoutBusinessesNestedInput
-    notification_messages?: notification_messagesUpdateManyWithoutBusinessesNestedInput
-    notification_preferences?: notification_preferencesUpdateManyWithoutBusinessesNestedInput
-    notification_templates?: notification_templatesUpdateManyWithoutBusinessesNestedInput
-    payment_reconciliation?: payment_reconciliationUpdateManyWithoutBusinessesNestedInput
-    payments?: paymentsUpdateManyWithoutBusinessesNestedInput
-    product_categories?: product_categoriesUpdateManyWithoutBusinessesNestedInput
-    product_images?: product_imagesUpdateManyWithoutBusinessesNestedInput
-    products?: productsUpdateManyWithoutBusinessesNestedInput
-    social_accounts?: social_accountsUpdateManyWithoutBusinessesNestedInput
-    stock_alerts?: stock_alertsUpdateManyWithoutBusinessesNestedInput
-    stock_counts?: stock_countsUpdateManyWithoutBusinessesNestedInput
-    stock_movements?: stock_movementsUpdateManyWithoutBusinessesNestedInput
-    stock_transfers?: stock_transfersUpdateManyWithoutBusinessesNestedInput
-    tags?: tagsUpdateManyWithoutBusinessesNestedInput
-    users?: usersUpdateManyWithoutBusinessesNestedInput
-    warehouses?: warehousesUpdateManyWithoutBusinessesNestedInput
-    workflow_executions?: workflow_executionsUpdateManyWithoutBusinessesNestedInput
-  }
-
-  export type businessesUncheckedUpdateWithoutSubscription_plansInput = {
-    business_id?: StringFieldUpdateOperationsInput | string
-    tenant_id?: StringFieldUpdateOperationsInput | string
-    business_name?: StringFieldUpdateOperationsInput | string
-    business_type?: NullableStringFieldUpdateOperationsInput | string | null
-    whatsapp_number?: NullableStringFieldUpdateOperationsInput | string | null
-    brand_colors?: NullableJsonNullValueInput | InputJsonValue
-    logo_url?: NullableStringFieldUpdateOperationsInput | string | null
-    working_hours?: NullableJsonNullValueInput | InputJsonValue
-    created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    business_workflows?: business_workflowsUncheckedUpdateManyWithoutBusinessesNestedInput
-    carts?: cartsUncheckedUpdateManyWithoutBusinessesNestedInput
-    inventory_levels?: inventory_levelsUncheckedUpdateManyWithoutBusinessesNestedInput
-    leads?: leadsUncheckedUpdateManyWithoutBusinessesNestedInput
-    notification_messages?: notification_messagesUncheckedUpdateManyWithoutBusinessesNestedInput
-    notification_preferences?: notification_preferencesUncheckedUpdateManyWithoutBusinessesNestedInput
-    notification_templates?: notification_templatesUncheckedUpdateManyWithoutBusinessesNestedInput
-    payment_reconciliation?: payment_reconciliationUncheckedUpdateManyWithoutBusinessesNestedInput
-    payments?: paymentsUncheckedUpdateManyWithoutBusinessesNestedInput
-    product_categories?: product_categoriesUncheckedUpdateManyWithoutBusinessesNestedInput
-    product_images?: product_imagesUncheckedUpdateManyWithoutBusinessesNestedInput
-    products?: productsUncheckedUpdateManyWithoutBusinessesNestedInput
-    social_accounts?: social_accountsUncheckedUpdateManyWithoutBusinessesNestedInput
-    stock_alerts?: stock_alertsUncheckedUpdateManyWithoutBusinessesNestedInput
-    stock_counts?: stock_countsUncheckedUpdateManyWithoutBusinessesNestedInput
-    stock_movements?: stock_movementsUncheckedUpdateManyWithoutBusinessesNestedInput
-    stock_transfers?: stock_transfersUncheckedUpdateManyWithoutBusinessesNestedInput
-    tags?: tagsUncheckedUpdateManyWithoutBusinessesNestedInput
-    users?: usersUncheckedUpdateManyWithoutBusinessesNestedInput
-    warehouses?: warehousesUncheckedUpdateManyWithoutBusinessesNestedInput
-    workflow_executions?: workflow_executionsUncheckedUpdateManyWithoutBusinessesNestedInput
-  }
-
-  export type businessesUncheckedUpdateManyWithoutSubscription_plansInput = {
-    business_id?: StringFieldUpdateOperationsInput | string
-    tenant_id?: StringFieldUpdateOperationsInput | string
-    business_name?: StringFieldUpdateOperationsInput | string
-    business_type?: NullableStringFieldUpdateOperationsInput | string | null
-    whatsapp_number?: NullableStringFieldUpdateOperationsInput | string | null
-    brand_colors?: NullableJsonNullValueInput | InputJsonValue
-    logo_url?: NullableStringFieldUpdateOperationsInput | string | null
-    working_hours?: NullableJsonNullValueInput | InputJsonValue
-    created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  }
-
   export type business_workflowsCreateManyTenantsInput = {
     id?: string
     business_id: string
@@ -140674,26 +147409,30 @@ export namespace Prisma {
     business_id?: string
     business_name: string
     business_type?: string | null
-    subscription_plan_id?: string | null
     whatsapp_number?: string | null
-    brand_colors?: NullableJsonNullValueInput | InputJsonValue
-    logo_url?: string | null
-    working_hours?: NullableJsonNullValueInput | InputJsonValue
     created_at?: Date | string | null
     updated_at?: Date | string | null
+    email?: string | null
+    phone?: string | null
+    website?: string | null
+    city?: string | null
+    address?: string | null
+    country?: string | null
+    gst_number?: string | null
+    pan_number?: string | null
   }
 
   export type cartsCreateManyTenantsInput = {
     cart_id?: string
     business_id: string
     lead_id?: string | null
-    customer_id?: string | null
     status?: string | null
     total_amount?: Decimal | DecimalJsLike | number | string | null
     total_items?: number | null
     expires_at?: Date | string | null
     created_at?: Date | string | null
     updated_at?: Date | string | null
+    customer_id?: string | null
   }
 
   export type inventory_levelsCreateManyTenantsInput = {
@@ -141020,13 +147759,18 @@ export namespace Prisma {
     business_name?: StringFieldUpdateOperationsInput | string
     business_type?: NullableStringFieldUpdateOperationsInput | string | null
     whatsapp_number?: NullableStringFieldUpdateOperationsInput | string | null
-    brand_colors?: NullableJsonNullValueInput | InputJsonValue
-    logo_url?: NullableStringFieldUpdateOperationsInput | string | null
-    working_hours?: NullableJsonNullValueInput | InputJsonValue
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    website?: NullableStringFieldUpdateOperationsInput | string | null
+    city?: NullableStringFieldUpdateOperationsInput | string | null
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    country?: NullableStringFieldUpdateOperationsInput | string | null
+    gst_number?: NullableStringFieldUpdateOperationsInput | string | null
+    pan_number?: NullableStringFieldUpdateOperationsInput | string | null
+    business_employees?: business_employeesUpdateManyWithoutBusinessesNestedInput
     business_workflows?: business_workflowsUpdateManyWithoutBusinessesNestedInput
-    subscription_plans?: subscription_plansUpdateOneWithoutBusinessesNestedInput
     carts?: cartsUpdateManyWithoutBusinessesNestedInput
     inventory_levels?: inventory_levelsUpdateManyWithoutBusinessesNestedInput
     leads?: leadsUpdateManyWithoutBusinessesNestedInput
@@ -141053,13 +147797,18 @@ export namespace Prisma {
     business_id?: StringFieldUpdateOperationsInput | string
     business_name?: StringFieldUpdateOperationsInput | string
     business_type?: NullableStringFieldUpdateOperationsInput | string | null
-    subscription_plan_id?: NullableStringFieldUpdateOperationsInput | string | null
     whatsapp_number?: NullableStringFieldUpdateOperationsInput | string | null
-    brand_colors?: NullableJsonNullValueInput | InputJsonValue
-    logo_url?: NullableStringFieldUpdateOperationsInput | string | null
-    working_hours?: NullableJsonNullValueInput | InputJsonValue
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    website?: NullableStringFieldUpdateOperationsInput | string | null
+    city?: NullableStringFieldUpdateOperationsInput | string | null
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    country?: NullableStringFieldUpdateOperationsInput | string | null
+    gst_number?: NullableStringFieldUpdateOperationsInput | string | null
+    pan_number?: NullableStringFieldUpdateOperationsInput | string | null
+    business_employees?: business_employeesUncheckedUpdateManyWithoutBusinessesNestedInput
     business_workflows?: business_workflowsUncheckedUpdateManyWithoutBusinessesNestedInput
     carts?: cartsUncheckedUpdateManyWithoutBusinessesNestedInput
     inventory_levels?: inventory_levelsUncheckedUpdateManyWithoutBusinessesNestedInput
@@ -141087,13 +147836,17 @@ export namespace Prisma {
     business_id?: StringFieldUpdateOperationsInput | string
     business_name?: StringFieldUpdateOperationsInput | string
     business_type?: NullableStringFieldUpdateOperationsInput | string | null
-    subscription_plan_id?: NullableStringFieldUpdateOperationsInput | string | null
     whatsapp_number?: NullableStringFieldUpdateOperationsInput | string | null
-    brand_colors?: NullableJsonNullValueInput | InputJsonValue
-    logo_url?: NullableStringFieldUpdateOperationsInput | string | null
-    working_hours?: NullableJsonNullValueInput | InputJsonValue
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    website?: NullableStringFieldUpdateOperationsInput | string | null
+    city?: NullableStringFieldUpdateOperationsInput | string | null
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    country?: NullableStringFieldUpdateOperationsInput | string | null
+    gst_number?: NullableStringFieldUpdateOperationsInput | string | null
+    pan_number?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type cartsUpdateWithoutTenantsInput = {
@@ -141114,13 +147867,13 @@ export namespace Prisma {
     cart_id?: StringFieldUpdateOperationsInput | string
     business_id?: StringFieldUpdateOperationsInput | string
     lead_id?: NullableStringFieldUpdateOperationsInput | string | null
-    customer_id?: NullableStringFieldUpdateOperationsInput | string | null
     status?: NullableStringFieldUpdateOperationsInput | string | null
     total_amount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     total_items?: NullableIntFieldUpdateOperationsInput | number | null
     expires_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    customer_id?: NullableStringFieldUpdateOperationsInput | string | null
     cart_items?: cart_itemsUncheckedUpdateManyWithoutCartsNestedInput
   }
 
@@ -141128,13 +147881,13 @@ export namespace Prisma {
     cart_id?: StringFieldUpdateOperationsInput | string
     business_id?: StringFieldUpdateOperationsInput | string
     lead_id?: NullableStringFieldUpdateOperationsInput | string | null
-    customer_id?: NullableStringFieldUpdateOperationsInput | string | null
     status?: NullableStringFieldUpdateOperationsInput | string | null
     total_amount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     total_items?: NullableIntFieldUpdateOperationsInput | number | null
     expires_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    customer_id?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type inventory_levelsUpdateWithoutTenantsInput = {
@@ -141275,6 +148028,7 @@ export namespace Prisma {
     deleted_by?: NullableStringFieldUpdateOperationsInput | string | null
     onboarding_completed?: BoolFieldUpdateOperationsInput | boolean
     delivery_address?: NullableStringFieldUpdateOperationsInput | string | null
+    cart_reservations?: cart_reservationsUpdateManyWithoutLeadsNestedInput
     carts?: cartsUpdateManyWithoutLeadsNestedInput
     lead_activities?: lead_activitiesUpdateManyWithoutLeadsNestedInput
     lead_conversations?: lead_conversationsUpdateManyWithoutLeadsNestedInput
@@ -141293,7 +148047,6 @@ export namespace Prisma {
     duplicate_leads?: leadsUpdateManyWithoutDuplicate_of_leadNestedInput
     orders?: ordersUpdateManyWithoutLeadsNestedInput
     workflow_executions?: workflow_executionsUpdateManyWithoutLeadsNestedInput
-    cart_reservations?: cart_reservationsUpdateManyWithoutLeadsNestedInput
   }
 
   export type leadsUncheckedUpdateWithoutTenantsInput = {
@@ -141355,6 +148108,7 @@ export namespace Prisma {
     deleted_by?: NullableStringFieldUpdateOperationsInput | string | null
     onboarding_completed?: BoolFieldUpdateOperationsInput | boolean
     delivery_address?: NullableStringFieldUpdateOperationsInput | string | null
+    cart_reservations?: cart_reservationsUncheckedUpdateManyWithoutLeadsNestedInput
     carts?: cartsUncheckedUpdateManyWithoutLeadsNestedInput
     lead_activities?: lead_activitiesUncheckedUpdateManyWithoutLeadsNestedInput
     lead_conversations?: lead_conversationsUncheckedUpdateManyWithoutLeadsNestedInput
@@ -141370,7 +148124,6 @@ export namespace Prisma {
     duplicate_leads?: leadsUncheckedUpdateManyWithoutDuplicate_of_leadNestedInput
     orders?: ordersUncheckedUpdateManyWithoutLeadsNestedInput
     workflow_executions?: workflow_executionsUncheckedUpdateManyWithoutLeadsNestedInput
-    cart_reservations?: cart_reservationsUncheckedUpdateManyWithoutLeadsNestedInput
   }
 
   export type leadsUncheckedUpdateManyWithoutTenantsInput = {
@@ -142623,6 +149376,7 @@ export namespace Prisma {
     deleted_by?: NullableStringFieldUpdateOperationsInput | string | null
     onboarding_completed?: BoolFieldUpdateOperationsInput | boolean
     delivery_address?: NullableStringFieldUpdateOperationsInput | string | null
+    cart_reservations?: cart_reservationsUpdateManyWithoutLeadsNestedInput
     carts?: cartsUpdateManyWithoutLeadsNestedInput
     lead_activities?: lead_activitiesUpdateManyWithoutLeadsNestedInput
     lead_conversations?: lead_conversationsUpdateManyWithoutLeadsNestedInput
@@ -142641,7 +149395,6 @@ export namespace Prisma {
     tenants?: tenantsUpdateOneRequiredWithoutLeadsNestedInput
     orders?: ordersUpdateManyWithoutLeadsNestedInput
     workflow_executions?: workflow_executionsUpdateManyWithoutLeadsNestedInput
-    cart_reservations?: cart_reservationsUpdateManyWithoutLeadsNestedInput
   }
 
   export type leadsUncheckedUpdateWithoutAssigned_agentInput = {
@@ -142703,6 +149456,7 @@ export namespace Prisma {
     deleted_by?: NullableStringFieldUpdateOperationsInput | string | null
     onboarding_completed?: BoolFieldUpdateOperationsInput | boolean
     delivery_address?: NullableStringFieldUpdateOperationsInput | string | null
+    cart_reservations?: cart_reservationsUncheckedUpdateManyWithoutLeadsNestedInput
     carts?: cartsUncheckedUpdateManyWithoutLeadsNestedInput
     lead_activities?: lead_activitiesUncheckedUpdateManyWithoutLeadsNestedInput
     lead_conversations?: lead_conversationsUncheckedUpdateManyWithoutLeadsNestedInput
@@ -142718,7 +149472,6 @@ export namespace Prisma {
     duplicate_leads?: leadsUncheckedUpdateManyWithoutDuplicate_of_leadNestedInput
     orders?: ordersUncheckedUpdateManyWithoutLeadsNestedInput
     workflow_executions?: workflow_executionsUncheckedUpdateManyWithoutLeadsNestedInput
-    cart_reservations?: cart_reservationsUncheckedUpdateManyWithoutLeadsNestedInput
   }
 
   export type leadsUncheckedUpdateManyWithoutAssigned_agentInput = {
@@ -142942,17 +149695,28 @@ export namespace Prisma {
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type cart_reservationsCreateManyLeadsInput = {
+    reservation_id?: string
+    product_id: string
+    variant_id?: string | null
+    quantity: number
+    expires_at: Date | string
+    status?: string
+    created_at?: Date | string
+    updated_at?: Date | string
+  }
+
   export type cartsCreateManyLeadsInput = {
     cart_id?: string
     business_id: string
     tenant_id: string
-    customer_id?: string | null
     status?: string | null
     total_amount?: Decimal | DecimalJsLike | number | string | null
     total_items?: number | null
     expires_at?: Date | string | null
     created_at?: Date | string | null
     updated_at?: Date | string | null
+    customer_id?: string | null
   }
 
   export type lead_activitiesCreateManyLeadsInput = {
@@ -143259,15 +150023,37 @@ export namespace Prisma {
     chat_id?: string | null
   }
 
-  export type cart_reservationsCreateManyLeadsInput = {
-    reservation_id?: string
-    product_id: string
-    variant_id?: string | null
-    quantity: number
-    expires_at: Date | string
-    status?: string
-    created_at?: Date | string
-    updated_at?: Date | string
+  export type cart_reservationsUpdateWithoutLeadsInput = {
+    reservation_id?: StringFieldUpdateOperationsInput | string
+    variant_id?: NullableStringFieldUpdateOperationsInput | string | null
+    quantity?: IntFieldUpdateOperationsInput | number
+    expires_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    status?: StringFieldUpdateOperationsInput | string
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    products?: productsUpdateOneRequiredWithoutCart_reservationsNestedInput
+  }
+
+  export type cart_reservationsUncheckedUpdateWithoutLeadsInput = {
+    reservation_id?: StringFieldUpdateOperationsInput | string
+    product_id?: StringFieldUpdateOperationsInput | string
+    variant_id?: NullableStringFieldUpdateOperationsInput | string | null
+    quantity?: IntFieldUpdateOperationsInput | number
+    expires_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    status?: StringFieldUpdateOperationsInput | string
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type cart_reservationsUncheckedUpdateManyWithoutLeadsInput = {
+    reservation_id?: StringFieldUpdateOperationsInput | string
+    product_id?: StringFieldUpdateOperationsInput | string
+    variant_id?: NullableStringFieldUpdateOperationsInput | string | null
+    quantity?: IntFieldUpdateOperationsInput | number
+    expires_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    status?: StringFieldUpdateOperationsInput | string
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type cartsUpdateWithoutLeadsInput = {
@@ -143288,13 +150074,13 @@ export namespace Prisma {
     cart_id?: StringFieldUpdateOperationsInput | string
     business_id?: StringFieldUpdateOperationsInput | string
     tenant_id?: StringFieldUpdateOperationsInput | string
-    customer_id?: NullableStringFieldUpdateOperationsInput | string | null
     status?: NullableStringFieldUpdateOperationsInput | string | null
     total_amount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     total_items?: NullableIntFieldUpdateOperationsInput | number | null
     expires_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    customer_id?: NullableStringFieldUpdateOperationsInput | string | null
     cart_items?: cart_itemsUncheckedUpdateManyWithoutCartsNestedInput
   }
 
@@ -143302,13 +150088,13 @@ export namespace Prisma {
     cart_id?: StringFieldUpdateOperationsInput | string
     business_id?: StringFieldUpdateOperationsInput | string
     tenant_id?: StringFieldUpdateOperationsInput | string
-    customer_id?: NullableStringFieldUpdateOperationsInput | string | null
     status?: NullableStringFieldUpdateOperationsInput | string | null
     total_amount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     total_items?: NullableIntFieldUpdateOperationsInput | number | null
     expires_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    customer_id?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type lead_activitiesUpdateWithoutLeadsInput = {
@@ -143923,6 +150709,7 @@ export namespace Prisma {
     deleted_by?: NullableStringFieldUpdateOperationsInput | string | null
     onboarding_completed?: BoolFieldUpdateOperationsInput | boolean
     delivery_address?: NullableStringFieldUpdateOperationsInput | string | null
+    cart_reservations?: cart_reservationsUpdateManyWithoutLeadsNestedInput
     carts?: cartsUpdateManyWithoutLeadsNestedInput
     lead_activities?: lead_activitiesUpdateManyWithoutLeadsNestedInput
     lead_conversations?: lead_conversationsUpdateManyWithoutLeadsNestedInput
@@ -143941,7 +150728,6 @@ export namespace Prisma {
     tenants?: tenantsUpdateOneRequiredWithoutLeadsNestedInput
     orders?: ordersUpdateManyWithoutLeadsNestedInput
     workflow_executions?: workflow_executionsUpdateManyWithoutLeadsNestedInput
-    cart_reservations?: cart_reservationsUpdateManyWithoutLeadsNestedInput
   }
 
   export type leadsUncheckedUpdateWithoutDuplicate_of_leadInput = {
@@ -144003,6 +150789,7 @@ export namespace Prisma {
     deleted_by?: NullableStringFieldUpdateOperationsInput | string | null
     onboarding_completed?: BoolFieldUpdateOperationsInput | boolean
     delivery_address?: NullableStringFieldUpdateOperationsInput | string | null
+    cart_reservations?: cart_reservationsUncheckedUpdateManyWithoutLeadsNestedInput
     carts?: cartsUncheckedUpdateManyWithoutLeadsNestedInput
     lead_activities?: lead_activitiesUncheckedUpdateManyWithoutLeadsNestedInput
     lead_conversations?: lead_conversationsUncheckedUpdateManyWithoutLeadsNestedInput
@@ -144018,7 +150805,6 @@ export namespace Prisma {
     duplicate_leads?: leadsUncheckedUpdateManyWithoutDuplicate_of_leadNestedInput
     orders?: ordersUncheckedUpdateManyWithoutLeadsNestedInput
     workflow_executions?: workflow_executionsUncheckedUpdateManyWithoutLeadsNestedInput
-    cart_reservations?: cart_reservationsUncheckedUpdateManyWithoutLeadsNestedInput
   }
 
   export type leadsUncheckedUpdateManyWithoutDuplicate_of_leadInput = {
@@ -144265,39 +151051,6 @@ export namespace Prisma {
     intent?: NullableStringFieldUpdateOperationsInput | string | null
     message_id?: NullableStringFieldUpdateOperationsInput | string | null
     chat_id?: NullableStringFieldUpdateOperationsInput | string | null
-  }
-
-  export type cart_reservationsUpdateWithoutLeadsInput = {
-    reservation_id?: StringFieldUpdateOperationsInput | string
-    variant_id?: NullableStringFieldUpdateOperationsInput | string | null
-    quantity?: IntFieldUpdateOperationsInput | number
-    expires_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    status?: StringFieldUpdateOperationsInput | string
-    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    products?: productsUpdateOneRequiredWithoutCart_reservationsNestedInput
-  }
-
-  export type cart_reservationsUncheckedUpdateWithoutLeadsInput = {
-    reservation_id?: StringFieldUpdateOperationsInput | string
-    product_id?: StringFieldUpdateOperationsInput | string
-    variant_id?: NullableStringFieldUpdateOperationsInput | string | null
-    quantity?: IntFieldUpdateOperationsInput | number
-    expires_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    status?: StringFieldUpdateOperationsInput | string
-    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type cart_reservationsUncheckedUpdateManyWithoutLeadsInput = {
-    reservation_id?: StringFieldUpdateOperationsInput | string
-    product_id?: StringFieldUpdateOperationsInput | string
-    variant_id?: NullableStringFieldUpdateOperationsInput | string | null
-    quantity?: IntFieldUpdateOperationsInput | number
-    expires_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    status?: StringFieldUpdateOperationsInput | string
-    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type lead_messagesCreateManyConversationInput = {
@@ -144617,6 +151370,17 @@ export namespace Prisma {
     updated_at?: Date | string | null
   }
 
+  export type cart_reservationsCreateManyProductsInput = {
+    reservation_id?: string
+    lead_id: string
+    variant_id?: string | null
+    quantity: number
+    expires_at: Date | string
+    status?: string
+    created_at?: Date | string
+    updated_at?: Date | string
+  }
+
   export type course_batchesCreateManyCourseInput = {
     batch_id?: string
     business_id: string
@@ -144710,17 +151474,6 @@ export namespace Prisma {
     variant_id?: string | null
     quantity: number
     reserved_at?: Date | string
-    expires_at: Date | string
-    status?: string
-    created_at?: Date | string
-    updated_at?: Date | string
-  }
-
-  export type cart_reservationsCreateManyProductsInput = {
-    reservation_id?: string
-    lead_id: string
-    variant_id?: string | null
-    quantity: number
     expires_at: Date | string
     status?: string
     created_at?: Date | string
@@ -144860,6 +151613,39 @@ export namespace Prisma {
     snapshot?: NullableJsonNullValueInput | InputJsonValue
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
+  export type cart_reservationsUpdateWithoutProductsInput = {
+    reservation_id?: StringFieldUpdateOperationsInput | string
+    variant_id?: NullableStringFieldUpdateOperationsInput | string | null
+    quantity?: IntFieldUpdateOperationsInput | number
+    expires_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    status?: StringFieldUpdateOperationsInput | string
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    leads?: leadsUpdateOneRequiredWithoutCart_reservationsNestedInput
+  }
+
+  export type cart_reservationsUncheckedUpdateWithoutProductsInput = {
+    reservation_id?: StringFieldUpdateOperationsInput | string
+    lead_id?: StringFieldUpdateOperationsInput | string
+    variant_id?: NullableStringFieldUpdateOperationsInput | string | null
+    quantity?: IntFieldUpdateOperationsInput | number
+    expires_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    status?: StringFieldUpdateOperationsInput | string
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type cart_reservationsUncheckedUpdateManyWithoutProductsInput = {
+    reservation_id?: StringFieldUpdateOperationsInput | string
+    lead_id?: StringFieldUpdateOperationsInput | string
+    variant_id?: NullableStringFieldUpdateOperationsInput | string | null
+    quantity?: IntFieldUpdateOperationsInput | number
+    expires_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    status?: StringFieldUpdateOperationsInput | string
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type course_batchesUpdateWithoutCourseInput = {
@@ -145163,39 +151949,6 @@ export namespace Prisma {
     variant_id?: NullableStringFieldUpdateOperationsInput | string | null
     quantity?: IntFieldUpdateOperationsInput | number
     reserved_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    expires_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    status?: StringFieldUpdateOperationsInput | string
-    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type cart_reservationsUpdateWithoutProductsInput = {
-    reservation_id?: StringFieldUpdateOperationsInput | string
-    variant_id?: NullableStringFieldUpdateOperationsInput | string | null
-    quantity?: IntFieldUpdateOperationsInput | number
-    expires_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    status?: StringFieldUpdateOperationsInput | string
-    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    leads?: leadsUpdateOneRequiredWithoutCart_reservationsNestedInput
-  }
-
-  export type cart_reservationsUncheckedUpdateWithoutProductsInput = {
-    reservation_id?: StringFieldUpdateOperationsInput | string
-    lead_id?: StringFieldUpdateOperationsInput | string
-    variant_id?: NullableStringFieldUpdateOperationsInput | string | null
-    quantity?: IntFieldUpdateOperationsInput | number
-    expires_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    status?: StringFieldUpdateOperationsInput | string
-    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type cart_reservationsUncheckedUpdateManyWithoutProductsInput = {
-    reservation_id?: StringFieldUpdateOperationsInput | string
-    lead_id?: StringFieldUpdateOperationsInput | string
-    variant_id?: NullableStringFieldUpdateOperationsInput | string | null
-    quantity?: IntFieldUpdateOperationsInput | number
     expires_at?: DateTimeFieldUpdateOperationsInput | Date | string
     status?: StringFieldUpdateOperationsInput | string
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -148065,6 +154818,7 @@ export namespace Prisma {
     instagram_retailer_id?: NullableStringFieldUpdateOperationsInput | string | null
     campaigns?: campaignsUpdateManyWithoutProductsNestedInput
     cart_items?: cart_itemsUpdateManyWithoutProductsNestedInput
+    cart_reservations?: cart_reservationsUpdateManyWithoutProductsNestedInput
     course_batches?: course_batchesUpdateManyWithoutCourseNestedInput
     order_items?: order_itemsUpdateManyWithoutProductsNestedInput
     product_images?: product_imagesUpdateManyWithoutProductsNestedInput
@@ -148072,7 +154826,6 @@ export namespace Prisma {
     product_variants?: product_variantsUpdateManyWithoutProductNestedInput
     businesses?: businessesUpdateOneRequiredWithoutProductsNestedInput
     stock_reservations?: stock_reservationsUpdateManyWithoutProductsNestedInput
-    cart_reservations?: cart_reservationsUpdateManyWithoutProductsNestedInput
   }
 
   export type productsUncheckedUpdateWithoutProduct_categoriesInput = {
@@ -148114,13 +154867,13 @@ export namespace Prisma {
     instagram_retailer_id?: NullableStringFieldUpdateOperationsInput | string | null
     campaigns?: campaignsUncheckedUpdateManyWithoutProductsNestedInput
     cart_items?: cart_itemsUncheckedUpdateManyWithoutProductsNestedInput
+    cart_reservations?: cart_reservationsUncheckedUpdateManyWithoutProductsNestedInput
     course_batches?: course_batchesUncheckedUpdateManyWithoutCourseNestedInput
     order_items?: order_itemsUncheckedUpdateManyWithoutProductsNestedInput
     product_images?: product_imagesUncheckedUpdateManyWithoutProductsNestedInput
     product_reviews?: product_reviewsUncheckedUpdateManyWithoutProductNestedInput
     product_variants?: product_variantsUncheckedUpdateManyWithoutProductNestedInput
     stock_reservations?: stock_reservationsUncheckedUpdateManyWithoutProductsNestedInput
-    cart_reservations?: cart_reservationsUncheckedUpdateManyWithoutProductsNestedInput
   }
 
   export type productsUncheckedUpdateManyWithoutProduct_categoriesInput = {
@@ -148328,6 +155081,58 @@ export namespace Prisma {
     snapshot?: NullableJsonNullValueInput | InputJsonValue
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
+  export type hotel_booking_outcomesCreateManyRecommendationInput = {
+    id?: string
+    hotel_id: string
+    org_id: string
+    actual_price_used: number
+    rooms_booked: number
+    total_rooms: number
+    actual_occupancy: number
+    revenue: number
+    checkin_date: Date | string
+    recorded_at?: Date | string
+  }
+
+  export type hotel_booking_outcomesUpdateWithoutRecommendationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    hotel_id?: StringFieldUpdateOperationsInput | string
+    org_id?: StringFieldUpdateOperationsInput | string
+    actual_price_used?: IntFieldUpdateOperationsInput | number
+    rooms_booked?: IntFieldUpdateOperationsInput | number
+    total_rooms?: IntFieldUpdateOperationsInput | number
+    actual_occupancy?: FloatFieldUpdateOperationsInput | number
+    revenue?: IntFieldUpdateOperationsInput | number
+    checkin_date?: DateTimeFieldUpdateOperationsInput | Date | string
+    recorded_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type hotel_booking_outcomesUncheckedUpdateWithoutRecommendationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    hotel_id?: StringFieldUpdateOperationsInput | string
+    org_id?: StringFieldUpdateOperationsInput | string
+    actual_price_used?: IntFieldUpdateOperationsInput | number
+    rooms_booked?: IntFieldUpdateOperationsInput | number
+    total_rooms?: IntFieldUpdateOperationsInput | number
+    actual_occupancy?: FloatFieldUpdateOperationsInput | number
+    revenue?: IntFieldUpdateOperationsInput | number
+    checkin_date?: DateTimeFieldUpdateOperationsInput | Date | string
+    recorded_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type hotel_booking_outcomesUncheckedUpdateManyWithoutRecommendationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    hotel_id?: StringFieldUpdateOperationsInput | string
+    org_id?: StringFieldUpdateOperationsInput | string
+    actual_price_used?: IntFieldUpdateOperationsInput | number
+    rooms_booked?: IntFieldUpdateOperationsInput | number
+    total_rooms?: IntFieldUpdateOperationsInput | number
+    actual_occupancy?: FloatFieldUpdateOperationsInput | number
+    revenue?: IntFieldUpdateOperationsInput | number
+    checkin_date?: DateTimeFieldUpdateOperationsInput | Date | string
+    recorded_at?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
 

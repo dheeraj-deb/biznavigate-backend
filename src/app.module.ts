@@ -41,9 +41,12 @@ import { ServeStaticModule } from "@nestjs/serve-static";
 import { join } from "path";
 import { MongooseModule } from "@nestjs/mongoose";
 import { ConfigModule, ConfigService } from "@nestjs/config";
+import { EventEmitterModule } from "@nestjs/event-emitter";
+import { ScheduleModule } from "@nestjs/schedule";
 import { CampaignModule } from "./features/campaign/campaign.module";
 import { InboxModule } from "./features/inbox/inbox.module";
 import { GatewayModule } from "./features/inbox/gateway/gateway.module";
+import { HotelPricingModule } from "./features/hotel-pricing/hotel-pricing.module";
 
 @Module({
   imports: [
@@ -88,6 +91,8 @@ import { GatewayModule } from "./features/inbox/gateway/gateway.module";
       port: 6379,
       ttl: 60 * 60 * 24, // Cache expiry in seconds (24 hours)
     }),
+    EventEmitterModule.forRoot(),
+    ScheduleModule.forRoot(),
     LoggerModule,
     PrismaModule,
     BullMQModule,
@@ -113,7 +118,7 @@ import { GatewayModule } from "./features/inbox/gateway/gateway.module";
     ContactsModule,
     InstagramModule,
     ...(process.env.MONGODB_URI
-      ? [CampaignModule, InboxModule, GatewayModule, WhatsAppModule, ChatWidgetModule, WorkflowsModule]
+      ? [CampaignModule, InboxModule, GatewayModule, WhatsAppModule, ChatWidgetModule, WorkflowsModule, HotelPricingModule]
       : []),
   ],
   providers: [
