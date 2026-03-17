@@ -2,7 +2,7 @@ import { Body, Controller, Get, Param, Post, Put, Query } from '@nestjs/common';
 import { WorkflowsService } from './workflows.service';
 import { CreateWorkflowDto, InitiateWorkflowDto, UpdateWorkflowDto } from './dto/save-workflow.dto';
 
-@Controller('workflows')
+@Controller('api/v1/workflows')
 export class WorkflowsController {
     constructor(private readonly workflowsService: WorkflowsService) { }
 

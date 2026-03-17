@@ -5,7 +5,7 @@ import { CancelSubscriptionDto } from "../application/dto/cancel-subscription.dt
 import { SubscriptionsService } from "../application/subscription.service";
 
 
-@Controller("subscriptions")
+@Controller("api/v1/subscriptions")
 export class SubscriptionsController {
   constructor(private readonly service: SubscriptionsService) {}
 

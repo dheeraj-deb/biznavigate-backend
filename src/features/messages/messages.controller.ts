@@ -20,7 +20,7 @@ import type {
 } from './messages.service';
 import { JwtAuthGuard } from '../../common/guards/jwt-auth.guard';
 
-@Controller('messages')
+@Controller('api/v1/messages')
 @UseGuards(JwtAuthGuard)
 export class MessagesController {
   constructor(private readonly messagesService: MessagesService) {}

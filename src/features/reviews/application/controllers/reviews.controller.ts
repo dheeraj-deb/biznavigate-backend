@@ -19,7 +19,7 @@ import { RespondReviewDto } from '../dto/respond-review.dto';
 import { QueryReviewsDto } from '../dto/query-reviews.dto';
 import { JwtAuthGuard } from 'src/common/guards';
 
-@Controller('reviews')
+@Controller('api/v1/reviews')
 @UseGuards(JwtAuthGuard)
 export class ReviewsController {
   constructor(private readonly reviewsService: ReviewsService) {}

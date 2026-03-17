@@ -21,7 +21,7 @@ import { JwtAuthGuard } from '../../../../common/guards/jwt-auth.guard';
  * Category Controller
  * Handles all HTTP endpoints for category management
  */
-@Controller('categories')
+@Controller('api/v1/categories')
 @UseGuards(JwtAuthGuard)
 export class CategoryController {
   private readonly logger = new Logger(CategoryController.name);

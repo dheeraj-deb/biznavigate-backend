@@ -18,7 +18,7 @@ import { BusinessesService } from "../application/business.service";
 @ApiTags("Businesses")
 @ApiBearerAuth()
 @UseGuards(JwtAuthGuard)
-@Controller("businesses")
+@Controller("api/v1/businesses")
 export class BusinessesController {
   constructor(private readonly service: BusinessesService) {}
 

@@ -14,7 +14,7 @@ import { JwtAuthGuard } from "src/common/guards";
 import { CampaignService } from "./campaign.service";
 import { CreateCampaignDto, QueryCampaignDto } from "./dto/campaign.dto";
 
-@Controller('campaigns')
+@Controller('api/v1/campaigns')
 @UseGuards(JwtAuthGuard)
 export class CampaignController {
     constructor(private readonly service: CampaignService) { }

@@ -3,7 +3,7 @@ import { NotifyUserDto } from "../application/dto/notify-user.dto";
 import { RolePermissions } from "../infrastructure/role.repository.prisma";
 import { RolesService } from "../application/role.service";
 
-@Controller("roles")
+@Controller("api/v1/roles")
 export class RolesController {
   constructor(private readonly service: RolesService) {}
 

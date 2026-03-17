@@ -23,7 +23,7 @@ import { JwtAuthGuard } from '../../../../common/guards/jwt-auth.guard';
  * Handles all HTTP requests for order management
  * All endpoints are JWT protected
  */
-@Controller('orders')
+@Controller('api/v1/orders')
 @UseGuards(JwtAuthGuard)
 export class OrderController {
   constructor(private readonly orderService: OrderService) {}

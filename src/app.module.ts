@@ -44,6 +44,7 @@ import { ConfigModule, ConfigService } from "@nestjs/config";
 import { CampaignModule } from "./features/campaign/campaign.module";
 import { InboxModule } from "./features/inbox/inbox.module";
 import { GatewayModule } from "./features/inbox/gateway/gateway.module";
+import { S3Module } from "./s3/s3.module";
 
 @Module({
   imports: [
@@ -112,6 +113,7 @@ import { GatewayModule } from "./features/inbox/gateway/gateway.module";
     MessagesModule,
     ContactsModule,
     InstagramModule,
+    S3Module,
     ...(process.env.MONGODB_URI
       ? [CampaignModule, InboxModule, GatewayModule, WhatsAppModule, ChatWidgetModule, WorkflowsModule]
       : []),

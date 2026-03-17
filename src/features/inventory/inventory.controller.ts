@@ -13,6 +13,7 @@ import {
   HttpStatus,
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiOperation, ApiQuery, ApiTags } from '@nestjs/swagger';
+import { SkipThrottle } from '@nestjs/throttler';
 import { JwtAuthGuard } from '../../common/guards/jwt-auth.guard';
 import { InventoryService } from './inventory.service';
 import { IsString, IsNumber, IsOptional, IsArray, IsUUID, IsDateString, Min } from 'class-validator';
@@ -22,22 +23,22 @@ import { Type } from 'class-transformer';
 
 const INVENTORY_CONFIG: Record<string, { service_types: string[]; attribute_schema: Record<string, any> }> = {
   hospitality: {
-    service_types: ['room', 'villa', 'dormitory', 'tent-site', 'cabin', 'glamping'],
+    service_types: ['room', 'villa', 'dormitory', 'tent_site', 'cabin', 'glamping'],
     attribute_schema: {
-      room:        { label: 'Room',      fields: [{ key: 'ac', label: 'Air Conditioning', type: 'boolean', required: false }, { key: 'view', label: 'View', type: 'select', options: ['sea', 'garden', 'pool', 'city'], required: false }, { key: 'floor', label: 'Floor Number', type: 'number', required: false }, { key: 'amenities', label: 'Amenities', type: 'multi-select', options: ['wifi', 'tv', 'minibar', 'safe', 'bathtub'], required: false }] },
-      villa:       { label: 'Villa',     fields: [{ key: 'bedrooms', label: 'Bedrooms', type: 'number', required: true }, { key: 'private_pool', label: 'Private Pool', type: 'boolean', required: false }, { key: 'amenities', label: 'Amenities', type: 'multi-select', options: ['wifi', 'kitchen', 'bbq', 'jacuzzi'], required: false }] },
-      dormitory:   { label: 'Dormitory', fields: [{ key: 'beds_per_room', label: 'Beds Per Room', type: 'number', required: true }, { key: 'gender', label: 'Gender Policy', type: 'select', options: ['mixed', 'male', 'female'], required: false }, { key: 'locker', label: 'Locker Available', type: 'boolean', required: false }] },
-      'tent-site': { label: 'Tent Site', fields: [{ key: 'power_hookup', label: 'Power Hookup', type: 'boolean', required: false }, { key: 'shade', label: 'Shaded', type: 'boolean', required: false }, { key: 'near_water', label: 'Near Water', type: 'boolean', required: false }] },
-      cabin:       { label: 'Cabin',     fields: [{ key: 'beds', label: 'Number of Beds', type: 'number', required: true }, { key: 'kitchen', label: 'Kitchen Available', type: 'boolean', required: false }, { key: 'amenities', label: 'Amenities', type: 'multi-select', options: ['wifi', 'heater', 'fireplace', 'bbq'], required: false }] },
-      glamping:    { label: 'Glamping',  fields: [{ key: 'beds', label: 'Number of Beds', type: 'number', required: true }, { key: 'private_bathroom', label: 'Private Bathroom', type: 'boolean', required: false }, { key: 'amenities', label: 'Amenities', type: 'multi-select', options: ['wifi', 'ac', 'minibar', 'jacuzzi'], required: false }] },
+      room:      { label: 'Room',      fields: [{ key: 'bed_type', label: 'Bed Type', type: 'select', options: ['Single', 'Double', 'King', 'Twin'] }, { key: 'has_ac', label: 'AC', type: 'boolean' }, { key: 'floor', label: 'Floor', type: 'number' }] },
+      villa:     { label: 'Villa',     fields: [{ key: 'max_guests', label: 'Maximum Guests Allowed', type: 'select', options: ['Maximum 2','Maximum 4','Maximum 6','Maximum 8','Maximum 10','Maximum 15','Maximum 20'] }, { key: 'bedrooms', label: 'Bedrooms', type: 'number' }, { key: 'has_pool', label: 'Private Pool', type: 'boolean' }] },
+      dormitory: { label: 'Dormitory', fields: [{ key: 'bunk_type', label: 'Bunk Type', type: 'select', options: ['Upper', 'Lower'] }, { key: 'mixed', label: 'Mixed Dorm', type: 'boolean' }] },
+      tent_site: { label: 'Tent Site', fields: [{ key: 'max_guests', label: 'Maximum Guests Allowed', type: 'select', options: ['Maximum 2','Maximum 4','Maximum 6','Maximum 8','Maximum 10'] }, { key: 'has_power', label: 'Power Hookup', type: 'boolean' }, { key: 'shade', label: 'Shade', type: 'boolean' }] },
+      cabin:     { label: 'Cabin',     fields: [{ key: 'max_guests', label: 'Maximum Guests Allowed', type: 'select', options: ['Maximum 2','Maximum 4','Maximum 6','Maximum 8','Maximum 10','Maximum 15','Maximum 20'] }, { key: 'bedrooms', label: 'Bedrooms', type: 'number' }, { key: 'has_kitchen', label: 'Kitchen', type: 'boolean' }] },
+      glamping:  { label: 'Glamping',  fields: [{ key: 'max_guests', label: 'Maximum Guests Allowed', type: 'select', options: ['Maximum 2','Maximum 4','Maximum 6','Maximum 8','Maximum 10'] }, { key: 'tent_type', label: 'Tent Type', type: 'select', options: ['Safari', 'Dome', 'Bell'] }, { key: 'has_ac', label: 'AC', type: 'boolean' }] },
     },
   },
   events: {
     service_types: ['event', 'workshop', 'banquet'],
     attribute_schema: {
-      event:    { label: 'Event',    fields: [{ key: 'location', label: 'Venue / Location', type: 'text', required: false }, { key: 'duration_hours', label: 'Duration (hours)', type: 'number', required: false }, { key: 'includes', label: 'Includes', type: 'multi-select', options: ['catering', 'decoration', 'sound', 'photography', 'transport'], required: false }] },
-      workshop: { label: 'Workshop', fields: [{ key: 'duration_hours', label: 'Duration (hours)', type: 'number', required: false }, { key: 'materials_included', label: 'Materials Included', type: 'boolean', required: false }, { key: 'instructor', label: 'Instructor Name', type: 'text', required: false }] },
-      banquet:  { label: 'Banquet',  fields: [{ key: 'seating_capacity', label: 'Seating Capacity', type: 'number', required: true }, { key: 'catering', label: 'Catering Included', type: 'boolean', required: false }, { key: 'av_equipment', label: 'AV Equipment', type: 'boolean', required: false }] },
+      event:    { label: 'Event',    fields: [{ key: 'event_type', label: 'Event Type', type: 'select', options: ['Concert', 'Conference', 'Wedding', 'Corporate'] }, { key: 'indoor', label: 'Indoor', type: 'boolean' }] },
+      workshop: { label: 'Workshop', fields: [{ key: 'duration_hours', label: 'Duration (hrs)', type: 'number' }, { key: 'materials_included', label: 'Materials Included', type: 'boolean' }] },
+      banquet:  { label: 'Banquet',  fields: [{ key: 'catering', label: 'Catering', type: 'boolean' }, { key: 'layout', label: 'Layout', type: 'select', options: ['Theatre', 'Classroom', 'Banquet', 'Cocktail'] }] },
     },
   },
   products: {
@@ -91,6 +92,7 @@ class UpdateStockDto {
 
 // ─────────────────────────────────────────────────────────────────────────────
 
+@SkipThrottle()
 @ApiTags('Inventory')
 @ApiBearerAuth()
 @UseGuards(JwtAuthGuard)

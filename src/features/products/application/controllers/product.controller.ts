@@ -24,7 +24,7 @@ import { JwtAuthGuard } from '../../../../common/guards/jwt-auth.guard';
  * Handles all HTTP endpoints for product management
  * All endpoints require JWT authentication
  */
-@Controller('products')
+@Controller('api/v1/products')
 @UseGuards(JwtAuthGuard)
 export class ProductController {
   private readonly logger = new Logger(ProductController.name);

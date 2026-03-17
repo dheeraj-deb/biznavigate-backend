@@ -67,7 +67,7 @@ export class InventoryService {
   // ═══════════════════════════════════════════════════════════════════════════
 
   async createService(businessId: string, tenantId: string, dto: CreateServiceDto) {
-    return this.prisma.services.create({
+    const service = await this.prisma.services.create({
       data: {
         business_id: businessId,
         tenant_id: tenantId,
@@ -80,6 +80,29 @@ export class InventoryService {
         image_urls: dto.image_urls ? dto.image_urls : Prisma.JsonNull,
       },
     });
+
+    // Auto-generate availability for the next 365 days so the service is immediately bookable
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const dates = Array.from({ length: 365 }, (_, i) => {
+      const d = new Date(today);
+      d.setDate(d.getDate() + i);
+      return d;
+    });
+    await this.prisma.$transaction(
+      dates.map((date) =>
+        this.prisma.$executeRaw`
+          INSERT INTO service_availability
+            (service_id, business_id, date, total_slots, booked_slots, available_slots, effective_price, is_blocked, created_at, updated_at)
+          VALUES
+            (${service.service_id}::uuid, ${businessId}::uuid, ${date}::date,
+             ${dto.capacity}, 0, ${dto.capacity}, NULL, false, NOW(), NOW())
+          ON CONFLICT (service_id, date) DO NOTHING
+        `
+      )
+    );
+
+    return service;
   }
 
   async getServices(businessId: string, type?: string) {
@@ -94,6 +117,9 @@ export class InventoryService {
   }
 
   async getServiceById(serviceId: string, businessId: string) {
+    if (!serviceId || serviceId === 'undefined') {
+      throw new BadRequestException('service_id is required and must be a valid UUID');
+    }
     const service = await this.prisma.services.findFirst({
       where: { service_id: serviceId, business_id: businessId },
     });
@@ -139,18 +165,19 @@ export class InventoryService {
     // Upsert each date — if already exists, update total/price but preserve bookings
     await this.prisma.$transaction(
       rows.map((row) =>
-        this.prisma.service_availability.upsert({
-          where: { service_id_date: { service_id: row.service_id, date: row.date } },
-          create: row,
-          update: {
-            total_slots: row.total_slots,
-            available_slots: this.prisma.$queryRaw`
-              GREATEST(0, ${row.total_slots} - booked_slots)
-            ` as any,
-            effective_price: row.effective_price,
-            updated_at: new Date(),
-          },
-        }),
+        this.prisma.$executeRaw`
+          INSERT INTO service_availability
+            (service_id, business_id, date, total_slots, booked_slots, available_slots, effective_price, is_blocked, created_at, updated_at)
+          VALUES
+            (${row.service_id}::uuid, ${row.business_id}::uuid, ${row.date}::date,
+             ${row.total_slots}, 0, ${row.total_slots},
+             ${row.effective_price ?? null}, false, NOW(), NOW())
+          ON CONFLICT (service_id, date) DO UPDATE SET
+            total_slots     = EXCLUDED.total_slots,
+            available_slots = GREATEST(0, EXCLUDED.total_slots - service_availability.booked_slots),
+            effective_price = EXCLUDED.effective_price,
+            updated_at      = NOW()
+        `
       ),
     );
 
@@ -364,6 +391,12 @@ export class InventoryService {
       }
 
       // ── Path B: direct booking without prior hold ────────────────────────
+      if (!dto.service_id || !dto.check_in_date || !dto.check_out_date) {
+        throw new BadRequestException(
+          'service_id, check_in_date, and check_out_date are required when hold_id is not provided',
+        );
+      }
+
       const dateCount = await tx.service_availability.count({
         where: {
           service_id: dto.service_id,

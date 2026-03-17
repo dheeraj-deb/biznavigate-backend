@@ -14,7 +14,7 @@ import { JwtAuthGuard } from 'src/common/guards';
 import { InboxService, InboxQueryDto, SendReplyDto, UpdateInboxConversationDto, BatchMessagesDto } from './inbox.service';
 
 @SkipThrottle()
-@Controller('inbox')
+@Controller('api/v1/inbox')
 @UseGuards(JwtAuthGuard)
 export class InboxController {
     constructor(private readonly inboxService: InboxService) {}
