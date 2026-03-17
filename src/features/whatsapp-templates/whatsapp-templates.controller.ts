@@ -12,6 +12,13 @@ import { JwtAuthGuard } from '../../common/guards/jwt-auth.guard';
 export class WhatsAppTemplatesController {
     constructor(private readonly service: WhatsAppTemplatesService) { }
 
+    // POST /whatsapp/templates/sync-from-meta — import all templates from Meta into local DB
+    @Post('sync-from-meta')
+    @HttpCode(HttpStatus.OK)
+    syncFromMeta(@Req() req) {
+        return this.service.syncFromMeta(req.user.business_id);
+    }
+
     @Post()
     create(@Req() req, @Body() dto: CreateTemplateDto) {
         const businessId = req.user.business_id; // from JWT

@@ -6,17 +6,22 @@ import { WhatsAppFlowsService } from './whatsapp-flows.service';
 import { WhatsAppFlow, WhatsAppFlowSchema } from './schemas/flow.schema';
 import { WhatsAppApiClientService } from '../whatsapp/infrastructure/whatsapp-api-client.service';
 import { PrismaModule } from '../../prisma/prisma.module';
+import { FlowDataExchangeController } from './flow-data-exchange.controller';
+import { FlowDataExchangeService } from './flow-data-exchange.service';
+import { HospitalityFlowService } from './hospitality-flow.service';
+import { InventoryModule } from '../inventory/inventory.module';
 
 @Module({
     imports: [
         ConfigModule,
         PrismaModule,
+        InventoryModule,
         MongooseModule.forFeature([
             { name: WhatsAppFlow.name, schema: WhatsAppFlowSchema },
         ]),
     ],
-    controllers: [WhatsAppFlowsController],
-    providers: [WhatsAppFlowsService, WhatsAppApiClientService],
+    controllers: [WhatsAppFlowsController, FlowDataExchangeController],
+    providers: [WhatsAppFlowsService, WhatsAppApiClientService, FlowDataExchangeService, HospitalityFlowService],
     exports: [WhatsAppFlowsService],
 })
 export class WhatsAppFlowsModule { }

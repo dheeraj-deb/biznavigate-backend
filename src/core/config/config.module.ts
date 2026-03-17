@@ -2,7 +2,7 @@ import { Module } from "@nestjs/common";
 import { ConfigModule } from "@nestjs/config";
 import appConfig from "../../config/app.config";
 import aiConfig from "../../config/ai.config";
-import envConfig from "src/config/env.config";
+import envConfig from "../../config/env.config";
 import instagramConfig from "../../config/instagram.config";
 import whatsappConfig from "../../config/whatsapp.config";
 import encryptionConfig from "../../config/encryption.config";

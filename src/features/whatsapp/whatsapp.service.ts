@@ -828,7 +828,9 @@ export class WhatsAppService {
     screen?: string,
     flowToken?: string,
     nodeId?: string,
+    flowData?: Record<string, any>,
   ): Promise<any> {
+    console.log("flowData", flowData)
     const token = flowToken ?? `flow-${nodeId ?? Date.now()}`;
     const message: any = {
       messaging_product: 'whatsapp',
@@ -845,10 +847,11 @@ export class WhatsAppService {
             flow_token: token,
             flow_id: flowId,
             flow_cta: cta,
-            flow_action: 'navigate',
-            flow_action_payload: {
-              screen: screen ?? 'INIT',
-            },
+            flow_action: 'data_exchange',
+            // flow_action_payload: {
+            //   screen: screen ?? 'INIT',
+            //   ...(flowData ? { data: flowData } : {}),
+            // },
           },
         },
       },

@@ -125,17 +125,6 @@ exports.Prisma.BusinessesScalarFieldEnum = {
   tenant_id: 'tenant_id',
   business_name: 'business_name',
   business_type: 'business_type',
-<<<<<<< HEAD
-=======
-  email: 'email',
-  phone: 'phone',
-  website: 'website',
-  city: 'city',
-  address: 'address',
-  country: 'country',
-  gst_number: 'gst_number',
-  pan_number: 'pan_number',
->>>>>>> 8a7b2acf9bf5e0bc0fe32c6a0d8aa6e2a9f871a8
   whatsapp_number: 'whatsapp_number',
   created_at: 'created_at',
   updated_at: 'updated_at',
@@ -147,16 +136,6 @@ exports.Prisma.BusinessesScalarFieldEnum = {
   country: 'country',
   gst_number: 'gst_number',
   pan_number: 'pan_number'
-};
-
-exports.Prisma.Business_employeesScalarFieldEnum = {
-  employee_id: 'employee_id',
-  business_id: 'business_id',
-  name: 'name',
-  email: 'email',
-  phone: 'phone',
-  role: 'role',
-  created_at: 'created_at'
 };
 
 exports.Prisma.Business_employeesScalarFieldEnum = {
@@ -1114,7 +1093,6 @@ exports.Prisma.Campaign_analyticsScalarFieldEnum = {
   updated_at: 'updated_at'
 };
 
-<<<<<<< HEAD
 exports.Prisma.Hotel_pricing_recommendationsScalarFieldEnum = {
   id: 'id',
   hotel_id: 'hotel_id',
@@ -1157,7 +1135,9 @@ exports.Prisma.Hotel_pricing_notificationsScalarFieldEnum = {
   body: 'body',
   metadata: 'metadata',
   read_at: 'read_at',
-=======
+  created_at: 'created_at'
+};
+
 exports.Prisma.ServicesScalarFieldEnum = {
   service_id: 'service_id',
   business_id: 'business_id',
@@ -1204,6 +1184,18 @@ exports.Prisma.Service_bookingsScalarFieldEnum = {
   special_requests: 'special_requests',
   created_at: 'created_at',
   updated_at: 'updated_at'
+};
+
+exports.Prisma.Booking_guestsScalarFieldEnum = {
+  guest_id: 'guest_id',
+  booking_id: 'booking_id',
+  name: 'name',
+  phone: 'phone',
+  age: 'age',
+  num_guests: 'num_guests',
+  address: 'address',
+  pin_code: 'pin_code',
+  created_at: 'created_at'
 };
 
 exports.Prisma.Pricing_rulesScalarFieldEnum = {
@@ -1274,7 +1266,6 @@ exports.Prisma.Service_holdsScalarFieldEnum = {
   slots_held: 'slots_held',
   status: 'status',
   expires_at: 'expires_at',
->>>>>>> 8a7b2acf9bf5e0bc0fe32c6a0d8aa6e2a9f871a8
   created_at: 'created_at'
 };
 
@@ -1362,20 +1353,18 @@ exports.Prisma.ModelName = {
   carts: 'carts',
   whatsapp_optouts: 'whatsapp_optouts',
   campaign_analytics: 'campaign_analytics',
-<<<<<<< HEAD
   hotel_pricing_recommendations: 'hotel_pricing_recommendations',
   hotel_booking_outcomes: 'hotel_booking_outcomes',
-  hotel_pricing_notifications: 'hotel_pricing_notifications'
-=======
+  hotel_pricing_notifications: 'hotel_pricing_notifications',
   services: 'services',
   service_availability: 'service_availability',
   service_bookings: 'service_bookings',
+  booking_guests: 'booking_guests',
   pricing_rules: 'pricing_rules',
   pricing_suggestions: 'pricing_suggestions',
   pricing_history: 'pricing_history',
   product_stock_alerts: 'product_stock_alerts',
   service_holds: 'service_holds'
->>>>>>> 8a7b2acf9bf5e0bc0fe32c6a0d8aa6e2a9f871a8
 };
 
 /**

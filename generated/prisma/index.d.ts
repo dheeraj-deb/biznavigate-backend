@@ -278,7 +278,6 @@ export type whatsapp_optouts = $Result.DefaultSelection<Prisma.$whatsapp_optouts
  */
 export type campaign_analytics = $Result.DefaultSelection<Prisma.$campaign_analyticsPayload>
 /**
-<<<<<<< HEAD
  * Model hotel_pricing_recommendations
  * 
  */
@@ -293,7 +292,7 @@ export type hotel_booking_outcomes = $Result.DefaultSelection<Prisma.$hotel_book
  * 
  */
 export type hotel_pricing_notifications = $Result.DefaultSelection<Prisma.$hotel_pricing_notificationsPayload>
-=======
+/**
  * Model services
  * Services - Bookable items: rooms, villas, dormitories, events, camping spots
  */
@@ -308,6 +307,11 @@ export type service_availability = $Result.DefaultSelection<Prisma.$service_avai
  * Service Bookings - Confirmed reservations
  */
 export type service_bookings = $Result.DefaultSelection<Prisma.$service_bookingsPayload>
+/**
+ * Model booking_guests
+ * 
+ */
+export type booking_guests = $Result.DefaultSelection<Prisma.$booking_guestsPayload>
 /**
  * Model pricing_rules
  * Pricing Rules - Rules AI uses to detect when to suggest price changes
@@ -333,7 +337,6 @@ export type product_stock_alerts = $Result.DefaultSelection<Prisma.$product_stoc
  * Service Holds - Temporary slot reservation during checkout (released if payment not made)
  */
 export type service_holds = $Result.DefaultSelection<Prisma.$service_holdsPayload>
->>>>>>> 8a7b2acf9bf5e0bc0fe32c6a0d8aa6e2a9f871a8
 
 /**
  * ##  Prisma Client ʲˢ
@@ -981,7 +984,6 @@ export class PrismaClient<
   get campaign_analytics(): Prisma.campaign_analyticsDelegate<ExtArgs, ClientOptions>;
 
   /**
-<<<<<<< HEAD
    * `prisma.hotel_pricing_recommendations`: Exposes CRUD operations for the **hotel_pricing_recommendations** model.
     * Example usage:
     * ```ts
@@ -1010,7 +1012,8 @@ export class PrismaClient<
     * ```
     */
   get hotel_pricing_notifications(): Prisma.hotel_pricing_notificationsDelegate<ExtArgs, ClientOptions>;
-=======
+
+  /**
    * `prisma.services`: Exposes CRUD operations for the **services** model.
     * Example usage:
     * ```ts
@@ -1039,6 +1042,16 @@ export class PrismaClient<
     * ```
     */
   get service_bookings(): Prisma.service_bookingsDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.booking_guests`: Exposes CRUD operations for the **booking_guests** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more Booking_guests
+    * const booking_guests = await prisma.booking_guests.findMany()
+    * ```
+    */
+  get booking_guests(): Prisma.booking_guestsDelegate<ExtArgs, ClientOptions>;
 
   /**
    * `prisma.pricing_rules`: Exposes CRUD operations for the **pricing_rules** model.
@@ -1089,7 +1102,6 @@ export class PrismaClient<
     * ```
     */
   get service_holds(): Prisma.service_holdsDelegate<ExtArgs, ClientOptions>;
->>>>>>> 8a7b2acf9bf5e0bc0fe32c6a0d8aa6e2a9f871a8
 }
 
 export namespace Prisma {
@@ -1582,20 +1594,18 @@ export namespace Prisma {
     carts: 'carts',
     whatsapp_optouts: 'whatsapp_optouts',
     campaign_analytics: 'campaign_analytics',
-<<<<<<< HEAD
     hotel_pricing_recommendations: 'hotel_pricing_recommendations',
     hotel_booking_outcomes: 'hotel_booking_outcomes',
-    hotel_pricing_notifications: 'hotel_pricing_notifications'
-=======
+    hotel_pricing_notifications: 'hotel_pricing_notifications',
     services: 'services',
     service_availability: 'service_availability',
     service_bookings: 'service_bookings',
+    booking_guests: 'booking_guests',
     pricing_rules: 'pricing_rules',
     pricing_suggestions: 'pricing_suggestions',
     pricing_history: 'pricing_history',
     product_stock_alerts: 'product_stock_alerts',
     service_holds: 'service_holds'
->>>>>>> 8a7b2acf9bf5e0bc0fe32c6a0d8aa6e2a9f871a8
   };
 
   export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -1614,11 +1624,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-<<<<<<< HEAD
-      modelProps: "businesses" | "business_employees" | "intents" | "notifications" | "role_intents" | "roles" | "social_accounts" | "subscription_plans" | "tenants" | "users" | "leads" | "lead_activities" | "lead_conversations" | "lead_messages" | "tags" | "lead_tag_assignments" | "lead_notes" | "lead_status_history" | "lead_followups" | "lead_duplicates" | "products" | "product_variants" | "product_images" | "course_batches" | "customers" | "orders" | "order_items" | "stock_reservations" | "cart_reservations" | "campaigns" | "campaign_recipients" | "lead_scoring_rules" | "lead_score_history" | "tasks" | "warehouses" | "inventory_levels" | "stock_movements" | "stock_transfers" | "stock_alerts" | "stock_counts" | "notification_templates" | "notification_messages" | "notification_preferences" | "payments" | "payment_reconciliation" | "conversations" | "messages" | "notification_events" | "payment_webhooks" | "instagram_media" | "product_categories" | "product_reviews" | "workflow_definitions" | "business_workflows" | "workflow_executions" | "cart_items" | "carts" | "whatsapp_optouts" | "campaign_analytics" | "hotel_pricing_recommendations" | "hotel_booking_outcomes" | "hotel_pricing_notifications"
-=======
-      modelProps: "businesses" | "business_employees" | "intents" | "notifications" | "role_intents" | "roles" | "social_accounts" | "subscription_plans" | "tenants" | "users" | "leads" | "lead_activities" | "lead_conversations" | "lead_messages" | "tags" | "lead_tag_assignments" | "lead_notes" | "lead_status_history" | "lead_followups" | "lead_duplicates" | "products" | "product_variants" | "product_images" | "course_batches" | "customers" | "orders" | "order_items" | "cart_reservations" | "campaigns" | "campaign_recipients" | "lead_scoring_rules" | "lead_score_history" | "tasks" | "notification_templates" | "notification_messages" | "notification_preferences" | "payments" | "payment_reconciliation" | "conversations" | "messages" | "notification_events" | "payment_webhooks" | "instagram_media" | "product_categories" | "product_reviews" | "workflow_definitions" | "business_workflows" | "workflow_executions" | "cart_items" | "carts" | "whatsapp_optouts" | "campaign_analytics" | "services" | "service_availability" | "service_bookings" | "pricing_rules" | "pricing_suggestions" | "pricing_history" | "product_stock_alerts" | "service_holds"
->>>>>>> 8a7b2acf9bf5e0bc0fe32c6a0d8aa6e2a9f871a8
+      modelProps: "businesses" | "business_employees" | "intents" | "notifications" | "role_intents" | "roles" | "social_accounts" | "subscription_plans" | "tenants" | "users" | "leads" | "lead_activities" | "lead_conversations" | "lead_messages" | "tags" | "lead_tag_assignments" | "lead_notes" | "lead_status_history" | "lead_followups" | "lead_duplicates" | "products" | "product_variants" | "product_images" | "course_batches" | "customers" | "orders" | "order_items" | "cart_reservations" | "campaigns" | "campaign_recipients" | "lead_scoring_rules" | "lead_score_history" | "tasks" | "notification_templates" | "notification_messages" | "notification_preferences" | "payments" | "payment_reconciliation" | "conversations" | "messages" | "notification_events" | "payment_webhooks" | "instagram_media" | "product_categories" | "product_reviews" | "workflow_definitions" | "business_workflows" | "workflow_executions" | "cart_items" | "carts" | "whatsapp_optouts" | "campaign_analytics" | "hotel_pricing_recommendations" | "hotel_booking_outcomes" | "hotel_pricing_notifications" | "services" | "service_availability" | "service_bookings" | "booking_guests" | "pricing_rules" | "pricing_suggestions" | "pricing_history" | "product_stock_alerts" | "service_holds"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -5470,7 +5476,6 @@ export namespace Prisma {
           }
         }
       }
-<<<<<<< HEAD
       hotel_pricing_recommendations: {
         payload: Prisma.$hotel_pricing_recommendationsPayload<ExtArgs>
         fields: Prisma.hotel_pricing_recommendationsFieldRefs
@@ -5690,7 +5695,9 @@ export namespace Prisma {
           count: {
             args: Prisma.hotel_pricing_notificationsCountArgs<ExtArgs>
             result: $Utils.Optional<Hotel_pricing_notificationsCountAggregateOutputType> | number
-=======
+          }
+        }
+      }
       services: {
         payload: Prisma.$servicesPayload<ExtArgs>
         fields: Prisma.servicesFieldRefs
@@ -5910,6 +5917,80 @@ export namespace Prisma {
           count: {
             args: Prisma.service_bookingsCountArgs<ExtArgs>
             result: $Utils.Optional<Service_bookingsCountAggregateOutputType> | number
+          }
+        }
+      }
+      booking_guests: {
+        payload: Prisma.$booking_guestsPayload<ExtArgs>
+        fields: Prisma.booking_guestsFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.booking_guestsFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$booking_guestsPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.booking_guestsFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$booking_guestsPayload>
+          }
+          findFirst: {
+            args: Prisma.booking_guestsFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$booking_guestsPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.booking_guestsFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$booking_guestsPayload>
+          }
+          findMany: {
+            args: Prisma.booking_guestsFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$booking_guestsPayload>[]
+          }
+          create: {
+            args: Prisma.booking_guestsCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$booking_guestsPayload>
+          }
+          createMany: {
+            args: Prisma.booking_guestsCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.booking_guestsCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$booking_guestsPayload>[]
+          }
+          delete: {
+            args: Prisma.booking_guestsDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$booking_guestsPayload>
+          }
+          update: {
+            args: Prisma.booking_guestsUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$booking_guestsPayload>
+          }
+          deleteMany: {
+            args: Prisma.booking_guestsDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.booking_guestsUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.booking_guestsUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$booking_guestsPayload>[]
+          }
+          upsert: {
+            args: Prisma.booking_guestsUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$booking_guestsPayload>
+          }
+          aggregate: {
+            args: Prisma.Booking_guestsAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateBooking_guests>
+          }
+          groupBy: {
+            args: Prisma.booking_guestsGroupByArgs<ExtArgs>
+            result: $Utils.Optional<Booking_guestsGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.booking_guestsCountArgs<ExtArgs>
+            result: $Utils.Optional<Booking_guestsCountAggregateOutputType> | number
           }
         }
       }
@@ -6280,7 +6361,6 @@ export namespace Prisma {
           count: {
             args: Prisma.service_holdsCountArgs<ExtArgs>
             result: $Utils.Optional<Service_holdsCountAggregateOutputType> | number
->>>>>>> 8a7b2acf9bf5e0bc0fe32c6a0d8aa6e2a9f871a8
           }
         }
       }
@@ -6420,20 +6500,18 @@ export namespace Prisma {
     carts?: cartsOmit
     whatsapp_optouts?: whatsapp_optoutsOmit
     campaign_analytics?: campaign_analyticsOmit
-<<<<<<< HEAD
     hotel_pricing_recommendations?: hotel_pricing_recommendationsOmit
     hotel_booking_outcomes?: hotel_booking_outcomesOmit
     hotel_pricing_notifications?: hotel_pricing_notificationsOmit
-=======
     services?: servicesOmit
     service_availability?: service_availabilityOmit
     service_bookings?: service_bookingsOmit
+    booking_guests?: booking_guestsOmit
     pricing_rules?: pricing_rulesOmit
     pricing_suggestions?: pricing_suggestionsOmit
     pricing_history?: pricing_historyOmit
     product_stock_alerts?: product_stock_alertsOmit
     service_holds?: service_holdsOmit
->>>>>>> 8a7b2acf9bf5e0bc0fe32c6a0d8aa6e2a9f871a8
   }
 
   /* Types for Logging */
@@ -6823,8 +6901,8 @@ export namespace Prisma {
    */
 
   export type TenantsCountOutputType = {
-    businesses: number
     business_workflows: number
+    businesses: number
     carts: number
     leads: number
     notification_messages: number
@@ -6833,8 +6911,8 @@ export namespace Prisma {
   }
 
   export type TenantsCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    businesses?: boolean | TenantsCountOutputTypeCountBusinessesArgs
     business_workflows?: boolean | TenantsCountOutputTypeCountBusiness_workflowsArgs
+    businesses?: boolean | TenantsCountOutputTypeCountBusinessesArgs
     carts?: boolean | TenantsCountOutputTypeCountCartsArgs
     leads?: boolean | TenantsCountOutputTypeCountLeadsArgs
     notification_messages?: boolean | TenantsCountOutputTypeCountNotification_messagesArgs
@@ -6856,15 +6934,15 @@ export namespace Prisma {
   /**
    * TenantsCountOutputType without action
    */
-  export type TenantsCountOutputTypeCountBusinessesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: businessesWhereInput
+  export type TenantsCountOutputTypeCountBusiness_workflowsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: business_workflowsWhereInput
   }
 
   /**
    * TenantsCountOutputType without action
    */
-  export type TenantsCountOutputTypeCountBusiness_workflowsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: business_workflowsWhereInput
+  export type TenantsCountOutputTypeCountBusinessesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: businessesWhereInput
   }
 
   /**
@@ -7278,12 +7356,7 @@ export namespace Prisma {
     product_images: number
     product_reviews: number
     product_variants: number
-<<<<<<< HEAD
-    stock_reservations: number
-=======
-    cart_reservations: number
     product_stock_alerts: number
->>>>>>> 8a7b2acf9bf5e0bc0fe32c6a0d8aa6e2a9f871a8
   }
 
   export type ProductsCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -7295,12 +7368,7 @@ export namespace Prisma {
     product_images?: boolean | ProductsCountOutputTypeCountProduct_imagesArgs
     product_reviews?: boolean | ProductsCountOutputTypeCountProduct_reviewsArgs
     product_variants?: boolean | ProductsCountOutputTypeCountProduct_variantsArgs
-<<<<<<< HEAD
-    stock_reservations?: boolean | ProductsCountOutputTypeCountStock_reservationsArgs
-=======
-    cart_reservations?: boolean | ProductsCountOutputTypeCountCart_reservationsArgs
     product_stock_alerts?: boolean | ProductsCountOutputTypeCountProduct_stock_alertsArgs
->>>>>>> 8a7b2acf9bf5e0bc0fe32c6a0d8aa6e2a9f871a8
   }
 
   // Custom InputTypes
@@ -7373,20 +7441,10 @@ export namespace Prisma {
   /**
    * ProductsCountOutputType without action
    */
-  export type ProductsCountOutputTypeCountCart_reservationsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: cart_reservationsWhereInput
-  }
-
-<<<<<<< HEAD
-=======
-  /**
-   * ProductsCountOutputType without action
-   */
   export type ProductsCountOutputTypeCountProduct_stock_alertsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: product_stock_alertsWhereInput
   }
 
->>>>>>> 8a7b2acf9bf5e0bc0fe32c6a0d8aa6e2a9f871a8
 
   /**
    * Count Type Product_variantsCountOutputType
@@ -7860,7 +7918,6 @@ export namespace Prisma {
 
 
   /**
-<<<<<<< HEAD
    * Count Type Hotel_pricing_recommendationsCountOutputType
    */
 
@@ -7870,7 +7927,28 @@ export namespace Prisma {
 
   export type Hotel_pricing_recommendationsCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     booking_outcomes?: boolean | Hotel_pricing_recommendationsCountOutputTypeCountBooking_outcomesArgs
-=======
+  }
+
+  // Custom InputTypes
+  /**
+   * Hotel_pricing_recommendationsCountOutputType without action
+   */
+  export type Hotel_pricing_recommendationsCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Hotel_pricing_recommendationsCountOutputType
+     */
+    select?: Hotel_pricing_recommendationsCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * Hotel_pricing_recommendationsCountOutputType without action
+   */
+  export type Hotel_pricing_recommendationsCountOutputTypeCountBooking_outcomesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: hotel_booking_outcomesWhereInput
+  }
+
+
+  /**
    * Count Type ServicesCountOutputType
    */
 
@@ -7888,27 +7966,10 @@ export namespace Prisma {
     service_holds?: boolean | ServicesCountOutputTypeCountService_holdsArgs
     pricing_suggestions?: boolean | ServicesCountOutputTypeCountPricing_suggestionsArgs
     pricing_history?: boolean | ServicesCountOutputTypeCountPricing_historyArgs
->>>>>>> 8a7b2acf9bf5e0bc0fe32c6a0d8aa6e2a9f871a8
   }
 
   // Custom InputTypes
   /**
-<<<<<<< HEAD
-   * Hotel_pricing_recommendationsCountOutputType without action
-   */
-  export type Hotel_pricing_recommendationsCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Hotel_pricing_recommendationsCountOutputType
-     */
-    select?: Hotel_pricing_recommendationsCountOutputTypeSelect<ExtArgs> | null
-  }
-
-  /**
-   * Hotel_pricing_recommendationsCountOutputType without action
-   */
-  export type Hotel_pricing_recommendationsCountOutputTypeCountBooking_outcomesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: hotel_booking_outcomesWhereInput
-=======
    * ServicesCountOutputType without action
    */
   export type ServicesCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -7951,7 +8012,6 @@ export namespace Prisma {
    */
   export type ServicesCountOutputTypeCountPricing_historyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: pricing_historyWhereInput
->>>>>>> 8a7b2acf9bf5e0bc0fe32c6a0d8aa6e2a9f871a8
   }
 
 
@@ -7974,17 +8034,6 @@ export namespace Prisma {
     tenant_id: string | null
     business_name: string | null
     business_type: string | null
-<<<<<<< HEAD
-=======
-    email: string | null
-    phone: string | null
-    website: string | null
-    city: string | null
-    address: string | null
-    country: string | null
-    gst_number: string | null
-    pan_number: string | null
->>>>>>> 8a7b2acf9bf5e0bc0fe32c6a0d8aa6e2a9f871a8
     whatsapp_number: string | null
     created_at: Date | null
     updated_at: Date | null
@@ -8003,17 +8052,6 @@ export namespace Prisma {
     tenant_id: string | null
     business_name: string | null
     business_type: string | null
-<<<<<<< HEAD
-=======
-    email: string | null
-    phone: string | null
-    website: string | null
-    city: string | null
-    address: string | null
-    country: string | null
-    gst_number: string | null
-    pan_number: string | null
->>>>>>> 8a7b2acf9bf5e0bc0fe32c6a0d8aa6e2a9f871a8
     whatsapp_number: string | null
     created_at: Date | null
     updated_at: Date | null
@@ -8032,17 +8070,6 @@ export namespace Prisma {
     tenant_id: number
     business_name: number
     business_type: number
-<<<<<<< HEAD
-=======
-    email: number
-    phone: number
-    website: number
-    city: number
-    address: number
-    country: number
-    gst_number: number
-    pan_number: number
->>>>>>> 8a7b2acf9bf5e0bc0fe32c6a0d8aa6e2a9f871a8
     whatsapp_number: number
     created_at: number
     updated_at: number
@@ -8063,17 +8090,6 @@ export namespace Prisma {
     tenant_id?: true
     business_name?: true
     business_type?: true
-<<<<<<< HEAD
-=======
-    email?: true
-    phone?: true
-    website?: true
-    city?: true
-    address?: true
-    country?: true
-    gst_number?: true
-    pan_number?: true
->>>>>>> 8a7b2acf9bf5e0bc0fe32c6a0d8aa6e2a9f871a8
     whatsapp_number?: true
     created_at?: true
     updated_at?: true
@@ -8092,17 +8108,6 @@ export namespace Prisma {
     tenant_id?: true
     business_name?: true
     business_type?: true
-<<<<<<< HEAD
-=======
-    email?: true
-    phone?: true
-    website?: true
-    city?: true
-    address?: true
-    country?: true
-    gst_number?: true
-    pan_number?: true
->>>>>>> 8a7b2acf9bf5e0bc0fe32c6a0d8aa6e2a9f871a8
     whatsapp_number?: true
     created_at?: true
     updated_at?: true
@@ -8121,17 +8126,6 @@ export namespace Prisma {
     tenant_id?: true
     business_name?: true
     business_type?: true
-<<<<<<< HEAD
-=======
-    email?: true
-    phone?: true
-    website?: true
-    city?: true
-    address?: true
-    country?: true
-    gst_number?: true
-    pan_number?: true
->>>>>>> 8a7b2acf9bf5e0bc0fe32c6a0d8aa6e2a9f871a8
     whatsapp_number?: true
     created_at?: true
     updated_at?: true
@@ -8223,17 +8217,6 @@ export namespace Prisma {
     tenant_id: string
     business_name: string
     business_type: string | null
-<<<<<<< HEAD
-=======
-    email: string | null
-    phone: string | null
-    website: string | null
-    city: string | null
-    address: string | null
-    country: string | null
-    gst_number: string | null
-    pan_number: string | null
->>>>>>> 8a7b2acf9bf5e0bc0fe32c6a0d8aa6e2a9f871a8
     whatsapp_number: string | null
     created_at: Date | null
     updated_at: Date | null
@@ -8269,7 +8252,6 @@ export namespace Prisma {
     tenant_id?: boolean
     business_name?: boolean
     business_type?: boolean
-<<<<<<< HEAD
     whatsapp_number?: boolean
     created_at?: boolean
     updated_at?: boolean
@@ -8281,19 +8263,6 @@ export namespace Prisma {
     country?: boolean
     gst_number?: boolean
     pan_number?: boolean
-=======
-    email?: boolean
-    phone?: boolean
-    website?: boolean
-    city?: boolean
-    address?: boolean
-    country?: boolean
-    gst_number?: boolean
-    pan_number?: boolean
-    whatsapp_number?: boolean
-    created_at?: boolean
-    updated_at?: boolean
->>>>>>> 8a7b2acf9bf5e0bc0fe32c6a0d8aa6e2a9f871a8
     business_employees?: boolean | businesses$business_employeesArgs<ExtArgs>
     business_workflows?: boolean | businesses$business_workflowsArgs<ExtArgs>
     tenants?: boolean | tenantsDefaultArgs<ExtArgs>
@@ -8322,7 +8291,6 @@ export namespace Prisma {
     tenant_id?: boolean
     business_name?: boolean
     business_type?: boolean
-<<<<<<< HEAD
     whatsapp_number?: boolean
     created_at?: boolean
     updated_at?: boolean
@@ -8334,19 +8302,6 @@ export namespace Prisma {
     country?: boolean
     gst_number?: boolean
     pan_number?: boolean
-=======
-    email?: boolean
-    phone?: boolean
-    website?: boolean
-    city?: boolean
-    address?: boolean
-    country?: boolean
-    gst_number?: boolean
-    pan_number?: boolean
-    whatsapp_number?: boolean
-    created_at?: boolean
-    updated_at?: boolean
->>>>>>> 8a7b2acf9bf5e0bc0fe32c6a0d8aa6e2a9f871a8
     tenants?: boolean | tenantsDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["businesses"]>
 
@@ -8355,7 +8310,6 @@ export namespace Prisma {
     tenant_id?: boolean
     business_name?: boolean
     business_type?: boolean
-<<<<<<< HEAD
     whatsapp_number?: boolean
     created_at?: boolean
     updated_at?: boolean
@@ -8367,19 +8321,6 @@ export namespace Prisma {
     country?: boolean
     gst_number?: boolean
     pan_number?: boolean
-=======
-    email?: boolean
-    phone?: boolean
-    website?: boolean
-    city?: boolean
-    address?: boolean
-    country?: boolean
-    gst_number?: boolean
-    pan_number?: boolean
-    whatsapp_number?: boolean
-    created_at?: boolean
-    updated_at?: boolean
->>>>>>> 8a7b2acf9bf5e0bc0fe32c6a0d8aa6e2a9f871a8
     tenants?: boolean | tenantsDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["businesses"]>
 
@@ -8388,17 +8329,6 @@ export namespace Prisma {
     tenant_id?: boolean
     business_name?: boolean
     business_type?: boolean
-<<<<<<< HEAD
-=======
-    email?: boolean
-    phone?: boolean
-    website?: boolean
-    city?: boolean
-    address?: boolean
-    country?: boolean
-    gst_number?: boolean
-    pan_number?: boolean
->>>>>>> 8a7b2acf9bf5e0bc0fe32c6a0d8aa6e2a9f871a8
     whatsapp_number?: boolean
     created_at?: boolean
     updated_at?: boolean
@@ -8412,11 +8342,7 @@ export namespace Prisma {
     pan_number?: boolean
   }
 
-<<<<<<< HEAD
   export type businessesOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"business_id" | "tenant_id" | "business_name" | "business_type" | "whatsapp_number" | "created_at" | "updated_at" | "email" | "phone" | "website" | "city" | "address" | "country" | "gst_number" | "pan_number", ExtArgs["result"]["businesses"]>
-=======
-  export type businessesOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"business_id" | "tenant_id" | "business_name" | "business_type" | "email" | "phone" | "website" | "city" | "address" | "country" | "gst_number" | "pan_number" | "whatsapp_number" | "created_at" | "updated_at", ExtArgs["result"]["businesses"]>
->>>>>>> 8a7b2acf9bf5e0bc0fe32c6a0d8aa6e2a9f871a8
   export type businessesInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     business_employees?: boolean | businesses$business_employeesArgs<ExtArgs>
     business_workflows?: boolean | businesses$business_workflowsArgs<ExtArgs>
@@ -8476,17 +8402,6 @@ export namespace Prisma {
       tenant_id: string
       business_name: string
       business_type: string | null
-<<<<<<< HEAD
-=======
-      email: string | null
-      phone: string | null
-      website: string | null
-      city: string | null
-      address: string | null
-      country: string | null
-      gst_number: string | null
-      pan_number: string | null
->>>>>>> 8a7b2acf9bf5e0bc0fe32c6a0d8aa6e2a9f871a8
       whatsapp_number: string | null
       created_at: Date | null
       updated_at: Date | null
@@ -8945,17 +8860,6 @@ export namespace Prisma {
     readonly tenant_id: FieldRef<"businesses", 'String'>
     readonly business_name: FieldRef<"businesses", 'String'>
     readonly business_type: FieldRef<"businesses", 'String'>
-<<<<<<< HEAD
-=======
-    readonly email: FieldRef<"businesses", 'String'>
-    readonly phone: FieldRef<"businesses", 'String'>
-    readonly website: FieldRef<"businesses", 'String'>
-    readonly city: FieldRef<"businesses", 'String'>
-    readonly address: FieldRef<"businesses", 'String'>
-    readonly country: FieldRef<"businesses", 'String'>
-    readonly gst_number: FieldRef<"businesses", 'String'>
-    readonly pan_number: FieldRef<"businesses", 'String'>
->>>>>>> 8a7b2acf9bf5e0bc0fe32c6a0d8aa6e2a9f871a8
     readonly whatsapp_number: FieldRef<"businesses", 'String'>
     readonly created_at: FieldRef<"businesses", 'DateTime'>
     readonly updated_at: FieldRef<"businesses", 'DateTime'>
@@ -17702,8 +17606,8 @@ export namespace Prisma {
     gst_number?: boolean
     pan_number?: boolean
     registration_no?: boolean
-    businesses?: boolean | tenants$businessesArgs<ExtArgs>
     business_workflows?: boolean | tenants$business_workflowsArgs<ExtArgs>
+    businesses?: boolean | tenants$businessesArgs<ExtArgs>
     carts?: boolean | tenants$cartsArgs<ExtArgs>
     leads?: boolean | tenants$leadsArgs<ExtArgs>
     notification_messages?: boolean | tenants$notification_messagesArgs<ExtArgs>
@@ -17753,8 +17657,8 @@ export namespace Prisma {
 
   export type tenantsOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"tenant_id" | "tenant_name" | "email" | "phone_number" | "created_at" | "updated_at" | "address" | "gst_number" | "pan_number" | "registration_no", ExtArgs["result"]["tenants"]>
   export type tenantsInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    businesses?: boolean | tenants$businessesArgs<ExtArgs>
     business_workflows?: boolean | tenants$business_workflowsArgs<ExtArgs>
+    businesses?: boolean | tenants$businessesArgs<ExtArgs>
     carts?: boolean | tenants$cartsArgs<ExtArgs>
     leads?: boolean | tenants$leadsArgs<ExtArgs>
     notification_messages?: boolean | tenants$notification_messagesArgs<ExtArgs>
@@ -17768,8 +17672,8 @@ export namespace Prisma {
   export type $tenantsPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "tenants"
     objects: {
-      businesses: Prisma.$businessesPayload<ExtArgs>[]
       business_workflows: Prisma.$business_workflowsPayload<ExtArgs>[]
+      businesses: Prisma.$businessesPayload<ExtArgs>[]
       carts: Prisma.$cartsPayload<ExtArgs>[]
       leads: Prisma.$leadsPayload<ExtArgs>[]
       notification_messages: Prisma.$notification_messagesPayload<ExtArgs>[]
@@ -18181,8 +18085,8 @@ export namespace Prisma {
    */
   export interface Prisma__tenantsClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
-    businesses<T extends tenants$businessesArgs<ExtArgs> = {}>(args?: Subset<T, tenants$businessesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$businessesPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     business_workflows<T extends tenants$business_workflowsArgs<ExtArgs> = {}>(args?: Subset<T, tenants$business_workflowsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$business_workflowsPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    businesses<T extends tenants$businessesArgs<ExtArgs> = {}>(args?: Subset<T, tenants$businessesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$businessesPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     carts<T extends tenants$cartsArgs<ExtArgs> = {}>(args?: Subset<T, tenants$cartsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$cartsPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     leads<T extends tenants$leadsArgs<ExtArgs> = {}>(args?: Subset<T, tenants$leadsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$leadsPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     notification_messages<T extends tenants$notification_messagesArgs<ExtArgs> = {}>(args?: Subset<T, tenants$notification_messagesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$notification_messagesPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
@@ -18615,30 +18519,6 @@ export namespace Prisma {
   }
 
   /**
-   * tenants.businesses
-   */
-  export type tenants$businessesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the businesses
-     */
-    select?: businessesSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the businesses
-     */
-    omit?: businessesOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: businessesInclude<ExtArgs> | null
-    where?: businessesWhereInput
-    orderBy?: businessesOrderByWithRelationInput | businessesOrderByWithRelationInput[]
-    cursor?: businessesWhereUniqueInput
-    take?: number
-    skip?: number
-    distinct?: BusinessesScalarFieldEnum | BusinessesScalarFieldEnum[]
-  }
-
-  /**
    * tenants.business_workflows
    */
   export type tenants$business_workflowsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -18660,6 +18540,30 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: Business_workflowsScalarFieldEnum | Business_workflowsScalarFieldEnum[]
+  }
+
+  /**
+   * tenants.businesses
+   */
+  export type tenants$businessesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the businesses
+     */
+    select?: businessesSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the businesses
+     */
+    omit?: businessesOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: businessesInclude<ExtArgs> | null
+    where?: businessesWhereInput
+    orderBy?: businessesOrderByWithRelationInput | businessesOrderByWithRelationInput[]
+    cursor?: businessesWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: BusinessesScalarFieldEnum | BusinessesScalarFieldEnum[]
   }
 
   /**
@@ -34217,12 +34121,7 @@ export namespace Prisma {
     product_variants?: boolean | products$product_variantsArgs<ExtArgs>
     businesses?: boolean | businessesDefaultArgs<ExtArgs>
     product_categories?: boolean | products$product_categoriesArgs<ExtArgs>
-<<<<<<< HEAD
-    stock_reservations?: boolean | products$stock_reservationsArgs<ExtArgs>
-=======
-    cart_reservations?: boolean | products$cart_reservationsArgs<ExtArgs>
     product_stock_alerts?: boolean | products$product_stock_alertsArgs<ExtArgs>
->>>>>>> 8a7b2acf9bf5e0bc0fe32c6a0d8aa6e2a9f871a8
     _count?: boolean | ProductsCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["products"]>
 
@@ -34365,12 +34264,7 @@ export namespace Prisma {
     product_variants?: boolean | products$product_variantsArgs<ExtArgs>
     businesses?: boolean | businessesDefaultArgs<ExtArgs>
     product_categories?: boolean | products$product_categoriesArgs<ExtArgs>
-<<<<<<< HEAD
-    stock_reservations?: boolean | products$stock_reservationsArgs<ExtArgs>
-=======
-    cart_reservations?: boolean | products$cart_reservationsArgs<ExtArgs>
     product_stock_alerts?: boolean | products$product_stock_alertsArgs<ExtArgs>
->>>>>>> 8a7b2acf9bf5e0bc0fe32c6a0d8aa6e2a9f871a8
     _count?: boolean | ProductsCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type productsIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -34395,12 +34289,7 @@ export namespace Prisma {
       product_variants: Prisma.$product_variantsPayload<ExtArgs>[]
       businesses: Prisma.$businessesPayload<ExtArgs>
       product_categories: Prisma.$product_categoriesPayload<ExtArgs> | null
-<<<<<<< HEAD
-      stock_reservations: Prisma.$stock_reservationsPayload<ExtArgs>[]
-=======
-      cart_reservations: Prisma.$cart_reservationsPayload<ExtArgs>[]
       product_stock_alerts: Prisma.$product_stock_alertsPayload<ExtArgs>[]
->>>>>>> 8a7b2acf9bf5e0bc0fe32c6a0d8aa6e2a9f871a8
     }
     scalars: $Extensions.GetPayloadResult<{
       product_id: string
@@ -34845,12 +34734,7 @@ export namespace Prisma {
     product_variants<T extends products$product_variantsArgs<ExtArgs> = {}>(args?: Subset<T, products$product_variantsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$product_variantsPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     businesses<T extends businessesDefaultArgs<ExtArgs> = {}>(args?: Subset<T, businessesDefaultArgs<ExtArgs>>): Prisma__businessesClient<$Result.GetResult<Prisma.$businessesPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     product_categories<T extends products$product_categoriesArgs<ExtArgs> = {}>(args?: Subset<T, products$product_categoriesArgs<ExtArgs>>): Prisma__product_categoriesClient<$Result.GetResult<Prisma.$product_categoriesPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
-<<<<<<< HEAD
-    stock_reservations<T extends products$stock_reservationsArgs<ExtArgs> = {}>(args?: Subset<T, products$stock_reservationsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$stock_reservationsPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-=======
-    cart_reservations<T extends products$cart_reservationsArgs<ExtArgs> = {}>(args?: Subset<T, products$cart_reservationsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$cart_reservationsPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     product_stock_alerts<T extends products$product_stock_alertsArgs<ExtArgs> = {}>(args?: Subset<T, products$product_stock_alertsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$product_stock_alertsPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
->>>>>>> 8a7b2acf9bf5e0bc0fe32c6a0d8aa6e2a9f871a8
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -35525,53 +35409,6 @@ export namespace Prisma {
   }
 
   /**
-<<<<<<< HEAD
-   * products.stock_reservations
-   */
-  export type products$stock_reservationsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the stock_reservations
-     */
-    select?: stock_reservationsSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the stock_reservations
-     */
-    omit?: stock_reservationsOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: stock_reservationsInclude<ExtArgs> | null
-    where?: stock_reservationsWhereInput
-    orderBy?: stock_reservationsOrderByWithRelationInput | stock_reservationsOrderByWithRelationInput[]
-    cursor?: stock_reservationsWhereUniqueInput
-    take?: number
-    skip?: number
-    distinct?: Stock_reservationsScalarFieldEnum | Stock_reservationsScalarFieldEnum[]
-=======
-   * products.cart_reservations
-   */
-  export type products$cart_reservationsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the cart_reservations
-     */
-    select?: cart_reservationsSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the cart_reservations
-     */
-    omit?: cart_reservationsOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: cart_reservationsInclude<ExtArgs> | null
-    where?: cart_reservationsWhereInput
-    orderBy?: cart_reservationsOrderByWithRelationInput | cart_reservationsOrderByWithRelationInput[]
-    cursor?: cart_reservationsWhereUniqueInput
-    take?: number
-    skip?: number
-    distinct?: Cart_reservationsScalarFieldEnum | Cart_reservationsScalarFieldEnum[]
-  }
-
-  /**
    * products.product_stock_alerts
    */
   export type products$product_stock_alertsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -35593,7 +35430,6 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: Product_stock_alertsScalarFieldEnum | Product_stock_alertsScalarFieldEnum[]
->>>>>>> 8a7b2acf9bf5e0bc0fe32c6a0d8aa6e2a9f871a8
   }
 
   /**
@@ -74647,7 +74483,6 @@ export namespace Prisma {
 
 
   /**
-<<<<<<< HEAD
    * Model hotel_pricing_recommendations
    */
 
@@ -77138,76 +76973,10 @@ export namespace Prisma {
     metadata: number
     read_at: number
     created_at: number
-=======
-   * Model services
-   */
-
-  export type AggregateServices = {
-    _count: ServicesCountAggregateOutputType | null
-    _avg: ServicesAvgAggregateOutputType | null
-    _sum: ServicesSumAggregateOutputType | null
-    _min: ServicesMinAggregateOutputType | null
-    _max: ServicesMaxAggregateOutputType | null
-  }
-
-  export type ServicesAvgAggregateOutputType = {
-    base_price: Decimal | null
-    capacity: number | null
-  }
-
-  export type ServicesSumAggregateOutputType = {
-    base_price: Decimal | null
-    capacity: number | null
-  }
-
-  export type ServicesMinAggregateOutputType = {
-    service_id: string | null
-    business_id: string | null
-    tenant_id: string | null
-    name: string | null
-    type: string | null
-    description: string | null
-    base_price: Decimal | null
-    capacity: number | null
-    is_active: boolean | null
-    created_at: Date | null
-    updated_at: Date | null
-  }
-
-  export type ServicesMaxAggregateOutputType = {
-    service_id: string | null
-    business_id: string | null
-    tenant_id: string | null
-    name: string | null
-    type: string | null
-    description: string | null
-    base_price: Decimal | null
-    capacity: number | null
-    is_active: boolean | null
-    created_at: Date | null
-    updated_at: Date | null
-  }
-
-  export type ServicesCountAggregateOutputType = {
-    service_id: number
-    business_id: number
-    tenant_id: number
-    name: number
-    type: number
-    description: number
-    base_price: number
-    capacity: number
-    attributes: number
-    image_urls: number
-    is_active: number
-    created_at: number
-    updated_at: number
->>>>>>> 8a7b2acf9bf5e0bc0fe32c6a0d8aa6e2a9f871a8
     _all: number
   }
 
 
-<<<<<<< HEAD
   export type Hotel_pricing_notificationsMinAggregateInputType = {
     id?: true
     org_id?: true
@@ -77254,144 +77023,41 @@ export namespace Prisma {
      * Determine the order of hotel_pricing_notifications to fetch.
      */
     orderBy?: hotel_pricing_notificationsOrderByWithRelationInput | hotel_pricing_notificationsOrderByWithRelationInput[]
-=======
-  export type ServicesAvgAggregateInputType = {
-    base_price?: true
-    capacity?: true
-  }
-
-  export type ServicesSumAggregateInputType = {
-    base_price?: true
-    capacity?: true
-  }
-
-  export type ServicesMinAggregateInputType = {
-    service_id?: true
-    business_id?: true
-    tenant_id?: true
-    name?: true
-    type?: true
-    description?: true
-    base_price?: true
-    capacity?: true
-    is_active?: true
-    created_at?: true
-    updated_at?: true
-  }
-
-  export type ServicesMaxAggregateInputType = {
-    service_id?: true
-    business_id?: true
-    tenant_id?: true
-    name?: true
-    type?: true
-    description?: true
-    base_price?: true
-    capacity?: true
-    is_active?: true
-    created_at?: true
-    updated_at?: true
-  }
-
-  export type ServicesCountAggregateInputType = {
-    service_id?: true
-    business_id?: true
-    tenant_id?: true
-    name?: true
-    type?: true
-    description?: true
-    base_price?: true
-    capacity?: true
-    attributes?: true
-    image_urls?: true
-    is_active?: true
-    created_at?: true
-    updated_at?: true
-    _all?: true
-  }
-
-  export type ServicesAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Filter which services to aggregate.
-     */
-    where?: servicesWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of services to fetch.
-     */
-    orderBy?: servicesOrderByWithRelationInput | servicesOrderByWithRelationInput[]
->>>>>>> 8a7b2acf9bf5e0bc0fe32c6a0d8aa6e2a9f871a8
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
      * 
      * Sets the start position
      */
-<<<<<<< HEAD
     cursor?: hotel_pricing_notificationsWhereUniqueInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
      * Take `±n` hotel_pricing_notifications from the position of the cursor.
-=======
-    cursor?: servicesWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` services from the position of the cursor.
->>>>>>> 8a7b2acf9bf5e0bc0fe32c6a0d8aa6e2a9f871a8
      */
     take?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
-<<<<<<< HEAD
      * Skip the first `n` hotel_pricing_notifications.
-=======
-     * Skip the first `n` services.
->>>>>>> 8a7b2acf9bf5e0bc0fe32c6a0d8aa6e2a9f871a8
      */
     skip?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
      * 
-<<<<<<< HEAD
      * Count returned hotel_pricing_notifications
     **/
     _count?: true | Hotel_pricing_notificationsCountAggregateInputType
-=======
-     * Count returned services
-    **/
-    _count?: true | ServicesCountAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to average
-    **/
-    _avg?: ServicesAvgAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to sum
-    **/
-    _sum?: ServicesSumAggregateInputType
->>>>>>> 8a7b2acf9bf5e0bc0fe32c6a0d8aa6e2a9f871a8
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
      * 
      * Select which fields to find the minimum value
     **/
-<<<<<<< HEAD
     _min?: Hotel_pricing_notificationsMinAggregateInputType
-=======
-    _min?: ServicesMinAggregateInputType
->>>>>>> 8a7b2acf9bf5e0bc0fe32c6a0d8aa6e2a9f871a8
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
      * 
      * Select which fields to find the maximum value
     **/
-<<<<<<< HEAD
     _max?: Hotel_pricing_notificationsMaxAggregateInputType
   }
 
@@ -77401,23 +77067,11 @@ export namespace Prisma {
         ? number
         : GetScalarType<T[P], AggregateHotel_pricing_notifications[P]>
       : GetScalarType<T[P], AggregateHotel_pricing_notifications[P]>
-=======
-    _max?: ServicesMaxAggregateInputType
-  }
-
-  export type GetServicesAggregateType<T extends ServicesAggregateArgs> = {
-        [P in keyof T & keyof AggregateServices]: P extends '_count' | 'count'
-      ? T[P] extends true
-        ? number
-        : GetScalarType<T[P], AggregateServices[P]>
-      : GetScalarType<T[P], AggregateServices[P]>
->>>>>>> 8a7b2acf9bf5e0bc0fe32c6a0d8aa6e2a9f871a8
   }
 
 
 
 
-<<<<<<< HEAD
   export type hotel_pricing_notificationsGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: hotel_pricing_notificationsWhereInput
     orderBy?: hotel_pricing_notificationsOrderByWithAggregationInput | hotel_pricing_notificationsOrderByWithAggregationInput[]
@@ -77454,58 +77108,11 @@ export namespace Prisma {
               ? number
               : GetScalarType<T[P], Hotel_pricing_notificationsGroupByOutputType[P]>
             : GetScalarType<T[P], Hotel_pricing_notificationsGroupByOutputType[P]>
-=======
-  export type servicesGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: servicesWhereInput
-    orderBy?: servicesOrderByWithAggregationInput | servicesOrderByWithAggregationInput[]
-    by: ServicesScalarFieldEnum[] | ServicesScalarFieldEnum
-    having?: servicesScalarWhereWithAggregatesInput
-    take?: number
-    skip?: number
-    _count?: ServicesCountAggregateInputType | true
-    _avg?: ServicesAvgAggregateInputType
-    _sum?: ServicesSumAggregateInputType
-    _min?: ServicesMinAggregateInputType
-    _max?: ServicesMaxAggregateInputType
-  }
-
-  export type ServicesGroupByOutputType = {
-    service_id: string
-    business_id: string
-    tenant_id: string
-    name: string
-    type: string
-    description: string | null
-    base_price: Decimal
-    capacity: number
-    attributes: JsonValue | null
-    image_urls: JsonValue | null
-    is_active: boolean
-    created_at: Date
-    updated_at: Date
-    _count: ServicesCountAggregateOutputType | null
-    _avg: ServicesAvgAggregateOutputType | null
-    _sum: ServicesSumAggregateOutputType | null
-    _min: ServicesMinAggregateOutputType | null
-    _max: ServicesMaxAggregateOutputType | null
-  }
-
-  type GetServicesGroupByPayload<T extends servicesGroupByArgs> = Prisma.PrismaPromise<
-    Array<
-      PickEnumerable<ServicesGroupByOutputType, T['by']> &
-        {
-          [P in ((keyof T) & (keyof ServicesGroupByOutputType))]: P extends '_count'
-            ? T[P] extends boolean
-              ? number
-              : GetScalarType<T[P], ServicesGroupByOutputType[P]>
-            : GetScalarType<T[P], ServicesGroupByOutputType[P]>
->>>>>>> 8a7b2acf9bf5e0bc0fe32c6a0d8aa6e2a9f871a8
         }
       >
     >
 
 
-<<<<<<< HEAD
   export type hotel_pricing_notificationsSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     org_id?: boolean
@@ -77588,7 +77195,1029 @@ export namespace Prisma {
      * @example
      * // Get one Hotel_pricing_notifications
      * const hotel_pricing_notifications = await prisma.hotel_pricing_notifications.findUnique({
-=======
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends hotel_pricing_notificationsFindUniqueArgs>(args: SelectSubset<T, hotel_pricing_notificationsFindUniqueArgs<ExtArgs>>): Prisma__hotel_pricing_notificationsClient<$Result.GetResult<Prisma.$hotel_pricing_notificationsPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one Hotel_pricing_notifications that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {hotel_pricing_notificationsFindUniqueOrThrowArgs} args - Arguments to find a Hotel_pricing_notifications
+     * @example
+     * // Get one Hotel_pricing_notifications
+     * const hotel_pricing_notifications = await prisma.hotel_pricing_notifications.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends hotel_pricing_notificationsFindUniqueOrThrowArgs>(args: SelectSubset<T, hotel_pricing_notificationsFindUniqueOrThrowArgs<ExtArgs>>): Prisma__hotel_pricing_notificationsClient<$Result.GetResult<Prisma.$hotel_pricing_notificationsPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Hotel_pricing_notifications that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {hotel_pricing_notificationsFindFirstArgs} args - Arguments to find a Hotel_pricing_notifications
+     * @example
+     * // Get one Hotel_pricing_notifications
+     * const hotel_pricing_notifications = await prisma.hotel_pricing_notifications.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends hotel_pricing_notificationsFindFirstArgs>(args?: SelectSubset<T, hotel_pricing_notificationsFindFirstArgs<ExtArgs>>): Prisma__hotel_pricing_notificationsClient<$Result.GetResult<Prisma.$hotel_pricing_notificationsPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Hotel_pricing_notifications that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {hotel_pricing_notificationsFindFirstOrThrowArgs} args - Arguments to find a Hotel_pricing_notifications
+     * @example
+     * // Get one Hotel_pricing_notifications
+     * const hotel_pricing_notifications = await prisma.hotel_pricing_notifications.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends hotel_pricing_notificationsFindFirstOrThrowArgs>(args?: SelectSubset<T, hotel_pricing_notificationsFindFirstOrThrowArgs<ExtArgs>>): Prisma__hotel_pricing_notificationsClient<$Result.GetResult<Prisma.$hotel_pricing_notificationsPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more Hotel_pricing_notifications that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {hotel_pricing_notificationsFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all Hotel_pricing_notifications
+     * const hotel_pricing_notifications = await prisma.hotel_pricing_notifications.findMany()
+     * 
+     * // Get first 10 Hotel_pricing_notifications
+     * const hotel_pricing_notifications = await prisma.hotel_pricing_notifications.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const hotel_pricing_notificationsWithIdOnly = await prisma.hotel_pricing_notifications.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends hotel_pricing_notificationsFindManyArgs>(args?: SelectSubset<T, hotel_pricing_notificationsFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$hotel_pricing_notificationsPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a Hotel_pricing_notifications.
+     * @param {hotel_pricing_notificationsCreateArgs} args - Arguments to create a Hotel_pricing_notifications.
+     * @example
+     * // Create one Hotel_pricing_notifications
+     * const Hotel_pricing_notifications = await prisma.hotel_pricing_notifications.create({
+     *   data: {
+     *     // ... data to create a Hotel_pricing_notifications
+     *   }
+     * })
+     * 
+     */
+    create<T extends hotel_pricing_notificationsCreateArgs>(args: SelectSubset<T, hotel_pricing_notificationsCreateArgs<ExtArgs>>): Prisma__hotel_pricing_notificationsClient<$Result.GetResult<Prisma.$hotel_pricing_notificationsPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many Hotel_pricing_notifications.
+     * @param {hotel_pricing_notificationsCreateManyArgs} args - Arguments to create many Hotel_pricing_notifications.
+     * @example
+     * // Create many Hotel_pricing_notifications
+     * const hotel_pricing_notifications = await prisma.hotel_pricing_notifications.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends hotel_pricing_notificationsCreateManyArgs>(args?: SelectSubset<T, hotel_pricing_notificationsCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many Hotel_pricing_notifications and returns the data saved in the database.
+     * @param {hotel_pricing_notificationsCreateManyAndReturnArgs} args - Arguments to create many Hotel_pricing_notifications.
+     * @example
+     * // Create many Hotel_pricing_notifications
+     * const hotel_pricing_notifications = await prisma.hotel_pricing_notifications.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many Hotel_pricing_notifications and only return the `id`
+     * const hotel_pricing_notificationsWithIdOnly = await prisma.hotel_pricing_notifications.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends hotel_pricing_notificationsCreateManyAndReturnArgs>(args?: SelectSubset<T, hotel_pricing_notificationsCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$hotel_pricing_notificationsPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a Hotel_pricing_notifications.
+     * @param {hotel_pricing_notificationsDeleteArgs} args - Arguments to delete one Hotel_pricing_notifications.
+     * @example
+     * // Delete one Hotel_pricing_notifications
+     * const Hotel_pricing_notifications = await prisma.hotel_pricing_notifications.delete({
+     *   where: {
+     *     // ... filter to delete one Hotel_pricing_notifications
+     *   }
+     * })
+     * 
+     */
+    delete<T extends hotel_pricing_notificationsDeleteArgs>(args: SelectSubset<T, hotel_pricing_notificationsDeleteArgs<ExtArgs>>): Prisma__hotel_pricing_notificationsClient<$Result.GetResult<Prisma.$hotel_pricing_notificationsPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one Hotel_pricing_notifications.
+     * @param {hotel_pricing_notificationsUpdateArgs} args - Arguments to update one Hotel_pricing_notifications.
+     * @example
+     * // Update one Hotel_pricing_notifications
+     * const hotel_pricing_notifications = await prisma.hotel_pricing_notifications.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends hotel_pricing_notificationsUpdateArgs>(args: SelectSubset<T, hotel_pricing_notificationsUpdateArgs<ExtArgs>>): Prisma__hotel_pricing_notificationsClient<$Result.GetResult<Prisma.$hotel_pricing_notificationsPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more Hotel_pricing_notifications.
+     * @param {hotel_pricing_notificationsDeleteManyArgs} args - Arguments to filter Hotel_pricing_notifications to delete.
+     * @example
+     * // Delete a few Hotel_pricing_notifications
+     * const { count } = await prisma.hotel_pricing_notifications.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends hotel_pricing_notificationsDeleteManyArgs>(args?: SelectSubset<T, hotel_pricing_notificationsDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Hotel_pricing_notifications.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {hotel_pricing_notificationsUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many Hotel_pricing_notifications
+     * const hotel_pricing_notifications = await prisma.hotel_pricing_notifications.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends hotel_pricing_notificationsUpdateManyArgs>(args: SelectSubset<T, hotel_pricing_notificationsUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Hotel_pricing_notifications and returns the data updated in the database.
+     * @param {hotel_pricing_notificationsUpdateManyAndReturnArgs} args - Arguments to update many Hotel_pricing_notifications.
+     * @example
+     * // Update many Hotel_pricing_notifications
+     * const hotel_pricing_notifications = await prisma.hotel_pricing_notifications.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more Hotel_pricing_notifications and only return the `id`
+     * const hotel_pricing_notificationsWithIdOnly = await prisma.hotel_pricing_notifications.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends hotel_pricing_notificationsUpdateManyAndReturnArgs>(args: SelectSubset<T, hotel_pricing_notificationsUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$hotel_pricing_notificationsPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one Hotel_pricing_notifications.
+     * @param {hotel_pricing_notificationsUpsertArgs} args - Arguments to update or create a Hotel_pricing_notifications.
+     * @example
+     * // Update or create a Hotel_pricing_notifications
+     * const hotel_pricing_notifications = await prisma.hotel_pricing_notifications.upsert({
+     *   create: {
+     *     // ... data to create a Hotel_pricing_notifications
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the Hotel_pricing_notifications we want to update
+     *   }
+     * })
+     */
+    upsert<T extends hotel_pricing_notificationsUpsertArgs>(args: SelectSubset<T, hotel_pricing_notificationsUpsertArgs<ExtArgs>>): Prisma__hotel_pricing_notificationsClient<$Result.GetResult<Prisma.$hotel_pricing_notificationsPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of Hotel_pricing_notifications.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {hotel_pricing_notificationsCountArgs} args - Arguments to filter Hotel_pricing_notifications to count.
+     * @example
+     * // Count the number of Hotel_pricing_notifications
+     * const count = await prisma.hotel_pricing_notifications.count({
+     *   where: {
+     *     // ... the filter for the Hotel_pricing_notifications we want to count
+     *   }
+     * })
+    **/
+    count<T extends hotel_pricing_notificationsCountArgs>(
+      args?: Subset<T, hotel_pricing_notificationsCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], Hotel_pricing_notificationsCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a Hotel_pricing_notifications.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {Hotel_pricing_notificationsAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends Hotel_pricing_notificationsAggregateArgs>(args: Subset<T, Hotel_pricing_notificationsAggregateArgs>): Prisma.PrismaPromise<GetHotel_pricing_notificationsAggregateType<T>>
+
+    /**
+     * Group by Hotel_pricing_notifications.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {hotel_pricing_notificationsGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends hotel_pricing_notificationsGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: hotel_pricing_notificationsGroupByArgs['orderBy'] }
+        : { orderBy?: hotel_pricing_notificationsGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, hotel_pricing_notificationsGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetHotel_pricing_notificationsGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the hotel_pricing_notifications model
+   */
+  readonly fields: hotel_pricing_notificationsFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for hotel_pricing_notifications.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__hotel_pricing_notificationsClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the hotel_pricing_notifications model
+   */
+  interface hotel_pricing_notificationsFieldRefs {
+    readonly id: FieldRef<"hotel_pricing_notifications", 'String'>
+    readonly org_id: FieldRef<"hotel_pricing_notifications", 'String'>
+    readonly hotel_id: FieldRef<"hotel_pricing_notifications", 'String'>
+    readonly type: FieldRef<"hotel_pricing_notifications", 'String'>
+    readonly title: FieldRef<"hotel_pricing_notifications", 'String'>
+    readonly body: FieldRef<"hotel_pricing_notifications", 'String'>
+    readonly metadata: FieldRef<"hotel_pricing_notifications", 'Json'>
+    readonly read_at: FieldRef<"hotel_pricing_notifications", 'DateTime'>
+    readonly created_at: FieldRef<"hotel_pricing_notifications", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * hotel_pricing_notifications findUnique
+   */
+  export type hotel_pricing_notificationsFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the hotel_pricing_notifications
+     */
+    select?: hotel_pricing_notificationsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the hotel_pricing_notifications
+     */
+    omit?: hotel_pricing_notificationsOmit<ExtArgs> | null
+    /**
+     * Filter, which hotel_pricing_notifications to fetch.
+     */
+    where: hotel_pricing_notificationsWhereUniqueInput
+  }
+
+  /**
+   * hotel_pricing_notifications findUniqueOrThrow
+   */
+  export type hotel_pricing_notificationsFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the hotel_pricing_notifications
+     */
+    select?: hotel_pricing_notificationsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the hotel_pricing_notifications
+     */
+    omit?: hotel_pricing_notificationsOmit<ExtArgs> | null
+    /**
+     * Filter, which hotel_pricing_notifications to fetch.
+     */
+    where: hotel_pricing_notificationsWhereUniqueInput
+  }
+
+  /**
+   * hotel_pricing_notifications findFirst
+   */
+  export type hotel_pricing_notificationsFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the hotel_pricing_notifications
+     */
+    select?: hotel_pricing_notificationsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the hotel_pricing_notifications
+     */
+    omit?: hotel_pricing_notificationsOmit<ExtArgs> | null
+    /**
+     * Filter, which hotel_pricing_notifications to fetch.
+     */
+    where?: hotel_pricing_notificationsWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of hotel_pricing_notifications to fetch.
+     */
+    orderBy?: hotel_pricing_notificationsOrderByWithRelationInput | hotel_pricing_notificationsOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for hotel_pricing_notifications.
+     */
+    cursor?: hotel_pricing_notificationsWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` hotel_pricing_notifications from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` hotel_pricing_notifications.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of hotel_pricing_notifications.
+     */
+    distinct?: Hotel_pricing_notificationsScalarFieldEnum | Hotel_pricing_notificationsScalarFieldEnum[]
+  }
+
+  /**
+   * hotel_pricing_notifications findFirstOrThrow
+   */
+  export type hotel_pricing_notificationsFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the hotel_pricing_notifications
+     */
+    select?: hotel_pricing_notificationsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the hotel_pricing_notifications
+     */
+    omit?: hotel_pricing_notificationsOmit<ExtArgs> | null
+    /**
+     * Filter, which hotel_pricing_notifications to fetch.
+     */
+    where?: hotel_pricing_notificationsWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of hotel_pricing_notifications to fetch.
+     */
+    orderBy?: hotel_pricing_notificationsOrderByWithRelationInput | hotel_pricing_notificationsOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for hotel_pricing_notifications.
+     */
+    cursor?: hotel_pricing_notificationsWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` hotel_pricing_notifications from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` hotel_pricing_notifications.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of hotel_pricing_notifications.
+     */
+    distinct?: Hotel_pricing_notificationsScalarFieldEnum | Hotel_pricing_notificationsScalarFieldEnum[]
+  }
+
+  /**
+   * hotel_pricing_notifications findMany
+   */
+  export type hotel_pricing_notificationsFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the hotel_pricing_notifications
+     */
+    select?: hotel_pricing_notificationsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the hotel_pricing_notifications
+     */
+    omit?: hotel_pricing_notificationsOmit<ExtArgs> | null
+    /**
+     * Filter, which hotel_pricing_notifications to fetch.
+     */
+    where?: hotel_pricing_notificationsWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of hotel_pricing_notifications to fetch.
+     */
+    orderBy?: hotel_pricing_notificationsOrderByWithRelationInput | hotel_pricing_notificationsOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing hotel_pricing_notifications.
+     */
+    cursor?: hotel_pricing_notificationsWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` hotel_pricing_notifications from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` hotel_pricing_notifications.
+     */
+    skip?: number
+    distinct?: Hotel_pricing_notificationsScalarFieldEnum | Hotel_pricing_notificationsScalarFieldEnum[]
+  }
+
+  /**
+   * hotel_pricing_notifications create
+   */
+  export type hotel_pricing_notificationsCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the hotel_pricing_notifications
+     */
+    select?: hotel_pricing_notificationsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the hotel_pricing_notifications
+     */
+    omit?: hotel_pricing_notificationsOmit<ExtArgs> | null
+    /**
+     * The data needed to create a hotel_pricing_notifications.
+     */
+    data: XOR<hotel_pricing_notificationsCreateInput, hotel_pricing_notificationsUncheckedCreateInput>
+  }
+
+  /**
+   * hotel_pricing_notifications createMany
+   */
+  export type hotel_pricing_notificationsCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many hotel_pricing_notifications.
+     */
+    data: hotel_pricing_notificationsCreateManyInput | hotel_pricing_notificationsCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * hotel_pricing_notifications createManyAndReturn
+   */
+  export type hotel_pricing_notificationsCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the hotel_pricing_notifications
+     */
+    select?: hotel_pricing_notificationsSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the hotel_pricing_notifications
+     */
+    omit?: hotel_pricing_notificationsOmit<ExtArgs> | null
+    /**
+     * The data used to create many hotel_pricing_notifications.
+     */
+    data: hotel_pricing_notificationsCreateManyInput | hotel_pricing_notificationsCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * hotel_pricing_notifications update
+   */
+  export type hotel_pricing_notificationsUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the hotel_pricing_notifications
+     */
+    select?: hotel_pricing_notificationsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the hotel_pricing_notifications
+     */
+    omit?: hotel_pricing_notificationsOmit<ExtArgs> | null
+    /**
+     * The data needed to update a hotel_pricing_notifications.
+     */
+    data: XOR<hotel_pricing_notificationsUpdateInput, hotel_pricing_notificationsUncheckedUpdateInput>
+    /**
+     * Choose, which hotel_pricing_notifications to update.
+     */
+    where: hotel_pricing_notificationsWhereUniqueInput
+  }
+
+  /**
+   * hotel_pricing_notifications updateMany
+   */
+  export type hotel_pricing_notificationsUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update hotel_pricing_notifications.
+     */
+    data: XOR<hotel_pricing_notificationsUpdateManyMutationInput, hotel_pricing_notificationsUncheckedUpdateManyInput>
+    /**
+     * Filter which hotel_pricing_notifications to update
+     */
+    where?: hotel_pricing_notificationsWhereInput
+    /**
+     * Limit how many hotel_pricing_notifications to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * hotel_pricing_notifications updateManyAndReturn
+   */
+  export type hotel_pricing_notificationsUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the hotel_pricing_notifications
+     */
+    select?: hotel_pricing_notificationsSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the hotel_pricing_notifications
+     */
+    omit?: hotel_pricing_notificationsOmit<ExtArgs> | null
+    /**
+     * The data used to update hotel_pricing_notifications.
+     */
+    data: XOR<hotel_pricing_notificationsUpdateManyMutationInput, hotel_pricing_notificationsUncheckedUpdateManyInput>
+    /**
+     * Filter which hotel_pricing_notifications to update
+     */
+    where?: hotel_pricing_notificationsWhereInput
+    /**
+     * Limit how many hotel_pricing_notifications to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * hotel_pricing_notifications upsert
+   */
+  export type hotel_pricing_notificationsUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the hotel_pricing_notifications
+     */
+    select?: hotel_pricing_notificationsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the hotel_pricing_notifications
+     */
+    omit?: hotel_pricing_notificationsOmit<ExtArgs> | null
+    /**
+     * The filter to search for the hotel_pricing_notifications to update in case it exists.
+     */
+    where: hotel_pricing_notificationsWhereUniqueInput
+    /**
+     * In case the hotel_pricing_notifications found by the `where` argument doesn't exist, create a new hotel_pricing_notifications with this data.
+     */
+    create: XOR<hotel_pricing_notificationsCreateInput, hotel_pricing_notificationsUncheckedCreateInput>
+    /**
+     * In case the hotel_pricing_notifications was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<hotel_pricing_notificationsUpdateInput, hotel_pricing_notificationsUncheckedUpdateInput>
+  }
+
+  /**
+   * hotel_pricing_notifications delete
+   */
+  export type hotel_pricing_notificationsDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the hotel_pricing_notifications
+     */
+    select?: hotel_pricing_notificationsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the hotel_pricing_notifications
+     */
+    omit?: hotel_pricing_notificationsOmit<ExtArgs> | null
+    /**
+     * Filter which hotel_pricing_notifications to delete.
+     */
+    where: hotel_pricing_notificationsWhereUniqueInput
+  }
+
+  /**
+   * hotel_pricing_notifications deleteMany
+   */
+  export type hotel_pricing_notificationsDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which hotel_pricing_notifications to delete
+     */
+    where?: hotel_pricing_notificationsWhereInput
+    /**
+     * Limit how many hotel_pricing_notifications to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * hotel_pricing_notifications without action
+   */
+  export type hotel_pricing_notificationsDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the hotel_pricing_notifications
+     */
+    select?: hotel_pricing_notificationsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the hotel_pricing_notifications
+     */
+    omit?: hotel_pricing_notificationsOmit<ExtArgs> | null
+  }
+
+
+  /**
+   * Model services
+   */
+
+  export type AggregateServices = {
+    _count: ServicesCountAggregateOutputType | null
+    _avg: ServicesAvgAggregateOutputType | null
+    _sum: ServicesSumAggregateOutputType | null
+    _min: ServicesMinAggregateOutputType | null
+    _max: ServicesMaxAggregateOutputType | null
+  }
+
+  export type ServicesAvgAggregateOutputType = {
+    base_price: Decimal | null
+    capacity: number | null
+  }
+
+  export type ServicesSumAggregateOutputType = {
+    base_price: Decimal | null
+    capacity: number | null
+  }
+
+  export type ServicesMinAggregateOutputType = {
+    service_id: string | null
+    business_id: string | null
+    tenant_id: string | null
+    name: string | null
+    type: string | null
+    description: string | null
+    base_price: Decimal | null
+    capacity: number | null
+    is_active: boolean | null
+    created_at: Date | null
+    updated_at: Date | null
+  }
+
+  export type ServicesMaxAggregateOutputType = {
+    service_id: string | null
+    business_id: string | null
+    tenant_id: string | null
+    name: string | null
+    type: string | null
+    description: string | null
+    base_price: Decimal | null
+    capacity: number | null
+    is_active: boolean | null
+    created_at: Date | null
+    updated_at: Date | null
+  }
+
+  export type ServicesCountAggregateOutputType = {
+    service_id: number
+    business_id: number
+    tenant_id: number
+    name: number
+    type: number
+    description: number
+    base_price: number
+    capacity: number
+    attributes: number
+    image_urls: number
+    is_active: number
+    created_at: number
+    updated_at: number
+    _all: number
+  }
+
+
+  export type ServicesAvgAggregateInputType = {
+    base_price?: true
+    capacity?: true
+  }
+
+  export type ServicesSumAggregateInputType = {
+    base_price?: true
+    capacity?: true
+  }
+
+  export type ServicesMinAggregateInputType = {
+    service_id?: true
+    business_id?: true
+    tenant_id?: true
+    name?: true
+    type?: true
+    description?: true
+    base_price?: true
+    capacity?: true
+    is_active?: true
+    created_at?: true
+    updated_at?: true
+  }
+
+  export type ServicesMaxAggregateInputType = {
+    service_id?: true
+    business_id?: true
+    tenant_id?: true
+    name?: true
+    type?: true
+    description?: true
+    base_price?: true
+    capacity?: true
+    is_active?: true
+    created_at?: true
+    updated_at?: true
+  }
+
+  export type ServicesCountAggregateInputType = {
+    service_id?: true
+    business_id?: true
+    tenant_id?: true
+    name?: true
+    type?: true
+    description?: true
+    base_price?: true
+    capacity?: true
+    attributes?: true
+    image_urls?: true
+    is_active?: true
+    created_at?: true
+    updated_at?: true
+    _all?: true
+  }
+
+  export type ServicesAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which services to aggregate.
+     */
+    where?: servicesWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of services to fetch.
+     */
+    orderBy?: servicesOrderByWithRelationInput | servicesOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: servicesWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` services from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` services.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned services
+    **/
+    _count?: true | ServicesCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: ServicesAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: ServicesSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: ServicesMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: ServicesMaxAggregateInputType
+  }
+
+  export type GetServicesAggregateType<T extends ServicesAggregateArgs> = {
+        [P in keyof T & keyof AggregateServices]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateServices[P]>
+      : GetScalarType<T[P], AggregateServices[P]>
+  }
+
+
+
+
+  export type servicesGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: servicesWhereInput
+    orderBy?: servicesOrderByWithAggregationInput | servicesOrderByWithAggregationInput[]
+    by: ServicesScalarFieldEnum[] | ServicesScalarFieldEnum
+    having?: servicesScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: ServicesCountAggregateInputType | true
+    _avg?: ServicesAvgAggregateInputType
+    _sum?: ServicesSumAggregateInputType
+    _min?: ServicesMinAggregateInputType
+    _max?: ServicesMaxAggregateInputType
+  }
+
+  export type ServicesGroupByOutputType = {
+    service_id: string
+    business_id: string
+    tenant_id: string
+    name: string
+    type: string
+    description: string | null
+    base_price: Decimal
+    capacity: number
+    attributes: JsonValue | null
+    image_urls: JsonValue | null
+    is_active: boolean
+    created_at: Date
+    updated_at: Date
+    _count: ServicesCountAggregateOutputType | null
+    _avg: ServicesAvgAggregateOutputType | null
+    _sum: ServicesSumAggregateOutputType | null
+    _min: ServicesMinAggregateOutputType | null
+    _max: ServicesMaxAggregateOutputType | null
+  }
+
+  type GetServicesGroupByPayload<T extends servicesGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<ServicesGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof ServicesGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], ServicesGroupByOutputType[P]>
+            : GetScalarType<T[P], ServicesGroupByOutputType[P]>
+        }
+      >
+    >
+
+
   export type servicesSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     service_id?: boolean
     business_id?: boolean
@@ -77722,23 +78351,11 @@ export namespace Prisma {
      * @example
      * // Get one Services
      * const services = await prisma.services.findUnique({
->>>>>>> 8a7b2acf9bf5e0bc0fe32c6a0d8aa6e2a9f871a8
      *   where: {
      *     // ... provide filter here
      *   }
      * })
      */
-<<<<<<< HEAD
-    findUnique<T extends hotel_pricing_notificationsFindUniqueArgs>(args: SelectSubset<T, hotel_pricing_notificationsFindUniqueArgs<ExtArgs>>): Prisma__hotel_pricing_notificationsClient<$Result.GetResult<Prisma.$hotel_pricing_notificationsPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Find one Hotel_pricing_notifications that matches the filter or throw an error with `error.code='P2025'`
-     * if no matches were found.
-     * @param {hotel_pricing_notificationsFindUniqueOrThrowArgs} args - Arguments to find a Hotel_pricing_notifications
-     * @example
-     * // Get one Hotel_pricing_notifications
-     * const hotel_pricing_notifications = await prisma.hotel_pricing_notifications.findUniqueOrThrow({
-=======
     findUnique<T extends servicesFindUniqueArgs>(args: SelectSubset<T, servicesFindUniqueArgs<ExtArgs>>): Prisma__servicesClient<$Result.GetResult<Prisma.$servicesPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
 
     /**
@@ -77748,24 +78365,11 @@ export namespace Prisma {
      * @example
      * // Get one Services
      * const services = await prisma.services.findUniqueOrThrow({
->>>>>>> 8a7b2acf9bf5e0bc0fe32c6a0d8aa6e2a9f871a8
      *   where: {
      *     // ... provide filter here
      *   }
      * })
      */
-<<<<<<< HEAD
-    findUniqueOrThrow<T extends hotel_pricing_notificationsFindUniqueOrThrowArgs>(args: SelectSubset<T, hotel_pricing_notificationsFindUniqueOrThrowArgs<ExtArgs>>): Prisma__hotel_pricing_notificationsClient<$Result.GetResult<Prisma.$hotel_pricing_notificationsPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Find the first Hotel_pricing_notifications that matches the filter.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {hotel_pricing_notificationsFindFirstArgs} args - Arguments to find a Hotel_pricing_notifications
-     * @example
-     * // Get one Hotel_pricing_notifications
-     * const hotel_pricing_notifications = await prisma.hotel_pricing_notifications.findFirst({
-=======
     findUniqueOrThrow<T extends servicesFindUniqueOrThrowArgs>(args: SelectSubset<T, servicesFindUniqueOrThrowArgs<ExtArgs>>): Prisma__servicesClient<$Result.GetResult<Prisma.$servicesPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
     /**
@@ -77776,25 +78380,11 @@ export namespace Prisma {
      * @example
      * // Get one Services
      * const services = await prisma.services.findFirst({
->>>>>>> 8a7b2acf9bf5e0bc0fe32c6a0d8aa6e2a9f871a8
      *   where: {
      *     // ... provide filter here
      *   }
      * })
      */
-<<<<<<< HEAD
-    findFirst<T extends hotel_pricing_notificationsFindFirstArgs>(args?: SelectSubset<T, hotel_pricing_notificationsFindFirstArgs<ExtArgs>>): Prisma__hotel_pricing_notificationsClient<$Result.GetResult<Prisma.$hotel_pricing_notificationsPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Find the first Hotel_pricing_notifications that matches the filter or
-     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {hotel_pricing_notificationsFindFirstOrThrowArgs} args - Arguments to find a Hotel_pricing_notifications
-     * @example
-     * // Get one Hotel_pricing_notifications
-     * const hotel_pricing_notifications = await prisma.hotel_pricing_notifications.findFirstOrThrow({
-=======
     findFirst<T extends servicesFindFirstArgs>(args?: SelectSubset<T, servicesFindFirstArgs<ExtArgs>>): Prisma__servicesClient<$Result.GetResult<Prisma.$servicesPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
 
     /**
@@ -77806,42 +78396,11 @@ export namespace Prisma {
      * @example
      * // Get one Services
      * const services = await prisma.services.findFirstOrThrow({
->>>>>>> 8a7b2acf9bf5e0bc0fe32c6a0d8aa6e2a9f871a8
      *   where: {
      *     // ... provide filter here
      *   }
      * })
      */
-<<<<<<< HEAD
-    findFirstOrThrow<T extends hotel_pricing_notificationsFindFirstOrThrowArgs>(args?: SelectSubset<T, hotel_pricing_notificationsFindFirstOrThrowArgs<ExtArgs>>): Prisma__hotel_pricing_notificationsClient<$Result.GetResult<Prisma.$hotel_pricing_notificationsPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Find zero or more Hotel_pricing_notifications that matches the filter.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {hotel_pricing_notificationsFindManyArgs} args - Arguments to filter and select certain fields only.
-     * @example
-     * // Get all Hotel_pricing_notifications
-     * const hotel_pricing_notifications = await prisma.hotel_pricing_notifications.findMany()
-     * 
-     * // Get first 10 Hotel_pricing_notifications
-     * const hotel_pricing_notifications = await prisma.hotel_pricing_notifications.findMany({ take: 10 })
-     * 
-     * // Only select the `id`
-     * const hotel_pricing_notificationsWithIdOnly = await prisma.hotel_pricing_notifications.findMany({ select: { id: true } })
-     * 
-     */
-    findMany<T extends hotel_pricing_notificationsFindManyArgs>(args?: SelectSubset<T, hotel_pricing_notificationsFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$hotel_pricing_notificationsPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
-
-    /**
-     * Create a Hotel_pricing_notifications.
-     * @param {hotel_pricing_notificationsCreateArgs} args - Arguments to create a Hotel_pricing_notifications.
-     * @example
-     * // Create one Hotel_pricing_notifications
-     * const Hotel_pricing_notifications = await prisma.hotel_pricing_notifications.create({
-     *   data: {
-     *     // ... data to create a Hotel_pricing_notifications
-=======
     findFirstOrThrow<T extends servicesFindFirstOrThrowArgs>(args?: SelectSubset<T, servicesFindFirstOrThrowArgs<ExtArgs>>): Prisma__servicesClient<$Result.GetResult<Prisma.$servicesPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
     /**
@@ -77870,21 +78429,10 @@ export namespace Prisma {
      * const Services = await prisma.services.create({
      *   data: {
      *     // ... data to create a Services
->>>>>>> 8a7b2acf9bf5e0bc0fe32c6a0d8aa6e2a9f871a8
      *   }
      * })
      * 
      */
-<<<<<<< HEAD
-    create<T extends hotel_pricing_notificationsCreateArgs>(args: SelectSubset<T, hotel_pricing_notificationsCreateArgs<ExtArgs>>): Prisma__hotel_pricing_notificationsClient<$Result.GetResult<Prisma.$hotel_pricing_notificationsPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Create many Hotel_pricing_notifications.
-     * @param {hotel_pricing_notificationsCreateManyArgs} args - Arguments to create many Hotel_pricing_notifications.
-     * @example
-     * // Create many Hotel_pricing_notifications
-     * const hotel_pricing_notifications = await prisma.hotel_pricing_notifications.createMany({
-=======
     create<T extends servicesCreateArgs>(args: SelectSubset<T, servicesCreateArgs<ExtArgs>>): Prisma__servicesClient<$Result.GetResult<Prisma.$servicesPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
     /**
@@ -77893,23 +78441,12 @@ export namespace Prisma {
      * @example
      * // Create many Services
      * const services = await prisma.services.createMany({
->>>>>>> 8a7b2acf9bf5e0bc0fe32c6a0d8aa6e2a9f871a8
      *   data: [
      *     // ... provide data here
      *   ]
      * })
      *     
      */
-<<<<<<< HEAD
-    createMany<T extends hotel_pricing_notificationsCreateManyArgs>(args?: SelectSubset<T, hotel_pricing_notificationsCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
-
-    /**
-     * Create many Hotel_pricing_notifications and returns the data saved in the database.
-     * @param {hotel_pricing_notificationsCreateManyAndReturnArgs} args - Arguments to create many Hotel_pricing_notifications.
-     * @example
-     * // Create many Hotel_pricing_notifications
-     * const hotel_pricing_notifications = await prisma.hotel_pricing_notifications.createManyAndReturn({
-=======
     createMany<T extends servicesCreateManyArgs>(args?: SelectSubset<T, servicesCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
 
     /**
@@ -77918,21 +78455,14 @@ export namespace Prisma {
      * @example
      * // Create many Services
      * const services = await prisma.services.createManyAndReturn({
->>>>>>> 8a7b2acf9bf5e0bc0fe32c6a0d8aa6e2a9f871a8
      *   data: [
      *     // ... provide data here
      *   ]
      * })
      * 
-<<<<<<< HEAD
-     * // Create many Hotel_pricing_notifications and only return the `id`
-     * const hotel_pricing_notificationsWithIdOnly = await prisma.hotel_pricing_notifications.createManyAndReturn({
-     *   select: { id: true },
-=======
      * // Create many Services and only return the `service_id`
      * const servicesWithService_idOnly = await prisma.services.createManyAndReturn({
      *   select: { service_id: true },
->>>>>>> 8a7b2acf9bf5e0bc0fe32c6a0d8aa6e2a9f871a8
      *   data: [
      *     // ... provide data here
      *   ]
@@ -77941,18 +78471,6 @@ export namespace Prisma {
      * Read more here: https://pris.ly/d/null-undefined
      * 
      */
-<<<<<<< HEAD
-    createManyAndReturn<T extends hotel_pricing_notificationsCreateManyAndReturnArgs>(args?: SelectSubset<T, hotel_pricing_notificationsCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$hotel_pricing_notificationsPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
-
-    /**
-     * Delete a Hotel_pricing_notifications.
-     * @param {hotel_pricing_notificationsDeleteArgs} args - Arguments to delete one Hotel_pricing_notifications.
-     * @example
-     * // Delete one Hotel_pricing_notifications
-     * const Hotel_pricing_notifications = await prisma.hotel_pricing_notifications.delete({
-     *   where: {
-     *     // ... filter to delete one Hotel_pricing_notifications
-=======
     createManyAndReturn<T extends servicesCreateManyAndReturnArgs>(args?: SelectSubset<T, servicesCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$servicesPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
 
     /**
@@ -77963,21 +78481,10 @@ export namespace Prisma {
      * const Services = await prisma.services.delete({
      *   where: {
      *     // ... filter to delete one Services
->>>>>>> 8a7b2acf9bf5e0bc0fe32c6a0d8aa6e2a9f871a8
      *   }
      * })
      * 
      */
-<<<<<<< HEAD
-    delete<T extends hotel_pricing_notificationsDeleteArgs>(args: SelectSubset<T, hotel_pricing_notificationsDeleteArgs<ExtArgs>>): Prisma__hotel_pricing_notificationsClient<$Result.GetResult<Prisma.$hotel_pricing_notificationsPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Update one Hotel_pricing_notifications.
-     * @param {hotel_pricing_notificationsUpdateArgs} args - Arguments to update one Hotel_pricing_notifications.
-     * @example
-     * // Update one Hotel_pricing_notifications
-     * const hotel_pricing_notifications = await prisma.hotel_pricing_notifications.update({
-=======
     delete<T extends servicesDeleteArgs>(args: SelectSubset<T, servicesDeleteArgs<ExtArgs>>): Prisma__servicesClient<$Result.GetResult<Prisma.$servicesPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
     /**
@@ -77986,7 +78493,6 @@ export namespace Prisma {
      * @example
      * // Update one Services
      * const services = await prisma.services.update({
->>>>>>> 8a7b2acf9bf5e0bc0fe32c6a0d8aa6e2a9f871a8
      *   where: {
      *     // ... provide filter here
      *   },
@@ -77996,16 +78502,6 @@ export namespace Prisma {
      * })
      * 
      */
-<<<<<<< HEAD
-    update<T extends hotel_pricing_notificationsUpdateArgs>(args: SelectSubset<T, hotel_pricing_notificationsUpdateArgs<ExtArgs>>): Prisma__hotel_pricing_notificationsClient<$Result.GetResult<Prisma.$hotel_pricing_notificationsPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Delete zero or more Hotel_pricing_notifications.
-     * @param {hotel_pricing_notificationsDeleteManyArgs} args - Arguments to filter Hotel_pricing_notifications to delete.
-     * @example
-     * // Delete a few Hotel_pricing_notifications
-     * const { count } = await prisma.hotel_pricing_notifications.deleteMany({
-=======
     update<T extends servicesUpdateArgs>(args: SelectSubset<T, servicesUpdateArgs<ExtArgs>>): Prisma__servicesClient<$Result.GetResult<Prisma.$servicesPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
     /**
@@ -78014,25 +78510,12 @@ export namespace Prisma {
      * @example
      * // Delete a few Services
      * const { count } = await prisma.services.deleteMany({
->>>>>>> 8a7b2acf9bf5e0bc0fe32c6a0d8aa6e2a9f871a8
      *   where: {
      *     // ... provide filter here
      *   }
      * })
      * 
      */
-<<<<<<< HEAD
-    deleteMany<T extends hotel_pricing_notificationsDeleteManyArgs>(args?: SelectSubset<T, hotel_pricing_notificationsDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
-
-    /**
-     * Update zero or more Hotel_pricing_notifications.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {hotel_pricing_notificationsUpdateManyArgs} args - Arguments to update one or more rows.
-     * @example
-     * // Update many Hotel_pricing_notifications
-     * const hotel_pricing_notifications = await prisma.hotel_pricing_notifications.updateMany({
-=======
     deleteMany<T extends servicesDeleteManyArgs>(args?: SelectSubset<T, servicesDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
 
     /**
@@ -78043,7 +78526,6 @@ export namespace Prisma {
      * @example
      * // Update many Services
      * const services = await prisma.services.updateMany({
->>>>>>> 8a7b2acf9bf5e0bc0fe32c6a0d8aa6e2a9f871a8
      *   where: {
      *     // ... provide filter here
      *   },
@@ -78053,16 +78535,6 @@ export namespace Prisma {
      * })
      * 
      */
-<<<<<<< HEAD
-    updateMany<T extends hotel_pricing_notificationsUpdateManyArgs>(args: SelectSubset<T, hotel_pricing_notificationsUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
-
-    /**
-     * Update zero or more Hotel_pricing_notifications and returns the data updated in the database.
-     * @param {hotel_pricing_notificationsUpdateManyAndReturnArgs} args - Arguments to update many Hotel_pricing_notifications.
-     * @example
-     * // Update many Hotel_pricing_notifications
-     * const hotel_pricing_notifications = await prisma.hotel_pricing_notifications.updateManyAndReturn({
-=======
     updateMany<T extends servicesUpdateManyArgs>(args: SelectSubset<T, servicesUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
 
     /**
@@ -78071,7 +78543,6 @@ export namespace Prisma {
      * @example
      * // Update many Services
      * const services = await prisma.services.updateManyAndReturn({
->>>>>>> 8a7b2acf9bf5e0bc0fe32c6a0d8aa6e2a9f871a8
      *   where: {
      *     // ... provide filter here
      *   },
@@ -78080,15 +78551,9 @@ export namespace Prisma {
      *   ]
      * })
      * 
-<<<<<<< HEAD
-     * // Update zero or more Hotel_pricing_notifications and only return the `id`
-     * const hotel_pricing_notificationsWithIdOnly = await prisma.hotel_pricing_notifications.updateManyAndReturn({
-     *   select: { id: true },
-=======
      * // Update zero or more Services and only return the `service_id`
      * const servicesWithService_idOnly = await prisma.services.updateManyAndReturn({
      *   select: { service_id: true },
->>>>>>> 8a7b2acf9bf5e0bc0fe32c6a0d8aa6e2a9f871a8
      *   where: {
      *     // ... provide filter here
      *   },
@@ -78100,18 +78565,6 @@ export namespace Prisma {
      * Read more here: https://pris.ly/d/null-undefined
      * 
      */
-<<<<<<< HEAD
-    updateManyAndReturn<T extends hotel_pricing_notificationsUpdateManyAndReturnArgs>(args: SelectSubset<T, hotel_pricing_notificationsUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$hotel_pricing_notificationsPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
-
-    /**
-     * Create or update one Hotel_pricing_notifications.
-     * @param {hotel_pricing_notificationsUpsertArgs} args - Arguments to update or create a Hotel_pricing_notifications.
-     * @example
-     * // Update or create a Hotel_pricing_notifications
-     * const hotel_pricing_notifications = await prisma.hotel_pricing_notifications.upsert({
-     *   create: {
-     *     // ... data to create a Hotel_pricing_notifications
-=======
     updateManyAndReturn<T extends servicesUpdateManyAndReturnArgs>(args: SelectSubset<T, servicesUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$servicesPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
 
     /**
@@ -78122,36 +78575,11 @@ export namespace Prisma {
      * const services = await prisma.services.upsert({
      *   create: {
      *     // ... data to create a Services
->>>>>>> 8a7b2acf9bf5e0bc0fe32c6a0d8aa6e2a9f871a8
      *   },
      *   update: {
      *     // ... in case it already exists, update
      *   },
      *   where: {
-<<<<<<< HEAD
-     *     // ... the filter for the Hotel_pricing_notifications we want to update
-     *   }
-     * })
-     */
-    upsert<T extends hotel_pricing_notificationsUpsertArgs>(args: SelectSubset<T, hotel_pricing_notificationsUpsertArgs<ExtArgs>>): Prisma__hotel_pricing_notificationsClient<$Result.GetResult<Prisma.$hotel_pricing_notificationsPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-
-    /**
-     * Count the number of Hotel_pricing_notifications.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {hotel_pricing_notificationsCountArgs} args - Arguments to filter Hotel_pricing_notifications to count.
-     * @example
-     * // Count the number of Hotel_pricing_notifications
-     * const count = await prisma.hotel_pricing_notifications.count({
-     *   where: {
-     *     // ... the filter for the Hotel_pricing_notifications we want to count
-     *   }
-     * })
-    **/
-    count<T extends hotel_pricing_notificationsCountArgs>(
-      args?: Subset<T, hotel_pricing_notificationsCountArgs>,
-=======
      *     // ... the filter for the Services we want to update
      *   }
      * })
@@ -78174,31 +78602,19 @@ export namespace Prisma {
     **/
     count<T extends servicesCountArgs>(
       args?: Subset<T, servicesCountArgs>,
->>>>>>> 8a7b2acf9bf5e0bc0fe32c6a0d8aa6e2a9f871a8
     ): Prisma.PrismaPromise<
       T extends $Utils.Record<'select', any>
         ? T['select'] extends true
           ? number
-<<<<<<< HEAD
-          : GetScalarType<T['select'], Hotel_pricing_notificationsCountAggregateOutputType>
-=======
           : GetScalarType<T['select'], ServicesCountAggregateOutputType>
->>>>>>> 8a7b2acf9bf5e0bc0fe32c6a0d8aa6e2a9f871a8
         : number
     >
 
     /**
-<<<<<<< HEAD
-     * Allows you to perform aggregations operations on a Hotel_pricing_notifications.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {Hotel_pricing_notificationsAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
-=======
      * Allows you to perform aggregations operations on a Services.
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
      * @param {ServicesAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
->>>>>>> 8a7b2acf9bf5e0bc0fe32c6a0d8aa6e2a9f871a8
      * @example
      * // Ordered by age ascending
      * // Where email contains prisma.io
@@ -78218,15 +78634,6 @@ export namespace Prisma {
      *   take: 10,
      * })
     **/
-<<<<<<< HEAD
-    aggregate<T extends Hotel_pricing_notificationsAggregateArgs>(args: Subset<T, Hotel_pricing_notificationsAggregateArgs>): Prisma.PrismaPromise<GetHotel_pricing_notificationsAggregateType<T>>
-
-    /**
-     * Group by Hotel_pricing_notifications.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {hotel_pricing_notificationsGroupByArgs} args - Group by arguments.
-=======
     aggregate<T extends ServicesAggregateArgs>(args: Subset<T, ServicesAggregateArgs>): Prisma.PrismaPromise<GetServicesAggregateType<T>>
 
     /**
@@ -78234,7 +78641,6 @@ export namespace Prisma {
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
      * @param {servicesGroupByArgs} args - Group by arguments.
->>>>>>> 8a7b2acf9bf5e0bc0fe32c6a0d8aa6e2a9f871a8
      * @example
      * // Group by city, order by createdAt, get count
      * const result = await prisma.user.groupBy({
@@ -78249,23 +78655,14 @@ export namespace Prisma {
      * 
     **/
     groupBy<
-<<<<<<< HEAD
-      T extends hotel_pricing_notificationsGroupByArgs,
-=======
       T extends servicesGroupByArgs,
->>>>>>> 8a7b2acf9bf5e0bc0fe32c6a0d8aa6e2a9f871a8
       HasSelectOrTake extends Or<
         Extends<'skip', Keys<T>>,
         Extends<'take', Keys<T>>
       >,
       OrderByArg extends True extends HasSelectOrTake
-<<<<<<< HEAD
-        ? { orderBy: hotel_pricing_notificationsGroupByArgs['orderBy'] }
-        : { orderBy?: hotel_pricing_notificationsGroupByArgs['orderBy'] },
-=======
         ? { orderBy: servicesGroupByArgs['orderBy'] }
         : { orderBy?: servicesGroupByArgs['orderBy'] },
->>>>>>> 8a7b2acf9bf5e0bc0fe32c6a0d8aa6e2a9f871a8
       OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
       ByFields extends MaybeTupleToUnion<T['by']>,
       ByValid extends Has<ByFields, OrderFields>,
@@ -78314,17 +78711,6 @@ export namespace Prisma {
             ? never
             : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
         }[OrderFields]
-<<<<<<< HEAD
-    >(args: SubsetIntersection<T, hotel_pricing_notificationsGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetHotel_pricing_notificationsGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
-  /**
-   * Fields of the hotel_pricing_notifications model
-   */
-  readonly fields: hotel_pricing_notificationsFieldRefs;
-  }
-
-  /**
-   * The delegate class that acts as a "Promise-like" for hotel_pricing_notifications.
-=======
     >(args: SubsetIntersection<T, servicesGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetServicesGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
   /**
    * Fields of the services model
@@ -78334,15 +78720,10 @@ export namespace Prisma {
 
   /**
    * The delegate class that acts as a "Promise-like" for services.
->>>>>>> 8a7b2acf9bf5e0bc0fe32c6a0d8aa6e2a9f871a8
    * Why is this prefixed with `Prisma__`?
    * Because we want to prevent naming conflicts as mentioned in
    * https://github.com/prisma/prisma-client-js/issues/707
    */
-<<<<<<< HEAD
-  export interface Prisma__hotel_pricing_notificationsClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
-    readonly [Symbol.toStringTag]: "PrismaPromise"
-=======
   export interface Prisma__servicesClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     businesses<T extends businessesDefaultArgs<ExtArgs> = {}>(args?: Subset<T, businessesDefaultArgs<ExtArgs>>): Prisma__businessesClient<$Result.GetResult<Prisma.$businessesPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
@@ -78351,7 +78732,6 @@ export namespace Prisma {
     service_holds<T extends services$service_holdsArgs<ExtArgs> = {}>(args?: Subset<T, services$service_holdsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$service_holdsPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     pricing_suggestions<T extends services$pricing_suggestionsArgs<ExtArgs> = {}>(args?: Subset<T, services$pricing_suggestionsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$pricing_suggestionsPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     pricing_history<T extends services$pricing_historyArgs<ExtArgs> = {}>(args?: Subset<T, services$pricing_historyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$pricing_historyPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
->>>>>>> 8a7b2acf9bf5e0bc0fe32c6a0d8aa6e2a9f871a8
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -78378,20 +78758,6 @@ export namespace Prisma {
 
 
   /**
-<<<<<<< HEAD
-   * Fields of the hotel_pricing_notifications model
-   */
-  interface hotel_pricing_notificationsFieldRefs {
-    readonly id: FieldRef<"hotel_pricing_notifications", 'String'>
-    readonly org_id: FieldRef<"hotel_pricing_notifications", 'String'>
-    readonly hotel_id: FieldRef<"hotel_pricing_notifications", 'String'>
-    readonly type: FieldRef<"hotel_pricing_notifications", 'String'>
-    readonly title: FieldRef<"hotel_pricing_notifications", 'String'>
-    readonly body: FieldRef<"hotel_pricing_notifications", 'String'>
-    readonly metadata: FieldRef<"hotel_pricing_notifications", 'Json'>
-    readonly read_at: FieldRef<"hotel_pricing_notifications", 'DateTime'>
-    readonly created_at: FieldRef<"hotel_pricing_notifications", 'DateTime'>
-=======
    * Fields of the services model
    */
   interface servicesFieldRefs {
@@ -78408,81 +78774,11 @@ export namespace Prisma {
     readonly is_active: FieldRef<"services", 'Boolean'>
     readonly created_at: FieldRef<"services", 'DateTime'>
     readonly updated_at: FieldRef<"services", 'DateTime'>
->>>>>>> 8a7b2acf9bf5e0bc0fe32c6a0d8aa6e2a9f871a8
   }
     
 
   // Custom InputTypes
   /**
-<<<<<<< HEAD
-   * hotel_pricing_notifications findUnique
-   */
-  export type hotel_pricing_notificationsFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the hotel_pricing_notifications
-     */
-    select?: hotel_pricing_notificationsSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the hotel_pricing_notifications
-     */
-    omit?: hotel_pricing_notificationsOmit<ExtArgs> | null
-    /**
-     * Filter, which hotel_pricing_notifications to fetch.
-     */
-    where: hotel_pricing_notificationsWhereUniqueInput
-  }
-
-  /**
-   * hotel_pricing_notifications findUniqueOrThrow
-   */
-  export type hotel_pricing_notificationsFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the hotel_pricing_notifications
-     */
-    select?: hotel_pricing_notificationsSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the hotel_pricing_notifications
-     */
-    omit?: hotel_pricing_notificationsOmit<ExtArgs> | null
-    /**
-     * Filter, which hotel_pricing_notifications to fetch.
-     */
-    where: hotel_pricing_notificationsWhereUniqueInput
-  }
-
-  /**
-   * hotel_pricing_notifications findFirst
-   */
-  export type hotel_pricing_notificationsFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the hotel_pricing_notifications
-     */
-    select?: hotel_pricing_notificationsSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the hotel_pricing_notifications
-     */
-    omit?: hotel_pricing_notificationsOmit<ExtArgs> | null
-    /**
-     * Filter, which hotel_pricing_notifications to fetch.
-     */
-    where?: hotel_pricing_notificationsWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of hotel_pricing_notifications to fetch.
-     */
-    orderBy?: hotel_pricing_notificationsOrderByWithRelationInput | hotel_pricing_notificationsOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the position for searching for hotel_pricing_notifications.
-     */
-    cursor?: hotel_pricing_notificationsWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` hotel_pricing_notifications from the position of the cursor.
-=======
    * services findUnique
    */
   export type servicesFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -78562,61 +78858,17 @@ export namespace Prisma {
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
      * Take `±n` services from the position of the cursor.
->>>>>>> 8a7b2acf9bf5e0bc0fe32c6a0d8aa6e2a9f871a8
      */
     take?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
-<<<<<<< HEAD
-     * Skip the first `n` hotel_pricing_notifications.
-=======
      * Skip the first `n` services.
->>>>>>> 8a7b2acf9bf5e0bc0fe32c6a0d8aa6e2a9f871a8
      */
     skip?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
      * 
-<<<<<<< HEAD
-     * Filter by unique combinations of hotel_pricing_notifications.
-     */
-    distinct?: Hotel_pricing_notificationsScalarFieldEnum | Hotel_pricing_notificationsScalarFieldEnum[]
-  }
-
-  /**
-   * hotel_pricing_notifications findFirstOrThrow
-   */
-  export type hotel_pricing_notificationsFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the hotel_pricing_notifications
-     */
-    select?: hotel_pricing_notificationsSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the hotel_pricing_notifications
-     */
-    omit?: hotel_pricing_notificationsOmit<ExtArgs> | null
-    /**
-     * Filter, which hotel_pricing_notifications to fetch.
-     */
-    where?: hotel_pricing_notificationsWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of hotel_pricing_notifications to fetch.
-     */
-    orderBy?: hotel_pricing_notificationsOrderByWithRelationInput | hotel_pricing_notificationsOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the position for searching for hotel_pricing_notifications.
-     */
-    cursor?: hotel_pricing_notificationsWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` hotel_pricing_notifications from the position of the cursor.
-=======
      * Filter by unique combinations of services.
      */
     distinct?: ServicesScalarFieldEnum | ServicesScalarFieldEnum[]
@@ -78658,61 +78910,17 @@ export namespace Prisma {
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
      * Take `±n` services from the position of the cursor.
->>>>>>> 8a7b2acf9bf5e0bc0fe32c6a0d8aa6e2a9f871a8
      */
     take?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
-<<<<<<< HEAD
-     * Skip the first `n` hotel_pricing_notifications.
-=======
      * Skip the first `n` services.
->>>>>>> 8a7b2acf9bf5e0bc0fe32c6a0d8aa6e2a9f871a8
      */
     skip?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
      * 
-<<<<<<< HEAD
-     * Filter by unique combinations of hotel_pricing_notifications.
-     */
-    distinct?: Hotel_pricing_notificationsScalarFieldEnum | Hotel_pricing_notificationsScalarFieldEnum[]
-  }
-
-  /**
-   * hotel_pricing_notifications findMany
-   */
-  export type hotel_pricing_notificationsFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the hotel_pricing_notifications
-     */
-    select?: hotel_pricing_notificationsSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the hotel_pricing_notifications
-     */
-    omit?: hotel_pricing_notificationsOmit<ExtArgs> | null
-    /**
-     * Filter, which hotel_pricing_notifications to fetch.
-     */
-    where?: hotel_pricing_notificationsWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of hotel_pricing_notifications to fetch.
-     */
-    orderBy?: hotel_pricing_notificationsOrderByWithRelationInput | hotel_pricing_notificationsOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the position for listing hotel_pricing_notifications.
-     */
-    cursor?: hotel_pricing_notificationsWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` hotel_pricing_notifications from the position of the cursor.
-=======
      * Filter by unique combinations of services.
      */
     distinct?: ServicesScalarFieldEnum | ServicesScalarFieldEnum[]
@@ -78754,46 +78962,11 @@ export namespace Prisma {
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
      * Take `±n` services from the position of the cursor.
->>>>>>> 8a7b2acf9bf5e0bc0fe32c6a0d8aa6e2a9f871a8
      */
     take?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
-<<<<<<< HEAD
-     * Skip the first `n` hotel_pricing_notifications.
-     */
-    skip?: number
-    distinct?: Hotel_pricing_notificationsScalarFieldEnum | Hotel_pricing_notificationsScalarFieldEnum[]
-  }
-
-  /**
-   * hotel_pricing_notifications create
-   */
-  export type hotel_pricing_notificationsCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the hotel_pricing_notifications
-     */
-    select?: hotel_pricing_notificationsSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the hotel_pricing_notifications
-     */
-    omit?: hotel_pricing_notificationsOmit<ExtArgs> | null
-    /**
-     * The data needed to create a hotel_pricing_notifications.
-     */
-    data: XOR<hotel_pricing_notificationsCreateInput, hotel_pricing_notificationsUncheckedCreateInput>
-  }
-
-  /**
-   * hotel_pricing_notifications createMany
-   */
-  export type hotel_pricing_notificationsCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * The data used to create many hotel_pricing_notifications.
-     */
-    data: hotel_pricing_notificationsCreateManyInput | hotel_pricing_notificationsCreateManyInput[]
-=======
      * Skip the first `n` services.
      */
     skip?: number
@@ -78830,28 +79003,10 @@ export namespace Prisma {
      * The data used to create many services.
      */
     data: servicesCreateManyInput | servicesCreateManyInput[]
->>>>>>> 8a7b2acf9bf5e0bc0fe32c6a0d8aa6e2a9f871a8
     skipDuplicates?: boolean
   }
 
   /**
-<<<<<<< HEAD
-   * hotel_pricing_notifications createManyAndReturn
-   */
-  export type hotel_pricing_notificationsCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the hotel_pricing_notifications
-     */
-    select?: hotel_pricing_notificationsSelectCreateManyAndReturn<ExtArgs> | null
-    /**
-     * Omit specific fields from the hotel_pricing_notifications
-     */
-    omit?: hotel_pricing_notificationsOmit<ExtArgs> | null
-    /**
-     * The data used to create many hotel_pricing_notifications.
-     */
-    data: hotel_pricing_notificationsCreateManyInput | hotel_pricing_notificationsCreateManyInput[]
-=======
    * services createManyAndReturn
    */
   export type servicesCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -80150,48 +80305,10 @@ export namespace Prisma {
      * The data used to create many service_availabilities.
      */
     data: service_availabilityCreateManyInput | service_availabilityCreateManyInput[]
->>>>>>> 8a7b2acf9bf5e0bc0fe32c6a0d8aa6e2a9f871a8
     skipDuplicates?: boolean
   }
 
   /**
-<<<<<<< HEAD
-   * hotel_pricing_notifications update
-   */
-  export type hotel_pricing_notificationsUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the hotel_pricing_notifications
-     */
-    select?: hotel_pricing_notificationsSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the hotel_pricing_notifications
-     */
-    omit?: hotel_pricing_notificationsOmit<ExtArgs> | null
-    /**
-     * The data needed to update a hotel_pricing_notifications.
-     */
-    data: XOR<hotel_pricing_notificationsUpdateInput, hotel_pricing_notificationsUncheckedUpdateInput>
-    /**
-     * Choose, which hotel_pricing_notifications to update.
-     */
-    where: hotel_pricing_notificationsWhereUniqueInput
-  }
-
-  /**
-   * hotel_pricing_notifications updateMany
-   */
-  export type hotel_pricing_notificationsUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * The data used to update hotel_pricing_notifications.
-     */
-    data: XOR<hotel_pricing_notificationsUpdateManyMutationInput, hotel_pricing_notificationsUncheckedUpdateManyInput>
-    /**
-     * Filter which hotel_pricing_notifications to update
-     */
-    where?: hotel_pricing_notificationsWhereInput
-    /**
-     * Limit how many hotel_pricing_notifications to update.
-=======
    * service_availability createManyAndReturn
    */
   export type service_availabilityCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -80254,35 +80371,11 @@ export namespace Prisma {
     where?: service_availabilityWhereInput
     /**
      * Limit how many service_availabilities to update.
->>>>>>> 8a7b2acf9bf5e0bc0fe32c6a0d8aa6e2a9f871a8
      */
     limit?: number
   }
 
   /**
-<<<<<<< HEAD
-   * hotel_pricing_notifications updateManyAndReturn
-   */
-  export type hotel_pricing_notificationsUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the hotel_pricing_notifications
-     */
-    select?: hotel_pricing_notificationsSelectUpdateManyAndReturn<ExtArgs> | null
-    /**
-     * Omit specific fields from the hotel_pricing_notifications
-     */
-    omit?: hotel_pricing_notificationsOmit<ExtArgs> | null
-    /**
-     * The data used to update hotel_pricing_notifications.
-     */
-    data: XOR<hotel_pricing_notificationsUpdateManyMutationInput, hotel_pricing_notificationsUncheckedUpdateManyInput>
-    /**
-     * Filter which hotel_pricing_notifications to update
-     */
-    where?: hotel_pricing_notificationsWhereInput
-    /**
-     * Limit how many hotel_pricing_notifications to update.
-=======
    * service_availability updateManyAndReturn
    */
   export type service_availabilityUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -80374,67 +80467,11 @@ export namespace Prisma {
     where?: service_availabilityWhereInput
     /**
      * Limit how many service_availabilities to delete.
->>>>>>> 8a7b2acf9bf5e0bc0fe32c6a0d8aa6e2a9f871a8
      */
     limit?: number
   }
 
   /**
-<<<<<<< HEAD
-   * hotel_pricing_notifications upsert
-   */
-  export type hotel_pricing_notificationsUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the hotel_pricing_notifications
-     */
-    select?: hotel_pricing_notificationsSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the hotel_pricing_notifications
-     */
-    omit?: hotel_pricing_notificationsOmit<ExtArgs> | null
-    /**
-     * The filter to search for the hotel_pricing_notifications to update in case it exists.
-     */
-    where: hotel_pricing_notificationsWhereUniqueInput
-    /**
-     * In case the hotel_pricing_notifications found by the `where` argument doesn't exist, create a new hotel_pricing_notifications with this data.
-     */
-    create: XOR<hotel_pricing_notificationsCreateInput, hotel_pricing_notificationsUncheckedCreateInput>
-    /**
-     * In case the hotel_pricing_notifications was found with the provided `where` argument, update it with this data.
-     */
-    update: XOR<hotel_pricing_notificationsUpdateInput, hotel_pricing_notificationsUncheckedUpdateInput>
-  }
-
-  /**
-   * hotel_pricing_notifications delete
-   */
-  export type hotel_pricing_notificationsDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the hotel_pricing_notifications
-     */
-    select?: hotel_pricing_notificationsSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the hotel_pricing_notifications
-     */
-    omit?: hotel_pricing_notificationsOmit<ExtArgs> | null
-    /**
-     * Filter which hotel_pricing_notifications to delete.
-     */
-    where: hotel_pricing_notificationsWhereUniqueInput
-  }
-
-  /**
-   * hotel_pricing_notifications deleteMany
-   */
-  export type hotel_pricing_notificationsDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Filter which hotel_pricing_notifications to delete
-     */
-    where?: hotel_pricing_notificationsWhereInput
-    /**
-     * Limit how many hotel_pricing_notifications to delete.
-=======
    * service_availability without action
    */
   export type service_availabilityDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -80736,6 +80773,7 @@ export namespace Prisma {
     created_at?: boolean
     updated_at?: boolean
     services?: boolean | servicesDefaultArgs<ExtArgs>
+    booking_guests?: boolean | service_bookings$booking_guestsArgs<ExtArgs>
   }, ExtArgs["result"]["service_bookings"]>
 
   export type service_bookingsSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -80797,6 +80835,7 @@ export namespace Prisma {
   export type service_bookingsOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"booking_id" | "service_id" | "business_id" | "lead_id" | "customer_name" | "customer_phone" | "check_in_date" | "check_out_date" | "slots_booked" | "total_price" | "status" | "payment_status" | "special_requests" | "created_at" | "updated_at", ExtArgs["result"]["service_bookings"]>
   export type service_bookingsInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     services?: boolean | servicesDefaultArgs<ExtArgs>
+    booking_guests?: boolean | service_bookings$booking_guestsArgs<ExtArgs>
   }
   export type service_bookingsIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     services?: boolean | servicesDefaultArgs<ExtArgs>
@@ -80809,6 +80848,7 @@ export namespace Prisma {
     name: "service_bookings"
     objects: {
       services: Prisma.$servicesPayload<ExtArgs>
+      booking_guests: Prisma.$booking_guestsPayload<ExtArgs> | null
     }
     scalars: $Extensions.GetPayloadResult<{
       booking_id: string
@@ -81221,6 +81261,7 @@ export namespace Prisma {
   export interface Prisma__service_bookingsClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     services<T extends servicesDefaultArgs<ExtArgs> = {}>(args?: Subset<T, servicesDefaultArgs<ExtArgs>>): Prisma__servicesClient<$Result.GetResult<Prisma.$servicesPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    booking_guests<T extends service_bookings$booking_guestsArgs<ExtArgs> = {}>(args?: Subset<T, service_bookings$booking_guestsArgs<ExtArgs>>): Prisma__booking_guestsClient<$Result.GetResult<Prisma.$booking_guestsPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -81560,25 +81601,11 @@ export namespace Prisma {
     where?: service_bookingsWhereInput
     /**
      * Limit how many service_bookings to update.
->>>>>>> 8a7b2acf9bf5e0bc0fe32c6a0d8aa6e2a9f871a8
      */
     limit?: number
   }
 
   /**
-<<<<<<< HEAD
-   * hotel_pricing_notifications without action
-   */
-  export type hotel_pricing_notificationsDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the hotel_pricing_notifications
-     */
-    select?: hotel_pricing_notificationsSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the hotel_pricing_notifications
-     */
-    omit?: hotel_pricing_notificationsOmit<ExtArgs> | null
-=======
    * service_bookings updateManyAndReturn
    */
   export type service_bookingsUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -81675,6 +81702,25 @@ export namespace Prisma {
   }
 
   /**
+   * service_bookings.booking_guests
+   */
+  export type service_bookings$booking_guestsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the booking_guests
+     */
+    select?: booking_guestsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the booking_guests
+     */
+    omit?: booking_guestsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: booking_guestsInclude<ExtArgs> | null
+    where?: booking_guestsWhereInput
+  }
+
+  /**
    * service_bookings without action
    */
   export type service_bookingsDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -81690,6 +81736,1154 @@ export namespace Prisma {
      * Choose, which related nodes to fetch as well
      */
     include?: service_bookingsInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model booking_guests
+   */
+
+  export type AggregateBooking_guests = {
+    _count: Booking_guestsCountAggregateOutputType | null
+    _avg: Booking_guestsAvgAggregateOutputType | null
+    _sum: Booking_guestsSumAggregateOutputType | null
+    _min: Booking_guestsMinAggregateOutputType | null
+    _max: Booking_guestsMaxAggregateOutputType | null
+  }
+
+  export type Booking_guestsAvgAggregateOutputType = {
+    age: number | null
+    num_guests: number | null
+  }
+
+  export type Booking_guestsSumAggregateOutputType = {
+    age: number | null
+    num_guests: number | null
+  }
+
+  export type Booking_guestsMinAggregateOutputType = {
+    guest_id: string | null
+    booking_id: string | null
+    name: string | null
+    phone: string | null
+    age: number | null
+    num_guests: number | null
+    address: string | null
+    pin_code: string | null
+    created_at: Date | null
+  }
+
+  export type Booking_guestsMaxAggregateOutputType = {
+    guest_id: string | null
+    booking_id: string | null
+    name: string | null
+    phone: string | null
+    age: number | null
+    num_guests: number | null
+    address: string | null
+    pin_code: string | null
+    created_at: Date | null
+  }
+
+  export type Booking_guestsCountAggregateOutputType = {
+    guest_id: number
+    booking_id: number
+    name: number
+    phone: number
+    age: number
+    num_guests: number
+    address: number
+    pin_code: number
+    created_at: number
+    _all: number
+  }
+
+
+  export type Booking_guestsAvgAggregateInputType = {
+    age?: true
+    num_guests?: true
+  }
+
+  export type Booking_guestsSumAggregateInputType = {
+    age?: true
+    num_guests?: true
+  }
+
+  export type Booking_guestsMinAggregateInputType = {
+    guest_id?: true
+    booking_id?: true
+    name?: true
+    phone?: true
+    age?: true
+    num_guests?: true
+    address?: true
+    pin_code?: true
+    created_at?: true
+  }
+
+  export type Booking_guestsMaxAggregateInputType = {
+    guest_id?: true
+    booking_id?: true
+    name?: true
+    phone?: true
+    age?: true
+    num_guests?: true
+    address?: true
+    pin_code?: true
+    created_at?: true
+  }
+
+  export type Booking_guestsCountAggregateInputType = {
+    guest_id?: true
+    booking_id?: true
+    name?: true
+    phone?: true
+    age?: true
+    num_guests?: true
+    address?: true
+    pin_code?: true
+    created_at?: true
+    _all?: true
+  }
+
+  export type Booking_guestsAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which booking_guests to aggregate.
+     */
+    where?: booking_guestsWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of booking_guests to fetch.
+     */
+    orderBy?: booking_guestsOrderByWithRelationInput | booking_guestsOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: booking_guestsWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` booking_guests from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` booking_guests.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned booking_guests
+    **/
+    _count?: true | Booking_guestsCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: Booking_guestsAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: Booking_guestsSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: Booking_guestsMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: Booking_guestsMaxAggregateInputType
+  }
+
+  export type GetBooking_guestsAggregateType<T extends Booking_guestsAggregateArgs> = {
+        [P in keyof T & keyof AggregateBooking_guests]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateBooking_guests[P]>
+      : GetScalarType<T[P], AggregateBooking_guests[P]>
+  }
+
+
+
+
+  export type booking_guestsGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: booking_guestsWhereInput
+    orderBy?: booking_guestsOrderByWithAggregationInput | booking_guestsOrderByWithAggregationInput[]
+    by: Booking_guestsScalarFieldEnum[] | Booking_guestsScalarFieldEnum
+    having?: booking_guestsScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: Booking_guestsCountAggregateInputType | true
+    _avg?: Booking_guestsAvgAggregateInputType
+    _sum?: Booking_guestsSumAggregateInputType
+    _min?: Booking_guestsMinAggregateInputType
+    _max?: Booking_guestsMaxAggregateInputType
+  }
+
+  export type Booking_guestsGroupByOutputType = {
+    guest_id: string
+    booking_id: string
+    name: string
+    phone: string
+    age: number | null
+    num_guests: number
+    address: string | null
+    pin_code: string | null
+    created_at: Date
+    _count: Booking_guestsCountAggregateOutputType | null
+    _avg: Booking_guestsAvgAggregateOutputType | null
+    _sum: Booking_guestsSumAggregateOutputType | null
+    _min: Booking_guestsMinAggregateOutputType | null
+    _max: Booking_guestsMaxAggregateOutputType | null
+  }
+
+  type GetBooking_guestsGroupByPayload<T extends booking_guestsGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<Booking_guestsGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof Booking_guestsGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], Booking_guestsGroupByOutputType[P]>
+            : GetScalarType<T[P], Booking_guestsGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type booking_guestsSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    guest_id?: boolean
+    booking_id?: boolean
+    name?: boolean
+    phone?: boolean
+    age?: boolean
+    num_guests?: boolean
+    address?: boolean
+    pin_code?: boolean
+    created_at?: boolean
+    service_bookings?: boolean | service_bookingsDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["booking_guests"]>
+
+  export type booking_guestsSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    guest_id?: boolean
+    booking_id?: boolean
+    name?: boolean
+    phone?: boolean
+    age?: boolean
+    num_guests?: boolean
+    address?: boolean
+    pin_code?: boolean
+    created_at?: boolean
+    service_bookings?: boolean | service_bookingsDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["booking_guests"]>
+
+  export type booking_guestsSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    guest_id?: boolean
+    booking_id?: boolean
+    name?: boolean
+    phone?: boolean
+    age?: boolean
+    num_guests?: boolean
+    address?: boolean
+    pin_code?: boolean
+    created_at?: boolean
+    service_bookings?: boolean | service_bookingsDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["booking_guests"]>
+
+  export type booking_guestsSelectScalar = {
+    guest_id?: boolean
+    booking_id?: boolean
+    name?: boolean
+    phone?: boolean
+    age?: boolean
+    num_guests?: boolean
+    address?: boolean
+    pin_code?: boolean
+    created_at?: boolean
+  }
+
+  export type booking_guestsOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"guest_id" | "booking_id" | "name" | "phone" | "age" | "num_guests" | "address" | "pin_code" | "created_at", ExtArgs["result"]["booking_guests"]>
+  export type booking_guestsInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    service_bookings?: boolean | service_bookingsDefaultArgs<ExtArgs>
+  }
+  export type booking_guestsIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    service_bookings?: boolean | service_bookingsDefaultArgs<ExtArgs>
+  }
+  export type booking_guestsIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    service_bookings?: boolean | service_bookingsDefaultArgs<ExtArgs>
+  }
+
+  export type $booking_guestsPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "booking_guests"
+    objects: {
+      service_bookings: Prisma.$service_bookingsPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      guest_id: string
+      booking_id: string
+      name: string
+      phone: string
+      age: number | null
+      num_guests: number
+      address: string | null
+      pin_code: string | null
+      created_at: Date
+    }, ExtArgs["result"]["booking_guests"]>
+    composites: {}
+  }
+
+  type booking_guestsGetPayload<S extends boolean | null | undefined | booking_guestsDefaultArgs> = $Result.GetResult<Prisma.$booking_guestsPayload, S>
+
+  type booking_guestsCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<booking_guestsFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: Booking_guestsCountAggregateInputType | true
+    }
+
+  export interface booking_guestsDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['booking_guests'], meta: { name: 'booking_guests' } }
+    /**
+     * Find zero or one Booking_guests that matches the filter.
+     * @param {booking_guestsFindUniqueArgs} args - Arguments to find a Booking_guests
+     * @example
+     * // Get one Booking_guests
+     * const booking_guests = await prisma.booking_guests.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends booking_guestsFindUniqueArgs>(args: SelectSubset<T, booking_guestsFindUniqueArgs<ExtArgs>>): Prisma__booking_guestsClient<$Result.GetResult<Prisma.$booking_guestsPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one Booking_guests that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {booking_guestsFindUniqueOrThrowArgs} args - Arguments to find a Booking_guests
+     * @example
+     * // Get one Booking_guests
+     * const booking_guests = await prisma.booking_guests.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends booking_guestsFindUniqueOrThrowArgs>(args: SelectSubset<T, booking_guestsFindUniqueOrThrowArgs<ExtArgs>>): Prisma__booking_guestsClient<$Result.GetResult<Prisma.$booking_guestsPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Booking_guests that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {booking_guestsFindFirstArgs} args - Arguments to find a Booking_guests
+     * @example
+     * // Get one Booking_guests
+     * const booking_guests = await prisma.booking_guests.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends booking_guestsFindFirstArgs>(args?: SelectSubset<T, booking_guestsFindFirstArgs<ExtArgs>>): Prisma__booking_guestsClient<$Result.GetResult<Prisma.$booking_guestsPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Booking_guests that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {booking_guestsFindFirstOrThrowArgs} args - Arguments to find a Booking_guests
+     * @example
+     * // Get one Booking_guests
+     * const booking_guests = await prisma.booking_guests.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends booking_guestsFindFirstOrThrowArgs>(args?: SelectSubset<T, booking_guestsFindFirstOrThrowArgs<ExtArgs>>): Prisma__booking_guestsClient<$Result.GetResult<Prisma.$booking_guestsPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more Booking_guests that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {booking_guestsFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all Booking_guests
+     * const booking_guests = await prisma.booking_guests.findMany()
+     * 
+     * // Get first 10 Booking_guests
+     * const booking_guests = await prisma.booking_guests.findMany({ take: 10 })
+     * 
+     * // Only select the `guest_id`
+     * const booking_guestsWithGuest_idOnly = await prisma.booking_guests.findMany({ select: { guest_id: true } })
+     * 
+     */
+    findMany<T extends booking_guestsFindManyArgs>(args?: SelectSubset<T, booking_guestsFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$booking_guestsPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a Booking_guests.
+     * @param {booking_guestsCreateArgs} args - Arguments to create a Booking_guests.
+     * @example
+     * // Create one Booking_guests
+     * const Booking_guests = await prisma.booking_guests.create({
+     *   data: {
+     *     // ... data to create a Booking_guests
+     *   }
+     * })
+     * 
+     */
+    create<T extends booking_guestsCreateArgs>(args: SelectSubset<T, booking_guestsCreateArgs<ExtArgs>>): Prisma__booking_guestsClient<$Result.GetResult<Prisma.$booking_guestsPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many Booking_guests.
+     * @param {booking_guestsCreateManyArgs} args - Arguments to create many Booking_guests.
+     * @example
+     * // Create many Booking_guests
+     * const booking_guests = await prisma.booking_guests.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends booking_guestsCreateManyArgs>(args?: SelectSubset<T, booking_guestsCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many Booking_guests and returns the data saved in the database.
+     * @param {booking_guestsCreateManyAndReturnArgs} args - Arguments to create many Booking_guests.
+     * @example
+     * // Create many Booking_guests
+     * const booking_guests = await prisma.booking_guests.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many Booking_guests and only return the `guest_id`
+     * const booking_guestsWithGuest_idOnly = await prisma.booking_guests.createManyAndReturn({
+     *   select: { guest_id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends booking_guestsCreateManyAndReturnArgs>(args?: SelectSubset<T, booking_guestsCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$booking_guestsPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a Booking_guests.
+     * @param {booking_guestsDeleteArgs} args - Arguments to delete one Booking_guests.
+     * @example
+     * // Delete one Booking_guests
+     * const Booking_guests = await prisma.booking_guests.delete({
+     *   where: {
+     *     // ... filter to delete one Booking_guests
+     *   }
+     * })
+     * 
+     */
+    delete<T extends booking_guestsDeleteArgs>(args: SelectSubset<T, booking_guestsDeleteArgs<ExtArgs>>): Prisma__booking_guestsClient<$Result.GetResult<Prisma.$booking_guestsPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one Booking_guests.
+     * @param {booking_guestsUpdateArgs} args - Arguments to update one Booking_guests.
+     * @example
+     * // Update one Booking_guests
+     * const booking_guests = await prisma.booking_guests.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends booking_guestsUpdateArgs>(args: SelectSubset<T, booking_guestsUpdateArgs<ExtArgs>>): Prisma__booking_guestsClient<$Result.GetResult<Prisma.$booking_guestsPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more Booking_guests.
+     * @param {booking_guestsDeleteManyArgs} args - Arguments to filter Booking_guests to delete.
+     * @example
+     * // Delete a few Booking_guests
+     * const { count } = await prisma.booking_guests.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends booking_guestsDeleteManyArgs>(args?: SelectSubset<T, booking_guestsDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Booking_guests.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {booking_guestsUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many Booking_guests
+     * const booking_guests = await prisma.booking_guests.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends booking_guestsUpdateManyArgs>(args: SelectSubset<T, booking_guestsUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Booking_guests and returns the data updated in the database.
+     * @param {booking_guestsUpdateManyAndReturnArgs} args - Arguments to update many Booking_guests.
+     * @example
+     * // Update many Booking_guests
+     * const booking_guests = await prisma.booking_guests.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more Booking_guests and only return the `guest_id`
+     * const booking_guestsWithGuest_idOnly = await prisma.booking_guests.updateManyAndReturn({
+     *   select: { guest_id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends booking_guestsUpdateManyAndReturnArgs>(args: SelectSubset<T, booking_guestsUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$booking_guestsPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one Booking_guests.
+     * @param {booking_guestsUpsertArgs} args - Arguments to update or create a Booking_guests.
+     * @example
+     * // Update or create a Booking_guests
+     * const booking_guests = await prisma.booking_guests.upsert({
+     *   create: {
+     *     // ... data to create a Booking_guests
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the Booking_guests we want to update
+     *   }
+     * })
+     */
+    upsert<T extends booking_guestsUpsertArgs>(args: SelectSubset<T, booking_guestsUpsertArgs<ExtArgs>>): Prisma__booking_guestsClient<$Result.GetResult<Prisma.$booking_guestsPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of Booking_guests.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {booking_guestsCountArgs} args - Arguments to filter Booking_guests to count.
+     * @example
+     * // Count the number of Booking_guests
+     * const count = await prisma.booking_guests.count({
+     *   where: {
+     *     // ... the filter for the Booking_guests we want to count
+     *   }
+     * })
+    **/
+    count<T extends booking_guestsCountArgs>(
+      args?: Subset<T, booking_guestsCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], Booking_guestsCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a Booking_guests.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {Booking_guestsAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends Booking_guestsAggregateArgs>(args: Subset<T, Booking_guestsAggregateArgs>): Prisma.PrismaPromise<GetBooking_guestsAggregateType<T>>
+
+    /**
+     * Group by Booking_guests.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {booking_guestsGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends booking_guestsGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: booking_guestsGroupByArgs['orderBy'] }
+        : { orderBy?: booking_guestsGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, booking_guestsGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetBooking_guestsGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the booking_guests model
+   */
+  readonly fields: booking_guestsFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for booking_guests.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__booking_guestsClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    service_bookings<T extends service_bookingsDefaultArgs<ExtArgs> = {}>(args?: Subset<T, service_bookingsDefaultArgs<ExtArgs>>): Prisma__service_bookingsClient<$Result.GetResult<Prisma.$service_bookingsPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the booking_guests model
+   */
+  interface booking_guestsFieldRefs {
+    readonly guest_id: FieldRef<"booking_guests", 'String'>
+    readonly booking_id: FieldRef<"booking_guests", 'String'>
+    readonly name: FieldRef<"booking_guests", 'String'>
+    readonly phone: FieldRef<"booking_guests", 'String'>
+    readonly age: FieldRef<"booking_guests", 'Int'>
+    readonly num_guests: FieldRef<"booking_guests", 'Int'>
+    readonly address: FieldRef<"booking_guests", 'String'>
+    readonly pin_code: FieldRef<"booking_guests", 'String'>
+    readonly created_at: FieldRef<"booking_guests", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * booking_guests findUnique
+   */
+  export type booking_guestsFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the booking_guests
+     */
+    select?: booking_guestsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the booking_guests
+     */
+    omit?: booking_guestsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: booking_guestsInclude<ExtArgs> | null
+    /**
+     * Filter, which booking_guests to fetch.
+     */
+    where: booking_guestsWhereUniqueInput
+  }
+
+  /**
+   * booking_guests findUniqueOrThrow
+   */
+  export type booking_guestsFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the booking_guests
+     */
+    select?: booking_guestsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the booking_guests
+     */
+    omit?: booking_guestsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: booking_guestsInclude<ExtArgs> | null
+    /**
+     * Filter, which booking_guests to fetch.
+     */
+    where: booking_guestsWhereUniqueInput
+  }
+
+  /**
+   * booking_guests findFirst
+   */
+  export type booking_guestsFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the booking_guests
+     */
+    select?: booking_guestsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the booking_guests
+     */
+    omit?: booking_guestsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: booking_guestsInclude<ExtArgs> | null
+    /**
+     * Filter, which booking_guests to fetch.
+     */
+    where?: booking_guestsWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of booking_guests to fetch.
+     */
+    orderBy?: booking_guestsOrderByWithRelationInput | booking_guestsOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for booking_guests.
+     */
+    cursor?: booking_guestsWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` booking_guests from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` booking_guests.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of booking_guests.
+     */
+    distinct?: Booking_guestsScalarFieldEnum | Booking_guestsScalarFieldEnum[]
+  }
+
+  /**
+   * booking_guests findFirstOrThrow
+   */
+  export type booking_guestsFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the booking_guests
+     */
+    select?: booking_guestsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the booking_guests
+     */
+    omit?: booking_guestsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: booking_guestsInclude<ExtArgs> | null
+    /**
+     * Filter, which booking_guests to fetch.
+     */
+    where?: booking_guestsWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of booking_guests to fetch.
+     */
+    orderBy?: booking_guestsOrderByWithRelationInput | booking_guestsOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for booking_guests.
+     */
+    cursor?: booking_guestsWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` booking_guests from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` booking_guests.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of booking_guests.
+     */
+    distinct?: Booking_guestsScalarFieldEnum | Booking_guestsScalarFieldEnum[]
+  }
+
+  /**
+   * booking_guests findMany
+   */
+  export type booking_guestsFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the booking_guests
+     */
+    select?: booking_guestsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the booking_guests
+     */
+    omit?: booking_guestsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: booking_guestsInclude<ExtArgs> | null
+    /**
+     * Filter, which booking_guests to fetch.
+     */
+    where?: booking_guestsWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of booking_guests to fetch.
+     */
+    orderBy?: booking_guestsOrderByWithRelationInput | booking_guestsOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing booking_guests.
+     */
+    cursor?: booking_guestsWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` booking_guests from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` booking_guests.
+     */
+    skip?: number
+    distinct?: Booking_guestsScalarFieldEnum | Booking_guestsScalarFieldEnum[]
+  }
+
+  /**
+   * booking_guests create
+   */
+  export type booking_guestsCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the booking_guests
+     */
+    select?: booking_guestsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the booking_guests
+     */
+    omit?: booking_guestsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: booking_guestsInclude<ExtArgs> | null
+    /**
+     * The data needed to create a booking_guests.
+     */
+    data: XOR<booking_guestsCreateInput, booking_guestsUncheckedCreateInput>
+  }
+
+  /**
+   * booking_guests createMany
+   */
+  export type booking_guestsCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many booking_guests.
+     */
+    data: booking_guestsCreateManyInput | booking_guestsCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * booking_guests createManyAndReturn
+   */
+  export type booking_guestsCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the booking_guests
+     */
+    select?: booking_guestsSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the booking_guests
+     */
+    omit?: booking_guestsOmit<ExtArgs> | null
+    /**
+     * The data used to create many booking_guests.
+     */
+    data: booking_guestsCreateManyInput | booking_guestsCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: booking_guestsIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * booking_guests update
+   */
+  export type booking_guestsUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the booking_guests
+     */
+    select?: booking_guestsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the booking_guests
+     */
+    omit?: booking_guestsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: booking_guestsInclude<ExtArgs> | null
+    /**
+     * The data needed to update a booking_guests.
+     */
+    data: XOR<booking_guestsUpdateInput, booking_guestsUncheckedUpdateInput>
+    /**
+     * Choose, which booking_guests to update.
+     */
+    where: booking_guestsWhereUniqueInput
+  }
+
+  /**
+   * booking_guests updateMany
+   */
+  export type booking_guestsUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update booking_guests.
+     */
+    data: XOR<booking_guestsUpdateManyMutationInput, booking_guestsUncheckedUpdateManyInput>
+    /**
+     * Filter which booking_guests to update
+     */
+    where?: booking_guestsWhereInput
+    /**
+     * Limit how many booking_guests to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * booking_guests updateManyAndReturn
+   */
+  export type booking_guestsUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the booking_guests
+     */
+    select?: booking_guestsSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the booking_guests
+     */
+    omit?: booking_guestsOmit<ExtArgs> | null
+    /**
+     * The data used to update booking_guests.
+     */
+    data: XOR<booking_guestsUpdateManyMutationInput, booking_guestsUncheckedUpdateManyInput>
+    /**
+     * Filter which booking_guests to update
+     */
+    where?: booking_guestsWhereInput
+    /**
+     * Limit how many booking_guests to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: booking_guestsIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * booking_guests upsert
+   */
+  export type booking_guestsUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the booking_guests
+     */
+    select?: booking_guestsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the booking_guests
+     */
+    omit?: booking_guestsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: booking_guestsInclude<ExtArgs> | null
+    /**
+     * The filter to search for the booking_guests to update in case it exists.
+     */
+    where: booking_guestsWhereUniqueInput
+    /**
+     * In case the booking_guests found by the `where` argument doesn't exist, create a new booking_guests with this data.
+     */
+    create: XOR<booking_guestsCreateInput, booking_guestsUncheckedCreateInput>
+    /**
+     * In case the booking_guests was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<booking_guestsUpdateInput, booking_guestsUncheckedUpdateInput>
+  }
+
+  /**
+   * booking_guests delete
+   */
+  export type booking_guestsDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the booking_guests
+     */
+    select?: booking_guestsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the booking_guests
+     */
+    omit?: booking_guestsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: booking_guestsInclude<ExtArgs> | null
+    /**
+     * Filter which booking_guests to delete.
+     */
+    where: booking_guestsWhereUniqueInput
+  }
+
+  /**
+   * booking_guests deleteMany
+   */
+  export type booking_guestsDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which booking_guests to delete
+     */
+    where?: booking_guestsWhereInput
+    /**
+     * Limit how many booking_guests to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * booking_guests without action
+   */
+  export type booking_guestsDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the booking_guests
+     */
+    select?: booking_guestsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the booking_guests
+     */
+    omit?: booking_guestsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: booking_guestsInclude<ExtArgs> | null
   }
 
 
@@ -87604,7 +88798,6 @@ export namespace Prisma {
      * Choose, which related nodes to fetch as well
      */
     include?: service_holdsInclude<ExtArgs> | null
->>>>>>> 8a7b2acf9bf5e0bc0fe32c6a0d8aa6e2a9f871a8
   }
 
 
@@ -87627,17 +88820,6 @@ export namespace Prisma {
     tenant_id: 'tenant_id',
     business_name: 'business_name',
     business_type: 'business_type',
-<<<<<<< HEAD
-=======
-    email: 'email',
-    phone: 'phone',
-    website: 'website',
-    city: 'city',
-    address: 'address',
-    country: 'country',
-    gst_number: 'gst_number',
-    pan_number: 'pan_number',
->>>>>>> 8a7b2acf9bf5e0bc0fe32c6a0d8aa6e2a9f871a8
     whatsapp_number: 'whatsapp_number',
     created_at: 'created_at',
     updated_at: 'updated_at',
@@ -88762,7 +89944,6 @@ export namespace Prisma {
   export type Campaign_analyticsScalarFieldEnum = (typeof Campaign_analyticsScalarFieldEnum)[keyof typeof Campaign_analyticsScalarFieldEnum]
 
 
-<<<<<<< HEAD
   export const Hotel_pricing_recommendationsScalarFieldEnum: {
     id: 'id',
     hotel_id: 'hotel_id',
@@ -88815,7 +89996,8 @@ export namespace Prisma {
   };
 
   export type Hotel_pricing_notificationsScalarFieldEnum = (typeof Hotel_pricing_notificationsScalarFieldEnum)[keyof typeof Hotel_pricing_notificationsScalarFieldEnum]
-=======
+
+
   export const ServicesScalarFieldEnum: {
     service_id: 'service_id',
     business_id: 'business_id',
@@ -88871,6 +90053,21 @@ export namespace Prisma {
   };
 
   export type Service_bookingsScalarFieldEnum = (typeof Service_bookingsScalarFieldEnum)[keyof typeof Service_bookingsScalarFieldEnum]
+
+
+  export const Booking_guestsScalarFieldEnum: {
+    guest_id: 'guest_id',
+    booking_id: 'booking_id',
+    name: 'name',
+    phone: 'phone',
+    age: 'age',
+    num_guests: 'num_guests',
+    address: 'address',
+    pin_code: 'pin_code',
+    created_at: 'created_at'
+  };
+
+  export type Booking_guestsScalarFieldEnum = (typeof Booking_guestsScalarFieldEnum)[keyof typeof Booking_guestsScalarFieldEnum]
 
 
   export const Pricing_rulesScalarFieldEnum: {
@@ -88957,7 +90154,6 @@ export namespace Prisma {
   };
 
   export type Service_holdsScalarFieldEnum = (typeof Service_holdsScalarFieldEnum)[keyof typeof Service_holdsScalarFieldEnum]
->>>>>>> 8a7b2acf9bf5e0bc0fe32c6a0d8aa6e2a9f871a8
 
 
   export const SortOrder: {
@@ -89129,7 +90325,6 @@ export namespace Prisma {
     tenant_id?: UuidFilter<"businesses"> | string
     business_name?: StringFilter<"businesses"> | string
     business_type?: StringNullableFilter<"businesses"> | string | null
-<<<<<<< HEAD
     whatsapp_number?: StringNullableFilter<"businesses"> | string | null
     created_at?: DateTimeNullableFilter<"businesses"> | Date | string | null
     updated_at?: DateTimeNullableFilter<"businesses"> | Date | string | null
@@ -89141,19 +90336,6 @@ export namespace Prisma {
     country?: StringNullableFilter<"businesses"> | string | null
     gst_number?: StringNullableFilter<"businesses"> | string | null
     pan_number?: StringNullableFilter<"businesses"> | string | null
-=======
-    email?: StringNullableFilter<"businesses"> | string | null
-    phone?: StringNullableFilter<"businesses"> | string | null
-    website?: StringNullableFilter<"businesses"> | string | null
-    city?: StringNullableFilter<"businesses"> | string | null
-    address?: StringNullableFilter<"businesses"> | string | null
-    country?: StringNullableFilter<"businesses"> | string | null
-    gst_number?: StringNullableFilter<"businesses"> | string | null
-    pan_number?: StringNullableFilter<"businesses"> | string | null
-    whatsapp_number?: StringNullableFilter<"businesses"> | string | null
-    created_at?: DateTimeNullableFilter<"businesses"> | Date | string | null
-    updated_at?: DateTimeNullableFilter<"businesses"> | Date | string | null
->>>>>>> 8a7b2acf9bf5e0bc0fe32c6a0d8aa6e2a9f871a8
     business_employees?: Business_employeesListRelationFilter
     business_workflows?: Business_workflowsListRelationFilter
     tenants?: XOR<TenantsScalarRelationFilter, tenantsWhereInput>
@@ -89181,7 +90363,6 @@ export namespace Prisma {
     tenant_id?: SortOrder
     business_name?: SortOrder
     business_type?: SortOrderInput | SortOrder
-<<<<<<< HEAD
     whatsapp_number?: SortOrderInput | SortOrder
     created_at?: SortOrderInput | SortOrder
     updated_at?: SortOrderInput | SortOrder
@@ -89193,19 +90374,6 @@ export namespace Prisma {
     country?: SortOrderInput | SortOrder
     gst_number?: SortOrderInput | SortOrder
     pan_number?: SortOrderInput | SortOrder
-=======
-    email?: SortOrderInput | SortOrder
-    phone?: SortOrderInput | SortOrder
-    website?: SortOrderInput | SortOrder
-    city?: SortOrderInput | SortOrder
-    address?: SortOrderInput | SortOrder
-    country?: SortOrderInput | SortOrder
-    gst_number?: SortOrderInput | SortOrder
-    pan_number?: SortOrderInput | SortOrder
-    whatsapp_number?: SortOrderInput | SortOrder
-    created_at?: SortOrderInput | SortOrder
-    updated_at?: SortOrderInput | SortOrder
->>>>>>> 8a7b2acf9bf5e0bc0fe32c6a0d8aa6e2a9f871a8
     business_employees?: business_employeesOrderByRelationAggregateInput
     business_workflows?: business_workflowsOrderByRelationAggregateInput
     tenants?: tenantsOrderByWithRelationInput
@@ -89236,7 +90404,6 @@ export namespace Prisma {
     tenant_id?: UuidFilter<"businesses"> | string
     business_name?: StringFilter<"businesses"> | string
     business_type?: StringNullableFilter<"businesses"> | string | null
-<<<<<<< HEAD
     whatsapp_number?: StringNullableFilter<"businesses"> | string | null
     created_at?: DateTimeNullableFilter<"businesses"> | Date | string | null
     updated_at?: DateTimeNullableFilter<"businesses"> | Date | string | null
@@ -89248,19 +90415,6 @@ export namespace Prisma {
     country?: StringNullableFilter<"businesses"> | string | null
     gst_number?: StringNullableFilter<"businesses"> | string | null
     pan_number?: StringNullableFilter<"businesses"> | string | null
-=======
-    email?: StringNullableFilter<"businesses"> | string | null
-    phone?: StringNullableFilter<"businesses"> | string | null
-    website?: StringNullableFilter<"businesses"> | string | null
-    city?: StringNullableFilter<"businesses"> | string | null
-    address?: StringNullableFilter<"businesses"> | string | null
-    country?: StringNullableFilter<"businesses"> | string | null
-    gst_number?: StringNullableFilter<"businesses"> | string | null
-    pan_number?: StringNullableFilter<"businesses"> | string | null
-    whatsapp_number?: StringNullableFilter<"businesses"> | string | null
-    created_at?: DateTimeNullableFilter<"businesses"> | Date | string | null
-    updated_at?: DateTimeNullableFilter<"businesses"> | Date | string | null
->>>>>>> 8a7b2acf9bf5e0bc0fe32c6a0d8aa6e2a9f871a8
     business_employees?: Business_employeesListRelationFilter
     business_workflows?: Business_workflowsListRelationFilter
     tenants?: XOR<TenantsScalarRelationFilter, tenantsWhereInput>
@@ -89288,17 +90442,6 @@ export namespace Prisma {
     tenant_id?: SortOrder
     business_name?: SortOrder
     business_type?: SortOrderInput | SortOrder
-<<<<<<< HEAD
-=======
-    email?: SortOrderInput | SortOrder
-    phone?: SortOrderInput | SortOrder
-    website?: SortOrderInput | SortOrder
-    city?: SortOrderInput | SortOrder
-    address?: SortOrderInput | SortOrder
-    country?: SortOrderInput | SortOrder
-    gst_number?: SortOrderInput | SortOrder
-    pan_number?: SortOrderInput | SortOrder
->>>>>>> 8a7b2acf9bf5e0bc0fe32c6a0d8aa6e2a9f871a8
     whatsapp_number?: SortOrderInput | SortOrder
     created_at?: SortOrderInput | SortOrder
     updated_at?: SortOrderInput | SortOrder
@@ -89323,17 +90466,6 @@ export namespace Prisma {
     tenant_id?: UuidWithAggregatesFilter<"businesses"> | string
     business_name?: StringWithAggregatesFilter<"businesses"> | string
     business_type?: StringNullableWithAggregatesFilter<"businesses"> | string | null
-<<<<<<< HEAD
-=======
-    email?: StringNullableWithAggregatesFilter<"businesses"> | string | null
-    phone?: StringNullableWithAggregatesFilter<"businesses"> | string | null
-    website?: StringNullableWithAggregatesFilter<"businesses"> | string | null
-    city?: StringNullableWithAggregatesFilter<"businesses"> | string | null
-    address?: StringNullableWithAggregatesFilter<"businesses"> | string | null
-    country?: StringNullableWithAggregatesFilter<"businesses"> | string | null
-    gst_number?: StringNullableWithAggregatesFilter<"businesses"> | string | null
-    pan_number?: StringNullableWithAggregatesFilter<"businesses"> | string | null
->>>>>>> 8a7b2acf9bf5e0bc0fe32c6a0d8aa6e2a9f871a8
     whatsapp_number?: StringNullableWithAggregatesFilter<"businesses"> | string | null
     created_at?: DateTimeNullableWithAggregatesFilter<"businesses"> | Date | string | null
     updated_at?: DateTimeNullableWithAggregatesFilter<"businesses"> | Date | string | null
@@ -89345,71 +90477,6 @@ export namespace Prisma {
     country?: StringNullableWithAggregatesFilter<"businesses"> | string | null
     gst_number?: StringNullableWithAggregatesFilter<"businesses"> | string | null
     pan_number?: StringNullableWithAggregatesFilter<"businesses"> | string | null
-  }
-
-  export type business_employeesWhereInput = {
-    AND?: business_employeesWhereInput | business_employeesWhereInput[]
-    OR?: business_employeesWhereInput[]
-    NOT?: business_employeesWhereInput | business_employeesWhereInput[]
-    employee_id?: UuidFilter<"business_employees"> | string
-    business_id?: UuidFilter<"business_employees"> | string
-    name?: StringFilter<"business_employees"> | string
-    email?: StringNullableFilter<"business_employees"> | string | null
-    phone?: StringNullableFilter<"business_employees"> | string | null
-    role?: StringNullableFilter<"business_employees"> | string | null
-    created_at?: DateTimeNullableFilter<"business_employees"> | Date | string | null
-    businesses?: XOR<BusinessesScalarRelationFilter, businessesWhereInput>
-  }
-
-  export type business_employeesOrderByWithRelationInput = {
-    employee_id?: SortOrder
-    business_id?: SortOrder
-    name?: SortOrder
-    email?: SortOrderInput | SortOrder
-    phone?: SortOrderInput | SortOrder
-    role?: SortOrderInput | SortOrder
-    created_at?: SortOrderInput | SortOrder
-    businesses?: businessesOrderByWithRelationInput
-  }
-
-  export type business_employeesWhereUniqueInput = Prisma.AtLeast<{
-    employee_id?: string
-    AND?: business_employeesWhereInput | business_employeesWhereInput[]
-    OR?: business_employeesWhereInput[]
-    NOT?: business_employeesWhereInput | business_employeesWhereInput[]
-    business_id?: UuidFilter<"business_employees"> | string
-    name?: StringFilter<"business_employees"> | string
-    email?: StringNullableFilter<"business_employees"> | string | null
-    phone?: StringNullableFilter<"business_employees"> | string | null
-    role?: StringNullableFilter<"business_employees"> | string | null
-    created_at?: DateTimeNullableFilter<"business_employees"> | Date | string | null
-    businesses?: XOR<BusinessesScalarRelationFilter, businessesWhereInput>
-  }, "employee_id">
-
-  export type business_employeesOrderByWithAggregationInput = {
-    employee_id?: SortOrder
-    business_id?: SortOrder
-    name?: SortOrder
-    email?: SortOrderInput | SortOrder
-    phone?: SortOrderInput | SortOrder
-    role?: SortOrderInput | SortOrder
-    created_at?: SortOrderInput | SortOrder
-    _count?: business_employeesCountOrderByAggregateInput
-    _max?: business_employeesMaxOrderByAggregateInput
-    _min?: business_employeesMinOrderByAggregateInput
-  }
-
-  export type business_employeesScalarWhereWithAggregatesInput = {
-    AND?: business_employeesScalarWhereWithAggregatesInput | business_employeesScalarWhereWithAggregatesInput[]
-    OR?: business_employeesScalarWhereWithAggregatesInput[]
-    NOT?: business_employeesScalarWhereWithAggregatesInput | business_employeesScalarWhereWithAggregatesInput[]
-    employee_id?: UuidWithAggregatesFilter<"business_employees"> | string
-    business_id?: UuidWithAggregatesFilter<"business_employees"> | string
-    name?: StringWithAggregatesFilter<"business_employees"> | string
-    email?: StringNullableWithAggregatesFilter<"business_employees"> | string | null
-    phone?: StringNullableWithAggregatesFilter<"business_employees"> | string | null
-    role?: StringNullableWithAggregatesFilter<"business_employees"> | string | null
-    created_at?: DateTimeNullableWithAggregatesFilter<"business_employees"> | Date | string | null
   }
 
   export type business_employeesWhereInput = {
@@ -89882,8 +90949,8 @@ export namespace Prisma {
     gst_number?: StringNullableFilter<"tenants"> | string | null
     pan_number?: StringNullableFilter<"tenants"> | string | null
     registration_no?: StringNullableFilter<"tenants"> | string | null
-    businesses?: BusinessesListRelationFilter
     business_workflows?: Business_workflowsListRelationFilter
+    businesses?: BusinessesListRelationFilter
     carts?: CartsListRelationFilter
     leads?: LeadsListRelationFilter
     notification_messages?: Notification_messagesListRelationFilter
@@ -89902,8 +90969,8 @@ export namespace Prisma {
     gst_number?: SortOrderInput | SortOrder
     pan_number?: SortOrderInput | SortOrder
     registration_no?: SortOrderInput | SortOrder
-    businesses?: businessesOrderByRelationAggregateInput
     business_workflows?: business_workflowsOrderByRelationAggregateInput
+    businesses?: businessesOrderByRelationAggregateInput
     carts?: cartsOrderByRelationAggregateInput
     leads?: leadsOrderByRelationAggregateInput
     notification_messages?: notification_messagesOrderByRelationAggregateInput
@@ -89925,8 +90992,8 @@ export namespace Prisma {
     gst_number?: StringNullableFilter<"tenants"> | string | null
     pan_number?: StringNullableFilter<"tenants"> | string | null
     registration_no?: StringNullableFilter<"tenants"> | string | null
-    businesses?: BusinessesListRelationFilter
     business_workflows?: Business_workflowsListRelationFilter
+    businesses?: BusinessesListRelationFilter
     carts?: CartsListRelationFilter
     leads?: LeadsListRelationFilter
     notification_messages?: Notification_messagesListRelationFilter
@@ -91565,12 +92632,7 @@ export namespace Prisma {
     product_variants?: Product_variantsListRelationFilter
     businesses?: XOR<BusinessesScalarRelationFilter, businessesWhereInput>
     product_categories?: XOR<Product_categoriesNullableScalarRelationFilter, product_categoriesWhereInput> | null
-<<<<<<< HEAD
-    stock_reservations?: Stock_reservationsListRelationFilter
-=======
-    cart_reservations?: Cart_reservationsListRelationFilter
     product_stock_alerts?: Product_stock_alertsListRelationFilter
->>>>>>> 8a7b2acf9bf5e0bc0fe32c6a0d8aa6e2a9f871a8
   }
 
   export type productsOrderByWithRelationInput = {
@@ -91622,12 +92684,7 @@ export namespace Prisma {
     product_variants?: product_variantsOrderByRelationAggregateInput
     businesses?: businessesOrderByWithRelationInput
     product_categories?: product_categoriesOrderByWithRelationInput
-<<<<<<< HEAD
-    stock_reservations?: stock_reservationsOrderByRelationAggregateInput
-=======
-    cart_reservations?: cart_reservationsOrderByRelationAggregateInput
     product_stock_alerts?: product_stock_alertsOrderByRelationAggregateInput
->>>>>>> 8a7b2acf9bf5e0bc0fe32c6a0d8aa6e2a9f871a8
   }
 
   export type productsWhereUniqueInput = Prisma.AtLeast<{
@@ -91682,12 +92739,7 @@ export namespace Prisma {
     product_variants?: Product_variantsListRelationFilter
     businesses?: XOR<BusinessesScalarRelationFilter, businessesWhereInput>
     product_categories?: XOR<Product_categoriesNullableScalarRelationFilter, product_categoriesWhereInput> | null
-<<<<<<< HEAD
-    stock_reservations?: Stock_reservationsListRelationFilter
-=======
-    cart_reservations?: Cart_reservationsListRelationFilter
     product_stock_alerts?: Product_stock_alertsListRelationFilter
->>>>>>> 8a7b2acf9bf5e0bc0fe32c6a0d8aa6e2a9f871a8
   }, "product_id">
 
   export type productsOrderByWithAggregationInput = {
@@ -95357,7 +96409,6 @@ export namespace Prisma {
     updated_at?: DateTimeWithAggregatesFilter<"campaign_analytics"> | Date | string
   }
 
-<<<<<<< HEAD
   export type hotel_pricing_recommendationsWhereInput = {
     AND?: hotel_pricing_recommendationsWhereInput | hotel_pricing_recommendationsWhereInput[]
     OR?: hotel_pricing_recommendationsWhereInput[]
@@ -95627,7 +96678,8 @@ export namespace Prisma {
     metadata?: JsonNullableWithAggregatesFilter<"hotel_pricing_notifications">
     read_at?: DateTimeNullableWithAggregatesFilter<"hotel_pricing_notifications"> | Date | string | null
     created_at?: DateTimeWithAggregatesFilter<"hotel_pricing_notifications"> | Date | string
-=======
+  }
+
   export type servicesWhereInput = {
     AND?: servicesWhereInput | servicesWhereInput[]
     OR?: servicesWhereInput[]
@@ -95848,6 +96900,7 @@ export namespace Prisma {
     created_at?: DateTimeFilter<"service_bookings"> | Date | string
     updated_at?: DateTimeFilter<"service_bookings"> | Date | string
     services?: XOR<ServicesScalarRelationFilter, servicesWhereInput>
+    booking_guests?: XOR<Booking_guestsNullableScalarRelationFilter, booking_guestsWhereInput> | null
   }
 
   export type service_bookingsOrderByWithRelationInput = {
@@ -95867,6 +96920,7 @@ export namespace Prisma {
     created_at?: SortOrder
     updated_at?: SortOrder
     services?: servicesOrderByWithRelationInput
+    booking_guests?: booking_guestsOrderByWithRelationInput
   }
 
   export type service_bookingsWhereUniqueInput = Prisma.AtLeast<{
@@ -95889,6 +96943,7 @@ export namespace Prisma {
     created_at?: DateTimeFilter<"service_bookings"> | Date | string
     updated_at?: DateTimeFilter<"service_bookings"> | Date | string
     services?: XOR<ServicesScalarRelationFilter, servicesWhereInput>
+    booking_guests?: XOR<Booking_guestsNullableScalarRelationFilter, booking_guestsWhereInput> | null
   }, "booking_id">
 
   export type service_bookingsOrderByWithAggregationInput = {
@@ -95933,6 +96988,83 @@ export namespace Prisma {
     special_requests?: StringNullableWithAggregatesFilter<"service_bookings"> | string | null
     created_at?: DateTimeWithAggregatesFilter<"service_bookings"> | Date | string
     updated_at?: DateTimeWithAggregatesFilter<"service_bookings"> | Date | string
+  }
+
+  export type booking_guestsWhereInput = {
+    AND?: booking_guestsWhereInput | booking_guestsWhereInput[]
+    OR?: booking_guestsWhereInput[]
+    NOT?: booking_guestsWhereInput | booking_guestsWhereInput[]
+    guest_id?: UuidFilter<"booking_guests"> | string
+    booking_id?: UuidFilter<"booking_guests"> | string
+    name?: StringFilter<"booking_guests"> | string
+    phone?: StringFilter<"booking_guests"> | string
+    age?: IntNullableFilter<"booking_guests"> | number | null
+    num_guests?: IntFilter<"booking_guests"> | number
+    address?: StringNullableFilter<"booking_guests"> | string | null
+    pin_code?: StringNullableFilter<"booking_guests"> | string | null
+    created_at?: DateTimeFilter<"booking_guests"> | Date | string
+    service_bookings?: XOR<Service_bookingsScalarRelationFilter, service_bookingsWhereInput>
+  }
+
+  export type booking_guestsOrderByWithRelationInput = {
+    guest_id?: SortOrder
+    booking_id?: SortOrder
+    name?: SortOrder
+    phone?: SortOrder
+    age?: SortOrderInput | SortOrder
+    num_guests?: SortOrder
+    address?: SortOrderInput | SortOrder
+    pin_code?: SortOrderInput | SortOrder
+    created_at?: SortOrder
+    service_bookings?: service_bookingsOrderByWithRelationInput
+  }
+
+  export type booking_guestsWhereUniqueInput = Prisma.AtLeast<{
+    guest_id?: string
+    booking_id?: string
+    AND?: booking_guestsWhereInput | booking_guestsWhereInput[]
+    OR?: booking_guestsWhereInput[]
+    NOT?: booking_guestsWhereInput | booking_guestsWhereInput[]
+    name?: StringFilter<"booking_guests"> | string
+    phone?: StringFilter<"booking_guests"> | string
+    age?: IntNullableFilter<"booking_guests"> | number | null
+    num_guests?: IntFilter<"booking_guests"> | number
+    address?: StringNullableFilter<"booking_guests"> | string | null
+    pin_code?: StringNullableFilter<"booking_guests"> | string | null
+    created_at?: DateTimeFilter<"booking_guests"> | Date | string
+    service_bookings?: XOR<Service_bookingsScalarRelationFilter, service_bookingsWhereInput>
+  }, "guest_id" | "booking_id">
+
+  export type booking_guestsOrderByWithAggregationInput = {
+    guest_id?: SortOrder
+    booking_id?: SortOrder
+    name?: SortOrder
+    phone?: SortOrder
+    age?: SortOrderInput | SortOrder
+    num_guests?: SortOrder
+    address?: SortOrderInput | SortOrder
+    pin_code?: SortOrderInput | SortOrder
+    created_at?: SortOrder
+    _count?: booking_guestsCountOrderByAggregateInput
+    _avg?: booking_guestsAvgOrderByAggregateInput
+    _max?: booking_guestsMaxOrderByAggregateInput
+    _min?: booking_guestsMinOrderByAggregateInput
+    _sum?: booking_guestsSumOrderByAggregateInput
+  }
+
+  export type booking_guestsScalarWhereWithAggregatesInput = {
+    AND?: booking_guestsScalarWhereWithAggregatesInput | booking_guestsScalarWhereWithAggregatesInput[]
+    OR?: booking_guestsScalarWhereWithAggregatesInput[]
+    NOT?: booking_guestsScalarWhereWithAggregatesInput | booking_guestsScalarWhereWithAggregatesInput[]
+    guest_id?: UuidWithAggregatesFilter<"booking_guests"> | string
+    booking_id?: UuidWithAggregatesFilter<"booking_guests"> | string
+    name?: StringWithAggregatesFilter<"booking_guests"> | string
+    phone?: StringWithAggregatesFilter<"booking_guests"> | string
+    age?: IntNullableWithAggregatesFilter<"booking_guests"> | number | null
+    num_guests?: IntWithAggregatesFilter<"booking_guests"> | number
+    address?: StringNullableWithAggregatesFilter<"booking_guests"> | string | null
+    pin_code?: StringNullableWithAggregatesFilter<"booking_guests"> | string | null
+    created_at?: DateTimeWithAggregatesFilter<"booking_guests"> | Date | string
   }
 
   export type pricing_rulesWhereInput = {
@@ -96380,25 +97512,15 @@ export namespace Prisma {
     status?: StringWithAggregatesFilter<"service_holds"> | string
     expires_at?: DateTimeWithAggregatesFilter<"service_holds"> | Date | string
     created_at?: DateTimeWithAggregatesFilter<"service_holds"> | Date | string
->>>>>>> 8a7b2acf9bf5e0bc0fe32c6a0d8aa6e2a9f871a8
   }
 
   export type businessesCreateInput = {
     business_id?: string
     business_name: string
     business_type?: string | null
-    email?: string | null
-    phone?: string | null
-    website?: string | null
-    city?: string | null
-    address?: string | null
-    country?: string | null
-    gst_number?: string | null
-    pan_number?: string | null
     whatsapp_number?: string | null
     created_at?: Date | string | null
     updated_at?: Date | string | null
-<<<<<<< HEAD
     email?: string | null
     phone?: string | null
     website?: string | null
@@ -96407,8 +97529,6 @@ export namespace Prisma {
     country?: string | null
     gst_number?: string | null
     pan_number?: string | null
-=======
->>>>>>> 8a7b2acf9bf5e0bc0fe32c6a0d8aa6e2a9f871a8
     business_employees?: business_employeesCreateNestedManyWithoutBusinessesInput
     business_workflows?: business_workflowsCreateNestedManyWithoutBusinessesInput
     tenants: tenantsCreateNestedOneWithoutBusinessesInput
@@ -96436,7 +97556,6 @@ export namespace Prisma {
     tenant_id: string
     business_name: string
     business_type?: string | null
-<<<<<<< HEAD
     whatsapp_number?: string | null
     created_at?: Date | string | null
     updated_at?: Date | string | null
@@ -96448,19 +97567,6 @@ export namespace Prisma {
     country?: string | null
     gst_number?: string | null
     pan_number?: string | null
-=======
-    email?: string | null
-    phone?: string | null
-    website?: string | null
-    city?: string | null
-    address?: string | null
-    country?: string | null
-    gst_number?: string | null
-    pan_number?: string | null
-    whatsapp_number?: string | null
-    created_at?: Date | string | null
-    updated_at?: Date | string | null
->>>>>>> 8a7b2acf9bf5e0bc0fe32c6a0d8aa6e2a9f871a8
     business_employees?: business_employeesUncheckedCreateNestedManyWithoutBusinessesInput
     business_workflows?: business_workflowsUncheckedCreateNestedManyWithoutBusinessesInput
     carts?: cartsUncheckedCreateNestedManyWithoutBusinessesInput
@@ -96486,18 +97592,9 @@ export namespace Prisma {
     business_id?: StringFieldUpdateOperationsInput | string
     business_name?: StringFieldUpdateOperationsInput | string
     business_type?: NullableStringFieldUpdateOperationsInput | string | null
-    email?: NullableStringFieldUpdateOperationsInput | string | null
-    phone?: NullableStringFieldUpdateOperationsInput | string | null
-    website?: NullableStringFieldUpdateOperationsInput | string | null
-    city?: NullableStringFieldUpdateOperationsInput | string | null
-    address?: NullableStringFieldUpdateOperationsInput | string | null
-    country?: NullableStringFieldUpdateOperationsInput | string | null
-    gst_number?: NullableStringFieldUpdateOperationsInput | string | null
-    pan_number?: NullableStringFieldUpdateOperationsInput | string | null
     whatsapp_number?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-<<<<<<< HEAD
     email?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     website?: NullableStringFieldUpdateOperationsInput | string | null
@@ -96506,8 +97603,6 @@ export namespace Prisma {
     country?: NullableStringFieldUpdateOperationsInput | string | null
     gst_number?: NullableStringFieldUpdateOperationsInput | string | null
     pan_number?: NullableStringFieldUpdateOperationsInput | string | null
-=======
->>>>>>> 8a7b2acf9bf5e0bc0fe32c6a0d8aa6e2a9f871a8
     business_employees?: business_employeesUpdateManyWithoutBusinessesNestedInput
     business_workflows?: business_workflowsUpdateManyWithoutBusinessesNestedInput
     tenants?: tenantsUpdateOneRequiredWithoutBusinessesNestedInput
@@ -96535,7 +97630,6 @@ export namespace Prisma {
     tenant_id?: StringFieldUpdateOperationsInput | string
     business_name?: StringFieldUpdateOperationsInput | string
     business_type?: NullableStringFieldUpdateOperationsInput | string | null
-<<<<<<< HEAD
     whatsapp_number?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -96547,19 +97641,6 @@ export namespace Prisma {
     country?: NullableStringFieldUpdateOperationsInput | string | null
     gst_number?: NullableStringFieldUpdateOperationsInput | string | null
     pan_number?: NullableStringFieldUpdateOperationsInput | string | null
-=======
-    email?: NullableStringFieldUpdateOperationsInput | string | null
-    phone?: NullableStringFieldUpdateOperationsInput | string | null
-    website?: NullableStringFieldUpdateOperationsInput | string | null
-    city?: NullableStringFieldUpdateOperationsInput | string | null
-    address?: NullableStringFieldUpdateOperationsInput | string | null
-    country?: NullableStringFieldUpdateOperationsInput | string | null
-    gst_number?: NullableStringFieldUpdateOperationsInput | string | null
-    pan_number?: NullableStringFieldUpdateOperationsInput | string | null
-    whatsapp_number?: NullableStringFieldUpdateOperationsInput | string | null
-    created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
->>>>>>> 8a7b2acf9bf5e0bc0fe32c6a0d8aa6e2a9f871a8
     business_employees?: business_employeesUncheckedUpdateManyWithoutBusinessesNestedInput
     business_workflows?: business_workflowsUncheckedUpdateManyWithoutBusinessesNestedInput
     carts?: cartsUncheckedUpdateManyWithoutBusinessesNestedInput
@@ -96586,17 +97667,6 @@ export namespace Prisma {
     tenant_id: string
     business_name: string
     business_type?: string | null
-<<<<<<< HEAD
-=======
-    email?: string | null
-    phone?: string | null
-    website?: string | null
-    city?: string | null
-    address?: string | null
-    country?: string | null
-    gst_number?: string | null
-    pan_number?: string | null
->>>>>>> 8a7b2acf9bf5e0bc0fe32c6a0d8aa6e2a9f871a8
     whatsapp_number?: string | null
     created_at?: Date | string | null
     updated_at?: Date | string | null
@@ -96614,14 +97684,6 @@ export namespace Prisma {
     business_id?: StringFieldUpdateOperationsInput | string
     business_name?: StringFieldUpdateOperationsInput | string
     business_type?: NullableStringFieldUpdateOperationsInput | string | null
-    email?: NullableStringFieldUpdateOperationsInput | string | null
-    phone?: NullableStringFieldUpdateOperationsInput | string | null
-    website?: NullableStringFieldUpdateOperationsInput | string | null
-    city?: NullableStringFieldUpdateOperationsInput | string | null
-    address?: NullableStringFieldUpdateOperationsInput | string | null
-    country?: NullableStringFieldUpdateOperationsInput | string | null
-    gst_number?: NullableStringFieldUpdateOperationsInput | string | null
-    pan_number?: NullableStringFieldUpdateOperationsInput | string | null
     whatsapp_number?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -96640,17 +97702,6 @@ export namespace Prisma {
     tenant_id?: StringFieldUpdateOperationsInput | string
     business_name?: StringFieldUpdateOperationsInput | string
     business_type?: NullableStringFieldUpdateOperationsInput | string | null
-<<<<<<< HEAD
-=======
-    email?: NullableStringFieldUpdateOperationsInput | string | null
-    phone?: NullableStringFieldUpdateOperationsInput | string | null
-    website?: NullableStringFieldUpdateOperationsInput | string | null
-    city?: NullableStringFieldUpdateOperationsInput | string | null
-    address?: NullableStringFieldUpdateOperationsInput | string | null
-    country?: NullableStringFieldUpdateOperationsInput | string | null
-    gst_number?: NullableStringFieldUpdateOperationsInput | string | null
-    pan_number?: NullableStringFieldUpdateOperationsInput | string | null
->>>>>>> 8a7b2acf9bf5e0bc0fe32c6a0d8aa6e2a9f871a8
     whatsapp_number?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -96662,75 +97713,6 @@ export namespace Prisma {
     country?: NullableStringFieldUpdateOperationsInput | string | null
     gst_number?: NullableStringFieldUpdateOperationsInput | string | null
     pan_number?: NullableStringFieldUpdateOperationsInput | string | null
-  }
-
-  export type business_employeesCreateInput = {
-    employee_id?: string
-    name: string
-    email?: string | null
-    phone?: string | null
-    role?: string | null
-    created_at?: Date | string | null
-    businesses: businessesCreateNestedOneWithoutBusiness_employeesInput
-  }
-
-  export type business_employeesUncheckedCreateInput = {
-    employee_id?: string
-    business_id: string
-    name: string
-    email?: string | null
-    phone?: string | null
-    role?: string | null
-    created_at?: Date | string | null
-  }
-
-  export type business_employeesUpdateInput = {
-    employee_id?: StringFieldUpdateOperationsInput | string
-    name?: StringFieldUpdateOperationsInput | string
-    email?: NullableStringFieldUpdateOperationsInput | string | null
-    phone?: NullableStringFieldUpdateOperationsInput | string | null
-    role?: NullableStringFieldUpdateOperationsInput | string | null
-    created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    businesses?: businessesUpdateOneRequiredWithoutBusiness_employeesNestedInput
-  }
-
-  export type business_employeesUncheckedUpdateInput = {
-    employee_id?: StringFieldUpdateOperationsInput | string
-    business_id?: StringFieldUpdateOperationsInput | string
-    name?: StringFieldUpdateOperationsInput | string
-    email?: NullableStringFieldUpdateOperationsInput | string | null
-    phone?: NullableStringFieldUpdateOperationsInput | string | null
-    role?: NullableStringFieldUpdateOperationsInput | string | null
-    created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  }
-
-  export type business_employeesCreateManyInput = {
-    employee_id?: string
-    business_id: string
-    name: string
-    email?: string | null
-    phone?: string | null
-    role?: string | null
-    created_at?: Date | string | null
-  }
-
-  export type business_employeesUpdateManyMutationInput = {
-    employee_id?: StringFieldUpdateOperationsInput | string
-    name?: StringFieldUpdateOperationsInput | string
-    email?: NullableStringFieldUpdateOperationsInput | string | null
-    phone?: NullableStringFieldUpdateOperationsInput | string | null
-    role?: NullableStringFieldUpdateOperationsInput | string | null
-    created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  }
-
-  export type business_employeesUncheckedUpdateManyInput = {
-    employee_id?: StringFieldUpdateOperationsInput | string
-    business_id?: StringFieldUpdateOperationsInput | string
-    name?: StringFieldUpdateOperationsInput | string
-    email?: NullableStringFieldUpdateOperationsInput | string | null
-    phone?: NullableStringFieldUpdateOperationsInput | string | null
-    role?: NullableStringFieldUpdateOperationsInput | string | null
-    created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
   export type business_employeesCreateInput = {
@@ -97231,8 +98213,8 @@ export namespace Prisma {
     gst_number?: string | null
     pan_number?: string | null
     registration_no?: string | null
-    businesses?: businessesCreateNestedManyWithoutTenantsInput
     business_workflows?: business_workflowsCreateNestedManyWithoutTenantsInput
+    businesses?: businessesCreateNestedManyWithoutTenantsInput
     carts?: cartsCreateNestedManyWithoutTenantsInput
     leads?: leadsCreateNestedManyWithoutTenantsInput
     notification_messages?: notification_messagesCreateNestedManyWithoutTenantsInput
@@ -97251,8 +98233,8 @@ export namespace Prisma {
     gst_number?: string | null
     pan_number?: string | null
     registration_no?: string | null
-    businesses?: businessesUncheckedCreateNestedManyWithoutTenantsInput
     business_workflows?: business_workflowsUncheckedCreateNestedManyWithoutTenantsInput
+    businesses?: businessesUncheckedCreateNestedManyWithoutTenantsInput
     carts?: cartsUncheckedCreateNestedManyWithoutTenantsInput
     leads?: leadsUncheckedCreateNestedManyWithoutTenantsInput
     notification_messages?: notification_messagesUncheckedCreateNestedManyWithoutTenantsInput
@@ -97271,8 +98253,8 @@ export namespace Prisma {
     gst_number?: NullableStringFieldUpdateOperationsInput | string | null
     pan_number?: NullableStringFieldUpdateOperationsInput | string | null
     registration_no?: NullableStringFieldUpdateOperationsInput | string | null
-    businesses?: businessesUpdateManyWithoutTenantsNestedInput
     business_workflows?: business_workflowsUpdateManyWithoutTenantsNestedInput
+    businesses?: businessesUpdateManyWithoutTenantsNestedInput
     carts?: cartsUpdateManyWithoutTenantsNestedInput
     leads?: leadsUpdateManyWithoutTenantsNestedInput
     notification_messages?: notification_messagesUpdateManyWithoutTenantsNestedInput
@@ -97291,8 +98273,8 @@ export namespace Prisma {
     gst_number?: NullableStringFieldUpdateOperationsInput | string | null
     pan_number?: NullableStringFieldUpdateOperationsInput | string | null
     registration_no?: NullableStringFieldUpdateOperationsInput | string | null
-    businesses?: businessesUncheckedUpdateManyWithoutTenantsNestedInput
     business_workflows?: business_workflowsUncheckedUpdateManyWithoutTenantsNestedInput
+    businesses?: businessesUncheckedUpdateManyWithoutTenantsNestedInput
     carts?: cartsUncheckedUpdateManyWithoutTenantsNestedInput
     leads?: leadsUncheckedUpdateManyWithoutTenantsNestedInput
     notification_messages?: notification_messagesUncheckedUpdateManyWithoutTenantsNestedInput
@@ -99217,12 +100199,7 @@ export namespace Prisma {
     product_variants?: product_variantsCreateNestedManyWithoutProductInput
     businesses: businessesCreateNestedOneWithoutProductsInput
     product_categories?: product_categoriesCreateNestedOneWithoutProductsInput
-<<<<<<< HEAD
-    stock_reservations?: stock_reservationsCreateNestedManyWithoutProductsInput
-=======
-    cart_reservations?: cart_reservationsCreateNestedManyWithoutProductsInput
     product_stock_alerts?: product_stock_alertsCreateNestedManyWithoutProductsInput
->>>>>>> 8a7b2acf9bf5e0bc0fe32c6a0d8aa6e2a9f871a8
   }
 
   export type productsUncheckedCreateInput = {
@@ -99272,12 +100249,7 @@ export namespace Prisma {
     product_images?: product_imagesUncheckedCreateNestedManyWithoutProductsInput
     product_reviews?: product_reviewsUncheckedCreateNestedManyWithoutProductInput
     product_variants?: product_variantsUncheckedCreateNestedManyWithoutProductInput
-<<<<<<< HEAD
-    stock_reservations?: stock_reservationsUncheckedCreateNestedManyWithoutProductsInput
-=======
-    cart_reservations?: cart_reservationsUncheckedCreateNestedManyWithoutProductsInput
     product_stock_alerts?: product_stock_alertsUncheckedCreateNestedManyWithoutProductsInput
->>>>>>> 8a7b2acf9bf5e0bc0fe32c6a0d8aa6e2a9f871a8
   }
 
   export type productsUpdateInput = {
@@ -99327,12 +100299,7 @@ export namespace Prisma {
     product_variants?: product_variantsUpdateManyWithoutProductNestedInput
     businesses?: businessesUpdateOneRequiredWithoutProductsNestedInput
     product_categories?: product_categoriesUpdateOneWithoutProductsNestedInput
-<<<<<<< HEAD
-    stock_reservations?: stock_reservationsUpdateManyWithoutProductsNestedInput
-=======
-    cart_reservations?: cart_reservationsUpdateManyWithoutProductsNestedInput
     product_stock_alerts?: product_stock_alertsUpdateManyWithoutProductsNestedInput
->>>>>>> 8a7b2acf9bf5e0bc0fe32c6a0d8aa6e2a9f871a8
   }
 
   export type productsUncheckedUpdateInput = {
@@ -99382,12 +100349,7 @@ export namespace Prisma {
     product_images?: product_imagesUncheckedUpdateManyWithoutProductsNestedInput
     product_reviews?: product_reviewsUncheckedUpdateManyWithoutProductNestedInput
     product_variants?: product_variantsUncheckedUpdateManyWithoutProductNestedInput
-<<<<<<< HEAD
-    stock_reservations?: stock_reservationsUncheckedUpdateManyWithoutProductsNestedInput
-=======
-    cart_reservations?: cart_reservationsUncheckedUpdateManyWithoutProductsNestedInput
     product_stock_alerts?: product_stock_alertsUncheckedUpdateManyWithoutProductsNestedInput
->>>>>>> 8a7b2acf9bf5e0bc0fe32c6a0d8aa6e2a9f871a8
   }
 
   export type productsCreateManyInput = {
@@ -103638,7 +104600,6 @@ export namespace Prisma {
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
-<<<<<<< HEAD
   export type hotel_pricing_recommendationsCreateInput = {
     id?: string
     hotel_id: string
@@ -103954,7 +104915,9 @@ export namespace Prisma {
     body?: StringFieldUpdateOperationsInput | string
     metadata?: NullableJsonNullValueInput | InputJsonValue
     read_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-=======
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type servicesCreateInput = {
     service_id?: string
     tenant_id: string
@@ -104199,6 +105162,7 @@ export namespace Prisma {
     created_at?: Date | string
     updated_at?: Date | string
     services: servicesCreateNestedOneWithoutService_bookingsInput
+    booking_guests?: booking_guestsCreateNestedOneWithoutService_bookingsInput
   }
 
   export type service_bookingsUncheckedCreateInput = {
@@ -104217,6 +105181,7 @@ export namespace Prisma {
     special_requests?: string | null
     created_at?: Date | string
     updated_at?: Date | string
+    booking_guests?: booking_guestsUncheckedCreateNestedOneWithoutService_bookingsInput
   }
 
   export type service_bookingsUpdateInput = {
@@ -104235,6 +105200,7 @@ export namespace Prisma {
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     services?: servicesUpdateOneRequiredWithoutService_bookingsNestedInput
+    booking_guests?: booking_guestsUpdateOneWithoutService_bookingsNestedInput
   }
 
   export type service_bookingsUncheckedUpdateInput = {
@@ -104253,6 +105219,7 @@ export namespace Prisma {
     special_requests?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    booking_guests?: booking_guestsUncheckedUpdateOneWithoutService_bookingsNestedInput
   }
 
   export type service_bookingsCreateManyInput = {
@@ -104306,6 +105273,89 @@ export namespace Prisma {
     special_requests?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type booking_guestsCreateInput = {
+    guest_id?: string
+    name: string
+    phone: string
+    age?: number | null
+    num_guests?: number
+    address?: string | null
+    pin_code?: string | null
+    created_at?: Date | string
+    service_bookings: service_bookingsCreateNestedOneWithoutBooking_guestsInput
+  }
+
+  export type booking_guestsUncheckedCreateInput = {
+    guest_id?: string
+    booking_id: string
+    name: string
+    phone: string
+    age?: number | null
+    num_guests?: number
+    address?: string | null
+    pin_code?: string | null
+    created_at?: Date | string
+  }
+
+  export type booking_guestsUpdateInput = {
+    guest_id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    phone?: StringFieldUpdateOperationsInput | string
+    age?: NullableIntFieldUpdateOperationsInput | number | null
+    num_guests?: IntFieldUpdateOperationsInput | number
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    pin_code?: NullableStringFieldUpdateOperationsInput | string | null
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    service_bookings?: service_bookingsUpdateOneRequiredWithoutBooking_guestsNestedInput
+  }
+
+  export type booking_guestsUncheckedUpdateInput = {
+    guest_id?: StringFieldUpdateOperationsInput | string
+    booking_id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    phone?: StringFieldUpdateOperationsInput | string
+    age?: NullableIntFieldUpdateOperationsInput | number | null
+    num_guests?: IntFieldUpdateOperationsInput | number
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    pin_code?: NullableStringFieldUpdateOperationsInput | string | null
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type booking_guestsCreateManyInput = {
+    guest_id?: string
+    booking_id: string
+    name: string
+    phone: string
+    age?: number | null
+    num_guests?: number
+    address?: string | null
+    pin_code?: string | null
+    created_at?: Date | string
+  }
+
+  export type booking_guestsUpdateManyMutationInput = {
+    guest_id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    phone?: StringFieldUpdateOperationsInput | string
+    age?: NullableIntFieldUpdateOperationsInput | number | null
+    num_guests?: IntFieldUpdateOperationsInput | number
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    pin_code?: NullableStringFieldUpdateOperationsInput | string | null
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type booking_guestsUncheckedUpdateManyInput = {
+    guest_id?: StringFieldUpdateOperationsInput | string
+    booking_id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    phone?: StringFieldUpdateOperationsInput | string
+    age?: NullableIntFieldUpdateOperationsInput | number | null
+    num_guests?: IntFieldUpdateOperationsInput | number
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    pin_code?: NullableStringFieldUpdateOperationsInput | string | null
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type pricing_rulesCreateInput = {
@@ -104795,7 +105845,6 @@ export namespace Prisma {
     slots_held?: IntFieldUpdateOperationsInput | number
     status?: StringFieldUpdateOperationsInput | string
     expires_at?: DateTimeFieldUpdateOperationsInput | Date | string
->>>>>>> 8a7b2acf9bf5e0bc0fe32c6a0d8aa6e2a9f871a8
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -105057,17 +106106,6 @@ export namespace Prisma {
     tenant_id?: SortOrder
     business_name?: SortOrder
     business_type?: SortOrder
-<<<<<<< HEAD
-=======
-    email?: SortOrder
-    phone?: SortOrder
-    website?: SortOrder
-    city?: SortOrder
-    address?: SortOrder
-    country?: SortOrder
-    gst_number?: SortOrder
-    pan_number?: SortOrder
->>>>>>> 8a7b2acf9bf5e0bc0fe32c6a0d8aa6e2a9f871a8
     whatsapp_number?: SortOrder
     created_at?: SortOrder
     updated_at?: SortOrder
@@ -105086,17 +106124,6 @@ export namespace Prisma {
     tenant_id?: SortOrder
     business_name?: SortOrder
     business_type?: SortOrder
-<<<<<<< HEAD
-=======
-    email?: SortOrder
-    phone?: SortOrder
-    website?: SortOrder
-    city?: SortOrder
-    address?: SortOrder
-    country?: SortOrder
-    gst_number?: SortOrder
-    pan_number?: SortOrder
->>>>>>> 8a7b2acf9bf5e0bc0fe32c6a0d8aa6e2a9f871a8
     whatsapp_number?: SortOrder
     created_at?: SortOrder
     updated_at?: SortOrder
@@ -105115,17 +106142,6 @@ export namespace Prisma {
     tenant_id?: SortOrder
     business_name?: SortOrder
     business_type?: SortOrder
-<<<<<<< HEAD
-=======
-    email?: SortOrder
-    phone?: SortOrder
-    website?: SortOrder
-    city?: SortOrder
-    address?: SortOrder
-    country?: SortOrder
-    gst_number?: SortOrder
-    pan_number?: SortOrder
->>>>>>> 8a7b2acf9bf5e0bc0fe32c6a0d8aa6e2a9f871a8
     whatsapp_number?: SortOrder
     created_at?: SortOrder
     updated_at?: SortOrder
@@ -105832,15 +106848,12 @@ export namespace Prisma {
     not?: NestedUuidNullableFilter<$PrismaModel> | string | null
   }
 
-<<<<<<< HEAD
   export type Cart_reservationsListRelationFilter = {
     every?: cart_reservationsWhereInput
     some?: cart_reservationsWhereInput
     none?: cart_reservationsWhereInput
   }
 
-=======
->>>>>>> 8a7b2acf9bf5e0bc0fe32c6a0d8aa6e2a9f871a8
   export type Lead_activitiesListRelationFilter = {
     every?: lead_activitiesWhereInput
     some?: lead_activitiesWhereInput
@@ -109163,7 +110176,6 @@ export namespace Prisma {
     estimated_cost?: SortOrder
   }
 
-<<<<<<< HEAD
   export type FloatFilter<$PrismaModel = never> = {
     equals?: number | FloatFieldRefInput<$PrismaModel>
     in?: number[] | ListFloatFieldRefInput<$PrismaModel>
@@ -109371,7 +110383,6 @@ export namespace Prisma {
     created_at?: SortOrder
   }
 
-=======
   export type Service_availabilityListRelationFilter = {
     every?: service_availabilityWhereInput
     some?: service_availabilityWhereInput
@@ -109542,6 +110553,11 @@ export namespace Prisma {
     effective_price?: SortOrder
   }
 
+  export type Booking_guestsNullableScalarRelationFilter = {
+    is?: booking_guestsWhereInput | null
+    isNot?: booking_guestsWhereInput | null
+  }
+
   export type service_bookingsCountOrderByAggregateInput = {
     booking_id?: SortOrder
     service_id?: SortOrder
@@ -109604,6 +110620,57 @@ export namespace Prisma {
   export type service_bookingsSumOrderByAggregateInput = {
     slots_booked?: SortOrder
     total_price?: SortOrder
+  }
+
+  export type Service_bookingsScalarRelationFilter = {
+    is?: service_bookingsWhereInput
+    isNot?: service_bookingsWhereInput
+  }
+
+  export type booking_guestsCountOrderByAggregateInput = {
+    guest_id?: SortOrder
+    booking_id?: SortOrder
+    name?: SortOrder
+    phone?: SortOrder
+    age?: SortOrder
+    num_guests?: SortOrder
+    address?: SortOrder
+    pin_code?: SortOrder
+    created_at?: SortOrder
+  }
+
+  export type booking_guestsAvgOrderByAggregateInput = {
+    age?: SortOrder
+    num_guests?: SortOrder
+  }
+
+  export type booking_guestsMaxOrderByAggregateInput = {
+    guest_id?: SortOrder
+    booking_id?: SortOrder
+    name?: SortOrder
+    phone?: SortOrder
+    age?: SortOrder
+    num_guests?: SortOrder
+    address?: SortOrder
+    pin_code?: SortOrder
+    created_at?: SortOrder
+  }
+
+  export type booking_guestsMinOrderByAggregateInput = {
+    guest_id?: SortOrder
+    booking_id?: SortOrder
+    name?: SortOrder
+    phone?: SortOrder
+    age?: SortOrder
+    num_guests?: SortOrder
+    address?: SortOrder
+    pin_code?: SortOrder
+    created_at?: SortOrder
+  }
+
+  export type booking_guestsSumOrderByAggregateInput = {
+    age?: SortOrder
+    num_guests?: SortOrder
   }
 
   export type pricing_rulesCountOrderByAggregateInput = {
@@ -109873,7 +110940,6 @@ export namespace Prisma {
     slots_held?: SortOrder
   }
 
->>>>>>> 8a7b2acf9bf5e0bc0fe32c6a0d8aa6e2a9f871a8
   export type business_employeesCreateNestedManyWithoutBusinessesInput = {
     create?: XOR<business_employeesCreateWithoutBusinessesInput, business_employeesUncheckedCreateWithoutBusinessesInput> | business_employeesCreateWithoutBusinessesInput[] | business_employeesUncheckedCreateWithoutBusinessesInput[]
     connectOrCreate?: business_employeesCreateOrConnectWithoutBusinessesInput | business_employeesCreateOrConnectWithoutBusinessesInput[]
@@ -109992,8 +111058,6 @@ export namespace Prisma {
     connect?: workflow_executionsWhereUniqueInput | workflow_executionsWhereUniqueInput[]
   }
 
-<<<<<<< HEAD
-=======
   export type servicesCreateNestedManyWithoutBusinessesInput = {
     create?: XOR<servicesCreateWithoutBusinessesInput, servicesUncheckedCreateWithoutBusinessesInput> | servicesCreateWithoutBusinessesInput[] | servicesUncheckedCreateWithoutBusinessesInput[]
     connectOrCreate?: servicesCreateOrConnectWithoutBusinessesInput | servicesCreateOrConnectWithoutBusinessesInput[]
@@ -110015,7 +111079,6 @@ export namespace Prisma {
     connect?: product_stock_alertsWhereUniqueInput | product_stock_alertsWhereUniqueInput[]
   }
 
->>>>>>> 8a7b2acf9bf5e0bc0fe32c6a0d8aa6e2a9f871a8
   export type business_employeesUncheckedCreateNestedManyWithoutBusinessesInput = {
     create?: XOR<business_employeesCreateWithoutBusinessesInput, business_employeesUncheckedCreateWithoutBusinessesInput> | business_employeesCreateWithoutBusinessesInput[] | business_employeesUncheckedCreateWithoutBusinessesInput[]
     connectOrCreate?: business_employeesCreateOrConnectWithoutBusinessesInput | business_employeesCreateOrConnectWithoutBusinessesInput[]
@@ -110393,8 +111456,6 @@ export namespace Prisma {
     deleteMany?: workflow_executionsScalarWhereInput | workflow_executionsScalarWhereInput[]
   }
 
-<<<<<<< HEAD
-=======
   export type servicesUpdateManyWithoutBusinessesNestedInput = {
     create?: XOR<servicesCreateWithoutBusinessesInput, servicesUncheckedCreateWithoutBusinessesInput> | servicesCreateWithoutBusinessesInput[] | servicesUncheckedCreateWithoutBusinessesInput[]
     connectOrCreate?: servicesCreateOrConnectWithoutBusinessesInput | servicesCreateOrConnectWithoutBusinessesInput[]
@@ -110437,7 +111498,6 @@ export namespace Prisma {
     deleteMany?: product_stock_alertsScalarWhereInput | product_stock_alertsScalarWhereInput[]
   }
 
->>>>>>> 8a7b2acf9bf5e0bc0fe32c6a0d8aa6e2a9f871a8
   export type business_employeesUncheckedUpdateManyWithoutBusinessesNestedInput = {
     create?: XOR<business_employeesCreateWithoutBusinessesInput, business_employeesUncheckedCreateWithoutBusinessesInput> | business_employeesCreateWithoutBusinessesInput[] | business_employeesUncheckedCreateWithoutBusinessesInput[]
     connectOrCreate?: business_employeesCreateOrConnectWithoutBusinessesInput | business_employeesCreateOrConnectWithoutBusinessesInput[]
@@ -110662,8 +111722,6 @@ export namespace Prisma {
     deleteMany?: workflow_executionsScalarWhereInput | workflow_executionsScalarWhereInput[]
   }
 
-<<<<<<< HEAD
-=======
   export type servicesUncheckedUpdateManyWithoutBusinessesNestedInput = {
     create?: XOR<servicesCreateWithoutBusinessesInput, servicesUncheckedCreateWithoutBusinessesInput> | servicesCreateWithoutBusinessesInput[] | servicesUncheckedCreateWithoutBusinessesInput[]
     connectOrCreate?: servicesCreateOrConnectWithoutBusinessesInput | servicesCreateOrConnectWithoutBusinessesInput[]
@@ -110706,7 +111764,6 @@ export namespace Prisma {
     deleteMany?: product_stock_alertsScalarWhereInput | product_stock_alertsScalarWhereInput[]
   }
 
->>>>>>> 8a7b2acf9bf5e0bc0fe32c6a0d8aa6e2a9f871a8
   export type businessesCreateNestedOneWithoutBusiness_employeesInput = {
     create?: XOR<businessesCreateWithoutBusiness_employeesInput, businessesUncheckedCreateWithoutBusiness_employeesInput>
     connectOrCreate?: businessesCreateOrConnectWithoutBusiness_employeesInput
@@ -110973,7 +112030,6 @@ export namespace Prisma {
     divide?: Decimal | DecimalJsLike | number | string
   }
 
-<<<<<<< HEAD
   export type business_workflowsCreateNestedManyWithoutTenantsInput = {
     create?: XOR<business_workflowsCreateWithoutTenantsInput, business_workflowsUncheckedCreateWithoutTenantsInput> | business_workflowsCreateWithoutTenantsInput[] | business_workflowsUncheckedCreateWithoutTenantsInput[]
     connectOrCreate?: business_workflowsCreateOrConnectWithoutTenantsInput | business_workflowsCreateOrConnectWithoutTenantsInput[]
@@ -110981,20 +112037,11 @@ export namespace Prisma {
     connect?: business_workflowsWhereUniqueInput | business_workflowsWhereUniqueInput[]
   }
 
-=======
->>>>>>> 8a7b2acf9bf5e0bc0fe32c6a0d8aa6e2a9f871a8
   export type businessesCreateNestedManyWithoutTenantsInput = {
     create?: XOR<businessesCreateWithoutTenantsInput, businessesUncheckedCreateWithoutTenantsInput> | businessesCreateWithoutTenantsInput[] | businessesUncheckedCreateWithoutTenantsInput[]
     connectOrCreate?: businessesCreateOrConnectWithoutTenantsInput | businessesCreateOrConnectWithoutTenantsInput[]
     createMany?: businessesCreateManyTenantsInputEnvelope
     connect?: businessesWhereUniqueInput | businessesWhereUniqueInput[]
-  }
-
-  export type business_workflowsCreateNestedManyWithoutTenantsInput = {
-    create?: XOR<business_workflowsCreateWithoutTenantsInput, business_workflowsUncheckedCreateWithoutTenantsInput> | business_workflowsCreateWithoutTenantsInput[] | business_workflowsUncheckedCreateWithoutTenantsInput[]
-    connectOrCreate?: business_workflowsCreateOrConnectWithoutTenantsInput | business_workflowsCreateOrConnectWithoutTenantsInput[]
-    createMany?: business_workflowsCreateManyTenantsInputEnvelope
-    connect?: business_workflowsWhereUniqueInput | business_workflowsWhereUniqueInput[]
   }
 
   export type cartsCreateNestedManyWithoutTenantsInput = {
@@ -111032,18 +112079,18 @@ export namespace Prisma {
     connect?: product_categoriesWhereUniqueInput | product_categoriesWhereUniqueInput[]
   }
 
-  export type businessesUncheckedCreateNestedManyWithoutTenantsInput = {
-    create?: XOR<businessesCreateWithoutTenantsInput, businessesUncheckedCreateWithoutTenantsInput> | businessesCreateWithoutTenantsInput[] | businessesUncheckedCreateWithoutTenantsInput[]
-    connectOrCreate?: businessesCreateOrConnectWithoutTenantsInput | businessesCreateOrConnectWithoutTenantsInput[]
-    createMany?: businessesCreateManyTenantsInputEnvelope
-    connect?: businessesWhereUniqueInput | businessesWhereUniqueInput[]
-  }
-
   export type business_workflowsUncheckedCreateNestedManyWithoutTenantsInput = {
     create?: XOR<business_workflowsCreateWithoutTenantsInput, business_workflowsUncheckedCreateWithoutTenantsInput> | business_workflowsCreateWithoutTenantsInput[] | business_workflowsUncheckedCreateWithoutTenantsInput[]
     connectOrCreate?: business_workflowsCreateOrConnectWithoutTenantsInput | business_workflowsCreateOrConnectWithoutTenantsInput[]
     createMany?: business_workflowsCreateManyTenantsInputEnvelope
     connect?: business_workflowsWhereUniqueInput | business_workflowsWhereUniqueInput[]
+  }
+
+  export type businessesUncheckedCreateNestedManyWithoutTenantsInput = {
+    create?: XOR<businessesCreateWithoutTenantsInput, businessesUncheckedCreateWithoutTenantsInput> | businessesCreateWithoutTenantsInput[] | businessesUncheckedCreateWithoutTenantsInput[]
+    connectOrCreate?: businessesCreateOrConnectWithoutTenantsInput | businessesCreateOrConnectWithoutTenantsInput[]
+    createMany?: businessesCreateManyTenantsInputEnvelope
+    connect?: businessesWhereUniqueInput | businessesWhereUniqueInput[]
   }
 
   export type cartsUncheckedCreateNestedManyWithoutTenantsInput = {
@@ -111081,20 +112128,6 @@ export namespace Prisma {
     connect?: product_categoriesWhereUniqueInput | product_categoriesWhereUniqueInput[]
   }
 
-  export type businessesUpdateManyWithoutTenantsNestedInput = {
-    create?: XOR<businessesCreateWithoutTenantsInput, businessesUncheckedCreateWithoutTenantsInput> | businessesCreateWithoutTenantsInput[] | businessesUncheckedCreateWithoutTenantsInput[]
-    connectOrCreate?: businessesCreateOrConnectWithoutTenantsInput | businessesCreateOrConnectWithoutTenantsInput[]
-    upsert?: businessesUpsertWithWhereUniqueWithoutTenantsInput | businessesUpsertWithWhereUniqueWithoutTenantsInput[]
-    createMany?: businessesCreateManyTenantsInputEnvelope
-    set?: businessesWhereUniqueInput | businessesWhereUniqueInput[]
-    disconnect?: businessesWhereUniqueInput | businessesWhereUniqueInput[]
-    delete?: businessesWhereUniqueInput | businessesWhereUniqueInput[]
-    connect?: businessesWhereUniqueInput | businessesWhereUniqueInput[]
-    update?: businessesUpdateWithWhereUniqueWithoutTenantsInput | businessesUpdateWithWhereUniqueWithoutTenantsInput[]
-    updateMany?: businessesUpdateManyWithWhereWithoutTenantsInput | businessesUpdateManyWithWhereWithoutTenantsInput[]
-    deleteMany?: businessesScalarWhereInput | businessesScalarWhereInput[]
-  }
-
   export type business_workflowsUpdateManyWithoutTenantsNestedInput = {
     create?: XOR<business_workflowsCreateWithoutTenantsInput, business_workflowsUncheckedCreateWithoutTenantsInput> | business_workflowsCreateWithoutTenantsInput[] | business_workflowsUncheckedCreateWithoutTenantsInput[]
     connectOrCreate?: business_workflowsCreateOrConnectWithoutTenantsInput | business_workflowsCreateOrConnectWithoutTenantsInput[]
@@ -111107,6 +112140,20 @@ export namespace Prisma {
     update?: business_workflowsUpdateWithWhereUniqueWithoutTenantsInput | business_workflowsUpdateWithWhereUniqueWithoutTenantsInput[]
     updateMany?: business_workflowsUpdateManyWithWhereWithoutTenantsInput | business_workflowsUpdateManyWithWhereWithoutTenantsInput[]
     deleteMany?: business_workflowsScalarWhereInput | business_workflowsScalarWhereInput[]
+  }
+
+  export type businessesUpdateManyWithoutTenantsNestedInput = {
+    create?: XOR<businessesCreateWithoutTenantsInput, businessesUncheckedCreateWithoutTenantsInput> | businessesCreateWithoutTenantsInput[] | businessesUncheckedCreateWithoutTenantsInput[]
+    connectOrCreate?: businessesCreateOrConnectWithoutTenantsInput | businessesCreateOrConnectWithoutTenantsInput[]
+    upsert?: businessesUpsertWithWhereUniqueWithoutTenantsInput | businessesUpsertWithWhereUniqueWithoutTenantsInput[]
+    createMany?: businessesCreateManyTenantsInputEnvelope
+    set?: businessesWhereUniqueInput | businessesWhereUniqueInput[]
+    disconnect?: businessesWhereUniqueInput | businessesWhereUniqueInput[]
+    delete?: businessesWhereUniqueInput | businessesWhereUniqueInput[]
+    connect?: businessesWhereUniqueInput | businessesWhereUniqueInput[]
+    update?: businessesUpdateWithWhereUniqueWithoutTenantsInput | businessesUpdateWithWhereUniqueWithoutTenantsInput[]
+    updateMany?: businessesUpdateManyWithWhereWithoutTenantsInput | businessesUpdateManyWithWhereWithoutTenantsInput[]
+    deleteMany?: businessesScalarWhereInput | businessesScalarWhereInput[]
   }
 
   export type cartsUpdateManyWithoutTenantsNestedInput = {
@@ -111179,20 +112226,6 @@ export namespace Prisma {
     deleteMany?: product_categoriesScalarWhereInput | product_categoriesScalarWhereInput[]
   }
 
-  export type businessesUncheckedUpdateManyWithoutTenantsNestedInput = {
-    create?: XOR<businessesCreateWithoutTenantsInput, businessesUncheckedCreateWithoutTenantsInput> | businessesCreateWithoutTenantsInput[] | businessesUncheckedCreateWithoutTenantsInput[]
-    connectOrCreate?: businessesCreateOrConnectWithoutTenantsInput | businessesCreateOrConnectWithoutTenantsInput[]
-    upsert?: businessesUpsertWithWhereUniqueWithoutTenantsInput | businessesUpsertWithWhereUniqueWithoutTenantsInput[]
-    createMany?: businessesCreateManyTenantsInputEnvelope
-    set?: businessesWhereUniqueInput | businessesWhereUniqueInput[]
-    disconnect?: businessesWhereUniqueInput | businessesWhereUniqueInput[]
-    delete?: businessesWhereUniqueInput | businessesWhereUniqueInput[]
-    connect?: businessesWhereUniqueInput | businessesWhereUniqueInput[]
-    update?: businessesUpdateWithWhereUniqueWithoutTenantsInput | businessesUpdateWithWhereUniqueWithoutTenantsInput[]
-    updateMany?: businessesUpdateManyWithWhereWithoutTenantsInput | businessesUpdateManyWithWhereWithoutTenantsInput[]
-    deleteMany?: businessesScalarWhereInput | businessesScalarWhereInput[]
-  }
-
   export type business_workflowsUncheckedUpdateManyWithoutTenantsNestedInput = {
     create?: XOR<business_workflowsCreateWithoutTenantsInput, business_workflowsUncheckedCreateWithoutTenantsInput> | business_workflowsCreateWithoutTenantsInput[] | business_workflowsUncheckedCreateWithoutTenantsInput[]
     connectOrCreate?: business_workflowsCreateOrConnectWithoutTenantsInput | business_workflowsCreateOrConnectWithoutTenantsInput[]
@@ -111205,6 +112238,20 @@ export namespace Prisma {
     update?: business_workflowsUpdateWithWhereUniqueWithoutTenantsInput | business_workflowsUpdateWithWhereUniqueWithoutTenantsInput[]
     updateMany?: business_workflowsUpdateManyWithWhereWithoutTenantsInput | business_workflowsUpdateManyWithWhereWithoutTenantsInput[]
     deleteMany?: business_workflowsScalarWhereInput | business_workflowsScalarWhereInput[]
+  }
+
+  export type businessesUncheckedUpdateManyWithoutTenantsNestedInput = {
+    create?: XOR<businessesCreateWithoutTenantsInput, businessesUncheckedCreateWithoutTenantsInput> | businessesCreateWithoutTenantsInput[] | businessesUncheckedCreateWithoutTenantsInput[]
+    connectOrCreate?: businessesCreateOrConnectWithoutTenantsInput | businessesCreateOrConnectWithoutTenantsInput[]
+    upsert?: businessesUpsertWithWhereUniqueWithoutTenantsInput | businessesUpsertWithWhereUniqueWithoutTenantsInput[]
+    createMany?: businessesCreateManyTenantsInputEnvelope
+    set?: businessesWhereUniqueInput | businessesWhereUniqueInput[]
+    disconnect?: businessesWhereUniqueInput | businessesWhereUniqueInput[]
+    delete?: businessesWhereUniqueInput | businessesWhereUniqueInput[]
+    connect?: businessesWhereUniqueInput | businessesWhereUniqueInput[]
+    update?: businessesUpdateWithWhereUniqueWithoutTenantsInput | businessesUpdateWithWhereUniqueWithoutTenantsInput[]
+    updateMany?: businessesUpdateManyWithWhereWithoutTenantsInput | businessesUpdateManyWithWhereWithoutTenantsInput[]
+    deleteMany?: businessesScalarWhereInput | businessesScalarWhereInput[]
   }
 
   export type cartsUncheckedUpdateManyWithoutTenantsNestedInput = {
@@ -112875,26 +113922,11 @@ export namespace Prisma {
     connect?: product_categoriesWhereUniqueInput
   }
 
-<<<<<<< HEAD
-  export type stock_reservationsCreateNestedManyWithoutProductsInput = {
-    create?: XOR<stock_reservationsCreateWithoutProductsInput, stock_reservationsUncheckedCreateWithoutProductsInput> | stock_reservationsCreateWithoutProductsInput[] | stock_reservationsUncheckedCreateWithoutProductsInput[]
-    connectOrCreate?: stock_reservationsCreateOrConnectWithoutProductsInput | stock_reservationsCreateOrConnectWithoutProductsInput[]
-    createMany?: stock_reservationsCreateManyProductsInputEnvelope
-    connect?: stock_reservationsWhereUniqueInput | stock_reservationsWhereUniqueInput[]
-=======
-  export type cart_reservationsCreateNestedManyWithoutProductsInput = {
-    create?: XOR<cart_reservationsCreateWithoutProductsInput, cart_reservationsUncheckedCreateWithoutProductsInput> | cart_reservationsCreateWithoutProductsInput[] | cart_reservationsUncheckedCreateWithoutProductsInput[]
-    connectOrCreate?: cart_reservationsCreateOrConnectWithoutProductsInput | cart_reservationsCreateOrConnectWithoutProductsInput[]
-    createMany?: cart_reservationsCreateManyProductsInputEnvelope
-    connect?: cart_reservationsWhereUniqueInput | cart_reservationsWhereUniqueInput[]
-  }
-
   export type product_stock_alertsCreateNestedManyWithoutProductsInput = {
     create?: XOR<product_stock_alertsCreateWithoutProductsInput, product_stock_alertsUncheckedCreateWithoutProductsInput> | product_stock_alertsCreateWithoutProductsInput[] | product_stock_alertsUncheckedCreateWithoutProductsInput[]
     connectOrCreate?: product_stock_alertsCreateOrConnectWithoutProductsInput | product_stock_alertsCreateOrConnectWithoutProductsInput[]
     createMany?: product_stock_alertsCreateManyProductsInputEnvelope
     connect?: product_stock_alertsWhereUniqueInput | product_stock_alertsWhereUniqueInput[]
->>>>>>> 8a7b2acf9bf5e0bc0fe32c6a0d8aa6e2a9f871a8
   }
 
   export type campaignsUncheckedCreateNestedManyWithoutProductsInput = {
@@ -112953,26 +113985,11 @@ export namespace Prisma {
     connect?: product_variantsWhereUniqueInput | product_variantsWhereUniqueInput[]
   }
 
-<<<<<<< HEAD
-  export type stock_reservationsUncheckedCreateNestedManyWithoutProductsInput = {
-    create?: XOR<stock_reservationsCreateWithoutProductsInput, stock_reservationsUncheckedCreateWithoutProductsInput> | stock_reservationsCreateWithoutProductsInput[] | stock_reservationsUncheckedCreateWithoutProductsInput[]
-    connectOrCreate?: stock_reservationsCreateOrConnectWithoutProductsInput | stock_reservationsCreateOrConnectWithoutProductsInput[]
-    createMany?: stock_reservationsCreateManyProductsInputEnvelope
-    connect?: stock_reservationsWhereUniqueInput | stock_reservationsWhereUniqueInput[]
-=======
-  export type cart_reservationsUncheckedCreateNestedManyWithoutProductsInput = {
-    create?: XOR<cart_reservationsCreateWithoutProductsInput, cart_reservationsUncheckedCreateWithoutProductsInput> | cart_reservationsCreateWithoutProductsInput[] | cart_reservationsUncheckedCreateWithoutProductsInput[]
-    connectOrCreate?: cart_reservationsCreateOrConnectWithoutProductsInput | cart_reservationsCreateOrConnectWithoutProductsInput[]
-    createMany?: cart_reservationsCreateManyProductsInputEnvelope
-    connect?: cart_reservationsWhereUniqueInput | cart_reservationsWhereUniqueInput[]
-  }
-
   export type product_stock_alertsUncheckedCreateNestedManyWithoutProductsInput = {
     create?: XOR<product_stock_alertsCreateWithoutProductsInput, product_stock_alertsUncheckedCreateWithoutProductsInput> | product_stock_alertsCreateWithoutProductsInput[] | product_stock_alertsUncheckedCreateWithoutProductsInput[]
     connectOrCreate?: product_stock_alertsCreateOrConnectWithoutProductsInput | product_stock_alertsCreateOrConnectWithoutProductsInput[]
     createMany?: product_stock_alertsCreateManyProductsInputEnvelope
     connect?: product_stock_alertsWhereUniqueInput | product_stock_alertsWhereUniqueInput[]
->>>>>>> 8a7b2acf9bf5e0bc0fe32c6a0d8aa6e2a9f871a8
   }
 
   export type campaignsUpdateManyWithoutProductsNestedInput = {
@@ -113105,34 +114122,6 @@ export namespace Prisma {
     update?: XOR<XOR<product_categoriesUpdateToOneWithWhereWithoutProductsInput, product_categoriesUpdateWithoutProductsInput>, product_categoriesUncheckedUpdateWithoutProductsInput>
   }
 
-<<<<<<< HEAD
-  export type stock_reservationsUpdateManyWithoutProductsNestedInput = {
-    create?: XOR<stock_reservationsCreateWithoutProductsInput, stock_reservationsUncheckedCreateWithoutProductsInput> | stock_reservationsCreateWithoutProductsInput[] | stock_reservationsUncheckedCreateWithoutProductsInput[]
-    connectOrCreate?: stock_reservationsCreateOrConnectWithoutProductsInput | stock_reservationsCreateOrConnectWithoutProductsInput[]
-    upsert?: stock_reservationsUpsertWithWhereUniqueWithoutProductsInput | stock_reservationsUpsertWithWhereUniqueWithoutProductsInput[]
-    createMany?: stock_reservationsCreateManyProductsInputEnvelope
-    set?: stock_reservationsWhereUniqueInput | stock_reservationsWhereUniqueInput[]
-    disconnect?: stock_reservationsWhereUniqueInput | stock_reservationsWhereUniqueInput[]
-    delete?: stock_reservationsWhereUniqueInput | stock_reservationsWhereUniqueInput[]
-    connect?: stock_reservationsWhereUniqueInput | stock_reservationsWhereUniqueInput[]
-    update?: stock_reservationsUpdateWithWhereUniqueWithoutProductsInput | stock_reservationsUpdateWithWhereUniqueWithoutProductsInput[]
-    updateMany?: stock_reservationsUpdateManyWithWhereWithoutProductsInput | stock_reservationsUpdateManyWithWhereWithoutProductsInput[]
-    deleteMany?: stock_reservationsScalarWhereInput | stock_reservationsScalarWhereInput[]
-=======
-  export type cart_reservationsUpdateManyWithoutProductsNestedInput = {
-    create?: XOR<cart_reservationsCreateWithoutProductsInput, cart_reservationsUncheckedCreateWithoutProductsInput> | cart_reservationsCreateWithoutProductsInput[] | cart_reservationsUncheckedCreateWithoutProductsInput[]
-    connectOrCreate?: cart_reservationsCreateOrConnectWithoutProductsInput | cart_reservationsCreateOrConnectWithoutProductsInput[]
-    upsert?: cart_reservationsUpsertWithWhereUniqueWithoutProductsInput | cart_reservationsUpsertWithWhereUniqueWithoutProductsInput[]
-    createMany?: cart_reservationsCreateManyProductsInputEnvelope
-    set?: cart_reservationsWhereUniqueInput | cart_reservationsWhereUniqueInput[]
-    disconnect?: cart_reservationsWhereUniqueInput | cart_reservationsWhereUniqueInput[]
-    delete?: cart_reservationsWhereUniqueInput | cart_reservationsWhereUniqueInput[]
-    connect?: cart_reservationsWhereUniqueInput | cart_reservationsWhereUniqueInput[]
-    update?: cart_reservationsUpdateWithWhereUniqueWithoutProductsInput | cart_reservationsUpdateWithWhereUniqueWithoutProductsInput[]
-    updateMany?: cart_reservationsUpdateManyWithWhereWithoutProductsInput | cart_reservationsUpdateManyWithWhereWithoutProductsInput[]
-    deleteMany?: cart_reservationsScalarWhereInput | cart_reservationsScalarWhereInput[]
-  }
-
   export type product_stock_alertsUpdateManyWithoutProductsNestedInput = {
     create?: XOR<product_stock_alertsCreateWithoutProductsInput, product_stock_alertsUncheckedCreateWithoutProductsInput> | product_stock_alertsCreateWithoutProductsInput[] | product_stock_alertsUncheckedCreateWithoutProductsInput[]
     connectOrCreate?: product_stock_alertsCreateOrConnectWithoutProductsInput | product_stock_alertsCreateOrConnectWithoutProductsInput[]
@@ -113145,7 +114134,6 @@ export namespace Prisma {
     update?: product_stock_alertsUpdateWithWhereUniqueWithoutProductsInput | product_stock_alertsUpdateWithWhereUniqueWithoutProductsInput[]
     updateMany?: product_stock_alertsUpdateManyWithWhereWithoutProductsInput | product_stock_alertsUpdateManyWithWhereWithoutProductsInput[]
     deleteMany?: product_stock_alertsScalarWhereInput | product_stock_alertsScalarWhereInput[]
->>>>>>> 8a7b2acf9bf5e0bc0fe32c6a0d8aa6e2a9f871a8
   }
 
   export type campaignsUncheckedUpdateManyWithoutProductsNestedInput = {
@@ -113260,34 +114248,6 @@ export namespace Prisma {
     deleteMany?: product_variantsScalarWhereInput | product_variantsScalarWhereInput[]
   }
 
-<<<<<<< HEAD
-  export type stock_reservationsUncheckedUpdateManyWithoutProductsNestedInput = {
-    create?: XOR<stock_reservationsCreateWithoutProductsInput, stock_reservationsUncheckedCreateWithoutProductsInput> | stock_reservationsCreateWithoutProductsInput[] | stock_reservationsUncheckedCreateWithoutProductsInput[]
-    connectOrCreate?: stock_reservationsCreateOrConnectWithoutProductsInput | stock_reservationsCreateOrConnectWithoutProductsInput[]
-    upsert?: stock_reservationsUpsertWithWhereUniqueWithoutProductsInput | stock_reservationsUpsertWithWhereUniqueWithoutProductsInput[]
-    createMany?: stock_reservationsCreateManyProductsInputEnvelope
-    set?: stock_reservationsWhereUniqueInput | stock_reservationsWhereUniqueInput[]
-    disconnect?: stock_reservationsWhereUniqueInput | stock_reservationsWhereUniqueInput[]
-    delete?: stock_reservationsWhereUniqueInput | stock_reservationsWhereUniqueInput[]
-    connect?: stock_reservationsWhereUniqueInput | stock_reservationsWhereUniqueInput[]
-    update?: stock_reservationsUpdateWithWhereUniqueWithoutProductsInput | stock_reservationsUpdateWithWhereUniqueWithoutProductsInput[]
-    updateMany?: stock_reservationsUpdateManyWithWhereWithoutProductsInput | stock_reservationsUpdateManyWithWhereWithoutProductsInput[]
-    deleteMany?: stock_reservationsScalarWhereInput | stock_reservationsScalarWhereInput[]
-=======
-  export type cart_reservationsUncheckedUpdateManyWithoutProductsNestedInput = {
-    create?: XOR<cart_reservationsCreateWithoutProductsInput, cart_reservationsUncheckedCreateWithoutProductsInput> | cart_reservationsCreateWithoutProductsInput[] | cart_reservationsUncheckedCreateWithoutProductsInput[]
-    connectOrCreate?: cart_reservationsCreateOrConnectWithoutProductsInput | cart_reservationsCreateOrConnectWithoutProductsInput[]
-    upsert?: cart_reservationsUpsertWithWhereUniqueWithoutProductsInput | cart_reservationsUpsertWithWhereUniqueWithoutProductsInput[]
-    createMany?: cart_reservationsCreateManyProductsInputEnvelope
-    set?: cart_reservationsWhereUniqueInput | cart_reservationsWhereUniqueInput[]
-    disconnect?: cart_reservationsWhereUniqueInput | cart_reservationsWhereUniqueInput[]
-    delete?: cart_reservationsWhereUniqueInput | cart_reservationsWhereUniqueInput[]
-    connect?: cart_reservationsWhereUniqueInput | cart_reservationsWhereUniqueInput[]
-    update?: cart_reservationsUpdateWithWhereUniqueWithoutProductsInput | cart_reservationsUpdateWithWhereUniqueWithoutProductsInput[]
-    updateMany?: cart_reservationsUpdateManyWithWhereWithoutProductsInput | cart_reservationsUpdateManyWithWhereWithoutProductsInput[]
-    deleteMany?: cart_reservationsScalarWhereInput | cart_reservationsScalarWhereInput[]
-  }
-
   export type product_stock_alertsUncheckedUpdateManyWithoutProductsNestedInput = {
     create?: XOR<product_stock_alertsCreateWithoutProductsInput, product_stock_alertsUncheckedCreateWithoutProductsInput> | product_stock_alertsCreateWithoutProductsInput[] | product_stock_alertsUncheckedCreateWithoutProductsInput[]
     connectOrCreate?: product_stock_alertsCreateOrConnectWithoutProductsInput | product_stock_alertsCreateOrConnectWithoutProductsInput[]
@@ -113300,7 +114260,6 @@ export namespace Prisma {
     update?: product_stock_alertsUpdateWithWhereUniqueWithoutProductsInput | product_stock_alertsUpdateWithWhereUniqueWithoutProductsInput[]
     updateMany?: product_stock_alertsUpdateManyWithWhereWithoutProductsInput | product_stock_alertsUpdateManyWithWhereWithoutProductsInput[]
     deleteMany?: product_stock_alertsScalarWhereInput | product_stock_alertsScalarWhereInput[]
->>>>>>> 8a7b2acf9bf5e0bc0fe32c6a0d8aa6e2a9f871a8
   }
 
   export type cart_itemsCreateNestedManyWithoutProduct_variantsInput = {
@@ -115078,7 +116037,6 @@ export namespace Prisma {
     deleteMany?: cart_itemsScalarWhereInput | cart_itemsScalarWhereInput[]
   }
 
-<<<<<<< HEAD
   export type hotel_booking_outcomesCreateNestedManyWithoutRecommendationInput = {
     create?: XOR<hotel_booking_outcomesCreateWithoutRecommendationInput, hotel_booking_outcomesUncheckedCreateWithoutRecommendationInput> | hotel_booking_outcomesCreateWithoutRecommendationInput[] | hotel_booking_outcomesUncheckedCreateWithoutRecommendationInput[]
     connectOrCreate?: hotel_booking_outcomesCreateOrConnectWithoutRecommendationInput | hotel_booking_outcomesCreateOrConnectWithoutRecommendationInput[]
@@ -115141,7 +116099,8 @@ export namespace Prisma {
     upsert?: hotel_pricing_recommendationsUpsertWithoutBooking_outcomesInput
     connect?: hotel_pricing_recommendationsWhereUniqueInput
     update?: XOR<XOR<hotel_pricing_recommendationsUpdateToOneWithWhereWithoutBooking_outcomesInput, hotel_pricing_recommendationsUpdateWithoutBooking_outcomesInput>, hotel_pricing_recommendationsUncheckedUpdateWithoutBooking_outcomesInput>
-=======
+  }
+
   export type businessesCreateNestedOneWithoutServicesInput = {
     create?: XOR<businessesCreateWithoutServicesInput, businessesUncheckedCreateWithoutServicesInput>
     connectOrCreate?: businessesCreateOrConnectWithoutServicesInput
@@ -115386,12 +116345,58 @@ export namespace Prisma {
     connect?: servicesWhereUniqueInput
   }
 
+  export type booking_guestsCreateNestedOneWithoutService_bookingsInput = {
+    create?: XOR<booking_guestsCreateWithoutService_bookingsInput, booking_guestsUncheckedCreateWithoutService_bookingsInput>
+    connectOrCreate?: booking_guestsCreateOrConnectWithoutService_bookingsInput
+    connect?: booking_guestsWhereUniqueInput
+  }
+
+  export type booking_guestsUncheckedCreateNestedOneWithoutService_bookingsInput = {
+    create?: XOR<booking_guestsCreateWithoutService_bookingsInput, booking_guestsUncheckedCreateWithoutService_bookingsInput>
+    connectOrCreate?: booking_guestsCreateOrConnectWithoutService_bookingsInput
+    connect?: booking_guestsWhereUniqueInput
+  }
+
   export type servicesUpdateOneRequiredWithoutService_bookingsNestedInput = {
     create?: XOR<servicesCreateWithoutService_bookingsInput, servicesUncheckedCreateWithoutService_bookingsInput>
     connectOrCreate?: servicesCreateOrConnectWithoutService_bookingsInput
     upsert?: servicesUpsertWithoutService_bookingsInput
     connect?: servicesWhereUniqueInput
     update?: XOR<XOR<servicesUpdateToOneWithWhereWithoutService_bookingsInput, servicesUpdateWithoutService_bookingsInput>, servicesUncheckedUpdateWithoutService_bookingsInput>
+  }
+
+  export type booking_guestsUpdateOneWithoutService_bookingsNestedInput = {
+    create?: XOR<booking_guestsCreateWithoutService_bookingsInput, booking_guestsUncheckedCreateWithoutService_bookingsInput>
+    connectOrCreate?: booking_guestsCreateOrConnectWithoutService_bookingsInput
+    upsert?: booking_guestsUpsertWithoutService_bookingsInput
+    disconnect?: booking_guestsWhereInput | boolean
+    delete?: booking_guestsWhereInput | boolean
+    connect?: booking_guestsWhereUniqueInput
+    update?: XOR<XOR<booking_guestsUpdateToOneWithWhereWithoutService_bookingsInput, booking_guestsUpdateWithoutService_bookingsInput>, booking_guestsUncheckedUpdateWithoutService_bookingsInput>
+  }
+
+  export type booking_guestsUncheckedUpdateOneWithoutService_bookingsNestedInput = {
+    create?: XOR<booking_guestsCreateWithoutService_bookingsInput, booking_guestsUncheckedCreateWithoutService_bookingsInput>
+    connectOrCreate?: booking_guestsCreateOrConnectWithoutService_bookingsInput
+    upsert?: booking_guestsUpsertWithoutService_bookingsInput
+    disconnect?: booking_guestsWhereInput | boolean
+    delete?: booking_guestsWhereInput | boolean
+    connect?: booking_guestsWhereUniqueInput
+    update?: XOR<XOR<booking_guestsUpdateToOneWithWhereWithoutService_bookingsInput, booking_guestsUpdateWithoutService_bookingsInput>, booking_guestsUncheckedUpdateWithoutService_bookingsInput>
+  }
+
+  export type service_bookingsCreateNestedOneWithoutBooking_guestsInput = {
+    create?: XOR<service_bookingsCreateWithoutBooking_guestsInput, service_bookingsUncheckedCreateWithoutBooking_guestsInput>
+    connectOrCreate?: service_bookingsCreateOrConnectWithoutBooking_guestsInput
+    connect?: service_bookingsWhereUniqueInput
+  }
+
+  export type service_bookingsUpdateOneRequiredWithoutBooking_guestsNestedInput = {
+    create?: XOR<service_bookingsCreateWithoutBooking_guestsInput, service_bookingsUncheckedCreateWithoutBooking_guestsInput>
+    connectOrCreate?: service_bookingsCreateOrConnectWithoutBooking_guestsInput
+    upsert?: service_bookingsUpsertWithoutBooking_guestsInput
+    connect?: service_bookingsWhereUniqueInput
+    update?: XOR<XOR<service_bookingsUpdateToOneWithWhereWithoutBooking_guestsInput, service_bookingsUpdateWithoutBooking_guestsInput>, service_bookingsUncheckedUpdateWithoutBooking_guestsInput>
   }
 
   export type businessesCreateNestedOneWithoutPricing_rulesInput = {
@@ -115492,7 +116497,6 @@ export namespace Prisma {
     upsert?: servicesUpsertWithoutService_holdsInput
     connect?: servicesWhereUniqueInput
     update?: XOR<XOR<servicesUpdateToOneWithWhereWithoutService_holdsInput, servicesUpdateWithoutService_holdsInput>, servicesUncheckedUpdateWithoutService_holdsInput>
->>>>>>> 8a7b2acf9bf5e0bc0fe32c6a0d8aa6e2a9f871a8
   }
 
   export type NestedUuidFilter<$PrismaModel = never> = {
@@ -115886,7 +116890,6 @@ export namespace Prisma {
     not?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
   }
 
-<<<<<<< HEAD
   export type NestedFloatWithAggregatesFilter<$PrismaModel = never> = {
     equals?: number | FloatFieldRefInput<$PrismaModel>
     in?: number[] | ListFloatFieldRefInput<$PrismaModel>
@@ -115903,8 +116906,6 @@ export namespace Prisma {
     _max?: NestedFloatFilter<$PrismaModel>
   }
 
-=======
->>>>>>> 8a7b2acf9bf5e0bc0fe32c6a0d8aa6e2a9f871a8
   export type business_employeesCreateWithoutBusinessesInput = {
     employee_id?: string
     name: string
@@ -116650,12 +117651,7 @@ export namespace Prisma {
     product_reviews?: product_reviewsCreateNestedManyWithoutProductInput
     product_variants?: product_variantsCreateNestedManyWithoutProductInput
     product_categories?: product_categoriesCreateNestedOneWithoutProductsInput
-<<<<<<< HEAD
-    stock_reservations?: stock_reservationsCreateNestedManyWithoutProductsInput
-=======
-    cart_reservations?: cart_reservationsCreateNestedManyWithoutProductsInput
     product_stock_alerts?: product_stock_alertsCreateNestedManyWithoutProductsInput
->>>>>>> 8a7b2acf9bf5e0bc0fe32c6a0d8aa6e2a9f871a8
   }
 
   export type productsUncheckedCreateWithoutBusinessesInput = {
@@ -116704,12 +117700,7 @@ export namespace Prisma {
     product_images?: product_imagesUncheckedCreateNestedManyWithoutProductsInput
     product_reviews?: product_reviewsUncheckedCreateNestedManyWithoutProductInput
     product_variants?: product_variantsUncheckedCreateNestedManyWithoutProductInput
-<<<<<<< HEAD
-    stock_reservations?: stock_reservationsUncheckedCreateNestedManyWithoutProductsInput
-=======
-    cart_reservations?: cart_reservationsUncheckedCreateNestedManyWithoutProductsInput
     product_stock_alerts?: product_stock_alertsUncheckedCreateNestedManyWithoutProductsInput
->>>>>>> 8a7b2acf9bf5e0bc0fe32c6a0d8aa6e2a9f871a8
   }
 
   export type productsCreateOrConnectWithoutBusinessesInput = {
@@ -116932,8 +117923,6 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
-<<<<<<< HEAD
-=======
   export type servicesCreateWithoutBusinessesInput = {
     service_id?: string
     tenant_id: string
@@ -117060,7 +118049,6 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
->>>>>>> 8a7b2acf9bf5e0bc0fe32c6a0d8aa6e2a9f871a8
   export type business_employeesUpsertWithWhereUniqueWithoutBusinessesInput = {
     where: business_employeesWhereUniqueInput
     update: XOR<business_employeesUpdateWithoutBusinessesInput, business_employeesUncheckedUpdateWithoutBusinessesInput>
@@ -117794,8 +118782,6 @@ export namespace Prisma {
     chat_id?: StringNullableFilter<"workflow_executions"> | string | null
   }
 
-<<<<<<< HEAD
-=======
   export type servicesUpsertWithWhereUniqueWithoutBusinessesInput = {
     where: servicesWhereUniqueInput
     update: XOR<servicesUpdateWithoutBusinessesInput, servicesUncheckedUpdateWithoutBusinessesInput>
@@ -117899,17 +118885,13 @@ export namespace Prisma {
     updated_at?: DateTimeFilter<"product_stock_alerts"> | Date | string
   }
 
->>>>>>> 8a7b2acf9bf5e0bc0fe32c6a0d8aa6e2a9f871a8
   export type businessesCreateWithoutBusiness_employeesInput = {
     business_id?: string
     business_name: string
     business_type?: string | null
-<<<<<<< HEAD
     whatsapp_number?: string | null
     created_at?: Date | string | null
     updated_at?: Date | string | null
-=======
->>>>>>> 8a7b2acf9bf5e0bc0fe32c6a0d8aa6e2a9f871a8
     email?: string | null
     phone?: string | null
     website?: string | null
@@ -117918,19 +118900,9 @@ export namespace Prisma {
     country?: string | null
     gst_number?: string | null
     pan_number?: string | null
-<<<<<<< HEAD
     business_workflows?: business_workflowsCreateNestedManyWithoutBusinessesInput
     tenants: tenantsCreateNestedOneWithoutBusinessesInput
     carts?: cartsCreateNestedManyWithoutBusinessesInput
-    inventory_levels?: inventory_levelsCreateNestedManyWithoutBusinessesInput
-=======
-    whatsapp_number?: string | null
-    created_at?: Date | string | null
-    updated_at?: Date | string | null
-    business_workflows?: business_workflowsCreateNestedManyWithoutBusinessesInput
-    tenants: tenantsCreateNestedOneWithoutBusinessesInput
-    carts?: cartsCreateNestedManyWithoutBusinessesInput
->>>>>>> 8a7b2acf9bf5e0bc0fe32c6a0d8aa6e2a9f871a8
     leads?: leadsCreateNestedManyWithoutBusinessesInput
     notification_messages?: notification_messagesCreateNestedManyWithoutBusinessesInput
     notification_preferences?: notification_preferencesCreateNestedManyWithoutBusinessesInput
@@ -117941,23 +118913,12 @@ export namespace Prisma {
     product_images?: product_imagesCreateNestedManyWithoutBusinessesInput
     products?: productsCreateNestedManyWithoutBusinessesInput
     social_accounts?: social_accountsCreateNestedManyWithoutBusinessesInput
-<<<<<<< HEAD
-    stock_alerts?: stock_alertsCreateNestedManyWithoutBusinessesInput
-    stock_counts?: stock_countsCreateNestedManyWithoutBusinessesInput
-    stock_movements?: stock_movementsCreateNestedManyWithoutBusinessesInput
-    stock_transfers?: stock_transfersCreateNestedManyWithoutBusinessesInput
-    tags?: tagsCreateNestedManyWithoutBusinessesInput
-    users?: usersCreateNestedManyWithoutBusinessesInput
-    warehouses?: warehousesCreateNestedManyWithoutBusinessesInput
-    workflow_executions?: workflow_executionsCreateNestedManyWithoutBusinessesInput
-=======
     tags?: tagsCreateNestedManyWithoutBusinessesInput
     users?: usersCreateNestedManyWithoutBusinessesInput
     workflow_executions?: workflow_executionsCreateNestedManyWithoutBusinessesInput
     services?: servicesCreateNestedManyWithoutBusinessesInput
     pricing_rules?: pricing_rulesCreateNestedManyWithoutBusinessesInput
     product_stock_alerts?: product_stock_alertsCreateNestedManyWithoutBusinessesInput
->>>>>>> 8a7b2acf9bf5e0bc0fe32c6a0d8aa6e2a9f871a8
   }
 
   export type businessesUncheckedCreateWithoutBusiness_employeesInput = {
@@ -117965,12 +118926,9 @@ export namespace Prisma {
     tenant_id: string
     business_name: string
     business_type?: string | null
-<<<<<<< HEAD
     whatsapp_number?: string | null
     created_at?: Date | string | null
     updated_at?: Date | string | null
-=======
->>>>>>> 8a7b2acf9bf5e0bc0fe32c6a0d8aa6e2a9f871a8
     email?: string | null
     phone?: string | null
     website?: string | null
@@ -117979,17 +118937,8 @@ export namespace Prisma {
     country?: string | null
     gst_number?: string | null
     pan_number?: string | null
-<<<<<<< HEAD
     business_workflows?: business_workflowsUncheckedCreateNestedManyWithoutBusinessesInput
     carts?: cartsUncheckedCreateNestedManyWithoutBusinessesInput
-    inventory_levels?: inventory_levelsUncheckedCreateNestedManyWithoutBusinessesInput
-=======
-    whatsapp_number?: string | null
-    created_at?: Date | string | null
-    updated_at?: Date | string | null
-    business_workflows?: business_workflowsUncheckedCreateNestedManyWithoutBusinessesInput
-    carts?: cartsUncheckedCreateNestedManyWithoutBusinessesInput
->>>>>>> 8a7b2acf9bf5e0bc0fe32c6a0d8aa6e2a9f871a8
     leads?: leadsUncheckedCreateNestedManyWithoutBusinessesInput
     notification_messages?: notification_messagesUncheckedCreateNestedManyWithoutBusinessesInput
     notification_preferences?: notification_preferencesUncheckedCreateNestedManyWithoutBusinessesInput
@@ -118000,23 +118949,12 @@ export namespace Prisma {
     product_images?: product_imagesUncheckedCreateNestedManyWithoutBusinessesInput
     products?: productsUncheckedCreateNestedManyWithoutBusinessesInput
     social_accounts?: social_accountsUncheckedCreateNestedManyWithoutBusinessesInput
-<<<<<<< HEAD
-    stock_alerts?: stock_alertsUncheckedCreateNestedManyWithoutBusinessesInput
-    stock_counts?: stock_countsUncheckedCreateNestedManyWithoutBusinessesInput
-    stock_movements?: stock_movementsUncheckedCreateNestedManyWithoutBusinessesInput
-    stock_transfers?: stock_transfersUncheckedCreateNestedManyWithoutBusinessesInput
-    tags?: tagsUncheckedCreateNestedManyWithoutBusinessesInput
-    users?: usersUncheckedCreateNestedManyWithoutBusinessesInput
-    warehouses?: warehousesUncheckedCreateNestedManyWithoutBusinessesInput
-    workflow_executions?: workflow_executionsUncheckedCreateNestedManyWithoutBusinessesInput
-=======
     tags?: tagsUncheckedCreateNestedManyWithoutBusinessesInput
     users?: usersUncheckedCreateNestedManyWithoutBusinessesInput
     workflow_executions?: workflow_executionsUncheckedCreateNestedManyWithoutBusinessesInput
     services?: servicesUncheckedCreateNestedManyWithoutBusinessesInput
     pricing_rules?: pricing_rulesUncheckedCreateNestedManyWithoutBusinessesInput
     product_stock_alerts?: product_stock_alertsUncheckedCreateNestedManyWithoutBusinessesInput
->>>>>>> 8a7b2acf9bf5e0bc0fe32c6a0d8aa6e2a9f871a8
   }
 
   export type businessesCreateOrConnectWithoutBusiness_employeesInput = {
@@ -118039,12 +118977,9 @@ export namespace Prisma {
     business_id?: StringFieldUpdateOperationsInput | string
     business_name?: StringFieldUpdateOperationsInput | string
     business_type?: NullableStringFieldUpdateOperationsInput | string | null
-<<<<<<< HEAD
     whatsapp_number?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-=======
->>>>>>> 8a7b2acf9bf5e0bc0fe32c6a0d8aa6e2a9f871a8
     email?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     website?: NullableStringFieldUpdateOperationsInput | string | null
@@ -118053,19 +118988,9 @@ export namespace Prisma {
     country?: NullableStringFieldUpdateOperationsInput | string | null
     gst_number?: NullableStringFieldUpdateOperationsInput | string | null
     pan_number?: NullableStringFieldUpdateOperationsInput | string | null
-<<<<<<< HEAD
     business_workflows?: business_workflowsUpdateManyWithoutBusinessesNestedInput
     tenants?: tenantsUpdateOneRequiredWithoutBusinessesNestedInput
     carts?: cartsUpdateManyWithoutBusinessesNestedInput
-    inventory_levels?: inventory_levelsUpdateManyWithoutBusinessesNestedInput
-=======
-    whatsapp_number?: NullableStringFieldUpdateOperationsInput | string | null
-    created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    business_workflows?: business_workflowsUpdateManyWithoutBusinessesNestedInput
-    tenants?: tenantsUpdateOneRequiredWithoutBusinessesNestedInput
-    carts?: cartsUpdateManyWithoutBusinessesNestedInput
->>>>>>> 8a7b2acf9bf5e0bc0fe32c6a0d8aa6e2a9f871a8
     leads?: leadsUpdateManyWithoutBusinessesNestedInput
     notification_messages?: notification_messagesUpdateManyWithoutBusinessesNestedInput
     notification_preferences?: notification_preferencesUpdateManyWithoutBusinessesNestedInput
@@ -118076,23 +119001,12 @@ export namespace Prisma {
     product_images?: product_imagesUpdateManyWithoutBusinessesNestedInput
     products?: productsUpdateManyWithoutBusinessesNestedInput
     social_accounts?: social_accountsUpdateManyWithoutBusinessesNestedInput
-<<<<<<< HEAD
-    stock_alerts?: stock_alertsUpdateManyWithoutBusinessesNestedInput
-    stock_counts?: stock_countsUpdateManyWithoutBusinessesNestedInput
-    stock_movements?: stock_movementsUpdateManyWithoutBusinessesNestedInput
-    stock_transfers?: stock_transfersUpdateManyWithoutBusinessesNestedInput
-    tags?: tagsUpdateManyWithoutBusinessesNestedInput
-    users?: usersUpdateManyWithoutBusinessesNestedInput
-    warehouses?: warehousesUpdateManyWithoutBusinessesNestedInput
-    workflow_executions?: workflow_executionsUpdateManyWithoutBusinessesNestedInput
-=======
     tags?: tagsUpdateManyWithoutBusinessesNestedInput
     users?: usersUpdateManyWithoutBusinessesNestedInput
     workflow_executions?: workflow_executionsUpdateManyWithoutBusinessesNestedInput
     services?: servicesUpdateManyWithoutBusinessesNestedInput
     pricing_rules?: pricing_rulesUpdateManyWithoutBusinessesNestedInput
     product_stock_alerts?: product_stock_alertsUpdateManyWithoutBusinessesNestedInput
->>>>>>> 8a7b2acf9bf5e0bc0fe32c6a0d8aa6e2a9f871a8
   }
 
   export type businessesUncheckedUpdateWithoutBusiness_employeesInput = {
@@ -118100,12 +119014,9 @@ export namespace Prisma {
     tenant_id?: StringFieldUpdateOperationsInput | string
     business_name?: StringFieldUpdateOperationsInput | string
     business_type?: NullableStringFieldUpdateOperationsInput | string | null
-<<<<<<< HEAD
     whatsapp_number?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-=======
->>>>>>> 8a7b2acf9bf5e0bc0fe32c6a0d8aa6e2a9f871a8
     email?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     website?: NullableStringFieldUpdateOperationsInput | string | null
@@ -118114,17 +119025,8 @@ export namespace Prisma {
     country?: NullableStringFieldUpdateOperationsInput | string | null
     gst_number?: NullableStringFieldUpdateOperationsInput | string | null
     pan_number?: NullableStringFieldUpdateOperationsInput | string | null
-<<<<<<< HEAD
     business_workflows?: business_workflowsUncheckedUpdateManyWithoutBusinessesNestedInput
     carts?: cartsUncheckedUpdateManyWithoutBusinessesNestedInput
-    inventory_levels?: inventory_levelsUncheckedUpdateManyWithoutBusinessesNestedInput
-=======
-    whatsapp_number?: NullableStringFieldUpdateOperationsInput | string | null
-    created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    business_workflows?: business_workflowsUncheckedUpdateManyWithoutBusinessesNestedInput
-    carts?: cartsUncheckedUpdateManyWithoutBusinessesNestedInput
->>>>>>> 8a7b2acf9bf5e0bc0fe32c6a0d8aa6e2a9f871a8
     leads?: leadsUncheckedUpdateManyWithoutBusinessesNestedInput
     notification_messages?: notification_messagesUncheckedUpdateManyWithoutBusinessesNestedInput
     notification_preferences?: notification_preferencesUncheckedUpdateManyWithoutBusinessesNestedInput
@@ -118135,23 +119037,12 @@ export namespace Prisma {
     product_images?: product_imagesUncheckedUpdateManyWithoutBusinessesNestedInput
     products?: productsUncheckedUpdateManyWithoutBusinessesNestedInput
     social_accounts?: social_accountsUncheckedUpdateManyWithoutBusinessesNestedInput
-<<<<<<< HEAD
-    stock_alerts?: stock_alertsUncheckedUpdateManyWithoutBusinessesNestedInput
-    stock_counts?: stock_countsUncheckedUpdateManyWithoutBusinessesNestedInput
-    stock_movements?: stock_movementsUncheckedUpdateManyWithoutBusinessesNestedInput
-    stock_transfers?: stock_transfersUncheckedUpdateManyWithoutBusinessesNestedInput
-    tags?: tagsUncheckedUpdateManyWithoutBusinessesNestedInput
-    users?: usersUncheckedUpdateManyWithoutBusinessesNestedInput
-    warehouses?: warehousesUncheckedUpdateManyWithoutBusinessesNestedInput
-    workflow_executions?: workflow_executionsUncheckedUpdateManyWithoutBusinessesNestedInput
-=======
     tags?: tagsUncheckedUpdateManyWithoutBusinessesNestedInput
     users?: usersUncheckedUpdateManyWithoutBusinessesNestedInput
     workflow_executions?: workflow_executionsUncheckedUpdateManyWithoutBusinessesNestedInput
     services?: servicesUncheckedUpdateManyWithoutBusinessesNestedInput
     pricing_rules?: pricing_rulesUncheckedUpdateManyWithoutBusinessesNestedInput
     product_stock_alerts?: product_stock_alertsUncheckedUpdateManyWithoutBusinessesNestedInput
->>>>>>> 8a7b2acf9bf5e0bc0fe32c6a0d8aa6e2a9f871a8
   }
 
   export type notificationsCreateWithoutIntentsInput = {
@@ -118633,18 +119524,9 @@ export namespace Prisma {
     business_id?: string
     business_name: string
     business_type?: string | null
-    email?: string | null
-    phone?: string | null
-    website?: string | null
-    city?: string | null
-    address?: string | null
-    country?: string | null
-    gst_number?: string | null
-    pan_number?: string | null
     whatsapp_number?: string | null
     created_at?: Date | string | null
     updated_at?: Date | string | null
-<<<<<<< HEAD
     email?: string | null
     phone?: string | null
     website?: string | null
@@ -118653,8 +119535,6 @@ export namespace Prisma {
     country?: string | null
     gst_number?: string | null
     pan_number?: string | null
-=======
->>>>>>> 8a7b2acf9bf5e0bc0fe32c6a0d8aa6e2a9f871a8
     business_employees?: business_employeesCreateNestedManyWithoutBusinessesInput
     business_workflows?: business_workflowsCreateNestedManyWithoutBusinessesInput
     tenants: tenantsCreateNestedOneWithoutBusinessesInput
@@ -118681,7 +119561,6 @@ export namespace Prisma {
     tenant_id: string
     business_name: string
     business_type?: string | null
-<<<<<<< HEAD
     whatsapp_number?: string | null
     created_at?: Date | string | null
     updated_at?: Date | string | null
@@ -118693,19 +119572,6 @@ export namespace Prisma {
     country?: string | null
     gst_number?: string | null
     pan_number?: string | null
-=======
-    email?: string | null
-    phone?: string | null
-    website?: string | null
-    city?: string | null
-    address?: string | null
-    country?: string | null
-    gst_number?: string | null
-    pan_number?: string | null
-    whatsapp_number?: string | null
-    created_at?: Date | string | null
-    updated_at?: Date | string | null
->>>>>>> 8a7b2acf9bf5e0bc0fe32c6a0d8aa6e2a9f871a8
     business_employees?: business_employeesUncheckedCreateNestedManyWithoutBusinessesInput
     business_workflows?: business_workflowsUncheckedCreateNestedManyWithoutBusinessesInput
     carts?: cartsUncheckedCreateNestedManyWithoutBusinessesInput
@@ -118782,18 +119648,9 @@ export namespace Prisma {
     business_id?: StringFieldUpdateOperationsInput | string
     business_name?: StringFieldUpdateOperationsInput | string
     business_type?: NullableStringFieldUpdateOperationsInput | string | null
-    email?: NullableStringFieldUpdateOperationsInput | string | null
-    phone?: NullableStringFieldUpdateOperationsInput | string | null
-    website?: NullableStringFieldUpdateOperationsInput | string | null
-    city?: NullableStringFieldUpdateOperationsInput | string | null
-    address?: NullableStringFieldUpdateOperationsInput | string | null
-    country?: NullableStringFieldUpdateOperationsInput | string | null
-    gst_number?: NullableStringFieldUpdateOperationsInput | string | null
-    pan_number?: NullableStringFieldUpdateOperationsInput | string | null
     whatsapp_number?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-<<<<<<< HEAD
     email?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     website?: NullableStringFieldUpdateOperationsInput | string | null
@@ -118802,8 +119659,6 @@ export namespace Prisma {
     country?: NullableStringFieldUpdateOperationsInput | string | null
     gst_number?: NullableStringFieldUpdateOperationsInput | string | null
     pan_number?: NullableStringFieldUpdateOperationsInput | string | null
-=======
->>>>>>> 8a7b2acf9bf5e0bc0fe32c6a0d8aa6e2a9f871a8
     business_employees?: business_employeesUpdateManyWithoutBusinessesNestedInput
     business_workflows?: business_workflowsUpdateManyWithoutBusinessesNestedInput
     tenants?: tenantsUpdateOneRequiredWithoutBusinessesNestedInput
@@ -118830,7 +119685,6 @@ export namespace Prisma {
     tenant_id?: StringFieldUpdateOperationsInput | string
     business_name?: StringFieldUpdateOperationsInput | string
     business_type?: NullableStringFieldUpdateOperationsInput | string | null
-<<<<<<< HEAD
     whatsapp_number?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -118842,19 +119696,6 @@ export namespace Prisma {
     country?: NullableStringFieldUpdateOperationsInput | string | null
     gst_number?: NullableStringFieldUpdateOperationsInput | string | null
     pan_number?: NullableStringFieldUpdateOperationsInput | string | null
-=======
-    email?: NullableStringFieldUpdateOperationsInput | string | null
-    phone?: NullableStringFieldUpdateOperationsInput | string | null
-    website?: NullableStringFieldUpdateOperationsInput | string | null
-    city?: NullableStringFieldUpdateOperationsInput | string | null
-    address?: NullableStringFieldUpdateOperationsInput | string | null
-    country?: NullableStringFieldUpdateOperationsInput | string | null
-    gst_number?: NullableStringFieldUpdateOperationsInput | string | null
-    pan_number?: NullableStringFieldUpdateOperationsInput | string | null
-    whatsapp_number?: NullableStringFieldUpdateOperationsInput | string | null
-    created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
->>>>>>> 8a7b2acf9bf5e0bc0fe32c6a0d8aa6e2a9f871a8
     business_employees?: business_employeesUncheckedUpdateManyWithoutBusinessesNestedInput
     business_workflows?: business_workflowsUncheckedUpdateManyWithoutBusinessesNestedInput
     carts?: cartsUncheckedUpdateManyWithoutBusinessesNestedInput
@@ -118875,12 +119716,43 @@ export namespace Prisma {
     product_stock_alerts?: product_stock_alertsUncheckedUpdateManyWithoutBusinessesNestedInput
   }
 
-<<<<<<< HEAD
-=======
+  export type business_workflowsCreateWithoutTenantsInput = {
+    id?: string
+    intent_name: string
+    is_active?: boolean
+    created_at?: Date | string
+    updated_at?: Date | string
+    businesses: businessesCreateNestedOneWithoutBusiness_workflowsInput
+    workflow_definitions: workflow_definitionsCreateNestedOneWithoutBusiness_workflowsInput
+  }
+
+  export type business_workflowsUncheckedCreateWithoutTenantsInput = {
+    id?: string
+    business_id: string
+    intent_name: string
+    workflow_id: string
+    is_active?: boolean
+    created_at?: Date | string
+    updated_at?: Date | string
+  }
+
+  export type business_workflowsCreateOrConnectWithoutTenantsInput = {
+    where: business_workflowsWhereUniqueInput
+    create: XOR<business_workflowsCreateWithoutTenantsInput, business_workflowsUncheckedCreateWithoutTenantsInput>
+  }
+
+  export type business_workflowsCreateManyTenantsInputEnvelope = {
+    data: business_workflowsCreateManyTenantsInput | business_workflowsCreateManyTenantsInput[]
+    skipDuplicates?: boolean
+  }
+
   export type businessesCreateWithoutTenantsInput = {
     business_id?: string
     business_name: string
     business_type?: string | null
+    whatsapp_number?: string | null
+    created_at?: Date | string | null
+    updated_at?: Date | string | null
     email?: string | null
     phone?: string | null
     website?: string | null
@@ -118889,9 +119761,6 @@ export namespace Prisma {
     country?: string | null
     gst_number?: string | null
     pan_number?: string | null
-    whatsapp_number?: string | null
-    created_at?: Date | string | null
-    updated_at?: Date | string | null
     business_employees?: business_employeesCreateNestedManyWithoutBusinessesInput
     business_workflows?: business_workflowsCreateNestedManyWithoutBusinessesInput
     carts?: cartsCreateNestedManyWithoutBusinessesInput
@@ -118917,6 +119786,9 @@ export namespace Prisma {
     business_id?: string
     business_name: string
     business_type?: string | null
+    whatsapp_number?: string | null
+    created_at?: Date | string | null
+    updated_at?: Date | string | null
     email?: string | null
     phone?: string | null
     website?: string | null
@@ -118925,9 +119797,6 @@ export namespace Prisma {
     country?: string | null
     gst_number?: string | null
     pan_number?: string | null
-    whatsapp_number?: string | null
-    created_at?: Date | string | null
-    updated_at?: Date | string | null
     business_employees?: business_employeesUncheckedCreateNestedManyWithoutBusinessesInput
     business_workflows?: business_workflowsUncheckedCreateNestedManyWithoutBusinessesInput
     carts?: cartsUncheckedCreateNestedManyWithoutBusinessesInput
@@ -118959,128 +119828,6 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
->>>>>>> 8a7b2acf9bf5e0bc0fe32c6a0d8aa6e2a9f871a8
-  export type business_workflowsCreateWithoutTenantsInput = {
-    id?: string
-    intent_name: string
-    is_active?: boolean
-    created_at?: Date | string
-    updated_at?: Date | string
-    businesses: businessesCreateNestedOneWithoutBusiness_workflowsInput
-    workflow_definitions: workflow_definitionsCreateNestedOneWithoutBusiness_workflowsInput
-  }
-
-  export type business_workflowsUncheckedCreateWithoutTenantsInput = {
-    id?: string
-    business_id: string
-    intent_name: string
-    workflow_id: string
-    is_active?: boolean
-    created_at?: Date | string
-    updated_at?: Date | string
-  }
-
-  export type business_workflowsCreateOrConnectWithoutTenantsInput = {
-    where: business_workflowsWhereUniqueInput
-    create: XOR<business_workflowsCreateWithoutTenantsInput, business_workflowsUncheckedCreateWithoutTenantsInput>
-  }
-
-  export type business_workflowsCreateManyTenantsInputEnvelope = {
-    data: business_workflowsCreateManyTenantsInput | business_workflowsCreateManyTenantsInput[]
-    skipDuplicates?: boolean
-  }
-
-<<<<<<< HEAD
-  export type businessesCreateWithoutTenantsInput = {
-    business_id?: string
-    business_name: string
-    business_type?: string | null
-    whatsapp_number?: string | null
-    created_at?: Date | string | null
-    updated_at?: Date | string | null
-    email?: string | null
-    phone?: string | null
-    website?: string | null
-    city?: string | null
-    address?: string | null
-    country?: string | null
-    gst_number?: string | null
-    pan_number?: string | null
-    business_employees?: business_employeesCreateNestedManyWithoutBusinessesInput
-    business_workflows?: business_workflowsCreateNestedManyWithoutBusinessesInput
-    carts?: cartsCreateNestedManyWithoutBusinessesInput
-    inventory_levels?: inventory_levelsCreateNestedManyWithoutBusinessesInput
-    leads?: leadsCreateNestedManyWithoutBusinessesInput
-    notification_messages?: notification_messagesCreateNestedManyWithoutBusinessesInput
-    notification_preferences?: notification_preferencesCreateNestedManyWithoutBusinessesInput
-    notification_templates?: notification_templatesCreateNestedManyWithoutBusinessesInput
-    payment_reconciliation?: payment_reconciliationCreateNestedManyWithoutBusinessesInput
-    payments?: paymentsCreateNestedManyWithoutBusinessesInput
-    product_categories?: product_categoriesCreateNestedManyWithoutBusinessesInput
-    product_images?: product_imagesCreateNestedManyWithoutBusinessesInput
-    products?: productsCreateNestedManyWithoutBusinessesInput
-    social_accounts?: social_accountsCreateNestedManyWithoutBusinessesInput
-    stock_alerts?: stock_alertsCreateNestedManyWithoutBusinessesInput
-    stock_counts?: stock_countsCreateNestedManyWithoutBusinessesInput
-    stock_movements?: stock_movementsCreateNestedManyWithoutBusinessesInput
-    stock_transfers?: stock_transfersCreateNestedManyWithoutBusinessesInput
-    tags?: tagsCreateNestedManyWithoutBusinessesInput
-    users?: usersCreateNestedManyWithoutBusinessesInput
-    warehouses?: warehousesCreateNestedManyWithoutBusinessesInput
-    workflow_executions?: workflow_executionsCreateNestedManyWithoutBusinessesInput
-  }
-
-  export type businessesUncheckedCreateWithoutTenantsInput = {
-    business_id?: string
-    business_name: string
-    business_type?: string | null
-    whatsapp_number?: string | null
-    created_at?: Date | string | null
-    updated_at?: Date | string | null
-    email?: string | null
-    phone?: string | null
-    website?: string | null
-    city?: string | null
-    address?: string | null
-    country?: string | null
-    gst_number?: string | null
-    pan_number?: string | null
-    business_employees?: business_employeesUncheckedCreateNestedManyWithoutBusinessesInput
-    business_workflows?: business_workflowsUncheckedCreateNestedManyWithoutBusinessesInput
-    carts?: cartsUncheckedCreateNestedManyWithoutBusinessesInput
-    inventory_levels?: inventory_levelsUncheckedCreateNestedManyWithoutBusinessesInput
-    leads?: leadsUncheckedCreateNestedManyWithoutBusinessesInput
-    notification_messages?: notification_messagesUncheckedCreateNestedManyWithoutBusinessesInput
-    notification_preferences?: notification_preferencesUncheckedCreateNestedManyWithoutBusinessesInput
-    notification_templates?: notification_templatesUncheckedCreateNestedManyWithoutBusinessesInput
-    payment_reconciliation?: payment_reconciliationUncheckedCreateNestedManyWithoutBusinessesInput
-    payments?: paymentsUncheckedCreateNestedManyWithoutBusinessesInput
-    product_categories?: product_categoriesUncheckedCreateNestedManyWithoutBusinessesInput
-    product_images?: product_imagesUncheckedCreateNestedManyWithoutBusinessesInput
-    products?: productsUncheckedCreateNestedManyWithoutBusinessesInput
-    social_accounts?: social_accountsUncheckedCreateNestedManyWithoutBusinessesInput
-    stock_alerts?: stock_alertsUncheckedCreateNestedManyWithoutBusinessesInput
-    stock_counts?: stock_countsUncheckedCreateNestedManyWithoutBusinessesInput
-    stock_movements?: stock_movementsUncheckedCreateNestedManyWithoutBusinessesInput
-    stock_transfers?: stock_transfersUncheckedCreateNestedManyWithoutBusinessesInput
-    tags?: tagsUncheckedCreateNestedManyWithoutBusinessesInput
-    users?: usersUncheckedCreateNestedManyWithoutBusinessesInput
-    warehouses?: warehousesUncheckedCreateNestedManyWithoutBusinessesInput
-    workflow_executions?: workflow_executionsUncheckedCreateNestedManyWithoutBusinessesInput
-  }
-
-  export type businessesCreateOrConnectWithoutTenantsInput = {
-    where: businessesWhereUniqueInput
-    create: XOR<businessesCreateWithoutTenantsInput, businessesUncheckedCreateWithoutTenantsInput>
-  }
-
-  export type businessesCreateManyTenantsInputEnvelope = {
-    data: businessesCreateManyTenantsInput | businessesCreateManyTenantsInput[]
-    skipDuplicates?: boolean
-  }
-
-=======
->>>>>>> 8a7b2acf9bf5e0bc0fe32c6a0d8aa6e2a9f871a8
   export type cartsCreateWithoutTenantsInput = {
     cart_id?: string
     status?: string | null
@@ -119481,43 +120228,6 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
-  export type businessesUpsertWithWhereUniqueWithoutTenantsInput = {
-    where: businessesWhereUniqueInput
-    update: XOR<businessesUpdateWithoutTenantsInput, businessesUncheckedUpdateWithoutTenantsInput>
-    create: XOR<businessesCreateWithoutTenantsInput, businessesUncheckedCreateWithoutTenantsInput>
-  }
-
-  export type businessesUpdateWithWhereUniqueWithoutTenantsInput = {
-    where: businessesWhereUniqueInput
-    data: XOR<businessesUpdateWithoutTenantsInput, businessesUncheckedUpdateWithoutTenantsInput>
-  }
-
-  export type businessesUpdateManyWithWhereWithoutTenantsInput = {
-    where: businessesScalarWhereInput
-    data: XOR<businessesUpdateManyMutationInput, businessesUncheckedUpdateManyWithoutTenantsInput>
-  }
-
-  export type businessesScalarWhereInput = {
-    AND?: businessesScalarWhereInput | businessesScalarWhereInput[]
-    OR?: businessesScalarWhereInput[]
-    NOT?: businessesScalarWhereInput | businessesScalarWhereInput[]
-    business_id?: UuidFilter<"businesses"> | string
-    tenant_id?: UuidFilter<"businesses"> | string
-    business_name?: StringFilter<"businesses"> | string
-    business_type?: StringNullableFilter<"businesses"> | string | null
-    email?: StringNullableFilter<"businesses"> | string | null
-    phone?: StringNullableFilter<"businesses"> | string | null
-    website?: StringNullableFilter<"businesses"> | string | null
-    city?: StringNullableFilter<"businesses"> | string | null
-    address?: StringNullableFilter<"businesses"> | string | null
-    country?: StringNullableFilter<"businesses"> | string | null
-    gst_number?: StringNullableFilter<"businesses"> | string | null
-    pan_number?: StringNullableFilter<"businesses"> | string | null
-    whatsapp_number?: StringNullableFilter<"businesses"> | string | null
-    created_at?: DateTimeNullableFilter<"businesses"> | Date | string | null
-    updated_at?: DateTimeNullableFilter<"businesses"> | Date | string | null
-  }
-
   export type business_workflowsUpsertWithWhereUniqueWithoutTenantsInput = {
     where: business_workflowsWhereUniqueInput
     update: XOR<business_workflowsUpdateWithoutTenantsInput, business_workflowsUncheckedUpdateWithoutTenantsInput>
@@ -119534,7 +120244,6 @@ export namespace Prisma {
     data: XOR<business_workflowsUpdateManyMutationInput, business_workflowsUncheckedUpdateManyWithoutTenantsInput>
   }
 
-<<<<<<< HEAD
   export type businessesUpsertWithWhereUniqueWithoutTenantsInput = {
     where: businessesWhereUniqueInput
     update: XOR<businessesUpdateWithoutTenantsInput, businessesUncheckedUpdateWithoutTenantsInput>
@@ -119572,8 +120281,6 @@ export namespace Prisma {
     pan_number?: StringNullableFilter<"businesses"> | string | null
   }
 
-=======
->>>>>>> 8a7b2acf9bf5e0bc0fe32c6a0d8aa6e2a9f871a8
   export type cartsUpsertWithWhereUniqueWithoutTenantsInput = {
     where: cartsWhereUniqueInput
     update: XOR<cartsUpdateWithoutTenantsInput, cartsUncheckedUpdateWithoutTenantsInput>
@@ -120208,18 +120915,9 @@ export namespace Prisma {
     business_id?: string
     business_name: string
     business_type?: string | null
-    email?: string | null
-    phone?: string | null
-    website?: string | null
-    city?: string | null
-    address?: string | null
-    country?: string | null
-    gst_number?: string | null
-    pan_number?: string | null
     whatsapp_number?: string | null
     created_at?: Date | string | null
     updated_at?: Date | string | null
-<<<<<<< HEAD
     email?: string | null
     phone?: string | null
     website?: string | null
@@ -120228,8 +120926,6 @@ export namespace Prisma {
     country?: string | null
     gst_number?: string | null
     pan_number?: string | null
-=======
->>>>>>> 8a7b2acf9bf5e0bc0fe32c6a0d8aa6e2a9f871a8
     business_employees?: business_employeesCreateNestedManyWithoutBusinessesInput
     business_workflows?: business_workflowsCreateNestedManyWithoutBusinessesInput
     tenants: tenantsCreateNestedOneWithoutBusinessesInput
@@ -120256,7 +120952,6 @@ export namespace Prisma {
     tenant_id: string
     business_name: string
     business_type?: string | null
-<<<<<<< HEAD
     whatsapp_number?: string | null
     created_at?: Date | string | null
     updated_at?: Date | string | null
@@ -120268,19 +120963,6 @@ export namespace Prisma {
     country?: string | null
     gst_number?: string | null
     pan_number?: string | null
-=======
-    email?: string | null
-    phone?: string | null
-    website?: string | null
-    city?: string | null
-    address?: string | null
-    country?: string | null
-    gst_number?: string | null
-    pan_number?: string | null
-    whatsapp_number?: string | null
-    created_at?: Date | string | null
-    updated_at?: Date | string | null
->>>>>>> 8a7b2acf9bf5e0bc0fe32c6a0d8aa6e2a9f871a8
     business_employees?: business_employeesUncheckedCreateNestedManyWithoutBusinessesInput
     business_workflows?: business_workflowsUncheckedCreateNestedManyWithoutBusinessesInput
     carts?: cartsUncheckedCreateNestedManyWithoutBusinessesInput
@@ -120605,18 +121287,9 @@ export namespace Prisma {
     business_id?: StringFieldUpdateOperationsInput | string
     business_name?: StringFieldUpdateOperationsInput | string
     business_type?: NullableStringFieldUpdateOperationsInput | string | null
-    email?: NullableStringFieldUpdateOperationsInput | string | null
-    phone?: NullableStringFieldUpdateOperationsInput | string | null
-    website?: NullableStringFieldUpdateOperationsInput | string | null
-    city?: NullableStringFieldUpdateOperationsInput | string | null
-    address?: NullableStringFieldUpdateOperationsInput | string | null
-    country?: NullableStringFieldUpdateOperationsInput | string | null
-    gst_number?: NullableStringFieldUpdateOperationsInput | string | null
-    pan_number?: NullableStringFieldUpdateOperationsInput | string | null
     whatsapp_number?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-<<<<<<< HEAD
     email?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     website?: NullableStringFieldUpdateOperationsInput | string | null
@@ -120625,8 +121298,6 @@ export namespace Prisma {
     country?: NullableStringFieldUpdateOperationsInput | string | null
     gst_number?: NullableStringFieldUpdateOperationsInput | string | null
     pan_number?: NullableStringFieldUpdateOperationsInput | string | null
-=======
->>>>>>> 8a7b2acf9bf5e0bc0fe32c6a0d8aa6e2a9f871a8
     business_employees?: business_employeesUpdateManyWithoutBusinessesNestedInput
     business_workflows?: business_workflowsUpdateManyWithoutBusinessesNestedInput
     tenants?: tenantsUpdateOneRequiredWithoutBusinessesNestedInput
@@ -120653,7 +121324,6 @@ export namespace Prisma {
     tenant_id?: StringFieldUpdateOperationsInput | string
     business_name?: StringFieldUpdateOperationsInput | string
     business_type?: NullableStringFieldUpdateOperationsInput | string | null
-<<<<<<< HEAD
     whatsapp_number?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -120665,19 +121335,6 @@ export namespace Prisma {
     country?: NullableStringFieldUpdateOperationsInput | string | null
     gst_number?: NullableStringFieldUpdateOperationsInput | string | null
     pan_number?: NullableStringFieldUpdateOperationsInput | string | null
-=======
-    email?: NullableStringFieldUpdateOperationsInput | string | null
-    phone?: NullableStringFieldUpdateOperationsInput | string | null
-    website?: NullableStringFieldUpdateOperationsInput | string | null
-    city?: NullableStringFieldUpdateOperationsInput | string | null
-    address?: NullableStringFieldUpdateOperationsInput | string | null
-    country?: NullableStringFieldUpdateOperationsInput | string | null
-    gst_number?: NullableStringFieldUpdateOperationsInput | string | null
-    pan_number?: NullableStringFieldUpdateOperationsInput | string | null
-    whatsapp_number?: NullableStringFieldUpdateOperationsInput | string | null
-    created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
->>>>>>> 8a7b2acf9bf5e0bc0fe32c6a0d8aa6e2a9f871a8
     business_employees?: business_employeesUncheckedUpdateManyWithoutBusinessesNestedInput
     business_workflows?: business_workflowsUncheckedUpdateManyWithoutBusinessesNestedInput
     carts?: cartsUncheckedUpdateManyWithoutBusinessesNestedInput
@@ -121352,18 +122009,9 @@ export namespace Prisma {
     business_id?: string
     business_name: string
     business_type?: string | null
-    email?: string | null
-    phone?: string | null
-    website?: string | null
-    city?: string | null
-    address?: string | null
-    country?: string | null
-    gst_number?: string | null
-    pan_number?: string | null
     whatsapp_number?: string | null
     created_at?: Date | string | null
     updated_at?: Date | string | null
-<<<<<<< HEAD
     email?: string | null
     phone?: string | null
     website?: string | null
@@ -121372,8 +122020,6 @@ export namespace Prisma {
     country?: string | null
     gst_number?: string | null
     pan_number?: string | null
-=======
->>>>>>> 8a7b2acf9bf5e0bc0fe32c6a0d8aa6e2a9f871a8
     business_employees?: business_employeesCreateNestedManyWithoutBusinessesInput
     business_workflows?: business_workflowsCreateNestedManyWithoutBusinessesInput
     tenants: tenantsCreateNestedOneWithoutBusinessesInput
@@ -121400,7 +122046,6 @@ export namespace Prisma {
     tenant_id: string
     business_name: string
     business_type?: string | null
-<<<<<<< HEAD
     whatsapp_number?: string | null
     created_at?: Date | string | null
     updated_at?: Date | string | null
@@ -121412,19 +122057,6 @@ export namespace Prisma {
     country?: string | null
     gst_number?: string | null
     pan_number?: string | null
-=======
-    email?: string | null
-    phone?: string | null
-    website?: string | null
-    city?: string | null
-    address?: string | null
-    country?: string | null
-    gst_number?: string | null
-    pan_number?: string | null
-    whatsapp_number?: string | null
-    created_at?: Date | string | null
-    updated_at?: Date | string | null
->>>>>>> 8a7b2acf9bf5e0bc0fe32c6a0d8aa6e2a9f871a8
     business_employees?: business_employeesUncheckedCreateNestedManyWithoutBusinessesInput
     business_workflows?: business_workflowsUncheckedCreateNestedManyWithoutBusinessesInput
     carts?: cartsUncheckedCreateNestedManyWithoutBusinessesInput
@@ -121784,8 +122416,8 @@ export namespace Prisma {
     gst_number?: string | null
     pan_number?: string | null
     registration_no?: string | null
-    businesses?: businessesCreateNestedManyWithoutTenantsInput
     business_workflows?: business_workflowsCreateNestedManyWithoutTenantsInput
+    businesses?: businessesCreateNestedManyWithoutTenantsInput
     carts?: cartsCreateNestedManyWithoutTenantsInput
     notification_messages?: notification_messagesCreateNestedManyWithoutTenantsInput
     notification_templates?: notification_templatesCreateNestedManyWithoutTenantsInput
@@ -121803,8 +122435,8 @@ export namespace Prisma {
     gst_number?: string | null
     pan_number?: string | null
     registration_no?: string | null
-    businesses?: businessesUncheckedCreateNestedManyWithoutTenantsInput
     business_workflows?: business_workflowsUncheckedCreateNestedManyWithoutTenantsInput
+    businesses?: businessesUncheckedCreateNestedManyWithoutTenantsInput
     carts?: cartsUncheckedCreateNestedManyWithoutTenantsInput
     notification_messages?: notification_messagesUncheckedCreateNestedManyWithoutTenantsInput
     notification_templates?: notification_templatesUncheckedCreateNestedManyWithoutTenantsInput
@@ -122394,18 +123026,9 @@ export namespace Prisma {
     business_id?: StringFieldUpdateOperationsInput | string
     business_name?: StringFieldUpdateOperationsInput | string
     business_type?: NullableStringFieldUpdateOperationsInput | string | null
-    email?: NullableStringFieldUpdateOperationsInput | string | null
-    phone?: NullableStringFieldUpdateOperationsInput | string | null
-    website?: NullableStringFieldUpdateOperationsInput | string | null
-    city?: NullableStringFieldUpdateOperationsInput | string | null
-    address?: NullableStringFieldUpdateOperationsInput | string | null
-    country?: NullableStringFieldUpdateOperationsInput | string | null
-    gst_number?: NullableStringFieldUpdateOperationsInput | string | null
-    pan_number?: NullableStringFieldUpdateOperationsInput | string | null
     whatsapp_number?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-<<<<<<< HEAD
     email?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     website?: NullableStringFieldUpdateOperationsInput | string | null
@@ -122414,8 +123037,6 @@ export namespace Prisma {
     country?: NullableStringFieldUpdateOperationsInput | string | null
     gst_number?: NullableStringFieldUpdateOperationsInput | string | null
     pan_number?: NullableStringFieldUpdateOperationsInput | string | null
-=======
->>>>>>> 8a7b2acf9bf5e0bc0fe32c6a0d8aa6e2a9f871a8
     business_employees?: business_employeesUpdateManyWithoutBusinessesNestedInput
     business_workflows?: business_workflowsUpdateManyWithoutBusinessesNestedInput
     tenants?: tenantsUpdateOneRequiredWithoutBusinessesNestedInput
@@ -122442,7 +123063,6 @@ export namespace Prisma {
     tenant_id?: StringFieldUpdateOperationsInput | string
     business_name?: StringFieldUpdateOperationsInput | string
     business_type?: NullableStringFieldUpdateOperationsInput | string | null
-<<<<<<< HEAD
     whatsapp_number?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -122454,19 +123074,6 @@ export namespace Prisma {
     country?: NullableStringFieldUpdateOperationsInput | string | null
     gst_number?: NullableStringFieldUpdateOperationsInput | string | null
     pan_number?: NullableStringFieldUpdateOperationsInput | string | null
-=======
-    email?: NullableStringFieldUpdateOperationsInput | string | null
-    phone?: NullableStringFieldUpdateOperationsInput | string | null
-    website?: NullableStringFieldUpdateOperationsInput | string | null
-    city?: NullableStringFieldUpdateOperationsInput | string | null
-    address?: NullableStringFieldUpdateOperationsInput | string | null
-    country?: NullableStringFieldUpdateOperationsInput | string | null
-    gst_number?: NullableStringFieldUpdateOperationsInput | string | null
-    pan_number?: NullableStringFieldUpdateOperationsInput | string | null
-    whatsapp_number?: NullableStringFieldUpdateOperationsInput | string | null
-    created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
->>>>>>> 8a7b2acf9bf5e0bc0fe32c6a0d8aa6e2a9f871a8
     business_employees?: business_employeesUncheckedUpdateManyWithoutBusinessesNestedInput
     business_workflows?: business_workflowsUncheckedUpdateManyWithoutBusinessesNestedInput
     carts?: cartsUncheckedUpdateManyWithoutBusinessesNestedInput
@@ -122690,8 +123297,8 @@ export namespace Prisma {
     gst_number?: NullableStringFieldUpdateOperationsInput | string | null
     pan_number?: NullableStringFieldUpdateOperationsInput | string | null
     registration_no?: NullableStringFieldUpdateOperationsInput | string | null
-    businesses?: businessesUpdateManyWithoutTenantsNestedInput
     business_workflows?: business_workflowsUpdateManyWithoutTenantsNestedInput
+    businesses?: businessesUpdateManyWithoutTenantsNestedInput
     carts?: cartsUpdateManyWithoutTenantsNestedInput
     notification_messages?: notification_messagesUpdateManyWithoutTenantsNestedInput
     notification_templates?: notification_templatesUpdateManyWithoutTenantsNestedInput
@@ -122709,8 +123316,8 @@ export namespace Prisma {
     gst_number?: NullableStringFieldUpdateOperationsInput | string | null
     pan_number?: NullableStringFieldUpdateOperationsInput | string | null
     registration_no?: NullableStringFieldUpdateOperationsInput | string | null
-    businesses?: businessesUncheckedUpdateManyWithoutTenantsNestedInput
     business_workflows?: business_workflowsUncheckedUpdateManyWithoutTenantsNestedInput
+    businesses?: businessesUncheckedUpdateManyWithoutTenantsNestedInput
     carts?: cartsUncheckedUpdateManyWithoutTenantsNestedInput
     notification_messages?: notification_messagesUncheckedUpdateManyWithoutTenantsNestedInput
     notification_templates?: notification_templatesUncheckedUpdateManyWithoutTenantsNestedInput
@@ -124398,18 +125005,9 @@ export namespace Prisma {
     business_id?: string
     business_name: string
     business_type?: string | null
-    email?: string | null
-    phone?: string | null
-    website?: string | null
-    city?: string | null
-    address?: string | null
-    country?: string | null
-    gst_number?: string | null
-    pan_number?: string | null
     whatsapp_number?: string | null
     created_at?: Date | string | null
     updated_at?: Date | string | null
-<<<<<<< HEAD
     email?: string | null
     phone?: string | null
     website?: string | null
@@ -124418,8 +125016,6 @@ export namespace Prisma {
     country?: string | null
     gst_number?: string | null
     pan_number?: string | null
-=======
->>>>>>> 8a7b2acf9bf5e0bc0fe32c6a0d8aa6e2a9f871a8
     business_employees?: business_employeesCreateNestedManyWithoutBusinessesInput
     business_workflows?: business_workflowsCreateNestedManyWithoutBusinessesInput
     tenants: tenantsCreateNestedOneWithoutBusinessesInput
@@ -124446,7 +125042,6 @@ export namespace Prisma {
     tenant_id: string
     business_name: string
     business_type?: string | null
-<<<<<<< HEAD
     whatsapp_number?: string | null
     created_at?: Date | string | null
     updated_at?: Date | string | null
@@ -124458,19 +125053,6 @@ export namespace Prisma {
     country?: string | null
     gst_number?: string | null
     pan_number?: string | null
-=======
-    email?: string | null
-    phone?: string | null
-    website?: string | null
-    city?: string | null
-    address?: string | null
-    country?: string | null
-    gst_number?: string | null
-    pan_number?: string | null
-    whatsapp_number?: string | null
-    created_at?: Date | string | null
-    updated_at?: Date | string | null
->>>>>>> 8a7b2acf9bf5e0bc0fe32c6a0d8aa6e2a9f871a8
     business_employees?: business_employeesUncheckedCreateNestedManyWithoutBusinessesInput
     business_workflows?: business_workflowsUncheckedCreateNestedManyWithoutBusinessesInput
     carts?: cartsUncheckedCreateNestedManyWithoutBusinessesInput
@@ -124527,18 +125109,9 @@ export namespace Prisma {
     business_id?: StringFieldUpdateOperationsInput | string
     business_name?: StringFieldUpdateOperationsInput | string
     business_type?: NullableStringFieldUpdateOperationsInput | string | null
-    email?: NullableStringFieldUpdateOperationsInput | string | null
-    phone?: NullableStringFieldUpdateOperationsInput | string | null
-    website?: NullableStringFieldUpdateOperationsInput | string | null
-    city?: NullableStringFieldUpdateOperationsInput | string | null
-    address?: NullableStringFieldUpdateOperationsInput | string | null
-    country?: NullableStringFieldUpdateOperationsInput | string | null
-    gst_number?: NullableStringFieldUpdateOperationsInput | string | null
-    pan_number?: NullableStringFieldUpdateOperationsInput | string | null
     whatsapp_number?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-<<<<<<< HEAD
     email?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     website?: NullableStringFieldUpdateOperationsInput | string | null
@@ -124547,8 +125120,6 @@ export namespace Prisma {
     country?: NullableStringFieldUpdateOperationsInput | string | null
     gst_number?: NullableStringFieldUpdateOperationsInput | string | null
     pan_number?: NullableStringFieldUpdateOperationsInput | string | null
-=======
->>>>>>> 8a7b2acf9bf5e0bc0fe32c6a0d8aa6e2a9f871a8
     business_employees?: business_employeesUpdateManyWithoutBusinessesNestedInput
     business_workflows?: business_workflowsUpdateManyWithoutBusinessesNestedInput
     tenants?: tenantsUpdateOneRequiredWithoutBusinessesNestedInput
@@ -124575,7 +125146,6 @@ export namespace Prisma {
     tenant_id?: StringFieldUpdateOperationsInput | string
     business_name?: StringFieldUpdateOperationsInput | string
     business_type?: NullableStringFieldUpdateOperationsInput | string | null
-<<<<<<< HEAD
     whatsapp_number?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -124587,19 +125157,6 @@ export namespace Prisma {
     country?: NullableStringFieldUpdateOperationsInput | string | null
     gst_number?: NullableStringFieldUpdateOperationsInput | string | null
     pan_number?: NullableStringFieldUpdateOperationsInput | string | null
-=======
-    email?: NullableStringFieldUpdateOperationsInput | string | null
-    phone?: NullableStringFieldUpdateOperationsInput | string | null
-    website?: NullableStringFieldUpdateOperationsInput | string | null
-    city?: NullableStringFieldUpdateOperationsInput | string | null
-    address?: NullableStringFieldUpdateOperationsInput | string | null
-    country?: NullableStringFieldUpdateOperationsInput | string | null
-    gst_number?: NullableStringFieldUpdateOperationsInput | string | null
-    pan_number?: NullableStringFieldUpdateOperationsInput | string | null
-    whatsapp_number?: NullableStringFieldUpdateOperationsInput | string | null
-    created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
->>>>>>> 8a7b2acf9bf5e0bc0fe32c6a0d8aa6e2a9f871a8
     business_employees?: business_employeesUncheckedUpdateManyWithoutBusinessesNestedInput
     business_workflows?: business_workflowsUncheckedUpdateManyWithoutBusinessesNestedInput
     carts?: cartsUncheckedUpdateManyWithoutBusinessesNestedInput
@@ -127782,18 +128339,9 @@ export namespace Prisma {
     business_id?: string
     business_name: string
     business_type?: string | null
-    email?: string | null
-    phone?: string | null
-    website?: string | null
-    city?: string | null
-    address?: string | null
-    country?: string | null
-    gst_number?: string | null
-    pan_number?: string | null
     whatsapp_number?: string | null
     created_at?: Date | string | null
     updated_at?: Date | string | null
-<<<<<<< HEAD
     email?: string | null
     phone?: string | null
     website?: string | null
@@ -127802,8 +128350,6 @@ export namespace Prisma {
     country?: string | null
     gst_number?: string | null
     pan_number?: string | null
-=======
->>>>>>> 8a7b2acf9bf5e0bc0fe32c6a0d8aa6e2a9f871a8
     business_employees?: business_employeesCreateNestedManyWithoutBusinessesInput
     business_workflows?: business_workflowsCreateNestedManyWithoutBusinessesInput
     tenants: tenantsCreateNestedOneWithoutBusinessesInput
@@ -127830,7 +128376,6 @@ export namespace Prisma {
     tenant_id: string
     business_name: string
     business_type?: string | null
-<<<<<<< HEAD
     whatsapp_number?: string | null
     created_at?: Date | string | null
     updated_at?: Date | string | null
@@ -127842,19 +128387,6 @@ export namespace Prisma {
     country?: string | null
     gst_number?: string | null
     pan_number?: string | null
-=======
-    email?: string | null
-    phone?: string | null
-    website?: string | null
-    city?: string | null
-    address?: string | null
-    country?: string | null
-    gst_number?: string | null
-    pan_number?: string | null
-    whatsapp_number?: string | null
-    created_at?: Date | string | null
-    updated_at?: Date | string | null
->>>>>>> 8a7b2acf9bf5e0bc0fe32c6a0d8aa6e2a9f871a8
     business_employees?: business_employeesUncheckedCreateNestedManyWithoutBusinessesInput
     business_workflows?: business_workflowsUncheckedCreateNestedManyWithoutBusinessesInput
     carts?: cartsUncheckedCreateNestedManyWithoutBusinessesInput
@@ -127931,67 +128463,6 @@ export namespace Prisma {
     create: XOR<product_categoriesCreateWithoutProductsInput, product_categoriesUncheckedCreateWithoutProductsInput>
   }
 
-<<<<<<< HEAD
-  export type stock_reservationsCreateWithoutProductsInput = {
-    reservation_id?: string
-    variant_id?: string | null
-    quantity: number
-    reserved_at?: Date | string
-=======
-  export type cart_reservationsCreateWithoutProductsInput = {
-    reservation_id?: string
-    variant_id?: string | null
-    quantity: number
->>>>>>> 8a7b2acf9bf5e0bc0fe32c6a0d8aa6e2a9f871a8
-    expires_at: Date | string
-    status?: string
-    created_at?: Date | string
-    updated_at?: Date | string
-<<<<<<< HEAD
-    orders: ordersCreateNestedOneWithoutStock_reservationsInput
-  }
-
-  export type stock_reservationsUncheckedCreateWithoutProductsInput = {
-    reservation_id?: string
-    order_id: string
-    variant_id?: string | null
-    quantity: number
-    reserved_at?: Date | string
-=======
-    leads: leadsCreateNestedOneWithoutCart_reservationsInput
-  }
-
-  export type cart_reservationsUncheckedCreateWithoutProductsInput = {
-    reservation_id?: string
-    lead_id: string
-    variant_id?: string | null
-    quantity: number
->>>>>>> 8a7b2acf9bf5e0bc0fe32c6a0d8aa6e2a9f871a8
-    expires_at: Date | string
-    status?: string
-    created_at?: Date | string
-    updated_at?: Date | string
-  }
-
-<<<<<<< HEAD
-  export type stock_reservationsCreateOrConnectWithoutProductsInput = {
-    where: stock_reservationsWhereUniqueInput
-    create: XOR<stock_reservationsCreateWithoutProductsInput, stock_reservationsUncheckedCreateWithoutProductsInput>
-  }
-
-  export type stock_reservationsCreateManyProductsInputEnvelope = {
-    data: stock_reservationsCreateManyProductsInput | stock_reservationsCreateManyProductsInput[]
-=======
-  export type cart_reservationsCreateOrConnectWithoutProductsInput = {
-    where: cart_reservationsWhereUniqueInput
-    create: XOR<cart_reservationsCreateWithoutProductsInput, cart_reservationsUncheckedCreateWithoutProductsInput>
-  }
-
-  export type cart_reservationsCreateManyProductsInputEnvelope = {
-    data: cart_reservationsCreateManyProductsInput | cart_reservationsCreateManyProductsInput[]
-    skipDuplicates?: boolean
-  }
-
   export type product_stock_alertsCreateWithoutProductsInput = {
     alert_id?: string
     product_name: string
@@ -128029,7 +128500,6 @@ export namespace Prisma {
 
   export type product_stock_alertsCreateManyProductsInputEnvelope = {
     data: product_stock_alertsCreateManyProductsInput | product_stock_alertsCreateManyProductsInput[]
->>>>>>> 8a7b2acf9bf5e0bc0fe32c6a0d8aa6e2a9f871a8
     skipDuplicates?: boolean
   }
 
@@ -128268,18 +128738,9 @@ export namespace Prisma {
     business_id?: StringFieldUpdateOperationsInput | string
     business_name?: StringFieldUpdateOperationsInput | string
     business_type?: NullableStringFieldUpdateOperationsInput | string | null
-    email?: NullableStringFieldUpdateOperationsInput | string | null
-    phone?: NullableStringFieldUpdateOperationsInput | string | null
-    website?: NullableStringFieldUpdateOperationsInput | string | null
-    city?: NullableStringFieldUpdateOperationsInput | string | null
-    address?: NullableStringFieldUpdateOperationsInput | string | null
-    country?: NullableStringFieldUpdateOperationsInput | string | null
-    gst_number?: NullableStringFieldUpdateOperationsInput | string | null
-    pan_number?: NullableStringFieldUpdateOperationsInput | string | null
     whatsapp_number?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-<<<<<<< HEAD
     email?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     website?: NullableStringFieldUpdateOperationsInput | string | null
@@ -128288,8 +128749,6 @@ export namespace Prisma {
     country?: NullableStringFieldUpdateOperationsInput | string | null
     gst_number?: NullableStringFieldUpdateOperationsInput | string | null
     pan_number?: NullableStringFieldUpdateOperationsInput | string | null
-=======
->>>>>>> 8a7b2acf9bf5e0bc0fe32c6a0d8aa6e2a9f871a8
     business_employees?: business_employeesUpdateManyWithoutBusinessesNestedInput
     business_workflows?: business_workflowsUpdateManyWithoutBusinessesNestedInput
     tenants?: tenantsUpdateOneRequiredWithoutBusinessesNestedInput
@@ -128316,7 +128775,6 @@ export namespace Prisma {
     tenant_id?: StringFieldUpdateOperationsInput | string
     business_name?: StringFieldUpdateOperationsInput | string
     business_type?: NullableStringFieldUpdateOperationsInput | string | null
-<<<<<<< HEAD
     whatsapp_number?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -128328,19 +128786,6 @@ export namespace Prisma {
     country?: NullableStringFieldUpdateOperationsInput | string | null
     gst_number?: NullableStringFieldUpdateOperationsInput | string | null
     pan_number?: NullableStringFieldUpdateOperationsInput | string | null
-=======
-    email?: NullableStringFieldUpdateOperationsInput | string | null
-    phone?: NullableStringFieldUpdateOperationsInput | string | null
-    website?: NullableStringFieldUpdateOperationsInput | string | null
-    city?: NullableStringFieldUpdateOperationsInput | string | null
-    address?: NullableStringFieldUpdateOperationsInput | string | null
-    country?: NullableStringFieldUpdateOperationsInput | string | null
-    gst_number?: NullableStringFieldUpdateOperationsInput | string | null
-    pan_number?: NullableStringFieldUpdateOperationsInput | string | null
-    whatsapp_number?: NullableStringFieldUpdateOperationsInput | string | null
-    created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
->>>>>>> 8a7b2acf9bf5e0bc0fe32c6a0d8aa6e2a9f871a8
     business_employees?: business_employeesUncheckedUpdateManyWithoutBusinessesNestedInput
     business_workflows?: business_workflowsUncheckedUpdateManyWithoutBusinessesNestedInput
     carts?: cartsUncheckedUpdateManyWithoutBusinessesNestedInput
@@ -128418,54 +128863,6 @@ export namespace Prisma {
     child_categories?: product_categoriesUncheckedUpdateManyWithoutParent_categoryNestedInput
   }
 
-<<<<<<< HEAD
-  export type stock_reservationsUpsertWithWhereUniqueWithoutProductsInput = {
-    where: stock_reservationsWhereUniqueInput
-    update: XOR<stock_reservationsUpdateWithoutProductsInput, stock_reservationsUncheckedUpdateWithoutProductsInput>
-    create: XOR<stock_reservationsCreateWithoutProductsInput, stock_reservationsUncheckedCreateWithoutProductsInput>
-  }
-
-  export type stock_reservationsUpdateWithWhereUniqueWithoutProductsInput = {
-    where: stock_reservationsWhereUniqueInput
-    data: XOR<stock_reservationsUpdateWithoutProductsInput, stock_reservationsUncheckedUpdateWithoutProductsInput>
-  }
-
-  export type stock_reservationsUpdateManyWithWhereWithoutProductsInput = {
-    where: stock_reservationsScalarWhereInput
-    data: XOR<stock_reservationsUpdateManyMutationInput, stock_reservationsUncheckedUpdateManyWithoutProductsInput>
-  }
-
-  export type stock_reservationsScalarWhereInput = {
-    AND?: stock_reservationsScalarWhereInput | stock_reservationsScalarWhereInput[]
-    OR?: stock_reservationsScalarWhereInput[]
-    NOT?: stock_reservationsScalarWhereInput | stock_reservationsScalarWhereInput[]
-    reservation_id?: UuidFilter<"stock_reservations"> | string
-    order_id?: UuidFilter<"stock_reservations"> | string
-    product_id?: UuidFilter<"stock_reservations"> | string
-    variant_id?: UuidNullableFilter<"stock_reservations"> | string | null
-    quantity?: IntFilter<"stock_reservations"> | number
-    reserved_at?: DateTimeFilter<"stock_reservations"> | Date | string
-    expires_at?: DateTimeFilter<"stock_reservations"> | Date | string
-    status?: StringFilter<"stock_reservations"> | string
-    created_at?: DateTimeFilter<"stock_reservations"> | Date | string
-    updated_at?: DateTimeFilter<"stock_reservations"> | Date | string
-=======
-  export type cart_reservationsUpsertWithWhereUniqueWithoutProductsInput = {
-    where: cart_reservationsWhereUniqueInput
-    update: XOR<cart_reservationsUpdateWithoutProductsInput, cart_reservationsUncheckedUpdateWithoutProductsInput>
-    create: XOR<cart_reservationsCreateWithoutProductsInput, cart_reservationsUncheckedCreateWithoutProductsInput>
-  }
-
-  export type cart_reservationsUpdateWithWhereUniqueWithoutProductsInput = {
-    where: cart_reservationsWhereUniqueInput
-    data: XOR<cart_reservationsUpdateWithoutProductsInput, cart_reservationsUncheckedUpdateWithoutProductsInput>
-  }
-
-  export type cart_reservationsUpdateManyWithWhereWithoutProductsInput = {
-    where: cart_reservationsScalarWhereInput
-    data: XOR<cart_reservationsUpdateManyMutationInput, cart_reservationsUncheckedUpdateManyWithoutProductsInput>
-  }
-
   export type product_stock_alertsUpsertWithWhereUniqueWithoutProductsInput = {
     where: product_stock_alertsWhereUniqueInput
     update: XOR<product_stock_alertsUpdateWithoutProductsInput, product_stock_alertsUncheckedUpdateWithoutProductsInput>
@@ -128480,7 +128877,6 @@ export namespace Prisma {
   export type product_stock_alertsUpdateManyWithWhereWithoutProductsInput = {
     where: product_stock_alertsScalarWhereInput
     data: XOR<product_stock_alertsUpdateManyMutationInput, product_stock_alertsUncheckedUpdateManyWithoutProductsInput>
->>>>>>> 8a7b2acf9bf5e0bc0fe32c6a0d8aa6e2a9f871a8
   }
 
   export type cart_itemsCreateWithoutProduct_variantsInput = {
@@ -128567,12 +128963,7 @@ export namespace Prisma {
     product_reviews?: product_reviewsCreateNestedManyWithoutProductInput
     businesses: businessesCreateNestedOneWithoutProductsInput
     product_categories?: product_categoriesCreateNestedOneWithoutProductsInput
-<<<<<<< HEAD
-    stock_reservations?: stock_reservationsCreateNestedManyWithoutProductsInput
-=======
-    cart_reservations?: cart_reservationsCreateNestedManyWithoutProductsInput
     product_stock_alerts?: product_stock_alertsCreateNestedManyWithoutProductsInput
->>>>>>> 8a7b2acf9bf5e0bc0fe32c6a0d8aa6e2a9f871a8
   }
 
   export type productsUncheckedCreateWithoutProduct_variantsInput = {
@@ -128621,12 +129012,7 @@ export namespace Prisma {
     order_items?: order_itemsUncheckedCreateNestedManyWithoutProductsInput
     product_images?: product_imagesUncheckedCreateNestedManyWithoutProductsInput
     product_reviews?: product_reviewsUncheckedCreateNestedManyWithoutProductInput
-<<<<<<< HEAD
-    stock_reservations?: stock_reservationsUncheckedCreateNestedManyWithoutProductsInput
-=======
-    cart_reservations?: cart_reservationsUncheckedCreateNestedManyWithoutProductsInput
     product_stock_alerts?: product_stock_alertsUncheckedCreateNestedManyWithoutProductsInput
->>>>>>> 8a7b2acf9bf5e0bc0fe32c6a0d8aa6e2a9f871a8
   }
 
   export type productsCreateOrConnectWithoutProduct_variantsInput = {
@@ -128747,12 +129133,7 @@ export namespace Prisma {
     product_reviews?: product_reviewsUpdateManyWithoutProductNestedInput
     businesses?: businessesUpdateOneRequiredWithoutProductsNestedInput
     product_categories?: product_categoriesUpdateOneWithoutProductsNestedInput
-<<<<<<< HEAD
-    stock_reservations?: stock_reservationsUpdateManyWithoutProductsNestedInput
-=======
-    cart_reservations?: cart_reservationsUpdateManyWithoutProductsNestedInput
     product_stock_alerts?: product_stock_alertsUpdateManyWithoutProductsNestedInput
->>>>>>> 8a7b2acf9bf5e0bc0fe32c6a0d8aa6e2a9f871a8
   }
 
   export type productsUncheckedUpdateWithoutProduct_variantsInput = {
@@ -128801,12 +129182,7 @@ export namespace Prisma {
     order_items?: order_itemsUncheckedUpdateManyWithoutProductsNestedInput
     product_images?: product_imagesUncheckedUpdateManyWithoutProductsNestedInput
     product_reviews?: product_reviewsUncheckedUpdateManyWithoutProductNestedInput
-<<<<<<< HEAD
-    stock_reservations?: stock_reservationsUncheckedUpdateManyWithoutProductsNestedInput
-=======
-    cart_reservations?: cart_reservationsUncheckedUpdateManyWithoutProductsNestedInput
     product_stock_alerts?: product_stock_alertsUncheckedUpdateManyWithoutProductsNestedInput
->>>>>>> 8a7b2acf9bf5e0bc0fe32c6a0d8aa6e2a9f871a8
   }
 
   export type product_stock_alertsUpsertWithWhereUniqueWithoutVariantsInput = {
@@ -128829,18 +129205,9 @@ export namespace Prisma {
     business_id?: string
     business_name: string
     business_type?: string | null
-    email?: string | null
-    phone?: string | null
-    website?: string | null
-    city?: string | null
-    address?: string | null
-    country?: string | null
-    gst_number?: string | null
-    pan_number?: string | null
     whatsapp_number?: string | null
     created_at?: Date | string | null
     updated_at?: Date | string | null
-<<<<<<< HEAD
     email?: string | null
     phone?: string | null
     website?: string | null
@@ -128849,8 +129216,6 @@ export namespace Prisma {
     country?: string | null
     gst_number?: string | null
     pan_number?: string | null
-=======
->>>>>>> 8a7b2acf9bf5e0bc0fe32c6a0d8aa6e2a9f871a8
     business_employees?: business_employeesCreateNestedManyWithoutBusinessesInput
     business_workflows?: business_workflowsCreateNestedManyWithoutBusinessesInput
     tenants: tenantsCreateNestedOneWithoutBusinessesInput
@@ -128877,7 +129242,6 @@ export namespace Prisma {
     tenant_id: string
     business_name: string
     business_type?: string | null
-<<<<<<< HEAD
     whatsapp_number?: string | null
     created_at?: Date | string | null
     updated_at?: Date | string | null
@@ -128889,19 +129253,6 @@ export namespace Prisma {
     country?: string | null
     gst_number?: string | null
     pan_number?: string | null
-=======
-    email?: string | null
-    phone?: string | null
-    website?: string | null
-    city?: string | null
-    address?: string | null
-    country?: string | null
-    gst_number?: string | null
-    pan_number?: string | null
-    whatsapp_number?: string | null
-    created_at?: Date | string | null
-    updated_at?: Date | string | null
->>>>>>> 8a7b2acf9bf5e0bc0fe32c6a0d8aa6e2a9f871a8
     business_employees?: business_employeesUncheckedCreateNestedManyWithoutBusinessesInput
     business_workflows?: business_workflowsUncheckedCreateNestedManyWithoutBusinessesInput
     carts?: cartsUncheckedCreateNestedManyWithoutBusinessesInput
@@ -128973,12 +129324,7 @@ export namespace Prisma {
     product_variants?: product_variantsCreateNestedManyWithoutProductInput
     businesses: businessesCreateNestedOneWithoutProductsInput
     product_categories?: product_categoriesCreateNestedOneWithoutProductsInput
-<<<<<<< HEAD
-    stock_reservations?: stock_reservationsCreateNestedManyWithoutProductsInput
-=======
-    cart_reservations?: cart_reservationsCreateNestedManyWithoutProductsInput
     product_stock_alerts?: product_stock_alertsCreateNestedManyWithoutProductsInput
->>>>>>> 8a7b2acf9bf5e0bc0fe32c6a0d8aa6e2a9f871a8
   }
 
   export type productsUncheckedCreateWithoutProduct_imagesInput = {
@@ -129027,12 +129373,7 @@ export namespace Prisma {
     order_items?: order_itemsUncheckedCreateNestedManyWithoutProductsInput
     product_reviews?: product_reviewsUncheckedCreateNestedManyWithoutProductInput
     product_variants?: product_variantsUncheckedCreateNestedManyWithoutProductInput
-<<<<<<< HEAD
-    stock_reservations?: stock_reservationsUncheckedCreateNestedManyWithoutProductsInput
-=======
-    cart_reservations?: cart_reservationsUncheckedCreateNestedManyWithoutProductsInput
     product_stock_alerts?: product_stock_alertsUncheckedCreateNestedManyWithoutProductsInput
->>>>>>> 8a7b2acf9bf5e0bc0fe32c6a0d8aa6e2a9f871a8
   }
 
   export type productsCreateOrConnectWithoutProduct_imagesInput = {
@@ -129055,18 +129396,9 @@ export namespace Prisma {
     business_id?: StringFieldUpdateOperationsInput | string
     business_name?: StringFieldUpdateOperationsInput | string
     business_type?: NullableStringFieldUpdateOperationsInput | string | null
-    email?: NullableStringFieldUpdateOperationsInput | string | null
-    phone?: NullableStringFieldUpdateOperationsInput | string | null
-    website?: NullableStringFieldUpdateOperationsInput | string | null
-    city?: NullableStringFieldUpdateOperationsInput | string | null
-    address?: NullableStringFieldUpdateOperationsInput | string | null
-    country?: NullableStringFieldUpdateOperationsInput | string | null
-    gst_number?: NullableStringFieldUpdateOperationsInput | string | null
-    pan_number?: NullableStringFieldUpdateOperationsInput | string | null
     whatsapp_number?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-<<<<<<< HEAD
     email?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     website?: NullableStringFieldUpdateOperationsInput | string | null
@@ -129075,8 +129407,6 @@ export namespace Prisma {
     country?: NullableStringFieldUpdateOperationsInput | string | null
     gst_number?: NullableStringFieldUpdateOperationsInput | string | null
     pan_number?: NullableStringFieldUpdateOperationsInput | string | null
-=======
->>>>>>> 8a7b2acf9bf5e0bc0fe32c6a0d8aa6e2a9f871a8
     business_employees?: business_employeesUpdateManyWithoutBusinessesNestedInput
     business_workflows?: business_workflowsUpdateManyWithoutBusinessesNestedInput
     tenants?: tenantsUpdateOneRequiredWithoutBusinessesNestedInput
@@ -129103,7 +129433,6 @@ export namespace Prisma {
     tenant_id?: StringFieldUpdateOperationsInput | string
     business_name?: StringFieldUpdateOperationsInput | string
     business_type?: NullableStringFieldUpdateOperationsInput | string | null
-<<<<<<< HEAD
     whatsapp_number?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -129115,19 +129444,6 @@ export namespace Prisma {
     country?: NullableStringFieldUpdateOperationsInput | string | null
     gst_number?: NullableStringFieldUpdateOperationsInput | string | null
     pan_number?: NullableStringFieldUpdateOperationsInput | string | null
-=======
-    email?: NullableStringFieldUpdateOperationsInput | string | null
-    phone?: NullableStringFieldUpdateOperationsInput | string | null
-    website?: NullableStringFieldUpdateOperationsInput | string | null
-    city?: NullableStringFieldUpdateOperationsInput | string | null
-    address?: NullableStringFieldUpdateOperationsInput | string | null
-    country?: NullableStringFieldUpdateOperationsInput | string | null
-    gst_number?: NullableStringFieldUpdateOperationsInput | string | null
-    pan_number?: NullableStringFieldUpdateOperationsInput | string | null
-    whatsapp_number?: NullableStringFieldUpdateOperationsInput | string | null
-    created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
->>>>>>> 8a7b2acf9bf5e0bc0fe32c6a0d8aa6e2a9f871a8
     business_employees?: business_employeesUncheckedUpdateManyWithoutBusinessesNestedInput
     business_workflows?: business_workflowsUncheckedUpdateManyWithoutBusinessesNestedInput
     carts?: cartsUncheckedUpdateManyWithoutBusinessesNestedInput
@@ -129205,12 +129521,7 @@ export namespace Prisma {
     product_variants?: product_variantsUpdateManyWithoutProductNestedInput
     businesses?: businessesUpdateOneRequiredWithoutProductsNestedInput
     product_categories?: product_categoriesUpdateOneWithoutProductsNestedInput
-<<<<<<< HEAD
-    stock_reservations?: stock_reservationsUpdateManyWithoutProductsNestedInput
-=======
-    cart_reservations?: cart_reservationsUpdateManyWithoutProductsNestedInput
     product_stock_alerts?: product_stock_alertsUpdateManyWithoutProductsNestedInput
->>>>>>> 8a7b2acf9bf5e0bc0fe32c6a0d8aa6e2a9f871a8
   }
 
   export type productsUncheckedUpdateWithoutProduct_imagesInput = {
@@ -129259,12 +129570,7 @@ export namespace Prisma {
     order_items?: order_itemsUncheckedUpdateManyWithoutProductsNestedInput
     product_reviews?: product_reviewsUncheckedUpdateManyWithoutProductNestedInput
     product_variants?: product_variantsUncheckedUpdateManyWithoutProductNestedInput
-<<<<<<< HEAD
-    stock_reservations?: stock_reservationsUncheckedUpdateManyWithoutProductsNestedInput
-=======
-    cart_reservations?: cart_reservationsUncheckedUpdateManyWithoutProductsNestedInput
     product_stock_alerts?: product_stock_alertsUncheckedUpdateManyWithoutProductsNestedInput
->>>>>>> 8a7b2acf9bf5e0bc0fe32c6a0d8aa6e2a9f871a8
   }
 
   export type productsCreateWithoutCourse_batchesInput = {
@@ -129313,12 +129619,7 @@ export namespace Prisma {
     product_variants?: product_variantsCreateNestedManyWithoutProductInput
     businesses: businessesCreateNestedOneWithoutProductsInput
     product_categories?: product_categoriesCreateNestedOneWithoutProductsInput
-<<<<<<< HEAD
-    stock_reservations?: stock_reservationsCreateNestedManyWithoutProductsInput
-=======
-    cart_reservations?: cart_reservationsCreateNestedManyWithoutProductsInput
     product_stock_alerts?: product_stock_alertsCreateNestedManyWithoutProductsInput
->>>>>>> 8a7b2acf9bf5e0bc0fe32c6a0d8aa6e2a9f871a8
   }
 
   export type productsUncheckedCreateWithoutCourse_batchesInput = {
@@ -129367,12 +129668,7 @@ export namespace Prisma {
     product_images?: product_imagesUncheckedCreateNestedManyWithoutProductsInput
     product_reviews?: product_reviewsUncheckedCreateNestedManyWithoutProductInput
     product_variants?: product_variantsUncheckedCreateNestedManyWithoutProductInput
-<<<<<<< HEAD
-    stock_reservations?: stock_reservationsUncheckedCreateNestedManyWithoutProductsInput
-=======
-    cart_reservations?: cart_reservationsUncheckedCreateNestedManyWithoutProductsInput
     product_stock_alerts?: product_stock_alertsUncheckedCreateNestedManyWithoutProductsInput
->>>>>>> 8a7b2acf9bf5e0bc0fe32c6a0d8aa6e2a9f871a8
   }
 
   export type productsCreateOrConnectWithoutCourse_batchesInput = {
@@ -129608,12 +129904,7 @@ export namespace Prisma {
     product_variants?: product_variantsUpdateManyWithoutProductNestedInput
     businesses?: businessesUpdateOneRequiredWithoutProductsNestedInput
     product_categories?: product_categoriesUpdateOneWithoutProductsNestedInput
-<<<<<<< HEAD
-    stock_reservations?: stock_reservationsUpdateManyWithoutProductsNestedInput
-=======
-    cart_reservations?: cart_reservationsUpdateManyWithoutProductsNestedInput
     product_stock_alerts?: product_stock_alertsUpdateManyWithoutProductsNestedInput
->>>>>>> 8a7b2acf9bf5e0bc0fe32c6a0d8aa6e2a9f871a8
   }
 
   export type productsUncheckedUpdateWithoutCourse_batchesInput = {
@@ -129662,12 +129953,7 @@ export namespace Prisma {
     product_images?: product_imagesUncheckedUpdateManyWithoutProductsNestedInput
     product_reviews?: product_reviewsUncheckedUpdateManyWithoutProductNestedInput
     product_variants?: product_variantsUncheckedUpdateManyWithoutProductNestedInput
-<<<<<<< HEAD
-    stock_reservations?: stock_reservationsUncheckedUpdateManyWithoutProductsNestedInput
-=======
-    cart_reservations?: cart_reservationsUncheckedUpdateManyWithoutProductsNestedInput
     product_stock_alerts?: product_stock_alertsUncheckedUpdateManyWithoutProductsNestedInput
->>>>>>> 8a7b2acf9bf5e0bc0fe32c6a0d8aa6e2a9f871a8
   }
 
   export type usersUpsertWithoutCourse_batchesInput = {
@@ -131118,12 +131404,7 @@ export namespace Prisma {
     product_variants?: product_variantsCreateNestedManyWithoutProductInput
     businesses: businessesCreateNestedOneWithoutProductsInput
     product_categories?: product_categoriesCreateNestedOneWithoutProductsInput
-<<<<<<< HEAD
-    stock_reservations?: stock_reservationsCreateNestedManyWithoutProductsInput
-=======
-    cart_reservations?: cart_reservationsCreateNestedManyWithoutProductsInput
     product_stock_alerts?: product_stock_alertsCreateNestedManyWithoutProductsInput
->>>>>>> 8a7b2acf9bf5e0bc0fe32c6a0d8aa6e2a9f871a8
   }
 
   export type productsUncheckedCreateWithoutOrder_itemsInput = {
@@ -131172,12 +131453,7 @@ export namespace Prisma {
     product_images?: product_imagesUncheckedCreateNestedManyWithoutProductsInput
     product_reviews?: product_reviewsUncheckedCreateNestedManyWithoutProductInput
     product_variants?: product_variantsUncheckedCreateNestedManyWithoutProductInput
-<<<<<<< HEAD
-    stock_reservations?: stock_reservationsUncheckedCreateNestedManyWithoutProductsInput
-=======
-    cart_reservations?: cart_reservationsUncheckedCreateNestedManyWithoutProductsInput
     product_stock_alerts?: product_stock_alertsUncheckedCreateNestedManyWithoutProductsInput
->>>>>>> 8a7b2acf9bf5e0bc0fe32c6a0d8aa6e2a9f871a8
   }
 
   export type productsCreateOrConnectWithoutOrder_itemsInput = {
@@ -131341,12 +131617,7 @@ export namespace Prisma {
     product_variants?: product_variantsUpdateManyWithoutProductNestedInput
     businesses?: businessesUpdateOneRequiredWithoutProductsNestedInput
     product_categories?: product_categoriesUpdateOneWithoutProductsNestedInput
-<<<<<<< HEAD
-    stock_reservations?: stock_reservationsUpdateManyWithoutProductsNestedInput
-=======
-    cart_reservations?: cart_reservationsUpdateManyWithoutProductsNestedInput
     product_stock_alerts?: product_stock_alertsUpdateManyWithoutProductsNestedInput
->>>>>>> 8a7b2acf9bf5e0bc0fe32c6a0d8aa6e2a9f871a8
   }
 
   export type productsUncheckedUpdateWithoutOrder_itemsInput = {
@@ -131395,416 +131666,7 @@ export namespace Prisma {
     product_images?: product_imagesUncheckedUpdateManyWithoutProductsNestedInput
     product_reviews?: product_reviewsUncheckedUpdateManyWithoutProductNestedInput
     product_variants?: product_variantsUncheckedUpdateManyWithoutProductNestedInput
-<<<<<<< HEAD
-    stock_reservations?: stock_reservationsUncheckedUpdateManyWithoutProductsNestedInput
-  }
-
-  export type ordersCreateWithoutStock_reservationsInput = {
-    order_id?: string
-    business_id: string
-    tenant_id: string
-    order_type: string
-    items?: NullableJsonNullValueInput | InputJsonValue
-    total_amount: Decimal | DecimalJsLike | number | string
-    payment_status?: string
-    payment_id?: string | null
-    paid_at?: Date | string | null
-    delivery_status?: string | null
-    service_status?: string | null
-    created_at?: Date | string
-    updated_at?: Date | string
-    delivered_at?: Date | string | null
-    admin_notes?: string | null
-    cancelled_at?: Date | string | null
-    discount_amount?: Decimal | DecimalJsLike | number | string | null
-    notes?: string | null
-    order_number?: string | null
-    payment_expires_at?: Date | string | null
-    payment_method?: string | null
-    payment_reference?: string | null
-    shipped_at?: Date | string | null
-    shipping_address?: string | null
-    shipping_city?: string | null
-    shipping_fee?: Decimal | DecimalJsLike | number | string | null
-    shipping_phone?: string | null
-    shipping_pincode?: string | null
-    shipping_state?: string | null
-    source?: string | null
-    status?: string | null
-    subtotal?: Decimal | DecimalJsLike | number | string | null
-    tax_amount?: Decimal | DecimalJsLike | number | string | null
-    tracking_number?: string | null
-    billing_address?: string | null
-    cancellation_reason?: string | null
-    order_items?: order_itemsCreateNestedManyWithoutOrdersInput
-    batch?: course_batchesCreateNestedOneWithoutOrdersInput
-    customers?: customersCreateNestedOneWithoutOrdersInput
-    leads?: leadsCreateNestedOneWithoutOrdersInput
-    payments?: paymentsCreateNestedManyWithoutOrdersInput
-    product_reviews?: product_reviewsCreateNestedManyWithoutOrderInput
-  }
-
-  export type ordersUncheckedCreateWithoutStock_reservationsInput = {
-    order_id?: string
-    business_id: string
-    tenant_id: string
-    lead_id?: string | null
-    order_type: string
-    items?: NullableJsonNullValueInput | InputJsonValue
-    total_amount: Decimal | DecimalJsLike | number | string
-    payment_status?: string
-    payment_id?: string | null
-    paid_at?: Date | string | null
-    delivery_status?: string | null
-    service_status?: string | null
-    batch_id?: string | null
-    created_at?: Date | string
-    updated_at?: Date | string
-    delivered_at?: Date | string | null
-    admin_notes?: string | null
-    cancelled_at?: Date | string | null
-    customer_id?: string | null
-    discount_amount?: Decimal | DecimalJsLike | number | string | null
-    notes?: string | null
-    order_number?: string | null
-    payment_expires_at?: Date | string | null
-    payment_method?: string | null
-    payment_reference?: string | null
-    shipped_at?: Date | string | null
-    shipping_address?: string | null
-    shipping_city?: string | null
-    shipping_fee?: Decimal | DecimalJsLike | number | string | null
-    shipping_phone?: string | null
-    shipping_pincode?: string | null
-    shipping_state?: string | null
-    source?: string | null
-    status?: string | null
-    subtotal?: Decimal | DecimalJsLike | number | string | null
-    tax_amount?: Decimal | DecimalJsLike | number | string | null
-    tracking_number?: string | null
-    billing_address?: string | null
-    cancellation_reason?: string | null
-    order_items?: order_itemsUncheckedCreateNestedManyWithoutOrdersInput
-    payments?: paymentsUncheckedCreateNestedManyWithoutOrdersInput
-    product_reviews?: product_reviewsUncheckedCreateNestedManyWithoutOrderInput
-  }
-
-  export type ordersCreateOrConnectWithoutStock_reservationsInput = {
-    where: ordersWhereUniqueInput
-    create: XOR<ordersCreateWithoutStock_reservationsInput, ordersUncheckedCreateWithoutStock_reservationsInput>
-  }
-
-  export type productsCreateWithoutStock_reservationsInput = {
-    product_id?: string
-    tenant_id: string
-    product_type: string
-    name: string
-    description?: string | null
-    category?: string | null
-    price?: Decimal | DecimalJsLike | number | string | null
-    stock_quantity?: number | null
-    image_urls?: NullableJsonNullValueInput | InputJsonValue
-    is_active?: boolean
-    created_at?: Date | string
-    updated_at?: Date | string
-    ai_enhanced_description?: string | null
-    ai_generated_tags?: NullableJsonNullValueInput | InputJsonValue
-    compare_price?: Decimal | DecimalJsLike | number | string | null
-    currency?: string | null
-    has_variants?: boolean | null
-    in_stock?: boolean | null
-    primary_image_url?: string | null
-    reserved_stock?: number | null
-    sku?: string | null
-    slug?: string | null
-    track_inventory?: boolean | null
-    version?: number | null
-    in_whatsapp_catalog?: boolean | null
-    whatsapp_catalog_id?: string | null
-    whatsapp_sync_status?: string | null
-    whatsapp_sync_error?: string | null
-    whatsapp_synced_at?: Date | string | null
-    in_instagram_catalog?: boolean | null
-    instagram_catalog_id?: string | null
-    instagram_sync_status?: string | null
-    instagram_sync_error?: string | null
-    instagram_synced_at?: Date | string | null
-    instagram_retailer_id?: string | null
-    campaigns?: campaignsCreateNestedManyWithoutProductsInput
-    cart_items?: cart_itemsCreateNestedManyWithoutProductsInput
-    cart_reservations?: cart_reservationsCreateNestedManyWithoutProductsInput
-    course_batches?: course_batchesCreateNestedManyWithoutCourseInput
-    order_items?: order_itemsCreateNestedManyWithoutProductsInput
-    product_images?: product_imagesCreateNestedManyWithoutProductsInput
-    product_reviews?: product_reviewsCreateNestedManyWithoutProductInput
-    product_variants?: product_variantsCreateNestedManyWithoutProductInput
-    businesses: businessesCreateNestedOneWithoutProductsInput
-    product_categories?: product_categoriesCreateNestedOneWithoutProductsInput
-  }
-
-  export type productsUncheckedCreateWithoutStock_reservationsInput = {
-    product_id?: string
-    business_id: string
-    tenant_id: string
-    product_type: string
-    name: string
-    description?: string | null
-    category?: string | null
-    price?: Decimal | DecimalJsLike | number | string | null
-    stock_quantity?: number | null
-    image_urls?: NullableJsonNullValueInput | InputJsonValue
-    is_active?: boolean
-    created_at?: Date | string
-    updated_at?: Date | string
-    ai_enhanced_description?: string | null
-    ai_generated_tags?: NullableJsonNullValueInput | InputJsonValue
-    compare_price?: Decimal | DecimalJsLike | number | string | null
-    currency?: string | null
-    has_variants?: boolean | null
-    in_stock?: boolean | null
-    primary_image_url?: string | null
-    reserved_stock?: number | null
-    sku?: string | null
-    slug?: string | null
-    track_inventory?: boolean | null
-    version?: number | null
-    category_id?: string | null
-    in_whatsapp_catalog?: boolean | null
-    whatsapp_catalog_id?: string | null
-    whatsapp_sync_status?: string | null
-    whatsapp_sync_error?: string | null
-    whatsapp_synced_at?: Date | string | null
-    in_instagram_catalog?: boolean | null
-    instagram_catalog_id?: string | null
-    instagram_sync_status?: string | null
-    instagram_sync_error?: string | null
-    instagram_synced_at?: Date | string | null
-    instagram_retailer_id?: string | null
-    campaigns?: campaignsUncheckedCreateNestedManyWithoutProductsInput
-    cart_items?: cart_itemsUncheckedCreateNestedManyWithoutProductsInput
-    cart_reservations?: cart_reservationsUncheckedCreateNestedManyWithoutProductsInput
-    course_batches?: course_batchesUncheckedCreateNestedManyWithoutCourseInput
-    order_items?: order_itemsUncheckedCreateNestedManyWithoutProductsInput
-    product_images?: product_imagesUncheckedCreateNestedManyWithoutProductsInput
-    product_reviews?: product_reviewsUncheckedCreateNestedManyWithoutProductInput
-    product_variants?: product_variantsUncheckedCreateNestedManyWithoutProductInput
-  }
-
-  export type productsCreateOrConnectWithoutStock_reservationsInput = {
-    where: productsWhereUniqueInput
-    create: XOR<productsCreateWithoutStock_reservationsInput, productsUncheckedCreateWithoutStock_reservationsInput>
-  }
-
-  export type ordersUpsertWithoutStock_reservationsInput = {
-    update: XOR<ordersUpdateWithoutStock_reservationsInput, ordersUncheckedUpdateWithoutStock_reservationsInput>
-    create: XOR<ordersCreateWithoutStock_reservationsInput, ordersUncheckedCreateWithoutStock_reservationsInput>
-    where?: ordersWhereInput
-  }
-
-  export type ordersUpdateToOneWithWhereWithoutStock_reservationsInput = {
-    where?: ordersWhereInput
-    data: XOR<ordersUpdateWithoutStock_reservationsInput, ordersUncheckedUpdateWithoutStock_reservationsInput>
-  }
-
-  export type ordersUpdateWithoutStock_reservationsInput = {
-    order_id?: StringFieldUpdateOperationsInput | string
-    business_id?: StringFieldUpdateOperationsInput | string
-    tenant_id?: StringFieldUpdateOperationsInput | string
-    order_type?: StringFieldUpdateOperationsInput | string
-    items?: NullableJsonNullValueInput | InputJsonValue
-    total_amount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    payment_status?: StringFieldUpdateOperationsInput | string
-    payment_id?: NullableStringFieldUpdateOperationsInput | string | null
-    paid_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    delivery_status?: NullableStringFieldUpdateOperationsInput | string | null
-    service_status?: NullableStringFieldUpdateOperationsInput | string | null
-    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    delivered_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    admin_notes?: NullableStringFieldUpdateOperationsInput | string | null
-    cancelled_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    discount_amount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    notes?: NullableStringFieldUpdateOperationsInput | string | null
-    order_number?: NullableStringFieldUpdateOperationsInput | string | null
-    payment_expires_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    payment_method?: NullableStringFieldUpdateOperationsInput | string | null
-    payment_reference?: NullableStringFieldUpdateOperationsInput | string | null
-    shipped_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    shipping_address?: NullableStringFieldUpdateOperationsInput | string | null
-    shipping_city?: NullableStringFieldUpdateOperationsInput | string | null
-    shipping_fee?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    shipping_phone?: NullableStringFieldUpdateOperationsInput | string | null
-    shipping_pincode?: NullableStringFieldUpdateOperationsInput | string | null
-    shipping_state?: NullableStringFieldUpdateOperationsInput | string | null
-    source?: NullableStringFieldUpdateOperationsInput | string | null
-    status?: NullableStringFieldUpdateOperationsInput | string | null
-    subtotal?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    tax_amount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    tracking_number?: NullableStringFieldUpdateOperationsInput | string | null
-    billing_address?: NullableStringFieldUpdateOperationsInput | string | null
-    cancellation_reason?: NullableStringFieldUpdateOperationsInput | string | null
-    order_items?: order_itemsUpdateManyWithoutOrdersNestedInput
-    batch?: course_batchesUpdateOneWithoutOrdersNestedInput
-    customers?: customersUpdateOneWithoutOrdersNestedInput
-    leads?: leadsUpdateOneWithoutOrdersNestedInput
-    payments?: paymentsUpdateManyWithoutOrdersNestedInput
-    product_reviews?: product_reviewsUpdateManyWithoutOrderNestedInput
-  }
-
-  export type ordersUncheckedUpdateWithoutStock_reservationsInput = {
-    order_id?: StringFieldUpdateOperationsInput | string
-    business_id?: StringFieldUpdateOperationsInput | string
-    tenant_id?: StringFieldUpdateOperationsInput | string
-    lead_id?: NullableStringFieldUpdateOperationsInput | string | null
-    order_type?: StringFieldUpdateOperationsInput | string
-    items?: NullableJsonNullValueInput | InputJsonValue
-    total_amount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    payment_status?: StringFieldUpdateOperationsInput | string
-    payment_id?: NullableStringFieldUpdateOperationsInput | string | null
-    paid_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    delivery_status?: NullableStringFieldUpdateOperationsInput | string | null
-    service_status?: NullableStringFieldUpdateOperationsInput | string | null
-    batch_id?: NullableStringFieldUpdateOperationsInput | string | null
-    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    delivered_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    admin_notes?: NullableStringFieldUpdateOperationsInput | string | null
-    cancelled_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    customer_id?: NullableStringFieldUpdateOperationsInput | string | null
-    discount_amount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    notes?: NullableStringFieldUpdateOperationsInput | string | null
-    order_number?: NullableStringFieldUpdateOperationsInput | string | null
-    payment_expires_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    payment_method?: NullableStringFieldUpdateOperationsInput | string | null
-    payment_reference?: NullableStringFieldUpdateOperationsInput | string | null
-    shipped_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    shipping_address?: NullableStringFieldUpdateOperationsInput | string | null
-    shipping_city?: NullableStringFieldUpdateOperationsInput | string | null
-    shipping_fee?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    shipping_phone?: NullableStringFieldUpdateOperationsInput | string | null
-    shipping_pincode?: NullableStringFieldUpdateOperationsInput | string | null
-    shipping_state?: NullableStringFieldUpdateOperationsInput | string | null
-    source?: NullableStringFieldUpdateOperationsInput | string | null
-    status?: NullableStringFieldUpdateOperationsInput | string | null
-    subtotal?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    tax_amount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    tracking_number?: NullableStringFieldUpdateOperationsInput | string | null
-    billing_address?: NullableStringFieldUpdateOperationsInput | string | null
-    cancellation_reason?: NullableStringFieldUpdateOperationsInput | string | null
-    order_items?: order_itemsUncheckedUpdateManyWithoutOrdersNestedInput
-    payments?: paymentsUncheckedUpdateManyWithoutOrdersNestedInput
-    product_reviews?: product_reviewsUncheckedUpdateManyWithoutOrderNestedInput
-  }
-
-  export type productsUpsertWithoutStock_reservationsInput = {
-    update: XOR<productsUpdateWithoutStock_reservationsInput, productsUncheckedUpdateWithoutStock_reservationsInput>
-    create: XOR<productsCreateWithoutStock_reservationsInput, productsUncheckedCreateWithoutStock_reservationsInput>
-    where?: productsWhereInput
-  }
-
-  export type productsUpdateToOneWithWhereWithoutStock_reservationsInput = {
-    where?: productsWhereInput
-    data: XOR<productsUpdateWithoutStock_reservationsInput, productsUncheckedUpdateWithoutStock_reservationsInput>
-  }
-
-  export type productsUpdateWithoutStock_reservationsInput = {
-    product_id?: StringFieldUpdateOperationsInput | string
-    tenant_id?: StringFieldUpdateOperationsInput | string
-    product_type?: StringFieldUpdateOperationsInput | string
-    name?: StringFieldUpdateOperationsInput | string
-    description?: NullableStringFieldUpdateOperationsInput | string | null
-    category?: NullableStringFieldUpdateOperationsInput | string | null
-    price?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    stock_quantity?: NullableIntFieldUpdateOperationsInput | number | null
-    image_urls?: NullableJsonNullValueInput | InputJsonValue
-    is_active?: BoolFieldUpdateOperationsInput | boolean
-    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    ai_enhanced_description?: NullableStringFieldUpdateOperationsInput | string | null
-    ai_generated_tags?: NullableJsonNullValueInput | InputJsonValue
-    compare_price?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    currency?: NullableStringFieldUpdateOperationsInput | string | null
-    has_variants?: NullableBoolFieldUpdateOperationsInput | boolean | null
-    in_stock?: NullableBoolFieldUpdateOperationsInput | boolean | null
-    primary_image_url?: NullableStringFieldUpdateOperationsInput | string | null
-    reserved_stock?: NullableIntFieldUpdateOperationsInput | number | null
-    sku?: NullableStringFieldUpdateOperationsInput | string | null
-    slug?: NullableStringFieldUpdateOperationsInput | string | null
-    track_inventory?: NullableBoolFieldUpdateOperationsInput | boolean | null
-    version?: NullableIntFieldUpdateOperationsInput | number | null
-    in_whatsapp_catalog?: NullableBoolFieldUpdateOperationsInput | boolean | null
-    whatsapp_catalog_id?: NullableStringFieldUpdateOperationsInput | string | null
-    whatsapp_sync_status?: NullableStringFieldUpdateOperationsInput | string | null
-    whatsapp_sync_error?: NullableStringFieldUpdateOperationsInput | string | null
-    whatsapp_synced_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    in_instagram_catalog?: NullableBoolFieldUpdateOperationsInput | boolean | null
-    instagram_catalog_id?: NullableStringFieldUpdateOperationsInput | string | null
-    instagram_sync_status?: NullableStringFieldUpdateOperationsInput | string | null
-    instagram_sync_error?: NullableStringFieldUpdateOperationsInput | string | null
-    instagram_synced_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    instagram_retailer_id?: NullableStringFieldUpdateOperationsInput | string | null
-    campaigns?: campaignsUpdateManyWithoutProductsNestedInput
-    cart_items?: cart_itemsUpdateManyWithoutProductsNestedInput
-    cart_reservations?: cart_reservationsUpdateManyWithoutProductsNestedInput
-    course_batches?: course_batchesUpdateManyWithoutCourseNestedInput
-    order_items?: order_itemsUpdateManyWithoutProductsNestedInput
-    product_images?: product_imagesUpdateManyWithoutProductsNestedInput
-    product_reviews?: product_reviewsUpdateManyWithoutProductNestedInput
-    product_variants?: product_variantsUpdateManyWithoutProductNestedInput
-    businesses?: businessesUpdateOneRequiredWithoutProductsNestedInput
-    product_categories?: product_categoriesUpdateOneWithoutProductsNestedInput
-  }
-
-  export type productsUncheckedUpdateWithoutStock_reservationsInput = {
-    product_id?: StringFieldUpdateOperationsInput | string
-    business_id?: StringFieldUpdateOperationsInput | string
-    tenant_id?: StringFieldUpdateOperationsInput | string
-    product_type?: StringFieldUpdateOperationsInput | string
-    name?: StringFieldUpdateOperationsInput | string
-    description?: NullableStringFieldUpdateOperationsInput | string | null
-    category?: NullableStringFieldUpdateOperationsInput | string | null
-    price?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    stock_quantity?: NullableIntFieldUpdateOperationsInput | number | null
-    image_urls?: NullableJsonNullValueInput | InputJsonValue
-    is_active?: BoolFieldUpdateOperationsInput | boolean
-    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    ai_enhanced_description?: NullableStringFieldUpdateOperationsInput | string | null
-    ai_generated_tags?: NullableJsonNullValueInput | InputJsonValue
-    compare_price?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    currency?: NullableStringFieldUpdateOperationsInput | string | null
-    has_variants?: NullableBoolFieldUpdateOperationsInput | boolean | null
-    in_stock?: NullableBoolFieldUpdateOperationsInput | boolean | null
-    primary_image_url?: NullableStringFieldUpdateOperationsInput | string | null
-    reserved_stock?: NullableIntFieldUpdateOperationsInput | number | null
-    sku?: NullableStringFieldUpdateOperationsInput | string | null
-    slug?: NullableStringFieldUpdateOperationsInput | string | null
-    track_inventory?: NullableBoolFieldUpdateOperationsInput | boolean | null
-    version?: NullableIntFieldUpdateOperationsInput | number | null
-    category_id?: NullableStringFieldUpdateOperationsInput | string | null
-    in_whatsapp_catalog?: NullableBoolFieldUpdateOperationsInput | boolean | null
-    whatsapp_catalog_id?: NullableStringFieldUpdateOperationsInput | string | null
-    whatsapp_sync_status?: NullableStringFieldUpdateOperationsInput | string | null
-    whatsapp_sync_error?: NullableStringFieldUpdateOperationsInput | string | null
-    whatsapp_synced_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    in_instagram_catalog?: NullableBoolFieldUpdateOperationsInput | boolean | null
-    instagram_catalog_id?: NullableStringFieldUpdateOperationsInput | string | null
-    instagram_sync_status?: NullableStringFieldUpdateOperationsInput | string | null
-    instagram_sync_error?: NullableStringFieldUpdateOperationsInput | string | null
-    instagram_synced_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    instagram_retailer_id?: NullableStringFieldUpdateOperationsInput | string | null
-    campaigns?: campaignsUncheckedUpdateManyWithoutProductsNestedInput
-    cart_items?: cart_itemsUncheckedUpdateManyWithoutProductsNestedInput
-    cart_reservations?: cart_reservationsUncheckedUpdateManyWithoutProductsNestedInput
-    course_batches?: course_batchesUncheckedUpdateManyWithoutCourseNestedInput
-    order_items?: order_itemsUncheckedUpdateManyWithoutProductsNestedInput
-    product_images?: product_imagesUncheckedUpdateManyWithoutProductsNestedInput
-    product_reviews?: product_reviewsUncheckedUpdateManyWithoutProductNestedInput
-    product_variants?: product_variantsUncheckedUpdateManyWithoutProductNestedInput
-=======
-    cart_reservations?: cart_reservationsUncheckedUpdateManyWithoutProductsNestedInput
     product_stock_alerts?: product_stock_alertsUncheckedUpdateManyWithoutProductsNestedInput
->>>>>>> 8a7b2acf9bf5e0bc0fe32c6a0d8aa6e2a9f871a8
   }
 
   export type leadsCreateWithoutCart_reservationsInput = {
@@ -132389,12 +132251,7 @@ export namespace Prisma {
     product_variants?: product_variantsCreateNestedManyWithoutProductInput
     businesses: businessesCreateNestedOneWithoutProductsInput
     product_categories?: product_categoriesCreateNestedOneWithoutProductsInput
-<<<<<<< HEAD
-    stock_reservations?: stock_reservationsCreateNestedManyWithoutProductsInput
-=======
-    cart_reservations?: cart_reservationsCreateNestedManyWithoutProductsInput
     product_stock_alerts?: product_stock_alertsCreateNestedManyWithoutProductsInput
->>>>>>> 8a7b2acf9bf5e0bc0fe32c6a0d8aa6e2a9f871a8
   }
 
   export type productsUncheckedCreateWithoutCampaignsInput = {
@@ -132443,12 +132300,7 @@ export namespace Prisma {
     product_images?: product_imagesUncheckedCreateNestedManyWithoutProductsInput
     product_reviews?: product_reviewsUncheckedCreateNestedManyWithoutProductInput
     product_variants?: product_variantsUncheckedCreateNestedManyWithoutProductInput
-<<<<<<< HEAD
-    stock_reservations?: stock_reservationsUncheckedCreateNestedManyWithoutProductsInput
-=======
-    cart_reservations?: cart_reservationsUncheckedCreateNestedManyWithoutProductsInput
     product_stock_alerts?: product_stock_alertsUncheckedCreateNestedManyWithoutProductsInput
->>>>>>> 8a7b2acf9bf5e0bc0fe32c6a0d8aa6e2a9f871a8
   }
 
   export type productsCreateOrConnectWithoutCampaignsInput = {
@@ -132566,12 +132418,7 @@ export namespace Prisma {
     product_variants?: product_variantsUpdateManyWithoutProductNestedInput
     businesses?: businessesUpdateOneRequiredWithoutProductsNestedInput
     product_categories?: product_categoriesUpdateOneWithoutProductsNestedInput
-<<<<<<< HEAD
-    stock_reservations?: stock_reservationsUpdateManyWithoutProductsNestedInput
-=======
-    cart_reservations?: cart_reservationsUpdateManyWithoutProductsNestedInput
     product_stock_alerts?: product_stock_alertsUpdateManyWithoutProductsNestedInput
->>>>>>> 8a7b2acf9bf5e0bc0fe32c6a0d8aa6e2a9f871a8
   }
 
   export type productsUncheckedUpdateWithoutCampaignsInput = {
@@ -132620,12 +132467,7 @@ export namespace Prisma {
     product_images?: product_imagesUncheckedUpdateManyWithoutProductsNestedInput
     product_reviews?: product_reviewsUncheckedUpdateManyWithoutProductNestedInput
     product_variants?: product_variantsUncheckedUpdateManyWithoutProductNestedInput
-<<<<<<< HEAD
-    stock_reservations?: stock_reservationsUncheckedUpdateManyWithoutProductsNestedInput
-=======
-    cart_reservations?: cart_reservationsUncheckedUpdateManyWithoutProductsNestedInput
     product_stock_alerts?: product_stock_alertsUncheckedUpdateManyWithoutProductsNestedInput
->>>>>>> 8a7b2acf9bf5e0bc0fe32c6a0d8aa6e2a9f871a8
   }
 
   export type notification_templatesUpsertWithoutCampaignsInput = {
@@ -133133,3727 +132975,6 @@ export namespace Prisma {
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
-<<<<<<< HEAD
-  export type inventory_levelsCreateWithoutWarehousesInput = {
-    inventory_level_id?: string
-    available_quantity?: number
-    reserved_quantity?: number
-    damaged_quantity?: number
-    in_transit_quantity?: number
-    reorder_point?: number
-    reorder_quantity?: number
-    max_stock_level?: number | null
-    average_cost?: Decimal | DecimalJsLike | number | string
-    total_value?: Decimal | DecimalJsLike | number | string
-    bin_location?: string | null
-    aisle?: string | null
-    shelf?: string | null
-    last_counted_at?: Date | string | null
-    last_restock_at?: Date | string | null
-    is_low_stock?: boolean
-    is_out_of_stock?: boolean
-    metadata?: JsonNullValueInput | InputJsonValue
-    created_at?: Date | string
-    updated_at?: Date | string
-    businesses: businessesCreateNestedOneWithoutInventory_levelsInput
-    tenants: tenantsCreateNestedOneWithoutInventory_levelsInput
-    product_variants: product_variantsCreateNestedOneWithoutInventory_levelsInput
-    stock_alerts?: stock_alertsCreateNestedManyWithoutInventory_levelsInput
-    stock_movements?: stock_movementsCreateNestedManyWithoutInventory_levelsInput
-  }
-
-  export type inventory_levelsUncheckedCreateWithoutWarehousesInput = {
-    inventory_level_id?: string
-    business_id: string
-    tenant_id: string
-    variant_id: string
-    available_quantity?: number
-    reserved_quantity?: number
-    damaged_quantity?: number
-    in_transit_quantity?: number
-    reorder_point?: number
-    reorder_quantity?: number
-    max_stock_level?: number | null
-    average_cost?: Decimal | DecimalJsLike | number | string
-    total_value?: Decimal | DecimalJsLike | number | string
-    bin_location?: string | null
-    aisle?: string | null
-    shelf?: string | null
-    last_counted_at?: Date | string | null
-    last_restock_at?: Date | string | null
-    is_low_stock?: boolean
-    is_out_of_stock?: boolean
-    metadata?: JsonNullValueInput | InputJsonValue
-    created_at?: Date | string
-    updated_at?: Date | string
-    stock_alerts?: stock_alertsUncheckedCreateNestedManyWithoutInventory_levelsInput
-    stock_movements?: stock_movementsUncheckedCreateNestedManyWithoutInventory_levelsInput
-  }
-
-  export type inventory_levelsCreateOrConnectWithoutWarehousesInput = {
-    where: inventory_levelsWhereUniqueInput
-    create: XOR<inventory_levelsCreateWithoutWarehousesInput, inventory_levelsUncheckedCreateWithoutWarehousesInput>
-  }
-
-  export type inventory_levelsCreateManyWarehousesInputEnvelope = {
-    data: inventory_levelsCreateManyWarehousesInput | inventory_levelsCreateManyWarehousesInput[]
-    skipDuplicates?: boolean
-  }
-
-  export type stock_alertsCreateWithoutWarehousesInput = {
-    alert_id?: string
-    alert_type: string
-    severity?: string
-    current_quantity: number
-    reorder_point?: number | null
-    recommended_order_quantity?: number | null
-    status?: string
-    acknowledged_at?: Date | string | null
-    acknowledged_by?: string | null
-    resolved_at?: Date | string | null
-    resolved_by?: string | null
-    resolution_notes?: string | null
-    notification_sent?: boolean
-    notification_sent_at?: Date | string | null
-    metadata?: JsonNullValueInput | InputJsonValue
-    created_at?: Date | string
-    updated_at?: Date | string
-    businesses: businessesCreateNestedOneWithoutStock_alertsInput
-    inventory_levels: inventory_levelsCreateNestedOneWithoutStock_alertsInput
-    tenants: tenantsCreateNestedOneWithoutStock_alertsInput
-    product_variants: product_variantsCreateNestedOneWithoutStock_alertsInput
-  }
-
-  export type stock_alertsUncheckedCreateWithoutWarehousesInput = {
-    alert_id?: string
-    business_id: string
-    tenant_id: string
-    variant_id: string
-    inventory_level_id: string
-    alert_type: string
-    severity?: string
-    current_quantity: number
-    reorder_point?: number | null
-    recommended_order_quantity?: number | null
-    status?: string
-    acknowledged_at?: Date | string | null
-    acknowledged_by?: string | null
-    resolved_at?: Date | string | null
-    resolved_by?: string | null
-    resolution_notes?: string | null
-    notification_sent?: boolean
-    notification_sent_at?: Date | string | null
-    metadata?: JsonNullValueInput | InputJsonValue
-    created_at?: Date | string
-    updated_at?: Date | string
-  }
-
-  export type stock_alertsCreateOrConnectWithoutWarehousesInput = {
-    where: stock_alertsWhereUniqueInput
-    create: XOR<stock_alertsCreateWithoutWarehousesInput, stock_alertsUncheckedCreateWithoutWarehousesInput>
-  }
-
-  export type stock_alertsCreateManyWarehousesInputEnvelope = {
-    data: stock_alertsCreateManyWarehousesInput | stock_alertsCreateManyWarehousesInput[]
-    skipDuplicates?: boolean
-  }
-
-  export type stock_countsCreateWithoutWarehousesInput = {
-    count_id?: string
-    count_number: string
-    count_type?: string
-    status?: string
-    scheduled_date?: Date | string | null
-    start_date?: Date | string | null
-    end_date?: Date | string | null
-    items?: JsonNullValueInput | InputJsonValue
-    total_items_counted?: number
-    total_variances?: number
-    total_value_variance?: Decimal | DecimalJsLike | number | string
-    created_by?: string | null
-    counted_by?: string | null
-    approved_by?: string | null
-    notes?: string | null
-    metadata?: JsonNullValueInput | InputJsonValue
-    created_at?: Date | string
-    updated_at?: Date | string
-    businesses: businessesCreateNestedOneWithoutStock_countsInput
-    tenants: tenantsCreateNestedOneWithoutStock_countsInput
-  }
-
-  export type stock_countsUncheckedCreateWithoutWarehousesInput = {
-    count_id?: string
-    business_id: string
-    tenant_id: string
-    count_number: string
-    count_type?: string
-    status?: string
-    scheduled_date?: Date | string | null
-    start_date?: Date | string | null
-    end_date?: Date | string | null
-    items?: JsonNullValueInput | InputJsonValue
-    total_items_counted?: number
-    total_variances?: number
-    total_value_variance?: Decimal | DecimalJsLike | number | string
-    created_by?: string | null
-    counted_by?: string | null
-    approved_by?: string | null
-    notes?: string | null
-    metadata?: JsonNullValueInput | InputJsonValue
-    created_at?: Date | string
-    updated_at?: Date | string
-  }
-
-  export type stock_countsCreateOrConnectWithoutWarehousesInput = {
-    where: stock_countsWhereUniqueInput
-    create: XOR<stock_countsCreateWithoutWarehousesInput, stock_countsUncheckedCreateWithoutWarehousesInput>
-  }
-
-  export type stock_countsCreateManyWarehousesInputEnvelope = {
-    data: stock_countsCreateManyWarehousesInput | stock_countsCreateManyWarehousesInput[]
-    skipDuplicates?: boolean
-  }
-
-  export type stock_movementsCreateWithoutWarehousesInput = {
-    movement_id?: string
-    movement_type: string
-    movement_date?: Date | string
-    reference_type?: string | null
-    reference_id?: string | null
-    quantity_change: number
-    quantity_before: number
-    quantity_after: number
-    unit_cost?: Decimal | DecimalJsLike | number | string | null
-    total_cost?: Decimal | DecimalJsLike | number | string | null
-    from_warehouse_id?: string | null
-    to_warehouse_id?: string | null
-    reason?: string | null
-    notes?: string | null
-    created_by?: string | null
-    approved_by?: string | null
-    metadata?: JsonNullValueInput | InputJsonValue
-    created_at?: Date | string
-    businesses: businessesCreateNestedOneWithoutStock_movementsInput
-    inventory_levels: inventory_levelsCreateNestedOneWithoutStock_movementsInput
-    tenants: tenantsCreateNestedOneWithoutStock_movementsInput
-    product_variants: product_variantsCreateNestedOneWithoutStock_movementsInput
-  }
-
-  export type stock_movementsUncheckedCreateWithoutWarehousesInput = {
-    movement_id?: string
-    business_id: string
-    tenant_id: string
-    variant_id: string
-    inventory_level_id: string
-    movement_type: string
-    movement_date?: Date | string
-    reference_type?: string | null
-    reference_id?: string | null
-    quantity_change: number
-    quantity_before: number
-    quantity_after: number
-    unit_cost?: Decimal | DecimalJsLike | number | string | null
-    total_cost?: Decimal | DecimalJsLike | number | string | null
-    from_warehouse_id?: string | null
-    to_warehouse_id?: string | null
-    reason?: string | null
-    notes?: string | null
-    created_by?: string | null
-    approved_by?: string | null
-    metadata?: JsonNullValueInput | InputJsonValue
-    created_at?: Date | string
-  }
-
-  export type stock_movementsCreateOrConnectWithoutWarehousesInput = {
-    where: stock_movementsWhereUniqueInput
-    create: XOR<stock_movementsCreateWithoutWarehousesInput, stock_movementsUncheckedCreateWithoutWarehousesInput>
-  }
-
-  export type stock_movementsCreateManyWarehousesInputEnvelope = {
-    data: stock_movementsCreateManyWarehousesInput | stock_movementsCreateManyWarehousesInput[]
-    skipDuplicates?: boolean
-  }
-
-  export type stock_transfersCreateWithoutFrom_warehouseInput = {
-    transfer_id?: string
-    transfer_number: string
-    status?: string
-    items: JsonNullValueInput | InputJsonValue
-    requested_date?: Date | string
-    shipped_date?: Date | string | null
-    received_date?: Date | string | null
-    expected_delivery_date?: Date | string | null
-    tracking_number?: string | null
-    carrier?: string | null
-    requested_by?: string | null
-    approved_by?: string | null
-    shipped_by?: string | null
-    received_by?: string | null
-    notes?: string | null
-    rejection_reason?: string | null
-    metadata?: JsonNullValueInput | InputJsonValue
-    created_at?: Date | string
-    updated_at?: Date | string
-    businesses: businessesCreateNestedOneWithoutStock_transfersInput
-    tenants: tenantsCreateNestedOneWithoutStock_transfersInput
-    to_warehouse: warehousesCreateNestedOneWithoutStock_transfers_toInput
-  }
-
-  export type stock_transfersUncheckedCreateWithoutFrom_warehouseInput = {
-    transfer_id?: string
-    business_id: string
-    tenant_id: string
-    transfer_number: string
-    to_warehouse_id: string
-    status?: string
-    items: JsonNullValueInput | InputJsonValue
-    requested_date?: Date | string
-    shipped_date?: Date | string | null
-    received_date?: Date | string | null
-    expected_delivery_date?: Date | string | null
-    tracking_number?: string | null
-    carrier?: string | null
-    requested_by?: string | null
-    approved_by?: string | null
-    shipped_by?: string | null
-    received_by?: string | null
-    notes?: string | null
-    rejection_reason?: string | null
-    metadata?: JsonNullValueInput | InputJsonValue
-    created_at?: Date | string
-    updated_at?: Date | string
-  }
-
-  export type stock_transfersCreateOrConnectWithoutFrom_warehouseInput = {
-    where: stock_transfersWhereUniqueInput
-    create: XOR<stock_transfersCreateWithoutFrom_warehouseInput, stock_transfersUncheckedCreateWithoutFrom_warehouseInput>
-  }
-
-  export type stock_transfersCreateManyFrom_warehouseInputEnvelope = {
-    data: stock_transfersCreateManyFrom_warehouseInput | stock_transfersCreateManyFrom_warehouseInput[]
-    skipDuplicates?: boolean
-  }
-
-  export type stock_transfersCreateWithoutTo_warehouseInput = {
-    transfer_id?: string
-    transfer_number: string
-    status?: string
-    items: JsonNullValueInput | InputJsonValue
-    requested_date?: Date | string
-    shipped_date?: Date | string | null
-    received_date?: Date | string | null
-    expected_delivery_date?: Date | string | null
-    tracking_number?: string | null
-    carrier?: string | null
-    requested_by?: string | null
-    approved_by?: string | null
-    shipped_by?: string | null
-    received_by?: string | null
-    notes?: string | null
-    rejection_reason?: string | null
-    metadata?: JsonNullValueInput | InputJsonValue
-    created_at?: Date | string
-    updated_at?: Date | string
-    businesses: businessesCreateNestedOneWithoutStock_transfersInput
-    from_warehouse: warehousesCreateNestedOneWithoutStock_transfers_fromInput
-    tenants: tenantsCreateNestedOneWithoutStock_transfersInput
-  }
-
-  export type stock_transfersUncheckedCreateWithoutTo_warehouseInput = {
-    transfer_id?: string
-    business_id: string
-    tenant_id: string
-    transfer_number: string
-    from_warehouse_id: string
-    status?: string
-    items: JsonNullValueInput | InputJsonValue
-    requested_date?: Date | string
-    shipped_date?: Date | string | null
-    received_date?: Date | string | null
-    expected_delivery_date?: Date | string | null
-    tracking_number?: string | null
-    carrier?: string | null
-    requested_by?: string | null
-    approved_by?: string | null
-    shipped_by?: string | null
-    received_by?: string | null
-    notes?: string | null
-    rejection_reason?: string | null
-    metadata?: JsonNullValueInput | InputJsonValue
-    created_at?: Date | string
-    updated_at?: Date | string
-  }
-
-  export type stock_transfersCreateOrConnectWithoutTo_warehouseInput = {
-    where: stock_transfersWhereUniqueInput
-    create: XOR<stock_transfersCreateWithoutTo_warehouseInput, stock_transfersUncheckedCreateWithoutTo_warehouseInput>
-  }
-
-  export type stock_transfersCreateManyTo_warehouseInputEnvelope = {
-    data: stock_transfersCreateManyTo_warehouseInput | stock_transfersCreateManyTo_warehouseInput[]
-    skipDuplicates?: boolean
-  }
-
-  export type businessesCreateWithoutWarehousesInput = {
-    business_id?: string
-    business_name: string
-    business_type?: string | null
-    whatsapp_number?: string | null
-    created_at?: Date | string | null
-    updated_at?: Date | string | null
-    email?: string | null
-    phone?: string | null
-    website?: string | null
-    city?: string | null
-    address?: string | null
-    country?: string | null
-    gst_number?: string | null
-    pan_number?: string | null
-    business_employees?: business_employeesCreateNestedManyWithoutBusinessesInput
-    business_workflows?: business_workflowsCreateNestedManyWithoutBusinessesInput
-    tenants: tenantsCreateNestedOneWithoutBusinessesInput
-    carts?: cartsCreateNestedManyWithoutBusinessesInput
-    inventory_levels?: inventory_levelsCreateNestedManyWithoutBusinessesInput
-    leads?: leadsCreateNestedManyWithoutBusinessesInput
-    notification_messages?: notification_messagesCreateNestedManyWithoutBusinessesInput
-    notification_preferences?: notification_preferencesCreateNestedManyWithoutBusinessesInput
-    notification_templates?: notification_templatesCreateNestedManyWithoutBusinessesInput
-    payment_reconciliation?: payment_reconciliationCreateNestedManyWithoutBusinessesInput
-    payments?: paymentsCreateNestedManyWithoutBusinessesInput
-    product_categories?: product_categoriesCreateNestedManyWithoutBusinessesInput
-    product_images?: product_imagesCreateNestedManyWithoutBusinessesInput
-    products?: productsCreateNestedManyWithoutBusinessesInput
-    social_accounts?: social_accountsCreateNestedManyWithoutBusinessesInput
-    stock_alerts?: stock_alertsCreateNestedManyWithoutBusinessesInput
-    stock_counts?: stock_countsCreateNestedManyWithoutBusinessesInput
-    stock_movements?: stock_movementsCreateNestedManyWithoutBusinessesInput
-    stock_transfers?: stock_transfersCreateNestedManyWithoutBusinessesInput
-    tags?: tagsCreateNestedManyWithoutBusinessesInput
-    users?: usersCreateNestedManyWithoutBusinessesInput
-    workflow_executions?: workflow_executionsCreateNestedManyWithoutBusinessesInput
-  }
-
-  export type businessesUncheckedCreateWithoutWarehousesInput = {
-    business_id?: string
-    tenant_id: string
-    business_name: string
-    business_type?: string | null
-    whatsapp_number?: string | null
-    created_at?: Date | string | null
-    updated_at?: Date | string | null
-    email?: string | null
-    phone?: string | null
-    website?: string | null
-    city?: string | null
-    address?: string | null
-    country?: string | null
-    gst_number?: string | null
-    pan_number?: string | null
-    business_employees?: business_employeesUncheckedCreateNestedManyWithoutBusinessesInput
-    business_workflows?: business_workflowsUncheckedCreateNestedManyWithoutBusinessesInput
-    carts?: cartsUncheckedCreateNestedManyWithoutBusinessesInput
-    inventory_levels?: inventory_levelsUncheckedCreateNestedManyWithoutBusinessesInput
-    leads?: leadsUncheckedCreateNestedManyWithoutBusinessesInput
-    notification_messages?: notification_messagesUncheckedCreateNestedManyWithoutBusinessesInput
-    notification_preferences?: notification_preferencesUncheckedCreateNestedManyWithoutBusinessesInput
-    notification_templates?: notification_templatesUncheckedCreateNestedManyWithoutBusinessesInput
-    payment_reconciliation?: payment_reconciliationUncheckedCreateNestedManyWithoutBusinessesInput
-    payments?: paymentsUncheckedCreateNestedManyWithoutBusinessesInput
-    product_categories?: product_categoriesUncheckedCreateNestedManyWithoutBusinessesInput
-    product_images?: product_imagesUncheckedCreateNestedManyWithoutBusinessesInput
-    products?: productsUncheckedCreateNestedManyWithoutBusinessesInput
-    social_accounts?: social_accountsUncheckedCreateNestedManyWithoutBusinessesInput
-    stock_alerts?: stock_alertsUncheckedCreateNestedManyWithoutBusinessesInput
-    stock_counts?: stock_countsUncheckedCreateNestedManyWithoutBusinessesInput
-    stock_movements?: stock_movementsUncheckedCreateNestedManyWithoutBusinessesInput
-    stock_transfers?: stock_transfersUncheckedCreateNestedManyWithoutBusinessesInput
-    tags?: tagsUncheckedCreateNestedManyWithoutBusinessesInput
-    users?: usersUncheckedCreateNestedManyWithoutBusinessesInput
-    workflow_executions?: workflow_executionsUncheckedCreateNestedManyWithoutBusinessesInput
-  }
-
-  export type businessesCreateOrConnectWithoutWarehousesInput = {
-    where: businessesWhereUniqueInput
-    create: XOR<businessesCreateWithoutWarehousesInput, businessesUncheckedCreateWithoutWarehousesInput>
-  }
-
-  export type tenantsCreateWithoutWarehousesInput = {
-    tenant_id?: string
-    tenant_name: string
-    email: string
-    phone_number?: string | null
-    created_at?: Date | string | null
-    updated_at?: Date | string | null
-    address?: string | null
-    gst_number?: string | null
-    pan_number?: string | null
-    registration_no?: string | null
-    business_workflows?: business_workflowsCreateNestedManyWithoutTenantsInput
-    businesses?: businessesCreateNestedManyWithoutTenantsInput
-    carts?: cartsCreateNestedManyWithoutTenantsInput
-    inventory_levels?: inventory_levelsCreateNestedManyWithoutTenantsInput
-    leads?: leadsCreateNestedManyWithoutTenantsInput
-    notification_messages?: notification_messagesCreateNestedManyWithoutTenantsInput
-    notification_templates?: notification_templatesCreateNestedManyWithoutTenantsInput
-    product_categories?: product_categoriesCreateNestedManyWithoutTenantsInput
-    stock_alerts?: stock_alertsCreateNestedManyWithoutTenantsInput
-    stock_counts?: stock_countsCreateNestedManyWithoutTenantsInput
-    stock_movements?: stock_movementsCreateNestedManyWithoutTenantsInput
-    stock_transfers?: stock_transfersCreateNestedManyWithoutTenantsInput
-  }
-
-  export type tenantsUncheckedCreateWithoutWarehousesInput = {
-    tenant_id?: string
-    tenant_name: string
-    email: string
-    phone_number?: string | null
-    created_at?: Date | string | null
-    updated_at?: Date | string | null
-    address?: string | null
-    gst_number?: string | null
-    pan_number?: string | null
-    registration_no?: string | null
-    business_workflows?: business_workflowsUncheckedCreateNestedManyWithoutTenantsInput
-    businesses?: businessesUncheckedCreateNestedManyWithoutTenantsInput
-    carts?: cartsUncheckedCreateNestedManyWithoutTenantsInput
-    inventory_levels?: inventory_levelsUncheckedCreateNestedManyWithoutTenantsInput
-    leads?: leadsUncheckedCreateNestedManyWithoutTenantsInput
-    notification_messages?: notification_messagesUncheckedCreateNestedManyWithoutTenantsInput
-    notification_templates?: notification_templatesUncheckedCreateNestedManyWithoutTenantsInput
-    product_categories?: product_categoriesUncheckedCreateNestedManyWithoutTenantsInput
-    stock_alerts?: stock_alertsUncheckedCreateNestedManyWithoutTenantsInput
-    stock_counts?: stock_countsUncheckedCreateNestedManyWithoutTenantsInput
-    stock_movements?: stock_movementsUncheckedCreateNestedManyWithoutTenantsInput
-    stock_transfers?: stock_transfersUncheckedCreateNestedManyWithoutTenantsInput
-  }
-
-  export type tenantsCreateOrConnectWithoutWarehousesInput = {
-    where: tenantsWhereUniqueInput
-    create: XOR<tenantsCreateWithoutWarehousesInput, tenantsUncheckedCreateWithoutWarehousesInput>
-  }
-
-  export type inventory_levelsUpsertWithWhereUniqueWithoutWarehousesInput = {
-    where: inventory_levelsWhereUniqueInput
-    update: XOR<inventory_levelsUpdateWithoutWarehousesInput, inventory_levelsUncheckedUpdateWithoutWarehousesInput>
-    create: XOR<inventory_levelsCreateWithoutWarehousesInput, inventory_levelsUncheckedCreateWithoutWarehousesInput>
-  }
-
-  export type inventory_levelsUpdateWithWhereUniqueWithoutWarehousesInput = {
-    where: inventory_levelsWhereUniqueInput
-    data: XOR<inventory_levelsUpdateWithoutWarehousesInput, inventory_levelsUncheckedUpdateWithoutWarehousesInput>
-  }
-
-  export type inventory_levelsUpdateManyWithWhereWithoutWarehousesInput = {
-    where: inventory_levelsScalarWhereInput
-    data: XOR<inventory_levelsUpdateManyMutationInput, inventory_levelsUncheckedUpdateManyWithoutWarehousesInput>
-  }
-
-  export type stock_alertsUpsertWithWhereUniqueWithoutWarehousesInput = {
-    where: stock_alertsWhereUniqueInput
-    update: XOR<stock_alertsUpdateWithoutWarehousesInput, stock_alertsUncheckedUpdateWithoutWarehousesInput>
-    create: XOR<stock_alertsCreateWithoutWarehousesInput, stock_alertsUncheckedCreateWithoutWarehousesInput>
-  }
-
-  export type stock_alertsUpdateWithWhereUniqueWithoutWarehousesInput = {
-    where: stock_alertsWhereUniqueInput
-    data: XOR<stock_alertsUpdateWithoutWarehousesInput, stock_alertsUncheckedUpdateWithoutWarehousesInput>
-  }
-
-  export type stock_alertsUpdateManyWithWhereWithoutWarehousesInput = {
-    where: stock_alertsScalarWhereInput
-    data: XOR<stock_alertsUpdateManyMutationInput, stock_alertsUncheckedUpdateManyWithoutWarehousesInput>
-  }
-
-  export type stock_countsUpsertWithWhereUniqueWithoutWarehousesInput = {
-    where: stock_countsWhereUniqueInput
-    update: XOR<stock_countsUpdateWithoutWarehousesInput, stock_countsUncheckedUpdateWithoutWarehousesInput>
-    create: XOR<stock_countsCreateWithoutWarehousesInput, stock_countsUncheckedCreateWithoutWarehousesInput>
-  }
-
-  export type stock_countsUpdateWithWhereUniqueWithoutWarehousesInput = {
-    where: stock_countsWhereUniqueInput
-    data: XOR<stock_countsUpdateWithoutWarehousesInput, stock_countsUncheckedUpdateWithoutWarehousesInput>
-  }
-
-  export type stock_countsUpdateManyWithWhereWithoutWarehousesInput = {
-    where: stock_countsScalarWhereInput
-    data: XOR<stock_countsUpdateManyMutationInput, stock_countsUncheckedUpdateManyWithoutWarehousesInput>
-  }
-
-  export type stock_movementsUpsertWithWhereUniqueWithoutWarehousesInput = {
-    where: stock_movementsWhereUniqueInput
-    update: XOR<stock_movementsUpdateWithoutWarehousesInput, stock_movementsUncheckedUpdateWithoutWarehousesInput>
-    create: XOR<stock_movementsCreateWithoutWarehousesInput, stock_movementsUncheckedCreateWithoutWarehousesInput>
-  }
-
-  export type stock_movementsUpdateWithWhereUniqueWithoutWarehousesInput = {
-    where: stock_movementsWhereUniqueInput
-    data: XOR<stock_movementsUpdateWithoutWarehousesInput, stock_movementsUncheckedUpdateWithoutWarehousesInput>
-  }
-
-  export type stock_movementsUpdateManyWithWhereWithoutWarehousesInput = {
-    where: stock_movementsScalarWhereInput
-    data: XOR<stock_movementsUpdateManyMutationInput, stock_movementsUncheckedUpdateManyWithoutWarehousesInput>
-  }
-
-  export type stock_transfersUpsertWithWhereUniqueWithoutFrom_warehouseInput = {
-    where: stock_transfersWhereUniqueInput
-    update: XOR<stock_transfersUpdateWithoutFrom_warehouseInput, stock_transfersUncheckedUpdateWithoutFrom_warehouseInput>
-    create: XOR<stock_transfersCreateWithoutFrom_warehouseInput, stock_transfersUncheckedCreateWithoutFrom_warehouseInput>
-  }
-
-  export type stock_transfersUpdateWithWhereUniqueWithoutFrom_warehouseInput = {
-    where: stock_transfersWhereUniqueInput
-    data: XOR<stock_transfersUpdateWithoutFrom_warehouseInput, stock_transfersUncheckedUpdateWithoutFrom_warehouseInput>
-  }
-
-  export type stock_transfersUpdateManyWithWhereWithoutFrom_warehouseInput = {
-    where: stock_transfersScalarWhereInput
-    data: XOR<stock_transfersUpdateManyMutationInput, stock_transfersUncheckedUpdateManyWithoutFrom_warehouseInput>
-  }
-
-  export type stock_transfersUpsertWithWhereUniqueWithoutTo_warehouseInput = {
-    where: stock_transfersWhereUniqueInput
-    update: XOR<stock_transfersUpdateWithoutTo_warehouseInput, stock_transfersUncheckedUpdateWithoutTo_warehouseInput>
-    create: XOR<stock_transfersCreateWithoutTo_warehouseInput, stock_transfersUncheckedCreateWithoutTo_warehouseInput>
-  }
-
-  export type stock_transfersUpdateWithWhereUniqueWithoutTo_warehouseInput = {
-    where: stock_transfersWhereUniqueInput
-    data: XOR<stock_transfersUpdateWithoutTo_warehouseInput, stock_transfersUncheckedUpdateWithoutTo_warehouseInput>
-  }
-
-  export type stock_transfersUpdateManyWithWhereWithoutTo_warehouseInput = {
-    where: stock_transfersScalarWhereInput
-    data: XOR<stock_transfersUpdateManyMutationInput, stock_transfersUncheckedUpdateManyWithoutTo_warehouseInput>
-  }
-
-  export type businessesUpsertWithoutWarehousesInput = {
-    update: XOR<businessesUpdateWithoutWarehousesInput, businessesUncheckedUpdateWithoutWarehousesInput>
-    create: XOR<businessesCreateWithoutWarehousesInput, businessesUncheckedCreateWithoutWarehousesInput>
-    where?: businessesWhereInput
-  }
-
-  export type businessesUpdateToOneWithWhereWithoutWarehousesInput = {
-    where?: businessesWhereInput
-    data: XOR<businessesUpdateWithoutWarehousesInput, businessesUncheckedUpdateWithoutWarehousesInput>
-  }
-
-  export type businessesUpdateWithoutWarehousesInput = {
-    business_id?: StringFieldUpdateOperationsInput | string
-    business_name?: StringFieldUpdateOperationsInput | string
-    business_type?: NullableStringFieldUpdateOperationsInput | string | null
-    whatsapp_number?: NullableStringFieldUpdateOperationsInput | string | null
-    created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    email?: NullableStringFieldUpdateOperationsInput | string | null
-    phone?: NullableStringFieldUpdateOperationsInput | string | null
-    website?: NullableStringFieldUpdateOperationsInput | string | null
-    city?: NullableStringFieldUpdateOperationsInput | string | null
-    address?: NullableStringFieldUpdateOperationsInput | string | null
-    country?: NullableStringFieldUpdateOperationsInput | string | null
-    gst_number?: NullableStringFieldUpdateOperationsInput | string | null
-    pan_number?: NullableStringFieldUpdateOperationsInput | string | null
-    business_employees?: business_employeesUpdateManyWithoutBusinessesNestedInput
-    business_workflows?: business_workflowsUpdateManyWithoutBusinessesNestedInput
-    tenants?: tenantsUpdateOneRequiredWithoutBusinessesNestedInput
-    carts?: cartsUpdateManyWithoutBusinessesNestedInput
-    inventory_levels?: inventory_levelsUpdateManyWithoutBusinessesNestedInput
-    leads?: leadsUpdateManyWithoutBusinessesNestedInput
-    notification_messages?: notification_messagesUpdateManyWithoutBusinessesNestedInput
-    notification_preferences?: notification_preferencesUpdateManyWithoutBusinessesNestedInput
-    notification_templates?: notification_templatesUpdateManyWithoutBusinessesNestedInput
-    payment_reconciliation?: payment_reconciliationUpdateManyWithoutBusinessesNestedInput
-    payments?: paymentsUpdateManyWithoutBusinessesNestedInput
-    product_categories?: product_categoriesUpdateManyWithoutBusinessesNestedInput
-    product_images?: product_imagesUpdateManyWithoutBusinessesNestedInput
-    products?: productsUpdateManyWithoutBusinessesNestedInput
-    social_accounts?: social_accountsUpdateManyWithoutBusinessesNestedInput
-    stock_alerts?: stock_alertsUpdateManyWithoutBusinessesNestedInput
-    stock_counts?: stock_countsUpdateManyWithoutBusinessesNestedInput
-    stock_movements?: stock_movementsUpdateManyWithoutBusinessesNestedInput
-    stock_transfers?: stock_transfersUpdateManyWithoutBusinessesNestedInput
-    tags?: tagsUpdateManyWithoutBusinessesNestedInput
-    users?: usersUpdateManyWithoutBusinessesNestedInput
-    workflow_executions?: workflow_executionsUpdateManyWithoutBusinessesNestedInput
-  }
-
-  export type businessesUncheckedUpdateWithoutWarehousesInput = {
-    business_id?: StringFieldUpdateOperationsInput | string
-    tenant_id?: StringFieldUpdateOperationsInput | string
-    business_name?: StringFieldUpdateOperationsInput | string
-    business_type?: NullableStringFieldUpdateOperationsInput | string | null
-    whatsapp_number?: NullableStringFieldUpdateOperationsInput | string | null
-    created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    email?: NullableStringFieldUpdateOperationsInput | string | null
-    phone?: NullableStringFieldUpdateOperationsInput | string | null
-    website?: NullableStringFieldUpdateOperationsInput | string | null
-    city?: NullableStringFieldUpdateOperationsInput | string | null
-    address?: NullableStringFieldUpdateOperationsInput | string | null
-    country?: NullableStringFieldUpdateOperationsInput | string | null
-    gst_number?: NullableStringFieldUpdateOperationsInput | string | null
-    pan_number?: NullableStringFieldUpdateOperationsInput | string | null
-    business_employees?: business_employeesUncheckedUpdateManyWithoutBusinessesNestedInput
-    business_workflows?: business_workflowsUncheckedUpdateManyWithoutBusinessesNestedInput
-    carts?: cartsUncheckedUpdateManyWithoutBusinessesNestedInput
-    inventory_levels?: inventory_levelsUncheckedUpdateManyWithoutBusinessesNestedInput
-    leads?: leadsUncheckedUpdateManyWithoutBusinessesNestedInput
-    notification_messages?: notification_messagesUncheckedUpdateManyWithoutBusinessesNestedInput
-    notification_preferences?: notification_preferencesUncheckedUpdateManyWithoutBusinessesNestedInput
-    notification_templates?: notification_templatesUncheckedUpdateManyWithoutBusinessesNestedInput
-    payment_reconciliation?: payment_reconciliationUncheckedUpdateManyWithoutBusinessesNestedInput
-    payments?: paymentsUncheckedUpdateManyWithoutBusinessesNestedInput
-    product_categories?: product_categoriesUncheckedUpdateManyWithoutBusinessesNestedInput
-    product_images?: product_imagesUncheckedUpdateManyWithoutBusinessesNestedInput
-    products?: productsUncheckedUpdateManyWithoutBusinessesNestedInput
-    social_accounts?: social_accountsUncheckedUpdateManyWithoutBusinessesNestedInput
-    stock_alerts?: stock_alertsUncheckedUpdateManyWithoutBusinessesNestedInput
-    stock_counts?: stock_countsUncheckedUpdateManyWithoutBusinessesNestedInput
-    stock_movements?: stock_movementsUncheckedUpdateManyWithoutBusinessesNestedInput
-    stock_transfers?: stock_transfersUncheckedUpdateManyWithoutBusinessesNestedInput
-    tags?: tagsUncheckedUpdateManyWithoutBusinessesNestedInput
-    users?: usersUncheckedUpdateManyWithoutBusinessesNestedInput
-    workflow_executions?: workflow_executionsUncheckedUpdateManyWithoutBusinessesNestedInput
-  }
-
-  export type tenantsUpsertWithoutWarehousesInput = {
-    update: XOR<tenantsUpdateWithoutWarehousesInput, tenantsUncheckedUpdateWithoutWarehousesInput>
-    create: XOR<tenantsCreateWithoutWarehousesInput, tenantsUncheckedCreateWithoutWarehousesInput>
-    where?: tenantsWhereInput
-  }
-
-  export type tenantsUpdateToOneWithWhereWithoutWarehousesInput = {
-    where?: tenantsWhereInput
-    data: XOR<tenantsUpdateWithoutWarehousesInput, tenantsUncheckedUpdateWithoutWarehousesInput>
-  }
-
-  export type tenantsUpdateWithoutWarehousesInput = {
-    tenant_id?: StringFieldUpdateOperationsInput | string
-    tenant_name?: StringFieldUpdateOperationsInput | string
-    email?: StringFieldUpdateOperationsInput | string
-    phone_number?: NullableStringFieldUpdateOperationsInput | string | null
-    created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    address?: NullableStringFieldUpdateOperationsInput | string | null
-    gst_number?: NullableStringFieldUpdateOperationsInput | string | null
-    pan_number?: NullableStringFieldUpdateOperationsInput | string | null
-    registration_no?: NullableStringFieldUpdateOperationsInput | string | null
-    business_workflows?: business_workflowsUpdateManyWithoutTenantsNestedInput
-    businesses?: businessesUpdateManyWithoutTenantsNestedInput
-    carts?: cartsUpdateManyWithoutTenantsNestedInput
-    inventory_levels?: inventory_levelsUpdateManyWithoutTenantsNestedInput
-    leads?: leadsUpdateManyWithoutTenantsNestedInput
-    notification_messages?: notification_messagesUpdateManyWithoutTenantsNestedInput
-    notification_templates?: notification_templatesUpdateManyWithoutTenantsNestedInput
-    product_categories?: product_categoriesUpdateManyWithoutTenantsNestedInput
-    stock_alerts?: stock_alertsUpdateManyWithoutTenantsNestedInput
-    stock_counts?: stock_countsUpdateManyWithoutTenantsNestedInput
-    stock_movements?: stock_movementsUpdateManyWithoutTenantsNestedInput
-    stock_transfers?: stock_transfersUpdateManyWithoutTenantsNestedInput
-  }
-
-  export type tenantsUncheckedUpdateWithoutWarehousesInput = {
-    tenant_id?: StringFieldUpdateOperationsInput | string
-    tenant_name?: StringFieldUpdateOperationsInput | string
-    email?: StringFieldUpdateOperationsInput | string
-    phone_number?: NullableStringFieldUpdateOperationsInput | string | null
-    created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    address?: NullableStringFieldUpdateOperationsInput | string | null
-    gst_number?: NullableStringFieldUpdateOperationsInput | string | null
-    pan_number?: NullableStringFieldUpdateOperationsInput | string | null
-    registration_no?: NullableStringFieldUpdateOperationsInput | string | null
-    business_workflows?: business_workflowsUncheckedUpdateManyWithoutTenantsNestedInput
-    businesses?: businessesUncheckedUpdateManyWithoutTenantsNestedInput
-    carts?: cartsUncheckedUpdateManyWithoutTenantsNestedInput
-    inventory_levels?: inventory_levelsUncheckedUpdateManyWithoutTenantsNestedInput
-    leads?: leadsUncheckedUpdateManyWithoutTenantsNestedInput
-    notification_messages?: notification_messagesUncheckedUpdateManyWithoutTenantsNestedInput
-    notification_templates?: notification_templatesUncheckedUpdateManyWithoutTenantsNestedInput
-    product_categories?: product_categoriesUncheckedUpdateManyWithoutTenantsNestedInput
-    stock_alerts?: stock_alertsUncheckedUpdateManyWithoutTenantsNestedInput
-    stock_counts?: stock_countsUncheckedUpdateManyWithoutTenantsNestedInput
-    stock_movements?: stock_movementsUncheckedUpdateManyWithoutTenantsNestedInput
-    stock_transfers?: stock_transfersUncheckedUpdateManyWithoutTenantsNestedInput
-  }
-
-  export type businessesCreateWithoutInventory_levelsInput = {
-    business_id?: string
-    business_name: string
-    business_type?: string | null
-    whatsapp_number?: string | null
-    created_at?: Date | string | null
-    updated_at?: Date | string | null
-    email?: string | null
-    phone?: string | null
-    website?: string | null
-    city?: string | null
-    address?: string | null
-    country?: string | null
-    gst_number?: string | null
-    pan_number?: string | null
-    business_employees?: business_employeesCreateNestedManyWithoutBusinessesInput
-    business_workflows?: business_workflowsCreateNestedManyWithoutBusinessesInput
-    tenants: tenantsCreateNestedOneWithoutBusinessesInput
-    carts?: cartsCreateNestedManyWithoutBusinessesInput
-    leads?: leadsCreateNestedManyWithoutBusinessesInput
-    notification_messages?: notification_messagesCreateNestedManyWithoutBusinessesInput
-    notification_preferences?: notification_preferencesCreateNestedManyWithoutBusinessesInput
-    notification_templates?: notification_templatesCreateNestedManyWithoutBusinessesInput
-    payment_reconciliation?: payment_reconciliationCreateNestedManyWithoutBusinessesInput
-    payments?: paymentsCreateNestedManyWithoutBusinessesInput
-    product_categories?: product_categoriesCreateNestedManyWithoutBusinessesInput
-    product_images?: product_imagesCreateNestedManyWithoutBusinessesInput
-    products?: productsCreateNestedManyWithoutBusinessesInput
-    social_accounts?: social_accountsCreateNestedManyWithoutBusinessesInput
-    stock_alerts?: stock_alertsCreateNestedManyWithoutBusinessesInput
-    stock_counts?: stock_countsCreateNestedManyWithoutBusinessesInput
-    stock_movements?: stock_movementsCreateNestedManyWithoutBusinessesInput
-    stock_transfers?: stock_transfersCreateNestedManyWithoutBusinessesInput
-    tags?: tagsCreateNestedManyWithoutBusinessesInput
-    users?: usersCreateNestedManyWithoutBusinessesInput
-    warehouses?: warehousesCreateNestedManyWithoutBusinessesInput
-    workflow_executions?: workflow_executionsCreateNestedManyWithoutBusinessesInput
-  }
-
-  export type businessesUncheckedCreateWithoutInventory_levelsInput = {
-    business_id?: string
-    tenant_id: string
-    business_name: string
-    business_type?: string | null
-    whatsapp_number?: string | null
-    created_at?: Date | string | null
-    updated_at?: Date | string | null
-    email?: string | null
-    phone?: string | null
-    website?: string | null
-    city?: string | null
-    address?: string | null
-    country?: string | null
-    gst_number?: string | null
-    pan_number?: string | null
-    business_employees?: business_employeesUncheckedCreateNestedManyWithoutBusinessesInput
-    business_workflows?: business_workflowsUncheckedCreateNestedManyWithoutBusinessesInput
-    carts?: cartsUncheckedCreateNestedManyWithoutBusinessesInput
-    leads?: leadsUncheckedCreateNestedManyWithoutBusinessesInput
-    notification_messages?: notification_messagesUncheckedCreateNestedManyWithoutBusinessesInput
-    notification_preferences?: notification_preferencesUncheckedCreateNestedManyWithoutBusinessesInput
-    notification_templates?: notification_templatesUncheckedCreateNestedManyWithoutBusinessesInput
-    payment_reconciliation?: payment_reconciliationUncheckedCreateNestedManyWithoutBusinessesInput
-    payments?: paymentsUncheckedCreateNestedManyWithoutBusinessesInput
-    product_categories?: product_categoriesUncheckedCreateNestedManyWithoutBusinessesInput
-    product_images?: product_imagesUncheckedCreateNestedManyWithoutBusinessesInput
-    products?: productsUncheckedCreateNestedManyWithoutBusinessesInput
-    social_accounts?: social_accountsUncheckedCreateNestedManyWithoutBusinessesInput
-    stock_alerts?: stock_alertsUncheckedCreateNestedManyWithoutBusinessesInput
-    stock_counts?: stock_countsUncheckedCreateNestedManyWithoutBusinessesInput
-    stock_movements?: stock_movementsUncheckedCreateNestedManyWithoutBusinessesInput
-    stock_transfers?: stock_transfersUncheckedCreateNestedManyWithoutBusinessesInput
-    tags?: tagsUncheckedCreateNestedManyWithoutBusinessesInput
-    users?: usersUncheckedCreateNestedManyWithoutBusinessesInput
-    warehouses?: warehousesUncheckedCreateNestedManyWithoutBusinessesInput
-    workflow_executions?: workflow_executionsUncheckedCreateNestedManyWithoutBusinessesInput
-  }
-
-  export type businessesCreateOrConnectWithoutInventory_levelsInput = {
-    where: businessesWhereUniqueInput
-    create: XOR<businessesCreateWithoutInventory_levelsInput, businessesUncheckedCreateWithoutInventory_levelsInput>
-  }
-
-  export type tenantsCreateWithoutInventory_levelsInput = {
-    tenant_id?: string
-    tenant_name: string
-    email: string
-    phone_number?: string | null
-    created_at?: Date | string | null
-    updated_at?: Date | string | null
-    address?: string | null
-    gst_number?: string | null
-    pan_number?: string | null
-    registration_no?: string | null
-    business_workflows?: business_workflowsCreateNestedManyWithoutTenantsInput
-    businesses?: businessesCreateNestedManyWithoutTenantsInput
-    carts?: cartsCreateNestedManyWithoutTenantsInput
-    leads?: leadsCreateNestedManyWithoutTenantsInput
-    notification_messages?: notification_messagesCreateNestedManyWithoutTenantsInput
-    notification_templates?: notification_templatesCreateNestedManyWithoutTenantsInput
-    product_categories?: product_categoriesCreateNestedManyWithoutTenantsInput
-    stock_alerts?: stock_alertsCreateNestedManyWithoutTenantsInput
-    stock_counts?: stock_countsCreateNestedManyWithoutTenantsInput
-    stock_movements?: stock_movementsCreateNestedManyWithoutTenantsInput
-    stock_transfers?: stock_transfersCreateNestedManyWithoutTenantsInput
-    warehouses?: warehousesCreateNestedManyWithoutTenantsInput
-  }
-
-  export type tenantsUncheckedCreateWithoutInventory_levelsInput = {
-    tenant_id?: string
-    tenant_name: string
-    email: string
-    phone_number?: string | null
-    created_at?: Date | string | null
-    updated_at?: Date | string | null
-    address?: string | null
-    gst_number?: string | null
-    pan_number?: string | null
-    registration_no?: string | null
-    business_workflows?: business_workflowsUncheckedCreateNestedManyWithoutTenantsInput
-    businesses?: businessesUncheckedCreateNestedManyWithoutTenantsInput
-    carts?: cartsUncheckedCreateNestedManyWithoutTenantsInput
-    leads?: leadsUncheckedCreateNestedManyWithoutTenantsInput
-    notification_messages?: notification_messagesUncheckedCreateNestedManyWithoutTenantsInput
-    notification_templates?: notification_templatesUncheckedCreateNestedManyWithoutTenantsInput
-    product_categories?: product_categoriesUncheckedCreateNestedManyWithoutTenantsInput
-    stock_alerts?: stock_alertsUncheckedCreateNestedManyWithoutTenantsInput
-    stock_counts?: stock_countsUncheckedCreateNestedManyWithoutTenantsInput
-    stock_movements?: stock_movementsUncheckedCreateNestedManyWithoutTenantsInput
-    stock_transfers?: stock_transfersUncheckedCreateNestedManyWithoutTenantsInput
-    warehouses?: warehousesUncheckedCreateNestedManyWithoutTenantsInput
-  }
-
-  export type tenantsCreateOrConnectWithoutInventory_levelsInput = {
-    where: tenantsWhereUniqueInput
-    create: XOR<tenantsCreateWithoutInventory_levelsInput, tenantsUncheckedCreateWithoutInventory_levelsInput>
-  }
-
-  export type product_variantsCreateWithoutInventory_levelsInput = {
-    variant_id?: string
-    name: string
-    sku?: string | null
-    price: Decimal | DecimalJsLike | number | string
-    quantity?: number
-    reserved_stock?: number | null
-    version?: number | null
-    in_stock?: boolean
-    variant_options?: NullableJsonNullValueInput | InputJsonValue
-    created_at?: Date | string
-    updated_at?: Date | string
-    cart_items?: cart_itemsCreateNestedManyWithoutProduct_variantsInput
-    product: productsCreateNestedOneWithoutProduct_variantsInput
-    stock_alerts?: stock_alertsCreateNestedManyWithoutProduct_variantsInput
-    stock_movements?: stock_movementsCreateNestedManyWithoutProduct_variantsInput
-  }
-
-  export type product_variantsUncheckedCreateWithoutInventory_levelsInput = {
-    variant_id?: string
-    product_id: string
-    name: string
-    sku?: string | null
-    price: Decimal | DecimalJsLike | number | string
-    quantity?: number
-    reserved_stock?: number | null
-    version?: number | null
-    in_stock?: boolean
-    variant_options?: NullableJsonNullValueInput | InputJsonValue
-    created_at?: Date | string
-    updated_at?: Date | string
-    cart_items?: cart_itemsUncheckedCreateNestedManyWithoutProduct_variantsInput
-    stock_alerts?: stock_alertsUncheckedCreateNestedManyWithoutProduct_variantsInput
-    stock_movements?: stock_movementsUncheckedCreateNestedManyWithoutProduct_variantsInput
-  }
-
-  export type product_variantsCreateOrConnectWithoutInventory_levelsInput = {
-    where: product_variantsWhereUniqueInput
-    create: XOR<product_variantsCreateWithoutInventory_levelsInput, product_variantsUncheckedCreateWithoutInventory_levelsInput>
-  }
-
-  export type warehousesCreateWithoutInventory_levelsInput = {
-    warehouse_id?: string
-    warehouse_name: string
-    warehouse_code: string
-    warehouse_type?: string
-    address_line1?: string | null
-    address_line2?: string | null
-    city?: string | null
-    state?: string | null
-    postal_code?: string | null
-    country?: string
-    contact_person?: string | null
-    contact_email?: string | null
-    contact_phone?: string | null
-    total_capacity?: number | null
-    used_capacity?: number
-    is_default?: boolean
-    is_active?: boolean
-    priority?: number
-    operating_hours?: JsonNullValueInput | InputJsonValue
-    metadata?: JsonNullValueInput | InputJsonValue
-    created_at?: Date | string
-    updated_at?: Date | string
-    stock_alerts?: stock_alertsCreateNestedManyWithoutWarehousesInput
-    stock_counts?: stock_countsCreateNestedManyWithoutWarehousesInput
-    stock_movements?: stock_movementsCreateNestedManyWithoutWarehousesInput
-    stock_transfers_from?: stock_transfersCreateNestedManyWithoutFrom_warehouseInput
-    stock_transfers_to?: stock_transfersCreateNestedManyWithoutTo_warehouseInput
-    businesses: businessesCreateNestedOneWithoutWarehousesInput
-    tenants: tenantsCreateNestedOneWithoutWarehousesInput
-  }
-
-  export type warehousesUncheckedCreateWithoutInventory_levelsInput = {
-    warehouse_id?: string
-    business_id: string
-    tenant_id: string
-    warehouse_name: string
-    warehouse_code: string
-    warehouse_type?: string
-    address_line1?: string | null
-    address_line2?: string | null
-    city?: string | null
-    state?: string | null
-    postal_code?: string | null
-    country?: string
-    contact_person?: string | null
-    contact_email?: string | null
-    contact_phone?: string | null
-    total_capacity?: number | null
-    used_capacity?: number
-    is_default?: boolean
-    is_active?: boolean
-    priority?: number
-    operating_hours?: JsonNullValueInput | InputJsonValue
-    metadata?: JsonNullValueInput | InputJsonValue
-    created_at?: Date | string
-    updated_at?: Date | string
-    stock_alerts?: stock_alertsUncheckedCreateNestedManyWithoutWarehousesInput
-    stock_counts?: stock_countsUncheckedCreateNestedManyWithoutWarehousesInput
-    stock_movements?: stock_movementsUncheckedCreateNestedManyWithoutWarehousesInput
-    stock_transfers_from?: stock_transfersUncheckedCreateNestedManyWithoutFrom_warehouseInput
-    stock_transfers_to?: stock_transfersUncheckedCreateNestedManyWithoutTo_warehouseInput
-  }
-
-  export type warehousesCreateOrConnectWithoutInventory_levelsInput = {
-    where: warehousesWhereUniqueInput
-    create: XOR<warehousesCreateWithoutInventory_levelsInput, warehousesUncheckedCreateWithoutInventory_levelsInput>
-  }
-
-  export type stock_alertsCreateWithoutInventory_levelsInput = {
-    alert_id?: string
-    alert_type: string
-    severity?: string
-    current_quantity: number
-    reorder_point?: number | null
-    recommended_order_quantity?: number | null
-    status?: string
-    acknowledged_at?: Date | string | null
-    acknowledged_by?: string | null
-    resolved_at?: Date | string | null
-    resolved_by?: string | null
-    resolution_notes?: string | null
-    notification_sent?: boolean
-    notification_sent_at?: Date | string | null
-    metadata?: JsonNullValueInput | InputJsonValue
-    created_at?: Date | string
-    updated_at?: Date | string
-    businesses: businessesCreateNestedOneWithoutStock_alertsInput
-    tenants: tenantsCreateNestedOneWithoutStock_alertsInput
-    product_variants: product_variantsCreateNestedOneWithoutStock_alertsInput
-    warehouses: warehousesCreateNestedOneWithoutStock_alertsInput
-  }
-
-  export type stock_alertsUncheckedCreateWithoutInventory_levelsInput = {
-    alert_id?: string
-    business_id: string
-    tenant_id: string
-    warehouse_id: string
-    variant_id: string
-    alert_type: string
-    severity?: string
-    current_quantity: number
-    reorder_point?: number | null
-    recommended_order_quantity?: number | null
-    status?: string
-    acknowledged_at?: Date | string | null
-    acknowledged_by?: string | null
-    resolved_at?: Date | string | null
-    resolved_by?: string | null
-    resolution_notes?: string | null
-    notification_sent?: boolean
-    notification_sent_at?: Date | string | null
-    metadata?: JsonNullValueInput | InputJsonValue
-    created_at?: Date | string
-    updated_at?: Date | string
-  }
-
-  export type stock_alertsCreateOrConnectWithoutInventory_levelsInput = {
-    where: stock_alertsWhereUniqueInput
-    create: XOR<stock_alertsCreateWithoutInventory_levelsInput, stock_alertsUncheckedCreateWithoutInventory_levelsInput>
-  }
-
-  export type stock_alertsCreateManyInventory_levelsInputEnvelope = {
-    data: stock_alertsCreateManyInventory_levelsInput | stock_alertsCreateManyInventory_levelsInput[]
-    skipDuplicates?: boolean
-  }
-
-  export type stock_movementsCreateWithoutInventory_levelsInput = {
-    movement_id?: string
-    movement_type: string
-    movement_date?: Date | string
-    reference_type?: string | null
-    reference_id?: string | null
-    quantity_change: number
-    quantity_before: number
-    quantity_after: number
-    unit_cost?: Decimal | DecimalJsLike | number | string | null
-    total_cost?: Decimal | DecimalJsLike | number | string | null
-    from_warehouse_id?: string | null
-    to_warehouse_id?: string | null
-    reason?: string | null
-    notes?: string | null
-    created_by?: string | null
-    approved_by?: string | null
-    metadata?: JsonNullValueInput | InputJsonValue
-    created_at?: Date | string
-    businesses: businessesCreateNestedOneWithoutStock_movementsInput
-    tenants: tenantsCreateNestedOneWithoutStock_movementsInput
-    product_variants: product_variantsCreateNestedOneWithoutStock_movementsInput
-    warehouses: warehousesCreateNestedOneWithoutStock_movementsInput
-  }
-
-  export type stock_movementsUncheckedCreateWithoutInventory_levelsInput = {
-    movement_id?: string
-    business_id: string
-    tenant_id: string
-    warehouse_id: string
-    variant_id: string
-    movement_type: string
-    movement_date?: Date | string
-    reference_type?: string | null
-    reference_id?: string | null
-    quantity_change: number
-    quantity_before: number
-    quantity_after: number
-    unit_cost?: Decimal | DecimalJsLike | number | string | null
-    total_cost?: Decimal | DecimalJsLike | number | string | null
-    from_warehouse_id?: string | null
-    to_warehouse_id?: string | null
-    reason?: string | null
-    notes?: string | null
-    created_by?: string | null
-    approved_by?: string | null
-    metadata?: JsonNullValueInput | InputJsonValue
-    created_at?: Date | string
-  }
-
-  export type stock_movementsCreateOrConnectWithoutInventory_levelsInput = {
-    where: stock_movementsWhereUniqueInput
-    create: XOR<stock_movementsCreateWithoutInventory_levelsInput, stock_movementsUncheckedCreateWithoutInventory_levelsInput>
-  }
-
-  export type stock_movementsCreateManyInventory_levelsInputEnvelope = {
-    data: stock_movementsCreateManyInventory_levelsInput | stock_movementsCreateManyInventory_levelsInput[]
-    skipDuplicates?: boolean
-  }
-
-  export type businessesUpsertWithoutInventory_levelsInput = {
-    update: XOR<businessesUpdateWithoutInventory_levelsInput, businessesUncheckedUpdateWithoutInventory_levelsInput>
-    create: XOR<businessesCreateWithoutInventory_levelsInput, businessesUncheckedCreateWithoutInventory_levelsInput>
-    where?: businessesWhereInput
-  }
-
-  export type businessesUpdateToOneWithWhereWithoutInventory_levelsInput = {
-    where?: businessesWhereInput
-    data: XOR<businessesUpdateWithoutInventory_levelsInput, businessesUncheckedUpdateWithoutInventory_levelsInput>
-  }
-
-  export type businessesUpdateWithoutInventory_levelsInput = {
-    business_id?: StringFieldUpdateOperationsInput | string
-    business_name?: StringFieldUpdateOperationsInput | string
-    business_type?: NullableStringFieldUpdateOperationsInput | string | null
-    whatsapp_number?: NullableStringFieldUpdateOperationsInput | string | null
-    created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    email?: NullableStringFieldUpdateOperationsInput | string | null
-    phone?: NullableStringFieldUpdateOperationsInput | string | null
-    website?: NullableStringFieldUpdateOperationsInput | string | null
-    city?: NullableStringFieldUpdateOperationsInput | string | null
-    address?: NullableStringFieldUpdateOperationsInput | string | null
-    country?: NullableStringFieldUpdateOperationsInput | string | null
-    gst_number?: NullableStringFieldUpdateOperationsInput | string | null
-    pan_number?: NullableStringFieldUpdateOperationsInput | string | null
-    business_employees?: business_employeesUpdateManyWithoutBusinessesNestedInput
-    business_workflows?: business_workflowsUpdateManyWithoutBusinessesNestedInput
-    tenants?: tenantsUpdateOneRequiredWithoutBusinessesNestedInput
-    carts?: cartsUpdateManyWithoutBusinessesNestedInput
-    leads?: leadsUpdateManyWithoutBusinessesNestedInput
-    notification_messages?: notification_messagesUpdateManyWithoutBusinessesNestedInput
-    notification_preferences?: notification_preferencesUpdateManyWithoutBusinessesNestedInput
-    notification_templates?: notification_templatesUpdateManyWithoutBusinessesNestedInput
-    payment_reconciliation?: payment_reconciliationUpdateManyWithoutBusinessesNestedInput
-    payments?: paymentsUpdateManyWithoutBusinessesNestedInput
-    product_categories?: product_categoriesUpdateManyWithoutBusinessesNestedInput
-    product_images?: product_imagesUpdateManyWithoutBusinessesNestedInput
-    products?: productsUpdateManyWithoutBusinessesNestedInput
-    social_accounts?: social_accountsUpdateManyWithoutBusinessesNestedInput
-    stock_alerts?: stock_alertsUpdateManyWithoutBusinessesNestedInput
-    stock_counts?: stock_countsUpdateManyWithoutBusinessesNestedInput
-    stock_movements?: stock_movementsUpdateManyWithoutBusinessesNestedInput
-    stock_transfers?: stock_transfersUpdateManyWithoutBusinessesNestedInput
-    tags?: tagsUpdateManyWithoutBusinessesNestedInput
-    users?: usersUpdateManyWithoutBusinessesNestedInput
-    warehouses?: warehousesUpdateManyWithoutBusinessesNestedInput
-    workflow_executions?: workflow_executionsUpdateManyWithoutBusinessesNestedInput
-  }
-
-  export type businessesUncheckedUpdateWithoutInventory_levelsInput = {
-    business_id?: StringFieldUpdateOperationsInput | string
-    tenant_id?: StringFieldUpdateOperationsInput | string
-    business_name?: StringFieldUpdateOperationsInput | string
-    business_type?: NullableStringFieldUpdateOperationsInput | string | null
-    whatsapp_number?: NullableStringFieldUpdateOperationsInput | string | null
-    created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    email?: NullableStringFieldUpdateOperationsInput | string | null
-    phone?: NullableStringFieldUpdateOperationsInput | string | null
-    website?: NullableStringFieldUpdateOperationsInput | string | null
-    city?: NullableStringFieldUpdateOperationsInput | string | null
-    address?: NullableStringFieldUpdateOperationsInput | string | null
-    country?: NullableStringFieldUpdateOperationsInput | string | null
-    gst_number?: NullableStringFieldUpdateOperationsInput | string | null
-    pan_number?: NullableStringFieldUpdateOperationsInput | string | null
-    business_employees?: business_employeesUncheckedUpdateManyWithoutBusinessesNestedInput
-    business_workflows?: business_workflowsUncheckedUpdateManyWithoutBusinessesNestedInput
-    carts?: cartsUncheckedUpdateManyWithoutBusinessesNestedInput
-    leads?: leadsUncheckedUpdateManyWithoutBusinessesNestedInput
-    notification_messages?: notification_messagesUncheckedUpdateManyWithoutBusinessesNestedInput
-    notification_preferences?: notification_preferencesUncheckedUpdateManyWithoutBusinessesNestedInput
-    notification_templates?: notification_templatesUncheckedUpdateManyWithoutBusinessesNestedInput
-    payment_reconciliation?: payment_reconciliationUncheckedUpdateManyWithoutBusinessesNestedInput
-    payments?: paymentsUncheckedUpdateManyWithoutBusinessesNestedInput
-    product_categories?: product_categoriesUncheckedUpdateManyWithoutBusinessesNestedInput
-    product_images?: product_imagesUncheckedUpdateManyWithoutBusinessesNestedInput
-    products?: productsUncheckedUpdateManyWithoutBusinessesNestedInput
-    social_accounts?: social_accountsUncheckedUpdateManyWithoutBusinessesNestedInput
-    stock_alerts?: stock_alertsUncheckedUpdateManyWithoutBusinessesNestedInput
-    stock_counts?: stock_countsUncheckedUpdateManyWithoutBusinessesNestedInput
-    stock_movements?: stock_movementsUncheckedUpdateManyWithoutBusinessesNestedInput
-    stock_transfers?: stock_transfersUncheckedUpdateManyWithoutBusinessesNestedInput
-    tags?: tagsUncheckedUpdateManyWithoutBusinessesNestedInput
-    users?: usersUncheckedUpdateManyWithoutBusinessesNestedInput
-    warehouses?: warehousesUncheckedUpdateManyWithoutBusinessesNestedInput
-    workflow_executions?: workflow_executionsUncheckedUpdateManyWithoutBusinessesNestedInput
-  }
-
-  export type tenantsUpsertWithoutInventory_levelsInput = {
-    update: XOR<tenantsUpdateWithoutInventory_levelsInput, tenantsUncheckedUpdateWithoutInventory_levelsInput>
-    create: XOR<tenantsCreateWithoutInventory_levelsInput, tenantsUncheckedCreateWithoutInventory_levelsInput>
-    where?: tenantsWhereInput
-  }
-
-  export type tenantsUpdateToOneWithWhereWithoutInventory_levelsInput = {
-    where?: tenantsWhereInput
-    data: XOR<tenantsUpdateWithoutInventory_levelsInput, tenantsUncheckedUpdateWithoutInventory_levelsInput>
-  }
-
-  export type tenantsUpdateWithoutInventory_levelsInput = {
-    tenant_id?: StringFieldUpdateOperationsInput | string
-    tenant_name?: StringFieldUpdateOperationsInput | string
-    email?: StringFieldUpdateOperationsInput | string
-    phone_number?: NullableStringFieldUpdateOperationsInput | string | null
-    created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    address?: NullableStringFieldUpdateOperationsInput | string | null
-    gst_number?: NullableStringFieldUpdateOperationsInput | string | null
-    pan_number?: NullableStringFieldUpdateOperationsInput | string | null
-    registration_no?: NullableStringFieldUpdateOperationsInput | string | null
-    business_workflows?: business_workflowsUpdateManyWithoutTenantsNestedInput
-    businesses?: businessesUpdateManyWithoutTenantsNestedInput
-    carts?: cartsUpdateManyWithoutTenantsNestedInput
-    leads?: leadsUpdateManyWithoutTenantsNestedInput
-    notification_messages?: notification_messagesUpdateManyWithoutTenantsNestedInput
-    notification_templates?: notification_templatesUpdateManyWithoutTenantsNestedInput
-    product_categories?: product_categoriesUpdateManyWithoutTenantsNestedInput
-    stock_alerts?: stock_alertsUpdateManyWithoutTenantsNestedInput
-    stock_counts?: stock_countsUpdateManyWithoutTenantsNestedInput
-    stock_movements?: stock_movementsUpdateManyWithoutTenantsNestedInput
-    stock_transfers?: stock_transfersUpdateManyWithoutTenantsNestedInput
-    warehouses?: warehousesUpdateManyWithoutTenantsNestedInput
-  }
-
-  export type tenantsUncheckedUpdateWithoutInventory_levelsInput = {
-    tenant_id?: StringFieldUpdateOperationsInput | string
-    tenant_name?: StringFieldUpdateOperationsInput | string
-    email?: StringFieldUpdateOperationsInput | string
-    phone_number?: NullableStringFieldUpdateOperationsInput | string | null
-    created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    address?: NullableStringFieldUpdateOperationsInput | string | null
-    gst_number?: NullableStringFieldUpdateOperationsInput | string | null
-    pan_number?: NullableStringFieldUpdateOperationsInput | string | null
-    registration_no?: NullableStringFieldUpdateOperationsInput | string | null
-    business_workflows?: business_workflowsUncheckedUpdateManyWithoutTenantsNestedInput
-    businesses?: businessesUncheckedUpdateManyWithoutTenantsNestedInput
-    carts?: cartsUncheckedUpdateManyWithoutTenantsNestedInput
-    leads?: leadsUncheckedUpdateManyWithoutTenantsNestedInput
-    notification_messages?: notification_messagesUncheckedUpdateManyWithoutTenantsNestedInput
-    notification_templates?: notification_templatesUncheckedUpdateManyWithoutTenantsNestedInput
-    product_categories?: product_categoriesUncheckedUpdateManyWithoutTenantsNestedInput
-    stock_alerts?: stock_alertsUncheckedUpdateManyWithoutTenantsNestedInput
-    stock_counts?: stock_countsUncheckedUpdateManyWithoutTenantsNestedInput
-    stock_movements?: stock_movementsUncheckedUpdateManyWithoutTenantsNestedInput
-    stock_transfers?: stock_transfersUncheckedUpdateManyWithoutTenantsNestedInput
-    warehouses?: warehousesUncheckedUpdateManyWithoutTenantsNestedInput
-  }
-
-  export type product_variantsUpsertWithoutInventory_levelsInput = {
-    update: XOR<product_variantsUpdateWithoutInventory_levelsInput, product_variantsUncheckedUpdateWithoutInventory_levelsInput>
-    create: XOR<product_variantsCreateWithoutInventory_levelsInput, product_variantsUncheckedCreateWithoutInventory_levelsInput>
-    where?: product_variantsWhereInput
-  }
-
-  export type product_variantsUpdateToOneWithWhereWithoutInventory_levelsInput = {
-    where?: product_variantsWhereInput
-    data: XOR<product_variantsUpdateWithoutInventory_levelsInput, product_variantsUncheckedUpdateWithoutInventory_levelsInput>
-  }
-
-  export type product_variantsUpdateWithoutInventory_levelsInput = {
-    variant_id?: StringFieldUpdateOperationsInput | string
-    name?: StringFieldUpdateOperationsInput | string
-    sku?: NullableStringFieldUpdateOperationsInput | string | null
-    price?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    quantity?: IntFieldUpdateOperationsInput | number
-    reserved_stock?: NullableIntFieldUpdateOperationsInput | number | null
-    version?: NullableIntFieldUpdateOperationsInput | number | null
-    in_stock?: BoolFieldUpdateOperationsInput | boolean
-    variant_options?: NullableJsonNullValueInput | InputJsonValue
-    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    cart_items?: cart_itemsUpdateManyWithoutProduct_variantsNestedInput
-    product?: productsUpdateOneRequiredWithoutProduct_variantsNestedInput
-    stock_alerts?: stock_alertsUpdateManyWithoutProduct_variantsNestedInput
-    stock_movements?: stock_movementsUpdateManyWithoutProduct_variantsNestedInput
-  }
-
-  export type product_variantsUncheckedUpdateWithoutInventory_levelsInput = {
-    variant_id?: StringFieldUpdateOperationsInput | string
-    product_id?: StringFieldUpdateOperationsInput | string
-    name?: StringFieldUpdateOperationsInput | string
-    sku?: NullableStringFieldUpdateOperationsInput | string | null
-    price?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    quantity?: IntFieldUpdateOperationsInput | number
-    reserved_stock?: NullableIntFieldUpdateOperationsInput | number | null
-    version?: NullableIntFieldUpdateOperationsInput | number | null
-    in_stock?: BoolFieldUpdateOperationsInput | boolean
-    variant_options?: NullableJsonNullValueInput | InputJsonValue
-    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    cart_items?: cart_itemsUncheckedUpdateManyWithoutProduct_variantsNestedInput
-    stock_alerts?: stock_alertsUncheckedUpdateManyWithoutProduct_variantsNestedInput
-    stock_movements?: stock_movementsUncheckedUpdateManyWithoutProduct_variantsNestedInput
-  }
-
-  export type warehousesUpsertWithoutInventory_levelsInput = {
-    update: XOR<warehousesUpdateWithoutInventory_levelsInput, warehousesUncheckedUpdateWithoutInventory_levelsInput>
-    create: XOR<warehousesCreateWithoutInventory_levelsInput, warehousesUncheckedCreateWithoutInventory_levelsInput>
-    where?: warehousesWhereInput
-  }
-
-  export type warehousesUpdateToOneWithWhereWithoutInventory_levelsInput = {
-    where?: warehousesWhereInput
-    data: XOR<warehousesUpdateWithoutInventory_levelsInput, warehousesUncheckedUpdateWithoutInventory_levelsInput>
-  }
-
-  export type warehousesUpdateWithoutInventory_levelsInput = {
-    warehouse_id?: StringFieldUpdateOperationsInput | string
-    warehouse_name?: StringFieldUpdateOperationsInput | string
-    warehouse_code?: StringFieldUpdateOperationsInput | string
-    warehouse_type?: StringFieldUpdateOperationsInput | string
-    address_line1?: NullableStringFieldUpdateOperationsInput | string | null
-    address_line2?: NullableStringFieldUpdateOperationsInput | string | null
-    city?: NullableStringFieldUpdateOperationsInput | string | null
-    state?: NullableStringFieldUpdateOperationsInput | string | null
-    postal_code?: NullableStringFieldUpdateOperationsInput | string | null
-    country?: StringFieldUpdateOperationsInput | string
-    contact_person?: NullableStringFieldUpdateOperationsInput | string | null
-    contact_email?: NullableStringFieldUpdateOperationsInput | string | null
-    contact_phone?: NullableStringFieldUpdateOperationsInput | string | null
-    total_capacity?: NullableIntFieldUpdateOperationsInput | number | null
-    used_capacity?: IntFieldUpdateOperationsInput | number
-    is_default?: BoolFieldUpdateOperationsInput | boolean
-    is_active?: BoolFieldUpdateOperationsInput | boolean
-    priority?: IntFieldUpdateOperationsInput | number
-    operating_hours?: JsonNullValueInput | InputJsonValue
-    metadata?: JsonNullValueInput | InputJsonValue
-    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    stock_alerts?: stock_alertsUpdateManyWithoutWarehousesNestedInput
-    stock_counts?: stock_countsUpdateManyWithoutWarehousesNestedInput
-    stock_movements?: stock_movementsUpdateManyWithoutWarehousesNestedInput
-    stock_transfers_from?: stock_transfersUpdateManyWithoutFrom_warehouseNestedInput
-    stock_transfers_to?: stock_transfersUpdateManyWithoutTo_warehouseNestedInput
-    businesses?: businessesUpdateOneRequiredWithoutWarehousesNestedInput
-    tenants?: tenantsUpdateOneRequiredWithoutWarehousesNestedInput
-  }
-
-  export type warehousesUncheckedUpdateWithoutInventory_levelsInput = {
-    warehouse_id?: StringFieldUpdateOperationsInput | string
-    business_id?: StringFieldUpdateOperationsInput | string
-    tenant_id?: StringFieldUpdateOperationsInput | string
-    warehouse_name?: StringFieldUpdateOperationsInput | string
-    warehouse_code?: StringFieldUpdateOperationsInput | string
-    warehouse_type?: StringFieldUpdateOperationsInput | string
-    address_line1?: NullableStringFieldUpdateOperationsInput | string | null
-    address_line2?: NullableStringFieldUpdateOperationsInput | string | null
-    city?: NullableStringFieldUpdateOperationsInput | string | null
-    state?: NullableStringFieldUpdateOperationsInput | string | null
-    postal_code?: NullableStringFieldUpdateOperationsInput | string | null
-    country?: StringFieldUpdateOperationsInput | string
-    contact_person?: NullableStringFieldUpdateOperationsInput | string | null
-    contact_email?: NullableStringFieldUpdateOperationsInput | string | null
-    contact_phone?: NullableStringFieldUpdateOperationsInput | string | null
-    total_capacity?: NullableIntFieldUpdateOperationsInput | number | null
-    used_capacity?: IntFieldUpdateOperationsInput | number
-    is_default?: BoolFieldUpdateOperationsInput | boolean
-    is_active?: BoolFieldUpdateOperationsInput | boolean
-    priority?: IntFieldUpdateOperationsInput | number
-    operating_hours?: JsonNullValueInput | InputJsonValue
-    metadata?: JsonNullValueInput | InputJsonValue
-    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    stock_alerts?: stock_alertsUncheckedUpdateManyWithoutWarehousesNestedInput
-    stock_counts?: stock_countsUncheckedUpdateManyWithoutWarehousesNestedInput
-    stock_movements?: stock_movementsUncheckedUpdateManyWithoutWarehousesNestedInput
-    stock_transfers_from?: stock_transfersUncheckedUpdateManyWithoutFrom_warehouseNestedInput
-    stock_transfers_to?: stock_transfersUncheckedUpdateManyWithoutTo_warehouseNestedInput
-  }
-
-  export type stock_alertsUpsertWithWhereUniqueWithoutInventory_levelsInput = {
-    where: stock_alertsWhereUniqueInput
-    update: XOR<stock_alertsUpdateWithoutInventory_levelsInput, stock_alertsUncheckedUpdateWithoutInventory_levelsInput>
-    create: XOR<stock_alertsCreateWithoutInventory_levelsInput, stock_alertsUncheckedCreateWithoutInventory_levelsInput>
-  }
-
-  export type stock_alertsUpdateWithWhereUniqueWithoutInventory_levelsInput = {
-    where: stock_alertsWhereUniqueInput
-    data: XOR<stock_alertsUpdateWithoutInventory_levelsInput, stock_alertsUncheckedUpdateWithoutInventory_levelsInput>
-  }
-
-  export type stock_alertsUpdateManyWithWhereWithoutInventory_levelsInput = {
-    where: stock_alertsScalarWhereInput
-    data: XOR<stock_alertsUpdateManyMutationInput, stock_alertsUncheckedUpdateManyWithoutInventory_levelsInput>
-  }
-
-  export type stock_movementsUpsertWithWhereUniqueWithoutInventory_levelsInput = {
-    where: stock_movementsWhereUniqueInput
-    update: XOR<stock_movementsUpdateWithoutInventory_levelsInput, stock_movementsUncheckedUpdateWithoutInventory_levelsInput>
-    create: XOR<stock_movementsCreateWithoutInventory_levelsInput, stock_movementsUncheckedCreateWithoutInventory_levelsInput>
-  }
-
-  export type stock_movementsUpdateWithWhereUniqueWithoutInventory_levelsInput = {
-    where: stock_movementsWhereUniqueInput
-    data: XOR<stock_movementsUpdateWithoutInventory_levelsInput, stock_movementsUncheckedUpdateWithoutInventory_levelsInput>
-  }
-
-  export type stock_movementsUpdateManyWithWhereWithoutInventory_levelsInput = {
-    where: stock_movementsScalarWhereInput
-    data: XOR<stock_movementsUpdateManyMutationInput, stock_movementsUncheckedUpdateManyWithoutInventory_levelsInput>
-  }
-
-  export type businessesCreateWithoutStock_movementsInput = {
-    business_id?: string
-    business_name: string
-    business_type?: string | null
-    whatsapp_number?: string | null
-    created_at?: Date | string | null
-    updated_at?: Date | string | null
-    email?: string | null
-    phone?: string | null
-    website?: string | null
-    city?: string | null
-    address?: string | null
-    country?: string | null
-    gst_number?: string | null
-    pan_number?: string | null
-    business_employees?: business_employeesCreateNestedManyWithoutBusinessesInput
-    business_workflows?: business_workflowsCreateNestedManyWithoutBusinessesInput
-    tenants: tenantsCreateNestedOneWithoutBusinessesInput
-    carts?: cartsCreateNestedManyWithoutBusinessesInput
-    inventory_levels?: inventory_levelsCreateNestedManyWithoutBusinessesInput
-    leads?: leadsCreateNestedManyWithoutBusinessesInput
-    notification_messages?: notification_messagesCreateNestedManyWithoutBusinessesInput
-    notification_preferences?: notification_preferencesCreateNestedManyWithoutBusinessesInput
-    notification_templates?: notification_templatesCreateNestedManyWithoutBusinessesInput
-    payment_reconciliation?: payment_reconciliationCreateNestedManyWithoutBusinessesInput
-    payments?: paymentsCreateNestedManyWithoutBusinessesInput
-    product_categories?: product_categoriesCreateNestedManyWithoutBusinessesInput
-    product_images?: product_imagesCreateNestedManyWithoutBusinessesInput
-    products?: productsCreateNestedManyWithoutBusinessesInput
-    social_accounts?: social_accountsCreateNestedManyWithoutBusinessesInput
-    stock_alerts?: stock_alertsCreateNestedManyWithoutBusinessesInput
-    stock_counts?: stock_countsCreateNestedManyWithoutBusinessesInput
-    stock_transfers?: stock_transfersCreateNestedManyWithoutBusinessesInput
-    tags?: tagsCreateNestedManyWithoutBusinessesInput
-    users?: usersCreateNestedManyWithoutBusinessesInput
-    warehouses?: warehousesCreateNestedManyWithoutBusinessesInput
-    workflow_executions?: workflow_executionsCreateNestedManyWithoutBusinessesInput
-  }
-
-  export type businessesUncheckedCreateWithoutStock_movementsInput = {
-    business_id?: string
-    tenant_id: string
-    business_name: string
-    business_type?: string | null
-    whatsapp_number?: string | null
-    created_at?: Date | string | null
-    updated_at?: Date | string | null
-    email?: string | null
-    phone?: string | null
-    website?: string | null
-    city?: string | null
-    address?: string | null
-    country?: string | null
-    gst_number?: string | null
-    pan_number?: string | null
-    business_employees?: business_employeesUncheckedCreateNestedManyWithoutBusinessesInput
-    business_workflows?: business_workflowsUncheckedCreateNestedManyWithoutBusinessesInput
-    carts?: cartsUncheckedCreateNestedManyWithoutBusinessesInput
-    inventory_levels?: inventory_levelsUncheckedCreateNestedManyWithoutBusinessesInput
-    leads?: leadsUncheckedCreateNestedManyWithoutBusinessesInput
-    notification_messages?: notification_messagesUncheckedCreateNestedManyWithoutBusinessesInput
-    notification_preferences?: notification_preferencesUncheckedCreateNestedManyWithoutBusinessesInput
-    notification_templates?: notification_templatesUncheckedCreateNestedManyWithoutBusinessesInput
-    payment_reconciliation?: payment_reconciliationUncheckedCreateNestedManyWithoutBusinessesInput
-    payments?: paymentsUncheckedCreateNestedManyWithoutBusinessesInput
-    product_categories?: product_categoriesUncheckedCreateNestedManyWithoutBusinessesInput
-    product_images?: product_imagesUncheckedCreateNestedManyWithoutBusinessesInput
-    products?: productsUncheckedCreateNestedManyWithoutBusinessesInput
-    social_accounts?: social_accountsUncheckedCreateNestedManyWithoutBusinessesInput
-    stock_alerts?: stock_alertsUncheckedCreateNestedManyWithoutBusinessesInput
-    stock_counts?: stock_countsUncheckedCreateNestedManyWithoutBusinessesInput
-    stock_transfers?: stock_transfersUncheckedCreateNestedManyWithoutBusinessesInput
-    tags?: tagsUncheckedCreateNestedManyWithoutBusinessesInput
-    users?: usersUncheckedCreateNestedManyWithoutBusinessesInput
-    warehouses?: warehousesUncheckedCreateNestedManyWithoutBusinessesInput
-    workflow_executions?: workflow_executionsUncheckedCreateNestedManyWithoutBusinessesInput
-  }
-
-  export type businessesCreateOrConnectWithoutStock_movementsInput = {
-    where: businessesWhereUniqueInput
-    create: XOR<businessesCreateWithoutStock_movementsInput, businessesUncheckedCreateWithoutStock_movementsInput>
-  }
-
-  export type inventory_levelsCreateWithoutStock_movementsInput = {
-    inventory_level_id?: string
-    available_quantity?: number
-    reserved_quantity?: number
-    damaged_quantity?: number
-    in_transit_quantity?: number
-    reorder_point?: number
-    reorder_quantity?: number
-    max_stock_level?: number | null
-    average_cost?: Decimal | DecimalJsLike | number | string
-    total_value?: Decimal | DecimalJsLike | number | string
-    bin_location?: string | null
-    aisle?: string | null
-    shelf?: string | null
-    last_counted_at?: Date | string | null
-    last_restock_at?: Date | string | null
-    is_low_stock?: boolean
-    is_out_of_stock?: boolean
-    metadata?: JsonNullValueInput | InputJsonValue
-    created_at?: Date | string
-    updated_at?: Date | string
-    businesses: businessesCreateNestedOneWithoutInventory_levelsInput
-    tenants: tenantsCreateNestedOneWithoutInventory_levelsInput
-    product_variants: product_variantsCreateNestedOneWithoutInventory_levelsInput
-    warehouses: warehousesCreateNestedOneWithoutInventory_levelsInput
-    stock_alerts?: stock_alertsCreateNestedManyWithoutInventory_levelsInput
-  }
-
-  export type inventory_levelsUncheckedCreateWithoutStock_movementsInput = {
-    inventory_level_id?: string
-    business_id: string
-    tenant_id: string
-    warehouse_id: string
-    variant_id: string
-    available_quantity?: number
-    reserved_quantity?: number
-    damaged_quantity?: number
-    in_transit_quantity?: number
-    reorder_point?: number
-    reorder_quantity?: number
-    max_stock_level?: number | null
-    average_cost?: Decimal | DecimalJsLike | number | string
-    total_value?: Decimal | DecimalJsLike | number | string
-    bin_location?: string | null
-    aisle?: string | null
-    shelf?: string | null
-    last_counted_at?: Date | string | null
-    last_restock_at?: Date | string | null
-    is_low_stock?: boolean
-    is_out_of_stock?: boolean
-    metadata?: JsonNullValueInput | InputJsonValue
-    created_at?: Date | string
-    updated_at?: Date | string
-    stock_alerts?: stock_alertsUncheckedCreateNestedManyWithoutInventory_levelsInput
-  }
-
-  export type inventory_levelsCreateOrConnectWithoutStock_movementsInput = {
-    where: inventory_levelsWhereUniqueInput
-    create: XOR<inventory_levelsCreateWithoutStock_movementsInput, inventory_levelsUncheckedCreateWithoutStock_movementsInput>
-  }
-
-  export type tenantsCreateWithoutStock_movementsInput = {
-    tenant_id?: string
-    tenant_name: string
-    email: string
-    phone_number?: string | null
-    created_at?: Date | string | null
-    updated_at?: Date | string | null
-    address?: string | null
-    gst_number?: string | null
-    pan_number?: string | null
-    registration_no?: string | null
-    business_workflows?: business_workflowsCreateNestedManyWithoutTenantsInput
-    businesses?: businessesCreateNestedManyWithoutTenantsInput
-    carts?: cartsCreateNestedManyWithoutTenantsInput
-    inventory_levels?: inventory_levelsCreateNestedManyWithoutTenantsInput
-    leads?: leadsCreateNestedManyWithoutTenantsInput
-    notification_messages?: notification_messagesCreateNestedManyWithoutTenantsInput
-    notification_templates?: notification_templatesCreateNestedManyWithoutTenantsInput
-    product_categories?: product_categoriesCreateNestedManyWithoutTenantsInput
-    stock_alerts?: stock_alertsCreateNestedManyWithoutTenantsInput
-    stock_counts?: stock_countsCreateNestedManyWithoutTenantsInput
-    stock_transfers?: stock_transfersCreateNestedManyWithoutTenantsInput
-    warehouses?: warehousesCreateNestedManyWithoutTenantsInput
-  }
-
-  export type tenantsUncheckedCreateWithoutStock_movementsInput = {
-    tenant_id?: string
-    tenant_name: string
-    email: string
-    phone_number?: string | null
-    created_at?: Date | string | null
-    updated_at?: Date | string | null
-    address?: string | null
-    gst_number?: string | null
-    pan_number?: string | null
-    registration_no?: string | null
-    business_workflows?: business_workflowsUncheckedCreateNestedManyWithoutTenantsInput
-    businesses?: businessesUncheckedCreateNestedManyWithoutTenantsInput
-    carts?: cartsUncheckedCreateNestedManyWithoutTenantsInput
-    inventory_levels?: inventory_levelsUncheckedCreateNestedManyWithoutTenantsInput
-    leads?: leadsUncheckedCreateNestedManyWithoutTenantsInput
-    notification_messages?: notification_messagesUncheckedCreateNestedManyWithoutTenantsInput
-    notification_templates?: notification_templatesUncheckedCreateNestedManyWithoutTenantsInput
-    product_categories?: product_categoriesUncheckedCreateNestedManyWithoutTenantsInput
-    stock_alerts?: stock_alertsUncheckedCreateNestedManyWithoutTenantsInput
-    stock_counts?: stock_countsUncheckedCreateNestedManyWithoutTenantsInput
-    stock_transfers?: stock_transfersUncheckedCreateNestedManyWithoutTenantsInput
-    warehouses?: warehousesUncheckedCreateNestedManyWithoutTenantsInput
-  }
-
-  export type tenantsCreateOrConnectWithoutStock_movementsInput = {
-    where: tenantsWhereUniqueInput
-    create: XOR<tenantsCreateWithoutStock_movementsInput, tenantsUncheckedCreateWithoutStock_movementsInput>
-  }
-
-  export type product_variantsCreateWithoutStock_movementsInput = {
-    variant_id?: string
-    name: string
-    sku?: string | null
-    price: Decimal | DecimalJsLike | number | string
-    quantity?: number
-    reserved_stock?: number | null
-    version?: number | null
-    in_stock?: boolean
-    variant_options?: NullableJsonNullValueInput | InputJsonValue
-    created_at?: Date | string
-    updated_at?: Date | string
-    cart_items?: cart_itemsCreateNestedManyWithoutProduct_variantsInput
-    inventory_levels?: inventory_levelsCreateNestedManyWithoutProduct_variantsInput
-    product: productsCreateNestedOneWithoutProduct_variantsInput
-    stock_alerts?: stock_alertsCreateNestedManyWithoutProduct_variantsInput
-  }
-
-  export type product_variantsUncheckedCreateWithoutStock_movementsInput = {
-    variant_id?: string
-    product_id: string
-    name: string
-    sku?: string | null
-    price: Decimal | DecimalJsLike | number | string
-    quantity?: number
-    reserved_stock?: number | null
-    version?: number | null
-    in_stock?: boolean
-    variant_options?: NullableJsonNullValueInput | InputJsonValue
-    created_at?: Date | string
-    updated_at?: Date | string
-    cart_items?: cart_itemsUncheckedCreateNestedManyWithoutProduct_variantsInput
-    inventory_levels?: inventory_levelsUncheckedCreateNestedManyWithoutProduct_variantsInput
-    stock_alerts?: stock_alertsUncheckedCreateNestedManyWithoutProduct_variantsInput
-  }
-
-  export type product_variantsCreateOrConnectWithoutStock_movementsInput = {
-    where: product_variantsWhereUniqueInput
-    create: XOR<product_variantsCreateWithoutStock_movementsInput, product_variantsUncheckedCreateWithoutStock_movementsInput>
-  }
-
-  export type warehousesCreateWithoutStock_movementsInput = {
-    warehouse_id?: string
-    warehouse_name: string
-    warehouse_code: string
-    warehouse_type?: string
-    address_line1?: string | null
-    address_line2?: string | null
-    city?: string | null
-    state?: string | null
-    postal_code?: string | null
-    country?: string
-    contact_person?: string | null
-    contact_email?: string | null
-    contact_phone?: string | null
-    total_capacity?: number | null
-    used_capacity?: number
-    is_default?: boolean
-    is_active?: boolean
-    priority?: number
-    operating_hours?: JsonNullValueInput | InputJsonValue
-    metadata?: JsonNullValueInput | InputJsonValue
-    created_at?: Date | string
-    updated_at?: Date | string
-    inventory_levels?: inventory_levelsCreateNestedManyWithoutWarehousesInput
-    stock_alerts?: stock_alertsCreateNestedManyWithoutWarehousesInput
-    stock_counts?: stock_countsCreateNestedManyWithoutWarehousesInput
-    stock_transfers_from?: stock_transfersCreateNestedManyWithoutFrom_warehouseInput
-    stock_transfers_to?: stock_transfersCreateNestedManyWithoutTo_warehouseInput
-    businesses: businessesCreateNestedOneWithoutWarehousesInput
-    tenants: tenantsCreateNestedOneWithoutWarehousesInput
-  }
-
-  export type warehousesUncheckedCreateWithoutStock_movementsInput = {
-    warehouse_id?: string
-    business_id: string
-    tenant_id: string
-    warehouse_name: string
-    warehouse_code: string
-    warehouse_type?: string
-    address_line1?: string | null
-    address_line2?: string | null
-    city?: string | null
-    state?: string | null
-    postal_code?: string | null
-    country?: string
-    contact_person?: string | null
-    contact_email?: string | null
-    contact_phone?: string | null
-    total_capacity?: number | null
-    used_capacity?: number
-    is_default?: boolean
-    is_active?: boolean
-    priority?: number
-    operating_hours?: JsonNullValueInput | InputJsonValue
-    metadata?: JsonNullValueInput | InputJsonValue
-    created_at?: Date | string
-    updated_at?: Date | string
-    inventory_levels?: inventory_levelsUncheckedCreateNestedManyWithoutWarehousesInput
-    stock_alerts?: stock_alertsUncheckedCreateNestedManyWithoutWarehousesInput
-    stock_counts?: stock_countsUncheckedCreateNestedManyWithoutWarehousesInput
-    stock_transfers_from?: stock_transfersUncheckedCreateNestedManyWithoutFrom_warehouseInput
-    stock_transfers_to?: stock_transfersUncheckedCreateNestedManyWithoutTo_warehouseInput
-  }
-
-  export type warehousesCreateOrConnectWithoutStock_movementsInput = {
-    where: warehousesWhereUniqueInput
-    create: XOR<warehousesCreateWithoutStock_movementsInput, warehousesUncheckedCreateWithoutStock_movementsInput>
-  }
-
-  export type businessesUpsertWithoutStock_movementsInput = {
-    update: XOR<businessesUpdateWithoutStock_movementsInput, businessesUncheckedUpdateWithoutStock_movementsInput>
-    create: XOR<businessesCreateWithoutStock_movementsInput, businessesUncheckedCreateWithoutStock_movementsInput>
-    where?: businessesWhereInput
-  }
-
-  export type businessesUpdateToOneWithWhereWithoutStock_movementsInput = {
-    where?: businessesWhereInput
-    data: XOR<businessesUpdateWithoutStock_movementsInput, businessesUncheckedUpdateWithoutStock_movementsInput>
-  }
-
-  export type businessesUpdateWithoutStock_movementsInput = {
-    business_id?: StringFieldUpdateOperationsInput | string
-    business_name?: StringFieldUpdateOperationsInput | string
-    business_type?: NullableStringFieldUpdateOperationsInput | string | null
-    whatsapp_number?: NullableStringFieldUpdateOperationsInput | string | null
-    created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    email?: NullableStringFieldUpdateOperationsInput | string | null
-    phone?: NullableStringFieldUpdateOperationsInput | string | null
-    website?: NullableStringFieldUpdateOperationsInput | string | null
-    city?: NullableStringFieldUpdateOperationsInput | string | null
-    address?: NullableStringFieldUpdateOperationsInput | string | null
-    country?: NullableStringFieldUpdateOperationsInput | string | null
-    gst_number?: NullableStringFieldUpdateOperationsInput | string | null
-    pan_number?: NullableStringFieldUpdateOperationsInput | string | null
-    business_employees?: business_employeesUpdateManyWithoutBusinessesNestedInput
-    business_workflows?: business_workflowsUpdateManyWithoutBusinessesNestedInput
-    tenants?: tenantsUpdateOneRequiredWithoutBusinessesNestedInput
-    carts?: cartsUpdateManyWithoutBusinessesNestedInput
-    inventory_levels?: inventory_levelsUpdateManyWithoutBusinessesNestedInput
-    leads?: leadsUpdateManyWithoutBusinessesNestedInput
-    notification_messages?: notification_messagesUpdateManyWithoutBusinessesNestedInput
-    notification_preferences?: notification_preferencesUpdateManyWithoutBusinessesNestedInput
-    notification_templates?: notification_templatesUpdateManyWithoutBusinessesNestedInput
-    payment_reconciliation?: payment_reconciliationUpdateManyWithoutBusinessesNestedInput
-    payments?: paymentsUpdateManyWithoutBusinessesNestedInput
-    product_categories?: product_categoriesUpdateManyWithoutBusinessesNestedInput
-    product_images?: product_imagesUpdateManyWithoutBusinessesNestedInput
-    products?: productsUpdateManyWithoutBusinessesNestedInput
-    social_accounts?: social_accountsUpdateManyWithoutBusinessesNestedInput
-    stock_alerts?: stock_alertsUpdateManyWithoutBusinessesNestedInput
-    stock_counts?: stock_countsUpdateManyWithoutBusinessesNestedInput
-    stock_transfers?: stock_transfersUpdateManyWithoutBusinessesNestedInput
-    tags?: tagsUpdateManyWithoutBusinessesNestedInput
-    users?: usersUpdateManyWithoutBusinessesNestedInput
-    warehouses?: warehousesUpdateManyWithoutBusinessesNestedInput
-    workflow_executions?: workflow_executionsUpdateManyWithoutBusinessesNestedInput
-  }
-
-  export type businessesUncheckedUpdateWithoutStock_movementsInput = {
-    business_id?: StringFieldUpdateOperationsInput | string
-    tenant_id?: StringFieldUpdateOperationsInput | string
-    business_name?: StringFieldUpdateOperationsInput | string
-    business_type?: NullableStringFieldUpdateOperationsInput | string | null
-    whatsapp_number?: NullableStringFieldUpdateOperationsInput | string | null
-    created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    email?: NullableStringFieldUpdateOperationsInput | string | null
-    phone?: NullableStringFieldUpdateOperationsInput | string | null
-    website?: NullableStringFieldUpdateOperationsInput | string | null
-    city?: NullableStringFieldUpdateOperationsInput | string | null
-    address?: NullableStringFieldUpdateOperationsInput | string | null
-    country?: NullableStringFieldUpdateOperationsInput | string | null
-    gst_number?: NullableStringFieldUpdateOperationsInput | string | null
-    pan_number?: NullableStringFieldUpdateOperationsInput | string | null
-    business_employees?: business_employeesUncheckedUpdateManyWithoutBusinessesNestedInput
-    business_workflows?: business_workflowsUncheckedUpdateManyWithoutBusinessesNestedInput
-    carts?: cartsUncheckedUpdateManyWithoutBusinessesNestedInput
-    inventory_levels?: inventory_levelsUncheckedUpdateManyWithoutBusinessesNestedInput
-    leads?: leadsUncheckedUpdateManyWithoutBusinessesNestedInput
-    notification_messages?: notification_messagesUncheckedUpdateManyWithoutBusinessesNestedInput
-    notification_preferences?: notification_preferencesUncheckedUpdateManyWithoutBusinessesNestedInput
-    notification_templates?: notification_templatesUncheckedUpdateManyWithoutBusinessesNestedInput
-    payment_reconciliation?: payment_reconciliationUncheckedUpdateManyWithoutBusinessesNestedInput
-    payments?: paymentsUncheckedUpdateManyWithoutBusinessesNestedInput
-    product_categories?: product_categoriesUncheckedUpdateManyWithoutBusinessesNestedInput
-    product_images?: product_imagesUncheckedUpdateManyWithoutBusinessesNestedInput
-    products?: productsUncheckedUpdateManyWithoutBusinessesNestedInput
-    social_accounts?: social_accountsUncheckedUpdateManyWithoutBusinessesNestedInput
-    stock_alerts?: stock_alertsUncheckedUpdateManyWithoutBusinessesNestedInput
-    stock_counts?: stock_countsUncheckedUpdateManyWithoutBusinessesNestedInput
-    stock_transfers?: stock_transfersUncheckedUpdateManyWithoutBusinessesNestedInput
-    tags?: tagsUncheckedUpdateManyWithoutBusinessesNestedInput
-    users?: usersUncheckedUpdateManyWithoutBusinessesNestedInput
-    warehouses?: warehousesUncheckedUpdateManyWithoutBusinessesNestedInput
-    workflow_executions?: workflow_executionsUncheckedUpdateManyWithoutBusinessesNestedInput
-  }
-
-  export type inventory_levelsUpsertWithoutStock_movementsInput = {
-    update: XOR<inventory_levelsUpdateWithoutStock_movementsInput, inventory_levelsUncheckedUpdateWithoutStock_movementsInput>
-    create: XOR<inventory_levelsCreateWithoutStock_movementsInput, inventory_levelsUncheckedCreateWithoutStock_movementsInput>
-    where?: inventory_levelsWhereInput
-  }
-
-  export type inventory_levelsUpdateToOneWithWhereWithoutStock_movementsInput = {
-    where?: inventory_levelsWhereInput
-    data: XOR<inventory_levelsUpdateWithoutStock_movementsInput, inventory_levelsUncheckedUpdateWithoutStock_movementsInput>
-  }
-
-  export type inventory_levelsUpdateWithoutStock_movementsInput = {
-    inventory_level_id?: StringFieldUpdateOperationsInput | string
-    available_quantity?: IntFieldUpdateOperationsInput | number
-    reserved_quantity?: IntFieldUpdateOperationsInput | number
-    damaged_quantity?: IntFieldUpdateOperationsInput | number
-    in_transit_quantity?: IntFieldUpdateOperationsInput | number
-    reorder_point?: IntFieldUpdateOperationsInput | number
-    reorder_quantity?: IntFieldUpdateOperationsInput | number
-    max_stock_level?: NullableIntFieldUpdateOperationsInput | number | null
-    average_cost?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    total_value?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    bin_location?: NullableStringFieldUpdateOperationsInput | string | null
-    aisle?: NullableStringFieldUpdateOperationsInput | string | null
-    shelf?: NullableStringFieldUpdateOperationsInput | string | null
-    last_counted_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    last_restock_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    is_low_stock?: BoolFieldUpdateOperationsInput | boolean
-    is_out_of_stock?: BoolFieldUpdateOperationsInput | boolean
-    metadata?: JsonNullValueInput | InputJsonValue
-    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    businesses?: businessesUpdateOneRequiredWithoutInventory_levelsNestedInput
-    tenants?: tenantsUpdateOneRequiredWithoutInventory_levelsNestedInput
-    product_variants?: product_variantsUpdateOneRequiredWithoutInventory_levelsNestedInput
-    warehouses?: warehousesUpdateOneRequiredWithoutInventory_levelsNestedInput
-    stock_alerts?: stock_alertsUpdateManyWithoutInventory_levelsNestedInput
-  }
-
-  export type inventory_levelsUncheckedUpdateWithoutStock_movementsInput = {
-    inventory_level_id?: StringFieldUpdateOperationsInput | string
-    business_id?: StringFieldUpdateOperationsInput | string
-    tenant_id?: StringFieldUpdateOperationsInput | string
-    warehouse_id?: StringFieldUpdateOperationsInput | string
-    variant_id?: StringFieldUpdateOperationsInput | string
-    available_quantity?: IntFieldUpdateOperationsInput | number
-    reserved_quantity?: IntFieldUpdateOperationsInput | number
-    damaged_quantity?: IntFieldUpdateOperationsInput | number
-    in_transit_quantity?: IntFieldUpdateOperationsInput | number
-    reorder_point?: IntFieldUpdateOperationsInput | number
-    reorder_quantity?: IntFieldUpdateOperationsInput | number
-    max_stock_level?: NullableIntFieldUpdateOperationsInput | number | null
-    average_cost?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    total_value?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    bin_location?: NullableStringFieldUpdateOperationsInput | string | null
-    aisle?: NullableStringFieldUpdateOperationsInput | string | null
-    shelf?: NullableStringFieldUpdateOperationsInput | string | null
-    last_counted_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    last_restock_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    is_low_stock?: BoolFieldUpdateOperationsInput | boolean
-    is_out_of_stock?: BoolFieldUpdateOperationsInput | boolean
-    metadata?: JsonNullValueInput | InputJsonValue
-    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    stock_alerts?: stock_alertsUncheckedUpdateManyWithoutInventory_levelsNestedInput
-  }
-
-  export type tenantsUpsertWithoutStock_movementsInput = {
-    update: XOR<tenantsUpdateWithoutStock_movementsInput, tenantsUncheckedUpdateWithoutStock_movementsInput>
-    create: XOR<tenantsCreateWithoutStock_movementsInput, tenantsUncheckedCreateWithoutStock_movementsInput>
-    where?: tenantsWhereInput
-  }
-
-  export type tenantsUpdateToOneWithWhereWithoutStock_movementsInput = {
-    where?: tenantsWhereInput
-    data: XOR<tenantsUpdateWithoutStock_movementsInput, tenantsUncheckedUpdateWithoutStock_movementsInput>
-  }
-
-  export type tenantsUpdateWithoutStock_movementsInput = {
-    tenant_id?: StringFieldUpdateOperationsInput | string
-    tenant_name?: StringFieldUpdateOperationsInput | string
-    email?: StringFieldUpdateOperationsInput | string
-    phone_number?: NullableStringFieldUpdateOperationsInput | string | null
-    created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    address?: NullableStringFieldUpdateOperationsInput | string | null
-    gst_number?: NullableStringFieldUpdateOperationsInput | string | null
-    pan_number?: NullableStringFieldUpdateOperationsInput | string | null
-    registration_no?: NullableStringFieldUpdateOperationsInput | string | null
-    business_workflows?: business_workflowsUpdateManyWithoutTenantsNestedInput
-    businesses?: businessesUpdateManyWithoutTenantsNestedInput
-    carts?: cartsUpdateManyWithoutTenantsNestedInput
-    inventory_levels?: inventory_levelsUpdateManyWithoutTenantsNestedInput
-    leads?: leadsUpdateManyWithoutTenantsNestedInput
-    notification_messages?: notification_messagesUpdateManyWithoutTenantsNestedInput
-    notification_templates?: notification_templatesUpdateManyWithoutTenantsNestedInput
-    product_categories?: product_categoriesUpdateManyWithoutTenantsNestedInput
-    stock_alerts?: stock_alertsUpdateManyWithoutTenantsNestedInput
-    stock_counts?: stock_countsUpdateManyWithoutTenantsNestedInput
-    stock_transfers?: stock_transfersUpdateManyWithoutTenantsNestedInput
-    warehouses?: warehousesUpdateManyWithoutTenantsNestedInput
-  }
-
-  export type tenantsUncheckedUpdateWithoutStock_movementsInput = {
-    tenant_id?: StringFieldUpdateOperationsInput | string
-    tenant_name?: StringFieldUpdateOperationsInput | string
-    email?: StringFieldUpdateOperationsInput | string
-    phone_number?: NullableStringFieldUpdateOperationsInput | string | null
-    created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    address?: NullableStringFieldUpdateOperationsInput | string | null
-    gst_number?: NullableStringFieldUpdateOperationsInput | string | null
-    pan_number?: NullableStringFieldUpdateOperationsInput | string | null
-    registration_no?: NullableStringFieldUpdateOperationsInput | string | null
-    business_workflows?: business_workflowsUncheckedUpdateManyWithoutTenantsNestedInput
-    businesses?: businessesUncheckedUpdateManyWithoutTenantsNestedInput
-    carts?: cartsUncheckedUpdateManyWithoutTenantsNestedInput
-    inventory_levels?: inventory_levelsUncheckedUpdateManyWithoutTenantsNestedInput
-    leads?: leadsUncheckedUpdateManyWithoutTenantsNestedInput
-    notification_messages?: notification_messagesUncheckedUpdateManyWithoutTenantsNestedInput
-    notification_templates?: notification_templatesUncheckedUpdateManyWithoutTenantsNestedInput
-    product_categories?: product_categoriesUncheckedUpdateManyWithoutTenantsNestedInput
-    stock_alerts?: stock_alertsUncheckedUpdateManyWithoutTenantsNestedInput
-    stock_counts?: stock_countsUncheckedUpdateManyWithoutTenantsNestedInput
-    stock_transfers?: stock_transfersUncheckedUpdateManyWithoutTenantsNestedInput
-    warehouses?: warehousesUncheckedUpdateManyWithoutTenantsNestedInput
-  }
-
-  export type product_variantsUpsertWithoutStock_movementsInput = {
-    update: XOR<product_variantsUpdateWithoutStock_movementsInput, product_variantsUncheckedUpdateWithoutStock_movementsInput>
-    create: XOR<product_variantsCreateWithoutStock_movementsInput, product_variantsUncheckedCreateWithoutStock_movementsInput>
-    where?: product_variantsWhereInput
-  }
-
-  export type product_variantsUpdateToOneWithWhereWithoutStock_movementsInput = {
-    where?: product_variantsWhereInput
-    data: XOR<product_variantsUpdateWithoutStock_movementsInput, product_variantsUncheckedUpdateWithoutStock_movementsInput>
-  }
-
-  export type product_variantsUpdateWithoutStock_movementsInput = {
-    variant_id?: StringFieldUpdateOperationsInput | string
-    name?: StringFieldUpdateOperationsInput | string
-    sku?: NullableStringFieldUpdateOperationsInput | string | null
-    price?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    quantity?: IntFieldUpdateOperationsInput | number
-    reserved_stock?: NullableIntFieldUpdateOperationsInput | number | null
-    version?: NullableIntFieldUpdateOperationsInput | number | null
-    in_stock?: BoolFieldUpdateOperationsInput | boolean
-    variant_options?: NullableJsonNullValueInput | InputJsonValue
-    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    cart_items?: cart_itemsUpdateManyWithoutProduct_variantsNestedInput
-    inventory_levels?: inventory_levelsUpdateManyWithoutProduct_variantsNestedInput
-    product?: productsUpdateOneRequiredWithoutProduct_variantsNestedInput
-    stock_alerts?: stock_alertsUpdateManyWithoutProduct_variantsNestedInput
-  }
-
-  export type product_variantsUncheckedUpdateWithoutStock_movementsInput = {
-    variant_id?: StringFieldUpdateOperationsInput | string
-    product_id?: StringFieldUpdateOperationsInput | string
-    name?: StringFieldUpdateOperationsInput | string
-    sku?: NullableStringFieldUpdateOperationsInput | string | null
-    price?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    quantity?: IntFieldUpdateOperationsInput | number
-    reserved_stock?: NullableIntFieldUpdateOperationsInput | number | null
-    version?: NullableIntFieldUpdateOperationsInput | number | null
-    in_stock?: BoolFieldUpdateOperationsInput | boolean
-    variant_options?: NullableJsonNullValueInput | InputJsonValue
-    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    cart_items?: cart_itemsUncheckedUpdateManyWithoutProduct_variantsNestedInput
-    inventory_levels?: inventory_levelsUncheckedUpdateManyWithoutProduct_variantsNestedInput
-    stock_alerts?: stock_alertsUncheckedUpdateManyWithoutProduct_variantsNestedInput
-  }
-
-  export type warehousesUpsertWithoutStock_movementsInput = {
-    update: XOR<warehousesUpdateWithoutStock_movementsInput, warehousesUncheckedUpdateWithoutStock_movementsInput>
-    create: XOR<warehousesCreateWithoutStock_movementsInput, warehousesUncheckedCreateWithoutStock_movementsInput>
-    where?: warehousesWhereInput
-  }
-
-  export type warehousesUpdateToOneWithWhereWithoutStock_movementsInput = {
-    where?: warehousesWhereInput
-    data: XOR<warehousesUpdateWithoutStock_movementsInput, warehousesUncheckedUpdateWithoutStock_movementsInput>
-  }
-
-  export type warehousesUpdateWithoutStock_movementsInput = {
-    warehouse_id?: StringFieldUpdateOperationsInput | string
-    warehouse_name?: StringFieldUpdateOperationsInput | string
-    warehouse_code?: StringFieldUpdateOperationsInput | string
-    warehouse_type?: StringFieldUpdateOperationsInput | string
-    address_line1?: NullableStringFieldUpdateOperationsInput | string | null
-    address_line2?: NullableStringFieldUpdateOperationsInput | string | null
-    city?: NullableStringFieldUpdateOperationsInput | string | null
-    state?: NullableStringFieldUpdateOperationsInput | string | null
-    postal_code?: NullableStringFieldUpdateOperationsInput | string | null
-    country?: StringFieldUpdateOperationsInput | string
-    contact_person?: NullableStringFieldUpdateOperationsInput | string | null
-    contact_email?: NullableStringFieldUpdateOperationsInput | string | null
-    contact_phone?: NullableStringFieldUpdateOperationsInput | string | null
-    total_capacity?: NullableIntFieldUpdateOperationsInput | number | null
-    used_capacity?: IntFieldUpdateOperationsInput | number
-    is_default?: BoolFieldUpdateOperationsInput | boolean
-    is_active?: BoolFieldUpdateOperationsInput | boolean
-    priority?: IntFieldUpdateOperationsInput | number
-    operating_hours?: JsonNullValueInput | InputJsonValue
-    metadata?: JsonNullValueInput | InputJsonValue
-    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    inventory_levels?: inventory_levelsUpdateManyWithoutWarehousesNestedInput
-    stock_alerts?: stock_alertsUpdateManyWithoutWarehousesNestedInput
-    stock_counts?: stock_countsUpdateManyWithoutWarehousesNestedInput
-    stock_transfers_from?: stock_transfersUpdateManyWithoutFrom_warehouseNestedInput
-    stock_transfers_to?: stock_transfersUpdateManyWithoutTo_warehouseNestedInput
-    businesses?: businessesUpdateOneRequiredWithoutWarehousesNestedInput
-    tenants?: tenantsUpdateOneRequiredWithoutWarehousesNestedInput
-  }
-
-  export type warehousesUncheckedUpdateWithoutStock_movementsInput = {
-    warehouse_id?: StringFieldUpdateOperationsInput | string
-    business_id?: StringFieldUpdateOperationsInput | string
-    tenant_id?: StringFieldUpdateOperationsInput | string
-    warehouse_name?: StringFieldUpdateOperationsInput | string
-    warehouse_code?: StringFieldUpdateOperationsInput | string
-    warehouse_type?: StringFieldUpdateOperationsInput | string
-    address_line1?: NullableStringFieldUpdateOperationsInput | string | null
-    address_line2?: NullableStringFieldUpdateOperationsInput | string | null
-    city?: NullableStringFieldUpdateOperationsInput | string | null
-    state?: NullableStringFieldUpdateOperationsInput | string | null
-    postal_code?: NullableStringFieldUpdateOperationsInput | string | null
-    country?: StringFieldUpdateOperationsInput | string
-    contact_person?: NullableStringFieldUpdateOperationsInput | string | null
-    contact_email?: NullableStringFieldUpdateOperationsInput | string | null
-    contact_phone?: NullableStringFieldUpdateOperationsInput | string | null
-    total_capacity?: NullableIntFieldUpdateOperationsInput | number | null
-    used_capacity?: IntFieldUpdateOperationsInput | number
-    is_default?: BoolFieldUpdateOperationsInput | boolean
-    is_active?: BoolFieldUpdateOperationsInput | boolean
-    priority?: IntFieldUpdateOperationsInput | number
-    operating_hours?: JsonNullValueInput | InputJsonValue
-    metadata?: JsonNullValueInput | InputJsonValue
-    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    inventory_levels?: inventory_levelsUncheckedUpdateManyWithoutWarehousesNestedInput
-    stock_alerts?: stock_alertsUncheckedUpdateManyWithoutWarehousesNestedInput
-    stock_counts?: stock_countsUncheckedUpdateManyWithoutWarehousesNestedInput
-    stock_transfers_from?: stock_transfersUncheckedUpdateManyWithoutFrom_warehouseNestedInput
-    stock_transfers_to?: stock_transfersUncheckedUpdateManyWithoutTo_warehouseNestedInput
-  }
-
-  export type businessesCreateWithoutStock_transfersInput = {
-    business_id?: string
-    business_name: string
-    business_type?: string | null
-    whatsapp_number?: string | null
-    created_at?: Date | string | null
-    updated_at?: Date | string | null
-    email?: string | null
-    phone?: string | null
-    website?: string | null
-    city?: string | null
-    address?: string | null
-    country?: string | null
-    gst_number?: string | null
-    pan_number?: string | null
-    business_employees?: business_employeesCreateNestedManyWithoutBusinessesInput
-    business_workflows?: business_workflowsCreateNestedManyWithoutBusinessesInput
-    tenants: tenantsCreateNestedOneWithoutBusinessesInput
-    carts?: cartsCreateNestedManyWithoutBusinessesInput
-    inventory_levels?: inventory_levelsCreateNestedManyWithoutBusinessesInput
-    leads?: leadsCreateNestedManyWithoutBusinessesInput
-    notification_messages?: notification_messagesCreateNestedManyWithoutBusinessesInput
-    notification_preferences?: notification_preferencesCreateNestedManyWithoutBusinessesInput
-    notification_templates?: notification_templatesCreateNestedManyWithoutBusinessesInput
-    payment_reconciliation?: payment_reconciliationCreateNestedManyWithoutBusinessesInput
-    payments?: paymentsCreateNestedManyWithoutBusinessesInput
-    product_categories?: product_categoriesCreateNestedManyWithoutBusinessesInput
-    product_images?: product_imagesCreateNestedManyWithoutBusinessesInput
-    products?: productsCreateNestedManyWithoutBusinessesInput
-    social_accounts?: social_accountsCreateNestedManyWithoutBusinessesInput
-    stock_alerts?: stock_alertsCreateNestedManyWithoutBusinessesInput
-    stock_counts?: stock_countsCreateNestedManyWithoutBusinessesInput
-    stock_movements?: stock_movementsCreateNestedManyWithoutBusinessesInput
-    tags?: tagsCreateNestedManyWithoutBusinessesInput
-    users?: usersCreateNestedManyWithoutBusinessesInput
-    warehouses?: warehousesCreateNestedManyWithoutBusinessesInput
-    workflow_executions?: workflow_executionsCreateNestedManyWithoutBusinessesInput
-  }
-
-  export type businessesUncheckedCreateWithoutStock_transfersInput = {
-    business_id?: string
-    tenant_id: string
-    business_name: string
-    business_type?: string | null
-    whatsapp_number?: string | null
-    created_at?: Date | string | null
-    updated_at?: Date | string | null
-    email?: string | null
-    phone?: string | null
-    website?: string | null
-    city?: string | null
-    address?: string | null
-    country?: string | null
-    gst_number?: string | null
-    pan_number?: string | null
-    business_employees?: business_employeesUncheckedCreateNestedManyWithoutBusinessesInput
-    business_workflows?: business_workflowsUncheckedCreateNestedManyWithoutBusinessesInput
-    carts?: cartsUncheckedCreateNestedManyWithoutBusinessesInput
-    inventory_levels?: inventory_levelsUncheckedCreateNestedManyWithoutBusinessesInput
-    leads?: leadsUncheckedCreateNestedManyWithoutBusinessesInput
-    notification_messages?: notification_messagesUncheckedCreateNestedManyWithoutBusinessesInput
-    notification_preferences?: notification_preferencesUncheckedCreateNestedManyWithoutBusinessesInput
-    notification_templates?: notification_templatesUncheckedCreateNestedManyWithoutBusinessesInput
-    payment_reconciliation?: payment_reconciliationUncheckedCreateNestedManyWithoutBusinessesInput
-    payments?: paymentsUncheckedCreateNestedManyWithoutBusinessesInput
-    product_categories?: product_categoriesUncheckedCreateNestedManyWithoutBusinessesInput
-    product_images?: product_imagesUncheckedCreateNestedManyWithoutBusinessesInput
-    products?: productsUncheckedCreateNestedManyWithoutBusinessesInput
-    social_accounts?: social_accountsUncheckedCreateNestedManyWithoutBusinessesInput
-    stock_alerts?: stock_alertsUncheckedCreateNestedManyWithoutBusinessesInput
-    stock_counts?: stock_countsUncheckedCreateNestedManyWithoutBusinessesInput
-    stock_movements?: stock_movementsUncheckedCreateNestedManyWithoutBusinessesInput
-    tags?: tagsUncheckedCreateNestedManyWithoutBusinessesInput
-    users?: usersUncheckedCreateNestedManyWithoutBusinessesInput
-    warehouses?: warehousesUncheckedCreateNestedManyWithoutBusinessesInput
-    workflow_executions?: workflow_executionsUncheckedCreateNestedManyWithoutBusinessesInput
-  }
-
-  export type businessesCreateOrConnectWithoutStock_transfersInput = {
-    where: businessesWhereUniqueInput
-    create: XOR<businessesCreateWithoutStock_transfersInput, businessesUncheckedCreateWithoutStock_transfersInput>
-  }
-
-  export type warehousesCreateWithoutStock_transfers_fromInput = {
-    warehouse_id?: string
-    warehouse_name: string
-    warehouse_code: string
-    warehouse_type?: string
-    address_line1?: string | null
-    address_line2?: string | null
-    city?: string | null
-    state?: string | null
-    postal_code?: string | null
-    country?: string
-    contact_person?: string | null
-    contact_email?: string | null
-    contact_phone?: string | null
-    total_capacity?: number | null
-    used_capacity?: number
-    is_default?: boolean
-    is_active?: boolean
-    priority?: number
-    operating_hours?: JsonNullValueInput | InputJsonValue
-    metadata?: JsonNullValueInput | InputJsonValue
-    created_at?: Date | string
-    updated_at?: Date | string
-    inventory_levels?: inventory_levelsCreateNestedManyWithoutWarehousesInput
-    stock_alerts?: stock_alertsCreateNestedManyWithoutWarehousesInput
-    stock_counts?: stock_countsCreateNestedManyWithoutWarehousesInput
-    stock_movements?: stock_movementsCreateNestedManyWithoutWarehousesInput
-    stock_transfers_to?: stock_transfersCreateNestedManyWithoutTo_warehouseInput
-    businesses: businessesCreateNestedOneWithoutWarehousesInput
-    tenants: tenantsCreateNestedOneWithoutWarehousesInput
-  }
-
-  export type warehousesUncheckedCreateWithoutStock_transfers_fromInput = {
-    warehouse_id?: string
-    business_id: string
-    tenant_id: string
-    warehouse_name: string
-    warehouse_code: string
-    warehouse_type?: string
-    address_line1?: string | null
-    address_line2?: string | null
-    city?: string | null
-    state?: string | null
-    postal_code?: string | null
-    country?: string
-    contact_person?: string | null
-    contact_email?: string | null
-    contact_phone?: string | null
-    total_capacity?: number | null
-    used_capacity?: number
-    is_default?: boolean
-    is_active?: boolean
-    priority?: number
-    operating_hours?: JsonNullValueInput | InputJsonValue
-    metadata?: JsonNullValueInput | InputJsonValue
-    created_at?: Date | string
-    updated_at?: Date | string
-    inventory_levels?: inventory_levelsUncheckedCreateNestedManyWithoutWarehousesInput
-    stock_alerts?: stock_alertsUncheckedCreateNestedManyWithoutWarehousesInput
-    stock_counts?: stock_countsUncheckedCreateNestedManyWithoutWarehousesInput
-    stock_movements?: stock_movementsUncheckedCreateNestedManyWithoutWarehousesInput
-    stock_transfers_to?: stock_transfersUncheckedCreateNestedManyWithoutTo_warehouseInput
-  }
-
-  export type warehousesCreateOrConnectWithoutStock_transfers_fromInput = {
-    where: warehousesWhereUniqueInput
-    create: XOR<warehousesCreateWithoutStock_transfers_fromInput, warehousesUncheckedCreateWithoutStock_transfers_fromInput>
-  }
-
-  export type tenantsCreateWithoutStock_transfersInput = {
-    tenant_id?: string
-    tenant_name: string
-    email: string
-    phone_number?: string | null
-    created_at?: Date | string | null
-    updated_at?: Date | string | null
-    address?: string | null
-    gst_number?: string | null
-    pan_number?: string | null
-    registration_no?: string | null
-    business_workflows?: business_workflowsCreateNestedManyWithoutTenantsInput
-    businesses?: businessesCreateNestedManyWithoutTenantsInput
-    carts?: cartsCreateNestedManyWithoutTenantsInput
-    inventory_levels?: inventory_levelsCreateNestedManyWithoutTenantsInput
-    leads?: leadsCreateNestedManyWithoutTenantsInput
-    notification_messages?: notification_messagesCreateNestedManyWithoutTenantsInput
-    notification_templates?: notification_templatesCreateNestedManyWithoutTenantsInput
-    product_categories?: product_categoriesCreateNestedManyWithoutTenantsInput
-    stock_alerts?: stock_alertsCreateNestedManyWithoutTenantsInput
-    stock_counts?: stock_countsCreateNestedManyWithoutTenantsInput
-    stock_movements?: stock_movementsCreateNestedManyWithoutTenantsInput
-    warehouses?: warehousesCreateNestedManyWithoutTenantsInput
-  }
-
-  export type tenantsUncheckedCreateWithoutStock_transfersInput = {
-    tenant_id?: string
-    tenant_name: string
-    email: string
-    phone_number?: string | null
-    created_at?: Date | string | null
-    updated_at?: Date | string | null
-    address?: string | null
-    gst_number?: string | null
-    pan_number?: string | null
-    registration_no?: string | null
-    business_workflows?: business_workflowsUncheckedCreateNestedManyWithoutTenantsInput
-    businesses?: businessesUncheckedCreateNestedManyWithoutTenantsInput
-    carts?: cartsUncheckedCreateNestedManyWithoutTenantsInput
-    inventory_levels?: inventory_levelsUncheckedCreateNestedManyWithoutTenantsInput
-    leads?: leadsUncheckedCreateNestedManyWithoutTenantsInput
-    notification_messages?: notification_messagesUncheckedCreateNestedManyWithoutTenantsInput
-    notification_templates?: notification_templatesUncheckedCreateNestedManyWithoutTenantsInput
-    product_categories?: product_categoriesUncheckedCreateNestedManyWithoutTenantsInput
-    stock_alerts?: stock_alertsUncheckedCreateNestedManyWithoutTenantsInput
-    stock_counts?: stock_countsUncheckedCreateNestedManyWithoutTenantsInput
-    stock_movements?: stock_movementsUncheckedCreateNestedManyWithoutTenantsInput
-    warehouses?: warehousesUncheckedCreateNestedManyWithoutTenantsInput
-  }
-
-  export type tenantsCreateOrConnectWithoutStock_transfersInput = {
-    where: tenantsWhereUniqueInput
-    create: XOR<tenantsCreateWithoutStock_transfersInput, tenantsUncheckedCreateWithoutStock_transfersInput>
-  }
-
-  export type warehousesCreateWithoutStock_transfers_toInput = {
-    warehouse_id?: string
-    warehouse_name: string
-    warehouse_code: string
-    warehouse_type?: string
-    address_line1?: string | null
-    address_line2?: string | null
-    city?: string | null
-    state?: string | null
-    postal_code?: string | null
-    country?: string
-    contact_person?: string | null
-    contact_email?: string | null
-    contact_phone?: string | null
-    total_capacity?: number | null
-    used_capacity?: number
-    is_default?: boolean
-    is_active?: boolean
-    priority?: number
-    operating_hours?: JsonNullValueInput | InputJsonValue
-    metadata?: JsonNullValueInput | InputJsonValue
-    created_at?: Date | string
-    updated_at?: Date | string
-    inventory_levels?: inventory_levelsCreateNestedManyWithoutWarehousesInput
-    stock_alerts?: stock_alertsCreateNestedManyWithoutWarehousesInput
-    stock_counts?: stock_countsCreateNestedManyWithoutWarehousesInput
-    stock_movements?: stock_movementsCreateNestedManyWithoutWarehousesInput
-    stock_transfers_from?: stock_transfersCreateNestedManyWithoutFrom_warehouseInput
-    businesses: businessesCreateNestedOneWithoutWarehousesInput
-    tenants: tenantsCreateNestedOneWithoutWarehousesInput
-  }
-
-  export type warehousesUncheckedCreateWithoutStock_transfers_toInput = {
-    warehouse_id?: string
-    business_id: string
-    tenant_id: string
-    warehouse_name: string
-    warehouse_code: string
-    warehouse_type?: string
-    address_line1?: string | null
-    address_line2?: string | null
-    city?: string | null
-    state?: string | null
-    postal_code?: string | null
-    country?: string
-    contact_person?: string | null
-    contact_email?: string | null
-    contact_phone?: string | null
-    total_capacity?: number | null
-    used_capacity?: number
-    is_default?: boolean
-    is_active?: boolean
-    priority?: number
-    operating_hours?: JsonNullValueInput | InputJsonValue
-    metadata?: JsonNullValueInput | InputJsonValue
-    created_at?: Date | string
-    updated_at?: Date | string
-    inventory_levels?: inventory_levelsUncheckedCreateNestedManyWithoutWarehousesInput
-    stock_alerts?: stock_alertsUncheckedCreateNestedManyWithoutWarehousesInput
-    stock_counts?: stock_countsUncheckedCreateNestedManyWithoutWarehousesInput
-    stock_movements?: stock_movementsUncheckedCreateNestedManyWithoutWarehousesInput
-    stock_transfers_from?: stock_transfersUncheckedCreateNestedManyWithoutFrom_warehouseInput
-  }
-
-  export type warehousesCreateOrConnectWithoutStock_transfers_toInput = {
-    where: warehousesWhereUniqueInput
-    create: XOR<warehousesCreateWithoutStock_transfers_toInput, warehousesUncheckedCreateWithoutStock_transfers_toInput>
-  }
-
-  export type businessesUpsertWithoutStock_transfersInput = {
-    update: XOR<businessesUpdateWithoutStock_transfersInput, businessesUncheckedUpdateWithoutStock_transfersInput>
-    create: XOR<businessesCreateWithoutStock_transfersInput, businessesUncheckedCreateWithoutStock_transfersInput>
-    where?: businessesWhereInput
-  }
-
-  export type businessesUpdateToOneWithWhereWithoutStock_transfersInput = {
-    where?: businessesWhereInput
-    data: XOR<businessesUpdateWithoutStock_transfersInput, businessesUncheckedUpdateWithoutStock_transfersInput>
-  }
-
-  export type businessesUpdateWithoutStock_transfersInput = {
-    business_id?: StringFieldUpdateOperationsInput | string
-    business_name?: StringFieldUpdateOperationsInput | string
-    business_type?: NullableStringFieldUpdateOperationsInput | string | null
-    whatsapp_number?: NullableStringFieldUpdateOperationsInput | string | null
-    created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    email?: NullableStringFieldUpdateOperationsInput | string | null
-    phone?: NullableStringFieldUpdateOperationsInput | string | null
-    website?: NullableStringFieldUpdateOperationsInput | string | null
-    city?: NullableStringFieldUpdateOperationsInput | string | null
-    address?: NullableStringFieldUpdateOperationsInput | string | null
-    country?: NullableStringFieldUpdateOperationsInput | string | null
-    gst_number?: NullableStringFieldUpdateOperationsInput | string | null
-    pan_number?: NullableStringFieldUpdateOperationsInput | string | null
-    business_employees?: business_employeesUpdateManyWithoutBusinessesNestedInput
-    business_workflows?: business_workflowsUpdateManyWithoutBusinessesNestedInput
-    tenants?: tenantsUpdateOneRequiredWithoutBusinessesNestedInput
-    carts?: cartsUpdateManyWithoutBusinessesNestedInput
-    inventory_levels?: inventory_levelsUpdateManyWithoutBusinessesNestedInput
-    leads?: leadsUpdateManyWithoutBusinessesNestedInput
-    notification_messages?: notification_messagesUpdateManyWithoutBusinessesNestedInput
-    notification_preferences?: notification_preferencesUpdateManyWithoutBusinessesNestedInput
-    notification_templates?: notification_templatesUpdateManyWithoutBusinessesNestedInput
-    payment_reconciliation?: payment_reconciliationUpdateManyWithoutBusinessesNestedInput
-    payments?: paymentsUpdateManyWithoutBusinessesNestedInput
-    product_categories?: product_categoriesUpdateManyWithoutBusinessesNestedInput
-    product_images?: product_imagesUpdateManyWithoutBusinessesNestedInput
-    products?: productsUpdateManyWithoutBusinessesNestedInput
-    social_accounts?: social_accountsUpdateManyWithoutBusinessesNestedInput
-    stock_alerts?: stock_alertsUpdateManyWithoutBusinessesNestedInput
-    stock_counts?: stock_countsUpdateManyWithoutBusinessesNestedInput
-    stock_movements?: stock_movementsUpdateManyWithoutBusinessesNestedInput
-    tags?: tagsUpdateManyWithoutBusinessesNestedInput
-    users?: usersUpdateManyWithoutBusinessesNestedInput
-    warehouses?: warehousesUpdateManyWithoutBusinessesNestedInput
-    workflow_executions?: workflow_executionsUpdateManyWithoutBusinessesNestedInput
-  }
-
-  export type businessesUncheckedUpdateWithoutStock_transfersInput = {
-    business_id?: StringFieldUpdateOperationsInput | string
-    tenant_id?: StringFieldUpdateOperationsInput | string
-    business_name?: StringFieldUpdateOperationsInput | string
-    business_type?: NullableStringFieldUpdateOperationsInput | string | null
-    whatsapp_number?: NullableStringFieldUpdateOperationsInput | string | null
-    created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    email?: NullableStringFieldUpdateOperationsInput | string | null
-    phone?: NullableStringFieldUpdateOperationsInput | string | null
-    website?: NullableStringFieldUpdateOperationsInput | string | null
-    city?: NullableStringFieldUpdateOperationsInput | string | null
-    address?: NullableStringFieldUpdateOperationsInput | string | null
-    country?: NullableStringFieldUpdateOperationsInput | string | null
-    gst_number?: NullableStringFieldUpdateOperationsInput | string | null
-    pan_number?: NullableStringFieldUpdateOperationsInput | string | null
-    business_employees?: business_employeesUncheckedUpdateManyWithoutBusinessesNestedInput
-    business_workflows?: business_workflowsUncheckedUpdateManyWithoutBusinessesNestedInput
-    carts?: cartsUncheckedUpdateManyWithoutBusinessesNestedInput
-    inventory_levels?: inventory_levelsUncheckedUpdateManyWithoutBusinessesNestedInput
-    leads?: leadsUncheckedUpdateManyWithoutBusinessesNestedInput
-    notification_messages?: notification_messagesUncheckedUpdateManyWithoutBusinessesNestedInput
-    notification_preferences?: notification_preferencesUncheckedUpdateManyWithoutBusinessesNestedInput
-    notification_templates?: notification_templatesUncheckedUpdateManyWithoutBusinessesNestedInput
-    payment_reconciliation?: payment_reconciliationUncheckedUpdateManyWithoutBusinessesNestedInput
-    payments?: paymentsUncheckedUpdateManyWithoutBusinessesNestedInput
-    product_categories?: product_categoriesUncheckedUpdateManyWithoutBusinessesNestedInput
-    product_images?: product_imagesUncheckedUpdateManyWithoutBusinessesNestedInput
-    products?: productsUncheckedUpdateManyWithoutBusinessesNestedInput
-    social_accounts?: social_accountsUncheckedUpdateManyWithoutBusinessesNestedInput
-    stock_alerts?: stock_alertsUncheckedUpdateManyWithoutBusinessesNestedInput
-    stock_counts?: stock_countsUncheckedUpdateManyWithoutBusinessesNestedInput
-    stock_movements?: stock_movementsUncheckedUpdateManyWithoutBusinessesNestedInput
-    tags?: tagsUncheckedUpdateManyWithoutBusinessesNestedInput
-    users?: usersUncheckedUpdateManyWithoutBusinessesNestedInput
-    warehouses?: warehousesUncheckedUpdateManyWithoutBusinessesNestedInput
-    workflow_executions?: workflow_executionsUncheckedUpdateManyWithoutBusinessesNestedInput
-  }
-
-  export type warehousesUpsertWithoutStock_transfers_fromInput = {
-    update: XOR<warehousesUpdateWithoutStock_transfers_fromInput, warehousesUncheckedUpdateWithoutStock_transfers_fromInput>
-    create: XOR<warehousesCreateWithoutStock_transfers_fromInput, warehousesUncheckedCreateWithoutStock_transfers_fromInput>
-    where?: warehousesWhereInput
-  }
-
-  export type warehousesUpdateToOneWithWhereWithoutStock_transfers_fromInput = {
-    where?: warehousesWhereInput
-    data: XOR<warehousesUpdateWithoutStock_transfers_fromInput, warehousesUncheckedUpdateWithoutStock_transfers_fromInput>
-  }
-
-  export type warehousesUpdateWithoutStock_transfers_fromInput = {
-    warehouse_id?: StringFieldUpdateOperationsInput | string
-    warehouse_name?: StringFieldUpdateOperationsInput | string
-    warehouse_code?: StringFieldUpdateOperationsInput | string
-    warehouse_type?: StringFieldUpdateOperationsInput | string
-    address_line1?: NullableStringFieldUpdateOperationsInput | string | null
-    address_line2?: NullableStringFieldUpdateOperationsInput | string | null
-    city?: NullableStringFieldUpdateOperationsInput | string | null
-    state?: NullableStringFieldUpdateOperationsInput | string | null
-    postal_code?: NullableStringFieldUpdateOperationsInput | string | null
-    country?: StringFieldUpdateOperationsInput | string
-    contact_person?: NullableStringFieldUpdateOperationsInput | string | null
-    contact_email?: NullableStringFieldUpdateOperationsInput | string | null
-    contact_phone?: NullableStringFieldUpdateOperationsInput | string | null
-    total_capacity?: NullableIntFieldUpdateOperationsInput | number | null
-    used_capacity?: IntFieldUpdateOperationsInput | number
-    is_default?: BoolFieldUpdateOperationsInput | boolean
-    is_active?: BoolFieldUpdateOperationsInput | boolean
-    priority?: IntFieldUpdateOperationsInput | number
-    operating_hours?: JsonNullValueInput | InputJsonValue
-    metadata?: JsonNullValueInput | InputJsonValue
-    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    inventory_levels?: inventory_levelsUpdateManyWithoutWarehousesNestedInput
-    stock_alerts?: stock_alertsUpdateManyWithoutWarehousesNestedInput
-    stock_counts?: stock_countsUpdateManyWithoutWarehousesNestedInput
-    stock_movements?: stock_movementsUpdateManyWithoutWarehousesNestedInput
-    stock_transfers_to?: stock_transfersUpdateManyWithoutTo_warehouseNestedInput
-    businesses?: businessesUpdateOneRequiredWithoutWarehousesNestedInput
-    tenants?: tenantsUpdateOneRequiredWithoutWarehousesNestedInput
-  }
-
-  export type warehousesUncheckedUpdateWithoutStock_transfers_fromInput = {
-    warehouse_id?: StringFieldUpdateOperationsInput | string
-    business_id?: StringFieldUpdateOperationsInput | string
-    tenant_id?: StringFieldUpdateOperationsInput | string
-    warehouse_name?: StringFieldUpdateOperationsInput | string
-    warehouse_code?: StringFieldUpdateOperationsInput | string
-    warehouse_type?: StringFieldUpdateOperationsInput | string
-    address_line1?: NullableStringFieldUpdateOperationsInput | string | null
-    address_line2?: NullableStringFieldUpdateOperationsInput | string | null
-    city?: NullableStringFieldUpdateOperationsInput | string | null
-    state?: NullableStringFieldUpdateOperationsInput | string | null
-    postal_code?: NullableStringFieldUpdateOperationsInput | string | null
-    country?: StringFieldUpdateOperationsInput | string
-    contact_person?: NullableStringFieldUpdateOperationsInput | string | null
-    contact_email?: NullableStringFieldUpdateOperationsInput | string | null
-    contact_phone?: NullableStringFieldUpdateOperationsInput | string | null
-    total_capacity?: NullableIntFieldUpdateOperationsInput | number | null
-    used_capacity?: IntFieldUpdateOperationsInput | number
-    is_default?: BoolFieldUpdateOperationsInput | boolean
-    is_active?: BoolFieldUpdateOperationsInput | boolean
-    priority?: IntFieldUpdateOperationsInput | number
-    operating_hours?: JsonNullValueInput | InputJsonValue
-    metadata?: JsonNullValueInput | InputJsonValue
-    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    inventory_levels?: inventory_levelsUncheckedUpdateManyWithoutWarehousesNestedInput
-    stock_alerts?: stock_alertsUncheckedUpdateManyWithoutWarehousesNestedInput
-    stock_counts?: stock_countsUncheckedUpdateManyWithoutWarehousesNestedInput
-    stock_movements?: stock_movementsUncheckedUpdateManyWithoutWarehousesNestedInput
-    stock_transfers_to?: stock_transfersUncheckedUpdateManyWithoutTo_warehouseNestedInput
-  }
-
-  export type tenantsUpsertWithoutStock_transfersInput = {
-    update: XOR<tenantsUpdateWithoutStock_transfersInput, tenantsUncheckedUpdateWithoutStock_transfersInput>
-    create: XOR<tenantsCreateWithoutStock_transfersInput, tenantsUncheckedCreateWithoutStock_transfersInput>
-    where?: tenantsWhereInput
-  }
-
-  export type tenantsUpdateToOneWithWhereWithoutStock_transfersInput = {
-    where?: tenantsWhereInput
-    data: XOR<tenantsUpdateWithoutStock_transfersInput, tenantsUncheckedUpdateWithoutStock_transfersInput>
-  }
-
-  export type tenantsUpdateWithoutStock_transfersInput = {
-    tenant_id?: StringFieldUpdateOperationsInput | string
-    tenant_name?: StringFieldUpdateOperationsInput | string
-    email?: StringFieldUpdateOperationsInput | string
-    phone_number?: NullableStringFieldUpdateOperationsInput | string | null
-    created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    address?: NullableStringFieldUpdateOperationsInput | string | null
-    gst_number?: NullableStringFieldUpdateOperationsInput | string | null
-    pan_number?: NullableStringFieldUpdateOperationsInput | string | null
-    registration_no?: NullableStringFieldUpdateOperationsInput | string | null
-    business_workflows?: business_workflowsUpdateManyWithoutTenantsNestedInput
-    businesses?: businessesUpdateManyWithoutTenantsNestedInput
-    carts?: cartsUpdateManyWithoutTenantsNestedInput
-    inventory_levels?: inventory_levelsUpdateManyWithoutTenantsNestedInput
-    leads?: leadsUpdateManyWithoutTenantsNestedInput
-    notification_messages?: notification_messagesUpdateManyWithoutTenantsNestedInput
-    notification_templates?: notification_templatesUpdateManyWithoutTenantsNestedInput
-    product_categories?: product_categoriesUpdateManyWithoutTenantsNestedInput
-    stock_alerts?: stock_alertsUpdateManyWithoutTenantsNestedInput
-    stock_counts?: stock_countsUpdateManyWithoutTenantsNestedInput
-    stock_movements?: stock_movementsUpdateManyWithoutTenantsNestedInput
-    warehouses?: warehousesUpdateManyWithoutTenantsNestedInput
-  }
-
-  export type tenantsUncheckedUpdateWithoutStock_transfersInput = {
-    tenant_id?: StringFieldUpdateOperationsInput | string
-    tenant_name?: StringFieldUpdateOperationsInput | string
-    email?: StringFieldUpdateOperationsInput | string
-    phone_number?: NullableStringFieldUpdateOperationsInput | string | null
-    created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    address?: NullableStringFieldUpdateOperationsInput | string | null
-    gst_number?: NullableStringFieldUpdateOperationsInput | string | null
-    pan_number?: NullableStringFieldUpdateOperationsInput | string | null
-    registration_no?: NullableStringFieldUpdateOperationsInput | string | null
-    business_workflows?: business_workflowsUncheckedUpdateManyWithoutTenantsNestedInput
-    businesses?: businessesUncheckedUpdateManyWithoutTenantsNestedInput
-    carts?: cartsUncheckedUpdateManyWithoutTenantsNestedInput
-    inventory_levels?: inventory_levelsUncheckedUpdateManyWithoutTenantsNestedInput
-    leads?: leadsUncheckedUpdateManyWithoutTenantsNestedInput
-    notification_messages?: notification_messagesUncheckedUpdateManyWithoutTenantsNestedInput
-    notification_templates?: notification_templatesUncheckedUpdateManyWithoutTenantsNestedInput
-    product_categories?: product_categoriesUncheckedUpdateManyWithoutTenantsNestedInput
-    stock_alerts?: stock_alertsUncheckedUpdateManyWithoutTenantsNestedInput
-    stock_counts?: stock_countsUncheckedUpdateManyWithoutTenantsNestedInput
-    stock_movements?: stock_movementsUncheckedUpdateManyWithoutTenantsNestedInput
-    warehouses?: warehousesUncheckedUpdateManyWithoutTenantsNestedInput
-  }
-
-  export type warehousesUpsertWithoutStock_transfers_toInput = {
-    update: XOR<warehousesUpdateWithoutStock_transfers_toInput, warehousesUncheckedUpdateWithoutStock_transfers_toInput>
-    create: XOR<warehousesCreateWithoutStock_transfers_toInput, warehousesUncheckedCreateWithoutStock_transfers_toInput>
-    where?: warehousesWhereInput
-  }
-
-  export type warehousesUpdateToOneWithWhereWithoutStock_transfers_toInput = {
-    where?: warehousesWhereInput
-    data: XOR<warehousesUpdateWithoutStock_transfers_toInput, warehousesUncheckedUpdateWithoutStock_transfers_toInput>
-  }
-
-  export type warehousesUpdateWithoutStock_transfers_toInput = {
-    warehouse_id?: StringFieldUpdateOperationsInput | string
-    warehouse_name?: StringFieldUpdateOperationsInput | string
-    warehouse_code?: StringFieldUpdateOperationsInput | string
-    warehouse_type?: StringFieldUpdateOperationsInput | string
-    address_line1?: NullableStringFieldUpdateOperationsInput | string | null
-    address_line2?: NullableStringFieldUpdateOperationsInput | string | null
-    city?: NullableStringFieldUpdateOperationsInput | string | null
-    state?: NullableStringFieldUpdateOperationsInput | string | null
-    postal_code?: NullableStringFieldUpdateOperationsInput | string | null
-    country?: StringFieldUpdateOperationsInput | string
-    contact_person?: NullableStringFieldUpdateOperationsInput | string | null
-    contact_email?: NullableStringFieldUpdateOperationsInput | string | null
-    contact_phone?: NullableStringFieldUpdateOperationsInput | string | null
-    total_capacity?: NullableIntFieldUpdateOperationsInput | number | null
-    used_capacity?: IntFieldUpdateOperationsInput | number
-    is_default?: BoolFieldUpdateOperationsInput | boolean
-    is_active?: BoolFieldUpdateOperationsInput | boolean
-    priority?: IntFieldUpdateOperationsInput | number
-    operating_hours?: JsonNullValueInput | InputJsonValue
-    metadata?: JsonNullValueInput | InputJsonValue
-    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    inventory_levels?: inventory_levelsUpdateManyWithoutWarehousesNestedInput
-    stock_alerts?: stock_alertsUpdateManyWithoutWarehousesNestedInput
-    stock_counts?: stock_countsUpdateManyWithoutWarehousesNestedInput
-    stock_movements?: stock_movementsUpdateManyWithoutWarehousesNestedInput
-    stock_transfers_from?: stock_transfersUpdateManyWithoutFrom_warehouseNestedInput
-    businesses?: businessesUpdateOneRequiredWithoutWarehousesNestedInput
-    tenants?: tenantsUpdateOneRequiredWithoutWarehousesNestedInput
-  }
-
-  export type warehousesUncheckedUpdateWithoutStock_transfers_toInput = {
-    warehouse_id?: StringFieldUpdateOperationsInput | string
-    business_id?: StringFieldUpdateOperationsInput | string
-    tenant_id?: StringFieldUpdateOperationsInput | string
-    warehouse_name?: StringFieldUpdateOperationsInput | string
-    warehouse_code?: StringFieldUpdateOperationsInput | string
-    warehouse_type?: StringFieldUpdateOperationsInput | string
-    address_line1?: NullableStringFieldUpdateOperationsInput | string | null
-    address_line2?: NullableStringFieldUpdateOperationsInput | string | null
-    city?: NullableStringFieldUpdateOperationsInput | string | null
-    state?: NullableStringFieldUpdateOperationsInput | string | null
-    postal_code?: NullableStringFieldUpdateOperationsInput | string | null
-    country?: StringFieldUpdateOperationsInput | string
-    contact_person?: NullableStringFieldUpdateOperationsInput | string | null
-    contact_email?: NullableStringFieldUpdateOperationsInput | string | null
-    contact_phone?: NullableStringFieldUpdateOperationsInput | string | null
-    total_capacity?: NullableIntFieldUpdateOperationsInput | number | null
-    used_capacity?: IntFieldUpdateOperationsInput | number
-    is_default?: BoolFieldUpdateOperationsInput | boolean
-    is_active?: BoolFieldUpdateOperationsInput | boolean
-    priority?: IntFieldUpdateOperationsInput | number
-    operating_hours?: JsonNullValueInput | InputJsonValue
-    metadata?: JsonNullValueInput | InputJsonValue
-    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    inventory_levels?: inventory_levelsUncheckedUpdateManyWithoutWarehousesNestedInput
-    stock_alerts?: stock_alertsUncheckedUpdateManyWithoutWarehousesNestedInput
-    stock_counts?: stock_countsUncheckedUpdateManyWithoutWarehousesNestedInput
-    stock_movements?: stock_movementsUncheckedUpdateManyWithoutWarehousesNestedInput
-    stock_transfers_from?: stock_transfersUncheckedUpdateManyWithoutFrom_warehouseNestedInput
-  }
-
-  export type businessesCreateWithoutStock_alertsInput = {
-    business_id?: string
-    business_name: string
-    business_type?: string | null
-    whatsapp_number?: string | null
-    created_at?: Date | string | null
-    updated_at?: Date | string | null
-    email?: string | null
-    phone?: string | null
-    website?: string | null
-    city?: string | null
-    address?: string | null
-    country?: string | null
-    gst_number?: string | null
-    pan_number?: string | null
-    business_employees?: business_employeesCreateNestedManyWithoutBusinessesInput
-    business_workflows?: business_workflowsCreateNestedManyWithoutBusinessesInput
-    tenants: tenantsCreateNestedOneWithoutBusinessesInput
-    carts?: cartsCreateNestedManyWithoutBusinessesInput
-    inventory_levels?: inventory_levelsCreateNestedManyWithoutBusinessesInput
-    leads?: leadsCreateNestedManyWithoutBusinessesInput
-    notification_messages?: notification_messagesCreateNestedManyWithoutBusinessesInput
-    notification_preferences?: notification_preferencesCreateNestedManyWithoutBusinessesInput
-    notification_templates?: notification_templatesCreateNestedManyWithoutBusinessesInput
-    payment_reconciliation?: payment_reconciliationCreateNestedManyWithoutBusinessesInput
-    payments?: paymentsCreateNestedManyWithoutBusinessesInput
-    product_categories?: product_categoriesCreateNestedManyWithoutBusinessesInput
-    product_images?: product_imagesCreateNestedManyWithoutBusinessesInput
-    products?: productsCreateNestedManyWithoutBusinessesInput
-    social_accounts?: social_accountsCreateNestedManyWithoutBusinessesInput
-    stock_counts?: stock_countsCreateNestedManyWithoutBusinessesInput
-    stock_movements?: stock_movementsCreateNestedManyWithoutBusinessesInput
-    stock_transfers?: stock_transfersCreateNestedManyWithoutBusinessesInput
-    tags?: tagsCreateNestedManyWithoutBusinessesInput
-    users?: usersCreateNestedManyWithoutBusinessesInput
-    warehouses?: warehousesCreateNestedManyWithoutBusinessesInput
-    workflow_executions?: workflow_executionsCreateNestedManyWithoutBusinessesInput
-  }
-
-  export type businessesUncheckedCreateWithoutStock_alertsInput = {
-    business_id?: string
-    tenant_id: string
-    business_name: string
-    business_type?: string | null
-    whatsapp_number?: string | null
-    created_at?: Date | string | null
-    updated_at?: Date | string | null
-    email?: string | null
-    phone?: string | null
-    website?: string | null
-    city?: string | null
-    address?: string | null
-    country?: string | null
-    gst_number?: string | null
-    pan_number?: string | null
-    business_employees?: business_employeesUncheckedCreateNestedManyWithoutBusinessesInput
-    business_workflows?: business_workflowsUncheckedCreateNestedManyWithoutBusinessesInput
-    carts?: cartsUncheckedCreateNestedManyWithoutBusinessesInput
-    inventory_levels?: inventory_levelsUncheckedCreateNestedManyWithoutBusinessesInput
-    leads?: leadsUncheckedCreateNestedManyWithoutBusinessesInput
-    notification_messages?: notification_messagesUncheckedCreateNestedManyWithoutBusinessesInput
-    notification_preferences?: notification_preferencesUncheckedCreateNestedManyWithoutBusinessesInput
-    notification_templates?: notification_templatesUncheckedCreateNestedManyWithoutBusinessesInput
-    payment_reconciliation?: payment_reconciliationUncheckedCreateNestedManyWithoutBusinessesInput
-    payments?: paymentsUncheckedCreateNestedManyWithoutBusinessesInput
-    product_categories?: product_categoriesUncheckedCreateNestedManyWithoutBusinessesInput
-    product_images?: product_imagesUncheckedCreateNestedManyWithoutBusinessesInput
-    products?: productsUncheckedCreateNestedManyWithoutBusinessesInput
-    social_accounts?: social_accountsUncheckedCreateNestedManyWithoutBusinessesInput
-    stock_counts?: stock_countsUncheckedCreateNestedManyWithoutBusinessesInput
-    stock_movements?: stock_movementsUncheckedCreateNestedManyWithoutBusinessesInput
-    stock_transfers?: stock_transfersUncheckedCreateNestedManyWithoutBusinessesInput
-    tags?: tagsUncheckedCreateNestedManyWithoutBusinessesInput
-    users?: usersUncheckedCreateNestedManyWithoutBusinessesInput
-    warehouses?: warehousesUncheckedCreateNestedManyWithoutBusinessesInput
-    workflow_executions?: workflow_executionsUncheckedCreateNestedManyWithoutBusinessesInput
-  }
-
-  export type businessesCreateOrConnectWithoutStock_alertsInput = {
-    where: businessesWhereUniqueInput
-    create: XOR<businessesCreateWithoutStock_alertsInput, businessesUncheckedCreateWithoutStock_alertsInput>
-  }
-
-  export type inventory_levelsCreateWithoutStock_alertsInput = {
-    inventory_level_id?: string
-    available_quantity?: number
-    reserved_quantity?: number
-    damaged_quantity?: number
-    in_transit_quantity?: number
-    reorder_point?: number
-    reorder_quantity?: number
-    max_stock_level?: number | null
-    average_cost?: Decimal | DecimalJsLike | number | string
-    total_value?: Decimal | DecimalJsLike | number | string
-    bin_location?: string | null
-    aisle?: string | null
-    shelf?: string | null
-    last_counted_at?: Date | string | null
-    last_restock_at?: Date | string | null
-    is_low_stock?: boolean
-    is_out_of_stock?: boolean
-    metadata?: JsonNullValueInput | InputJsonValue
-    created_at?: Date | string
-    updated_at?: Date | string
-    businesses: businessesCreateNestedOneWithoutInventory_levelsInput
-    tenants: tenantsCreateNestedOneWithoutInventory_levelsInput
-    product_variants: product_variantsCreateNestedOneWithoutInventory_levelsInput
-    warehouses: warehousesCreateNestedOneWithoutInventory_levelsInput
-    stock_movements?: stock_movementsCreateNestedManyWithoutInventory_levelsInput
-  }
-
-  export type inventory_levelsUncheckedCreateWithoutStock_alertsInput = {
-    inventory_level_id?: string
-    business_id: string
-    tenant_id: string
-    warehouse_id: string
-    variant_id: string
-    available_quantity?: number
-    reserved_quantity?: number
-    damaged_quantity?: number
-    in_transit_quantity?: number
-    reorder_point?: number
-    reorder_quantity?: number
-    max_stock_level?: number | null
-    average_cost?: Decimal | DecimalJsLike | number | string
-    total_value?: Decimal | DecimalJsLike | number | string
-    bin_location?: string | null
-    aisle?: string | null
-    shelf?: string | null
-    last_counted_at?: Date | string | null
-    last_restock_at?: Date | string | null
-    is_low_stock?: boolean
-    is_out_of_stock?: boolean
-    metadata?: JsonNullValueInput | InputJsonValue
-    created_at?: Date | string
-    updated_at?: Date | string
-    stock_movements?: stock_movementsUncheckedCreateNestedManyWithoutInventory_levelsInput
-  }
-
-  export type inventory_levelsCreateOrConnectWithoutStock_alertsInput = {
-    where: inventory_levelsWhereUniqueInput
-    create: XOR<inventory_levelsCreateWithoutStock_alertsInput, inventory_levelsUncheckedCreateWithoutStock_alertsInput>
-  }
-
-  export type tenantsCreateWithoutStock_alertsInput = {
-    tenant_id?: string
-    tenant_name: string
-    email: string
-    phone_number?: string | null
-    created_at?: Date | string | null
-    updated_at?: Date | string | null
-    address?: string | null
-    gst_number?: string | null
-    pan_number?: string | null
-    registration_no?: string | null
-    business_workflows?: business_workflowsCreateNestedManyWithoutTenantsInput
-    businesses?: businessesCreateNestedManyWithoutTenantsInput
-    carts?: cartsCreateNestedManyWithoutTenantsInput
-    inventory_levels?: inventory_levelsCreateNestedManyWithoutTenantsInput
-    leads?: leadsCreateNestedManyWithoutTenantsInput
-    notification_messages?: notification_messagesCreateNestedManyWithoutTenantsInput
-    notification_templates?: notification_templatesCreateNestedManyWithoutTenantsInput
-    product_categories?: product_categoriesCreateNestedManyWithoutTenantsInput
-    stock_counts?: stock_countsCreateNestedManyWithoutTenantsInput
-    stock_movements?: stock_movementsCreateNestedManyWithoutTenantsInput
-    stock_transfers?: stock_transfersCreateNestedManyWithoutTenantsInput
-    warehouses?: warehousesCreateNestedManyWithoutTenantsInput
-  }
-
-  export type tenantsUncheckedCreateWithoutStock_alertsInput = {
-    tenant_id?: string
-    tenant_name: string
-    email: string
-    phone_number?: string | null
-    created_at?: Date | string | null
-    updated_at?: Date | string | null
-    address?: string | null
-    gst_number?: string | null
-    pan_number?: string | null
-    registration_no?: string | null
-    business_workflows?: business_workflowsUncheckedCreateNestedManyWithoutTenantsInput
-    businesses?: businessesUncheckedCreateNestedManyWithoutTenantsInput
-    carts?: cartsUncheckedCreateNestedManyWithoutTenantsInput
-    inventory_levels?: inventory_levelsUncheckedCreateNestedManyWithoutTenantsInput
-    leads?: leadsUncheckedCreateNestedManyWithoutTenantsInput
-    notification_messages?: notification_messagesUncheckedCreateNestedManyWithoutTenantsInput
-    notification_templates?: notification_templatesUncheckedCreateNestedManyWithoutTenantsInput
-    product_categories?: product_categoriesUncheckedCreateNestedManyWithoutTenantsInput
-    stock_counts?: stock_countsUncheckedCreateNestedManyWithoutTenantsInput
-    stock_movements?: stock_movementsUncheckedCreateNestedManyWithoutTenantsInput
-    stock_transfers?: stock_transfersUncheckedCreateNestedManyWithoutTenantsInput
-    warehouses?: warehousesUncheckedCreateNestedManyWithoutTenantsInput
-  }
-
-  export type tenantsCreateOrConnectWithoutStock_alertsInput = {
-    where: tenantsWhereUniqueInput
-    create: XOR<tenantsCreateWithoutStock_alertsInput, tenantsUncheckedCreateWithoutStock_alertsInput>
-  }
-
-  export type product_variantsCreateWithoutStock_alertsInput = {
-    variant_id?: string
-    name: string
-    sku?: string | null
-    price: Decimal | DecimalJsLike | number | string
-    quantity?: number
-    reserved_stock?: number | null
-    version?: number | null
-    in_stock?: boolean
-    variant_options?: NullableJsonNullValueInput | InputJsonValue
-    created_at?: Date | string
-    updated_at?: Date | string
-    cart_items?: cart_itemsCreateNestedManyWithoutProduct_variantsInput
-    inventory_levels?: inventory_levelsCreateNestedManyWithoutProduct_variantsInput
-    product: productsCreateNestedOneWithoutProduct_variantsInput
-    stock_movements?: stock_movementsCreateNestedManyWithoutProduct_variantsInput
-  }
-
-  export type product_variantsUncheckedCreateWithoutStock_alertsInput = {
-    variant_id?: string
-    product_id: string
-    name: string
-    sku?: string | null
-    price: Decimal | DecimalJsLike | number | string
-    quantity?: number
-    reserved_stock?: number | null
-    version?: number | null
-    in_stock?: boolean
-    variant_options?: NullableJsonNullValueInput | InputJsonValue
-    created_at?: Date | string
-    updated_at?: Date | string
-    cart_items?: cart_itemsUncheckedCreateNestedManyWithoutProduct_variantsInput
-    inventory_levels?: inventory_levelsUncheckedCreateNestedManyWithoutProduct_variantsInput
-    stock_movements?: stock_movementsUncheckedCreateNestedManyWithoutProduct_variantsInput
-  }
-
-  export type product_variantsCreateOrConnectWithoutStock_alertsInput = {
-    where: product_variantsWhereUniqueInput
-    create: XOR<product_variantsCreateWithoutStock_alertsInput, product_variantsUncheckedCreateWithoutStock_alertsInput>
-  }
-
-  export type warehousesCreateWithoutStock_alertsInput = {
-    warehouse_id?: string
-    warehouse_name: string
-    warehouse_code: string
-    warehouse_type?: string
-    address_line1?: string | null
-    address_line2?: string | null
-    city?: string | null
-    state?: string | null
-    postal_code?: string | null
-    country?: string
-    contact_person?: string | null
-    contact_email?: string | null
-    contact_phone?: string | null
-    total_capacity?: number | null
-    used_capacity?: number
-    is_default?: boolean
-    is_active?: boolean
-    priority?: number
-    operating_hours?: JsonNullValueInput | InputJsonValue
-    metadata?: JsonNullValueInput | InputJsonValue
-    created_at?: Date | string
-    updated_at?: Date | string
-    inventory_levels?: inventory_levelsCreateNestedManyWithoutWarehousesInput
-    stock_counts?: stock_countsCreateNestedManyWithoutWarehousesInput
-    stock_movements?: stock_movementsCreateNestedManyWithoutWarehousesInput
-    stock_transfers_from?: stock_transfersCreateNestedManyWithoutFrom_warehouseInput
-    stock_transfers_to?: stock_transfersCreateNestedManyWithoutTo_warehouseInput
-    businesses: businessesCreateNestedOneWithoutWarehousesInput
-    tenants: tenantsCreateNestedOneWithoutWarehousesInput
-  }
-
-  export type warehousesUncheckedCreateWithoutStock_alertsInput = {
-    warehouse_id?: string
-    business_id: string
-    tenant_id: string
-    warehouse_name: string
-    warehouse_code: string
-    warehouse_type?: string
-    address_line1?: string | null
-    address_line2?: string | null
-    city?: string | null
-    state?: string | null
-    postal_code?: string | null
-    country?: string
-    contact_person?: string | null
-    contact_email?: string | null
-    contact_phone?: string | null
-    total_capacity?: number | null
-    used_capacity?: number
-    is_default?: boolean
-    is_active?: boolean
-    priority?: number
-    operating_hours?: JsonNullValueInput | InputJsonValue
-    metadata?: JsonNullValueInput | InputJsonValue
-    created_at?: Date | string
-    updated_at?: Date | string
-    inventory_levels?: inventory_levelsUncheckedCreateNestedManyWithoutWarehousesInput
-    stock_counts?: stock_countsUncheckedCreateNestedManyWithoutWarehousesInput
-    stock_movements?: stock_movementsUncheckedCreateNestedManyWithoutWarehousesInput
-    stock_transfers_from?: stock_transfersUncheckedCreateNestedManyWithoutFrom_warehouseInput
-    stock_transfers_to?: stock_transfersUncheckedCreateNestedManyWithoutTo_warehouseInput
-  }
-
-  export type warehousesCreateOrConnectWithoutStock_alertsInput = {
-    where: warehousesWhereUniqueInput
-    create: XOR<warehousesCreateWithoutStock_alertsInput, warehousesUncheckedCreateWithoutStock_alertsInput>
-  }
-
-  export type businessesUpsertWithoutStock_alertsInput = {
-    update: XOR<businessesUpdateWithoutStock_alertsInput, businessesUncheckedUpdateWithoutStock_alertsInput>
-    create: XOR<businessesCreateWithoutStock_alertsInput, businessesUncheckedCreateWithoutStock_alertsInput>
-    where?: businessesWhereInput
-  }
-
-  export type businessesUpdateToOneWithWhereWithoutStock_alertsInput = {
-    where?: businessesWhereInput
-    data: XOR<businessesUpdateWithoutStock_alertsInput, businessesUncheckedUpdateWithoutStock_alertsInput>
-  }
-
-  export type businessesUpdateWithoutStock_alertsInput = {
-    business_id?: StringFieldUpdateOperationsInput | string
-    business_name?: StringFieldUpdateOperationsInput | string
-    business_type?: NullableStringFieldUpdateOperationsInput | string | null
-    whatsapp_number?: NullableStringFieldUpdateOperationsInput | string | null
-    created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    email?: NullableStringFieldUpdateOperationsInput | string | null
-    phone?: NullableStringFieldUpdateOperationsInput | string | null
-    website?: NullableStringFieldUpdateOperationsInput | string | null
-    city?: NullableStringFieldUpdateOperationsInput | string | null
-    address?: NullableStringFieldUpdateOperationsInput | string | null
-    country?: NullableStringFieldUpdateOperationsInput | string | null
-    gst_number?: NullableStringFieldUpdateOperationsInput | string | null
-    pan_number?: NullableStringFieldUpdateOperationsInput | string | null
-    business_employees?: business_employeesUpdateManyWithoutBusinessesNestedInput
-    business_workflows?: business_workflowsUpdateManyWithoutBusinessesNestedInput
-    tenants?: tenantsUpdateOneRequiredWithoutBusinessesNestedInput
-    carts?: cartsUpdateManyWithoutBusinessesNestedInput
-    inventory_levels?: inventory_levelsUpdateManyWithoutBusinessesNestedInput
-    leads?: leadsUpdateManyWithoutBusinessesNestedInput
-    notification_messages?: notification_messagesUpdateManyWithoutBusinessesNestedInput
-    notification_preferences?: notification_preferencesUpdateManyWithoutBusinessesNestedInput
-    notification_templates?: notification_templatesUpdateManyWithoutBusinessesNestedInput
-    payment_reconciliation?: payment_reconciliationUpdateManyWithoutBusinessesNestedInput
-    payments?: paymentsUpdateManyWithoutBusinessesNestedInput
-    product_categories?: product_categoriesUpdateManyWithoutBusinessesNestedInput
-    product_images?: product_imagesUpdateManyWithoutBusinessesNestedInput
-    products?: productsUpdateManyWithoutBusinessesNestedInput
-    social_accounts?: social_accountsUpdateManyWithoutBusinessesNestedInput
-    stock_counts?: stock_countsUpdateManyWithoutBusinessesNestedInput
-    stock_movements?: stock_movementsUpdateManyWithoutBusinessesNestedInput
-    stock_transfers?: stock_transfersUpdateManyWithoutBusinessesNestedInput
-    tags?: tagsUpdateManyWithoutBusinessesNestedInput
-    users?: usersUpdateManyWithoutBusinessesNestedInput
-    warehouses?: warehousesUpdateManyWithoutBusinessesNestedInput
-    workflow_executions?: workflow_executionsUpdateManyWithoutBusinessesNestedInput
-  }
-
-  export type businessesUncheckedUpdateWithoutStock_alertsInput = {
-    business_id?: StringFieldUpdateOperationsInput | string
-    tenant_id?: StringFieldUpdateOperationsInput | string
-    business_name?: StringFieldUpdateOperationsInput | string
-    business_type?: NullableStringFieldUpdateOperationsInput | string | null
-    whatsapp_number?: NullableStringFieldUpdateOperationsInput | string | null
-    created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    email?: NullableStringFieldUpdateOperationsInput | string | null
-    phone?: NullableStringFieldUpdateOperationsInput | string | null
-    website?: NullableStringFieldUpdateOperationsInput | string | null
-    city?: NullableStringFieldUpdateOperationsInput | string | null
-    address?: NullableStringFieldUpdateOperationsInput | string | null
-    country?: NullableStringFieldUpdateOperationsInput | string | null
-    gst_number?: NullableStringFieldUpdateOperationsInput | string | null
-    pan_number?: NullableStringFieldUpdateOperationsInput | string | null
-    business_employees?: business_employeesUncheckedUpdateManyWithoutBusinessesNestedInput
-    business_workflows?: business_workflowsUncheckedUpdateManyWithoutBusinessesNestedInput
-    carts?: cartsUncheckedUpdateManyWithoutBusinessesNestedInput
-    inventory_levels?: inventory_levelsUncheckedUpdateManyWithoutBusinessesNestedInput
-    leads?: leadsUncheckedUpdateManyWithoutBusinessesNestedInput
-    notification_messages?: notification_messagesUncheckedUpdateManyWithoutBusinessesNestedInput
-    notification_preferences?: notification_preferencesUncheckedUpdateManyWithoutBusinessesNestedInput
-    notification_templates?: notification_templatesUncheckedUpdateManyWithoutBusinessesNestedInput
-    payment_reconciliation?: payment_reconciliationUncheckedUpdateManyWithoutBusinessesNestedInput
-    payments?: paymentsUncheckedUpdateManyWithoutBusinessesNestedInput
-    product_categories?: product_categoriesUncheckedUpdateManyWithoutBusinessesNestedInput
-    product_images?: product_imagesUncheckedUpdateManyWithoutBusinessesNestedInput
-    products?: productsUncheckedUpdateManyWithoutBusinessesNestedInput
-    social_accounts?: social_accountsUncheckedUpdateManyWithoutBusinessesNestedInput
-    stock_counts?: stock_countsUncheckedUpdateManyWithoutBusinessesNestedInput
-    stock_movements?: stock_movementsUncheckedUpdateManyWithoutBusinessesNestedInput
-    stock_transfers?: stock_transfersUncheckedUpdateManyWithoutBusinessesNestedInput
-    tags?: tagsUncheckedUpdateManyWithoutBusinessesNestedInput
-    users?: usersUncheckedUpdateManyWithoutBusinessesNestedInput
-    warehouses?: warehousesUncheckedUpdateManyWithoutBusinessesNestedInput
-    workflow_executions?: workflow_executionsUncheckedUpdateManyWithoutBusinessesNestedInput
-  }
-
-  export type inventory_levelsUpsertWithoutStock_alertsInput = {
-    update: XOR<inventory_levelsUpdateWithoutStock_alertsInput, inventory_levelsUncheckedUpdateWithoutStock_alertsInput>
-    create: XOR<inventory_levelsCreateWithoutStock_alertsInput, inventory_levelsUncheckedCreateWithoutStock_alertsInput>
-    where?: inventory_levelsWhereInput
-  }
-
-  export type inventory_levelsUpdateToOneWithWhereWithoutStock_alertsInput = {
-    where?: inventory_levelsWhereInput
-    data: XOR<inventory_levelsUpdateWithoutStock_alertsInput, inventory_levelsUncheckedUpdateWithoutStock_alertsInput>
-  }
-
-  export type inventory_levelsUpdateWithoutStock_alertsInput = {
-    inventory_level_id?: StringFieldUpdateOperationsInput | string
-    available_quantity?: IntFieldUpdateOperationsInput | number
-    reserved_quantity?: IntFieldUpdateOperationsInput | number
-    damaged_quantity?: IntFieldUpdateOperationsInput | number
-    in_transit_quantity?: IntFieldUpdateOperationsInput | number
-    reorder_point?: IntFieldUpdateOperationsInput | number
-    reorder_quantity?: IntFieldUpdateOperationsInput | number
-    max_stock_level?: NullableIntFieldUpdateOperationsInput | number | null
-    average_cost?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    total_value?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    bin_location?: NullableStringFieldUpdateOperationsInput | string | null
-    aisle?: NullableStringFieldUpdateOperationsInput | string | null
-    shelf?: NullableStringFieldUpdateOperationsInput | string | null
-    last_counted_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    last_restock_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    is_low_stock?: BoolFieldUpdateOperationsInput | boolean
-    is_out_of_stock?: BoolFieldUpdateOperationsInput | boolean
-    metadata?: JsonNullValueInput | InputJsonValue
-    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    businesses?: businessesUpdateOneRequiredWithoutInventory_levelsNestedInput
-    tenants?: tenantsUpdateOneRequiredWithoutInventory_levelsNestedInput
-    product_variants?: product_variantsUpdateOneRequiredWithoutInventory_levelsNestedInput
-    warehouses?: warehousesUpdateOneRequiredWithoutInventory_levelsNestedInput
-    stock_movements?: stock_movementsUpdateManyWithoutInventory_levelsNestedInput
-  }
-
-  export type inventory_levelsUncheckedUpdateWithoutStock_alertsInput = {
-    inventory_level_id?: StringFieldUpdateOperationsInput | string
-    business_id?: StringFieldUpdateOperationsInput | string
-    tenant_id?: StringFieldUpdateOperationsInput | string
-    warehouse_id?: StringFieldUpdateOperationsInput | string
-    variant_id?: StringFieldUpdateOperationsInput | string
-    available_quantity?: IntFieldUpdateOperationsInput | number
-    reserved_quantity?: IntFieldUpdateOperationsInput | number
-    damaged_quantity?: IntFieldUpdateOperationsInput | number
-    in_transit_quantity?: IntFieldUpdateOperationsInput | number
-    reorder_point?: IntFieldUpdateOperationsInput | number
-    reorder_quantity?: IntFieldUpdateOperationsInput | number
-    max_stock_level?: NullableIntFieldUpdateOperationsInput | number | null
-    average_cost?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    total_value?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    bin_location?: NullableStringFieldUpdateOperationsInput | string | null
-    aisle?: NullableStringFieldUpdateOperationsInput | string | null
-    shelf?: NullableStringFieldUpdateOperationsInput | string | null
-    last_counted_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    last_restock_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    is_low_stock?: BoolFieldUpdateOperationsInput | boolean
-    is_out_of_stock?: BoolFieldUpdateOperationsInput | boolean
-    metadata?: JsonNullValueInput | InputJsonValue
-    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    stock_movements?: stock_movementsUncheckedUpdateManyWithoutInventory_levelsNestedInput
-  }
-
-  export type tenantsUpsertWithoutStock_alertsInput = {
-    update: XOR<tenantsUpdateWithoutStock_alertsInput, tenantsUncheckedUpdateWithoutStock_alertsInput>
-    create: XOR<tenantsCreateWithoutStock_alertsInput, tenantsUncheckedCreateWithoutStock_alertsInput>
-    where?: tenantsWhereInput
-  }
-
-  export type tenantsUpdateToOneWithWhereWithoutStock_alertsInput = {
-    where?: tenantsWhereInput
-    data: XOR<tenantsUpdateWithoutStock_alertsInput, tenantsUncheckedUpdateWithoutStock_alertsInput>
-  }
-
-  export type tenantsUpdateWithoutStock_alertsInput = {
-    tenant_id?: StringFieldUpdateOperationsInput | string
-    tenant_name?: StringFieldUpdateOperationsInput | string
-    email?: StringFieldUpdateOperationsInput | string
-    phone_number?: NullableStringFieldUpdateOperationsInput | string | null
-    created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    address?: NullableStringFieldUpdateOperationsInput | string | null
-    gst_number?: NullableStringFieldUpdateOperationsInput | string | null
-    pan_number?: NullableStringFieldUpdateOperationsInput | string | null
-    registration_no?: NullableStringFieldUpdateOperationsInput | string | null
-    business_workflows?: business_workflowsUpdateManyWithoutTenantsNestedInput
-    businesses?: businessesUpdateManyWithoutTenantsNestedInput
-    carts?: cartsUpdateManyWithoutTenantsNestedInput
-    inventory_levels?: inventory_levelsUpdateManyWithoutTenantsNestedInput
-    leads?: leadsUpdateManyWithoutTenantsNestedInput
-    notification_messages?: notification_messagesUpdateManyWithoutTenantsNestedInput
-    notification_templates?: notification_templatesUpdateManyWithoutTenantsNestedInput
-    product_categories?: product_categoriesUpdateManyWithoutTenantsNestedInput
-    stock_counts?: stock_countsUpdateManyWithoutTenantsNestedInput
-    stock_movements?: stock_movementsUpdateManyWithoutTenantsNestedInput
-    stock_transfers?: stock_transfersUpdateManyWithoutTenantsNestedInput
-    warehouses?: warehousesUpdateManyWithoutTenantsNestedInput
-  }
-
-  export type tenantsUncheckedUpdateWithoutStock_alertsInput = {
-    tenant_id?: StringFieldUpdateOperationsInput | string
-    tenant_name?: StringFieldUpdateOperationsInput | string
-    email?: StringFieldUpdateOperationsInput | string
-    phone_number?: NullableStringFieldUpdateOperationsInput | string | null
-    created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    address?: NullableStringFieldUpdateOperationsInput | string | null
-    gst_number?: NullableStringFieldUpdateOperationsInput | string | null
-    pan_number?: NullableStringFieldUpdateOperationsInput | string | null
-    registration_no?: NullableStringFieldUpdateOperationsInput | string | null
-    business_workflows?: business_workflowsUncheckedUpdateManyWithoutTenantsNestedInput
-    businesses?: businessesUncheckedUpdateManyWithoutTenantsNestedInput
-    carts?: cartsUncheckedUpdateManyWithoutTenantsNestedInput
-    inventory_levels?: inventory_levelsUncheckedUpdateManyWithoutTenantsNestedInput
-    leads?: leadsUncheckedUpdateManyWithoutTenantsNestedInput
-    notification_messages?: notification_messagesUncheckedUpdateManyWithoutTenantsNestedInput
-    notification_templates?: notification_templatesUncheckedUpdateManyWithoutTenantsNestedInput
-    product_categories?: product_categoriesUncheckedUpdateManyWithoutTenantsNestedInput
-    stock_counts?: stock_countsUncheckedUpdateManyWithoutTenantsNestedInput
-    stock_movements?: stock_movementsUncheckedUpdateManyWithoutTenantsNestedInput
-    stock_transfers?: stock_transfersUncheckedUpdateManyWithoutTenantsNestedInput
-    warehouses?: warehousesUncheckedUpdateManyWithoutTenantsNestedInput
-  }
-
-  export type product_variantsUpsertWithoutStock_alertsInput = {
-    update: XOR<product_variantsUpdateWithoutStock_alertsInput, product_variantsUncheckedUpdateWithoutStock_alertsInput>
-    create: XOR<product_variantsCreateWithoutStock_alertsInput, product_variantsUncheckedCreateWithoutStock_alertsInput>
-    where?: product_variantsWhereInput
-  }
-
-  export type product_variantsUpdateToOneWithWhereWithoutStock_alertsInput = {
-    where?: product_variantsWhereInput
-    data: XOR<product_variantsUpdateWithoutStock_alertsInput, product_variantsUncheckedUpdateWithoutStock_alertsInput>
-  }
-
-  export type product_variantsUpdateWithoutStock_alertsInput = {
-    variant_id?: StringFieldUpdateOperationsInput | string
-    name?: StringFieldUpdateOperationsInput | string
-    sku?: NullableStringFieldUpdateOperationsInput | string | null
-    price?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    quantity?: IntFieldUpdateOperationsInput | number
-    reserved_stock?: NullableIntFieldUpdateOperationsInput | number | null
-    version?: NullableIntFieldUpdateOperationsInput | number | null
-    in_stock?: BoolFieldUpdateOperationsInput | boolean
-    variant_options?: NullableJsonNullValueInput | InputJsonValue
-    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    cart_items?: cart_itemsUpdateManyWithoutProduct_variantsNestedInput
-    inventory_levels?: inventory_levelsUpdateManyWithoutProduct_variantsNestedInput
-    product?: productsUpdateOneRequiredWithoutProduct_variantsNestedInput
-    stock_movements?: stock_movementsUpdateManyWithoutProduct_variantsNestedInput
-  }
-
-  export type product_variantsUncheckedUpdateWithoutStock_alertsInput = {
-    variant_id?: StringFieldUpdateOperationsInput | string
-    product_id?: StringFieldUpdateOperationsInput | string
-    name?: StringFieldUpdateOperationsInput | string
-    sku?: NullableStringFieldUpdateOperationsInput | string | null
-    price?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    quantity?: IntFieldUpdateOperationsInput | number
-    reserved_stock?: NullableIntFieldUpdateOperationsInput | number | null
-    version?: NullableIntFieldUpdateOperationsInput | number | null
-    in_stock?: BoolFieldUpdateOperationsInput | boolean
-    variant_options?: NullableJsonNullValueInput | InputJsonValue
-    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    cart_items?: cart_itemsUncheckedUpdateManyWithoutProduct_variantsNestedInput
-    inventory_levels?: inventory_levelsUncheckedUpdateManyWithoutProduct_variantsNestedInput
-    stock_movements?: stock_movementsUncheckedUpdateManyWithoutProduct_variantsNestedInput
-  }
-
-  export type warehousesUpsertWithoutStock_alertsInput = {
-    update: XOR<warehousesUpdateWithoutStock_alertsInput, warehousesUncheckedUpdateWithoutStock_alertsInput>
-    create: XOR<warehousesCreateWithoutStock_alertsInput, warehousesUncheckedCreateWithoutStock_alertsInput>
-    where?: warehousesWhereInput
-  }
-
-  export type warehousesUpdateToOneWithWhereWithoutStock_alertsInput = {
-    where?: warehousesWhereInput
-    data: XOR<warehousesUpdateWithoutStock_alertsInput, warehousesUncheckedUpdateWithoutStock_alertsInput>
-  }
-
-  export type warehousesUpdateWithoutStock_alertsInput = {
-    warehouse_id?: StringFieldUpdateOperationsInput | string
-    warehouse_name?: StringFieldUpdateOperationsInput | string
-    warehouse_code?: StringFieldUpdateOperationsInput | string
-    warehouse_type?: StringFieldUpdateOperationsInput | string
-    address_line1?: NullableStringFieldUpdateOperationsInput | string | null
-    address_line2?: NullableStringFieldUpdateOperationsInput | string | null
-    city?: NullableStringFieldUpdateOperationsInput | string | null
-    state?: NullableStringFieldUpdateOperationsInput | string | null
-    postal_code?: NullableStringFieldUpdateOperationsInput | string | null
-    country?: StringFieldUpdateOperationsInput | string
-    contact_person?: NullableStringFieldUpdateOperationsInput | string | null
-    contact_email?: NullableStringFieldUpdateOperationsInput | string | null
-    contact_phone?: NullableStringFieldUpdateOperationsInput | string | null
-    total_capacity?: NullableIntFieldUpdateOperationsInput | number | null
-    used_capacity?: IntFieldUpdateOperationsInput | number
-    is_default?: BoolFieldUpdateOperationsInput | boolean
-    is_active?: BoolFieldUpdateOperationsInput | boolean
-    priority?: IntFieldUpdateOperationsInput | number
-    operating_hours?: JsonNullValueInput | InputJsonValue
-    metadata?: JsonNullValueInput | InputJsonValue
-    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    inventory_levels?: inventory_levelsUpdateManyWithoutWarehousesNestedInput
-    stock_counts?: stock_countsUpdateManyWithoutWarehousesNestedInput
-    stock_movements?: stock_movementsUpdateManyWithoutWarehousesNestedInput
-    stock_transfers_from?: stock_transfersUpdateManyWithoutFrom_warehouseNestedInput
-    stock_transfers_to?: stock_transfersUpdateManyWithoutTo_warehouseNestedInput
-    businesses?: businessesUpdateOneRequiredWithoutWarehousesNestedInput
-    tenants?: tenantsUpdateOneRequiredWithoutWarehousesNestedInput
-  }
-
-  export type warehousesUncheckedUpdateWithoutStock_alertsInput = {
-    warehouse_id?: StringFieldUpdateOperationsInput | string
-    business_id?: StringFieldUpdateOperationsInput | string
-    tenant_id?: StringFieldUpdateOperationsInput | string
-    warehouse_name?: StringFieldUpdateOperationsInput | string
-    warehouse_code?: StringFieldUpdateOperationsInput | string
-    warehouse_type?: StringFieldUpdateOperationsInput | string
-    address_line1?: NullableStringFieldUpdateOperationsInput | string | null
-    address_line2?: NullableStringFieldUpdateOperationsInput | string | null
-    city?: NullableStringFieldUpdateOperationsInput | string | null
-    state?: NullableStringFieldUpdateOperationsInput | string | null
-    postal_code?: NullableStringFieldUpdateOperationsInput | string | null
-    country?: StringFieldUpdateOperationsInput | string
-    contact_person?: NullableStringFieldUpdateOperationsInput | string | null
-    contact_email?: NullableStringFieldUpdateOperationsInput | string | null
-    contact_phone?: NullableStringFieldUpdateOperationsInput | string | null
-    total_capacity?: NullableIntFieldUpdateOperationsInput | number | null
-    used_capacity?: IntFieldUpdateOperationsInput | number
-    is_default?: BoolFieldUpdateOperationsInput | boolean
-    is_active?: BoolFieldUpdateOperationsInput | boolean
-    priority?: IntFieldUpdateOperationsInput | number
-    operating_hours?: JsonNullValueInput | InputJsonValue
-    metadata?: JsonNullValueInput | InputJsonValue
-    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    inventory_levels?: inventory_levelsUncheckedUpdateManyWithoutWarehousesNestedInput
-    stock_counts?: stock_countsUncheckedUpdateManyWithoutWarehousesNestedInput
-    stock_movements?: stock_movementsUncheckedUpdateManyWithoutWarehousesNestedInput
-    stock_transfers_from?: stock_transfersUncheckedUpdateManyWithoutFrom_warehouseNestedInput
-    stock_transfers_to?: stock_transfersUncheckedUpdateManyWithoutTo_warehouseNestedInput
-  }
-
-  export type businessesCreateWithoutStock_countsInput = {
-    business_id?: string
-    business_name: string
-    business_type?: string | null
-    whatsapp_number?: string | null
-    created_at?: Date | string | null
-    updated_at?: Date | string | null
-    email?: string | null
-    phone?: string | null
-    website?: string | null
-    city?: string | null
-    address?: string | null
-    country?: string | null
-    gst_number?: string | null
-    pan_number?: string | null
-    business_employees?: business_employeesCreateNestedManyWithoutBusinessesInput
-    business_workflows?: business_workflowsCreateNestedManyWithoutBusinessesInput
-    tenants: tenantsCreateNestedOneWithoutBusinessesInput
-    carts?: cartsCreateNestedManyWithoutBusinessesInput
-    inventory_levels?: inventory_levelsCreateNestedManyWithoutBusinessesInput
-    leads?: leadsCreateNestedManyWithoutBusinessesInput
-    notification_messages?: notification_messagesCreateNestedManyWithoutBusinessesInput
-    notification_preferences?: notification_preferencesCreateNestedManyWithoutBusinessesInput
-    notification_templates?: notification_templatesCreateNestedManyWithoutBusinessesInput
-    payment_reconciliation?: payment_reconciliationCreateNestedManyWithoutBusinessesInput
-    payments?: paymentsCreateNestedManyWithoutBusinessesInput
-    product_categories?: product_categoriesCreateNestedManyWithoutBusinessesInput
-    product_images?: product_imagesCreateNestedManyWithoutBusinessesInput
-    products?: productsCreateNestedManyWithoutBusinessesInput
-    social_accounts?: social_accountsCreateNestedManyWithoutBusinessesInput
-    stock_alerts?: stock_alertsCreateNestedManyWithoutBusinessesInput
-    stock_movements?: stock_movementsCreateNestedManyWithoutBusinessesInput
-    stock_transfers?: stock_transfersCreateNestedManyWithoutBusinessesInput
-    tags?: tagsCreateNestedManyWithoutBusinessesInput
-    users?: usersCreateNestedManyWithoutBusinessesInput
-    warehouses?: warehousesCreateNestedManyWithoutBusinessesInput
-    workflow_executions?: workflow_executionsCreateNestedManyWithoutBusinessesInput
-  }
-
-  export type businessesUncheckedCreateWithoutStock_countsInput = {
-    business_id?: string
-    tenant_id: string
-    business_name: string
-    business_type?: string | null
-    whatsapp_number?: string | null
-    created_at?: Date | string | null
-    updated_at?: Date | string | null
-    email?: string | null
-    phone?: string | null
-    website?: string | null
-    city?: string | null
-    address?: string | null
-    country?: string | null
-    gst_number?: string | null
-    pan_number?: string | null
-    business_employees?: business_employeesUncheckedCreateNestedManyWithoutBusinessesInput
-    business_workflows?: business_workflowsUncheckedCreateNestedManyWithoutBusinessesInput
-    carts?: cartsUncheckedCreateNestedManyWithoutBusinessesInput
-    inventory_levels?: inventory_levelsUncheckedCreateNestedManyWithoutBusinessesInput
-    leads?: leadsUncheckedCreateNestedManyWithoutBusinessesInput
-    notification_messages?: notification_messagesUncheckedCreateNestedManyWithoutBusinessesInput
-    notification_preferences?: notification_preferencesUncheckedCreateNestedManyWithoutBusinessesInput
-    notification_templates?: notification_templatesUncheckedCreateNestedManyWithoutBusinessesInput
-    payment_reconciliation?: payment_reconciliationUncheckedCreateNestedManyWithoutBusinessesInput
-    payments?: paymentsUncheckedCreateNestedManyWithoutBusinessesInput
-    product_categories?: product_categoriesUncheckedCreateNestedManyWithoutBusinessesInput
-    product_images?: product_imagesUncheckedCreateNestedManyWithoutBusinessesInput
-    products?: productsUncheckedCreateNestedManyWithoutBusinessesInput
-    social_accounts?: social_accountsUncheckedCreateNestedManyWithoutBusinessesInput
-    stock_alerts?: stock_alertsUncheckedCreateNestedManyWithoutBusinessesInput
-    stock_movements?: stock_movementsUncheckedCreateNestedManyWithoutBusinessesInput
-    stock_transfers?: stock_transfersUncheckedCreateNestedManyWithoutBusinessesInput
-    tags?: tagsUncheckedCreateNestedManyWithoutBusinessesInput
-    users?: usersUncheckedCreateNestedManyWithoutBusinessesInput
-    warehouses?: warehousesUncheckedCreateNestedManyWithoutBusinessesInput
-    workflow_executions?: workflow_executionsUncheckedCreateNestedManyWithoutBusinessesInput
-  }
-
-  export type businessesCreateOrConnectWithoutStock_countsInput = {
-    where: businessesWhereUniqueInput
-    create: XOR<businessesCreateWithoutStock_countsInput, businessesUncheckedCreateWithoutStock_countsInput>
-  }
-
-  export type tenantsCreateWithoutStock_countsInput = {
-    tenant_id?: string
-    tenant_name: string
-    email: string
-    phone_number?: string | null
-    created_at?: Date | string | null
-    updated_at?: Date | string | null
-    address?: string | null
-    gst_number?: string | null
-    pan_number?: string | null
-    registration_no?: string | null
-    business_workflows?: business_workflowsCreateNestedManyWithoutTenantsInput
-    businesses?: businessesCreateNestedManyWithoutTenantsInput
-    carts?: cartsCreateNestedManyWithoutTenantsInput
-    inventory_levels?: inventory_levelsCreateNestedManyWithoutTenantsInput
-    leads?: leadsCreateNestedManyWithoutTenantsInput
-    notification_messages?: notification_messagesCreateNestedManyWithoutTenantsInput
-    notification_templates?: notification_templatesCreateNestedManyWithoutTenantsInput
-    product_categories?: product_categoriesCreateNestedManyWithoutTenantsInput
-    stock_alerts?: stock_alertsCreateNestedManyWithoutTenantsInput
-    stock_movements?: stock_movementsCreateNestedManyWithoutTenantsInput
-    stock_transfers?: stock_transfersCreateNestedManyWithoutTenantsInput
-    warehouses?: warehousesCreateNestedManyWithoutTenantsInput
-  }
-
-  export type tenantsUncheckedCreateWithoutStock_countsInput = {
-    tenant_id?: string
-    tenant_name: string
-    email: string
-    phone_number?: string | null
-    created_at?: Date | string | null
-    updated_at?: Date | string | null
-    address?: string | null
-    gst_number?: string | null
-    pan_number?: string | null
-    registration_no?: string | null
-    business_workflows?: business_workflowsUncheckedCreateNestedManyWithoutTenantsInput
-    businesses?: businessesUncheckedCreateNestedManyWithoutTenantsInput
-    carts?: cartsUncheckedCreateNestedManyWithoutTenantsInput
-    inventory_levels?: inventory_levelsUncheckedCreateNestedManyWithoutTenantsInput
-    leads?: leadsUncheckedCreateNestedManyWithoutTenantsInput
-    notification_messages?: notification_messagesUncheckedCreateNestedManyWithoutTenantsInput
-    notification_templates?: notification_templatesUncheckedCreateNestedManyWithoutTenantsInput
-    product_categories?: product_categoriesUncheckedCreateNestedManyWithoutTenantsInput
-    stock_alerts?: stock_alertsUncheckedCreateNestedManyWithoutTenantsInput
-    stock_movements?: stock_movementsUncheckedCreateNestedManyWithoutTenantsInput
-    stock_transfers?: stock_transfersUncheckedCreateNestedManyWithoutTenantsInput
-    warehouses?: warehousesUncheckedCreateNestedManyWithoutTenantsInput
-  }
-
-  export type tenantsCreateOrConnectWithoutStock_countsInput = {
-    where: tenantsWhereUniqueInput
-    create: XOR<tenantsCreateWithoutStock_countsInput, tenantsUncheckedCreateWithoutStock_countsInput>
-  }
-
-  export type warehousesCreateWithoutStock_countsInput = {
-    warehouse_id?: string
-    warehouse_name: string
-    warehouse_code: string
-    warehouse_type?: string
-    address_line1?: string | null
-    address_line2?: string | null
-    city?: string | null
-    state?: string | null
-    postal_code?: string | null
-    country?: string
-    contact_person?: string | null
-    contact_email?: string | null
-    contact_phone?: string | null
-    total_capacity?: number | null
-    used_capacity?: number
-    is_default?: boolean
-    is_active?: boolean
-    priority?: number
-    operating_hours?: JsonNullValueInput | InputJsonValue
-    metadata?: JsonNullValueInput | InputJsonValue
-    created_at?: Date | string
-    updated_at?: Date | string
-    inventory_levels?: inventory_levelsCreateNestedManyWithoutWarehousesInput
-    stock_alerts?: stock_alertsCreateNestedManyWithoutWarehousesInput
-    stock_movements?: stock_movementsCreateNestedManyWithoutWarehousesInput
-    stock_transfers_from?: stock_transfersCreateNestedManyWithoutFrom_warehouseInput
-    stock_transfers_to?: stock_transfersCreateNestedManyWithoutTo_warehouseInput
-    businesses: businessesCreateNestedOneWithoutWarehousesInput
-    tenants: tenantsCreateNestedOneWithoutWarehousesInput
-  }
-
-  export type warehousesUncheckedCreateWithoutStock_countsInput = {
-    warehouse_id?: string
-    business_id: string
-    tenant_id: string
-    warehouse_name: string
-    warehouse_code: string
-    warehouse_type?: string
-    address_line1?: string | null
-    address_line2?: string | null
-    city?: string | null
-    state?: string | null
-    postal_code?: string | null
-    country?: string
-    contact_person?: string | null
-    contact_email?: string | null
-    contact_phone?: string | null
-    total_capacity?: number | null
-    used_capacity?: number
-    is_default?: boolean
-    is_active?: boolean
-    priority?: number
-    operating_hours?: JsonNullValueInput | InputJsonValue
-    metadata?: JsonNullValueInput | InputJsonValue
-    created_at?: Date | string
-    updated_at?: Date | string
-    inventory_levels?: inventory_levelsUncheckedCreateNestedManyWithoutWarehousesInput
-    stock_alerts?: stock_alertsUncheckedCreateNestedManyWithoutWarehousesInput
-    stock_movements?: stock_movementsUncheckedCreateNestedManyWithoutWarehousesInput
-    stock_transfers_from?: stock_transfersUncheckedCreateNestedManyWithoutFrom_warehouseInput
-    stock_transfers_to?: stock_transfersUncheckedCreateNestedManyWithoutTo_warehouseInput
-  }
-
-  export type warehousesCreateOrConnectWithoutStock_countsInput = {
-    where: warehousesWhereUniqueInput
-    create: XOR<warehousesCreateWithoutStock_countsInput, warehousesUncheckedCreateWithoutStock_countsInput>
-  }
-
-  export type businessesUpsertWithoutStock_countsInput = {
-    update: XOR<businessesUpdateWithoutStock_countsInput, businessesUncheckedUpdateWithoutStock_countsInput>
-    create: XOR<businessesCreateWithoutStock_countsInput, businessesUncheckedCreateWithoutStock_countsInput>
-    where?: businessesWhereInput
-  }
-
-  export type businessesUpdateToOneWithWhereWithoutStock_countsInput = {
-    where?: businessesWhereInput
-    data: XOR<businessesUpdateWithoutStock_countsInput, businessesUncheckedUpdateWithoutStock_countsInput>
-  }
-
-  export type businessesUpdateWithoutStock_countsInput = {
-    business_id?: StringFieldUpdateOperationsInput | string
-    business_name?: StringFieldUpdateOperationsInput | string
-    business_type?: NullableStringFieldUpdateOperationsInput | string | null
-    whatsapp_number?: NullableStringFieldUpdateOperationsInput | string | null
-    created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    email?: NullableStringFieldUpdateOperationsInput | string | null
-    phone?: NullableStringFieldUpdateOperationsInput | string | null
-    website?: NullableStringFieldUpdateOperationsInput | string | null
-    city?: NullableStringFieldUpdateOperationsInput | string | null
-    address?: NullableStringFieldUpdateOperationsInput | string | null
-    country?: NullableStringFieldUpdateOperationsInput | string | null
-    gst_number?: NullableStringFieldUpdateOperationsInput | string | null
-    pan_number?: NullableStringFieldUpdateOperationsInput | string | null
-    business_employees?: business_employeesUpdateManyWithoutBusinessesNestedInput
-    business_workflows?: business_workflowsUpdateManyWithoutBusinessesNestedInput
-    tenants?: tenantsUpdateOneRequiredWithoutBusinessesNestedInput
-    carts?: cartsUpdateManyWithoutBusinessesNestedInput
-    inventory_levels?: inventory_levelsUpdateManyWithoutBusinessesNestedInput
-    leads?: leadsUpdateManyWithoutBusinessesNestedInput
-    notification_messages?: notification_messagesUpdateManyWithoutBusinessesNestedInput
-    notification_preferences?: notification_preferencesUpdateManyWithoutBusinessesNestedInput
-    notification_templates?: notification_templatesUpdateManyWithoutBusinessesNestedInput
-    payment_reconciliation?: payment_reconciliationUpdateManyWithoutBusinessesNestedInput
-    payments?: paymentsUpdateManyWithoutBusinessesNestedInput
-    product_categories?: product_categoriesUpdateManyWithoutBusinessesNestedInput
-    product_images?: product_imagesUpdateManyWithoutBusinessesNestedInput
-    products?: productsUpdateManyWithoutBusinessesNestedInput
-    social_accounts?: social_accountsUpdateManyWithoutBusinessesNestedInput
-    stock_alerts?: stock_alertsUpdateManyWithoutBusinessesNestedInput
-    stock_movements?: stock_movementsUpdateManyWithoutBusinessesNestedInput
-    stock_transfers?: stock_transfersUpdateManyWithoutBusinessesNestedInput
-    tags?: tagsUpdateManyWithoutBusinessesNestedInput
-    users?: usersUpdateManyWithoutBusinessesNestedInput
-    warehouses?: warehousesUpdateManyWithoutBusinessesNestedInput
-    workflow_executions?: workflow_executionsUpdateManyWithoutBusinessesNestedInput
-  }
-
-  export type businessesUncheckedUpdateWithoutStock_countsInput = {
-    business_id?: StringFieldUpdateOperationsInput | string
-    tenant_id?: StringFieldUpdateOperationsInput | string
-    business_name?: StringFieldUpdateOperationsInput | string
-    business_type?: NullableStringFieldUpdateOperationsInput | string | null
-    whatsapp_number?: NullableStringFieldUpdateOperationsInput | string | null
-    created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    email?: NullableStringFieldUpdateOperationsInput | string | null
-    phone?: NullableStringFieldUpdateOperationsInput | string | null
-    website?: NullableStringFieldUpdateOperationsInput | string | null
-    city?: NullableStringFieldUpdateOperationsInput | string | null
-    address?: NullableStringFieldUpdateOperationsInput | string | null
-    country?: NullableStringFieldUpdateOperationsInput | string | null
-    gst_number?: NullableStringFieldUpdateOperationsInput | string | null
-    pan_number?: NullableStringFieldUpdateOperationsInput | string | null
-    business_employees?: business_employeesUncheckedUpdateManyWithoutBusinessesNestedInput
-    business_workflows?: business_workflowsUncheckedUpdateManyWithoutBusinessesNestedInput
-    carts?: cartsUncheckedUpdateManyWithoutBusinessesNestedInput
-    inventory_levels?: inventory_levelsUncheckedUpdateManyWithoutBusinessesNestedInput
-    leads?: leadsUncheckedUpdateManyWithoutBusinessesNestedInput
-    notification_messages?: notification_messagesUncheckedUpdateManyWithoutBusinessesNestedInput
-    notification_preferences?: notification_preferencesUncheckedUpdateManyWithoutBusinessesNestedInput
-    notification_templates?: notification_templatesUncheckedUpdateManyWithoutBusinessesNestedInput
-    payment_reconciliation?: payment_reconciliationUncheckedUpdateManyWithoutBusinessesNestedInput
-    payments?: paymentsUncheckedUpdateManyWithoutBusinessesNestedInput
-    product_categories?: product_categoriesUncheckedUpdateManyWithoutBusinessesNestedInput
-    product_images?: product_imagesUncheckedUpdateManyWithoutBusinessesNestedInput
-    products?: productsUncheckedUpdateManyWithoutBusinessesNestedInput
-    social_accounts?: social_accountsUncheckedUpdateManyWithoutBusinessesNestedInput
-    stock_alerts?: stock_alertsUncheckedUpdateManyWithoutBusinessesNestedInput
-    stock_movements?: stock_movementsUncheckedUpdateManyWithoutBusinessesNestedInput
-    stock_transfers?: stock_transfersUncheckedUpdateManyWithoutBusinessesNestedInput
-    tags?: tagsUncheckedUpdateManyWithoutBusinessesNestedInput
-    users?: usersUncheckedUpdateManyWithoutBusinessesNestedInput
-    warehouses?: warehousesUncheckedUpdateManyWithoutBusinessesNestedInput
-    workflow_executions?: workflow_executionsUncheckedUpdateManyWithoutBusinessesNestedInput
-  }
-
-  export type tenantsUpsertWithoutStock_countsInput = {
-    update: XOR<tenantsUpdateWithoutStock_countsInput, tenantsUncheckedUpdateWithoutStock_countsInput>
-    create: XOR<tenantsCreateWithoutStock_countsInput, tenantsUncheckedCreateWithoutStock_countsInput>
-    where?: tenantsWhereInput
-  }
-
-  export type tenantsUpdateToOneWithWhereWithoutStock_countsInput = {
-    where?: tenantsWhereInput
-    data: XOR<tenantsUpdateWithoutStock_countsInput, tenantsUncheckedUpdateWithoutStock_countsInput>
-  }
-
-  export type tenantsUpdateWithoutStock_countsInput = {
-    tenant_id?: StringFieldUpdateOperationsInput | string
-    tenant_name?: StringFieldUpdateOperationsInput | string
-    email?: StringFieldUpdateOperationsInput | string
-    phone_number?: NullableStringFieldUpdateOperationsInput | string | null
-    created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    address?: NullableStringFieldUpdateOperationsInput | string | null
-    gst_number?: NullableStringFieldUpdateOperationsInput | string | null
-    pan_number?: NullableStringFieldUpdateOperationsInput | string | null
-    registration_no?: NullableStringFieldUpdateOperationsInput | string | null
-    business_workflows?: business_workflowsUpdateManyWithoutTenantsNestedInput
-    businesses?: businessesUpdateManyWithoutTenantsNestedInput
-    carts?: cartsUpdateManyWithoutTenantsNestedInput
-    inventory_levels?: inventory_levelsUpdateManyWithoutTenantsNestedInput
-    leads?: leadsUpdateManyWithoutTenantsNestedInput
-    notification_messages?: notification_messagesUpdateManyWithoutTenantsNestedInput
-    notification_templates?: notification_templatesUpdateManyWithoutTenantsNestedInput
-    product_categories?: product_categoriesUpdateManyWithoutTenantsNestedInput
-    stock_alerts?: stock_alertsUpdateManyWithoutTenantsNestedInput
-    stock_movements?: stock_movementsUpdateManyWithoutTenantsNestedInput
-    stock_transfers?: stock_transfersUpdateManyWithoutTenantsNestedInput
-    warehouses?: warehousesUpdateManyWithoutTenantsNestedInput
-  }
-
-  export type tenantsUncheckedUpdateWithoutStock_countsInput = {
-    tenant_id?: StringFieldUpdateOperationsInput | string
-    tenant_name?: StringFieldUpdateOperationsInput | string
-    email?: StringFieldUpdateOperationsInput | string
-    phone_number?: NullableStringFieldUpdateOperationsInput | string | null
-    created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    address?: NullableStringFieldUpdateOperationsInput | string | null
-    gst_number?: NullableStringFieldUpdateOperationsInput | string | null
-    pan_number?: NullableStringFieldUpdateOperationsInput | string | null
-    registration_no?: NullableStringFieldUpdateOperationsInput | string | null
-    business_workflows?: business_workflowsUncheckedUpdateManyWithoutTenantsNestedInput
-    businesses?: businessesUncheckedUpdateManyWithoutTenantsNestedInput
-    carts?: cartsUncheckedUpdateManyWithoutTenantsNestedInput
-    inventory_levels?: inventory_levelsUncheckedUpdateManyWithoutTenantsNestedInput
-    leads?: leadsUncheckedUpdateManyWithoutTenantsNestedInput
-    notification_messages?: notification_messagesUncheckedUpdateManyWithoutTenantsNestedInput
-    notification_templates?: notification_templatesUncheckedUpdateManyWithoutTenantsNestedInput
-    product_categories?: product_categoriesUncheckedUpdateManyWithoutTenantsNestedInput
-    stock_alerts?: stock_alertsUncheckedUpdateManyWithoutTenantsNestedInput
-    stock_movements?: stock_movementsUncheckedUpdateManyWithoutTenantsNestedInput
-    stock_transfers?: stock_transfersUncheckedUpdateManyWithoutTenantsNestedInput
-    warehouses?: warehousesUncheckedUpdateManyWithoutTenantsNestedInput
-  }
-
-  export type warehousesUpsertWithoutStock_countsInput = {
-    update: XOR<warehousesUpdateWithoutStock_countsInput, warehousesUncheckedUpdateWithoutStock_countsInput>
-    create: XOR<warehousesCreateWithoutStock_countsInput, warehousesUncheckedCreateWithoutStock_countsInput>
-    where?: warehousesWhereInput
-  }
-
-  export type warehousesUpdateToOneWithWhereWithoutStock_countsInput = {
-    where?: warehousesWhereInput
-    data: XOR<warehousesUpdateWithoutStock_countsInput, warehousesUncheckedUpdateWithoutStock_countsInput>
-  }
-
-  export type warehousesUpdateWithoutStock_countsInput = {
-    warehouse_id?: StringFieldUpdateOperationsInput | string
-    warehouse_name?: StringFieldUpdateOperationsInput | string
-    warehouse_code?: StringFieldUpdateOperationsInput | string
-    warehouse_type?: StringFieldUpdateOperationsInput | string
-    address_line1?: NullableStringFieldUpdateOperationsInput | string | null
-    address_line2?: NullableStringFieldUpdateOperationsInput | string | null
-    city?: NullableStringFieldUpdateOperationsInput | string | null
-    state?: NullableStringFieldUpdateOperationsInput | string | null
-    postal_code?: NullableStringFieldUpdateOperationsInput | string | null
-    country?: StringFieldUpdateOperationsInput | string
-    contact_person?: NullableStringFieldUpdateOperationsInput | string | null
-    contact_email?: NullableStringFieldUpdateOperationsInput | string | null
-    contact_phone?: NullableStringFieldUpdateOperationsInput | string | null
-    total_capacity?: NullableIntFieldUpdateOperationsInput | number | null
-    used_capacity?: IntFieldUpdateOperationsInput | number
-    is_default?: BoolFieldUpdateOperationsInput | boolean
-    is_active?: BoolFieldUpdateOperationsInput | boolean
-    priority?: IntFieldUpdateOperationsInput | number
-    operating_hours?: JsonNullValueInput | InputJsonValue
-    metadata?: JsonNullValueInput | InputJsonValue
-    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    inventory_levels?: inventory_levelsUpdateManyWithoutWarehousesNestedInput
-    stock_alerts?: stock_alertsUpdateManyWithoutWarehousesNestedInput
-    stock_movements?: stock_movementsUpdateManyWithoutWarehousesNestedInput
-    stock_transfers_from?: stock_transfersUpdateManyWithoutFrom_warehouseNestedInput
-    stock_transfers_to?: stock_transfersUpdateManyWithoutTo_warehouseNestedInput
-    businesses?: businessesUpdateOneRequiredWithoutWarehousesNestedInput
-    tenants?: tenantsUpdateOneRequiredWithoutWarehousesNestedInput
-  }
-
-  export type warehousesUncheckedUpdateWithoutStock_countsInput = {
-    warehouse_id?: StringFieldUpdateOperationsInput | string
-    business_id?: StringFieldUpdateOperationsInput | string
-    tenant_id?: StringFieldUpdateOperationsInput | string
-    warehouse_name?: StringFieldUpdateOperationsInput | string
-    warehouse_code?: StringFieldUpdateOperationsInput | string
-    warehouse_type?: StringFieldUpdateOperationsInput | string
-    address_line1?: NullableStringFieldUpdateOperationsInput | string | null
-    address_line2?: NullableStringFieldUpdateOperationsInput | string | null
-    city?: NullableStringFieldUpdateOperationsInput | string | null
-    state?: NullableStringFieldUpdateOperationsInput | string | null
-    postal_code?: NullableStringFieldUpdateOperationsInput | string | null
-    country?: StringFieldUpdateOperationsInput | string
-    contact_person?: NullableStringFieldUpdateOperationsInput | string | null
-    contact_email?: NullableStringFieldUpdateOperationsInput | string | null
-    contact_phone?: NullableStringFieldUpdateOperationsInput | string | null
-    total_capacity?: NullableIntFieldUpdateOperationsInput | number | null
-    used_capacity?: IntFieldUpdateOperationsInput | number
-    is_default?: BoolFieldUpdateOperationsInput | boolean
-    is_active?: BoolFieldUpdateOperationsInput | boolean
-    priority?: IntFieldUpdateOperationsInput | number
-    operating_hours?: JsonNullValueInput | InputJsonValue
-    metadata?: JsonNullValueInput | InputJsonValue
-    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    inventory_levels?: inventory_levelsUncheckedUpdateManyWithoutWarehousesNestedInput
-    stock_alerts?: stock_alertsUncheckedUpdateManyWithoutWarehousesNestedInput
-    stock_movements?: stock_movementsUncheckedUpdateManyWithoutWarehousesNestedInput
-    stock_transfers_from?: stock_transfersUncheckedUpdateManyWithoutFrom_warehouseNestedInput
-    stock_transfers_to?: stock_transfersUncheckedUpdateManyWithoutTo_warehouseNestedInput
-  }
-
-=======
->>>>>>> 8a7b2acf9bf5e0bc0fe32c6a0d8aa6e2a9f871a8
   export type campaignsCreateWithoutNotification_templatesInput = {
     campaign_id?: string
     business_id: string
@@ -137014,18 +133135,9 @@ export namespace Prisma {
     business_id?: string
     business_name: string
     business_type?: string | null
-    email?: string | null
-    phone?: string | null
-    website?: string | null
-    city?: string | null
-    address?: string | null
-    country?: string | null
-    gst_number?: string | null
-    pan_number?: string | null
     whatsapp_number?: string | null
     created_at?: Date | string | null
     updated_at?: Date | string | null
-<<<<<<< HEAD
     email?: string | null
     phone?: string | null
     website?: string | null
@@ -137034,8 +133146,6 @@ export namespace Prisma {
     country?: string | null
     gst_number?: string | null
     pan_number?: string | null
-=======
->>>>>>> 8a7b2acf9bf5e0bc0fe32c6a0d8aa6e2a9f871a8
     business_employees?: business_employeesCreateNestedManyWithoutBusinessesInput
     business_workflows?: business_workflowsCreateNestedManyWithoutBusinessesInput
     tenants: tenantsCreateNestedOneWithoutBusinessesInput
@@ -137062,7 +133172,6 @@ export namespace Prisma {
     tenant_id: string
     business_name: string
     business_type?: string | null
-<<<<<<< HEAD
     whatsapp_number?: string | null
     created_at?: Date | string | null
     updated_at?: Date | string | null
@@ -137074,19 +133183,6 @@ export namespace Prisma {
     country?: string | null
     gst_number?: string | null
     pan_number?: string | null
-=======
-    email?: string | null
-    phone?: string | null
-    website?: string | null
-    city?: string | null
-    address?: string | null
-    country?: string | null
-    gst_number?: string | null
-    pan_number?: string | null
-    whatsapp_number?: string | null
-    created_at?: Date | string | null
-    updated_at?: Date | string | null
->>>>>>> 8a7b2acf9bf5e0bc0fe32c6a0d8aa6e2a9f871a8
     business_employees?: business_employeesUncheckedCreateNestedManyWithoutBusinessesInput
     business_workflows?: business_workflowsUncheckedCreateNestedManyWithoutBusinessesInput
     carts?: cartsUncheckedCreateNestedManyWithoutBusinessesInput
@@ -137123,8 +133219,8 @@ export namespace Prisma {
     gst_number?: string | null
     pan_number?: string | null
     registration_no?: string | null
-    businesses?: businessesCreateNestedManyWithoutTenantsInput
     business_workflows?: business_workflowsCreateNestedManyWithoutTenantsInput
+    businesses?: businessesCreateNestedManyWithoutTenantsInput
     carts?: cartsCreateNestedManyWithoutTenantsInput
     leads?: leadsCreateNestedManyWithoutTenantsInput
     notification_messages?: notification_messagesCreateNestedManyWithoutTenantsInput
@@ -137142,8 +133238,8 @@ export namespace Prisma {
     gst_number?: string | null
     pan_number?: string | null
     registration_no?: string | null
-    businesses?: businessesUncheckedCreateNestedManyWithoutTenantsInput
     business_workflows?: business_workflowsUncheckedCreateNestedManyWithoutTenantsInput
+    businesses?: businessesUncheckedCreateNestedManyWithoutTenantsInput
     carts?: cartsUncheckedCreateNestedManyWithoutTenantsInput
     leads?: leadsUncheckedCreateNestedManyWithoutTenantsInput
     notification_messages?: notification_messagesUncheckedCreateNestedManyWithoutTenantsInput
@@ -137202,18 +133298,9 @@ export namespace Prisma {
     business_id?: StringFieldUpdateOperationsInput | string
     business_name?: StringFieldUpdateOperationsInput | string
     business_type?: NullableStringFieldUpdateOperationsInput | string | null
-    email?: NullableStringFieldUpdateOperationsInput | string | null
-    phone?: NullableStringFieldUpdateOperationsInput | string | null
-    website?: NullableStringFieldUpdateOperationsInput | string | null
-    city?: NullableStringFieldUpdateOperationsInput | string | null
-    address?: NullableStringFieldUpdateOperationsInput | string | null
-    country?: NullableStringFieldUpdateOperationsInput | string | null
-    gst_number?: NullableStringFieldUpdateOperationsInput | string | null
-    pan_number?: NullableStringFieldUpdateOperationsInput | string | null
     whatsapp_number?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-<<<<<<< HEAD
     email?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     website?: NullableStringFieldUpdateOperationsInput | string | null
@@ -137222,8 +133309,6 @@ export namespace Prisma {
     country?: NullableStringFieldUpdateOperationsInput | string | null
     gst_number?: NullableStringFieldUpdateOperationsInput | string | null
     pan_number?: NullableStringFieldUpdateOperationsInput | string | null
-=======
->>>>>>> 8a7b2acf9bf5e0bc0fe32c6a0d8aa6e2a9f871a8
     business_employees?: business_employeesUpdateManyWithoutBusinessesNestedInput
     business_workflows?: business_workflowsUpdateManyWithoutBusinessesNestedInput
     tenants?: tenantsUpdateOneRequiredWithoutBusinessesNestedInput
@@ -137250,7 +133335,6 @@ export namespace Prisma {
     tenant_id?: StringFieldUpdateOperationsInput | string
     business_name?: StringFieldUpdateOperationsInput | string
     business_type?: NullableStringFieldUpdateOperationsInput | string | null
-<<<<<<< HEAD
     whatsapp_number?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -137262,19 +133346,6 @@ export namespace Prisma {
     country?: NullableStringFieldUpdateOperationsInput | string | null
     gst_number?: NullableStringFieldUpdateOperationsInput | string | null
     pan_number?: NullableStringFieldUpdateOperationsInput | string | null
-=======
-    email?: NullableStringFieldUpdateOperationsInput | string | null
-    phone?: NullableStringFieldUpdateOperationsInput | string | null
-    website?: NullableStringFieldUpdateOperationsInput | string | null
-    city?: NullableStringFieldUpdateOperationsInput | string | null
-    address?: NullableStringFieldUpdateOperationsInput | string | null
-    country?: NullableStringFieldUpdateOperationsInput | string | null
-    gst_number?: NullableStringFieldUpdateOperationsInput | string | null
-    pan_number?: NullableStringFieldUpdateOperationsInput | string | null
-    whatsapp_number?: NullableStringFieldUpdateOperationsInput | string | null
-    created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
->>>>>>> 8a7b2acf9bf5e0bc0fe32c6a0d8aa6e2a9f871a8
     business_employees?: business_employeesUncheckedUpdateManyWithoutBusinessesNestedInput
     business_workflows?: business_workflowsUncheckedUpdateManyWithoutBusinessesNestedInput
     carts?: cartsUncheckedUpdateManyWithoutBusinessesNestedInput
@@ -137317,8 +133388,8 @@ export namespace Prisma {
     gst_number?: NullableStringFieldUpdateOperationsInput | string | null
     pan_number?: NullableStringFieldUpdateOperationsInput | string | null
     registration_no?: NullableStringFieldUpdateOperationsInput | string | null
-    businesses?: businessesUpdateManyWithoutTenantsNestedInput
     business_workflows?: business_workflowsUpdateManyWithoutTenantsNestedInput
+    businesses?: businessesUpdateManyWithoutTenantsNestedInput
     carts?: cartsUpdateManyWithoutTenantsNestedInput
     leads?: leadsUpdateManyWithoutTenantsNestedInput
     notification_messages?: notification_messagesUpdateManyWithoutTenantsNestedInput
@@ -137336,8 +133407,8 @@ export namespace Prisma {
     gst_number?: NullableStringFieldUpdateOperationsInput | string | null
     pan_number?: NullableStringFieldUpdateOperationsInput | string | null
     registration_no?: NullableStringFieldUpdateOperationsInput | string | null
-    businesses?: businessesUncheckedUpdateManyWithoutTenantsNestedInput
     business_workflows?: business_workflowsUncheckedUpdateManyWithoutTenantsNestedInput
+    businesses?: businessesUncheckedUpdateManyWithoutTenantsNestedInput
     carts?: cartsUncheckedUpdateManyWithoutTenantsNestedInput
     leads?: leadsUncheckedUpdateManyWithoutTenantsNestedInput
     notification_messages?: notification_messagesUncheckedUpdateManyWithoutTenantsNestedInput
@@ -137376,18 +133447,9 @@ export namespace Prisma {
     business_id?: string
     business_name: string
     business_type?: string | null
-    email?: string | null
-    phone?: string | null
-    website?: string | null
-    city?: string | null
-    address?: string | null
-    country?: string | null
-    gst_number?: string | null
-    pan_number?: string | null
     whatsapp_number?: string | null
     created_at?: Date | string | null
     updated_at?: Date | string | null
-<<<<<<< HEAD
     email?: string | null
     phone?: string | null
     website?: string | null
@@ -137396,8 +133458,6 @@ export namespace Prisma {
     country?: string | null
     gst_number?: string | null
     pan_number?: string | null
-=======
->>>>>>> 8a7b2acf9bf5e0bc0fe32c6a0d8aa6e2a9f871a8
     business_employees?: business_employeesCreateNestedManyWithoutBusinessesInput
     business_workflows?: business_workflowsCreateNestedManyWithoutBusinessesInput
     tenants: tenantsCreateNestedOneWithoutBusinessesInput
@@ -137424,7 +133484,6 @@ export namespace Prisma {
     tenant_id: string
     business_name: string
     business_type?: string | null
-<<<<<<< HEAD
     whatsapp_number?: string | null
     created_at?: Date | string | null
     updated_at?: Date | string | null
@@ -137436,19 +133495,6 @@ export namespace Prisma {
     country?: string | null
     gst_number?: string | null
     pan_number?: string | null
-=======
-    email?: string | null
-    phone?: string | null
-    website?: string | null
-    city?: string | null
-    address?: string | null
-    country?: string | null
-    gst_number?: string | null
-    pan_number?: string | null
-    whatsapp_number?: string | null
-    created_at?: Date | string | null
-    updated_at?: Date | string | null
->>>>>>> 8a7b2acf9bf5e0bc0fe32c6a0d8aa6e2a9f871a8
     business_employees?: business_employeesUncheckedCreateNestedManyWithoutBusinessesInput
     business_workflows?: business_workflowsUncheckedCreateNestedManyWithoutBusinessesInput
     carts?: cartsUncheckedCreateNestedManyWithoutBusinessesInput
@@ -137587,8 +133633,8 @@ export namespace Prisma {
     gst_number?: string | null
     pan_number?: string | null
     registration_no?: string | null
-    businesses?: businessesCreateNestedManyWithoutTenantsInput
     business_workflows?: business_workflowsCreateNestedManyWithoutTenantsInput
+    businesses?: businessesCreateNestedManyWithoutTenantsInput
     carts?: cartsCreateNestedManyWithoutTenantsInput
     leads?: leadsCreateNestedManyWithoutTenantsInput
     notification_templates?: notification_templatesCreateNestedManyWithoutTenantsInput
@@ -137606,8 +133652,8 @@ export namespace Prisma {
     gst_number?: string | null
     pan_number?: string | null
     registration_no?: string | null
-    businesses?: businessesUncheckedCreateNestedManyWithoutTenantsInput
     business_workflows?: business_workflowsUncheckedCreateNestedManyWithoutTenantsInput
+    businesses?: businessesUncheckedCreateNestedManyWithoutTenantsInput
     carts?: cartsUncheckedCreateNestedManyWithoutTenantsInput
     leads?: leadsUncheckedCreateNestedManyWithoutTenantsInput
     notification_templates?: notification_templatesUncheckedCreateNestedManyWithoutTenantsInput
@@ -137663,18 +133709,9 @@ export namespace Prisma {
     business_id?: StringFieldUpdateOperationsInput | string
     business_name?: StringFieldUpdateOperationsInput | string
     business_type?: NullableStringFieldUpdateOperationsInput | string | null
-    email?: NullableStringFieldUpdateOperationsInput | string | null
-    phone?: NullableStringFieldUpdateOperationsInput | string | null
-    website?: NullableStringFieldUpdateOperationsInput | string | null
-    city?: NullableStringFieldUpdateOperationsInput | string | null
-    address?: NullableStringFieldUpdateOperationsInput | string | null
-    country?: NullableStringFieldUpdateOperationsInput | string | null
-    gst_number?: NullableStringFieldUpdateOperationsInput | string | null
-    pan_number?: NullableStringFieldUpdateOperationsInput | string | null
     whatsapp_number?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-<<<<<<< HEAD
     email?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     website?: NullableStringFieldUpdateOperationsInput | string | null
@@ -137683,8 +133720,6 @@ export namespace Prisma {
     country?: NullableStringFieldUpdateOperationsInput | string | null
     gst_number?: NullableStringFieldUpdateOperationsInput | string | null
     pan_number?: NullableStringFieldUpdateOperationsInput | string | null
-=======
->>>>>>> 8a7b2acf9bf5e0bc0fe32c6a0d8aa6e2a9f871a8
     business_employees?: business_employeesUpdateManyWithoutBusinessesNestedInput
     business_workflows?: business_workflowsUpdateManyWithoutBusinessesNestedInput
     tenants?: tenantsUpdateOneRequiredWithoutBusinessesNestedInput
@@ -137711,7 +133746,6 @@ export namespace Prisma {
     tenant_id?: StringFieldUpdateOperationsInput | string
     business_name?: StringFieldUpdateOperationsInput | string
     business_type?: NullableStringFieldUpdateOperationsInput | string | null
-<<<<<<< HEAD
     whatsapp_number?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -137723,19 +133757,6 @@ export namespace Prisma {
     country?: NullableStringFieldUpdateOperationsInput | string | null
     gst_number?: NullableStringFieldUpdateOperationsInput | string | null
     pan_number?: NullableStringFieldUpdateOperationsInput | string | null
-=======
-    email?: NullableStringFieldUpdateOperationsInput | string | null
-    phone?: NullableStringFieldUpdateOperationsInput | string | null
-    website?: NullableStringFieldUpdateOperationsInput | string | null
-    city?: NullableStringFieldUpdateOperationsInput | string | null
-    address?: NullableStringFieldUpdateOperationsInput | string | null
-    country?: NullableStringFieldUpdateOperationsInput | string | null
-    gst_number?: NullableStringFieldUpdateOperationsInput | string | null
-    pan_number?: NullableStringFieldUpdateOperationsInput | string | null
-    whatsapp_number?: NullableStringFieldUpdateOperationsInput | string | null
-    created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
->>>>>>> 8a7b2acf9bf5e0bc0fe32c6a0d8aa6e2a9f871a8
     business_employees?: business_employeesUncheckedUpdateManyWithoutBusinessesNestedInput
     business_workflows?: business_workflowsUncheckedUpdateManyWithoutBusinessesNestedInput
     carts?: cartsUncheckedUpdateManyWithoutBusinessesNestedInput
@@ -137892,8 +133913,8 @@ export namespace Prisma {
     gst_number?: NullableStringFieldUpdateOperationsInput | string | null
     pan_number?: NullableStringFieldUpdateOperationsInput | string | null
     registration_no?: NullableStringFieldUpdateOperationsInput | string | null
-    businesses?: businessesUpdateManyWithoutTenantsNestedInput
     business_workflows?: business_workflowsUpdateManyWithoutTenantsNestedInput
+    businesses?: businessesUpdateManyWithoutTenantsNestedInput
     carts?: cartsUpdateManyWithoutTenantsNestedInput
     leads?: leadsUpdateManyWithoutTenantsNestedInput
     notification_templates?: notification_templatesUpdateManyWithoutTenantsNestedInput
@@ -137911,8 +133932,8 @@ export namespace Prisma {
     gst_number?: NullableStringFieldUpdateOperationsInput | string | null
     pan_number?: NullableStringFieldUpdateOperationsInput | string | null
     registration_no?: NullableStringFieldUpdateOperationsInput | string | null
-    businesses?: businessesUncheckedUpdateManyWithoutTenantsNestedInput
     business_workflows?: business_workflowsUncheckedUpdateManyWithoutTenantsNestedInput
+    businesses?: businessesUncheckedUpdateManyWithoutTenantsNestedInput
     carts?: cartsUncheckedUpdateManyWithoutTenantsNestedInput
     leads?: leadsUncheckedUpdateManyWithoutTenantsNestedInput
     notification_templates?: notification_templatesUncheckedUpdateManyWithoutTenantsNestedInput
@@ -137923,18 +133944,9 @@ export namespace Prisma {
     business_id?: string
     business_name: string
     business_type?: string | null
-    email?: string | null
-    phone?: string | null
-    website?: string | null
-    city?: string | null
-    address?: string | null
-    country?: string | null
-    gst_number?: string | null
-    pan_number?: string | null
     whatsapp_number?: string | null
     created_at?: Date | string | null
     updated_at?: Date | string | null
-<<<<<<< HEAD
     email?: string | null
     phone?: string | null
     website?: string | null
@@ -137943,8 +133955,6 @@ export namespace Prisma {
     country?: string | null
     gst_number?: string | null
     pan_number?: string | null
-=======
->>>>>>> 8a7b2acf9bf5e0bc0fe32c6a0d8aa6e2a9f871a8
     business_employees?: business_employeesCreateNestedManyWithoutBusinessesInput
     business_workflows?: business_workflowsCreateNestedManyWithoutBusinessesInput
     tenants: tenantsCreateNestedOneWithoutBusinessesInput
@@ -137971,7 +133981,6 @@ export namespace Prisma {
     tenant_id: string
     business_name: string
     business_type?: string | null
-<<<<<<< HEAD
     whatsapp_number?: string | null
     created_at?: Date | string | null
     updated_at?: Date | string | null
@@ -137983,19 +133992,6 @@ export namespace Prisma {
     country?: string | null
     gst_number?: string | null
     pan_number?: string | null
-=======
-    email?: string | null
-    phone?: string | null
-    website?: string | null
-    city?: string | null
-    address?: string | null
-    country?: string | null
-    gst_number?: string | null
-    pan_number?: string | null
-    whatsapp_number?: string | null
-    created_at?: Date | string | null
-    updated_at?: Date | string | null
->>>>>>> 8a7b2acf9bf5e0bc0fe32c6a0d8aa6e2a9f871a8
     business_employees?: business_employeesUncheckedCreateNestedManyWithoutBusinessesInput
     business_workflows?: business_workflowsUncheckedCreateNestedManyWithoutBusinessesInput
     carts?: cartsUncheckedCreateNestedManyWithoutBusinessesInput
@@ -138085,18 +134081,9 @@ export namespace Prisma {
     business_id?: StringFieldUpdateOperationsInput | string
     business_name?: StringFieldUpdateOperationsInput | string
     business_type?: NullableStringFieldUpdateOperationsInput | string | null
-    email?: NullableStringFieldUpdateOperationsInput | string | null
-    phone?: NullableStringFieldUpdateOperationsInput | string | null
-    website?: NullableStringFieldUpdateOperationsInput | string | null
-    city?: NullableStringFieldUpdateOperationsInput | string | null
-    address?: NullableStringFieldUpdateOperationsInput | string | null
-    country?: NullableStringFieldUpdateOperationsInput | string | null
-    gst_number?: NullableStringFieldUpdateOperationsInput | string | null
-    pan_number?: NullableStringFieldUpdateOperationsInput | string | null
     whatsapp_number?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-<<<<<<< HEAD
     email?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     website?: NullableStringFieldUpdateOperationsInput | string | null
@@ -138105,8 +134092,6 @@ export namespace Prisma {
     country?: NullableStringFieldUpdateOperationsInput | string | null
     gst_number?: NullableStringFieldUpdateOperationsInput | string | null
     pan_number?: NullableStringFieldUpdateOperationsInput | string | null
-=======
->>>>>>> 8a7b2acf9bf5e0bc0fe32c6a0d8aa6e2a9f871a8
     business_employees?: business_employeesUpdateManyWithoutBusinessesNestedInput
     business_workflows?: business_workflowsUpdateManyWithoutBusinessesNestedInput
     tenants?: tenantsUpdateOneRequiredWithoutBusinessesNestedInput
@@ -138133,7 +134118,6 @@ export namespace Prisma {
     tenant_id?: StringFieldUpdateOperationsInput | string
     business_name?: StringFieldUpdateOperationsInput | string
     business_type?: NullableStringFieldUpdateOperationsInput | string | null
-<<<<<<< HEAD
     whatsapp_number?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -138145,19 +134129,6 @@ export namespace Prisma {
     country?: NullableStringFieldUpdateOperationsInput | string | null
     gst_number?: NullableStringFieldUpdateOperationsInput | string | null
     pan_number?: NullableStringFieldUpdateOperationsInput | string | null
-=======
-    email?: NullableStringFieldUpdateOperationsInput | string | null
-    phone?: NullableStringFieldUpdateOperationsInput | string | null
-    website?: NullableStringFieldUpdateOperationsInput | string | null
-    city?: NullableStringFieldUpdateOperationsInput | string | null
-    address?: NullableStringFieldUpdateOperationsInput | string | null
-    country?: NullableStringFieldUpdateOperationsInput | string | null
-    gst_number?: NullableStringFieldUpdateOperationsInput | string | null
-    pan_number?: NullableStringFieldUpdateOperationsInput | string | null
-    whatsapp_number?: NullableStringFieldUpdateOperationsInput | string | null
-    created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
->>>>>>> 8a7b2acf9bf5e0bc0fe32c6a0d8aa6e2a9f871a8
     business_employees?: business_employeesUncheckedUpdateManyWithoutBusinessesNestedInput
     business_workflows?: business_workflowsUncheckedUpdateManyWithoutBusinessesNestedInput
     carts?: cartsUncheckedUpdateManyWithoutBusinessesNestedInput
@@ -138275,18 +134246,9 @@ export namespace Prisma {
     business_id?: string
     business_name: string
     business_type?: string | null
-    email?: string | null
-    phone?: string | null
-    website?: string | null
-    city?: string | null
-    address?: string | null
-    country?: string | null
-    gst_number?: string | null
-    pan_number?: string | null
     whatsapp_number?: string | null
     created_at?: Date | string | null
     updated_at?: Date | string | null
-<<<<<<< HEAD
     email?: string | null
     phone?: string | null
     website?: string | null
@@ -138295,8 +134257,6 @@ export namespace Prisma {
     country?: string | null
     gst_number?: string | null
     pan_number?: string | null
-=======
->>>>>>> 8a7b2acf9bf5e0bc0fe32c6a0d8aa6e2a9f871a8
     business_employees?: business_employeesCreateNestedManyWithoutBusinessesInput
     business_workflows?: business_workflowsCreateNestedManyWithoutBusinessesInput
     tenants: tenantsCreateNestedOneWithoutBusinessesInput
@@ -138323,7 +134283,6 @@ export namespace Prisma {
     tenant_id: string
     business_name: string
     business_type?: string | null
-<<<<<<< HEAD
     whatsapp_number?: string | null
     created_at?: Date | string | null
     updated_at?: Date | string | null
@@ -138335,19 +134294,6 @@ export namespace Prisma {
     country?: string | null
     gst_number?: string | null
     pan_number?: string | null
-=======
-    email?: string | null
-    phone?: string | null
-    website?: string | null
-    city?: string | null
-    address?: string | null
-    country?: string | null
-    gst_number?: string | null
-    pan_number?: string | null
-    whatsapp_number?: string | null
-    created_at?: Date | string | null
-    updated_at?: Date | string | null
->>>>>>> 8a7b2acf9bf5e0bc0fe32c6a0d8aa6e2a9f871a8
     business_employees?: business_employeesUncheckedCreateNestedManyWithoutBusinessesInput
     business_workflows?: business_workflowsUncheckedCreateNestedManyWithoutBusinessesInput
     carts?: cartsUncheckedCreateNestedManyWithoutBusinessesInput
@@ -138564,18 +134510,9 @@ export namespace Prisma {
     business_id?: StringFieldUpdateOperationsInput | string
     business_name?: StringFieldUpdateOperationsInput | string
     business_type?: NullableStringFieldUpdateOperationsInput | string | null
-    email?: NullableStringFieldUpdateOperationsInput | string | null
-    phone?: NullableStringFieldUpdateOperationsInput | string | null
-    website?: NullableStringFieldUpdateOperationsInput | string | null
-    city?: NullableStringFieldUpdateOperationsInput | string | null
-    address?: NullableStringFieldUpdateOperationsInput | string | null
-    country?: NullableStringFieldUpdateOperationsInput | string | null
-    gst_number?: NullableStringFieldUpdateOperationsInput | string | null
-    pan_number?: NullableStringFieldUpdateOperationsInput | string | null
     whatsapp_number?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-<<<<<<< HEAD
     email?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     website?: NullableStringFieldUpdateOperationsInput | string | null
@@ -138584,8 +134521,6 @@ export namespace Prisma {
     country?: NullableStringFieldUpdateOperationsInput | string | null
     gst_number?: NullableStringFieldUpdateOperationsInput | string | null
     pan_number?: NullableStringFieldUpdateOperationsInput | string | null
-=======
->>>>>>> 8a7b2acf9bf5e0bc0fe32c6a0d8aa6e2a9f871a8
     business_employees?: business_employeesUpdateManyWithoutBusinessesNestedInput
     business_workflows?: business_workflowsUpdateManyWithoutBusinessesNestedInput
     tenants?: tenantsUpdateOneRequiredWithoutBusinessesNestedInput
@@ -138612,7 +134547,6 @@ export namespace Prisma {
     tenant_id?: StringFieldUpdateOperationsInput | string
     business_name?: StringFieldUpdateOperationsInput | string
     business_type?: NullableStringFieldUpdateOperationsInput | string | null
-<<<<<<< HEAD
     whatsapp_number?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -138624,19 +134558,6 @@ export namespace Prisma {
     country?: NullableStringFieldUpdateOperationsInput | string | null
     gst_number?: NullableStringFieldUpdateOperationsInput | string | null
     pan_number?: NullableStringFieldUpdateOperationsInput | string | null
-=======
-    email?: NullableStringFieldUpdateOperationsInput | string | null
-    phone?: NullableStringFieldUpdateOperationsInput | string | null
-    website?: NullableStringFieldUpdateOperationsInput | string | null
-    city?: NullableStringFieldUpdateOperationsInput | string | null
-    address?: NullableStringFieldUpdateOperationsInput | string | null
-    country?: NullableStringFieldUpdateOperationsInput | string | null
-    gst_number?: NullableStringFieldUpdateOperationsInput | string | null
-    pan_number?: NullableStringFieldUpdateOperationsInput | string | null
-    whatsapp_number?: NullableStringFieldUpdateOperationsInput | string | null
-    created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
->>>>>>> 8a7b2acf9bf5e0bc0fe32c6a0d8aa6e2a9f871a8
     business_employees?: business_employeesUncheckedUpdateManyWithoutBusinessesNestedInput
     business_workflows?: business_workflowsUncheckedUpdateManyWithoutBusinessesNestedInput
     carts?: cartsUncheckedUpdateManyWithoutBusinessesNestedInput
@@ -138815,18 +134736,9 @@ export namespace Prisma {
     business_id?: string
     business_name: string
     business_type?: string | null
-    email?: string | null
-    phone?: string | null
-    website?: string | null
-    city?: string | null
-    address?: string | null
-    country?: string | null
-    gst_number?: string | null
-    pan_number?: string | null
     whatsapp_number?: string | null
     created_at?: Date | string | null
     updated_at?: Date | string | null
-<<<<<<< HEAD
     email?: string | null
     phone?: string | null
     website?: string | null
@@ -138835,8 +134747,6 @@ export namespace Prisma {
     country?: string | null
     gst_number?: string | null
     pan_number?: string | null
-=======
->>>>>>> 8a7b2acf9bf5e0bc0fe32c6a0d8aa6e2a9f871a8
     business_employees?: business_employeesCreateNestedManyWithoutBusinessesInput
     business_workflows?: business_workflowsCreateNestedManyWithoutBusinessesInput
     tenants: tenantsCreateNestedOneWithoutBusinessesInput
@@ -138863,7 +134773,6 @@ export namespace Prisma {
     tenant_id: string
     business_name: string
     business_type?: string | null
-<<<<<<< HEAD
     whatsapp_number?: string | null
     created_at?: Date | string | null
     updated_at?: Date | string | null
@@ -138875,19 +134784,6 @@ export namespace Prisma {
     country?: string | null
     gst_number?: string | null
     pan_number?: string | null
-=======
-    email?: string | null
-    phone?: string | null
-    website?: string | null
-    city?: string | null
-    address?: string | null
-    country?: string | null
-    gst_number?: string | null
-    pan_number?: string | null
-    whatsapp_number?: string | null
-    created_at?: Date | string | null
-    updated_at?: Date | string | null
->>>>>>> 8a7b2acf9bf5e0bc0fe32c6a0d8aa6e2a9f871a8
     business_employees?: business_employeesUncheckedCreateNestedManyWithoutBusinessesInput
     business_workflows?: business_workflowsUncheckedCreateNestedManyWithoutBusinessesInput
     carts?: cartsUncheckedCreateNestedManyWithoutBusinessesInput
@@ -138928,18 +134824,9 @@ export namespace Prisma {
     business_id?: StringFieldUpdateOperationsInput | string
     business_name?: StringFieldUpdateOperationsInput | string
     business_type?: NullableStringFieldUpdateOperationsInput | string | null
-    email?: NullableStringFieldUpdateOperationsInput | string | null
-    phone?: NullableStringFieldUpdateOperationsInput | string | null
-    website?: NullableStringFieldUpdateOperationsInput | string | null
-    city?: NullableStringFieldUpdateOperationsInput | string | null
-    address?: NullableStringFieldUpdateOperationsInput | string | null
-    country?: NullableStringFieldUpdateOperationsInput | string | null
-    gst_number?: NullableStringFieldUpdateOperationsInput | string | null
-    pan_number?: NullableStringFieldUpdateOperationsInput | string | null
     whatsapp_number?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-<<<<<<< HEAD
     email?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     website?: NullableStringFieldUpdateOperationsInput | string | null
@@ -138948,8 +134835,6 @@ export namespace Prisma {
     country?: NullableStringFieldUpdateOperationsInput | string | null
     gst_number?: NullableStringFieldUpdateOperationsInput | string | null
     pan_number?: NullableStringFieldUpdateOperationsInput | string | null
-=======
->>>>>>> 8a7b2acf9bf5e0bc0fe32c6a0d8aa6e2a9f871a8
     business_employees?: business_employeesUpdateManyWithoutBusinessesNestedInput
     business_workflows?: business_workflowsUpdateManyWithoutBusinessesNestedInput
     tenants?: tenantsUpdateOneRequiredWithoutBusinessesNestedInput
@@ -138976,7 +134861,6 @@ export namespace Prisma {
     tenant_id?: StringFieldUpdateOperationsInput | string
     business_name?: StringFieldUpdateOperationsInput | string
     business_type?: NullableStringFieldUpdateOperationsInput | string | null
-<<<<<<< HEAD
     whatsapp_number?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -138988,19 +134872,6 @@ export namespace Prisma {
     country?: NullableStringFieldUpdateOperationsInput | string | null
     gst_number?: NullableStringFieldUpdateOperationsInput | string | null
     pan_number?: NullableStringFieldUpdateOperationsInput | string | null
-=======
-    email?: NullableStringFieldUpdateOperationsInput | string | null
-    phone?: NullableStringFieldUpdateOperationsInput | string | null
-    website?: NullableStringFieldUpdateOperationsInput | string | null
-    city?: NullableStringFieldUpdateOperationsInput | string | null
-    address?: NullableStringFieldUpdateOperationsInput | string | null
-    country?: NullableStringFieldUpdateOperationsInput | string | null
-    gst_number?: NullableStringFieldUpdateOperationsInput | string | null
-    pan_number?: NullableStringFieldUpdateOperationsInput | string | null
-    whatsapp_number?: NullableStringFieldUpdateOperationsInput | string | null
-    created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
->>>>>>> 8a7b2acf9bf5e0bc0fe32c6a0d8aa6e2a9f871a8
     business_employees?: business_employeesUncheckedUpdateManyWithoutBusinessesNestedInput
     business_workflows?: business_workflowsUncheckedUpdateManyWithoutBusinessesNestedInput
     carts?: cartsUncheckedUpdateManyWithoutBusinessesNestedInput
@@ -139599,18 +135470,9 @@ export namespace Prisma {
     business_id?: string
     business_name: string
     business_type?: string | null
-    email?: string | null
-    phone?: string | null
-    website?: string | null
-    city?: string | null
-    address?: string | null
-    country?: string | null
-    gst_number?: string | null
-    pan_number?: string | null
     whatsapp_number?: string | null
     created_at?: Date | string | null
     updated_at?: Date | string | null
-<<<<<<< HEAD
     email?: string | null
     phone?: string | null
     website?: string | null
@@ -139619,8 +135481,6 @@ export namespace Prisma {
     country?: string | null
     gst_number?: string | null
     pan_number?: string | null
-=======
->>>>>>> 8a7b2acf9bf5e0bc0fe32c6a0d8aa6e2a9f871a8
     business_employees?: business_employeesCreateNestedManyWithoutBusinessesInput
     business_workflows?: business_workflowsCreateNestedManyWithoutBusinessesInput
     tenants: tenantsCreateNestedOneWithoutBusinessesInput
@@ -139647,7 +135507,6 @@ export namespace Prisma {
     tenant_id: string
     business_name: string
     business_type?: string | null
-<<<<<<< HEAD
     whatsapp_number?: string | null
     created_at?: Date | string | null
     updated_at?: Date | string | null
@@ -139659,19 +135518,6 @@ export namespace Prisma {
     country?: string | null
     gst_number?: string | null
     pan_number?: string | null
-=======
-    email?: string | null
-    phone?: string | null
-    website?: string | null
-    city?: string | null
-    address?: string | null
-    country?: string | null
-    gst_number?: string | null
-    pan_number?: string | null
-    whatsapp_number?: string | null
-    created_at?: Date | string | null
-    updated_at?: Date | string | null
->>>>>>> 8a7b2acf9bf5e0bc0fe32c6a0d8aa6e2a9f871a8
     business_employees?: business_employeesUncheckedCreateNestedManyWithoutBusinessesInput
     business_workflows?: business_workflowsUncheckedCreateNestedManyWithoutBusinessesInput
     carts?: cartsUncheckedCreateNestedManyWithoutBusinessesInput
@@ -139888,8 +135734,8 @@ export namespace Prisma {
     gst_number?: string | null
     pan_number?: string | null
     registration_no?: string | null
-    businesses?: businessesCreateNestedManyWithoutTenantsInput
     business_workflows?: business_workflowsCreateNestedManyWithoutTenantsInput
+    businesses?: businessesCreateNestedManyWithoutTenantsInput
     carts?: cartsCreateNestedManyWithoutTenantsInput
     leads?: leadsCreateNestedManyWithoutTenantsInput
     notification_messages?: notification_messagesCreateNestedManyWithoutTenantsInput
@@ -139907,8 +135753,8 @@ export namespace Prisma {
     gst_number?: string | null
     pan_number?: string | null
     registration_no?: string | null
-    businesses?: businessesUncheckedCreateNestedManyWithoutTenantsInput
     business_workflows?: business_workflowsUncheckedCreateNestedManyWithoutTenantsInput
+    businesses?: businessesUncheckedCreateNestedManyWithoutTenantsInput
     carts?: cartsUncheckedCreateNestedManyWithoutTenantsInput
     leads?: leadsUncheckedCreateNestedManyWithoutTenantsInput
     notification_messages?: notification_messagesUncheckedCreateNestedManyWithoutTenantsInput
@@ -139966,12 +135812,7 @@ export namespace Prisma {
     product_reviews?: product_reviewsCreateNestedManyWithoutProductInput
     product_variants?: product_variantsCreateNestedManyWithoutProductInput
     businesses: businessesCreateNestedOneWithoutProductsInput
-<<<<<<< HEAD
-    stock_reservations?: stock_reservationsCreateNestedManyWithoutProductsInput
-=======
-    cart_reservations?: cart_reservationsCreateNestedManyWithoutProductsInput
     product_stock_alerts?: product_stock_alertsCreateNestedManyWithoutProductsInput
->>>>>>> 8a7b2acf9bf5e0bc0fe32c6a0d8aa6e2a9f871a8
   }
 
   export type productsUncheckedCreateWithoutProduct_categoriesInput = {
@@ -140020,12 +135861,7 @@ export namespace Prisma {
     product_images?: product_imagesUncheckedCreateNestedManyWithoutProductsInput
     product_reviews?: product_reviewsUncheckedCreateNestedManyWithoutProductInput
     product_variants?: product_variantsUncheckedCreateNestedManyWithoutProductInput
-<<<<<<< HEAD
-    stock_reservations?: stock_reservationsUncheckedCreateNestedManyWithoutProductsInput
-=======
-    cart_reservations?: cart_reservationsUncheckedCreateNestedManyWithoutProductsInput
     product_stock_alerts?: product_stock_alertsUncheckedCreateNestedManyWithoutProductsInput
->>>>>>> 8a7b2acf9bf5e0bc0fe32c6a0d8aa6e2a9f871a8
   }
 
   export type productsCreateOrConnectWithoutProduct_categoriesInput = {
@@ -140053,18 +135889,9 @@ export namespace Prisma {
     business_id?: StringFieldUpdateOperationsInput | string
     business_name?: StringFieldUpdateOperationsInput | string
     business_type?: NullableStringFieldUpdateOperationsInput | string | null
-    email?: NullableStringFieldUpdateOperationsInput | string | null
-    phone?: NullableStringFieldUpdateOperationsInput | string | null
-    website?: NullableStringFieldUpdateOperationsInput | string | null
-    city?: NullableStringFieldUpdateOperationsInput | string | null
-    address?: NullableStringFieldUpdateOperationsInput | string | null
-    country?: NullableStringFieldUpdateOperationsInput | string | null
-    gst_number?: NullableStringFieldUpdateOperationsInput | string | null
-    pan_number?: NullableStringFieldUpdateOperationsInput | string | null
     whatsapp_number?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-<<<<<<< HEAD
     email?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     website?: NullableStringFieldUpdateOperationsInput | string | null
@@ -140073,8 +135900,6 @@ export namespace Prisma {
     country?: NullableStringFieldUpdateOperationsInput | string | null
     gst_number?: NullableStringFieldUpdateOperationsInput | string | null
     pan_number?: NullableStringFieldUpdateOperationsInput | string | null
-=======
->>>>>>> 8a7b2acf9bf5e0bc0fe32c6a0d8aa6e2a9f871a8
     business_employees?: business_employeesUpdateManyWithoutBusinessesNestedInput
     business_workflows?: business_workflowsUpdateManyWithoutBusinessesNestedInput
     tenants?: tenantsUpdateOneRequiredWithoutBusinessesNestedInput
@@ -140101,7 +135926,6 @@ export namespace Prisma {
     tenant_id?: StringFieldUpdateOperationsInput | string
     business_name?: StringFieldUpdateOperationsInput | string
     business_type?: NullableStringFieldUpdateOperationsInput | string | null
-<<<<<<< HEAD
     whatsapp_number?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -140113,19 +135937,6 @@ export namespace Prisma {
     country?: NullableStringFieldUpdateOperationsInput | string | null
     gst_number?: NullableStringFieldUpdateOperationsInput | string | null
     pan_number?: NullableStringFieldUpdateOperationsInput | string | null
-=======
-    email?: NullableStringFieldUpdateOperationsInput | string | null
-    phone?: NullableStringFieldUpdateOperationsInput | string | null
-    website?: NullableStringFieldUpdateOperationsInput | string | null
-    city?: NullableStringFieldUpdateOperationsInput | string | null
-    address?: NullableStringFieldUpdateOperationsInput | string | null
-    country?: NullableStringFieldUpdateOperationsInput | string | null
-    gst_number?: NullableStringFieldUpdateOperationsInput | string | null
-    pan_number?: NullableStringFieldUpdateOperationsInput | string | null
-    whatsapp_number?: NullableStringFieldUpdateOperationsInput | string | null
-    created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
->>>>>>> 8a7b2acf9bf5e0bc0fe32c6a0d8aa6e2a9f871a8
     business_employees?: business_employeesUncheckedUpdateManyWithoutBusinessesNestedInput
     business_workflows?: business_workflowsUncheckedUpdateManyWithoutBusinessesNestedInput
     carts?: cartsUncheckedUpdateManyWithoutBusinessesNestedInput
@@ -140320,8 +136131,8 @@ export namespace Prisma {
     gst_number?: NullableStringFieldUpdateOperationsInput | string | null
     pan_number?: NullableStringFieldUpdateOperationsInput | string | null
     registration_no?: NullableStringFieldUpdateOperationsInput | string | null
-    businesses?: businessesUpdateManyWithoutTenantsNestedInput
     business_workflows?: business_workflowsUpdateManyWithoutTenantsNestedInput
+    businesses?: businessesUpdateManyWithoutTenantsNestedInput
     carts?: cartsUpdateManyWithoutTenantsNestedInput
     leads?: leadsUpdateManyWithoutTenantsNestedInput
     notification_messages?: notification_messagesUpdateManyWithoutTenantsNestedInput
@@ -140339,8 +136150,8 @@ export namespace Prisma {
     gst_number?: NullableStringFieldUpdateOperationsInput | string | null
     pan_number?: NullableStringFieldUpdateOperationsInput | string | null
     registration_no?: NullableStringFieldUpdateOperationsInput | string | null
-    businesses?: businessesUncheckedUpdateManyWithoutTenantsNestedInput
     business_workflows?: business_workflowsUncheckedUpdateManyWithoutTenantsNestedInput
+    businesses?: businessesUncheckedUpdateManyWithoutTenantsNestedInput
     carts?: cartsUncheckedUpdateManyWithoutTenantsNestedInput
     leads?: leadsUncheckedUpdateManyWithoutTenantsNestedInput
     notification_messages?: notification_messagesUncheckedUpdateManyWithoutTenantsNestedInput
@@ -140551,12 +136362,7 @@ export namespace Prisma {
     product_variants?: product_variantsCreateNestedManyWithoutProductInput
     businesses: businessesCreateNestedOneWithoutProductsInput
     product_categories?: product_categoriesCreateNestedOneWithoutProductsInput
-<<<<<<< HEAD
-    stock_reservations?: stock_reservationsCreateNestedManyWithoutProductsInput
-=======
-    cart_reservations?: cart_reservationsCreateNestedManyWithoutProductsInput
     product_stock_alerts?: product_stock_alertsCreateNestedManyWithoutProductsInput
->>>>>>> 8a7b2acf9bf5e0bc0fe32c6a0d8aa6e2a9f871a8
   }
 
   export type productsUncheckedCreateWithoutProduct_reviewsInput = {
@@ -140605,12 +136411,7 @@ export namespace Prisma {
     order_items?: order_itemsUncheckedCreateNestedManyWithoutProductsInput
     product_images?: product_imagesUncheckedCreateNestedManyWithoutProductsInput
     product_variants?: product_variantsUncheckedCreateNestedManyWithoutProductInput
-<<<<<<< HEAD
-    stock_reservations?: stock_reservationsUncheckedCreateNestedManyWithoutProductsInput
-=======
-    cart_reservations?: cart_reservationsUncheckedCreateNestedManyWithoutProductsInput
     product_stock_alerts?: product_stock_alertsUncheckedCreateNestedManyWithoutProductsInput
->>>>>>> 8a7b2acf9bf5e0bc0fe32c6a0d8aa6e2a9f871a8
   }
 
   export type productsCreateOrConnectWithoutProduct_reviewsInput = {
@@ -140902,12 +136703,7 @@ export namespace Prisma {
     product_variants?: product_variantsUpdateManyWithoutProductNestedInput
     businesses?: businessesUpdateOneRequiredWithoutProductsNestedInput
     product_categories?: product_categoriesUpdateOneWithoutProductsNestedInput
-<<<<<<< HEAD
-    stock_reservations?: stock_reservationsUpdateManyWithoutProductsNestedInput
-=======
-    cart_reservations?: cart_reservationsUpdateManyWithoutProductsNestedInput
     product_stock_alerts?: product_stock_alertsUpdateManyWithoutProductsNestedInput
->>>>>>> 8a7b2acf9bf5e0bc0fe32c6a0d8aa6e2a9f871a8
   }
 
   export type productsUncheckedUpdateWithoutProduct_reviewsInput = {
@@ -140956,12 +136752,7 @@ export namespace Prisma {
     order_items?: order_itemsUncheckedUpdateManyWithoutProductsNestedInput
     product_images?: product_imagesUncheckedUpdateManyWithoutProductsNestedInput
     product_variants?: product_variantsUncheckedUpdateManyWithoutProductNestedInput
-<<<<<<< HEAD
-    stock_reservations?: stock_reservationsUncheckedUpdateManyWithoutProductsNestedInput
-=======
-    cart_reservations?: cart_reservationsUncheckedUpdateManyWithoutProductsNestedInput
     product_stock_alerts?: product_stock_alertsUncheckedUpdateManyWithoutProductsNestedInput
->>>>>>> 8a7b2acf9bf5e0bc0fe32c6a0d8aa6e2a9f871a8
   }
 
   export type usersUpsertWithoutReview_responsesInput = {
@@ -141155,18 +136946,9 @@ export namespace Prisma {
     business_id?: string
     business_name: string
     business_type?: string | null
-    email?: string | null
-    phone?: string | null
-    website?: string | null
-    city?: string | null
-    address?: string | null
-    country?: string | null
-    gst_number?: string | null
-    pan_number?: string | null
     whatsapp_number?: string | null
     created_at?: Date | string | null
     updated_at?: Date | string | null
-<<<<<<< HEAD
     email?: string | null
     phone?: string | null
     website?: string | null
@@ -141175,8 +136957,6 @@ export namespace Prisma {
     country?: string | null
     gst_number?: string | null
     pan_number?: string | null
-=======
->>>>>>> 8a7b2acf9bf5e0bc0fe32c6a0d8aa6e2a9f871a8
     business_employees?: business_employeesCreateNestedManyWithoutBusinessesInput
     tenants: tenantsCreateNestedOneWithoutBusinessesInput
     carts?: cartsCreateNestedManyWithoutBusinessesInput
@@ -141203,7 +136983,6 @@ export namespace Prisma {
     tenant_id: string
     business_name: string
     business_type?: string | null
-<<<<<<< HEAD
     whatsapp_number?: string | null
     created_at?: Date | string | null
     updated_at?: Date | string | null
@@ -141215,19 +136994,6 @@ export namespace Prisma {
     country?: string | null
     gst_number?: string | null
     pan_number?: string | null
-=======
-    email?: string | null
-    phone?: string | null
-    website?: string | null
-    city?: string | null
-    address?: string | null
-    country?: string | null
-    gst_number?: string | null
-    pan_number?: string | null
-    whatsapp_number?: string | null
-    created_at?: Date | string | null
-    updated_at?: Date | string | null
->>>>>>> 8a7b2acf9bf5e0bc0fe32c6a0d8aa6e2a9f871a8
     business_employees?: business_employeesUncheckedCreateNestedManyWithoutBusinessesInput
     carts?: cartsUncheckedCreateNestedManyWithoutBusinessesInput
     leads?: leadsUncheckedCreateNestedManyWithoutBusinessesInput
@@ -141346,18 +137112,9 @@ export namespace Prisma {
     business_id?: StringFieldUpdateOperationsInput | string
     business_name?: StringFieldUpdateOperationsInput | string
     business_type?: NullableStringFieldUpdateOperationsInput | string | null
-    email?: NullableStringFieldUpdateOperationsInput | string | null
-    phone?: NullableStringFieldUpdateOperationsInput | string | null
-    website?: NullableStringFieldUpdateOperationsInput | string | null
-    city?: NullableStringFieldUpdateOperationsInput | string | null
-    address?: NullableStringFieldUpdateOperationsInput | string | null
-    country?: NullableStringFieldUpdateOperationsInput | string | null
-    gst_number?: NullableStringFieldUpdateOperationsInput | string | null
-    pan_number?: NullableStringFieldUpdateOperationsInput | string | null
     whatsapp_number?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-<<<<<<< HEAD
     email?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     website?: NullableStringFieldUpdateOperationsInput | string | null
@@ -141366,8 +137123,6 @@ export namespace Prisma {
     country?: NullableStringFieldUpdateOperationsInput | string | null
     gst_number?: NullableStringFieldUpdateOperationsInput | string | null
     pan_number?: NullableStringFieldUpdateOperationsInput | string | null
-=======
->>>>>>> 8a7b2acf9bf5e0bc0fe32c6a0d8aa6e2a9f871a8
     business_employees?: business_employeesUpdateManyWithoutBusinessesNestedInput
     tenants?: tenantsUpdateOneRequiredWithoutBusinessesNestedInput
     carts?: cartsUpdateManyWithoutBusinessesNestedInput
@@ -141394,7 +137149,6 @@ export namespace Prisma {
     tenant_id?: StringFieldUpdateOperationsInput | string
     business_name?: StringFieldUpdateOperationsInput | string
     business_type?: NullableStringFieldUpdateOperationsInput | string | null
-<<<<<<< HEAD
     whatsapp_number?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -141406,19 +137160,6 @@ export namespace Prisma {
     country?: NullableStringFieldUpdateOperationsInput | string | null
     gst_number?: NullableStringFieldUpdateOperationsInput | string | null
     pan_number?: NullableStringFieldUpdateOperationsInput | string | null
-=======
-    email?: NullableStringFieldUpdateOperationsInput | string | null
-    phone?: NullableStringFieldUpdateOperationsInput | string | null
-    website?: NullableStringFieldUpdateOperationsInput | string | null
-    city?: NullableStringFieldUpdateOperationsInput | string | null
-    address?: NullableStringFieldUpdateOperationsInput | string | null
-    country?: NullableStringFieldUpdateOperationsInput | string | null
-    gst_number?: NullableStringFieldUpdateOperationsInput | string | null
-    pan_number?: NullableStringFieldUpdateOperationsInput | string | null
-    whatsapp_number?: NullableStringFieldUpdateOperationsInput | string | null
-    created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
->>>>>>> 8a7b2acf9bf5e0bc0fe32c6a0d8aa6e2a9f871a8
     business_employees?: business_employeesUncheckedUpdateManyWithoutBusinessesNestedInput
     carts?: cartsUncheckedUpdateManyWithoutBusinessesNestedInput
     leads?: leadsUncheckedUpdateManyWithoutBusinessesNestedInput
@@ -141533,18 +137274,9 @@ export namespace Prisma {
     business_id?: string
     business_name: string
     business_type?: string | null
-    email?: string | null
-    phone?: string | null
-    website?: string | null
-    city?: string | null
-    address?: string | null
-    country?: string | null
-    gst_number?: string | null
-    pan_number?: string | null
     whatsapp_number?: string | null
     created_at?: Date | string | null
     updated_at?: Date | string | null
-<<<<<<< HEAD
     email?: string | null
     phone?: string | null
     website?: string | null
@@ -141553,8 +137285,6 @@ export namespace Prisma {
     country?: string | null
     gst_number?: string | null
     pan_number?: string | null
-=======
->>>>>>> 8a7b2acf9bf5e0bc0fe32c6a0d8aa6e2a9f871a8
     business_employees?: business_employeesCreateNestedManyWithoutBusinessesInput
     business_workflows?: business_workflowsCreateNestedManyWithoutBusinessesInput
     tenants: tenantsCreateNestedOneWithoutBusinessesInput
@@ -141581,7 +137311,6 @@ export namespace Prisma {
     tenant_id: string
     business_name: string
     business_type?: string | null
-<<<<<<< HEAD
     whatsapp_number?: string | null
     created_at?: Date | string | null
     updated_at?: Date | string | null
@@ -141593,19 +137322,6 @@ export namespace Prisma {
     country?: string | null
     gst_number?: string | null
     pan_number?: string | null
-=======
-    email?: string | null
-    phone?: string | null
-    website?: string | null
-    city?: string | null
-    address?: string | null
-    country?: string | null
-    gst_number?: string | null
-    pan_number?: string | null
-    whatsapp_number?: string | null
-    created_at?: Date | string | null
-    updated_at?: Date | string | null
->>>>>>> 8a7b2acf9bf5e0bc0fe32c6a0d8aa6e2a9f871a8
     business_employees?: business_employeesUncheckedCreateNestedManyWithoutBusinessesInput
     business_workflows?: business_workflowsUncheckedCreateNestedManyWithoutBusinessesInput
     carts?: cartsUncheckedCreateNestedManyWithoutBusinessesInput
@@ -141840,18 +137556,9 @@ export namespace Prisma {
     business_id?: StringFieldUpdateOperationsInput | string
     business_name?: StringFieldUpdateOperationsInput | string
     business_type?: NullableStringFieldUpdateOperationsInput | string | null
-    email?: NullableStringFieldUpdateOperationsInput | string | null
-    phone?: NullableStringFieldUpdateOperationsInput | string | null
-    website?: NullableStringFieldUpdateOperationsInput | string | null
-    city?: NullableStringFieldUpdateOperationsInput | string | null
-    address?: NullableStringFieldUpdateOperationsInput | string | null
-    country?: NullableStringFieldUpdateOperationsInput | string | null
-    gst_number?: NullableStringFieldUpdateOperationsInput | string | null
-    pan_number?: NullableStringFieldUpdateOperationsInput | string | null
     whatsapp_number?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-<<<<<<< HEAD
     email?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     website?: NullableStringFieldUpdateOperationsInput | string | null
@@ -141860,8 +137567,6 @@ export namespace Prisma {
     country?: NullableStringFieldUpdateOperationsInput | string | null
     gst_number?: NullableStringFieldUpdateOperationsInput | string | null
     pan_number?: NullableStringFieldUpdateOperationsInput | string | null
-=======
->>>>>>> 8a7b2acf9bf5e0bc0fe32c6a0d8aa6e2a9f871a8
     business_employees?: business_employeesUpdateManyWithoutBusinessesNestedInput
     business_workflows?: business_workflowsUpdateManyWithoutBusinessesNestedInput
     tenants?: tenantsUpdateOneRequiredWithoutBusinessesNestedInput
@@ -141888,7 +137593,6 @@ export namespace Prisma {
     tenant_id?: StringFieldUpdateOperationsInput | string
     business_name?: StringFieldUpdateOperationsInput | string
     business_type?: NullableStringFieldUpdateOperationsInput | string | null
-<<<<<<< HEAD
     whatsapp_number?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -141900,19 +137604,6 @@ export namespace Prisma {
     country?: NullableStringFieldUpdateOperationsInput | string | null
     gst_number?: NullableStringFieldUpdateOperationsInput | string | null
     pan_number?: NullableStringFieldUpdateOperationsInput | string | null
-=======
-    email?: NullableStringFieldUpdateOperationsInput | string | null
-    phone?: NullableStringFieldUpdateOperationsInput | string | null
-    website?: NullableStringFieldUpdateOperationsInput | string | null
-    city?: NullableStringFieldUpdateOperationsInput | string | null
-    address?: NullableStringFieldUpdateOperationsInput | string | null
-    country?: NullableStringFieldUpdateOperationsInput | string | null
-    gst_number?: NullableStringFieldUpdateOperationsInput | string | null
-    pan_number?: NullableStringFieldUpdateOperationsInput | string | null
-    whatsapp_number?: NullableStringFieldUpdateOperationsInput | string | null
-    created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
->>>>>>> 8a7b2acf9bf5e0bc0fe32c6a0d8aa6e2a9f871a8
     business_employees?: business_employeesUncheckedUpdateManyWithoutBusinessesNestedInput
     business_workflows?: business_workflowsUncheckedUpdateManyWithoutBusinessesNestedInput
     carts?: cartsUncheckedUpdateManyWithoutBusinessesNestedInput
@@ -142218,12 +137909,7 @@ export namespace Prisma {
     product_variants?: product_variantsCreateNestedManyWithoutProductInput
     businesses: businessesCreateNestedOneWithoutProductsInput
     product_categories?: product_categoriesCreateNestedOneWithoutProductsInput
-<<<<<<< HEAD
-    stock_reservations?: stock_reservationsCreateNestedManyWithoutProductsInput
-=======
-    cart_reservations?: cart_reservationsCreateNestedManyWithoutProductsInput
     product_stock_alerts?: product_stock_alertsCreateNestedManyWithoutProductsInput
->>>>>>> 8a7b2acf9bf5e0bc0fe32c6a0d8aa6e2a9f871a8
   }
 
   export type productsUncheckedCreateWithoutCart_itemsInput = {
@@ -142272,12 +137958,7 @@ export namespace Prisma {
     product_images?: product_imagesUncheckedCreateNestedManyWithoutProductsInput
     product_reviews?: product_reviewsUncheckedCreateNestedManyWithoutProductInput
     product_variants?: product_variantsUncheckedCreateNestedManyWithoutProductInput
-<<<<<<< HEAD
-    stock_reservations?: stock_reservationsUncheckedCreateNestedManyWithoutProductsInput
-=======
-    cart_reservations?: cart_reservationsUncheckedCreateNestedManyWithoutProductsInput
     product_stock_alerts?: product_stock_alertsUncheckedCreateNestedManyWithoutProductsInput
->>>>>>> 8a7b2acf9bf5e0bc0fe32c6a0d8aa6e2a9f871a8
   }
 
   export type productsCreateOrConnectWithoutCart_itemsInput = {
@@ -142420,12 +138101,7 @@ export namespace Prisma {
     product_variants?: product_variantsUpdateManyWithoutProductNestedInput
     businesses?: businessesUpdateOneRequiredWithoutProductsNestedInput
     product_categories?: product_categoriesUpdateOneWithoutProductsNestedInput
-<<<<<<< HEAD
-    stock_reservations?: stock_reservationsUpdateManyWithoutProductsNestedInput
-=======
-    cart_reservations?: cart_reservationsUpdateManyWithoutProductsNestedInput
     product_stock_alerts?: product_stock_alertsUpdateManyWithoutProductsNestedInput
->>>>>>> 8a7b2acf9bf5e0bc0fe32c6a0d8aa6e2a9f871a8
   }
 
   export type productsUncheckedUpdateWithoutCart_itemsInput = {
@@ -142474,12 +138150,7 @@ export namespace Prisma {
     product_images?: product_imagesUncheckedUpdateManyWithoutProductsNestedInput
     product_reviews?: product_reviewsUncheckedUpdateManyWithoutProductNestedInput
     product_variants?: product_variantsUncheckedUpdateManyWithoutProductNestedInput
-<<<<<<< HEAD
-    stock_reservations?: stock_reservationsUncheckedUpdateManyWithoutProductsNestedInput
-=======
-    cart_reservations?: cart_reservationsUncheckedUpdateManyWithoutProductsNestedInput
     product_stock_alerts?: product_stock_alertsUncheckedUpdateManyWithoutProductsNestedInput
->>>>>>> 8a7b2acf9bf5e0bc0fe32c6a0d8aa6e2a9f871a8
   }
 
   export type product_variantsUpsertWithoutCart_itemsInput = {
@@ -142569,18 +138240,9 @@ export namespace Prisma {
     business_id?: string
     business_name: string
     business_type?: string | null
-    email?: string | null
-    phone?: string | null
-    website?: string | null
-    city?: string | null
-    address?: string | null
-    country?: string | null
-    gst_number?: string | null
-    pan_number?: string | null
     whatsapp_number?: string | null
     created_at?: Date | string | null
     updated_at?: Date | string | null
-<<<<<<< HEAD
     email?: string | null
     phone?: string | null
     website?: string | null
@@ -142589,8 +138251,6 @@ export namespace Prisma {
     country?: string | null
     gst_number?: string | null
     pan_number?: string | null
-=======
->>>>>>> 8a7b2acf9bf5e0bc0fe32c6a0d8aa6e2a9f871a8
     business_employees?: business_employeesCreateNestedManyWithoutBusinessesInput
     business_workflows?: business_workflowsCreateNestedManyWithoutBusinessesInput
     tenants: tenantsCreateNestedOneWithoutBusinessesInput
@@ -142617,7 +138277,6 @@ export namespace Prisma {
     tenant_id: string
     business_name: string
     business_type?: string | null
-<<<<<<< HEAD
     whatsapp_number?: string | null
     created_at?: Date | string | null
     updated_at?: Date | string | null
@@ -142629,19 +138288,6 @@ export namespace Prisma {
     country?: string | null
     gst_number?: string | null
     pan_number?: string | null
-=======
-    email?: string | null
-    phone?: string | null
-    website?: string | null
-    city?: string | null
-    address?: string | null
-    country?: string | null
-    gst_number?: string | null
-    pan_number?: string | null
-    whatsapp_number?: string | null
-    created_at?: Date | string | null
-    updated_at?: Date | string | null
->>>>>>> 8a7b2acf9bf5e0bc0fe32c6a0d8aa6e2a9f871a8
     business_employees?: business_employeesUncheckedCreateNestedManyWithoutBusinessesInput
     business_workflows?: business_workflowsUncheckedCreateNestedManyWithoutBusinessesInput
     leads?: leadsUncheckedCreateNestedManyWithoutBusinessesInput
@@ -142886,8 +138532,8 @@ export namespace Prisma {
     gst_number?: string | null
     pan_number?: string | null
     registration_no?: string | null
-    businesses?: businessesCreateNestedManyWithoutTenantsInput
     business_workflows?: business_workflowsCreateNestedManyWithoutTenantsInput
+    businesses?: businessesCreateNestedManyWithoutTenantsInput
     leads?: leadsCreateNestedManyWithoutTenantsInput
     notification_messages?: notification_messagesCreateNestedManyWithoutTenantsInput
     notification_templates?: notification_templatesCreateNestedManyWithoutTenantsInput
@@ -142905,8 +138551,8 @@ export namespace Prisma {
     gst_number?: string | null
     pan_number?: string | null
     registration_no?: string | null
-    businesses?: businessesUncheckedCreateNestedManyWithoutTenantsInput
     business_workflows?: business_workflowsUncheckedCreateNestedManyWithoutTenantsInput
+    businesses?: businessesUncheckedCreateNestedManyWithoutTenantsInput
     leads?: leadsUncheckedCreateNestedManyWithoutTenantsInput
     notification_messages?: notification_messagesUncheckedCreateNestedManyWithoutTenantsInput
     notification_templates?: notification_templatesUncheckedCreateNestedManyWithoutTenantsInput
@@ -142949,18 +138595,9 @@ export namespace Prisma {
     business_id?: StringFieldUpdateOperationsInput | string
     business_name?: StringFieldUpdateOperationsInput | string
     business_type?: NullableStringFieldUpdateOperationsInput | string | null
-    email?: NullableStringFieldUpdateOperationsInput | string | null
-    phone?: NullableStringFieldUpdateOperationsInput | string | null
-    website?: NullableStringFieldUpdateOperationsInput | string | null
-    city?: NullableStringFieldUpdateOperationsInput | string | null
-    address?: NullableStringFieldUpdateOperationsInput | string | null
-    country?: NullableStringFieldUpdateOperationsInput | string | null
-    gst_number?: NullableStringFieldUpdateOperationsInput | string | null
-    pan_number?: NullableStringFieldUpdateOperationsInput | string | null
     whatsapp_number?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-<<<<<<< HEAD
     email?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     website?: NullableStringFieldUpdateOperationsInput | string | null
@@ -142969,8 +138606,6 @@ export namespace Prisma {
     country?: NullableStringFieldUpdateOperationsInput | string | null
     gst_number?: NullableStringFieldUpdateOperationsInput | string | null
     pan_number?: NullableStringFieldUpdateOperationsInput | string | null
-=======
->>>>>>> 8a7b2acf9bf5e0bc0fe32c6a0d8aa6e2a9f871a8
     business_employees?: business_employeesUpdateManyWithoutBusinessesNestedInput
     business_workflows?: business_workflowsUpdateManyWithoutBusinessesNestedInput
     tenants?: tenantsUpdateOneRequiredWithoutBusinessesNestedInput
@@ -142997,7 +138632,6 @@ export namespace Prisma {
     tenant_id?: StringFieldUpdateOperationsInput | string
     business_name?: StringFieldUpdateOperationsInput | string
     business_type?: NullableStringFieldUpdateOperationsInput | string | null
-<<<<<<< HEAD
     whatsapp_number?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -143009,19 +138643,6 @@ export namespace Prisma {
     country?: NullableStringFieldUpdateOperationsInput | string | null
     gst_number?: NullableStringFieldUpdateOperationsInput | string | null
     pan_number?: NullableStringFieldUpdateOperationsInput | string | null
-=======
-    email?: NullableStringFieldUpdateOperationsInput | string | null
-    phone?: NullableStringFieldUpdateOperationsInput | string | null
-    website?: NullableStringFieldUpdateOperationsInput | string | null
-    city?: NullableStringFieldUpdateOperationsInput | string | null
-    address?: NullableStringFieldUpdateOperationsInput | string | null
-    country?: NullableStringFieldUpdateOperationsInput | string | null
-    gst_number?: NullableStringFieldUpdateOperationsInput | string | null
-    pan_number?: NullableStringFieldUpdateOperationsInput | string | null
-    whatsapp_number?: NullableStringFieldUpdateOperationsInput | string | null
-    created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
->>>>>>> 8a7b2acf9bf5e0bc0fe32c6a0d8aa6e2a9f871a8
     business_employees?: business_employeesUncheckedUpdateManyWithoutBusinessesNestedInput
     business_workflows?: business_workflowsUncheckedUpdateManyWithoutBusinessesNestedInput
     leads?: leadsUncheckedUpdateManyWithoutBusinessesNestedInput
@@ -143284,8 +138905,8 @@ export namespace Prisma {
     gst_number?: NullableStringFieldUpdateOperationsInput | string | null
     pan_number?: NullableStringFieldUpdateOperationsInput | string | null
     registration_no?: NullableStringFieldUpdateOperationsInput | string | null
-    businesses?: businessesUpdateManyWithoutTenantsNestedInput
     business_workflows?: business_workflowsUpdateManyWithoutTenantsNestedInput
+    businesses?: businessesUpdateManyWithoutTenantsNestedInput
     leads?: leadsUpdateManyWithoutTenantsNestedInput
     notification_messages?: notification_messagesUpdateManyWithoutTenantsNestedInput
     notification_templates?: notification_templatesUpdateManyWithoutTenantsNestedInput
@@ -143303,18 +138924,182 @@ export namespace Prisma {
     gst_number?: NullableStringFieldUpdateOperationsInput | string | null
     pan_number?: NullableStringFieldUpdateOperationsInput | string | null
     registration_no?: NullableStringFieldUpdateOperationsInput | string | null
-    businesses?: businessesUncheckedUpdateManyWithoutTenantsNestedInput
     business_workflows?: business_workflowsUncheckedUpdateManyWithoutTenantsNestedInput
+    businesses?: businessesUncheckedUpdateManyWithoutTenantsNestedInput
     leads?: leadsUncheckedUpdateManyWithoutTenantsNestedInput
     notification_messages?: notification_messagesUncheckedUpdateManyWithoutTenantsNestedInput
     notification_templates?: notification_templatesUncheckedUpdateManyWithoutTenantsNestedInput
     product_categories?: product_categoriesUncheckedUpdateManyWithoutTenantsNestedInput
   }
 
+  export type hotel_booking_outcomesCreateWithoutRecommendationInput = {
+    id?: string
+    hotel_id: string
+    org_id: string
+    actual_price_used: number
+    rooms_booked: number
+    total_rooms: number
+    actual_occupancy: number
+    revenue: number
+    checkin_date: Date | string
+    recorded_at?: Date | string
+  }
+
+  export type hotel_booking_outcomesUncheckedCreateWithoutRecommendationInput = {
+    id?: string
+    hotel_id: string
+    org_id: string
+    actual_price_used: number
+    rooms_booked: number
+    total_rooms: number
+    actual_occupancy: number
+    revenue: number
+    checkin_date: Date | string
+    recorded_at?: Date | string
+  }
+
+  export type hotel_booking_outcomesCreateOrConnectWithoutRecommendationInput = {
+    where: hotel_booking_outcomesWhereUniqueInput
+    create: XOR<hotel_booking_outcomesCreateWithoutRecommendationInput, hotel_booking_outcomesUncheckedCreateWithoutRecommendationInput>
+  }
+
+  export type hotel_booking_outcomesCreateManyRecommendationInputEnvelope = {
+    data: hotel_booking_outcomesCreateManyRecommendationInput | hotel_booking_outcomesCreateManyRecommendationInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type hotel_booking_outcomesUpsertWithWhereUniqueWithoutRecommendationInput = {
+    where: hotel_booking_outcomesWhereUniqueInput
+    update: XOR<hotel_booking_outcomesUpdateWithoutRecommendationInput, hotel_booking_outcomesUncheckedUpdateWithoutRecommendationInput>
+    create: XOR<hotel_booking_outcomesCreateWithoutRecommendationInput, hotel_booking_outcomesUncheckedCreateWithoutRecommendationInput>
+  }
+
+  export type hotel_booking_outcomesUpdateWithWhereUniqueWithoutRecommendationInput = {
+    where: hotel_booking_outcomesWhereUniqueInput
+    data: XOR<hotel_booking_outcomesUpdateWithoutRecommendationInput, hotel_booking_outcomesUncheckedUpdateWithoutRecommendationInput>
+  }
+
+  export type hotel_booking_outcomesUpdateManyWithWhereWithoutRecommendationInput = {
+    where: hotel_booking_outcomesScalarWhereInput
+    data: XOR<hotel_booking_outcomesUpdateManyMutationInput, hotel_booking_outcomesUncheckedUpdateManyWithoutRecommendationInput>
+  }
+
+  export type hotel_booking_outcomesScalarWhereInput = {
+    AND?: hotel_booking_outcomesScalarWhereInput | hotel_booking_outcomesScalarWhereInput[]
+    OR?: hotel_booking_outcomesScalarWhereInput[]
+    NOT?: hotel_booking_outcomesScalarWhereInput | hotel_booking_outcomesScalarWhereInput[]
+    id?: UuidFilter<"hotel_booking_outcomes"> | string
+    recommendation_id?: UuidFilter<"hotel_booking_outcomes"> | string
+    hotel_id?: StringFilter<"hotel_booking_outcomes"> | string
+    org_id?: StringFilter<"hotel_booking_outcomes"> | string
+    actual_price_used?: IntFilter<"hotel_booking_outcomes"> | number
+    rooms_booked?: IntFilter<"hotel_booking_outcomes"> | number
+    total_rooms?: IntFilter<"hotel_booking_outcomes"> | number
+    actual_occupancy?: FloatFilter<"hotel_booking_outcomes"> | number
+    revenue?: IntFilter<"hotel_booking_outcomes"> | number
+    checkin_date?: DateTimeFilter<"hotel_booking_outcomes"> | Date | string
+    recorded_at?: DateTimeFilter<"hotel_booking_outcomes"> | Date | string
+  }
+
+  export type hotel_pricing_recommendationsCreateWithoutBooking_outcomesInput = {
+    id?: string
+    hotel_id: string
+    org_id: string
+    room_type: string
+    checkin_date: Date | string
+    suggested_price: number
+    demand_score: number
+    confidence: number
+    competitor_avg_price: number
+    current_price: number
+    price_range_low: number
+    price_range_high: number
+    claude_narrative?: string | null
+    xotelo_snapshot?: NullableJsonNullValueInput | InputJsonValue
+    seven_day_forecast?: NullableJsonNullValueInput | InputJsonValue
+    created_at?: Date | string
+  }
+
+  export type hotel_pricing_recommendationsUncheckedCreateWithoutBooking_outcomesInput = {
+    id?: string
+    hotel_id: string
+    org_id: string
+    room_type: string
+    checkin_date: Date | string
+    suggested_price: number
+    demand_score: number
+    confidence: number
+    competitor_avg_price: number
+    current_price: number
+    price_range_low: number
+    price_range_high: number
+    claude_narrative?: string | null
+    xotelo_snapshot?: NullableJsonNullValueInput | InputJsonValue
+    seven_day_forecast?: NullableJsonNullValueInput | InputJsonValue
+    created_at?: Date | string
+  }
+
+  export type hotel_pricing_recommendationsCreateOrConnectWithoutBooking_outcomesInput = {
+    where: hotel_pricing_recommendationsWhereUniqueInput
+    create: XOR<hotel_pricing_recommendationsCreateWithoutBooking_outcomesInput, hotel_pricing_recommendationsUncheckedCreateWithoutBooking_outcomesInput>
+  }
+
+  export type hotel_pricing_recommendationsUpsertWithoutBooking_outcomesInput = {
+    update: XOR<hotel_pricing_recommendationsUpdateWithoutBooking_outcomesInput, hotel_pricing_recommendationsUncheckedUpdateWithoutBooking_outcomesInput>
+    create: XOR<hotel_pricing_recommendationsCreateWithoutBooking_outcomesInput, hotel_pricing_recommendationsUncheckedCreateWithoutBooking_outcomesInput>
+    where?: hotel_pricing_recommendationsWhereInput
+  }
+
+  export type hotel_pricing_recommendationsUpdateToOneWithWhereWithoutBooking_outcomesInput = {
+    where?: hotel_pricing_recommendationsWhereInput
+    data: XOR<hotel_pricing_recommendationsUpdateWithoutBooking_outcomesInput, hotel_pricing_recommendationsUncheckedUpdateWithoutBooking_outcomesInput>
+  }
+
+  export type hotel_pricing_recommendationsUpdateWithoutBooking_outcomesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    hotel_id?: StringFieldUpdateOperationsInput | string
+    org_id?: StringFieldUpdateOperationsInput | string
+    room_type?: StringFieldUpdateOperationsInput | string
+    checkin_date?: DateTimeFieldUpdateOperationsInput | Date | string
+    suggested_price?: IntFieldUpdateOperationsInput | number
+    demand_score?: FloatFieldUpdateOperationsInput | number
+    confidence?: FloatFieldUpdateOperationsInput | number
+    competitor_avg_price?: IntFieldUpdateOperationsInput | number
+    current_price?: IntFieldUpdateOperationsInput | number
+    price_range_low?: IntFieldUpdateOperationsInput | number
+    price_range_high?: IntFieldUpdateOperationsInput | number
+    claude_narrative?: NullableStringFieldUpdateOperationsInput | string | null
+    xotelo_snapshot?: NullableJsonNullValueInput | InputJsonValue
+    seven_day_forecast?: NullableJsonNullValueInput | InputJsonValue
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type hotel_pricing_recommendationsUncheckedUpdateWithoutBooking_outcomesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    hotel_id?: StringFieldUpdateOperationsInput | string
+    org_id?: StringFieldUpdateOperationsInput | string
+    room_type?: StringFieldUpdateOperationsInput | string
+    checkin_date?: DateTimeFieldUpdateOperationsInput | Date | string
+    suggested_price?: IntFieldUpdateOperationsInput | number
+    demand_score?: FloatFieldUpdateOperationsInput | number
+    confidence?: FloatFieldUpdateOperationsInput | number
+    competitor_avg_price?: IntFieldUpdateOperationsInput | number
+    current_price?: IntFieldUpdateOperationsInput | number
+    price_range_low?: IntFieldUpdateOperationsInput | number
+    price_range_high?: IntFieldUpdateOperationsInput | number
+    claude_narrative?: NullableStringFieldUpdateOperationsInput | string | null
+    xotelo_snapshot?: NullableJsonNullValueInput | InputJsonValue
+    seven_day_forecast?: NullableJsonNullValueInput | InputJsonValue
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type businessesCreateWithoutServicesInput = {
     business_id?: string
     business_name: string
     business_type?: string | null
+    whatsapp_number?: string | null
+    created_at?: Date | string | null
+    updated_at?: Date | string | null
     email?: string | null
     phone?: string | null
     website?: string | null
@@ -143323,9 +139108,6 @@ export namespace Prisma {
     country?: string | null
     gst_number?: string | null
     pan_number?: string | null
-    whatsapp_number?: string | null
-    created_at?: Date | string | null
-    updated_at?: Date | string | null
     business_employees?: business_employeesCreateNestedManyWithoutBusinessesInput
     business_workflows?: business_workflowsCreateNestedManyWithoutBusinessesInput
     tenants: tenantsCreateNestedOneWithoutBusinessesInput
@@ -143352,6 +139134,9 @@ export namespace Prisma {
     tenant_id: string
     business_name: string
     business_type?: string | null
+    whatsapp_number?: string | null
+    created_at?: Date | string | null
+    updated_at?: Date | string | null
     email?: string | null
     phone?: string | null
     website?: string | null
@@ -143360,9 +139145,6 @@ export namespace Prisma {
     country?: string | null
     gst_number?: string | null
     pan_number?: string | null
-    whatsapp_number?: string | null
-    created_at?: Date | string | null
-    updated_at?: Date | string | null
     business_employees?: business_employeesUncheckedCreateNestedManyWithoutBusinessesInput
     business_workflows?: business_workflowsUncheckedCreateNestedManyWithoutBusinessesInput
     carts?: cartsUncheckedCreateNestedManyWithoutBusinessesInput
@@ -143439,6 +139221,7 @@ export namespace Prisma {
     special_requests?: string | null
     created_at?: Date | string
     updated_at?: Date | string
+    booking_guests?: booking_guestsCreateNestedOneWithoutService_bookingsInput
   }
 
   export type service_bookingsUncheckedCreateWithoutServicesInput = {
@@ -143456,6 +139239,7 @@ export namespace Prisma {
     special_requests?: string | null
     created_at?: Date | string
     updated_at?: Date | string
+    booking_guests?: booking_guestsUncheckedCreateNestedOneWithoutService_bookingsInput
   }
 
   export type service_bookingsCreateOrConnectWithoutServicesInput = {
@@ -143589,6 +139373,9 @@ export namespace Prisma {
     business_id?: StringFieldUpdateOperationsInput | string
     business_name?: StringFieldUpdateOperationsInput | string
     business_type?: NullableStringFieldUpdateOperationsInput | string | null
+    whatsapp_number?: NullableStringFieldUpdateOperationsInput | string | null
+    created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     email?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     website?: NullableStringFieldUpdateOperationsInput | string | null
@@ -143597,9 +139384,6 @@ export namespace Prisma {
     country?: NullableStringFieldUpdateOperationsInput | string | null
     gst_number?: NullableStringFieldUpdateOperationsInput | string | null
     pan_number?: NullableStringFieldUpdateOperationsInput | string | null
-    whatsapp_number?: NullableStringFieldUpdateOperationsInput | string | null
-    created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     business_employees?: business_employeesUpdateManyWithoutBusinessesNestedInput
     business_workflows?: business_workflowsUpdateManyWithoutBusinessesNestedInput
     tenants?: tenantsUpdateOneRequiredWithoutBusinessesNestedInput
@@ -143626,6 +139410,9 @@ export namespace Prisma {
     tenant_id?: StringFieldUpdateOperationsInput | string
     business_name?: StringFieldUpdateOperationsInput | string
     business_type?: NullableStringFieldUpdateOperationsInput | string | null
+    whatsapp_number?: NullableStringFieldUpdateOperationsInput | string | null
+    created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     email?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     website?: NullableStringFieldUpdateOperationsInput | string | null
@@ -143634,9 +139421,6 @@ export namespace Prisma {
     country?: NullableStringFieldUpdateOperationsInput | string | null
     gst_number?: NullableStringFieldUpdateOperationsInput | string | null
     pan_number?: NullableStringFieldUpdateOperationsInput | string | null
-    whatsapp_number?: NullableStringFieldUpdateOperationsInput | string | null
-    created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     business_employees?: business_employeesUncheckedUpdateManyWithoutBusinessesNestedInput
     business_workflows?: business_workflowsUncheckedUpdateManyWithoutBusinessesNestedInput
     carts?: cartsUncheckedUpdateManyWithoutBusinessesNestedInput
@@ -143966,6 +139750,33 @@ export namespace Prisma {
     create: XOR<servicesCreateWithoutService_bookingsInput, servicesUncheckedCreateWithoutService_bookingsInput>
   }
 
+  export type booking_guestsCreateWithoutService_bookingsInput = {
+    guest_id?: string
+    name: string
+    phone: string
+    age?: number | null
+    num_guests?: number
+    address?: string | null
+    pin_code?: string | null
+    created_at?: Date | string
+  }
+
+  export type booking_guestsUncheckedCreateWithoutService_bookingsInput = {
+    guest_id?: string
+    name: string
+    phone: string
+    age?: number | null
+    num_guests?: number
+    address?: string | null
+    pin_code?: string | null
+    created_at?: Date | string
+  }
+
+  export type booking_guestsCreateOrConnectWithoutService_bookingsInput = {
+    where: booking_guestsWhereUniqueInput
+    create: XOR<booking_guestsCreateWithoutService_bookingsInput, booking_guestsUncheckedCreateWithoutService_bookingsInput>
+  }
+
   export type servicesUpsertWithoutService_bookingsInput = {
     update: XOR<servicesUpdateWithoutService_bookingsInput, servicesUncheckedUpdateWithoutService_bookingsInput>
     create: XOR<servicesCreateWithoutService_bookingsInput, servicesUncheckedCreateWithoutService_bookingsInput>
@@ -144017,10 +139828,134 @@ export namespace Prisma {
     pricing_history?: pricing_historyUncheckedUpdateManyWithoutServicesNestedInput
   }
 
+  export type booking_guestsUpsertWithoutService_bookingsInput = {
+    update: XOR<booking_guestsUpdateWithoutService_bookingsInput, booking_guestsUncheckedUpdateWithoutService_bookingsInput>
+    create: XOR<booking_guestsCreateWithoutService_bookingsInput, booking_guestsUncheckedCreateWithoutService_bookingsInput>
+    where?: booking_guestsWhereInput
+  }
+
+  export type booking_guestsUpdateToOneWithWhereWithoutService_bookingsInput = {
+    where?: booking_guestsWhereInput
+    data: XOR<booking_guestsUpdateWithoutService_bookingsInput, booking_guestsUncheckedUpdateWithoutService_bookingsInput>
+  }
+
+  export type booking_guestsUpdateWithoutService_bookingsInput = {
+    guest_id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    phone?: StringFieldUpdateOperationsInput | string
+    age?: NullableIntFieldUpdateOperationsInput | number | null
+    num_guests?: IntFieldUpdateOperationsInput | number
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    pin_code?: NullableStringFieldUpdateOperationsInput | string | null
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type booking_guestsUncheckedUpdateWithoutService_bookingsInput = {
+    guest_id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    phone?: StringFieldUpdateOperationsInput | string
+    age?: NullableIntFieldUpdateOperationsInput | number | null
+    num_guests?: IntFieldUpdateOperationsInput | number
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    pin_code?: NullableStringFieldUpdateOperationsInput | string | null
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type service_bookingsCreateWithoutBooking_guestsInput = {
+    booking_id?: string
+    business_id: string
+    lead_id?: string | null
+    customer_name: string
+    customer_phone: string
+    check_in_date: Date | string
+    check_out_date: Date | string
+    slots_booked?: number
+    total_price: Decimal | DecimalJsLike | number | string
+    status?: string
+    payment_status?: string
+    special_requests?: string | null
+    created_at?: Date | string
+    updated_at?: Date | string
+    services: servicesCreateNestedOneWithoutService_bookingsInput
+  }
+
+  export type service_bookingsUncheckedCreateWithoutBooking_guestsInput = {
+    booking_id?: string
+    service_id: string
+    business_id: string
+    lead_id?: string | null
+    customer_name: string
+    customer_phone: string
+    check_in_date: Date | string
+    check_out_date: Date | string
+    slots_booked?: number
+    total_price: Decimal | DecimalJsLike | number | string
+    status?: string
+    payment_status?: string
+    special_requests?: string | null
+    created_at?: Date | string
+    updated_at?: Date | string
+  }
+
+  export type service_bookingsCreateOrConnectWithoutBooking_guestsInput = {
+    where: service_bookingsWhereUniqueInput
+    create: XOR<service_bookingsCreateWithoutBooking_guestsInput, service_bookingsUncheckedCreateWithoutBooking_guestsInput>
+  }
+
+  export type service_bookingsUpsertWithoutBooking_guestsInput = {
+    update: XOR<service_bookingsUpdateWithoutBooking_guestsInput, service_bookingsUncheckedUpdateWithoutBooking_guestsInput>
+    create: XOR<service_bookingsCreateWithoutBooking_guestsInput, service_bookingsUncheckedCreateWithoutBooking_guestsInput>
+    where?: service_bookingsWhereInput
+  }
+
+  export type service_bookingsUpdateToOneWithWhereWithoutBooking_guestsInput = {
+    where?: service_bookingsWhereInput
+    data: XOR<service_bookingsUpdateWithoutBooking_guestsInput, service_bookingsUncheckedUpdateWithoutBooking_guestsInput>
+  }
+
+  export type service_bookingsUpdateWithoutBooking_guestsInput = {
+    booking_id?: StringFieldUpdateOperationsInput | string
+    business_id?: StringFieldUpdateOperationsInput | string
+    lead_id?: NullableStringFieldUpdateOperationsInput | string | null
+    customer_name?: StringFieldUpdateOperationsInput | string
+    customer_phone?: StringFieldUpdateOperationsInput | string
+    check_in_date?: DateTimeFieldUpdateOperationsInput | Date | string
+    check_out_date?: DateTimeFieldUpdateOperationsInput | Date | string
+    slots_booked?: IntFieldUpdateOperationsInput | number
+    total_price?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    status?: StringFieldUpdateOperationsInput | string
+    payment_status?: StringFieldUpdateOperationsInput | string
+    special_requests?: NullableStringFieldUpdateOperationsInput | string | null
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    services?: servicesUpdateOneRequiredWithoutService_bookingsNestedInput
+  }
+
+  export type service_bookingsUncheckedUpdateWithoutBooking_guestsInput = {
+    booking_id?: StringFieldUpdateOperationsInput | string
+    service_id?: StringFieldUpdateOperationsInput | string
+    business_id?: StringFieldUpdateOperationsInput | string
+    lead_id?: NullableStringFieldUpdateOperationsInput | string | null
+    customer_name?: StringFieldUpdateOperationsInput | string
+    customer_phone?: StringFieldUpdateOperationsInput | string
+    check_in_date?: DateTimeFieldUpdateOperationsInput | Date | string
+    check_out_date?: DateTimeFieldUpdateOperationsInput | Date | string
+    slots_booked?: IntFieldUpdateOperationsInput | number
+    total_price?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    status?: StringFieldUpdateOperationsInput | string
+    payment_status?: StringFieldUpdateOperationsInput | string
+    special_requests?: NullableStringFieldUpdateOperationsInput | string | null
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type businessesCreateWithoutPricing_rulesInput = {
     business_id?: string
     business_name: string
     business_type?: string | null
+    whatsapp_number?: string | null
+    created_at?: Date | string | null
+    updated_at?: Date | string | null
     email?: string | null
     phone?: string | null
     website?: string | null
@@ -144029,9 +139964,6 @@ export namespace Prisma {
     country?: string | null
     gst_number?: string | null
     pan_number?: string | null
-    whatsapp_number?: string | null
-    created_at?: Date | string | null
-    updated_at?: Date | string | null
     business_employees?: business_employeesCreateNestedManyWithoutBusinessesInput
     business_workflows?: business_workflowsCreateNestedManyWithoutBusinessesInput
     tenants: tenantsCreateNestedOneWithoutBusinessesInput
@@ -144058,6 +139990,9 @@ export namespace Prisma {
     tenant_id: string
     business_name: string
     business_type?: string | null
+    whatsapp_number?: string | null
+    created_at?: Date | string | null
+    updated_at?: Date | string | null
     email?: string | null
     phone?: string | null
     website?: string | null
@@ -144066,9 +140001,6 @@ export namespace Prisma {
     country?: string | null
     gst_number?: string | null
     pan_number?: string | null
-    whatsapp_number?: string | null
-    created_at?: Date | string | null
-    updated_at?: Date | string | null
     business_employees?: business_employeesUncheckedCreateNestedManyWithoutBusinessesInput
     business_workflows?: business_workflowsUncheckedCreateNestedManyWithoutBusinessesInput
     carts?: cartsUncheckedCreateNestedManyWithoutBusinessesInput
@@ -144109,6 +140041,9 @@ export namespace Prisma {
     business_id?: StringFieldUpdateOperationsInput | string
     business_name?: StringFieldUpdateOperationsInput | string
     business_type?: NullableStringFieldUpdateOperationsInput | string | null
+    whatsapp_number?: NullableStringFieldUpdateOperationsInput | string | null
+    created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     email?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     website?: NullableStringFieldUpdateOperationsInput | string | null
@@ -144117,9 +140052,6 @@ export namespace Prisma {
     country?: NullableStringFieldUpdateOperationsInput | string | null
     gst_number?: NullableStringFieldUpdateOperationsInput | string | null
     pan_number?: NullableStringFieldUpdateOperationsInput | string | null
-    whatsapp_number?: NullableStringFieldUpdateOperationsInput | string | null
-    created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     business_employees?: business_employeesUpdateManyWithoutBusinessesNestedInput
     business_workflows?: business_workflowsUpdateManyWithoutBusinessesNestedInput
     tenants?: tenantsUpdateOneRequiredWithoutBusinessesNestedInput
@@ -144146,6 +140078,9 @@ export namespace Prisma {
     tenant_id?: StringFieldUpdateOperationsInput | string
     business_name?: StringFieldUpdateOperationsInput | string
     business_type?: NullableStringFieldUpdateOperationsInput | string | null
+    whatsapp_number?: NullableStringFieldUpdateOperationsInput | string | null
+    created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     email?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     website?: NullableStringFieldUpdateOperationsInput | string | null
@@ -144154,9 +140089,6 @@ export namespace Prisma {
     country?: NullableStringFieldUpdateOperationsInput | string | null
     gst_number?: NullableStringFieldUpdateOperationsInput | string | null
     pan_number?: NullableStringFieldUpdateOperationsInput | string | null
-    whatsapp_number?: NullableStringFieldUpdateOperationsInput | string | null
-    created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     business_employees?: business_employeesUncheckedUpdateManyWithoutBusinessesNestedInput
     business_workflows?: business_workflowsUncheckedUpdateManyWithoutBusinessesNestedInput
     carts?: cartsUncheckedUpdateManyWithoutBusinessesNestedInput
@@ -144373,6 +140305,9 @@ export namespace Prisma {
     business_id?: string
     business_name: string
     business_type?: string | null
+    whatsapp_number?: string | null
+    created_at?: Date | string | null
+    updated_at?: Date | string | null
     email?: string | null
     phone?: string | null
     website?: string | null
@@ -144381,9 +140316,6 @@ export namespace Prisma {
     country?: string | null
     gst_number?: string | null
     pan_number?: string | null
-    whatsapp_number?: string | null
-    created_at?: Date | string | null
-    updated_at?: Date | string | null
     business_employees?: business_employeesCreateNestedManyWithoutBusinessesInput
     business_workflows?: business_workflowsCreateNestedManyWithoutBusinessesInput
     tenants: tenantsCreateNestedOneWithoutBusinessesInput
@@ -144410,6 +140342,9 @@ export namespace Prisma {
     tenant_id: string
     business_name: string
     business_type?: string | null
+    whatsapp_number?: string | null
+    created_at?: Date | string | null
+    updated_at?: Date | string | null
     email?: string | null
     phone?: string | null
     website?: string | null
@@ -144418,9 +140353,6 @@ export namespace Prisma {
     country?: string | null
     gst_number?: string | null
     pan_number?: string | null
-    whatsapp_number?: string | null
-    created_at?: Date | string | null
-    updated_at?: Date | string | null
     business_employees?: business_employeesUncheckedCreateNestedManyWithoutBusinessesInput
     business_workflows?: business_workflowsUncheckedCreateNestedManyWithoutBusinessesInput
     carts?: cartsUncheckedCreateNestedManyWithoutBusinessesInput
@@ -144485,6 +140417,7 @@ export namespace Prisma {
     instagram_retailer_id?: string | null
     campaigns?: campaignsCreateNestedManyWithoutProductsInput
     cart_items?: cart_itemsCreateNestedManyWithoutProductsInput
+    cart_reservations?: cart_reservationsCreateNestedManyWithoutProductsInput
     course_batches?: course_batchesCreateNestedManyWithoutCourseInput
     order_items?: order_itemsCreateNestedManyWithoutProductsInput
     product_images?: product_imagesCreateNestedManyWithoutProductsInput
@@ -144492,7 +140425,6 @@ export namespace Prisma {
     product_variants?: product_variantsCreateNestedManyWithoutProductInput
     businesses: businessesCreateNestedOneWithoutProductsInput
     product_categories?: product_categoriesCreateNestedOneWithoutProductsInput
-    cart_reservations?: cart_reservationsCreateNestedManyWithoutProductsInput
   }
 
   export type productsUncheckedCreateWithoutProduct_stock_alertsInput = {
@@ -144536,12 +140468,12 @@ export namespace Prisma {
     instagram_retailer_id?: string | null
     campaigns?: campaignsUncheckedCreateNestedManyWithoutProductsInput
     cart_items?: cart_itemsUncheckedCreateNestedManyWithoutProductsInput
+    cart_reservations?: cart_reservationsUncheckedCreateNestedManyWithoutProductsInput
     course_batches?: course_batchesUncheckedCreateNestedManyWithoutCourseInput
     order_items?: order_itemsUncheckedCreateNestedManyWithoutProductsInput
     product_images?: product_imagesUncheckedCreateNestedManyWithoutProductsInput
     product_reviews?: product_reviewsUncheckedCreateNestedManyWithoutProductInput
     product_variants?: product_variantsUncheckedCreateNestedManyWithoutProductInput
-    cart_reservations?: cart_reservationsUncheckedCreateNestedManyWithoutProductsInput
   }
 
   export type productsCreateOrConnectWithoutProduct_stock_alertsInput = {
@@ -144603,6 +140535,9 @@ export namespace Prisma {
     business_id?: StringFieldUpdateOperationsInput | string
     business_name?: StringFieldUpdateOperationsInput | string
     business_type?: NullableStringFieldUpdateOperationsInput | string | null
+    whatsapp_number?: NullableStringFieldUpdateOperationsInput | string | null
+    created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     email?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     website?: NullableStringFieldUpdateOperationsInput | string | null
@@ -144611,9 +140546,6 @@ export namespace Prisma {
     country?: NullableStringFieldUpdateOperationsInput | string | null
     gst_number?: NullableStringFieldUpdateOperationsInput | string | null
     pan_number?: NullableStringFieldUpdateOperationsInput | string | null
-    whatsapp_number?: NullableStringFieldUpdateOperationsInput | string | null
-    created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     business_employees?: business_employeesUpdateManyWithoutBusinessesNestedInput
     business_workflows?: business_workflowsUpdateManyWithoutBusinessesNestedInput
     tenants?: tenantsUpdateOneRequiredWithoutBusinessesNestedInput
@@ -144640,6 +140572,9 @@ export namespace Prisma {
     tenant_id?: StringFieldUpdateOperationsInput | string
     business_name?: StringFieldUpdateOperationsInput | string
     business_type?: NullableStringFieldUpdateOperationsInput | string | null
+    whatsapp_number?: NullableStringFieldUpdateOperationsInput | string | null
+    created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     email?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     website?: NullableStringFieldUpdateOperationsInput | string | null
@@ -144648,9 +140583,6 @@ export namespace Prisma {
     country?: NullableStringFieldUpdateOperationsInput | string | null
     gst_number?: NullableStringFieldUpdateOperationsInput | string | null
     pan_number?: NullableStringFieldUpdateOperationsInput | string | null
-    whatsapp_number?: NullableStringFieldUpdateOperationsInput | string | null
-    created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     business_employees?: business_employeesUncheckedUpdateManyWithoutBusinessesNestedInput
     business_workflows?: business_workflowsUncheckedUpdateManyWithoutBusinessesNestedInput
     carts?: cartsUncheckedUpdateManyWithoutBusinessesNestedInput
@@ -144721,6 +140653,7 @@ export namespace Prisma {
     instagram_retailer_id?: NullableStringFieldUpdateOperationsInput | string | null
     campaigns?: campaignsUpdateManyWithoutProductsNestedInput
     cart_items?: cart_itemsUpdateManyWithoutProductsNestedInput
+    cart_reservations?: cart_reservationsUpdateManyWithoutProductsNestedInput
     course_batches?: course_batchesUpdateManyWithoutCourseNestedInput
     order_items?: order_itemsUpdateManyWithoutProductsNestedInput
     product_images?: product_imagesUpdateManyWithoutProductsNestedInput
@@ -144728,7 +140661,6 @@ export namespace Prisma {
     product_variants?: product_variantsUpdateManyWithoutProductNestedInput
     businesses?: businessesUpdateOneRequiredWithoutProductsNestedInput
     product_categories?: product_categoriesUpdateOneWithoutProductsNestedInput
-    cart_reservations?: cart_reservationsUpdateManyWithoutProductsNestedInput
   }
 
   export type productsUncheckedUpdateWithoutProduct_stock_alertsInput = {
@@ -144772,12 +140704,12 @@ export namespace Prisma {
     instagram_retailer_id?: NullableStringFieldUpdateOperationsInput | string | null
     campaigns?: campaignsUncheckedUpdateManyWithoutProductsNestedInput
     cart_items?: cart_itemsUncheckedUpdateManyWithoutProductsNestedInput
+    cart_reservations?: cart_reservationsUncheckedUpdateManyWithoutProductsNestedInput
     course_batches?: course_batchesUncheckedUpdateManyWithoutCourseNestedInput
     order_items?: order_itemsUncheckedUpdateManyWithoutProductsNestedInput
     product_images?: product_imagesUncheckedUpdateManyWithoutProductsNestedInput
     product_reviews?: product_reviewsUncheckedUpdateManyWithoutProductNestedInput
     product_variants?: product_variantsUncheckedUpdateManyWithoutProductNestedInput
-    cart_reservations?: cart_reservationsUncheckedUpdateManyWithoutProductsNestedInput
   }
 
   export type product_variantsUpsertWithoutProduct_stock_alertsInput = {
@@ -144919,176 +140851,6 @@ export namespace Prisma {
     service_bookings?: service_bookingsUncheckedUpdateManyWithoutServicesNestedInput
     pricing_suggestions?: pricing_suggestionsUncheckedUpdateManyWithoutServicesNestedInput
     pricing_history?: pricing_historyUncheckedUpdateManyWithoutServicesNestedInput
-  }
-
-  export type business_employeesCreateManyBusinessesInput = {
-    employee_id?: string
-    name: string
-    email?: string | null
-    phone?: string | null
-    role?: string | null
-    created_at?: Date | string | null
-  }
-
-  export type hotel_booking_outcomesCreateWithoutRecommendationInput = {
-    id?: string
-    hotel_id: string
-    org_id: string
-    actual_price_used: number
-    rooms_booked: number
-    total_rooms: number
-    actual_occupancy: number
-    revenue: number
-    checkin_date: Date | string
-    recorded_at?: Date | string
-  }
-
-  export type hotel_booking_outcomesUncheckedCreateWithoutRecommendationInput = {
-    id?: string
-    hotel_id: string
-    org_id: string
-    actual_price_used: number
-    rooms_booked: number
-    total_rooms: number
-    actual_occupancy: number
-    revenue: number
-    checkin_date: Date | string
-    recorded_at?: Date | string
-  }
-
-  export type hotel_booking_outcomesCreateOrConnectWithoutRecommendationInput = {
-    where: hotel_booking_outcomesWhereUniqueInput
-    create: XOR<hotel_booking_outcomesCreateWithoutRecommendationInput, hotel_booking_outcomesUncheckedCreateWithoutRecommendationInput>
-  }
-
-  export type hotel_booking_outcomesCreateManyRecommendationInputEnvelope = {
-    data: hotel_booking_outcomesCreateManyRecommendationInput | hotel_booking_outcomesCreateManyRecommendationInput[]
-    skipDuplicates?: boolean
-  }
-
-  export type hotel_booking_outcomesUpsertWithWhereUniqueWithoutRecommendationInput = {
-    where: hotel_booking_outcomesWhereUniqueInput
-    update: XOR<hotel_booking_outcomesUpdateWithoutRecommendationInput, hotel_booking_outcomesUncheckedUpdateWithoutRecommendationInput>
-    create: XOR<hotel_booking_outcomesCreateWithoutRecommendationInput, hotel_booking_outcomesUncheckedCreateWithoutRecommendationInput>
-  }
-
-  export type hotel_booking_outcomesUpdateWithWhereUniqueWithoutRecommendationInput = {
-    where: hotel_booking_outcomesWhereUniqueInput
-    data: XOR<hotel_booking_outcomesUpdateWithoutRecommendationInput, hotel_booking_outcomesUncheckedUpdateWithoutRecommendationInput>
-  }
-
-  export type hotel_booking_outcomesUpdateManyWithWhereWithoutRecommendationInput = {
-    where: hotel_booking_outcomesScalarWhereInput
-    data: XOR<hotel_booking_outcomesUpdateManyMutationInput, hotel_booking_outcomesUncheckedUpdateManyWithoutRecommendationInput>
-  }
-
-  export type hotel_booking_outcomesScalarWhereInput = {
-    AND?: hotel_booking_outcomesScalarWhereInput | hotel_booking_outcomesScalarWhereInput[]
-    OR?: hotel_booking_outcomesScalarWhereInput[]
-    NOT?: hotel_booking_outcomesScalarWhereInput | hotel_booking_outcomesScalarWhereInput[]
-    id?: UuidFilter<"hotel_booking_outcomes"> | string
-    recommendation_id?: UuidFilter<"hotel_booking_outcomes"> | string
-    hotel_id?: StringFilter<"hotel_booking_outcomes"> | string
-    org_id?: StringFilter<"hotel_booking_outcomes"> | string
-    actual_price_used?: IntFilter<"hotel_booking_outcomes"> | number
-    rooms_booked?: IntFilter<"hotel_booking_outcomes"> | number
-    total_rooms?: IntFilter<"hotel_booking_outcomes"> | number
-    actual_occupancy?: FloatFilter<"hotel_booking_outcomes"> | number
-    revenue?: IntFilter<"hotel_booking_outcomes"> | number
-    checkin_date?: DateTimeFilter<"hotel_booking_outcomes"> | Date | string
-    recorded_at?: DateTimeFilter<"hotel_booking_outcomes"> | Date | string
-  }
-
-  export type hotel_pricing_recommendationsCreateWithoutBooking_outcomesInput = {
-    id?: string
-    hotel_id: string
-    org_id: string
-    room_type: string
-    checkin_date: Date | string
-    suggested_price: number
-    demand_score: number
-    confidence: number
-    competitor_avg_price: number
-    current_price: number
-    price_range_low: number
-    price_range_high: number
-    claude_narrative?: string | null
-    xotelo_snapshot?: NullableJsonNullValueInput | InputJsonValue
-    seven_day_forecast?: NullableJsonNullValueInput | InputJsonValue
-    created_at?: Date | string
-  }
-
-  export type hotel_pricing_recommendationsUncheckedCreateWithoutBooking_outcomesInput = {
-    id?: string
-    hotel_id: string
-    org_id: string
-    room_type: string
-    checkin_date: Date | string
-    suggested_price: number
-    demand_score: number
-    confidence: number
-    competitor_avg_price: number
-    current_price: number
-    price_range_low: number
-    price_range_high: number
-    claude_narrative?: string | null
-    xotelo_snapshot?: NullableJsonNullValueInput | InputJsonValue
-    seven_day_forecast?: NullableJsonNullValueInput | InputJsonValue
-    created_at?: Date | string
-  }
-
-  export type hotel_pricing_recommendationsCreateOrConnectWithoutBooking_outcomesInput = {
-    where: hotel_pricing_recommendationsWhereUniqueInput
-    create: XOR<hotel_pricing_recommendationsCreateWithoutBooking_outcomesInput, hotel_pricing_recommendationsUncheckedCreateWithoutBooking_outcomesInput>
-  }
-
-  export type hotel_pricing_recommendationsUpsertWithoutBooking_outcomesInput = {
-    update: XOR<hotel_pricing_recommendationsUpdateWithoutBooking_outcomesInput, hotel_pricing_recommendationsUncheckedUpdateWithoutBooking_outcomesInput>
-    create: XOR<hotel_pricing_recommendationsCreateWithoutBooking_outcomesInput, hotel_pricing_recommendationsUncheckedCreateWithoutBooking_outcomesInput>
-    where?: hotel_pricing_recommendationsWhereInput
-  }
-
-  export type hotel_pricing_recommendationsUpdateToOneWithWhereWithoutBooking_outcomesInput = {
-    where?: hotel_pricing_recommendationsWhereInput
-    data: XOR<hotel_pricing_recommendationsUpdateWithoutBooking_outcomesInput, hotel_pricing_recommendationsUncheckedUpdateWithoutBooking_outcomesInput>
-  }
-
-  export type hotel_pricing_recommendationsUpdateWithoutBooking_outcomesInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    hotel_id?: StringFieldUpdateOperationsInput | string
-    org_id?: StringFieldUpdateOperationsInput | string
-    room_type?: StringFieldUpdateOperationsInput | string
-    checkin_date?: DateTimeFieldUpdateOperationsInput | Date | string
-    suggested_price?: IntFieldUpdateOperationsInput | number
-    demand_score?: FloatFieldUpdateOperationsInput | number
-    confidence?: FloatFieldUpdateOperationsInput | number
-    competitor_avg_price?: IntFieldUpdateOperationsInput | number
-    current_price?: IntFieldUpdateOperationsInput | number
-    price_range_low?: IntFieldUpdateOperationsInput | number
-    price_range_high?: IntFieldUpdateOperationsInput | number
-    claude_narrative?: NullableStringFieldUpdateOperationsInput | string | null
-    xotelo_snapshot?: NullableJsonNullValueInput | InputJsonValue
-    seven_day_forecast?: NullableJsonNullValueInput | InputJsonValue
-    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type hotel_pricing_recommendationsUncheckedUpdateWithoutBooking_outcomesInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    hotel_id?: StringFieldUpdateOperationsInput | string
-    org_id?: StringFieldUpdateOperationsInput | string
-    room_type?: StringFieldUpdateOperationsInput | string
-    checkin_date?: DateTimeFieldUpdateOperationsInput | Date | string
-    suggested_price?: IntFieldUpdateOperationsInput | number
-    demand_score?: FloatFieldUpdateOperationsInput | number
-    confidence?: FloatFieldUpdateOperationsInput | number
-    competitor_avg_price?: IntFieldUpdateOperationsInput | number
-    current_price?: IntFieldUpdateOperationsInput | number
-    price_range_low?: IntFieldUpdateOperationsInput | number
-    price_range_high?: IntFieldUpdateOperationsInput | number
-    claude_narrative?: NullableStringFieldUpdateOperationsInput | string | null
-    xotelo_snapshot?: NullableJsonNullValueInput | InputJsonValue
-    seven_day_forecast?: NullableJsonNullValueInput | InputJsonValue
-    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type business_employeesCreateManyBusinessesInput = {
@@ -145455,8 +141217,6 @@ export namespace Prisma {
     chat_id?: string | null
   }
 
-<<<<<<< HEAD
-=======
   export type servicesCreateManyBusinessesInput = {
     service_id?: string
     tenant_id: string
@@ -145500,7 +141260,6 @@ export namespace Prisma {
     updated_at?: Date | string
   }
 
->>>>>>> 8a7b2acf9bf5e0bc0fe32c6a0d8aa6e2a9f871a8
   export type business_employeesUpdateWithoutBusinessesInput = {
     employee_id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
@@ -146343,12 +142102,7 @@ export namespace Prisma {
     product_reviews?: product_reviewsUpdateManyWithoutProductNestedInput
     product_variants?: product_variantsUpdateManyWithoutProductNestedInput
     product_categories?: product_categoriesUpdateOneWithoutProductsNestedInput
-<<<<<<< HEAD
-    stock_reservations?: stock_reservationsUpdateManyWithoutProductsNestedInput
-=======
-    cart_reservations?: cart_reservationsUpdateManyWithoutProductsNestedInput
     product_stock_alerts?: product_stock_alertsUpdateManyWithoutProductsNestedInput
->>>>>>> 8a7b2acf9bf5e0bc0fe32c6a0d8aa6e2a9f871a8
   }
 
   export type productsUncheckedUpdateWithoutBusinessesInput = {
@@ -146397,12 +142151,7 @@ export namespace Prisma {
     product_images?: product_imagesUncheckedUpdateManyWithoutProductsNestedInput
     product_reviews?: product_reviewsUncheckedUpdateManyWithoutProductNestedInput
     product_variants?: product_variantsUncheckedUpdateManyWithoutProductNestedInput
-<<<<<<< HEAD
-    stock_reservations?: stock_reservationsUncheckedUpdateManyWithoutProductsNestedInput
-=======
-    cart_reservations?: cart_reservationsUncheckedUpdateManyWithoutProductsNestedInput
     product_stock_alerts?: product_stock_alertsUncheckedUpdateManyWithoutProductsNestedInput
->>>>>>> 8a7b2acf9bf5e0bc0fe32c6a0d8aa6e2a9f871a8
   }
 
   export type productsUncheckedUpdateManyWithoutBusinessesInput = {
@@ -147062,26 +142811,6 @@ export namespace Prisma {
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
-<<<<<<< HEAD
-=======
-  export type businessesCreateManyTenantsInput = {
-    business_id?: string
-    business_name: string
-    business_type?: string | null
-    email?: string | null
-    phone?: string | null
-    website?: string | null
-    city?: string | null
-    address?: string | null
-    country?: string | null
-    gst_number?: string | null
-    pan_number?: string | null
-    whatsapp_number?: string | null
-    created_at?: Date | string | null
-    updated_at?: Date | string | null
-  }
-
->>>>>>> 8a7b2acf9bf5e0bc0fe32c6a0d8aa6e2a9f871a8
   export type business_workflowsCreateManyTenantsInput = {
     id?: string
     business_id: string
@@ -147092,7 +142821,6 @@ export namespace Prisma {
     updated_at?: Date | string
   }
 
-<<<<<<< HEAD
   export type businessesCreateManyTenantsInput = {
     business_id?: string
     business_name: string
@@ -147110,8 +142838,6 @@ export namespace Prisma {
     pan_number?: string | null
   }
 
-=======
->>>>>>> 8a7b2acf9bf5e0bc0fe32c6a0d8aa6e2a9f871a8
   export type cartsCreateManyTenantsInput = {
     cart_id?: string
     business_id: string
@@ -147265,95 +142991,6 @@ export namespace Prisma {
     created_by?: string | null
   }
 
-  export type businessesUpdateWithoutTenantsInput = {
-    business_id?: StringFieldUpdateOperationsInput | string
-    business_name?: StringFieldUpdateOperationsInput | string
-    business_type?: NullableStringFieldUpdateOperationsInput | string | null
-    email?: NullableStringFieldUpdateOperationsInput | string | null
-    phone?: NullableStringFieldUpdateOperationsInput | string | null
-    website?: NullableStringFieldUpdateOperationsInput | string | null
-    city?: NullableStringFieldUpdateOperationsInput | string | null
-    address?: NullableStringFieldUpdateOperationsInput | string | null
-    country?: NullableStringFieldUpdateOperationsInput | string | null
-    gst_number?: NullableStringFieldUpdateOperationsInput | string | null
-    pan_number?: NullableStringFieldUpdateOperationsInput | string | null
-    whatsapp_number?: NullableStringFieldUpdateOperationsInput | string | null
-    created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    business_employees?: business_employeesUpdateManyWithoutBusinessesNestedInput
-    business_workflows?: business_workflowsUpdateManyWithoutBusinessesNestedInput
-    carts?: cartsUpdateManyWithoutBusinessesNestedInput
-    leads?: leadsUpdateManyWithoutBusinessesNestedInput
-    notification_messages?: notification_messagesUpdateManyWithoutBusinessesNestedInput
-    notification_preferences?: notification_preferencesUpdateManyWithoutBusinessesNestedInput
-    notification_templates?: notification_templatesUpdateManyWithoutBusinessesNestedInput
-    payment_reconciliation?: payment_reconciliationUpdateManyWithoutBusinessesNestedInput
-    payments?: paymentsUpdateManyWithoutBusinessesNestedInput
-    product_categories?: product_categoriesUpdateManyWithoutBusinessesNestedInput
-    product_images?: product_imagesUpdateManyWithoutBusinessesNestedInput
-    products?: productsUpdateManyWithoutBusinessesNestedInput
-    social_accounts?: social_accountsUpdateManyWithoutBusinessesNestedInput
-    tags?: tagsUpdateManyWithoutBusinessesNestedInput
-    users?: usersUpdateManyWithoutBusinessesNestedInput
-    workflow_executions?: workflow_executionsUpdateManyWithoutBusinessesNestedInput
-    services?: servicesUpdateManyWithoutBusinessesNestedInput
-    pricing_rules?: pricing_rulesUpdateManyWithoutBusinessesNestedInput
-    product_stock_alerts?: product_stock_alertsUpdateManyWithoutBusinessesNestedInput
-  }
-
-  export type businessesUncheckedUpdateWithoutTenantsInput = {
-    business_id?: StringFieldUpdateOperationsInput | string
-    business_name?: StringFieldUpdateOperationsInput | string
-    business_type?: NullableStringFieldUpdateOperationsInput | string | null
-    email?: NullableStringFieldUpdateOperationsInput | string | null
-    phone?: NullableStringFieldUpdateOperationsInput | string | null
-    website?: NullableStringFieldUpdateOperationsInput | string | null
-    city?: NullableStringFieldUpdateOperationsInput | string | null
-    address?: NullableStringFieldUpdateOperationsInput | string | null
-    country?: NullableStringFieldUpdateOperationsInput | string | null
-    gst_number?: NullableStringFieldUpdateOperationsInput | string | null
-    pan_number?: NullableStringFieldUpdateOperationsInput | string | null
-    whatsapp_number?: NullableStringFieldUpdateOperationsInput | string | null
-    created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    business_employees?: business_employeesUncheckedUpdateManyWithoutBusinessesNestedInput
-    business_workflows?: business_workflowsUncheckedUpdateManyWithoutBusinessesNestedInput
-    carts?: cartsUncheckedUpdateManyWithoutBusinessesNestedInput
-    leads?: leadsUncheckedUpdateManyWithoutBusinessesNestedInput
-    notification_messages?: notification_messagesUncheckedUpdateManyWithoutBusinessesNestedInput
-    notification_preferences?: notification_preferencesUncheckedUpdateManyWithoutBusinessesNestedInput
-    notification_templates?: notification_templatesUncheckedUpdateManyWithoutBusinessesNestedInput
-    payment_reconciliation?: payment_reconciliationUncheckedUpdateManyWithoutBusinessesNestedInput
-    payments?: paymentsUncheckedUpdateManyWithoutBusinessesNestedInput
-    product_categories?: product_categoriesUncheckedUpdateManyWithoutBusinessesNestedInput
-    product_images?: product_imagesUncheckedUpdateManyWithoutBusinessesNestedInput
-    products?: productsUncheckedUpdateManyWithoutBusinessesNestedInput
-    social_accounts?: social_accountsUncheckedUpdateManyWithoutBusinessesNestedInput
-    tags?: tagsUncheckedUpdateManyWithoutBusinessesNestedInput
-    users?: usersUncheckedUpdateManyWithoutBusinessesNestedInput
-    workflow_executions?: workflow_executionsUncheckedUpdateManyWithoutBusinessesNestedInput
-    services?: servicesUncheckedUpdateManyWithoutBusinessesNestedInput
-    pricing_rules?: pricing_rulesUncheckedUpdateManyWithoutBusinessesNestedInput
-    product_stock_alerts?: product_stock_alertsUncheckedUpdateManyWithoutBusinessesNestedInput
-  }
-
-  export type businessesUncheckedUpdateManyWithoutTenantsInput = {
-    business_id?: StringFieldUpdateOperationsInput | string
-    business_name?: StringFieldUpdateOperationsInput | string
-    business_type?: NullableStringFieldUpdateOperationsInput | string | null
-    email?: NullableStringFieldUpdateOperationsInput | string | null
-    phone?: NullableStringFieldUpdateOperationsInput | string | null
-    website?: NullableStringFieldUpdateOperationsInput | string | null
-    city?: NullableStringFieldUpdateOperationsInput | string | null
-    address?: NullableStringFieldUpdateOperationsInput | string | null
-    country?: NullableStringFieldUpdateOperationsInput | string | null
-    gst_number?: NullableStringFieldUpdateOperationsInput | string | null
-    pan_number?: NullableStringFieldUpdateOperationsInput | string | null
-    whatsapp_number?: NullableStringFieldUpdateOperationsInput | string | null
-    created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  }
-
   export type business_workflowsUpdateWithoutTenantsInput = {
     id?: StringFieldUpdateOperationsInput | string
     intent_name?: StringFieldUpdateOperationsInput | string
@@ -147384,7 +143021,6 @@ export namespace Prisma {
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
-<<<<<<< HEAD
   export type businessesUpdateWithoutTenantsInput = {
     business_id?: StringFieldUpdateOperationsInput | string
     business_name?: StringFieldUpdateOperationsInput | string
@@ -147403,7 +143039,6 @@ export namespace Prisma {
     business_employees?: business_employeesUpdateManyWithoutBusinessesNestedInput
     business_workflows?: business_workflowsUpdateManyWithoutBusinessesNestedInput
     carts?: cartsUpdateManyWithoutBusinessesNestedInput
-    inventory_levels?: inventory_levelsUpdateManyWithoutBusinessesNestedInput
     leads?: leadsUpdateManyWithoutBusinessesNestedInput
     notification_messages?: notification_messagesUpdateManyWithoutBusinessesNestedInput
     notification_preferences?: notification_preferencesUpdateManyWithoutBusinessesNestedInput
@@ -147414,14 +143049,12 @@ export namespace Prisma {
     product_images?: product_imagesUpdateManyWithoutBusinessesNestedInput
     products?: productsUpdateManyWithoutBusinessesNestedInput
     social_accounts?: social_accountsUpdateManyWithoutBusinessesNestedInput
-    stock_alerts?: stock_alertsUpdateManyWithoutBusinessesNestedInput
-    stock_counts?: stock_countsUpdateManyWithoutBusinessesNestedInput
-    stock_movements?: stock_movementsUpdateManyWithoutBusinessesNestedInput
-    stock_transfers?: stock_transfersUpdateManyWithoutBusinessesNestedInput
     tags?: tagsUpdateManyWithoutBusinessesNestedInput
     users?: usersUpdateManyWithoutBusinessesNestedInput
-    warehouses?: warehousesUpdateManyWithoutBusinessesNestedInput
     workflow_executions?: workflow_executionsUpdateManyWithoutBusinessesNestedInput
+    services?: servicesUpdateManyWithoutBusinessesNestedInput
+    pricing_rules?: pricing_rulesUpdateManyWithoutBusinessesNestedInput
+    product_stock_alerts?: product_stock_alertsUpdateManyWithoutBusinessesNestedInput
   }
 
   export type businessesUncheckedUpdateWithoutTenantsInput = {
@@ -147442,7 +143075,6 @@ export namespace Prisma {
     business_employees?: business_employeesUncheckedUpdateManyWithoutBusinessesNestedInput
     business_workflows?: business_workflowsUncheckedUpdateManyWithoutBusinessesNestedInput
     carts?: cartsUncheckedUpdateManyWithoutBusinessesNestedInput
-    inventory_levels?: inventory_levelsUncheckedUpdateManyWithoutBusinessesNestedInput
     leads?: leadsUncheckedUpdateManyWithoutBusinessesNestedInput
     notification_messages?: notification_messagesUncheckedUpdateManyWithoutBusinessesNestedInput
     notification_preferences?: notification_preferencesUncheckedUpdateManyWithoutBusinessesNestedInput
@@ -147453,14 +143085,12 @@ export namespace Prisma {
     product_images?: product_imagesUncheckedUpdateManyWithoutBusinessesNestedInput
     products?: productsUncheckedUpdateManyWithoutBusinessesNestedInput
     social_accounts?: social_accountsUncheckedUpdateManyWithoutBusinessesNestedInput
-    stock_alerts?: stock_alertsUncheckedUpdateManyWithoutBusinessesNestedInput
-    stock_counts?: stock_countsUncheckedUpdateManyWithoutBusinessesNestedInput
-    stock_movements?: stock_movementsUncheckedUpdateManyWithoutBusinessesNestedInput
-    stock_transfers?: stock_transfersUncheckedUpdateManyWithoutBusinessesNestedInput
     tags?: tagsUncheckedUpdateManyWithoutBusinessesNestedInput
     users?: usersUncheckedUpdateManyWithoutBusinessesNestedInput
-    warehouses?: warehousesUncheckedUpdateManyWithoutBusinessesNestedInput
     workflow_executions?: workflow_executionsUncheckedUpdateManyWithoutBusinessesNestedInput
+    services?: servicesUncheckedUpdateManyWithoutBusinessesNestedInput
+    pricing_rules?: pricing_rulesUncheckedUpdateManyWithoutBusinessesNestedInput
+    product_stock_alerts?: product_stock_alertsUncheckedUpdateManyWithoutBusinessesNestedInput
   }
 
   export type businessesUncheckedUpdateManyWithoutTenantsInput = {
@@ -147480,8 +143110,6 @@ export namespace Prisma {
     pan_number?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
-=======
->>>>>>> 8a7b2acf9bf5e0bc0fe32c6a0d8aa6e2a9f871a8
   export type cartsUpdateWithoutTenantsInput = {
     cart_id?: StringFieldUpdateOperationsInput | string
     status?: NullableStringFieldUpdateOperationsInput | string | null
@@ -150637,28 +146265,6 @@ export namespace Prisma {
     updated_at?: Date | string
   }
 
-<<<<<<< HEAD
-  export type stock_reservationsCreateManyProductsInput = {
-    reservation_id?: string
-    order_id: string
-    variant_id?: string | null
-    quantity: number
-    reserved_at?: Date | string
-=======
-  export type cart_reservationsCreateManyProductsInput = {
-    reservation_id?: string
-    lead_id: string
-    variant_id?: string | null
-    quantity: number
->>>>>>> 8a7b2acf9bf5e0bc0fe32c6a0d8aa6e2a9f871a8
-    expires_at: Date | string
-    status?: string
-    created_at?: Date | string
-    updated_at?: Date | string
-  }
-
-<<<<<<< HEAD
-=======
   export type product_stock_alertsCreateManyProductsInput = {
     alert_id?: string
     business_id: string
@@ -150674,7 +146280,6 @@ export namespace Prisma {
     updated_at?: Date | string
   }
 
->>>>>>> 8a7b2acf9bf5e0bc0fe32c6a0d8aa6e2a9f871a8
   export type campaignsUpdateWithoutProductsInput = {
     campaign_id?: StringFieldUpdateOperationsInput | string
     business_id?: StringFieldUpdateOperationsInput | string
@@ -151113,70 +146718,6 @@ export namespace Prisma {
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
-<<<<<<< HEAD
-  export type stock_reservationsUpdateWithoutProductsInput = {
-    reservation_id?: StringFieldUpdateOperationsInput | string
-    variant_id?: NullableStringFieldUpdateOperationsInput | string | null
-    quantity?: IntFieldUpdateOperationsInput | number
-    reserved_at?: DateTimeFieldUpdateOperationsInput | Date | string
-=======
-  export type cart_reservationsUpdateWithoutProductsInput = {
-    reservation_id?: StringFieldUpdateOperationsInput | string
-    variant_id?: NullableStringFieldUpdateOperationsInput | string | null
-    quantity?: IntFieldUpdateOperationsInput | number
->>>>>>> 8a7b2acf9bf5e0bc0fe32c6a0d8aa6e2a9f871a8
-    expires_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    status?: StringFieldUpdateOperationsInput | string
-    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
-<<<<<<< HEAD
-    orders?: ordersUpdateOneRequiredWithoutStock_reservationsNestedInput
-  }
-
-  export type stock_reservationsUncheckedUpdateWithoutProductsInput = {
-    reservation_id?: StringFieldUpdateOperationsInput | string
-    order_id?: StringFieldUpdateOperationsInput | string
-    variant_id?: NullableStringFieldUpdateOperationsInput | string | null
-    quantity?: IntFieldUpdateOperationsInput | number
-    reserved_at?: DateTimeFieldUpdateOperationsInput | Date | string
-=======
-    leads?: leadsUpdateOneRequiredWithoutCart_reservationsNestedInput
-  }
-
-  export type cart_reservationsUncheckedUpdateWithoutProductsInput = {
-    reservation_id?: StringFieldUpdateOperationsInput | string
-    lead_id?: StringFieldUpdateOperationsInput | string
-    variant_id?: NullableStringFieldUpdateOperationsInput | string | null
-    quantity?: IntFieldUpdateOperationsInput | number
->>>>>>> 8a7b2acf9bf5e0bc0fe32c6a0d8aa6e2a9f871a8
-    expires_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    status?: StringFieldUpdateOperationsInput | string
-    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-<<<<<<< HEAD
-  export type stock_reservationsUncheckedUpdateManyWithoutProductsInput = {
-    reservation_id?: StringFieldUpdateOperationsInput | string
-    order_id?: StringFieldUpdateOperationsInput | string
-    variant_id?: NullableStringFieldUpdateOperationsInput | string | null
-    quantity?: IntFieldUpdateOperationsInput | number
-    reserved_at?: DateTimeFieldUpdateOperationsInput | Date | string
-=======
-  export type cart_reservationsUncheckedUpdateManyWithoutProductsInput = {
-    reservation_id?: StringFieldUpdateOperationsInput | string
-    lead_id?: StringFieldUpdateOperationsInput | string
-    variant_id?: NullableStringFieldUpdateOperationsInput | string | null
-    quantity?: IntFieldUpdateOperationsInput | number
->>>>>>> 8a7b2acf9bf5e0bc0fe32c6a0d8aa6e2a9f871a8
-    expires_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    status?: StringFieldUpdateOperationsInput | string
-    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-<<<<<<< HEAD
-=======
   export type product_stock_alertsUpdateWithoutProductsInput = {
     alert_id?: StringFieldUpdateOperationsInput | string
     product_name?: StringFieldUpdateOperationsInput | string
@@ -151222,7 +146763,6 @@ export namespace Prisma {
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
->>>>>>> 8a7b2acf9bf5e0bc0fe32c6a0d8aa6e2a9f871a8
   export type cart_itemsCreateManyProduct_variantsInput = {
     cart_item_id?: string
     cart_id: string
@@ -153055,12 +148595,7 @@ export namespace Prisma {
     product_reviews?: product_reviewsUpdateManyWithoutProductNestedInput
     product_variants?: product_variantsUpdateManyWithoutProductNestedInput
     businesses?: businessesUpdateOneRequiredWithoutProductsNestedInput
-<<<<<<< HEAD
-    stock_reservations?: stock_reservationsUpdateManyWithoutProductsNestedInput
-=======
-    cart_reservations?: cart_reservationsUpdateManyWithoutProductsNestedInput
     product_stock_alerts?: product_stock_alertsUpdateManyWithoutProductsNestedInput
->>>>>>> 8a7b2acf9bf5e0bc0fe32c6a0d8aa6e2a9f871a8
   }
 
   export type productsUncheckedUpdateWithoutProduct_categoriesInput = {
@@ -153109,12 +148644,7 @@ export namespace Prisma {
     product_images?: product_imagesUncheckedUpdateManyWithoutProductsNestedInput
     product_reviews?: product_reviewsUncheckedUpdateManyWithoutProductNestedInput
     product_variants?: product_variantsUncheckedUpdateManyWithoutProductNestedInput
-<<<<<<< HEAD
-    stock_reservations?: stock_reservationsUncheckedUpdateManyWithoutProductsNestedInput
-=======
-    cart_reservations?: cart_reservationsUncheckedUpdateManyWithoutProductsNestedInput
     product_stock_alerts?: product_stock_alertsUncheckedUpdateManyWithoutProductsNestedInput
->>>>>>> 8a7b2acf9bf5e0bc0fe32c6a0d8aa6e2a9f871a8
   }
 
   export type productsUncheckedUpdateManyWithoutProduct_categoriesInput = {
@@ -153325,7 +148855,6 @@ export namespace Prisma {
     updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
-<<<<<<< HEAD
   export type hotel_booking_outcomesCreateManyRecommendationInput = {
     id?: string
     hotel_id: string
@@ -153376,7 +148905,8 @@ export namespace Prisma {
     revenue?: IntFieldUpdateOperationsInput | number
     checkin_date?: DateTimeFieldUpdateOperationsInput | Date | string
     recorded_at?: DateTimeFieldUpdateOperationsInput | Date | string
-=======
+  }
+
   export type service_availabilityCreateManyServicesInput = {
     availability_id?: string
     business_id: string
@@ -153499,6 +149029,7 @@ export namespace Prisma {
     special_requests?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    booking_guests?: booking_guestsUpdateOneWithoutService_bookingsNestedInput
   }
 
   export type service_bookingsUncheckedUpdateWithoutServicesInput = {
@@ -153516,6 +149047,7 @@ export namespace Prisma {
     special_requests?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    booking_guests?: booking_guestsUncheckedUpdateOneWithoutService_bookingsNestedInput
   }
 
   export type service_bookingsUncheckedUpdateManyWithoutServicesInput = {
@@ -153647,7 +149179,6 @@ export namespace Prisma {
     changed_by?: NullableStringFieldUpdateOperationsInput | string | null
     suggestion_id?: NullableStringFieldUpdateOperationsInput | string | null
     applied_at?: DateTimeFieldUpdateOperationsInput | Date | string
->>>>>>> 8a7b2acf9bf5e0bc0fe32c6a0d8aa6e2a9f871a8
   }
 
 

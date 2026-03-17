@@ -2,7 +2,7 @@ import * as crypto from 'crypto';
 import { BadRequestException, ConflictException, Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { WhatsAppFlow, WhatsAppFlowDocument, FlowStatus } from './schemas/flow.schema';
+import { WhatsAppFlow, WhatsAppFlowDocument, FlowStatus, FlowCategory } from './schemas/flow.schema';
 import { CreateFlowDto } from './dto/create-flow.dto';
 import { QueryFlowDto } from './dto/query-flow.dto';
 import { WhatsAppApiClientService } from '../whatsapp/infrastructure/whatsapp-api-client.service';
@@ -95,12 +95,41 @@ export class WhatsAppFlowsService {
             await this.flowModel.findByIdAndUpdate(id, { metaFlowId });
         }
 
+        // Auto-generate RSA 2048-bit key pair if not already done
+        const baseUrl = this.configService.get<string>('APP_BASE_URL', '');
+        let endpointUri = `${baseUrl}/whatsapp/flows/exchange/${id}`;
+        if (!flow.privateKey) {
+            const { publicKey, privateKey } = crypto.generateKeyPairSync('rsa', {
+                modulusLength: 2048,
+                publicKeyEncoding: { type: 'spki', format: 'pem' },
+                privateKeyEncoding: { type: 'pkcs8', format: 'pem' },
+            });
+
+            // Upload the public key to Meta (signs the key for the phone number)
+            const phoneNumberId = account.platform_user_id;
+            await this.metaApi.uploadBusinessPublicKey(phoneNumberId, accessToken, publicKey);
+
+            // Encrypt the private key at rest using the same ENCRYPTION_KEY used for tokens
+            const encryptionKey = this.configService.get<string>('ENCRYPTION_KEY');
+            const encryptedPrivateKey = this.encryptPrivateKey(privateKey, encryptionKey);
+
+            await this.flowModel.findByIdAndUpdate(id, {
+                publicKey,
+                privateKey: encryptedPrivateKey,
+                endpointUri,
+            });
+        }
+
+        // Set the endpoint URI on the Meta flow
+        this.logger.log(`Setting endpoint_uri on Meta flow ${metaFlowId}: ${endpointUri}`);
+        await this.metaApi.updateFlow(metaFlowId, accessToken, { endpoint_uri: endpointUri });
+
         // Upload the Flow JSON
-        await this.metaApi.uploadFlowAsset(metaFlowId, accessToken, flow.flowJson, flow.endpointUri);
+        await this.metaApi.uploadFlowAsset(metaFlowId, accessToken, flow.flowJson, endpointUri);
 
         await this.flowModel.findByIdAndUpdate(id, { status: FlowStatus.DRAFT, metaFlowId });
 
-        return { message: 'Flow submitted to Meta. Call /publish to make it live.', metaFlowId };
+        return { message: 'Flow submitted to Meta. Call /publish to make it live.', metaFlowId, endpointUri };
     }
 
     /**
@@ -119,6 +148,12 @@ export class WhatsAppFlowsService {
 
         const account = await this.getActiveAccount(businessId);
         const accessToken = this.decryptToken(account.access_token);
+
+        // Re-upload this flow's public key before publishing so Meta uses the correct key for health check
+        if (flow.publicKey) {
+            const phoneNumberId = account.platform_user_id;
+            await this.metaApi.uploadBusinessPublicKey(phoneNumberId, accessToken, flow.publicKey);
+        }
 
         await this.metaApi.publishFlow(flow.metaFlowId, accessToken);
 
@@ -164,6 +199,44 @@ export class WhatsAppFlowsService {
         return { message: 'Flow deleted' };
     }
 
+    async syncFromMeta(businessId: string) {
+        const account = await this.getActiveAccount(businessId);
+        const accessToken = this.decryptToken(account.access_token);
+        const wabaId = account.instagram_business_account_id;
+
+        const metaFlows = await this.metaApi.listFlows(wabaId, accessToken);
+
+        let created = 0;
+        let updated = 0;
+
+        for (const mf of metaFlows) {
+            const status = (mf.status as FlowStatus) ?? FlowStatus.DRAFT;
+            const category = (mf.categories?.[0] as FlowCategory) ?? FlowCategory.OTHER;
+
+            const existing = await this.flowModel.findOne({ businessId, metaFlowId: mf.id });
+
+            if (existing) {
+                await this.flowModel.findByIdAndUpdate(existing._id, {
+                    status,
+                    endpointUri: mf.endpoint_uri ?? existing.endpointUri,
+                });
+                updated++;
+            } else {
+                await this.flowModel.create({
+                    businessId,
+                    name: mf.name,
+                    category,
+                    status,
+                    metaFlowId: mf.id,
+                    endpointUri: mf.endpoint_uri ?? '',
+                });
+                created++;
+            }
+        }
+
+        return { message: 'Flows synced from Meta', created, updated, total: metaFlows.length };
+    }
+
     async syncStatus(businessId: string, id: string) {
         const flow = await this.findOneOrFail(businessId, id);
 
@@ -204,5 +277,12 @@ export class WhatsAppFlowsService {
         const iv = Buffer.from(ivHex, 'hex');
         const decipher = crypto.createDecipheriv('aes-256-cbc', Buffer.from(key, 'hex'), iv);
         return decipher.update(encrypted, 'hex', 'utf8') + decipher.final('utf8');
+    }
+
+    private encryptPrivateKey(pem: string, encryptionKey: string): string {
+        const iv = crypto.randomBytes(16);
+        const cipher = crypto.createCipheriv('aes-256-cbc', Buffer.from(encryptionKey, 'hex'), iv);
+        const encrypted = cipher.update(pem, 'utf8', 'hex') + cipher.final('hex');
+        return `${iv.toString('hex')}:${encrypted}`;
     }
 }

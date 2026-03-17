@@ -36,6 +36,13 @@ export class WhatsAppFlowsController {
         return this.service.update(req.user.business_id, id, dto);
     }
 
+    // POST /whatsapp/flows/sync-from-meta — import all flows from Meta into local DB
+    @Post('sync-from-meta')
+    @HttpCode(HttpStatus.OK)
+    syncFromMeta(@Req() req) {
+        return this.service.syncFromMeta(req.user.business_id);
+    }
+
     // POST /whatsapp/flows/:id/submit — create on Meta + upload Flow JSON
     @Post(':id/submit')
     @HttpCode(HttpStatus.OK)

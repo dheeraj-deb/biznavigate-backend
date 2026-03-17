@@ -717,6 +717,8 @@ export class WorkflowsService implements OnModuleInit {
   async handleIncomingMessage(incomingParams: WorkflowProcessingContext) {
     const channel = 'whatsapp';
 
+    console.log("incomingParams", incomingParams)
+
     const { phoneNumberId } = incomingParams.context;
 
     const hasWaitingWorkflow = await this.workflowExecutionModel.findOne({

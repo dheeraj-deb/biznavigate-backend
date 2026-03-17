@@ -3,9 +3,9 @@
   "version": "1.0.0",
   "description": "Order Automation via WhatsApp integrated with CRMs",
   "scripts": {
-    "start": "nest start",
+    "start": "node -r tsconfig-paths/register dist/main",
     "start:dev": "nest start --watch",
-    "start:prod": "node dist/main",
+    "start:prod": "node -r tsconfig-paths/register dist/main",
     "build": "nest build && npm run postbuild",
     "postbuild": "mkdir -p dist/generated/prisma/client && cp -r generated/prisma/* dist/generated/prisma/ && cp -r generated/prisma/* dist/generated/prisma/client/",
     "test": "jest",

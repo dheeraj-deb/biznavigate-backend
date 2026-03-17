@@ -74,7 +74,8 @@ export class SendFlowNode extends ActionNode<SendFlowParams, string> {
     }
 
     async execute(context: WorkflowNodeExecutionContext): Promise<string> {
-        const { phoneNumberId, from } = context;
+        const { phoneNumberId, from, business_id } = context;
+        console.log("context", context);
         const bodyText = this.interpolateString(this.params.body, context);
         await this.whatsappService.sendFlowMessage(
             phoneNumberId, from,
@@ -86,6 +87,7 @@ export class SendFlowNode extends ActionNode<SendFlowParams, string> {
             this.params.screen,
             this.params.flow_token,
             this.id,
+            business_id ? { business_id } : undefined,
         );
         return 'flow_sent';
     }

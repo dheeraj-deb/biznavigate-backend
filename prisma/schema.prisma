@@ -565,9 +565,7 @@ model products {
   product_variants        product_variants[]
   businesses              businesses           @relation(fields: [business_id], references: [business_id])
   product_categories      product_categories?  @relation(fields: [category_id], references: [category_id])
-  stock_reservations      stock_reservations[]
-  cart_reservations        cart_reservations[]
-  product_stock_alerts     product_stock_alerts[]
+  product_stock_alerts    product_stock_alerts[]
 
   @@index([business_id, is_active], map: "idx_products_business_active")
   @@index([tenant_id], map: "idx_products_tenant_id")
@@ -1492,6 +1490,8 @@ model hotel_pricing_notifications {
 
   @@index([org_id, created_at(sort: Desc)])
   @@index([hotel_id])
+}
+
 // ─────────────────────────────────────────────────────────────────────────────
 // INVENTORY: SERVICES (Hotels, Resorts, Events, Camping)
 // ─────────────────────────────────────────────────────────────────────────────
@@ -1563,11 +1563,26 @@ model service_bookings {
   created_at       DateTime @default(now()) @db.Timestamptz(6)
   updated_at       DateTime @default(now()) @db.Timestamptz(6)
 
-  services services @relation(fields: [service_id], references: [service_id])
+  services       services        @relation(fields: [service_id], references: [service_id])
+  booking_guests booking_guests?
 
   @@index([business_id, status])
   @@index([service_id, check_in_date])
   @@index([business_id, check_in_date])
+}
+
+model booking_guests {
+  guest_id   String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  booking_id String   @unique @db.Uuid
+  name       String   @db.VarChar(255)
+  phone      String   @db.VarChar(20)
+  age        Int?
+  num_guests Int      @default(1)
+  address    String?
+  pin_code   String?  @db.VarChar(10)
+  created_at DateTime @default(now()) @db.Timestamptz(6)
+
+  service_bookings service_bookings @relation(fields: [booking_id], references: [booking_id], onDelete: Cascade)
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
