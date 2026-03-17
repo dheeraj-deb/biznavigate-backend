@@ -25,7 +25,7 @@ import { JwtAuthGuard } from '../../../../common/guards/jwt-auth.guard';
  * Handles all HTTP endpoints for customer management
  * Production-grade with JWT authentication and comprehensive error handling
  */
-@Controller('customers')
+@Controller('api/v1/customers')
 @UseGuards(JwtAuthGuard)
 export class CustomerController {
   private readonly logger = new Logger(CustomerController.name);

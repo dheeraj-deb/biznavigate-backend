@@ -11,7 +11,7 @@ import { UpdateProfileDto } from "../application/dto/update-profile.dto";
 @ApiTags('Users')
 @ApiBearerAuth()
 @UseGuards(JwtAuthGuard)
-@Controller("users")
+@Controller("api/v1/users")
 export class UsersController {
   constructor(private readonly service: UsersService) {}
 

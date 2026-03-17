@@ -27,7 +27,7 @@ import { JwtAuthGuard } from '../../../../common/guards/jwt-auth.guard';
  * Handles all HTTP endpoints for payment management
  * Production-grade with JWT authentication, webhook support, and comprehensive error handling
  */
-@Controller('payments')
+@Controller('api/v1/payments')
 export class PaymentController {
   private readonly logger = new Logger(PaymentController.name);
 
