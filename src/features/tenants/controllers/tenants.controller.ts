@@ -18,7 +18,7 @@ import { UpdateTenantDto } from "../application/dto/update-tenant.dto";
 @ApiTags("Tenants")
 @ApiBearerAuth()
 @UseGuards(JwtAuthGuard)
-@Controller("api/v1/tenants")
+@Controller("tenants")
 export class TenantsController {
   constructor(private readonly service: TenantsService) {}
 

@@ -40,7 +40,7 @@ import {
  */
 @ApiTags('Notification Templates')
 @ApiBearerAuth()
-@Controller('api/v1/notification-templates')
+@Controller('notification-templates')
 export class TemplatesController {
   private readonly logger = new Logger(TemplatesController.name);
 

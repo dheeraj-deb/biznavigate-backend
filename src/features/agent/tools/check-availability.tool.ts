@@ -1,0 +1,48 @@
+import { tool } from '@langchain/core/tools';
+import { z } from 'zod';
+import { InventoryService } from '../../inventory/inventory.service';
+import { resolveDate, isValidDate } from '../utils/date-resolver';
+
+export function makeCheckAvailabilityTool(inventoryService: InventoryService) {
+  return tool(
+    async ({ businessId, checkIn, checkOut }) => {
+      const resolvedCheckIn = resolveDate(checkIn);
+      const resolvedCheckOut = resolveDate(checkOut);
+
+      if (!isValidDate(resolvedCheckIn)) {
+        return `I couldn't understand the check-in date "${checkIn}". Please say something like "March 25" or "tomorrow".`;
+      }
+      if (!isValidDate(resolvedCheckOut)) {
+        return `I couldn't understand the check-out date "${checkOut}". Please say something like "March 28" or "next monday".`;
+      }
+      if (resolvedCheckOut <= resolvedCheckIn) {
+        return 'Check-out date must be after check-in date. Could you clarify your dates?';
+      }
+
+      // Quick check: confirm at least one room is available before triggering the flow
+      const services = await inventoryService.getServices(businessId);
+      let hasAvailability = false;
+      for (const service of services) {
+        const avail = await inventoryService.getAvailability(service.service_id, resolvedCheckIn, resolvedCheckOut);
+        if (!avail.isBlocked && avail.minAvailable > 0) {
+          hasAvailability = true;
+          break;
+        }
+      }
+
+      if (!hasAvailability) return `No rooms available from ${resolvedCheckIn} to ${resolvedCheckOut}.`;
+
+      // Signal the debounce processor to trigger the hospitality flow
+      return `FLOW:${JSON.stringify({ businessId, checkIn: resolvedCheckIn, checkOut: resolvedCheckOut })}`;
+    },
+    {
+      name: 'check_availability',
+      description: 'Check available rooms/services for given check-in and check-out dates',
+      schema: z.object({
+        businessId: z.string().describe('The business ID'),
+        checkIn: z.string().describe('Check-in date in YYYY-MM-DD format'),
+        checkOut: z.string().describe('Check-out date in YYYY-MM-DD format'),
+      }),
+    },
+  );
+}

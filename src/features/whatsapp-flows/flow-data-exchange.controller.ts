@@ -27,7 +27,7 @@ export class FlowDataExchangeController {
     private readonly flowModel: Model<WhatsAppFlowDocument>,
     private readonly configService: ConfigService,
     private readonly prisma: PrismaService,
-  ) {}
+  ) { }
 
   @Post('exchange/:flowId')
   async exchange(
@@ -79,15 +79,35 @@ export class FlowDataExchangeController {
       return res.status(421).send('Failed to decrypt request');
     }
 
+    // Parse flow_token — can be a JSON object string or plain string
+    let flowContext: Record<string, any> = {};
+    try {
+      if (payload.flow_token) {
+        flowContext = JSON.parse(payload.flow_token);
+      }
+    } catch {
+      // plain string token, not JSON
+    }
+
+    const businessId = flowContext.businessId ?? flow.businessId;
+
     const business = await this.prisma.businesses.findUnique({
-      where: { business_id: flow.businessId },
+      where: { business_id: businessId },
       select: { business_type: true },
     });
     const businessType = business?.business_type ?? 'hospitality';
 
+    // Merge flowContext into payload.data so handlers can access customerPhone, phoneNumberId, etc.
+    if (payload.data) {
+      payload.data._flowContext = flowContext;
+    }
+
+    console.log("payload")
+    console.dir(payload, { depth: null })
+
     let responseData: object;
     try {
-      responseData = await this.flowService.handleAction(payload, flow.businessId, businessType);
+      responseData = await this.flowService.handleAction(payload, businessId, businessType);
     } catch (err) {
       this.logger.error('Flow action handler error', err);
       responseData = { data: { error_message: 'Internal server error' } };

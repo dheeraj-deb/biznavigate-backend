@@ -26,7 +26,8 @@
       "Bash(docker exec biznavigate-kafka kafka-broker-api-versions --bootstrap-server localhost:9093)",
       "WebFetch(domain:xotelo.com)",
       "WebFetch(domain:rapidapi.com)",
-      "Bash(xargs kill:*)"
+      "Bash(xargs kill:*)",
+      "Bash(xargs sed:*)"
     ],
     "deny": [],
     "ask": []

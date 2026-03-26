@@ -172,6 +172,24 @@ export class WhatsAppTemplatesService {
         return this.findOneOrFail(businessId, templateId);
     }
 
+    async findApproved(businessId: string) {
+        return this.templateModel
+            .find({ businessId, status: TemplateStatus.APPROVED, isDeleted: false })
+            .select('-submissionHistory -__v')
+            .sort({ updatedAt: -1 });
+    }
+
+    async findByName(businessId: string, name: string) {
+        const template = await this.templateModel.findOne({
+            businessId,
+            name,
+            isDeleted: false,
+        }).select('-submissionHistory -__v');
+
+        if (!template) throw new NotFoundException(`Template "${name}" not found`);
+        return template;
+    }
+
     async update(businessId: string, templateId: string, dto: Partial<CreateTemplateDto>) {
         const template = await this.findOneOrFail(businessId, templateId);
 

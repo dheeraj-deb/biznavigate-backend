@@ -2,9 +2,15 @@ import { Body, Controller, Get, Param, Post, Put, Query } from '@nestjs/common';
 import { WorkflowsService } from './workflows.service';
 import { CreateWorkflowDto, InitiateWorkflowDto, UpdateWorkflowDto } from './dto/save-workflow.dto';
 
-@Controller('api/v1/workflows')
+@Controller('workflows')
 export class WorkflowsController {
     constructor(private readonly workflowsService: WorkflowsService) { }
+
+    @Get('variables')
+    getAvailableVariables(@Query('nodeTypes') nodeTypes?: string) {
+        const nodeTypeList = nodeTypes ? nodeTypes.split(',') : [];
+        return this.workflowsService.getAvailableVariables(nodeTypeList);
+    }
 
     @Get('nodes')
     getNodeDefinitions(@Query('category') category?: 'trigger' | 'action') {

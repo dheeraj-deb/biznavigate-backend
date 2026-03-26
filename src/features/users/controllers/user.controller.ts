@@ -11,7 +11,7 @@ import { UpdateProfileDto } from "../application/dto/update-profile.dto";
 @ApiTags('Users')
 @ApiBearerAuth()
 @UseGuards(JwtAuthGuard)
-@Controller("api/v1/users")
+@Controller("users")
 export class UsersController {
   constructor(private readonly service: UsersService) {}
 
@@ -28,6 +28,11 @@ export class UsersController {
   @Patch("assign-role")
   assignRole(@Body() dto: AssignRoleDto) {
     return this.service.assignRole(dto);
+  }
+
+  @Get("profile")
+  getProfile(@Request() req) {
+    return this.service.getUserById(req.user.user_id);
   }
 
   @Get(":user_id")

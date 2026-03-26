@@ -35,6 +35,7 @@ import {
 import * as path from 'path';
 import { WhatsAppTemplatesService } from '../whatsapp-templates/whatsapp-templates.service';
 import { WhatsAppSignatureGuard } from './guards/whatsapp-signature.guard';
+import axios from 'axios';
 
 interface RawBodyRequest<T> extends Request {
   rawBody?: Buffer;
@@ -137,6 +138,7 @@ export class WhatsAppController {
     @Res() res: Response,
     @Body() body: WhatsAppWebhookDto,
   ) {
+
     setImmediate(() => this.whatsappService.processWebhook(body));
     res.status(200).json({ success: 200 })
   }

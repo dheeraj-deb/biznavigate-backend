@@ -1495,26 +1495,34 @@ model hotel_pricing_notifications {
 
 /// Services - Bookable items: rooms, villas, dormitories, events, camping spots
 model services {
-  service_id  String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  business_id String   @db.Uuid
-  tenant_id   String   @db.Uuid
-  name        String   @db.VarChar(255)
-  type        String   @db.VarChar(50) // room | villa | dormitory | event | camping | suite | tent-site | cabin | class | workshop | service
-  description String?
-  base_price  Decimal  @db.Decimal(10, 2)
-  capacity    Int      @default(1) // total units of this type (e.g., 10 Deluxe Rooms)
-  attributes  Json? // flexible JSONB: {ac, view, floor, amenities} or {location, duration, includes}
-  image_urls  Json?
-  is_active   Boolean  @default(true)
-  created_at  DateTime @default(now()) @db.Timestamptz(6)
-  updated_at  DateTime @default(now()) @db.Timestamptz(6)
+  service_id          String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  business_id         String   @db.Uuid
+  tenant_id           String   @db.Uuid
+  name                String   @db.VarChar(255)
+  type                String   @db.VarChar(50) // room | villa | dormitory | event | camping | suite | tent-site | cabin | class | workshop | service
+  description         String?
+  base_price          Decimal  @db.Decimal(10, 2)
+  capacity            Int      @default(1) // max occupancy per unit (people)
+  total_units         Int      @default(1) // how many units of this type exist (e.g. 3 Deluxe Rooms)
+  check_in_time       String?  @db.VarChar(5) // "14:00"
+  check_out_time      String?  @db.VarChar(5) // "11:00"
+  cancellation_policy String?  @db.VarChar(500)
+  tax_percentage      Decimal? @db.Decimal(5, 2)
+  extra_guest_charge  Decimal? @db.Decimal(10, 2) // per extra person/night
+  max_adults          Int?
+  attributes          Json? // flexible JSONB: {ac, view, floor, amenities} or {location, duration, includes}
+  image_urls          Json?
+  is_active           Boolean  @default(true)
+  created_at          DateTime @default(now()) @db.Timestamptz(6)
+  updated_at          DateTime @default(now()) @db.Timestamptz(6)
 
-  businesses           businesses             @relation(fields: [business_id], references: [business_id], onDelete: Cascade)
-  service_availability service_availability[]
-  service_bookings     service_bookings[]
-  service_holds        service_holds[]
-  pricing_suggestions  pricing_suggestions[]
-  pricing_history      pricing_history[]
+  businesses            businesses              @relation(fields: [business_id], references: [business_id], onDelete: Cascade)
+  service_availability  service_availability[]
+  service_bookings      service_bookings[]
+  service_holds         service_holds[]
+  service_blocked_dates service_blocked_dates[]
+  pricing_suggestions   pricing_suggestions[]
+  pricing_history       pricing_history[]
 
   @@index([business_id, is_active])
   @@index([business_id, type])
@@ -1542,23 +1550,40 @@ model service_availability {
   @@index([business_id, date])
 }
 
+/// Service Blocked Dates - Manual blocks for maintenance, owner hold, etc.
+model service_blocked_dates {
+  id          String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  service_id  String   @db.Uuid
+  business_id String   @db.Uuid
+  date        DateTime @db.Date
+  reason      String?  @db.VarChar(255)
+  created_at  DateTime @default(now()) @db.Timestamptz(6)
+
+  services services @relation(fields: [service_id], references: [service_id], onDelete: Cascade)
+
+  @@unique([service_id, date])
+  @@index([service_id, date])
+  @@index([business_id, date])
+}
+
 /// Service Bookings - Confirmed reservations
 model service_bookings {
-  booking_id       String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  service_id       String   @db.Uuid
-  business_id      String   @db.Uuid
-  lead_id          String?  @db.Uuid
-  customer_name    String   @db.VarChar(255)
-  customer_phone   String   @db.VarChar(20)
-  check_in_date    DateTime @db.Date
-  check_out_date   DateTime @db.Date
-  slots_booked     Int      @default(1)
-  total_price      Decimal  @db.Decimal(10, 2)
-  status           String   @default("pending") @db.VarChar(20) // pending | confirmed | cancelled | completed
-  payment_status   String   @default("unpaid") @db.VarChar(20) // unpaid | paid | refunded
-  special_requests String?
-  created_at       DateTime @default(now()) @db.Timestamptz(6)
-  updated_at       DateTime @default(now()) @db.Timestamptz(6)
+  booking_id        String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  booking_reference String?  @unique @db.VarChar(20)
+  service_id        String   @db.Uuid
+  business_id       String   @db.Uuid
+  lead_id           String?  @db.Uuid
+  customer_name     String   @db.VarChar(255)
+  customer_phone    String   @db.VarChar(20)
+  check_in_date     DateTime @db.Date
+  check_out_date    DateTime @db.Date
+  slots_booked      Int      @default(1)
+  total_price       Decimal  @db.Decimal(10, 2)
+  status            String   @default("pending") @db.VarChar(20) // pending | confirmed | cancelled | completed
+  payment_status    String   @default("unpaid") @db.VarChar(20) // unpaid | paid | refunded
+  special_requests  String?
+  created_at        DateTime @default(now()) @db.Timestamptz(6)
+  updated_at        DateTime @default(now()) @db.Timestamptz(6)
 
   services       services        @relation(fields: [service_id], references: [service_id])
   booking_guests booking_guests?

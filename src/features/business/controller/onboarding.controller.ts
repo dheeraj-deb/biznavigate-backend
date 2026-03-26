@@ -40,7 +40,7 @@ class CompleteOnboardingDto extends UpdateBusinessDto {
 @ApiTags("Onboarding")
 @ApiBearerAuth()
 @UseGuards(JwtAuthGuard)
-@Controller("api/v1/onboarding")
+@Controller("onboarding")
 export class OnboardingController {
   constructor(private readonly prisma: PrismaService) {}
 

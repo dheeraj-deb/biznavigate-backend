@@ -36,6 +36,20 @@ export class WhatsAppFlowsController {
         return this.service.update(req.user.business_id, id, dto);
     }
 
+    // POST /whatsapp/flows/:id/rekey — regenerate RSA keys + fix endpoint URI on Meta
+    @Post(':id/rekey')
+    @HttpCode(HttpStatus.OK)
+    rekey(@Req() req, @Param('id') id: string) {
+        return this.service.rekey(req.user.business_id, id);
+    }
+
+    // POST /whatsapp/flows/:id/migrate — copy flow to another business
+    @Post(':id/migrate')
+    @HttpCode(HttpStatus.OK)
+    migrate(@Req() req, @Param('id') id: string, @Body('targetBusinessId') targetBusinessId: string) {
+        return this.service.migrate(req.user.business_id, id, targetBusinessId);
+    }
+
     // POST /whatsapp/flows/sync-from-meta — import all flows from Meta into local DB
     @Post('sync-from-meta')
     @HttpCode(HttpStatus.OK)

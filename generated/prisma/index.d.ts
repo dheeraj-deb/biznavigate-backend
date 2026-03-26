@@ -303,6 +303,11 @@ export type services = $Result.DefaultSelection<Prisma.$servicesPayload>
  */
 export type service_availability = $Result.DefaultSelection<Prisma.$service_availabilityPayload>
 /**
+ * Model service_blocked_dates
+ * Service Blocked Dates - Manual blocks for maintenance, owner hold, etc.
+ */
+export type service_blocked_dates = $Result.DefaultSelection<Prisma.$service_blocked_datesPayload>
+/**
  * Model service_bookings
  * Service Bookings - Confirmed reservations
  */
@@ -1034,6 +1039,16 @@ export class PrismaClient<
   get service_availability(): Prisma.service_availabilityDelegate<ExtArgs, ClientOptions>;
 
   /**
+   * `prisma.service_blocked_dates`: Exposes CRUD operations for the **service_blocked_dates** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more Service_blocked_dates
+    * const service_blocked_dates = await prisma.service_blocked_dates.findMany()
+    * ```
+    */
+  get service_blocked_dates(): Prisma.service_blocked_datesDelegate<ExtArgs, ClientOptions>;
+
+  /**
    * `prisma.service_bookings`: Exposes CRUD operations for the **service_bookings** model.
     * Example usage:
     * ```ts
@@ -1599,6 +1614,7 @@ export namespace Prisma {
     hotel_pricing_notifications: 'hotel_pricing_notifications',
     services: 'services',
     service_availability: 'service_availability',
+    service_blocked_dates: 'service_blocked_dates',
     service_bookings: 'service_bookings',
     booking_guests: 'booking_guests',
     pricing_rules: 'pricing_rules',
@@ -1624,7 +1640,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "businesses" | "business_employees" | "intents" | "notifications" | "role_intents" | "roles" | "social_accounts" | "subscription_plans" | "tenants" | "users" | "leads" | "lead_activities" | "lead_conversations" | "lead_messages" | "tags" | "lead_tag_assignments" | "lead_notes" | "lead_status_history" | "lead_followups" | "lead_duplicates" | "products" | "product_variants" | "product_images" | "course_batches" | "customers" | "orders" | "order_items" | "cart_reservations" | "campaigns" | "campaign_recipients" | "lead_scoring_rules" | "lead_score_history" | "tasks" | "notification_templates" | "notification_messages" | "notification_preferences" | "payments" | "payment_reconciliation" | "conversations" | "messages" | "notification_events" | "payment_webhooks" | "instagram_media" | "product_categories" | "product_reviews" | "workflow_definitions" | "business_workflows" | "workflow_executions" | "cart_items" | "carts" | "whatsapp_optouts" | "campaign_analytics" | "hotel_pricing_recommendations" | "hotel_booking_outcomes" | "hotel_pricing_notifications" | "services" | "service_availability" | "service_bookings" | "booking_guests" | "pricing_rules" | "pricing_suggestions" | "pricing_history" | "product_stock_alerts" | "service_holds"
+      modelProps: "businesses" | "business_employees" | "intents" | "notifications" | "role_intents" | "roles" | "social_accounts" | "subscription_plans" | "tenants" | "users" | "leads" | "lead_activities" | "lead_conversations" | "lead_messages" | "tags" | "lead_tag_assignments" | "lead_notes" | "lead_status_history" | "lead_followups" | "lead_duplicates" | "products" | "product_variants" | "product_images" | "course_batches" | "customers" | "orders" | "order_items" | "cart_reservations" | "campaigns" | "campaign_recipients" | "lead_scoring_rules" | "lead_score_history" | "tasks" | "notification_templates" | "notification_messages" | "notification_preferences" | "payments" | "payment_reconciliation" | "conversations" | "messages" | "notification_events" | "payment_webhooks" | "instagram_media" | "product_categories" | "product_reviews" | "workflow_definitions" | "business_workflows" | "workflow_executions" | "cart_items" | "carts" | "whatsapp_optouts" | "campaign_analytics" | "hotel_pricing_recommendations" | "hotel_booking_outcomes" | "hotel_pricing_notifications" | "services" | "service_availability" | "service_blocked_dates" | "service_bookings" | "booking_guests" | "pricing_rules" | "pricing_suggestions" | "pricing_history" | "product_stock_alerts" | "service_holds"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -5846,6 +5862,80 @@ export namespace Prisma {
           }
         }
       }
+      service_blocked_dates: {
+        payload: Prisma.$service_blocked_datesPayload<ExtArgs>
+        fields: Prisma.service_blocked_datesFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.service_blocked_datesFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$service_blocked_datesPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.service_blocked_datesFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$service_blocked_datesPayload>
+          }
+          findFirst: {
+            args: Prisma.service_blocked_datesFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$service_blocked_datesPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.service_blocked_datesFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$service_blocked_datesPayload>
+          }
+          findMany: {
+            args: Prisma.service_blocked_datesFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$service_blocked_datesPayload>[]
+          }
+          create: {
+            args: Prisma.service_blocked_datesCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$service_blocked_datesPayload>
+          }
+          createMany: {
+            args: Prisma.service_blocked_datesCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.service_blocked_datesCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$service_blocked_datesPayload>[]
+          }
+          delete: {
+            args: Prisma.service_blocked_datesDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$service_blocked_datesPayload>
+          }
+          update: {
+            args: Prisma.service_blocked_datesUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$service_blocked_datesPayload>
+          }
+          deleteMany: {
+            args: Prisma.service_blocked_datesDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.service_blocked_datesUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.service_blocked_datesUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$service_blocked_datesPayload>[]
+          }
+          upsert: {
+            args: Prisma.service_blocked_datesUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$service_blocked_datesPayload>
+          }
+          aggregate: {
+            args: Prisma.Service_blocked_datesAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateService_blocked_dates>
+          }
+          groupBy: {
+            args: Prisma.service_blocked_datesGroupByArgs<ExtArgs>
+            result: $Utils.Optional<Service_blocked_datesGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.service_blocked_datesCountArgs<ExtArgs>
+            result: $Utils.Optional<Service_blocked_datesCountAggregateOutputType> | number
+          }
+        }
+      }
       service_bookings: {
         payload: Prisma.$service_bookingsPayload<ExtArgs>
         fields: Prisma.service_bookingsFieldRefs
@@ -6505,6 +6595,7 @@ export namespace Prisma {
     hotel_pricing_notifications?: hotel_pricing_notificationsOmit
     services?: servicesOmit
     service_availability?: service_availabilityOmit
+    service_blocked_dates?: service_blocked_datesOmit
     service_bookings?: service_bookingsOmit
     booking_guests?: booking_guestsOmit
     pricing_rules?: pricing_rulesOmit
@@ -7956,6 +8047,7 @@ export namespace Prisma {
     service_availability: number
     service_bookings: number
     service_holds: number
+    service_blocked_dates: number
     pricing_suggestions: number
     pricing_history: number
   }
@@ -7964,6 +8056,7 @@ export namespace Prisma {
     service_availability?: boolean | ServicesCountOutputTypeCountService_availabilityArgs
     service_bookings?: boolean | ServicesCountOutputTypeCountService_bookingsArgs
     service_holds?: boolean | ServicesCountOutputTypeCountService_holdsArgs
+    service_blocked_dates?: boolean | ServicesCountOutputTypeCountService_blocked_datesArgs
     pricing_suggestions?: boolean | ServicesCountOutputTypeCountPricing_suggestionsArgs
     pricing_history?: boolean | ServicesCountOutputTypeCountPricing_historyArgs
   }
@@ -7998,6 +8091,13 @@ export namespace Prisma {
    */
   export type ServicesCountOutputTypeCountService_holdsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: service_holdsWhereInput
+  }
+
+  /**
+   * ServicesCountOutputType without action
+   */
+  export type ServicesCountOutputTypeCountService_blocked_datesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: service_blocked_datesWhereInput
   }
 
   /**
@@ -77989,11 +78089,19 @@ export namespace Prisma {
   export type ServicesAvgAggregateOutputType = {
     base_price: Decimal | null
     capacity: number | null
+    total_units: number | null
+    tax_percentage: Decimal | null
+    extra_guest_charge: Decimal | null
+    max_adults: number | null
   }
 
   export type ServicesSumAggregateOutputType = {
     base_price: Decimal | null
     capacity: number | null
+    total_units: number | null
+    tax_percentage: Decimal | null
+    extra_guest_charge: Decimal | null
+    max_adults: number | null
   }
 
   export type ServicesMinAggregateOutputType = {
@@ -78005,6 +78113,13 @@ export namespace Prisma {
     description: string | null
     base_price: Decimal | null
     capacity: number | null
+    total_units: number | null
+    check_in_time: string | null
+    check_out_time: string | null
+    cancellation_policy: string | null
+    tax_percentage: Decimal | null
+    extra_guest_charge: Decimal | null
+    max_adults: number | null
     is_active: boolean | null
     created_at: Date | null
     updated_at: Date | null
@@ -78019,6 +78134,13 @@ export namespace Prisma {
     description: string | null
     base_price: Decimal | null
     capacity: number | null
+    total_units: number | null
+    check_in_time: string | null
+    check_out_time: string | null
+    cancellation_policy: string | null
+    tax_percentage: Decimal | null
+    extra_guest_charge: Decimal | null
+    max_adults: number | null
     is_active: boolean | null
     created_at: Date | null
     updated_at: Date | null
@@ -78033,6 +78155,13 @@ export namespace Prisma {
     description: number
     base_price: number
     capacity: number
+    total_units: number
+    check_in_time: number
+    check_out_time: number
+    cancellation_policy: number
+    tax_percentage: number
+    extra_guest_charge: number
+    max_adults: number
     attributes: number
     image_urls: number
     is_active: number
@@ -78045,11 +78174,19 @@ export namespace Prisma {
   export type ServicesAvgAggregateInputType = {
     base_price?: true
     capacity?: true
+    total_units?: true
+    tax_percentage?: true
+    extra_guest_charge?: true
+    max_adults?: true
   }
 
   export type ServicesSumAggregateInputType = {
     base_price?: true
     capacity?: true
+    total_units?: true
+    tax_percentage?: true
+    extra_guest_charge?: true
+    max_adults?: true
   }
 
   export type ServicesMinAggregateInputType = {
@@ -78061,6 +78198,13 @@ export namespace Prisma {
     description?: true
     base_price?: true
     capacity?: true
+    total_units?: true
+    check_in_time?: true
+    check_out_time?: true
+    cancellation_policy?: true
+    tax_percentage?: true
+    extra_guest_charge?: true
+    max_adults?: true
     is_active?: true
     created_at?: true
     updated_at?: true
@@ -78075,6 +78219,13 @@ export namespace Prisma {
     description?: true
     base_price?: true
     capacity?: true
+    total_units?: true
+    check_in_time?: true
+    check_out_time?: true
+    cancellation_policy?: true
+    tax_percentage?: true
+    extra_guest_charge?: true
+    max_adults?: true
     is_active?: true
     created_at?: true
     updated_at?: true
@@ -78089,6 +78240,13 @@ export namespace Prisma {
     description?: true
     base_price?: true
     capacity?: true
+    total_units?: true
+    check_in_time?: true
+    check_out_time?: true
+    cancellation_policy?: true
+    tax_percentage?: true
+    extra_guest_charge?: true
+    max_adults?: true
     attributes?: true
     image_urls?: true
     is_active?: true
@@ -78192,6 +78350,13 @@ export namespace Prisma {
     description: string | null
     base_price: Decimal
     capacity: number
+    total_units: number
+    check_in_time: string | null
+    check_out_time: string | null
+    cancellation_policy: string | null
+    tax_percentage: Decimal | null
+    extra_guest_charge: Decimal | null
+    max_adults: number | null
     attributes: JsonValue | null
     image_urls: JsonValue | null
     is_active: boolean
@@ -78227,6 +78392,13 @@ export namespace Prisma {
     description?: boolean
     base_price?: boolean
     capacity?: boolean
+    total_units?: boolean
+    check_in_time?: boolean
+    check_out_time?: boolean
+    cancellation_policy?: boolean
+    tax_percentage?: boolean
+    extra_guest_charge?: boolean
+    max_adults?: boolean
     attributes?: boolean
     image_urls?: boolean
     is_active?: boolean
@@ -78236,6 +78408,7 @@ export namespace Prisma {
     service_availability?: boolean | services$service_availabilityArgs<ExtArgs>
     service_bookings?: boolean | services$service_bookingsArgs<ExtArgs>
     service_holds?: boolean | services$service_holdsArgs<ExtArgs>
+    service_blocked_dates?: boolean | services$service_blocked_datesArgs<ExtArgs>
     pricing_suggestions?: boolean | services$pricing_suggestionsArgs<ExtArgs>
     pricing_history?: boolean | services$pricing_historyArgs<ExtArgs>
     _count?: boolean | ServicesCountOutputTypeDefaultArgs<ExtArgs>
@@ -78250,6 +78423,13 @@ export namespace Prisma {
     description?: boolean
     base_price?: boolean
     capacity?: boolean
+    total_units?: boolean
+    check_in_time?: boolean
+    check_out_time?: boolean
+    cancellation_policy?: boolean
+    tax_percentage?: boolean
+    extra_guest_charge?: boolean
+    max_adults?: boolean
     attributes?: boolean
     image_urls?: boolean
     is_active?: boolean
@@ -78267,6 +78447,13 @@ export namespace Prisma {
     description?: boolean
     base_price?: boolean
     capacity?: boolean
+    total_units?: boolean
+    check_in_time?: boolean
+    check_out_time?: boolean
+    cancellation_policy?: boolean
+    tax_percentage?: boolean
+    extra_guest_charge?: boolean
+    max_adults?: boolean
     attributes?: boolean
     image_urls?: boolean
     is_active?: boolean
@@ -78284,6 +78471,13 @@ export namespace Prisma {
     description?: boolean
     base_price?: boolean
     capacity?: boolean
+    total_units?: boolean
+    check_in_time?: boolean
+    check_out_time?: boolean
+    cancellation_policy?: boolean
+    tax_percentage?: boolean
+    extra_guest_charge?: boolean
+    max_adults?: boolean
     attributes?: boolean
     image_urls?: boolean
     is_active?: boolean
@@ -78291,12 +78485,13 @@ export namespace Prisma {
     updated_at?: boolean
   }
 
-  export type servicesOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"service_id" | "business_id" | "tenant_id" | "name" | "type" | "description" | "base_price" | "capacity" | "attributes" | "image_urls" | "is_active" | "created_at" | "updated_at", ExtArgs["result"]["services"]>
+  export type servicesOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"service_id" | "business_id" | "tenant_id" | "name" | "type" | "description" | "base_price" | "capacity" | "total_units" | "check_in_time" | "check_out_time" | "cancellation_policy" | "tax_percentage" | "extra_guest_charge" | "max_adults" | "attributes" | "image_urls" | "is_active" | "created_at" | "updated_at", ExtArgs["result"]["services"]>
   export type servicesInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     businesses?: boolean | businessesDefaultArgs<ExtArgs>
     service_availability?: boolean | services$service_availabilityArgs<ExtArgs>
     service_bookings?: boolean | services$service_bookingsArgs<ExtArgs>
     service_holds?: boolean | services$service_holdsArgs<ExtArgs>
+    service_blocked_dates?: boolean | services$service_blocked_datesArgs<ExtArgs>
     pricing_suggestions?: boolean | services$pricing_suggestionsArgs<ExtArgs>
     pricing_history?: boolean | services$pricing_historyArgs<ExtArgs>
     _count?: boolean | ServicesCountOutputTypeDefaultArgs<ExtArgs>
@@ -78315,6 +78510,7 @@ export namespace Prisma {
       service_availability: Prisma.$service_availabilityPayload<ExtArgs>[]
       service_bookings: Prisma.$service_bookingsPayload<ExtArgs>[]
       service_holds: Prisma.$service_holdsPayload<ExtArgs>[]
+      service_blocked_dates: Prisma.$service_blocked_datesPayload<ExtArgs>[]
       pricing_suggestions: Prisma.$pricing_suggestionsPayload<ExtArgs>[]
       pricing_history: Prisma.$pricing_historyPayload<ExtArgs>[]
     }
@@ -78327,6 +78523,13 @@ export namespace Prisma {
       description: string | null
       base_price: Prisma.Decimal
       capacity: number
+      total_units: number
+      check_in_time: string | null
+      check_out_time: string | null
+      cancellation_policy: string | null
+      tax_percentage: Prisma.Decimal | null
+      extra_guest_charge: Prisma.Decimal | null
+      max_adults: number | null
       attributes: Prisma.JsonValue | null
       image_urls: Prisma.JsonValue | null
       is_active: boolean
@@ -78730,6 +78933,7 @@ export namespace Prisma {
     service_availability<T extends services$service_availabilityArgs<ExtArgs> = {}>(args?: Subset<T, services$service_availabilityArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$service_availabilityPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     service_bookings<T extends services$service_bookingsArgs<ExtArgs> = {}>(args?: Subset<T, services$service_bookingsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$service_bookingsPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     service_holds<T extends services$service_holdsArgs<ExtArgs> = {}>(args?: Subset<T, services$service_holdsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$service_holdsPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    service_blocked_dates<T extends services$service_blocked_datesArgs<ExtArgs> = {}>(args?: Subset<T, services$service_blocked_datesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$service_blocked_datesPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     pricing_suggestions<T extends services$pricing_suggestionsArgs<ExtArgs> = {}>(args?: Subset<T, services$pricing_suggestionsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$pricing_suggestionsPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     pricing_history<T extends services$pricing_historyArgs<ExtArgs> = {}>(args?: Subset<T, services$pricing_historyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$pricing_historyPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
@@ -78769,6 +78973,13 @@ export namespace Prisma {
     readonly description: FieldRef<"services", 'String'>
     readonly base_price: FieldRef<"services", 'Decimal'>
     readonly capacity: FieldRef<"services", 'Int'>
+    readonly total_units: FieldRef<"services", 'Int'>
+    readonly check_in_time: FieldRef<"services", 'String'>
+    readonly check_out_time: FieldRef<"services", 'String'>
+    readonly cancellation_policy: FieldRef<"services", 'String'>
+    readonly tax_percentage: FieldRef<"services", 'Decimal'>
+    readonly extra_guest_charge: FieldRef<"services", 'Decimal'>
+    readonly max_adults: FieldRef<"services", 'Int'>
     readonly attributes: FieldRef<"services", 'Json'>
     readonly image_urls: FieldRef<"services", 'Json'>
     readonly is_active: FieldRef<"services", 'Boolean'>
@@ -79239,6 +79450,30 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: Service_holdsScalarFieldEnum | Service_holdsScalarFieldEnum[]
+  }
+
+  /**
+   * services.service_blocked_dates
+   */
+  export type services$service_blocked_datesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the service_blocked_dates
+     */
+    select?: service_blocked_datesSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the service_blocked_dates
+     */
+    omit?: service_blocked_datesOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: service_blocked_datesInclude<ExtArgs> | null
+    where?: service_blocked_datesWhereInput
+    orderBy?: service_blocked_datesOrderByWithRelationInput | service_blocked_datesOrderByWithRelationInput[]
+    cursor?: service_blocked_datesWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: Service_blocked_datesScalarFieldEnum | Service_blocked_datesScalarFieldEnum[]
   }
 
   /**
@@ -80491,6 +80726,1077 @@ export namespace Prisma {
 
 
   /**
+   * Model service_blocked_dates
+   */
+
+  export type AggregateService_blocked_dates = {
+    _count: Service_blocked_datesCountAggregateOutputType | null
+    _min: Service_blocked_datesMinAggregateOutputType | null
+    _max: Service_blocked_datesMaxAggregateOutputType | null
+  }
+
+  export type Service_blocked_datesMinAggregateOutputType = {
+    id: string | null
+    service_id: string | null
+    business_id: string | null
+    date: Date | null
+    reason: string | null
+    created_at: Date | null
+  }
+
+  export type Service_blocked_datesMaxAggregateOutputType = {
+    id: string | null
+    service_id: string | null
+    business_id: string | null
+    date: Date | null
+    reason: string | null
+    created_at: Date | null
+  }
+
+  export type Service_blocked_datesCountAggregateOutputType = {
+    id: number
+    service_id: number
+    business_id: number
+    date: number
+    reason: number
+    created_at: number
+    _all: number
+  }
+
+
+  export type Service_blocked_datesMinAggregateInputType = {
+    id?: true
+    service_id?: true
+    business_id?: true
+    date?: true
+    reason?: true
+    created_at?: true
+  }
+
+  export type Service_blocked_datesMaxAggregateInputType = {
+    id?: true
+    service_id?: true
+    business_id?: true
+    date?: true
+    reason?: true
+    created_at?: true
+  }
+
+  export type Service_blocked_datesCountAggregateInputType = {
+    id?: true
+    service_id?: true
+    business_id?: true
+    date?: true
+    reason?: true
+    created_at?: true
+    _all?: true
+  }
+
+  export type Service_blocked_datesAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which service_blocked_dates to aggregate.
+     */
+    where?: service_blocked_datesWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of service_blocked_dates to fetch.
+     */
+    orderBy?: service_blocked_datesOrderByWithRelationInput | service_blocked_datesOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: service_blocked_datesWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` service_blocked_dates from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` service_blocked_dates.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned service_blocked_dates
+    **/
+    _count?: true | Service_blocked_datesCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: Service_blocked_datesMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: Service_blocked_datesMaxAggregateInputType
+  }
+
+  export type GetService_blocked_datesAggregateType<T extends Service_blocked_datesAggregateArgs> = {
+        [P in keyof T & keyof AggregateService_blocked_dates]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateService_blocked_dates[P]>
+      : GetScalarType<T[P], AggregateService_blocked_dates[P]>
+  }
+
+
+
+
+  export type service_blocked_datesGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: service_blocked_datesWhereInput
+    orderBy?: service_blocked_datesOrderByWithAggregationInput | service_blocked_datesOrderByWithAggregationInput[]
+    by: Service_blocked_datesScalarFieldEnum[] | Service_blocked_datesScalarFieldEnum
+    having?: service_blocked_datesScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: Service_blocked_datesCountAggregateInputType | true
+    _min?: Service_blocked_datesMinAggregateInputType
+    _max?: Service_blocked_datesMaxAggregateInputType
+  }
+
+  export type Service_blocked_datesGroupByOutputType = {
+    id: string
+    service_id: string
+    business_id: string
+    date: Date
+    reason: string | null
+    created_at: Date
+    _count: Service_blocked_datesCountAggregateOutputType | null
+    _min: Service_blocked_datesMinAggregateOutputType | null
+    _max: Service_blocked_datesMaxAggregateOutputType | null
+  }
+
+  type GetService_blocked_datesGroupByPayload<T extends service_blocked_datesGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<Service_blocked_datesGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof Service_blocked_datesGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], Service_blocked_datesGroupByOutputType[P]>
+            : GetScalarType<T[P], Service_blocked_datesGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type service_blocked_datesSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    service_id?: boolean
+    business_id?: boolean
+    date?: boolean
+    reason?: boolean
+    created_at?: boolean
+    services?: boolean | servicesDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["service_blocked_dates"]>
+
+  export type service_blocked_datesSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    service_id?: boolean
+    business_id?: boolean
+    date?: boolean
+    reason?: boolean
+    created_at?: boolean
+    services?: boolean | servicesDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["service_blocked_dates"]>
+
+  export type service_blocked_datesSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    service_id?: boolean
+    business_id?: boolean
+    date?: boolean
+    reason?: boolean
+    created_at?: boolean
+    services?: boolean | servicesDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["service_blocked_dates"]>
+
+  export type service_blocked_datesSelectScalar = {
+    id?: boolean
+    service_id?: boolean
+    business_id?: boolean
+    date?: boolean
+    reason?: boolean
+    created_at?: boolean
+  }
+
+  export type service_blocked_datesOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "service_id" | "business_id" | "date" | "reason" | "created_at", ExtArgs["result"]["service_blocked_dates"]>
+  export type service_blocked_datesInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    services?: boolean | servicesDefaultArgs<ExtArgs>
+  }
+  export type service_blocked_datesIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    services?: boolean | servicesDefaultArgs<ExtArgs>
+  }
+  export type service_blocked_datesIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    services?: boolean | servicesDefaultArgs<ExtArgs>
+  }
+
+  export type $service_blocked_datesPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "service_blocked_dates"
+    objects: {
+      services: Prisma.$servicesPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      service_id: string
+      business_id: string
+      date: Date
+      reason: string | null
+      created_at: Date
+    }, ExtArgs["result"]["service_blocked_dates"]>
+    composites: {}
+  }
+
+  type service_blocked_datesGetPayload<S extends boolean | null | undefined | service_blocked_datesDefaultArgs> = $Result.GetResult<Prisma.$service_blocked_datesPayload, S>
+
+  type service_blocked_datesCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<service_blocked_datesFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: Service_blocked_datesCountAggregateInputType | true
+    }
+
+  export interface service_blocked_datesDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['service_blocked_dates'], meta: { name: 'service_blocked_dates' } }
+    /**
+     * Find zero or one Service_blocked_dates that matches the filter.
+     * @param {service_blocked_datesFindUniqueArgs} args - Arguments to find a Service_blocked_dates
+     * @example
+     * // Get one Service_blocked_dates
+     * const service_blocked_dates = await prisma.service_blocked_dates.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends service_blocked_datesFindUniqueArgs>(args: SelectSubset<T, service_blocked_datesFindUniqueArgs<ExtArgs>>): Prisma__service_blocked_datesClient<$Result.GetResult<Prisma.$service_blocked_datesPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one Service_blocked_dates that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {service_blocked_datesFindUniqueOrThrowArgs} args - Arguments to find a Service_blocked_dates
+     * @example
+     * // Get one Service_blocked_dates
+     * const service_blocked_dates = await prisma.service_blocked_dates.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends service_blocked_datesFindUniqueOrThrowArgs>(args: SelectSubset<T, service_blocked_datesFindUniqueOrThrowArgs<ExtArgs>>): Prisma__service_blocked_datesClient<$Result.GetResult<Prisma.$service_blocked_datesPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Service_blocked_dates that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {service_blocked_datesFindFirstArgs} args - Arguments to find a Service_blocked_dates
+     * @example
+     * // Get one Service_blocked_dates
+     * const service_blocked_dates = await prisma.service_blocked_dates.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends service_blocked_datesFindFirstArgs>(args?: SelectSubset<T, service_blocked_datesFindFirstArgs<ExtArgs>>): Prisma__service_blocked_datesClient<$Result.GetResult<Prisma.$service_blocked_datesPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Service_blocked_dates that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {service_blocked_datesFindFirstOrThrowArgs} args - Arguments to find a Service_blocked_dates
+     * @example
+     * // Get one Service_blocked_dates
+     * const service_blocked_dates = await prisma.service_blocked_dates.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends service_blocked_datesFindFirstOrThrowArgs>(args?: SelectSubset<T, service_blocked_datesFindFirstOrThrowArgs<ExtArgs>>): Prisma__service_blocked_datesClient<$Result.GetResult<Prisma.$service_blocked_datesPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more Service_blocked_dates that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {service_blocked_datesFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all Service_blocked_dates
+     * const service_blocked_dates = await prisma.service_blocked_dates.findMany()
+     * 
+     * // Get first 10 Service_blocked_dates
+     * const service_blocked_dates = await prisma.service_blocked_dates.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const service_blocked_datesWithIdOnly = await prisma.service_blocked_dates.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends service_blocked_datesFindManyArgs>(args?: SelectSubset<T, service_blocked_datesFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$service_blocked_datesPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a Service_blocked_dates.
+     * @param {service_blocked_datesCreateArgs} args - Arguments to create a Service_blocked_dates.
+     * @example
+     * // Create one Service_blocked_dates
+     * const Service_blocked_dates = await prisma.service_blocked_dates.create({
+     *   data: {
+     *     // ... data to create a Service_blocked_dates
+     *   }
+     * })
+     * 
+     */
+    create<T extends service_blocked_datesCreateArgs>(args: SelectSubset<T, service_blocked_datesCreateArgs<ExtArgs>>): Prisma__service_blocked_datesClient<$Result.GetResult<Prisma.$service_blocked_datesPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many Service_blocked_dates.
+     * @param {service_blocked_datesCreateManyArgs} args - Arguments to create many Service_blocked_dates.
+     * @example
+     * // Create many Service_blocked_dates
+     * const service_blocked_dates = await prisma.service_blocked_dates.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends service_blocked_datesCreateManyArgs>(args?: SelectSubset<T, service_blocked_datesCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many Service_blocked_dates and returns the data saved in the database.
+     * @param {service_blocked_datesCreateManyAndReturnArgs} args - Arguments to create many Service_blocked_dates.
+     * @example
+     * // Create many Service_blocked_dates
+     * const service_blocked_dates = await prisma.service_blocked_dates.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many Service_blocked_dates and only return the `id`
+     * const service_blocked_datesWithIdOnly = await prisma.service_blocked_dates.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends service_blocked_datesCreateManyAndReturnArgs>(args?: SelectSubset<T, service_blocked_datesCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$service_blocked_datesPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a Service_blocked_dates.
+     * @param {service_blocked_datesDeleteArgs} args - Arguments to delete one Service_blocked_dates.
+     * @example
+     * // Delete one Service_blocked_dates
+     * const Service_blocked_dates = await prisma.service_blocked_dates.delete({
+     *   where: {
+     *     // ... filter to delete one Service_blocked_dates
+     *   }
+     * })
+     * 
+     */
+    delete<T extends service_blocked_datesDeleteArgs>(args: SelectSubset<T, service_blocked_datesDeleteArgs<ExtArgs>>): Prisma__service_blocked_datesClient<$Result.GetResult<Prisma.$service_blocked_datesPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one Service_blocked_dates.
+     * @param {service_blocked_datesUpdateArgs} args - Arguments to update one Service_blocked_dates.
+     * @example
+     * // Update one Service_blocked_dates
+     * const service_blocked_dates = await prisma.service_blocked_dates.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends service_blocked_datesUpdateArgs>(args: SelectSubset<T, service_blocked_datesUpdateArgs<ExtArgs>>): Prisma__service_blocked_datesClient<$Result.GetResult<Prisma.$service_blocked_datesPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more Service_blocked_dates.
+     * @param {service_blocked_datesDeleteManyArgs} args - Arguments to filter Service_blocked_dates to delete.
+     * @example
+     * // Delete a few Service_blocked_dates
+     * const { count } = await prisma.service_blocked_dates.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends service_blocked_datesDeleteManyArgs>(args?: SelectSubset<T, service_blocked_datesDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Service_blocked_dates.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {service_blocked_datesUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many Service_blocked_dates
+     * const service_blocked_dates = await prisma.service_blocked_dates.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends service_blocked_datesUpdateManyArgs>(args: SelectSubset<T, service_blocked_datesUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Service_blocked_dates and returns the data updated in the database.
+     * @param {service_blocked_datesUpdateManyAndReturnArgs} args - Arguments to update many Service_blocked_dates.
+     * @example
+     * // Update many Service_blocked_dates
+     * const service_blocked_dates = await prisma.service_blocked_dates.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more Service_blocked_dates and only return the `id`
+     * const service_blocked_datesWithIdOnly = await prisma.service_blocked_dates.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends service_blocked_datesUpdateManyAndReturnArgs>(args: SelectSubset<T, service_blocked_datesUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$service_blocked_datesPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one Service_blocked_dates.
+     * @param {service_blocked_datesUpsertArgs} args - Arguments to update or create a Service_blocked_dates.
+     * @example
+     * // Update or create a Service_blocked_dates
+     * const service_blocked_dates = await prisma.service_blocked_dates.upsert({
+     *   create: {
+     *     // ... data to create a Service_blocked_dates
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the Service_blocked_dates we want to update
+     *   }
+     * })
+     */
+    upsert<T extends service_blocked_datesUpsertArgs>(args: SelectSubset<T, service_blocked_datesUpsertArgs<ExtArgs>>): Prisma__service_blocked_datesClient<$Result.GetResult<Prisma.$service_blocked_datesPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of Service_blocked_dates.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {service_blocked_datesCountArgs} args - Arguments to filter Service_blocked_dates to count.
+     * @example
+     * // Count the number of Service_blocked_dates
+     * const count = await prisma.service_blocked_dates.count({
+     *   where: {
+     *     // ... the filter for the Service_blocked_dates we want to count
+     *   }
+     * })
+    **/
+    count<T extends service_blocked_datesCountArgs>(
+      args?: Subset<T, service_blocked_datesCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], Service_blocked_datesCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a Service_blocked_dates.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {Service_blocked_datesAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends Service_blocked_datesAggregateArgs>(args: Subset<T, Service_blocked_datesAggregateArgs>): Prisma.PrismaPromise<GetService_blocked_datesAggregateType<T>>
+
+    /**
+     * Group by Service_blocked_dates.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {service_blocked_datesGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends service_blocked_datesGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: service_blocked_datesGroupByArgs['orderBy'] }
+        : { orderBy?: service_blocked_datesGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, service_blocked_datesGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetService_blocked_datesGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the service_blocked_dates model
+   */
+  readonly fields: service_blocked_datesFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for service_blocked_dates.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__service_blocked_datesClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    services<T extends servicesDefaultArgs<ExtArgs> = {}>(args?: Subset<T, servicesDefaultArgs<ExtArgs>>): Prisma__servicesClient<$Result.GetResult<Prisma.$servicesPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the service_blocked_dates model
+   */
+  interface service_blocked_datesFieldRefs {
+    readonly id: FieldRef<"service_blocked_dates", 'String'>
+    readonly service_id: FieldRef<"service_blocked_dates", 'String'>
+    readonly business_id: FieldRef<"service_blocked_dates", 'String'>
+    readonly date: FieldRef<"service_blocked_dates", 'DateTime'>
+    readonly reason: FieldRef<"service_blocked_dates", 'String'>
+    readonly created_at: FieldRef<"service_blocked_dates", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * service_blocked_dates findUnique
+   */
+  export type service_blocked_datesFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the service_blocked_dates
+     */
+    select?: service_blocked_datesSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the service_blocked_dates
+     */
+    omit?: service_blocked_datesOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: service_blocked_datesInclude<ExtArgs> | null
+    /**
+     * Filter, which service_blocked_dates to fetch.
+     */
+    where: service_blocked_datesWhereUniqueInput
+  }
+
+  /**
+   * service_blocked_dates findUniqueOrThrow
+   */
+  export type service_blocked_datesFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the service_blocked_dates
+     */
+    select?: service_blocked_datesSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the service_blocked_dates
+     */
+    omit?: service_blocked_datesOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: service_blocked_datesInclude<ExtArgs> | null
+    /**
+     * Filter, which service_blocked_dates to fetch.
+     */
+    where: service_blocked_datesWhereUniqueInput
+  }
+
+  /**
+   * service_blocked_dates findFirst
+   */
+  export type service_blocked_datesFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the service_blocked_dates
+     */
+    select?: service_blocked_datesSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the service_blocked_dates
+     */
+    omit?: service_blocked_datesOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: service_blocked_datesInclude<ExtArgs> | null
+    /**
+     * Filter, which service_blocked_dates to fetch.
+     */
+    where?: service_blocked_datesWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of service_blocked_dates to fetch.
+     */
+    orderBy?: service_blocked_datesOrderByWithRelationInput | service_blocked_datesOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for service_blocked_dates.
+     */
+    cursor?: service_blocked_datesWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` service_blocked_dates from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` service_blocked_dates.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of service_blocked_dates.
+     */
+    distinct?: Service_blocked_datesScalarFieldEnum | Service_blocked_datesScalarFieldEnum[]
+  }
+
+  /**
+   * service_blocked_dates findFirstOrThrow
+   */
+  export type service_blocked_datesFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the service_blocked_dates
+     */
+    select?: service_blocked_datesSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the service_blocked_dates
+     */
+    omit?: service_blocked_datesOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: service_blocked_datesInclude<ExtArgs> | null
+    /**
+     * Filter, which service_blocked_dates to fetch.
+     */
+    where?: service_blocked_datesWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of service_blocked_dates to fetch.
+     */
+    orderBy?: service_blocked_datesOrderByWithRelationInput | service_blocked_datesOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for service_blocked_dates.
+     */
+    cursor?: service_blocked_datesWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` service_blocked_dates from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` service_blocked_dates.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of service_blocked_dates.
+     */
+    distinct?: Service_blocked_datesScalarFieldEnum | Service_blocked_datesScalarFieldEnum[]
+  }
+
+  /**
+   * service_blocked_dates findMany
+   */
+  export type service_blocked_datesFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the service_blocked_dates
+     */
+    select?: service_blocked_datesSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the service_blocked_dates
+     */
+    omit?: service_blocked_datesOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: service_blocked_datesInclude<ExtArgs> | null
+    /**
+     * Filter, which service_blocked_dates to fetch.
+     */
+    where?: service_blocked_datesWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of service_blocked_dates to fetch.
+     */
+    orderBy?: service_blocked_datesOrderByWithRelationInput | service_blocked_datesOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing service_blocked_dates.
+     */
+    cursor?: service_blocked_datesWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` service_blocked_dates from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` service_blocked_dates.
+     */
+    skip?: number
+    distinct?: Service_blocked_datesScalarFieldEnum | Service_blocked_datesScalarFieldEnum[]
+  }
+
+  /**
+   * service_blocked_dates create
+   */
+  export type service_blocked_datesCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the service_blocked_dates
+     */
+    select?: service_blocked_datesSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the service_blocked_dates
+     */
+    omit?: service_blocked_datesOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: service_blocked_datesInclude<ExtArgs> | null
+    /**
+     * The data needed to create a service_blocked_dates.
+     */
+    data: XOR<service_blocked_datesCreateInput, service_blocked_datesUncheckedCreateInput>
+  }
+
+  /**
+   * service_blocked_dates createMany
+   */
+  export type service_blocked_datesCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many service_blocked_dates.
+     */
+    data: service_blocked_datesCreateManyInput | service_blocked_datesCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * service_blocked_dates createManyAndReturn
+   */
+  export type service_blocked_datesCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the service_blocked_dates
+     */
+    select?: service_blocked_datesSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the service_blocked_dates
+     */
+    omit?: service_blocked_datesOmit<ExtArgs> | null
+    /**
+     * The data used to create many service_blocked_dates.
+     */
+    data: service_blocked_datesCreateManyInput | service_blocked_datesCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: service_blocked_datesIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * service_blocked_dates update
+   */
+  export type service_blocked_datesUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the service_blocked_dates
+     */
+    select?: service_blocked_datesSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the service_blocked_dates
+     */
+    omit?: service_blocked_datesOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: service_blocked_datesInclude<ExtArgs> | null
+    /**
+     * The data needed to update a service_blocked_dates.
+     */
+    data: XOR<service_blocked_datesUpdateInput, service_blocked_datesUncheckedUpdateInput>
+    /**
+     * Choose, which service_blocked_dates to update.
+     */
+    where: service_blocked_datesWhereUniqueInput
+  }
+
+  /**
+   * service_blocked_dates updateMany
+   */
+  export type service_blocked_datesUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update service_blocked_dates.
+     */
+    data: XOR<service_blocked_datesUpdateManyMutationInput, service_blocked_datesUncheckedUpdateManyInput>
+    /**
+     * Filter which service_blocked_dates to update
+     */
+    where?: service_blocked_datesWhereInput
+    /**
+     * Limit how many service_blocked_dates to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * service_blocked_dates updateManyAndReturn
+   */
+  export type service_blocked_datesUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the service_blocked_dates
+     */
+    select?: service_blocked_datesSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the service_blocked_dates
+     */
+    omit?: service_blocked_datesOmit<ExtArgs> | null
+    /**
+     * The data used to update service_blocked_dates.
+     */
+    data: XOR<service_blocked_datesUpdateManyMutationInput, service_blocked_datesUncheckedUpdateManyInput>
+    /**
+     * Filter which service_blocked_dates to update
+     */
+    where?: service_blocked_datesWhereInput
+    /**
+     * Limit how many service_blocked_dates to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: service_blocked_datesIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * service_blocked_dates upsert
+   */
+  export type service_blocked_datesUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the service_blocked_dates
+     */
+    select?: service_blocked_datesSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the service_blocked_dates
+     */
+    omit?: service_blocked_datesOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: service_blocked_datesInclude<ExtArgs> | null
+    /**
+     * The filter to search for the service_blocked_dates to update in case it exists.
+     */
+    where: service_blocked_datesWhereUniqueInput
+    /**
+     * In case the service_blocked_dates found by the `where` argument doesn't exist, create a new service_blocked_dates with this data.
+     */
+    create: XOR<service_blocked_datesCreateInput, service_blocked_datesUncheckedCreateInput>
+    /**
+     * In case the service_blocked_dates was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<service_blocked_datesUpdateInput, service_blocked_datesUncheckedUpdateInput>
+  }
+
+  /**
+   * service_blocked_dates delete
+   */
+  export type service_blocked_datesDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the service_blocked_dates
+     */
+    select?: service_blocked_datesSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the service_blocked_dates
+     */
+    omit?: service_blocked_datesOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: service_blocked_datesInclude<ExtArgs> | null
+    /**
+     * Filter which service_blocked_dates to delete.
+     */
+    where: service_blocked_datesWhereUniqueInput
+  }
+
+  /**
+   * service_blocked_dates deleteMany
+   */
+  export type service_blocked_datesDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which service_blocked_dates to delete
+     */
+    where?: service_blocked_datesWhereInput
+    /**
+     * Limit how many service_blocked_dates to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * service_blocked_dates without action
+   */
+  export type service_blocked_datesDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the service_blocked_dates
+     */
+    select?: service_blocked_datesSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the service_blocked_dates
+     */
+    omit?: service_blocked_datesOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: service_blocked_datesInclude<ExtArgs> | null
+  }
+
+
+  /**
    * Model service_bookings
    */
 
@@ -80514,6 +81820,7 @@ export namespace Prisma {
 
   export type Service_bookingsMinAggregateOutputType = {
     booking_id: string | null
+    booking_reference: string | null
     service_id: string | null
     business_id: string | null
     lead_id: string | null
@@ -80532,6 +81839,7 @@ export namespace Prisma {
 
   export type Service_bookingsMaxAggregateOutputType = {
     booking_id: string | null
+    booking_reference: string | null
     service_id: string | null
     business_id: string | null
     lead_id: string | null
@@ -80550,6 +81858,7 @@ export namespace Prisma {
 
   export type Service_bookingsCountAggregateOutputType = {
     booking_id: number
+    booking_reference: number
     service_id: number
     business_id: number
     lead_id: number
@@ -80580,6 +81889,7 @@ export namespace Prisma {
 
   export type Service_bookingsMinAggregateInputType = {
     booking_id?: true
+    booking_reference?: true
     service_id?: true
     business_id?: true
     lead_id?: true
@@ -80598,6 +81908,7 @@ export namespace Prisma {
 
   export type Service_bookingsMaxAggregateInputType = {
     booking_id?: true
+    booking_reference?: true
     service_id?: true
     business_id?: true
     lead_id?: true
@@ -80616,6 +81927,7 @@ export namespace Prisma {
 
   export type Service_bookingsCountAggregateInputType = {
     booking_id?: true
+    booking_reference?: true
     service_id?: true
     business_id?: true
     lead_id?: true
@@ -80721,6 +82033,7 @@ export namespace Prisma {
 
   export type Service_bookingsGroupByOutputType = {
     booking_id: string
+    booking_reference: string | null
     service_id: string
     business_id: string
     lead_id: string | null
@@ -80758,6 +82071,7 @@ export namespace Prisma {
 
   export type service_bookingsSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     booking_id?: boolean
+    booking_reference?: boolean
     service_id?: boolean
     business_id?: boolean
     lead_id?: boolean
@@ -80778,6 +82092,7 @@ export namespace Prisma {
 
   export type service_bookingsSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     booking_id?: boolean
+    booking_reference?: boolean
     service_id?: boolean
     business_id?: boolean
     lead_id?: boolean
@@ -80797,6 +82112,7 @@ export namespace Prisma {
 
   export type service_bookingsSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     booking_id?: boolean
+    booking_reference?: boolean
     service_id?: boolean
     business_id?: boolean
     lead_id?: boolean
@@ -80816,6 +82132,7 @@ export namespace Prisma {
 
   export type service_bookingsSelectScalar = {
     booking_id?: boolean
+    booking_reference?: boolean
     service_id?: boolean
     business_id?: boolean
     lead_id?: boolean
@@ -80832,7 +82149,7 @@ export namespace Prisma {
     updated_at?: boolean
   }
 
-  export type service_bookingsOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"booking_id" | "service_id" | "business_id" | "lead_id" | "customer_name" | "customer_phone" | "check_in_date" | "check_out_date" | "slots_booked" | "total_price" | "status" | "payment_status" | "special_requests" | "created_at" | "updated_at", ExtArgs["result"]["service_bookings"]>
+  export type service_bookingsOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"booking_id" | "booking_reference" | "service_id" | "business_id" | "lead_id" | "customer_name" | "customer_phone" | "check_in_date" | "check_out_date" | "slots_booked" | "total_price" | "status" | "payment_status" | "special_requests" | "created_at" | "updated_at", ExtArgs["result"]["service_bookings"]>
   export type service_bookingsInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     services?: boolean | servicesDefaultArgs<ExtArgs>
     booking_guests?: boolean | service_bookings$booking_guestsArgs<ExtArgs>
@@ -80852,6 +82169,7 @@ export namespace Prisma {
     }
     scalars: $Extensions.GetPayloadResult<{
       booking_id: string
+      booking_reference: string | null
       service_id: string
       business_id: string
       lead_id: string | null
@@ -81292,6 +82610,7 @@ export namespace Prisma {
    */
   interface service_bookingsFieldRefs {
     readonly booking_id: FieldRef<"service_bookings", 'String'>
+    readonly booking_reference: FieldRef<"service_bookings", 'String'>
     readonly service_id: FieldRef<"service_bookings", 'String'>
     readonly business_id: FieldRef<"service_bookings", 'String'>
     readonly lead_id: FieldRef<"service_bookings", 'String'>
@@ -90007,6 +91326,13 @@ export namespace Prisma {
     description: 'description',
     base_price: 'base_price',
     capacity: 'capacity',
+    total_units: 'total_units',
+    check_in_time: 'check_in_time',
+    check_out_time: 'check_out_time',
+    cancellation_policy: 'cancellation_policy',
+    tax_percentage: 'tax_percentage',
+    extra_guest_charge: 'extra_guest_charge',
+    max_adults: 'max_adults',
     attributes: 'attributes',
     image_urls: 'image_urls',
     is_active: 'is_active',
@@ -90034,8 +91360,21 @@ export namespace Prisma {
   export type Service_availabilityScalarFieldEnum = (typeof Service_availabilityScalarFieldEnum)[keyof typeof Service_availabilityScalarFieldEnum]
 
 
+  export const Service_blocked_datesScalarFieldEnum: {
+    id: 'id',
+    service_id: 'service_id',
+    business_id: 'business_id',
+    date: 'date',
+    reason: 'reason',
+    created_at: 'created_at'
+  };
+
+  export type Service_blocked_datesScalarFieldEnum = (typeof Service_blocked_datesScalarFieldEnum)[keyof typeof Service_blocked_datesScalarFieldEnum]
+
+
   export const Service_bookingsScalarFieldEnum: {
     booking_id: 'booking_id',
+    booking_reference: 'booking_reference',
     service_id: 'service_id',
     business_id: 'business_id',
     lead_id: 'lead_id',
@@ -96692,6 +98031,13 @@ export namespace Prisma {
     description?: StringNullableFilter<"services"> | string | null
     base_price?: DecimalFilter<"services"> | Decimal | DecimalJsLike | number | string
     capacity?: IntFilter<"services"> | number
+    total_units?: IntFilter<"services"> | number
+    check_in_time?: StringNullableFilter<"services"> | string | null
+    check_out_time?: StringNullableFilter<"services"> | string | null
+    cancellation_policy?: StringNullableFilter<"services"> | string | null
+    tax_percentage?: DecimalNullableFilter<"services"> | Decimal | DecimalJsLike | number | string | null
+    extra_guest_charge?: DecimalNullableFilter<"services"> | Decimal | DecimalJsLike | number | string | null
+    max_adults?: IntNullableFilter<"services"> | number | null
     attributes?: JsonNullableFilter<"services">
     image_urls?: JsonNullableFilter<"services">
     is_active?: BoolFilter<"services"> | boolean
@@ -96701,6 +98047,7 @@ export namespace Prisma {
     service_availability?: Service_availabilityListRelationFilter
     service_bookings?: Service_bookingsListRelationFilter
     service_holds?: Service_holdsListRelationFilter
+    service_blocked_dates?: Service_blocked_datesListRelationFilter
     pricing_suggestions?: Pricing_suggestionsListRelationFilter
     pricing_history?: Pricing_historyListRelationFilter
   }
@@ -96714,6 +98061,13 @@ export namespace Prisma {
     description?: SortOrderInput | SortOrder
     base_price?: SortOrder
     capacity?: SortOrder
+    total_units?: SortOrder
+    check_in_time?: SortOrderInput | SortOrder
+    check_out_time?: SortOrderInput | SortOrder
+    cancellation_policy?: SortOrderInput | SortOrder
+    tax_percentage?: SortOrderInput | SortOrder
+    extra_guest_charge?: SortOrderInput | SortOrder
+    max_adults?: SortOrderInput | SortOrder
     attributes?: SortOrderInput | SortOrder
     image_urls?: SortOrderInput | SortOrder
     is_active?: SortOrder
@@ -96723,6 +98077,7 @@ export namespace Prisma {
     service_availability?: service_availabilityOrderByRelationAggregateInput
     service_bookings?: service_bookingsOrderByRelationAggregateInput
     service_holds?: service_holdsOrderByRelationAggregateInput
+    service_blocked_dates?: service_blocked_datesOrderByRelationAggregateInput
     pricing_suggestions?: pricing_suggestionsOrderByRelationAggregateInput
     pricing_history?: pricing_historyOrderByRelationAggregateInput
   }
@@ -96739,6 +98094,13 @@ export namespace Prisma {
     description?: StringNullableFilter<"services"> | string | null
     base_price?: DecimalFilter<"services"> | Decimal | DecimalJsLike | number | string
     capacity?: IntFilter<"services"> | number
+    total_units?: IntFilter<"services"> | number
+    check_in_time?: StringNullableFilter<"services"> | string | null
+    check_out_time?: StringNullableFilter<"services"> | string | null
+    cancellation_policy?: StringNullableFilter<"services"> | string | null
+    tax_percentage?: DecimalNullableFilter<"services"> | Decimal | DecimalJsLike | number | string | null
+    extra_guest_charge?: DecimalNullableFilter<"services"> | Decimal | DecimalJsLike | number | string | null
+    max_adults?: IntNullableFilter<"services"> | number | null
     attributes?: JsonNullableFilter<"services">
     image_urls?: JsonNullableFilter<"services">
     is_active?: BoolFilter<"services"> | boolean
@@ -96748,6 +98110,7 @@ export namespace Prisma {
     service_availability?: Service_availabilityListRelationFilter
     service_bookings?: Service_bookingsListRelationFilter
     service_holds?: Service_holdsListRelationFilter
+    service_blocked_dates?: Service_blocked_datesListRelationFilter
     pricing_suggestions?: Pricing_suggestionsListRelationFilter
     pricing_history?: Pricing_historyListRelationFilter
   }, "service_id">
@@ -96761,6 +98124,13 @@ export namespace Prisma {
     description?: SortOrderInput | SortOrder
     base_price?: SortOrder
     capacity?: SortOrder
+    total_units?: SortOrder
+    check_in_time?: SortOrderInput | SortOrder
+    check_out_time?: SortOrderInput | SortOrder
+    cancellation_policy?: SortOrderInput | SortOrder
+    tax_percentage?: SortOrderInput | SortOrder
+    extra_guest_charge?: SortOrderInput | SortOrder
+    max_adults?: SortOrderInput | SortOrder
     attributes?: SortOrderInput | SortOrder
     image_urls?: SortOrderInput | SortOrder
     is_active?: SortOrder
@@ -96785,6 +98155,13 @@ export namespace Prisma {
     description?: StringNullableWithAggregatesFilter<"services"> | string | null
     base_price?: DecimalWithAggregatesFilter<"services"> | Decimal | DecimalJsLike | number | string
     capacity?: IntWithAggregatesFilter<"services"> | number
+    total_units?: IntWithAggregatesFilter<"services"> | number
+    check_in_time?: StringNullableWithAggregatesFilter<"services"> | string | null
+    check_out_time?: StringNullableWithAggregatesFilter<"services"> | string | null
+    cancellation_policy?: StringNullableWithAggregatesFilter<"services"> | string | null
+    tax_percentage?: DecimalNullableWithAggregatesFilter<"services"> | Decimal | DecimalJsLike | number | string | null
+    extra_guest_charge?: DecimalNullableWithAggregatesFilter<"services"> | Decimal | DecimalJsLike | number | string | null
+    max_adults?: IntNullableWithAggregatesFilter<"services"> | number | null
     attributes?: JsonNullableWithAggregatesFilter<"services">
     image_urls?: JsonNullableWithAggregatesFilter<"services">
     is_active?: BoolWithAggregatesFilter<"services"> | boolean
@@ -96880,11 +98257,73 @@ export namespace Prisma {
     updated_at?: DateTimeWithAggregatesFilter<"service_availability"> | Date | string
   }
 
+  export type service_blocked_datesWhereInput = {
+    AND?: service_blocked_datesWhereInput | service_blocked_datesWhereInput[]
+    OR?: service_blocked_datesWhereInput[]
+    NOT?: service_blocked_datesWhereInput | service_blocked_datesWhereInput[]
+    id?: UuidFilter<"service_blocked_dates"> | string
+    service_id?: UuidFilter<"service_blocked_dates"> | string
+    business_id?: UuidFilter<"service_blocked_dates"> | string
+    date?: DateTimeFilter<"service_blocked_dates"> | Date | string
+    reason?: StringNullableFilter<"service_blocked_dates"> | string | null
+    created_at?: DateTimeFilter<"service_blocked_dates"> | Date | string
+    services?: XOR<ServicesScalarRelationFilter, servicesWhereInput>
+  }
+
+  export type service_blocked_datesOrderByWithRelationInput = {
+    id?: SortOrder
+    service_id?: SortOrder
+    business_id?: SortOrder
+    date?: SortOrder
+    reason?: SortOrderInput | SortOrder
+    created_at?: SortOrder
+    services?: servicesOrderByWithRelationInput
+  }
+
+  export type service_blocked_datesWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    service_id_date?: service_blocked_datesService_idDateCompoundUniqueInput
+    AND?: service_blocked_datesWhereInput | service_blocked_datesWhereInput[]
+    OR?: service_blocked_datesWhereInput[]
+    NOT?: service_blocked_datesWhereInput | service_blocked_datesWhereInput[]
+    service_id?: UuidFilter<"service_blocked_dates"> | string
+    business_id?: UuidFilter<"service_blocked_dates"> | string
+    date?: DateTimeFilter<"service_blocked_dates"> | Date | string
+    reason?: StringNullableFilter<"service_blocked_dates"> | string | null
+    created_at?: DateTimeFilter<"service_blocked_dates"> | Date | string
+    services?: XOR<ServicesScalarRelationFilter, servicesWhereInput>
+  }, "id" | "service_id_date">
+
+  export type service_blocked_datesOrderByWithAggregationInput = {
+    id?: SortOrder
+    service_id?: SortOrder
+    business_id?: SortOrder
+    date?: SortOrder
+    reason?: SortOrderInput | SortOrder
+    created_at?: SortOrder
+    _count?: service_blocked_datesCountOrderByAggregateInput
+    _max?: service_blocked_datesMaxOrderByAggregateInput
+    _min?: service_blocked_datesMinOrderByAggregateInput
+  }
+
+  export type service_blocked_datesScalarWhereWithAggregatesInput = {
+    AND?: service_blocked_datesScalarWhereWithAggregatesInput | service_blocked_datesScalarWhereWithAggregatesInput[]
+    OR?: service_blocked_datesScalarWhereWithAggregatesInput[]
+    NOT?: service_blocked_datesScalarWhereWithAggregatesInput | service_blocked_datesScalarWhereWithAggregatesInput[]
+    id?: UuidWithAggregatesFilter<"service_blocked_dates"> | string
+    service_id?: UuidWithAggregatesFilter<"service_blocked_dates"> | string
+    business_id?: UuidWithAggregatesFilter<"service_blocked_dates"> | string
+    date?: DateTimeWithAggregatesFilter<"service_blocked_dates"> | Date | string
+    reason?: StringNullableWithAggregatesFilter<"service_blocked_dates"> | string | null
+    created_at?: DateTimeWithAggregatesFilter<"service_blocked_dates"> | Date | string
+  }
+
   export type service_bookingsWhereInput = {
     AND?: service_bookingsWhereInput | service_bookingsWhereInput[]
     OR?: service_bookingsWhereInput[]
     NOT?: service_bookingsWhereInput | service_bookingsWhereInput[]
     booking_id?: UuidFilter<"service_bookings"> | string
+    booking_reference?: StringNullableFilter<"service_bookings"> | string | null
     service_id?: UuidFilter<"service_bookings"> | string
     business_id?: UuidFilter<"service_bookings"> | string
     lead_id?: UuidNullableFilter<"service_bookings"> | string | null
@@ -96905,6 +98344,7 @@ export namespace Prisma {
 
   export type service_bookingsOrderByWithRelationInput = {
     booking_id?: SortOrder
+    booking_reference?: SortOrderInput | SortOrder
     service_id?: SortOrder
     business_id?: SortOrder
     lead_id?: SortOrderInput | SortOrder
@@ -96925,6 +98365,7 @@ export namespace Prisma {
 
   export type service_bookingsWhereUniqueInput = Prisma.AtLeast<{
     booking_id?: string
+    booking_reference?: string
     AND?: service_bookingsWhereInput | service_bookingsWhereInput[]
     OR?: service_bookingsWhereInput[]
     NOT?: service_bookingsWhereInput | service_bookingsWhereInput[]
@@ -96944,10 +98385,11 @@ export namespace Prisma {
     updated_at?: DateTimeFilter<"service_bookings"> | Date | string
     services?: XOR<ServicesScalarRelationFilter, servicesWhereInput>
     booking_guests?: XOR<Booking_guestsNullableScalarRelationFilter, booking_guestsWhereInput> | null
-  }, "booking_id">
+  }, "booking_id" | "booking_reference">
 
   export type service_bookingsOrderByWithAggregationInput = {
     booking_id?: SortOrder
+    booking_reference?: SortOrderInput | SortOrder
     service_id?: SortOrder
     business_id?: SortOrder
     lead_id?: SortOrderInput | SortOrder
@@ -96974,6 +98416,7 @@ export namespace Prisma {
     OR?: service_bookingsScalarWhereWithAggregatesInput[]
     NOT?: service_bookingsScalarWhereWithAggregatesInput | service_bookingsScalarWhereWithAggregatesInput[]
     booking_id?: UuidWithAggregatesFilter<"service_bookings"> | string
+    booking_reference?: StringNullableWithAggregatesFilter<"service_bookings"> | string | null
     service_id?: UuidWithAggregatesFilter<"service_bookings"> | string
     business_id?: UuidWithAggregatesFilter<"service_bookings"> | string
     lead_id?: UuidNullableWithAggregatesFilter<"service_bookings"> | string | null
@@ -104926,6 +106369,13 @@ export namespace Prisma {
     description?: string | null
     base_price: Decimal | DecimalJsLike | number | string
     capacity?: number
+    total_units?: number
+    check_in_time?: string | null
+    check_out_time?: string | null
+    cancellation_policy?: string | null
+    tax_percentage?: Decimal | DecimalJsLike | number | string | null
+    extra_guest_charge?: Decimal | DecimalJsLike | number | string | null
+    max_adults?: number | null
     attributes?: NullableJsonNullValueInput | InputJsonValue
     image_urls?: NullableJsonNullValueInput | InputJsonValue
     is_active?: boolean
@@ -104935,6 +106385,7 @@ export namespace Prisma {
     service_availability?: service_availabilityCreateNestedManyWithoutServicesInput
     service_bookings?: service_bookingsCreateNestedManyWithoutServicesInput
     service_holds?: service_holdsCreateNestedManyWithoutServicesInput
+    service_blocked_dates?: service_blocked_datesCreateNestedManyWithoutServicesInput
     pricing_suggestions?: pricing_suggestionsCreateNestedManyWithoutServicesInput
     pricing_history?: pricing_historyCreateNestedManyWithoutServicesInput
   }
@@ -104948,6 +106399,13 @@ export namespace Prisma {
     description?: string | null
     base_price: Decimal | DecimalJsLike | number | string
     capacity?: number
+    total_units?: number
+    check_in_time?: string | null
+    check_out_time?: string | null
+    cancellation_policy?: string | null
+    tax_percentage?: Decimal | DecimalJsLike | number | string | null
+    extra_guest_charge?: Decimal | DecimalJsLike | number | string | null
+    max_adults?: number | null
     attributes?: NullableJsonNullValueInput | InputJsonValue
     image_urls?: NullableJsonNullValueInput | InputJsonValue
     is_active?: boolean
@@ -104956,6 +106414,7 @@ export namespace Prisma {
     service_availability?: service_availabilityUncheckedCreateNestedManyWithoutServicesInput
     service_bookings?: service_bookingsUncheckedCreateNestedManyWithoutServicesInput
     service_holds?: service_holdsUncheckedCreateNestedManyWithoutServicesInput
+    service_blocked_dates?: service_blocked_datesUncheckedCreateNestedManyWithoutServicesInput
     pricing_suggestions?: pricing_suggestionsUncheckedCreateNestedManyWithoutServicesInput
     pricing_history?: pricing_historyUncheckedCreateNestedManyWithoutServicesInput
   }
@@ -104968,6 +106427,13 @@ export namespace Prisma {
     description?: NullableStringFieldUpdateOperationsInput | string | null
     base_price?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     capacity?: IntFieldUpdateOperationsInput | number
+    total_units?: IntFieldUpdateOperationsInput | number
+    check_in_time?: NullableStringFieldUpdateOperationsInput | string | null
+    check_out_time?: NullableStringFieldUpdateOperationsInput | string | null
+    cancellation_policy?: NullableStringFieldUpdateOperationsInput | string | null
+    tax_percentage?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    extra_guest_charge?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    max_adults?: NullableIntFieldUpdateOperationsInput | number | null
     attributes?: NullableJsonNullValueInput | InputJsonValue
     image_urls?: NullableJsonNullValueInput | InputJsonValue
     is_active?: BoolFieldUpdateOperationsInput | boolean
@@ -104977,6 +106443,7 @@ export namespace Prisma {
     service_availability?: service_availabilityUpdateManyWithoutServicesNestedInput
     service_bookings?: service_bookingsUpdateManyWithoutServicesNestedInput
     service_holds?: service_holdsUpdateManyWithoutServicesNestedInput
+    service_blocked_dates?: service_blocked_datesUpdateManyWithoutServicesNestedInput
     pricing_suggestions?: pricing_suggestionsUpdateManyWithoutServicesNestedInput
     pricing_history?: pricing_historyUpdateManyWithoutServicesNestedInput
   }
@@ -104990,6 +106457,13 @@ export namespace Prisma {
     description?: NullableStringFieldUpdateOperationsInput | string | null
     base_price?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     capacity?: IntFieldUpdateOperationsInput | number
+    total_units?: IntFieldUpdateOperationsInput | number
+    check_in_time?: NullableStringFieldUpdateOperationsInput | string | null
+    check_out_time?: NullableStringFieldUpdateOperationsInput | string | null
+    cancellation_policy?: NullableStringFieldUpdateOperationsInput | string | null
+    tax_percentage?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    extra_guest_charge?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    max_adults?: NullableIntFieldUpdateOperationsInput | number | null
     attributes?: NullableJsonNullValueInput | InputJsonValue
     image_urls?: NullableJsonNullValueInput | InputJsonValue
     is_active?: BoolFieldUpdateOperationsInput | boolean
@@ -104998,6 +106472,7 @@ export namespace Prisma {
     service_availability?: service_availabilityUncheckedUpdateManyWithoutServicesNestedInput
     service_bookings?: service_bookingsUncheckedUpdateManyWithoutServicesNestedInput
     service_holds?: service_holdsUncheckedUpdateManyWithoutServicesNestedInput
+    service_blocked_dates?: service_blocked_datesUncheckedUpdateManyWithoutServicesNestedInput
     pricing_suggestions?: pricing_suggestionsUncheckedUpdateManyWithoutServicesNestedInput
     pricing_history?: pricing_historyUncheckedUpdateManyWithoutServicesNestedInput
   }
@@ -105011,6 +106486,13 @@ export namespace Prisma {
     description?: string | null
     base_price: Decimal | DecimalJsLike | number | string
     capacity?: number
+    total_units?: number
+    check_in_time?: string | null
+    check_out_time?: string | null
+    cancellation_policy?: string | null
+    tax_percentage?: Decimal | DecimalJsLike | number | string | null
+    extra_guest_charge?: Decimal | DecimalJsLike | number | string | null
+    max_adults?: number | null
     attributes?: NullableJsonNullValueInput | InputJsonValue
     image_urls?: NullableJsonNullValueInput | InputJsonValue
     is_active?: boolean
@@ -105026,6 +106508,13 @@ export namespace Prisma {
     description?: NullableStringFieldUpdateOperationsInput | string | null
     base_price?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     capacity?: IntFieldUpdateOperationsInput | number
+    total_units?: IntFieldUpdateOperationsInput | number
+    check_in_time?: NullableStringFieldUpdateOperationsInput | string | null
+    check_out_time?: NullableStringFieldUpdateOperationsInput | string | null
+    cancellation_policy?: NullableStringFieldUpdateOperationsInput | string | null
+    tax_percentage?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    extra_guest_charge?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    max_adults?: NullableIntFieldUpdateOperationsInput | number | null
     attributes?: NullableJsonNullValueInput | InputJsonValue
     image_urls?: NullableJsonNullValueInput | InputJsonValue
     is_active?: BoolFieldUpdateOperationsInput | boolean
@@ -105042,6 +106531,13 @@ export namespace Prisma {
     description?: NullableStringFieldUpdateOperationsInput | string | null
     base_price?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     capacity?: IntFieldUpdateOperationsInput | number
+    total_units?: IntFieldUpdateOperationsInput | number
+    check_in_time?: NullableStringFieldUpdateOperationsInput | string | null
+    check_out_time?: NullableStringFieldUpdateOperationsInput | string | null
+    cancellation_policy?: NullableStringFieldUpdateOperationsInput | string | null
+    tax_percentage?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    extra_guest_charge?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    max_adults?: NullableIntFieldUpdateOperationsInput | number | null
     attributes?: NullableJsonNullValueInput | InputJsonValue
     image_urls?: NullableJsonNullValueInput | InputJsonValue
     is_active?: BoolFieldUpdateOperationsInput | boolean
@@ -105146,8 +106642,71 @@ export namespace Prisma {
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type service_blocked_datesCreateInput = {
+    id?: string
+    business_id: string
+    date: Date | string
+    reason?: string | null
+    created_at?: Date | string
+    services: servicesCreateNestedOneWithoutService_blocked_datesInput
+  }
+
+  export type service_blocked_datesUncheckedCreateInput = {
+    id?: string
+    service_id: string
+    business_id: string
+    date: Date | string
+    reason?: string | null
+    created_at?: Date | string
+  }
+
+  export type service_blocked_datesUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    business_id?: StringFieldUpdateOperationsInput | string
+    date?: DateTimeFieldUpdateOperationsInput | Date | string
+    reason?: NullableStringFieldUpdateOperationsInput | string | null
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    services?: servicesUpdateOneRequiredWithoutService_blocked_datesNestedInput
+  }
+
+  export type service_blocked_datesUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    service_id?: StringFieldUpdateOperationsInput | string
+    business_id?: StringFieldUpdateOperationsInput | string
+    date?: DateTimeFieldUpdateOperationsInput | Date | string
+    reason?: NullableStringFieldUpdateOperationsInput | string | null
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type service_blocked_datesCreateManyInput = {
+    id?: string
+    service_id: string
+    business_id: string
+    date: Date | string
+    reason?: string | null
+    created_at?: Date | string
+  }
+
+  export type service_blocked_datesUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    business_id?: StringFieldUpdateOperationsInput | string
+    date?: DateTimeFieldUpdateOperationsInput | Date | string
+    reason?: NullableStringFieldUpdateOperationsInput | string | null
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type service_blocked_datesUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    service_id?: StringFieldUpdateOperationsInput | string
+    business_id?: StringFieldUpdateOperationsInput | string
+    date?: DateTimeFieldUpdateOperationsInput | Date | string
+    reason?: NullableStringFieldUpdateOperationsInput | string | null
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type service_bookingsCreateInput = {
     booking_id?: string
+    booking_reference?: string | null
     business_id: string
     lead_id?: string | null
     customer_name: string
@@ -105167,6 +106726,7 @@ export namespace Prisma {
 
   export type service_bookingsUncheckedCreateInput = {
     booking_id?: string
+    booking_reference?: string | null
     service_id: string
     business_id: string
     lead_id?: string | null
@@ -105186,6 +106746,7 @@ export namespace Prisma {
 
   export type service_bookingsUpdateInput = {
     booking_id?: StringFieldUpdateOperationsInput | string
+    booking_reference?: NullableStringFieldUpdateOperationsInput | string | null
     business_id?: StringFieldUpdateOperationsInput | string
     lead_id?: NullableStringFieldUpdateOperationsInput | string | null
     customer_name?: StringFieldUpdateOperationsInput | string
@@ -105205,6 +106766,7 @@ export namespace Prisma {
 
   export type service_bookingsUncheckedUpdateInput = {
     booking_id?: StringFieldUpdateOperationsInput | string
+    booking_reference?: NullableStringFieldUpdateOperationsInput | string | null
     service_id?: StringFieldUpdateOperationsInput | string
     business_id?: StringFieldUpdateOperationsInput | string
     lead_id?: NullableStringFieldUpdateOperationsInput | string | null
@@ -105224,6 +106786,7 @@ export namespace Prisma {
 
   export type service_bookingsCreateManyInput = {
     booking_id?: string
+    booking_reference?: string | null
     service_id: string
     business_id: string
     lead_id?: string | null
@@ -105242,6 +106805,7 @@ export namespace Prisma {
 
   export type service_bookingsUpdateManyMutationInput = {
     booking_id?: StringFieldUpdateOperationsInput | string
+    booking_reference?: NullableStringFieldUpdateOperationsInput | string | null
     business_id?: StringFieldUpdateOperationsInput | string
     lead_id?: NullableStringFieldUpdateOperationsInput | string | null
     customer_name?: StringFieldUpdateOperationsInput | string
@@ -105259,6 +106823,7 @@ export namespace Prisma {
 
   export type service_bookingsUncheckedUpdateManyInput = {
     booking_id?: StringFieldUpdateOperationsInput | string
+    booking_reference?: NullableStringFieldUpdateOperationsInput | string | null
     service_id?: StringFieldUpdateOperationsInput | string
     business_id?: StringFieldUpdateOperationsInput | string
     lead_id?: NullableStringFieldUpdateOperationsInput | string | null
@@ -110401,6 +111966,12 @@ export namespace Prisma {
     none?: service_holdsWhereInput
   }
 
+  export type Service_blocked_datesListRelationFilter = {
+    every?: service_blocked_datesWhereInput
+    some?: service_blocked_datesWhereInput
+    none?: service_blocked_datesWhereInput
+  }
+
   export type Pricing_suggestionsListRelationFilter = {
     every?: pricing_suggestionsWhereInput
     some?: pricing_suggestionsWhereInput
@@ -110425,6 +111996,10 @@ export namespace Prisma {
     _count?: SortOrder
   }
 
+  export type service_blocked_datesOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
   export type pricing_suggestionsOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
@@ -110442,6 +112017,13 @@ export namespace Prisma {
     description?: SortOrder
     base_price?: SortOrder
     capacity?: SortOrder
+    total_units?: SortOrder
+    check_in_time?: SortOrder
+    check_out_time?: SortOrder
+    cancellation_policy?: SortOrder
+    tax_percentage?: SortOrder
+    extra_guest_charge?: SortOrder
+    max_adults?: SortOrder
     attributes?: SortOrder
     image_urls?: SortOrder
     is_active?: SortOrder
@@ -110452,6 +112034,10 @@ export namespace Prisma {
   export type servicesAvgOrderByAggregateInput = {
     base_price?: SortOrder
     capacity?: SortOrder
+    total_units?: SortOrder
+    tax_percentage?: SortOrder
+    extra_guest_charge?: SortOrder
+    max_adults?: SortOrder
   }
 
   export type servicesMaxOrderByAggregateInput = {
@@ -110463,6 +112049,13 @@ export namespace Prisma {
     description?: SortOrder
     base_price?: SortOrder
     capacity?: SortOrder
+    total_units?: SortOrder
+    check_in_time?: SortOrder
+    check_out_time?: SortOrder
+    cancellation_policy?: SortOrder
+    tax_percentage?: SortOrder
+    extra_guest_charge?: SortOrder
+    max_adults?: SortOrder
     is_active?: SortOrder
     created_at?: SortOrder
     updated_at?: SortOrder
@@ -110477,6 +112070,13 @@ export namespace Prisma {
     description?: SortOrder
     base_price?: SortOrder
     capacity?: SortOrder
+    total_units?: SortOrder
+    check_in_time?: SortOrder
+    check_out_time?: SortOrder
+    cancellation_policy?: SortOrder
+    tax_percentage?: SortOrder
+    extra_guest_charge?: SortOrder
+    max_adults?: SortOrder
     is_active?: SortOrder
     created_at?: SortOrder
     updated_at?: SortOrder
@@ -110485,6 +112085,10 @@ export namespace Prisma {
   export type servicesSumOrderByAggregateInput = {
     base_price?: SortOrder
     capacity?: SortOrder
+    total_units?: SortOrder
+    tax_percentage?: SortOrder
+    extra_guest_charge?: SortOrder
+    max_adults?: SortOrder
   }
 
   export type ServicesScalarRelationFilter = {
@@ -110553,6 +112157,38 @@ export namespace Prisma {
     effective_price?: SortOrder
   }
 
+  export type service_blocked_datesService_idDateCompoundUniqueInput = {
+    service_id: string
+    date: Date | string
+  }
+
+  export type service_blocked_datesCountOrderByAggregateInput = {
+    id?: SortOrder
+    service_id?: SortOrder
+    business_id?: SortOrder
+    date?: SortOrder
+    reason?: SortOrder
+    created_at?: SortOrder
+  }
+
+  export type service_blocked_datesMaxOrderByAggregateInput = {
+    id?: SortOrder
+    service_id?: SortOrder
+    business_id?: SortOrder
+    date?: SortOrder
+    reason?: SortOrder
+    created_at?: SortOrder
+  }
+
+  export type service_blocked_datesMinOrderByAggregateInput = {
+    id?: SortOrder
+    service_id?: SortOrder
+    business_id?: SortOrder
+    date?: SortOrder
+    reason?: SortOrder
+    created_at?: SortOrder
+  }
+
   export type Booking_guestsNullableScalarRelationFilter = {
     is?: booking_guestsWhereInput | null
     isNot?: booking_guestsWhereInput | null
@@ -110560,6 +112196,7 @@ export namespace Prisma {
 
   export type service_bookingsCountOrderByAggregateInput = {
     booking_id?: SortOrder
+    booking_reference?: SortOrder
     service_id?: SortOrder
     business_id?: SortOrder
     lead_id?: SortOrder
@@ -110583,6 +112220,7 @@ export namespace Prisma {
 
   export type service_bookingsMaxOrderByAggregateInput = {
     booking_id?: SortOrder
+    booking_reference?: SortOrder
     service_id?: SortOrder
     business_id?: SortOrder
     lead_id?: SortOrder
@@ -110601,6 +112239,7 @@ export namespace Prisma {
 
   export type service_bookingsMinOrderByAggregateInput = {
     booking_id?: SortOrder
+    booking_reference?: SortOrder
     service_id?: SortOrder
     business_id?: SortOrder
     lead_id?: SortOrder
@@ -116128,6 +117767,13 @@ export namespace Prisma {
     connect?: service_holdsWhereUniqueInput | service_holdsWhereUniqueInput[]
   }
 
+  export type service_blocked_datesCreateNestedManyWithoutServicesInput = {
+    create?: XOR<service_blocked_datesCreateWithoutServicesInput, service_blocked_datesUncheckedCreateWithoutServicesInput> | service_blocked_datesCreateWithoutServicesInput[] | service_blocked_datesUncheckedCreateWithoutServicesInput[]
+    connectOrCreate?: service_blocked_datesCreateOrConnectWithoutServicesInput | service_blocked_datesCreateOrConnectWithoutServicesInput[]
+    createMany?: service_blocked_datesCreateManyServicesInputEnvelope
+    connect?: service_blocked_datesWhereUniqueInput | service_blocked_datesWhereUniqueInput[]
+  }
+
   export type pricing_suggestionsCreateNestedManyWithoutServicesInput = {
     create?: XOR<pricing_suggestionsCreateWithoutServicesInput, pricing_suggestionsUncheckedCreateWithoutServicesInput> | pricing_suggestionsCreateWithoutServicesInput[] | pricing_suggestionsUncheckedCreateWithoutServicesInput[]
     connectOrCreate?: pricing_suggestionsCreateOrConnectWithoutServicesInput | pricing_suggestionsCreateOrConnectWithoutServicesInput[]
@@ -116161,6 +117807,13 @@ export namespace Prisma {
     connectOrCreate?: service_holdsCreateOrConnectWithoutServicesInput | service_holdsCreateOrConnectWithoutServicesInput[]
     createMany?: service_holdsCreateManyServicesInputEnvelope
     connect?: service_holdsWhereUniqueInput | service_holdsWhereUniqueInput[]
+  }
+
+  export type service_blocked_datesUncheckedCreateNestedManyWithoutServicesInput = {
+    create?: XOR<service_blocked_datesCreateWithoutServicesInput, service_blocked_datesUncheckedCreateWithoutServicesInput> | service_blocked_datesCreateWithoutServicesInput[] | service_blocked_datesUncheckedCreateWithoutServicesInput[]
+    connectOrCreate?: service_blocked_datesCreateOrConnectWithoutServicesInput | service_blocked_datesCreateOrConnectWithoutServicesInput[]
+    createMany?: service_blocked_datesCreateManyServicesInputEnvelope
+    connect?: service_blocked_datesWhereUniqueInput | service_blocked_datesWhereUniqueInput[]
   }
 
   export type pricing_suggestionsUncheckedCreateNestedManyWithoutServicesInput = {
@@ -116225,6 +117878,20 @@ export namespace Prisma {
     update?: service_holdsUpdateWithWhereUniqueWithoutServicesInput | service_holdsUpdateWithWhereUniqueWithoutServicesInput[]
     updateMany?: service_holdsUpdateManyWithWhereWithoutServicesInput | service_holdsUpdateManyWithWhereWithoutServicesInput[]
     deleteMany?: service_holdsScalarWhereInput | service_holdsScalarWhereInput[]
+  }
+
+  export type service_blocked_datesUpdateManyWithoutServicesNestedInput = {
+    create?: XOR<service_blocked_datesCreateWithoutServicesInput, service_blocked_datesUncheckedCreateWithoutServicesInput> | service_blocked_datesCreateWithoutServicesInput[] | service_blocked_datesUncheckedCreateWithoutServicesInput[]
+    connectOrCreate?: service_blocked_datesCreateOrConnectWithoutServicesInput | service_blocked_datesCreateOrConnectWithoutServicesInput[]
+    upsert?: service_blocked_datesUpsertWithWhereUniqueWithoutServicesInput | service_blocked_datesUpsertWithWhereUniqueWithoutServicesInput[]
+    createMany?: service_blocked_datesCreateManyServicesInputEnvelope
+    set?: service_blocked_datesWhereUniqueInput | service_blocked_datesWhereUniqueInput[]
+    disconnect?: service_blocked_datesWhereUniqueInput | service_blocked_datesWhereUniqueInput[]
+    delete?: service_blocked_datesWhereUniqueInput | service_blocked_datesWhereUniqueInput[]
+    connect?: service_blocked_datesWhereUniqueInput | service_blocked_datesWhereUniqueInput[]
+    update?: service_blocked_datesUpdateWithWhereUniqueWithoutServicesInput | service_blocked_datesUpdateWithWhereUniqueWithoutServicesInput[]
+    updateMany?: service_blocked_datesUpdateManyWithWhereWithoutServicesInput | service_blocked_datesUpdateManyWithWhereWithoutServicesInput[]
+    deleteMany?: service_blocked_datesScalarWhereInput | service_blocked_datesScalarWhereInput[]
   }
 
   export type pricing_suggestionsUpdateManyWithoutServicesNestedInput = {
@@ -116297,6 +117964,20 @@ export namespace Prisma {
     deleteMany?: service_holdsScalarWhereInput | service_holdsScalarWhereInput[]
   }
 
+  export type service_blocked_datesUncheckedUpdateManyWithoutServicesNestedInput = {
+    create?: XOR<service_blocked_datesCreateWithoutServicesInput, service_blocked_datesUncheckedCreateWithoutServicesInput> | service_blocked_datesCreateWithoutServicesInput[] | service_blocked_datesUncheckedCreateWithoutServicesInput[]
+    connectOrCreate?: service_blocked_datesCreateOrConnectWithoutServicesInput | service_blocked_datesCreateOrConnectWithoutServicesInput[]
+    upsert?: service_blocked_datesUpsertWithWhereUniqueWithoutServicesInput | service_blocked_datesUpsertWithWhereUniqueWithoutServicesInput[]
+    createMany?: service_blocked_datesCreateManyServicesInputEnvelope
+    set?: service_blocked_datesWhereUniqueInput | service_blocked_datesWhereUniqueInput[]
+    disconnect?: service_blocked_datesWhereUniqueInput | service_blocked_datesWhereUniqueInput[]
+    delete?: service_blocked_datesWhereUniqueInput | service_blocked_datesWhereUniqueInput[]
+    connect?: service_blocked_datesWhereUniqueInput | service_blocked_datesWhereUniqueInput[]
+    update?: service_blocked_datesUpdateWithWhereUniqueWithoutServicesInput | service_blocked_datesUpdateWithWhereUniqueWithoutServicesInput[]
+    updateMany?: service_blocked_datesUpdateManyWithWhereWithoutServicesInput | service_blocked_datesUpdateManyWithWhereWithoutServicesInput[]
+    deleteMany?: service_blocked_datesScalarWhereInput | service_blocked_datesScalarWhereInput[]
+  }
+
   export type pricing_suggestionsUncheckedUpdateManyWithoutServicesNestedInput = {
     create?: XOR<pricing_suggestionsCreateWithoutServicesInput, pricing_suggestionsUncheckedCreateWithoutServicesInput> | pricing_suggestionsCreateWithoutServicesInput[] | pricing_suggestionsUncheckedCreateWithoutServicesInput[]
     connectOrCreate?: pricing_suggestionsCreateOrConnectWithoutServicesInput | pricing_suggestionsCreateOrConnectWithoutServicesInput[]
@@ -116337,6 +118018,20 @@ export namespace Prisma {
     upsert?: servicesUpsertWithoutService_availabilityInput
     connect?: servicesWhereUniqueInput
     update?: XOR<XOR<servicesUpdateToOneWithWhereWithoutService_availabilityInput, servicesUpdateWithoutService_availabilityInput>, servicesUncheckedUpdateWithoutService_availabilityInput>
+  }
+
+  export type servicesCreateNestedOneWithoutService_blocked_datesInput = {
+    create?: XOR<servicesCreateWithoutService_blocked_datesInput, servicesUncheckedCreateWithoutService_blocked_datesInput>
+    connectOrCreate?: servicesCreateOrConnectWithoutService_blocked_datesInput
+    connect?: servicesWhereUniqueInput
+  }
+
+  export type servicesUpdateOneRequiredWithoutService_blocked_datesNestedInput = {
+    create?: XOR<servicesCreateWithoutService_blocked_datesInput, servicesUncheckedCreateWithoutService_blocked_datesInput>
+    connectOrCreate?: servicesCreateOrConnectWithoutService_blocked_datesInput
+    upsert?: servicesUpsertWithoutService_blocked_datesInput
+    connect?: servicesWhereUniqueInput
+    update?: XOR<XOR<servicesUpdateToOneWithWhereWithoutService_blocked_datesInput, servicesUpdateWithoutService_blocked_datesInput>, servicesUncheckedUpdateWithoutService_blocked_datesInput>
   }
 
   export type servicesCreateNestedOneWithoutService_bookingsInput = {
@@ -117931,6 +119626,13 @@ export namespace Prisma {
     description?: string | null
     base_price: Decimal | DecimalJsLike | number | string
     capacity?: number
+    total_units?: number
+    check_in_time?: string | null
+    check_out_time?: string | null
+    cancellation_policy?: string | null
+    tax_percentage?: Decimal | DecimalJsLike | number | string | null
+    extra_guest_charge?: Decimal | DecimalJsLike | number | string | null
+    max_adults?: number | null
     attributes?: NullableJsonNullValueInput | InputJsonValue
     image_urls?: NullableJsonNullValueInput | InputJsonValue
     is_active?: boolean
@@ -117939,6 +119641,7 @@ export namespace Prisma {
     service_availability?: service_availabilityCreateNestedManyWithoutServicesInput
     service_bookings?: service_bookingsCreateNestedManyWithoutServicesInput
     service_holds?: service_holdsCreateNestedManyWithoutServicesInput
+    service_blocked_dates?: service_blocked_datesCreateNestedManyWithoutServicesInput
     pricing_suggestions?: pricing_suggestionsCreateNestedManyWithoutServicesInput
     pricing_history?: pricing_historyCreateNestedManyWithoutServicesInput
   }
@@ -117951,6 +119654,13 @@ export namespace Prisma {
     description?: string | null
     base_price: Decimal | DecimalJsLike | number | string
     capacity?: number
+    total_units?: number
+    check_in_time?: string | null
+    check_out_time?: string | null
+    cancellation_policy?: string | null
+    tax_percentage?: Decimal | DecimalJsLike | number | string | null
+    extra_guest_charge?: Decimal | DecimalJsLike | number | string | null
+    max_adults?: number | null
     attributes?: NullableJsonNullValueInput | InputJsonValue
     image_urls?: NullableJsonNullValueInput | InputJsonValue
     is_active?: boolean
@@ -117959,6 +119669,7 @@ export namespace Prisma {
     service_availability?: service_availabilityUncheckedCreateNestedManyWithoutServicesInput
     service_bookings?: service_bookingsUncheckedCreateNestedManyWithoutServicesInput
     service_holds?: service_holdsUncheckedCreateNestedManyWithoutServicesInput
+    service_blocked_dates?: service_blocked_datesUncheckedCreateNestedManyWithoutServicesInput
     pricing_suggestions?: pricing_suggestionsUncheckedCreateNestedManyWithoutServicesInput
     pricing_history?: pricing_historyUncheckedCreateNestedManyWithoutServicesInput
   }
@@ -118810,6 +120521,13 @@ export namespace Prisma {
     description?: StringNullableFilter<"services"> | string | null
     base_price?: DecimalFilter<"services"> | Decimal | DecimalJsLike | number | string
     capacity?: IntFilter<"services"> | number
+    total_units?: IntFilter<"services"> | number
+    check_in_time?: StringNullableFilter<"services"> | string | null
+    check_out_time?: StringNullableFilter<"services"> | string | null
+    cancellation_policy?: StringNullableFilter<"services"> | string | null
+    tax_percentage?: DecimalNullableFilter<"services"> | Decimal | DecimalJsLike | number | string | null
+    extra_guest_charge?: DecimalNullableFilter<"services"> | Decimal | DecimalJsLike | number | string | null
+    max_adults?: IntNullableFilter<"services"> | number | null
     attributes?: JsonNullableFilter<"services">
     image_urls?: JsonNullableFilter<"services">
     is_active?: BoolFilter<"services"> | boolean
@@ -139208,6 +140926,7 @@ export namespace Prisma {
 
   export type service_bookingsCreateWithoutServicesInput = {
     booking_id?: string
+    booking_reference?: string | null
     business_id: string
     lead_id?: string | null
     customer_name: string
@@ -139226,6 +140945,7 @@ export namespace Prisma {
 
   export type service_bookingsUncheckedCreateWithoutServicesInput = {
     booking_id?: string
+    booking_reference?: string | null
     business_id: string
     lead_id?: string | null
     customer_name: string
@@ -139283,6 +141003,32 @@ export namespace Prisma {
 
   export type service_holdsCreateManyServicesInputEnvelope = {
     data: service_holdsCreateManyServicesInput | service_holdsCreateManyServicesInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type service_blocked_datesCreateWithoutServicesInput = {
+    id?: string
+    business_id: string
+    date: Date | string
+    reason?: string | null
+    created_at?: Date | string
+  }
+
+  export type service_blocked_datesUncheckedCreateWithoutServicesInput = {
+    id?: string
+    business_id: string
+    date: Date | string
+    reason?: string | null
+    created_at?: Date | string
+  }
+
+  export type service_blocked_datesCreateOrConnectWithoutServicesInput = {
+    where: service_blocked_datesWhereUniqueInput
+    create: XOR<service_blocked_datesCreateWithoutServicesInput, service_blocked_datesUncheckedCreateWithoutServicesInput>
+  }
+
+  export type service_blocked_datesCreateManyServicesInputEnvelope = {
+    data: service_blocked_datesCreateManyServicesInput | service_blocked_datesCreateManyServicesInput[]
     skipDuplicates?: boolean
   }
 
@@ -139495,6 +141241,7 @@ export namespace Prisma {
     OR?: service_bookingsScalarWhereInput[]
     NOT?: service_bookingsScalarWhereInput | service_bookingsScalarWhereInput[]
     booking_id?: UuidFilter<"service_bookings"> | string
+    booking_reference?: StringNullableFilter<"service_bookings"> | string | null
     service_id?: UuidFilter<"service_bookings"> | string
     business_id?: UuidFilter<"service_bookings"> | string
     lead_id?: UuidNullableFilter<"service_bookings"> | string | null
@@ -139541,6 +141288,34 @@ export namespace Prisma {
     status?: StringFilter<"service_holds"> | string
     expires_at?: DateTimeFilter<"service_holds"> | Date | string
     created_at?: DateTimeFilter<"service_holds"> | Date | string
+  }
+
+  export type service_blocked_datesUpsertWithWhereUniqueWithoutServicesInput = {
+    where: service_blocked_datesWhereUniqueInput
+    update: XOR<service_blocked_datesUpdateWithoutServicesInput, service_blocked_datesUncheckedUpdateWithoutServicesInput>
+    create: XOR<service_blocked_datesCreateWithoutServicesInput, service_blocked_datesUncheckedCreateWithoutServicesInput>
+  }
+
+  export type service_blocked_datesUpdateWithWhereUniqueWithoutServicesInput = {
+    where: service_blocked_datesWhereUniqueInput
+    data: XOR<service_blocked_datesUpdateWithoutServicesInput, service_blocked_datesUncheckedUpdateWithoutServicesInput>
+  }
+
+  export type service_blocked_datesUpdateManyWithWhereWithoutServicesInput = {
+    where: service_blocked_datesScalarWhereInput
+    data: XOR<service_blocked_datesUpdateManyMutationInput, service_blocked_datesUncheckedUpdateManyWithoutServicesInput>
+  }
+
+  export type service_blocked_datesScalarWhereInput = {
+    AND?: service_blocked_datesScalarWhereInput | service_blocked_datesScalarWhereInput[]
+    OR?: service_blocked_datesScalarWhereInput[]
+    NOT?: service_blocked_datesScalarWhereInput | service_blocked_datesScalarWhereInput[]
+    id?: UuidFilter<"service_blocked_dates"> | string
+    service_id?: UuidFilter<"service_blocked_dates"> | string
+    business_id?: UuidFilter<"service_blocked_dates"> | string
+    date?: DateTimeFilter<"service_blocked_dates"> | Date | string
+    reason?: StringNullableFilter<"service_blocked_dates"> | string | null
+    created_at?: DateTimeFilter<"service_blocked_dates"> | Date | string
   }
 
   export type pricing_suggestionsUpsertWithWhereUniqueWithoutServicesInput = {
@@ -139617,6 +141392,13 @@ export namespace Prisma {
     description?: string | null
     base_price: Decimal | DecimalJsLike | number | string
     capacity?: number
+    total_units?: number
+    check_in_time?: string | null
+    check_out_time?: string | null
+    cancellation_policy?: string | null
+    tax_percentage?: Decimal | DecimalJsLike | number | string | null
+    extra_guest_charge?: Decimal | DecimalJsLike | number | string | null
+    max_adults?: number | null
     attributes?: NullableJsonNullValueInput | InputJsonValue
     image_urls?: NullableJsonNullValueInput | InputJsonValue
     is_active?: boolean
@@ -139625,6 +141407,7 @@ export namespace Prisma {
     businesses: businessesCreateNestedOneWithoutServicesInput
     service_bookings?: service_bookingsCreateNestedManyWithoutServicesInput
     service_holds?: service_holdsCreateNestedManyWithoutServicesInput
+    service_blocked_dates?: service_blocked_datesCreateNestedManyWithoutServicesInput
     pricing_suggestions?: pricing_suggestionsCreateNestedManyWithoutServicesInput
     pricing_history?: pricing_historyCreateNestedManyWithoutServicesInput
   }
@@ -139638,6 +141421,13 @@ export namespace Prisma {
     description?: string | null
     base_price: Decimal | DecimalJsLike | number | string
     capacity?: number
+    total_units?: number
+    check_in_time?: string | null
+    check_out_time?: string | null
+    cancellation_policy?: string | null
+    tax_percentage?: Decimal | DecimalJsLike | number | string | null
+    extra_guest_charge?: Decimal | DecimalJsLike | number | string | null
+    max_adults?: number | null
     attributes?: NullableJsonNullValueInput | InputJsonValue
     image_urls?: NullableJsonNullValueInput | InputJsonValue
     is_active?: boolean
@@ -139645,6 +141435,7 @@ export namespace Prisma {
     updated_at?: Date | string
     service_bookings?: service_bookingsUncheckedCreateNestedManyWithoutServicesInput
     service_holds?: service_holdsUncheckedCreateNestedManyWithoutServicesInput
+    service_blocked_dates?: service_blocked_datesUncheckedCreateNestedManyWithoutServicesInput
     pricing_suggestions?: pricing_suggestionsUncheckedCreateNestedManyWithoutServicesInput
     pricing_history?: pricing_historyUncheckedCreateNestedManyWithoutServicesInput
   }
@@ -139673,6 +141464,13 @@ export namespace Prisma {
     description?: NullableStringFieldUpdateOperationsInput | string | null
     base_price?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     capacity?: IntFieldUpdateOperationsInput | number
+    total_units?: IntFieldUpdateOperationsInput | number
+    check_in_time?: NullableStringFieldUpdateOperationsInput | string | null
+    check_out_time?: NullableStringFieldUpdateOperationsInput | string | null
+    cancellation_policy?: NullableStringFieldUpdateOperationsInput | string | null
+    tax_percentage?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    extra_guest_charge?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    max_adults?: NullableIntFieldUpdateOperationsInput | number | null
     attributes?: NullableJsonNullValueInput | InputJsonValue
     image_urls?: NullableJsonNullValueInput | InputJsonValue
     is_active?: BoolFieldUpdateOperationsInput | boolean
@@ -139681,6 +141479,7 @@ export namespace Prisma {
     businesses?: businessesUpdateOneRequiredWithoutServicesNestedInput
     service_bookings?: service_bookingsUpdateManyWithoutServicesNestedInput
     service_holds?: service_holdsUpdateManyWithoutServicesNestedInput
+    service_blocked_dates?: service_blocked_datesUpdateManyWithoutServicesNestedInput
     pricing_suggestions?: pricing_suggestionsUpdateManyWithoutServicesNestedInput
     pricing_history?: pricing_historyUpdateManyWithoutServicesNestedInput
   }
@@ -139694,11 +141493,147 @@ export namespace Prisma {
     description?: NullableStringFieldUpdateOperationsInput | string | null
     base_price?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     capacity?: IntFieldUpdateOperationsInput | number
+    total_units?: IntFieldUpdateOperationsInput | number
+    check_in_time?: NullableStringFieldUpdateOperationsInput | string | null
+    check_out_time?: NullableStringFieldUpdateOperationsInput | string | null
+    cancellation_policy?: NullableStringFieldUpdateOperationsInput | string | null
+    tax_percentage?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    extra_guest_charge?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    max_adults?: NullableIntFieldUpdateOperationsInput | number | null
     attributes?: NullableJsonNullValueInput | InputJsonValue
     image_urls?: NullableJsonNullValueInput | InputJsonValue
     is_active?: BoolFieldUpdateOperationsInput | boolean
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    service_bookings?: service_bookingsUncheckedUpdateManyWithoutServicesNestedInput
+    service_holds?: service_holdsUncheckedUpdateManyWithoutServicesNestedInput
+    service_blocked_dates?: service_blocked_datesUncheckedUpdateManyWithoutServicesNestedInput
+    pricing_suggestions?: pricing_suggestionsUncheckedUpdateManyWithoutServicesNestedInput
+    pricing_history?: pricing_historyUncheckedUpdateManyWithoutServicesNestedInput
+  }
+
+  export type servicesCreateWithoutService_blocked_datesInput = {
+    service_id?: string
+    tenant_id: string
+    name: string
+    type: string
+    description?: string | null
+    base_price: Decimal | DecimalJsLike | number | string
+    capacity?: number
+    total_units?: number
+    check_in_time?: string | null
+    check_out_time?: string | null
+    cancellation_policy?: string | null
+    tax_percentage?: Decimal | DecimalJsLike | number | string | null
+    extra_guest_charge?: Decimal | DecimalJsLike | number | string | null
+    max_adults?: number | null
+    attributes?: NullableJsonNullValueInput | InputJsonValue
+    image_urls?: NullableJsonNullValueInput | InputJsonValue
+    is_active?: boolean
+    created_at?: Date | string
+    updated_at?: Date | string
+    businesses: businessesCreateNestedOneWithoutServicesInput
+    service_availability?: service_availabilityCreateNestedManyWithoutServicesInput
+    service_bookings?: service_bookingsCreateNestedManyWithoutServicesInput
+    service_holds?: service_holdsCreateNestedManyWithoutServicesInput
+    pricing_suggestions?: pricing_suggestionsCreateNestedManyWithoutServicesInput
+    pricing_history?: pricing_historyCreateNestedManyWithoutServicesInput
+  }
+
+  export type servicesUncheckedCreateWithoutService_blocked_datesInput = {
+    service_id?: string
+    business_id: string
+    tenant_id: string
+    name: string
+    type: string
+    description?: string | null
+    base_price: Decimal | DecimalJsLike | number | string
+    capacity?: number
+    total_units?: number
+    check_in_time?: string | null
+    check_out_time?: string | null
+    cancellation_policy?: string | null
+    tax_percentage?: Decimal | DecimalJsLike | number | string | null
+    extra_guest_charge?: Decimal | DecimalJsLike | number | string | null
+    max_adults?: number | null
+    attributes?: NullableJsonNullValueInput | InputJsonValue
+    image_urls?: NullableJsonNullValueInput | InputJsonValue
+    is_active?: boolean
+    created_at?: Date | string
+    updated_at?: Date | string
+    service_availability?: service_availabilityUncheckedCreateNestedManyWithoutServicesInput
+    service_bookings?: service_bookingsUncheckedCreateNestedManyWithoutServicesInput
+    service_holds?: service_holdsUncheckedCreateNestedManyWithoutServicesInput
+    pricing_suggestions?: pricing_suggestionsUncheckedCreateNestedManyWithoutServicesInput
+    pricing_history?: pricing_historyUncheckedCreateNestedManyWithoutServicesInput
+  }
+
+  export type servicesCreateOrConnectWithoutService_blocked_datesInput = {
+    where: servicesWhereUniqueInput
+    create: XOR<servicesCreateWithoutService_blocked_datesInput, servicesUncheckedCreateWithoutService_blocked_datesInput>
+  }
+
+  export type servicesUpsertWithoutService_blocked_datesInput = {
+    update: XOR<servicesUpdateWithoutService_blocked_datesInput, servicesUncheckedUpdateWithoutService_blocked_datesInput>
+    create: XOR<servicesCreateWithoutService_blocked_datesInput, servicesUncheckedCreateWithoutService_blocked_datesInput>
+    where?: servicesWhereInput
+  }
+
+  export type servicesUpdateToOneWithWhereWithoutService_blocked_datesInput = {
+    where?: servicesWhereInput
+    data: XOR<servicesUpdateWithoutService_blocked_datesInput, servicesUncheckedUpdateWithoutService_blocked_datesInput>
+  }
+
+  export type servicesUpdateWithoutService_blocked_datesInput = {
+    service_id?: StringFieldUpdateOperationsInput | string
+    tenant_id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    type?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    base_price?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    capacity?: IntFieldUpdateOperationsInput | number
+    total_units?: IntFieldUpdateOperationsInput | number
+    check_in_time?: NullableStringFieldUpdateOperationsInput | string | null
+    check_out_time?: NullableStringFieldUpdateOperationsInput | string | null
+    cancellation_policy?: NullableStringFieldUpdateOperationsInput | string | null
+    tax_percentage?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    extra_guest_charge?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    max_adults?: NullableIntFieldUpdateOperationsInput | number | null
+    attributes?: NullableJsonNullValueInput | InputJsonValue
+    image_urls?: NullableJsonNullValueInput | InputJsonValue
+    is_active?: BoolFieldUpdateOperationsInput | boolean
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    businesses?: businessesUpdateOneRequiredWithoutServicesNestedInput
+    service_availability?: service_availabilityUpdateManyWithoutServicesNestedInput
+    service_bookings?: service_bookingsUpdateManyWithoutServicesNestedInput
+    service_holds?: service_holdsUpdateManyWithoutServicesNestedInput
+    pricing_suggestions?: pricing_suggestionsUpdateManyWithoutServicesNestedInput
+    pricing_history?: pricing_historyUpdateManyWithoutServicesNestedInput
+  }
+
+  export type servicesUncheckedUpdateWithoutService_blocked_datesInput = {
+    service_id?: StringFieldUpdateOperationsInput | string
+    business_id?: StringFieldUpdateOperationsInput | string
+    tenant_id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    type?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    base_price?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    capacity?: IntFieldUpdateOperationsInput | number
+    total_units?: IntFieldUpdateOperationsInput | number
+    check_in_time?: NullableStringFieldUpdateOperationsInput | string | null
+    check_out_time?: NullableStringFieldUpdateOperationsInput | string | null
+    cancellation_policy?: NullableStringFieldUpdateOperationsInput | string | null
+    tax_percentage?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    extra_guest_charge?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    max_adults?: NullableIntFieldUpdateOperationsInput | number | null
+    attributes?: NullableJsonNullValueInput | InputJsonValue
+    image_urls?: NullableJsonNullValueInput | InputJsonValue
+    is_active?: BoolFieldUpdateOperationsInput | boolean
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    service_availability?: service_availabilityUncheckedUpdateManyWithoutServicesNestedInput
     service_bookings?: service_bookingsUncheckedUpdateManyWithoutServicesNestedInput
     service_holds?: service_holdsUncheckedUpdateManyWithoutServicesNestedInput
     pricing_suggestions?: pricing_suggestionsUncheckedUpdateManyWithoutServicesNestedInput
@@ -139713,6 +141648,13 @@ export namespace Prisma {
     description?: string | null
     base_price: Decimal | DecimalJsLike | number | string
     capacity?: number
+    total_units?: number
+    check_in_time?: string | null
+    check_out_time?: string | null
+    cancellation_policy?: string | null
+    tax_percentage?: Decimal | DecimalJsLike | number | string | null
+    extra_guest_charge?: Decimal | DecimalJsLike | number | string | null
+    max_adults?: number | null
     attributes?: NullableJsonNullValueInput | InputJsonValue
     image_urls?: NullableJsonNullValueInput | InputJsonValue
     is_active?: boolean
@@ -139721,6 +141663,7 @@ export namespace Prisma {
     businesses: businessesCreateNestedOneWithoutServicesInput
     service_availability?: service_availabilityCreateNestedManyWithoutServicesInput
     service_holds?: service_holdsCreateNestedManyWithoutServicesInput
+    service_blocked_dates?: service_blocked_datesCreateNestedManyWithoutServicesInput
     pricing_suggestions?: pricing_suggestionsCreateNestedManyWithoutServicesInput
     pricing_history?: pricing_historyCreateNestedManyWithoutServicesInput
   }
@@ -139734,6 +141677,13 @@ export namespace Prisma {
     description?: string | null
     base_price: Decimal | DecimalJsLike | number | string
     capacity?: number
+    total_units?: number
+    check_in_time?: string | null
+    check_out_time?: string | null
+    cancellation_policy?: string | null
+    tax_percentage?: Decimal | DecimalJsLike | number | string | null
+    extra_guest_charge?: Decimal | DecimalJsLike | number | string | null
+    max_adults?: number | null
     attributes?: NullableJsonNullValueInput | InputJsonValue
     image_urls?: NullableJsonNullValueInput | InputJsonValue
     is_active?: boolean
@@ -139741,6 +141691,7 @@ export namespace Prisma {
     updated_at?: Date | string
     service_availability?: service_availabilityUncheckedCreateNestedManyWithoutServicesInput
     service_holds?: service_holdsUncheckedCreateNestedManyWithoutServicesInput
+    service_blocked_dates?: service_blocked_datesUncheckedCreateNestedManyWithoutServicesInput
     pricing_suggestions?: pricing_suggestionsUncheckedCreateNestedManyWithoutServicesInput
     pricing_history?: pricing_historyUncheckedCreateNestedManyWithoutServicesInput
   }
@@ -139796,6 +141747,13 @@ export namespace Prisma {
     description?: NullableStringFieldUpdateOperationsInput | string | null
     base_price?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     capacity?: IntFieldUpdateOperationsInput | number
+    total_units?: IntFieldUpdateOperationsInput | number
+    check_in_time?: NullableStringFieldUpdateOperationsInput | string | null
+    check_out_time?: NullableStringFieldUpdateOperationsInput | string | null
+    cancellation_policy?: NullableStringFieldUpdateOperationsInput | string | null
+    tax_percentage?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    extra_guest_charge?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    max_adults?: NullableIntFieldUpdateOperationsInput | number | null
     attributes?: NullableJsonNullValueInput | InputJsonValue
     image_urls?: NullableJsonNullValueInput | InputJsonValue
     is_active?: BoolFieldUpdateOperationsInput | boolean
@@ -139804,6 +141762,7 @@ export namespace Prisma {
     businesses?: businessesUpdateOneRequiredWithoutServicesNestedInput
     service_availability?: service_availabilityUpdateManyWithoutServicesNestedInput
     service_holds?: service_holdsUpdateManyWithoutServicesNestedInput
+    service_blocked_dates?: service_blocked_datesUpdateManyWithoutServicesNestedInput
     pricing_suggestions?: pricing_suggestionsUpdateManyWithoutServicesNestedInput
     pricing_history?: pricing_historyUpdateManyWithoutServicesNestedInput
   }
@@ -139817,6 +141776,13 @@ export namespace Prisma {
     description?: NullableStringFieldUpdateOperationsInput | string | null
     base_price?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     capacity?: IntFieldUpdateOperationsInput | number
+    total_units?: IntFieldUpdateOperationsInput | number
+    check_in_time?: NullableStringFieldUpdateOperationsInput | string | null
+    check_out_time?: NullableStringFieldUpdateOperationsInput | string | null
+    cancellation_policy?: NullableStringFieldUpdateOperationsInput | string | null
+    tax_percentage?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    extra_guest_charge?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    max_adults?: NullableIntFieldUpdateOperationsInput | number | null
     attributes?: NullableJsonNullValueInput | InputJsonValue
     image_urls?: NullableJsonNullValueInput | InputJsonValue
     is_active?: BoolFieldUpdateOperationsInput | boolean
@@ -139824,6 +141790,7 @@ export namespace Prisma {
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     service_availability?: service_availabilityUncheckedUpdateManyWithoutServicesNestedInput
     service_holds?: service_holdsUncheckedUpdateManyWithoutServicesNestedInput
+    service_blocked_dates?: service_blocked_datesUncheckedUpdateManyWithoutServicesNestedInput
     pricing_suggestions?: pricing_suggestionsUncheckedUpdateManyWithoutServicesNestedInput
     pricing_history?: pricing_historyUncheckedUpdateManyWithoutServicesNestedInput
   }
@@ -139863,6 +141830,7 @@ export namespace Prisma {
 
   export type service_bookingsCreateWithoutBooking_guestsInput = {
     booking_id?: string
+    booking_reference?: string | null
     business_id: string
     lead_id?: string | null
     customer_name: string
@@ -139881,6 +141849,7 @@ export namespace Prisma {
 
   export type service_bookingsUncheckedCreateWithoutBooking_guestsInput = {
     booking_id?: string
+    booking_reference?: string | null
     service_id: string
     business_id: string
     lead_id?: string | null
@@ -139915,6 +141884,7 @@ export namespace Prisma {
 
   export type service_bookingsUpdateWithoutBooking_guestsInput = {
     booking_id?: StringFieldUpdateOperationsInput | string
+    booking_reference?: NullableStringFieldUpdateOperationsInput | string | null
     business_id?: StringFieldUpdateOperationsInput | string
     lead_id?: NullableStringFieldUpdateOperationsInput | string | null
     customer_name?: StringFieldUpdateOperationsInput | string
@@ -139933,6 +141903,7 @@ export namespace Prisma {
 
   export type service_bookingsUncheckedUpdateWithoutBooking_guestsInput = {
     booking_id?: StringFieldUpdateOperationsInput | string
+    booking_reference?: NullableStringFieldUpdateOperationsInput | string | null
     service_id?: StringFieldUpdateOperationsInput | string
     business_id?: StringFieldUpdateOperationsInput | string
     lead_id?: NullableStringFieldUpdateOperationsInput | string | null
@@ -140117,6 +142088,13 @@ export namespace Prisma {
     description?: string | null
     base_price: Decimal | DecimalJsLike | number | string
     capacity?: number
+    total_units?: number
+    check_in_time?: string | null
+    check_out_time?: string | null
+    cancellation_policy?: string | null
+    tax_percentage?: Decimal | DecimalJsLike | number | string | null
+    extra_guest_charge?: Decimal | DecimalJsLike | number | string | null
+    max_adults?: number | null
     attributes?: NullableJsonNullValueInput | InputJsonValue
     image_urls?: NullableJsonNullValueInput | InputJsonValue
     is_active?: boolean
@@ -140126,6 +142104,7 @@ export namespace Prisma {
     service_availability?: service_availabilityCreateNestedManyWithoutServicesInput
     service_bookings?: service_bookingsCreateNestedManyWithoutServicesInput
     service_holds?: service_holdsCreateNestedManyWithoutServicesInput
+    service_blocked_dates?: service_blocked_datesCreateNestedManyWithoutServicesInput
     pricing_history?: pricing_historyCreateNestedManyWithoutServicesInput
   }
 
@@ -140138,6 +142117,13 @@ export namespace Prisma {
     description?: string | null
     base_price: Decimal | DecimalJsLike | number | string
     capacity?: number
+    total_units?: number
+    check_in_time?: string | null
+    check_out_time?: string | null
+    cancellation_policy?: string | null
+    tax_percentage?: Decimal | DecimalJsLike | number | string | null
+    extra_guest_charge?: Decimal | DecimalJsLike | number | string | null
+    max_adults?: number | null
     attributes?: NullableJsonNullValueInput | InputJsonValue
     image_urls?: NullableJsonNullValueInput | InputJsonValue
     is_active?: boolean
@@ -140146,6 +142132,7 @@ export namespace Prisma {
     service_availability?: service_availabilityUncheckedCreateNestedManyWithoutServicesInput
     service_bookings?: service_bookingsUncheckedCreateNestedManyWithoutServicesInput
     service_holds?: service_holdsUncheckedCreateNestedManyWithoutServicesInput
+    service_blocked_dates?: service_blocked_datesUncheckedCreateNestedManyWithoutServicesInput
     pricing_history?: pricing_historyUncheckedCreateNestedManyWithoutServicesInput
   }
 
@@ -140173,6 +142160,13 @@ export namespace Prisma {
     description?: NullableStringFieldUpdateOperationsInput | string | null
     base_price?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     capacity?: IntFieldUpdateOperationsInput | number
+    total_units?: IntFieldUpdateOperationsInput | number
+    check_in_time?: NullableStringFieldUpdateOperationsInput | string | null
+    check_out_time?: NullableStringFieldUpdateOperationsInput | string | null
+    cancellation_policy?: NullableStringFieldUpdateOperationsInput | string | null
+    tax_percentage?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    extra_guest_charge?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    max_adults?: NullableIntFieldUpdateOperationsInput | number | null
     attributes?: NullableJsonNullValueInput | InputJsonValue
     image_urls?: NullableJsonNullValueInput | InputJsonValue
     is_active?: BoolFieldUpdateOperationsInput | boolean
@@ -140182,6 +142176,7 @@ export namespace Prisma {
     service_availability?: service_availabilityUpdateManyWithoutServicesNestedInput
     service_bookings?: service_bookingsUpdateManyWithoutServicesNestedInput
     service_holds?: service_holdsUpdateManyWithoutServicesNestedInput
+    service_blocked_dates?: service_blocked_datesUpdateManyWithoutServicesNestedInput
     pricing_history?: pricing_historyUpdateManyWithoutServicesNestedInput
   }
 
@@ -140194,6 +142189,13 @@ export namespace Prisma {
     description?: NullableStringFieldUpdateOperationsInput | string | null
     base_price?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     capacity?: IntFieldUpdateOperationsInput | number
+    total_units?: IntFieldUpdateOperationsInput | number
+    check_in_time?: NullableStringFieldUpdateOperationsInput | string | null
+    check_out_time?: NullableStringFieldUpdateOperationsInput | string | null
+    cancellation_policy?: NullableStringFieldUpdateOperationsInput | string | null
+    tax_percentage?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    extra_guest_charge?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    max_adults?: NullableIntFieldUpdateOperationsInput | number | null
     attributes?: NullableJsonNullValueInput | InputJsonValue
     image_urls?: NullableJsonNullValueInput | InputJsonValue
     is_active?: BoolFieldUpdateOperationsInput | boolean
@@ -140202,6 +142204,7 @@ export namespace Prisma {
     service_availability?: service_availabilityUncheckedUpdateManyWithoutServicesNestedInput
     service_bookings?: service_bookingsUncheckedUpdateManyWithoutServicesNestedInput
     service_holds?: service_holdsUncheckedUpdateManyWithoutServicesNestedInput
+    service_blocked_dates?: service_blocked_datesUncheckedUpdateManyWithoutServicesNestedInput
     pricing_history?: pricing_historyUncheckedUpdateManyWithoutServicesNestedInput
   }
 
@@ -140213,6 +142216,13 @@ export namespace Prisma {
     description?: string | null
     base_price: Decimal | DecimalJsLike | number | string
     capacity?: number
+    total_units?: number
+    check_in_time?: string | null
+    check_out_time?: string | null
+    cancellation_policy?: string | null
+    tax_percentage?: Decimal | DecimalJsLike | number | string | null
+    extra_guest_charge?: Decimal | DecimalJsLike | number | string | null
+    max_adults?: number | null
     attributes?: NullableJsonNullValueInput | InputJsonValue
     image_urls?: NullableJsonNullValueInput | InputJsonValue
     is_active?: boolean
@@ -140222,6 +142232,7 @@ export namespace Prisma {
     service_availability?: service_availabilityCreateNestedManyWithoutServicesInput
     service_bookings?: service_bookingsCreateNestedManyWithoutServicesInput
     service_holds?: service_holdsCreateNestedManyWithoutServicesInput
+    service_blocked_dates?: service_blocked_datesCreateNestedManyWithoutServicesInput
     pricing_suggestions?: pricing_suggestionsCreateNestedManyWithoutServicesInput
   }
 
@@ -140234,6 +142245,13 @@ export namespace Prisma {
     description?: string | null
     base_price: Decimal | DecimalJsLike | number | string
     capacity?: number
+    total_units?: number
+    check_in_time?: string | null
+    check_out_time?: string | null
+    cancellation_policy?: string | null
+    tax_percentage?: Decimal | DecimalJsLike | number | string | null
+    extra_guest_charge?: Decimal | DecimalJsLike | number | string | null
+    max_adults?: number | null
     attributes?: NullableJsonNullValueInput | InputJsonValue
     image_urls?: NullableJsonNullValueInput | InputJsonValue
     is_active?: boolean
@@ -140242,6 +142260,7 @@ export namespace Prisma {
     service_availability?: service_availabilityUncheckedCreateNestedManyWithoutServicesInput
     service_bookings?: service_bookingsUncheckedCreateNestedManyWithoutServicesInput
     service_holds?: service_holdsUncheckedCreateNestedManyWithoutServicesInput
+    service_blocked_dates?: service_blocked_datesUncheckedCreateNestedManyWithoutServicesInput
     pricing_suggestions?: pricing_suggestionsUncheckedCreateNestedManyWithoutServicesInput
   }
 
@@ -140269,6 +142288,13 @@ export namespace Prisma {
     description?: NullableStringFieldUpdateOperationsInput | string | null
     base_price?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     capacity?: IntFieldUpdateOperationsInput | number
+    total_units?: IntFieldUpdateOperationsInput | number
+    check_in_time?: NullableStringFieldUpdateOperationsInput | string | null
+    check_out_time?: NullableStringFieldUpdateOperationsInput | string | null
+    cancellation_policy?: NullableStringFieldUpdateOperationsInput | string | null
+    tax_percentage?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    extra_guest_charge?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    max_adults?: NullableIntFieldUpdateOperationsInput | number | null
     attributes?: NullableJsonNullValueInput | InputJsonValue
     image_urls?: NullableJsonNullValueInput | InputJsonValue
     is_active?: BoolFieldUpdateOperationsInput | boolean
@@ -140278,6 +142304,7 @@ export namespace Prisma {
     service_availability?: service_availabilityUpdateManyWithoutServicesNestedInput
     service_bookings?: service_bookingsUpdateManyWithoutServicesNestedInput
     service_holds?: service_holdsUpdateManyWithoutServicesNestedInput
+    service_blocked_dates?: service_blocked_datesUpdateManyWithoutServicesNestedInput
     pricing_suggestions?: pricing_suggestionsUpdateManyWithoutServicesNestedInput
   }
 
@@ -140290,6 +142317,13 @@ export namespace Prisma {
     description?: NullableStringFieldUpdateOperationsInput | string | null
     base_price?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     capacity?: IntFieldUpdateOperationsInput | number
+    total_units?: IntFieldUpdateOperationsInput | number
+    check_in_time?: NullableStringFieldUpdateOperationsInput | string | null
+    check_out_time?: NullableStringFieldUpdateOperationsInput | string | null
+    cancellation_policy?: NullableStringFieldUpdateOperationsInput | string | null
+    tax_percentage?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    extra_guest_charge?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    max_adults?: NullableIntFieldUpdateOperationsInput | number | null
     attributes?: NullableJsonNullValueInput | InputJsonValue
     image_urls?: NullableJsonNullValueInput | InputJsonValue
     is_active?: BoolFieldUpdateOperationsInput | boolean
@@ -140298,6 +142332,7 @@ export namespace Prisma {
     service_availability?: service_availabilityUncheckedUpdateManyWithoutServicesNestedInput
     service_bookings?: service_bookingsUncheckedUpdateManyWithoutServicesNestedInput
     service_holds?: service_holdsUncheckedUpdateManyWithoutServicesNestedInput
+    service_blocked_dates?: service_blocked_datesUncheckedUpdateManyWithoutServicesNestedInput
     pricing_suggestions?: pricing_suggestionsUncheckedUpdateManyWithoutServicesNestedInput
   }
 
@@ -140765,6 +142800,13 @@ export namespace Prisma {
     description?: string | null
     base_price: Decimal | DecimalJsLike | number | string
     capacity?: number
+    total_units?: number
+    check_in_time?: string | null
+    check_out_time?: string | null
+    cancellation_policy?: string | null
+    tax_percentage?: Decimal | DecimalJsLike | number | string | null
+    extra_guest_charge?: Decimal | DecimalJsLike | number | string | null
+    max_adults?: number | null
     attributes?: NullableJsonNullValueInput | InputJsonValue
     image_urls?: NullableJsonNullValueInput | InputJsonValue
     is_active?: boolean
@@ -140773,6 +142815,7 @@ export namespace Prisma {
     businesses: businessesCreateNestedOneWithoutServicesInput
     service_availability?: service_availabilityCreateNestedManyWithoutServicesInput
     service_bookings?: service_bookingsCreateNestedManyWithoutServicesInput
+    service_blocked_dates?: service_blocked_datesCreateNestedManyWithoutServicesInput
     pricing_suggestions?: pricing_suggestionsCreateNestedManyWithoutServicesInput
     pricing_history?: pricing_historyCreateNestedManyWithoutServicesInput
   }
@@ -140786,6 +142829,13 @@ export namespace Prisma {
     description?: string | null
     base_price: Decimal | DecimalJsLike | number | string
     capacity?: number
+    total_units?: number
+    check_in_time?: string | null
+    check_out_time?: string | null
+    cancellation_policy?: string | null
+    tax_percentage?: Decimal | DecimalJsLike | number | string | null
+    extra_guest_charge?: Decimal | DecimalJsLike | number | string | null
+    max_adults?: number | null
     attributes?: NullableJsonNullValueInput | InputJsonValue
     image_urls?: NullableJsonNullValueInput | InputJsonValue
     is_active?: boolean
@@ -140793,6 +142843,7 @@ export namespace Prisma {
     updated_at?: Date | string
     service_availability?: service_availabilityUncheckedCreateNestedManyWithoutServicesInput
     service_bookings?: service_bookingsUncheckedCreateNestedManyWithoutServicesInput
+    service_blocked_dates?: service_blocked_datesUncheckedCreateNestedManyWithoutServicesInput
     pricing_suggestions?: pricing_suggestionsUncheckedCreateNestedManyWithoutServicesInput
     pricing_history?: pricing_historyUncheckedCreateNestedManyWithoutServicesInput
   }
@@ -140821,6 +142872,13 @@ export namespace Prisma {
     description?: NullableStringFieldUpdateOperationsInput | string | null
     base_price?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     capacity?: IntFieldUpdateOperationsInput | number
+    total_units?: IntFieldUpdateOperationsInput | number
+    check_in_time?: NullableStringFieldUpdateOperationsInput | string | null
+    check_out_time?: NullableStringFieldUpdateOperationsInput | string | null
+    cancellation_policy?: NullableStringFieldUpdateOperationsInput | string | null
+    tax_percentage?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    extra_guest_charge?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    max_adults?: NullableIntFieldUpdateOperationsInput | number | null
     attributes?: NullableJsonNullValueInput | InputJsonValue
     image_urls?: NullableJsonNullValueInput | InputJsonValue
     is_active?: BoolFieldUpdateOperationsInput | boolean
@@ -140829,6 +142887,7 @@ export namespace Prisma {
     businesses?: businessesUpdateOneRequiredWithoutServicesNestedInput
     service_availability?: service_availabilityUpdateManyWithoutServicesNestedInput
     service_bookings?: service_bookingsUpdateManyWithoutServicesNestedInput
+    service_blocked_dates?: service_blocked_datesUpdateManyWithoutServicesNestedInput
     pricing_suggestions?: pricing_suggestionsUpdateManyWithoutServicesNestedInput
     pricing_history?: pricing_historyUpdateManyWithoutServicesNestedInput
   }
@@ -140842,6 +142901,13 @@ export namespace Prisma {
     description?: NullableStringFieldUpdateOperationsInput | string | null
     base_price?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     capacity?: IntFieldUpdateOperationsInput | number
+    total_units?: IntFieldUpdateOperationsInput | number
+    check_in_time?: NullableStringFieldUpdateOperationsInput | string | null
+    check_out_time?: NullableStringFieldUpdateOperationsInput | string | null
+    cancellation_policy?: NullableStringFieldUpdateOperationsInput | string | null
+    tax_percentage?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    extra_guest_charge?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    max_adults?: NullableIntFieldUpdateOperationsInput | number | null
     attributes?: NullableJsonNullValueInput | InputJsonValue
     image_urls?: NullableJsonNullValueInput | InputJsonValue
     is_active?: BoolFieldUpdateOperationsInput | boolean
@@ -140849,6 +142915,7 @@ export namespace Prisma {
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     service_availability?: service_availabilityUncheckedUpdateManyWithoutServicesNestedInput
     service_bookings?: service_bookingsUncheckedUpdateManyWithoutServicesNestedInput
+    service_blocked_dates?: service_blocked_datesUncheckedUpdateManyWithoutServicesNestedInput
     pricing_suggestions?: pricing_suggestionsUncheckedUpdateManyWithoutServicesNestedInput
     pricing_history?: pricing_historyUncheckedUpdateManyWithoutServicesNestedInput
   }
@@ -141225,6 +143292,13 @@ export namespace Prisma {
     description?: string | null
     base_price: Decimal | DecimalJsLike | number | string
     capacity?: number
+    total_units?: number
+    check_in_time?: string | null
+    check_out_time?: string | null
+    cancellation_policy?: string | null
+    tax_percentage?: Decimal | DecimalJsLike | number | string | null
+    extra_guest_charge?: Decimal | DecimalJsLike | number | string | null
+    max_adults?: number | null
     attributes?: NullableJsonNullValueInput | InputJsonValue
     image_urls?: NullableJsonNullValueInput | InputJsonValue
     is_active?: boolean
@@ -142446,6 +144520,13 @@ export namespace Prisma {
     description?: NullableStringFieldUpdateOperationsInput | string | null
     base_price?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     capacity?: IntFieldUpdateOperationsInput | number
+    total_units?: IntFieldUpdateOperationsInput | number
+    check_in_time?: NullableStringFieldUpdateOperationsInput | string | null
+    check_out_time?: NullableStringFieldUpdateOperationsInput | string | null
+    cancellation_policy?: NullableStringFieldUpdateOperationsInput | string | null
+    tax_percentage?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    extra_guest_charge?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    max_adults?: NullableIntFieldUpdateOperationsInput | number | null
     attributes?: NullableJsonNullValueInput | InputJsonValue
     image_urls?: NullableJsonNullValueInput | InputJsonValue
     is_active?: BoolFieldUpdateOperationsInput | boolean
@@ -142454,6 +144535,7 @@ export namespace Prisma {
     service_availability?: service_availabilityUpdateManyWithoutServicesNestedInput
     service_bookings?: service_bookingsUpdateManyWithoutServicesNestedInput
     service_holds?: service_holdsUpdateManyWithoutServicesNestedInput
+    service_blocked_dates?: service_blocked_datesUpdateManyWithoutServicesNestedInput
     pricing_suggestions?: pricing_suggestionsUpdateManyWithoutServicesNestedInput
     pricing_history?: pricing_historyUpdateManyWithoutServicesNestedInput
   }
@@ -142466,6 +144548,13 @@ export namespace Prisma {
     description?: NullableStringFieldUpdateOperationsInput | string | null
     base_price?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     capacity?: IntFieldUpdateOperationsInput | number
+    total_units?: IntFieldUpdateOperationsInput | number
+    check_in_time?: NullableStringFieldUpdateOperationsInput | string | null
+    check_out_time?: NullableStringFieldUpdateOperationsInput | string | null
+    cancellation_policy?: NullableStringFieldUpdateOperationsInput | string | null
+    tax_percentage?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    extra_guest_charge?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    max_adults?: NullableIntFieldUpdateOperationsInput | number | null
     attributes?: NullableJsonNullValueInput | InputJsonValue
     image_urls?: NullableJsonNullValueInput | InputJsonValue
     is_active?: BoolFieldUpdateOperationsInput | boolean
@@ -142474,6 +144563,7 @@ export namespace Prisma {
     service_availability?: service_availabilityUncheckedUpdateManyWithoutServicesNestedInput
     service_bookings?: service_bookingsUncheckedUpdateManyWithoutServicesNestedInput
     service_holds?: service_holdsUncheckedUpdateManyWithoutServicesNestedInput
+    service_blocked_dates?: service_blocked_datesUncheckedUpdateManyWithoutServicesNestedInput
     pricing_suggestions?: pricing_suggestionsUncheckedUpdateManyWithoutServicesNestedInput
     pricing_history?: pricing_historyUncheckedUpdateManyWithoutServicesNestedInput
   }
@@ -142486,6 +144576,13 @@ export namespace Prisma {
     description?: NullableStringFieldUpdateOperationsInput | string | null
     base_price?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     capacity?: IntFieldUpdateOperationsInput | number
+    total_units?: IntFieldUpdateOperationsInput | number
+    check_in_time?: NullableStringFieldUpdateOperationsInput | string | null
+    check_out_time?: NullableStringFieldUpdateOperationsInput | string | null
+    cancellation_policy?: NullableStringFieldUpdateOperationsInput | string | null
+    tax_percentage?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    extra_guest_charge?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    max_adults?: NullableIntFieldUpdateOperationsInput | number | null
     attributes?: NullableJsonNullValueInput | InputJsonValue
     image_urls?: NullableJsonNullValueInput | InputJsonValue
     is_active?: BoolFieldUpdateOperationsInput | boolean
@@ -148922,6 +151019,7 @@ export namespace Prisma {
 
   export type service_bookingsCreateManyServicesInput = {
     booking_id?: string
+    booking_reference?: string | null
     business_id: string
     lead_id?: string | null
     customer_name: string
@@ -148946,6 +151044,14 @@ export namespace Prisma {
     slots_held?: number
     status?: string
     expires_at: Date | string
+    created_at?: Date | string
+  }
+
+  export type service_blocked_datesCreateManyServicesInput = {
+    id?: string
+    business_id: string
+    date: Date | string
+    reason?: string | null
     created_at?: Date | string
   }
 
@@ -149016,6 +151122,7 @@ export namespace Prisma {
 
   export type service_bookingsUpdateWithoutServicesInput = {
     booking_id?: StringFieldUpdateOperationsInput | string
+    booking_reference?: NullableStringFieldUpdateOperationsInput | string | null
     business_id?: StringFieldUpdateOperationsInput | string
     lead_id?: NullableStringFieldUpdateOperationsInput | string | null
     customer_name?: StringFieldUpdateOperationsInput | string
@@ -149034,6 +151141,7 @@ export namespace Prisma {
 
   export type service_bookingsUncheckedUpdateWithoutServicesInput = {
     booking_id?: StringFieldUpdateOperationsInput | string
+    booking_reference?: NullableStringFieldUpdateOperationsInput | string | null
     business_id?: StringFieldUpdateOperationsInput | string
     lead_id?: NullableStringFieldUpdateOperationsInput | string | null
     customer_name?: StringFieldUpdateOperationsInput | string
@@ -149052,6 +151160,7 @@ export namespace Prisma {
 
   export type service_bookingsUncheckedUpdateManyWithoutServicesInput = {
     booking_id?: StringFieldUpdateOperationsInput | string
+    booking_reference?: NullableStringFieldUpdateOperationsInput | string | null
     business_id?: StringFieldUpdateOperationsInput | string
     lead_id?: NullableStringFieldUpdateOperationsInput | string | null
     customer_name?: StringFieldUpdateOperationsInput | string
@@ -149100,6 +151209,30 @@ export namespace Prisma {
     slots_held?: IntFieldUpdateOperationsInput | number
     status?: StringFieldUpdateOperationsInput | string
     expires_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type service_blocked_datesUpdateWithoutServicesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    business_id?: StringFieldUpdateOperationsInput | string
+    date?: DateTimeFieldUpdateOperationsInput | Date | string
+    reason?: NullableStringFieldUpdateOperationsInput | string | null
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type service_blocked_datesUncheckedUpdateWithoutServicesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    business_id?: StringFieldUpdateOperationsInput | string
+    date?: DateTimeFieldUpdateOperationsInput | Date | string
+    reason?: NullableStringFieldUpdateOperationsInput | string | null
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type service_blocked_datesUncheckedUpdateManyWithoutServicesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    business_id?: StringFieldUpdateOperationsInput | string
+    date?: DateTimeFieldUpdateOperationsInput | Date | string
+    reason?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 

@@ -22,6 +22,6 @@ import { InventoryModule } from '../inventory/inventory.module';
     ],
     controllers: [WhatsAppFlowsController, FlowDataExchangeController],
     providers: [WhatsAppFlowsService, WhatsAppApiClientService, FlowDataExchangeService, HospitalityFlowService],
-    exports: [WhatsAppFlowsService],
+    exports: [WhatsAppFlowsService, HospitalityFlowService],
 })
 export class WhatsAppFlowsModule { }

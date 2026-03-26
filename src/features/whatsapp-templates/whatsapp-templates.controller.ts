@@ -37,6 +37,18 @@ export class WhatsAppTemplatesController {
         return this.service.getStats(req.user.business_id);
     }
 
+    // GET /whatsapp/templates/approved — all approved templates
+    @Get('approved')
+    findApproved(@Req() req) {
+        return this.service.findApproved(req.user.business_id);
+    }
+
+    // GET /whatsapp/templates/by-name/:name — find approved template by name
+    @Get('by-name/:name')
+    findByName(@Req() req, @Param('name') name: string) {
+        return this.service.findByName(req.user.business_id, name);
+    }
+
     // GET /whatsapp/templates/:id
     @Get(':id')
     findOne(@Req() req, @Param('id') id: string) {

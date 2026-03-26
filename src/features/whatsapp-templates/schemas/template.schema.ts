@@ -52,6 +52,12 @@ class TemplateComponents {
     @Prop({ type: [String], default: [] })
     bodyExamples: string[];
 
+    // Human-readable description for each {{N}} variable in order.
+    // variableDescriptions[0] describes {{1}}, [1] describes {{2}}, etc.
+    // Used by the AI analyzer to accurately map variables to context paths.
+    @Prop({ type: [String], default: [] })
+    variableDescriptions: string[];
+
     @Prop({ type: [TemplateButton], default: [] })
     buttons: TemplateButton[];
 }

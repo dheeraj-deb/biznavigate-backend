@@ -15,6 +15,13 @@ export interface CreateServiceDto {
   description?: string;
   base_price: number;
   capacity: number;
+  total_units?: number;
+  check_in_time?: string;
+  check_out_time?: string;
+  cancellation_policy?: string;
+  tax_percentage?: number;
+  extra_guest_charge?: number;
+  max_adults?: number;
   attributes?: Record<string, any>;
   image_urls?: string[];
 }
@@ -60,7 +67,7 @@ export interface UpdateVariantStockDto {
 
 @Injectable()
 export class InventoryService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(private readonly prisma: PrismaService) { }
 
   // ═══════════════════════════════════════════════════════════════════════════
   // SERVICES (ROOMS / EVENTS / CAMPING)
@@ -76,6 +83,13 @@ export class InventoryService {
         description: dto.description ?? null,
         base_price: dto.base_price,
         capacity: dto.capacity,
+        total_units: dto.total_units ?? 1,
+        check_in_time: dto.check_in_time ?? null,
+        check_out_time: dto.check_out_time ?? null,
+        cancellation_policy: dto.cancellation_policy ?? null,
+        tax_percentage: dto.tax_percentage ?? null,
+        extra_guest_charge: dto.extra_guest_charge ?? null,
+        max_adults: dto.max_adults ?? null,
         attributes: dto.attributes ?? Prisma.JsonNull,
         image_urls: dto.image_urls ? dto.image_urls : Prisma.JsonNull,
       },
@@ -184,14 +198,71 @@ export class InventoryService {
     return { message: `${dto.dates.length} date(s) set successfully` };
   }
 
-  async getAvailability(serviceId: string, from: string, to: string) {
-    return this.prisma.service_availability.findMany({
-      where: {
-        service_id: serviceId,
-        date: { gte: new Date(from), lte: new Date(to) },
-      },
-      orderBy: { date: 'asc' },
-    });
+  async getAvailability(serviceId: string, from: string, to: string): Promise<{
+    isBlocked: boolean;
+    minAvailable: number;
+    pricePerNight: number;
+    totalUnits: number;
+  }> {
+    const fromDate = new Date(from);
+    const toDate = new Date(to); // exclusive: checkout day is not a night
+
+    const [service, blockedDates, bookings, holds] = await Promise.all([
+      this.prisma.services.findUnique({
+        where: { service_id: serviceId },
+        select: { total_units: true, base_price: true },
+      }),
+      this.prisma.service_blocked_dates.findMany({
+        where: { service_id: serviceId, date: { gte: fromDate, lt: toDate } },
+        select: { date: true },
+      }),
+      this.prisma.service_bookings.findMany({
+        where: {
+          service_id: serviceId,
+          status: { in: ['pending', 'confirmed'] },
+          check_in_date: { lt: toDate },
+          check_out_date: { gt: fromDate },
+        },
+        select: { check_in_date: true, check_out_date: true, slots_booked: true },
+      }),
+      this.prisma.service_holds.findMany({
+        where: {
+          service_id: serviceId,
+          status: 'active',
+          expires_at: { gt: new Date() },
+          check_in_date: { lt: toDate },
+          check_out_date: { gt: fromDate },
+        },
+        select: { check_in_date: true, check_out_date: true, slots_held: true },
+      }),
+    ]);
+
+    const totalUnits = service?.total_units ?? 1;
+    const pricePerNight = Number(service?.base_price ?? 0);
+    const isBlocked = blockedDates.length > 0;
+
+    // Walk each night in the range to find the tightest constraint
+    let minAvailable = totalUnits;
+    const cur = new Date(fromDate);
+    while (cur < toDate) {
+      const nextDay = new Date(cur);
+      nextDay.setDate(nextDay.getDate() + 1);
+
+      const bookedSlots = bookings
+        .filter(b => b.check_in_date < nextDay && b.check_out_date > cur)
+        .reduce((sum, b) => sum + b.slots_booked, 0);
+
+      const heldSlots = holds
+        .filter(h => h.check_in_date < nextDay && h.check_out_date > cur)
+        .reduce((sum, h) => sum + h.slots_held, 0);
+
+      const available = totalUnits - bookedSlots - heldSlots;
+      if (available < minAvailable) minAvailable = available;
+
+      cur.setDate(cur.getDate() + 1);
+    }
+
+    return { isBlocked, minAvailable, pricePerNight, totalUnits };
   }
 
   async blockDate(serviceId: string, businessId: string, date: string) {
@@ -217,53 +288,20 @@ export class InventoryService {
       throw new BadRequestException('check_out_date must be after check_in_date');
     }
 
-    const dateCount = await this.prisma.service_availability.count({
-      where: {
+    const expiresAt = new Date(Date.now() + this.HOLD_MINUTES * 60 * 1000);
+
+    return this.prisma.service_holds.create({
+      data: {
         service_id: dto.service_id,
-        date: { gte: checkIn, lt: checkOut },
-        is_blocked: false,
+        business_id: businessId,
+        lead_id: dto.lead_id ?? null,
+        check_in_date: checkIn,
+        check_out_date: checkOut,
+        slots_held: slots,
+        expires_at: expiresAt,
       },
     });
 
-    if (dateCount === 0) {
-      throw new BadRequestException('No availability found for the requested dates');
-    }
-
-    return this.prisma.$transaction(async (tx) => {
-      // Atomically decrement available_slots — same guard as booking
-      const result = await tx.$executeRaw`
-        UPDATE service_availability
-        SET
-          available_slots = available_slots - ${slots},
-          updated_at      = NOW()
-        WHERE
-          service_id          = ${dto.service_id}::uuid
-          AND date           >= ${checkIn}::date
-          AND date            < ${checkOut}::date
-          AND available_slots >= ${slots}
-          AND is_blocked      = false
-      `;
-
-      if (result < dateCount) {
-        throw new ConflictException(
-          'One or more dates in the selected range are fully booked or unavailable',
-        );
-      }
-
-      const expiresAt = new Date(Date.now() + this.HOLD_MINUTES * 60 * 1000);
-
-      return tx.service_holds.create({
-        data: {
-          service_id: dto.service_id,
-          business_id: businessId,
-          lead_id: dto.lead_id ?? null,
-          check_in_date: checkIn,
-          check_out_date: checkOut,
-          slots_held: slots,
-          expires_at: expiresAt,
-        },
-      });
-    });
   }
 
   async releaseHold(holdId: string, businessId: string) {
@@ -272,22 +310,9 @@ export class InventoryService {
     });
     if (!hold) throw new NotFoundException('Active hold not found');
 
-    return this.prisma.$transaction(async (tx) => {
-      await tx.$executeRaw`
-        UPDATE service_availability
-        SET
-          available_slots = LEAST(total_slots, available_slots + ${hold.slots_held}),
-          updated_at      = NOW()
-        WHERE
-          service_id = ${hold.service_id}::uuid
-          AND date  >= ${hold.check_in_date}::date
-          AND date   < ${hold.check_out_date}::date
-      `;
-
-      return tx.service_holds.update({
-        where: { hold_id: holdId },
-        data: { status: 'released' },
-      });
+    return this.prisma.service_holds.update({
+      where: { hold_id: holdId },
+      data: { status: 'released' },
     });
   }
 
@@ -299,21 +324,6 @@ export class InventoryService {
     });
 
     if (!expired.length) return 0;
-
-    await this.prisma.$transaction(
-      expired.map((hold) =>
-        this.prisma.$executeRaw`
-          UPDATE service_availability
-          SET
-            available_slots = LEAST(total_slots, available_slots + ${hold.slots_held}),
-            updated_at      = NOW()
-          WHERE
-            service_id = ${hold.service_id}::uuid
-            AND date  >= ${hold.check_in_date}::date
-            AND date   < ${hold.check_out_date}::date
-        `,
-      ),
-    );
 
     await this.prisma.service_holds.updateMany({
       where: { status: 'active', expires_at: { lt: now } },
@@ -337,6 +347,22 @@ export class InventoryService {
     }
 
     return this.prisma.$transaction(async (tx) => {
+      // Generate human-readable booking reference: {PREFIX}-{NNNN}
+      // Prefix = first letter of each word in business name, uppercase, max 4 chars
+      const business = await tx.businesses.findUnique({
+        where: { business_id: businessId },
+        select: { business_name: true },
+      });
+      const rawName = business?.business_name ?? 'BK';
+      const prefix = rawName
+        .split(/\s+/)
+        .map((w: string) => w[0]?.toUpperCase() ?? '')
+        .join('')
+        .replace(/[^A-Z]/g, '')
+        .slice(0, 4) || 'BK';
+      const count = await tx.service_bookings.count({ where: { business_id: businessId } });
+      const booking_reference = `${prefix}-${String(count + 1).padStart(4, '0')}`;
+
       // ── Path A: converting an existing hold ─────────────────────────────
       if (dto.hold_id) {
         const hold = await tx.service_holds.findFirst({
@@ -356,26 +382,19 @@ export class InventoryService {
           data: { status: 'converted' },
         });
 
-        // Move available_slots to booked_slots (slots were already removed from available at hold time)
-        await tx.$executeRaw`
-          UPDATE service_availability
-          SET booked_slots = booked_slots + ${hold.slots_held}, updated_at = NOW()
-          WHERE service_id = ${hold.service_id}::uuid
-            AND date >= ${hold.check_in_date}::date
-            AND date  < ${hold.check_out_date}::date
-        `;
-
-        const availability = await tx.service_availability.findMany({
-          where: { service_id: hold.service_id, date: { gte: checkIn, lt: checkOut } },
-          include: { services: { select: { base_price: true } } },
+        const service = await tx.services.findFirst({
+          where: { service_id: hold.service_id },
+          select: { base_price: true },
         });
 
-        const totalPrice = availability.reduce((sum, av) => {
-          return sum + Number(av.effective_price ?? av.services.base_price) * hold.slots_held;
-        }, 0);
+        const msPerDay = 1000 * 60 * 60 * 24;
+        const numNights = Math.max(1, Math.round((hold.check_out_date.getTime() - hold.check_in_date.getTime()) / msPerDay));
+        const basePrice = Math.min(Number(service?.base_price ?? 0), 9999999);
+        const totalPrice = basePrice * numNights;
 
         return tx.service_bookings.create({
           data: {
+            booking_reference,
             service_id: hold.service_id,
             business_id: businessId,
             lead_id: dto.lead_id ?? hold.lead_id ?? null,
@@ -397,49 +416,19 @@ export class InventoryService {
         );
       }
 
-      const dateCount = await tx.service_availability.count({
-        where: {
-          service_id: dto.service_id,
-          date: { gte: checkIn, lt: checkOut },
-          is_blocked: false,
-        },
+      const service = await tx.services.findFirst({
+        where: { service_id: dto.service_id },
+        select: { base_price: true },
       });
 
-      if (dateCount === 0) {
-        throw new BadRequestException('No availability found for the requested dates');
-      }
-
-      const result = await tx.$executeRaw`
-        UPDATE service_availability
-        SET
-          booked_slots    = booked_slots + ${slots},
-          available_slots = available_slots - ${slots},
-          updated_at      = NOW()
-        WHERE
-          service_id          = ${dto.service_id}::uuid
-          AND date           >= ${checkIn}::date
-          AND date            < ${checkOut}::date
-          AND available_slots >= ${slots}
-          AND is_blocked      = false
-      `;
-
-      if (result < dateCount) {
-        throw new ConflictException(
-          'One or more dates in the selected range are fully booked or unavailable',
-        );
-      }
-
-      const availability = await tx.service_availability.findMany({
-        where: { service_id: dto.service_id, date: { gte: checkIn, lt: checkOut } },
-        include: { services: { select: { base_price: true } } },
-      });
-
-      const totalPrice = availability.reduce((sum, av) => {
-        return sum + Number(av.effective_price ?? av.services.base_price) * slots;
-      }, 0);
+      const msPerDay = 1000 * 60 * 60 * 24;
+      const numNights = Math.max(1, Math.round((checkOut.getTime() - checkIn.getTime()) / msPerDay));
+      const basePrice = Math.min(Number(service?.base_price ?? 0), 9999999);
+      const totalPrice = basePrice * numNights;
 
       return tx.service_bookings.create({
         data: {
+          booking_reference,
           service_id: dto.service_id,
           business_id: businessId,
           lead_id: dto.lead_id ?? null,
@@ -456,9 +445,20 @@ export class InventoryService {
   }
 
   async cancelBooking(bookingId: string, businessId: string) {
+    console.log("cencell booking")
+    const isUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(bookingId);
     const booking = await this.prisma.service_bookings.findFirst({
-      where: { booking_id: bookingId, business_id: businessId },
+      where: {
+        business_id: businessId,
+        OR: [
+          { booking_reference: bookingId },
+          ...(isUuid ? [{ booking_id: bookingId }] : []),
+        ],
+      },
     });
+
+    console.log("booking", booking)
+
     if (!booking) throw new NotFoundException('Booking not found');
     if (booking.status === 'cancelled') {
       throw new BadRequestException('Booking already cancelled');
@@ -479,7 +479,7 @@ export class InventoryService {
       `;
 
       return tx.service_bookings.update({
-        where: { booking_id: bookingId },
+        where: { booking_id: booking.booking_id },
         data: { status: 'cancelled', updated_at: new Date() },
       });
     });

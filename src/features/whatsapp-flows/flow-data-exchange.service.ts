@@ -75,8 +75,8 @@ export class FlowDataExchangeService {
     switch (businessType) {
       case 'hospitality':
       default:
-        if (action === 'INIT') return this.hospitalityFlow.handleInit(data, businessId);
-        if (action === 'BACK') return this.hospitalityFlow.handleBack(screen, data);
+        if (action === 'INIT') return this.hospitalityFlow.handleInit(data, businessId, flow_token);
+        if (action === 'BACK') return this.hospitalityFlow.handleBack(screen, data, businessId);
         if (action === 'data_exchange') return this.hospitalityFlow.handleDataExchange(screen, data, flow_token, businessId);
     }
 

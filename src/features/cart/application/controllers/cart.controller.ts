@@ -23,7 +23,7 @@ import {
 } from '../dto/cart.dto';
 
 @ApiTags('Cart')
-@Controller('api/v1/cart')
+@Controller('cart')
 @UseGuards(JwtAuthGuard)
 export class CartController {
   constructor(private readonly cartService: CartService) {}

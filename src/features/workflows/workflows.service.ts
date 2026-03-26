@@ -11,6 +11,7 @@ import { WhatsAppCatalogService } from '../whatsapp/services/whatsapp-catalog.se
 import { NodeFactory } from './factories/node-factory';
 import { ConversationService } from '../conversation/conversation.service';
 import { CreateWorkflowDto, InitiateWorkflowDto, UpdateWorkflowDto } from './dto/save-workflow.dto';
+import { WorkflowAnalyzerService } from './workflow-analyzer.service';
 import { WorkflowDefinition, WorkflowDefinitionDocument } from './schema/workflow-definition.schema';
 import { BusinessWorkflow, BusinessWorkflowDocument } from './schema/business-workflow.schema';
 import { WorkflowExecution, WorkflowExecutionDocument } from './schema/workflow-execution.schema';
@@ -238,11 +239,111 @@ export class WorkflowsService implements OnModuleInit {
     @InjectModel(WorkflowDefinition.name) private readonly workflowDefinitionModel: Model<WorkflowDefinitionDocument>,
     @InjectModel(BusinessWorkflow.name) private readonly businessWorkflowModel: Model<BusinessWorkflowDocument>,
     @InjectModel(WorkflowExecution.name) private readonly workflowExecutionModel: Model<WorkflowExecutionDocument>,
+    private readonly workflowAnalyzer: WorkflowAnalyzerService,
   ) {
+  }
+
+  async onModuleInit() {
+    this.kafkaConsumer.registerMessageHandler('workflow-orchestration-global', {
+      handleAiResponse: async (aiResult: WorkflowProcessingContext) => {
+        await this.handleIncomingMessage(aiResult);
+      },
+    });
   }
 
   getNodeDefinitions() {
     return this.nodeFactory.getNodeDefinitions();
+  }
+
+  /**
+   * Returns all variables a user can reference in node params.
+   *
+   * system   — always available from WorkflowNodeExecutionContext
+   * node     — output variables produced by specific node types
+   *            (pass nodeTypes[] to filter to only nodes used in the workflow)
+   */
+  getAvailableVariables(nodeTypes: string[] = []) {
+    const system = [
+      // Contact
+      { path: 'contact.name', label: 'Contact Name', example: 'Dheeraj' },
+      { path: 'contact.from', label: 'Customer Phone', example: '919539192684' },
+      { path: 'contact.phoneNumberId', label: 'WhatsApp Phone Number ID', example: '123456789' },
+      // Business
+      { path: 'business.name', label: 'Business Name', example: 'Grand Hotel' },
+      { path: 'business.type', label: 'Business Type', example: 'hotel' },
+      { path: 'business.email', label: 'Business Email', example: 'info@grandhotel.com' },
+      { path: 'business.phone', label: 'Business Phone', example: '+919876543210' },
+      { path: 'business.website', label: 'Business Website', example: 'https://grandhotel.com' },
+      { path: 'business.city', label: 'Business City', example: 'Wayanad' },
+      { path: 'business.address', label: 'Business Address', example: '123 Main St, Kalpetta' },
+      { path: 'business.country', label: 'Business Country', example: 'India' },
+      // Lead
+      { path: 'lead.id', label: 'Lead ID', example: 'uuid...' },
+      { path: 'lead.first_name', label: 'Lead First Name', example: 'Dheeraj' },
+      { path: 'lead.last_name', label: 'Lead Last Name', example: 'Kumar' },
+      { path: 'lead.status', label: 'Lead Status', example: 'qualified' },
+      { path: 'lead.score', label: 'Lead Score', example: '85' },
+      { path: 'lead.phone', label: 'Lead Phone', example: '919539192684' },
+      { path: 'lead.email', label: 'Lead Email', example: 'user@example.com' },
+      // Runtime
+      { path: 'user_input', label: 'Last User Message', example: 'Hello' },
+      { path: 'intent.intent', label: 'Detected Intent', example: 'BOOKING' },
+      // Flat aliases (for backward compat with node template strings)
+      { path: 'contactName', label: 'Contact Name (alias)', example: 'Dheeraj' },
+      { path: 'from', label: 'Customer Phone (alias)', example: '919539192684' },
+      { path: 'business_name', label: 'Business Name (alias)', example: 'Grand Hotel' },
+    ];
+
+    // Each node type's output variable and the sub-fields it typically exposes
+    const nodeOutputs: Record<string, { path: string; label: string; example: string }[]> = {
+      'action.send_message_withmenu': [
+        { path: 'menu_selection', label: 'Menu Selection (ID)', example: 'option_1' },
+      ],
+      'action.send_message_with_btns': [
+        { path: 'button_selection', label: 'Button Selection (ID)', example: 'btn_yes' },
+      ],
+      'action.wait_for_text': [
+        { path: 'user_input', label: 'User Text Reply', example: 'Any text' },
+      ],
+      'action.collect_filter': [
+        { path: 'filter_metadata.filterKey', label: 'Filter Key', example: 'gender' },
+        { path: 'filter_metadata.filterValue', label: 'Filter Value', example: 'male' },
+        { path: 'filter_metadata.selected', label: 'Selected Option ID', example: 'men' },
+      ],
+      'action.send_catalog': [
+        { path: 'catalog_selection', label: 'Selected Product ID', example: 'prod_abc' },
+      ],
+      'action.send_flow': [
+        { path: 'flow_response', label: 'Flow Response (raw)', example: '{}' },
+        { path: 'flow_response.booking_id', label: 'Booking ID', example: 'BK-001' },
+        { path: 'flow_response.guest_name', label: 'Guest Name', example: 'Dheeraj' },
+        { path: 'flow_response.label_checkin', label: 'Check-in Label', example: 'Check-in: 2026-03-18' },
+        { path: 'flow_response.label_checkout', label: 'Check-out Label', example: 'Check-out: 2026-03-20' },
+        { path: 'flow_response.label_nights', label: 'Nights Label', example: 'Nights: 2' },
+        { path: 'flow_response.label_total', label: 'Total Label', example: 'Total: ₹5000' },
+      ],
+      'action.send_payment_request': [
+        { path: 'payment_reference_id', label: 'Payment Reference ID', example: 'pay_xyz' },
+      ],
+      'action.rag_search': [
+        { path: 'rag_results', label: 'RAG Search Results', example: '[{...}]' },
+      ],
+    };
+
+    const nodeVariables =
+      nodeTypes.length > 0
+        ? nodeTypes.flatMap((t) => nodeOutputs[t] ?? [])
+        : Object.values(nodeOutputs).flat();
+
+    // deduplicate by path
+    const seen = new Set<string>();
+    const unique = nodeVariables.filter((v) => {
+      if (seen.has(v.path)) return false;
+      seen.add(v.path);
+      return true;
+    });
+
+    return { system, node_outputs: unique };
   }
 
   async initiateWorkflow(dto: InitiateWorkflowDto) {
@@ -290,6 +391,21 @@ export class WorkflowsService implements OnModuleInit {
 
     const enrichedConnections = this.enrichConnectionsWithConditions(nodes, connections);
 
+    // AI variable mapping — auto-maps template node variables before saving
+    let analyzedNodes = nodes;
+    let analyzedConnections = enrichedConnections;
+    try {
+      const analyzed = await this.workflowAnalyzer.analyze({
+        business_id,
+        nodes,
+        connections: enrichedConnections,
+      });
+      analyzedNodes = analyzed.nodes;
+      analyzedConnections = analyzed.connections;
+    } catch (err) {
+      this.logger.error(`WorkflowAnalyzer failed, saving with original nodes: ${err.message}`, err.stack);
+    }
+
     if (workflow_id) {
       const workflowDef = await this.workflowDefinitionModel.findOneAndUpdate(
         { workflow_id },
@@ -298,7 +414,7 @@ export class WorkflowsService implements OnModuleInit {
             workflow_name,
             business_type,
             description,
-            workflow_definition: { nodes, connections: enrichedConnections },
+            workflow_definition: { nodes: analyzedNodes, connections: analyzedConnections },
             is_active: is_active ?? true,
           }
         },
@@ -323,7 +439,7 @@ export class WorkflowsService implements OnModuleInit {
           $set: {
             workflow_name,
             description,
-            workflow_definition: { nodes, connections: enrichedConnections },
+            workflow_definition: { nodes: analyzedNodes, connections: analyzedConnections },
             is_active: is_active ?? true,
           }
         },
@@ -343,7 +459,7 @@ export class WorkflowsService implements OnModuleInit {
       business_type,
       description,
       version: '1.0.0',
-      workflow_definition: { nodes, connections: enrichedConnections },
+      workflow_definition: { nodes: analyzedNodes, connections: analyzedConnections },
       is_active: is_active ?? true,
     });
 
@@ -396,15 +512,6 @@ export class WorkflowsService implements OnModuleInit {
     }
   }
 
-  async onModuleInit() {
-    this.kafkaConsumer.registerMessageHandler('workflow-orchestration-global', {
-      handleAiResponse: async (aiResult: WorkflowProcessingContext) => {
-        console.log('Received AI result for orchestration:', aiResult);
-        await this.handleIncomingMessage(aiResult);
-      },
-    });
-  }
-
 
   async startWorkflow(lead_id: string, chat_id: string, channel: 'whatsapp' | 'instagram', workflowInput: WorkflowProcessingContext) {
     let business_id = workflowInput.business_id;
@@ -426,6 +533,77 @@ export class WorkflowsService implements OnModuleInit {
 
     console.log("activeWrokflow", activeWorkflow)
 
+    // Fetch authoritative business + lead data from DB to build system context
+    const [business, lead] = await Promise.all([
+      this.prisma.businesses.findUnique({
+        where: { business_id },
+        select: {
+          business_id: true,
+          business_name: true,
+          business_type: true,
+          email: true,
+          phone: true,
+          website: true,
+          city: true,
+          address: true,
+          country: true,
+          whatsapp_number: true,
+          tenant_id: true,
+        },
+      }),
+      this.prisma.leads.findUnique({
+        where: { lead_id },
+        select: {
+          lead_id: true,
+          first_name: true,
+          last_name: true,
+          phone: true,
+          email: true,
+          status: true,
+          lead_score: true,
+        },
+      }),
+    ]);
+
+    const system_context: Record<string, any> = {
+      business_id: business?.business_id ?? business_id,
+      business_name: business?.business_name ?? workflowInput.context?.business?.name ?? '',
+      business_type: business?.business_type ?? null,
+      business_email: business?.email ?? null,
+      business_phone: business?.phone ?? null,
+      business_website: business?.website ?? null,
+      business_city: business?.city ?? null,
+      business_address: business?.address ?? null,
+      business_country: business?.country ?? null,
+      business_whatsapp_number: business?.whatsapp_number ?? null,
+      tenant_id: business?.tenant_id ?? workflowInput.tenant_id ?? null,
+      lead_id: lead?.lead_id ?? lead_id,
+      lead_first_name: lead?.first_name ?? null,
+      lead_last_name: lead?.last_name ?? null,
+      lead_phone: lead?.phone ?? null,
+      lead_email: lead?.email ?? null,
+      lead_status: lead?.status ?? null,
+      lead_score: lead?.lead_score ?? null,
+      channel,
+      intent: intent || null,
+      workflow_id: activeWorkflow.workflowId,
+    };
+
+    workflowInput.context = {
+      ...workflowInput.context,
+      business: {
+        id: system_context.business_id,
+        name: system_context.business_name,
+        type: system_context.business_type,
+        email: system_context.business_email,
+        phone: system_context.business_phone,
+        website: system_context.business_website,
+        city: system_context.business_city,
+        address: system_context.business_address,
+        country: system_context.business_country,
+      },
+    };
+
     const execution_id = crypto.randomUUID();
     await this.workflowExecutionModel.create({
       execution_id,
@@ -438,8 +616,12 @@ export class WorkflowsService implements OnModuleInit {
       waiting_for_input: false,
       current_node_id: null,
       context: workflowInput,
+      system_context,
     });
     this.logger.log(`Created workflow execution: ${execution_id}`);
+
+    console.log("workflow input")
+    console.dir(workflowInput)
 
     const workflow = new Workflow(this.nodeFactory);
     workflow.init(activeWorkflow.definition);
@@ -501,15 +683,20 @@ export class WorkflowsService implements OnModuleInit {
       }
     };
 
+    console.dir(workflowInput)
+
     await workflow.execute(workflowInput);
 
     return workflow.getExecutionState();
 
   }
 
-  private async resumeWorkflow(executionId: string, workflow_id: string, currentNodeId: string, savedContext: any, lead_id: string, chat_id: string, waitingForInput: boolean, newInput: WorkflowProcessingContext) {
+  async resumeWorkflow(executionId: string, workflow_id: string, currentNodeId: string, savedContext: any, lead_id: string, chat_id: string, waitingForInput: boolean, newInput: WorkflowProcessingContext) {
+    const workflowDef = await this.getWorkflowDefinition(workflow_id);
     const workflow = new Workflow(this.nodeFactory);
-    workflow.init(await this.getWorkflowDefinition(workflow_id));
+    workflow.init(workflowDef);
+
+    console.log("new input", newInput);
 
     // Determine the actual user input based on message type
     let actualInput: any;
@@ -522,6 +709,18 @@ export class WorkflowsService implements OnModuleInit {
     } else {
       // Fallback to entire newInput
       actualInput = newInput;
+    }
+
+    // Enrich flow response with DB data when resuming from a send_flow node
+    const waitingNode = workflowDef?.nodes?.find((n: any) => n.id === currentNodeId);
+    if (waitingNode?.type === 'action.send_flow' && typeof actualInput === 'string') {
+      try {
+        const parsed = JSON.parse(actualInput);
+        actualInput = await this.enrichFlowResponse(parsed);
+        this.logger.log(`Flow response enriched for node ${currentNodeId}`);
+      } catch {
+        // not valid JSON or enrichment failed — leave as-is
+      }
     }
 
     const conversation_id = newInput.context?.conversation_id;
@@ -714,12 +913,117 @@ export class WorkflowsService implements OnModuleInit {
   }
 
 
+  /**
+   * Find the first `action.send_flow` node in the active workflow for a business.
+   * Used by the agent to locate the correct node to start from.
+   */
+  async findSendFlowNodeId(businessId: string): Promise<string | null> {
+    const workflow = await this.getActiveWorkflowForBusiness(businessId, '');
+    const node = workflow?.definition.nodes.find((n: any) => n.type === 'action.send_flow');
+    return node?.id ?? null;
+  }
+
+  /**
+   * Start workflow execution at a specific node — used by the agent after confirming availability.
+   * Creates a fresh execution record at `nodeId` and immediately runs from that node.
+   */
+  async startFromNode(
+    businessId: string,
+    nodeId: string,
+    leadId: string,
+    chatId: string,
+    channel: 'whatsapp' | 'instagram',
+    context: WorkflowProcessingContext,
+  ): Promise<void> {
+    const activeWorkflow = await this.getActiveWorkflowForBusiness(businessId, '');
+    if (!activeWorkflow) {
+      this.logger.warn(`startFromNode: no active workflow for business ${businessId}`);
+      return;
+    }
+
+    const execution_id = crypto.randomUUID();
+    await this.workflowExecutionModel.create({
+      execution_id,
+      workflow_id: activeWorkflow.workflowId,
+      business_id: businessId,
+      lead_id: leadId,
+      channel,
+      chat_id: chatId,
+      status: 'running',
+      waiting_for_input: false,
+      current_node_id: nodeId,
+      context,
+      system_context: {},
+    });
+    this.logger.log(`startFromNode: created execution ${execution_id} at node ${nodeId}`);
+
+    const workflow = new Workflow(this.nodeFactory);
+    workflow.init(activeWorkflow.definition);
+    const conversation_id = context.context?.conversation_id;
+
+    workflow.onPause = async (state) => {
+      await this.saveExecutionState({ execution_id, ...state, lead_id: leadId, chat_id: chatId });
+      if (conversation_id) {
+        await this.conversationService.updateConversation(conversation_id, {
+          current_node_id: state.currentNodeId,
+          status: 'waiting',
+        });
+      }
+      this.clearDropTimer(execution_id);
+      this.dropTimers.set(execution_id, setTimeout(async () => {
+        this.logger.warn(`Workflow ${execution_id} dropped after 30min inactivity`);
+        await this.workflowExecutionModel.findOneAndUpdate(
+          { execution_id },
+          { $set: { status: 'dropped', waiting_for_input: false } },
+        );
+        if (conversation_id) {
+          await this.conversationService.updateConversation(conversation_id, {
+            status: 'dropped',
+            current_node_id: state.currentNodeId,
+          });
+        }
+        this.dropTimers.delete(execution_id);
+      }, 30 * 60 * 1000));
+    };
+
+    workflow.onComplete = async (state) => {
+      this.clearDropTimer(execution_id);
+      await this.workflowExecutionModel.findOneAndUpdate(
+        { execution_id },
+        { $set: { status: 'completed', waiting_for_input: false } },
+      );
+      if (conversation_id) {
+        await this.conversationService.updateConversation(conversation_id, {
+          status: 'ended',
+          current_node_id: state.currentNodeId,
+        });
+      }
+    };
+
+    workflow.onError = async (nodeId: string, error: Error) => {
+      this.clearDropTimer(execution_id);
+      await this.workflowExecutionModel.findOneAndUpdate(
+        { execution_id },
+        { $set: { status: 'failed', waiting_for_input: false } },
+      );
+      if (conversation_id) {
+        await this.conversationService.updateConversation(conversation_id, {
+          status: 'failed',
+          current_node_id: nodeId,
+          failed_reason: error.message,
+        });
+      }
+    };
+
+    await workflow.executeFromNode(nodeId, context);
+  }
+
   async handleIncomingMessage(incomingParams: WorkflowProcessingContext) {
     const channel = 'whatsapp';
 
     console.log("incomingParams", incomingParams)
 
-    const { phoneNumberId } = incomingParams.context;
+    const phoneNumberId = incomingParams.context.contact?.phoneNumberId;
 
     const hasWaitingWorkflow = await this.workflowExecutionModel.findOne({
       channel,
@@ -728,8 +1032,6 @@ export class WorkflowsService implements OnModuleInit {
       business_id: incomingParams.business_id,
       lead_id: incomingParams.lead_id,
     }).lean();
-
-    console.log("hasWaitingWorkflow", hasWaitingWorkflow);
 
     if (hasWaitingWorkflow) {
       console.log('Resuming existing workflow execution for chat_id:', phoneNumberId);
@@ -746,23 +1048,12 @@ export class WorkflowsService implements OnModuleInit {
       return;
     }
 
-    const intent = incomingParams.intent?.intent ?? '';
-    const messageType = incomingParams.context.message_type;
-    const isGreetingOrSupport = /GENERAL_INQUIRY|GREETING|SUPPORT/i.test(intent);
-    const isInteractive = messageType === 'interactive';
-
-    if (!isGreetingOrSupport && !isInteractive) {
-      console.log(`RAG chat triggered for intent="${intent}", messageType="${messageType}"`);
-      await this.callRagChat(incomingParams);
-    } else {
-      console.log('Starting new workflow for intent:', intent);
-      this.startWorkflow(
-        incomingParams.lead_id,
-        phoneNumberId,
-        channel,
-        incomingParams
-      );
-    }
+    this.startWorkflow(
+      incomingParams.lead_id,
+      phoneNumberId,
+      channel,
+      incomingParams,
+    );
   }
 
   private async callRagChat(incomingParams: WorkflowProcessingContext): Promise<void> {
@@ -798,6 +1089,65 @@ export class WorkflowsService implements OnModuleInit {
     });
 
     await ragNode.execute(nodeContext);
+  }
+
+  /**
+   * Enrich a WhatsApp Flow response with full DB data based on known IDs.
+   * Supports: booking_id (service_bookings) and order_id (orders).
+   */
+  private async enrichFlowResponse(data: Record<string, any>): Promise<Record<string, any>> {
+    // --- Service booking ---
+    if (data.booking_id) {
+      const booking = await this.prisma.service_bookings.findUnique({
+        where: { booking_id: data.booking_id },
+        include: { services: true, booking_guests: true },
+      });
+      if (booking) {
+        const nights = Math.ceil(
+          (booking.check_out_date.getTime() - booking.check_in_date.getTime()) / 86_400_000,
+        );
+        return {
+          booking_id: booking.booking_id,
+          booking_reference: booking.booking_reference,
+          service_name: booking.services.name,
+          service_type: booking.services.type,
+          check_in_date: booking.check_in_date.toISOString().split('T')[0],
+          check_out_date: booking.check_out_date.toISOString().split('T')[0],
+          nights,
+          total_price: Number(booking.total_price),
+          booking_status: booking.status,
+          payment_status: booking.payment_status,
+          num_guests: booking.booking_guests?.num_guests ?? booking.slots_booked,
+          customer_name: booking.customer_name,
+          customer_phone: booking.customer_phone,
+        };
+      }
+    }
+
+    // --- E-commerce order ---
+    if (data.order_id) {
+      const order = await this.prisma.orders.findUnique({
+        where: { order_id: data.order_id },
+        include: { order_items: true },
+      });
+      if (order) {
+        return {
+          order_id: order.order_id,
+          order_number: order.order_number,
+          order_status: order.status,
+          total_amount: Number(order.total_amount),
+          payment_status: order.payment_status,
+          items_count: order.order_items?.length ?? 0,
+          order_items: order.order_items?.map(i => ({
+            name: i.product_name,
+            quantity: i.quantity,
+            price: Number(i.total_price),
+          })),
+        };
+      }
+    }
+
+    return data;
   }
 
 }

@@ -4,7 +4,7 @@ import { ContactsService } from './contacts.service';
 import { CreateCustomerDto, QueryCustomerDto } from './dto/contact.dto';
 import { JwtAuthGuard } from '../../common/guards/jwt-auth.guard';
 
-@Controller('api/v1/contacts')
+@Controller('contacts')
 @UseGuards(JwtAuthGuard)
 export class ContactsController {
     constructor(private readonly contactsService: ContactsService) {}

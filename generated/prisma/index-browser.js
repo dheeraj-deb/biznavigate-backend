@@ -1147,6 +1147,13 @@ exports.Prisma.ServicesScalarFieldEnum = {
   description: 'description',
   base_price: 'base_price',
   capacity: 'capacity',
+  total_units: 'total_units',
+  check_in_time: 'check_in_time',
+  check_out_time: 'check_out_time',
+  cancellation_policy: 'cancellation_policy',
+  tax_percentage: 'tax_percentage',
+  extra_guest_charge: 'extra_guest_charge',
+  max_adults: 'max_adults',
   attributes: 'attributes',
   image_urls: 'image_urls',
   is_active: 'is_active',
@@ -1168,8 +1175,18 @@ exports.Prisma.Service_availabilityScalarFieldEnum = {
   updated_at: 'updated_at'
 };
 
+exports.Prisma.Service_blocked_datesScalarFieldEnum = {
+  id: 'id',
+  service_id: 'service_id',
+  business_id: 'business_id',
+  date: 'date',
+  reason: 'reason',
+  created_at: 'created_at'
+};
+
 exports.Prisma.Service_bookingsScalarFieldEnum = {
   booking_id: 'booking_id',
+  booking_reference: 'booking_reference',
   service_id: 'service_id',
   business_id: 'business_id',
   lead_id: 'lead_id',
@@ -1358,6 +1375,7 @@ exports.Prisma.ModelName = {
   hotel_pricing_notifications: 'hotel_pricing_notifications',
   services: 'services',
   service_availability: 'service_availability',
+  service_blocked_dates: 'service_blocked_dates',
   service_bookings: 'service_bookings',
   booking_guests: 'booking_guests',
   pricing_rules: 'pricing_rules',

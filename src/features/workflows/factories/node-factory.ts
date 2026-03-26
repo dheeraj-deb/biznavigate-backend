@@ -16,6 +16,7 @@ import { RAGSearchNode } from "../nodes/actions/rag-search-node";
 import { RagChatNode } from "../nodes/actions/rag-chat-node";
 import { SendPaymentRequestNode } from "../nodes/actions/send-payment-req-node";
 import { SendFlowNode } from "../nodes/actions/send-flow-node";
+import { SendTemplateNode } from "../nodes/actions/send-template-node";
 
 export type NodeConstructor<T extends BaseNode = BaseNode> =
     new (config: NodeConfig, ...deps: any[]) => T;
@@ -216,6 +217,27 @@ export class NodeFactory {
             ],
         },
 
+        // ── Templates ──────────────────────────────────────────────────────
+        {
+            type: 'action.send_template',
+            category: 'action',
+            label: 'Send Template',
+            description: 'Sends an approved WhatsApp template message with dynamic variables mapped from the workflow context.',
+            icon: '📨',
+            waitForInput: false,
+            output_variable: null,
+            params: [
+                { key: 'template_name', type: 'string' },
+                { key: 'language', type: 'string' },
+                { key: 'header_variable', type: 'string' },
+                {
+                    key: 'variables', type: 'array', items: [
+                        { key: 'path', type: 'string' },
+                    ]
+                },
+            ],
+        },
+
         // ── Flows ──────────────────────────────────────────────────────────
         {
             type: 'action.send_flow',
@@ -310,6 +332,9 @@ export class NodeFactory {
 
         // Flows
         this.register('action.send_flow', SendFlowNode);
+
+        // Templates
+        this.register('action.send_template', SendTemplateNode);
     }
 
     private register(type: string, constructor: NodeConstructor): void {
@@ -328,7 +353,7 @@ export class NodeFactory {
     }
 
     private getDependencies(nodeType: string): any[] {
-        if (nodeType.startsWith('trigger.whatsapp') || nodeType.includes('send_message') || nodeType === 'action.wait_for_text' || nodeType === 'action.collect_filter' || nodeType === 'action.rag_search' || nodeType === 'action.rag_chat' || nodeType === 'action.send_payment_request' || nodeType === 'action.send_flow') {
+        if (nodeType.startsWith('trigger.whatsapp') || nodeType.includes('send_message') || nodeType === 'action.wait_for_text' || nodeType === 'action.collect_filter' || nodeType === 'action.rag_search' || nodeType === 'action.rag_chat' || nodeType === 'action.send_payment_request' || nodeType === 'action.send_flow' || nodeType === 'action.send_template') {
             return [this.whatsappService];
         }
         if (nodeType === 'action.send_catalog') {

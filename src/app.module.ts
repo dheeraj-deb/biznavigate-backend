@@ -48,6 +48,7 @@ import { InboxModule } from "./features/inbox/inbox.module";
 import { GatewayModule } from "./features/inbox/gateway/gateway.module";
 import { HotelPricingModule } from "./features/hotel-pricing/hotel-pricing.module";
 import { S3Module } from "./s3/s3.module";
+import { AgentModule } from "./features/agent/agent.module";
 
 @Module({
   imports: [
@@ -119,6 +120,7 @@ import { S3Module } from "./s3/s3.module";
     ContactsModule,
     InstagramModule,
     S3Module,
+    AgentModule,
     ...(process.env.MONGODB_URI
       ? [CampaignModule, InboxModule, GatewayModule, WhatsAppModule, ChatWidgetModule, WorkflowsModule, HotelPricingModule]
       : []),

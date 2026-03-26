@@ -177,28 +177,45 @@ export interface StructuredDataResult {
 }
 
 
+export interface ContactInfo {
+    name: string | null;
+    from: string;
+    phoneNumberId: string;
+}
+
+export interface BusinessContext {
+    id: string;
+    name: string;
+    type?: string | null;
+    email?: string | null;
+    phone?: string | null;
+    website?: string | null;
+    city?: string | null;
+    address?: string | null;
+    country?: string | null;
+}
+
+export interface LeadContext {
+    id: string;
+    first_name: string | null;
+    last_name: string | null;
+    status: LeadStatus;
+    score: number;
+    phone?: string | null;
+    email?: string | null;
+}
+
 export interface MessageProcessingContext {
     message_id: string;
     conversation_id: string;
     channel: CommunicationChannel;
-
-    contactName: string | null;
-
-    phoneNumberId: string;
-
-    from: string;
-
-    business_name: string;
-
-    business_id: string;
-
-    lead_info: LeadInfo;
-
     message_type: MessageType;
-
+    contact: ContactInfo;
+    business?: BusinessContext;
+    lead: LeadContext;
 }
 
-
+/** @deprecated Use LeadContext instead */
 export interface LeadInfo {
     lead_id: string;
     first_name: string | null;
@@ -255,17 +272,27 @@ export interface FilterData {
 export interface WorkflowNodeExecutionContext {
     message_id: string;
     conversation_id: string;
-    channel: CommunicationChannel
-    contactName: string | null;
-    phoneNumberId: string;
-    from: string;
-    business_name: string;
-    lead_info: LeadInfo;
+    channel: CommunicationChannel;
     message_type: MessageType;
+
+    // Nested context objects
+    contact: ContactInfo;
+    business?: BusinessContext;
+    lead: LeadContext;
+
+    // Flat aliases — kept for backward compatibility with node template strings
+    // e.g. ${contactName}, ${from}, ${business_name} in node params
+    contactName: string | null;
+    from: string;
+    phoneNumberId: string;
+    business_name: string;
+
+    // Runtime fields
     user_input: string;
     business_id: string;
     tenant_id: string | null;
     lead_id: string;
+
     intent?: IntentResult;
     entities?: EntityExtractionResult;
     structured_data?: StructuredDataResult;

@@ -15,6 +15,7 @@ export class WorkflowExecution {
     @Prop() current_node_id: string;
     @Prop({ default: false }) waiting_for_input: boolean;
     @Prop({ type: Object }) context: Record<string, any>;
+    @Prop({ type: Object }) system_context: Record<string, any>;
 }
 
 export const WorkflowExecutionSchema = SchemaFactory.createForClass(WorkflowExecution);
