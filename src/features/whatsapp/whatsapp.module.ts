@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { forwardRef, Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { BullModule } from '@nestjs/bullmq';
 import { MessageDebounceProcessor } from './processors/message-debounce.processor';
@@ -20,6 +20,8 @@ import { ConversationModule } from '../conversation/conversation.module';
 import { WhatsAppTemplatesModule } from '../whatsapp-templates/whatsapp-templates.module';
 import { WhatsAppFlowsModule } from '../whatsapp-flows/whatsapp-flows.module';
 import { GatewayModule } from '../inbox/gateway/gateway.module';
+import { AgentModule } from '../agent/agent.module';
+import { WorkflowsModule } from '../workflows/workflows.module';
 
 @Module({
   imports: [
@@ -31,6 +33,8 @@ import { GatewayModule } from '../inbox/gateway/gateway.module';
     WhatsAppTemplatesModule,
     WhatsAppFlowsModule,
     GatewayModule,
+    AgentModule,
+    forwardRef(() => WorkflowsModule),
     BullModule.registerQueue({ name: 'message-debounce' }),
   ],
   controllers: [

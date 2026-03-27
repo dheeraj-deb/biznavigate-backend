@@ -2,7 +2,7 @@ import * as crypto from 'crypto';
 import { BadRequestException, ConflictException, Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { WhatsAppFlow, WhatsAppFlowDocument, FlowStatus } from './schemas/flow.schema';
+import { WhatsAppFlow, WhatsAppFlowDocument, FlowStatus, FlowCategory } from './schemas/flow.schema';
 import { CreateFlowDto } from './dto/create-flow.dto';
 import { QueryFlowDto } from './dto/query-flow.dto';
 import { WhatsAppApiClientService } from '../whatsapp/infrastructure/whatsapp-api-client.service';
@@ -95,12 +95,41 @@ export class WhatsAppFlowsService {
             await this.flowModel.findByIdAndUpdate(id, { metaFlowId });
         }
 
+        // Auto-generate RSA 2048-bit key pair if not already done
+        const baseUrl = this.configService.get<string>('APP_BASE_URL', '');
+        let endpointUri = `${baseUrl}/whatsapp/flows/exchange/${id}`;
+        if (!flow.privateKey) {
+            const { publicKey, privateKey } = crypto.generateKeyPairSync('rsa', {
+                modulusLength: 2048,
+                publicKeyEncoding: { type: 'spki', format: 'pem' },
+                privateKeyEncoding: { type: 'pkcs8', format: 'pem' },
+            });
+
+            // Upload the public key to Meta (signs the key for the phone number)
+            const phoneNumberId = account.platform_user_id;
+            await this.metaApi.uploadBusinessPublicKey(phoneNumberId, accessToken, publicKey);
+
+            // Encrypt the private key at rest using the same ENCRYPTION_KEY used for tokens
+            const encryptionKey = this.configService.get<string>('ENCRYPTION_KEY');
+            const encryptedPrivateKey = this.encryptPrivateKey(privateKey, encryptionKey);
+
+            await this.flowModel.findByIdAndUpdate(id, {
+                publicKey,
+                privateKey: encryptedPrivateKey,
+                endpointUri,
+            });
+        }
+
+        // Set the endpoint URI on the Meta flow
+        this.logger.log(`Setting endpoint_uri on Meta flow ${metaFlowId}: ${endpointUri}`);
+        await this.metaApi.updateFlow(metaFlowId, accessToken, { endpoint_uri: endpointUri });
+
         // Upload the Flow JSON
-        await this.metaApi.uploadFlowAsset(metaFlowId, accessToken, flow.flowJson, flow.endpointUri);
+        await this.metaApi.uploadFlowAsset(metaFlowId, accessToken, flow.flowJson, endpointUri);
 
         await this.flowModel.findByIdAndUpdate(id, { status: FlowStatus.DRAFT, metaFlowId });
 
-        return { message: 'Flow submitted to Meta. Call /publish to make it live.', metaFlowId };
+        return { message: 'Flow submitted to Meta. Call /publish to make it live.', metaFlowId, endpointUri };
     }
 
     /**
@@ -119,6 +148,12 @@ export class WhatsAppFlowsService {
 
         const account = await this.getActiveAccount(businessId);
         const accessToken = this.decryptToken(account.access_token);
+
+        // Re-upload this flow's public key before publishing so Meta uses the correct key for health check
+        if (flow.publicKey) {
+            const phoneNumberId = account.platform_user_id;
+            await this.metaApi.uploadBusinessPublicKey(phoneNumberId, accessToken, flow.publicKey);
+        }
 
         await this.metaApi.publishFlow(flow.metaFlowId, accessToken);
 
@@ -164,6 +199,143 @@ export class WhatsAppFlowsService {
         return { message: 'Flow deleted' };
     }
 
+    /**
+     * Regenerate RSA key pair and update endpoint URI on Meta.
+     * Use this when a flow was synced from Meta and has no private key,
+     * or when the endpoint URI is stale (points to a deleted document).
+     */
+    async rekey(businessId: string, id: string) {
+        const flow = await this.findOneOrFail(businessId, id);
+
+        if (!flow.metaFlowId) {
+            throw new BadRequestException('Flow has no Meta ID — submit it first');
+        }
+
+        const account = await this.getActiveAccount(businessId);
+        const accessToken = this.decryptToken(account.access_token);
+
+        const baseUrl = this.configService.get<string>('APP_BASE_URL', '');
+        const endpointUri = `${baseUrl}/whatsapp/flows/exchange/${id}`;
+
+        const { publicKey, privateKey } = crypto.generateKeyPairSync('rsa', {
+            modulusLength: 2048,
+            publicKeyEncoding: { type: 'spki', format: 'pem' },
+            privateKeyEncoding: { type: 'pkcs8', format: 'pem' },
+        });
+
+        const phoneNumberId = account.platform_user_id;
+        await this.metaApi.uploadBusinessPublicKey(phoneNumberId, accessToken, publicKey);
+
+        await this.metaApi.updateFlow(flow.metaFlowId, accessToken, { endpoint_uri: endpointUri });
+
+        const encryptionKey = this.configService.get<string>('ENCRYPTION_KEY');
+        const encryptedPrivateKey = this.encryptPrivateKey(privateKey, encryptionKey);
+
+        await this.flowModel.findByIdAndUpdate(id, {
+            publicKey,
+            privateKey: encryptedPrivateKey,
+            endpointUri,
+        });
+
+        this.logger.log(`Flow ${id} rekeyed — new endpointUri: ${endpointUri}`);
+        return { message: 'Flow rekeyed successfully', endpointUri };
+    }
+
+    async migrate(businessId: string, id: string, targetBusinessId: string) {
+        const flow = await this.findOneOrFail(businessId, id);
+
+        const existing = await this.flowModel.findOne({
+            businessId: targetBusinessId,
+            name: flow.name,
+            isDeleted: false,
+        });
+
+        if (existing) {
+            throw new ConflictException(`A flow named "${flow.name}" already exists in the target business`);
+        }
+
+        const migrated = await this.flowModel.create({
+            businessId: targetBusinessId,
+            name: flow.name,
+            category: flow.category,
+            flowJson: flow.flowJson,
+            status: FlowStatus.DRAFT,
+        });
+
+        this.logger.log(`Flow "${flow.name}" migrated from ${businessId} → ${targetBusinessId} as ${migrated._id}`);
+
+        return {
+            message: 'Flow migrated successfully. Submit and publish it in the target business to go live.',
+            flowId: migrated._id,
+            name: migrated.name,
+            targetBusinessId,
+        };
+    }
+
+    async syncFromMeta(businessId: string) {
+        const account = await this.getActiveAccount(businessId);
+        const accessToken = this.decryptToken(account.access_token);
+        const wabaId = account.instagram_business_account_id;
+        const baseUrl = this.configService.get<string>('APP_BASE_URL', '');
+        const encryptionKey = this.configService.get<string>('ENCRYPTION_KEY');
+        const phoneNumberId = account.platform_user_id;
+
+        const metaFlows = await this.metaApi.listFlows(wabaId, accessToken);
+
+        let created = 0;
+        let updated = 0;
+
+        for (const mf of metaFlows) {
+            const status = (mf.status as FlowStatus) ?? FlowStatus.DRAFT;
+            const category = (mf.categories?.[0] as FlowCategory) ?? FlowCategory.OTHER;
+
+            let doc = await this.flowModel.findOne({ businessId, metaFlowId: mf.id });
+
+            if (!doc) {
+                doc = await this.flowModel.create({
+                    businessId,
+                    name: mf.name,
+                    category,
+                    status,
+                    metaFlowId: mf.id,
+                });
+                created++;
+            } else {
+                await this.flowModel.findByIdAndUpdate(doc._id, { status });
+                updated++;
+            }
+
+            // Generate RSA key pair and update endpoint URI on Meta
+            const docId = doc._id.toString();
+            const endpointUri = `${baseUrl}/whatsapp/flows/exchange/${docId}`;
+
+            const { publicKey, privateKey } = crypto.generateKeyPairSync('rsa', {
+                modulusLength: 2048,
+                publicKeyEncoding: { type: 'spki', format: 'pem' },
+                privateKeyEncoding: { type: 'pkcs8', format: 'pem' },
+            });
+
+            try {
+                await this.metaApi.uploadBusinessPublicKey(phoneNumberId, accessToken, publicKey);
+                await this.metaApi.updateFlow(mf.id, accessToken, { endpoint_uri: endpointUri });
+            } catch (err) {
+                this.logger.warn(`Could not rekey flow "${mf.name}" (${mf.id}): ${err.message}`);
+                continue;
+            }
+
+            const encryptedPrivateKey = this.encryptPrivateKey(privateKey, encryptionKey);
+            await this.flowModel.findByIdAndUpdate(docId, {
+                publicKey,
+                privateKey: encryptedPrivateKey,
+                endpointUri,
+            });
+
+            this.logger.log(`Flow "${mf.name}" rekeyed → ${endpointUri}`);
+        }
+
+        return { message: 'Flows synced and rekeyed from Meta', created, updated, total: metaFlows.length };
+    }
+
     async syncStatus(businessId: string, id: string) {
         const flow = await this.findOneOrFail(businessId, id);
 
@@ -180,6 +352,20 @@ export class WhatsAppFlowsService {
         await this.flowModel.findByIdAndUpdate(id, { status });
 
         return { status };
+    }
+
+    /**
+     * Returns the Meta flow ID for the business's APPOINTMENT_BOOKING (hospitality) flow.
+     * Used by the AI agent to trigger the availability result screen directly.
+     */
+    async findHospitalityFlowId(businessId: string): Promise<string | null> {
+        const flow = await this.flowModel.findOne({
+            businessId,
+            category: FlowCategory.APPOINTMENT_BOOKING,
+            isDeleted: false,
+            metaFlowId: { $exists: true, $ne: null },
+        });
+        return flow?.metaFlowId ?? null;
     }
 
     // ── Helpers ───────────────────────────────────────────────────────────────
@@ -204,5 +390,12 @@ export class WhatsAppFlowsService {
         const iv = Buffer.from(ivHex, 'hex');
         const decipher = crypto.createDecipheriv('aes-256-cbc', Buffer.from(key, 'hex'), iv);
         return decipher.update(encrypted, 'hex', 'utf8') + decipher.final('utf8');
+    }
+
+    private encryptPrivateKey(pem: string, encryptionKey: string): string {
+        const iv = crypto.randomBytes(16);
+        const cipher = crypto.createCipheriv('aes-256-cbc', Buffer.from(encryptionKey, 'hex'), iv);
+        const encrypted = cipher.update(pem, 'utf8', 'hex') + cipher.final('hex');
+        return `${iv.toString('hex')}:${encrypted}`;
     }
 }

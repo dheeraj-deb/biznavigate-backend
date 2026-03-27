@@ -496,6 +496,18 @@ export class WhatsAppApiClientService {
     return response.data;
   }
 
+  async updateFlow(flowId: string, accessToken: string, fields: { endpoint_uri?: string; name?: string }): Promise<any> {
+    const body = new URLSearchParams();
+    Object.entries(fields).forEach(([k, v]) => { if (v !== undefined) body.append(k, v); });
+
+    const response = await this.apiClient.post(
+      `/${flowId}`,
+      body.toString(),
+      { headers: { Authorization: `Bearer ${accessToken}`, 'Content-Type': 'application/x-www-form-urlencoded' } },
+    );
+    return response.data;
+  }
+
   async publishFlow(flowId: string, accessToken: string): Promise<any> {
     const response = await this.apiClient.post(
       `/${flowId}/publish`,
@@ -531,6 +543,31 @@ export class WhatsAppApiClientService {
       },
     );
     return response.data.data || [];
+  }
+
+  async uploadBusinessPublicKey(phoneNumberId: string, accessToken: string, publicKey: string): Promise<any> {
+    const body = new URLSearchParams();
+    body.append('business_public_key', publicKey);
+
+    const response = await this.apiClient.post(
+      `/${phoneNumberId}/whatsapp_business_encryption`,
+      body.toString(),
+      {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+          'Content-Type': 'application/x-www-form-urlencoded',
+        },
+      },
+    );
+    return response.data;
+  }
+
+  async getBusinessPublicKey(phoneNumberId: string, accessToken: string): Promise<any> {
+    const response = await this.apiClient.get(
+      `/${phoneNumberId}/whatsapp_business_encryption`,
+      { headers: { Authorization: `Bearer ${accessToken}` } },
+    );
+    return response.data;
   }
 
   async getFlow(flowId: string, accessToken: string): Promise<any> {

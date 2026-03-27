@@ -2,6 +2,7 @@ import { Injectable, Logger, NotFoundException, BadRequestException } from '@nes
 import { ConfigService } from '@nestjs/config';
 import { InjectQueue } from '@nestjs/bullmq';
 import { Queue } from 'bullmq';
+import { getRedis } from 'src/utils/redis';
 import { PrismaService } from '../../prisma/prisma.service';
 import { WhatsAppApiClientService } from './infrastructure/whatsapp-api-client.service';
 import { CircuitBreakerService } from './infrastructure/circuit-breaker.service';
@@ -13,25 +14,16 @@ import * as crypto from 'crypto';
 import { WhatsAppCatalogOrderService } from './services/whatsapp-catalog-order.service';
 import { ConversationService } from '../conversation/conversation.service';
 import { InboxGateway } from '../inbox/gateway/inbox.gateway';
-import { getRedis } from 'src/utils/redis';
 import { WhatsAppWebhookDto } from './dto/webhook-event.dto';
 import { WebhookValidatorService } from './infrastructure/webhook-validator.service';
 import { WhatsAppTemplatesService } from '../whatsapp-templates/whatsapp-templates.service';
+import { WhatsAppFlowsService } from '../whatsapp-flows/whatsapp-flows.service';
+import axios from 'axios';
 
-interface PendingContext {
-  messageId: string;
-  conversationId: string;
-  from: string;
-  to: string;
-  businessId: string;
-  tenantId: string;
-  type: 'text' | 'interactive' | 'media';
-}
 
 @Injectable()
 export class WhatsAppService {
   private readonly logger = new Logger(WhatsAppService.name);
-  private readonly pendingMessages = new Map<string, PendingContext>();
 
   constructor(
     private readonly prisma: PrismaService,
@@ -46,7 +38,7 @@ export class WhatsAppService {
     private readonly inboxGateway: InboxGateway,
     private readonly webhookValidator: WebhookValidatorService,
     private readonly whatsappTemplatesService: WhatsAppTemplatesService,
-
+    private readonly whatsappFlowsService: WhatsAppFlowsService,
     @InjectQueue('message-debounce') private readonly debounceQueue: Queue,
   ) { }
 
@@ -106,7 +98,6 @@ export class WhatsAppService {
   }
 
   async processWebhook(webhookData: WhatsAppWebhookDto): Promise<void> {
-
     if (!this.webhookValidator.validateWebhookEvent(webhookData)) {
       throw new BadRequestException('Invalid webhook event structure');
     }
@@ -199,7 +190,7 @@ export class WhatsAppService {
       const from = message.from;
       const messageId = message.id;
 
-      // 🕐 STALE MESSAGE CHECK: Skip messages older than 5 minutes (Meta replays queued webhooks on restart)
+      // Skip messages older than 5 minutes (Meta replays queued webhooks on restart)
       const messageTimestampMs = parseInt(message.timestamp) * 1000;
       const ageMs = Date.now() - messageTimestampMs;
       if (ageMs > 5 * 60 * 1000) {
@@ -207,7 +198,7 @@ export class WhatsAppService {
         return;
       }
 
-      // 🔒 DEDUPLICATION: Check if this message has already been processed
+      // Check if this message has already been processed
       const existingMessage = await this.conversationService.findMessageByPlatformId(messageId);
       if (existingMessage) {
         this.logger.debug(`⏭️ Message ${messageId} already processed, skipping duplicate`);
@@ -383,108 +374,61 @@ export class WhatsAppService {
       );
 
       // Map business_type to AI service expected values
-      const businessTypeMap: Record<string, string> = {
-        'Retail': 'retail',
-        'Beauty': 'service',
-        'Restaurant': 'service',
-        'Service': 'service',
-        'D2C': 'd2c',
-        'Education': 'education',
-      };
+      // const businessTypeMap: Record<string, string> = {
+      //   'Retail': 'retail',
+      //   'Beauty': 'service',
+      //   'Restaurant': 'service',
+      //   'Service': 'service',
+      //   'D2C': 'd2c',
+      //   'Education': 'education',
+      // };
 
-      const mappedBusinessType = account.businesses.business_type
-        ? businessTypeMap[account.businesses.business_type] || 'service'
-        : 'service';
+      // const mappedBusinessType = account.businesses.business_type
+      //   ? businessTypeMap[account.businesses.business_type] || 'service'
+      //   : 'service';
 
       // Get conversation history for context continuity from MongoDB
-      const conversationHistory = await this.getConversationHistory(conversation.conversation_id, 10);
+      // const conversationHistory = await this.getConversationHistory(conversation.conversation_id, 10);
 
       // Check if message is interactive (button/list reply)
-      if (messageType === 'interactive' && (message as any).buttonId) {
-        this.logger.log(`📲 Interactive message detected, bypassing AI processing`);
+      const isInteractive = messageType === 'interactive' && (message as any).buttonId;
+      const userInput = isInteractive ? (message as any).buttonId : messageText;
 
-        const buttonId = (message as any).buttonId;
-
-        const workflowContext = {
-          lead_id: lead.lead_id,
-          business_id: account.business_id,
-          tenant_id: account.businesses.tenant_id,
-          processing_id: `interactive-${messageId}`,
-          user_input: buttonId,
-          intent: {
-            intent: 'INTERACTIVE_SELECTION',
-            confidence: 1.0,
-            suggested_actions: [],
-            method: 'interactive' as const,
-            processing_time_ms: 0,
-            cached: false,
-          },
-          entities: {},
-          structured_data: {
-            type: 'interactive_selection',
-            entities: {
-              selection_id: [buttonId],
-              selection_text: [messageText],
-            },
-          },
-          suggested_actions: [],
-          suggested_response: null,
-          processing_time_ms: 0,
-          context: {
-            message_id: leadMessageId,
-            conversation_id: conversation.conversation_id,
-            channel: 'whatsapp' as const,
-            contactName,
-            phoneNumberId,
+      const workflowPayload = {
+        lead_id: lead.lead_id,
+        business_id: account.business_id,
+        tenant_id: account.businesses.tenant_id,
+        user_input: userInput,
+        context: {
+          message_id: leadMessageId,
+          conversation_id: conversation.conversation_id,
+          channel: 'whatsapp' as const,
+          message_type: messageType,
+          contact: {
+            name: contactName,
             from,
-            business_name: account.businesses.business_name,
-            lead_info: {
-              lead_id: lead.lead_id,
-              first_name: lead.first_name,
-              last_name: lead.last_name,
-              status: lead.status,
-              lead_score: lead.lead_score,
-            },
-            interactive_selection: buttonId,
-            message_type: messageType,
+            phoneNumberId,
           },
-        };
+          lead: {
+            id: lead.lead_id,
+            first_name: lead.first_name,
+            last_name: lead.last_name,
+            status: lead.status,
+            score: lead.lead_score,
+            phone: lead.phone,
+          },
+        },
+      };
 
-        await this.kafkaProducer.publishInteractiveSelection(workflowContext);
-
+      if (isInteractive) {
+        this.logger.log(`📲 Interactive selection: ${userInput}`);
+        await this.kafkaProducer.publishInteractiveSelection(workflowPayload);
       } else {
-        // Buffer the AI payload and debounce — handles rapid multi-message bursts
+        // Buffer rapid-fire messages and debounce before processing
         const bufferKey = `msg_buffer:${conversation.conversation_id}`;
-        const payload = {
-          lead_id: lead.lead_id,
-          business_id: account.business_id,
-          text: messageText,
-          business_type: mappedBusinessType,
-          conversation_history: conversationHistory,
-          context: {
-            message_id: leadMessageId,
-            conversation_id: conversation.conversation_id,
-            channel: 'whatsapp',
-            contactName,
-            phoneNumberId,
-            from,
-            business_name: account.businesses.business_name,
-            lead_info: {
-              lead_id: lead.lead_id,
-              first_name: lead.first_name,
-              last_name: lead.last_name,
-              status: lead.status,
-              lead_score: lead.lead_score,
-            },
-            interactive_selection: (message as any).buttonId,
-            message_type: messageType,
-          },
-          priority: 'normal',
-        };
-
         const redis = getRedis();
-        await redis.rpush(bufferKey, JSON.stringify(payload));
-        await redis.expire(bufferKey, 30); // auto-clean buffer after 30s
+        await redis.rpush(bufferKey, JSON.stringify(workflowPayload));
+        await redis.expire(bufferKey, 30);
 
         await this.debounceQueue.add(
           'process-messages',
@@ -498,30 +442,34 @@ export class WhatsAppService {
         );
       }
 
-      // Store pending context for AI response
-      this.pendingMessages.set(leadMessageId, {
-        messageId: leadMessageId,
-        conversationId: conversation.conversation_id,
-        from: phoneNumberId,
-        to: from,
-        businessId: account.business_id,
-        tenantId: account.businesses.tenant_id,
-        type: messageType,
-      });
-
-      // Auto-cleanup after 10 minutes
-      setTimeout(() => {
-        this.pendingMessages.delete(leadMessageId);
-      }, 600000);
-
     } catch (error) {
       this.logger.error('Error processing WhatsApp message webhook:', error);
     }
   }
 
+
   /**
-   * Handle status update webhook (sent, delivered, read, failed)
+   * Called by MessageDebounceProcessor to send an agent-generated reply.
+   * Looks up the account for the business and handles token decryption internally.
    */
+  async sendAgentReply(businessId: string, phoneNumberId: string, to: string, text: string): Promise<void> {
+    const account = await this.prisma.social_accounts.findFirst({
+      where: { business_id: businessId, platform: 'whatsapp', page_id: phoneNumberId, is_active: true },
+    });
+    if (!account) {
+      this.logger.warn(`sendAgentReply: no active WhatsApp account for business ${businessId}`);
+      return;
+    }
+    const accessToken = this.decryptToken(account.access_token);
+    await this.apiClient.sendMessage(phoneNumberId, accessToken, {
+      messaging_product: 'whatsapp',
+      recipient_type: 'individual',
+      to,
+      type: SendMessageType.TEXT,
+      text: { body: text },
+    });
+  }
+
   async handleStatusWebhook(status: any): Promise<void> {
     try {
       const messageId = status.id;
@@ -828,8 +776,34 @@ export class WhatsAppService {
     screen?: string,
     flowToken?: string,
     nodeId?: string,
+    flowData?: Record<string, any>,
   ): Promise<any> {
-    const token = flowToken ?? `flow-${nodeId ?? Date.now()}`;
+    // Build flow_token as JSON context so the data exchange endpoint can access customerPhone, businessId etc.
+    const businessId = flowData?.business_id;
+    const tokenContext: Record<string, any> = {
+      customerPhone: to,
+      phoneNumberId,
+      ...(businessId ? { businessId } : {}),
+      // Agent handoff: embed pre-filled dates so INIT handler can skip SELECT_DATES
+      ...(flowData?.check_in ? { check_in: flowData.check_in } : {}),
+      ...(flowData?.check_out ? { check_out: flowData.check_out } : {}),
+    };
+
+    // Resolve lead_id once here so handlers don't need to query it repeatedly
+    if (businessId && to) {
+      const lead = await this.prisma.leads.findFirst({
+        where: { business_id: businessId, phone: to },
+        select: { lead_id: true },
+      }).catch(() => null);
+      if (lead) tokenContext.leadId = lead.lead_id;
+    }
+
+    try {
+      if (flowToken) Object.assign(tokenContext, JSON.parse(flowToken));
+    } catch {
+      // flowToken is not JSON, ignore
+    }
+    const token = JSON.stringify(tokenContext);
     const message: any = {
       messaging_product: 'whatsapp',
       recipient_type: 'individual',
@@ -845,10 +819,7 @@ export class WhatsAppService {
             flow_token: token,
             flow_id: flowId,
             flow_cta: cta,
-            flow_action: 'navigate',
-            flow_action_payload: {
-              screen: screen ?? 'INIT',
-            },
+            flow_action: 'data_exchange',
           },
         },
       },

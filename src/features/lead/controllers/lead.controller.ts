@@ -36,7 +36,7 @@ import { Tenant, User } from '../../../common/decorators';
 import { ApiPaginatedResponse } from '../../../common/decorators/api-paginated-response.decorator';
 
 @ApiTags('Leads')
-@Controller('api/v1/leads')
+@Controller('leads')
 @UseGuards(JwtAuthGuard, TenantGuard)
 @ApiBearerAuth()
 export class LeadController {

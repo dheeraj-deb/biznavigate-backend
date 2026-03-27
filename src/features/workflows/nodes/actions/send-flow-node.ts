@@ -48,8 +48,10 @@ export class SendFlowNode extends ActionNode<SendFlowParams, string> {
      * Input is the raw response_json string from the nfm_reply webhook.
      * A valid flow response must be parseable JSON.
      */
-    validateInput(input: string): boolean {
+    validateInput(input: any): boolean {
         if (input === 'exit') return true;
+        // Already parsed/enriched object from resumeWorkflow
+        if (typeof input === 'object' && input !== null) return true;
         try {
             JSON.parse(input);
             return true;
@@ -74,8 +76,12 @@ export class SendFlowNode extends ActionNode<SendFlowParams, string> {
     }
 
     async execute(context: WorkflowNodeExecutionContext): Promise<string> {
-        const { phoneNumberId, from } = context;
+        const { phoneNumberId, from, business_id } = context;
         const bodyText = this.interpolateString(this.params.body, context);
+
+        // If the agent pre-computed availability data, navigate directly to that screen
+        const navigateData = context.availability_navigate as { screen: string; data: Record<string, any> } | undefined;
+
         await this.whatsappService.sendFlowMessage(
             phoneNumberId, from,
             bodyText,
@@ -83,9 +89,12 @@ export class SendFlowNode extends ActionNode<SendFlowParams, string> {
             this.params.flow_id,
             this.params.header,
             this.params.footer,
-            this.params.screen,
+            navigateData?.screen ?? this.params.screen,
             this.params.flow_token,
             this.id,
+            navigateData
+                ? { ...navigateData.data, business_id }
+                : (business_id ? { business_id } : undefined),
         );
         return 'flow_sent';
     }

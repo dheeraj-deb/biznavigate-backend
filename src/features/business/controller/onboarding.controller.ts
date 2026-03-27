@@ -40,7 +40,7 @@ class CompleteOnboardingDto extends UpdateBusinessDto {
 @ApiTags("Onboarding")
 @ApiBearerAuth()
 @UseGuards(JwtAuthGuard)
-@Controller("api/v1/onboarding")
+@Controller("onboarding")
 export class OnboardingController {
   constructor(private readonly prisma: PrismaService) {}
 
@@ -67,6 +67,30 @@ export class OnboardingController {
       data: { profile_completed: true },
     });
 
-    return business;
+    const { business_employees, ...businessFields } = business;
+
+    return {
+      success: true,
+      data: {
+        business: {
+          business_id: businessFields.business_id,
+          tenant_id: businessFields.tenant_id,
+          business_name: businessFields.business_name,
+          business_type: businessFields.business_type,
+          email: businessFields.email,
+          phone: businessFields.phone,
+          city: businessFields.city,
+          country: businessFields.country,
+          created_at: businessFields.created_at,
+        },
+        employees_created: (business_employees ?? []).map((e: any) => ({
+          user_id: e.employee_id,
+          name: e.name,
+          email: e.email ?? null,
+          role: e.role ?? null,
+          temp_password: e.temp_password ?? null,
+        })),
+      },
+    };
   }
 }

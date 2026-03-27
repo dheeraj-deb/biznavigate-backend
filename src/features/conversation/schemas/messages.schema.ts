@@ -12,7 +12,7 @@ export class Messages {
     @Prop() sender_id: string; //phone number id
     @Prop() sender_name: string;
     @Prop({ required: true }) sender_type: string;       // 'customer' | 'business'
-    @Prop({ required: true, enum: ['text', 'location', 'interactive', 'button', 'image', 'video', 'audio', 'document', 'order'] }) message_type: string;
+    @Prop({ required: true, enum: ['text', 'location', 'interactive', 'button', 'image', 'video', 'audio', 'document', 'order', 'template'] }) message_type: string;
     @Prop() message_response_based_on_type: string;
     @Prop() message_text: string;
     @Prop({ index: true, unique: true, sparse: true }) platform_message_id: string; // WhatsApp message ID for deduplication

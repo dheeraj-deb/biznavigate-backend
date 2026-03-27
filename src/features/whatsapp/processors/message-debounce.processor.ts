@@ -2,6 +2,10 @@ import { Processor, WorkerHost } from "@nestjs/bullmq";
 import { Logger } from "@nestjs/common";
 import { Job } from "bullmq";
 import { KafkaProducerService } from "src/features/kafka/kafka-producer.service";
+import { AgentService } from "src/features/agent/agent.service";
+import { WhatsAppService } from "../whatsapp.service";
+import { WorkflowsService } from "src/features/workflows/workflows.service";
+import { HospitalityFlowService } from "src/features/whatsapp-flows/hospitality-flow.service";
 import { getRedis } from "src/utils/redis";
 
 @Processor('message-debounce')
@@ -10,6 +14,10 @@ export class MessageDebounceProcessor extends WorkerHost {
 
     constructor(
         private readonly kafkaProducer: KafkaProducerService,
+        private readonly agentService: AgentService,
+        private readonly whatsappService: WhatsAppService,
+        private readonly workflowsService: WorkflowsService,
+        private readonly hospitalityFlowService: HospitalityFlowService,
     ) {
         super();
     }
@@ -28,18 +36,74 @@ export class MessageDebounceProcessor extends WorkerHost {
         }
 
         const payloads: any[] = raw.map(r => JSON.parse(r));
-
-        const combinedText = payloads.map(p => p.text).filter(Boolean).join(' ');
-
+        const combinedText = payloads.map(p => p.user_input).filter(Boolean).join(' ');
         const lastPayload = payloads[payloads.length - 1];
 
         this.logger.log(
             `🔀 Debounce fired for conv ${conversationId}: ${payloads.length} message(s) → "${combinedText}"`,
         );
 
-        await this.kafkaProducer.requestAiProcessing({
-            ...lastPayload,
-            text: combinedText,
-        });
+        // Run agent and reply
+        try {
+            const reply = await this.agentService.processMessage(combinedText, {
+                businessId: lastPayload.business_id,
+                leadId: lastPayload.lead_id,
+                phone: lastPayload.context?.contact?.from,
+                conversationId: lastPayload.context?.conversation_id ?? conversationId,
+            });
+
+            const phoneNumberId = lastPayload.context?.contact?.phoneNumberId;
+            const customerPhone = lastPayload.context?.contact?.from;
+
+            if (reply.startsWith('FLOW:')) {
+                const { businessId, checkIn, checkOut } = JSON.parse(reply.slice(5));
+
+                // Build the AVAILABILITY_RESULT screen data via the existing hospitality service
+                const screenResult = await this.hospitalityFlowService.checkAvailability(
+                    { check_in: checkIn, check_out: checkOut },
+                    '',
+                    businessId,
+                );
+
+                // Find the send_flow node in the active workflow
+                const nodeId = await this.workflowsService.findSendFlowNodeId(businessId);
+
+                if (nodeId && screenResult.screen === 'AVAILABILITY_RESULT') {
+                    await this.workflowsService.startFromNode(
+                        businessId,
+                        nodeId,
+                        lastPayload.lead_id,
+                        phoneNumberId,
+                        'whatsapp',
+                        {
+                            ...lastPayload,
+                            availability_navigate: screenResult, // { screen, data } passed into SendFlowNode context
+                        },
+                    );
+                    this.logger.log(`🏨 Started workflow at send_flow node for ${customerPhone}`);
+                } else {
+                    // Fallback: no active workflow or no rooms
+                    const fallbackText = screenResult.data?.error_message
+                        || `No rooms available from ${checkIn} to ${checkOut}.`;
+                    await this.whatsappService.sendAgentReply(businessId, phoneNumberId, customerPhone, fallbackText);
+                }
+            } else {
+                await this.whatsappService.sendAgentReply(
+                    lastPayload.business_id,
+                    phoneNumberId,
+                    customerPhone,
+                    reply,
+                );
+            }
+
+            this.logger.log(`🤖 Agent replied to ${customerPhone}`);
+        } catch (err) {
+            this.logger.error(`Agent failed for conv ${conversationId}, falling back to workflow: ${err.message}`);
+            // Fallback to existing workflow pipeline
+            await this.kafkaProducer.publishTextMessage({
+                ...lastPayload,
+                user_input: combinedText,
+            });
+        }
     }
 }

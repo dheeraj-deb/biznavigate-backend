@@ -110,6 +110,21 @@ export class KafkaProducerService {
   }
 
   /**
+   * Publish a plain text message directly to workflow (no AI processing)
+   */
+  async publishTextMessage(payload: any) {
+    const event = {
+      event_id: uuidv4(),
+      event_type: 'workflow.text.message',
+      timestamp: new Date().toISOString(),
+      payload,
+    };
+
+    await this.publishEvent('workflow-event', event, payload.lead_id);
+    this.logger.log(`Published workflow.text.message for lead: ${payload.lead_id}`);
+  }
+
+  /**
    * Publish interactive selection directly to workflow (bypass AI)
    */
   async publishInteractiveSelection(payload: any) {

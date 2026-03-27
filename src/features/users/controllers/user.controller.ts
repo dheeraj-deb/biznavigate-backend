@@ -30,6 +30,11 @@ export class UsersController {
     return this.service.assignRole(dto);
   }
 
+  @Get("profile")
+  getProfile(@Request() req) {
+    return this.service.getUserById(req.user.user_id);
+  }
+
   @Get(":user_id")
   getUser(@Param("user_id") user_id: string) {
     return this.service.getUserById(user_id);

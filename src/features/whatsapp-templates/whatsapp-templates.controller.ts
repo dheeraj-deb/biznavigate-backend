@@ -12,6 +12,13 @@ import { JwtAuthGuard } from '../../common/guards/jwt-auth.guard';
 export class WhatsAppTemplatesController {
     constructor(private readonly service: WhatsAppTemplatesService) { }
 
+    // POST /whatsapp/templates/sync-from-meta — import all templates from Meta into local DB
+    @Post('sync-from-meta')
+    @HttpCode(HttpStatus.OK)
+    syncFromMeta(@Req() req) {
+        return this.service.syncFromMeta(req.user.business_id);
+    }
+
     @Post()
     create(@Req() req, @Body() dto: CreateTemplateDto) {
         const businessId = req.user.business_id; // from JWT
@@ -28,6 +35,18 @@ export class WhatsAppTemplatesController {
     @Get('stats')
     getStats(@Req() req) {
         return this.service.getStats(req.user.business_id);
+    }
+
+    // GET /whatsapp/templates/approved — all approved templates
+    @Get('approved')
+    findApproved(@Req() req) {
+        return this.service.findApproved(req.user.business_id);
+    }
+
+    // GET /whatsapp/templates/by-name/:name — find approved template by name
+    @Get('by-name/:name')
+    findByName(@Req() req, @Param('name') name: string) {
+        return this.service.findByName(req.user.business_id, name);
     }
 
     // GET /whatsapp/templates/:id

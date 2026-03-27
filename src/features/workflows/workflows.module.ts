@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { forwardRef, Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
 import { WorkflowsService } from './workflows.service';
 import { KafkaModule } from '../kafka/kafka.module';
@@ -14,15 +14,18 @@ import { WorkflowsController } from './workflows.controller';
 import { WorkflowDefinition, WorkflowDefinitionSchema } from './schema/workflow-definition.schema';
 import { BusinessWorkflow, BusinessWorkflowSchema } from './schema/business-workflow.schema';
 import { WorkflowExecution, WorkflowExecutionSchema } from './schema/workflow-execution.schema';
+import { WhatsAppTemplatesModule } from '../whatsapp-templates/whatsapp-templates.module';
+import { WorkflowAnalyzerService } from './workflow-analyzer.service';
 
 @Module({
   imports: [
     KafkaModule,
     PrismaModule,
-    WhatsAppModule,
+    forwardRef(() => WhatsAppModule),
     InstagramModule,
     CartModule,
     ConversationModule,
+    WhatsAppTemplatesModule,
     MongooseModule.forFeature([
       { name: WorkflowDefinition.name, schema: WorkflowDefinitionSchema },
       { name: BusinessWorkflow.name, schema: BusinessWorkflowSchema },
@@ -37,6 +40,7 @@ import { WorkflowExecution, WorkflowExecutionSchema } from './schema/workflow-ex
     CircuitBreakerService,
     NodeFactory,
     Workflow,
+    WorkflowAnalyzerService,
   ],
   exports: [
     WorkflowsService,

@@ -45,6 +45,14 @@ export class WhatsAppFlow {
     @Prop()
     endpointUri?: string;
 
+    /** Public key (PEM) uploaded to Meta for flow encryption */
+    @Prop()
+    publicKey?: string;
+
+    /** Private key (PEM, AES-256 encrypted at rest) for decrypting flow data exchange requests */
+    @Prop()
+    privateKey?: string;
+
     @Prop({ default: false })
     isDeleted: boolean;
 }

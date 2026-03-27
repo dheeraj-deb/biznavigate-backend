@@ -59,6 +59,32 @@ export class Workflow {
         }
     }
 
+    /**
+     * Start execution directly at a specific node — used by the agent handoff path.
+     * Skips the trigger node and runs `nodeId` immediately.
+     * Extra top-level keys from `context` (e.g. `availability_navigate`) are merged
+     * into nodeContext so nodes can read them.
+     */
+    async executeFromNode(nodeId: string, context: WorkflowProcessingContext): Promise<void> {
+        this.workflowContext = context;
+        this.nodeContext = this.buildNodeContext(context);
+
+        // Merge any extra top-level context fields (e.g. availability_navigate) into nodeContext
+        const builtInKeys = new Set(['context', 'user_input', 'business_id', 'lead_id', 'tenant_id',
+            'intent', 'entities', 'structured_data', 'cart_info', 'channel', 'message_id']);
+        for (const [k, v] of Object.entries(context)) {
+            if (!builtInKeys.has(k)) {
+                this.nodeContext[k] = v;
+            }
+        }
+
+        const node = this.getNode(nodeId);
+        if (!node) {
+            throw new Error(`executeFromNode: node "${nodeId}" not found in workflow`);
+        }
+        await this.executeNode(node);
+    }
+
     private async executeNode(node: BaseNode | null): Promise<any> {
         if (!node || node.disabled) return;
 
@@ -136,8 +162,16 @@ export class Workflow {
     }
 
     private buildNodeContext(context: WorkflowProcessingContext): WorkflowNodeExecutionContext {
+        const ctx = context.context;
         return {
-            ...context.context,
+            // Spread all nested context (contact, business, lead, etc.)
+            ...ctx,
+            // Flat aliases for backward compat with node template strings like ${contactName}
+            contactName: ctx.contact?.name ?? null,
+            from: ctx.contact?.from ?? '',
+            phoneNumberId: ctx.contact?.phoneNumberId ?? '',
+            business_name: ctx.business?.name ?? '',
+            // Runtime fields
             user_input: context.user_input,
             business_id: context.business_id,
             lead_id: context.lead_id,
@@ -239,16 +273,23 @@ export class Workflow {
         // Add the user input to the context (NOW after filter handling)
         if (currentNode?.outputVariable) {
             if (currentNode.type === 'action.send_flow') {
-                // Parse the flow response JSON so downstream nodes can access fields directly
-                try {
-                    this.nodeContext[currentNode.outputVariable] = JSON.parse(userInput);
-                } catch {
+                if (typeof userInput === 'object' && userInput !== null) {
+                    // Pre-parsed + enriched by resumeWorkflow
                     this.nodeContext[currentNode.outputVariable] = userInput;
+                } else {
+                    try {
+                        this.nodeContext[currentNode.outputVariable] = JSON.parse(userInput);
+                    } catch {
+                        this.nodeContext[currentNode.outputVariable] = userInput;
+                    }
                 }
             } else {
                 this.nodeContext[currentNode.outputVariable] = userInput;
             }
         }
+
+        console.log("node context =>")
+        console.dir(this.nodeContext)
 
         // Reset the waiting state
         this.waitForInput = false;

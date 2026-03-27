@@ -79,6 +79,14 @@ export class CreateComponentsDto {
     @IsString({ each: true })
     bodyExamples?: string[];
 
+    // Human-readable descriptions for each body variable in order.
+    // e.g. ["Guest name", "Booking reference ID", "Check-in date"]
+    // Helps the AI analyzer map variables to the correct context paths.
+    @IsOptional()
+    @IsArray()
+    @IsString({ each: true })
+    variableDescriptions?: string[];
+
     @IsOptional()
     @IsArray()
     @ValidateNested({ each: true })

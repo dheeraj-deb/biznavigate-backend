@@ -27,12 +27,14 @@ async function bootstrap() {
   );
 
   // Configure body parser with raw body for webhook signature verification
+  // 50mb limit to support base64 image uploads
   app.use(express.json({
+    limit: '50mb',
     verify: (req: any, res, buf) => {
       req.rawBody = buf;
     }
   }));
-  app.use(express.urlencoded({ extended: true }));
+  app.use(express.urlencoded({ extended: true, limit: '50mb' }));
 
   // Global Validation Pipe
   app.useGlobalPipes(
@@ -107,7 +109,7 @@ async function bootstrap() {
     },
   });
 
-  const port = process.env.PORT || 8000;
+  const port = process.env.PORT;
   await app.listen(port);
 
   console.log(`🚀 Application is running on: http://localhost:${port}`);

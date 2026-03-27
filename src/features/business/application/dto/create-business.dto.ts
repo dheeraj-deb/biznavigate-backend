@@ -6,8 +6,15 @@ import {
   IsString,
   IsArray,
   IsUUID,
+  IsIn,
   ValidateNested,
 } from "class-validator";
+
+export const BUSINESS_TYPES = [
+  'hospitality',
+  'events',
+  'products',
+] as const;
 
 export class CreateEmployeeDto {
   @IsNotEmpty()
@@ -37,7 +44,7 @@ export class CreateBusinessDto {
   business_name: string;
 
   @IsOptional()
-  @IsString()
+  @IsIn(BUSINESS_TYPES)
   business_type?: string;
 
   @IsOptional()

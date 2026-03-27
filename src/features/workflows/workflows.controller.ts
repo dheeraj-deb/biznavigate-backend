@@ -6,6 +6,12 @@ import { CreateWorkflowDto, InitiateWorkflowDto, UpdateWorkflowDto } from './dto
 export class WorkflowsController {
     constructor(private readonly workflowsService: WorkflowsService) { }
 
+    @Get('variables')
+    getAvailableVariables(@Query('nodeTypes') nodeTypes?: string) {
+        const nodeTypeList = nodeTypes ? nodeTypes.split(',') : [];
+        return this.workflowsService.getAvailableVariables(nodeTypeList);
+    }
+
     @Get('nodes')
     getNodeDefinitions(@Query('category') category?: 'trigger' | 'action') {
         let nodes = this.workflowsService.getNodeDefinitions();

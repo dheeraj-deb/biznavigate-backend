@@ -6,6 +6,7 @@ import {
   Param,
   Patch,
   Post,
+  Req,
   UseGuards,
 } from "@nestjs/common";
 import { ApiBearerAuth, ApiTags } from "@nestjs/swagger";
@@ -32,14 +33,19 @@ export class BusinessesController {
     return this.service.findAll();
   }
 
-  @Get(":id")
-  findById(@Param("id") id: string) {
-    return this.service.findById(id);
+  @Get("settings")
+  getSettings(@Req() req) {
+    return this.service.findById(req.user.business_id);
   }
 
   @Get("tenant/:tenant_id")
   findByTenant(@Param("tenant_id") tenant_id: string) {
     return this.service.findByTenant(tenant_id);
+  }
+
+  @Get(":id")
+  findById(@Param("id") id: string) {
+    return this.service.findById(id);
   }
 
   @Patch(":id")

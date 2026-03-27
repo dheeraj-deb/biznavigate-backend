@@ -1,4 +1,5 @@
-import { IsEmail, IsOptional, IsString } from "class-validator";
+import { IsEmail, IsIn, IsOptional, IsString } from "class-validator";
+import { BUSINESS_TYPES } from "./create-business.dto";
 
 export class UpdateBusinessDto {
   @IsOptional()
@@ -6,7 +7,7 @@ export class UpdateBusinessDto {
   business_name?: string;
 
   @IsOptional()
-  @IsString()
+  @IsIn(BUSINESS_TYPES)
   business_type?: string;
 
   @IsOptional()

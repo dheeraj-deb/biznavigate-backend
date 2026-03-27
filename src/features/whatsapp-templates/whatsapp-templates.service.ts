@@ -5,7 +5,7 @@ import { Model, Types } from "mongoose";
 import { WhatsAppTemplate, WhatsAppTemplateDocument } from "./schemas/template.schema";
 import { WhatsAppApiClientService } from "../whatsapp/infrastructure/whatsapp-api-client.service";
 import { CreateTemplateDto } from "./dto/create-template.dto";
-import { TemplateStatus } from "./enums/template.enum";
+import { ButtonType, HeaderType, TemplateCategory, TemplateStatus } from "./enums/template.enum";
 import { PrismaService } from "../../prisma/prisma.service";
 import { ConfigService } from "@nestjs/config";
 import { QueryTemplateDto } from "./dto/query-template.dto";
@@ -172,6 +172,24 @@ export class WhatsAppTemplatesService {
         return this.findOneOrFail(businessId, templateId);
     }
 
+    async findApproved(businessId: string) {
+        return this.templateModel
+            .find({ businessId, status: TemplateStatus.APPROVED, isDeleted: false })
+            .select('-submissionHistory -__v')
+            .sort({ updatedAt: -1 });
+    }
+
+    async findByName(businessId: string, name: string) {
+        const template = await this.templateModel.findOne({
+            businessId,
+            name,
+            isDeleted: false,
+        }).select('-submissionHistory -__v');
+
+        if (!template) throw new NotFoundException(`Template "${name}" not found`);
+        return template;
+    }
+
     async update(businessId: string, templateId: string, dto: Partial<CreateTemplateDto>) {
         const template = await this.findOneOrFail(businessId, templateId);
 
@@ -225,6 +243,92 @@ export class WhatsAppTemplatesService {
 
         await this.templateModel.findByIdAndUpdate(templateId, { isDeleted: true });
         return { message: 'Template deleted successfully' };
+    }
+
+    async syncFromMeta(businessId: string) {
+        const account = await this.prisma.social_accounts.findFirst({
+            where: { business_id: businessId, platform: 'whatsapp', is_active: true },
+        });
+        if (!account) throw new NotFoundException('No active WhatsApp account found');
+
+        const accessToken = this.decryptToken(account.access_token);
+        const wabaId = account.instagram_business_account_id;
+
+        const metaTemplates = await this.metaApi.getTemplates(wabaId, accessToken);
+
+        let created = 0;
+        let updated = 0;
+
+        for (const mt of metaTemplates) {
+            const status = this.mapMetaStatus(mt.status);
+            const components = this.parseMetaComponents(mt.components ?? []);
+            const language = mt.language ?? 'en';
+            const category = (mt.category as TemplateCategory) ?? TemplateCategory.MARKETING;
+
+            const existing = await this.templateModel.findOne({
+                businessId,
+                metaTemplateId: String(mt.id),
+                language,
+            });
+
+            if (existing) {
+                await this.templateModel.findByIdAndUpdate(existing._id, {
+                    status,
+                    ...(mt.rejected_reason && { rejectionReason: mt.rejected_reason }),
+                });
+                updated++;
+            } else {
+                const checksum = this.generateChecksum({ name: mt.name, components });
+                await this.templateModel.create({
+                    businessId,
+                    name: mt.name,
+                    category,
+                    language,
+                    components,
+                    status,
+                    metaTemplateId: String(mt.id),
+                    checksum,
+                    ...(mt.rejected_reason && { rejectionReason: mt.rejected_reason }),
+                });
+                created++;
+            }
+        }
+
+        return { message: 'Templates synced from Meta', created, updated, total: metaTemplates.length };
+    }
+
+    private parseMetaComponents(metaComponents: any[]): any {
+        const result: any = { body: '', bodyExamples: [], buttons: [] };
+
+        for (const comp of metaComponents) {
+            if (comp.type === 'HEADER') {
+                result.header = {
+                    type: comp.format as HeaderType,
+                    text: comp.text,
+                    example: comp.example?.header_text?.[0] ?? comp.example?.header_handle?.[0],
+                };
+            } else if (comp.type === 'BODY') {
+                result.body = comp.text ?? '';
+                result.bodyExamples = comp.example?.body_text?.[0] ?? [];
+            } else if (comp.type === 'FOOTER') {
+                result.footer = comp.text;
+            } else if (comp.type === 'BUTTONS') {
+                result.buttons = (comp.buttons ?? []).map((btn: any) => {
+                    if (btn.type === 'QUICK_REPLY') {
+                        return { type: ButtonType.QUICK_REPLY, text: btn.text };
+                    }
+                    return {
+                        type: ButtonType.CALL_TO_ACTION,
+                        text: btn.text,
+                        url: btn.url,
+                        phoneNumber: btn.phone_number,
+                        urlExample: btn.example?.[0],
+                    };
+                });
+            }
+        }
+
+        return result;
     }
 
     async syncStatus(businessId: string, templateId: string) {

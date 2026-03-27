@@ -1,4 +1,4 @@
-import { Injectable, Inject, NotFoundException, BadRequestException } from "@nestjs/common";
+import { Injectable, Inject, NotFoundException, BadRequestException, HttpException } from "@nestjs/common";
 
 import { CreateBusinessDto } from "./dto/create-business.dto";
 import { UpdateBusinessDto } from "./dto/update-business.dto";
@@ -16,6 +16,7 @@ export class BusinessesService {
     try {
       return await this.businessesRepo.create(dto);
     } catch (error) {
+      if (error instanceof HttpException) throw error;
       throw new BadRequestException(error.message);
     }
   }
@@ -24,6 +25,7 @@ export class BusinessesService {
     try {
       return await this.businessesRepo.findAll();
     } catch (error) {
+      if (error instanceof HttpException) throw error;
       throw new BadRequestException(error.message);
     }
   }
@@ -34,6 +36,7 @@ export class BusinessesService {
       if (!business) throw new NotFoundException("Business not found");
       return business;
     } catch (error) {
+      if (error instanceof HttpException) throw error;
       throw new BadRequestException(error.message);
     }
   }
@@ -42,6 +45,7 @@ export class BusinessesService {
     try {
       return await this.businessesRepo.findByTenant(tenant_id);
     } catch (error) {
+      if (error instanceof HttpException) throw error;
       throw new BadRequestException(error.message);
     }
   }
@@ -52,6 +56,7 @@ export class BusinessesService {
       if (!updated) throw new NotFoundException("Business not found");
       return updated;
     } catch (error) {
+      if (error instanceof HttpException) throw error;
       throw new BadRequestException(error.message);
     }
   }
@@ -60,6 +65,7 @@ export class BusinessesService {
     try {
       await this.businessesRepo.delete(id);
     } catch (error) {
+      if (error instanceof HttpException) throw error;
       throw new BadRequestException(error.message);
     }
   }

@@ -87,6 +87,9 @@ export class KafkaConsumerService {
       case "ai.process.result":
         await this.handleAiProcessResult(event);
         break;
+      case "workflow.text.message":
+        await this.handleInteractiveSelection(event); // same routing as interactive
+        break;
       case "workflow.interactive.selection":
         await this.handleInteractiveSelection(event);
         break;
