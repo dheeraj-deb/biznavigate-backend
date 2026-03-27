@@ -1,5 +1,3 @@
-version: '3.8'
-
 # ─── BizNavigate Full Stack ────────────────────────────────────────────────────
 # Includes: NestJS App + Kafka + Zookeeper + Kafka UI
 # External: PostgreSQL (RDS), MongoDB (Atlas/DocDB), Redis (ElastiCache/external)
