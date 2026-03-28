@@ -1,32 +1,43 @@
-# BizNavigate Backend — AWS EC2 Deployment Guide
+# BizNavigate Backend — AWS EC2 Deployment Guide (PM2 + Docker Kafka)
 
-> **Stack:** NestJS · PostgreSQL (external) · MongoDB (external) · Redis (external) · Kafka (Docker) · AWS S3
-> **Method:** Docker Compose on EC2 (recommended for this stack)
+> **Approach:** NestJS runs directly on the host with PM2 (no Docker build = no disk space issues).
+> Kafka + Zookeeper run via Docker Compose using pre-built images (no build step).
+
+---
+
+## Architecture Overview
+
+```
+EC2 Instance
+├── NestJS app  ──  managed by PM2  (port 3000)
+├── Nginx        ──  reverse proxy   (port 80 / 443)
+└── Docker
+    ├── Kafka        (localhost:9093)
+    ├── Zookeeper
+    └── Kafka UI     (port 8082)
+
+External:
+├── PostgreSQL  (RDS / Supabase / Neon)
+├── MongoDB     (Atlas / DocDB)
+└── Redis       (ElastiCache / Upstash)
+```
 
 ---
 
 ## Prerequisites
 
-Before starting, make sure you have:
+EC2 Security Group — inbound rules needed:
 
-- An EC2 instance running **Ubuntu 22.04 LTS** (t3.medium or larger recommended)
-- SSH access to the instance (your `.pem` key)
-- Security Group with the following **inbound rules** open:
-
-| Port | Protocol | Source | Purpose |
-|------|----------|--------|---------|
-| 22 | TCP | Your IP only | SSH |
-| 80 | TCP | 0.0.0.0/0 | HTTP (Nginx) |
-| 443 | TCP | 0.0.0.0/0 | HTTPS (Nginx + SSL) |
-| 3000 | TCP | 0.0.0.0/0 | NestJS app (or keep closed and use Nginx) |
-| 9093 | TCP | Your IP only | Kafka (optional, for external tools) |
-| 8082 | TCP | Your IP only | Kafka UI (optional) |
-
-- Your external database connection strings ready (PostgreSQL, MongoDB, Redis)
+| Port | Source | Purpose |
+|------|--------|---------|
+| 22 | Your IP only | SSH |
+| 80 | 0.0.0.0/0 | HTTP (Nginx) |
+| 443 | 0.0.0.0/0 | HTTPS |
+| 8082 | Your IP only | Kafka UI (optional) |
 
 ---
 
-## Step 1 — Connect to Your EC2 Instance
+## Step 1 — Connect to EC2
 
 ```bash
 ssh -i your-key.pem ubuntu@<your-ec2-public-ip>
@@ -34,149 +45,147 @@ ssh -i your-key.pem ubuntu@<your-ec2-public-ip>
 
 ---
 
-## Step 2 — Install Docker & Docker Compose
-
-Run the following on your EC2 instance:
+## Step 2 — Install Node.js 20
 
 ```bash
-# Update packages
-sudo apt update && sudo apt upgrade -y
+curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash -
+sudo apt install -y nodejs
 
-# Install Docker
-curl -fsSL https://get.docker.com | sudo sh
-
-# Add your user to the docker group (so you don't need sudo each time)
-sudo usermod -aG docker $USER
-
-# Apply group change without logout
-newgrp docker
-
-# Install Docker Compose plugin
-sudo apt install -y docker-compose-plugin
-
-# Verify both are installed
-docker --version
-docker compose version
+# Verify
+node -v   # should print v20.x.x
+npm -v
 ```
 
 ---
 
-## Step 3 — Install Git and Clone Your Repo
+## Step 3 — Install Yarn and PM2
 
 ```bash
-sudo apt install -y git
+sudo npm install -g yarn pm2
+```
 
-# Clone your repository
+---
+
+## Step 4 — Install Docker (for Kafka only)
+
+```bash
+curl -fsSL https://get.docker.com | sudo sh
+sudo usermod -aG docker $USER
+newgrp docker
+sudo apt install -y docker-compose-plugin
+```
+
+---
+
+## Step 5 — Clone Your Repository
+
+```bash
 git clone https://github.com/your-org/biznavigate-backend.git
 cd biznavigate-backend
 ```
 
-> **Alternative:** If you want to copy files directly from your local machine instead of using Git:
->
+> **Or copy from your local machine:**
 > ```bash
-> # Run this on your LOCAL machine (not EC2)
-> scp -i your-key.pem -r ./biznavigate-backend ubuntu@<ec2-ip>:~/biznavigate-backend
+> # Run on YOUR local machine
+> scp -i your-key.pem -r ./biznavigate-backend ubuntu@<ec2-ip>:~/
 > ```
 
 ---
 
-## Step 4 — Set Up Environment Variables
+## Step 6 — Set Up Environment Variables
 
 ```bash
-# Copy the example file
 cp .env.example .env
-
-# Edit it with your actual values
 nano .env
 ```
 
-Fill in all the required values — especially:
-- `DATABASE_URL` (your PostgreSQL connection string)
-- `MONGODB_URI` (your MongoDB connection string)
+Key values to fill in:
+- `DATABASE_URL` — your PostgreSQL connection string
+- `MONGODB_URI` — your MongoDB connection string
 - `REDIS_HOST`, `REDIS_PORT`, `REDIS_PASSWORD`
 - `JWT_SECRET`, `ENCRYPTION_KEY`
-- WhatsApp, Facebook, and AWS credentials
-
-**⚠️ Important:** Make sure `KAFKA_BROKERS` is NOT set in `.env` (or set to `localhost:9093`). The `docker-compose.yml` automatically overrides it to `kafka:29092` for internal Docker networking.
+- `KAFKA_BROKERS=localhost:9093`  ← Kafka runs on the same host
+- WhatsApp, Facebook, AWS S3, Gemini credentials
 
 ---
 
-## Step 5 — Verify RSA Key Files
-
-Your app uses RSA keys for JWT. Make sure these files exist in the project root:
+## Step 7 — Install Dependencies and Build
 
 ```bash
-ls -la private.pem public.pem
-```
+# Install all packages
+yarn install --frozen-lockfile
 
-If they're missing, generate new ones:
+# Generate Prisma client
+npx prisma generate
 
-```bash
-# Generate RSA private key
-openssl genpkey -algorithm RSA -out private.pem -pkcs8 -pkeyopt rsa_keygen_bits:2048
+# Build the NestJS app
+yarn build
 
-# Extract public key
-openssl rsa -pubout -in private.pem -out public.pem
+# Run DB migrations
+npx prisma migrate deploy
 ```
 
 ---
 
-## Step 6 — Build and Start the Application
+## Step 8 — Start Kafka with Docker Compose
 
 ```bash
-# Build the Docker image and start all services
-docker compose up -d --build
+# Start Kafka + Zookeeper + Kafka UI (pulls pre-built images, no build)
+docker compose up -d
 
-# Watch logs to verify everything starts correctly
-docker compose logs -f app
-```
-
-The first startup may take 2–3 minutes as Docker builds the NestJS image and Kafka initializes.
-
-**Check that everything is running:**
-
-```bash
+# Check they're running
 docker compose ps
+
+# Tail Kafka logs to confirm it's ready
+docker compose logs -f kafka
 ```
 
-You should see all containers with status `Up`:
-- `biznavigate-app`
-- `biznavigate-kafka`
-- `biznavigate-zookeeper`
-- `biznavigate-kafka-ui`
+Wait until you see `[KafkaServer] started` in the Kafka logs, then press `Ctrl+C`.
 
 ---
 
-## Step 7 — Run Database Migrations
-
-Migrations run automatically on startup (see the `CMD` in `Dockerfile`). To run them manually:
+## Step 9 — Start the App with PM2
 
 ```bash
-docker compose exec app npx prisma migrate deploy
+# Create logs directory
+mkdir -p logs
+
+# Start the app using the ecosystem config
+pm2 start ecosystem.config.js --env production
+
+# Save the PM2 process list so it survives reboots
+pm2 save
+
+# Register PM2 as a system service (run the command it prints)
+pm2 startup
+# → It will print a command like: sudo env PATH=... pm2 startup systemd ...
+# → Copy and run that command
+```
+
+**Check the app is running:**
+
+```bash
+pm2 status
+pm2 logs biznavigate --lines 50
 ```
 
 ---
 
-## Step 8 — Set Up Nginx as a Reverse Proxy (Recommended)
-
-Nginx handles HTTPS termination and routes traffic to your NestJS app.
+## Step 10 — Set Up Nginx as Reverse Proxy
 
 ```bash
-# Install Nginx
 sudo apt install -y nginx
 
-# Create site config
 sudo nano /etc/nginx/sites-available/biznavigate
 ```
 
-Paste the following (replace `your-domain.com` with your actual domain or EC2 IP):
+Paste this config (replace `your-domain.com` with your domain or EC2 IP):
 
 ```nginx
 server {
     listen 80;
     server_name your-domain.com www.your-domain.com;
 
-    # Increase body size limit for file uploads (matches NestJS 50mb limit)
     client_max_body_size 50M;
 
     location / {
@@ -199,140 +208,135 @@ server {
 ```
 
 ```bash
-# Enable the site
 sudo ln -s /etc/nginx/sites-available/biznavigate /etc/nginx/sites-enabled/
-
-# Test the config
 sudo nginx -t
-
-# Reload Nginx
-sudo systemctl reload nginx
 sudo systemctl enable nginx
+sudo systemctl reload nginx
 ```
 
 ---
 
-## Step 9 — Enable HTTPS with Let's Encrypt (Recommended)
-
-> Skip this step if you don't have a domain name yet. You can use your EC2 public IP for testing.
+## Step 11 — Enable HTTPS (if you have a domain)
 
 ```bash
-# Install Certbot
 sudo apt install -y certbot python3-certbot-nginx
-
-# Obtain and install SSL certificate
 sudo certbot --nginx -d your-domain.com -d www.your-domain.com
-
-# Certbot auto-renews — verify the timer is active
-sudo systemctl status certbot.timer
 ```
 
 ---
 
-## Step 10 — Verify the Deployment
+## Step 12 — Verify
 
 ```bash
-# Check app is responding
+# App health check
 curl http://localhost:3000/api/docs
 
-# Check via Nginx (using domain or EC2 public IP)
+# Via Nginx
 curl http://your-domain.com/api/docs
 ```
 
 Open in browser:
-- **Swagger API Docs:** `https://your-domain.com/api/docs`
-- **Kafka UI:** `http://<ec2-ip>:8082` (keep this behind a VPN or IP whitelist in production)
+- **Swagger:** `https://your-domain.com/api/docs`
+- **Kafka UI:** `http://<ec2-ip>:8082`
+
+---
+
+## Updating the App
+
+```bash
+cd ~/biznavigate-backend
+
+# Pull latest code
+git pull origin main
+
+# Install any new packages
+yarn install --frozen-lockfile
+
+# Rebuild
+yarn build
+
+# Apply any new migrations
+npx prisma migrate deploy
+
+# Reload PM2 (zero-downtime restart)
+pm2 reload biznavigate
+```
 
 ---
 
 ## Useful Commands
 
 ```bash
-# View logs for the app
-docker compose logs -f app
+# PM2
+pm2 status                        # View all running processes
+pm2 logs biznavigate              # Tail app logs
+pm2 logs biznavigate --lines 100  # Last 100 lines
+pm2 restart biznavigate           # Restart app
+pm2 stop biznavigate              # Stop app
+pm2 delete biznavigate            # Remove from PM2
 
-# View logs for Kafka
-docker compose logs -f kafka
+# Kafka (Docker)
+docker compose ps                 # Check container status
+docker compose logs -f kafka      # Kafka logs
+docker compose restart kafka      # Restart Kafka
+docker compose down               # Stop Kafka stack
+docker compose up -d              # Start Kafka stack
 
-# Restart only the app (e.g. after a config change)
-docker compose restart app
-
-# Stop everything
-docker compose down
-
-# Stop and remove all volumes (⚠️ deletes Kafka data)
-docker compose down -v
-
-# Open a shell inside the running app container
-docker compose exec app sh
-
-# Run Prisma Studio (database GUI)
-docker compose exec app npx prisma studio
-```
-
----
-
-## Updating the Application
-
-When you push new code and want to redeploy:
-
-```bash
-# Pull latest code
-git pull origin main
-
-# Rebuild and restart only the app container (Kafka keeps running)
-docker compose up -d --build app
-
-# Check logs
-docker compose logs -f app
+# Prisma
+npx prisma migrate deploy         # Run pending migrations
+npx prisma studio                 # Open DB GUI (runs on port 5555)
 ```
 
 ---
 
 ## Troubleshooting
 
-**App container keeps restarting:**
+**App won't start — check logs:**
 ```bash
-docker compose logs app --tail=50
+pm2 logs biznavigate --lines 100
 ```
-Usually this means a missing env variable or a database connection issue.
 
-**Kafka connection errors:**
-Make sure the app container has `KAFKA_BROKERS=kafka:29092` (the Docker Compose file sets this automatically). The app should NOT try to connect to `localhost:9093` from inside Docker.
-
-**Prisma migration fails:**
+**`Cannot find module` errors after build:**
 ```bash
-docker compose exec app npx prisma migrate status
-docker compose exec app npx prisma migrate deploy
+# Rebuild with fresh install
+rm -rf dist node_modules
+yarn install --frozen-lockfile
+yarn build
+pm2 restart biznavigate
 ```
+
+**Kafka connection refused:**
+- Make sure Docker Compose is running: `docker compose ps`
+- Make sure `KAFKA_BROKERS=localhost:9093` is in your `.env`
+- Wait ~30 seconds after starting Kafka before starting the app
 
 **Port 3000 already in use:**
 ```bash
 sudo lsof -i :3000
-# Kill the conflicting process or change PORT in .env
+# Kill the process or change PORT in .env, then restart PM2
 ```
 
-**Out of disk space (common with Docker):**
+**Out of disk space:**
 ```bash
-# Remove unused images and containers
+# Clean up unused Docker images
 docker system prune -a
+# Check disk usage
+df -h
 ```
 
 ---
 
 ## Production Checklist
 
-- [ ] All `.env` values filled in correctly
-- [ ] `NODE_ENV=production` is set
-- [ ] `ALLOWED_ORIGINS` is set to your actual frontend URL(s)
-- [ ] HTTPS is enabled via Certbot
-- [ ] Port 3000 is closed in EC2 Security Group (traffic goes through Nginx on 443)
-- [ ] Port 8082 (Kafka UI) is restricted to your IP only
-- [ ] Port 9093 (Kafka) is restricted to your IP only
-- [ ] `private.pem` and `public.pem` are present and not committed to Git
-- [ ] `.env` is in `.gitignore` and not committed to Git
-- [ ] Automated backups configured for your external databases
-- [ ] EC2 instance has at least **4GB RAM** (Kafka + NestJS is memory-heavy)
+- [ ] `NODE_ENV=production` in `.env`
+- [ ] `KAFKA_BROKERS=localhost:9093` in `.env`
+- [ ] `ALLOWED_ORIGINS` set to your actual frontend URL(s)
+- [ ] HTTPS enabled via Certbot
+- [ ] `pm2 save` and `pm2 startup` done (survives reboots)
+- [ ] `docker compose up -d` runs on reboot (Docker auto-restarts containers with `restart: unless-stopped`)
+- [ ] Port 8082 (Kafka UI) restricted to your IP in EC2 Security Group
+- [ ] `private.pem` and `public.pem` present in project root
+- [ ] `.env` is NOT committed to Git
 
 ---
 
