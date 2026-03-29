@@ -80,6 +80,7 @@ export class WhatsAppOAuthService {
     if (!business) throw new BadRequestException('Business not found');
 
     const tokenData = await this.exchangeCodeForToken(code, true);
+    console.log('Token data from embedded callback:', tokenData);
     const wabas = await this.getWhatsAppBusinessAccounts(tokenData.access_token);
 
     if (!wabas || wabas.length === 0) {
@@ -268,6 +269,8 @@ export class WhatsAppOAuthService {
     const apiVersion = this.configService.get<string>('whatsapp.apiVersion');
     // Embedded Signup uses the app domain as redirect_uri, not the callback path
     const redirectUri = embedded ? backendUrl : `${backendUrl}/whatsapp/oauth/callback`;
+
+    console.log("redirectUri", redirectUri);
 
     const url = new URL(`https://graph.facebook.com/${apiVersion}/oauth/access_token`);
     url.searchParams.append('client_id', appId);
