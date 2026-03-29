@@ -68,6 +68,77 @@ export class WhatsAppOAuthService {
   }
 
   /**
+   * Handle Embedded Signup — code is sent directly from the frontend FB SDK popup
+   */
+  async handleEmbeddedCallback(
+    code: string,
+    businessId: string,
+  ): Promise<{ accountId: string; phoneNumber: string; verifiedName: string }> {
+    const business = await this.prisma.businesses.findUnique({
+      where: { business_id: businessId },
+    });
+    if (!business) throw new BadRequestException('Business not found');
+
+    const tokenData = await this.exchangeCodeForToken(code, true);
+    const wabas = await this.getWhatsAppBusinessAccounts(tokenData.access_token);
+
+    if (!wabas || wabas.length === 0) {
+      throw new BadRequestException('No WhatsApp Business Account found.');
+    }
+
+    const waba = wabas[0];
+    const phoneNumbers = await this.getPhoneNumbers(waba.id, tokenData.access_token);
+
+    if (!phoneNumbers || phoneNumbers.length === 0) {
+      throw new BadRequestException('No phone numbers found for this WABA.');
+    }
+
+    const phoneNumber = phoneNumbers[0];
+    const tokenExpiry = new Date();
+    tokenExpiry.setDate(tokenExpiry.getDate() + 60);
+
+    const existing = await this.prisma.social_accounts.findFirst({
+      where: { business_id: businessId, platform: 'whatsapp', platform_user_id: phoneNumber.id },
+    });
+
+    let account;
+    if (existing) {
+      account = await this.prisma.social_accounts.update({
+        where: { account_id: existing.account_id },
+        data: {
+          username: phoneNumber.display_phone_number,
+          page_id: phoneNumber.id,
+          instagram_business_account_id: waba.id,
+          access_token: this.encryptToken(tokenData.access_token),
+          token_expiry: tokenExpiry,
+          is_active: true,
+          updated_at: new Date(),
+        },
+      });
+    } else {
+      account = await this.prisma.social_accounts.create({
+        data: {
+          business_id: businessId,
+          platform: 'whatsapp',
+          platform_user_id: phoneNumber.id,
+          username: phoneNumber.display_phone_number,
+          page_id: phoneNumber.id,
+          access_token: this.encryptToken(tokenData.access_token),
+          token_expiry: tokenExpiry,
+          instagram_business_account_id: waba.id,
+          is_active: true,
+        },
+      });
+    }
+
+    return {
+      accountId: account.account_id,
+      phoneNumber: phoneNumber.display_phone_number,
+      verifiedName: phoneNumber.verified_name || phoneNumber.display_phone_number,
+    };
+  }
+
+  /**
    * Handle OAuth callback and connect account
    */
   async handleCallback(
@@ -186,7 +257,7 @@ export class WhatsAppOAuthService {
   /**
    * Exchange authorization code for access token
    */
-  private async exchangeCodeForToken(code: string): Promise<{
+  private async exchangeCodeForToken(code: string, embedded = false): Promise<{
     access_token: string;
     token_type: string;
     expires_in?: number;
@@ -195,7 +266,8 @@ export class WhatsAppOAuthService {
     const appSecret = this.configService.get<string>('whatsapp.appSecret');
     const backendUrl = this.configService.get<string>('BACKEND_URL');
     const apiVersion = this.configService.get<string>('whatsapp.apiVersion');
-    const redirectUri = `${backendUrl}/whatsapp/oauth/callback`;
+    // Embedded Signup uses the app domain as redirect_uri, not the callback path
+    const redirectUri = embedded ? backendUrl : `${backendUrl}/whatsapp/oauth/callback`;
 
     const url = new URL(`https://graph.facebook.com/${apiVersion}/oauth/access_token`);
     url.searchParams.append('client_id', appId);
