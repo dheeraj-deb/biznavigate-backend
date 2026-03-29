@@ -452,7 +452,13 @@ export class WhatsAppService {
    * Called by MessageDebounceProcessor to send an agent-generated reply.
    * Looks up the account for the business and handles token decryption internally.
    */
-  async sendAgentReply(businessId: string, phoneNumberId: string, to: string, text: string): Promise<void> {
+  async sendAgentReply(
+    businessId: string,
+    phoneNumberId: string,
+    to: string,
+    text: string,
+    ctx?: { conversationId: string; leadId: string; tenantId: string },
+  ): Promise<void> {
     const account = await this.prisma.social_accounts.findFirst({
       where: { business_id: businessId, platform: 'whatsapp', page_id: phoneNumberId, is_active: true },
     });
@@ -468,6 +474,34 @@ export class WhatsAppService {
       type: SendMessageType.TEXT,
       text: { body: text },
     });
+
+    // Persist agent reply to MongoDB so it appears in the inbox
+    if (ctx) {
+      const saved = await this.conversationService.createMessage({
+        conversation_id: ctx.conversationId,
+        lead_id: ctx.leadId,
+        business_id: businessId,
+        tenant_id: ctx.tenantId,
+        sender_type: 'business',
+        sender_name: 'AI Agent',
+        message_text: text,
+        message_type: 'text',
+        delivery_status: 'sent',
+        assigned_to: 'bot',
+        metadata: { is_ai: true },
+      });
+
+      this.inboxGateway.notifyNewMessage(businessId, ctx.conversationId, {
+        _id: (saved._id as any).toString(),
+        conversation_id: ctx.conversationId,
+        sender_type: 'business',
+        sender_name: 'AI Agent',
+        message_type: 'text',
+        message_text: text,
+        delivery_status: 'sent',
+        timestamp: new Date(),
+      });
+    }
   }
 
   async handleStatusWebhook(status: any): Promise<void> {
@@ -649,7 +683,7 @@ export class WhatsAppService {
           });
         }
 
-        await this.conversationService.createMessage({
+        const saved = await this.conversationService.createMessage({
           conversation_id: conversation.conversation_id,
           lead_id: lead.lead_id,
           business_id: account.business_id,
@@ -661,6 +695,17 @@ export class WhatsAppService {
           platform_message_id: platformMessageId,
           delivery_status: 'sent',
           workflow_node_id: nodeId,
+        });
+
+        this.inboxGateway.notifyNewMessage(account.business_id, conversation.conversation_id, {
+          _id: (saved._id as any).toString(),
+          conversation_id: conversation.conversation_id,
+          sender_type: 'business',
+          message_type: message.type,
+          message_text: messageText,
+          platform_message_id: platformMessageId,
+          delivery_status: 'sent',
+          timestamp: new Date(),
         });
       }
 
