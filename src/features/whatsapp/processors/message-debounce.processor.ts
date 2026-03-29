@@ -93,6 +93,11 @@ export class MessageDebounceProcessor extends WorkerHost {
                     phoneNumberId,
                     customerPhone,
                     reply,
+                    {
+                        conversationId: lastPayload.context?.conversation_id ?? conversationId,
+                        leadId: lastPayload.lead_id,
+                        tenantId: lastPayload.tenant_id,
+                    },
                 );
             }
 
