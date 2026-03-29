@@ -649,7 +649,7 @@ export class WhatsAppService {
         throw new NotFoundException('WhatsApp account not found');
       }
 
-      const messageText = this.extractMessageText(message);
+      const { text: messageText, metadata: templateMetadata } = await this.resolveMessageContent(message, account.business_id);
       const accessToken = this.decryptToken(account.access_token);
 
       this.logger.log('Sending message via WhatsApp Business API');
@@ -695,6 +695,7 @@ export class WhatsAppService {
           platform_message_id: platformMessageId,
           delivery_status: 'sent',
           workflow_node_id: nodeId,
+          ...(templateMetadata && { metadata: templateMetadata }),
         });
 
         this.inboxGateway.notifyNewMessage(account.business_id, conversation.conversation_id, {
@@ -706,6 +707,7 @@ export class WhatsAppService {
           platform_message_id: platformMessageId,
           delivery_status: 'sent',
           timestamp: new Date(),
+          ...(templateMetadata && { metadata: templateMetadata }),
         });
       }
 
@@ -936,13 +938,69 @@ export class WhatsAppService {
   }
 
   /**
-   * Extract message text from send message DTO
+   * Resolve message text and optional template metadata from a send message DTO.
+   * For template messages, looks up the stored template to render the body with
+   * substituted parameters and captures header/footer/buttons for the frontend.
    */
-  private extractMessageText(message: SendWhatsAppMessageDto): string {
-    if (message.text) return message.text.body;
-    if (message.template) return `Template: ${message.template.name}`;
-    if (message.interactive) return message.interactive.body.text;
-    return `[${message.type}]`;
+  private async resolveMessageContent(
+    message: SendWhatsAppMessageDto,
+    businessId: string,
+  ): Promise<{ text: string; metadata?: Record<string, any> }> {
+    if (message.text) return { text: message.text.body };
+    if (message.interactive) return { text: message.interactive.body.text };
+
+    if (message.template) {
+      try {
+        const tmpl = await this.whatsappTemplatesService.findByName(businessId, message.template.name);
+
+        // Substitute {{N}} in body with parameters from the DTO's body component
+        const bodyComponent = message.template.components?.find(c => c.type === 'body');
+        let renderedBody = tmpl.components.body;
+        if (bodyComponent?.parameters?.length) {
+          bodyComponent.parameters.forEach((param, i) => {
+            const value = param.text ?? param.currency?.fallback_value ?? param.date_time?.fallback_value ?? '';
+            renderedBody = renderedBody.replace(new RegExp(`\\{\\{${i + 1}\\}\\}`, 'g'), value);
+          });
+        }
+
+        // Render header text with parameter substitution if applicable
+        let renderedHeaderText: string | undefined;
+        if (tmpl.components.header?.type === 'TEXT' && tmpl.components.header.text) {
+          renderedHeaderText = tmpl.components.header.text;
+          const headerComponent = message.template.components?.find(c => c.type === 'header');
+          const headerParam = headerComponent?.parameters?.[0];
+          if (headerParam?.text) {
+            renderedHeaderText = renderedHeaderText.replace(/\{\{1\}\}/g, headerParam.text);
+          }
+        }
+
+        const metadata: Record<string, any> = {
+          template: {
+            name: tmpl.name,
+            language: tmpl.language,
+            body: renderedBody,
+            ...(tmpl.components.header && {
+              header: {
+                type: tmpl.components.header.type,
+                ...(renderedHeaderText ? { text: renderedHeaderText } : {}),
+                ...(tmpl.components.header.mediaUrl ? { mediaUrl: tmpl.components.header.mediaUrl } : {}),
+              },
+            }),
+            ...(tmpl.components.footer && { footer: tmpl.components.footer }),
+            ...(tmpl.components.buttons?.length && {
+              buttons: tmpl.components.buttons.map(b => ({ type: b.type, text: b.text })),
+            }),
+          },
+        };
+
+        return { text: renderedBody, metadata };
+      } catch {
+        // Template not found in local DB — fall back gracefully
+        return { text: `Template: ${message.template.name}` };
+      }
+    }
+
+    return { text: `[${message.type}]` };
   }
 
   /**
