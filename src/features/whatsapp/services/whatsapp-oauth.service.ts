@@ -267,8 +267,8 @@ export class WhatsAppOAuthService {
     const appSecret = this.configService.get<string>('whatsapp.appSecret');
     const backendUrl = this.configService.get<string>('BACKEND_URL');
     const apiVersion = this.configService.get<string>('whatsapp.apiVersion');
-    // Embedded Signup uses the app domain as redirect_uri, not the callback path
-    const redirectUri = embedded ? backendUrl : `${backendUrl}/whatsapp/oauth/callback`;
+    // Embedded Signup (FB.login popup) has no redirect_uri — must be empty string
+    const redirectUri = embedded ? '' : `${backendUrl}/whatsapp/oauth/callback`;
 
     console.log("redirectUri", redirectUri);
 
@@ -276,7 +276,9 @@ export class WhatsAppOAuthService {
     url.searchParams.append('client_id', appId);
     url.searchParams.append('client_secret', appSecret);
     url.searchParams.append('code', code);
-    url.searchParams.append('redirect_uri', redirectUri);
+    if (redirectUri) {
+      url.searchParams.append('redirect_uri', redirectUri);
+    }
 
     this.logger.log('Exchanging code for access token...');
 
