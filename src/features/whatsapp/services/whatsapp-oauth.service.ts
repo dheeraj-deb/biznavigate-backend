@@ -73,6 +73,8 @@ export class WhatsAppOAuthService {
   async handleEmbeddedCallback(
     code: string,
     businessId: string,
+    wabaId?: string,
+    phoneNumberId?: string,
   ): Promise<{ accountId: string; phoneNumber: string; verifiedName: string }> {
     const business = await this.prisma.businesses.findUnique({
       where: { business_id: businessId },
@@ -80,21 +82,26 @@ export class WhatsAppOAuthService {
     if (!business) throw new BadRequestException('Business not found');
 
     const tokenData = await this.exchangeCodeForToken(code, true);
-    console.log('Token data from embedded callback:', tokenData);
-    const wabas = await this.getWhatsAppBusinessAccounts(tokenData.access_token);
 
-    if (!wabas || wabas.length === 0) {
-      throw new BadRequestException('No WhatsApp Business Account found.');
+    let resolvedWabaId = wabaId;
+    let phoneNumber: PhoneNumber;
+
+    if (wabaId && phoneNumberId) {
+      // Use IDs provided directly by the Embedded Signup session event — no /me/businesses needed
+      const phoneNumbers = await this.getPhoneNumbers(wabaId, tokenData.access_token);
+      const matched = phoneNumbers.find(p => p.id === phoneNumberId) ?? phoneNumbers[0];
+      if (!matched) throw new BadRequestException('No phone numbers found for this WABA.');
+      phoneNumber = matched;
+    } else {
+      // Fallback: discover WABA via /me/businesses (requires business_management scope)
+      const wabas = await this.getWhatsAppBusinessAccounts(tokenData.access_token);
+      if (!wabas || wabas.length === 0) throw new BadRequestException('No WhatsApp Business Account found.');
+      const waba = wabas[0];
+      resolvedWabaId = waba.id;
+      const phoneNumbers = await this.getPhoneNumbers(waba.id, tokenData.access_token);
+      if (!phoneNumbers || phoneNumbers.length === 0) throw new BadRequestException('No phone numbers found for this WABA.');
+      phoneNumber = phoneNumbers[0];
     }
-
-    const waba = wabas[0];
-    const phoneNumbers = await this.getPhoneNumbers(waba.id, tokenData.access_token);
-
-    if (!phoneNumbers || phoneNumbers.length === 0) {
-      throw new BadRequestException('No phone numbers found for this WABA.');
-    }
-
-    const phoneNumber = phoneNumbers[0];
     const tokenExpiry = new Date();
     tokenExpiry.setDate(tokenExpiry.getDate() + 60);
 
@@ -109,7 +116,7 @@ export class WhatsAppOAuthService {
         data: {
           username: phoneNumber.display_phone_number,
           page_id: phoneNumber.id,
-          instagram_business_account_id: waba.id,
+          instagram_business_account_id: resolvedWabaId,
           access_token: this.encryptToken(tokenData.access_token),
           token_expiry: tokenExpiry,
           is_active: true,
@@ -126,7 +133,7 @@ export class WhatsAppOAuthService {
           page_id: phoneNumber.id,
           access_token: this.encryptToken(tokenData.access_token),
           token_expiry: tokenExpiry,
-          instagram_business_account_id: waba.id,
+          instagram_business_account_id: resolvedWabaId,
           is_active: true,
         },
       });

@@ -62,12 +62,12 @@ export class WhatsAppOAuthController {
   @ApiBearerAuth()
   @ApiOperation({ summary: 'Handle WhatsApp Embedded Signup code from frontend' })
   async handleEmbeddedCallback(
-    @Body() body: { code: string; businessId: string },
+    @Body() body: { code: string; businessId: string; wabaId?: string; phoneNumberId?: string },
   ) {
     if (!body.code || !body.businessId) {
       throw new BadRequestException('code and businessId are required');
     }
-    const result = await this.oauthService.handleEmbeddedCallback(body.code, body.businessId);
+    const result = await this.oauthService.handleEmbeddedCallback(body.code, body.businessId, body.wabaId, body.phoneNumberId);
     return { success: true, data: result };
   }
 
