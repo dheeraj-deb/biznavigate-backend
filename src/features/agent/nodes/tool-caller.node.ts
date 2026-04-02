@@ -30,11 +30,14 @@ export function makeToolCallerNode(openaiApiKey: string, tools: StructuredTool[]
           }),
         );
 
-        // If any tool returned a FLOW: signal, pass it through directly as the final reply
-        const flowResult = toolResults.find((tr) => String(tr.content).startsWith('FLOW:'));
-        if (flowResult) {
-          logger.log(`FLOW signal detected — short-circuiting to workflow engine`);
-          return { messages: [...toolResults, new AIMessage(String(flowResult.content))] };
+        // If any tool returned a FLOW: or HANDOFF: signal, pass it through directly as the final reply
+        const signalResult = toolResults.find(
+          (tr) => String(tr.content).startsWith('FLOW:') || String(tr.content).startsWith('HANDOFF:'),
+        );
+        if (signalResult) {
+          const signal = String(signalResult.content).startsWith('FLOW:') ? 'FLOW' : 'HANDOFF';
+          logger.log(`${signal} signal detected — short-circuiting`);
+          return { messages: [...toolResults, new AIMessage(String(signalResult.content))] };
         }
 
         return { messages: toolResults };

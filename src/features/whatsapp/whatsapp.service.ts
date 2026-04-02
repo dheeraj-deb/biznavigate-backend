@@ -18,7 +18,7 @@ import { WhatsAppWebhookDto } from './dto/webhook-event.dto';
 import { WebhookValidatorService } from './infrastructure/webhook-validator.service';
 import { WhatsAppTemplatesService } from '../whatsapp-templates/whatsapp-templates.service';
 import { WhatsAppFlowsService } from '../whatsapp-flows/whatsapp-flows.service';
-import axios from 'axios';
+
 
 
 @Injectable()
@@ -30,15 +30,15 @@ export class WhatsAppService {
     private readonly apiClient: WhatsAppApiClientService,
     private readonly circuitBreaker: CircuitBreakerService,
     private readonly kafkaProducer: KafkaProducerService,
-    private readonly kafkaConsumer: KafkaConsumerService,
-    private readonly conversationState: ConversationStateService,
+    private readonly _kafkaConsumer: KafkaConsumerService,
+    private readonly _conversationState: ConversationStateService,
     private readonly configService: ConfigService,
     private readonly catalogOrderService: WhatsAppCatalogOrderService,
     private readonly conversationService: ConversationService,
     private readonly inboxGateway: InboxGateway,
     private readonly webhookValidator: WebhookValidatorService,
     private readonly whatsappTemplatesService: WhatsAppTemplatesService,
-    private readonly whatsappFlowsService: WhatsAppFlowsService,
+    private readonly _whatsappFlowsService: WhatsAppFlowsService,
     @InjectQueue('message-debounce') private readonly debounceQueue: Queue,
   ) { }
 
@@ -82,6 +82,9 @@ export class WhatsAppService {
           is_active: true,
         },
       });
+
+      // Subscribe this WABA to the app's webhook so Meta starts delivering events
+      await this.apiClient.subscribeToWebhooks(whatsappBusinessAccountId, accessToken);
 
       this.logger.log(`WhatsApp account ${phoneDetails.display_phone_number} connected for business ${businessId}`);
 
@@ -723,24 +726,6 @@ export class WhatsAppService {
   }
 
   /**
-   * Get conversation history for context continuity (reads from MongoDB)
-   */
-  private async getConversationHistory(conversationId: string, limit: number = 10): Promise<any[]> {
-    try {
-      const messages = await this.conversationService.getConversationHistory(conversationId, limit);
-      return messages.map(msg => ({
-        role: msg.sender_type === 'lead' ? 'user' : 'assistant',
-        content: msg.message_text,
-        timestamp: msg.timestamp,
-        message_type: msg.message_type,
-      }));
-    } catch (error) {
-      this.logger.error('Failed to get conversation history:', error);
-      return [];
-    }
-  }
-
-  /**
    * Send interactive button message
    */
   async sendButtonMessage(
@@ -866,7 +851,8 @@ export class WhatsAppService {
             flow_token: token,
             flow_id: flowId,
             flow_cta: cta,
-            flow_action: 'data_exchange',
+            flow_action: screen ? 'navigate' : 'data_exchange',
+            ...(screen ? { flow_action_payload: { screen, data: {} } } : {}),
           },
         },
       },

@@ -7,6 +7,9 @@ import { WhatsAppService } from "../whatsapp.service";
 import { WorkflowsService } from "src/features/workflows/workflows.service";
 import { HospitalityFlowService } from "src/features/whatsapp-flows/hospitality-flow.service";
 import { getRedis } from "src/utils/redis";
+import { PrismaService } from "src/prisma/prisma.service";
+import { ConversationService } from "src/features/conversation/conversation.service";
+import { InboxGateway } from "src/features/inbox/gateway/inbox.gateway";
 
 @Processor('message-debounce')
 export class MessageDebounceProcessor extends WorkerHost {
@@ -18,6 +21,9 @@ export class MessageDebounceProcessor extends WorkerHost {
         private readonly whatsappService: WhatsAppService,
         private readonly workflowsService: WorkflowsService,
         private readonly hospitalityFlowService: HospitalityFlowService,
+        private readonly prisma: PrismaService,
+        private readonly conversationService: ConversationService,
+        private readonly inboxGateway: InboxGateway,
     ) {
         super();
     }
@@ -55,7 +61,63 @@ export class MessageDebounceProcessor extends WorkerHost {
             const phoneNumberId = lastPayload.context?.contact?.phoneNumberId;
             const customerPhone = lastPayload.context?.contact?.from;
 
-            if (reply.startsWith('FLOW:')) {
+            if (reply.startsWith('HANDOFF:')) {
+                const { reason } = JSON.parse(reply.slice(8));
+                const activeConvId = lastPayload.context?.conversation_id ?? conversationId;
+                const escalatedAt = new Date();
+
+                // Mark conversation as human-handled in Postgres
+                await this.prisma.lead_conversations.updateMany({
+                    where: { conversation_id: activeConvId },
+                    data: {
+                        is_ai_handled: false,
+                        human_takeover_at: escalatedAt,
+                        human_takeover_reason: reason,
+                    },
+                });
+
+                // Save system message to MongoDB so it appears in the timeline
+                const saved = await this.conversationService.createMessage({
+                    conversation_id: activeConvId,
+                    lead_id: lastPayload.lead_id,
+                    business_id: lastPayload.business_id,
+                    tenant_id: lastPayload.tenant_id,
+                    sender_type: 'system',
+                    sender_name: 'System',
+                    message_text: `Conversation escalated to human agent: ${reason}`,
+                    message_type: 'text',
+                    delivery_status: 'sent',
+                    metadata: { is_escalation: true, reason },
+                });
+
+                // Notify dashboard in real-time
+                this.inboxGateway.notifyEscalation(lastPayload.business_id, activeConvId, {
+                    reason,
+                    phone: customerPhone,
+                    escalated_at: escalatedAt,
+                });
+
+                // Also push the system message so the chat thread updates immediately
+                this.inboxGateway.notifyNewMessage(lastPayload.business_id, activeConvId, {
+                    _id: (saved._id as any).toString(),
+                    conversation_id: activeConvId,
+                    sender_type: 'system',
+                    message_type: 'text',
+                    message_text: `Conversation escalated to human agent: ${reason}`,
+                    timestamp: escalatedAt,
+                });
+
+                // Inform the customer
+                await this.whatsappService.sendAgentReply(
+                    lastPayload.business_id,
+                    phoneNumberId,
+                    customerPhone,
+                    "You're being connected to a human agent. Someone will be with you shortly.",
+                );
+
+                this.logger.log(`🙋 Escalated conv ${activeConvId} to human — reason: ${reason}`);
+
+            } else if (reply.startsWith('FLOW:')) {
                 const { businessId, checkIn, checkOut } = JSON.parse(reply.slice(5));
 
                 // Build the AVAILABILITY_RESULT screen data via the existing hospitality service

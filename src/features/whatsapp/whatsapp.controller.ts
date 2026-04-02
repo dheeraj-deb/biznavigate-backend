@@ -138,7 +138,6 @@ export class WhatsAppController {
     @Res() res: Response,
     @Body() body: WhatsAppWebhookDto,
   ) {
-
     setImmediate(() => this.whatsappService.processWebhook(body));
     res.status(200).json({ success: 200 })
   }

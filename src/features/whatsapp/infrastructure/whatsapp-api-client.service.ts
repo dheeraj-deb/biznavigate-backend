@@ -1,4 +1,4 @@
-import { Injectable, Logger, HttpException } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import axios, { AxiosInstance, AxiosError } from 'axios';
 import { SendWhatsAppMessageDto, MarkAsReadDto } from '../dto/whatsapp-message.dto';
@@ -124,7 +124,7 @@ export class WhatsAppApiClientService {
   ): Promise<string> {
     try {
       const formData = new FormData();
-      const blob = new Blob([file], { type: mimeType });
+      const blob = new Blob([new Uint8Array(file)], { type: mimeType });
       formData.append('file', blob);
       formData.append('messaging_product', 'whatsapp');
       formData.append('type', mimeType);
@@ -464,6 +464,20 @@ export class WhatsAppApiClientService {
       this.logger.error('Failed to get template status:', error);
       throw error;
     }
+  }
+
+  /**
+   * Subscribe the app to receive webhook events for a WhatsApp Business Account.
+   * Must be called once when a new WABA is connected.
+   * POST /{waba-id}/subscribed_apps
+   */
+  async subscribeToWebhooks(wabaId: string, accessToken: string): Promise<void> {
+    const response = await this.apiClient.post(
+      `/${wabaId}/subscribed_apps`,
+      {},
+      { headers: { Authorization: `Bearer ${accessToken}` } },
+    );
+    this.logger.log(`Subscribed WABA ${wabaId} to webhooks: ${JSON.stringify(response.data)}`);
   }
 
   // ─── Flows API ────────────────────────────────────────────────────────────
