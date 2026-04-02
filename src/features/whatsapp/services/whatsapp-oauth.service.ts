@@ -139,6 +139,8 @@ export class WhatsAppOAuthService {
       });
     }
 
+    await this.subscribeToWebhooks(resolvedWabaId, tokenData.access_token);
+
     return {
       accountId: account.account_id,
       phoneNumber: phoneNumber.display_phone_number,
@@ -254,6 +256,8 @@ export class WhatsAppOAuthService {
       );
     }
 
+    await this.subscribeToWebhooks(waba.id, tokenData.access_token);
+
     return {
       accountId: account.account_id,
       phoneNumber: phoneNumber.display_phone_number,
@@ -364,6 +368,28 @@ export class WhatsAppOAuthService {
     this.logger.log(`Found ${phoneNumbers.length} phone number(s)`);
 
     return phoneNumbers;
+  }
+
+  /**
+   * Subscribe the app to receive webhook events for a WABA.
+   * POST /{waba-id}/subscribed_apps
+   */
+  private async subscribeToWebhooks(wabaId: string, accessToken: string): Promise<void> {
+    const apiVersion = this.configService.get<string>('whatsapp.apiVersion');
+    const url = `https://graph.facebook.com/${apiVersion}/${wabaId}/subscribed_apps`;
+
+    const response = await fetch(url, {
+      method: 'POST',
+      headers: { Authorization: `Bearer ${accessToken}` },
+    });
+    const data = await response.json() as any;
+
+    if (data.error) {
+      this.logger.error(`Failed to subscribe WABA ${wabaId} to webhooks:`, data.error);
+      // Non-fatal — account is saved, operator can retry
+    } else {
+      this.logger.log(`WABA ${wabaId} subscribed to webhooks successfully`);
+    }
   }
 
   /**
