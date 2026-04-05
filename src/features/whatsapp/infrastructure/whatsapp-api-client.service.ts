@@ -14,7 +14,7 @@ export class WhatsAppApiClientService {
   constructor(private readonly configService: ConfigService) {
     this.apiVersion = this.configService.get<string>('whatsapp.apiVersion', 'v21.0');
     this.baseUrl = `https://graph.facebook.com/${this.apiVersion}`;
-    this.permanentToken = this.configService.get<string>('WHATSAPP_PERMANENT_TOKEN', '');
+    this.permanentToken = this.configService.get<string>('whatsapp.permanentToken', '');
 
     this.apiClient = axios.create({
       baseURL: this.baseUrl,

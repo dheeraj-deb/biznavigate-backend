@@ -86,7 +86,7 @@ export class WhatsAppOAuthService {
     let resolvedWabaId = wabaId;
     let phoneNumber: PhoneNumber;
 
-    const permanentToken = this.configService.get<string>('WHATSAPP_PERMANENT_TOKEN');
+    const permanentToken = this.configService.get<string>('whatsapp.permanentToken');
 
     if (wabaId && phoneNumberId) {
       // IDs are known from the Embedded Signup session event — fetch just this phone number directly
@@ -175,7 +175,7 @@ export class WhatsAppOAuthService {
 
     // Exchange code for access token
     const tokenData = await this.exchangeCodeForToken(code);
-    const permanentToken = this.configService.get<string>('WHATSAPP_PERMANENT_TOKEN');
+    const permanentToken = this.configService.get<string>('whatsapp.permanentToken');
 
     // Get WhatsApp Business Account details
     const wabas = await this.getWhatsAppBusinessAccounts(
@@ -400,7 +400,7 @@ export class WhatsAppOAuthService {
    */
   private async subscribeToWebhooks(wabaId: string): Promise<void> {
     const apiVersion = this.configService.get<string>('whatsapp.apiVersion');
-    const permanentToken = this.configService.get<string>('WHATSAPP_PERMANENT_TOKEN');
+    const permanentToken = this.configService.get<string>('whatsapp.permanentToken');
     const url = `https://graph.facebook.com/${apiVersion}/${wabaId}/subscribed_apps`;
 
     const response = await fetch(url, {
