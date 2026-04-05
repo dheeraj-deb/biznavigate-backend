@@ -49,7 +49,6 @@ export class WhatsAppService {
   async connectWhatsAppAccount(
     whatsappBusinessAccountId: string,
     phoneNumberId: string,
-    accessToken: string,
     businessId: string,
   ): Promise<any> {
     try {
@@ -63,11 +62,8 @@ export class WhatsAppService {
 
       const phoneDetails = await this.circuitBreaker.execute(
         `whatsapp-phone-details-${phoneNumberId}`,
-        () => this.apiClient.getPhoneNumberDetails(phoneNumberId, accessToken),
+        () => this.apiClient.getPhoneNumberDetails(phoneNumberId),
       );
-
-      const tokenExpiry = new Date();
-      tokenExpiry.setDate(tokenExpiry.getDate() + 60);
 
       const account = await this.prisma.social_accounts.create({
         data: {
@@ -76,15 +72,14 @@ export class WhatsAppService {
           platform_user_id: phoneDetails.id,
           username: phoneDetails.display_phone_number,
           page_id: phoneNumberId,
-          access_token: this.encryptToken(accessToken),
-          token_expiry: tokenExpiry,
+          access_token: '',
           instagram_business_account_id: whatsappBusinessAccountId,
           is_active: true,
         },
       });
 
       // Subscribe this WABA to the app's webhook so Meta starts delivering events
-      await this.apiClient.subscribeToWebhooks(whatsappBusinessAccountId, accessToken);
+      await this.apiClient.subscribeToWebhooks(whatsappBusinessAccountId);
 
       this.logger.log(`WhatsApp account ${phoneDetails.display_phone_number} connected for business ${businessId}`);
 
@@ -305,7 +300,9 @@ export class WhatsAppService {
           messageText = `[Unsupported message type: ${message.type}]`;
       }
 
-      let conversation = await this.conversationService.findActiveConversation(lead.lead_id, 'whatsapp');
+      let conversation = await this.conversationService.findActiveConversation(lead.lead_id, 'whatsapp', account.business_id);
+
+      console.log('conversation==>', conversation);
 
       if (!conversation) {
         conversation = await this.conversationService.createConversation({
@@ -356,6 +353,10 @@ export class WhatsAppService {
 
       const leadMessageId = (leadMessage._id as any).toString();
 
+      // Bump conversation preview + updated_at so it surfaces to top of inbox list
+      await this.conversationService.touchConversation(conversation.conversation_id, messageText);
+
+      const msgTimestamp = new Date();
       // Notify inbox in real-time
       this.inboxGateway.notifyNewMessage(account.business_id, conversation.conversation_id, {
         _id: leadMessageId,
@@ -366,14 +367,17 @@ export class WhatsAppService {
         message_text: messageText,
         platform_message_id: messageId,
         delivery_status: 'received',
-        timestamp: new Date(),
+        timestamp: msgTimestamp,
+      });
+      this.inboxGateway.notifyConversationUpdated(account.business_id, conversation.conversation_id, {
+        message_text: messageText,
+        timestamp: msgTimestamp,
       });
 
       // Mark as read + show typing indicator while AI processes
-      const accessToken = this.decryptToken(account.access_token);
       await this.circuitBreaker.execute(
         `whatsapp-mark-read-${phoneNumberId}`,
-        () => this.apiClient.markAsRead(phoneNumberId, accessToken, messageId),
+        () => this.apiClient.markAsRead(phoneNumberId, messageId),
       );
 
       // Map business_type to AI service expected values
@@ -469,14 +473,14 @@ export class WhatsAppService {
       this.logger.warn(`sendAgentReply: no active WhatsApp account for business ${businessId}`);
       return;
     }
-    const accessToken = this.decryptToken(account.access_token);
-    await this.apiClient.sendMessage(phoneNumberId, accessToken, {
+    const apiResult = await this.apiClient.sendMessage(phoneNumberId, {
       messaging_product: 'whatsapp',
       recipient_type: 'individual',
       to,
       type: SendMessageType.TEXT,
       text: { body: text },
     });
+    const platformMessageId = apiResult?.messages?.[0]?.id;
 
     // Persist agent reply to MongoDB so it appears in the inbox
     if (ctx) {
@@ -486,9 +490,11 @@ export class WhatsAppService {
         business_id: businessId,
         tenant_id: ctx.tenantId,
         sender_type: 'business',
+        sender_id: phoneNumberId,
         sender_name: 'AI Agent',
         message_text: text,
         message_type: 'text',
+        platform_message_id: platformMessageId,
         delivery_status: 'sent',
         assigned_to: 'bot',
         metadata: { is_ai: true },
@@ -653,12 +659,10 @@ export class WhatsAppService {
       }
 
       const { text: messageText, metadata: templateMetadata } = await this.resolveMessageContent(message, account.business_id);
-      const accessToken = this.decryptToken(account.access_token);
-
       this.logger.log('Sending message via WhatsApp Business API');
       const result = await this.circuitBreaker.execute(
         `whatsapp-send-${phoneNumberId}`,
-        () => this.apiClient.sendMessage(phoneNumberId, accessToken, message),
+        () => this.apiClient.sendMessage(phoneNumberId, message),
       );
 
       // Find lead (stays in Postgres)
@@ -671,7 +675,7 @@ export class WhatsAppService {
 
       // Persist outbound message in MongoDB
       if (lead && platformMessageId) {
-        let conversation = await this.conversationService.findActiveConversation(lead.lead_id, 'whatsapp');
+        let conversation = await this.conversationService.findActiveConversation(lead.lead_id, 'whatsapp', account.business_id);
 
         if (!conversation) {
           conversation = await this.conversationService.createConversation({
@@ -693,6 +697,7 @@ export class WhatsAppService {
           tenant_id: account.businesses.tenant_id,
           sender_type: 'business',
           sender_id: phoneNumberId,
+          sender_name: account.businesses.business_name ?? 'Business',
           message_text: messageText,
           message_type: message.type,
           platform_message_id: platformMessageId,
@@ -700,6 +705,9 @@ export class WhatsAppService {
           workflow_node_id: nodeId,
           ...(templateMetadata && { metadata: templateMetadata }),
         });
+
+        const outboundTimestamp = new Date();
+        await this.conversationService.touchConversation(conversation.conversation_id, messageText);
 
         this.inboxGateway.notifyNewMessage(account.business_id, conversation.conversation_id, {
           _id: (saved._id as any).toString(),
@@ -709,8 +717,12 @@ export class WhatsAppService {
           message_text: messageText,
           platform_message_id: platformMessageId,
           delivery_status: 'sent',
-          timestamp: new Date(),
+          timestamp: outboundTimestamp,
           ...(templateMetadata && { metadata: templateMetadata }),
+        });
+        this.inboxGateway.notifyConversationUpdated(account.business_id, conversation.conversation_id, {
+          message_text: messageText,
+          timestamp: outboundTimestamp,
         });
       }
 
@@ -989,46 +1001,4 @@ export class WhatsAppService {
     return { text: `[${message.type}]` };
   }
 
-  /**
-   * Encrypt access token
-   */
-  private encryptToken(token: string): string {
-    try {
-      const algorithm = 'aes-256-cbc';
-      const encryptionKey = this.configService.get<string>('encryption.key');
-      if (!encryptionKey) throw new Error('ENCRYPTION_KEY not configured.');
-      const key = Buffer.from(encryptionKey, 'hex');
-      const iv = crypto.randomBytes(16);
-      const cipher = crypto.createCipheriv(algorithm, key, iv);
-      let encrypted = cipher.update(token, 'utf8', 'hex');
-      encrypted += cipher.final('hex');
-      return `${iv.toString('hex')}:${encrypted}`;
-    } catch (error) {
-      this.logger.error('Failed to encrypt token:', error);
-      throw new BadRequestException('Token encryption failed. Please check server configuration.');
-    }
-  }
-
-  /**
-   * Decrypt access token
-   */
-  private decryptToken(encryptedToken: string): string {
-    try {
-      const algorithm = 'aes-256-cbc';
-      const encryptionKey = this.configService.get<string>('encryption.key');
-      if (!encryptionKey) throw new Error('ENCRYPTION_KEY not configured.');
-      if (!encryptedToken || !encryptedToken.includes(':')) throw new Error('Invalid encrypted token format');
-      const key = Buffer.from(encryptionKey, 'hex');
-      const parts = encryptedToken.split(':');
-      const iv = Buffer.from(parts[0], 'hex');
-      const encrypted = parts[1];
-      const decipher = crypto.createDecipheriv(algorithm, key, iv);
-      let decrypted = decipher.update(encrypted, 'hex', 'utf8');
-      decrypted += decipher.final('utf8');
-      return decrypted;
-    } catch (error) {
-      this.logger.error('Failed to decrypt token:', error);
-      throw new BadRequestException('Token decryption failed. The stored token may be corrupted or the encryption key has changed.');
-    }
-  }
 }

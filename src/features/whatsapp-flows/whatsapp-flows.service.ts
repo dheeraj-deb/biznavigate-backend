@@ -64,7 +64,7 @@ export class WhatsAppFlowsService {
             throw new BadRequestException('Published flows cannot be edited locally. Deprecate first.');
         }
 
-        return this.flowModel.findByIdAndUpdate(id, { ...dto }, { new: true });
+        return this.flowModel.findByIdAndUpdate(id, { ...dto }, { returnDocument: 'after' });
     }
 
     /**
@@ -83,14 +83,13 @@ export class WhatsAppFlowsService {
         }
 
         const account = await this.getActiveAccount(businessId);
-        const accessToken = this.decryptToken(account.access_token);
         const wabaId = account.instagram_business_account_id;
 
         let metaFlowId = flow.metaFlowId;
 
         // Create on Meta if not yet created
         if (!metaFlowId) {
-            const created = await this.metaApi.createFlow(wabaId, accessToken, flow.name, [flow.category]);
+            const created = await this.metaApi.createFlow(wabaId, flow.name, [flow.category]);
             metaFlowId = created.id;
             await this.flowModel.findByIdAndUpdate(id, { metaFlowId });
         }
@@ -107,7 +106,7 @@ export class WhatsAppFlowsService {
 
             // Upload the public key to Meta (signs the key for the phone number)
             const phoneNumberId = account.platform_user_id;
-            await this.metaApi.uploadBusinessPublicKey(phoneNumberId, accessToken, publicKey);
+            await this.metaApi.uploadBusinessPublicKey(phoneNumberId, publicKey);
 
             // Encrypt the private key at rest using the same ENCRYPTION_KEY used for tokens
             const encryptionKey = this.configService.get<string>('ENCRYPTION_KEY');
@@ -122,10 +121,10 @@ export class WhatsAppFlowsService {
 
         // Set the endpoint URI on the Meta flow
         this.logger.log(`Setting endpoint_uri on Meta flow ${metaFlowId}: ${endpointUri}`);
-        await this.metaApi.updateFlow(metaFlowId, accessToken, { endpoint_uri: endpointUri });
+        await this.metaApi.updateFlow(metaFlowId, { endpoint_uri: endpointUri });
 
         // Upload the Flow JSON
-        await this.metaApi.uploadFlowAsset(metaFlowId, accessToken, flow.flowJson, endpointUri);
+        await this.metaApi.uploadFlowAsset(metaFlowId, flow.flowJson, endpointUri);
 
         await this.flowModel.findByIdAndUpdate(id, { status: FlowStatus.DRAFT, metaFlowId });
 
@@ -147,15 +146,14 @@ export class WhatsAppFlowsService {
         }
 
         const account = await this.getActiveAccount(businessId);
-        const accessToken = this.decryptToken(account.access_token);
 
         // Re-upload this flow's public key before publishing so Meta uses the correct key for health check
         if (flow.publicKey) {
             const phoneNumberId = account.platform_user_id;
-            await this.metaApi.uploadBusinessPublicKey(phoneNumberId, accessToken, flow.publicKey);
+            await this.metaApi.uploadBusinessPublicKey(phoneNumberId, flow.publicKey);
         }
 
-        await this.metaApi.publishFlow(flow.metaFlowId, accessToken);
+        await this.metaApi.publishFlow(flow.metaFlowId);
 
         await this.flowModel.findByIdAndUpdate(id, { status: FlowStatus.PUBLISHED });
 
@@ -173,10 +171,7 @@ export class WhatsAppFlowsService {
             throw new BadRequestException('Only published flows can be deprecated');
         }
 
-        const account = await this.getActiveAccount(businessId);
-        const accessToken = this.decryptToken(account.access_token);
-
-        await this.metaApi.deprecateFlow(flow.metaFlowId, accessToken);
+        await this.metaApi.deprecateFlow(flow.metaFlowId);
         await this.flowModel.findByIdAndUpdate(id, { status: FlowStatus.DEPRECATED });
 
         return { message: 'Flow deprecated' };
@@ -188,8 +183,7 @@ export class WhatsAppFlowsService {
         if (flow.metaFlowId) {
             const account = await this.getActiveAccount(businessId).catch(() => null);
             if (account) {
-                const accessToken = this.decryptToken(account.access_token);
-                await this.metaApi.deleteFlow(flow.metaFlowId, accessToken).catch((err) => {
+                await this.metaApi.deleteFlow(flow.metaFlowId).catch((err) => {
                     this.logger.warn(`Could not delete flow from Meta: ${err.message}`);
                 });
             }
@@ -212,7 +206,6 @@ export class WhatsAppFlowsService {
         }
 
         const account = await this.getActiveAccount(businessId);
-        const accessToken = this.decryptToken(account.access_token);
 
         const baseUrl = this.configService.get<string>('APP_BASE_URL', '');
         const endpointUri = `${baseUrl}/whatsapp/flows/exchange/${id}`;
@@ -224,9 +217,9 @@ export class WhatsAppFlowsService {
         });
 
         const phoneNumberId = account.platform_user_id;
-        await this.metaApi.uploadBusinessPublicKey(phoneNumberId, accessToken, publicKey);
+        await this.metaApi.uploadBusinessPublicKey(phoneNumberId, publicKey);
 
-        await this.metaApi.updateFlow(flow.metaFlowId, accessToken, { endpoint_uri: endpointUri });
+        await this.metaApi.updateFlow(flow.metaFlowId, { endpoint_uri: endpointUri });
 
         const encryptionKey = this.configService.get<string>('ENCRYPTION_KEY');
         const encryptedPrivateKey = this.encryptPrivateKey(privateKey, encryptionKey);
@@ -274,13 +267,12 @@ export class WhatsAppFlowsService {
 
     async syncFromMeta(businessId: string) {
         const account = await this.getActiveAccount(businessId);
-        const accessToken = this.decryptToken(account.access_token);
         const wabaId = account.instagram_business_account_id;
         const baseUrl = this.configService.get<string>('APP_BASE_URL', '');
         const encryptionKey = this.configService.get<string>('ENCRYPTION_KEY');
         const phoneNumberId = account.platform_user_id;
 
-        const metaFlows = await this.metaApi.listFlows(wabaId, accessToken);
+        const metaFlows = await this.metaApi.listFlows(wabaId);
 
         let created = 0;
         let updated = 0;
@@ -316,8 +308,8 @@ export class WhatsAppFlowsService {
             });
 
             try {
-                await this.metaApi.uploadBusinessPublicKey(phoneNumberId, accessToken, publicKey);
-                await this.metaApi.updateFlow(mf.id, accessToken, { endpoint_uri: endpointUri });
+                await this.metaApi.uploadBusinessPublicKey(phoneNumberId, publicKey);
+                await this.metaApi.updateFlow(mf.id, { endpoint_uri: endpointUri });
             } catch (err) {
                 this.logger.warn(`Could not rekey flow "${mf.name}" (${mf.id}): ${err.message}`);
                 continue;
@@ -343,10 +335,9 @@ export class WhatsAppFlowsService {
             throw new BadRequestException('Flow has not been submitted to Meta');
         }
 
-        const account = await this.getActiveAccount(businessId);
-        const accessToken = this.decryptToken(account.access_token);
+        await this.getActiveAccount(businessId);
 
-        const metaFlow = await this.metaApi.getFlow(flow.metaFlowId, accessToken);
+        const metaFlow = await this.metaApi.getFlow(flow.metaFlowId);
         const status = metaFlow.status as FlowStatus;
 
         await this.flowModel.findByIdAndUpdate(id, { status });
@@ -382,14 +373,6 @@ export class WhatsAppFlowsService {
         });
         if (!account) throw new NotFoundException('No active WhatsApp account found');
         return account;
-    }
-
-    private decryptToken(encryptedToken: string): string {
-        const key = this.configService.get<string>('ENCRYPTION_KEY');
-        const [ivHex, encrypted] = encryptedToken.split(':');
-        const iv = Buffer.from(ivHex, 'hex');
-        const decipher = crypto.createDecipheriv('aes-256-cbc', Buffer.from(key, 'hex'), iv);
-        return decipher.update(encrypted, 'hex', 'utf8') + decipher.final('utf8');
     }
 
     private encryptPrivateKey(pem: string, encryptionKey: string): string {

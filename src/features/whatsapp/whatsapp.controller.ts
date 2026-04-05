@@ -63,7 +63,6 @@ export class WhatsAppController {
     return this.whatsappService.connectWhatsAppAccount(
       dto.whatsappBusinessAccountId,
       dto.phoneNumberId,
-      dto.accessToken,
       dto.businessId,
     );
   }

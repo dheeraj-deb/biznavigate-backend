@@ -10,14 +10,14 @@ import {
     UseGuards,
 } from '@nestjs/common';
 import { SkipThrottle } from '@nestjs/throttler';
-import { JwtAuthGuard } from 'src/common/guards';
+import { JwtAuthGuard } from '../../common/guards/jwt-auth.guard';
 import { InboxService, InboxQueryDto, SendReplyDto, UpdateInboxConversationDto, BatchMessagesDto } from './inbox.service';
 
 @SkipThrottle()
 @Controller('inbox')
 @UseGuards(JwtAuthGuard)
 export class InboxController {
-    constructor(private readonly inboxService: InboxService) {}
+    constructor(private readonly inboxService: InboxService) { }
 
     @Get('conversations')
     listConversations(@Req() req: any, @Query() query: InboxQueryDto) {

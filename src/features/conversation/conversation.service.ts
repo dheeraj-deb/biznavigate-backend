@@ -1,4 +1,4 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { Conversation, ConversationDocument } from './schemas/conversations.schema';
@@ -7,8 +7,6 @@ import { ConversationContext, ConversationContextDocument } from './schemas/conv
 
 @Injectable()
 export class ConversationService {
-  private readonly logger = new Logger(ConversationService.name);
-
   constructor(
     @InjectModel(Conversation.name) private readonly conversationModel: Model<ConversationDocument>,
     @InjectModel(Messages.name) private readonly messagesModel: Model<MessagesDocument>,
@@ -22,8 +20,10 @@ export class ConversationService {
     return conversation.save();
   }
 
-  async findActiveConversation(lead_id: string, channel: string): Promise<ConversationDocument | null> {
-    return this.conversationModel.findOne({ lead_id, channel, status: { $in: ['active', 'waiting'] } }).exec();
+  async findActiveConversation(lead_id: string, channel: string, business_id?: string): Promise<ConversationDocument | null> {
+    const query: any = { lead_id, channel, status: { $in: ['active', 'waiting'] } };
+    if (business_id) query.business_id = business_id;
+    return this.conversationModel.findOne(query).sort({ updated_at: -1 }).exec();
   }
 
   async findConversationById(conversation_id: string): Promise<ConversationDocument | null> {
@@ -74,12 +74,15 @@ export class ConversationService {
     conversation_id: string,
     page: number = 1,
     limit: number = 50,
+    business_id?: string,
   ): Promise<{ data: MessagesDocument[]; total: number }> {
     const skip = (page - 1) * limit;
+    const query: any = { conversation_id };
+    if (business_id) query.business_id = business_id;
 
     const [data, total] = await Promise.all([
-      this.messagesModel.find({ conversation_id }).sort({ timestamp: 1 }).skip(skip).limit(limit).exec(),
-      this.messagesModel.countDocuments({ conversation_id }).exec(),
+      this.messagesModel.find(query).sort({ timestamp: 1 }).skip(skip).limit(limit).exec(),
+      this.messagesModel.countDocuments(query).exec(),
     ]);
 
     return { data, total };
@@ -138,12 +141,23 @@ export class ConversationService {
     return result;
   }
 
+  /** Update last-message preview and bump updated_at so the conversation surfaces to the top of the inbox list */
+  async touchConversation(conversation_id: string, message_text: string): Promise<void> {
+    await this.conversationModel
+      .findOneAndUpdate(
+        { conversation_id },
+        { $set: { message_text } },
+        { new: false },
+      )
+      .exec();
+  }
+
   async updateConversation(
     conversation_id: string,
     data: Partial<Conversation>,
   ): Promise<ConversationDocument | null> {
     return this.conversationModel
-      .findOneAndUpdate({ conversation_id }, { $set: data }, { new: true })
+      .findOneAndUpdate({ conversation_id }, { $set: data }, { returnDocument: 'after' })
       .exec();
   }
 
@@ -152,7 +166,7 @@ export class ConversationService {
       .findOneAndUpdate(
         { conversation_id },
         { $set: { status: 'ended' } },
-        { new: true },
+        { returnDocument: 'after' },
       )
       .exec();
   }
@@ -217,7 +231,7 @@ export class ConversationService {
       .findOneAndUpdate(
         { conversation_id },
         { $set: { memory } },
-        { new: true, upsert: true },
+        { returnDocument: 'after', upsert: true },
       )
       .exec();
   }

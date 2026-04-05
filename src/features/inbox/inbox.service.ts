@@ -1,4 +1,4 @@
-import { Injectable, Logger, NotFoundException, BadRequestException } from '@nestjs/common';
+import { Injectable, NotFoundException, BadRequestException } from '@nestjs/common';
 import { ConversationService } from '../conversation/conversation.service';
 import { WhatsAppService } from '../whatsapp/whatsapp.service';
 import { InboxGateway } from './gateway/inbox.gateway';
@@ -33,8 +33,6 @@ export interface BatchMessagesDto {
 
 @Injectable()
 export class InboxService {
-    private readonly logger = new Logger(InboxService.name);
-
     constructor(
         private readonly conversationService: ConversationService,
         private readonly whatsappService: WhatsAppService,
@@ -72,6 +70,7 @@ export class InboxService {
             conversationId,
             1,
             50,
+            businessId,
         );
 
         return { conversation, messages };
@@ -88,6 +87,7 @@ export class InboxService {
             conversationId,
             Number(page) || 1,
             Math.min(Number(limit) || 50, 100),
+            businessId,
         );
 
         return {
@@ -148,6 +148,7 @@ export class InboxService {
         const limit = Math.min(Number(dto.limit) || 50, 100);
 
         const messages = await this.conversationService.findBatchMessagesByCursor(businessId, ids, limit, dto.cursor);
+        console.log(" => batchMessages result", { messages });
 
         return {
             data: messages,

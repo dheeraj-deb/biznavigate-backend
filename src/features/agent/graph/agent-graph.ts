@@ -24,6 +24,8 @@ function shouldContinueAfterTools(state: AgentStateType): string {
   const last = state.messages.at(-1);
   // If the LLM returned tool_calls, loop back to execute them
   if (last instanceof AIMessage && last.tool_calls?.length) return 'tool_caller';
+  // No tool calls — if we still have retries left, loop back (tool_caller handles the nudge)
+  if (last instanceof AIMessage && !last.tool_calls?.length && state.toolRetries < 1) return 'tool_caller';
   return 'responder';
 }
 

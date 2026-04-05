@@ -1,6 +1,6 @@
 import { Logger } from '@nestjs/common';
 import { ChatOpenAI } from '@langchain/openai';
-import { SystemMessage } from '@langchain/core/messages';
+import { HumanMessage, SystemMessage } from '@langchain/core/messages';
 import { AgentStateType } from '../graph/agent-state';
 
 const INTENT_PROMPT = `You are an intent classifier for a hospitality/service booking chatbot.
@@ -35,7 +35,7 @@ export function makeIntentDetectorNode(openaiApiKey: string) {
 
     const response = await llm.invoke([
       new SystemMessage(INTENT_PROMPT),
-      ...state.messages,
+      new HumanMessage(String(userMsg)),
     ]);
 
     const VALID_INTENTS = new Set([

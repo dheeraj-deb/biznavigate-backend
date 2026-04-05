@@ -9,16 +9,19 @@ export class WhatsAppApiClientService {
   private readonly apiClient: AxiosInstance;
   private readonly apiVersion: string;
   private readonly baseUrl: string;
+  private readonly permanentToken: string;
 
   constructor(private readonly configService: ConfigService) {
     this.apiVersion = this.configService.get<string>('whatsapp.apiVersion', 'v21.0');
     this.baseUrl = `https://graph.facebook.com/${this.apiVersion}`;
+    this.permanentToken = this.configService.get<string>('WHATSAPP_PERMANENT_TOKEN', '');
 
     this.apiClient = axios.create({
       baseURL: this.baseUrl,
       timeout: 30000,
       headers: {
         'Content-Type': 'application/json',
+        'Authorization': `Bearer ${this.permanentToken}`,
       },
     });
 
@@ -51,7 +54,6 @@ export class WhatsAppApiClientService {
    */
   async sendMessage(
     phoneNumberId: string,
-    accessToken: string,
     message: SendWhatsAppMessageDto
   ): Promise<any> {
 
@@ -60,11 +62,6 @@ export class WhatsAppApiClientService {
       const response = await this.apiClient.post(
         `/${phoneNumberId}/messages`,
         message,
-        {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-          },
-        }
       );
 
       console.dir(response.data, { depth: null })
@@ -82,7 +79,6 @@ export class WhatsAppApiClientService {
    */
   async markAsRead(
     phoneNumberId: string,
-    accessToken: string,
     messageId: string
   ): Promise<any> {
     try {
@@ -98,11 +94,6 @@ export class WhatsAppApiClientService {
       const response = await this.apiClient.post(
         `/${phoneNumberId}/messages`,
         payload,
-        {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-          },
-        }
       );
 
       this.logger.debug(`Message ${messageId} marked as read`);
@@ -118,7 +109,6 @@ export class WhatsAppApiClientService {
    */
   async uploadMedia(
     phoneNumberId: string,
-    accessToken: string,
     file: Buffer,
     mimeType: string
   ): Promise<string> {
@@ -132,12 +122,7 @@ export class WhatsAppApiClientService {
       const response = await this.apiClient.post(
         `/${phoneNumberId}/media`,
         formData,
-        {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-            'Content-Type': 'multipart/form-data',
-          },
-        }
+        { headers: { 'Content-Type': 'multipart/form-data' } },
       );
 
       const mediaId = response.data.id;
@@ -154,14 +139,9 @@ export class WhatsAppApiClientService {
    */
   async getMediaUrl(
     mediaId: string,
-    accessToken: string
   ): Promise<string> {
     try {
-      const response = await this.apiClient.get(`/${mediaId}`, {
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
-      });
+      const response = await this.apiClient.get(`/${mediaId}`);
 
       return response.data.url;
     } catch (error) {
@@ -175,12 +155,11 @@ export class WhatsAppApiClientService {
    */
   async downloadMedia(
     mediaUrl: string,
-    accessToken: string
   ): Promise<Buffer> {
     try {
       const response = await axios.get(mediaUrl, {
         headers: {
-          Authorization: `Bearer ${accessToken}`,
+          Authorization: `Bearer ${this.permanentToken}`,
         },
         responseType: 'arraybuffer',
       });
@@ -197,16 +176,10 @@ export class WhatsAppApiClientService {
    */
   async getTemplates(
     whatsappBusinessAccountId: string,
-    accessToken: string
   ): Promise<any[]> {
     try {
       const response = await this.apiClient.get(
         `/${whatsappBusinessAccountId}/message_templates`,
-        {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-          },
-        }
       );
 
       return response.data.data || [];
@@ -221,7 +194,6 @@ export class WhatsAppApiClientService {
    */
   async createTemplate(
     whatsappBusinessAccountId: string,
-    accessToken: string,
     template: any
   ): Promise<any> {
 
@@ -231,11 +203,6 @@ export class WhatsAppApiClientService {
       const response = await this.apiClient.post(
         `/${whatsappBusinessAccountId}/message_templates`,
         template,
-        {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-          },
-        }
       );
 
       console.log("submission res", response)
@@ -253,16 +220,12 @@ export class WhatsAppApiClientService {
    */
   async deleteTemplate(
     whatsappBusinessAccountId: string,
-    accessToken: string,
     templateName: string
   ): Promise<any> {
     try {
       const response = await this.apiClient.delete(
         `/${whatsappBusinessAccountId}/message_templates`,
         {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-          },
           params: {
             name: templateName,
           },
@@ -282,13 +245,9 @@ export class WhatsAppApiClientService {
    */
   async getPhoneNumberDetails(
     phoneNumberId: string,
-    accessToken: string
   ): Promise<any> {
     try {
       const response = await this.apiClient.get(`/${phoneNumberId}`, {
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
         params: {
           fields: 'verified_name,display_phone_number,quality_rating,id',
         },
@@ -306,15 +265,11 @@ export class WhatsAppApiClientService {
    */
   async getBusinessAccountDetails(
     whatsappBusinessAccountId: string,
-    accessToken: string
   ): Promise<any> {
     try {
       const response = await this.apiClient.get(
         `/${whatsappBusinessAccountId}`,
         {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-          },
           params: {
             fields: 'id,name,timezone_id,message_template_namespace,account_review_status',
           },
@@ -333,7 +288,6 @@ export class WhatsAppApiClientService {
    */
   async syncCatalogProduct(
     catalogId: string,
-    accessToken: string,
     productData: {
       retailer_id: string;
       name: string;
@@ -351,15 +305,7 @@ export class WhatsAppApiClientService {
         ? `/${existingProductId}`
         : `/${catalogId}/products`;
 
-      const response = await this.apiClient.post(
-        endpoint,
-        productData,
-        {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-          },
-        }
-      );
+      const response = await this.apiClient.post(endpoint, productData);
 
       const productId = response.data.id || existingProductId;
       this.logger.log(`Product ${existingProductId ? 'updated' : 'created'} in catalog: ${productId}`);
@@ -376,14 +322,9 @@ export class WhatsAppApiClientService {
    */
   async deleteCatalogProduct(
     productId: string,
-    accessToken: string
   ): Promise<{ success: boolean }> {
     try {
-      await this.apiClient.delete(`/${productId}`, {
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
-      });
+      await this.apiClient.delete(`/${productId}`);
 
       this.logger.log(`Product deleted from catalog: ${productId}`);
       return { success: true };
@@ -398,13 +339,9 @@ export class WhatsAppApiClientService {
    */
   async getCatalog(
     catalogId: string,
-    accessToken: string
   ): Promise<any> {
     try {
       const response = await this.apiClient.get(`/${catalogId}`, {
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
         params: {
           fields: 'id,name,vertical,product_count',
         },
@@ -422,14 +359,10 @@ export class WhatsAppApiClientService {
    */
   async getCatalogProducts(
     catalogId: string,
-    accessToken: string,
     limit = 100
   ): Promise<any[]> {
     try {
       const response = await this.apiClient.get(`/${catalogId}/products`, {
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
         params: {
           fields: 'id,retailer_id,name,description,price,currency,availability,image_url',
           limit,
@@ -448,11 +381,9 @@ export class WhatsAppApiClientService {
    */
   async getTemplateStatus(
     metaTemplateId: string,
-    accessToken: string,
   ): Promise<{ status: string; rejectedReason?: string }> {
     try {
       const response = await this.apiClient.get(`/${metaTemplateId}`, {
-        headers: { Authorization: `Bearer ${accessToken}` },
         params: { fields: 'status,quality_score,rejected_reason' },
       });
 
@@ -471,27 +402,25 @@ export class WhatsAppApiClientService {
    * Must be called once when a new WABA is connected.
    * POST /{waba-id}/subscribed_apps
    */
-  async subscribeToWebhooks(wabaId: string, accessToken: string): Promise<void> {
+  async subscribeToWebhooks(wabaId: string): Promise<void> {
     const response = await this.apiClient.post(
       `/${wabaId}/subscribed_apps`,
       {},
-      { headers: { Authorization: `Bearer ${accessToken}` } },
     );
     this.logger.log(`Subscribed WABA ${wabaId} to webhooks: ${JSON.stringify(response.data)}`);
   }
 
   // ─── Flows API ────────────────────────────────────────────────────────────
 
-  async createFlow(wabaId: string, accessToken: string, name: string, categories: string[]): Promise<{ id: string }> {
+  async createFlow(wabaId: string, name: string, categories: string[]): Promise<{ id: string }> {
     const response = await this.apiClient.post(
       `/${wabaId}/flows`,
       { name, categories },
-      { headers: { Authorization: `Bearer ${accessToken}` } },
     );
     return response.data;
   }
 
-  async uploadFlowAsset(flowId: string, accessToken: string, flowJson: object, endpointUri?: string): Promise<any> {
+  async uploadFlowAsset(flowId: string, flowJson: object, endpointUri?: string): Promise<any> {
     const formData = new FormData();
     const jsonBlob = new Blob([JSON.stringify(flowJson)], { type: 'application/json' });
     formData.append('file', jsonBlob, 'flow.json');
@@ -505,90 +434,67 @@ export class WhatsAppApiClientService {
     const response = await this.apiClient.post(
       `/${flowId}/assets`,
       formData,
-      { headers: { Authorization: `Bearer ${accessToken}`, 'Content-Type': 'multipart/form-data' } },
+      { headers: { 'Content-Type': 'multipart/form-data' } },
     );
     return response.data;
   }
 
-  async updateFlow(flowId: string, accessToken: string, fields: { endpoint_uri?: string; name?: string }): Promise<any> {
+  async updateFlow(flowId: string, fields: { endpoint_uri?: string; name?: string }): Promise<any> {
     const body = new URLSearchParams();
     Object.entries(fields).forEach(([k, v]) => { if (v !== undefined) body.append(k, v); });
 
     const response = await this.apiClient.post(
       `/${flowId}`,
       body.toString(),
-      { headers: { Authorization: `Bearer ${accessToken}`, 'Content-Type': 'application/x-www-form-urlencoded' } },
+      { headers: { 'Content-Type': 'application/x-www-form-urlencoded' } },
     );
     return response.data;
   }
 
-  async publishFlow(flowId: string, accessToken: string): Promise<any> {
-    const response = await this.apiClient.post(
-      `/${flowId}/publish`,
-      {},
-      { headers: { Authorization: `Bearer ${accessToken}` } },
-    );
+  async publishFlow(flowId: string): Promise<any> {
+    const response = await this.apiClient.post(`/${flowId}/publish`, {});
     return response.data;
   }
 
-  async deprecateFlow(flowId: string, accessToken: string): Promise<any> {
-    const response = await this.apiClient.post(
-      `/${flowId}/deprecate`,
-      {},
-      { headers: { Authorization: `Bearer ${accessToken}` } },
-    );
+  async deprecateFlow(flowId: string): Promise<any> {
+    const response = await this.apiClient.post(`/${flowId}/deprecate`, {});
     return response.data;
   }
 
-  async deleteFlow(flowId: string, accessToken: string): Promise<any> {
-    const response = await this.apiClient.delete(
-      `/${flowId}`,
-      { headers: { Authorization: `Bearer ${accessToken}` } },
-    );
+  async deleteFlow(flowId: string): Promise<any> {
+    const response = await this.apiClient.delete(`/${flowId}`);
     return response.data;
   }
 
-  async listFlows(wabaId: string, accessToken: string): Promise<any[]> {
+  async listFlows(wabaId: string): Promise<any[]> {
     const response = await this.apiClient.get(
       `/${wabaId}/flows`,
-      {
-        headers: { Authorization: `Bearer ${accessToken}` },
-        params: { fields: 'id,name,status,categories,validation_errors,endpoint_uri' },
-      },
+      { params: { fields: 'id,name,status,categories,validation_errors,endpoint_uri' } },
     );
     return response.data.data || [];
   }
 
-  async uploadBusinessPublicKey(phoneNumberId: string, accessToken: string, publicKey: string): Promise<any> {
+  async uploadBusinessPublicKey(phoneNumberId: string, publicKey: string): Promise<any> {
     const body = new URLSearchParams();
     body.append('business_public_key', publicKey);
 
     const response = await this.apiClient.post(
       `/${phoneNumberId}/whatsapp_business_encryption`,
       body.toString(),
-      {
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-          'Content-Type': 'application/x-www-form-urlencoded',
-        },
-      },
+      { headers: { 'Content-Type': 'application/x-www-form-urlencoded' } },
     );
     return response.data;
   }
 
-  async getBusinessPublicKey(phoneNumberId: string, accessToken: string): Promise<any> {
-    const response = await this.apiClient.get(
-      `/${phoneNumberId}/whatsapp_business_encryption`,
-      { headers: { Authorization: `Bearer ${accessToken}` } },
-    );
+  async getBusinessPublicKey(phoneNumberId: string): Promise<any> {
+    const response = await this.apiClient.get(`/${phoneNumberId}/whatsapp_business_encryption`);
     return response.data;
   }
 
-  async getFlow(flowId: string, accessToken: string): Promise<any> {
+  async getFlow(flowId: string): Promise<any> {
     const response = await this.apiClient.get(
       `/${flowId}`,
       {
-        headers: { Authorization: `Bearer ${accessToken}` },
         params: { fields: 'id,name,status,categories,validation_errors,endpoint_uri,json_version,data_api_version' },
       },
     );

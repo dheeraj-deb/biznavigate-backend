@@ -418,13 +418,13 @@ export class WorkflowsService implements OnModuleInit {
             is_active: is_active ?? true,
           }
         },
-        { new: true },
+        { returnDocument: 'after' },
       );
 
       await this.businessWorkflowModel.findOneAndUpdate(
         { workflow_id },
         { $set: { is_active: is_active ?? true } },
-        { upsert: true, new: true },
+        { upsert: true, returnDocument: 'after' },
       );
 
       return workflowDef;
@@ -443,7 +443,7 @@ export class WorkflowsService implements OnModuleInit {
             is_active: is_active ?? true,
           }
         },
-        { new: true },
+        { returnDocument: 'after' },
       );
       await this.businessWorkflowModel.findOneAndUpdate(
         { _id: existingLink._id },
@@ -486,7 +486,7 @@ export class WorkflowsService implements OnModuleInit {
           ...(is_active !== undefined && { is_active }),
         }
       },
-      { new: true },
+      { returnDocument: 'after' },
     );
   }
 

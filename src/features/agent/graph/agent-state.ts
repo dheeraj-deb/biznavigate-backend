@@ -10,6 +10,7 @@ export const AgentState = Annotation.Root({
   businessId: Annotation<string>(),
   leadId: Annotation<string | undefined>(),
   phone: Annotation<string>(),
+  toolRetries: Annotation<number>({ reducer: (_, update: number) => update, default: () => 0 }),
 });
 
 export type AgentStateType = typeof AgentState.State;

@@ -48,6 +48,12 @@ export class InboxGateway implements OnGatewayConnection, OnGatewayDisconnect {
             .emit('message_sent', { conversationId, message });
     }
 
+    notifyConversationUpdated(businessId: string, conversationId: string, preview: { message_text: string; timestamp: Date }) {
+        this.server
+            .to(`biz:${businessId}`)
+            .emit('conversation_updated', { conversationId, ...preview });
+    }
+
     notifyEscalation(businessId: string, conversationId: string, data: { reason: string; phone: string; escalated_at: Date }) {
         this.server
             .to(`biz:${businessId}`)
