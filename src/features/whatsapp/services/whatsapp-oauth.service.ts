@@ -318,11 +318,11 @@ export class WhatsAppOAuthService {
     accessToken: string,
   ): Promise<WhatsAppBusinessAccount[]> {
     const apiVersion = this.configService.get<string>('whatsapp.apiVersion');
-    const url = `https://graph.facebook.com/${apiVersion}/me/businesses?fields=name,id,owned_whatsapp_business_accounts{id,name}&access_token=${accessToken}`;
+    const url = `https://graph.facebook.com/${apiVersion}/me/businesses?fields=name,id,owned_whatsapp_business_accounts{id,name}`;
 
     this.logger.log('Fetching WhatsApp Business Accounts...');
 
-    const response = await fetch(url);
+    const response = await fetch(url, { headers: { Authorization: `Bearer ${accessToken}` } });
     const data = await response.json();
 
     if (data.error) {
@@ -353,9 +353,10 @@ export class WhatsAppOAuthService {
     accessToken: string,
   ): Promise<PhoneNumber | null> {
     const apiVersion = this.configService.get<string>('whatsapp.apiVersion');
-    const url = `https://graph.facebook.com/${apiVersion}/${phoneNumberId}?fields=id,display_phone_number,verified_name,quality_rating&access_token=${accessToken}`;
+    if (!accessToken) throw new BadRequestException('WHATSAPP_PERMANENT_TOKEN is not configured');
+    const url = `https://graph.facebook.com/${apiVersion}/${phoneNumberId}?fields=id,display_phone_number,verified_name,quality_rating`;
 
-    const response = await fetch(url);
+    const response = await fetch(url, { headers: { Authorization: `Bearer ${accessToken}` } });
     const data = await response.json() as any;
 
     if (data.error) {
@@ -374,11 +375,12 @@ export class WhatsAppOAuthService {
     accessToken: string,
   ): Promise<PhoneNumber[]> {
     const apiVersion = this.configService.get<string>('whatsapp.apiVersion');
-    const url = `https://graph.facebook.com/${apiVersion}/${wabaId}/phone_numbers?access_token=${accessToken}`;
+    if (!accessToken) throw new BadRequestException('WHATSAPP_PERMANENT_TOKEN is not configured');
+    const url = `https://graph.facebook.com/${apiVersion}/${wabaId}/phone_numbers`;
 
     this.logger.log(`Fetching phone numbers for WABA: ${wabaId}...`);
 
-    const response = await fetch(url);
+    const response = await fetch(url, { headers: { Authorization: `Bearer ${accessToken}` } });
     const data = await response.json();
 
     if (data.error) {
