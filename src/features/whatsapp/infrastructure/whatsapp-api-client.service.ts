@@ -501,6 +501,15 @@ export class WhatsAppApiClientService {
     return response.data;
   }
 
+  // ─── Phone Number Registration ───────────────────────────────────────────
+
+  async registerPhoneNumber(phoneNumberId: string, pin: string): Promise<void> {
+    await this.apiClient.post(`/${phoneNumberId}/register`, {
+      messaging_product: 'whatsapp',
+      pin,
+    });
+  }
+
   // ──────────────────────────────────────────────────────────────────────────
 
   /**

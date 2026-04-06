@@ -6,8 +6,6 @@ import {
   Body,
   Param,
   Query,
-  Req,
-  Headers,
   BadRequestException,
   Logger,
   HttpCode,
@@ -15,9 +13,8 @@ import {
   Res,
   UseGuards,
 } from '@nestjs/common';
-import * as fs from "fs"
 import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth } from '@nestjs/swagger';
-import { Request, Response } from 'express';
+import { Response } from 'express';
 import { WhatsAppService } from './whatsapp.service';
 import { WebhookValidatorService } from './infrastructure/webhook-validator.service';
 import {
@@ -32,14 +29,7 @@ import {
   DisconnectWhatsAppAccountDto,
   GetAccountsDto,
 } from './dto/whatsapp-auth.dto';
-import * as path from 'path';
-import { WhatsAppTemplatesService } from '../whatsapp-templates/whatsapp-templates.service';
 import { WhatsAppSignatureGuard } from './guards/whatsapp-signature.guard';
-import axios from 'axios';
-
-interface RawBodyRequest<T> extends Request {
-  rawBody?: Buffer;
-}
 
 @ApiTags('WhatsApp')
 @Controller('whatsapp')

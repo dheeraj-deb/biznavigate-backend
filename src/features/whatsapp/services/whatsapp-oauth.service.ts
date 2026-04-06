@@ -1,6 +1,7 @@
 import { Injectable, BadRequestException, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { PrismaService } from '../../../prisma/prisma.service';
+import { WhatsAppApiClientService } from '../infrastructure/whatsapp-api-client.service';
 import * as crypto from 'crypto';
 
 interface StateData {
@@ -28,6 +29,7 @@ export class WhatsAppOAuthService {
   constructor(
     private readonly configService: ConfigService,
     private readonly prisma: PrismaService,
+    private readonly apiClient: WhatsAppApiClientService,
   ) {}
 
   /**
@@ -142,6 +144,15 @@ export class WhatsAppOAuthService {
     }
 
     await this.subscribeToWebhooks(resolvedWabaId);
+
+    // Register the phone number on Cloud API (required if status is pending)
+    try {
+      await this.apiClient.registerPhoneNumber(phoneNumber.id, '000000');
+      this.logger.log(`Phone number ${phoneNumber.id} registered on Cloud API`);
+    } catch (err) {
+      // Non-fatal — number may already be registered
+      this.logger.warn(`Phone number registration skipped: ${err?.message}`);
+    }
 
     return {
       accountId: account.account_id,
