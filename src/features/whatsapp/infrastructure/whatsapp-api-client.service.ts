@@ -249,7 +249,7 @@ export class WhatsAppApiClientService {
     try {
       const response = await this.apiClient.get(`/${phoneNumberId}`, {
         params: {
-          fields: 'verified_name,display_phone_number,quality_rating,id',
+          fields: 'verified_name,display_phone_number,quality_rating,messaging_limit_tier,id',
         },
       });
 

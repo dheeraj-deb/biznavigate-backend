@@ -154,11 +154,38 @@ export class WhatsAppService {
       },
     });
 
-    return accounts.map(acc => ({
-      ...acc,
-      phone_number_id: acc.page_id,
-      whatsapp_business_account_id: acc.instagram_business_account_id,
-    }));
+    const enriched = await Promise.all(
+      accounts.map(async (acc) => {
+        let verified_name: string | null = null;
+        let display_phone_number: string | null = acc.username;
+        let quality_rating: string | null = null;
+        let messaging_limit_tier: string | null = null;
+
+        try {
+          const details = await this.apiClient.getPhoneNumberDetails(acc.page_id);
+          verified_name = details.verified_name ?? null;
+          display_phone_number = details.display_phone_number ?? acc.username;
+          quality_rating = details.quality_rating ?? null;
+          messaging_limit_tier = details.messaging_limit_tier ?? null;
+        } catch (err) {
+          this.logger.warn(`Could not fetch live details for phone_number_id ${acc.page_id}: ${err.message}`);
+        }
+
+        return {
+          account_id: acc.account_id,
+          phone_number_id: acc.page_id,
+          whatsapp_business_account_id: acc.instagram_business_account_id,
+          display_phone_number,
+          verified_name,
+          quality_rating,
+          messaging_limit_tier,
+          is_active: acc.is_active,
+          created_at: acc.created_at,
+        };
+      }),
+    );
+
+    return enriched;
   }
 
   /**
