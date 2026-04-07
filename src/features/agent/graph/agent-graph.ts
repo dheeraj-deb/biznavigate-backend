@@ -12,7 +12,7 @@ export type AgentGraphDeps = {
 } & ToolDeps;
 
 // Intents that need tool calls vs. intents the LLM can answer directly
-const TOOL_INTENTS = new Set(['booking', 'cancellation', 'status', 'payment']);
+const TOOL_INTENTS = new Set(['booking', 'cancellation', 'status', 'payment', 'handoff', 'complaint', 'support']);
 
 function routeAfterIntent(state: AgentStateType): string {
   if (TOOL_INTENTS.has(state.intent)) return 'tool_caller';
@@ -22,8 +22,15 @@ function routeAfterIntent(state: AgentStateType): string {
 
 function shouldContinueAfterTools(state: AgentStateType): string {
   const last = state.messages.at(-1);
-  // If the LLM returned tool_calls, loop back to execute them
-  if (last instanceof AIMessage && last.tool_calls?.length) return 'tool_caller';
+  // If the last message is a HANDOFF or FLOW signal, go directly to END via responder (which will pass it through)
+  if (last instanceof AIMessage) {
+    const content = typeof last.content === 'string' ? last.content : '';
+    if (content.startsWith('HANDOFF:') || content.startsWith('FLOW:')) return 'responder';
+    // If the LLM returned tool_calls, loop back to execute them
+    if (last.tool_calls?.length) return 'tool_caller';
+    // No tool calls — if we still have retries left, loop back (tool_caller handles the nudge)
+    if (!last.tool_calls?.length && state.toolRetries < 1) return 'tool_caller';
+  }
   return 'responder';
 }
 

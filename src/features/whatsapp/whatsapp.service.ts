@@ -14,11 +14,12 @@ import * as crypto from 'crypto';
 import { WhatsAppCatalogOrderService } from './services/whatsapp-catalog-order.service';
 import { ConversationService } from '../conversation/conversation.service';
 import { InboxGateway } from '../inbox/gateway/inbox.gateway';
+import { HumanHandoffGateway } from '../human-handoff/human-handoff.gateway';
 import { WhatsAppWebhookDto } from './dto/webhook-event.dto';
 import { WebhookValidatorService } from './infrastructure/webhook-validator.service';
 import { WhatsAppTemplatesService } from '../whatsapp-templates/whatsapp-templates.service';
 import { WhatsAppFlowsService } from '../whatsapp-flows/whatsapp-flows.service';
-import axios from 'axios';
+
 
 
 @Injectable()
@@ -30,15 +31,16 @@ export class WhatsAppService {
     private readonly apiClient: WhatsAppApiClientService,
     private readonly circuitBreaker: CircuitBreakerService,
     private readonly kafkaProducer: KafkaProducerService,
-    private readonly kafkaConsumer: KafkaConsumerService,
-    private readonly conversationState: ConversationStateService,
+    private readonly _kafkaConsumer: KafkaConsumerService,
+    private readonly _conversationState: ConversationStateService,
     private readonly configService: ConfigService,
     private readonly catalogOrderService: WhatsAppCatalogOrderService,
     private readonly conversationService: ConversationService,
     private readonly inboxGateway: InboxGateway,
+    private readonly humanHandoffGateway: HumanHandoffGateway,
     private readonly webhookValidator: WebhookValidatorService,
     private readonly whatsappTemplatesService: WhatsAppTemplatesService,
-    private readonly whatsappFlowsService: WhatsAppFlowsService,
+    private readonly _whatsappFlowsService: WhatsAppFlowsService,
     @InjectQueue('message-debounce') private readonly debounceQueue: Queue,
   ) { }
 
@@ -49,7 +51,6 @@ export class WhatsAppService {
   async connectWhatsAppAccount(
     whatsappBusinessAccountId: string,
     phoneNumberId: string,
-    accessToken: string,
     businessId: string,
   ): Promise<any> {
     try {
@@ -63,11 +64,8 @@ export class WhatsAppService {
 
       const phoneDetails = await this.circuitBreaker.execute(
         `whatsapp-phone-details-${phoneNumberId}`,
-        () => this.apiClient.getPhoneNumberDetails(phoneNumberId, accessToken),
+        () => this.apiClient.getPhoneNumberDetails(phoneNumberId),
       );
-
-      const tokenExpiry = new Date();
-      tokenExpiry.setDate(tokenExpiry.getDate() + 60);
 
       const account = await this.prisma.social_accounts.create({
         data: {
@@ -76,12 +74,14 @@ export class WhatsAppService {
           platform_user_id: phoneDetails.id,
           username: phoneDetails.display_phone_number,
           page_id: phoneNumberId,
-          access_token: this.encryptToken(accessToken),
-          token_expiry: tokenExpiry,
+          access_token: '',
           instagram_business_account_id: whatsappBusinessAccountId,
           is_active: true,
         },
       });
+
+      // Subscribe this WABA to the app's webhook so Meta starts delivering events
+      await this.apiClient.subscribeToWebhooks(whatsappBusinessAccountId);
 
       this.logger.log(`WhatsApp account ${phoneDetails.display_phone_number} connected for business ${businessId}`);
 
@@ -302,11 +302,14 @@ export class WhatsAppService {
           messageText = `[Unsupported message type: ${message.type}]`;
       }
 
-      let conversation = await this.conversationService.findActiveConversation(lead.lead_id, 'whatsapp');
+      let conversation = await this.conversationService.findActiveConversation(lead.lead_id, 'whatsapp', account.business_id);
+
+      console.log('conversation==>', conversation);
 
       if (!conversation) {
+        const newConversationId = crypto.randomUUID();
         conversation = await this.conversationService.createConversation({
-          conversation_id: crypto.randomUUID(),
+          conversation_id: newConversationId,
           lead_id: lead.lead_id,
           customer_id: from,
           business_id: account.business_id,
@@ -315,6 +318,18 @@ export class WhatsAppService {
           status: 'active',
           sender_id: phoneNumberId,
           sender_name: contactName,
+        });
+
+        // Create the matching Postgres row so escalation/handoff queries can find it
+        await this.prisma.lead_conversations.create({
+          data: {
+            conversation_id: newConversationId,
+            lead_id: lead.lead_id,
+            business_id: account.business_id,
+            tenant_id: account.businesses.tenant_id,
+            channel: 'whatsapp',
+            customer_identifier: from,
+          },
         });
       }
 
@@ -353,6 +368,10 @@ export class WhatsAppService {
 
       const leadMessageId = (leadMessage._id as any).toString();
 
+      // Bump conversation preview + updated_at so it surfaces to top of inbox list
+      await this.conversationService.touchConversation(conversation.conversation_id, messageText);
+
+      const msgTimestamp = new Date();
       // Notify inbox in real-time
       this.inboxGateway.notifyNewMessage(account.business_id, conversation.conversation_id, {
         _id: leadMessageId,
@@ -363,14 +382,35 @@ export class WhatsAppService {
         message_text: messageText,
         platform_message_id: messageId,
         delivery_status: 'received',
-        timestamp: new Date(),
+        timestamp: msgTimestamp,
+      });
+      this.inboxGateway.notifyConversationUpdated(account.business_id, conversation.conversation_id, {
+        message_text: messageText,
+        timestamp: msgTimestamp,
       });
 
+      // If this conversation is human-handled, also notify the handoff namespace
+      const pgConv = await this.prisma.lead_conversations.findFirst({
+        where: { conversation_id: conversation.conversation_id, is_ai_handled: false, is_resolved: false },
+        select: { conversation_id: true },
+      });
+      if (pgConv) {
+        this.humanHandoffGateway.notifyCustomerMessage(account.business_id, conversation.conversation_id, {
+          _id: leadMessageId,
+          conversation_id: conversation.conversation_id,
+          sender_type: 'lead',
+          sender_name: contactName,
+          message_type: messageType,
+          message_text: messageText,
+          platform_message_id: messageId,
+          timestamp: msgTimestamp,
+        });
+      }
+
       // Mark as read + show typing indicator while AI processes
-      const accessToken = this.decryptToken(account.access_token);
       await this.circuitBreaker.execute(
         `whatsapp-mark-read-${phoneNumberId}`,
-        () => this.apiClient.markAsRead(phoneNumberId, accessToken, messageId),
+        () => this.apiClient.markAsRead(phoneNumberId, messageId),
       );
 
       // Map business_type to AI service expected values
@@ -452,7 +492,13 @@ export class WhatsAppService {
    * Called by MessageDebounceProcessor to send an agent-generated reply.
    * Looks up the account for the business and handles token decryption internally.
    */
-  async sendAgentReply(businessId: string, phoneNumberId: string, to: string, text: string): Promise<void> {
+  async sendAgentReply(
+    businessId: string,
+    phoneNumberId: string,
+    to: string,
+    text: string,
+    ctx?: { conversationId: string; leadId: string; tenantId: string },
+  ): Promise<void> {
     const account = await this.prisma.social_accounts.findFirst({
       where: { business_id: businessId, platform: 'whatsapp', page_id: phoneNumberId, is_active: true },
     });
@@ -460,14 +506,44 @@ export class WhatsAppService {
       this.logger.warn(`sendAgentReply: no active WhatsApp account for business ${businessId}`);
       return;
     }
-    const accessToken = this.decryptToken(account.access_token);
-    await this.apiClient.sendMessage(phoneNumberId, accessToken, {
+    const apiResult = await this.apiClient.sendMessage(phoneNumberId, {
       messaging_product: 'whatsapp',
       recipient_type: 'individual',
       to,
       type: SendMessageType.TEXT,
       text: { body: text },
     });
+    const platformMessageId = apiResult?.messages?.[0]?.id;
+
+    // Persist agent reply to MongoDB so it appears in the inbox
+    if (ctx) {
+      const saved = await this.conversationService.createMessage({
+        conversation_id: ctx.conversationId,
+        lead_id: ctx.leadId,
+        business_id: businessId,
+        tenant_id: ctx.tenantId,
+        sender_type: 'business',
+        sender_id: phoneNumberId,
+        sender_name: 'AI Agent',
+        message_text: text,
+        message_type: 'text',
+        platform_message_id: platformMessageId,
+        delivery_status: 'sent',
+        assigned_to: 'bot',
+        metadata: { is_ai: true },
+      });
+
+      this.inboxGateway.notifyNewMessage(businessId, ctx.conversationId, {
+        _id: (saved._id as any).toString(),
+        conversation_id: ctx.conversationId,
+        sender_type: 'business',
+        sender_name: 'AI Agent',
+        message_type: 'text',
+        message_text: text,
+        delivery_status: 'sent',
+        timestamp: new Date(),
+      });
+    }
   }
 
   async handleStatusWebhook(status: any): Promise<void> {
@@ -615,13 +691,11 @@ export class WhatsAppService {
         throw new NotFoundException('WhatsApp account not found');
       }
 
-      const messageText = this.extractMessageText(message);
-      const accessToken = this.decryptToken(account.access_token);
-
+      const { text: messageText, metadata: templateMetadata } = await this.resolveMessageContent(message, account.business_id);
       this.logger.log('Sending message via WhatsApp Business API');
       const result = await this.circuitBreaker.execute(
         `whatsapp-send-${phoneNumberId}`,
-        () => this.apiClient.sendMessage(phoneNumberId, accessToken, message),
+        () => this.apiClient.sendMessage(phoneNumberId, message),
       );
 
       // Find lead (stays in Postgres)
@@ -634,7 +708,7 @@ export class WhatsAppService {
 
       // Persist outbound message in MongoDB
       if (lead && platformMessageId) {
-        let conversation = await this.conversationService.findActiveConversation(lead.lead_id, 'whatsapp');
+        let conversation = await this.conversationService.findActiveConversation(lead.lead_id, 'whatsapp', account.business_id);
 
         if (!conversation) {
           conversation = await this.conversationService.createConversation({
@@ -649,18 +723,39 @@ export class WhatsAppService {
           });
         }
 
-        await this.conversationService.createMessage({
+        const saved = await this.conversationService.createMessage({
           conversation_id: conversation.conversation_id,
           lead_id: lead.lead_id,
           business_id: account.business_id,
           tenant_id: account.businesses.tenant_id,
           sender_type: 'business',
           sender_id: phoneNumberId,
+          sender_name: account.businesses.business_name ?? 'Business',
           message_text: messageText,
           message_type: message.type,
           platform_message_id: platformMessageId,
           delivery_status: 'sent',
           workflow_node_id: nodeId,
+          ...(templateMetadata && { metadata: templateMetadata }),
+        });
+
+        const outboundTimestamp = new Date();
+        await this.conversationService.touchConversation(conversation.conversation_id, messageText);
+
+        this.inboxGateway.notifyNewMessage(account.business_id, conversation.conversation_id, {
+          _id: (saved._id as any).toString(),
+          conversation_id: conversation.conversation_id,
+          sender_type: 'business',
+          message_type: message.type,
+          message_text: messageText,
+          platform_message_id: platformMessageId,
+          delivery_status: 'sent',
+          timestamp: outboundTimestamp,
+          ...(templateMetadata && { metadata: templateMetadata }),
+        });
+        this.inboxGateway.notifyConversationUpdated(account.business_id, conversation.conversation_id, {
+          message_text: messageText,
+          timestamp: outboundTimestamp,
         });
       }
 
@@ -672,24 +767,6 @@ export class WhatsAppService {
     } catch (error) {
       this.logger.error('Failed to send WhatsApp message:', error);
       throw error;
-    }
-  }
-
-  /**
-   * Get conversation history for context continuity (reads from MongoDB)
-   */
-  private async getConversationHistory(conversationId: string, limit: number = 10): Promise<any[]> {
-    try {
-      const messages = await this.conversationService.getConversationHistory(conversationId, limit);
-      return messages.map(msg => ({
-        role: msg.sender_type === 'lead' ? 'user' : 'assistant',
-        content: msg.message_text,
-        timestamp: msg.timestamp,
-        message_type: msg.message_type,
-      }));
-    } catch (error) {
-      this.logger.error('Failed to get conversation history:', error);
-      return [];
     }
   }
 
@@ -891,55 +968,69 @@ export class WhatsAppService {
   }
 
   /**
-   * Extract message text from send message DTO
+   * Resolve message text and optional template metadata from a send message DTO.
+   * For template messages, looks up the stored template to render the body with
+   * substituted parameters and captures header/footer/buttons for the frontend.
    */
-  private extractMessageText(message: SendWhatsAppMessageDto): string {
-    if (message.text) return message.text.body;
-    if (message.template) return `Template: ${message.template.name}`;
-    if (message.interactive) return message.interactive.body.text;
-    return `[${message.type}]`;
+  private async resolveMessageContent(
+    message: SendWhatsAppMessageDto,
+    businessId: string,
+  ): Promise<{ text: string; metadata?: Record<string, any> }> {
+    if (message.text) return { text: message.text.body };
+    if (message.interactive) return { text: message.interactive.body.text };
+
+    if (message.template) {
+      try {
+        const tmpl = await this.whatsappTemplatesService.findByName(businessId, message.template.name);
+
+        // Substitute {{N}} in body with parameters from the DTO's body component
+        const bodyComponent = message.template.components?.find(c => c.type === 'body');
+        let renderedBody = tmpl.components.body;
+        if (bodyComponent?.parameters?.length) {
+          bodyComponent.parameters.forEach((param, i) => {
+            const value = param.text ?? param.currency?.fallback_value ?? param.date_time?.fallback_value ?? '';
+            renderedBody = renderedBody.replace(new RegExp(`\\{\\{${i + 1}\\}\\}`, 'g'), value);
+          });
+        }
+
+        // Render header text with parameter substitution if applicable
+        let renderedHeaderText: string | undefined;
+        if (tmpl.components.header?.type === 'TEXT' && tmpl.components.header.text) {
+          renderedHeaderText = tmpl.components.header.text;
+          const headerComponent = message.template.components?.find(c => c.type === 'header');
+          const headerParam = headerComponent?.parameters?.[0];
+          if (headerParam?.text) {
+            renderedHeaderText = renderedHeaderText.replace(/\{\{1\}\}/g, headerParam.text);
+          }
+        }
+
+        const metadata: Record<string, any> = {
+          template: {
+            name: tmpl.name,
+            language: tmpl.language,
+            body: renderedBody,
+            ...(tmpl.components.header && {
+              header: {
+                type: tmpl.components.header.type,
+                ...(renderedHeaderText ? { text: renderedHeaderText } : {}),
+                ...(tmpl.components.header.mediaUrl ? { mediaUrl: tmpl.components.header.mediaUrl } : {}),
+              },
+            }),
+            ...(tmpl.components.footer && { footer: tmpl.components.footer }),
+            ...(tmpl.components.buttons?.length && {
+              buttons: tmpl.components.buttons.map(b => ({ type: b.type, text: b.text })),
+            }),
+          },
+        };
+
+        return { text: renderedBody, metadata };
+      } catch {
+        // Template not found in local DB — fall back gracefully
+        return { text: `Template: ${message.template.name}` };
+      }
+    }
+
+    return { text: `[${message.type}]` };
   }
 
-  /**
-   * Encrypt access token
-   */
-  private encryptToken(token: string): string {
-    try {
-      const algorithm = 'aes-256-cbc';
-      const encryptionKey = this.configService.get<string>('encryption.key');
-      if (!encryptionKey) throw new Error('ENCRYPTION_KEY not configured.');
-      const key = Buffer.from(encryptionKey, 'hex');
-      const iv = crypto.randomBytes(16);
-      const cipher = crypto.createCipheriv(algorithm, key, iv);
-      let encrypted = cipher.update(token, 'utf8', 'hex');
-      encrypted += cipher.final('hex');
-      return `${iv.toString('hex')}:${encrypted}`;
-    } catch (error) {
-      this.logger.error('Failed to encrypt token:', error);
-      throw new BadRequestException('Token encryption failed. Please check server configuration.');
-    }
-  }
-
-  /**
-   * Decrypt access token
-   */
-  private decryptToken(encryptedToken: string): string {
-    try {
-      const algorithm = 'aes-256-cbc';
-      const encryptionKey = this.configService.get<string>('encryption.key');
-      if (!encryptionKey) throw new Error('ENCRYPTION_KEY not configured.');
-      if (!encryptedToken || !encryptedToken.includes(':')) throw new Error('Invalid encrypted token format');
-      const key = Buffer.from(encryptionKey, 'hex');
-      const parts = encryptedToken.split(':');
-      const iv = Buffer.from(parts[0], 'hex');
-      const encrypted = parts[1];
-      const decipher = crypto.createDecipheriv(algorithm, key, iv);
-      let decrypted = decipher.update(encrypted, 'hex', 'utf8');
-      decrypted += decipher.final('utf8');
-      return decrypted;
-    } catch (error) {
-      this.logger.error('Failed to decrypt token:', error);
-      throw new BadRequestException('Token decryption failed. The stored token may be corrupted or the encryption key has changed.');
-    }
-  }
 }

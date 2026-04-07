@@ -48,10 +48,8 @@ export class TemplateSyncProcessor extends WorkerHost {
 
                 if (!account) continue;
 
-                const accessToken = this.decryptToken(account.access_token);
                 const { status, rejectedReason } = await this.metaApi.getTemplateStatus(
                     template.metaTemplateId,
-                    accessToken,
                 );
 
                 const mappedStatus = this.mapMetaStatus(status);
@@ -84,15 +82,4 @@ export class TemplateSyncProcessor extends WorkerHost {
         return map[metaStatus] ?? TemplateStatus.PENDING;
     }
 
-    private decryptToken(encryptedToken: string): string {
-        const encryptionKey = this.configService.get<string>('encryption.key');
-        if (!encryptionKey) throw new Error('ENCRYPTION_KEY not configured.');
-        const key = Buffer.from(encryptionKey, 'hex');
-        const [ivHex, encrypted] = encryptedToken.split(':');
-        const iv = Buffer.from(ivHex, 'hex');
-        const decipher = crypto.createDecipheriv('aes-256-cbc', key, iv);
-        let decrypted = decipher.update(encrypted, 'hex', 'utf8');
-        decrypted += decipher.final('utf8');
-        return decrypted;
-    }
 }

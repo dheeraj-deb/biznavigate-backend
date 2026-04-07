@@ -16,6 +16,9 @@ export default registerAs('whatsapp', () => ({
   businessAccountId: process.env.WHATSAPP_BUSINESS_ACCOUNT_ID || '',
   phoneNumberId: process.env.WHATSAPP_PHONE_NUMBER_ID || '',
 
+  // Permanent System User token (never expires)
+  permanentToken: process.env.WHATSAPP_PERMANENT_TOKEN || '',
+
   // Token configuration
   tokenRefreshBuffer: 7 * 24 * 60 * 60 * 1000, // 7 days in milliseconds
   longLivedTokenExpiry: 60 * 24 * 60 * 60 * 1000, // 60 days

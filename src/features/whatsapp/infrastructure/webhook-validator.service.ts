@@ -18,6 +18,11 @@ export class WebhookValidatorService {
    * WhatsApp sends X-Hub-Signature-256 header with SHA256 HMAC
    */
   verifySignature(payload: string, signature: string): boolean {
+    if (!this.appSecret) {
+      this.logger.error('FACEBOOK_APP_SECRET is not configured — all webhooks will be rejected');
+      return false;
+    }
+
     if (!signature) {
       this.logger.warn('No signature provided in webhook request');
       return false;
@@ -108,7 +113,7 @@ export class WebhookValidatorService {
       return [];
     }
 
-    return entry.changes.filter((change) => {
+    return entry.changes.filter((change: any) => {
       if (!change.field || !change.value) {
         this.logger.warn('Invalid change structure:', change);
         return false;

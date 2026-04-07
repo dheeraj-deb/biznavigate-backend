@@ -156,7 +156,6 @@ export class WhatsAppCatalogService {
     let failed = 0;
     const errors: any[] = [];
 
-    const accessToken = this.decryptToken(account.access_token);
     const catalogId = account.instagram_business_account_id; // Using this field to store catalog ID
 
     for (const product of products) {
@@ -181,7 +180,6 @@ export class WhatsAppCatalogService {
         // Sync to WhatsApp (using Commerce Manager API)
         const whatsappProduct = await this.syncProductToWhatsApp(
           catalogId,
-          accessToken,
           catalogProduct,
           product.whatsapp_catalog_id,
         );
@@ -231,7 +229,6 @@ export class WhatsAppCatalogService {
    */
   private async syncProductToWhatsApp(
     catalogId: string,
-    accessToken: string,
     product: CatalogProduct,
     existingWhatsAppId?: string,
   ): Promise<{ id: string }> {
@@ -311,13 +308,8 @@ export class WhatsAppCatalogService {
     }
 
     try {
-      const accessToken = this.decryptToken(account.access_token);
-
       // TODO: Call WhatsApp API to delete product
-      // await this.whatsappApiClient.deleteCatalogProduct(
-      //   product.whatsapp_catalog_id,
-      //   accessToken,
-      // );
+      // await this.whatsappApiClient.deleteCatalogProduct(product.whatsapp_catalog_id);
 
       // Update product
       await this.prisma.products.update({
@@ -368,12 +360,10 @@ export class WhatsAppCatalogService {
       return;
     }
 
-    const accessToken = this.decryptToken(account.access_token);
     const availability: 'in stock' | 'out of stock' = product.in_stock ? 'in stock' : 'out of stock';
 
     await this.whatsappApiClient.syncCatalogProduct(
       account.whatsapp_catalog_id ?? account.instagram_business_account_id,
-      accessToken,
       {
         retailer_id: product.product_id,
         name: product.name,
@@ -445,30 +435,4 @@ export class WhatsAppCatalogService {
   /**
    * Decrypt access token (copied from WhatsAppOAuth service)
    */
-  private decryptToken(encryptedToken: string): string {
-    try {
-      const algorithm = 'aes-256-cbc';
-      const encryptionKey = this.configService.get<string>('encryption.key');
-
-      if (!encryptionKey) {
-        throw new Error('ENCRYPTION_KEY not configured');
-      }
-
-      if (!encryptedToken || !encryptedToken.includes(':')) {
-        throw new Error('Invalid encrypted token format');
-      }
-
-      const key = Buffer.from(encryptionKey, 'hex');
-      const parts = encryptedToken.split(':');
-      const iv = Buffer.from(parts[0], 'hex');
-      const encrypted = parts[1];
-      const decipher = crypto.createDecipheriv(algorithm, key, iv);
-      let decrypted = decipher.update(encrypted, 'hex', 'utf8');
-      decrypted += decipher.final('utf8');
-      return decrypted;
-    } catch (error) {
-      this.logger.error('Failed to decrypt token:', error);
-      throw new BadRequestException('Token decryption failed');
-    }
-  }
 }

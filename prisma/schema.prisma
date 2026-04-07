@@ -103,7 +103,7 @@ model social_accounts {
   platform                      String            @db.VarChar(50)
   platform_user_id              String            @db.VarChar(255)
   page_id                       String?           @db.VarChar(255)
-  access_token                  String
+  access_token                  String?
   permissions                   Json?
   token_expiry                  DateTime?         @db.Timestamptz(6)
   is_active                     Boolean?          @default(true)

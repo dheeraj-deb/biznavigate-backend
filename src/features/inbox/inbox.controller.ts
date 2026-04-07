@@ -10,14 +10,14 @@ import {
     UseGuards,
 } from '@nestjs/common';
 import { SkipThrottle } from '@nestjs/throttler';
-import { JwtAuthGuard } from 'src/common/guards';
+import { JwtAuthGuard } from '../../common/guards/jwt-auth.guard';
 import { InboxService, InboxQueryDto, SendReplyDto, UpdateInboxConversationDto, BatchMessagesDto } from './inbox.service';
 
 @SkipThrottle()
 @Controller('inbox')
 @UseGuards(JwtAuthGuard)
 export class InboxController {
-    constructor(private readonly inboxService: InboxService) {}
+    constructor(private readonly inboxService: InboxService) { }
 
     @Get('conversations')
     listConversations(@Req() req: any, @Query() query: InboxQueryDto) {
@@ -60,5 +60,15 @@ export class InboxController {
         @Body() dto: UpdateInboxConversationDto,
     ) {
         return this.inboxService.updateConversation(req.user.business_id, id, dto);
+    }
+
+    @Post('conversations/:id/resolve')
+    resolveConversation(@Req() req: any, @Param('id') id: string) {
+        return this.inboxService.resolveConversation(req.user.business_id, id);
+    }
+
+    @Post('conversations/:id/takeover')
+    takeoverConversation(@Req() req: any, @Param('id') id: string) {
+        return this.inboxService.takeoverConversation(req.user.business_id, id, req.user.user_id);
     }
 }

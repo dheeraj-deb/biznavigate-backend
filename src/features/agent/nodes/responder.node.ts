@@ -11,11 +11,11 @@ export function makeResponderNode(openaiApiKey: string, _tools: StructuredTool[]
   const llm = new ChatOpenAI({ model: 'gpt-4o', apiKey: openaiApiKey, temperature: 0.3 });
 
   return async (state: AgentStateType): Promise<Partial<AgentStateType>> => {
-    // If the last message is already a FLOW: signal added by tool_caller, pass it through unchanged
+    // If the last message is a FLOW: or HANDOFF: signal added by tool_caller, pass it through unchanged
     const last = state.messages.at(-1);
-    if (last instanceof AIMessage && String(last.content).startsWith('FLOW:')) {
-      logger.log(`FLOW passthrough — skipping LLM call`);
-      return {}; // no new message — the existing AIMessage is the final reply
+    if (last instanceof AIMessage && (String(last.content).startsWith('FLOW:') || String(last.content).startsWith('HANDOFF:'))) {
+      logger.log(`${String(last.content).startsWith('FLOW:') ? 'FLOW' : 'HANDOFF'} passthrough — skipping LLM call`);
+      return {};
     }
 
     logger.log(`Generating response (businessId=${state.businessId})`);

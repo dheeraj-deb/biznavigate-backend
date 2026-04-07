@@ -1,6 +1,8 @@
 import {
   Controller,
   Get,
+  Post,
+  Body,
   Query,
   Res,
   BadRequestException,
@@ -50,6 +52,23 @@ export class WhatsAppOAuthController {
       success: true,
       data: { url },
     };
+  }
+
+  /**
+   * Handle Embedded Signup code posted directly from the frontend FB SDK popup
+   */
+  @Post('embedded-callback')
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'Handle WhatsApp Embedded Signup code from frontend' })
+  async handleEmbeddedCallback(
+    @Body() body: { code: string; businessId: string; wabaId?: string; phoneNumberId?: string },
+  ) {
+    if (!body.code || !body.businessId) {
+      throw new BadRequestException('code and businessId are required');
+    }
+    const result = await this.oauthService.handleEmbeddedCallback(body.code, body.businessId, body.wabaId, body.phoneNumberId);
+    return { success: true, data: result };
   }
 
   /**
