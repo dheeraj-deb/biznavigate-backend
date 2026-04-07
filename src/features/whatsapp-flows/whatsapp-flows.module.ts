@@ -10,12 +10,14 @@ import { FlowDataExchangeController } from './flow-data-exchange.controller';
 import { FlowDataExchangeService } from './flow-data-exchange.service';
 import { HospitalityFlowService } from './hospitality-flow.service';
 import { InventoryModule } from '../inventory/inventory.module';
+import { BookingsModule } from '../bookings/bookings.module';
 
 @Module({
     imports: [
         ConfigModule,
         PrismaModule,
         InventoryModule,
+        BookingsModule,
         MongooseModule.forFeature([
             { name: WhatsAppFlow.name, schema: WhatsAppFlowSchema },
         ]),

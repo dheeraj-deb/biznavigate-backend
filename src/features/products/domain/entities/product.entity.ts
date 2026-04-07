@@ -1,48 +1,44 @@
-/**
- * Product Entity
- * Represents a product in the system (physical product, course, event, service)
- */
 export class Product {
   product_id: string;
   business_id: string;
   tenant_id: string;
-  product_type: string; // 'physical', 'course', 'event', 'service'
+  product_type: string;
   name: string;
   description?: string;
   category?: string;
   price?: number;
   stock_quantity?: number;
-  image_urls?: any; // JSON array of image URLs
+  low_stock_threshold?: number;
+  image_urls?: any;
   is_active: boolean;
   created_at: Date;
   updated_at: Date;
 
-  // New fields for e-commerce and AI
   sku?: string;
+  brand?: string;
+  condition?: string;
+  weight?: number;
+  dimensions?: string;
   compare_price?: number;
   currency?: string;
   track_inventory?: boolean;
   in_stock?: boolean;
   primary_image_url?: string;
   ai_enhanced_description?: string;
-  ai_generated_tags?: any; // JSON array
+  ai_generated_tags?: any;
   has_variants?: boolean;
   slug?: string;
 }
 
-/**
- * Product Variant Entity
- * Represents variations of a product (e.g., different sizes, colors)
- */
 export class ProductVariant {
   variant_id: string;
   product_id: string;
-  name: string; // e.g., "50ml", "Red", "Large"
+  name: string;
   sku?: string;
   price: number;
   quantity: number;
   in_stock: boolean;
-  variant_options?: any; // JSON: { "size": "50ml", "color": "red" }
+  variant_options?: any;
   created_at: Date;
   updated_at: Date;
 }

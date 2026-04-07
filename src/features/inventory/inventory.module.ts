@@ -2,8 +2,8 @@ import { Module, OnModuleInit } from '@nestjs/common';
 import { BullModule, InjectQueue } from '@nestjs/bullmq';
 import { Queue } from 'bullmq';
 import { PrismaModule } from '../../prisma/prisma.module';
-import { InventoryController } from './inventory.controller';
-import { InventoryService } from './inventory.service';
+import { InventoryController } from './application/controllers/inventory.controller';
+import { InventoryService } from './application/services/inventory.service';
 import { HoldCleanupProcessor, HOLD_CLEANUP_QUEUE } from './hold-cleanup.job';
 
 @Module({

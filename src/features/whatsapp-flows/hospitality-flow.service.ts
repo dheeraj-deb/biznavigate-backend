@@ -3,7 +3,8 @@ import * as https from 'node:https';
 import * as http from 'node:http';
 import * as sharp from 'sharp';
 import { PrismaService } from '../../prisma/prisma.service';
-import { InventoryService } from '../inventory/inventory.service';
+import { InventoryService } from '../inventory/application/services/inventory.service';
+import { BookingService } from '../bookings/application/services/booking.service';
 
 @Injectable()
 export class HospitalityFlowService {
@@ -12,6 +13,7 @@ export class HospitalityFlowService {
   constructor(
     private readonly prisma: PrismaService,
     private readonly inventoryService: InventoryService,
+    private readonly bookingService: BookingService,
   ) { }
 
   async handleInit(data: any, businessId?: string, flowToken?: string) {
@@ -344,7 +346,7 @@ export class HospitalityFlowService {
     const customerPhone = _flowContext?.customerPhone || phone;
     const leadId = _flowContext?.leadId;
 
-    const booking = await this.inventoryService.createBooking(businessId ?? '', {
+    const booking = await this.bookingService.createBooking(businessId ?? '', {
       hold_id,
       service_id,
       customer_name: guest_name,
