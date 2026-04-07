@@ -159,14 +159,14 @@ export class WhatsAppService {
         let verified_name: string | null = null;
         let display_phone_number: string | null = acc.username;
         let quality_rating: string | null = null;
-        let messaging_limit_tier: string | null = null;
+        let messaging_limit: number | null = null;
 
         try {
           const details = await this.apiClient.getPhoneNumberDetails(acc.page_id);
           verified_name = details.verified_name ?? null;
           display_phone_number = details.display_phone_number ?? acc.username;
           quality_rating = details.quality_rating ?? null;
-          messaging_limit_tier = details.messaging_limit_tier ?? null;
+          messaging_limit = details.whatsapp_business_manager_messaging_limit ?? null;
         } catch (err) {
           this.logger.warn(`Could not fetch live details for phone_number_id ${acc.page_id}: ${err.message}`);
         }
@@ -178,7 +178,7 @@ export class WhatsAppService {
           display_phone_number,
           verified_name,
           quality_rating,
-          messaging_limit_tier,
+          messaging_limit,
           is_active: acc.is_active,
           created_at: acc.created_at,
         };
