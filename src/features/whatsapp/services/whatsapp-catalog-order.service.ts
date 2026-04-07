@@ -114,12 +114,10 @@ export class WhatsAppCatalogOrderService {
         if (!product) {
           this.logger.warn(`Product not found for retailer_id: ${productRetailerId}`);
 
-          const accessToken = this.decryptToken(account.access_token);
           await this.sendMessage(
             phoneNumberId,
             from,
             `Sorry, the product you selected is no longer available.`,
-            accessToken,
           );
           continue;
         }
@@ -146,12 +144,10 @@ export class WhatsAppCatalogOrderService {
         } catch (error) {
           this.logger.error(`Failed to add product to cart: ${error.message}`);
 
-          const accessToken = this.decryptToken(account.access_token);
           await this.sendMessage(
             phoneNumberId,
             from,
             `Sorry, we couldn't add "${product.name}" to your cart. ${error.message}`,
-            accessToken,
           );
         }
       }
@@ -165,7 +161,7 @@ export class WhatsAppCatalogOrderService {
       }
 
       // Always publish Kafka event — workflow service looks up paused execution in MongoDB
-      const conversation = await this.conversationService.findActiveConversation(lead.lead_id, 'whatsapp');
+      const conversation = await this.conversationService.findActiveConversation(lead.lead_id, 'whatsapp', account.business_id);
 
       await this.kafkaProducer.publishCatalogOrderCompleted({
         execution_id: null,
@@ -224,7 +220,6 @@ export class WhatsAppCatalogOrderService {
     to: string,
     cart: any,
     cartSummary: string,
-    accessToken: string,
   ): Promise<void> {
     try {
       const messagePayload = {
@@ -265,7 +260,7 @@ export class WhatsAppCatalogOrderService {
         },
       };
 
-      await this.apiClient.sendMessage(phoneNumberId, accessToken, messagePayload);
+      await this.apiClient.sendMessage(phoneNumberId, messagePayload);
     } catch (error) {
       this.logger.error(`Failed to send cart confirmation: ${error.message}`);
     }
@@ -278,7 +273,6 @@ export class WhatsAppCatalogOrderService {
     phoneNumberId: string,
     to: string,
     message: string,
-    accessToken: string,
   ): Promise<void> {
     try {
       const messagePayload = {
@@ -292,7 +286,7 @@ export class WhatsAppCatalogOrderService {
         },
       };
 
-      await this.apiClient.sendMessage(phoneNumberId, accessToken, messagePayload);
+      await this.apiClient.sendMessage(phoneNumberId, messagePayload);
     } catch (error) {
       this.logger.error(`Failed to send WhatsApp message: ${error.message}`);
     }
@@ -301,32 +295,6 @@ export class WhatsAppCatalogOrderService {
   /**
    * Decrypt access token
    */
-  private decryptToken(encryptedToken: string): string {
-    try {
-      const algorithm = 'aes-256-cbc';
-      const encryptionKey = this.configService.get<string>('encryption.key');
-
-      if (!encryptionKey) {
-        throw new Error('ENCRYPTION_KEY not configured');
-      }
-
-      if (!encryptedToken || !encryptedToken.includes(':')) {
-        throw new Error('Invalid encrypted token format');
-      }
-
-      const key = Buffer.from(encryptionKey, 'hex');
-      const parts = encryptedToken.split(':');
-      const iv = Buffer.from(parts[0], 'hex');
-      const encrypted = parts[1];
-      const decipher = crypto.createDecipheriv(algorithm, key, iv);
-      let decrypted = decipher.update(encrypted, 'hex', 'utf8');
-      decrypted += decipher.final('utf8');
-      return decrypted;
-    } catch (error) {
-      this.logger.error('Failed to decrypt token:', error);
-      throw new Error('Token decryption failed');
-    }
-  }
 
   /**
    * Find paused workflow execution for a lead

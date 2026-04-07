@@ -1,6 +1,7 @@
 import { Injectable, BadRequestException, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { PrismaService } from '../../../prisma/prisma.service';
+import { WhatsAppApiClientService } from '../infrastructure/whatsapp-api-client.service';
 import * as crypto from 'crypto';
 
 interface StateData {
@@ -28,6 +29,7 @@ export class WhatsAppOAuthService {
   constructor(
     private readonly configService: ConfigService,
     private readonly prisma: PrismaService,
+    private readonly apiClient: WhatsAppApiClientService,
   ) {}
 
   /**
@@ -73,6 +75,8 @@ export class WhatsAppOAuthService {
   async handleEmbeddedCallback(
     code: string,
     businessId: string,
+    wabaId?: string,
+    phoneNumberId?: string,
   ): Promise<{ accountId: string; phoneNumber: string; verifiedName: string }> {
     const business = await this.prisma.businesses.findUnique({
       where: { business_id: businessId },
@@ -80,20 +84,28 @@ export class WhatsAppOAuthService {
     if (!business) throw new BadRequestException('Business not found');
 
     const tokenData = await this.exchangeCodeForToken(code, true);
-    const wabas = await this.getWhatsAppBusinessAccounts(tokenData.access_token);
 
-    if (!wabas || wabas.length === 0) {
-      throw new BadRequestException('No WhatsApp Business Account found.');
+    let resolvedWabaId = wabaId;
+    let phoneNumber: PhoneNumber;
+
+    const permanentToken = this.configService.get<string>('whatsapp.permanentToken');
+
+    if (wabaId && phoneNumberId) {
+      // IDs are known from the Embedded Signup session event — fetch just this phone number directly
+      // using the permanent token (System User has access after Embedded Signup)
+      const fetched = await this.getPhoneNumberById(phoneNumberId, permanentToken);
+      if (!fetched) throw new BadRequestException('Phone number not found.');
+      phoneNumber = fetched;
+    } else {
+      // Fallback: discover WABA via /me/businesses using the client's token
+      const wabas = await this.getWhatsAppBusinessAccounts(tokenData.access_token);
+      if (!wabas || wabas.length === 0) throw new BadRequestException('No WhatsApp Business Account found.');
+      const waba = wabas[0];
+      resolvedWabaId = waba.id;
+      const phoneNumbers = await this.getPhoneNumbers(waba.id, permanentToken);
+      if (!phoneNumbers || phoneNumbers.length === 0) throw new BadRequestException('No phone numbers found for this WABA.');
+      phoneNumber = phoneNumbers[0];
     }
-
-    const waba = wabas[0];
-    const phoneNumbers = await this.getPhoneNumbers(waba.id, tokenData.access_token);
-
-    if (!phoneNumbers || phoneNumbers.length === 0) {
-      throw new BadRequestException('No phone numbers found for this WABA.');
-    }
-
-    const phoneNumber = phoneNumbers[0];
     const tokenExpiry = new Date();
     tokenExpiry.setDate(tokenExpiry.getDate() + 60);
 
@@ -108,8 +120,8 @@ export class WhatsAppOAuthService {
         data: {
           username: phoneNumber.display_phone_number,
           page_id: phoneNumber.id,
-          instagram_business_account_id: waba.id,
-          access_token: this.encryptToken(tokenData.access_token),
+          instagram_business_account_id: resolvedWabaId,
+          access_token: '',
           token_expiry: tokenExpiry,
           is_active: true,
           updated_at: new Date(),
@@ -123,12 +135,23 @@ export class WhatsAppOAuthService {
           platform_user_id: phoneNumber.id,
           username: phoneNumber.display_phone_number,
           page_id: phoneNumber.id,
-          access_token: this.encryptToken(tokenData.access_token),
+          access_token: '',
           token_expiry: tokenExpiry,
-          instagram_business_account_id: waba.id,
+          instagram_business_account_id: resolvedWabaId,
           is_active: true,
         },
       });
+    }
+
+    await this.subscribeToWebhooks(resolvedWabaId);
+
+    // Register the phone number on Cloud API (required if status is pending)
+    try {
+      await this.apiClient.registerPhoneNumber(phoneNumber.id, '000000');
+      this.logger.log(`Phone number ${phoneNumber.id} registered on Cloud API`);
+    } catch (err) {
+      // Non-fatal — number may already be registered
+      this.logger.warn(`Phone number registration skipped: ${err?.message}`);
     }
 
     return {
@@ -163,6 +186,7 @@ export class WhatsAppOAuthService {
 
     // Exchange code for access token
     const tokenData = await this.exchangeCodeForToken(code);
+    const permanentToken = this.configService.get<string>('whatsapp.permanentToken');
 
     // Get WhatsApp Business Account details
     const wabas = await this.getWhatsAppBusinessAccounts(
@@ -179,7 +203,7 @@ export class WhatsAppOAuthService {
     const waba = wabas[0];
     const phoneNumbers = await this.getPhoneNumbers(
       waba.id,
-      tokenData.access_token,
+      permanentToken,
     );
 
     if (!phoneNumbers || phoneNumbers.length === 0) {
@@ -215,7 +239,7 @@ export class WhatsAppOAuthService {
           username: phoneNumber.display_phone_number,
           page_id: phoneNumber.id,
           instagram_business_account_id: waba.id,
-          access_token: this.encryptToken(tokenData.access_token),
+          access_token: '',
           token_expiry: tokenExpiry,
           is_active: true,
           updated_at: new Date(),
@@ -234,7 +258,7 @@ export class WhatsAppOAuthService {
           platform_user_id: phoneNumber.id,
           username: phoneNumber.display_phone_number,
           page_id: phoneNumber.id, // phone_number_id
-          access_token: this.encryptToken(tokenData.access_token),
+          access_token: '',
           token_expiry: tokenExpiry,
           instagram_business_account_id: waba.id, // Store WABA ID here
           is_active: true,
@@ -245,6 +269,8 @@ export class WhatsAppOAuthService {
         `Created new WhatsApp account ${phoneNumber.display_phone_number} for business ${businessId}`,
       );
     }
+
+    await this.subscribeToWebhooks(waba.id);
 
     return {
       accountId: account.account_id,
@@ -266,14 +292,18 @@ export class WhatsAppOAuthService {
     const appSecret = this.configService.get<string>('whatsapp.appSecret');
     const backendUrl = this.configService.get<string>('BACKEND_URL');
     const apiVersion = this.configService.get<string>('whatsapp.apiVersion');
-    // Embedded Signup uses the app domain as redirect_uri, not the callback path
-    const redirectUri = embedded ? backendUrl : `${backendUrl}/whatsapp/oauth/callback`;
+    // Embedded Signup (FB.login popup) has no redirect_uri — must be empty string
+    const redirectUri = embedded ? '' : `${backendUrl}/whatsapp/oauth/callback`;
+
+    console.log("redirectUri", redirectUri);
 
     const url = new URL(`https://graph.facebook.com/${apiVersion}/oauth/access_token`);
     url.searchParams.append('client_id', appId);
     url.searchParams.append('client_secret', appSecret);
     url.searchParams.append('code', code);
-    url.searchParams.append('redirect_uri', redirectUri);
+    if (redirectUri) {
+      url.searchParams.append('redirect_uri', redirectUri);
+    }
 
     this.logger.log('Exchanging code for access token...');
 
@@ -299,11 +329,11 @@ export class WhatsAppOAuthService {
     accessToken: string,
   ): Promise<WhatsAppBusinessAccount[]> {
     const apiVersion = this.configService.get<string>('whatsapp.apiVersion');
-    const url = `https://graph.facebook.com/${apiVersion}/me/businesses?fields=name,id,owned_whatsapp_business_accounts{id,name}&access_token=${accessToken}`;
+    const url = `https://graph.facebook.com/${apiVersion}/me/businesses?fields=name,id,owned_whatsapp_business_accounts{id,name}`;
 
     this.logger.log('Fetching WhatsApp Business Accounts...');
 
-    const response = await fetch(url);
+    const response = await fetch(url, { headers: { Authorization: `Bearer ${accessToken}` } });
     const data = await response.json();
 
     if (data.error) {
@@ -327,6 +357,28 @@ export class WhatsAppOAuthService {
   }
 
   /**
+   * Get a single phone number by its ID using the permanent token
+   */
+  private async getPhoneNumberById(
+    phoneNumberId: string,
+    accessToken: string,
+  ): Promise<PhoneNumber | null> {
+    const apiVersion = this.configService.get<string>('whatsapp.apiVersion');
+    if (!accessToken) throw new BadRequestException('WHATSAPP_PERMANENT_TOKEN is not configured');
+    const url = `https://graph.facebook.com/${apiVersion}/${phoneNumberId}?fields=id,display_phone_number,verified_name,quality_rating`;
+
+    const response = await fetch(url, { headers: { Authorization: `Bearer ${accessToken}` } });
+    const data = await response.json() as any;
+
+    if (data.error) {
+      this.logger.error('Failed to fetch phone number by ID:', data.error);
+      throw new BadRequestException(`Failed to fetch phone number: ${data.error.message}`);
+    }
+
+    return data as PhoneNumber;
+  }
+
+  /**
    * Get phone numbers for a WhatsApp Business Account
    */
   private async getPhoneNumbers(
@@ -334,11 +386,12 @@ export class WhatsAppOAuthService {
     accessToken: string,
   ): Promise<PhoneNumber[]> {
     const apiVersion = this.configService.get<string>('whatsapp.apiVersion');
-    const url = `https://graph.facebook.com/${apiVersion}/${wabaId}/phone_numbers?access_token=${accessToken}`;
+    if (!accessToken) throw new BadRequestException('WHATSAPP_PERMANENT_TOKEN is not configured');
+    const url = `https://graph.facebook.com/${apiVersion}/${wabaId}/phone_numbers`;
 
     this.logger.log(`Fetching phone numbers for WABA: ${wabaId}...`);
 
-    const response = await fetch(url);
+    const response = await fetch(url, { headers: { Authorization: `Bearer ${accessToken}` } });
     const data = await response.json();
 
     if (data.error) {
@@ -352,6 +405,29 @@ export class WhatsAppOAuthService {
     this.logger.log(`Found ${phoneNumbers.length} phone number(s)`);
 
     return phoneNumbers;
+  }
+
+  /**
+   * Subscribe the app to receive webhook events for a WABA.
+   * POST /{waba-id}/subscribed_apps
+   */
+  private async subscribeToWebhooks(wabaId: string): Promise<void> {
+    const apiVersion = this.configService.get<string>('whatsapp.apiVersion');
+    const permanentToken = this.configService.get<string>('whatsapp.permanentToken');
+    const url = `https://graph.facebook.com/${apiVersion}/${wabaId}/subscribed_apps`;
+
+    const response = await fetch(url, {
+      method: 'POST',
+      headers: { Authorization: `Bearer ${permanentToken}` },
+    });
+    const data = await response.json() as any;
+
+    if (data.error) {
+      this.logger.error(`Failed to subscribe WABA ${wabaId} to webhooks:`, data.error);
+      // Non-fatal — account is saved, operator can retry
+    } else {
+      this.logger.log(`WABA ${wabaId} subscribed to webhooks successfully`);
+    }
   }
 
   /**
@@ -392,24 +468,4 @@ export class WhatsAppOAuthService {
     }
   }
 
-  /**
-   * Encrypt access token for storage
-   */
-  private encryptToken(token: string): string {
-    const algorithm = 'aes-256-cbc';
-    const encryptionKey = this.configService.get<string>('encryption.key');
-
-    if (!encryptionKey) {
-      throw new Error(
-        'ENCRYPTION_KEY not configured. Please set ENCRYPTION_KEY in your .env file.',
-      );
-    }
-
-    const key = Buffer.from(encryptionKey, 'hex');
-    const iv = crypto.randomBytes(16);
-    const cipher = crypto.createCipheriv(algorithm, key, iv);
-    let encrypted = cipher.update(token, 'utf8', 'hex');
-    encrypted += cipher.final('hex');
-    return `${iv.toString('hex')}:${encrypted}`;
-  }
 }

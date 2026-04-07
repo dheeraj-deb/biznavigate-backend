@@ -58,10 +58,11 @@ export class WhatsAppFlowsController {
     }
 
     // POST /whatsapp/flows/:id/submit — create on Meta + upload Flow JSON
+    // Pass { force: true } in body to re-create a stale/deleted Meta flow
     @Post(':id/submit')
     @HttpCode(HttpStatus.OK)
-    submit(@Req() req, @Param('id') id: string) {
-        return this.service.submit(req.user.business_id, id);
+    submit(@Req() req, @Param('id') id: string, @Body('force') force?: boolean) {
+        return this.service.submit(req.user.business_id, id, force);
     }
 
     // POST /whatsapp/flows/:id/publish — publish on Meta (go live)

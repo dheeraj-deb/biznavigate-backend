@@ -87,7 +87,6 @@ export class CampaignDispatchProcessor extends WorkerHost {
         }
 
         const phoneNumberId = account.page_id;
-        const accessToken = this.decryptToken(account.access_token);
 
         await this.campaignModel.findByIdAndUpdate(campaignId, {
             status: CampaignStatus.RUNNING,
@@ -129,7 +128,7 @@ export class CampaignDispatchProcessor extends WorkerHost {
                             resolvedVars,
                         );
 
-                        const result = await this.apiClient.sendMessage(phoneNumberId, accessToken, payload);
+                        const result = await this.apiClient.sendMessage(phoneNumberId, payload);
                         const waMessageId: string | null = result?.messages?.[0]?.id ?? null;
 
                         await this.prisma.campaign_recipients.update({
@@ -221,8 +220,6 @@ export class CampaignDispatchProcessor extends WorkerHost {
                 });
                 if (!account?.page_id) continue;
 
-                const accessToken = this.decryptToken(account.access_token);
-
                 const contact = recipient.contact_id
                     ? (await this.fetchContacts(recipient.business_id, [recipient.contact_id])).get(recipient.contact_id)
                     : null;
@@ -236,7 +233,7 @@ export class CampaignDispatchProcessor extends WorkerHost {
                         template.language,
                         resolvedVars,
                     );
-                    const result = await this.apiClient.sendMessage(account.page_id, accessToken, payload);
+                    const result = await this.apiClient.sendMessage(account.page_id, payload);
                     const waMessageId: string | null = result?.messages?.[0]?.id ?? null;
 
                     await this.prisma.campaign_recipients.update({
@@ -375,13 +372,6 @@ export class CampaignDispatchProcessor extends WorkerHost {
             failureReason: reason,
         });
         this.logger.error(`[Campaign ${campaignId}] Failed: ${reason}`);
-    }
-
-    private decryptToken(encryptedToken: string): string {
-        const key = Buffer.from(this.configService.get<string>('encryption.key')!, 'hex');
-        const [ivHex, encrypted] = encryptedToken.split(':');
-        const decipher = crypto.createDecipheriv('aes-256-cbc', key, Buffer.from(ivHex, 'hex'));
-        return decipher.update(encrypted, 'hex', 'utf8') + decipher.final('utf8');
     }
 
     private sleep(ms: number): Promise<void> {

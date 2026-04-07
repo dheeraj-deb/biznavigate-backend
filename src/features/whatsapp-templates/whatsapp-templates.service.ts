@@ -94,14 +94,12 @@ export class WhatsAppTemplatesService {
             throw new NotFoundException('No active WhatsApp account found for this business');
         }
 
-        const accessToken = this.decryptToken(account.access_token);
         const whatsappBusinessAccountId = account.instagram_business_account_id;
 
         let metaResult: { id: string; status: string };
         try {
             metaResult = await this.metaApi.createTemplate(
                 whatsappBusinessAccountId,
-                accessToken,
                 {
                     name: template.name,
                     category: template.category,
@@ -204,7 +202,7 @@ export class WhatsAppTemplatesService {
         return this.templateModel.findByIdAndUpdate(
             templateId,
             { ...dto, checksum, status: TemplateStatus.DRAFT },
-            { new: true },
+            { returnDocument: 'after' },
         );
     }
 
@@ -230,10 +228,8 @@ export class WhatsAppTemplatesService {
             });
 
             if (account) {
-                const accessToken = this.decryptToken(account.access_token);
                 await this.metaApi.deleteTemplate(
                     account.instagram_business_account_id,
-                    accessToken,
                     template.name,
                 ).catch((err) => {
                     this.logger.warn(`Could not delete template from Meta: ${err.message}`);
@@ -251,10 +247,9 @@ export class WhatsAppTemplatesService {
         });
         if (!account) throw new NotFoundException('No active WhatsApp account found');
 
-        const accessToken = this.decryptToken(account.access_token);
         const wabaId = account.instagram_business_account_id;
 
-        const metaTemplates = await this.metaApi.getTemplates(wabaId, accessToken);
+        const metaTemplates = await this.metaApi.getTemplates(wabaId);
 
         let created = 0;
         let updated = 0;
@@ -346,11 +341,8 @@ export class WhatsAppTemplatesService {
             throw new NotFoundException('No active WhatsApp account found for this business');
         }
 
-        const accessToken = this.decryptToken(account.access_token);
-
         const { status, rejectedReason } = await this.metaApi.getTemplateStatus(
             template.metaTemplateId,
-            accessToken,
         );
 
         const mappedStatus = this.mapMetaStatus(status);
@@ -442,20 +434,6 @@ export class WhatsAppTemplatesService {
             },
         ]);
     }
-
-    private decryptToken(encryptedToken: string): string {
-        const encryptionKey = this.configService.get<string>('encryption.key');
-        if (!encryptionKey) throw new Error('ENCRYPTION_KEY not configured.');
-        if (!encryptedToken?.includes(':')) throw new BadRequestException('Invalid encrypted token format');
-        const key = Buffer.from(encryptionKey, 'hex');
-        const [ivHex, encrypted] = encryptedToken.split(':');
-        const iv = Buffer.from(ivHex, 'hex');
-        const decipher = crypto.createDecipheriv('aes-256-cbc', key, iv);
-        let decrypted = decipher.update(encrypted, 'hex', 'utf8');
-        decrypted += decipher.final('utf8');
-        return decrypted;
-    }
-
 
     private validateTemplate(template: WhatsAppTemplateDocument) {
         const { body } = template.components;

@@ -20,6 +20,7 @@ import { ConversationModule } from '../conversation/conversation.module';
 import { WhatsAppTemplatesModule } from '../whatsapp-templates/whatsapp-templates.module';
 import { WhatsAppFlowsModule } from '../whatsapp-flows/whatsapp-flows.module';
 import { GatewayModule } from '../inbox/gateway/gateway.module';
+import { HumanHandoffGatewayModule } from '../human-handoff/human-handoff-gateway.module';
 import { AgentModule } from '../agent/agent.module';
 import { WorkflowsModule } from '../workflows/workflows.module';
 
@@ -33,6 +34,7 @@ import { WorkflowsModule } from '../workflows/workflows.module';
     WhatsAppTemplatesModule,
     WhatsAppFlowsModule,
     GatewayModule,
+    HumanHandoffGatewayModule,
     AgentModule,
     forwardRef(() => WorkflowsModule),
     BullModule.registerQueue({ name: 'message-debounce' }),

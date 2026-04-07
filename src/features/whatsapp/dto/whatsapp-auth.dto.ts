@@ -14,9 +14,10 @@ export class ConnectWhatsAppAccountDto {
   @IsString()
   phoneNumberId: string;
 
-  @ApiProperty({ description: 'Access Token from Facebook/Meta' })
+  @ApiPropertyOptional({ description: 'Access Token from Facebook/Meta (deprecated — platform uses permanent token)' })
   @IsString()
-  accessToken: string;
+  @IsOptional()
+  accessToken?: string;
 
   @ApiPropertyOptional({ description: 'Display phone number' })
   @IsString()

@@ -30,26 +30,32 @@ export function makeToolCallerNode(openaiApiKey: string, tools: StructuredTool[]
           }),
         );
 
-        // If any tool returned a FLOW: signal, pass it through directly as the final reply
-        const flowResult = toolResults.find((tr) => String(tr.content).startsWith('FLOW:'));
-        if (flowResult) {
-          logger.log(`FLOW signal detected — short-circuiting to workflow engine`);
-          return { messages: [...toolResults, new AIMessage(String(flowResult.content))] };
+        // If any tool returned a FLOW: or HANDOFF: signal, pass it through directly as the final reply
+        const signalResult = toolResults.find(
+          (tr) => String(tr.content).startsWith('FLOW:') || String(tr.content).startsWith('HANDOFF:'),
+        );
+        if (signalResult) {
+          const signal = String(signalResult.content).startsWith('FLOW:') ? 'FLOW' : 'HANDOFF';
+          logger.log(`${signal} signal detected — short-circuiting`);
+          return { messages: [...toolResults, new AIMessage(String(signalResult.content))] };
         }
 
         return { messages: toolResults };
       }
     }
 
-    logger.log(`Calling LLM for tool selection (intent=${state.intent} businessId=${state.businessId})`);
-    // Ask the LLM what tool to call next.
-    // Prepend a strong directive so the LLM calls a tool immediately instead of narrating.
+    logger.log(`Calling LLM for tool selection (intent=${state.intent} businessId=${state.businessId} retries=${state.toolRetries})`);
+
+    const today = new Date().toISOString().split('T')[0]; // e.g. 2026-04-03
     const toolCallerDirective = `${SYSTEM_PROMPT(state.businessId)}
 
 IMPORTANT — TOOL EXECUTION RULES:
+- Today's date is ${today}. Use this to resolve relative or partial dates (e.g. "26 to 27" means the 26th and 27th of the current month/year).
 - You MUST call a tool now. Do NOT respond with plain text.
+- If the user is reporting a complaint, problem, maintenance issue, or in-stay support request: call the handoff tool immediately with the reason. Do NOT reply with text.
+- If the user explicitly wants a human agent: call the handoff tool immediately.
 - If the conversation contains check-in and check-out dates, call check_availability immediately using those dates. Do not say "let me check" — just call the tool.
-- "27,28" means check-in March 27, check-out March 28. "25 to 28" means check-in 25th, check-out 28th.
+- Pass dates exactly as the user stated them (e.g. "26", "April 27", "tomorrow"). The tool resolves them automatically.
 - If the user confirmed or said "yes" to dates already mentioned, call check_availability with those dates right now.
 - Only ask a question if you are genuinely missing required information (e.g. no dates provided at all).`;
 
@@ -57,7 +63,24 @@ IMPORTANT — TOOL EXECUTION RULES:
       new SystemMessage(toolCallerDirective),
       ...state.messages,
     ]);
-    logger.log(`LLM tool selection → ${response.tool_calls?.length ? response.tool_calls.map(tc => tc.name).join(', ') : 'no tool calls (unexpected)'}`);
+
+    const hasToolCalls = !!(response.tool_calls?.length);
+    logger.log(`LLM tool selection → ${hasToolCalls ? response.tool_calls.map(tc => tc.name).join(', ') : 'no tool calls'}`);
+
+    // If the LLM narrated instead of calling a tool, retry once with an explicit nudge
+    if (!hasToolCalls && state.toolRetries < 1) {
+      logger.warn('LLM did not call a tool — retrying with explicit nudge');
+      const nudge = `You responded with plain text instead of calling a tool. You MUST call a tool now. Do not explain anything — call the appropriate tool immediately with the dates from the conversation.`;
+      const retryResponse = await llm.invoke([
+        new SystemMessage(toolCallerDirective),
+        ...state.messages,
+        response,
+        new (await import('@langchain/core/messages')).HumanMessage(nudge),
+      ]);
+      logger.log(`Retry tool selection → ${retryResponse.tool_calls?.length ? retryResponse.tool_calls.map(tc => tc.name).join(', ') : 'still no tool calls'}`);
+      return { messages: [retryResponse], toolRetries: state.toolRetries + 1 };
+    }
+
     return { messages: [response] };
   };
 }

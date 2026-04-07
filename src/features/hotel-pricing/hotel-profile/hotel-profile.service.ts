@@ -37,7 +37,7 @@ export class HotelProfileService {
   async update(organizationId: string, hotelId: string, dto: UpdateHotelProfileDto): Promise<HotelProfileDocument> {
     await this.findById(organizationId, hotelId); // ownership check
     const updated = await this.hotelProfileModel
-      .findByIdAndUpdate(hotelId, { $set: dto }, { new: true })
+      .findByIdAndUpdate(hotelId, { $set: dto }, { returnDocument: 'after' })
       .lean()
       .exec();
     return updated as HotelProfileDocument;
@@ -46,7 +46,7 @@ export class HotelProfileService {
   async addCompetitorTokens(organizationId: string, hotelId: string, tokens: string[]): Promise<HotelProfileDocument> {
     await this.findById(organizationId, hotelId);
     const updated = await this.hotelProfileModel
-      .findByIdAndUpdate(hotelId, { $addToSet: { competitorHotelTokens: { $each: tokens } } }, { new: true })
+      .findByIdAndUpdate(hotelId, { $addToSet: { competitorHotelTokens: { $each: tokens } } }, { returnDocument: 'after' })
       .lean()
       .exec();
     return updated as HotelProfileDocument;

@@ -259,8 +259,8 @@ export class WhatsAppMessageDto {
   timestamp: number;
 
   @ApiProperty()
-  @IsEnum(WhatsAppMessageType)
-  type: WhatsAppMessageType;
+  @IsString()
+  type: string; // kept as string — Meta can send 'unsupported', 'system', future types
 
   @ApiPropertyOptional({ type: MessageContextDto })
   @ValidateNested()
@@ -330,8 +330,8 @@ export class StatusDto {
   id: string;
 
   @ApiProperty()
-  @IsEnum(MessageStatus)
-  status: MessageStatus;
+  @IsString()
+  status: string; // kept as string — Meta can send 'deleted' and future statuses
 
   @ApiProperty()
   @Type(() => Number)
