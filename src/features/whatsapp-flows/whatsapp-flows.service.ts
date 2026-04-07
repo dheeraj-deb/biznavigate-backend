@@ -71,14 +71,14 @@ export class WhatsAppFlowsService {
      * Step 1: Create the flow shell on Meta, then upload the Flow JSON asset.
      * After this the flow is still in DRAFT on Meta — call publish() to go live.
      */
-    async submit(businessId: string, id: string) {
+    async submit(businessId: string, id: string, force = false) {
         const flow = await this.findOneOrFail(businessId, id);
 
         if (!flow.flowJson) {
             throw new BadRequestException('Flow JSON is required before submitting to Meta');
         }
 
-        if (flow.status === FlowStatus.PUBLISHED) {
+        if (flow.status === FlowStatus.PUBLISHED && !force) {
             throw new BadRequestException('Flow is already published');
         }
 
@@ -86,6 +86,13 @@ export class WhatsAppFlowsService {
         const wabaId = account.instagram_business_account_id;
 
         let metaFlowId = flow.metaFlowId;
+
+        // Force: clear stale Meta flow ID and create a fresh one
+        if (force && metaFlowId) {
+            this.logger.warn(`Force re-submit: clearing stale metaFlowId ${metaFlowId}`);
+            metaFlowId = null;
+            await this.flowModel.findByIdAndUpdate(id, { metaFlowId: null, status: FlowStatus.DRAFT });
+        }
 
         // Create on Meta if not yet created
         if (!metaFlowId) {
@@ -125,6 +132,9 @@ export class WhatsAppFlowsService {
 
         // Upload the Flow JSON
         await this.metaApi.uploadFlowAsset(metaFlowId, flow.flowJson, endpointUri);
+
+        // Ensure the app is subscribed to the WABA (required for flow publishing)
+        await this.metaApi.subscribeToWebhooks(account.instagram_business_account_id);
 
         await this.flowModel.findByIdAndUpdate(id, { status: FlowStatus.DRAFT, metaFlowId });
 
