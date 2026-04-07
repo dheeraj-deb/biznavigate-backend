@@ -21,6 +21,10 @@ export class Conversation {
     @Prop() workflowId: string;
     @Prop() agent_id: string;
     @Prop() failed_reason: string;
+    @Prop() is_ai_handled: boolean;
+    @Prop() human_takeover_at: Date;
+    @Prop() human_takeover_reason: string;
+    @Prop() is_resolved: boolean;
 }
 
 export const ConversationSchema = SchemaFactory.createForClass(Conversation);

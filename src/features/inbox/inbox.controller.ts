@@ -61,4 +61,14 @@ export class InboxController {
     ) {
         return this.inboxService.updateConversation(req.user.business_id, id, dto);
     }
+
+    @Post('conversations/:id/resolve')
+    resolveConversation(@Req() req: any, @Param('id') id: string) {
+        return this.inboxService.resolveConversation(req.user.business_id, id);
+    }
+
+    @Post('conversations/:id/takeover')
+    takeoverConversation(@Req() req: any, @Param('id') id: string) {
+        return this.inboxService.takeoverConversation(req.user.business_id, id, req.user.user_id);
+    }
 }

@@ -14,6 +14,7 @@ import * as crypto from 'crypto';
 import { WhatsAppCatalogOrderService } from './services/whatsapp-catalog-order.service';
 import { ConversationService } from '../conversation/conversation.service';
 import { InboxGateway } from '../inbox/gateway/inbox.gateway';
+import { HumanHandoffGateway } from '../human-handoff/human-handoff.gateway';
 import { WhatsAppWebhookDto } from './dto/webhook-event.dto';
 import { WebhookValidatorService } from './infrastructure/webhook-validator.service';
 import { WhatsAppTemplatesService } from '../whatsapp-templates/whatsapp-templates.service';
@@ -36,6 +37,7 @@ export class WhatsAppService {
     private readonly catalogOrderService: WhatsAppCatalogOrderService,
     private readonly conversationService: ConversationService,
     private readonly inboxGateway: InboxGateway,
+    private readonly humanHandoffGateway: HumanHandoffGateway,
     private readonly webhookValidator: WebhookValidatorService,
     private readonly whatsappTemplatesService: WhatsAppTemplatesService,
     private readonly _whatsappFlowsService: WhatsAppFlowsService,
@@ -305,8 +307,9 @@ export class WhatsAppService {
       console.log('conversation==>', conversation);
 
       if (!conversation) {
+        const newConversationId = crypto.randomUUID();
         conversation = await this.conversationService.createConversation({
-          conversation_id: crypto.randomUUID(),
+          conversation_id: newConversationId,
           lead_id: lead.lead_id,
           customer_id: from,
           business_id: account.business_id,
@@ -315,6 +318,18 @@ export class WhatsAppService {
           status: 'active',
           sender_id: phoneNumberId,
           sender_name: contactName,
+        });
+
+        // Create the matching Postgres row so escalation/handoff queries can find it
+        await this.prisma.lead_conversations.create({
+          data: {
+            conversation_id: newConversationId,
+            lead_id: lead.lead_id,
+            business_id: account.business_id,
+            tenant_id: account.businesses.tenant_id,
+            channel: 'whatsapp',
+            customer_identifier: from,
+          },
         });
       }
 
@@ -373,6 +388,24 @@ export class WhatsAppService {
         message_text: messageText,
         timestamp: msgTimestamp,
       });
+
+      // If this conversation is human-handled, also notify the handoff namespace
+      const pgConv = await this.prisma.lead_conversations.findFirst({
+        where: { conversation_id: conversation.conversation_id, is_ai_handled: false, is_resolved: false },
+        select: { conversation_id: true },
+      });
+      if (pgConv) {
+        this.humanHandoffGateway.notifyCustomerMessage(account.business_id, conversation.conversation_id, {
+          _id: leadMessageId,
+          conversation_id: conversation.conversation_id,
+          sender_type: 'lead',
+          sender_name: contactName,
+          message_type: messageType,
+          message_text: messageText,
+          platform_message_id: messageId,
+          timestamp: msgTimestamp,
+        });
+      }
 
       // Mark as read + show typing indicator while AI processes
       await this.circuitBreaker.execute(

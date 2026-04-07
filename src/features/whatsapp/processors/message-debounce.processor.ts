@@ -10,6 +10,7 @@ import { getRedis } from "src/utils/redis";
 import { PrismaService } from "src/prisma/prisma.service";
 import { ConversationService } from "src/features/conversation/conversation.service";
 import { InboxGateway } from "src/features/inbox/gateway/inbox.gateway";
+import { HumanHandoffGateway } from "src/features/human-handoff/human-handoff.gateway";
 
 @Processor('message-debounce')
 export class MessageDebounceProcessor extends WorkerHost {
@@ -24,6 +25,7 @@ export class MessageDebounceProcessor extends WorkerHost {
         private readonly prisma: PrismaService,
         private readonly conversationService: ConversationService,
         private readonly inboxGateway: InboxGateway,
+        private readonly humanHandoffGateway: HumanHandoffGateway,
     ) {
         super();
     }
@@ -66,10 +68,21 @@ export class MessageDebounceProcessor extends WorkerHost {
                 const activeConvId = lastPayload.context?.conversation_id ?? conversationId;
                 const escalatedAt = new Date();
 
-                // Mark conversation as human-handled in Postgres
-                await this.prisma.lead_conversations.updateMany({
+                // Mark conversation as human-handled in Postgres (upsert so legacy convs without a row are covered)
+                await this.prisma.lead_conversations.upsert({
                     where: { conversation_id: activeConvId },
-                    data: {
+                    update: {
+                        is_ai_handled: false,
+                        human_takeover_at: escalatedAt,
+                        human_takeover_reason: reason,
+                    },
+                    create: {
+                        conversation_id: activeConvId,
+                        lead_id: lastPayload.lead_id,
+                        business_id: lastPayload.business_id,
+                        tenant_id: lastPayload.tenant_id,
+                        channel: 'whatsapp',
+                        customer_identifier: customerPhone,
                         is_ai_handled: false,
                         human_takeover_at: escalatedAt,
                         human_takeover_reason: reason,
@@ -90,14 +103,18 @@ export class MessageDebounceProcessor extends WorkerHost {
                     metadata: { is_escalation: true, reason },
                 });
 
-                // Notify dashboard in real-time
-                this.inboxGateway.notifyEscalation(lastPayload.business_id, activeConvId, {
+                // Notify human handoff queue in real-time
+                const contactName = lastPayload.context?.contact?.name;
+                this.humanHandoffGateway.notifyNewEscalation(lastPayload.business_id, {
+                    conversationId: activeConvId,
                     reason,
                     phone: customerPhone,
                     escalated_at: escalatedAt,
+                    customer_name: contactName,
+                    lead_id: lastPayload.lead_id,
                 });
 
-                // Also push the system message so the chat thread updates immediately
+                // Also push the system message to inbox so the chat thread updates
                 this.inboxGateway.notifyNewMessage(lastPayload.business_id, activeConvId, {
                     _id: (saved._id as any).toString(),
                     conversation_id: activeConvId,

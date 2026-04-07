@@ -20,6 +20,8 @@ export interface SendReplyDto {
 export interface UpdateInboxConversationDto {
     status?: string;
     assigned_to?: string;
+    is_resolved?: boolean;
+    agent_id?: string;
 }
 
 export interface BatchMessagesDto {
@@ -52,8 +54,38 @@ export class InboxService {
             limit,
         );
 
+        // Merge Postgres escalation/resolution fields into each conversation
+        const conversationIds = data.map(c => c.conversation_id);
+        const pgRows = conversationIds.length
+            ? await this.prisma.lead_conversations.findMany({
+                where: { conversation_id: { in: conversationIds } },
+                select: {
+                    conversation_id: true,
+                    is_ai_handled: true,
+                    human_takeover_at: true,
+                    human_takeover_reason: true,
+                    is_resolved: true,
+                    agent_id: true,
+                },
+            })
+            : [];
+
+        const pgMap = new Map(pgRows.map(r => [r.conversation_id, r]));
+
+        const enriched = data.map(conv => {
+            const pg = pgMap.get(conv.conversation_id);
+            return {
+                ...conv.toObject(),
+                is_ai_handled: pg?.is_ai_handled ?? true,
+                human_takeover_at: pg?.human_takeover_at ?? null,
+                human_takeover_reason: pg?.human_takeover_reason ?? null,
+                is_resolved: pg?.is_resolved ?? false,
+                agent_id: pg?.agent_id ?? conv.agent_id ?? null,
+            };
+        });
+
         return {
-            data,
+            data: enriched,
             pagination: { total, page, limit, totalPages: Math.ceil(total / limit) },
         };
     }
@@ -178,7 +210,70 @@ export class InboxService {
             throw new NotFoundException('Conversation not found');
         }
 
+        // Update MongoDB
         const updated = await this.conversationService.updateConversation(conversationId, dto);
+
+        // Sync relevant fields to Postgres
+        const pgUpdate: Record<string, any> = {};
+        if (dto.status) pgUpdate.status = dto.status;
+        if (dto.agent_id !== undefined) pgUpdate.agent_id = dto.agent_id;
+        if (dto.is_resolved !== undefined) {
+            pgUpdate.is_resolved = dto.is_resolved;
+            if (dto.is_resolved) pgUpdate.resolved_at = new Date();
+        }
+
+        if (Object.keys(pgUpdate).length) {
+            await this.prisma.lead_conversations.updateMany({
+                where: { conversation_id: conversationId },
+                data: pgUpdate,
+            });
+        }
+
         return updated;
+    }
+
+    async resolveConversation(businessId: string, conversationId: string) {
+        const conversation = await this.conversationService.findConversationById(conversationId);
+
+        if (!conversation || conversation.business_id !== businessId) {
+            throw new NotFoundException('Conversation not found');
+        }
+
+        const resolvedAt = new Date();
+
+        await Promise.all([
+            this.conversationService.updateConversation(conversationId, { status: 'ended' }),
+            this.prisma.lead_conversations.updateMany({
+                where: { conversation_id: conversationId },
+                data: { is_resolved: true, resolved_at: resolvedAt, status: 'ended' },
+            }),
+        ]);
+
+        this.inboxGateway.notifyConversationResolved(businessId, conversationId, resolvedAt);
+
+        return { success: true, resolved_at: resolvedAt };
+    }
+
+    async takeoverConversation(businessId: string, conversationId: string, agentId: string) {
+        const conversation = await this.conversationService.findConversationById(conversationId);
+
+        if (!conversation || conversation.business_id !== businessId) {
+            throw new NotFoundException('Conversation not found');
+        }
+
+        await Promise.all([
+            this.conversationService.updateConversation(conversationId, { agent_id: agentId }),
+            this.prisma.lead_conversations.updateMany({
+                where: { conversation_id: conversationId },
+                data: { agent_id: agentId, is_ai_handled: false },
+            }),
+        ]);
+
+        this.inboxGateway.notifyConversationUpdated(businessId, conversationId, {
+            message_text: conversation.message_text,
+            timestamp: new Date(),
+        });
+
+        return { success: true, agent_id: agentId, is_ai_handled: false };
     }
 }

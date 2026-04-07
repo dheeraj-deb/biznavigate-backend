@@ -52,6 +52,8 @@ export function makeToolCallerNode(openaiApiKey: string, tools: StructuredTool[]
 IMPORTANT — TOOL EXECUTION RULES:
 - Today's date is ${today}. Use this to resolve relative or partial dates (e.g. "26 to 27" means the 26th and 27th of the current month/year).
 - You MUST call a tool now. Do NOT respond with plain text.
+- If the user is reporting a complaint, problem, maintenance issue, or in-stay support request: call the handoff tool immediately with the reason. Do NOT reply with text.
+- If the user explicitly wants a human agent: call the handoff tool immediately.
 - If the conversation contains check-in and check-out dates, call check_availability immediately using those dates. Do not say "let me check" — just call the tool.
 - Pass dates exactly as the user stated them (e.g. "26", "April 27", "tomorrow"). The tool resolves them automatically.
 - If the user confirmed or said "yes" to dates already mentioned, call check_availability with those dates right now.

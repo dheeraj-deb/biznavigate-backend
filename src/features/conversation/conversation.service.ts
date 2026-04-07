@@ -152,6 +152,12 @@ export class ConversationService {
       .exec();
   }
 
+  async findConversationsByIds(conversationIds: string[]): Promise<ConversationDocument[]> {
+    return this.conversationModel
+      .find({ conversation_id: { $in: conversationIds } })
+      .exec();
+  }
+
   async updateConversation(
     conversation_id: string,
     data: Partial<Conversation>,
