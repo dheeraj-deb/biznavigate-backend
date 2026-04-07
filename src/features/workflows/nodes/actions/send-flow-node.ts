@@ -79,7 +79,7 @@ export class SendFlowNode extends ActionNode<SendFlowParams, string> {
         const { phoneNumberId, from, business_id } = context;
         const bodyText = this.interpolateString(this.params.body, context);
 
-        // If the agent pre-computed availability data, navigate directly to that screen
+        // If the agent pre-computed availability data, embed dates into flow_token so INIT pre-fills SELECT_DATES
         const navigateData = context.availability_navigate as { screen: string; data: Record<string, any> } | undefined;
 
         await this.whatsappService.sendFlowMessage(
@@ -89,7 +89,7 @@ export class SendFlowNode extends ActionNode<SendFlowParams, string> {
             this.params.flow_id,
             this.params.header,
             this.params.footer,
-            navigateData?.screen ?? this.params.screen,
+            undefined,
             this.params.flow_token,
             this.id,
             navigateData
