@@ -227,34 +227,17 @@ export class KafkaConsumerService {
    */
   private async storeCatalogOrderActivity(payload: any) {
     try {
-      let tenantId = payload.tenant_id;
-      if (!tenantId) {
-        const lead = await this.prisma.leads.findUnique({
-          where: { lead_id: payload.lead_id },
-          select: { tenant_id: true },
-        });
-        tenantId = lead?.tenant_id;
-      }
-
-      if (!tenantId) {
-        this.logger.warn(`No tenant_id found for lead ${payload.lead_id}, skipping catalog order activity storage`);
-        return;
-      }
-
-      await this.prisma.lead_activities.create({
+      await this.prisma.lead_events.create({
         data: {
           lead_id: payload.lead_id,
           business_id: payload.business_id,
-          tenant_id: tenantId,
-          activity_type: "catalog_order",
-          activity_description: `Added items to cart from catalog`,
-          actor_type: "lead",
-          channel: payload.context?.channel || "whatsapp",
-          metadata: {
+          type: 'catalog_order',
+          actor: 'system',
+          data: {
             execution_id: payload.execution_id,
             cart_info: payload.cart_info,
+            channel: payload.context?.channel || 'whatsapp',
           } as any,
-          activity_timestamp: new Date(),
         },
       });
     } catch (error) {
@@ -267,36 +250,19 @@ export class KafkaConsumerService {
    */
   private async storeInteractiveSelection(payload: any) {
     try {
-      let tenantId = payload.tenant_id;
-      if (!tenantId) {
-        const lead = await this.prisma.leads.findUnique({
-          where: { lead_id: payload.lead_id },
-          select: { tenant_id: true },
-        });
-        tenantId = lead?.tenant_id;
-      }
-
-      if (!tenantId) {
-        this.logger.warn(`No tenant_id found for lead ${payload.lead_id}, skipping interactive selection storage`);
-        return;
-      }
-
-      await this.prisma.lead_activities.create({
+      await this.prisma.lead_events.create({
         data: {
           lead_id: payload.lead_id,
           business_id: payload.business_id,
-          tenant_id: tenantId,
-          activity_type: "interactive_selection",
-          activity_description: `User selected: ${payload.user_input}`,
-          actor_type: "lead",
-          channel: payload.context?.channel || "whatsapp",
-          metadata: {
+          type: 'interactive_selection',
+          actor: 'system',
+          data: {
             processing_id: payload.processing_id,
             selection_id: payload.user_input,
             selection_text: payload.structured_data?.entities?.selection_text?.[0],
             intent: payload.intent,
+            channel: payload.context?.channel || 'whatsapp',
           } as any,
-          activity_timestamp: new Date(),
         },
       });
     } catch (error) {
@@ -309,40 +275,19 @@ export class KafkaConsumerService {
    */
   private async storeAiResult(payload: any) {
     try {
-      // Fetch tenant_id from the lead if not provided
-      let tenantId = payload.tenant_id;
-      if (!tenantId) {
-        const lead = await this.prisma.leads.findUnique({
-          where: { lead_id: payload.lead_id },
-          select: { tenant_id: true },
-        });
-        tenantId = lead?.tenant_id;
-      }
-
-      if (!tenantId) {
-        this.logger.warn(`No tenant_id found for lead ${payload.lead_id}, skipping AI result storage`);
-        return;
-      }
-
-      // Store in database or cache for later retrieval
-      await this.prisma.lead_activities.create({
+      await this.prisma.lead_events.create({
         data: {
           lead_id: payload.lead_id,
           business_id: payload.business_id,
-          tenant_id: tenantId,
-          activity_type: "ai_result_received",
-          activity_description: `AI processing completed: ${payload.intent?.intent}`,
-          actor_type: "system",
-          channel: "ai",
-          metadata: {
+          type: 'ai_result',
+          actor: 'ai',
+          data: {
             processing_id: payload.processing_id,
             intent: payload.intent,
             entities: payload.entities,
             suggested_actions: payload.suggested_actions,
-            suggested_response: payload.suggested_response,
             processing_time_ms: payload.processing_time_ms,
           } as any,
-          activity_timestamp: new Date(),
         },
       });
     } catch (error) {
@@ -362,36 +307,13 @@ export class KafkaConsumerService {
     );
 
     try {
-      // Fetch tenant_id from the lead if not provided
-      let tenantId = payload.tenant_id;
-      if (!tenantId) {
-        const lead = await this.prisma.leads.findUnique({
-          where: { lead_id },
-          select: { tenant_id: true },
-        });
-        tenantId = lead?.tenant_id;
-      }
-
-      if (!tenantId) {
-        this.logger.warn(`No tenant_id found for lead ${lead_id}, skipping AI error log`);
-        return;
-      }
-
-      // Log the error in lead activities
-      await this.prisma.lead_activities.create({
+      await this.prisma.lead_events.create({
         data: {
           lead_id,
           business_id: payload.business_id,
-          tenant_id: tenantId,
-          activity_type: "ai_error",
-          activity_description: `AI processing failed: ${error_message}`,
-          actor_type: "system",
-          channel: "ai",
-          metadata: {
-            error_type,
-            error_message,
-          } as any,
-          activity_timestamp: new Date(),
+          type: 'ai_error',
+          actor: 'system',
+          data: { error_type, error_message } as any,
         },
       });
     } catch (error) {

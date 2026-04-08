@@ -13,6 +13,7 @@ import { WhatsAppTemplate, WhatsAppTemplateDocument } from "../whatsapp-template
 import { AudienceFilterOperator, CampaignStatus } from "./enums/enums";
 import { PrismaService } from "src/prisma/prisma.service";
 import { CampaignSchedulerService } from "./jobs/campaign-scheduler.service";
+import { WhatsAppApiClientService } from "../whatsapp/infrastructure/whatsapp-api-client.service";
 
 type ResolvedRecipient = {
     phone_number: string;
@@ -36,6 +37,7 @@ export class CampaignService {
         @InjectModel(WhatsAppTemplate.name) private readonly templateModel: Model<WhatsAppTemplateDocument>,
         private readonly prisma: PrismaService,
         private readonly campaignScheduler: CampaignSchedulerService,
+        private readonly whatsappApi: WhatsAppApiClientService,
     ) { }
 
     async create(businessId: string, dto: CreateCampaignDto) {
@@ -396,5 +398,61 @@ export class CampaignService {
             select: { phone_number: true },
         });
         return new Set(rows.map((r: { phone_number: string }) => r.phone_number));
+    }
+
+    /**
+     * Quick blast: send a plain text message to a list of leads.
+     * Used by POST /campaigns/bulk.
+     * Replaces {{name}} with the lead's name if available.
+     */
+    async sendBulkQuickMessage(
+        businessId: string,
+        leadIds: string[],
+        message: string,
+    ): Promise<{ sent: number; failed: number; skipped: number }> {
+        if (!leadIds?.length) throw new BadRequestException('lead_ids must not be empty');
+        if (!message?.trim()) throw new BadRequestException('message must not be empty');
+
+        // Get the business WhatsApp phone number ID
+        const account = await this.prisma.social_accounts.findFirst({
+            where: { business_id: businessId, platform: 'whatsapp', is_active: true },
+            select: { page_id: true },
+        });
+        if (!account) throw new NotFoundException('No active WhatsApp account for this business');
+
+        // Fetch leads
+        const leads = await this.prisma.leads.findMany({
+            where: { lead_id: { in: leadIds }, business_id: businessId, deleted_at: null },
+            select: { lead_id: true, name: true, phone: true },
+        });
+
+        const phones = leads.map((l) => l.phone).filter(Boolean) as string[];
+        const optouts = await this.getOptouts(businessId, phones);
+
+        let sent = 0;
+        let failed = 0;
+        let skipped = 0;
+
+        for (const lead of leads) {
+            if (!lead.phone) { skipped++; continue; }
+            if (optouts.has(lead.phone)) { skipped++; continue; }
+
+            const text = message.replace(/\{\{name\}\}/gi, lead.name ?? 'there');
+
+            try {
+                await this.whatsappApi.sendMessage(account.page_id, {
+                    messaging_product: 'whatsapp',
+                    recipient_type: 'individual',
+                    to: lead.phone,
+                    type: 'text' as any,
+                    text: { body: text, preview_url: false },
+                });
+                sent++;
+            } catch {
+                failed++;
+            }
+        }
+
+        return { sent, failed, skipped };
     }
 }

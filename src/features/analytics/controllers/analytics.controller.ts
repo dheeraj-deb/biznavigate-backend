@@ -49,19 +49,14 @@ export class AnalyticsController {
   @Get('dashboard')
   @ApiOperation({
     summary: 'Get dashboard summary',
-    description: 'Returns comprehensive dashboard with sales, inventory, customer metrics, and trends',
-  })
-  @ApiResponse({
-    status: HttpStatus.OK,
-    description: 'Dashboard summary retrieved successfully',
-    type: DashboardSummaryDto,
+    description: 'Returns flat stats: totalRevenue, totalOrders, totalCustomers, conversionRate with MoM change percentages',
   })
   async getDashboardSummary(
     @Query('businessId') businessId: string,
     @Query('tenantId') tenantId: string,
   ) {
     this.logger.log(`Dashboard summary requested for business ${businessId}`);
-    return this.businessKPIsService.getDashboardSummary(businessId, tenantId);
+    return this.businessKPIsService.getMonthlyComparison(businessId, tenantId);
   }
 
   /**
@@ -130,20 +125,31 @@ export class AnalyticsController {
     description: 'Revenue breakdown retrieved successfully',
   })
   async getRevenueByPeriod(
-    @Query() query: AnalyticsQueryDto,
+    @Query('businessId') businessId: string,
+    @Query('tenantId') tenantId: string,
     @Query('period') period: 'hour' | 'day' | 'week' | 'month' = 'day',
+    @Query('startDate') startDate?: string,
+    @Query('endDate') endDate?: string,
   ) {
-    this.logger.log(`Revenue by period requested for business ${query.businessId}`);
+    this.logger.log(`Revenue by period requested for business ${businessId}`);
 
-    const { startDate, endDate } = this.parseDateRange(query);
+    const start = startDate ? new Date(startDate) : new Date(Date.now() - 30 * 24 * 60 * 60 * 1000);
+    const end = endDate ? new Date(endDate) : new Date();
 
-    return this.salesAnalyticsService.getRevenueByPeriod(
-      query.businessId,
-      query.tenantId,
-      startDate,
-      endDate,
+    const raw = await this.salesAnalyticsService.getRevenueByPeriod(
+      businessId,
+      tenantId,
+      start,
+      end,
       period,
     );
+    return raw.map((r) => ({ date: r.period, revenue: r.revenue, orders: r.orders }));
+  }
+
+  @Get('funnel')
+  @ApiOperation({ summary: 'Lead conversion funnel — counts per stage' })
+  getFunnel(@Query('businessId') businessId: string) {
+    return this.businessKPIsService.getLeadFunnel(businessId);
   }
 
   /**

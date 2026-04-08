@@ -96,12 +96,28 @@ export class BookingService {
     });
   }
 
-  async getBookings(businessId: string, status?: string) {
+  async getBookings(businessId: string, status?: string, leadId?: string) {
     return this.prisma.service_bookings.findMany({
-      where: { business_id: businessId, ...(status && { status }) },
+      where: {
+        business_id: businessId,
+        ...(status && { status }),
+        ...(leadId && { lead_id: leadId }),
+      },
       include: { services: { select: { name: true, type: true, base_price: true } } },
       orderBy: { created_at: 'desc' },
     });
+  }
+
+  async getBookingById(bookingId: string, businessId: string) {
+    const booking = await this.prisma.service_bookings.findFirst({
+      where: { booking_id: bookingId, business_id: businessId },
+      include: {
+        services: { select: { name: true, type: true, base_price: true } },
+        booking_guests: true,
+      },
+    });
+    if (!booking) throw new NotFoundException('Booking not found');
+    return booking;
   }
 
   async cancelBooking(bookingId: string, businessId: string) {

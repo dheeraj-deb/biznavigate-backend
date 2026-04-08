@@ -68,25 +68,10 @@ export class MessageDebounceProcessor extends WorkerHost {
                 const activeConvId = lastPayload.context?.conversation_id ?? conversationId;
                 const escalatedAt = new Date();
 
-                // Mark conversation as human-handled in Postgres (upsert so legacy convs without a row are covered)
-                await this.prisma.lead_conversations.upsert({
-                    where: { conversation_id: activeConvId },
-                    update: {
-                        is_ai_handled: false,
-                        human_takeover_at: escalatedAt,
-                        human_takeover_reason: reason,
-                    },
-                    create: {
-                        conversation_id: activeConvId,
-                        lead_id: lastPayload.lead_id,
-                        business_id: lastPayload.business_id,
-                        tenant_id: lastPayload.tenant_id,
-                        channel: 'whatsapp',
-                        customer_identifier: customerPhone,
-                        is_ai_handled: false,
-                        human_takeover_at: escalatedAt,
-                        human_takeover_reason: reason,
-                    },
+                // Mark conversation as human-handled in MongoDB
+                await this.conversationService.updateConversation(activeConvId, {
+                    is_ai: false,
+                    status: 'handed_off',
                 });
 
                 // Save system message to MongoDB so it appears in the timeline

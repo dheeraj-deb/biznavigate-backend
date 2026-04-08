@@ -369,6 +369,30 @@ export class HospitalityFlowService {
       },
     });
 
+    // Update lead status + write lead_event
+    if (leadId && businessId) {
+      await this.prisma.$transaction([
+        this.prisma.leads.update({
+          where: { lead_id: leadId },
+          data: { status: 'booked', updated_at: new Date() },
+        }),
+        this.prisma.lead_events.create({
+          data: {
+            lead_id: leadId,
+            business_id: businessId,
+            type: 'booked',
+            actor: 'ai',
+            data: {
+              booking_id: booking.booking_id,
+              booking_reference: (booking as any).booking_reference,
+              check_in: check_in,
+              check_out: check_out,
+            } as any,
+          },
+        }),
+      ]);
+    }
+
     this.logger.log(`Booking created: ${booking.booking_id}`);
 
     return {

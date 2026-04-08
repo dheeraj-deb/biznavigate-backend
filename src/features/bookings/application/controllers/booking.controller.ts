@@ -21,10 +21,21 @@ export class BookingController {
   }
 
   @Get()
-  @ApiOperation({ summary: 'List bookings for the business' })
+  @ApiOperation({ summary: 'List bookings. Filter by status or leadId.' })
   @ApiQuery({ name: 'status', required: false, description: 'pending | confirmed | cancelled | completed' })
-  getBookings(@Request() req, @Query('status') status?: string) {
-    return this.bookingService.getBookings(req.user.business_id, status);
+  @ApiQuery({ name: 'leadId', required: false, description: 'Filter by lead UUID' })
+  getBookings(
+    @Request() req,
+    @Query('status') status?: string,
+    @Query('leadId') leadId?: string,
+  ) {
+    return this.bookingService.getBookings(req.user.business_id, status, leadId);
+  }
+
+  @Get(':bookingId')
+  @ApiOperation({ summary: 'Get a single booking with guests' })
+  getBooking(@Request() req, @Param('bookingId') bookingId: string) {
+    return this.bookingService.getBookingById(bookingId, req.user.business_id);
   }
 
   @Patch(':bookingId/cancel')

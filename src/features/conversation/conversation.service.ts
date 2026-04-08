@@ -3,14 +3,12 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { Conversation, ConversationDocument } from './schemas/conversations.schema';
 import { Messages, MessagesDocument } from './schemas/messages.schema';
-import { ConversationContext, ConversationContextDocument } from './schemas/conversation_context.schema';
 
 @Injectable()
 export class ConversationService {
   constructor(
     @InjectModel(Conversation.name) private readonly conversationModel: Model<ConversationDocument>,
     @InjectModel(Messages.name) private readonly messagesModel: Model<MessagesDocument>,
-    @InjectModel(ConversationContext.name) private readonly contextModel: Model<ConversationContextDocument>,
   ) {}
 
   // ─── Conversation ─────────────────────────────────────────────────────────
@@ -38,6 +36,16 @@ export class ConversationService {
     return this.conversationModel
       .find({ business_id, tenant_id, ...filter })
       .sort({ updated_at: -1 })
+      .exec();
+  }
+
+  async findConversationsByBusinessAndStatus(
+    business_id: string,
+    status: string,
+  ): Promise<ConversationDocument[]> {
+    return this.conversationModel
+      .find({ business_id, status })
+      .sort({ updated_at: 1 })
       .exec();
   }
 
@@ -223,26 +231,4 @@ export class ConversationService {
     return { first, last };
   }
 
-  // ─── Conversation Context ──────────────────────────────────────────────────
-
-  async getContext(conversation_id: string): Promise<ConversationContextDocument | null> {
-    return this.contextModel.findOne({ conversation_id }).exec();
-  }
-
-  async upsertContext(
-    conversation_id: string,
-    memory: Record<string, any>,
-  ): Promise<ConversationContextDocument> {
-    return this.contextModel
-      .findOneAndUpdate(
-        { conversation_id },
-        { $set: { memory } },
-        { returnDocument: 'after', upsert: true },
-      )
-      .exec();
-  }
-
-  async deleteContext(conversation_id: string): Promise<void> {
-    await this.contextModel.deleteOne({ conversation_id }).exec();
-  }
 }
