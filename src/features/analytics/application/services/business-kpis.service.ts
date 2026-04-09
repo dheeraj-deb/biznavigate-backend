@@ -62,7 +62,7 @@ export class BusinessKPIsService {
           AND status != 'cancelled'
       `,
 
-      // Inventory statistics for turnover
+      // Inventory statistics — use order_items to compute sold value (no inventory_levels table)
       this.prisma.$queryRaw<
         Array<{
           avg_inventory_value: number;
@@ -70,20 +70,14 @@ export class BusinessKPIsService {
         }>
       >`
         SELECT
-          AVG(il.available_quantity * pv.price)::DECIMAL as avg_inventory_value,
-          COALESCE(SUM(
-            CASE WHEN im.movement_type IN ('deduct', 'sale')
-            THEN ABS(im.quantity_change) * pv.price
-            ELSE 0 END
-          ), 0)::DECIMAL as total_sold_value
-        FROM inventory_levels il
-        JOIN product_variants pv ON il.variant_id = pv.variant_id
-        LEFT JOIN inventory_movements im ON il.variant_id = im.variant_id
-          AND im.business_id = ${businessId}::uuid
-          AND im.movement_date >= ${startDate}::timestamp
-          AND im.movement_date <= ${endDate}::timestamp
-        WHERE il.business_id = ${businessId}::uuid
-          AND il.tenant_id = ${tenantId}::uuid
+          0::DECIMAL as avg_inventory_value,
+          COALESCE(SUM(oi.price * oi.quantity), 0)::DECIMAL as total_sold_value
+        FROM order_items oi
+        JOIN orders o ON oi.order_id = o.order_id
+        WHERE o.business_id = ${businessId}::uuid
+          AND o.created_at >= ${startDate}::timestamp
+          AND o.created_at <= ${endDate}::timestamp
+          AND o.status != 'cancelled'
       `,
 
       // Returned/cancelled orders
