@@ -19,7 +19,7 @@ export class ConversationService {
   }
 
   async findActiveConversation(lead_id: string, channel: string, business_id?: string): Promise<ConversationDocument | null> {
-    const query: any = { lead_id, channel, status: { $in: ['active', 'waiting'] } };
+    const query: any = { lead_id, channel, status: { $in: ['open', 'handed_off'] } };
     if (business_id) query.business_id = business_id;
     return this.conversationModel.findOne(query).sort({ updated_at: -1 }).exec();
   }
