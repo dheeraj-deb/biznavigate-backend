@@ -3,7 +3,8 @@ import * as https from 'node:https';
 import * as http from 'node:http';
 import * as sharp from 'sharp';
 import { PrismaService } from '../../prisma/prisma.service';
-import { InventoryService } from '../inventory/inventory.service';
+import { InventoryService } from '../inventory/application/services/inventory.service';
+import { BookingService } from '../bookings/application/services/booking.service';
 
 @Injectable()
 export class HospitalityFlowService {
@@ -12,6 +13,7 @@ export class HospitalityFlowService {
   constructor(
     private readonly prisma: PrismaService,
     private readonly inventoryService: InventoryService,
+    private readonly bookingService: BookingService,
   ) { }
 
   async handleInit(data: any, businessId?: string, flowToken?: string) {
@@ -344,7 +346,7 @@ export class HospitalityFlowService {
     const customerPhone = _flowContext?.customerPhone || phone;
     const leadId = _flowContext?.leadId;
 
-    const booking = await this.inventoryService.createBooking(businessId ?? '', {
+    const booking = await this.bookingService.createBooking(businessId ?? '', {
       hold_id,
       service_id,
       customer_name: guest_name,
@@ -366,6 +368,30 @@ export class HospitalityFlowService {
         pin_code: pin_code ?? null,
       },
     });
+
+    // Update lead status + write lead_event
+    if (leadId && businessId) {
+      await this.prisma.$transaction([
+        this.prisma.leads.update({
+          where: { lead_id: leadId },
+          data: { status: 'booked', updated_at: new Date() },
+        }),
+        this.prisma.lead_events.create({
+          data: {
+            lead_id: leadId,
+            business_id: businessId,
+            type: 'booked',
+            actor: 'ai',
+            data: {
+              booking_id: booking.booking_id,
+              booking_reference: (booking as any).booking_reference,
+              check_in: check_in,
+              check_out: check_out,
+            } as any,
+          },
+        }),
+      ]);
+    }
 
     this.logger.log(`Booking created: ${booking.booking_id}`);
 

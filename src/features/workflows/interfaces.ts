@@ -197,10 +197,8 @@ export interface BusinessContext {
 
 export interface LeadContext {
     id: string;
-    first_name: string | null;
-    last_name: string | null;
+    name: string | null;
     status: LeadStatus;
-    score: number;
     phone?: string | null;
     email?: string | null;
 }
@@ -218,10 +216,8 @@ export interface MessageProcessingContext {
 /** @deprecated Use LeadContext instead */
 export interface LeadInfo {
     lead_id: string;
-    first_name: string | null;
-    last_name: string | null;
+    name: string | null;
     status: LeadStatus;
-    lead_score: number;
 }
 
 

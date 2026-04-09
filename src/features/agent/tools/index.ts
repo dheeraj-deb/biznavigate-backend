@@ -4,11 +4,13 @@ import { getBookingTool } from './get-booking.tool';
 import { getPaymentTool } from './get-payment.tool';
 import { faqTool } from './faq.tool';
 import { handoffTool } from './handoff.tool';
-import { InventoryService } from '../../inventory/inventory.service';
+import { InventoryService } from '../../inventory/application/services/inventory.service';
+import { BookingService } from '../../bookings/application/services/booking.service';
 import { PrismaService } from '../../../prisma/prisma.service';
 
 export interface ToolDeps {
   inventoryService: InventoryService;
+  bookingService: BookingService;
   prisma: PrismaService;
 }
 
@@ -16,7 +18,7 @@ export function buildTools(deps: ToolDeps) {
   return [
     makeCheckAvailabilityTool(deps.inventoryService),           // booking
     getBookingTool,                                              // status    (stub)
-    makeCancelBookingTool(deps.inventoryService, deps.prisma),  // cancellation
+    makeCancelBookingTool(deps.bookingService, deps.prisma),    // cancellation
     getPaymentTool,                                             // payment   (stub)
     faqTool,                                                    // faq       (stub)
     handoffTool,                                                // handoff

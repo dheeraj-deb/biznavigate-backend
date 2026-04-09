@@ -40,11 +40,8 @@ export class ConversationStateService {
     const lead = await this.prisma.leads.findUnique({
       where: { lead_id: leadId },
       select: {
-        first_name: true,
-        last_name: true,
-        city: true,
-        state: true,
-        onboarding_completed: true,
+        name: true,
+        context: true,
       },
     });
 
@@ -52,22 +49,20 @@ export class ConversationStateService {
       return this.createState(leadId, OnboardingStep.WELCOME);
     }
 
-    // If lead has name and location, onboarding is complete
-    if (lead.onboarding_completed || (lead.first_name && lead.city)) {
+    const ctx = lead.context as any;
+
+    // If lead has name, onboarding is complete
+    if (lead.name) {
       return this.createState(leadId, OnboardingStep.COMPLETED, {
-        name: `${lead.first_name} ${lead.last_name || ''}`.trim(),
-        city: lead.city || undefined,
-        area: lead.state || undefined,
+        name: lead.name,
+        city: ctx?.city || undefined,
+        area: ctx?.state || undefined,
       });
     }
 
     // Determine current step based on what data exists
-    if (!lead.first_name) {
+    if (!lead.name) {
       return this.createState(leadId, OnboardingStep.AWAITING_NAME);
-    } else if (!lead.city) {
-      return this.createState(leadId, OnboardingStep.AWAITING_LOCATION, {
-        name: lead.first_name,
-      });
     }
 
     return this.createState(leadId, OnboardingStep.COMPLETED);
@@ -110,30 +105,25 @@ export class ConversationStateService {
       const updateData: any = {};
 
       if (data.name) {
-        const nameParts = data.name.trim().split(' ');
-        updateData.first_name = nameParts[0];
-        if (nameParts.length > 1) {
-          updateData.last_name = nameParts.slice(1).join(' ');
-        }
+        updateData.name = data.name.trim();
       }
 
-      if (data.city) {
-        updateData.city = data.city;
-      }
-
-      if (data.area) {
-        updateData.state = data.area;
-      }
-
+      // Store city/area into context JSONB
+      const ctxUpdate: any = {};
+      if (data.city) ctxUpdate.city = data.city;
+      if (data.area) ctxUpdate.state = data.area;
       if (data.location) {
-        // Try to parse location into city and area
         const locationParts = data.location.split(',').map((p) => p.trim());
-        if (locationParts.length >= 1) {
-          updateData.city = locationParts[0];
-        }
-        if (locationParts.length >= 2) {
-          updateData.state = locationParts[1];
-        }
+        if (locationParts.length >= 1) ctxUpdate.city = locationParts[0];
+        if (locationParts.length >= 2) ctxUpdate.state = locationParts[1];
+      }
+
+      if (Object.keys(ctxUpdate).length > 0) {
+        const existing = await this.prisma.leads.findUnique({
+          where: { lead_id: leadId },
+          select: { context: true },
+        });
+        updateData.context = { ...(existing?.context as any ?? {}), ...ctxUpdate };
       }
 
       await this.prisma.leads.update({
@@ -153,10 +143,7 @@ export class ConversationStateService {
    */
   async completeOnboarding(leadId: string): Promise<void> {
     try {
-      await this.prisma.leads.update({
-        where: { lead_id: leadId },
-        data: { onboarding_completed: true },
-      });
+      // onboarding_completed field removed — name presence signals completion
 
       await this.updateState(leadId, OnboardingStep.COMPLETED);
 

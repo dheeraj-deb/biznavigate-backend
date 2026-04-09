@@ -22,42 +22,24 @@ export class HumanHandoffService {
      */
     async getQueue(businessId: string) {
         this.logger.log(`getQueue for business ${businessId}`);
-        const pgRows = await this.prisma.lead_conversations.findMany({
-            where: { business_id: businessId, is_ai_handled: false, is_resolved: false },
-            orderBy: { human_takeover_at: 'asc' },
-            select: {
-                conversation_id: true,
-                lead_id: true,
-                agent_id: true,
-                is_ai_handled: true,
-                human_takeover_at: true,
-                human_takeover_reason: true,
-                is_resolved: true,
-                status: true,
-                channel: true,
-                customer_identifier: true,
-            },
-        });
+        // MongoDB is source of truth — handed_off conversations are those with is_ai: false
+        const mongoConvs = await this.conversationService.findConversationsByBusinessAndStatus(
+            businessId, 'handed_off',
+        );
 
-        this.logger.log(`getQueue found ${pgRows.length} Postgres rows`);
-        if (!pgRows.length) return { data: [], total: 0 };
+        this.logger.log(`getQueue found ${mongoConvs.length} conversations`);
 
-        const conversationIds = pgRows.map(r => r.conversation_id);
-
-        // Fetch MongoDB conversations for customer name / last message preview
-        const mongoConvs = await this.conversationService.findConversationsByIds(conversationIds);
-        const mongoMap = new Map(mongoConvs.map(c => [c.conversation_id, c]));
-
-        const data = pgRows.map(row => {
-            const mongo = mongoMap.get(row.conversation_id);
-            return {
-                ...row,
-                customer_id: mongo?.customer_id ?? row.customer_identifier ?? null,
-                customer_name: mongo?.sender_name ?? null,
-                message_text: mongo?.message_text ?? null,
-                channel: mongo?.channel ?? row.channel,
-            };
-        });
+        const data = mongoConvs.map(conv => ({
+            conversation_id: conv.conversation_id,
+            lead_id: conv.lead_id,
+            agent_id: conv.agent_id ?? null,
+            is_ai_handled: conv.is_ai ?? conv.is_ai_handled ?? false,
+            is_resolved: conv.status === 'resolved',
+            status: conv.status,
+            channel: conv.channel,
+            customer_name: (conv as any).sender_name ?? null,
+            message_text: (conv as any).message_text ?? null,
+        }));
 
         return { data, total: data.length };
     }
@@ -66,27 +48,21 @@ export class HumanHandoffService {
      * Get a single escalated conversation with recent messages.
      */
     async getConversation(businessId: string, conversationId: string) {
-        const pgRow = await this.prisma.lead_conversations.findFirst({
-            where: { conversation_id: conversationId, business_id: businessId },
-            select: {
-                conversation_id: true,
-                lead_id: true,
-                agent_id: true,
-                is_ai_handled: true,
-                human_takeover_at: true,
-                human_takeover_reason: true,
-                is_resolved: true,
-                status: true,
-            },
-        });
-
-        if (!pgRow) throw new NotFoundException('Conversation not found');
-
         const conversation = await this.conversationService.findConversationById(conversationId);
+
+        if (!conversation || conversation.business_id !== businessId) {
+            throw new NotFoundException('Conversation not found');
+        }
+
         const { data: messages } = await this.conversationService.findMessagesByConversation(conversationId, 1, 50, businessId);
 
         return {
-            ...pgRow,
+            conversation_id: conversation.conversation_id,
+            lead_id: conversation.lead_id,
+            agent_id: conversation.agent_id ?? null,
+            is_ai_handled: conversation.is_ai ?? conversation.is_ai_handled ?? true,
+            is_resolved: conversation.status === 'resolved',
+            status: conversation.status,
             conversation,
             messages,
         };
@@ -96,24 +72,19 @@ export class HumanHandoffService {
      * Agent takes over the conversation.
      */
     async takeover(businessId: string, conversationId: string, agentId: string) {
-        const pgRow = await this.prisma.lead_conversations.findFirst({
-            where: { conversation_id: conversationId, business_id: businessId },
-        });
-
-        if (!pgRow) throw new NotFoundException('Conversation not found');
+        const conversation = await this.conversationService.findConversationById(conversationId);
+        if (!conversation || conversation.business_id !== businessId) {
+            throw new NotFoundException('Conversation not found');
+        }
 
         const assignedAt = new Date();
-
-        await Promise.all([
-            this.prisma.lead_conversations.updateMany({
-                where: { conversation_id: conversationId },
-                data: { agent_id: agentId, is_ai_handled: false },
-            }),
-            this.conversationService.updateConversation(conversationId, { agent_id: agentId }),
-        ]);
+        await this.conversationService.updateConversation(conversationId, {
+            agent_id: agentId,
+            is_ai: false,
+            status: 'handed_off',
+        });
 
         this.gateway.notifyAgentAssigned(businessId, conversationId, agentId, assignedAt);
-
         return { success: true, agent_id: agentId, assigned_at: assignedAt };
     }
 
@@ -121,21 +92,15 @@ export class HumanHandoffService {
      * Agent resolves/closes the conversation.
      */
     async resolve(businessId: string, conversationId: string) {
-        const pgRow = await this.prisma.lead_conversations.findFirst({
-            where: { conversation_id: conversationId, business_id: businessId },
-        });
+        const conversation = await this.conversationService.findConversationById(conversationId);
 
-        if (!pgRow) throw new NotFoundException('Conversation not found');
+        if (!conversation || conversation.business_id !== businessId) {
+            throw new NotFoundException('Conversation not found');
+        }
 
         const resolvedAt = new Date();
 
-        await Promise.all([
-            this.prisma.lead_conversations.updateMany({
-                where: { conversation_id: conversationId },
-                data: { is_resolved: true, resolved_at: resolvedAt, status: 'ended' },
-            }),
-            this.conversationService.updateConversation(conversationId, { status: 'ended' }),
-        ]);
+        await this.conversationService.updateConversation(conversationId, { status: 'ended' });
 
         this.gateway.notifyResolved(businessId, conversationId, resolvedAt);
 

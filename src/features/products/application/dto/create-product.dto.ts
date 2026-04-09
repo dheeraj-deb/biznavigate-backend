@@ -14,14 +14,11 @@ import {
 } from 'class-validator';
 import { Type } from 'class-transformer';
 
-/**
- * DTO for creating a product variant
- */
 export class CreateProductVariantDto {
   @IsString()
   @IsNotEmpty()
   @MaxLength(100)
-  name: string; // e.g., "50ml", "100ml", "Red"
+  name: string;
 
   @IsOptional()
   @IsString()
@@ -42,21 +39,18 @@ export class CreateProductVariantDto {
 
   @IsOptional()
   @IsObject()
-  variant_options?: Record<string, any>; // { "size": "50ml", "color": "red" }
+  variant_options?: Record<string, any>;
 }
 
-/**
- * DTO for creating a new product
- * Validates all required and optional fields
- */
 export class CreateProductDto {
+  // business_id & tenant_id injected from JWT in controller — optional in body
+  @IsOptional()
   @IsUUID()
-  @IsNotEmpty()
-  business_id: string;
+  business_id?: string;
 
+  @IsOptional()
   @IsUUID()
-  @IsNotEmpty()
-  tenant_id: string;
+  tenant_id?: string;
 
   @IsString()
   @IsNotEmpty()
@@ -67,19 +61,44 @@ export class CreateProductDto {
   @IsString()
   description?: string;
 
+  @IsNumber()
+  @Min(0)
+  price: number;
+
+  @IsOptional()
+  @IsString()
+  @MaxLength(100)
+  sku?: string;
+
+  @IsOptional()
+  @IsString()
+  @MaxLength(100)
+  brand?: string;
+
   @IsOptional()
   @IsString()
   @MaxLength(100)
   category?: string;
 
-  @IsString()
-  @IsNotEmpty()
-  @IsIn(['physical', 'course', 'event', 'service'])
-  product_type: string;
+  @IsOptional()
+  @IsIn(['new', 'like_new', 'good', 'refurbished'])
+  condition?: string;
 
+  @IsOptional()
   @IsNumber()
   @Min(0)
-  price: number;
+  @Type(() => Number)
+  weight?: number;
+
+  @IsOptional()
+  @IsString()
+  @MaxLength(100)
+  dimensions?: string;
+
+  @IsOptional()
+  @IsString()
+  @IsIn(['physical', 'course', 'event', 'service'])
+  product_type?: string;
 
   @IsOptional()
   @IsNumber()
@@ -87,9 +106,9 @@ export class CreateProductDto {
   stock_quantity?: number;
 
   @IsOptional()
-  @IsString()
-  @MaxLength(100)
-  sku?: string;
+  @IsNumber()
+  @Min(0)
+  low_stock_threshold?: number;
 
   @IsOptional()
   @IsNumber()
@@ -99,11 +118,11 @@ export class CreateProductDto {
   @IsOptional()
   @IsString()
   @MaxLength(10)
-  currency?: string = 'INR';
+  currency?: string;
 
   @IsOptional()
   @IsBoolean()
-  track_inventory?: boolean = true;
+  track_inventory?: boolean;
 
   @IsOptional()
   @IsArray()
@@ -116,11 +135,11 @@ export class CreateProductDto {
 
   @IsOptional()
   @IsBoolean()
-  is_active?: boolean = true;
+  is_active?: boolean;
 
   @IsOptional()
   @IsBoolean()
-  has_variants?: boolean = false;
+  has_variants?: boolean;
 
   @IsOptional()
   @IsArray()

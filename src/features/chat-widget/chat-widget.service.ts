@@ -1,8 +1,7 @@
 import { Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../../prisma/prisma.service';
-import { KafkaProducerService } from '../kafka/kafka-producer.service';
+import { LeadService } from '../lead/application/services/lead.service';
 import { SendWidgetMessageDto, UpdateVisitorInfoDto } from './dto/widget-message.dto';
-import { v4 as uuidv4 } from 'uuid';
 
 @Injectable()
 export class ChatWidgetService {
@@ -10,380 +9,190 @@ export class ChatWidgetService {
 
   constructor(
     private readonly prisma: PrismaService,
-    private readonly kafkaProducer: KafkaProducerService,
+    private readonly leadService: LeadService,
   ) {}
 
   /**
-   * Initialize widget session and get conversation history
+   * Initialize widget session — returns existing conversation history if any.
    */
-  async initWidget(businessId: string, visitorId: string, pageUrl?: string): Promise<any> {
-    try {
-      // Verify business exists
-      const business = await this.prisma.businesses.findUnique({
-        where: { business_id: businessId },
-      });
+  async initWidget(businessId: string, visitorId: string, utmSource?: string): Promise<any> {
+    const business = await this.prisma.businesses.findUnique({
+      where: { business_id: businessId },
+    });
+    if (!business) throw new NotFoundException('Business not found');
 
-      if (!business) {
-        throw new NotFoundException('Business not found');
-      }
+    // Find existing lead and conversation
+    const lead = await this.prisma.leads.findFirst({
+      where: { platform_id: visitorId, business_id: businessId, deleted_at: null },
+    });
 
-      // Find existing lead by visitor ID
-      let lead = await this.prisma.leads.findFirst({
-        where: {
-          business_id: businessId,
-          platform_user_id: visitorId,
-          source: 'website_chat',
-        },
-      });
+    let messages: any[] = [];
+    let conversationId: string | null = null;
 
-      // Find active conversation
-      let conversation = null;
-      let messages = [];
-
-      if (lead) {
-        conversation = await this.prisma.lead_conversations.findFirst({
-          where: {
-            lead_id: lead.lead_id,
-            channel: 'website_chat',
-            status: 'active',
-          },
-          include: {
-            lead_messages: {
-              orderBy: { timestamp: 'asc' },
-              take: 50, // Last 50 messages
-            },
-          },
-        });
-
-        if (conversation) {
-          messages = conversation.lead_messages.map(msg => ({
-            id: msg.message_id,
-            text: msg.message_text,
-            sender: msg.sender_type,
-            timestamp: msg.timestamp,
-            senderName: msg.sender_name,
-          }));
-        }
-      }
-
-      return {
-        visitorId,
-        leadId: lead?.lead_id,
-        conversationId: conversation?.conversation_id,
-        messages,
-        config: {
-          welcomeMessage: business.business_name
-            ? `Hi! Welcome to ${business.business_name}. How can we help you today?`
-            : 'Hi! How can we help you today?',
-          botName: business.business_name || 'Support Bot',
-        },
-      };
-    } catch (error) {
-      this.logger.error('Error initializing widget:', error);
-      throw error;
-    }
-  }
-
-  /**
-   * Process incoming widget message
-   */
-  async processMessage(data: SendWidgetMessageDto): Promise<any> {
-    try {
-      const { businessId, message, visitorId, visitorName, visitorEmail, visitorPhone, pageUrl, pageTitle, metadata } = data;
-
-      // Verify business exists
-      const business = await this.prisma.businesses.findUnique({
-        where: { business_id: businessId },
-      });
-
-      if (!business) {
-        throw new NotFoundException('Business not found');
-      }
-
-      // Find or create lead
-      let lead = await this.prisma.leads.findFirst({
-        where: {
-          business_id: businessId,
-          platform_user_id: visitorId,
-          source: 'website_chat',
-        },
-      });
-
-      if (!lead) {
-        // Create new lead
-        const nameParts = visitorName ? visitorName.split(' ') : ['Anonymous'];
-        lead = await this.prisma.leads.create({
-          data: {
-            business_id: businessId,
-            tenant_id: business.tenant_id,
-            source: 'website_chat',
-            platform_user_id: visitorId,
-            first_name: nameParts[0] || 'Anonymous',
-            last_name: nameParts.slice(1).join(' ') || null,
-            email: visitorEmail || null,
-            phone: visitorPhone || null,
-            status: 'new',
-            lead_score: 5,
-            // Store page info in notes or custom field if needed
-          },
-        });
-
-        this.logger.log(`Created new lead from website chat: ${lead.lead_id}`);
-      } else if (visitorEmail || visitorPhone || visitorName) {
-        // Update lead with new information
-        const updateData: any = {};
-        if (visitorEmail && !lead.email) updateData.email = visitorEmail;
-        if (visitorPhone && !lead.phone) updateData.phone = visitorPhone;
-        if (visitorName) {
-          const nameParts = visitorName.split(' ');
-          updateData.first_name = nameParts[0];
-          updateData.last_name = nameParts.slice(1).join(' ') || null;
-        }
-
-        if (Object.keys(updateData).length > 0) {
-          await this.prisma.leads.update({
-            where: { lead_id: lead.lead_id },
-            data: updateData,
-          });
-        }
-      }
-
-      // Find or create conversation
-      let conversation = await this.prisma.lead_conversations.findFirst({
-        where: {
-          lead_id: lead.lead_id,
-          channel: 'website_chat',
-          status: 'active',
-        },
-      });
-
-      if (!conversation) {
-        conversation = await this.prisma.lead_conversations.create({
-          data: {
-            lead_id: lead.lead_id,
-            business_id: businessId,
-            tenant_id: business.tenant_id,
-            channel: 'website_chat',
-            status: 'active',
-            started_at: new Date(),
-          },
-        });
-
-        this.logger.log(`Created new conversation: ${conversation.conversation_id}`);
-      }
-
-      // Store visitor message
-      const visitorMessage = await this.prisma.lead_messages.create({
-        data: {
-          conversation_id: conversation.conversation_id,
-          lead_id: lead.lead_id,
-          business_id: businessId,
-          tenant_id: business.tenant_id,
-          sender_type: 'lead',
-          sender_name: visitorName || 'Visitor',
-          message_text: message,
-          message_type: 'text',
-          delivery_status: 'received',
-          metadata: {
-            pageUrl,
-            pageTitle,
-            ...metadata,
-          },
-        },
-      });
-
-      this.logger.log(`Stored widget message: ${visitorMessage.message_id}`);
-
-      // Send to AI processor via Kafka
-      await this.kafkaProducer.publishLeadMessage({
-        lead_id: lead.lead_id,
-        business_id: businessId,
-        message_id: visitorMessage.message_id,
-        message_text: message,
-        direction: 'inbound',
-        channel: 'website_chat',
-        metadata: {
-          visitorId,
-          visitorName,
-          pageUrl,
-          pageTitle,
-          conversationId: conversation.conversation_id,
-        },
-      });
-
-      this.logger.log(`Sent message to AI processor: ${visitorMessage.message_id}`);
-
-      return {
-        messageId: visitorMessage.message_id,
-        conversationId: conversation.conversation_id,
+    if (lead) {
+      const conv = await this.leadService.upsertConversation({
         leadId: lead.lead_id,
-        timestamp: visitorMessage.timestamp,
-      };
-    } catch (error) {
-      this.logger.error('Error processing widget message:', error);
-      throw error;
-    }
-  }
-
-  /**
-   * Get conversation history
-   */
-  async getConversationHistory(businessId: string, visitorId: string): Promise<any[]> {
-    try {
-      const lead = await this.prisma.leads.findFirst({
-        where: {
-          business_id: businessId,
-          platform_user_id: visitorId,
-          source: 'website_chat',
-        },
-      });
-
-      if (!lead) {
-        return [];
-      }
-
-      const conversation = await this.prisma.lead_conversations.findFirst({
-        where: {
-          lead_id: lead.lead_id,
-          channel: 'website_chat',
-          status: 'active',
-        },
-        include: {
-          lead_messages: {
-            orderBy: { timestamp: 'asc' },
-          },
-        },
-      });
-
-      if (!conversation) {
-        return [];
-      }
-
-      return conversation.lead_messages.map(msg => ({
-        id: msg.message_id,
-        text: msg.message_text,
-        sender: msg.sender_type,
-        timestamp: msg.timestamp,
-        senderName: msg.sender_name,
-      }));
-    } catch (error) {
-      this.logger.error('Error getting conversation history:', error);
-      return [];
-    }
-  }
-
-  /**
-   * Update visitor information
-   */
-  async updateVisitorInfo(data: UpdateVisitorInfoDto): Promise<void> {
-    try {
-      const { businessId, visitorId, name, email, phone } = data;
-
-      const lead = await this.prisma.leads.findFirst({
-        where: {
-          business_id: businessId,
-          platform_user_id: visitorId,
-          source: 'website_chat',
-        },
-      });
-
-      if (!lead) {
-        this.logger.warn(`Lead not found for visitor: ${visitorId}`);
-        return;
-      }
-
-      const updateData: any = {};
-      if (name) {
-        const nameParts = name.split(' ');
-        updateData.first_name = nameParts[0];
-        updateData.last_name = nameParts.slice(1).join(' ') || null;
-      }
-      if (email) updateData.email = email;
-      if (phone) updateData.phone = phone;
-
-      if (Object.keys(updateData).length > 0) {
-        await this.prisma.leads.update({
-          where: { lead_id: lead.lead_id },
-          data: updateData,
-        });
-
-        this.logger.log(`Updated visitor info for lead: ${lead.lead_id}`);
-      }
-    } catch (error) {
-      this.logger.error('Error updating visitor info:', error);
-    }
-  }
-
-  /**
-   * Send bot response (called by AI processor)
-   */
-  async sendBotResponse(conversationId: string, message: string): Promise<any> {
-    try {
-      const conversation = await this.prisma.lead_conversations.findUnique({
-        where: { conversation_id: conversationId },
-        include: {
-          leads: true,
-        },
-      });
-
-      if (!conversation) {
-        throw new NotFoundException('Conversation not found');
-      }
-
-      const botMessage = await this.prisma.lead_messages.create({
-        data: {
-          conversation_id: conversationId,
-          lead_id: conversation.lead_id,
-          business_id: conversation.business_id,
-          tenant_id: conversation.tenant_id,
-          sender_type: 'business',
-          sender_name: 'Support Bot',
-          message_text: message,
-          message_type: 'text',
-          delivery_status: 'sent',
-          is_automated: true,
-        },
-      });
-
-      this.logger.log(`Sent bot response: ${botMessage.message_id}`);
-
-      return {
-        messageId: botMessage.message_id,
-        text: message,
-        timestamp: botMessage.timestamp,
-      };
-    } catch (error) {
-      this.logger.error('Error sending bot response:', error);
-      throw error;
-    }
-  }
-
-  /**
-   * Get widget configuration for business
-   */
-  async getWidgetConfig(businessId: string): Promise<any> {
-    try {
-      const business = await this.prisma.businesses.findUnique({
-        where: { business_id: businessId },
-      });
-
-      if (!business) {
-        throw new NotFoundException('Business not found');
-      }
-
-      const primaryColor = '#0084FF';
-
-      return {
         businessId,
-        primaryColor: primaryColor,
+        channel: 'website',
+        platformId: visitorId,
+      });
+      conversationId = conv.conversation_id;
+      const rawMessages = await this.leadService.getMessages(conv.conversation_id, 50);
+      messages = rawMessages.map((m: any) => ({
+        id: m._id,
+        text: m.body,
+        role: m.role,
+        timestamp: m.created_at,
+      }));
+    }
+
+    return {
+      visitorId,
+      leadId: lead?.lead_id ?? null,
+      conversationId,
+      messages,
+      config: {
         welcomeMessage: `Hi! Welcome to ${business.business_name}. How can we help you today?`,
         botName: business.business_name || 'Support Bot',
-        position: 'bottom-right',
-        showBranding: true,
-      };
-    } catch (error) {
-      this.logger.error('Error getting widget config:', error);
-      throw error;
+      },
+    };
+  }
+
+  /**
+   * Process incoming widget message from visitor.
+   * 1. Upsert lead (PostgreSQL)
+   * 2. Upsert conversation (MongoDB)
+   * 3. Insert message (MongoDB)
+   */
+  async processMessage(data: SendWidgetMessageDto): Promise<any> {
+    const { businessId, message, visitorId, visitorName, visitorEmail, visitorPhone, pageUrl } = data;
+
+    const business = await this.prisma.businesses.findUnique({
+      where: { business_id: businessId },
+    });
+    if (!business) throw new NotFoundException('Business not found');
+
+    // Detect source from UTM or referrer context (passed in dto metadata)
+    const source = (data as any).utmSource ?? 'direct';
+
+    // 1. Upsert lead
+    const lead = await this.leadService.upsertLead({
+      businessId,
+      tenantId: business.tenant_id,
+      channel: 'website',
+      source,
+      platformId: visitorId,
+      name: visitorName,
+      email: visitorEmail,
+      phone: visitorPhone,
+    });
+
+    // 2. Upsert conversation
+    const conversation = await this.leadService.upsertConversation({
+      leadId: lead.lead_id,
+      businessId,
+      channel: 'website',
+      platformId: visitorId,
+    });
+
+    // 3. Insert visitor message
+    const msg = await this.leadService.insertMessage({
+      conversationId: conversation.conversation_id,
+      leadId: lead.lead_id,
+      businessId,
+      role: 'user',
+      body: message,
+      type: 'text',
+      meta: { page_url: pageUrl },
+    });
+
+    this.logger.log(`Widget message stored for lead ${lead.lead_id}`);
+
+    return {
+      messageId: msg?._id ?? null,
+      conversationId: conversation.conversation_id,
+      leadId: lead.lead_id,
+    };
+  }
+
+  /**
+   * Send AI/bot response — called by agent after processing.
+   */
+  async sendBotResponse(conversationId: string, messageBody: string): Promise<any> {
+    // Fetch conversation from MongoDB to get lead_id and business_id
+    const conv = await this.leadService['conversationModel'].findOne({
+      conversation_id: conversationId,
+    });
+    if (!conv) throw new NotFoundException('Conversation not found');
+
+    const msg = await this.leadService.insertMessage({
+      conversationId,
+      leadId: conv.lead_id,
+      businessId: conv.business_id,
+      role: 'ai',
+      body: messageBody,
+      type: 'text',
+      meta: { is_automated: true },
+    });
+
+    return { messageId: msg?._id, text: messageBody };
+  }
+
+  /**
+   * Update visitor contact info (called when they share phone/email in chat).
+   */
+  async updateVisitorInfo(data: UpdateVisitorInfoDto): Promise<void> {
+    const { businessId, visitorId, name, email, phone } = data;
+
+    const lead = await this.prisma.leads.findFirst({
+      where: { platform_id: visitorId, business_id: businessId, deleted_at: null },
+    });
+    if (!lead) return;
+
+    const updateData: any = { updated_at: new Date() };
+    if (name && !lead.name) updateData.name = name;
+    if (email && !lead.email) updateData.email = email;
+    if (phone && !lead.phone) updateData.phone = phone;
+
+    if (Object.keys(updateData).length > 1) {
+      await this.prisma.leads.update({ where: { lead_id: lead.lead_id }, data: updateData });
     }
+  }
+
+  async getConversationHistory(businessId: string, visitorId: string): Promise<any[]> {
+    const lead = await this.prisma.leads.findFirst({
+      where: { platform_id: visitorId, business_id: businessId, deleted_at: null },
+    });
+    if (!lead) return [];
+
+    const conv = await this.leadService['conversationModel'].findOne({
+      lead_id: lead.lead_id,
+      business_id: businessId,
+    });
+    if (!conv) return [];
+
+    const messages = await this.leadService.getMessages(conv.conversation_id, 50);
+    return messages.map((m: any) => ({
+      id: m._id,
+      text: m.body,
+      role: m.role,
+      timestamp: m.created_at,
+    }));
+  }
+
+  async getWidgetConfig(businessId: string): Promise<any> {
+    const business = await this.prisma.businesses.findUnique({
+      where: { business_id: businessId },
+    });
+    if (!business) throw new NotFoundException('Business not found');
+
+    return {
+      businessId,
+      primaryColor: '#0084FF',
+      welcomeMessage: `Hi! Welcome to ${business.business_name}. How can we help you today?`,
+      botName: business.business_name || 'Support Bot',
+      position: 'bottom-right',
+      showBranding: true,
+    };
   }
 }
