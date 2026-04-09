@@ -313,13 +313,11 @@ export class WhatsAppService {
         conversation = await this.conversationService.createConversation({
           conversation_id: newConversationId,
           lead_id: lead.lead_id,
-          customer_id: from,
+          platform_id: from,
           business_id: account.business_id,
-          tenant_id: account.businesses.tenant_id,
           channel: 'whatsapp',
-          status: 'active',
-          sender_id: phoneNumberId,
-          sender_name: contactName,
+          status: 'open',
+          is_ai: true,
         });
 
         // MongoDB conversation is the source of truth — no Postgres mirror needed
