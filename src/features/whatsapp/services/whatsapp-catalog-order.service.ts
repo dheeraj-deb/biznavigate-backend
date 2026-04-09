@@ -68,27 +68,25 @@ export class WhatsAppCatalogOrderService {
       let lead = await this.prisma.leads.findFirst({
         where: {
           business_id: account.business_id,
-          platform_user_id: from,
-          source: 'whatsapp',
+          platform_id: from,
+          channel: 'whatsapp',
         },
       });
 
       if (!lead) {
         const contact = contacts?.find(c => c.wa_id === from);
         const contactName = contact?.profile?.name || from;
-        const nameParts = contactName.split(' ');
 
         lead = await this.prisma.leads.create({
           data: {
             business_id: account.business_id,
             tenant_id: account.businesses.tenant_id,
-            source: 'whatsapp',
-            platform_user_id: from,
-            first_name: nameParts[0] || contactName,
-            last_name: nameParts.slice(1).join(' ') || null,
+            channel: 'whatsapp',
+            source: 'direct',
+            platform_id: from,
+            name: contactName,
             phone: from,
             status: 'new',
-            lead_score: 5,
           },
         });
 
@@ -184,10 +182,8 @@ export class WhatsAppCatalogOrderService {
           business_name: account.businesses.business_name,
           lead_info: {
             lead_id: lead.lead_id,
-            first_name: lead.first_name,
-            last_name: lead.last_name,
+            name: lead.name,
             status: lead.status,
-            lead_score: lead.lead_score,
           },
           message_type: 'order',
         },

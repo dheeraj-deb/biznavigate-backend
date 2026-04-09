@@ -19,6 +19,14 @@ import { CreateCampaignDto, QueryCampaignDto } from "./dto/campaign.dto";
 export class CampaignController {
     constructor(private readonly service: CampaignService) { }
 
+    @Post('bulk')
+    bulkQuickSend(
+        @Req() req: any,
+        @Body() body: { lead_ids: string[]; message: string },
+    ) {
+        return this.service.sendBulkQuickMessage(req.user.business_id, body.lead_ids, body.message);
+    }
+
     @Post()
     create(@Req() req: any, @Body() dto: CreateCampaignDto) {
         return this.service.create(req.user.business_id, dto);

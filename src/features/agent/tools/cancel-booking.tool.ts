@@ -1,9 +1,9 @@
 import { tool } from '@langchain/core/tools';
 import { z } from 'zod';
-import { InventoryService } from '../../inventory/inventory.service';
+import { BookingService } from '../../bookings/application/services/booking.service';
 import { PrismaService } from '../../../prisma/prisma.service';
 
-export function makeCancelBookingTool(inventoryService: InventoryService, prisma: PrismaService) {
+export function makeCancelBookingTool(inventoryService: BookingService, prisma: PrismaService) {
   return tool(
     async ({ bookingId, phone, businessId }) => {
       let resolvedBookingId = bookingId;

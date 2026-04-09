@@ -2,7 +2,7 @@ import { Injectable, Logger } from '@nestjs/common';
 import { PrismaService } from '../../../prisma/prisma.service';
 import { Product, ProductVariant } from '../domain/entities/product.entity';
 import { ProductQueryDto } from '../application/dto/product-query.dto';
-import { Decimal } from '@prisma/client/runtime/library';
+// Decimal import removed — conversion handled inline
 
 /**
  * Product Repository Interface
@@ -97,6 +97,7 @@ export class ProductRepositoryPrisma implements IProductRepository {
         product_type,
         is_active,
         in_stock,
+        low_stock,
         min_price,
         max_price,
         page = 1,
@@ -119,6 +120,7 @@ export class ProductRepositoryPrisma implements IProductRepository {
           { name: { contains: search, mode: 'insensitive' } },
           { description: { contains: search, mode: 'insensitive' } },
           { sku: { contains: search, mode: 'insensitive' } },
+          { brand: { contains: search, mode: 'insensitive' } },
         ];
       }
 
@@ -136,6 +138,21 @@ export class ProductRepositoryPrisma implements IProductRepository {
 
       if (typeof in_stock === 'boolean') {
         where.in_stock = in_stock;
+      }
+
+      // low_stock: Prisma can't compare columns, so fetch low-stock IDs via raw SQL
+      if (low_stock === true && business_id) {
+        const lowStockRows = await this.prisma.$queryRawUnsafe<{ product_id: string }[]>(
+          `SELECT product_id FROM products
+           WHERE business_id = $1::uuid AND track_inventory = true AND is_active = true
+           AND stock_quantity <= COALESCE(low_stock_threshold, 10)`,
+          business_id,
+        );
+        const ids = lowStockRows.map((r) => r.product_id);
+        if (ids.length === 0) {
+          return { data: [], total: 0, page, limit };
+        }
+        where.product_id = { in: ids };
       }
 
       if (min_price !== undefined || max_price !== undefined) {

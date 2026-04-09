@@ -249,223 +249,50 @@ exports.Prisma.LeadsScalarFieldEnum = {
   lead_id: 'lead_id',
   business_id: 'business_id',
   tenant_id: 'tenant_id',
-  source: 'source',
-  source_reference_id: 'source_reference_id',
-  platform_user_id: 'platform_user_id',
-  post_id: 'post_id',
-  page_id: 'page_id',
-  first_name: 'first_name',
-  last_name: 'last_name',
+  name: 'name',
   phone: 'phone',
   email: 'email',
-  alternate_phone: 'alternate_phone',
-  city: 'city',
-  state: 'state',
-  country: 'country',
-  pincode: 'pincode',
+  channel: 'channel',
+  source: 'source',
+  platform_id: 'platform_id',
   status: 'status',
-  intent_type: 'intent_type',
-  lead_quality: 'lead_quality',
-  lead_score: 'lead_score',
-  assigned_agent_id: 'assigned_agent_id',
-  assigned_at: 'assigned_at',
-  assigned_by: 'assigned_by',
-  first_contact_at: 'first_contact_at',
-  last_contact_at: 'last_contact_at',
-  last_activity_at: 'last_activity_at',
-  next_followup_at: 'next_followup_at',
-  followup_count: 'followup_count',
-  is_converted: 'is_converted',
-  converted_at: 'converted_at',
-  conversion_value: 'conversion_value',
-  interested_products: 'interested_products',
-  interested_courses: 'interested_courses',
-  tags: 'tags',
-  custom_fields: 'custom_fields',
-  extracted_entities: 'extracted_entities',
-  sentiment_score: 'sentiment_score',
-  preferred_contact_method: 'preferred_contact_method',
-  preferred_contact_time: 'preferred_contact_time',
-  language_preference: 'language_preference',
-  utm_source: 'utm_source',
-  utm_medium: 'utm_medium',
-  utm_campaign: 'utm_campaign',
-  referral_source: 'referral_source',
   lost_reason: 'lost_reason',
-  lost_at: 'lost_at',
-  invalid_reason: 'invalid_reason',
-  is_active: 'is_active',
-  is_duplicate: 'is_duplicate',
-  duplicate_of_lead_id: 'duplicate_of_lead_id',
-  created_at: 'created_at',
-  updated_at: 'updated_at',
-  created_by: 'created_by',
-  updated_by: 'updated_by',
+  context: 'context',
+  quoted_amount: 'quoted_amount',
+  quoted_at: 'quoted_at',
+  converted_value: 'converted_value',
+  converted_at: 'converted_at',
+  tags: 'tags',
+  assigned_to: 'assigned_to',
+  followup_at: 'followup_at',
   deleted_at: 'deleted_at',
-  deleted_by: 'deleted_by',
-  onboarding_completed: 'onboarding_completed',
-  delivery_address: 'delivery_address'
+  created_at: 'created_at',
+  updated_at: 'updated_at'
 };
 
-exports.Prisma.Lead_activitiesScalarFieldEnum = {
-  activity_id: 'activity_id',
+exports.Prisma.Lead_eventsScalarFieldEnum = {
+  event_id: 'event_id',
   lead_id: 'lead_id',
   business_id: 'business_id',
-  tenant_id: 'tenant_id',
-  activity_type: 'activity_type',
-  activity_description: 'activity_description',
-  actor_type: 'actor_type',
+  type: 'type',
+  actor: 'actor',
   actor_id: 'actor_id',
-  actor_name: 'actor_name',
-  channel: 'channel',
-  message_content: 'message_content',
-  metadata: 'metadata',
-  activity_timestamp: 'activity_timestamp',
+  data: 'data',
   created_at: 'created_at'
-};
-
-exports.Prisma.Lead_conversationsScalarFieldEnum = {
-  conversation_id: 'conversation_id',
-  lead_id: 'lead_id',
-  business_id: 'business_id',
-  tenant_id: 'tenant_id',
-  channel: 'channel',
-  platform_conversation_id: 'platform_conversation_id',
-  customer_identifier: 'customer_identifier',
-  agent_id: 'agent_id',
-  status: 'status',
-  is_ai_handled: 'is_ai_handled',
-  ai_takeover_at: 'ai_takeover_at',
-  human_takeover_at: 'human_takeover_at',
-  human_takeover_reason: 'human_takeover_reason',
-  message_count: 'message_count',
-  ai_message_count: 'ai_message_count',
-  agent_message_count: 'agent_message_count',
-  customer_message_count: 'customer_message_count',
-  first_response_time_seconds: 'first_response_time_seconds',
-  avg_response_time_seconds: 'avg_response_time_seconds',
-  is_resolved: 'is_resolved',
-  resolved_at: 'resolved_at',
-  resolution_time_seconds: 'resolution_time_seconds',
-  started_at: 'started_at',
-  last_message_at: 'last_message_at',
-  closed_at: 'closed_at',
-  created_at: 'created_at',
-  updated_at: 'updated_at'
-};
-
-exports.Prisma.Lead_messagesScalarFieldEnum = {
-  message_id: 'message_id',
-  conversation_id: 'conversation_id',
-  lead_id: 'lead_id',
-  business_id: 'business_id',
-  tenant_id: 'tenant_id',
-  sender_type: 'sender_type',
-  sender_id: 'sender_id',
-  sender_name: 'sender_name',
-  message_text: 'message_text',
-  message_type: 'message_type',
-  media_url: 'media_url',
-  media_type: 'media_type',
-  platform_message_id: 'platform_message_id',
-  delivery_status: 'delivery_status',
-  delivered_at: 'delivered_at',
-  read_at: 'read_at',
-  failed_reason: 'failed_reason',
-  intent_detected: 'intent_detected',
-  entities_extracted: 'entities_extracted',
-  ai_confidence: 'ai_confidence',
-  sentiment: 'sentiment',
-  requires_human_response: 'requires_human_response',
-  reply_to_message_id: 'reply_to_message_id',
-  is_automated: 'is_automated',
-  template_used: 'template_used',
-  metadata: 'metadata',
-  timestamp: 'timestamp',
-  created_at: 'created_at'
-};
-
-exports.Prisma.TagsScalarFieldEnum = {
-  tag_id: 'tag_id',
-  business_id: 'business_id',
-  tenant_id: 'tenant_id',
-  tag_name: 'tag_name',
-  tag_category: 'tag_category',
-  tag_color: 'tag_color',
-  is_system: 'is_system',
-  created_at: 'created_at'
-};
-
-exports.Prisma.Lead_tag_assignmentsScalarFieldEnum = {
-  assignment_id: 'assignment_id',
-  lead_id: 'lead_id',
-  tag_id: 'tag_id',
-  assigned_by: 'assigned_by',
-  assigned_at: 'assigned_at'
-};
-
-exports.Prisma.Lead_notesScalarFieldEnum = {
-  note_id: 'note_id',
-  lead_id: 'lead_id',
-  business_id: 'business_id',
-  tenant_id: 'tenant_id',
-  note_text: 'note_text',
-  note_type: 'note_type',
-  is_pinned: 'is_pinned',
-  visibility: 'visibility',
-  created_by: 'created_by',
-  created_at: 'created_at',
-  updated_at: 'updated_at'
-};
-
-exports.Prisma.Lead_status_historyScalarFieldEnum = {
-  history_id: 'history_id',
-  lead_id: 'lead_id',
-  business_id: 'business_id',
-  tenant_id: 'tenant_id',
-  from_status: 'from_status',
-  to_status: 'to_status',
-  changed_by: 'changed_by',
-  changed_by_type: 'changed_by_type',
-  reason: 'reason',
-  duration_in_previous_status: 'duration_in_previous_status',
-  changed_at: 'changed_at'
 };
 
 exports.Prisma.Lead_followupsScalarFieldEnum = {
   followup_id: 'followup_id',
   lead_id: 'lead_id',
   business_id: 'business_id',
-  tenant_id: 'tenant_id',
-  followup_type: 'followup_type',
-  followup_description: 'followup_description',
+  note: 'note',
   scheduled_at: 'scheduled_at',
-  scheduled_by: 'scheduled_by',
   assigned_to: 'assigned_to',
-  status: 'status',
-  completed_at: 'completed_at',
-  completed_by: 'completed_by',
-  completion_notes: 'completion_notes',
-  reminder_sent: 'reminder_sent',
-  reminder_sent_at: 'reminder_sent_at',
-  created_at: 'created_at',
-  updated_at: 'updated_at'
-};
-
-exports.Prisma.Lead_duplicatesScalarFieldEnum = {
-  duplicate_id: 'duplicate_id',
-  business_id: 'business_id',
-  tenant_id: 'tenant_id',
-  lead_id_1: 'lead_id_1',
-  lead_id_2: 'lead_id_2',
-  similarity_score: 'similarity_score',
-  match_type: 'match_type',
-  matched_fields: 'matched_fields',
-  is_confirmed_duplicate: 'is_confirmed_duplicate',
-  merged_into_lead_id: 'merged_into_lead_id',
-  detected_at: 'detected_at',
-  reviewed_at: 'reviewed_at',
-  reviewed_by: 'reviewed_by'
+  done: 'done',
+  done_at: 'done_at',
+  done_note: 'done_note',
+  created_by: 'created_by',
+  created_at: 'created_at'
 };
 
 exports.Prisma.ProductsScalarFieldEnum = {
@@ -492,6 +319,10 @@ exports.Prisma.ProductsScalarFieldEnum = {
   reserved_stock: 'reserved_stock',
   sku: 'sku',
   slug: 'slug',
+  brand: 'brand',
+  condition: 'condition',
+  weight: 'weight',
+  dimensions: 'dimensions',
   track_inventory: 'track_inventory',
   low_stock_threshold: 'low_stock_threshold',
   version: 'version',
@@ -702,51 +533,6 @@ exports.Prisma.Campaign_recipientsScalarFieldEnum = {
   updated_at: 'updated_at'
 };
 
-exports.Prisma.Lead_scoring_rulesScalarFieldEnum = {
-  rule_id: 'rule_id',
-  business_id: 'business_id',
-  tenant_id: 'tenant_id',
-  rule_name: 'rule_name',
-  rule_type: 'rule_type',
-  condition: 'condition',
-  score_impact: 'score_impact',
-  is_active: 'is_active',
-  priority: 'priority',
-  created_at: 'created_at',
-  updated_at: 'updated_at'
-};
-
-exports.Prisma.Lead_score_historyScalarFieldEnum = {
-  score_history_id: 'score_history_id',
-  lead_id: 'lead_id',
-  business_id: 'business_id',
-  tenant_id: 'tenant_id',
-  previous_score: 'previous_score',
-  new_score: 'new_score',
-  score_change: 'score_change',
-  rule_id: 'rule_id',
-  reason: 'reason',
-  calculated_at: 'calculated_at'
-};
-
-exports.Prisma.TasksScalarFieldEnum = {
-  task_id: 'task_id',
-  lead_id: 'lead_id',
-  business_id: 'business_id',
-  tenant_id: 'tenant_id',
-  task_type: 'task_type',
-  title: 'title',
-  description: 'description',
-  status: 'status',
-  priority: 'priority',
-  assigned_to_type: 'assigned_to_type',
-  assigned_to_id: 'assigned_to_id',
-  due_date: 'due_date',
-  metadata: 'metadata',
-  created_at: 'created_at',
-  updated_at: 'updated_at'
-};
-
 exports.Prisma.Notification_templatesScalarFieldEnum = {
   template_id: 'template_id',
   business_id: 'business_id',
@@ -869,41 +655,6 @@ exports.Prisma.Payment_reconciliationScalarFieldEnum = {
   discrepancy_details: 'discrepancy_details',
   created_at: 'created_at',
   updated_at: 'updated_at'
-};
-
-exports.Prisma.ConversationsScalarFieldEnum = {
-  conversation_id: 'conversation_id',
-  business_id: 'business_id',
-  tenant_id: 'tenant_id',
-  contact_name: 'contact_name',
-  contact_phone: 'contact_phone',
-  contact_email: 'contact_email',
-  contact_avatar: 'contact_avatar',
-  platform: 'platform',
-  platform_contact_id: 'platform_contact_id',
-  status: 'status',
-  priority: 'priority',
-  last_message: 'last_message',
-  last_message_at: 'last_message_at',
-  unread_count: 'unread_count',
-  is_starred: 'is_starred',
-  tags: 'tags',
-  assigned_to: 'assigned_to',
-  created_at: 'created_at',
-  updated_at: 'updated_at'
-};
-
-exports.Prisma.MessagesScalarFieldEnum = {
-  message_id: 'message_id',
-  conversation_id: 'conversation_id',
-  content: 'content',
-  direction: 'direction',
-  status: 'status',
-  attachments: 'attachments',
-  platform_message_id: 'platform_message_id',
-  sent_by: 'sent_by',
-  is_ai_generated: 'is_ai_generated',
-  created_at: 'created_at'
 };
 
 exports.Prisma.Notification_eventsScalarFieldEnum = {
@@ -1329,15 +1080,8 @@ exports.Prisma.ModelName = {
   tenants: 'tenants',
   users: 'users',
   leads: 'leads',
-  lead_activities: 'lead_activities',
-  lead_conversations: 'lead_conversations',
-  lead_messages: 'lead_messages',
-  tags: 'tags',
-  lead_tag_assignments: 'lead_tag_assignments',
-  lead_notes: 'lead_notes',
-  lead_status_history: 'lead_status_history',
+  lead_events: 'lead_events',
   lead_followups: 'lead_followups',
-  lead_duplicates: 'lead_duplicates',
   products: 'products',
   product_variants: 'product_variants',
   product_images: 'product_images',
@@ -1348,16 +1092,11 @@ exports.Prisma.ModelName = {
   cart_reservations: 'cart_reservations',
   campaigns: 'campaigns',
   campaign_recipients: 'campaign_recipients',
-  lead_scoring_rules: 'lead_scoring_rules',
-  lead_score_history: 'lead_score_history',
-  tasks: 'tasks',
   notification_templates: 'notification_templates',
   notification_messages: 'notification_messages',
   notification_preferences: 'notification_preferences',
   payments: 'payments',
   payment_reconciliation: 'payment_reconciliation',
-  conversations: 'conversations',
-  messages: 'messages',
   notification_events: 'notification_events',
   payment_webhooks: 'payment_webhooks',
   instagram_media: 'instagram_media',

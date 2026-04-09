@@ -1,7 +1,7 @@
 import { Processor, WorkerHost } from '@nestjs/bullmq';
 import { Logger } from '@nestjs/common';
 import { Job } from 'bullmq';
-import { InventoryService } from './inventory.service';
+import { InventoryService } from './application/services/inventory.service';
 
 export const HOLD_CLEANUP_QUEUE = 'hold-cleanup';
 

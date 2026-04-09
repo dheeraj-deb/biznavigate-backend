@@ -1,6 +1,6 @@
 import { tool } from '@langchain/core/tools';
 import { z } from 'zod';
-import { InventoryService } from '../../inventory/inventory.service';
+import { InventoryService } from '../../inventory/application/services/inventory.service';
 import { resolveDate, isValidDate } from '../utils/date-resolver';
 
 export function makeCheckAvailabilityTool(inventoryService: InventoryService) {

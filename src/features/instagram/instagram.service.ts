@@ -307,12 +307,11 @@ export class InstagramService implements OnModuleInit {
         data: {
           business_id: account.business_id,
           tenant_id: account.businesses.tenant_id,
-          source: 'instagram_comment',
-          source_reference_id: commentId,
-          platform_user_id: from.id,
-          post_id: post_id || media_id,
-          page_id: account.page_id,
+          channel: 'whatsapp',
+          source: 'instagram',
+          platform_id: from.id,
           status: 'new',
+          context: { instagram_comment_id: commentId, post_id: post_id || media_id } as any,
         },
       });
 
@@ -383,8 +382,9 @@ export class InstagramService implements OnModuleInit {
       let lead = await this.prisma.leads.findFirst({
         where: {
           business_id: account.business_id,
-          platform_user_id: sender.id,
-          source: 'instagram_dm',
+          platform_id: sender.id,
+          channel: 'whatsapp',
+          source: 'instagram',
         },
       });
 
@@ -395,9 +395,9 @@ export class InstagramService implements OnModuleInit {
           data: {
             business_id: account.business_id,
             tenant_id: account.businesses.tenant_id,
-            source: 'instagram_dm',
-            platform_user_id: sender.id,
-            page_id: account.page_id,
+            channel: 'whatsapp',
+            source: 'instagram',
+            platform_id: sender.id,
             status: 'new',
           },
         });
@@ -490,21 +490,19 @@ export class InstagramService implements OnModuleInit {
       }
 
       // Log activity
-      await this.prisma.lead_activities.create({
+      await this.prisma.lead_events.create({
         data: {
           lead_id: leadId,
           business_id: context.businessId,
-          tenant_id: context.tenantId,
-          activity_type: 'ai_reply_sent',
-          activity_description: `AI reply sent via Instagram ${context.type}`,
-          actor_type: 'system',
-          channel: 'instagram',
-          message_content: responseMessage,
-          metadata: {
+          type: 'ai_reply_sent',
+          actor: 'ai',
+          data: {
+            channel: 'instagram',
+            message_type: context.type,
             intent: aiResult.intent,
             confidence: aiResult.confidence,
             entities: aiResult.entities,
-          },
+          } as any,
         },
       });
 

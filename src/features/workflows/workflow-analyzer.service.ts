@@ -22,10 +22,8 @@ const SYSTEM_KEYS: string[] = [
   'business.country',
   // Lead
   'lead.id',
-  'lead.first_name',
-  'lead.last_name',
+  'lead.name',
   'lead.status',
-  'lead.score',
   'lead.phone',
   'lead.email',
   // Runtime
@@ -486,9 +484,8 @@ Business:
 
 Lead:
 - lead.id — lead UUID
-- lead.first_name, lead.last_name — lead's name
-- lead.status — lead status (e.g. "qualified")
-- lead.score — lead score (0–100)
+- lead.name — lead's full name
+- lead.status — lead status (e.g. "active")
 - lead.phone, lead.email — lead contact details
 
 Runtime:

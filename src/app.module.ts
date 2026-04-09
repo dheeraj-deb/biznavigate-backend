@@ -33,9 +33,9 @@ import { PaymentsModule } from "./features/payments/payments.module";
 import { ReviewsModule } from "./features/reviews/reviews.module";
 import { NotificationsModule } from "./features/notifications/notifications.module";
 import { InventoryModule } from "./features/inventory/inventory.module";
+import { BookingsModule } from "./features/bookings/bookings.module";
 import { AnalyticsModule } from "./features/analytics/analytics.module";
 import { TemplatesModule } from "./features/notification-templates/templates.module";
-import { MessagesModule } from "./features/messages/messages.module";
 import { ContactsModule } from "./features/contacts/contacts.module";
 import { ServeStaticModule } from "@nestjs/serve-static";
 import { join } from "path";
@@ -115,9 +115,9 @@ import { AgentModule } from "./features/agent/agent.module";
     ReviewsModule,
     NotificationsModule,
     InventoryModule,
+    BookingsModule,
     AnalyticsModule,
     TemplatesModule,
-    MessagesModule,
     ContactsModule,
     InstagramModule,
     S3Module,

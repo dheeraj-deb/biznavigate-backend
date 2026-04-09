@@ -238,22 +238,24 @@ export class WhatsAppService {
       }
 
       let lead = await this.prisma.leads.findFirst({
-        where: { business_id: account.business_id, platform_user_id: from, source: 'whatsapp' },
+        where: { business_id: account.business_id, platform_id: from, deleted_at: null },
       });
 
       if (!lead) {
-        const nameParts = contactName.split(' ');
+        const { v4: uuidv4 } = await import('uuid');
         lead = await this.prisma.leads.create({
           data: {
+            lead_id: uuidv4(),
             business_id: account.business_id,
             tenant_id: account.businesses.tenant_id,
-            source: 'whatsapp',
-            platform_user_id: from,
-            first_name: nameParts[0] || contactName,
-            last_name: nameParts.slice(1).join(' ') || null,
+            channel: 'whatsapp',
+            source: 'direct',
+            platform_id: from,
+            name: contactName,
             phone: from,
             status: 'new',
-            lead_score: 5,
+            created_at: new Date(),
+            updated_at: new Date(),
           },
         });
         this.logger.log(`New lead created from WhatsApp: ${lead.lead_id}`);
@@ -320,17 +322,7 @@ export class WhatsAppService {
           sender_name: contactName,
         });
 
-        // Create the matching Postgres row so escalation/handoff queries can find it
-        await this.prisma.lead_conversations.create({
-          data: {
-            conversation_id: newConversationId,
-            lead_id: lead.lead_id,
-            business_id: account.business_id,
-            tenant_id: account.businesses.tenant_id,
-            channel: 'whatsapp',
-            customer_identifier: from,
-          },
-        });
+        // MongoDB conversation is the source of truth — no Postgres mirror needed
       }
 
       // Look up the current waiting workflow node (if any) to tag this inbound message
@@ -390,11 +382,8 @@ export class WhatsAppService {
       });
 
       // If this conversation is human-handled, also notify the handoff namespace
-      const pgConv = await this.prisma.lead_conversations.findFirst({
-        where: { conversation_id: conversation.conversation_id, is_ai_handled: false, is_resolved: false },
-        select: { conversation_id: true },
-      });
-      if (pgConv) {
+      const mongoConv = await this.conversationService.findConversationById(conversation.conversation_id);
+      if (mongoConv && mongoConv.is_ai === false && mongoConv.status !== 'resolved') {
         this.humanHandoffGateway.notifyCustomerMessage(account.business_id, conversation.conversation_id, {
           _id: leadMessageId,
           conversation_id: conversation.conversation_id,
@@ -451,10 +440,8 @@ export class WhatsAppService {
           },
           lead: {
             id: lead.lead_id,
-            first_name: lead.first_name,
-            last_name: lead.last_name,
+            name: lead.name,
             status: lead.status,
-            score: lead.lead_score,
             phone: lead.phone,
           },
         },
@@ -700,7 +687,7 @@ export class WhatsAppService {
 
       // Find lead (stays in Postgres)
       const lead = await this.prisma.leads.findFirst({
-        where: { business_id: account.business_id, platform_user_id: to, source: 'whatsapp' },
+        where: { business_id: account.business_id, platform_id: to, deleted_at: null },
       });
 
       // Extract message ID from WhatsApp API response (format: { messages: [{id: "wamid..."}] })
@@ -943,7 +930,7 @@ export class WhatsAppService {
       // Lead info still fetched from Postgres
       const lead = await this.prisma.leads.findUnique({
         where: { lead_id: conversation.lead_id },
-        select: { first_name: true, last_name: true },
+        select: { name: true },
       });
 
       const duration = firstMessage && lastMessage
@@ -952,7 +939,7 @@ export class WhatsAppService {
 
       return {
         conversation_id: conversationId,
-        lead_name: `${lead?.first_name || ''} ${lead?.last_name || ''}`.trim(),
+        lead_name: lead?.name ?? '',
         channel: conversation.channel,
         status: conversation.status,
         message_count: messageCount,
