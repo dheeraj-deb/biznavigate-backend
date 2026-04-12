@@ -43,9 +43,11 @@
     "@nestjs/schedule": "^6.1.1",
     "@nestjs/serve-static": "^5.0.3",
     "@nestjs/swagger": "^7.0.0",
+    "@nestjs/terminus": "^11.1.1",
     "@nestjs/throttler": "^6.4.0",
     "@nestjs/websockets": "^10.4.20",
     "@prisma/client": "^6.7.0",
+    "@sentry/nestjs": "^10.47.0",
     "@types/nodemailer": "^7.0.3",
     "@types/sharp": "^0.31.1",
     "@types/socket.io": "^3.0.1",
@@ -62,9 +64,11 @@
     "handlebars": "^4.7.8",
     "helmet": "^8.1.0",
     "ioredis": "^5.3.2",
+    "joi": "^18.1.2",
     "kafkajs": "^2.2.4",
     "mongoose": "^9.2.2",
     "multer": "^2.0.2",
+    "nest-winston": "^1.10.2",
     "nodemailer": "^7.0.10",
     "openai": "^6.32.0",
     "passport": "^0.7.0",
@@ -76,7 +80,8 @@
     "sharp": "^0.34.5",
     "socket.io": "^4.8.1",
     "swagger-ui-express": "^5.0.1",
-    "uuid": "^9.0.1"
+    "uuid": "^9.0.1",
+    "winston": "^3.19.0"
   },
   "devDependencies": {
     "@nestjs/cli": "^10.0.0",
