@@ -55,6 +55,16 @@ export type social_accounts = $Result.DefaultSelection<Prisma.$social_accountsPa
  */
 export type subscription_plans = $Result.DefaultSelection<Prisma.$subscription_plansPayload>
 /**
+ * Model business_subscriptions
+ * 
+ */
+export type business_subscriptions = $Result.DefaultSelection<Prisma.$business_subscriptionsPayload>
+/**
+ * Model api_usage_metrics
+ * 
+ */
+export type api_usage_metrics = $Result.DefaultSelection<Prisma.$api_usage_metricsPayload>
+/**
  * Model tenants
  * 
  */
@@ -532,6 +542,26 @@ export class PrismaClient<
     * ```
     */
   get subscription_plans(): Prisma.subscription_plansDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.business_subscriptions`: Exposes CRUD operations for the **business_subscriptions** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more Business_subscriptions
+    * const business_subscriptions = await prisma.business_subscriptions.findMany()
+    * ```
+    */
+  get business_subscriptions(): Prisma.business_subscriptionsDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.api_usage_metrics`: Exposes CRUD operations for the **api_usage_metrics** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more Api_usage_metrics
+    * const api_usage_metrics = await prisma.api_usage_metrics.findMany()
+    * ```
+    */
+  get api_usage_metrics(): Prisma.api_usage_metricsDelegate<ExtArgs, ClientOptions>;
 
   /**
    * `prisma.tenants`: Exposes CRUD operations for the **tenants** model.
@@ -1520,6 +1550,8 @@ export namespace Prisma {
     roles: 'roles',
     social_accounts: 'social_accounts',
     subscription_plans: 'subscription_plans',
+    business_subscriptions: 'business_subscriptions',
+    api_usage_metrics: 'api_usage_metrics',
     tenants: 'tenants',
     users: 'users',
     leads: 'leads',
@@ -1592,7 +1624,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "businesses" | "business_employees" | "intents" | "notifications" | "role_intents" | "roles" | "social_accounts" | "subscription_plans" | "tenants" | "users" | "leads" | "lead_activities" | "lead_conversations" | "lead_messages" | "tags" | "lead_tag_assignments" | "lead_notes" | "lead_status_history" | "lead_followups" | "lead_duplicates" | "products" | "product_variants" | "product_images" | "course_batches" | "customers" | "orders" | "order_items" | "stock_reservations" | "cart_reservations" | "campaigns" | "campaign_recipients" | "lead_scoring_rules" | "lead_score_history" | "tasks" | "warehouses" | "inventory_levels" | "stock_movements" | "stock_transfers" | "stock_alerts" | "stock_counts" | "notification_templates" | "notification_messages" | "notification_preferences" | "payments" | "payment_reconciliation" | "conversations" | "messages" | "notification_events" | "payment_webhooks" | "instagram_media" | "product_categories" | "product_reviews" | "workflow_definitions" | "business_workflows" | "workflow_executions" | "cart_items" | "carts" | "whatsapp_optouts" | "campaign_analytics" | "hotel_pricing_recommendations" | "hotel_booking_outcomes" | "hotel_pricing_notifications"
+      modelProps: "businesses" | "business_employees" | "intents" | "notifications" | "role_intents" | "roles" | "social_accounts" | "subscription_plans" | "business_subscriptions" | "api_usage_metrics" | "tenants" | "users" | "leads" | "lead_activities" | "lead_conversations" | "lead_messages" | "tags" | "lead_tag_assignments" | "lead_notes" | "lead_status_history" | "lead_followups" | "lead_duplicates" | "products" | "product_variants" | "product_images" | "course_batches" | "customers" | "orders" | "order_items" | "stock_reservations" | "cart_reservations" | "campaigns" | "campaign_recipients" | "lead_scoring_rules" | "lead_score_history" | "tasks" | "warehouses" | "inventory_levels" | "stock_movements" | "stock_transfers" | "stock_alerts" | "stock_counts" | "notification_templates" | "notification_messages" | "notification_preferences" | "payments" | "payment_reconciliation" | "conversations" | "messages" | "notification_events" | "payment_webhooks" | "instagram_media" | "product_categories" | "product_reviews" | "workflow_definitions" | "business_workflows" | "workflow_executions" | "cart_items" | "carts" | "whatsapp_optouts" | "campaign_analytics" | "hotel_pricing_recommendations" | "hotel_booking_outcomes" | "hotel_pricing_notifications"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -2185,6 +2217,154 @@ export namespace Prisma {
           count: {
             args: Prisma.subscription_plansCountArgs<ExtArgs>
             result: $Utils.Optional<Subscription_plansCountAggregateOutputType> | number
+          }
+        }
+      }
+      business_subscriptions: {
+        payload: Prisma.$business_subscriptionsPayload<ExtArgs>
+        fields: Prisma.business_subscriptionsFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.business_subscriptionsFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$business_subscriptionsPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.business_subscriptionsFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$business_subscriptionsPayload>
+          }
+          findFirst: {
+            args: Prisma.business_subscriptionsFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$business_subscriptionsPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.business_subscriptionsFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$business_subscriptionsPayload>
+          }
+          findMany: {
+            args: Prisma.business_subscriptionsFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$business_subscriptionsPayload>[]
+          }
+          create: {
+            args: Prisma.business_subscriptionsCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$business_subscriptionsPayload>
+          }
+          createMany: {
+            args: Prisma.business_subscriptionsCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.business_subscriptionsCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$business_subscriptionsPayload>[]
+          }
+          delete: {
+            args: Prisma.business_subscriptionsDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$business_subscriptionsPayload>
+          }
+          update: {
+            args: Prisma.business_subscriptionsUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$business_subscriptionsPayload>
+          }
+          deleteMany: {
+            args: Prisma.business_subscriptionsDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.business_subscriptionsUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.business_subscriptionsUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$business_subscriptionsPayload>[]
+          }
+          upsert: {
+            args: Prisma.business_subscriptionsUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$business_subscriptionsPayload>
+          }
+          aggregate: {
+            args: Prisma.Business_subscriptionsAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateBusiness_subscriptions>
+          }
+          groupBy: {
+            args: Prisma.business_subscriptionsGroupByArgs<ExtArgs>
+            result: $Utils.Optional<Business_subscriptionsGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.business_subscriptionsCountArgs<ExtArgs>
+            result: $Utils.Optional<Business_subscriptionsCountAggregateOutputType> | number
+          }
+        }
+      }
+      api_usage_metrics: {
+        payload: Prisma.$api_usage_metricsPayload<ExtArgs>
+        fields: Prisma.api_usage_metricsFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.api_usage_metricsFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$api_usage_metricsPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.api_usage_metricsFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$api_usage_metricsPayload>
+          }
+          findFirst: {
+            args: Prisma.api_usage_metricsFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$api_usage_metricsPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.api_usage_metricsFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$api_usage_metricsPayload>
+          }
+          findMany: {
+            args: Prisma.api_usage_metricsFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$api_usage_metricsPayload>[]
+          }
+          create: {
+            args: Prisma.api_usage_metricsCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$api_usage_metricsPayload>
+          }
+          createMany: {
+            args: Prisma.api_usage_metricsCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.api_usage_metricsCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$api_usage_metricsPayload>[]
+          }
+          delete: {
+            args: Prisma.api_usage_metricsDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$api_usage_metricsPayload>
+          }
+          update: {
+            args: Prisma.api_usage_metricsUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$api_usage_metricsPayload>
+          }
+          deleteMany: {
+            args: Prisma.api_usage_metricsDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.api_usage_metricsUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.api_usage_metricsUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$api_usage_metricsPayload>[]
+          }
+          upsert: {
+            args: Prisma.api_usage_metricsUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$api_usage_metricsPayload>
+          }
+          aggregate: {
+            args: Prisma.Api_usage_metricsAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateApi_usage_metrics>
+          }
+          groupBy: {
+            args: Prisma.api_usage_metricsGroupByArgs<ExtArgs>
+            result: $Utils.Optional<Api_usage_metricsGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.api_usage_metricsCountArgs<ExtArgs>
+            result: $Utils.Optional<Api_usage_metricsCountAggregateOutputType> | number
           }
         }
       }
@@ -6276,6 +6456,8 @@ export namespace Prisma {
     roles?: rolesOmit
     social_accounts?: social_accountsOmit
     subscription_plans?: subscription_plansOmit
+    business_subscriptions?: business_subscriptionsOmit
+    api_usage_metrics?: api_usage_metricsOmit
     tenants?: tenantsOmit
     users?: usersOmit
     leads?: leadsOmit
@@ -6446,6 +6628,8 @@ export namespace Prisma {
     users: number
     warehouses: number
     workflow_executions: number
+    business_subscriptions: number
+    api_usage_metrics: number
   }
 
   export type BusinessesCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -6471,6 +6655,8 @@ export namespace Prisma {
     users?: boolean | BusinessesCountOutputTypeCountUsersArgs
     warehouses?: boolean | BusinessesCountOutputTypeCountWarehousesArgs
     workflow_executions?: boolean | BusinessesCountOutputTypeCountWorkflow_executionsArgs
+    business_subscriptions?: boolean | BusinessesCountOutputTypeCountBusiness_subscriptionsArgs
+    api_usage_metrics?: boolean | BusinessesCountOutputTypeCountApi_usage_metricsArgs
   }
 
   // Custom InputTypes
@@ -6638,6 +6824,20 @@ export namespace Prisma {
     where?: workflow_executionsWhereInput
   }
 
+  /**
+   * BusinessesCountOutputType without action
+   */
+  export type BusinessesCountOutputTypeCountBusiness_subscriptionsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: business_subscriptionsWhereInput
+  }
+
+  /**
+   * BusinessesCountOutputType without action
+   */
+  export type BusinessesCountOutputTypeCountApi_usage_metricsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: api_usage_metricsWhereInput
+  }
+
 
   /**
    * Count Type IntentsCountOutputType
@@ -6738,6 +6938,37 @@ export namespace Prisma {
    */
   export type Social_accountsCountOutputTypeCountInstagram_mediaArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: instagram_mediaWhereInput
+  }
+
+
+  /**
+   * Count Type Subscription_plansCountOutputType
+   */
+
+  export type Subscription_plansCountOutputType = {
+    business_subscriptions: number
+  }
+
+  export type Subscription_plansCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    business_subscriptions?: boolean | Subscription_plansCountOutputTypeCountBusiness_subscriptionsArgs
+  }
+
+  // Custom InputTypes
+  /**
+   * Subscription_plansCountOutputType without action
+   */
+  export type Subscription_plansCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Subscription_plansCountOutputType
+     */
+    select?: Subscription_plansCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * Subscription_plansCountOutputType without action
+   */
+  export type Subscription_plansCountOutputTypeCountBusiness_subscriptionsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: business_subscriptionsWhereInput
   }
 
 
@@ -8252,6 +8483,8 @@ export namespace Prisma {
     users?: boolean | businesses$usersArgs<ExtArgs>
     warehouses?: boolean | businesses$warehousesArgs<ExtArgs>
     workflow_executions?: boolean | businesses$workflow_executionsArgs<ExtArgs>
+    business_subscriptions?: boolean | businesses$business_subscriptionsArgs<ExtArgs>
+    api_usage_metrics?: boolean | businesses$api_usage_metricsArgs<ExtArgs>
     _count?: boolean | BusinessesCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["businesses"]>
 
@@ -8336,6 +8569,8 @@ export namespace Prisma {
     users?: boolean | businesses$usersArgs<ExtArgs>
     warehouses?: boolean | businesses$warehousesArgs<ExtArgs>
     workflow_executions?: boolean | businesses$workflow_executionsArgs<ExtArgs>
+    business_subscriptions?: boolean | businesses$business_subscriptionsArgs<ExtArgs>
+    api_usage_metrics?: boolean | businesses$api_usage_metricsArgs<ExtArgs>
     _count?: boolean | BusinessesCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type businessesIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -8371,6 +8606,8 @@ export namespace Prisma {
       users: Prisma.$usersPayload<ExtArgs>[]
       warehouses: Prisma.$warehousesPayload<ExtArgs>[]
       workflow_executions: Prisma.$workflow_executionsPayload<ExtArgs>[]
+      business_subscriptions: Prisma.$business_subscriptionsPayload<ExtArgs>[]
+      api_usage_metrics: Prisma.$api_usage_metricsPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       business_id: string
@@ -8805,6 +9042,8 @@ export namespace Prisma {
     users<T extends businesses$usersArgs<ExtArgs> = {}>(args?: Subset<T, businesses$usersArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$usersPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     warehouses<T extends businesses$warehousesArgs<ExtArgs> = {}>(args?: Subset<T, businesses$warehousesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$warehousesPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     workflow_executions<T extends businesses$workflow_executionsArgs<ExtArgs> = {}>(args?: Subset<T, businesses$workflow_executionsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$workflow_executionsPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    business_subscriptions<T extends businesses$business_subscriptionsArgs<ExtArgs> = {}>(args?: Subset<T, businesses$business_subscriptionsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$business_subscriptionsPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    api_usage_metrics<T extends businesses$api_usage_metricsArgs<ExtArgs> = {}>(args?: Subset<T, businesses$api_usage_metricsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$api_usage_metricsPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -9770,6 +10009,54 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: Workflow_executionsScalarFieldEnum | Workflow_executionsScalarFieldEnum[]
+  }
+
+  /**
+   * businesses.business_subscriptions
+   */
+  export type businesses$business_subscriptionsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the business_subscriptions
+     */
+    select?: business_subscriptionsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the business_subscriptions
+     */
+    omit?: business_subscriptionsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: business_subscriptionsInclude<ExtArgs> | null
+    where?: business_subscriptionsWhereInput
+    orderBy?: business_subscriptionsOrderByWithRelationInput | business_subscriptionsOrderByWithRelationInput[]
+    cursor?: business_subscriptionsWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: Business_subscriptionsScalarFieldEnum | Business_subscriptionsScalarFieldEnum[]
+  }
+
+  /**
+   * businesses.api_usage_metrics
+   */
+  export type businesses$api_usage_metricsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the api_usage_metrics
+     */
+    select?: api_usage_metricsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the api_usage_metrics
+     */
+    omit?: api_usage_metricsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: api_usage_metricsInclude<ExtArgs> | null
+    where?: api_usage_metricsWhereInput
+    orderBy?: api_usage_metricsOrderByWithRelationInput | api_usage_metricsOrderByWithRelationInput[]
+    cursor?: api_usage_metricsWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: Api_usage_metricsScalarFieldEnum | Api_usage_metricsScalarFieldEnum[]
   }
 
   /**
@@ -16446,7 +16733,11 @@ export namespace Prisma {
     plan_name: string | null
     price: Decimal | null
     duration_in_days: number | null
+    billing_cycle: string | null
+    is_active: boolean | null
+    razorpay_plan_id: string | null
     created_at: Date | null
+    updated_at: Date | null
   }
 
   export type Subscription_plansMaxAggregateOutputType = {
@@ -16454,7 +16745,11 @@ export namespace Prisma {
     plan_name: string | null
     price: Decimal | null
     duration_in_days: number | null
+    billing_cycle: string | null
+    is_active: boolean | null
+    razorpay_plan_id: string | null
     created_at: Date | null
+    updated_at: Date | null
   }
 
   export type Subscription_plansCountAggregateOutputType = {
@@ -16462,7 +16757,13 @@ export namespace Prisma {
     plan_name: number
     price: number
     duration_in_days: number
+    billing_cycle: number
+    features: number
+    limits: number
+    is_active: number
+    razorpay_plan_id: number
     created_at: number
+    updated_at: number
     _all: number
   }
 
@@ -16482,7 +16783,11 @@ export namespace Prisma {
     plan_name?: true
     price?: true
     duration_in_days?: true
+    billing_cycle?: true
+    is_active?: true
+    razorpay_plan_id?: true
     created_at?: true
+    updated_at?: true
   }
 
   export type Subscription_plansMaxAggregateInputType = {
@@ -16490,7 +16795,11 @@ export namespace Prisma {
     plan_name?: true
     price?: true
     duration_in_days?: true
+    billing_cycle?: true
+    is_active?: true
+    razorpay_plan_id?: true
     created_at?: true
+    updated_at?: true
   }
 
   export type Subscription_plansCountAggregateInputType = {
@@ -16498,7 +16807,13 @@ export namespace Prisma {
     plan_name?: true
     price?: true
     duration_in_days?: true
+    billing_cycle?: true
+    features?: true
+    limits?: true
+    is_active?: true
+    razorpay_plan_id?: true
     created_at?: true
+    updated_at?: true
     _all?: true
   }
 
@@ -16593,7 +16908,13 @@ export namespace Prisma {
     plan_name: string
     price: Decimal | null
     duration_in_days: number | null
+    billing_cycle: string | null
+    features: JsonValue | null
+    limits: JsonValue | null
+    is_active: boolean
+    razorpay_plan_id: string | null
     created_at: Date | null
+    updated_at: Date | null
     _count: Subscription_plansCountAggregateOutputType | null
     _avg: Subscription_plansAvgAggregateOutputType | null
     _sum: Subscription_plansSumAggregateOutputType | null
@@ -16620,7 +16941,15 @@ export namespace Prisma {
     plan_name?: boolean
     price?: boolean
     duration_in_days?: boolean
+    billing_cycle?: boolean
+    features?: boolean
+    limits?: boolean
+    is_active?: boolean
+    razorpay_plan_id?: boolean
     created_at?: boolean
+    updated_at?: boolean
+    business_subscriptions?: boolean | subscription_plans$business_subscriptionsArgs<ExtArgs>
+    _count?: boolean | Subscription_plansCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["subscription_plans"]>
 
   export type subscription_plansSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -16628,7 +16957,13 @@ export namespace Prisma {
     plan_name?: boolean
     price?: boolean
     duration_in_days?: boolean
+    billing_cycle?: boolean
+    features?: boolean
+    limits?: boolean
+    is_active?: boolean
+    razorpay_plan_id?: boolean
     created_at?: boolean
+    updated_at?: boolean
   }, ExtArgs["result"]["subscription_plans"]>
 
   export type subscription_plansSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -16636,7 +16971,13 @@ export namespace Prisma {
     plan_name?: boolean
     price?: boolean
     duration_in_days?: boolean
+    billing_cycle?: boolean
+    features?: boolean
+    limits?: boolean
+    is_active?: boolean
+    razorpay_plan_id?: boolean
     created_at?: boolean
+    updated_at?: boolean
   }, ExtArgs["result"]["subscription_plans"]>
 
   export type subscription_plansSelectScalar = {
@@ -16644,20 +16985,40 @@ export namespace Prisma {
     plan_name?: boolean
     price?: boolean
     duration_in_days?: boolean
+    billing_cycle?: boolean
+    features?: boolean
+    limits?: boolean
+    is_active?: boolean
+    razorpay_plan_id?: boolean
     created_at?: boolean
+    updated_at?: boolean
   }
 
-  export type subscription_plansOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"subscription_plan_id" | "plan_name" | "price" | "duration_in_days" | "created_at", ExtArgs["result"]["subscription_plans"]>
+  export type subscription_plansOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"subscription_plan_id" | "plan_name" | "price" | "duration_in_days" | "billing_cycle" | "features" | "limits" | "is_active" | "razorpay_plan_id" | "created_at" | "updated_at", ExtArgs["result"]["subscription_plans"]>
+  export type subscription_plansInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    business_subscriptions?: boolean | subscription_plans$business_subscriptionsArgs<ExtArgs>
+    _count?: boolean | Subscription_plansCountOutputTypeDefaultArgs<ExtArgs>
+  }
+  export type subscription_plansIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
+  export type subscription_plansIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
 
   export type $subscription_plansPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "subscription_plans"
-    objects: {}
+    objects: {
+      business_subscriptions: Prisma.$business_subscriptionsPayload<ExtArgs>[]
+    }
     scalars: $Extensions.GetPayloadResult<{
       subscription_plan_id: string
       plan_name: string
       price: Prisma.Decimal | null
       duration_in_days: number | null
+      billing_cycle: string | null
+      features: Prisma.JsonValue | null
+      limits: Prisma.JsonValue | null
+      is_active: boolean
+      razorpay_plan_id: string | null
       created_at: Date | null
+      updated_at: Date | null
     }, ExtArgs["result"]["subscription_plans"]>
     composites: {}
   }
@@ -17052,6 +17413,7 @@ export namespace Prisma {
    */
   export interface Prisma__subscription_plansClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
+    business_subscriptions<T extends subscription_plans$business_subscriptionsArgs<ExtArgs> = {}>(args?: Subset<T, subscription_plans$business_subscriptionsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$business_subscriptionsPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -17085,7 +17447,13 @@ export namespace Prisma {
     readonly plan_name: FieldRef<"subscription_plans", 'String'>
     readonly price: FieldRef<"subscription_plans", 'Decimal'>
     readonly duration_in_days: FieldRef<"subscription_plans", 'Int'>
+    readonly billing_cycle: FieldRef<"subscription_plans", 'String'>
+    readonly features: FieldRef<"subscription_plans", 'Json'>
+    readonly limits: FieldRef<"subscription_plans", 'Json'>
+    readonly is_active: FieldRef<"subscription_plans", 'Boolean'>
+    readonly razorpay_plan_id: FieldRef<"subscription_plans", 'String'>
     readonly created_at: FieldRef<"subscription_plans", 'DateTime'>
+    readonly updated_at: FieldRef<"subscription_plans", 'DateTime'>
   }
     
 
@@ -17102,6 +17470,10 @@ export namespace Prisma {
      * Omit specific fields from the subscription_plans
      */
     omit?: subscription_plansOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: subscription_plansInclude<ExtArgs> | null
     /**
      * Filter, which subscription_plans to fetch.
      */
@@ -17121,6 +17493,10 @@ export namespace Prisma {
      */
     omit?: subscription_plansOmit<ExtArgs> | null
     /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: subscription_plansInclude<ExtArgs> | null
+    /**
      * Filter, which subscription_plans to fetch.
      */
     where: subscription_plansWhereUniqueInput
@@ -17138,6 +17514,10 @@ export namespace Prisma {
      * Omit specific fields from the subscription_plans
      */
     omit?: subscription_plansOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: subscription_plansInclude<ExtArgs> | null
     /**
      * Filter, which subscription_plans to fetch.
      */
@@ -17187,6 +17567,10 @@ export namespace Prisma {
      */
     omit?: subscription_plansOmit<ExtArgs> | null
     /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: subscription_plansInclude<ExtArgs> | null
+    /**
      * Filter, which subscription_plans to fetch.
      */
     where?: subscription_plansWhereInput
@@ -17235,6 +17619,10 @@ export namespace Prisma {
      */
     omit?: subscription_plansOmit<ExtArgs> | null
     /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: subscription_plansInclude<ExtArgs> | null
+    /**
      * Filter, which subscription_plans to fetch.
      */
     where?: subscription_plansWhereInput
@@ -17277,6 +17665,10 @@ export namespace Prisma {
      * Omit specific fields from the subscription_plans
      */
     omit?: subscription_plansOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: subscription_plansInclude<ExtArgs> | null
     /**
      * The data needed to create a subscription_plans.
      */
@@ -17325,6 +17717,10 @@ export namespace Prisma {
      * Omit specific fields from the subscription_plans
      */
     omit?: subscription_plansOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: subscription_plansInclude<ExtArgs> | null
     /**
      * The data needed to update a subscription_plans.
      */
@@ -17392,6 +17788,10 @@ export namespace Prisma {
      */
     omit?: subscription_plansOmit<ExtArgs> | null
     /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: subscription_plansInclude<ExtArgs> | null
+    /**
      * The filter to search for the subscription_plans to update in case it exists.
      */
     where: subscription_plansWhereUniqueInput
@@ -17418,6 +17818,10 @@ export namespace Prisma {
      */
     omit?: subscription_plansOmit<ExtArgs> | null
     /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: subscription_plansInclude<ExtArgs> | null
+    /**
      * Filter which subscription_plans to delete.
      */
     where: subscription_plansWhereUniqueInput
@@ -17438,6 +17842,30 @@ export namespace Prisma {
   }
 
   /**
+   * subscription_plans.business_subscriptions
+   */
+  export type subscription_plans$business_subscriptionsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the business_subscriptions
+     */
+    select?: business_subscriptionsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the business_subscriptions
+     */
+    omit?: business_subscriptionsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: business_subscriptionsInclude<ExtArgs> | null
+    where?: business_subscriptionsWhereInput
+    orderBy?: business_subscriptionsOrderByWithRelationInput | business_subscriptionsOrderByWithRelationInput[]
+    cursor?: business_subscriptionsWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: Business_subscriptionsScalarFieldEnum | Business_subscriptionsScalarFieldEnum[]
+  }
+
+  /**
    * subscription_plans without action
    */
   export type subscription_plansDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -17449,6 +17877,2272 @@ export namespace Prisma {
      * Omit specific fields from the subscription_plans
      */
     omit?: subscription_plansOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: subscription_plansInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model business_subscriptions
+   */
+
+  export type AggregateBusiness_subscriptions = {
+    _count: Business_subscriptionsCountAggregateOutputType | null
+    _min: Business_subscriptionsMinAggregateOutputType | null
+    _max: Business_subscriptionsMaxAggregateOutputType | null
+  }
+
+  export type Business_subscriptionsMinAggregateOutputType = {
+    subscription_id: string | null
+    business_id: string | null
+    subscription_plan_id: string | null
+    status: string | null
+    started_at: Date | null
+    expires_at: Date | null
+    cancelled_at: Date | null
+    razorpay_subscription_id: string | null
+    created_at: Date | null
+    updated_at: Date | null
+  }
+
+  export type Business_subscriptionsMaxAggregateOutputType = {
+    subscription_id: string | null
+    business_id: string | null
+    subscription_plan_id: string | null
+    status: string | null
+    started_at: Date | null
+    expires_at: Date | null
+    cancelled_at: Date | null
+    razorpay_subscription_id: string | null
+    created_at: Date | null
+    updated_at: Date | null
+  }
+
+  export type Business_subscriptionsCountAggregateOutputType = {
+    subscription_id: number
+    business_id: number
+    subscription_plan_id: number
+    status: number
+    started_at: number
+    expires_at: number
+    cancelled_at: number
+    razorpay_subscription_id: number
+    created_at: number
+    updated_at: number
+    _all: number
+  }
+
+
+  export type Business_subscriptionsMinAggregateInputType = {
+    subscription_id?: true
+    business_id?: true
+    subscription_plan_id?: true
+    status?: true
+    started_at?: true
+    expires_at?: true
+    cancelled_at?: true
+    razorpay_subscription_id?: true
+    created_at?: true
+    updated_at?: true
+  }
+
+  export type Business_subscriptionsMaxAggregateInputType = {
+    subscription_id?: true
+    business_id?: true
+    subscription_plan_id?: true
+    status?: true
+    started_at?: true
+    expires_at?: true
+    cancelled_at?: true
+    razorpay_subscription_id?: true
+    created_at?: true
+    updated_at?: true
+  }
+
+  export type Business_subscriptionsCountAggregateInputType = {
+    subscription_id?: true
+    business_id?: true
+    subscription_plan_id?: true
+    status?: true
+    started_at?: true
+    expires_at?: true
+    cancelled_at?: true
+    razorpay_subscription_id?: true
+    created_at?: true
+    updated_at?: true
+    _all?: true
+  }
+
+  export type Business_subscriptionsAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which business_subscriptions to aggregate.
+     */
+    where?: business_subscriptionsWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of business_subscriptions to fetch.
+     */
+    orderBy?: business_subscriptionsOrderByWithRelationInput | business_subscriptionsOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: business_subscriptionsWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` business_subscriptions from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` business_subscriptions.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned business_subscriptions
+    **/
+    _count?: true | Business_subscriptionsCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: Business_subscriptionsMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: Business_subscriptionsMaxAggregateInputType
+  }
+
+  export type GetBusiness_subscriptionsAggregateType<T extends Business_subscriptionsAggregateArgs> = {
+        [P in keyof T & keyof AggregateBusiness_subscriptions]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateBusiness_subscriptions[P]>
+      : GetScalarType<T[P], AggregateBusiness_subscriptions[P]>
+  }
+
+
+
+
+  export type business_subscriptionsGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: business_subscriptionsWhereInput
+    orderBy?: business_subscriptionsOrderByWithAggregationInput | business_subscriptionsOrderByWithAggregationInput[]
+    by: Business_subscriptionsScalarFieldEnum[] | Business_subscriptionsScalarFieldEnum
+    having?: business_subscriptionsScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: Business_subscriptionsCountAggregateInputType | true
+    _min?: Business_subscriptionsMinAggregateInputType
+    _max?: Business_subscriptionsMaxAggregateInputType
+  }
+
+  export type Business_subscriptionsGroupByOutputType = {
+    subscription_id: string
+    business_id: string
+    subscription_plan_id: string
+    status: string
+    started_at: Date
+    expires_at: Date | null
+    cancelled_at: Date | null
+    razorpay_subscription_id: string | null
+    created_at: Date | null
+    updated_at: Date | null
+    _count: Business_subscriptionsCountAggregateOutputType | null
+    _min: Business_subscriptionsMinAggregateOutputType | null
+    _max: Business_subscriptionsMaxAggregateOutputType | null
+  }
+
+  type GetBusiness_subscriptionsGroupByPayload<T extends business_subscriptionsGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<Business_subscriptionsGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof Business_subscriptionsGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], Business_subscriptionsGroupByOutputType[P]>
+            : GetScalarType<T[P], Business_subscriptionsGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type business_subscriptionsSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    subscription_id?: boolean
+    business_id?: boolean
+    subscription_plan_id?: boolean
+    status?: boolean
+    started_at?: boolean
+    expires_at?: boolean
+    cancelled_at?: boolean
+    razorpay_subscription_id?: boolean
+    created_at?: boolean
+    updated_at?: boolean
+    businesses?: boolean | businessesDefaultArgs<ExtArgs>
+    subscription_plans?: boolean | subscription_plansDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["business_subscriptions"]>
+
+  export type business_subscriptionsSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    subscription_id?: boolean
+    business_id?: boolean
+    subscription_plan_id?: boolean
+    status?: boolean
+    started_at?: boolean
+    expires_at?: boolean
+    cancelled_at?: boolean
+    razorpay_subscription_id?: boolean
+    created_at?: boolean
+    updated_at?: boolean
+    businesses?: boolean | businessesDefaultArgs<ExtArgs>
+    subscription_plans?: boolean | subscription_plansDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["business_subscriptions"]>
+
+  export type business_subscriptionsSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    subscription_id?: boolean
+    business_id?: boolean
+    subscription_plan_id?: boolean
+    status?: boolean
+    started_at?: boolean
+    expires_at?: boolean
+    cancelled_at?: boolean
+    razorpay_subscription_id?: boolean
+    created_at?: boolean
+    updated_at?: boolean
+    businesses?: boolean | businessesDefaultArgs<ExtArgs>
+    subscription_plans?: boolean | subscription_plansDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["business_subscriptions"]>
+
+  export type business_subscriptionsSelectScalar = {
+    subscription_id?: boolean
+    business_id?: boolean
+    subscription_plan_id?: boolean
+    status?: boolean
+    started_at?: boolean
+    expires_at?: boolean
+    cancelled_at?: boolean
+    razorpay_subscription_id?: boolean
+    created_at?: boolean
+    updated_at?: boolean
+  }
+
+  export type business_subscriptionsOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"subscription_id" | "business_id" | "subscription_plan_id" | "status" | "started_at" | "expires_at" | "cancelled_at" | "razorpay_subscription_id" | "created_at" | "updated_at", ExtArgs["result"]["business_subscriptions"]>
+  export type business_subscriptionsInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    businesses?: boolean | businessesDefaultArgs<ExtArgs>
+    subscription_plans?: boolean | subscription_plansDefaultArgs<ExtArgs>
+  }
+  export type business_subscriptionsIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    businesses?: boolean | businessesDefaultArgs<ExtArgs>
+    subscription_plans?: boolean | subscription_plansDefaultArgs<ExtArgs>
+  }
+  export type business_subscriptionsIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    businesses?: boolean | businessesDefaultArgs<ExtArgs>
+    subscription_plans?: boolean | subscription_plansDefaultArgs<ExtArgs>
+  }
+
+  export type $business_subscriptionsPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "business_subscriptions"
+    objects: {
+      businesses: Prisma.$businessesPayload<ExtArgs>
+      subscription_plans: Prisma.$subscription_plansPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      subscription_id: string
+      business_id: string
+      subscription_plan_id: string
+      status: string
+      started_at: Date
+      expires_at: Date | null
+      cancelled_at: Date | null
+      razorpay_subscription_id: string | null
+      created_at: Date | null
+      updated_at: Date | null
+    }, ExtArgs["result"]["business_subscriptions"]>
+    composites: {}
+  }
+
+  type business_subscriptionsGetPayload<S extends boolean | null | undefined | business_subscriptionsDefaultArgs> = $Result.GetResult<Prisma.$business_subscriptionsPayload, S>
+
+  type business_subscriptionsCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<business_subscriptionsFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: Business_subscriptionsCountAggregateInputType | true
+    }
+
+  export interface business_subscriptionsDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['business_subscriptions'], meta: { name: 'business_subscriptions' } }
+    /**
+     * Find zero or one Business_subscriptions that matches the filter.
+     * @param {business_subscriptionsFindUniqueArgs} args - Arguments to find a Business_subscriptions
+     * @example
+     * // Get one Business_subscriptions
+     * const business_subscriptions = await prisma.business_subscriptions.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends business_subscriptionsFindUniqueArgs>(args: SelectSubset<T, business_subscriptionsFindUniqueArgs<ExtArgs>>): Prisma__business_subscriptionsClient<$Result.GetResult<Prisma.$business_subscriptionsPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one Business_subscriptions that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {business_subscriptionsFindUniqueOrThrowArgs} args - Arguments to find a Business_subscriptions
+     * @example
+     * // Get one Business_subscriptions
+     * const business_subscriptions = await prisma.business_subscriptions.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends business_subscriptionsFindUniqueOrThrowArgs>(args: SelectSubset<T, business_subscriptionsFindUniqueOrThrowArgs<ExtArgs>>): Prisma__business_subscriptionsClient<$Result.GetResult<Prisma.$business_subscriptionsPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Business_subscriptions that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {business_subscriptionsFindFirstArgs} args - Arguments to find a Business_subscriptions
+     * @example
+     * // Get one Business_subscriptions
+     * const business_subscriptions = await prisma.business_subscriptions.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends business_subscriptionsFindFirstArgs>(args?: SelectSubset<T, business_subscriptionsFindFirstArgs<ExtArgs>>): Prisma__business_subscriptionsClient<$Result.GetResult<Prisma.$business_subscriptionsPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Business_subscriptions that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {business_subscriptionsFindFirstOrThrowArgs} args - Arguments to find a Business_subscriptions
+     * @example
+     * // Get one Business_subscriptions
+     * const business_subscriptions = await prisma.business_subscriptions.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends business_subscriptionsFindFirstOrThrowArgs>(args?: SelectSubset<T, business_subscriptionsFindFirstOrThrowArgs<ExtArgs>>): Prisma__business_subscriptionsClient<$Result.GetResult<Prisma.$business_subscriptionsPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more Business_subscriptions that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {business_subscriptionsFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all Business_subscriptions
+     * const business_subscriptions = await prisma.business_subscriptions.findMany()
+     * 
+     * // Get first 10 Business_subscriptions
+     * const business_subscriptions = await prisma.business_subscriptions.findMany({ take: 10 })
+     * 
+     * // Only select the `subscription_id`
+     * const business_subscriptionsWithSubscription_idOnly = await prisma.business_subscriptions.findMany({ select: { subscription_id: true } })
+     * 
+     */
+    findMany<T extends business_subscriptionsFindManyArgs>(args?: SelectSubset<T, business_subscriptionsFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$business_subscriptionsPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a Business_subscriptions.
+     * @param {business_subscriptionsCreateArgs} args - Arguments to create a Business_subscriptions.
+     * @example
+     * // Create one Business_subscriptions
+     * const Business_subscriptions = await prisma.business_subscriptions.create({
+     *   data: {
+     *     // ... data to create a Business_subscriptions
+     *   }
+     * })
+     * 
+     */
+    create<T extends business_subscriptionsCreateArgs>(args: SelectSubset<T, business_subscriptionsCreateArgs<ExtArgs>>): Prisma__business_subscriptionsClient<$Result.GetResult<Prisma.$business_subscriptionsPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many Business_subscriptions.
+     * @param {business_subscriptionsCreateManyArgs} args - Arguments to create many Business_subscriptions.
+     * @example
+     * // Create many Business_subscriptions
+     * const business_subscriptions = await prisma.business_subscriptions.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends business_subscriptionsCreateManyArgs>(args?: SelectSubset<T, business_subscriptionsCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many Business_subscriptions and returns the data saved in the database.
+     * @param {business_subscriptionsCreateManyAndReturnArgs} args - Arguments to create many Business_subscriptions.
+     * @example
+     * // Create many Business_subscriptions
+     * const business_subscriptions = await prisma.business_subscriptions.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many Business_subscriptions and only return the `subscription_id`
+     * const business_subscriptionsWithSubscription_idOnly = await prisma.business_subscriptions.createManyAndReturn({
+     *   select: { subscription_id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends business_subscriptionsCreateManyAndReturnArgs>(args?: SelectSubset<T, business_subscriptionsCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$business_subscriptionsPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a Business_subscriptions.
+     * @param {business_subscriptionsDeleteArgs} args - Arguments to delete one Business_subscriptions.
+     * @example
+     * // Delete one Business_subscriptions
+     * const Business_subscriptions = await prisma.business_subscriptions.delete({
+     *   where: {
+     *     // ... filter to delete one Business_subscriptions
+     *   }
+     * })
+     * 
+     */
+    delete<T extends business_subscriptionsDeleteArgs>(args: SelectSubset<T, business_subscriptionsDeleteArgs<ExtArgs>>): Prisma__business_subscriptionsClient<$Result.GetResult<Prisma.$business_subscriptionsPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one Business_subscriptions.
+     * @param {business_subscriptionsUpdateArgs} args - Arguments to update one Business_subscriptions.
+     * @example
+     * // Update one Business_subscriptions
+     * const business_subscriptions = await prisma.business_subscriptions.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends business_subscriptionsUpdateArgs>(args: SelectSubset<T, business_subscriptionsUpdateArgs<ExtArgs>>): Prisma__business_subscriptionsClient<$Result.GetResult<Prisma.$business_subscriptionsPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more Business_subscriptions.
+     * @param {business_subscriptionsDeleteManyArgs} args - Arguments to filter Business_subscriptions to delete.
+     * @example
+     * // Delete a few Business_subscriptions
+     * const { count } = await prisma.business_subscriptions.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends business_subscriptionsDeleteManyArgs>(args?: SelectSubset<T, business_subscriptionsDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Business_subscriptions.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {business_subscriptionsUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many Business_subscriptions
+     * const business_subscriptions = await prisma.business_subscriptions.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends business_subscriptionsUpdateManyArgs>(args: SelectSubset<T, business_subscriptionsUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Business_subscriptions and returns the data updated in the database.
+     * @param {business_subscriptionsUpdateManyAndReturnArgs} args - Arguments to update many Business_subscriptions.
+     * @example
+     * // Update many Business_subscriptions
+     * const business_subscriptions = await prisma.business_subscriptions.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more Business_subscriptions and only return the `subscription_id`
+     * const business_subscriptionsWithSubscription_idOnly = await prisma.business_subscriptions.updateManyAndReturn({
+     *   select: { subscription_id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends business_subscriptionsUpdateManyAndReturnArgs>(args: SelectSubset<T, business_subscriptionsUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$business_subscriptionsPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one Business_subscriptions.
+     * @param {business_subscriptionsUpsertArgs} args - Arguments to update or create a Business_subscriptions.
+     * @example
+     * // Update or create a Business_subscriptions
+     * const business_subscriptions = await prisma.business_subscriptions.upsert({
+     *   create: {
+     *     // ... data to create a Business_subscriptions
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the Business_subscriptions we want to update
+     *   }
+     * })
+     */
+    upsert<T extends business_subscriptionsUpsertArgs>(args: SelectSubset<T, business_subscriptionsUpsertArgs<ExtArgs>>): Prisma__business_subscriptionsClient<$Result.GetResult<Prisma.$business_subscriptionsPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of Business_subscriptions.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {business_subscriptionsCountArgs} args - Arguments to filter Business_subscriptions to count.
+     * @example
+     * // Count the number of Business_subscriptions
+     * const count = await prisma.business_subscriptions.count({
+     *   where: {
+     *     // ... the filter for the Business_subscriptions we want to count
+     *   }
+     * })
+    **/
+    count<T extends business_subscriptionsCountArgs>(
+      args?: Subset<T, business_subscriptionsCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], Business_subscriptionsCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a Business_subscriptions.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {Business_subscriptionsAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends Business_subscriptionsAggregateArgs>(args: Subset<T, Business_subscriptionsAggregateArgs>): Prisma.PrismaPromise<GetBusiness_subscriptionsAggregateType<T>>
+
+    /**
+     * Group by Business_subscriptions.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {business_subscriptionsGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends business_subscriptionsGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: business_subscriptionsGroupByArgs['orderBy'] }
+        : { orderBy?: business_subscriptionsGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, business_subscriptionsGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetBusiness_subscriptionsGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the business_subscriptions model
+   */
+  readonly fields: business_subscriptionsFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for business_subscriptions.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__business_subscriptionsClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    businesses<T extends businessesDefaultArgs<ExtArgs> = {}>(args?: Subset<T, businessesDefaultArgs<ExtArgs>>): Prisma__businessesClient<$Result.GetResult<Prisma.$businessesPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    subscription_plans<T extends subscription_plansDefaultArgs<ExtArgs> = {}>(args?: Subset<T, subscription_plansDefaultArgs<ExtArgs>>): Prisma__subscription_plansClient<$Result.GetResult<Prisma.$subscription_plansPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the business_subscriptions model
+   */
+  interface business_subscriptionsFieldRefs {
+    readonly subscription_id: FieldRef<"business_subscriptions", 'String'>
+    readonly business_id: FieldRef<"business_subscriptions", 'String'>
+    readonly subscription_plan_id: FieldRef<"business_subscriptions", 'String'>
+    readonly status: FieldRef<"business_subscriptions", 'String'>
+    readonly started_at: FieldRef<"business_subscriptions", 'DateTime'>
+    readonly expires_at: FieldRef<"business_subscriptions", 'DateTime'>
+    readonly cancelled_at: FieldRef<"business_subscriptions", 'DateTime'>
+    readonly razorpay_subscription_id: FieldRef<"business_subscriptions", 'String'>
+    readonly created_at: FieldRef<"business_subscriptions", 'DateTime'>
+    readonly updated_at: FieldRef<"business_subscriptions", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * business_subscriptions findUnique
+   */
+  export type business_subscriptionsFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the business_subscriptions
+     */
+    select?: business_subscriptionsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the business_subscriptions
+     */
+    omit?: business_subscriptionsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: business_subscriptionsInclude<ExtArgs> | null
+    /**
+     * Filter, which business_subscriptions to fetch.
+     */
+    where: business_subscriptionsWhereUniqueInput
+  }
+
+  /**
+   * business_subscriptions findUniqueOrThrow
+   */
+  export type business_subscriptionsFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the business_subscriptions
+     */
+    select?: business_subscriptionsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the business_subscriptions
+     */
+    omit?: business_subscriptionsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: business_subscriptionsInclude<ExtArgs> | null
+    /**
+     * Filter, which business_subscriptions to fetch.
+     */
+    where: business_subscriptionsWhereUniqueInput
+  }
+
+  /**
+   * business_subscriptions findFirst
+   */
+  export type business_subscriptionsFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the business_subscriptions
+     */
+    select?: business_subscriptionsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the business_subscriptions
+     */
+    omit?: business_subscriptionsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: business_subscriptionsInclude<ExtArgs> | null
+    /**
+     * Filter, which business_subscriptions to fetch.
+     */
+    where?: business_subscriptionsWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of business_subscriptions to fetch.
+     */
+    orderBy?: business_subscriptionsOrderByWithRelationInput | business_subscriptionsOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for business_subscriptions.
+     */
+    cursor?: business_subscriptionsWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` business_subscriptions from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` business_subscriptions.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of business_subscriptions.
+     */
+    distinct?: Business_subscriptionsScalarFieldEnum | Business_subscriptionsScalarFieldEnum[]
+  }
+
+  /**
+   * business_subscriptions findFirstOrThrow
+   */
+  export type business_subscriptionsFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the business_subscriptions
+     */
+    select?: business_subscriptionsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the business_subscriptions
+     */
+    omit?: business_subscriptionsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: business_subscriptionsInclude<ExtArgs> | null
+    /**
+     * Filter, which business_subscriptions to fetch.
+     */
+    where?: business_subscriptionsWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of business_subscriptions to fetch.
+     */
+    orderBy?: business_subscriptionsOrderByWithRelationInput | business_subscriptionsOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for business_subscriptions.
+     */
+    cursor?: business_subscriptionsWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` business_subscriptions from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` business_subscriptions.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of business_subscriptions.
+     */
+    distinct?: Business_subscriptionsScalarFieldEnum | Business_subscriptionsScalarFieldEnum[]
+  }
+
+  /**
+   * business_subscriptions findMany
+   */
+  export type business_subscriptionsFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the business_subscriptions
+     */
+    select?: business_subscriptionsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the business_subscriptions
+     */
+    omit?: business_subscriptionsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: business_subscriptionsInclude<ExtArgs> | null
+    /**
+     * Filter, which business_subscriptions to fetch.
+     */
+    where?: business_subscriptionsWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of business_subscriptions to fetch.
+     */
+    orderBy?: business_subscriptionsOrderByWithRelationInput | business_subscriptionsOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing business_subscriptions.
+     */
+    cursor?: business_subscriptionsWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` business_subscriptions from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` business_subscriptions.
+     */
+    skip?: number
+    distinct?: Business_subscriptionsScalarFieldEnum | Business_subscriptionsScalarFieldEnum[]
+  }
+
+  /**
+   * business_subscriptions create
+   */
+  export type business_subscriptionsCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the business_subscriptions
+     */
+    select?: business_subscriptionsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the business_subscriptions
+     */
+    omit?: business_subscriptionsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: business_subscriptionsInclude<ExtArgs> | null
+    /**
+     * The data needed to create a business_subscriptions.
+     */
+    data: XOR<business_subscriptionsCreateInput, business_subscriptionsUncheckedCreateInput>
+  }
+
+  /**
+   * business_subscriptions createMany
+   */
+  export type business_subscriptionsCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many business_subscriptions.
+     */
+    data: business_subscriptionsCreateManyInput | business_subscriptionsCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * business_subscriptions createManyAndReturn
+   */
+  export type business_subscriptionsCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the business_subscriptions
+     */
+    select?: business_subscriptionsSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the business_subscriptions
+     */
+    omit?: business_subscriptionsOmit<ExtArgs> | null
+    /**
+     * The data used to create many business_subscriptions.
+     */
+    data: business_subscriptionsCreateManyInput | business_subscriptionsCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: business_subscriptionsIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * business_subscriptions update
+   */
+  export type business_subscriptionsUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the business_subscriptions
+     */
+    select?: business_subscriptionsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the business_subscriptions
+     */
+    omit?: business_subscriptionsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: business_subscriptionsInclude<ExtArgs> | null
+    /**
+     * The data needed to update a business_subscriptions.
+     */
+    data: XOR<business_subscriptionsUpdateInput, business_subscriptionsUncheckedUpdateInput>
+    /**
+     * Choose, which business_subscriptions to update.
+     */
+    where: business_subscriptionsWhereUniqueInput
+  }
+
+  /**
+   * business_subscriptions updateMany
+   */
+  export type business_subscriptionsUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update business_subscriptions.
+     */
+    data: XOR<business_subscriptionsUpdateManyMutationInput, business_subscriptionsUncheckedUpdateManyInput>
+    /**
+     * Filter which business_subscriptions to update
+     */
+    where?: business_subscriptionsWhereInput
+    /**
+     * Limit how many business_subscriptions to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * business_subscriptions updateManyAndReturn
+   */
+  export type business_subscriptionsUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the business_subscriptions
+     */
+    select?: business_subscriptionsSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the business_subscriptions
+     */
+    omit?: business_subscriptionsOmit<ExtArgs> | null
+    /**
+     * The data used to update business_subscriptions.
+     */
+    data: XOR<business_subscriptionsUpdateManyMutationInput, business_subscriptionsUncheckedUpdateManyInput>
+    /**
+     * Filter which business_subscriptions to update
+     */
+    where?: business_subscriptionsWhereInput
+    /**
+     * Limit how many business_subscriptions to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: business_subscriptionsIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * business_subscriptions upsert
+   */
+  export type business_subscriptionsUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the business_subscriptions
+     */
+    select?: business_subscriptionsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the business_subscriptions
+     */
+    omit?: business_subscriptionsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: business_subscriptionsInclude<ExtArgs> | null
+    /**
+     * The filter to search for the business_subscriptions to update in case it exists.
+     */
+    where: business_subscriptionsWhereUniqueInput
+    /**
+     * In case the business_subscriptions found by the `where` argument doesn't exist, create a new business_subscriptions with this data.
+     */
+    create: XOR<business_subscriptionsCreateInput, business_subscriptionsUncheckedCreateInput>
+    /**
+     * In case the business_subscriptions was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<business_subscriptionsUpdateInput, business_subscriptionsUncheckedUpdateInput>
+  }
+
+  /**
+   * business_subscriptions delete
+   */
+  export type business_subscriptionsDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the business_subscriptions
+     */
+    select?: business_subscriptionsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the business_subscriptions
+     */
+    omit?: business_subscriptionsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: business_subscriptionsInclude<ExtArgs> | null
+    /**
+     * Filter which business_subscriptions to delete.
+     */
+    where: business_subscriptionsWhereUniqueInput
+  }
+
+  /**
+   * business_subscriptions deleteMany
+   */
+  export type business_subscriptionsDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which business_subscriptions to delete
+     */
+    where?: business_subscriptionsWhereInput
+    /**
+     * Limit how many business_subscriptions to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * business_subscriptions without action
+   */
+  export type business_subscriptionsDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the business_subscriptions
+     */
+    select?: business_subscriptionsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the business_subscriptions
+     */
+    omit?: business_subscriptionsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: business_subscriptionsInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model api_usage_metrics
+   */
+
+  export type AggregateApi_usage_metrics = {
+    _count: Api_usage_metricsCountAggregateOutputType | null
+    _avg: Api_usage_metricsAvgAggregateOutputType | null
+    _sum: Api_usage_metricsSumAggregateOutputType | null
+    _min: Api_usage_metricsMinAggregateOutputType | null
+    _max: Api_usage_metricsMaxAggregateOutputType | null
+  }
+
+  export type Api_usage_metricsAvgAggregateOutputType = {
+    count: number | null
+  }
+
+  export type Api_usage_metricsSumAggregateOutputType = {
+    count: number | null
+  }
+
+  export type Api_usage_metricsMinAggregateOutputType = {
+    metric_id: string | null
+    business_id: string | null
+    tenant_id: string | null
+    endpoint: string | null
+    date: Date | null
+    count: number | null
+    created_at: Date | null
+    updated_at: Date | null
+  }
+
+  export type Api_usage_metricsMaxAggregateOutputType = {
+    metric_id: string | null
+    business_id: string | null
+    tenant_id: string | null
+    endpoint: string | null
+    date: Date | null
+    count: number | null
+    created_at: Date | null
+    updated_at: Date | null
+  }
+
+  export type Api_usage_metricsCountAggregateOutputType = {
+    metric_id: number
+    business_id: number
+    tenant_id: number
+    endpoint: number
+    date: number
+    count: number
+    created_at: number
+    updated_at: number
+    _all: number
+  }
+
+
+  export type Api_usage_metricsAvgAggregateInputType = {
+    count?: true
+  }
+
+  export type Api_usage_metricsSumAggregateInputType = {
+    count?: true
+  }
+
+  export type Api_usage_metricsMinAggregateInputType = {
+    metric_id?: true
+    business_id?: true
+    tenant_id?: true
+    endpoint?: true
+    date?: true
+    count?: true
+    created_at?: true
+    updated_at?: true
+  }
+
+  export type Api_usage_metricsMaxAggregateInputType = {
+    metric_id?: true
+    business_id?: true
+    tenant_id?: true
+    endpoint?: true
+    date?: true
+    count?: true
+    created_at?: true
+    updated_at?: true
+  }
+
+  export type Api_usage_metricsCountAggregateInputType = {
+    metric_id?: true
+    business_id?: true
+    tenant_id?: true
+    endpoint?: true
+    date?: true
+    count?: true
+    created_at?: true
+    updated_at?: true
+    _all?: true
+  }
+
+  export type Api_usage_metricsAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which api_usage_metrics to aggregate.
+     */
+    where?: api_usage_metricsWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of api_usage_metrics to fetch.
+     */
+    orderBy?: api_usage_metricsOrderByWithRelationInput | api_usage_metricsOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: api_usage_metricsWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` api_usage_metrics from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` api_usage_metrics.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned api_usage_metrics
+    **/
+    _count?: true | Api_usage_metricsCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: Api_usage_metricsAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: Api_usage_metricsSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: Api_usage_metricsMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: Api_usage_metricsMaxAggregateInputType
+  }
+
+  export type GetApi_usage_metricsAggregateType<T extends Api_usage_metricsAggregateArgs> = {
+        [P in keyof T & keyof AggregateApi_usage_metrics]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateApi_usage_metrics[P]>
+      : GetScalarType<T[P], AggregateApi_usage_metrics[P]>
+  }
+
+
+
+
+  export type api_usage_metricsGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: api_usage_metricsWhereInput
+    orderBy?: api_usage_metricsOrderByWithAggregationInput | api_usage_metricsOrderByWithAggregationInput[]
+    by: Api_usage_metricsScalarFieldEnum[] | Api_usage_metricsScalarFieldEnum
+    having?: api_usage_metricsScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: Api_usage_metricsCountAggregateInputType | true
+    _avg?: Api_usage_metricsAvgAggregateInputType
+    _sum?: Api_usage_metricsSumAggregateInputType
+    _min?: Api_usage_metricsMinAggregateInputType
+    _max?: Api_usage_metricsMaxAggregateInputType
+  }
+
+  export type Api_usage_metricsGroupByOutputType = {
+    metric_id: string
+    business_id: string
+    tenant_id: string
+    endpoint: string
+    date: Date
+    count: number
+    created_at: Date | null
+    updated_at: Date | null
+    _count: Api_usage_metricsCountAggregateOutputType | null
+    _avg: Api_usage_metricsAvgAggregateOutputType | null
+    _sum: Api_usage_metricsSumAggregateOutputType | null
+    _min: Api_usage_metricsMinAggregateOutputType | null
+    _max: Api_usage_metricsMaxAggregateOutputType | null
+  }
+
+  type GetApi_usage_metricsGroupByPayload<T extends api_usage_metricsGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<Api_usage_metricsGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof Api_usage_metricsGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], Api_usage_metricsGroupByOutputType[P]>
+            : GetScalarType<T[P], Api_usage_metricsGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type api_usage_metricsSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    metric_id?: boolean
+    business_id?: boolean
+    tenant_id?: boolean
+    endpoint?: boolean
+    date?: boolean
+    count?: boolean
+    created_at?: boolean
+    updated_at?: boolean
+    businesses?: boolean | businessesDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["api_usage_metrics"]>
+
+  export type api_usage_metricsSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    metric_id?: boolean
+    business_id?: boolean
+    tenant_id?: boolean
+    endpoint?: boolean
+    date?: boolean
+    count?: boolean
+    created_at?: boolean
+    updated_at?: boolean
+    businesses?: boolean | businessesDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["api_usage_metrics"]>
+
+  export type api_usage_metricsSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    metric_id?: boolean
+    business_id?: boolean
+    tenant_id?: boolean
+    endpoint?: boolean
+    date?: boolean
+    count?: boolean
+    created_at?: boolean
+    updated_at?: boolean
+    businesses?: boolean | businessesDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["api_usage_metrics"]>
+
+  export type api_usage_metricsSelectScalar = {
+    metric_id?: boolean
+    business_id?: boolean
+    tenant_id?: boolean
+    endpoint?: boolean
+    date?: boolean
+    count?: boolean
+    created_at?: boolean
+    updated_at?: boolean
+  }
+
+  export type api_usage_metricsOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"metric_id" | "business_id" | "tenant_id" | "endpoint" | "date" | "count" | "created_at" | "updated_at", ExtArgs["result"]["api_usage_metrics"]>
+  export type api_usage_metricsInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    businesses?: boolean | businessesDefaultArgs<ExtArgs>
+  }
+  export type api_usage_metricsIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    businesses?: boolean | businessesDefaultArgs<ExtArgs>
+  }
+  export type api_usage_metricsIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    businesses?: boolean | businessesDefaultArgs<ExtArgs>
+  }
+
+  export type $api_usage_metricsPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "api_usage_metrics"
+    objects: {
+      businesses: Prisma.$businessesPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      metric_id: string
+      business_id: string
+      tenant_id: string
+      endpoint: string
+      date: Date
+      count: number
+      created_at: Date | null
+      updated_at: Date | null
+    }, ExtArgs["result"]["api_usage_metrics"]>
+    composites: {}
+  }
+
+  type api_usage_metricsGetPayload<S extends boolean | null | undefined | api_usage_metricsDefaultArgs> = $Result.GetResult<Prisma.$api_usage_metricsPayload, S>
+
+  type api_usage_metricsCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<api_usage_metricsFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: Api_usage_metricsCountAggregateInputType | true
+    }
+
+  export interface api_usage_metricsDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['api_usage_metrics'], meta: { name: 'api_usage_metrics' } }
+    /**
+     * Find zero or one Api_usage_metrics that matches the filter.
+     * @param {api_usage_metricsFindUniqueArgs} args - Arguments to find a Api_usage_metrics
+     * @example
+     * // Get one Api_usage_metrics
+     * const api_usage_metrics = await prisma.api_usage_metrics.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends api_usage_metricsFindUniqueArgs>(args: SelectSubset<T, api_usage_metricsFindUniqueArgs<ExtArgs>>): Prisma__api_usage_metricsClient<$Result.GetResult<Prisma.$api_usage_metricsPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one Api_usage_metrics that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {api_usage_metricsFindUniqueOrThrowArgs} args - Arguments to find a Api_usage_metrics
+     * @example
+     * // Get one Api_usage_metrics
+     * const api_usage_metrics = await prisma.api_usage_metrics.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends api_usage_metricsFindUniqueOrThrowArgs>(args: SelectSubset<T, api_usage_metricsFindUniqueOrThrowArgs<ExtArgs>>): Prisma__api_usage_metricsClient<$Result.GetResult<Prisma.$api_usage_metricsPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Api_usage_metrics that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {api_usage_metricsFindFirstArgs} args - Arguments to find a Api_usage_metrics
+     * @example
+     * // Get one Api_usage_metrics
+     * const api_usage_metrics = await prisma.api_usage_metrics.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends api_usage_metricsFindFirstArgs>(args?: SelectSubset<T, api_usage_metricsFindFirstArgs<ExtArgs>>): Prisma__api_usage_metricsClient<$Result.GetResult<Prisma.$api_usage_metricsPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Api_usage_metrics that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {api_usage_metricsFindFirstOrThrowArgs} args - Arguments to find a Api_usage_metrics
+     * @example
+     * // Get one Api_usage_metrics
+     * const api_usage_metrics = await prisma.api_usage_metrics.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends api_usage_metricsFindFirstOrThrowArgs>(args?: SelectSubset<T, api_usage_metricsFindFirstOrThrowArgs<ExtArgs>>): Prisma__api_usage_metricsClient<$Result.GetResult<Prisma.$api_usage_metricsPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more Api_usage_metrics that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {api_usage_metricsFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all Api_usage_metrics
+     * const api_usage_metrics = await prisma.api_usage_metrics.findMany()
+     * 
+     * // Get first 10 Api_usage_metrics
+     * const api_usage_metrics = await prisma.api_usage_metrics.findMany({ take: 10 })
+     * 
+     * // Only select the `metric_id`
+     * const api_usage_metricsWithMetric_idOnly = await prisma.api_usage_metrics.findMany({ select: { metric_id: true } })
+     * 
+     */
+    findMany<T extends api_usage_metricsFindManyArgs>(args?: SelectSubset<T, api_usage_metricsFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$api_usage_metricsPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a Api_usage_metrics.
+     * @param {api_usage_metricsCreateArgs} args - Arguments to create a Api_usage_metrics.
+     * @example
+     * // Create one Api_usage_metrics
+     * const Api_usage_metrics = await prisma.api_usage_metrics.create({
+     *   data: {
+     *     // ... data to create a Api_usage_metrics
+     *   }
+     * })
+     * 
+     */
+    create<T extends api_usage_metricsCreateArgs>(args: SelectSubset<T, api_usage_metricsCreateArgs<ExtArgs>>): Prisma__api_usage_metricsClient<$Result.GetResult<Prisma.$api_usage_metricsPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many Api_usage_metrics.
+     * @param {api_usage_metricsCreateManyArgs} args - Arguments to create many Api_usage_metrics.
+     * @example
+     * // Create many Api_usage_metrics
+     * const api_usage_metrics = await prisma.api_usage_metrics.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends api_usage_metricsCreateManyArgs>(args?: SelectSubset<T, api_usage_metricsCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many Api_usage_metrics and returns the data saved in the database.
+     * @param {api_usage_metricsCreateManyAndReturnArgs} args - Arguments to create many Api_usage_metrics.
+     * @example
+     * // Create many Api_usage_metrics
+     * const api_usage_metrics = await prisma.api_usage_metrics.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many Api_usage_metrics and only return the `metric_id`
+     * const api_usage_metricsWithMetric_idOnly = await prisma.api_usage_metrics.createManyAndReturn({
+     *   select: { metric_id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends api_usage_metricsCreateManyAndReturnArgs>(args?: SelectSubset<T, api_usage_metricsCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$api_usage_metricsPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a Api_usage_metrics.
+     * @param {api_usage_metricsDeleteArgs} args - Arguments to delete one Api_usage_metrics.
+     * @example
+     * // Delete one Api_usage_metrics
+     * const Api_usage_metrics = await prisma.api_usage_metrics.delete({
+     *   where: {
+     *     // ... filter to delete one Api_usage_metrics
+     *   }
+     * })
+     * 
+     */
+    delete<T extends api_usage_metricsDeleteArgs>(args: SelectSubset<T, api_usage_metricsDeleteArgs<ExtArgs>>): Prisma__api_usage_metricsClient<$Result.GetResult<Prisma.$api_usage_metricsPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one Api_usage_metrics.
+     * @param {api_usage_metricsUpdateArgs} args - Arguments to update one Api_usage_metrics.
+     * @example
+     * // Update one Api_usage_metrics
+     * const api_usage_metrics = await prisma.api_usage_metrics.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends api_usage_metricsUpdateArgs>(args: SelectSubset<T, api_usage_metricsUpdateArgs<ExtArgs>>): Prisma__api_usage_metricsClient<$Result.GetResult<Prisma.$api_usage_metricsPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more Api_usage_metrics.
+     * @param {api_usage_metricsDeleteManyArgs} args - Arguments to filter Api_usage_metrics to delete.
+     * @example
+     * // Delete a few Api_usage_metrics
+     * const { count } = await prisma.api_usage_metrics.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends api_usage_metricsDeleteManyArgs>(args?: SelectSubset<T, api_usage_metricsDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Api_usage_metrics.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {api_usage_metricsUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many Api_usage_metrics
+     * const api_usage_metrics = await prisma.api_usage_metrics.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends api_usage_metricsUpdateManyArgs>(args: SelectSubset<T, api_usage_metricsUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Api_usage_metrics and returns the data updated in the database.
+     * @param {api_usage_metricsUpdateManyAndReturnArgs} args - Arguments to update many Api_usage_metrics.
+     * @example
+     * // Update many Api_usage_metrics
+     * const api_usage_metrics = await prisma.api_usage_metrics.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more Api_usage_metrics and only return the `metric_id`
+     * const api_usage_metricsWithMetric_idOnly = await prisma.api_usage_metrics.updateManyAndReturn({
+     *   select: { metric_id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends api_usage_metricsUpdateManyAndReturnArgs>(args: SelectSubset<T, api_usage_metricsUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$api_usage_metricsPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one Api_usage_metrics.
+     * @param {api_usage_metricsUpsertArgs} args - Arguments to update or create a Api_usage_metrics.
+     * @example
+     * // Update or create a Api_usage_metrics
+     * const api_usage_metrics = await prisma.api_usage_metrics.upsert({
+     *   create: {
+     *     // ... data to create a Api_usage_metrics
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the Api_usage_metrics we want to update
+     *   }
+     * })
+     */
+    upsert<T extends api_usage_metricsUpsertArgs>(args: SelectSubset<T, api_usage_metricsUpsertArgs<ExtArgs>>): Prisma__api_usage_metricsClient<$Result.GetResult<Prisma.$api_usage_metricsPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of Api_usage_metrics.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {api_usage_metricsCountArgs} args - Arguments to filter Api_usage_metrics to count.
+     * @example
+     * // Count the number of Api_usage_metrics
+     * const count = await prisma.api_usage_metrics.count({
+     *   where: {
+     *     // ... the filter for the Api_usage_metrics we want to count
+     *   }
+     * })
+    **/
+    count<T extends api_usage_metricsCountArgs>(
+      args?: Subset<T, api_usage_metricsCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], Api_usage_metricsCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a Api_usage_metrics.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {Api_usage_metricsAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends Api_usage_metricsAggregateArgs>(args: Subset<T, Api_usage_metricsAggregateArgs>): Prisma.PrismaPromise<GetApi_usage_metricsAggregateType<T>>
+
+    /**
+     * Group by Api_usage_metrics.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {api_usage_metricsGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends api_usage_metricsGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: api_usage_metricsGroupByArgs['orderBy'] }
+        : { orderBy?: api_usage_metricsGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, api_usage_metricsGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetApi_usage_metricsGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the api_usage_metrics model
+   */
+  readonly fields: api_usage_metricsFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for api_usage_metrics.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__api_usage_metricsClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    businesses<T extends businessesDefaultArgs<ExtArgs> = {}>(args?: Subset<T, businessesDefaultArgs<ExtArgs>>): Prisma__businessesClient<$Result.GetResult<Prisma.$businessesPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the api_usage_metrics model
+   */
+  interface api_usage_metricsFieldRefs {
+    readonly metric_id: FieldRef<"api_usage_metrics", 'String'>
+    readonly business_id: FieldRef<"api_usage_metrics", 'String'>
+    readonly tenant_id: FieldRef<"api_usage_metrics", 'String'>
+    readonly endpoint: FieldRef<"api_usage_metrics", 'String'>
+    readonly date: FieldRef<"api_usage_metrics", 'DateTime'>
+    readonly count: FieldRef<"api_usage_metrics", 'Int'>
+    readonly created_at: FieldRef<"api_usage_metrics", 'DateTime'>
+    readonly updated_at: FieldRef<"api_usage_metrics", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * api_usage_metrics findUnique
+   */
+  export type api_usage_metricsFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the api_usage_metrics
+     */
+    select?: api_usage_metricsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the api_usage_metrics
+     */
+    omit?: api_usage_metricsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: api_usage_metricsInclude<ExtArgs> | null
+    /**
+     * Filter, which api_usage_metrics to fetch.
+     */
+    where: api_usage_metricsWhereUniqueInput
+  }
+
+  /**
+   * api_usage_metrics findUniqueOrThrow
+   */
+  export type api_usage_metricsFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the api_usage_metrics
+     */
+    select?: api_usage_metricsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the api_usage_metrics
+     */
+    omit?: api_usage_metricsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: api_usage_metricsInclude<ExtArgs> | null
+    /**
+     * Filter, which api_usage_metrics to fetch.
+     */
+    where: api_usage_metricsWhereUniqueInput
+  }
+
+  /**
+   * api_usage_metrics findFirst
+   */
+  export type api_usage_metricsFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the api_usage_metrics
+     */
+    select?: api_usage_metricsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the api_usage_metrics
+     */
+    omit?: api_usage_metricsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: api_usage_metricsInclude<ExtArgs> | null
+    /**
+     * Filter, which api_usage_metrics to fetch.
+     */
+    where?: api_usage_metricsWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of api_usage_metrics to fetch.
+     */
+    orderBy?: api_usage_metricsOrderByWithRelationInput | api_usage_metricsOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for api_usage_metrics.
+     */
+    cursor?: api_usage_metricsWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` api_usage_metrics from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` api_usage_metrics.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of api_usage_metrics.
+     */
+    distinct?: Api_usage_metricsScalarFieldEnum | Api_usage_metricsScalarFieldEnum[]
+  }
+
+  /**
+   * api_usage_metrics findFirstOrThrow
+   */
+  export type api_usage_metricsFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the api_usage_metrics
+     */
+    select?: api_usage_metricsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the api_usage_metrics
+     */
+    omit?: api_usage_metricsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: api_usage_metricsInclude<ExtArgs> | null
+    /**
+     * Filter, which api_usage_metrics to fetch.
+     */
+    where?: api_usage_metricsWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of api_usage_metrics to fetch.
+     */
+    orderBy?: api_usage_metricsOrderByWithRelationInput | api_usage_metricsOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for api_usage_metrics.
+     */
+    cursor?: api_usage_metricsWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` api_usage_metrics from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` api_usage_metrics.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of api_usage_metrics.
+     */
+    distinct?: Api_usage_metricsScalarFieldEnum | Api_usage_metricsScalarFieldEnum[]
+  }
+
+  /**
+   * api_usage_metrics findMany
+   */
+  export type api_usage_metricsFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the api_usage_metrics
+     */
+    select?: api_usage_metricsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the api_usage_metrics
+     */
+    omit?: api_usage_metricsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: api_usage_metricsInclude<ExtArgs> | null
+    /**
+     * Filter, which api_usage_metrics to fetch.
+     */
+    where?: api_usage_metricsWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of api_usage_metrics to fetch.
+     */
+    orderBy?: api_usage_metricsOrderByWithRelationInput | api_usage_metricsOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing api_usage_metrics.
+     */
+    cursor?: api_usage_metricsWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` api_usage_metrics from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` api_usage_metrics.
+     */
+    skip?: number
+    distinct?: Api_usage_metricsScalarFieldEnum | Api_usage_metricsScalarFieldEnum[]
+  }
+
+  /**
+   * api_usage_metrics create
+   */
+  export type api_usage_metricsCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the api_usage_metrics
+     */
+    select?: api_usage_metricsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the api_usage_metrics
+     */
+    omit?: api_usage_metricsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: api_usage_metricsInclude<ExtArgs> | null
+    /**
+     * The data needed to create a api_usage_metrics.
+     */
+    data: XOR<api_usage_metricsCreateInput, api_usage_metricsUncheckedCreateInput>
+  }
+
+  /**
+   * api_usage_metrics createMany
+   */
+  export type api_usage_metricsCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many api_usage_metrics.
+     */
+    data: api_usage_metricsCreateManyInput | api_usage_metricsCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * api_usage_metrics createManyAndReturn
+   */
+  export type api_usage_metricsCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the api_usage_metrics
+     */
+    select?: api_usage_metricsSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the api_usage_metrics
+     */
+    omit?: api_usage_metricsOmit<ExtArgs> | null
+    /**
+     * The data used to create many api_usage_metrics.
+     */
+    data: api_usage_metricsCreateManyInput | api_usage_metricsCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: api_usage_metricsIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * api_usage_metrics update
+   */
+  export type api_usage_metricsUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the api_usage_metrics
+     */
+    select?: api_usage_metricsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the api_usage_metrics
+     */
+    omit?: api_usage_metricsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: api_usage_metricsInclude<ExtArgs> | null
+    /**
+     * The data needed to update a api_usage_metrics.
+     */
+    data: XOR<api_usage_metricsUpdateInput, api_usage_metricsUncheckedUpdateInput>
+    /**
+     * Choose, which api_usage_metrics to update.
+     */
+    where: api_usage_metricsWhereUniqueInput
+  }
+
+  /**
+   * api_usage_metrics updateMany
+   */
+  export type api_usage_metricsUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update api_usage_metrics.
+     */
+    data: XOR<api_usage_metricsUpdateManyMutationInput, api_usage_metricsUncheckedUpdateManyInput>
+    /**
+     * Filter which api_usage_metrics to update
+     */
+    where?: api_usage_metricsWhereInput
+    /**
+     * Limit how many api_usage_metrics to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * api_usage_metrics updateManyAndReturn
+   */
+  export type api_usage_metricsUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the api_usage_metrics
+     */
+    select?: api_usage_metricsSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the api_usage_metrics
+     */
+    omit?: api_usage_metricsOmit<ExtArgs> | null
+    /**
+     * The data used to update api_usage_metrics.
+     */
+    data: XOR<api_usage_metricsUpdateManyMutationInput, api_usage_metricsUncheckedUpdateManyInput>
+    /**
+     * Filter which api_usage_metrics to update
+     */
+    where?: api_usage_metricsWhereInput
+    /**
+     * Limit how many api_usage_metrics to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: api_usage_metricsIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * api_usage_metrics upsert
+   */
+  export type api_usage_metricsUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the api_usage_metrics
+     */
+    select?: api_usage_metricsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the api_usage_metrics
+     */
+    omit?: api_usage_metricsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: api_usage_metricsInclude<ExtArgs> | null
+    /**
+     * The filter to search for the api_usage_metrics to update in case it exists.
+     */
+    where: api_usage_metricsWhereUniqueInput
+    /**
+     * In case the api_usage_metrics found by the `where` argument doesn't exist, create a new api_usage_metrics with this data.
+     */
+    create: XOR<api_usage_metricsCreateInput, api_usage_metricsUncheckedCreateInput>
+    /**
+     * In case the api_usage_metrics was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<api_usage_metricsUpdateInput, api_usage_metricsUncheckedUpdateInput>
+  }
+
+  /**
+   * api_usage_metrics delete
+   */
+  export type api_usage_metricsDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the api_usage_metrics
+     */
+    select?: api_usage_metricsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the api_usage_metrics
+     */
+    omit?: api_usage_metricsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: api_usage_metricsInclude<ExtArgs> | null
+    /**
+     * Filter which api_usage_metrics to delete.
+     */
+    where: api_usage_metricsWhereUniqueInput
+  }
+
+  /**
+   * api_usage_metrics deleteMany
+   */
+  export type api_usage_metricsDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which api_usage_metrics to delete
+     */
+    where?: api_usage_metricsWhereInput
+    /**
+     * Limit how many api_usage_metrics to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * api_usage_metrics without action
+   */
+  export type api_usage_metricsDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the api_usage_metrics
+     */
+    select?: api_usage_metricsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the api_usage_metrics
+     */
+    omit?: api_usage_metricsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: api_usage_metricsInclude<ExtArgs> | null
   }
 
 
@@ -87829,10 +90523,46 @@ export namespace Prisma {
     plan_name: 'plan_name',
     price: 'price',
     duration_in_days: 'duration_in_days',
-    created_at: 'created_at'
+    billing_cycle: 'billing_cycle',
+    features: 'features',
+    limits: 'limits',
+    is_active: 'is_active',
+    razorpay_plan_id: 'razorpay_plan_id',
+    created_at: 'created_at',
+    updated_at: 'updated_at'
   };
 
   export type Subscription_plansScalarFieldEnum = (typeof Subscription_plansScalarFieldEnum)[keyof typeof Subscription_plansScalarFieldEnum]
+
+
+  export const Business_subscriptionsScalarFieldEnum: {
+    subscription_id: 'subscription_id',
+    business_id: 'business_id',
+    subscription_plan_id: 'subscription_plan_id',
+    status: 'status',
+    started_at: 'started_at',
+    expires_at: 'expires_at',
+    cancelled_at: 'cancelled_at',
+    razorpay_subscription_id: 'razorpay_subscription_id',
+    created_at: 'created_at',
+    updated_at: 'updated_at'
+  };
+
+  export type Business_subscriptionsScalarFieldEnum = (typeof Business_subscriptionsScalarFieldEnum)[keyof typeof Business_subscriptionsScalarFieldEnum]
+
+
+  export const Api_usage_metricsScalarFieldEnum: {
+    metric_id: 'metric_id',
+    business_id: 'business_id',
+    tenant_id: 'tenant_id',
+    endpoint: 'endpoint',
+    date: 'date',
+    count: 'count',
+    created_at: 'created_at',
+    updated_at: 'updated_at'
+  };
+
+  export type Api_usage_metricsScalarFieldEnum = (typeof Api_usage_metricsScalarFieldEnum)[keyof typeof Api_usage_metricsScalarFieldEnum]
 
 
   export const TenantsScalarFieldEnum: {
@@ -89298,6 +92028,8 @@ export namespace Prisma {
     users?: UsersListRelationFilter
     warehouses?: WarehousesListRelationFilter
     workflow_executions?: Workflow_executionsListRelationFilter
+    business_subscriptions?: Business_subscriptionsListRelationFilter
+    api_usage_metrics?: Api_usage_metricsListRelationFilter
   }
 
   export type businessesOrderByWithRelationInput = {
@@ -89339,6 +92071,8 @@ export namespace Prisma {
     users?: usersOrderByRelationAggregateInput
     warehouses?: warehousesOrderByRelationAggregateInput
     workflow_executions?: workflow_executionsOrderByRelationAggregateInput
+    business_subscriptions?: business_subscriptionsOrderByRelationAggregateInput
+    api_usage_metrics?: api_usage_metricsOrderByRelationAggregateInput
   }
 
   export type businessesWhereUniqueInput = Prisma.AtLeast<{
@@ -89383,6 +92117,8 @@ export namespace Prisma {
     users?: UsersListRelationFilter
     warehouses?: WarehousesListRelationFilter
     workflow_executions?: Workflow_executionsListRelationFilter
+    business_subscriptions?: Business_subscriptionsListRelationFilter
+    api_usage_metrics?: Api_usage_metricsListRelationFilter
   }, "business_id">
 
   export type businessesOrderByWithAggregationInput = {
@@ -89837,7 +92573,14 @@ export namespace Prisma {
     plan_name?: StringFilter<"subscription_plans"> | string
     price?: DecimalNullableFilter<"subscription_plans"> | Decimal | DecimalJsLike | number | string | null
     duration_in_days?: IntNullableFilter<"subscription_plans"> | number | null
+    billing_cycle?: StringNullableFilter<"subscription_plans"> | string | null
+    features?: JsonNullableFilter<"subscription_plans">
+    limits?: JsonNullableFilter<"subscription_plans">
+    is_active?: BoolFilter<"subscription_plans"> | boolean
+    razorpay_plan_id?: StringNullableFilter<"subscription_plans"> | string | null
     created_at?: DateTimeNullableFilter<"subscription_plans"> | Date | string | null
+    updated_at?: DateTimeNullableFilter<"subscription_plans"> | Date | string | null
+    business_subscriptions?: Business_subscriptionsListRelationFilter
   }
 
   export type subscription_plansOrderByWithRelationInput = {
@@ -89845,7 +92588,14 @@ export namespace Prisma {
     plan_name?: SortOrder
     price?: SortOrderInput | SortOrder
     duration_in_days?: SortOrderInput | SortOrder
+    billing_cycle?: SortOrderInput | SortOrder
+    features?: SortOrderInput | SortOrder
+    limits?: SortOrderInput | SortOrder
+    is_active?: SortOrder
+    razorpay_plan_id?: SortOrderInput | SortOrder
     created_at?: SortOrderInput | SortOrder
+    updated_at?: SortOrderInput | SortOrder
+    business_subscriptions?: business_subscriptionsOrderByRelationAggregateInput
   }
 
   export type subscription_plansWhereUniqueInput = Prisma.AtLeast<{
@@ -89856,7 +92606,14 @@ export namespace Prisma {
     plan_name?: StringFilter<"subscription_plans"> | string
     price?: DecimalNullableFilter<"subscription_plans"> | Decimal | DecimalJsLike | number | string | null
     duration_in_days?: IntNullableFilter<"subscription_plans"> | number | null
+    billing_cycle?: StringNullableFilter<"subscription_plans"> | string | null
+    features?: JsonNullableFilter<"subscription_plans">
+    limits?: JsonNullableFilter<"subscription_plans">
+    is_active?: BoolFilter<"subscription_plans"> | boolean
+    razorpay_plan_id?: StringNullableFilter<"subscription_plans"> | string | null
     created_at?: DateTimeNullableFilter<"subscription_plans"> | Date | string | null
+    updated_at?: DateTimeNullableFilter<"subscription_plans"> | Date | string | null
+    business_subscriptions?: Business_subscriptionsListRelationFilter
   }, "subscription_plan_id">
 
   export type subscription_plansOrderByWithAggregationInput = {
@@ -89864,7 +92621,13 @@ export namespace Prisma {
     plan_name?: SortOrder
     price?: SortOrderInput | SortOrder
     duration_in_days?: SortOrderInput | SortOrder
+    billing_cycle?: SortOrderInput | SortOrder
+    features?: SortOrderInput | SortOrder
+    limits?: SortOrderInput | SortOrder
+    is_active?: SortOrder
+    razorpay_plan_id?: SortOrderInput | SortOrder
     created_at?: SortOrderInput | SortOrder
+    updated_at?: SortOrderInput | SortOrder
     _count?: subscription_plansCountOrderByAggregateInput
     _avg?: subscription_plansAvgOrderByAggregateInput
     _max?: subscription_plansMaxOrderByAggregateInput
@@ -89880,7 +92643,169 @@ export namespace Prisma {
     plan_name?: StringWithAggregatesFilter<"subscription_plans"> | string
     price?: DecimalNullableWithAggregatesFilter<"subscription_plans"> | Decimal | DecimalJsLike | number | string | null
     duration_in_days?: IntNullableWithAggregatesFilter<"subscription_plans"> | number | null
+    billing_cycle?: StringNullableWithAggregatesFilter<"subscription_plans"> | string | null
+    features?: JsonNullableWithAggregatesFilter<"subscription_plans">
+    limits?: JsonNullableWithAggregatesFilter<"subscription_plans">
+    is_active?: BoolWithAggregatesFilter<"subscription_plans"> | boolean
+    razorpay_plan_id?: StringNullableWithAggregatesFilter<"subscription_plans"> | string | null
     created_at?: DateTimeNullableWithAggregatesFilter<"subscription_plans"> | Date | string | null
+    updated_at?: DateTimeNullableWithAggregatesFilter<"subscription_plans"> | Date | string | null
+  }
+
+  export type business_subscriptionsWhereInput = {
+    AND?: business_subscriptionsWhereInput | business_subscriptionsWhereInput[]
+    OR?: business_subscriptionsWhereInput[]
+    NOT?: business_subscriptionsWhereInput | business_subscriptionsWhereInput[]
+    subscription_id?: UuidFilter<"business_subscriptions"> | string
+    business_id?: UuidFilter<"business_subscriptions"> | string
+    subscription_plan_id?: UuidFilter<"business_subscriptions"> | string
+    status?: StringFilter<"business_subscriptions"> | string
+    started_at?: DateTimeFilter<"business_subscriptions"> | Date | string
+    expires_at?: DateTimeNullableFilter<"business_subscriptions"> | Date | string | null
+    cancelled_at?: DateTimeNullableFilter<"business_subscriptions"> | Date | string | null
+    razorpay_subscription_id?: StringNullableFilter<"business_subscriptions"> | string | null
+    created_at?: DateTimeNullableFilter<"business_subscriptions"> | Date | string | null
+    updated_at?: DateTimeNullableFilter<"business_subscriptions"> | Date | string | null
+    businesses?: XOR<BusinessesScalarRelationFilter, businessesWhereInput>
+    subscription_plans?: XOR<Subscription_plansScalarRelationFilter, subscription_plansWhereInput>
+  }
+
+  export type business_subscriptionsOrderByWithRelationInput = {
+    subscription_id?: SortOrder
+    business_id?: SortOrder
+    subscription_plan_id?: SortOrder
+    status?: SortOrder
+    started_at?: SortOrder
+    expires_at?: SortOrderInput | SortOrder
+    cancelled_at?: SortOrderInput | SortOrder
+    razorpay_subscription_id?: SortOrderInput | SortOrder
+    created_at?: SortOrderInput | SortOrder
+    updated_at?: SortOrderInput | SortOrder
+    businesses?: businessesOrderByWithRelationInput
+    subscription_plans?: subscription_plansOrderByWithRelationInput
+  }
+
+  export type business_subscriptionsWhereUniqueInput = Prisma.AtLeast<{
+    subscription_id?: string
+    AND?: business_subscriptionsWhereInput | business_subscriptionsWhereInput[]
+    OR?: business_subscriptionsWhereInput[]
+    NOT?: business_subscriptionsWhereInput | business_subscriptionsWhereInput[]
+    business_id?: UuidFilter<"business_subscriptions"> | string
+    subscription_plan_id?: UuidFilter<"business_subscriptions"> | string
+    status?: StringFilter<"business_subscriptions"> | string
+    started_at?: DateTimeFilter<"business_subscriptions"> | Date | string
+    expires_at?: DateTimeNullableFilter<"business_subscriptions"> | Date | string | null
+    cancelled_at?: DateTimeNullableFilter<"business_subscriptions"> | Date | string | null
+    razorpay_subscription_id?: StringNullableFilter<"business_subscriptions"> | string | null
+    created_at?: DateTimeNullableFilter<"business_subscriptions"> | Date | string | null
+    updated_at?: DateTimeNullableFilter<"business_subscriptions"> | Date | string | null
+    businesses?: XOR<BusinessesScalarRelationFilter, businessesWhereInput>
+    subscription_plans?: XOR<Subscription_plansScalarRelationFilter, subscription_plansWhereInput>
+  }, "subscription_id">
+
+  export type business_subscriptionsOrderByWithAggregationInput = {
+    subscription_id?: SortOrder
+    business_id?: SortOrder
+    subscription_plan_id?: SortOrder
+    status?: SortOrder
+    started_at?: SortOrder
+    expires_at?: SortOrderInput | SortOrder
+    cancelled_at?: SortOrderInput | SortOrder
+    razorpay_subscription_id?: SortOrderInput | SortOrder
+    created_at?: SortOrderInput | SortOrder
+    updated_at?: SortOrderInput | SortOrder
+    _count?: business_subscriptionsCountOrderByAggregateInput
+    _max?: business_subscriptionsMaxOrderByAggregateInput
+    _min?: business_subscriptionsMinOrderByAggregateInput
+  }
+
+  export type business_subscriptionsScalarWhereWithAggregatesInput = {
+    AND?: business_subscriptionsScalarWhereWithAggregatesInput | business_subscriptionsScalarWhereWithAggregatesInput[]
+    OR?: business_subscriptionsScalarWhereWithAggregatesInput[]
+    NOT?: business_subscriptionsScalarWhereWithAggregatesInput | business_subscriptionsScalarWhereWithAggregatesInput[]
+    subscription_id?: UuidWithAggregatesFilter<"business_subscriptions"> | string
+    business_id?: UuidWithAggregatesFilter<"business_subscriptions"> | string
+    subscription_plan_id?: UuidWithAggregatesFilter<"business_subscriptions"> | string
+    status?: StringWithAggregatesFilter<"business_subscriptions"> | string
+    started_at?: DateTimeWithAggregatesFilter<"business_subscriptions"> | Date | string
+    expires_at?: DateTimeNullableWithAggregatesFilter<"business_subscriptions"> | Date | string | null
+    cancelled_at?: DateTimeNullableWithAggregatesFilter<"business_subscriptions"> | Date | string | null
+    razorpay_subscription_id?: StringNullableWithAggregatesFilter<"business_subscriptions"> | string | null
+    created_at?: DateTimeNullableWithAggregatesFilter<"business_subscriptions"> | Date | string | null
+    updated_at?: DateTimeNullableWithAggregatesFilter<"business_subscriptions"> | Date | string | null
+  }
+
+  export type api_usage_metricsWhereInput = {
+    AND?: api_usage_metricsWhereInput | api_usage_metricsWhereInput[]
+    OR?: api_usage_metricsWhereInput[]
+    NOT?: api_usage_metricsWhereInput | api_usage_metricsWhereInput[]
+    metric_id?: UuidFilter<"api_usage_metrics"> | string
+    business_id?: UuidFilter<"api_usage_metrics"> | string
+    tenant_id?: UuidFilter<"api_usage_metrics"> | string
+    endpoint?: StringFilter<"api_usage_metrics"> | string
+    date?: DateTimeFilter<"api_usage_metrics"> | Date | string
+    count?: IntFilter<"api_usage_metrics"> | number
+    created_at?: DateTimeNullableFilter<"api_usage_metrics"> | Date | string | null
+    updated_at?: DateTimeNullableFilter<"api_usage_metrics"> | Date | string | null
+    businesses?: XOR<BusinessesScalarRelationFilter, businessesWhereInput>
+  }
+
+  export type api_usage_metricsOrderByWithRelationInput = {
+    metric_id?: SortOrder
+    business_id?: SortOrder
+    tenant_id?: SortOrder
+    endpoint?: SortOrder
+    date?: SortOrder
+    count?: SortOrder
+    created_at?: SortOrderInput | SortOrder
+    updated_at?: SortOrderInput | SortOrder
+    businesses?: businessesOrderByWithRelationInput
+  }
+
+  export type api_usage_metricsWhereUniqueInput = Prisma.AtLeast<{
+    metric_id?: string
+    business_id_endpoint_date?: api_usage_metricsBusiness_idEndpointDateCompoundUniqueInput
+    AND?: api_usage_metricsWhereInput | api_usage_metricsWhereInput[]
+    OR?: api_usage_metricsWhereInput[]
+    NOT?: api_usage_metricsWhereInput | api_usage_metricsWhereInput[]
+    business_id?: UuidFilter<"api_usage_metrics"> | string
+    tenant_id?: UuidFilter<"api_usage_metrics"> | string
+    endpoint?: StringFilter<"api_usage_metrics"> | string
+    date?: DateTimeFilter<"api_usage_metrics"> | Date | string
+    count?: IntFilter<"api_usage_metrics"> | number
+    created_at?: DateTimeNullableFilter<"api_usage_metrics"> | Date | string | null
+    updated_at?: DateTimeNullableFilter<"api_usage_metrics"> | Date | string | null
+    businesses?: XOR<BusinessesScalarRelationFilter, businessesWhereInput>
+  }, "metric_id" | "business_id_endpoint_date">
+
+  export type api_usage_metricsOrderByWithAggregationInput = {
+    metric_id?: SortOrder
+    business_id?: SortOrder
+    tenant_id?: SortOrder
+    endpoint?: SortOrder
+    date?: SortOrder
+    count?: SortOrder
+    created_at?: SortOrderInput | SortOrder
+    updated_at?: SortOrderInput | SortOrder
+    _count?: api_usage_metricsCountOrderByAggregateInput
+    _avg?: api_usage_metricsAvgOrderByAggregateInput
+    _max?: api_usage_metricsMaxOrderByAggregateInput
+    _min?: api_usage_metricsMinOrderByAggregateInput
+    _sum?: api_usage_metricsSumOrderByAggregateInput
+  }
+
+  export type api_usage_metricsScalarWhereWithAggregatesInput = {
+    AND?: api_usage_metricsScalarWhereWithAggregatesInput | api_usage_metricsScalarWhereWithAggregatesInput[]
+    OR?: api_usage_metricsScalarWhereWithAggregatesInput[]
+    NOT?: api_usage_metricsScalarWhereWithAggregatesInput | api_usage_metricsScalarWhereWithAggregatesInput[]
+    metric_id?: UuidWithAggregatesFilter<"api_usage_metrics"> | string
+    business_id?: UuidWithAggregatesFilter<"api_usage_metrics"> | string
+    tenant_id?: UuidWithAggregatesFilter<"api_usage_metrics"> | string
+    endpoint?: StringWithAggregatesFilter<"api_usage_metrics"> | string
+    date?: DateTimeWithAggregatesFilter<"api_usage_metrics"> | Date | string
+    count?: IntWithAggregatesFilter<"api_usage_metrics"> | number
+    created_at?: DateTimeNullableWithAggregatesFilter<"api_usage_metrics"> | Date | string | null
+    updated_at?: DateTimeNullableWithAggregatesFilter<"api_usage_metrics"> | Date | string | null
   }
 
   export type tenantsWhereInput = {
@@ -96720,6 +99645,8 @@ export namespace Prisma {
     users?: usersCreateNestedManyWithoutBusinessesInput
     warehouses?: warehousesCreateNestedManyWithoutBusinessesInput
     workflow_executions?: workflow_executionsCreateNestedManyWithoutBusinessesInput
+    business_subscriptions?: business_subscriptionsCreateNestedManyWithoutBusinessesInput
+    api_usage_metrics?: api_usage_metricsCreateNestedManyWithoutBusinessesInput
   }
 
   export type businessesUncheckedCreateInput = {
@@ -96760,6 +99687,8 @@ export namespace Prisma {
     users?: usersUncheckedCreateNestedManyWithoutBusinessesInput
     warehouses?: warehousesUncheckedCreateNestedManyWithoutBusinessesInput
     workflow_executions?: workflow_executionsUncheckedCreateNestedManyWithoutBusinessesInput
+    business_subscriptions?: business_subscriptionsUncheckedCreateNestedManyWithoutBusinessesInput
+    api_usage_metrics?: api_usage_metricsUncheckedCreateNestedManyWithoutBusinessesInput
   }
 
   export type businessesUpdateInput = {
@@ -96800,6 +99729,8 @@ export namespace Prisma {
     users?: usersUpdateManyWithoutBusinessesNestedInput
     warehouses?: warehousesUpdateManyWithoutBusinessesNestedInput
     workflow_executions?: workflow_executionsUpdateManyWithoutBusinessesNestedInput
+    business_subscriptions?: business_subscriptionsUpdateManyWithoutBusinessesNestedInput
+    api_usage_metrics?: api_usage_metricsUpdateManyWithoutBusinessesNestedInput
   }
 
   export type businessesUncheckedUpdateInput = {
@@ -96840,6 +99771,8 @@ export namespace Prisma {
     users?: usersUncheckedUpdateManyWithoutBusinessesNestedInput
     warehouses?: warehousesUncheckedUpdateManyWithoutBusinessesNestedInput
     workflow_executions?: workflow_executionsUncheckedUpdateManyWithoutBusinessesNestedInput
+    business_subscriptions?: business_subscriptionsUncheckedUpdateManyWithoutBusinessesNestedInput
+    api_usage_metrics?: api_usage_metricsUncheckedUpdateManyWithoutBusinessesNestedInput
   }
 
   export type businessesCreateManyInput = {
@@ -97331,7 +100264,14 @@ export namespace Prisma {
     plan_name: string
     price?: Decimal | DecimalJsLike | number | string | null
     duration_in_days?: number | null
+    billing_cycle?: string | null
+    features?: NullableJsonNullValueInput | InputJsonValue
+    limits?: NullableJsonNullValueInput | InputJsonValue
+    is_active?: boolean
+    razorpay_plan_id?: string | null
     created_at?: Date | string | null
+    updated_at?: Date | string | null
+    business_subscriptions?: business_subscriptionsCreateNestedManyWithoutSubscription_plansInput
   }
 
   export type subscription_plansUncheckedCreateInput = {
@@ -97339,7 +100279,14 @@ export namespace Prisma {
     plan_name: string
     price?: Decimal | DecimalJsLike | number | string | null
     duration_in_days?: number | null
+    billing_cycle?: string | null
+    features?: NullableJsonNullValueInput | InputJsonValue
+    limits?: NullableJsonNullValueInput | InputJsonValue
+    is_active?: boolean
+    razorpay_plan_id?: string | null
     created_at?: Date | string | null
+    updated_at?: Date | string | null
+    business_subscriptions?: business_subscriptionsUncheckedCreateNestedManyWithoutSubscription_plansInput
   }
 
   export type subscription_plansUpdateInput = {
@@ -97347,7 +100294,14 @@ export namespace Prisma {
     plan_name?: StringFieldUpdateOperationsInput | string
     price?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     duration_in_days?: NullableIntFieldUpdateOperationsInput | number | null
+    billing_cycle?: NullableStringFieldUpdateOperationsInput | string | null
+    features?: NullableJsonNullValueInput | InputJsonValue
+    limits?: NullableJsonNullValueInput | InputJsonValue
+    is_active?: BoolFieldUpdateOperationsInput | boolean
+    razorpay_plan_id?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    business_subscriptions?: business_subscriptionsUpdateManyWithoutSubscription_plansNestedInput
   }
 
   export type subscription_plansUncheckedUpdateInput = {
@@ -97355,7 +100309,14 @@ export namespace Prisma {
     plan_name?: StringFieldUpdateOperationsInput | string
     price?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     duration_in_days?: NullableIntFieldUpdateOperationsInput | number | null
+    billing_cycle?: NullableStringFieldUpdateOperationsInput | string | null
+    features?: NullableJsonNullValueInput | InputJsonValue
+    limits?: NullableJsonNullValueInput | InputJsonValue
+    is_active?: BoolFieldUpdateOperationsInput | boolean
+    razorpay_plan_id?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    business_subscriptions?: business_subscriptionsUncheckedUpdateManyWithoutSubscription_plansNestedInput
   }
 
   export type subscription_plansCreateManyInput = {
@@ -97363,7 +100324,13 @@ export namespace Prisma {
     plan_name: string
     price?: Decimal | DecimalJsLike | number | string | null
     duration_in_days?: number | null
+    billing_cycle?: string | null
+    features?: NullableJsonNullValueInput | InputJsonValue
+    limits?: NullableJsonNullValueInput | InputJsonValue
+    is_active?: boolean
+    razorpay_plan_id?: string | null
     created_at?: Date | string | null
+    updated_at?: Date | string | null
   }
 
   export type subscription_plansUpdateManyMutationInput = {
@@ -97371,7 +100338,13 @@ export namespace Prisma {
     plan_name?: StringFieldUpdateOperationsInput | string
     price?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     duration_in_days?: NullableIntFieldUpdateOperationsInput | number | null
+    billing_cycle?: NullableStringFieldUpdateOperationsInput | string | null
+    features?: NullableJsonNullValueInput | InputJsonValue
+    limits?: NullableJsonNullValueInput | InputJsonValue
+    is_active?: BoolFieldUpdateOperationsInput | boolean
+    razorpay_plan_id?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
   export type subscription_plansUncheckedUpdateManyInput = {
@@ -97379,7 +100352,178 @@ export namespace Prisma {
     plan_name?: StringFieldUpdateOperationsInput | string
     price?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     duration_in_days?: NullableIntFieldUpdateOperationsInput | number | null
+    billing_cycle?: NullableStringFieldUpdateOperationsInput | string | null
+    features?: NullableJsonNullValueInput | InputJsonValue
+    limits?: NullableJsonNullValueInput | InputJsonValue
+    is_active?: BoolFieldUpdateOperationsInput | boolean
+    razorpay_plan_id?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
+  export type business_subscriptionsCreateInput = {
+    subscription_id?: string
+    status: string
+    started_at?: Date | string
+    expires_at?: Date | string | null
+    cancelled_at?: Date | string | null
+    razorpay_subscription_id?: string | null
+    created_at?: Date | string | null
+    updated_at?: Date | string | null
+    businesses: businessesCreateNestedOneWithoutBusiness_subscriptionsInput
+    subscription_plans: subscription_plansCreateNestedOneWithoutBusiness_subscriptionsInput
+  }
+
+  export type business_subscriptionsUncheckedCreateInput = {
+    subscription_id?: string
+    business_id: string
+    subscription_plan_id: string
+    status: string
+    started_at?: Date | string
+    expires_at?: Date | string | null
+    cancelled_at?: Date | string | null
+    razorpay_subscription_id?: string | null
+    created_at?: Date | string | null
+    updated_at?: Date | string | null
+  }
+
+  export type business_subscriptionsUpdateInput = {
+    subscription_id?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    started_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    expires_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    cancelled_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    razorpay_subscription_id?: NullableStringFieldUpdateOperationsInput | string | null
+    created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    businesses?: businessesUpdateOneRequiredWithoutBusiness_subscriptionsNestedInput
+    subscription_plans?: subscription_plansUpdateOneRequiredWithoutBusiness_subscriptionsNestedInput
+  }
+
+  export type business_subscriptionsUncheckedUpdateInput = {
+    subscription_id?: StringFieldUpdateOperationsInput | string
+    business_id?: StringFieldUpdateOperationsInput | string
+    subscription_plan_id?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    started_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    expires_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    cancelled_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    razorpay_subscription_id?: NullableStringFieldUpdateOperationsInput | string | null
+    created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
+  export type business_subscriptionsCreateManyInput = {
+    subscription_id?: string
+    business_id: string
+    subscription_plan_id: string
+    status: string
+    started_at?: Date | string
+    expires_at?: Date | string | null
+    cancelled_at?: Date | string | null
+    razorpay_subscription_id?: string | null
+    created_at?: Date | string | null
+    updated_at?: Date | string | null
+  }
+
+  export type business_subscriptionsUpdateManyMutationInput = {
+    subscription_id?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    started_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    expires_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    cancelled_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    razorpay_subscription_id?: NullableStringFieldUpdateOperationsInput | string | null
+    created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
+  export type business_subscriptionsUncheckedUpdateManyInput = {
+    subscription_id?: StringFieldUpdateOperationsInput | string
+    business_id?: StringFieldUpdateOperationsInput | string
+    subscription_plan_id?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    started_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    expires_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    cancelled_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    razorpay_subscription_id?: NullableStringFieldUpdateOperationsInput | string | null
+    created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
+  export type api_usage_metricsCreateInput = {
+    metric_id?: string
+    tenant_id: string
+    endpoint: string
+    date: Date | string
+    count?: number
+    created_at?: Date | string | null
+    updated_at?: Date | string | null
+    businesses: businessesCreateNestedOneWithoutApi_usage_metricsInput
+  }
+
+  export type api_usage_metricsUncheckedCreateInput = {
+    metric_id?: string
+    business_id: string
+    tenant_id: string
+    endpoint: string
+    date: Date | string
+    count?: number
+    created_at?: Date | string | null
+    updated_at?: Date | string | null
+  }
+
+  export type api_usage_metricsUpdateInput = {
+    metric_id?: StringFieldUpdateOperationsInput | string
+    tenant_id?: StringFieldUpdateOperationsInput | string
+    endpoint?: StringFieldUpdateOperationsInput | string
+    date?: DateTimeFieldUpdateOperationsInput | Date | string
+    count?: IntFieldUpdateOperationsInput | number
+    created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    businesses?: businessesUpdateOneRequiredWithoutApi_usage_metricsNestedInput
+  }
+
+  export type api_usage_metricsUncheckedUpdateInput = {
+    metric_id?: StringFieldUpdateOperationsInput | string
+    business_id?: StringFieldUpdateOperationsInput | string
+    tenant_id?: StringFieldUpdateOperationsInput | string
+    endpoint?: StringFieldUpdateOperationsInput | string
+    date?: DateTimeFieldUpdateOperationsInput | Date | string
+    count?: IntFieldUpdateOperationsInput | number
+    created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
+  export type api_usage_metricsCreateManyInput = {
+    metric_id?: string
+    business_id: string
+    tenant_id: string
+    endpoint: string
+    date: Date | string
+    count?: number
+    created_at?: Date | string | null
+    updated_at?: Date | string | null
+  }
+
+  export type api_usage_metricsUpdateManyMutationInput = {
+    metric_id?: StringFieldUpdateOperationsInput | string
+    tenant_id?: StringFieldUpdateOperationsInput | string
+    endpoint?: StringFieldUpdateOperationsInput | string
+    date?: DateTimeFieldUpdateOperationsInput | Date | string
+    count?: IntFieldUpdateOperationsInput | number
+    created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
+  export type api_usage_metricsUncheckedUpdateManyInput = {
+    metric_id?: StringFieldUpdateOperationsInput | string
+    business_id?: StringFieldUpdateOperationsInput | string
+    tenant_id?: StringFieldUpdateOperationsInput | string
+    endpoint?: StringFieldUpdateOperationsInput | string
+    date?: DateTimeFieldUpdateOperationsInput | Date | string
+    count?: IntFieldUpdateOperationsInput | number
+    created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
   export type tenantsCreateInput = {
@@ -105493,6 +108637,18 @@ export namespace Prisma {
     none?: workflow_executionsWhereInput
   }
 
+  export type Business_subscriptionsListRelationFilter = {
+    every?: business_subscriptionsWhereInput
+    some?: business_subscriptionsWhereInput
+    none?: business_subscriptionsWhereInput
+  }
+
+  export type Api_usage_metricsListRelationFilter = {
+    every?: api_usage_metricsWhereInput
+    some?: api_usage_metricsWhereInput
+    none?: api_usage_metricsWhereInput
+  }
+
   export type SortOrderInput = {
     sort: SortOrder
     nulls?: NullsOrder
@@ -105583,6 +108739,14 @@ export namespace Prisma {
   }
 
   export type workflow_executionsOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type business_subscriptionsOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type api_usage_metricsOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -106086,7 +109250,13 @@ export namespace Prisma {
     plan_name?: SortOrder
     price?: SortOrder
     duration_in_days?: SortOrder
+    billing_cycle?: SortOrder
+    features?: SortOrder
+    limits?: SortOrder
+    is_active?: SortOrder
+    razorpay_plan_id?: SortOrder
     created_at?: SortOrder
+    updated_at?: SortOrder
   }
 
   export type subscription_plansAvgOrderByAggregateInput = {
@@ -106099,7 +109269,11 @@ export namespace Prisma {
     plan_name?: SortOrder
     price?: SortOrder
     duration_in_days?: SortOrder
+    billing_cycle?: SortOrder
+    is_active?: SortOrder
+    razorpay_plan_id?: SortOrder
     created_at?: SortOrder
+    updated_at?: SortOrder
   }
 
   export type subscription_plansMinOrderByAggregateInput = {
@@ -106107,7 +109281,11 @@ export namespace Prisma {
     plan_name?: SortOrder
     price?: SortOrder
     duration_in_days?: SortOrder
+    billing_cycle?: SortOrder
+    is_active?: SortOrder
+    razorpay_plan_id?: SortOrder
     created_at?: SortOrder
+    updated_at?: SortOrder
   }
 
   export type subscription_plansSumOrderByAggregateInput = {
@@ -106129,6 +109307,124 @@ export namespace Prisma {
     _sum?: NestedDecimalNullableFilter<$PrismaModel>
     _min?: NestedDecimalNullableFilter<$PrismaModel>
     _max?: NestedDecimalNullableFilter<$PrismaModel>
+  }
+
+  export type Subscription_plansScalarRelationFilter = {
+    is?: subscription_plansWhereInput
+    isNot?: subscription_plansWhereInput
+  }
+
+  export type business_subscriptionsCountOrderByAggregateInput = {
+    subscription_id?: SortOrder
+    business_id?: SortOrder
+    subscription_plan_id?: SortOrder
+    status?: SortOrder
+    started_at?: SortOrder
+    expires_at?: SortOrder
+    cancelled_at?: SortOrder
+    razorpay_subscription_id?: SortOrder
+    created_at?: SortOrder
+    updated_at?: SortOrder
+  }
+
+  export type business_subscriptionsMaxOrderByAggregateInput = {
+    subscription_id?: SortOrder
+    business_id?: SortOrder
+    subscription_plan_id?: SortOrder
+    status?: SortOrder
+    started_at?: SortOrder
+    expires_at?: SortOrder
+    cancelled_at?: SortOrder
+    razorpay_subscription_id?: SortOrder
+    created_at?: SortOrder
+    updated_at?: SortOrder
+  }
+
+  export type business_subscriptionsMinOrderByAggregateInput = {
+    subscription_id?: SortOrder
+    business_id?: SortOrder
+    subscription_plan_id?: SortOrder
+    status?: SortOrder
+    started_at?: SortOrder
+    expires_at?: SortOrder
+    cancelled_at?: SortOrder
+    razorpay_subscription_id?: SortOrder
+    created_at?: SortOrder
+    updated_at?: SortOrder
+  }
+
+  export type IntFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel>
+    in?: number[] | ListIntFieldRefInput<$PrismaModel>
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel>
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntFilter<$PrismaModel> | number
+  }
+
+  export type api_usage_metricsBusiness_idEndpointDateCompoundUniqueInput = {
+    business_id: string
+    endpoint: string
+    date: Date | string
+  }
+
+  export type api_usage_metricsCountOrderByAggregateInput = {
+    metric_id?: SortOrder
+    business_id?: SortOrder
+    tenant_id?: SortOrder
+    endpoint?: SortOrder
+    date?: SortOrder
+    count?: SortOrder
+    created_at?: SortOrder
+    updated_at?: SortOrder
+  }
+
+  export type api_usage_metricsAvgOrderByAggregateInput = {
+    count?: SortOrder
+  }
+
+  export type api_usage_metricsMaxOrderByAggregateInput = {
+    metric_id?: SortOrder
+    business_id?: SortOrder
+    tenant_id?: SortOrder
+    endpoint?: SortOrder
+    date?: SortOrder
+    count?: SortOrder
+    created_at?: SortOrder
+    updated_at?: SortOrder
+  }
+
+  export type api_usage_metricsMinOrderByAggregateInput = {
+    metric_id?: SortOrder
+    business_id?: SortOrder
+    tenant_id?: SortOrder
+    endpoint?: SortOrder
+    date?: SortOrder
+    count?: SortOrder
+    created_at?: SortOrder
+    updated_at?: SortOrder
+  }
+
+  export type api_usage_metricsSumOrderByAggregateInput = {
+    count?: SortOrder
+  }
+
+  export type IntWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel>
+    in?: number[] | ListIntFieldRefInput<$PrismaModel>
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel>
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntWithAggregatesFilter<$PrismaModel> | number
+    _count?: NestedIntFilter<$PrismaModel>
+    _avg?: NestedFloatFilter<$PrismaModel>
+    _sum?: NestedIntFilter<$PrismaModel>
+    _min?: NestedIntFilter<$PrismaModel>
+    _max?: NestedIntFilter<$PrismaModel>
   }
 
   export type BusinessesListRelationFilter = {
@@ -106682,17 +109978,6 @@ export namespace Prisma {
     created_at?: SortOrder
   }
 
-  export type IntFilter<$PrismaModel = never> = {
-    equals?: number | IntFieldRefInput<$PrismaModel>
-    in?: number[] | ListIntFieldRefInput<$PrismaModel>
-    notIn?: number[] | ListIntFieldRefInput<$PrismaModel>
-    lt?: number | IntFieldRefInput<$PrismaModel>
-    lte?: number | IntFieldRefInput<$PrismaModel>
-    gt?: number | IntFieldRefInput<$PrismaModel>
-    gte?: number | IntFieldRefInput<$PrismaModel>
-    not?: NestedIntFilter<$PrismaModel> | number
-  }
-
   export type lead_conversationsCountOrderByAggregateInput = {
     conversation_id?: SortOrder
     lead_id?: SortOrder
@@ -106801,22 +110086,6 @@ export namespace Prisma {
     first_response_time_seconds?: SortOrder
     avg_response_time_seconds?: SortOrder
     resolution_time_seconds?: SortOrder
-  }
-
-  export type IntWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: number | IntFieldRefInput<$PrismaModel>
-    in?: number[] | ListIntFieldRefInput<$PrismaModel>
-    notIn?: number[] | ListIntFieldRefInput<$PrismaModel>
-    lt?: number | IntFieldRefInput<$PrismaModel>
-    lte?: number | IntFieldRefInput<$PrismaModel>
-    gt?: number | IntFieldRefInput<$PrismaModel>
-    gte?: number | IntFieldRefInput<$PrismaModel>
-    not?: NestedIntWithAggregatesFilter<$PrismaModel> | number
-    _count?: NestedIntFilter<$PrismaModel>
-    _avg?: NestedFloatFilter<$PrismaModel>
-    _sum?: NestedIntFilter<$PrismaModel>
-    _min?: NestedIntFilter<$PrismaModel>
-    _max?: NestedIntFilter<$PrismaModel>
   }
 
   export type Lead_conversationsScalarRelationFilter = {
@@ -110628,6 +113897,20 @@ export namespace Prisma {
     connect?: workflow_executionsWhereUniqueInput | workflow_executionsWhereUniqueInput[]
   }
 
+  export type business_subscriptionsCreateNestedManyWithoutBusinessesInput = {
+    create?: XOR<business_subscriptionsCreateWithoutBusinessesInput, business_subscriptionsUncheckedCreateWithoutBusinessesInput> | business_subscriptionsCreateWithoutBusinessesInput[] | business_subscriptionsUncheckedCreateWithoutBusinessesInput[]
+    connectOrCreate?: business_subscriptionsCreateOrConnectWithoutBusinessesInput | business_subscriptionsCreateOrConnectWithoutBusinessesInput[]
+    createMany?: business_subscriptionsCreateManyBusinessesInputEnvelope
+    connect?: business_subscriptionsWhereUniqueInput | business_subscriptionsWhereUniqueInput[]
+  }
+
+  export type api_usage_metricsCreateNestedManyWithoutBusinessesInput = {
+    create?: XOR<api_usage_metricsCreateWithoutBusinessesInput, api_usage_metricsUncheckedCreateWithoutBusinessesInput> | api_usage_metricsCreateWithoutBusinessesInput[] | api_usage_metricsUncheckedCreateWithoutBusinessesInput[]
+    connectOrCreate?: api_usage_metricsCreateOrConnectWithoutBusinessesInput | api_usage_metricsCreateOrConnectWithoutBusinessesInput[]
+    createMany?: api_usage_metricsCreateManyBusinessesInputEnvelope
+    connect?: api_usage_metricsWhereUniqueInput | api_usage_metricsWhereUniqueInput[]
+  }
+
   export type business_employeesUncheckedCreateNestedManyWithoutBusinessesInput = {
     create?: XOR<business_employeesCreateWithoutBusinessesInput, business_employeesUncheckedCreateWithoutBusinessesInput> | business_employeesCreateWithoutBusinessesInput[] | business_employeesUncheckedCreateWithoutBusinessesInput[]
     connectOrCreate?: business_employeesCreateOrConnectWithoutBusinessesInput | business_employeesCreateOrConnectWithoutBusinessesInput[]
@@ -110780,6 +114063,20 @@ export namespace Prisma {
     connectOrCreate?: workflow_executionsCreateOrConnectWithoutBusinessesInput | workflow_executionsCreateOrConnectWithoutBusinessesInput[]
     createMany?: workflow_executionsCreateManyBusinessesInputEnvelope
     connect?: workflow_executionsWhereUniqueInput | workflow_executionsWhereUniqueInput[]
+  }
+
+  export type business_subscriptionsUncheckedCreateNestedManyWithoutBusinessesInput = {
+    create?: XOR<business_subscriptionsCreateWithoutBusinessesInput, business_subscriptionsUncheckedCreateWithoutBusinessesInput> | business_subscriptionsCreateWithoutBusinessesInput[] | business_subscriptionsUncheckedCreateWithoutBusinessesInput[]
+    connectOrCreate?: business_subscriptionsCreateOrConnectWithoutBusinessesInput | business_subscriptionsCreateOrConnectWithoutBusinessesInput[]
+    createMany?: business_subscriptionsCreateManyBusinessesInputEnvelope
+    connect?: business_subscriptionsWhereUniqueInput | business_subscriptionsWhereUniqueInput[]
+  }
+
+  export type api_usage_metricsUncheckedCreateNestedManyWithoutBusinessesInput = {
+    create?: XOR<api_usage_metricsCreateWithoutBusinessesInput, api_usage_metricsUncheckedCreateWithoutBusinessesInput> | api_usage_metricsCreateWithoutBusinessesInput[] | api_usage_metricsUncheckedCreateWithoutBusinessesInput[]
+    connectOrCreate?: api_usage_metricsCreateOrConnectWithoutBusinessesInput | api_usage_metricsCreateOrConnectWithoutBusinessesInput[]
+    createMany?: api_usage_metricsCreateManyBusinessesInputEnvelope
+    connect?: api_usage_metricsWhereUniqueInput | api_usage_metricsWhereUniqueInput[]
   }
 
   export type StringFieldUpdateOperationsInput = {
@@ -111110,6 +114407,34 @@ export namespace Prisma {
     deleteMany?: workflow_executionsScalarWhereInput | workflow_executionsScalarWhereInput[]
   }
 
+  export type business_subscriptionsUpdateManyWithoutBusinessesNestedInput = {
+    create?: XOR<business_subscriptionsCreateWithoutBusinessesInput, business_subscriptionsUncheckedCreateWithoutBusinessesInput> | business_subscriptionsCreateWithoutBusinessesInput[] | business_subscriptionsUncheckedCreateWithoutBusinessesInput[]
+    connectOrCreate?: business_subscriptionsCreateOrConnectWithoutBusinessesInput | business_subscriptionsCreateOrConnectWithoutBusinessesInput[]
+    upsert?: business_subscriptionsUpsertWithWhereUniqueWithoutBusinessesInput | business_subscriptionsUpsertWithWhereUniqueWithoutBusinessesInput[]
+    createMany?: business_subscriptionsCreateManyBusinessesInputEnvelope
+    set?: business_subscriptionsWhereUniqueInput | business_subscriptionsWhereUniqueInput[]
+    disconnect?: business_subscriptionsWhereUniqueInput | business_subscriptionsWhereUniqueInput[]
+    delete?: business_subscriptionsWhereUniqueInput | business_subscriptionsWhereUniqueInput[]
+    connect?: business_subscriptionsWhereUniqueInput | business_subscriptionsWhereUniqueInput[]
+    update?: business_subscriptionsUpdateWithWhereUniqueWithoutBusinessesInput | business_subscriptionsUpdateWithWhereUniqueWithoutBusinessesInput[]
+    updateMany?: business_subscriptionsUpdateManyWithWhereWithoutBusinessesInput | business_subscriptionsUpdateManyWithWhereWithoutBusinessesInput[]
+    deleteMany?: business_subscriptionsScalarWhereInput | business_subscriptionsScalarWhereInput[]
+  }
+
+  export type api_usage_metricsUpdateManyWithoutBusinessesNestedInput = {
+    create?: XOR<api_usage_metricsCreateWithoutBusinessesInput, api_usage_metricsUncheckedCreateWithoutBusinessesInput> | api_usage_metricsCreateWithoutBusinessesInput[] | api_usage_metricsUncheckedCreateWithoutBusinessesInput[]
+    connectOrCreate?: api_usage_metricsCreateOrConnectWithoutBusinessesInput | api_usage_metricsCreateOrConnectWithoutBusinessesInput[]
+    upsert?: api_usage_metricsUpsertWithWhereUniqueWithoutBusinessesInput | api_usage_metricsUpsertWithWhereUniqueWithoutBusinessesInput[]
+    createMany?: api_usage_metricsCreateManyBusinessesInputEnvelope
+    set?: api_usage_metricsWhereUniqueInput | api_usage_metricsWhereUniqueInput[]
+    disconnect?: api_usage_metricsWhereUniqueInput | api_usage_metricsWhereUniqueInput[]
+    delete?: api_usage_metricsWhereUniqueInput | api_usage_metricsWhereUniqueInput[]
+    connect?: api_usage_metricsWhereUniqueInput | api_usage_metricsWhereUniqueInput[]
+    update?: api_usage_metricsUpdateWithWhereUniqueWithoutBusinessesInput | api_usage_metricsUpdateWithWhereUniqueWithoutBusinessesInput[]
+    updateMany?: api_usage_metricsUpdateManyWithWhereWithoutBusinessesInput | api_usage_metricsUpdateManyWithWhereWithoutBusinessesInput[]
+    deleteMany?: api_usage_metricsScalarWhereInput | api_usage_metricsScalarWhereInput[]
+  }
+
   export type business_employeesUncheckedUpdateManyWithoutBusinessesNestedInput = {
     create?: XOR<business_employeesCreateWithoutBusinessesInput, business_employeesUncheckedCreateWithoutBusinessesInput> | business_employeesCreateWithoutBusinessesInput[] | business_employeesUncheckedCreateWithoutBusinessesInput[]
     connectOrCreate?: business_employeesCreateOrConnectWithoutBusinessesInput | business_employeesCreateOrConnectWithoutBusinessesInput[]
@@ -111418,6 +114743,34 @@ export namespace Prisma {
     deleteMany?: workflow_executionsScalarWhereInput | workflow_executionsScalarWhereInput[]
   }
 
+  export type business_subscriptionsUncheckedUpdateManyWithoutBusinessesNestedInput = {
+    create?: XOR<business_subscriptionsCreateWithoutBusinessesInput, business_subscriptionsUncheckedCreateWithoutBusinessesInput> | business_subscriptionsCreateWithoutBusinessesInput[] | business_subscriptionsUncheckedCreateWithoutBusinessesInput[]
+    connectOrCreate?: business_subscriptionsCreateOrConnectWithoutBusinessesInput | business_subscriptionsCreateOrConnectWithoutBusinessesInput[]
+    upsert?: business_subscriptionsUpsertWithWhereUniqueWithoutBusinessesInput | business_subscriptionsUpsertWithWhereUniqueWithoutBusinessesInput[]
+    createMany?: business_subscriptionsCreateManyBusinessesInputEnvelope
+    set?: business_subscriptionsWhereUniqueInput | business_subscriptionsWhereUniqueInput[]
+    disconnect?: business_subscriptionsWhereUniqueInput | business_subscriptionsWhereUniqueInput[]
+    delete?: business_subscriptionsWhereUniqueInput | business_subscriptionsWhereUniqueInput[]
+    connect?: business_subscriptionsWhereUniqueInput | business_subscriptionsWhereUniqueInput[]
+    update?: business_subscriptionsUpdateWithWhereUniqueWithoutBusinessesInput | business_subscriptionsUpdateWithWhereUniqueWithoutBusinessesInput[]
+    updateMany?: business_subscriptionsUpdateManyWithWhereWithoutBusinessesInput | business_subscriptionsUpdateManyWithWhereWithoutBusinessesInput[]
+    deleteMany?: business_subscriptionsScalarWhereInput | business_subscriptionsScalarWhereInput[]
+  }
+
+  export type api_usage_metricsUncheckedUpdateManyWithoutBusinessesNestedInput = {
+    create?: XOR<api_usage_metricsCreateWithoutBusinessesInput, api_usage_metricsUncheckedCreateWithoutBusinessesInput> | api_usage_metricsCreateWithoutBusinessesInput[] | api_usage_metricsUncheckedCreateWithoutBusinessesInput[]
+    connectOrCreate?: api_usage_metricsCreateOrConnectWithoutBusinessesInput | api_usage_metricsCreateOrConnectWithoutBusinessesInput[]
+    upsert?: api_usage_metricsUpsertWithWhereUniqueWithoutBusinessesInput | api_usage_metricsUpsertWithWhereUniqueWithoutBusinessesInput[]
+    createMany?: api_usage_metricsCreateManyBusinessesInputEnvelope
+    set?: api_usage_metricsWhereUniqueInput | api_usage_metricsWhereUniqueInput[]
+    disconnect?: api_usage_metricsWhereUniqueInput | api_usage_metricsWhereUniqueInput[]
+    delete?: api_usage_metricsWhereUniqueInput | api_usage_metricsWhereUniqueInput[]
+    connect?: api_usage_metricsWhereUniqueInput | api_usage_metricsWhereUniqueInput[]
+    update?: api_usage_metricsUpdateWithWhereUniqueWithoutBusinessesInput | api_usage_metricsUpdateWithWhereUniqueWithoutBusinessesInput[]
+    updateMany?: api_usage_metricsUpdateManyWithWhereWithoutBusinessesInput | api_usage_metricsUpdateManyWithWhereWithoutBusinessesInput[]
+    deleteMany?: api_usage_metricsScalarWhereInput | api_usage_metricsScalarWhereInput[]
+  }
+
   export type businessesCreateNestedOneWithoutBusiness_employeesInput = {
     create?: XOR<businessesCreateWithoutBusiness_employeesInput, businessesUncheckedCreateWithoutBusiness_employeesInput>
     connectOrCreate?: businessesCreateOrConnectWithoutBusiness_employeesInput
@@ -111676,12 +115029,104 @@ export namespace Prisma {
     deleteMany?: instagram_mediaScalarWhereInput | instagram_mediaScalarWhereInput[]
   }
 
+  export type business_subscriptionsCreateNestedManyWithoutSubscription_plansInput = {
+    create?: XOR<business_subscriptionsCreateWithoutSubscription_plansInput, business_subscriptionsUncheckedCreateWithoutSubscription_plansInput> | business_subscriptionsCreateWithoutSubscription_plansInput[] | business_subscriptionsUncheckedCreateWithoutSubscription_plansInput[]
+    connectOrCreate?: business_subscriptionsCreateOrConnectWithoutSubscription_plansInput | business_subscriptionsCreateOrConnectWithoutSubscription_plansInput[]
+    createMany?: business_subscriptionsCreateManySubscription_plansInputEnvelope
+    connect?: business_subscriptionsWhereUniqueInput | business_subscriptionsWhereUniqueInput[]
+  }
+
+  export type business_subscriptionsUncheckedCreateNestedManyWithoutSubscription_plansInput = {
+    create?: XOR<business_subscriptionsCreateWithoutSubscription_plansInput, business_subscriptionsUncheckedCreateWithoutSubscription_plansInput> | business_subscriptionsCreateWithoutSubscription_plansInput[] | business_subscriptionsUncheckedCreateWithoutSubscription_plansInput[]
+    connectOrCreate?: business_subscriptionsCreateOrConnectWithoutSubscription_plansInput | business_subscriptionsCreateOrConnectWithoutSubscription_plansInput[]
+    createMany?: business_subscriptionsCreateManySubscription_plansInputEnvelope
+    connect?: business_subscriptionsWhereUniqueInput | business_subscriptionsWhereUniqueInput[]
+  }
+
   export type NullableDecimalFieldUpdateOperationsInput = {
     set?: Decimal | DecimalJsLike | number | string | null
     increment?: Decimal | DecimalJsLike | number | string
     decrement?: Decimal | DecimalJsLike | number | string
     multiply?: Decimal | DecimalJsLike | number | string
     divide?: Decimal | DecimalJsLike | number | string
+  }
+
+  export type business_subscriptionsUpdateManyWithoutSubscription_plansNestedInput = {
+    create?: XOR<business_subscriptionsCreateWithoutSubscription_plansInput, business_subscriptionsUncheckedCreateWithoutSubscription_plansInput> | business_subscriptionsCreateWithoutSubscription_plansInput[] | business_subscriptionsUncheckedCreateWithoutSubscription_plansInput[]
+    connectOrCreate?: business_subscriptionsCreateOrConnectWithoutSubscription_plansInput | business_subscriptionsCreateOrConnectWithoutSubscription_plansInput[]
+    upsert?: business_subscriptionsUpsertWithWhereUniqueWithoutSubscription_plansInput | business_subscriptionsUpsertWithWhereUniqueWithoutSubscription_plansInput[]
+    createMany?: business_subscriptionsCreateManySubscription_plansInputEnvelope
+    set?: business_subscriptionsWhereUniqueInput | business_subscriptionsWhereUniqueInput[]
+    disconnect?: business_subscriptionsWhereUniqueInput | business_subscriptionsWhereUniqueInput[]
+    delete?: business_subscriptionsWhereUniqueInput | business_subscriptionsWhereUniqueInput[]
+    connect?: business_subscriptionsWhereUniqueInput | business_subscriptionsWhereUniqueInput[]
+    update?: business_subscriptionsUpdateWithWhereUniqueWithoutSubscription_plansInput | business_subscriptionsUpdateWithWhereUniqueWithoutSubscription_plansInput[]
+    updateMany?: business_subscriptionsUpdateManyWithWhereWithoutSubscription_plansInput | business_subscriptionsUpdateManyWithWhereWithoutSubscription_plansInput[]
+    deleteMany?: business_subscriptionsScalarWhereInput | business_subscriptionsScalarWhereInput[]
+  }
+
+  export type business_subscriptionsUncheckedUpdateManyWithoutSubscription_plansNestedInput = {
+    create?: XOR<business_subscriptionsCreateWithoutSubscription_plansInput, business_subscriptionsUncheckedCreateWithoutSubscription_plansInput> | business_subscriptionsCreateWithoutSubscription_plansInput[] | business_subscriptionsUncheckedCreateWithoutSubscription_plansInput[]
+    connectOrCreate?: business_subscriptionsCreateOrConnectWithoutSubscription_plansInput | business_subscriptionsCreateOrConnectWithoutSubscription_plansInput[]
+    upsert?: business_subscriptionsUpsertWithWhereUniqueWithoutSubscription_plansInput | business_subscriptionsUpsertWithWhereUniqueWithoutSubscription_plansInput[]
+    createMany?: business_subscriptionsCreateManySubscription_plansInputEnvelope
+    set?: business_subscriptionsWhereUniqueInput | business_subscriptionsWhereUniqueInput[]
+    disconnect?: business_subscriptionsWhereUniqueInput | business_subscriptionsWhereUniqueInput[]
+    delete?: business_subscriptionsWhereUniqueInput | business_subscriptionsWhereUniqueInput[]
+    connect?: business_subscriptionsWhereUniqueInput | business_subscriptionsWhereUniqueInput[]
+    update?: business_subscriptionsUpdateWithWhereUniqueWithoutSubscription_plansInput | business_subscriptionsUpdateWithWhereUniqueWithoutSubscription_plansInput[]
+    updateMany?: business_subscriptionsUpdateManyWithWhereWithoutSubscription_plansInput | business_subscriptionsUpdateManyWithWhereWithoutSubscription_plansInput[]
+    deleteMany?: business_subscriptionsScalarWhereInput | business_subscriptionsScalarWhereInput[]
+  }
+
+  export type businessesCreateNestedOneWithoutBusiness_subscriptionsInput = {
+    create?: XOR<businessesCreateWithoutBusiness_subscriptionsInput, businessesUncheckedCreateWithoutBusiness_subscriptionsInput>
+    connectOrCreate?: businessesCreateOrConnectWithoutBusiness_subscriptionsInput
+    connect?: businessesWhereUniqueInput
+  }
+
+  export type subscription_plansCreateNestedOneWithoutBusiness_subscriptionsInput = {
+    create?: XOR<subscription_plansCreateWithoutBusiness_subscriptionsInput, subscription_plansUncheckedCreateWithoutBusiness_subscriptionsInput>
+    connectOrCreate?: subscription_plansCreateOrConnectWithoutBusiness_subscriptionsInput
+    connect?: subscription_plansWhereUniqueInput
+  }
+
+  export type businessesUpdateOneRequiredWithoutBusiness_subscriptionsNestedInput = {
+    create?: XOR<businessesCreateWithoutBusiness_subscriptionsInput, businessesUncheckedCreateWithoutBusiness_subscriptionsInput>
+    connectOrCreate?: businessesCreateOrConnectWithoutBusiness_subscriptionsInput
+    upsert?: businessesUpsertWithoutBusiness_subscriptionsInput
+    connect?: businessesWhereUniqueInput
+    update?: XOR<XOR<businessesUpdateToOneWithWhereWithoutBusiness_subscriptionsInput, businessesUpdateWithoutBusiness_subscriptionsInput>, businessesUncheckedUpdateWithoutBusiness_subscriptionsInput>
+  }
+
+  export type subscription_plansUpdateOneRequiredWithoutBusiness_subscriptionsNestedInput = {
+    create?: XOR<subscription_plansCreateWithoutBusiness_subscriptionsInput, subscription_plansUncheckedCreateWithoutBusiness_subscriptionsInput>
+    connectOrCreate?: subscription_plansCreateOrConnectWithoutBusiness_subscriptionsInput
+    upsert?: subscription_plansUpsertWithoutBusiness_subscriptionsInput
+    connect?: subscription_plansWhereUniqueInput
+    update?: XOR<XOR<subscription_plansUpdateToOneWithWhereWithoutBusiness_subscriptionsInput, subscription_plansUpdateWithoutBusiness_subscriptionsInput>, subscription_plansUncheckedUpdateWithoutBusiness_subscriptionsInput>
+  }
+
+  export type businessesCreateNestedOneWithoutApi_usage_metricsInput = {
+    create?: XOR<businessesCreateWithoutApi_usage_metricsInput, businessesUncheckedCreateWithoutApi_usage_metricsInput>
+    connectOrCreate?: businessesCreateOrConnectWithoutApi_usage_metricsInput
+    connect?: businessesWhereUniqueInput
+  }
+
+  export type IntFieldUpdateOperationsInput = {
+    set?: number
+    increment?: number
+    decrement?: number
+    multiply?: number
+    divide?: number
+  }
+
+  export type businessesUpdateOneRequiredWithoutApi_usage_metricsNestedInput = {
+    create?: XOR<businessesCreateWithoutApi_usage_metricsInput, businessesUncheckedCreateWithoutApi_usage_metricsInput>
+    connectOrCreate?: businessesCreateOrConnectWithoutApi_usage_metricsInput
+    upsert?: businessesUpsertWithoutApi_usage_metricsInput
+    connect?: businessesWhereUniqueInput
+    update?: XOR<XOR<businessesUpdateToOneWithWhereWithoutApi_usage_metricsInput, businessesUpdateWithoutApi_usage_metricsInput>, businessesUncheckedUpdateWithoutApi_usage_metricsInput>
   }
 
   export type business_workflowsCreateNestedManyWithoutTenantsInput = {
@@ -113406,14 +116851,6 @@ export namespace Prisma {
     connectOrCreate?: lead_messagesCreateOrConnectWithoutConversationInput | lead_messagesCreateOrConnectWithoutConversationInput[]
     createMany?: lead_messagesCreateManyConversationInputEnvelope
     connect?: lead_messagesWhereUniqueInput | lead_messagesWhereUniqueInput[]
-  }
-
-  export type IntFieldUpdateOperationsInput = {
-    set?: number
-    increment?: number
-    decrement?: number
-    multiply?: number
-    divide?: number
   }
 
   export type usersUpdateOneWithoutLead_conversationsNestedInput = {
@@ -117071,31 +120508,6 @@ export namespace Prisma {
     _max?: NestedDecimalNullableFilter<$PrismaModel>
   }
 
-  export type NestedUuidNullableFilter<$PrismaModel = never> = {
-    equals?: string | StringFieldRefInput<$PrismaModel> | null
-    in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
-    notIn?: string[] | ListStringFieldRefInput<$PrismaModel> | null
-    lt?: string | StringFieldRefInput<$PrismaModel>
-    lte?: string | StringFieldRefInput<$PrismaModel>
-    gt?: string | StringFieldRefInput<$PrismaModel>
-    gte?: string | StringFieldRefInput<$PrismaModel>
-    not?: NestedUuidNullableFilter<$PrismaModel> | string | null
-  }
-
-  export type NestedUuidNullableWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: string | StringFieldRefInput<$PrismaModel> | null
-    in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
-    notIn?: string[] | ListStringFieldRefInput<$PrismaModel> | null
-    lt?: string | StringFieldRefInput<$PrismaModel>
-    lte?: string | StringFieldRefInput<$PrismaModel>
-    gt?: string | StringFieldRefInput<$PrismaModel>
-    gte?: string | StringFieldRefInput<$PrismaModel>
-    not?: NestedUuidNullableWithAggregatesFilter<$PrismaModel> | string | null
-    _count?: NestedIntNullableFilter<$PrismaModel>
-    _min?: NestedStringNullableFilter<$PrismaModel>
-    _max?: NestedStringNullableFilter<$PrismaModel>
-  }
-
   export type NestedIntWithAggregatesFilter<$PrismaModel = never> = {
     equals?: number | IntFieldRefInput<$PrismaModel>
     in?: number[] | ListIntFieldRefInput<$PrismaModel>
@@ -117121,6 +120533,31 @@ export namespace Prisma {
     gt?: number | FloatFieldRefInput<$PrismaModel>
     gte?: number | FloatFieldRefInput<$PrismaModel>
     not?: NestedFloatFilter<$PrismaModel> | number
+  }
+
+  export type NestedUuidNullableFilter<$PrismaModel = never> = {
+    equals?: string | StringFieldRefInput<$PrismaModel> | null
+    in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    notIn?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    lt?: string | StringFieldRefInput<$PrismaModel>
+    lte?: string | StringFieldRefInput<$PrismaModel>
+    gt?: string | StringFieldRefInput<$PrismaModel>
+    gte?: string | StringFieldRefInput<$PrismaModel>
+    not?: NestedUuidNullableFilter<$PrismaModel> | string | null
+  }
+
+  export type NestedUuidNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: string | StringFieldRefInput<$PrismaModel> | null
+    in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    notIn?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    lt?: string | StringFieldRefInput<$PrismaModel>
+    lte?: string | StringFieldRefInput<$PrismaModel>
+    gt?: string | StringFieldRefInput<$PrismaModel>
+    gte?: string | StringFieldRefInput<$PrismaModel>
+    not?: NestedUuidNullableWithAggregatesFilter<$PrismaModel> | string | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedStringNullableFilter<$PrismaModel>
+    _max?: NestedStringNullableFilter<$PrismaModel>
   }
 
   export type NestedDecimalFilter<$PrismaModel = never> = {
@@ -118617,6 +122054,70 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type business_subscriptionsCreateWithoutBusinessesInput = {
+    subscription_id?: string
+    status: string
+    started_at?: Date | string
+    expires_at?: Date | string | null
+    cancelled_at?: Date | string | null
+    razorpay_subscription_id?: string | null
+    created_at?: Date | string | null
+    updated_at?: Date | string | null
+    subscription_plans: subscription_plansCreateNestedOneWithoutBusiness_subscriptionsInput
+  }
+
+  export type business_subscriptionsUncheckedCreateWithoutBusinessesInput = {
+    subscription_id?: string
+    subscription_plan_id: string
+    status: string
+    started_at?: Date | string
+    expires_at?: Date | string | null
+    cancelled_at?: Date | string | null
+    razorpay_subscription_id?: string | null
+    created_at?: Date | string | null
+    updated_at?: Date | string | null
+  }
+
+  export type business_subscriptionsCreateOrConnectWithoutBusinessesInput = {
+    where: business_subscriptionsWhereUniqueInput
+    create: XOR<business_subscriptionsCreateWithoutBusinessesInput, business_subscriptionsUncheckedCreateWithoutBusinessesInput>
+  }
+
+  export type business_subscriptionsCreateManyBusinessesInputEnvelope = {
+    data: business_subscriptionsCreateManyBusinessesInput | business_subscriptionsCreateManyBusinessesInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type api_usage_metricsCreateWithoutBusinessesInput = {
+    metric_id?: string
+    tenant_id: string
+    endpoint: string
+    date: Date | string
+    count?: number
+    created_at?: Date | string | null
+    updated_at?: Date | string | null
+  }
+
+  export type api_usage_metricsUncheckedCreateWithoutBusinessesInput = {
+    metric_id?: string
+    tenant_id: string
+    endpoint: string
+    date: Date | string
+    count?: number
+    created_at?: Date | string | null
+    updated_at?: Date | string | null
+  }
+
+  export type api_usage_metricsCreateOrConnectWithoutBusinessesInput = {
+    where: api_usage_metricsWhereUniqueInput
+    create: XOR<api_usage_metricsCreateWithoutBusinessesInput, api_usage_metricsUncheckedCreateWithoutBusinessesInput>
+  }
+
+  export type api_usage_metricsCreateManyBusinessesInputEnvelope = {
+    data: api_usage_metricsCreateManyBusinessesInput | api_usage_metricsCreateManyBusinessesInput[]
+    skipDuplicates?: boolean
+  }
+
   export type business_employeesUpsertWithWhereUniqueWithoutBusinessesInput = {
     where: business_employeesWhereUniqueInput
     update: XOR<business_employeesUpdateWithoutBusinessesInput, business_employeesUncheckedUpdateWithoutBusinessesInput>
@@ -119630,6 +123131,68 @@ export namespace Prisma {
     chat_id?: StringNullableFilter<"workflow_executions"> | string | null
   }
 
+  export type business_subscriptionsUpsertWithWhereUniqueWithoutBusinessesInput = {
+    where: business_subscriptionsWhereUniqueInput
+    update: XOR<business_subscriptionsUpdateWithoutBusinessesInput, business_subscriptionsUncheckedUpdateWithoutBusinessesInput>
+    create: XOR<business_subscriptionsCreateWithoutBusinessesInput, business_subscriptionsUncheckedCreateWithoutBusinessesInput>
+  }
+
+  export type business_subscriptionsUpdateWithWhereUniqueWithoutBusinessesInput = {
+    where: business_subscriptionsWhereUniqueInput
+    data: XOR<business_subscriptionsUpdateWithoutBusinessesInput, business_subscriptionsUncheckedUpdateWithoutBusinessesInput>
+  }
+
+  export type business_subscriptionsUpdateManyWithWhereWithoutBusinessesInput = {
+    where: business_subscriptionsScalarWhereInput
+    data: XOR<business_subscriptionsUpdateManyMutationInput, business_subscriptionsUncheckedUpdateManyWithoutBusinessesInput>
+  }
+
+  export type business_subscriptionsScalarWhereInput = {
+    AND?: business_subscriptionsScalarWhereInput | business_subscriptionsScalarWhereInput[]
+    OR?: business_subscriptionsScalarWhereInput[]
+    NOT?: business_subscriptionsScalarWhereInput | business_subscriptionsScalarWhereInput[]
+    subscription_id?: UuidFilter<"business_subscriptions"> | string
+    business_id?: UuidFilter<"business_subscriptions"> | string
+    subscription_plan_id?: UuidFilter<"business_subscriptions"> | string
+    status?: StringFilter<"business_subscriptions"> | string
+    started_at?: DateTimeFilter<"business_subscriptions"> | Date | string
+    expires_at?: DateTimeNullableFilter<"business_subscriptions"> | Date | string | null
+    cancelled_at?: DateTimeNullableFilter<"business_subscriptions"> | Date | string | null
+    razorpay_subscription_id?: StringNullableFilter<"business_subscriptions"> | string | null
+    created_at?: DateTimeNullableFilter<"business_subscriptions"> | Date | string | null
+    updated_at?: DateTimeNullableFilter<"business_subscriptions"> | Date | string | null
+  }
+
+  export type api_usage_metricsUpsertWithWhereUniqueWithoutBusinessesInput = {
+    where: api_usage_metricsWhereUniqueInput
+    update: XOR<api_usage_metricsUpdateWithoutBusinessesInput, api_usage_metricsUncheckedUpdateWithoutBusinessesInput>
+    create: XOR<api_usage_metricsCreateWithoutBusinessesInput, api_usage_metricsUncheckedCreateWithoutBusinessesInput>
+  }
+
+  export type api_usage_metricsUpdateWithWhereUniqueWithoutBusinessesInput = {
+    where: api_usage_metricsWhereUniqueInput
+    data: XOR<api_usage_metricsUpdateWithoutBusinessesInput, api_usage_metricsUncheckedUpdateWithoutBusinessesInput>
+  }
+
+  export type api_usage_metricsUpdateManyWithWhereWithoutBusinessesInput = {
+    where: api_usage_metricsScalarWhereInput
+    data: XOR<api_usage_metricsUpdateManyMutationInput, api_usage_metricsUncheckedUpdateManyWithoutBusinessesInput>
+  }
+
+  export type api_usage_metricsScalarWhereInput = {
+    AND?: api_usage_metricsScalarWhereInput | api_usage_metricsScalarWhereInput[]
+    OR?: api_usage_metricsScalarWhereInput[]
+    NOT?: api_usage_metricsScalarWhereInput | api_usage_metricsScalarWhereInput[]
+    metric_id?: UuidFilter<"api_usage_metrics"> | string
+    business_id?: UuidFilter<"api_usage_metrics"> | string
+    tenant_id?: UuidFilter<"api_usage_metrics"> | string
+    endpoint?: StringFilter<"api_usage_metrics"> | string
+    date?: DateTimeFilter<"api_usage_metrics"> | Date | string
+    count?: IntFilter<"api_usage_metrics"> | number
+    created_at?: DateTimeNullableFilter<"api_usage_metrics"> | Date | string | null
+    updated_at?: DateTimeNullableFilter<"api_usage_metrics"> | Date | string | null
+  }
+
   export type businessesCreateWithoutBusiness_employeesInput = {
     business_id?: string
     business_name: string
@@ -119667,6 +123230,8 @@ export namespace Prisma {
     users?: usersCreateNestedManyWithoutBusinessesInput
     warehouses?: warehousesCreateNestedManyWithoutBusinessesInput
     workflow_executions?: workflow_executionsCreateNestedManyWithoutBusinessesInput
+    business_subscriptions?: business_subscriptionsCreateNestedManyWithoutBusinessesInput
+    api_usage_metrics?: api_usage_metricsCreateNestedManyWithoutBusinessesInput
   }
 
   export type businessesUncheckedCreateWithoutBusiness_employeesInput = {
@@ -119706,6 +123271,8 @@ export namespace Prisma {
     users?: usersUncheckedCreateNestedManyWithoutBusinessesInput
     warehouses?: warehousesUncheckedCreateNestedManyWithoutBusinessesInput
     workflow_executions?: workflow_executionsUncheckedCreateNestedManyWithoutBusinessesInput
+    business_subscriptions?: business_subscriptionsUncheckedCreateNestedManyWithoutBusinessesInput
+    api_usage_metrics?: api_usage_metricsUncheckedCreateNestedManyWithoutBusinessesInput
   }
 
   export type businessesCreateOrConnectWithoutBusiness_employeesInput = {
@@ -119761,6 +123328,8 @@ export namespace Prisma {
     users?: usersUpdateManyWithoutBusinessesNestedInput
     warehouses?: warehousesUpdateManyWithoutBusinessesNestedInput
     workflow_executions?: workflow_executionsUpdateManyWithoutBusinessesNestedInput
+    business_subscriptions?: business_subscriptionsUpdateManyWithoutBusinessesNestedInput
+    api_usage_metrics?: api_usage_metricsUpdateManyWithoutBusinessesNestedInput
   }
 
   export type businessesUncheckedUpdateWithoutBusiness_employeesInput = {
@@ -119800,6 +123369,8 @@ export namespace Prisma {
     users?: usersUncheckedUpdateManyWithoutBusinessesNestedInput
     warehouses?: warehousesUncheckedUpdateManyWithoutBusinessesNestedInput
     workflow_executions?: workflow_executionsUncheckedUpdateManyWithoutBusinessesNestedInput
+    business_subscriptions?: business_subscriptionsUncheckedUpdateManyWithoutBusinessesNestedInput
+    api_usage_metrics?: api_usage_metricsUncheckedUpdateManyWithoutBusinessesNestedInput
   }
 
   export type notificationsCreateWithoutIntentsInput = {
@@ -120314,6 +123885,8 @@ export namespace Prisma {
     users?: usersCreateNestedManyWithoutBusinessesInput
     warehouses?: warehousesCreateNestedManyWithoutBusinessesInput
     workflow_executions?: workflow_executionsCreateNestedManyWithoutBusinessesInput
+    business_subscriptions?: business_subscriptionsCreateNestedManyWithoutBusinessesInput
+    api_usage_metrics?: api_usage_metricsCreateNestedManyWithoutBusinessesInput
   }
 
   export type businessesUncheckedCreateWithoutSocial_accountsInput = {
@@ -120353,6 +123926,8 @@ export namespace Prisma {
     users?: usersUncheckedCreateNestedManyWithoutBusinessesInput
     warehouses?: warehousesUncheckedCreateNestedManyWithoutBusinessesInput
     workflow_executions?: workflow_executionsUncheckedCreateNestedManyWithoutBusinessesInput
+    business_subscriptions?: business_subscriptionsUncheckedCreateNestedManyWithoutBusinessesInput
+    api_usage_metrics?: api_usage_metricsUncheckedCreateNestedManyWithoutBusinessesInput
   }
 
   export type businessesCreateOrConnectWithoutSocial_accountsInput = {
@@ -120444,6 +124019,8 @@ export namespace Prisma {
     users?: usersUpdateManyWithoutBusinessesNestedInput
     warehouses?: warehousesUpdateManyWithoutBusinessesNestedInput
     workflow_executions?: workflow_executionsUpdateManyWithoutBusinessesNestedInput
+    business_subscriptions?: business_subscriptionsUpdateManyWithoutBusinessesNestedInput
+    api_usage_metrics?: api_usage_metricsUpdateManyWithoutBusinessesNestedInput
   }
 
   export type businessesUncheckedUpdateWithoutSocial_accountsInput = {
@@ -120483,6 +124060,490 @@ export namespace Prisma {
     users?: usersUncheckedUpdateManyWithoutBusinessesNestedInput
     warehouses?: warehousesUncheckedUpdateManyWithoutBusinessesNestedInput
     workflow_executions?: workflow_executionsUncheckedUpdateManyWithoutBusinessesNestedInput
+    business_subscriptions?: business_subscriptionsUncheckedUpdateManyWithoutBusinessesNestedInput
+    api_usage_metrics?: api_usage_metricsUncheckedUpdateManyWithoutBusinessesNestedInput
+  }
+
+  export type business_subscriptionsCreateWithoutSubscription_plansInput = {
+    subscription_id?: string
+    status: string
+    started_at?: Date | string
+    expires_at?: Date | string | null
+    cancelled_at?: Date | string | null
+    razorpay_subscription_id?: string | null
+    created_at?: Date | string | null
+    updated_at?: Date | string | null
+    businesses: businessesCreateNestedOneWithoutBusiness_subscriptionsInput
+  }
+
+  export type business_subscriptionsUncheckedCreateWithoutSubscription_plansInput = {
+    subscription_id?: string
+    business_id: string
+    status: string
+    started_at?: Date | string
+    expires_at?: Date | string | null
+    cancelled_at?: Date | string | null
+    razorpay_subscription_id?: string | null
+    created_at?: Date | string | null
+    updated_at?: Date | string | null
+  }
+
+  export type business_subscriptionsCreateOrConnectWithoutSubscription_plansInput = {
+    where: business_subscriptionsWhereUniqueInput
+    create: XOR<business_subscriptionsCreateWithoutSubscription_plansInput, business_subscriptionsUncheckedCreateWithoutSubscription_plansInput>
+  }
+
+  export type business_subscriptionsCreateManySubscription_plansInputEnvelope = {
+    data: business_subscriptionsCreateManySubscription_plansInput | business_subscriptionsCreateManySubscription_plansInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type business_subscriptionsUpsertWithWhereUniqueWithoutSubscription_plansInput = {
+    where: business_subscriptionsWhereUniqueInput
+    update: XOR<business_subscriptionsUpdateWithoutSubscription_plansInput, business_subscriptionsUncheckedUpdateWithoutSubscription_plansInput>
+    create: XOR<business_subscriptionsCreateWithoutSubscription_plansInput, business_subscriptionsUncheckedCreateWithoutSubscription_plansInput>
+  }
+
+  export type business_subscriptionsUpdateWithWhereUniqueWithoutSubscription_plansInput = {
+    where: business_subscriptionsWhereUniqueInput
+    data: XOR<business_subscriptionsUpdateWithoutSubscription_plansInput, business_subscriptionsUncheckedUpdateWithoutSubscription_plansInput>
+  }
+
+  export type business_subscriptionsUpdateManyWithWhereWithoutSubscription_plansInput = {
+    where: business_subscriptionsScalarWhereInput
+    data: XOR<business_subscriptionsUpdateManyMutationInput, business_subscriptionsUncheckedUpdateManyWithoutSubscription_plansInput>
+  }
+
+  export type businessesCreateWithoutBusiness_subscriptionsInput = {
+    business_id?: string
+    business_name: string
+    business_type?: string | null
+    whatsapp_number?: string | null
+    created_at?: Date | string | null
+    updated_at?: Date | string | null
+    email?: string | null
+    phone?: string | null
+    website?: string | null
+    city?: string | null
+    address?: string | null
+    country?: string | null
+    gst_number?: string | null
+    pan_number?: string | null
+    business_employees?: business_employeesCreateNestedManyWithoutBusinessesInput
+    business_workflows?: business_workflowsCreateNestedManyWithoutBusinessesInput
+    tenants: tenantsCreateNestedOneWithoutBusinessesInput
+    carts?: cartsCreateNestedManyWithoutBusinessesInput
+    inventory_levels?: inventory_levelsCreateNestedManyWithoutBusinessesInput
+    leads?: leadsCreateNestedManyWithoutBusinessesInput
+    notification_messages?: notification_messagesCreateNestedManyWithoutBusinessesInput
+    notification_preferences?: notification_preferencesCreateNestedManyWithoutBusinessesInput
+    notification_templates?: notification_templatesCreateNestedManyWithoutBusinessesInput
+    payment_reconciliation?: payment_reconciliationCreateNestedManyWithoutBusinessesInput
+    payments?: paymentsCreateNestedManyWithoutBusinessesInput
+    product_categories?: product_categoriesCreateNestedManyWithoutBusinessesInput
+    product_images?: product_imagesCreateNestedManyWithoutBusinessesInput
+    products?: productsCreateNestedManyWithoutBusinessesInput
+    social_accounts?: social_accountsCreateNestedManyWithoutBusinessesInput
+    stock_alerts?: stock_alertsCreateNestedManyWithoutBusinessesInput
+    stock_counts?: stock_countsCreateNestedManyWithoutBusinessesInput
+    stock_movements?: stock_movementsCreateNestedManyWithoutBusinessesInput
+    stock_transfers?: stock_transfersCreateNestedManyWithoutBusinessesInput
+    tags?: tagsCreateNestedManyWithoutBusinessesInput
+    users?: usersCreateNestedManyWithoutBusinessesInput
+    warehouses?: warehousesCreateNestedManyWithoutBusinessesInput
+    workflow_executions?: workflow_executionsCreateNestedManyWithoutBusinessesInput
+    api_usage_metrics?: api_usage_metricsCreateNestedManyWithoutBusinessesInput
+  }
+
+  export type businessesUncheckedCreateWithoutBusiness_subscriptionsInput = {
+    business_id?: string
+    tenant_id: string
+    business_name: string
+    business_type?: string | null
+    whatsapp_number?: string | null
+    created_at?: Date | string | null
+    updated_at?: Date | string | null
+    email?: string | null
+    phone?: string | null
+    website?: string | null
+    city?: string | null
+    address?: string | null
+    country?: string | null
+    gst_number?: string | null
+    pan_number?: string | null
+    business_employees?: business_employeesUncheckedCreateNestedManyWithoutBusinessesInput
+    business_workflows?: business_workflowsUncheckedCreateNestedManyWithoutBusinessesInput
+    carts?: cartsUncheckedCreateNestedManyWithoutBusinessesInput
+    inventory_levels?: inventory_levelsUncheckedCreateNestedManyWithoutBusinessesInput
+    leads?: leadsUncheckedCreateNestedManyWithoutBusinessesInput
+    notification_messages?: notification_messagesUncheckedCreateNestedManyWithoutBusinessesInput
+    notification_preferences?: notification_preferencesUncheckedCreateNestedManyWithoutBusinessesInput
+    notification_templates?: notification_templatesUncheckedCreateNestedManyWithoutBusinessesInput
+    payment_reconciliation?: payment_reconciliationUncheckedCreateNestedManyWithoutBusinessesInput
+    payments?: paymentsUncheckedCreateNestedManyWithoutBusinessesInput
+    product_categories?: product_categoriesUncheckedCreateNestedManyWithoutBusinessesInput
+    product_images?: product_imagesUncheckedCreateNestedManyWithoutBusinessesInput
+    products?: productsUncheckedCreateNestedManyWithoutBusinessesInput
+    social_accounts?: social_accountsUncheckedCreateNestedManyWithoutBusinessesInput
+    stock_alerts?: stock_alertsUncheckedCreateNestedManyWithoutBusinessesInput
+    stock_counts?: stock_countsUncheckedCreateNestedManyWithoutBusinessesInput
+    stock_movements?: stock_movementsUncheckedCreateNestedManyWithoutBusinessesInput
+    stock_transfers?: stock_transfersUncheckedCreateNestedManyWithoutBusinessesInput
+    tags?: tagsUncheckedCreateNestedManyWithoutBusinessesInput
+    users?: usersUncheckedCreateNestedManyWithoutBusinessesInput
+    warehouses?: warehousesUncheckedCreateNestedManyWithoutBusinessesInput
+    workflow_executions?: workflow_executionsUncheckedCreateNestedManyWithoutBusinessesInput
+    api_usage_metrics?: api_usage_metricsUncheckedCreateNestedManyWithoutBusinessesInput
+  }
+
+  export type businessesCreateOrConnectWithoutBusiness_subscriptionsInput = {
+    where: businessesWhereUniqueInput
+    create: XOR<businessesCreateWithoutBusiness_subscriptionsInput, businessesUncheckedCreateWithoutBusiness_subscriptionsInput>
+  }
+
+  export type subscription_plansCreateWithoutBusiness_subscriptionsInput = {
+    subscription_plan_id?: string
+    plan_name: string
+    price?: Decimal | DecimalJsLike | number | string | null
+    duration_in_days?: number | null
+    billing_cycle?: string | null
+    features?: NullableJsonNullValueInput | InputJsonValue
+    limits?: NullableJsonNullValueInput | InputJsonValue
+    is_active?: boolean
+    razorpay_plan_id?: string | null
+    created_at?: Date | string | null
+    updated_at?: Date | string | null
+  }
+
+  export type subscription_plansUncheckedCreateWithoutBusiness_subscriptionsInput = {
+    subscription_plan_id?: string
+    plan_name: string
+    price?: Decimal | DecimalJsLike | number | string | null
+    duration_in_days?: number | null
+    billing_cycle?: string | null
+    features?: NullableJsonNullValueInput | InputJsonValue
+    limits?: NullableJsonNullValueInput | InputJsonValue
+    is_active?: boolean
+    razorpay_plan_id?: string | null
+    created_at?: Date | string | null
+    updated_at?: Date | string | null
+  }
+
+  export type subscription_plansCreateOrConnectWithoutBusiness_subscriptionsInput = {
+    where: subscription_plansWhereUniqueInput
+    create: XOR<subscription_plansCreateWithoutBusiness_subscriptionsInput, subscription_plansUncheckedCreateWithoutBusiness_subscriptionsInput>
+  }
+
+  export type businessesUpsertWithoutBusiness_subscriptionsInput = {
+    update: XOR<businessesUpdateWithoutBusiness_subscriptionsInput, businessesUncheckedUpdateWithoutBusiness_subscriptionsInput>
+    create: XOR<businessesCreateWithoutBusiness_subscriptionsInput, businessesUncheckedCreateWithoutBusiness_subscriptionsInput>
+    where?: businessesWhereInput
+  }
+
+  export type businessesUpdateToOneWithWhereWithoutBusiness_subscriptionsInput = {
+    where?: businessesWhereInput
+    data: XOR<businessesUpdateWithoutBusiness_subscriptionsInput, businessesUncheckedUpdateWithoutBusiness_subscriptionsInput>
+  }
+
+  export type businessesUpdateWithoutBusiness_subscriptionsInput = {
+    business_id?: StringFieldUpdateOperationsInput | string
+    business_name?: StringFieldUpdateOperationsInput | string
+    business_type?: NullableStringFieldUpdateOperationsInput | string | null
+    whatsapp_number?: NullableStringFieldUpdateOperationsInput | string | null
+    created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    website?: NullableStringFieldUpdateOperationsInput | string | null
+    city?: NullableStringFieldUpdateOperationsInput | string | null
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    country?: NullableStringFieldUpdateOperationsInput | string | null
+    gst_number?: NullableStringFieldUpdateOperationsInput | string | null
+    pan_number?: NullableStringFieldUpdateOperationsInput | string | null
+    business_employees?: business_employeesUpdateManyWithoutBusinessesNestedInput
+    business_workflows?: business_workflowsUpdateManyWithoutBusinessesNestedInput
+    tenants?: tenantsUpdateOneRequiredWithoutBusinessesNestedInput
+    carts?: cartsUpdateManyWithoutBusinessesNestedInput
+    inventory_levels?: inventory_levelsUpdateManyWithoutBusinessesNestedInput
+    leads?: leadsUpdateManyWithoutBusinessesNestedInput
+    notification_messages?: notification_messagesUpdateManyWithoutBusinessesNestedInput
+    notification_preferences?: notification_preferencesUpdateManyWithoutBusinessesNestedInput
+    notification_templates?: notification_templatesUpdateManyWithoutBusinessesNestedInput
+    payment_reconciliation?: payment_reconciliationUpdateManyWithoutBusinessesNestedInput
+    payments?: paymentsUpdateManyWithoutBusinessesNestedInput
+    product_categories?: product_categoriesUpdateManyWithoutBusinessesNestedInput
+    product_images?: product_imagesUpdateManyWithoutBusinessesNestedInput
+    products?: productsUpdateManyWithoutBusinessesNestedInput
+    social_accounts?: social_accountsUpdateManyWithoutBusinessesNestedInput
+    stock_alerts?: stock_alertsUpdateManyWithoutBusinessesNestedInput
+    stock_counts?: stock_countsUpdateManyWithoutBusinessesNestedInput
+    stock_movements?: stock_movementsUpdateManyWithoutBusinessesNestedInput
+    stock_transfers?: stock_transfersUpdateManyWithoutBusinessesNestedInput
+    tags?: tagsUpdateManyWithoutBusinessesNestedInput
+    users?: usersUpdateManyWithoutBusinessesNestedInput
+    warehouses?: warehousesUpdateManyWithoutBusinessesNestedInput
+    workflow_executions?: workflow_executionsUpdateManyWithoutBusinessesNestedInput
+    api_usage_metrics?: api_usage_metricsUpdateManyWithoutBusinessesNestedInput
+  }
+
+  export type businessesUncheckedUpdateWithoutBusiness_subscriptionsInput = {
+    business_id?: StringFieldUpdateOperationsInput | string
+    tenant_id?: StringFieldUpdateOperationsInput | string
+    business_name?: StringFieldUpdateOperationsInput | string
+    business_type?: NullableStringFieldUpdateOperationsInput | string | null
+    whatsapp_number?: NullableStringFieldUpdateOperationsInput | string | null
+    created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    website?: NullableStringFieldUpdateOperationsInput | string | null
+    city?: NullableStringFieldUpdateOperationsInput | string | null
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    country?: NullableStringFieldUpdateOperationsInput | string | null
+    gst_number?: NullableStringFieldUpdateOperationsInput | string | null
+    pan_number?: NullableStringFieldUpdateOperationsInput | string | null
+    business_employees?: business_employeesUncheckedUpdateManyWithoutBusinessesNestedInput
+    business_workflows?: business_workflowsUncheckedUpdateManyWithoutBusinessesNestedInput
+    carts?: cartsUncheckedUpdateManyWithoutBusinessesNestedInput
+    inventory_levels?: inventory_levelsUncheckedUpdateManyWithoutBusinessesNestedInput
+    leads?: leadsUncheckedUpdateManyWithoutBusinessesNestedInput
+    notification_messages?: notification_messagesUncheckedUpdateManyWithoutBusinessesNestedInput
+    notification_preferences?: notification_preferencesUncheckedUpdateManyWithoutBusinessesNestedInput
+    notification_templates?: notification_templatesUncheckedUpdateManyWithoutBusinessesNestedInput
+    payment_reconciliation?: payment_reconciliationUncheckedUpdateManyWithoutBusinessesNestedInput
+    payments?: paymentsUncheckedUpdateManyWithoutBusinessesNestedInput
+    product_categories?: product_categoriesUncheckedUpdateManyWithoutBusinessesNestedInput
+    product_images?: product_imagesUncheckedUpdateManyWithoutBusinessesNestedInput
+    products?: productsUncheckedUpdateManyWithoutBusinessesNestedInput
+    social_accounts?: social_accountsUncheckedUpdateManyWithoutBusinessesNestedInput
+    stock_alerts?: stock_alertsUncheckedUpdateManyWithoutBusinessesNestedInput
+    stock_counts?: stock_countsUncheckedUpdateManyWithoutBusinessesNestedInput
+    stock_movements?: stock_movementsUncheckedUpdateManyWithoutBusinessesNestedInput
+    stock_transfers?: stock_transfersUncheckedUpdateManyWithoutBusinessesNestedInput
+    tags?: tagsUncheckedUpdateManyWithoutBusinessesNestedInput
+    users?: usersUncheckedUpdateManyWithoutBusinessesNestedInput
+    warehouses?: warehousesUncheckedUpdateManyWithoutBusinessesNestedInput
+    workflow_executions?: workflow_executionsUncheckedUpdateManyWithoutBusinessesNestedInput
+    api_usage_metrics?: api_usage_metricsUncheckedUpdateManyWithoutBusinessesNestedInput
+  }
+
+  export type subscription_plansUpsertWithoutBusiness_subscriptionsInput = {
+    update: XOR<subscription_plansUpdateWithoutBusiness_subscriptionsInput, subscription_plansUncheckedUpdateWithoutBusiness_subscriptionsInput>
+    create: XOR<subscription_plansCreateWithoutBusiness_subscriptionsInput, subscription_plansUncheckedCreateWithoutBusiness_subscriptionsInput>
+    where?: subscription_plansWhereInput
+  }
+
+  export type subscription_plansUpdateToOneWithWhereWithoutBusiness_subscriptionsInput = {
+    where?: subscription_plansWhereInput
+    data: XOR<subscription_plansUpdateWithoutBusiness_subscriptionsInput, subscription_plansUncheckedUpdateWithoutBusiness_subscriptionsInput>
+  }
+
+  export type subscription_plansUpdateWithoutBusiness_subscriptionsInput = {
+    subscription_plan_id?: StringFieldUpdateOperationsInput | string
+    plan_name?: StringFieldUpdateOperationsInput | string
+    price?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    duration_in_days?: NullableIntFieldUpdateOperationsInput | number | null
+    billing_cycle?: NullableStringFieldUpdateOperationsInput | string | null
+    features?: NullableJsonNullValueInput | InputJsonValue
+    limits?: NullableJsonNullValueInput | InputJsonValue
+    is_active?: BoolFieldUpdateOperationsInput | boolean
+    razorpay_plan_id?: NullableStringFieldUpdateOperationsInput | string | null
+    created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
+  export type subscription_plansUncheckedUpdateWithoutBusiness_subscriptionsInput = {
+    subscription_plan_id?: StringFieldUpdateOperationsInput | string
+    plan_name?: StringFieldUpdateOperationsInput | string
+    price?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    duration_in_days?: NullableIntFieldUpdateOperationsInput | number | null
+    billing_cycle?: NullableStringFieldUpdateOperationsInput | string | null
+    features?: NullableJsonNullValueInput | InputJsonValue
+    limits?: NullableJsonNullValueInput | InputJsonValue
+    is_active?: BoolFieldUpdateOperationsInput | boolean
+    razorpay_plan_id?: NullableStringFieldUpdateOperationsInput | string | null
+    created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
+  export type businessesCreateWithoutApi_usage_metricsInput = {
+    business_id?: string
+    business_name: string
+    business_type?: string | null
+    whatsapp_number?: string | null
+    created_at?: Date | string | null
+    updated_at?: Date | string | null
+    email?: string | null
+    phone?: string | null
+    website?: string | null
+    city?: string | null
+    address?: string | null
+    country?: string | null
+    gst_number?: string | null
+    pan_number?: string | null
+    business_employees?: business_employeesCreateNestedManyWithoutBusinessesInput
+    business_workflows?: business_workflowsCreateNestedManyWithoutBusinessesInput
+    tenants: tenantsCreateNestedOneWithoutBusinessesInput
+    carts?: cartsCreateNestedManyWithoutBusinessesInput
+    inventory_levels?: inventory_levelsCreateNestedManyWithoutBusinessesInput
+    leads?: leadsCreateNestedManyWithoutBusinessesInput
+    notification_messages?: notification_messagesCreateNestedManyWithoutBusinessesInput
+    notification_preferences?: notification_preferencesCreateNestedManyWithoutBusinessesInput
+    notification_templates?: notification_templatesCreateNestedManyWithoutBusinessesInput
+    payment_reconciliation?: payment_reconciliationCreateNestedManyWithoutBusinessesInput
+    payments?: paymentsCreateNestedManyWithoutBusinessesInput
+    product_categories?: product_categoriesCreateNestedManyWithoutBusinessesInput
+    product_images?: product_imagesCreateNestedManyWithoutBusinessesInput
+    products?: productsCreateNestedManyWithoutBusinessesInput
+    social_accounts?: social_accountsCreateNestedManyWithoutBusinessesInput
+    stock_alerts?: stock_alertsCreateNestedManyWithoutBusinessesInput
+    stock_counts?: stock_countsCreateNestedManyWithoutBusinessesInput
+    stock_movements?: stock_movementsCreateNestedManyWithoutBusinessesInput
+    stock_transfers?: stock_transfersCreateNestedManyWithoutBusinessesInput
+    tags?: tagsCreateNestedManyWithoutBusinessesInput
+    users?: usersCreateNestedManyWithoutBusinessesInput
+    warehouses?: warehousesCreateNestedManyWithoutBusinessesInput
+    workflow_executions?: workflow_executionsCreateNestedManyWithoutBusinessesInput
+    business_subscriptions?: business_subscriptionsCreateNestedManyWithoutBusinessesInput
+  }
+
+  export type businessesUncheckedCreateWithoutApi_usage_metricsInput = {
+    business_id?: string
+    tenant_id: string
+    business_name: string
+    business_type?: string | null
+    whatsapp_number?: string | null
+    created_at?: Date | string | null
+    updated_at?: Date | string | null
+    email?: string | null
+    phone?: string | null
+    website?: string | null
+    city?: string | null
+    address?: string | null
+    country?: string | null
+    gst_number?: string | null
+    pan_number?: string | null
+    business_employees?: business_employeesUncheckedCreateNestedManyWithoutBusinessesInput
+    business_workflows?: business_workflowsUncheckedCreateNestedManyWithoutBusinessesInput
+    carts?: cartsUncheckedCreateNestedManyWithoutBusinessesInput
+    inventory_levels?: inventory_levelsUncheckedCreateNestedManyWithoutBusinessesInput
+    leads?: leadsUncheckedCreateNestedManyWithoutBusinessesInput
+    notification_messages?: notification_messagesUncheckedCreateNestedManyWithoutBusinessesInput
+    notification_preferences?: notification_preferencesUncheckedCreateNestedManyWithoutBusinessesInput
+    notification_templates?: notification_templatesUncheckedCreateNestedManyWithoutBusinessesInput
+    payment_reconciliation?: payment_reconciliationUncheckedCreateNestedManyWithoutBusinessesInput
+    payments?: paymentsUncheckedCreateNestedManyWithoutBusinessesInput
+    product_categories?: product_categoriesUncheckedCreateNestedManyWithoutBusinessesInput
+    product_images?: product_imagesUncheckedCreateNestedManyWithoutBusinessesInput
+    products?: productsUncheckedCreateNestedManyWithoutBusinessesInput
+    social_accounts?: social_accountsUncheckedCreateNestedManyWithoutBusinessesInput
+    stock_alerts?: stock_alertsUncheckedCreateNestedManyWithoutBusinessesInput
+    stock_counts?: stock_countsUncheckedCreateNestedManyWithoutBusinessesInput
+    stock_movements?: stock_movementsUncheckedCreateNestedManyWithoutBusinessesInput
+    stock_transfers?: stock_transfersUncheckedCreateNestedManyWithoutBusinessesInput
+    tags?: tagsUncheckedCreateNestedManyWithoutBusinessesInput
+    users?: usersUncheckedCreateNestedManyWithoutBusinessesInput
+    warehouses?: warehousesUncheckedCreateNestedManyWithoutBusinessesInput
+    workflow_executions?: workflow_executionsUncheckedCreateNestedManyWithoutBusinessesInput
+    business_subscriptions?: business_subscriptionsUncheckedCreateNestedManyWithoutBusinessesInput
+  }
+
+  export type businessesCreateOrConnectWithoutApi_usage_metricsInput = {
+    where: businessesWhereUniqueInput
+    create: XOR<businessesCreateWithoutApi_usage_metricsInput, businessesUncheckedCreateWithoutApi_usage_metricsInput>
+  }
+
+  export type businessesUpsertWithoutApi_usage_metricsInput = {
+    update: XOR<businessesUpdateWithoutApi_usage_metricsInput, businessesUncheckedUpdateWithoutApi_usage_metricsInput>
+    create: XOR<businessesCreateWithoutApi_usage_metricsInput, businessesUncheckedCreateWithoutApi_usage_metricsInput>
+    where?: businessesWhereInput
+  }
+
+  export type businessesUpdateToOneWithWhereWithoutApi_usage_metricsInput = {
+    where?: businessesWhereInput
+    data: XOR<businessesUpdateWithoutApi_usage_metricsInput, businessesUncheckedUpdateWithoutApi_usage_metricsInput>
+  }
+
+  export type businessesUpdateWithoutApi_usage_metricsInput = {
+    business_id?: StringFieldUpdateOperationsInput | string
+    business_name?: StringFieldUpdateOperationsInput | string
+    business_type?: NullableStringFieldUpdateOperationsInput | string | null
+    whatsapp_number?: NullableStringFieldUpdateOperationsInput | string | null
+    created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    website?: NullableStringFieldUpdateOperationsInput | string | null
+    city?: NullableStringFieldUpdateOperationsInput | string | null
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    country?: NullableStringFieldUpdateOperationsInput | string | null
+    gst_number?: NullableStringFieldUpdateOperationsInput | string | null
+    pan_number?: NullableStringFieldUpdateOperationsInput | string | null
+    business_employees?: business_employeesUpdateManyWithoutBusinessesNestedInput
+    business_workflows?: business_workflowsUpdateManyWithoutBusinessesNestedInput
+    tenants?: tenantsUpdateOneRequiredWithoutBusinessesNestedInput
+    carts?: cartsUpdateManyWithoutBusinessesNestedInput
+    inventory_levels?: inventory_levelsUpdateManyWithoutBusinessesNestedInput
+    leads?: leadsUpdateManyWithoutBusinessesNestedInput
+    notification_messages?: notification_messagesUpdateManyWithoutBusinessesNestedInput
+    notification_preferences?: notification_preferencesUpdateManyWithoutBusinessesNestedInput
+    notification_templates?: notification_templatesUpdateManyWithoutBusinessesNestedInput
+    payment_reconciliation?: payment_reconciliationUpdateManyWithoutBusinessesNestedInput
+    payments?: paymentsUpdateManyWithoutBusinessesNestedInput
+    product_categories?: product_categoriesUpdateManyWithoutBusinessesNestedInput
+    product_images?: product_imagesUpdateManyWithoutBusinessesNestedInput
+    products?: productsUpdateManyWithoutBusinessesNestedInput
+    social_accounts?: social_accountsUpdateManyWithoutBusinessesNestedInput
+    stock_alerts?: stock_alertsUpdateManyWithoutBusinessesNestedInput
+    stock_counts?: stock_countsUpdateManyWithoutBusinessesNestedInput
+    stock_movements?: stock_movementsUpdateManyWithoutBusinessesNestedInput
+    stock_transfers?: stock_transfersUpdateManyWithoutBusinessesNestedInput
+    tags?: tagsUpdateManyWithoutBusinessesNestedInput
+    users?: usersUpdateManyWithoutBusinessesNestedInput
+    warehouses?: warehousesUpdateManyWithoutBusinessesNestedInput
+    workflow_executions?: workflow_executionsUpdateManyWithoutBusinessesNestedInput
+    business_subscriptions?: business_subscriptionsUpdateManyWithoutBusinessesNestedInput
+  }
+
+  export type businessesUncheckedUpdateWithoutApi_usage_metricsInput = {
+    business_id?: StringFieldUpdateOperationsInput | string
+    tenant_id?: StringFieldUpdateOperationsInput | string
+    business_name?: StringFieldUpdateOperationsInput | string
+    business_type?: NullableStringFieldUpdateOperationsInput | string | null
+    whatsapp_number?: NullableStringFieldUpdateOperationsInput | string | null
+    created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    website?: NullableStringFieldUpdateOperationsInput | string | null
+    city?: NullableStringFieldUpdateOperationsInput | string | null
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    country?: NullableStringFieldUpdateOperationsInput | string | null
+    gst_number?: NullableStringFieldUpdateOperationsInput | string | null
+    pan_number?: NullableStringFieldUpdateOperationsInput | string | null
+    business_employees?: business_employeesUncheckedUpdateManyWithoutBusinessesNestedInput
+    business_workflows?: business_workflowsUncheckedUpdateManyWithoutBusinessesNestedInput
+    carts?: cartsUncheckedUpdateManyWithoutBusinessesNestedInput
+    inventory_levels?: inventory_levelsUncheckedUpdateManyWithoutBusinessesNestedInput
+    leads?: leadsUncheckedUpdateManyWithoutBusinessesNestedInput
+    notification_messages?: notification_messagesUncheckedUpdateManyWithoutBusinessesNestedInput
+    notification_preferences?: notification_preferencesUncheckedUpdateManyWithoutBusinessesNestedInput
+    notification_templates?: notification_templatesUncheckedUpdateManyWithoutBusinessesNestedInput
+    payment_reconciliation?: payment_reconciliationUncheckedUpdateManyWithoutBusinessesNestedInput
+    payments?: paymentsUncheckedUpdateManyWithoutBusinessesNestedInput
+    product_categories?: product_categoriesUncheckedUpdateManyWithoutBusinessesNestedInput
+    product_images?: product_imagesUncheckedUpdateManyWithoutBusinessesNestedInput
+    products?: productsUncheckedUpdateManyWithoutBusinessesNestedInput
+    social_accounts?: social_accountsUncheckedUpdateManyWithoutBusinessesNestedInput
+    stock_alerts?: stock_alertsUncheckedUpdateManyWithoutBusinessesNestedInput
+    stock_counts?: stock_countsUncheckedUpdateManyWithoutBusinessesNestedInput
+    stock_movements?: stock_movementsUncheckedUpdateManyWithoutBusinessesNestedInput
+    stock_transfers?: stock_transfersUncheckedUpdateManyWithoutBusinessesNestedInput
+    tags?: tagsUncheckedUpdateManyWithoutBusinessesNestedInput
+    users?: usersUncheckedUpdateManyWithoutBusinessesNestedInput
+    warehouses?: warehousesUncheckedUpdateManyWithoutBusinessesNestedInput
+    workflow_executions?: workflow_executionsUncheckedUpdateManyWithoutBusinessesNestedInput
+    business_subscriptions?: business_subscriptionsUncheckedUpdateManyWithoutBusinessesNestedInput
   }
 
   export type business_workflowsCreateWithoutTenantsInput = {
@@ -120552,6 +124613,8 @@ export namespace Prisma {
     users?: usersCreateNestedManyWithoutBusinessesInput
     warehouses?: warehousesCreateNestedManyWithoutBusinessesInput
     workflow_executions?: workflow_executionsCreateNestedManyWithoutBusinessesInput
+    business_subscriptions?: business_subscriptionsCreateNestedManyWithoutBusinessesInput
+    api_usage_metrics?: api_usage_metricsCreateNestedManyWithoutBusinessesInput
   }
 
   export type businessesUncheckedCreateWithoutTenantsInput = {
@@ -120591,6 +124654,8 @@ export namespace Prisma {
     users?: usersUncheckedCreateNestedManyWithoutBusinessesInput
     warehouses?: warehousesUncheckedCreateNestedManyWithoutBusinessesInput
     workflow_executions?: workflow_executionsUncheckedCreateNestedManyWithoutBusinessesInput
+    business_subscriptions?: business_subscriptionsUncheckedCreateNestedManyWithoutBusinessesInput
+    api_usage_metrics?: api_usage_metricsUncheckedCreateNestedManyWithoutBusinessesInput
   }
 
   export type businessesCreateOrConnectWithoutTenantsInput = {
@@ -122193,6 +126258,8 @@ export namespace Prisma {
     tags?: tagsCreateNestedManyWithoutBusinessesInput
     warehouses?: warehousesCreateNestedManyWithoutBusinessesInput
     workflow_executions?: workflow_executionsCreateNestedManyWithoutBusinessesInput
+    business_subscriptions?: business_subscriptionsCreateNestedManyWithoutBusinessesInput
+    api_usage_metrics?: api_usage_metricsCreateNestedManyWithoutBusinessesInput
   }
 
   export type businessesUncheckedCreateWithoutUsersInput = {
@@ -122232,6 +126299,8 @@ export namespace Prisma {
     tags?: tagsUncheckedCreateNestedManyWithoutBusinessesInput
     warehouses?: warehousesUncheckedCreateNestedManyWithoutBusinessesInput
     workflow_executions?: workflow_executionsUncheckedCreateNestedManyWithoutBusinessesInput
+    business_subscriptions?: business_subscriptionsUncheckedCreateNestedManyWithoutBusinessesInput
+    api_usage_metrics?: api_usage_metricsUncheckedCreateNestedManyWithoutBusinessesInput
   }
 
   export type businessesCreateOrConnectWithoutUsersInput = {
@@ -122571,6 +126640,8 @@ export namespace Prisma {
     tags?: tagsUpdateManyWithoutBusinessesNestedInput
     warehouses?: warehousesUpdateManyWithoutBusinessesNestedInput
     workflow_executions?: workflow_executionsUpdateManyWithoutBusinessesNestedInput
+    business_subscriptions?: business_subscriptionsUpdateManyWithoutBusinessesNestedInput
+    api_usage_metrics?: api_usage_metricsUpdateManyWithoutBusinessesNestedInput
   }
 
   export type businessesUncheckedUpdateWithoutUsersInput = {
@@ -122610,6 +126681,8 @@ export namespace Prisma {
     tags?: tagsUncheckedUpdateManyWithoutBusinessesNestedInput
     warehouses?: warehousesUncheckedUpdateManyWithoutBusinessesNestedInput
     workflow_executions?: workflow_executionsUncheckedUpdateManyWithoutBusinessesNestedInput
+    business_subscriptions?: business_subscriptionsUncheckedUpdateManyWithoutBusinessesNestedInput
+    api_usage_metrics?: api_usage_metricsUncheckedUpdateManyWithoutBusinessesNestedInput
   }
 
   export type rolesUpsertWithoutUsersInput = {
@@ -123299,6 +127372,8 @@ export namespace Prisma {
     users?: usersCreateNestedManyWithoutBusinessesInput
     warehouses?: warehousesCreateNestedManyWithoutBusinessesInput
     workflow_executions?: workflow_executionsCreateNestedManyWithoutBusinessesInput
+    business_subscriptions?: business_subscriptionsCreateNestedManyWithoutBusinessesInput
+    api_usage_metrics?: api_usage_metricsCreateNestedManyWithoutBusinessesInput
   }
 
   export type businessesUncheckedCreateWithoutLeadsInput = {
@@ -123338,6 +127413,8 @@ export namespace Prisma {
     users?: usersUncheckedCreateNestedManyWithoutBusinessesInput
     warehouses?: warehousesUncheckedCreateNestedManyWithoutBusinessesInput
     workflow_executions?: workflow_executionsUncheckedCreateNestedManyWithoutBusinessesInput
+    business_subscriptions?: business_subscriptionsUncheckedCreateNestedManyWithoutBusinessesInput
+    api_usage_metrics?: api_usage_metricsUncheckedCreateNestedManyWithoutBusinessesInput
   }
 
   export type businessesCreateOrConnectWithoutLeadsInput = {
@@ -124336,6 +128413,8 @@ export namespace Prisma {
     users?: usersUpdateManyWithoutBusinessesNestedInput
     warehouses?: warehousesUpdateManyWithoutBusinessesNestedInput
     workflow_executions?: workflow_executionsUpdateManyWithoutBusinessesNestedInput
+    business_subscriptions?: business_subscriptionsUpdateManyWithoutBusinessesNestedInput
+    api_usage_metrics?: api_usage_metricsUpdateManyWithoutBusinessesNestedInput
   }
 
   export type businessesUncheckedUpdateWithoutLeadsInput = {
@@ -124375,6 +128454,8 @@ export namespace Prisma {
     users?: usersUncheckedUpdateManyWithoutBusinessesNestedInput
     warehouses?: warehousesUncheckedUpdateManyWithoutBusinessesNestedInput
     workflow_executions?: workflow_executionsUncheckedUpdateManyWithoutBusinessesNestedInput
+    business_subscriptions?: business_subscriptionsUncheckedUpdateManyWithoutBusinessesNestedInput
+    api_usage_metrics?: api_usage_metricsUncheckedUpdateManyWithoutBusinessesNestedInput
   }
 
   export type leadsUpsertWithoutDuplicate_leadsInput = {
@@ -126333,6 +130414,8 @@ export namespace Prisma {
     users?: usersCreateNestedManyWithoutBusinessesInput
     warehouses?: warehousesCreateNestedManyWithoutBusinessesInput
     workflow_executions?: workflow_executionsCreateNestedManyWithoutBusinessesInput
+    business_subscriptions?: business_subscriptionsCreateNestedManyWithoutBusinessesInput
+    api_usage_metrics?: api_usage_metricsCreateNestedManyWithoutBusinessesInput
   }
 
   export type businessesUncheckedCreateWithoutTagsInput = {
@@ -126372,6 +130455,8 @@ export namespace Prisma {
     users?: usersUncheckedCreateNestedManyWithoutBusinessesInput
     warehouses?: warehousesUncheckedCreateNestedManyWithoutBusinessesInput
     workflow_executions?: workflow_executionsUncheckedCreateNestedManyWithoutBusinessesInput
+    business_subscriptions?: business_subscriptionsUncheckedCreateNestedManyWithoutBusinessesInput
+    api_usage_metrics?: api_usage_metricsUncheckedCreateNestedManyWithoutBusinessesInput
   }
 
   export type businessesCreateOrConnectWithoutTagsInput = {
@@ -126443,6 +130528,8 @@ export namespace Prisma {
     users?: usersUpdateManyWithoutBusinessesNestedInput
     warehouses?: warehousesUpdateManyWithoutBusinessesNestedInput
     workflow_executions?: workflow_executionsUpdateManyWithoutBusinessesNestedInput
+    business_subscriptions?: business_subscriptionsUpdateManyWithoutBusinessesNestedInput
+    api_usage_metrics?: api_usage_metricsUpdateManyWithoutBusinessesNestedInput
   }
 
   export type businessesUncheckedUpdateWithoutTagsInput = {
@@ -126482,6 +130569,8 @@ export namespace Prisma {
     users?: usersUncheckedUpdateManyWithoutBusinessesNestedInput
     warehouses?: warehousesUncheckedUpdateManyWithoutBusinessesNestedInput
     workflow_executions?: workflow_executionsUncheckedUpdateManyWithoutBusinessesNestedInput
+    business_subscriptions?: business_subscriptionsUncheckedUpdateManyWithoutBusinessesNestedInput
+    api_usage_metrics?: api_usage_metricsUncheckedUpdateManyWithoutBusinessesNestedInput
   }
 
   export type leadsCreateWithoutLead_tag_assignmentsInput = {
@@ -129681,6 +133770,8 @@ export namespace Prisma {
     users?: usersCreateNestedManyWithoutBusinessesInput
     warehouses?: warehousesCreateNestedManyWithoutBusinessesInput
     workflow_executions?: workflow_executionsCreateNestedManyWithoutBusinessesInput
+    business_subscriptions?: business_subscriptionsCreateNestedManyWithoutBusinessesInput
+    api_usage_metrics?: api_usage_metricsCreateNestedManyWithoutBusinessesInput
   }
 
   export type businessesUncheckedCreateWithoutProductsInput = {
@@ -129720,6 +133811,8 @@ export namespace Prisma {
     users?: usersUncheckedCreateNestedManyWithoutBusinessesInput
     warehouses?: warehousesUncheckedCreateNestedManyWithoutBusinessesInput
     workflow_executions?: workflow_executionsUncheckedCreateNestedManyWithoutBusinessesInput
+    business_subscriptions?: business_subscriptionsUncheckedCreateNestedManyWithoutBusinessesInput
+    api_usage_metrics?: api_usage_metricsUncheckedCreateNestedManyWithoutBusinessesInput
   }
 
   export type businessesCreateOrConnectWithoutProductsInput = {
@@ -130079,6 +134172,8 @@ export namespace Prisma {
     users?: usersUpdateManyWithoutBusinessesNestedInput
     warehouses?: warehousesUpdateManyWithoutBusinessesNestedInput
     workflow_executions?: workflow_executionsUpdateManyWithoutBusinessesNestedInput
+    business_subscriptions?: business_subscriptionsUpdateManyWithoutBusinessesNestedInput
+    api_usage_metrics?: api_usage_metricsUpdateManyWithoutBusinessesNestedInput
   }
 
   export type businessesUncheckedUpdateWithoutProductsInput = {
@@ -130118,6 +134213,8 @@ export namespace Prisma {
     users?: usersUncheckedUpdateManyWithoutBusinessesNestedInput
     warehouses?: warehousesUncheckedUpdateManyWithoutBusinessesNestedInput
     workflow_executions?: workflow_executionsUncheckedUpdateManyWithoutBusinessesNestedInput
+    business_subscriptions?: business_subscriptionsUncheckedUpdateManyWithoutBusinessesNestedInput
+    api_usage_metrics?: api_usage_metricsUncheckedUpdateManyWithoutBusinessesNestedInput
   }
 
   export type product_categoriesUpsertWithoutProductsInput = {
@@ -130740,6 +134837,8 @@ export namespace Prisma {
     users?: usersCreateNestedManyWithoutBusinessesInput
     warehouses?: warehousesCreateNestedManyWithoutBusinessesInput
     workflow_executions?: workflow_executionsCreateNestedManyWithoutBusinessesInput
+    business_subscriptions?: business_subscriptionsCreateNestedManyWithoutBusinessesInput
+    api_usage_metrics?: api_usage_metricsCreateNestedManyWithoutBusinessesInput
   }
 
   export type businessesUncheckedCreateWithoutProduct_imagesInput = {
@@ -130779,6 +134878,8 @@ export namespace Prisma {
     users?: usersUncheckedCreateNestedManyWithoutBusinessesInput
     warehouses?: warehousesUncheckedCreateNestedManyWithoutBusinessesInput
     workflow_executions?: workflow_executionsUncheckedCreateNestedManyWithoutBusinessesInput
+    business_subscriptions?: business_subscriptionsUncheckedCreateNestedManyWithoutBusinessesInput
+    api_usage_metrics?: api_usage_metricsUncheckedCreateNestedManyWithoutBusinessesInput
   }
 
   export type businessesCreateOrConnectWithoutProduct_imagesInput = {
@@ -130935,6 +135036,8 @@ export namespace Prisma {
     users?: usersUpdateManyWithoutBusinessesNestedInput
     warehouses?: warehousesUpdateManyWithoutBusinessesNestedInput
     workflow_executions?: workflow_executionsUpdateManyWithoutBusinessesNestedInput
+    business_subscriptions?: business_subscriptionsUpdateManyWithoutBusinessesNestedInput
+    api_usage_metrics?: api_usage_metricsUpdateManyWithoutBusinessesNestedInput
   }
 
   export type businessesUncheckedUpdateWithoutProduct_imagesInput = {
@@ -130974,6 +135077,8 @@ export namespace Prisma {
     users?: usersUncheckedUpdateManyWithoutBusinessesNestedInput
     warehouses?: warehousesUncheckedUpdateManyWithoutBusinessesNestedInput
     workflow_executions?: workflow_executionsUncheckedUpdateManyWithoutBusinessesNestedInput
+    business_subscriptions?: business_subscriptionsUncheckedUpdateManyWithoutBusinessesNestedInput
+    api_usage_metrics?: api_usage_metricsUncheckedUpdateManyWithoutBusinessesNestedInput
   }
 
   export type productsUpsertWithoutProduct_imagesInput = {
@@ -135342,6 +139447,8 @@ export namespace Prisma {
     tags?: tagsCreateNestedManyWithoutBusinessesInput
     users?: usersCreateNestedManyWithoutBusinessesInput
     workflow_executions?: workflow_executionsCreateNestedManyWithoutBusinessesInput
+    business_subscriptions?: business_subscriptionsCreateNestedManyWithoutBusinessesInput
+    api_usage_metrics?: api_usage_metricsCreateNestedManyWithoutBusinessesInput
   }
 
   export type businessesUncheckedCreateWithoutWarehousesInput = {
@@ -135381,6 +139488,8 @@ export namespace Prisma {
     tags?: tagsUncheckedCreateNestedManyWithoutBusinessesInput
     users?: usersUncheckedCreateNestedManyWithoutBusinessesInput
     workflow_executions?: workflow_executionsUncheckedCreateNestedManyWithoutBusinessesInput
+    business_subscriptions?: business_subscriptionsUncheckedCreateNestedManyWithoutBusinessesInput
+    api_usage_metrics?: api_usage_metricsUncheckedCreateNestedManyWithoutBusinessesInput
   }
 
   export type businessesCreateOrConnectWithoutWarehousesInput = {
@@ -135587,6 +139696,8 @@ export namespace Prisma {
     tags?: tagsUpdateManyWithoutBusinessesNestedInput
     users?: usersUpdateManyWithoutBusinessesNestedInput
     workflow_executions?: workflow_executionsUpdateManyWithoutBusinessesNestedInput
+    business_subscriptions?: business_subscriptionsUpdateManyWithoutBusinessesNestedInput
+    api_usage_metrics?: api_usage_metricsUpdateManyWithoutBusinessesNestedInput
   }
 
   export type businessesUncheckedUpdateWithoutWarehousesInput = {
@@ -135626,6 +139737,8 @@ export namespace Prisma {
     tags?: tagsUncheckedUpdateManyWithoutBusinessesNestedInput
     users?: usersUncheckedUpdateManyWithoutBusinessesNestedInput
     workflow_executions?: workflow_executionsUncheckedUpdateManyWithoutBusinessesNestedInput
+    business_subscriptions?: business_subscriptionsUncheckedUpdateManyWithoutBusinessesNestedInput
+    api_usage_metrics?: api_usage_metricsUncheckedUpdateManyWithoutBusinessesNestedInput
   }
 
   export type tenantsUpsertWithoutWarehousesInput = {
@@ -135726,6 +139839,8 @@ export namespace Prisma {
     users?: usersCreateNestedManyWithoutBusinessesInput
     warehouses?: warehousesCreateNestedManyWithoutBusinessesInput
     workflow_executions?: workflow_executionsCreateNestedManyWithoutBusinessesInput
+    business_subscriptions?: business_subscriptionsCreateNestedManyWithoutBusinessesInput
+    api_usage_metrics?: api_usage_metricsCreateNestedManyWithoutBusinessesInput
   }
 
   export type businessesUncheckedCreateWithoutInventory_levelsInput = {
@@ -135765,6 +139880,8 @@ export namespace Prisma {
     users?: usersUncheckedCreateNestedManyWithoutBusinessesInput
     warehouses?: warehousesUncheckedCreateNestedManyWithoutBusinessesInput
     workflow_executions?: workflow_executionsUncheckedCreateNestedManyWithoutBusinessesInput
+    business_subscriptions?: business_subscriptionsUncheckedCreateNestedManyWithoutBusinessesInput
+    api_usage_metrics?: api_usage_metricsUncheckedCreateNestedManyWithoutBusinessesInput
   }
 
   export type businessesCreateOrConnectWithoutInventory_levelsInput = {
@@ -136103,6 +140220,8 @@ export namespace Prisma {
     users?: usersUpdateManyWithoutBusinessesNestedInput
     warehouses?: warehousesUpdateManyWithoutBusinessesNestedInput
     workflow_executions?: workflow_executionsUpdateManyWithoutBusinessesNestedInput
+    business_subscriptions?: business_subscriptionsUpdateManyWithoutBusinessesNestedInput
+    api_usage_metrics?: api_usage_metricsUpdateManyWithoutBusinessesNestedInput
   }
 
   export type businessesUncheckedUpdateWithoutInventory_levelsInput = {
@@ -136142,6 +140261,8 @@ export namespace Prisma {
     users?: usersUncheckedUpdateManyWithoutBusinessesNestedInput
     warehouses?: warehousesUncheckedUpdateManyWithoutBusinessesNestedInput
     workflow_executions?: workflow_executionsUncheckedUpdateManyWithoutBusinessesNestedInput
+    business_subscriptions?: business_subscriptionsUncheckedUpdateManyWithoutBusinessesNestedInput
+    api_usage_metrics?: api_usage_metricsUncheckedUpdateManyWithoutBusinessesNestedInput
   }
 
   export type tenantsUpsertWithoutInventory_levelsInput = {
@@ -136396,6 +140517,8 @@ export namespace Prisma {
     users?: usersCreateNestedManyWithoutBusinessesInput
     warehouses?: warehousesCreateNestedManyWithoutBusinessesInput
     workflow_executions?: workflow_executionsCreateNestedManyWithoutBusinessesInput
+    business_subscriptions?: business_subscriptionsCreateNestedManyWithoutBusinessesInput
+    api_usage_metrics?: api_usage_metricsCreateNestedManyWithoutBusinessesInput
   }
 
   export type businessesUncheckedCreateWithoutStock_movementsInput = {
@@ -136435,6 +140558,8 @@ export namespace Prisma {
     users?: usersUncheckedCreateNestedManyWithoutBusinessesInput
     warehouses?: warehousesUncheckedCreateNestedManyWithoutBusinessesInput
     workflow_executions?: workflow_executionsUncheckedCreateNestedManyWithoutBusinessesInput
+    business_subscriptions?: business_subscriptionsUncheckedCreateNestedManyWithoutBusinessesInput
+    api_usage_metrics?: api_usage_metricsUncheckedCreateNestedManyWithoutBusinessesInput
   }
 
   export type businessesCreateOrConnectWithoutStock_movementsInput = {
@@ -136716,6 +140841,8 @@ export namespace Prisma {
     users?: usersUpdateManyWithoutBusinessesNestedInput
     warehouses?: warehousesUpdateManyWithoutBusinessesNestedInput
     workflow_executions?: workflow_executionsUpdateManyWithoutBusinessesNestedInput
+    business_subscriptions?: business_subscriptionsUpdateManyWithoutBusinessesNestedInput
+    api_usage_metrics?: api_usage_metricsUpdateManyWithoutBusinessesNestedInput
   }
 
   export type businessesUncheckedUpdateWithoutStock_movementsInput = {
@@ -136755,6 +140882,8 @@ export namespace Prisma {
     users?: usersUncheckedUpdateManyWithoutBusinessesNestedInput
     warehouses?: warehousesUncheckedUpdateManyWithoutBusinessesNestedInput
     workflow_executions?: workflow_executionsUncheckedUpdateManyWithoutBusinessesNestedInput
+    business_subscriptions?: business_subscriptionsUncheckedUpdateManyWithoutBusinessesNestedInput
+    api_usage_metrics?: api_usage_metricsUncheckedUpdateManyWithoutBusinessesNestedInput
   }
 
   export type inventory_levelsUpsertWithoutStock_movementsInput = {
@@ -137044,6 +141173,8 @@ export namespace Prisma {
     users?: usersCreateNestedManyWithoutBusinessesInput
     warehouses?: warehousesCreateNestedManyWithoutBusinessesInput
     workflow_executions?: workflow_executionsCreateNestedManyWithoutBusinessesInput
+    business_subscriptions?: business_subscriptionsCreateNestedManyWithoutBusinessesInput
+    api_usage_metrics?: api_usage_metricsCreateNestedManyWithoutBusinessesInput
   }
 
   export type businessesUncheckedCreateWithoutStock_transfersInput = {
@@ -137083,6 +141214,8 @@ export namespace Prisma {
     users?: usersUncheckedCreateNestedManyWithoutBusinessesInput
     warehouses?: warehousesUncheckedCreateNestedManyWithoutBusinessesInput
     workflow_executions?: workflow_executionsUncheckedCreateNestedManyWithoutBusinessesInput
+    business_subscriptions?: business_subscriptionsUncheckedCreateNestedManyWithoutBusinessesInput
+    api_usage_metrics?: api_usage_metricsUncheckedCreateNestedManyWithoutBusinessesInput
   }
 
   export type businessesCreateOrConnectWithoutStock_transfersInput = {
@@ -137331,6 +141464,8 @@ export namespace Prisma {
     users?: usersUpdateManyWithoutBusinessesNestedInput
     warehouses?: warehousesUpdateManyWithoutBusinessesNestedInput
     workflow_executions?: workflow_executionsUpdateManyWithoutBusinessesNestedInput
+    business_subscriptions?: business_subscriptionsUpdateManyWithoutBusinessesNestedInput
+    api_usage_metrics?: api_usage_metricsUpdateManyWithoutBusinessesNestedInput
   }
 
   export type businessesUncheckedUpdateWithoutStock_transfersInput = {
@@ -137370,6 +141505,8 @@ export namespace Prisma {
     users?: usersUncheckedUpdateManyWithoutBusinessesNestedInput
     warehouses?: warehousesUncheckedUpdateManyWithoutBusinessesNestedInput
     workflow_executions?: workflow_executionsUncheckedUpdateManyWithoutBusinessesNestedInput
+    business_subscriptions?: business_subscriptionsUncheckedUpdateManyWithoutBusinessesNestedInput
+    api_usage_metrics?: api_usage_metricsUncheckedUpdateManyWithoutBusinessesNestedInput
   }
 
   export type warehousesUpsertWithoutStock_transfers_fromInput = {
@@ -137620,6 +141757,8 @@ export namespace Prisma {
     users?: usersCreateNestedManyWithoutBusinessesInput
     warehouses?: warehousesCreateNestedManyWithoutBusinessesInput
     workflow_executions?: workflow_executionsCreateNestedManyWithoutBusinessesInput
+    business_subscriptions?: business_subscriptionsCreateNestedManyWithoutBusinessesInput
+    api_usage_metrics?: api_usage_metricsCreateNestedManyWithoutBusinessesInput
   }
 
   export type businessesUncheckedCreateWithoutStock_alertsInput = {
@@ -137659,6 +141798,8 @@ export namespace Prisma {
     users?: usersUncheckedCreateNestedManyWithoutBusinessesInput
     warehouses?: warehousesUncheckedCreateNestedManyWithoutBusinessesInput
     workflow_executions?: workflow_executionsUncheckedCreateNestedManyWithoutBusinessesInput
+    business_subscriptions?: business_subscriptionsUncheckedCreateNestedManyWithoutBusinessesInput
+    api_usage_metrics?: api_usage_metricsUncheckedCreateNestedManyWithoutBusinessesInput
   }
 
   export type businessesCreateOrConnectWithoutStock_alertsInput = {
@@ -137940,6 +142081,8 @@ export namespace Prisma {
     users?: usersUpdateManyWithoutBusinessesNestedInput
     warehouses?: warehousesUpdateManyWithoutBusinessesNestedInput
     workflow_executions?: workflow_executionsUpdateManyWithoutBusinessesNestedInput
+    business_subscriptions?: business_subscriptionsUpdateManyWithoutBusinessesNestedInput
+    api_usage_metrics?: api_usage_metricsUpdateManyWithoutBusinessesNestedInput
   }
 
   export type businessesUncheckedUpdateWithoutStock_alertsInput = {
@@ -137979,6 +142122,8 @@ export namespace Prisma {
     users?: usersUncheckedUpdateManyWithoutBusinessesNestedInput
     warehouses?: warehousesUncheckedUpdateManyWithoutBusinessesNestedInput
     workflow_executions?: workflow_executionsUncheckedUpdateManyWithoutBusinessesNestedInput
+    business_subscriptions?: business_subscriptionsUncheckedUpdateManyWithoutBusinessesNestedInput
+    api_usage_metrics?: api_usage_metricsUncheckedUpdateManyWithoutBusinessesNestedInput
   }
 
   export type inventory_levelsUpsertWithoutStock_alertsInput = {
@@ -138268,6 +142413,8 @@ export namespace Prisma {
     users?: usersCreateNestedManyWithoutBusinessesInput
     warehouses?: warehousesCreateNestedManyWithoutBusinessesInput
     workflow_executions?: workflow_executionsCreateNestedManyWithoutBusinessesInput
+    business_subscriptions?: business_subscriptionsCreateNestedManyWithoutBusinessesInput
+    api_usage_metrics?: api_usage_metricsCreateNestedManyWithoutBusinessesInput
   }
 
   export type businessesUncheckedCreateWithoutStock_countsInput = {
@@ -138307,6 +142454,8 @@ export namespace Prisma {
     users?: usersUncheckedCreateNestedManyWithoutBusinessesInput
     warehouses?: warehousesUncheckedCreateNestedManyWithoutBusinessesInput
     workflow_executions?: workflow_executionsUncheckedCreateNestedManyWithoutBusinessesInput
+    business_subscriptions?: business_subscriptionsUncheckedCreateNestedManyWithoutBusinessesInput
+    api_usage_metrics?: api_usage_metricsUncheckedCreateNestedManyWithoutBusinessesInput
   }
 
   export type businessesCreateOrConnectWithoutStock_countsInput = {
@@ -138486,6 +142635,8 @@ export namespace Prisma {
     users?: usersUpdateManyWithoutBusinessesNestedInput
     warehouses?: warehousesUpdateManyWithoutBusinessesNestedInput
     workflow_executions?: workflow_executionsUpdateManyWithoutBusinessesNestedInput
+    business_subscriptions?: business_subscriptionsUpdateManyWithoutBusinessesNestedInput
+    api_usage_metrics?: api_usage_metricsUpdateManyWithoutBusinessesNestedInput
   }
 
   export type businessesUncheckedUpdateWithoutStock_countsInput = {
@@ -138525,6 +142676,8 @@ export namespace Prisma {
     users?: usersUncheckedUpdateManyWithoutBusinessesNestedInput
     warehouses?: warehousesUncheckedUpdateManyWithoutBusinessesNestedInput
     workflow_executions?: workflow_executionsUncheckedUpdateManyWithoutBusinessesNestedInput
+    business_subscriptions?: business_subscriptionsUncheckedUpdateManyWithoutBusinessesNestedInput
+    api_usage_metrics?: api_usage_metricsUncheckedUpdateManyWithoutBusinessesNestedInput
   }
 
   export type tenantsUpsertWithoutStock_countsInput = {
@@ -138856,6 +143009,8 @@ export namespace Prisma {
     users?: usersCreateNestedManyWithoutBusinessesInput
     warehouses?: warehousesCreateNestedManyWithoutBusinessesInput
     workflow_executions?: workflow_executionsCreateNestedManyWithoutBusinessesInput
+    business_subscriptions?: business_subscriptionsCreateNestedManyWithoutBusinessesInput
+    api_usage_metrics?: api_usage_metricsCreateNestedManyWithoutBusinessesInput
   }
 
   export type businessesUncheckedCreateWithoutNotification_templatesInput = {
@@ -138895,6 +143050,8 @@ export namespace Prisma {
     users?: usersUncheckedCreateNestedManyWithoutBusinessesInput
     warehouses?: warehousesUncheckedCreateNestedManyWithoutBusinessesInput
     workflow_executions?: workflow_executionsUncheckedCreateNestedManyWithoutBusinessesInput
+    business_subscriptions?: business_subscriptionsUncheckedCreateNestedManyWithoutBusinessesInput
+    api_usage_metrics?: api_usage_metricsUncheckedCreateNestedManyWithoutBusinessesInput
   }
 
   export type businessesCreateOrConnectWithoutNotification_templatesInput = {
@@ -139037,6 +143194,8 @@ export namespace Prisma {
     users?: usersUpdateManyWithoutBusinessesNestedInput
     warehouses?: warehousesUpdateManyWithoutBusinessesNestedInput
     workflow_executions?: workflow_executionsUpdateManyWithoutBusinessesNestedInput
+    business_subscriptions?: business_subscriptionsUpdateManyWithoutBusinessesNestedInput
+    api_usage_metrics?: api_usage_metricsUpdateManyWithoutBusinessesNestedInput
   }
 
   export type businessesUncheckedUpdateWithoutNotification_templatesInput = {
@@ -139076,6 +143235,8 @@ export namespace Prisma {
     users?: usersUncheckedUpdateManyWithoutBusinessesNestedInput
     warehouses?: warehousesUncheckedUpdateManyWithoutBusinessesNestedInput
     workflow_executions?: workflow_executionsUncheckedUpdateManyWithoutBusinessesNestedInput
+    business_subscriptions?: business_subscriptionsUncheckedUpdateManyWithoutBusinessesNestedInput
+    api_usage_metrics?: api_usage_metricsUncheckedUpdateManyWithoutBusinessesNestedInput
   }
 
   export type tenantsUpsertWithoutNotification_templatesInput = {
@@ -139204,6 +143365,8 @@ export namespace Prisma {
     users?: usersCreateNestedManyWithoutBusinessesInput
     warehouses?: warehousesCreateNestedManyWithoutBusinessesInput
     workflow_executions?: workflow_executionsCreateNestedManyWithoutBusinessesInput
+    business_subscriptions?: business_subscriptionsCreateNestedManyWithoutBusinessesInput
+    api_usage_metrics?: api_usage_metricsCreateNestedManyWithoutBusinessesInput
   }
 
   export type businessesUncheckedCreateWithoutNotification_messagesInput = {
@@ -139243,6 +143406,8 @@ export namespace Prisma {
     users?: usersUncheckedCreateNestedManyWithoutBusinessesInput
     warehouses?: warehousesUncheckedCreateNestedManyWithoutBusinessesInput
     workflow_executions?: workflow_executionsUncheckedCreateNestedManyWithoutBusinessesInput
+    business_subscriptions?: business_subscriptionsUncheckedCreateNestedManyWithoutBusinessesInput
+    api_usage_metrics?: api_usage_metricsUncheckedCreateNestedManyWithoutBusinessesInput
   }
 
   export type businessesCreateOrConnectWithoutNotification_messagesInput = {
@@ -139484,6 +143649,8 @@ export namespace Prisma {
     users?: usersUpdateManyWithoutBusinessesNestedInput
     warehouses?: warehousesUpdateManyWithoutBusinessesNestedInput
     workflow_executions?: workflow_executionsUpdateManyWithoutBusinessesNestedInput
+    business_subscriptions?: business_subscriptionsUpdateManyWithoutBusinessesNestedInput
+    api_usage_metrics?: api_usage_metricsUpdateManyWithoutBusinessesNestedInput
   }
 
   export type businessesUncheckedUpdateWithoutNotification_messagesInput = {
@@ -139523,6 +143690,8 @@ export namespace Prisma {
     users?: usersUncheckedUpdateManyWithoutBusinessesNestedInput
     warehouses?: warehousesUncheckedUpdateManyWithoutBusinessesNestedInput
     workflow_executions?: workflow_executionsUncheckedUpdateManyWithoutBusinessesNestedInput
+    business_subscriptions?: business_subscriptionsUncheckedUpdateManyWithoutBusinessesNestedInput
+    api_usage_metrics?: api_usage_metricsUncheckedUpdateManyWithoutBusinessesNestedInput
   }
 
   export type customersUpsertWithoutNotification_messagesInput = {
@@ -139737,6 +143906,8 @@ export namespace Prisma {
     users?: usersCreateNestedManyWithoutBusinessesInput
     warehouses?: warehousesCreateNestedManyWithoutBusinessesInput
     workflow_executions?: workflow_executionsCreateNestedManyWithoutBusinessesInput
+    business_subscriptions?: business_subscriptionsCreateNestedManyWithoutBusinessesInput
+    api_usage_metrics?: api_usage_metricsCreateNestedManyWithoutBusinessesInput
   }
 
   export type businessesUncheckedCreateWithoutNotification_preferencesInput = {
@@ -139776,6 +143947,8 @@ export namespace Prisma {
     users?: usersUncheckedCreateNestedManyWithoutBusinessesInput
     warehouses?: warehousesUncheckedCreateNestedManyWithoutBusinessesInput
     workflow_executions?: workflow_executionsUncheckedCreateNestedManyWithoutBusinessesInput
+    business_subscriptions?: business_subscriptionsUncheckedCreateNestedManyWithoutBusinessesInput
+    api_usage_metrics?: api_usage_metricsUncheckedCreateNestedManyWithoutBusinessesInput
   }
 
   export type businessesCreateOrConnectWithoutNotification_preferencesInput = {
@@ -139880,6 +144053,8 @@ export namespace Prisma {
     users?: usersUpdateManyWithoutBusinessesNestedInput
     warehouses?: warehousesUpdateManyWithoutBusinessesNestedInput
     workflow_executions?: workflow_executionsUpdateManyWithoutBusinessesNestedInput
+    business_subscriptions?: business_subscriptionsUpdateManyWithoutBusinessesNestedInput
+    api_usage_metrics?: api_usage_metricsUpdateManyWithoutBusinessesNestedInput
   }
 
   export type businessesUncheckedUpdateWithoutNotification_preferencesInput = {
@@ -139919,6 +144094,8 @@ export namespace Prisma {
     users?: usersUncheckedUpdateManyWithoutBusinessesNestedInput
     warehouses?: warehousesUncheckedUpdateManyWithoutBusinessesNestedInput
     workflow_executions?: workflow_executionsUncheckedUpdateManyWithoutBusinessesNestedInput
+    business_subscriptions?: business_subscriptionsUncheckedUpdateManyWithoutBusinessesNestedInput
+    api_usage_metrics?: api_usage_metricsUncheckedUpdateManyWithoutBusinessesNestedInput
   }
 
   export type customersUpsertWithoutNotification_preferencesInput = {
@@ -140051,6 +144228,8 @@ export namespace Prisma {
     users?: usersCreateNestedManyWithoutBusinessesInput
     warehouses?: warehousesCreateNestedManyWithoutBusinessesInput
     workflow_executions?: workflow_executionsCreateNestedManyWithoutBusinessesInput
+    business_subscriptions?: business_subscriptionsCreateNestedManyWithoutBusinessesInput
+    api_usage_metrics?: api_usage_metricsCreateNestedManyWithoutBusinessesInput
   }
 
   export type businessesUncheckedCreateWithoutPaymentsInput = {
@@ -140090,6 +144269,8 @@ export namespace Prisma {
     users?: usersUncheckedCreateNestedManyWithoutBusinessesInput
     warehouses?: warehousesUncheckedCreateNestedManyWithoutBusinessesInput
     workflow_executions?: workflow_executionsUncheckedCreateNestedManyWithoutBusinessesInput
+    business_subscriptions?: business_subscriptionsUncheckedCreateNestedManyWithoutBusinessesInput
+    api_usage_metrics?: api_usage_metricsUncheckedCreateNestedManyWithoutBusinessesInput
   }
 
   export type businessesCreateOrConnectWithoutPaymentsInput = {
@@ -140323,6 +144504,8 @@ export namespace Prisma {
     users?: usersUpdateManyWithoutBusinessesNestedInput
     warehouses?: warehousesUpdateManyWithoutBusinessesNestedInput
     workflow_executions?: workflow_executionsUpdateManyWithoutBusinessesNestedInput
+    business_subscriptions?: business_subscriptionsUpdateManyWithoutBusinessesNestedInput
+    api_usage_metrics?: api_usage_metricsUpdateManyWithoutBusinessesNestedInput
   }
 
   export type businessesUncheckedUpdateWithoutPaymentsInput = {
@@ -140362,6 +144545,8 @@ export namespace Prisma {
     users?: usersUncheckedUpdateManyWithoutBusinessesNestedInput
     warehouses?: warehousesUncheckedUpdateManyWithoutBusinessesNestedInput
     workflow_executions?: workflow_executionsUncheckedUpdateManyWithoutBusinessesNestedInput
+    business_subscriptions?: business_subscriptionsUncheckedUpdateManyWithoutBusinessesNestedInput
+    api_usage_metrics?: api_usage_metricsUncheckedUpdateManyWithoutBusinessesNestedInput
   }
 
   export type customersUpsertWithoutPaymentsInput = {
@@ -140557,6 +144742,8 @@ export namespace Prisma {
     users?: usersCreateNestedManyWithoutBusinessesInput
     warehouses?: warehousesCreateNestedManyWithoutBusinessesInput
     workflow_executions?: workflow_executionsCreateNestedManyWithoutBusinessesInput
+    business_subscriptions?: business_subscriptionsCreateNestedManyWithoutBusinessesInput
+    api_usage_metrics?: api_usage_metricsCreateNestedManyWithoutBusinessesInput
   }
 
   export type businessesUncheckedCreateWithoutPayment_reconciliationInput = {
@@ -140596,6 +144783,8 @@ export namespace Prisma {
     users?: usersUncheckedCreateNestedManyWithoutBusinessesInput
     warehouses?: warehousesUncheckedCreateNestedManyWithoutBusinessesInput
     workflow_executions?: workflow_executionsUncheckedCreateNestedManyWithoutBusinessesInput
+    business_subscriptions?: business_subscriptionsUncheckedCreateNestedManyWithoutBusinessesInput
+    api_usage_metrics?: api_usage_metricsUncheckedCreateNestedManyWithoutBusinessesInput
   }
 
   export type businessesCreateOrConnectWithoutPayment_reconciliationInput = {
@@ -140651,6 +144840,8 @@ export namespace Prisma {
     users?: usersUpdateManyWithoutBusinessesNestedInput
     warehouses?: warehousesUpdateManyWithoutBusinessesNestedInput
     workflow_executions?: workflow_executionsUpdateManyWithoutBusinessesNestedInput
+    business_subscriptions?: business_subscriptionsUpdateManyWithoutBusinessesNestedInput
+    api_usage_metrics?: api_usage_metricsUpdateManyWithoutBusinessesNestedInput
   }
 
   export type businessesUncheckedUpdateWithoutPayment_reconciliationInput = {
@@ -140690,6 +144881,8 @@ export namespace Prisma {
     users?: usersUncheckedUpdateManyWithoutBusinessesNestedInput
     warehouses?: warehousesUncheckedUpdateManyWithoutBusinessesNestedInput
     workflow_executions?: workflow_executionsUncheckedUpdateManyWithoutBusinessesNestedInput
+    business_subscriptions?: business_subscriptionsUncheckedUpdateManyWithoutBusinessesNestedInput
+    api_usage_metrics?: api_usage_metricsUncheckedUpdateManyWithoutBusinessesNestedInput
   }
 
   export type messagesCreateWithoutConversationsInput = {
@@ -141303,6 +145496,8 @@ export namespace Prisma {
     users?: usersCreateNestedManyWithoutBusinessesInput
     warehouses?: warehousesCreateNestedManyWithoutBusinessesInput
     workflow_executions?: workflow_executionsCreateNestedManyWithoutBusinessesInput
+    business_subscriptions?: business_subscriptionsCreateNestedManyWithoutBusinessesInput
+    api_usage_metrics?: api_usage_metricsCreateNestedManyWithoutBusinessesInput
   }
 
   export type businessesUncheckedCreateWithoutProduct_categoriesInput = {
@@ -141342,6 +145537,8 @@ export namespace Prisma {
     users?: usersUncheckedCreateNestedManyWithoutBusinessesInput
     warehouses?: warehousesUncheckedCreateNestedManyWithoutBusinessesInput
     workflow_executions?: workflow_executionsUncheckedCreateNestedManyWithoutBusinessesInput
+    business_subscriptions?: business_subscriptionsUncheckedCreateNestedManyWithoutBusinessesInput
+    api_usage_metrics?: api_usage_metricsUncheckedCreateNestedManyWithoutBusinessesInput
   }
 
   export type businessesCreateOrConnectWithoutProduct_categoriesInput = {
@@ -141738,6 +145935,8 @@ export namespace Prisma {
     users?: usersUpdateManyWithoutBusinessesNestedInput
     warehouses?: warehousesUpdateManyWithoutBusinessesNestedInput
     workflow_executions?: workflow_executionsUpdateManyWithoutBusinessesNestedInput
+    business_subscriptions?: business_subscriptionsUpdateManyWithoutBusinessesNestedInput
+    api_usage_metrics?: api_usage_metricsUpdateManyWithoutBusinessesNestedInput
   }
 
   export type businessesUncheckedUpdateWithoutProduct_categoriesInput = {
@@ -141777,6 +145976,8 @@ export namespace Prisma {
     users?: usersUncheckedUpdateManyWithoutBusinessesNestedInput
     warehouses?: warehousesUncheckedUpdateManyWithoutBusinessesNestedInput
     workflow_executions?: workflow_executionsUncheckedUpdateManyWithoutBusinessesNestedInput
+    business_subscriptions?: business_subscriptionsUncheckedUpdateManyWithoutBusinessesNestedInput
+    api_usage_metrics?: api_usage_metricsUncheckedUpdateManyWithoutBusinessesNestedInput
   }
 
   export type usersUpsertWithoutProduct_categories_createdInput = {
@@ -142813,6 +147014,8 @@ export namespace Prisma {
     users?: usersCreateNestedManyWithoutBusinessesInput
     warehouses?: warehousesCreateNestedManyWithoutBusinessesInput
     workflow_executions?: workflow_executionsCreateNestedManyWithoutBusinessesInput
+    business_subscriptions?: business_subscriptionsCreateNestedManyWithoutBusinessesInput
+    api_usage_metrics?: api_usage_metricsCreateNestedManyWithoutBusinessesInput
   }
 
   export type businessesUncheckedCreateWithoutBusiness_workflowsInput = {
@@ -142852,6 +147055,8 @@ export namespace Prisma {
     users?: usersUncheckedCreateNestedManyWithoutBusinessesInput
     warehouses?: warehousesUncheckedCreateNestedManyWithoutBusinessesInput
     workflow_executions?: workflow_executionsUncheckedCreateNestedManyWithoutBusinessesInput
+    business_subscriptions?: business_subscriptionsUncheckedCreateNestedManyWithoutBusinessesInput
+    api_usage_metrics?: api_usage_metricsUncheckedCreateNestedManyWithoutBusinessesInput
   }
 
   export type businessesCreateOrConnectWithoutBusiness_workflowsInput = {
@@ -142997,6 +147202,8 @@ export namespace Prisma {
     users?: usersUpdateManyWithoutBusinessesNestedInput
     warehouses?: warehousesUpdateManyWithoutBusinessesNestedInput
     workflow_executions?: workflow_executionsUpdateManyWithoutBusinessesNestedInput
+    business_subscriptions?: business_subscriptionsUpdateManyWithoutBusinessesNestedInput
+    api_usage_metrics?: api_usage_metricsUpdateManyWithoutBusinessesNestedInput
   }
 
   export type businessesUncheckedUpdateWithoutBusiness_workflowsInput = {
@@ -143036,6 +147243,8 @@ export namespace Prisma {
     users?: usersUncheckedUpdateManyWithoutBusinessesNestedInput
     warehouses?: warehousesUncheckedUpdateManyWithoutBusinessesNestedInput
     workflow_executions?: workflow_executionsUncheckedUpdateManyWithoutBusinessesNestedInput
+    business_subscriptions?: business_subscriptionsUncheckedUpdateManyWithoutBusinessesNestedInput
+    api_usage_metrics?: api_usage_metricsUncheckedUpdateManyWithoutBusinessesNestedInput
   }
 
   export type tenantsUpsertWithoutBusiness_workflowsInput = {
@@ -143177,6 +147386,8 @@ export namespace Prisma {
     tags?: tagsCreateNestedManyWithoutBusinessesInput
     users?: usersCreateNestedManyWithoutBusinessesInput
     warehouses?: warehousesCreateNestedManyWithoutBusinessesInput
+    business_subscriptions?: business_subscriptionsCreateNestedManyWithoutBusinessesInput
+    api_usage_metrics?: api_usage_metricsCreateNestedManyWithoutBusinessesInput
   }
 
   export type businessesUncheckedCreateWithoutWorkflow_executionsInput = {
@@ -143216,6 +147427,8 @@ export namespace Prisma {
     tags?: tagsUncheckedCreateNestedManyWithoutBusinessesInput
     users?: usersUncheckedCreateNestedManyWithoutBusinessesInput
     warehouses?: warehousesUncheckedCreateNestedManyWithoutBusinessesInput
+    business_subscriptions?: business_subscriptionsUncheckedCreateNestedManyWithoutBusinessesInput
+    api_usage_metrics?: api_usage_metricsUncheckedCreateNestedManyWithoutBusinessesInput
   }
 
   export type businessesCreateOrConnectWithoutWorkflow_executionsInput = {
@@ -143465,6 +147678,8 @@ export namespace Prisma {
     tags?: tagsUpdateManyWithoutBusinessesNestedInput
     users?: usersUpdateManyWithoutBusinessesNestedInput
     warehouses?: warehousesUpdateManyWithoutBusinessesNestedInput
+    business_subscriptions?: business_subscriptionsUpdateManyWithoutBusinessesNestedInput
+    api_usage_metrics?: api_usage_metricsUpdateManyWithoutBusinessesNestedInput
   }
 
   export type businessesUncheckedUpdateWithoutWorkflow_executionsInput = {
@@ -143504,6 +147719,8 @@ export namespace Prisma {
     tags?: tagsUncheckedUpdateManyWithoutBusinessesNestedInput
     users?: usersUncheckedUpdateManyWithoutBusinessesNestedInput
     warehouses?: warehousesUncheckedUpdateManyWithoutBusinessesNestedInput
+    business_subscriptions?: business_subscriptionsUncheckedUpdateManyWithoutBusinessesNestedInput
+    api_usage_metrics?: api_usage_metricsUncheckedUpdateManyWithoutBusinessesNestedInput
   }
 
   export type leadsUpsertWithoutWorkflow_executionsInput = {
@@ -144155,6 +148372,8 @@ export namespace Prisma {
     users?: usersCreateNestedManyWithoutBusinessesInput
     warehouses?: warehousesCreateNestedManyWithoutBusinessesInput
     workflow_executions?: workflow_executionsCreateNestedManyWithoutBusinessesInput
+    business_subscriptions?: business_subscriptionsCreateNestedManyWithoutBusinessesInput
+    api_usage_metrics?: api_usage_metricsCreateNestedManyWithoutBusinessesInput
   }
 
   export type businessesUncheckedCreateWithoutCartsInput = {
@@ -144194,6 +148413,8 @@ export namespace Prisma {
     users?: usersUncheckedCreateNestedManyWithoutBusinessesInput
     warehouses?: warehousesUncheckedCreateNestedManyWithoutBusinessesInput
     workflow_executions?: workflow_executionsUncheckedCreateNestedManyWithoutBusinessesInput
+    business_subscriptions?: business_subscriptionsUncheckedCreateNestedManyWithoutBusinessesInput
+    api_usage_metrics?: api_usage_metricsUncheckedCreateNestedManyWithoutBusinessesInput
   }
 
   export type businessesCreateOrConnectWithoutCartsInput = {
@@ -144528,6 +148749,8 @@ export namespace Prisma {
     users?: usersUpdateManyWithoutBusinessesNestedInput
     warehouses?: warehousesUpdateManyWithoutBusinessesNestedInput
     workflow_executions?: workflow_executionsUpdateManyWithoutBusinessesNestedInput
+    business_subscriptions?: business_subscriptionsUpdateManyWithoutBusinessesNestedInput
+    api_usage_metrics?: api_usage_metricsUpdateManyWithoutBusinessesNestedInput
   }
 
   export type businessesUncheckedUpdateWithoutCartsInput = {
@@ -144567,6 +148790,8 @@ export namespace Prisma {
     users?: usersUncheckedUpdateManyWithoutBusinessesNestedInput
     warehouses?: warehousesUncheckedUpdateManyWithoutBusinessesNestedInput
     workflow_executions?: workflow_executionsUncheckedUpdateManyWithoutBusinessesNestedInput
+    business_subscriptions?: business_subscriptionsUncheckedUpdateManyWithoutBusinessesNestedInput
+    api_usage_metrics?: api_usage_metricsUncheckedUpdateManyWithoutBusinessesNestedInput
   }
 
   export type customersUpsertWithoutCartsInput = {
@@ -145521,6 +149746,28 @@ export namespace Prisma {
     intent?: string | null
     message_id?: string | null
     chat_id?: string | null
+  }
+
+  export type business_subscriptionsCreateManyBusinessesInput = {
+    subscription_id?: string
+    subscription_plan_id: string
+    status: string
+    started_at?: Date | string
+    expires_at?: Date | string | null
+    cancelled_at?: Date | string | null
+    razorpay_subscription_id?: string | null
+    created_at?: Date | string | null
+    updated_at?: Date | string | null
+  }
+
+  export type api_usage_metricsCreateManyBusinessesInput = {
+    metric_id?: string
+    tenant_id: string
+    endpoint: string
+    date: Date | string
+    count?: number
+    created_at?: Date | string | null
+    updated_at?: Date | string | null
   }
 
   export type business_employeesUpdateWithoutBusinessesInput = {
@@ -147161,6 +151408,72 @@ export namespace Prisma {
     chat_id?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
+  export type business_subscriptionsUpdateWithoutBusinessesInput = {
+    subscription_id?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    started_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    expires_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    cancelled_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    razorpay_subscription_id?: NullableStringFieldUpdateOperationsInput | string | null
+    created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    subscription_plans?: subscription_plansUpdateOneRequiredWithoutBusiness_subscriptionsNestedInput
+  }
+
+  export type business_subscriptionsUncheckedUpdateWithoutBusinessesInput = {
+    subscription_id?: StringFieldUpdateOperationsInput | string
+    subscription_plan_id?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    started_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    expires_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    cancelled_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    razorpay_subscription_id?: NullableStringFieldUpdateOperationsInput | string | null
+    created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
+  export type business_subscriptionsUncheckedUpdateManyWithoutBusinessesInput = {
+    subscription_id?: StringFieldUpdateOperationsInput | string
+    subscription_plan_id?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    started_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    expires_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    cancelled_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    razorpay_subscription_id?: NullableStringFieldUpdateOperationsInput | string | null
+    created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
+  export type api_usage_metricsUpdateWithoutBusinessesInput = {
+    metric_id?: StringFieldUpdateOperationsInput | string
+    tenant_id?: StringFieldUpdateOperationsInput | string
+    endpoint?: StringFieldUpdateOperationsInput | string
+    date?: DateTimeFieldUpdateOperationsInput | Date | string
+    count?: IntFieldUpdateOperationsInput | number
+    created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
+  export type api_usage_metricsUncheckedUpdateWithoutBusinessesInput = {
+    metric_id?: StringFieldUpdateOperationsInput | string
+    tenant_id?: StringFieldUpdateOperationsInput | string
+    endpoint?: StringFieldUpdateOperationsInput | string
+    date?: DateTimeFieldUpdateOperationsInput | Date | string
+    count?: IntFieldUpdateOperationsInput | number
+    created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
+  export type api_usage_metricsUncheckedUpdateManyWithoutBusinessesInput = {
+    metric_id?: StringFieldUpdateOperationsInput | string
+    tenant_id?: StringFieldUpdateOperationsInput | string
+    endpoint?: StringFieldUpdateOperationsInput | string
+    date?: DateTimeFieldUpdateOperationsInput | Date | string
+    count?: IntFieldUpdateOperationsInput | number
+    created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
   export type notificationsCreateManyIntentsInput = {
     notification_id?: string
     user_id: string
@@ -147393,6 +151706,54 @@ export namespace Prisma {
     owner_username?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type business_subscriptionsCreateManySubscription_plansInput = {
+    subscription_id?: string
+    business_id: string
+    status: string
+    started_at?: Date | string
+    expires_at?: Date | string | null
+    cancelled_at?: Date | string | null
+    razorpay_subscription_id?: string | null
+    created_at?: Date | string | null
+    updated_at?: Date | string | null
+  }
+
+  export type business_subscriptionsUpdateWithoutSubscription_plansInput = {
+    subscription_id?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    started_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    expires_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    cancelled_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    razorpay_subscription_id?: NullableStringFieldUpdateOperationsInput | string | null
+    created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    businesses?: businessesUpdateOneRequiredWithoutBusiness_subscriptionsNestedInput
+  }
+
+  export type business_subscriptionsUncheckedUpdateWithoutSubscription_plansInput = {
+    subscription_id?: StringFieldUpdateOperationsInput | string
+    business_id?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    started_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    expires_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    cancelled_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    razorpay_subscription_id?: NullableStringFieldUpdateOperationsInput | string | null
+    created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
+  export type business_subscriptionsUncheckedUpdateManyWithoutSubscription_plansInput = {
+    subscription_id?: StringFieldUpdateOperationsInput | string
+    business_id?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    started_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    expires_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    cancelled_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    razorpay_subscription_id?: NullableStringFieldUpdateOperationsInput | string | null
+    created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    updated_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
   export type business_workflowsCreateManyTenantsInput = {
@@ -147791,6 +152152,8 @@ export namespace Prisma {
     users?: usersUpdateManyWithoutBusinessesNestedInput
     warehouses?: warehousesUpdateManyWithoutBusinessesNestedInput
     workflow_executions?: workflow_executionsUpdateManyWithoutBusinessesNestedInput
+    business_subscriptions?: business_subscriptionsUpdateManyWithoutBusinessesNestedInput
+    api_usage_metrics?: api_usage_metricsUpdateManyWithoutBusinessesNestedInput
   }
 
   export type businessesUncheckedUpdateWithoutTenantsInput = {
@@ -147830,6 +152193,8 @@ export namespace Prisma {
     users?: usersUncheckedUpdateManyWithoutBusinessesNestedInput
     warehouses?: warehousesUncheckedUpdateManyWithoutBusinessesNestedInput
     workflow_executions?: workflow_executionsUncheckedUpdateManyWithoutBusinessesNestedInput
+    business_subscriptions?: business_subscriptionsUncheckedUpdateManyWithoutBusinessesNestedInput
+    api_usage_metrics?: api_usage_metricsUncheckedUpdateManyWithoutBusinessesNestedInput
   }
 
   export type businessesUncheckedUpdateManyWithoutTenantsInput = {

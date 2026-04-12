@@ -6,6 +6,7 @@ import envConfig from "src/config/env.config";
 import instagramConfig from "../../config/instagram.config";
 import whatsappConfig from "../../config/whatsapp.config";
 import encryptionConfig from "../../config/encryption.config";
+import { envValidationSchema } from "./env.validation";
 
 @Module({
   imports: [
@@ -13,6 +14,7 @@ import encryptionConfig from "../../config/encryption.config";
       isGlobal: true,
       load: [appConfig, aiConfig, envConfig, instagramConfig, whatsappConfig, encryptionConfig],
       envFilePath: [".env.local", ".env"],
+      validationSchema: envValidationSchema,
       validationOptions: {
         allowUnknown: true,
         abortEarly: false,

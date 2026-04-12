@@ -1,0 +1,17 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "NestJS Dev Server",
+      "runtimeExecutable": "/usr/local/bin/node",
+      "runtimeArgs": ["/Users/dheerajt/Downloads/biznavigate/biznavigate-backend/node_modules/.bin/nest", "start", "--watch"],
+      "port": 3006
+    },
+    {
+      "name": "Prisma Studio",
+      "runtimeExecutable": "/usr/local/bin/node",
+      "runtimeArgs": ["/Users/dheerajt/Downloads/biznavigate/biznavigate-backend/node_modules/.bin/prisma", "studio"],
+      "port": 5555
+    }
+  ]
+}

@@ -203,7 +203,37 @@ exports.Prisma.Subscription_plansScalarFieldEnum = {
   plan_name: 'plan_name',
   price: 'price',
   duration_in_days: 'duration_in_days',
-  created_at: 'created_at'
+  billing_cycle: 'billing_cycle',
+  features: 'features',
+  limits: 'limits',
+  is_active: 'is_active',
+  razorpay_plan_id: 'razorpay_plan_id',
+  created_at: 'created_at',
+  updated_at: 'updated_at'
+};
+
+exports.Prisma.Business_subscriptionsScalarFieldEnum = {
+  subscription_id: 'subscription_id',
+  business_id: 'business_id',
+  subscription_plan_id: 'subscription_plan_id',
+  status: 'status',
+  started_at: 'started_at',
+  expires_at: 'expires_at',
+  cancelled_at: 'cancelled_at',
+  razorpay_subscription_id: 'razorpay_subscription_id',
+  created_at: 'created_at',
+  updated_at: 'updated_at'
+};
+
+exports.Prisma.Api_usage_metricsScalarFieldEnum = {
+  metric_id: 'metric_id',
+  business_id: 'business_id',
+  tenant_id: 'tenant_id',
+  endpoint: 'endpoint',
+  date: 'date',
+  count: 'count',
+  created_at: 'created_at',
+  updated_at: 'updated_at'
 };
 
 exports.Prisma.TenantsScalarFieldEnum = {
@@ -1344,6 +1374,8 @@ exports.Prisma.ModelName = {
   roles: 'roles',
   social_accounts: 'social_accounts',
   subscription_plans: 'subscription_plans',
+  business_subscriptions: 'business_subscriptions',
+  api_usage_metrics: 'api_usage_metrics',
   tenants: 'tenants',
   users: 'users',
   leads: 'leads',

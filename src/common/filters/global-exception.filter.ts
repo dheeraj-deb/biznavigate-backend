@@ -7,6 +7,7 @@ import {
   Logger,
 } from '@nestjs/common';
 import { Request, Response } from 'express';
+import * as Sentry from '@sentry/nestjs';
 import { BaseException } from '../exceptions/base.exception';
 
 @Catch()
@@ -32,14 +33,29 @@ export class GlobalExceptionFilter implements ExceptionFilter {
     } else if (exception instanceof HttpException) {
       status = exception.getStatus();
       const errorResponse = exception.getResponse();
-      message = typeof errorResponse === 'string' ? errorResponse : (errorResponse as any).message;
+      message =
+        typeof errorResponse === 'string'
+          ? errorResponse
+          : (errorResponse as any).message;
     } else if (exception instanceof Error) {
       status = HttpStatus.INTERNAL_SERVER_ERROR;
       message = 'Internal server error';
-      details = process.env.NODE_ENV === 'development' ? exception.stack : null;
+      details =
+        process.env.NODE_ENV === 'development' ? exception.stack : null;
     } else {
       status = HttpStatus.INTERNAL_SERVER_ERROR;
       message = 'Unknown error occurred';
+    }
+
+    // Capture unhandled server errors in Sentry (5xx only)
+    if (status >= 500 && exception instanceof Error) {
+      Sentry.captureException(exception, {
+        extra: {
+          url: request.url,
+          method: request.method,
+          correlationId: (request as any).correlationId,
+        },
+      });
     }
 
     const errorResponse = {
@@ -52,10 +68,9 @@ export class GlobalExceptionFilter implements ExceptionFilter {
       ...(details && { details }),
     };
 
-    // Log the error
     this.logger.error(
       `${request.method} ${request.url} - ${status} - ${message}`,
-      exception instanceof Error ? exception.stack : exception,
+      exception instanceof Error ? exception.stack : String(exception),
     );
 
     response.status(status).json(errorResponse);

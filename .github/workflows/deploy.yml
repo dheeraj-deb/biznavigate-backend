@@ -1,0 +1,52 @@
+name: Deploy
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  deploy:
+    name: Deploy to Production
+    runs-on: ubuntu-latest
+    environment: production
+
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci --legacy-peer-deps
+
+      - name: Generate Prisma client
+        run: npm run prisma:generate
+
+      - name: Build
+        run: npm run build
+
+      - name: Build and push Docker image
+        run: |
+          docker build -t biznavigate-backend:${{ github.sha }} .
+          docker tag biznavigate-backend:${{ github.sha }} biznavigate-backend:latest
+        # TODO: Add your registry push commands here:
+        # docker login -u ${{ secrets.DOCKER_USER }} -p ${{ secrets.DOCKER_PASSWORD }}
+        # docker push your-registry/biznavigate-backend:${{ github.sha }}
+
+      - name: Deploy via SSH
+        # TODO: Configure SSH deployment
+        # Uses: appleboy/ssh-action@v1.0.0
+        # with:
+        #   host: ${{ secrets.SSH_HOST }}
+        #   username: ${{ secrets.SSH_USER }}
+        #   key: ${{ secrets.SSH_PRIVATE_KEY }}
+        #   script: |
+        #     cd /app/biznavigate-backend
+        #     git pull origin main
+        #     npm ci --legacy-peer-deps --production
+        #     npm run prisma:generate
+        #     npx prisma migrate deploy
+        #     npm run build
+        #     pm2 restart ecosystem.config.js
+        run: echo "Configure SSH deployment in secrets"

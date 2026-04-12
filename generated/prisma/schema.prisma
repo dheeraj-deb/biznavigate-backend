@@ -47,6 +47,8 @@ model businesses {
   users                    users[]
   warehouses               warehouses[]               @relation("warehouses_business")
   workflow_executions      workflow_executions[]
+  business_subscriptions   business_subscriptions[]
+  api_usage_metrics        api_usage_metrics[]
 }
 
 model business_employees {
@@ -128,11 +130,51 @@ model social_accounts {
 }
 
 model subscription_plans {
-  subscription_plan_id String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  plan_name            String    @db.VarChar(100)
-  price                Decimal?  @db.Decimal(10, 2)
-  duration_in_days     Int?
-  created_at           DateTime? @default(now()) @db.Timestamptz(6)
+  subscription_plan_id   String                   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  plan_name              String                   @db.VarChar(100)
+  price                  Decimal?                 @db.Decimal(10, 2)
+  duration_in_days       Int?
+  billing_cycle          String?                  @db.VarChar(20)
+  features               Json?
+  limits                 Json?
+  is_active              Boolean                  @default(true)
+  razorpay_plan_id       String?                  @db.VarChar(100)
+  created_at             DateTime?                @default(now()) @db.Timestamptz(6)
+  updated_at             DateTime?                @default(now()) @db.Timestamptz(6)
+  business_subscriptions business_subscriptions[]
+}
+
+model business_subscriptions {
+  subscription_id          String             @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  business_id              String             @db.Uuid
+  subscription_plan_id     String             @db.Uuid
+  status                   String             @db.VarChar(20)
+  started_at               DateTime           @default(now()) @db.Timestamptz(6)
+  expires_at               DateTime?          @db.Timestamptz(6)
+  cancelled_at             DateTime?          @db.Timestamptz(6)
+  razorpay_subscription_id String?            @db.VarChar(100)
+  created_at               DateTime?          @default(now()) @db.Timestamptz(6)
+  updated_at               DateTime?          @default(now()) @db.Timestamptz(6)
+  businesses               businesses         @relation(fields: [business_id], references: [business_id], onDelete: Cascade)
+  subscription_plans       subscription_plans @relation(fields: [subscription_plan_id], references: [subscription_plan_id])
+
+  @@index([business_id])
+  @@index([status])
+}
+
+model api_usage_metrics {
+  metric_id   String     @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  business_id String     @db.Uuid
+  tenant_id   String     @db.Uuid
+  endpoint    String     @db.VarChar(255)
+  date        DateTime   @db.Date
+  count       Int        @default(0)
+  created_at  DateTime?  @default(now()) @db.Timestamptz(6)
+  updated_at  DateTime?  @default(now()) @db.Timestamptz(6)
+  businesses  businesses @relation(fields: [business_id], references: [business_id], onDelete: Cascade)
+
+  @@unique([business_id, endpoint, date])
+  @@index([business_id, date])
 }
 
 model tenants {
