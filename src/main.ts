@@ -5,11 +5,18 @@ import { DocumentBuilder, SwaggerModule } from "@nestjs/swagger";
 import * as express from "express";
 import { join } from "path";
 import helmet from "helmet";
+import { AppLoggerService } from "./core/logging/logger.service";
+import { LoggingInterceptor } from "./core/logging/logging.interceptor";
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
     bodyParser: false, // Disable default body parser
+    bufferLogs: true,
   });
+
+  const logger = app.get(AppLoggerService);
+  app.useLogger(logger);
+  app.useGlobalInterceptors(new LoggingInterceptor(logger));
 
   // Security: Helmet middleware for security headers
   app.use(
@@ -112,8 +119,8 @@ async function bootstrap() {
   const port = process.env.PORT;
   await app.listen(port);
 
-  console.log(`🚀 Application is running on: http://localhost:${port}`);
-  console.log(`📚 Swagger documentation: http://localhost:${port}/api/docs`);
+  logger.log(`Application is running on: http://localhost:${port}`, "Bootstrap");
+  logger.log(`Swagger documentation: http://localhost:${port}/api/docs`, "Bootstrap");
 }
 
 bootstrap();

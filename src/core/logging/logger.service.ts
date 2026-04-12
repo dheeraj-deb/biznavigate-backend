@@ -1,5 +1,6 @@
-import { Injectable, LoggerService, ConsoleLogger } from "@nestjs/common";
+import { Injectable, LoggerService } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
+import * as winston from "winston";
 
 export interface LogContext {
   userId?: string;
@@ -10,20 +11,51 @@ export interface LogContext {
 }
 
 @Injectable()
-export class AppLoggerService extends ConsoleLogger implements LoggerService {
+export class AppLoggerService implements LoggerService {
+  private readonly logger: winston.Logger;
+
   constructor(private readonly configService: ConfigService) {
-    super();
-    this.setLogLevel();
+    const isProduction = this.configService.get("app.nodeEnv") === "production";
+
+    this.logger = winston.createLogger({
+      level: isProduction ? "warn" : "debug",
+      format: winston.format.combine(
+        winston.format.timestamp(),
+        winston.format.errors({ stack: true }),
+        isProduction
+          ? winston.format.json()
+          : winston.format.combine(
+              winston.format.colorize(),
+              winston.format.printf(({ timestamp, level, message, ...meta }) => {
+                const metaStr = Object.keys(meta).length
+                  ? " " + JSON.stringify(meta, null, 2)
+                  : "";
+                return `${timestamp} [${level}] ${message}${metaStr}`;
+              })
+            )
+      ),
+      transports: [new winston.transports.Console()],
+    });
   }
 
-  private setLogLevel() {
-    const nodeEnv = this.configService.get("app.nodeEnv");
-    const logLevels: import("@nestjs/common").LogLevel[] =
-      nodeEnv === "production"
-        ? ["error", "warn", "log"]
-        : ["error", "warn", "log", "debug", "verbose"];
+  log(message: any, context?: string) {
+    this.logger.info(message, { context });
+  }
 
-    this.setLogLevels(logLevels);
+  error(message: any, trace?: string, context?: string) {
+    this.logger.error(message, { context, trace });
+  }
+
+  warn(message: any, context?: string) {
+    this.logger.warn(message, { context });
+  }
+
+  debug(message: any, context?: string) {
+    this.logger.debug(message, { context });
+  }
+
+  verbose(message: any, context?: string) {
+    this.logger.verbose(message, { context });
   }
 
   logWithContext(
@@ -31,23 +63,8 @@ export class AppLoggerService extends ConsoleLogger implements LoggerService {
     message: string,
     context?: LogContext
   ) {
-    const logMessage = context
-      ? `${message} ${JSON.stringify(context)}`
-      : message;
-
-    switch (level) {
-      case "error":
-        this.error(logMessage);
-        break;
-      case "warn":
-        this.warn(logMessage);
-        break;
-      case "debug":
-        this.debug(logMessage);
-        break;
-      default:
-        this.log(logMessage);
-    }
+    const winstonLevel = level === "log" ? "info" : level;
+    this.logger.log(winstonLevel, message, context ?? {});
   }
 
   logRequest(
@@ -57,33 +74,40 @@ export class AppLoggerService extends ConsoleLogger implements LoggerService {
     responseTime: number,
     context?: LogContext
   ) {
-    this.logWithContext(
-      "log",
-      `${method} ${url} - ${statusCode} - ${responseTime}ms`,
-      context
-    );
+    this.logger.info(`${method} ${url} ${statusCode} ${responseTime}ms`, {
+      type: "http_request",
+      method,
+      url,
+      statusCode,
+      responseTime,
+      ...context,
+    });
   }
 
   logError(error: Error, context?: LogContext) {
-    this.logWithContext("error", `${error.message}`, {
-      ...context,
-      stack: error.stack,
+    this.logger.error(error.message, {
+      type: "error",
       name: error.name,
+      stack: error.stack,
+      ...context,
     });
   }
 
   logBusinessEvent(event: string, data?: any, context?: LogContext) {
-    this.logWithContext("log", `Business Event: ${event}`, {
-      ...context,
+    this.logger.info(`Business Event: ${event}`, {
+      type: "business_event",
+      event,
       eventData: data,
+      ...context,
     });
   }
 
   logDatabaseQuery(query: string, duration: number, context?: LogContext) {
-    this.logWithContext("debug", `Database Query - ${duration}ms`, {
-      ...context,
+    this.logger.debug(`DB Query ${duration}ms`, {
+      type: "db_query",
       query: query.substring(0, 100) + (query.length > 100 ? "..." : ""),
       duration,
+      ...context,
     });
   }
 
@@ -94,13 +118,14 @@ export class AppLoggerService extends ConsoleLogger implements LoggerService {
     success: boolean,
     context?: LogContext
   ) {
-    const level = success ? "log" : "warn";
-    this.logWithContext(
-      level,
-      `External Service: ${service}.${operation} - ${
-        success ? "SUCCESS" : "FAILED"
-      } - ${duration}ms`,
-      context
-    );
+    const level = success ? "info" : "warn";
+    this.logger.log(level, `External Service: ${service}.${operation} ${success ? "SUCCESS" : "FAILED"} ${duration}ms`, {
+      type: "external_service",
+      service,
+      operation,
+      duration,
+      success,
+      ...context,
+    });
   }
 }
