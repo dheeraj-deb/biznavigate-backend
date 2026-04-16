@@ -36,64 +36,58 @@ export class CartService {
         customer.tenant_id,
       );
 
-      const product = await this.prisma.products.findUnique({
-        where: { product_id: dto.product_id },
+      const item = await this.prisma.catalog_items.findFirst({
+        where: { item_id: dto.product_id, deleted_at: null },
         include: {
-          product_variants: dto.variant_id
+          variants: dto.variant_id
             ? { where: { variant_id: dto.variant_id } }
             : undefined,
         },
       });
 
-      if (!product) {
-        throw new NotFoundException(`Product not found: ${dto.product_id}`);
+      if (!item) {
+        throw new NotFoundException(`Item not found: ${dto.product_id}`);
       }
 
-      if (!product.in_whatsapp_catalog) {
-        throw new BadRequestException(
-          `Product ${product.name} is not available in WhatsApp catalog`,
-        );
+      if (!item.is_active) {
+        throw new BadRequestException(`Item ${item.name} is not available`);
       }
 
-      if (!product.is_active) {
-        throw new BadRequestException(`Product ${product.name} is not available`);
-      }
-
-      // Determine price and stock based on variant or product
+      // Determine price and stock based on variant or item
       let unitPrice: number;
       let availableStock: number;
-      let productName: string = product.name;
+      let productName: string = item.name;
       let variantName: string | null = null;
 
       if (dto.variant_id) {
-        const variant = product.product_variants?.[0];
+        const variant = item.variants?.[0];
         if (!variant) {
           throw new NotFoundException(`Variant not found: ${dto.variant_id}`);
         }
 
-        if (!variant.in_stock) {
+        if (!variant.is_active || variant.stock_quantity <= 0) {
           throw new BadRequestException(
-            `${product.name} - ${variant.name} is out of stock`,
+            `${item.name} - ${variant.name} is out of stock`,
           );
         }
 
         unitPrice = Number(variant.price);
-        availableStock = variant.quantity;
+        availableStock = variant.stock_quantity;
         variantName = variant.name;
       } else {
-        if (!product.in_stock) {
-          throw new BadRequestException(`${product.name} is out of stock`);
+        if (item.stock_quantity !== null && item.stock_quantity <= 0) {
+          throw new BadRequestException(`${item.name} is out of stock`);
         }
 
-        unitPrice = Number(product.price);
-        availableStock = product.stock_quantity || 0;
+        unitPrice = Number(item.base_price);
+        availableStock = item.stock_quantity ?? 0;
       }
 
-      if (product.track_inventory) {
+      if (item.stock_quantity !== null) {
         const existingCartItem = await this.prisma.cart_items.findFirst({
           where: {
             cart_id: cart.cart_id,
-            product_id: dto.product_id,
+            item_id: dto.product_id,
             variant_id: dto.variant_id || null,
           },
         });
@@ -120,7 +114,7 @@ export class CartService {
       );
 
       this.logger.log(
-        `Added to cart: ${productName}${variantName ? ` - ${variantName}` : ''} x${dto.quantity} for lead ${dto.customer_id}`,
+        `Added to cart: ${productName}${variantName ? ` - ${variantName}` : ''} x${dto.quantity} for customer ${dto.customer_id}`,
       );
 
       // Return updated cart with items
@@ -132,7 +126,7 @@ export class CartService {
   }
 
   /**
-   * Get active cart for a lead
+   * Get active cart for a customer
    */
   async getCart(customer_id: string, businessId: string): Promise<CartWithItems | null> {
     return await this.cartRepository.getActiveCartByCustomerId(customer_id, businessId);
@@ -149,8 +143,8 @@ export class CartService {
       const cartItem = await this.prisma.cart_items.findUnique({
         where: { cart_item_id: cartItemId },
         include: {
-          products: true,
-          product_variants: true,
+          catalog_item: true,
+          item_variant: true,
         },
       });
 
@@ -159,11 +153,11 @@ export class CartService {
       }
 
       // Check stock availability
-      const product = cartItem.products;
-      if (product.track_inventory) {
+      const catalogItem = cartItem.catalog_item;
+      if (catalogItem.stock_quantity !== null) {
         const availableStock = cartItem.variant_id
-          ? cartItem.product_variants?.quantity || 0
-          : product.stock_quantity || 0;
+          ? cartItem.item_variant?.stock_quantity || 0
+          : catalogItem.stock_quantity || 0;
 
         if (dto.quantity > availableStock) {
           throw new BadRequestException(
@@ -230,7 +224,6 @@ export class CartService {
 
   /**
    * Checkout cart - Create order and reserve inventory
-   * This is called when user clicks "Place Order" in WhatsApp catalog
    */
   async checkoutCart(dto: CheckoutCartDto): Promise<any> {
     try {
@@ -247,23 +240,23 @@ export class CartService {
 
       // Validate all items still have stock
       for (const item of cart.items) {
-        const product = await this.prisma.products.findUnique({
-          where: { product_id: item.product_id },
+        const catalogItem = await this.prisma.catalog_items.findFirst({
+          where: { item_id: item.item_id ?? (item as any).product_id, deleted_at: null },
           include: {
-            product_variants: item.variant_id
+            variants: item.variant_id
               ? { where: { variant_id: item.variant_id } }
               : undefined,
           },
         });
 
-        if (!product) {
-          throw new BadRequestException(`Product ${item.product_name} no longer exists`);
+        if (!catalogItem) {
+          throw new BadRequestException(`Item ${item.product_name} no longer exists`);
         }
 
-        if (product.track_inventory) {
+        if (catalogItem.stock_quantity !== null) {
           const availableStock = item.variant_id
-            ? product.product_variants?.[0]?.quantity || 0
-            : product.stock_quantity || 0;
+            ? catalogItem.variants?.[0]?.stock_quantity || 0
+            : catalogItem.stock_quantity || 0;
 
           if (item.quantity > availableStock) {
             throw new BadRequestException(
@@ -273,16 +266,16 @@ export class CartService {
         }
       }
 
-      // Reserve inventory for all items
+      // Decrement stock for physical items
       for (const item of cart.items) {
-        await this.reserveStock(item.product_id, item.variant_id, item.quantity);
+        await this.decrementStock(item.item_id, item.variant_id, item.quantity);
       }
 
-      this.logger.log(`Reserved inventory for cart ${dto.cart_id}`);
+      this.logger.log(`Decremented inventory for cart ${dto.cart_id}`);
 
       // Prepare order items
       const orderItems = cart.items.map((item) => ({
-        product_id: item.product_id,
+        item_id: item.item_id,
         variant_id: item.variant_id,
         product_name: item.product_name,
         variant_name: item.variant_name,
@@ -314,30 +307,22 @@ export class CartService {
   }
 
   /**
-   * Reserve stock for a product/variant
+   * Decrement stock on checkout
    */
-  private async reserveStock(
-    productId: string,
+  private async decrementStock(
+    itemId: string,
     variantId: string | null,
     quantity: number,
   ): Promise<void> {
     if (variantId) {
-      // Reserve variant stock
-      await this.prisma.product_variants.update({
+      await this.prisma.item_variants.update({
         where: { variant_id: variantId },
-        data: {
-          reserved_stock: { increment: quantity },
-          version: { increment: 1 },
-        },
+        data: { stock_quantity: { decrement: quantity } },
       });
     } else {
-      // Reserve product stock
-      await this.prisma.products.update({
-        where: { product_id: productId },
-        data: {
-          reserved_stock: { increment: quantity },
-          version: { increment: 1 },
-        },
+      await this.prisma.catalog_items.updateMany({
+        where: { item_id: itemId, stock_quantity: { not: null } },
+        data: { stock_quantity: { decrement: quantity }, updated_at: new Date() },
       });
     }
   }
@@ -351,7 +336,6 @@ export class CartService {
     deliveryAddress?: string,
     paymentMethod?: string,
   ): Promise<any> {
-    // Get lead info
     const lead = await this.prisma.leads.findUnique({
       where: { lead_id: cart.lead_id },
     });
@@ -370,7 +354,7 @@ export class CartService {
         total_amount: cart.total_amount,
         payment_status: 'pending',
         delivery_status: 'pending',
-        items: orderItems, // Store as JSON for now
+        items: orderItems,
       },
     });
 
@@ -379,7 +363,7 @@ export class CartService {
       await this.prisma.order_items.create({
         data: {
           order_id: order.order_id,
-          product_id: item.product_id,
+          item_id: item.item_id,
           variant_id: item.variant_id,
           product_name: item.product_name,
           variant_name: item.variant_name,

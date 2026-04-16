@@ -73,7 +73,7 @@ export class SendCatalogNode extends ActionNode<SendCatalogParams, string> {
         const catalogSections = [{
             title: 'Available Products',
             product_items: limitedProducts.map(product => ({
-                product_retailer_id: product.product_id,
+                product_retailer_id: (product as any).item_id,
             }))
         }]
 
@@ -87,7 +87,7 @@ export class SendCatalogNode extends ActionNode<SendCatalogParams, string> {
                     type: 'text',
                     text: this.params.header,
                 },
-                body: { text: this.interpolateString(this.params.message, context) },
+                body: { text: this.interpolateString(this.params.message ?? '', context) },
                 action: {
                     catalog_id: await this.catalogService.getCatalogId(business_id),
                     sections: catalogSections,

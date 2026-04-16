@@ -10,6 +10,7 @@ import {
   Logger,
   HttpCode,
   HttpStatus,
+  NotImplementedException,
 } from '@nestjs/common';
 import {
   ApiTags,
@@ -67,16 +68,7 @@ export class InstagramCatalogController {
     this.logger.log(
       `Toggling product ${dto.productId} - inCatalog: ${dto.inCatalog}`,
     );
-    const result = await this.catalogService.toggleProductInCatalog(
-      dto.productId,
-      businessId,
-      dto.inCatalog,
-    );
-    return {
-      success: true,
-      data: result.product,
-      message: `Product ${dto.inCatalog ? 'added to' : 'removed from'} Instagram catalog`,
-    };
+    throw new NotImplementedException('Instagram catalog sync not yet migrated to catalog_items');
   }
 
   /**
@@ -93,16 +85,7 @@ export class InstagramCatalogController {
     this.logger.log(
       `Bulk toggling ${dto.productIds.length} products - inCatalog: ${dto.inCatalog}`,
     );
-    const result = await this.catalogService.bulkUpdateCatalog(
-      dto.productIds,
-      businessId,
-      dto.inCatalog,
-    );
-    return {
-      success: true,
-      count: result.count,
-      message: `${result.count} products ${dto.inCatalog ? 'added to' : 'removed from'} Instagram catalog`,
-    };
+    throw new NotImplementedException('Instagram catalog sync not yet migrated to catalog_items');
   }
 
   /**
@@ -127,21 +110,7 @@ export class InstagramCatalogController {
       `Starting catalog sync for business ${businessId} - Full sync: ${dto.fullSync || false}`,
     );
 
-    const result = await this.catalogService.syncToInstagram(
-      businessId,
-      dto.fullSync,
-    );
-
-    return {
-      success: true,
-      data: {
-        synced: result.synced,
-        failed: result.failed,
-        handles: result.handles,
-        errors: result.errors,
-      },
-      message: `Sync completed. ${result.synced} products synced, ${result.failed} failed.`,
-    };
+    throw new NotImplementedException('Instagram catalog sync not yet migrated to catalog_items');
   }
 
   /**
@@ -176,17 +145,7 @@ export class InstagramCatalogController {
       };
     }
 
-    const accessToken = this.catalogService['decryptToken'](account.access_token);
-    const status = await this.catalogService.checkBatchStatus(
-      account.instagram_catalog_id,
-      accessToken,
-      dto.handle,
-    );
-
-    return {
-      success: true,
-      data: status,
-    };
+    throw new NotImplementedException('Instagram catalog sync not yet migrated to catalog_items');
   }
 
   /**

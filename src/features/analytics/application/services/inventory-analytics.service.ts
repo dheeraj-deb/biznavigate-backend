@@ -10,19 +10,31 @@ export class InventoryAnalyticsService {
   async getInventoryAnalytics(businessId: string, tenantId: string) {
     this.logger.log(`Getting inventory analytics for business ${businessId}`);
 
-    const [totalProducts, lowStockAlerts, activeBookings] = await Promise.all([
-      this.prisma.products.count({ where: { business_id: businessId, is_active: true } }),
-      this.prisma.product_stock_alerts.count({ where: { business_id: businessId, status: 'active' } }),
-      this.prisma.service_bookings.count({ where: { business_id: businessId, status: 'confirmed' } }),
+    const [totalItems, lowStockItems] = await Promise.all([
+      this.prisma.catalog_items.count({ where: { business_id: businessId, is_active: true, deleted_at: null } }),
+      this.prisma.catalog_items.count({
+        where: {
+          business_id: businessId,
+          is_active: true,
+          deleted_at: null,
+          stock_quantity: { not: null, lt: 10 },
+        },
+      }),
     ]);
 
-    return { totalProducts, lowStockAlerts, activeBookings };
+    return { totalProducts: totalItems, lowStockAlerts: lowStockItems, activeBookings: 0 };
   }
 
   async getLowStockAlerts(businessId: string, tenantId: string) {
-    return this.prisma.product_stock_alerts.findMany({
-      where: { business_id: businessId, status: 'active' },
-      orderBy: { created_at: 'desc' },
+    return this.prisma.catalog_items.findMany({
+      where: {
+        business_id: businessId,
+        is_active: true,
+        deleted_at: null,
+        stock_quantity: { not: null, lt: 10 },
+      },
+      select: { item_id: true, name: true, stock_quantity: true, category: true },
+      orderBy: { stock_quantity: 'asc' },
     });
   }
 
@@ -32,14 +44,14 @@ export class InventoryAnalyticsService {
     startDate?: Date,
     endDate?: Date,
   ) {
-    return this.prisma.products.findMany({
-      where: { business_id: businessId, is_active: true },
+    return this.prisma.catalog_items.findMany({
+      where: { business_id: businessId, is_active: true, deleted_at: null },
       select: {
-        product_id: true,
+        item_id: true,
         name: true,
         stock_quantity: true,
-        low_stock_threshold: true,
-        sku: true,
+        category: true,
+        item_type: true,
       },
     });
   }

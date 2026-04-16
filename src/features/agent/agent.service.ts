@@ -2,8 +2,7 @@ import { Injectable, Logger, OnModuleInit } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { HumanMessage } from '@langchain/core/messages';
 import { buildAgentGraph } from './graph/agent-graph';
-import { InventoryService } from '../inventory/application/services/inventory.service';
-import { BookingService } from '../bookings/application/services/booking.service';
+import { CatalogService } from '../catalog/catalog.service';
 import { PrismaService } from '../../prisma/prisma.service';
 
 export interface AgentContext {
@@ -20,15 +19,14 @@ export class AgentService implements OnModuleInit {
 
   constructor(
     private readonly configService: ConfigService,
-    private readonly inventoryService: InventoryService,
-    private readonly bookingService: BookingService,
+    private readonly catalogService: CatalogService,
     private readonly prisma: PrismaService,
   ) { }
 
   async onModuleInit() {
-    const openaiApiKey = this.configService.get<string>('OPENAI_API_KEY');
-    const databaseUrl = this.configService.get<string>('DATABASE_URL');
-    this.graph = await buildAgentGraph({ openaiApiKey, databaseUrl, inventoryService: this.inventoryService, bookingService: this.bookingService, prisma: this.prisma });
+    const openaiApiKey = this.configService.get<string>('OPENAI_API_KEY') ?? '';
+    const databaseUrl = this.configService.get<string>('DATABASE_URL') ?? '';
+    this.graph = await buildAgentGraph({ openaiApiKey, databaseUrl, catalogService: this.catalogService, prisma: this.prisma });
     this.logger.log('Agent graph initialized with PostgreSQL checkpointer');
   }
 

@@ -52,24 +52,21 @@ export class CartRepositoryPrisma {
       include: {
         cart_items: {
           include: {
-            products: {
+            catalog_item: {
               select: {
-                product_id: true,
+                item_id: true,
                 name: true,
-                price: true,
+                base_price: true,
                 primary_image_url: true,
-                in_stock: true,
                 stock_quantity: true,
-                track_inventory: true,
               },
             },
-            product_variants: {
+            item_variant: {
               select: {
                 variant_id: true,
                 name: true,
                 price: true,
-                quantity: true,
-                in_stock: true,
+                stock_quantity: true,
               },
             },
           },
@@ -88,7 +85,7 @@ export class CartRepositoryPrisma {
         total_price: Number(item.total_price),
         variant_id: item.variant_id || null,
         variant_name: item.variant_name || null,
-        snapshot: item.snapshot || null,
+        snapshot: (item as any).snapshot || null,
       })),
     } as CartWithItems;
   }
@@ -109,7 +106,7 @@ export class CartRepositoryPrisma {
     const existingItem = await this.prisma.cart_items.findFirst({
       where: {
         cart_id: cartId,
-        product_id: productId,
+        item_id: productId,
         variant_id: variantId || null,
       },
     });
@@ -134,7 +131,7 @@ export class CartRepositoryPrisma {
       cartItem = await this.prisma.cart_items.create({
         data: {
           cart_id: cartId,
-          product_id: productId,
+          item_id: productId,
           variant_id: variantId,
           product_name: productName,
           variant_name: variantName,
@@ -319,7 +316,7 @@ export class CartRepositoryPrisma {
         total_price: Number(item.total_price),
         variant_id: item.variant_id || null,
         variant_name: item.variant_name || null,
-        snapshot: item.snapshot || null,
+        snapshot: (item as any).snapshot || null,
       })),
     } as CartWithItems;
   }

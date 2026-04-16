@@ -54,11 +54,7 @@ export class WhatsAppCatalogController {
     @Param('businessId') businessId: string,
     @Body() dto: BulkToggleCatalogDto,
   ) {
-    return this.catalogService.bulkUpdateCatalog(
-      dto.productIds,
-      businessId,
-      dto.inCatalog,
-    );
+    return this.catalogService.bulkUpdateCatalog(businessId, dto.productIds);
   }
 
   /**

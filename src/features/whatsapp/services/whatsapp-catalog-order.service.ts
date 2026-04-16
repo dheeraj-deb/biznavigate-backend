@@ -101,11 +101,12 @@ export class WhatsAppCatalogOrderService {
         const itemPrice = item.item_price || 0;
         const currency = item.currency || 'INR';
 
-        const product = await this.prisma.products.findFirst({
+        const product = await this.prisma.catalog_items.findFirst({
           where: {
             business_id: account.business_id,
-            product_id: productRetailerId,
-            in_whatsapp_catalog: true,
+            item_id: productRetailerId,
+            is_active: true,
+            deleted_at: null,
           },
         });
 
@@ -124,7 +125,7 @@ export class WhatsAppCatalogOrderService {
           await this.cartService.addToCart({
             customer_id: (await customer).customer_id,
             business_id: account.business_id,
-            product_id: product.product_id,
+            product_id: product.item_id,
             variant_id: undefined,
             quantity: quantity,
           });
@@ -134,7 +135,7 @@ export class WhatsAppCatalogOrderService {
           );
 
           try {
-            await this.createTemporaryHold(product.product_id, quantity, lead.lead_id);
+            await this.createTemporaryHold(product.item_id, quantity, lead.lead_id);
             this.logger.log(`Reserved ${quantity} unit(s) of "${product.name}" for lead ${lead.lead_id}`);
           } catch (holdError) {
             this.logger.warn(`Stock hold failed for "${product.name}": ${holdError.message}`);
@@ -326,42 +327,40 @@ export class WhatsAppCatalogOrderService {
     let stockHitZero = false;
 
     const reservationId = await this.prisma.$transaction(async (tx) => {
-      // 1. Pessimistic lock — blocks concurrent holds on the same product
-      const rows = await tx.$queryRaw<{ stock_quantity: number; reserved_stock: number }[]>(
-        Prisma.sql`SELECT stock_quantity, reserved_stock FROM products WHERE product_id = ${productId}::uuid FOR UPDATE`,
+      // 1. Pessimistic lock — blocks concurrent holds on the same item
+      const rows = await tx.$queryRaw<{ stock_quantity: number }[]>(
+        Prisma.sql`SELECT stock_quantity FROM catalog_items WHERE item_id = ${productId}::uuid FOR UPDATE`,
       );
 
       const product = rows[0];
       if (!product) {
-        throw new BadRequestException(`Product not found: ${productId}`);
+        throw new BadRequestException(`Item not found: ${productId}`);
       }
 
-      // 2. Available = stock not yet committed to pending orders
-      const available = (Number(product.stock_quantity) ?? 0) - (Number(product.reserved_stock) ?? 0);
+      // 2. Available = current stock
+      const available = Number(product.stock_quantity) ?? 0;
 
       if (available < qty) {
         throw new ConflictException(
-          `Insufficient stock for product ${productId} (lead: ${leadId}). Available: ${available}, Requested: ${qty}`,
+          `Insufficient stock for item ${productId} (lead: ${leadId}). Available: ${available}, Requested: ${qty}`,
         );
       }
 
-      // 3. Deduct from stock_quantity immediately — physically locks units for this cart hold.
+      // 3. Deduct from stock_quantity immediately
       const newStock = Number(product.stock_quantity) - qty;
       stockHitZero = newStock === 0;
 
       await tx.$executeRaw(
-        Prisma.sql`UPDATE products
+        Prisma.sql`UPDATE catalog_items
           SET stock_quantity = ${newStock}::integer,
-              in_stock       = ${newStock > 0},
-              version        = version + 1,
               updated_at     = NOW()
-          WHERE product_id = ${productId}::uuid`,
+          WHERE item_id = ${productId}::uuid`,
       );
 
       // 4. Record the hold so the cleanup job can reverse it on expiry
       const expiresAt = new Date(Date.now() + this.HOLD_MINUTES * 60 * 1000);
       const inserted = await tx.$queryRaw<{ reservation_id: string }[]>(
-        Prisma.sql`INSERT INTO cart_reservations (lead_id, product_id, quantity, expires_at, status)
+        Prisma.sql`INSERT INTO cart_reservations (lead_id, item_id, quantity, expires_at, status)
           VALUES (${leadId}::uuid, ${productId}::uuid, ${qty}::integer, ${expiresAt}, 'active')
           RETURNING reservation_id`,
       );

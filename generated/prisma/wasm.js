@@ -295,103 +295,6 @@ exports.Prisma.Lead_followupsScalarFieldEnum = {
   created_at: 'created_at'
 };
 
-exports.Prisma.ProductsScalarFieldEnum = {
-  product_id: 'product_id',
-  business_id: 'business_id',
-  tenant_id: 'tenant_id',
-  product_type: 'product_type',
-  name: 'name',
-  description: 'description',
-  category: 'category',
-  price: 'price',
-  stock_quantity: 'stock_quantity',
-  image_urls: 'image_urls',
-  is_active: 'is_active',
-  created_at: 'created_at',
-  updated_at: 'updated_at',
-  ai_enhanced_description: 'ai_enhanced_description',
-  ai_generated_tags: 'ai_generated_tags',
-  compare_price: 'compare_price',
-  currency: 'currency',
-  has_variants: 'has_variants',
-  in_stock: 'in_stock',
-  primary_image_url: 'primary_image_url',
-  reserved_stock: 'reserved_stock',
-  sku: 'sku',
-  slug: 'slug',
-  brand: 'brand',
-  condition: 'condition',
-  weight: 'weight',
-  dimensions: 'dimensions',
-  track_inventory: 'track_inventory',
-  low_stock_threshold: 'low_stock_threshold',
-  version: 'version',
-  category_id: 'category_id',
-  in_whatsapp_catalog: 'in_whatsapp_catalog',
-  whatsapp_catalog_id: 'whatsapp_catalog_id',
-  whatsapp_sync_status: 'whatsapp_sync_status',
-  whatsapp_sync_error: 'whatsapp_sync_error',
-  whatsapp_synced_at: 'whatsapp_synced_at',
-  in_instagram_catalog: 'in_instagram_catalog',
-  instagram_catalog_id: 'instagram_catalog_id',
-  instagram_sync_status: 'instagram_sync_status',
-  instagram_sync_error: 'instagram_sync_error',
-  instagram_synced_at: 'instagram_synced_at',
-  instagram_retailer_id: 'instagram_retailer_id'
-};
-
-exports.Prisma.Product_variantsScalarFieldEnum = {
-  variant_id: 'variant_id',
-  product_id: 'product_id',
-  name: 'name',
-  sku: 'sku',
-  price: 'price',
-  quantity: 'quantity',
-  reserved_stock: 'reserved_stock',
-  low_stock_threshold: 'low_stock_threshold',
-  version: 'version',
-  in_stock: 'in_stock',
-  variant_options: 'variant_options',
-  created_at: 'created_at',
-  updated_at: 'updated_at'
-};
-
-exports.Prisma.Product_imagesScalarFieldEnum = {
-  image_id: 'image_id',
-  product_id: 'product_id',
-  business_id: 'business_id',
-  file_name: 'file_name',
-  file_path: 'file_path',
-  file_size: 'file_size',
-  mime_type: 'mime_type',
-  storage_type: 'storage_type',
-  width: 'width',
-  height: 'height',
-  alt_text: 'alt_text',
-  display_order: 'display_order',
-  is_primary: 'is_primary',
-  created_at: 'created_at',
-  updated_at: 'updated_at'
-};
-
-exports.Prisma.Course_batchesScalarFieldEnum = {
-  batch_id: 'batch_id',
-  course_id: 'course_id',
-  business_id: 'business_id',
-  tenant_id: 'tenant_id',
-  batch_name: 'batch_name',
-  start_date: 'start_date',
-  end_date: 'end_date',
-  schedule: 'schedule',
-  total_slots: 'total_slots',
-  available_slots: 'available_slots',
-  instructor_id: 'instructor_id',
-  location: 'location',
-  is_active: 'is_active',
-  created_at: 'created_at',
-  updated_at: 'updated_at'
-};
-
 exports.Prisma.CustomersScalarFieldEnum = {
   customer_id: 'customer_id',
   business_id: 'business_id',
@@ -422,7 +325,6 @@ exports.Prisma.OrdersScalarFieldEnum = {
   paid_at: 'paid_at',
   delivery_status: 'delivery_status',
   service_status: 'service_status',
-  batch_id: 'batch_id',
   created_at: 'created_at',
   updated_at: 'updated_at',
   delivered_at: 'delivered_at',
@@ -454,7 +356,7 @@ exports.Prisma.OrdersScalarFieldEnum = {
 exports.Prisma.Order_itemsScalarFieldEnum = {
   order_item_id: 'order_item_id',
   order_id: 'order_id',
-  product_id: 'product_id',
+  item_id: 'item_id',
   variant_id: 'variant_id',
   product_name: 'product_name',
   variant_name: 'variant_name',
@@ -471,7 +373,7 @@ exports.Prisma.Order_itemsScalarFieldEnum = {
 exports.Prisma.Cart_reservationsScalarFieldEnum = {
   reservation_id: 'reservation_id',
   lead_id: 'lead_id',
-  product_id: 'product_id',
+  item_id: 'item_id',
   variant_id: 'variant_id',
   quantity: 'quantity',
   expires_at: 'expires_at',
@@ -699,52 +601,6 @@ exports.Prisma.Instagram_mediaScalarFieldEnum = {
   updated_at: 'updated_at'
 };
 
-exports.Prisma.Product_categoriesScalarFieldEnum = {
-  category_id: 'category_id',
-  business_id: 'business_id',
-  tenant_id: 'tenant_id',
-  name: 'name',
-  slug: 'slug',
-  description: 'description',
-  parent_category_id: 'parent_category_id',
-  level: 'level',
-  path: 'path',
-  icon_url: 'icon_url',
-  image_url: 'image_url',
-  display_order: 'display_order',
-  meta_title: 'meta_title',
-  meta_description: 'meta_description',
-  is_active: 'is_active',
-  product_count: 'product_count',
-  created_at: 'created_at',
-  updated_at: 'updated_at',
-  created_by: 'created_by'
-};
-
-exports.Prisma.Product_reviewsScalarFieldEnum = {
-  review_id: 'review_id',
-  business_id: 'business_id',
-  tenant_id: 'tenant_id',
-  product_id: 'product_id',
-  customer_id: 'customer_id',
-  order_id: 'order_id',
-  rating: 'rating',
-  title: 'title',
-  comment: 'comment',
-  photo_urls: 'photo_urls',
-  video_url: 'video_url',
-  is_verified: 'is_verified',
-  is_featured: 'is_featured',
-  is_published: 'is_published',
-  helpful_count: 'helpful_count',
-  reported_count: 'reported_count',
-  response_text: 'response_text',
-  response_date: 'response_date',
-  responded_by: 'responded_by',
-  created_at: 'created_at',
-  updated_at: 'updated_at'
-};
-
 exports.Prisma.Workflow_definitionsScalarFieldEnum = {
   workflow_id: 'workflow_id',
   workflow_key: 'workflow_key',
@@ -792,7 +648,7 @@ exports.Prisma.Workflow_executionsScalarFieldEnum = {
 exports.Prisma.Cart_itemsScalarFieldEnum = {
   cart_item_id: 'cart_item_id',
   cart_id: 'cart_id',
-  product_id: 'product_id',
+  item_id: 'item_id',
   variant_id: 'variant_id',
   product_name: 'product_name',
   variant_name: 'variant_name',
@@ -889,152 +745,53 @@ exports.Prisma.Hotel_pricing_notificationsScalarFieldEnum = {
   created_at: 'created_at'
 };
 
-exports.Prisma.ServicesScalarFieldEnum = {
-  service_id: 'service_id',
+exports.Prisma.Catalog_itemsScalarFieldEnum = {
+  item_id: 'item_id',
   business_id: 'business_id',
   tenant_id: 'tenant_id',
+  item_type: 'item_type',
   name: 'name',
-  type: 'type',
   description: 'description',
+  category: 'category',
   base_price: 'base_price',
-  capacity: 'capacity',
-  total_units: 'total_units',
-  check_in_time: 'check_in_time',
-  check_out_time: 'check_out_time',
-  cancellation_policy: 'cancellation_policy',
-  tax_percentage: 'tax_percentage',
-  extra_guest_charge: 'extra_guest_charge',
-  max_adults: 'max_adults',
-  attributes: 'attributes',
+  compare_price: 'compare_price',
+  currency: 'currency',
+  stock_quantity: 'stock_quantity',
+  primary_image_url: 'primary_image_url',
   image_urls: 'image_urls',
+  attributes: 'attributes',
+  ai_tags: 'ai_tags',
+  is_active: 'is_active',
+  deleted_at: 'deleted_at',
+  created_at: 'created_at',
+  updated_at: 'updated_at'
+};
+
+exports.Prisma.Item_variantsScalarFieldEnum = {
+  variant_id: 'variant_id',
+  item_id: 'item_id',
+  business_id: 'business_id',
+  name: 'name',
+  sku: 'sku',
+  price: 'price',
+  stock_quantity: 'stock_quantity',
+  options: 'options',
   is_active: 'is_active',
   created_at: 'created_at',
   updated_at: 'updated_at'
 };
 
-exports.Prisma.Service_availabilityScalarFieldEnum = {
-  availability_id: 'availability_id',
-  service_id: 'service_id',
+exports.Prisma.Item_availabilityScalarFieldEnum = {
+  avail_id: 'avail_id',
+  item_id: 'item_id',
   business_id: 'business_id',
   date: 'date',
   total_slots: 'total_slots',
   booked_slots: 'booked_slots',
-  available_slots: 'available_slots',
-  effective_price: 'effective_price',
+  price_override: 'price_override',
   is_blocked: 'is_blocked',
   created_at: 'created_at',
   updated_at: 'updated_at'
-};
-
-exports.Prisma.Service_blocked_datesScalarFieldEnum = {
-  id: 'id',
-  service_id: 'service_id',
-  business_id: 'business_id',
-  date: 'date',
-  reason: 'reason',
-  created_at: 'created_at'
-};
-
-exports.Prisma.Service_bookingsScalarFieldEnum = {
-  booking_id: 'booking_id',
-  booking_reference: 'booking_reference',
-  service_id: 'service_id',
-  business_id: 'business_id',
-  lead_id: 'lead_id',
-  customer_name: 'customer_name',
-  customer_phone: 'customer_phone',
-  check_in_date: 'check_in_date',
-  check_out_date: 'check_out_date',
-  slots_booked: 'slots_booked',
-  total_price: 'total_price',
-  status: 'status',
-  payment_status: 'payment_status',
-  special_requests: 'special_requests',
-  created_at: 'created_at',
-  updated_at: 'updated_at'
-};
-
-exports.Prisma.Booking_guestsScalarFieldEnum = {
-  guest_id: 'guest_id',
-  booking_id: 'booking_id',
-  name: 'name',
-  phone: 'phone',
-  age: 'age',
-  num_guests: 'num_guests',
-  address: 'address',
-  pin_code: 'pin_code',
-  created_at: 'created_at'
-};
-
-exports.Prisma.Pricing_rulesScalarFieldEnum = {
-  rule_id: 'rule_id',
-  business_id: 'business_id',
-  service_id: 'service_id',
-  rule_name: 'rule_name',
-  rule_type: 'rule_type',
-  conditions: 'conditions',
-  adjustment_type: 'adjustment_type',
-  adjustment_value: 'adjustment_value',
-  priority: 'priority',
-  is_active: 'is_active',
-  created_at: 'created_at'
-};
-
-exports.Prisma.Pricing_suggestionsScalarFieldEnum = {
-  suggestion_id: 'suggestion_id',
-  business_id: 'business_id',
-  service_id: 'service_id',
-  current_price: 'current_price',
-  suggested_price: 'suggested_price',
-  reason: 'reason',
-  ai_confidence: 'ai_confidence',
-  status: 'status',
-  valid_from: 'valid_from',
-  valid_to: 'valid_to',
-  reviewed_by: 'reviewed_by',
-  reviewed_at: 'reviewed_at',
-  created_at: 'created_at'
-};
-
-exports.Prisma.Pricing_historyScalarFieldEnum = {
-  history_id: 'history_id',
-  service_id: 'service_id',
-  business_id: 'business_id',
-  old_price: 'old_price',
-  new_price: 'new_price',
-  change_reason: 'change_reason',
-  changed_by: 'changed_by',
-  suggestion_id: 'suggestion_id',
-  applied_at: 'applied_at'
-};
-
-exports.Prisma.Product_stock_alertsScalarFieldEnum = {
-  alert_id: 'alert_id',
-  business_id: 'business_id',
-  product_id: 'product_id',
-  variant_id: 'variant_id',
-  product_name: 'product_name',
-  variant_name: 'variant_name',
-  current_stock: 'current_stock',
-  threshold: 'threshold',
-  status: 'status',
-  acknowledged_at: 'acknowledged_at',
-  resolved_at: 'resolved_at',
-  created_at: 'created_at',
-  updated_at: 'updated_at'
-};
-
-exports.Prisma.Service_holdsScalarFieldEnum = {
-  hold_id: 'hold_id',
-  service_id: 'service_id',
-  business_id: 'business_id',
-  lead_id: 'lead_id',
-  check_in_date: 'check_in_date',
-  check_out_date: 'check_out_date',
-  slots_held: 'slots_held',
-  status: 'status',
-  expires_at: 'expires_at',
-  created_at: 'created_at'
 };
 
 exports.Prisma.SortOrder = {
@@ -1082,10 +839,6 @@ exports.Prisma.ModelName = {
   leads: 'leads',
   lead_events: 'lead_events',
   lead_followups: 'lead_followups',
-  products: 'products',
-  product_variants: 'product_variants',
-  product_images: 'product_images',
-  course_batches: 'course_batches',
   customers: 'customers',
   orders: 'orders',
   order_items: 'order_items',
@@ -1100,8 +853,6 @@ exports.Prisma.ModelName = {
   notification_events: 'notification_events',
   payment_webhooks: 'payment_webhooks',
   instagram_media: 'instagram_media',
-  product_categories: 'product_categories',
-  product_reviews: 'product_reviews',
   workflow_definitions: 'workflow_definitions',
   business_workflows: 'business_workflows',
   workflow_executions: 'workflow_executions',
@@ -1112,16 +863,9 @@ exports.Prisma.ModelName = {
   hotel_pricing_recommendations: 'hotel_pricing_recommendations',
   hotel_booking_outcomes: 'hotel_booking_outcomes',
   hotel_pricing_notifications: 'hotel_pricing_notifications',
-  services: 'services',
-  service_availability: 'service_availability',
-  service_blocked_dates: 'service_blocked_dates',
-  service_bookings: 'service_bookings',
-  booking_guests: 'booking_guests',
-  pricing_rules: 'pricing_rules',
-  pricing_suggestions: 'pricing_suggestions',
-  pricing_history: 'pricing_history',
-  product_stock_alerts: 'product_stock_alerts',
-  service_holds: 'service_holds'
+  catalog_items: 'catalog_items',
+  item_variants: 'item_variants',
+  item_availability: 'item_availability'
 };
 
 /**
