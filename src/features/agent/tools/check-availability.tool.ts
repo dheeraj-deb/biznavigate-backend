@@ -1,9 +1,9 @@
 import { tool } from '@langchain/core/tools';
 import { z } from 'zod';
-import { InventoryService } from '../../inventory/application/services/inventory.service';
+import { CatalogService } from '../../catalog/catalog.service';
 import { resolveDate, isValidDate } from '../utils/date-resolver';
 
-export function makeCheckAvailabilityTool(inventoryService: InventoryService) {
+export function makeCheckAvailabilityTool(catalogService: CatalogService) {
   return tool(
     async ({ businessId, checkIn, checkOut }) => {
       const resolvedCheckIn = resolveDate(checkIn);
@@ -19,18 +19,17 @@ export function makeCheckAvailabilityTool(inventoryService: InventoryService) {
         return 'Check-out date must be after check-in date. Could you clarify your dates?';
       }
 
-      // Quick check: confirm at least one room is available before triggering the flow
-      const services = await inventoryService.getServices(businessId);
-      let hasAvailability = false;
-      for (const service of services) {
-        const avail = await inventoryService.getAvailability(service.service_id, resolvedCheckIn, resolvedCheckOut);
-        if (!avail.isBlocked && avail.minAvailable > 0) {
-          hasAvailability = true;
-          break;
-        }
-      }
+      // Query available items via catalog
+      const results = await catalogService.queryForAgent({
+        businessId,
+        item_type: 'accommodation',
+        check_in: resolvedCheckIn,
+        check_out: resolvedCheckOut,
+      });
 
-      if (!hasAvailability) return `No rooms available from ${resolvedCheckIn} to ${resolvedCheckOut}.`;
+      if (!results || results.length === 0) {
+        return `No rooms available from ${resolvedCheckIn} to ${resolvedCheckOut}.`;
+      }
 
       // Signal the debounce processor to trigger the hospitality flow
       return `FLOW:${JSON.stringify({ businessId, checkIn: resolvedCheckIn, checkOut: resolvedCheckOut })}`;

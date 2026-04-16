@@ -338,33 +338,33 @@ export class OrderService {
     variantId: string | undefined,
     quantity: number,
   ): Promise<void> {
-    const product = await this.prisma.products.findUnique({
-      where: { product_id: productId },
-      include: { product_variants: true },
+    const product = await this.prisma.catalog_items.findFirst({
+      where: { item_id: productId, deleted_at: null },
+      include: { variants: { where: { is_active: true } } },
     });
 
     if (!product) {
-      throw new NotFoundException(`Product not found: ${productId}`);
+      throw new NotFoundException(`Item not found: ${productId}`);
     }
 
     if (!product.is_active) {
-      throw new BadRequestException(`Product is not active: ${product.name}`);
+      throw new BadRequestException(`Item is not active: ${product.name}`);
     }
 
-    // Check stock if inventory tracking is enabled
-    if (product.track_inventory) {
+    // Check stock for physical products
+    if (product.stock_quantity !== null) {
       if (variantId) {
-        const variant = product.product_variants.find((v) => v.variant_id === variantId);
+        const variant = product.variants.find((v) => v.variant_id === variantId);
         if (!variant) {
-          throw new NotFoundException(`Product variant not found: ${variantId}`);
+          throw new NotFoundException(`Item variant not found: ${variantId}`);
         }
-        if (!variant.in_stock || variant.quantity < quantity) {
+        if (variant.stock_quantity < quantity) {
           throw new BadRequestException(
-            `Insufficient stock for ${product.name} - ${variant.name}. Available: ${variant.quantity}, Requested: ${quantity}`,
+            `Insufficient stock for ${product.name} - ${variant.name}. Available: ${variant.stock_quantity}, Requested: ${quantity}`,
           );
         }
       } else {
-        if (!product.in_stock || (product.stock_quantity !== null && product.stock_quantity < quantity)) {
+        if (product.stock_quantity < quantity) {
           throw new BadRequestException(
             `Insufficient stock for ${product.name}. Available: ${product.stock_quantity}, Requested: ${quantity}`,
           );

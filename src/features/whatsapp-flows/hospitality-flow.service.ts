@@ -3,8 +3,7 @@ import * as https from 'node:https';
 import * as http from 'node:http';
 import * as sharp from 'sharp';
 import { PrismaService } from '../../prisma/prisma.service';
-import { InventoryService } from '../inventory/application/services/inventory.service';
-import { BookingService } from '../bookings/application/services/booking.service';
+import { CatalogService } from '../catalog/catalog.service';
 
 @Injectable()
 export class HospitalityFlowService {
@@ -12,8 +11,7 @@ export class HospitalityFlowService {
 
   constructor(
     private readonly prisma: PrismaService,
-    private readonly inventoryService: InventoryService,
-    private readonly bookingService: BookingService,
+    private readonly catalogService: CatalogService,
   ) { }
 
   async handleInit(data: any, businessId?: string, flowToken?: string) {
@@ -42,12 +40,8 @@ export class HospitalityFlowService {
   }
 
   async handleBack(_screen: string, data: any, businessId?: string) {
-    // Release the hold via InventoryService so available_slots are restored
-    if (data?.hold_id && businessId) {
-      await this.inventoryService.releaseHold(data.hold_id, businessId).catch((err) => {
-        this.logger.warn(`Could not release hold ${data.hold_id}: ${err.message}`);
-      });
-    }
+    // Hold release not needed — new catalog uses item_availability directly
+    void data; void businessId;
     return {
       screen: 'SELECT_DATES',
       data: {
@@ -111,8 +105,8 @@ export class HospitalityFlowService {
     const { service_id, check_in, check_out, nights } = data;
 
     const [service, business] = await Promise.all([
-      this.prisma.services.findFirst({
-        where: { service_id },
+      this.prisma.catalog_items.findFirst({
+        where: { item_id: service_id, deleted_at: null },
         select: { name: true, description: true, image_urls: true, base_price: true, attributes: true },
       }),
       businessId
@@ -125,25 +119,18 @@ export class HospitalityFlowService {
 
     const fromStr = new Date(check_in).toISOString().split('T')[0];
     const checkOutStr = new Date(check_out).toISOString().split('T')[0];
-    const avail = await this.inventoryService.getAvailability(service_id, fromStr, checkOutStr);
-    const pricePerNight = avail.pricePerNight;
 
-    // Create hold for the selected room only
-    let holdId = '';
-    if (businessId) {
-      const hold = await this.inventoryService.createHold(businessId, {
-        service_id,
-        check_in_date: fromStr,
-        check_out_date: checkOutStr,
-        slots_held: 1,
-        lead_id: data?._flowContext?.leadId,
-      }).catch((err) => {
-        this.logger.warn(`Could not create hold for ${service_id}: ${err.message}`);
-        return null;
-      });
+    // Get availability from item_availability
+    const availRows = await this.catalogService.getAvailability(service_id, businessId ?? '', fromStr, checkOutStr);
+    const pricePerNight = availRows.find(r => r.price != null)?.price
+      ? Number(availRows.find(r => r.price != null)!.price)
+      : Number(service?.base_price ?? 0);
+    const minSlots = availRows.length > 0
+      ? Math.min(...availRows.map(r => r.available_slots))
+      : 0;
 
-      holdId = hold?.hold_id ?? '';
-    }
+    // Holds not supported in new catalog — skip
+    const holdId = '';
 
     const imageUrls = (service?.image_urls as string[] | null) ?? [];
     const images = await Promise.all(
@@ -157,7 +144,6 @@ export class HospitalityFlowService {
     const totalPrice = pricePerNight * numNights;
 
     // --- stock: minimum available slots across the stay ---
-    const minSlots = avail.minAvailable;
     const stockLabel = minSlots <= 5 && minSlots > 0
       ? `Only ${minSlots} left`
       : minSlots > 5
@@ -263,9 +249,9 @@ export class HospitalityFlowService {
     }
 
     const services = businessId
-      ? await this.prisma.services.findMany({
-        where: { business_id: businessId, is_active: true },
-        select: { service_id: true, name: true, base_price: true, description: true, image_urls: true },
+      ? await this.prisma.catalog_items.findMany({
+        where: { business_id: businessId, is_active: true, deleted_at: null, item_type: 'accommodation' },
+        select: { item_id: true, name: true, base_price: true, description: true, image_urls: true },
       })
       : [];
 
@@ -277,22 +263,28 @@ export class HospitalityFlowService {
     }> = [];
 
     for (const service of services) {
-      const avail = await this.inventoryService.getAvailability(
-        service.service_id,
+      const availRows = await this.catalogService.getAvailability(
+        service.item_id,
+        businessId ?? '',
         checkInDate.toISOString().split('T')[0],
         checkOutDate.toISOString().split('T')[0],
       );
 
-      if (avail.isBlocked || avail.minAvailable <= 0) continue;
+      const minAvailable = availRows.length > 0
+        ? Math.min(...availRows.map(r => r.available_slots))
+        : 0;
+      if (availRows.some(r => r.is_blocked) || minAvailable <= 0) continue;
 
-      const pricePerNight = avail.pricePerNight;
+      const pricePerNight = availRows.find(r => r.price != null)?.price
+        ? Number(availRows.find(r => r.price != null)!.price)
+        : Number(service.base_price);
 
       const imageUrls = service.image_urls as string[] | null;
       const image = imageUrls?.[0] ? await this.fetchImageAsBase64(imageUrls[0], 100 * 1024) : '';
-      this.logger.debug(`Service ${service.service_id} image_urls=${JSON.stringify(imageUrls)} image_length=${image.length}`);
+      this.logger.debug(`Item ${service.item_id} image_urls=${JSON.stringify(imageUrls)} image_length=${image.length}`);
 
       availableServices.push({
-        id: service.service_id,
+        id: service.item_id,
         'main-content': {
           title: service.name.length > 30 ? service.name.slice(0, 27) + '...' : service.name,
           metadata: `₹${pricePerNight}/night`,
@@ -304,7 +296,7 @@ export class HospitalityFlowService {
         'on-click-action': {
           name: 'data_exchange',
           payload: {
-            service_id: service.service_id,
+            service_id: service.item_id,
             check_in: checkInDate.toISOString().split('T')[0],
             check_out: checkOutDate.toISOString().split('T')[0],
             nights: numNights,
@@ -346,28 +338,50 @@ export class HospitalityFlowService {
     const customerPhone = _flowContext?.customerPhone || phone;
     const leadId = _flowContext?.leadId;
 
-    const booking = await this.bookingService.createBooking(businessId ?? '', {
-      hold_id,
-      service_id,
-      customer_name: guest_name,
-      customer_phone: customerPhone,
-      check_in_date: check_in,
-      check_out_date: check_out,
-      slots_booked: 1,
-      lead_id: leadId,
+    // Look up item to get price
+    const catalogItem = await this.prisma.catalog_items.findFirst({
+      where: { item_id: service_id, deleted_at: null },
+      select: { base_price: true, name: true, tenant_id: true },
     });
 
-    await this.prisma.booking_guests.create({
+    const nights = Math.ceil(
+      (new Date(check_out).getTime() - new Date(check_in).getTime()) / 86_400_000,
+    );
+    const totalAmount = Number(catalogItem?.base_price ?? 0) * Math.max(nights, 1);
+
+    // Create order as the booking record
+    const booking = await this.prisma.orders.create({
       data: {
-        booking_id: booking.booking_id,
-        name: guest_name,
-        phone: customerPhone,
-        age: age ? Number(age) : null,
-        num_guests: Number(num_guests) || 1,
-        address: address ?? null,
-        pin_code: pin_code ?? null,
+        business_id: businessId ?? '',
+        tenant_id: catalogItem?.tenant_id ?? '',
+        lead_id: leadId ?? null,
+        order_type: 'accommodation',
+        total_amount: totalAmount,
+        payment_status: 'pending',
+        delivery_status: 'confirmed',
+        items: [{
+          item_id: service_id,
+          item_name: catalogItem?.name ?? '',
+          check_in,
+          check_out,
+          nights,
+          guest_name,
+          phone: customerPhone,
+          num_guests: Number(num_guests) || 1,
+          age: age ? Number(age) : null,
+          address: address ?? null,
+          pin_code: pin_code ?? null,
+        }],
       },
     });
+    // Increment booked_slots in item_availability for each date
+    await this.prisma.$executeRaw`
+      UPDATE item_availability
+      SET booked_slots = booked_slots + 1, updated_at = NOW()
+      WHERE item_id = ${service_id}::uuid
+        AND date >= ${check_in}::date
+        AND date < ${check_out}::date
+    `;
 
     // Update lead status + write lead_event
     if (leadId && businessId) {
@@ -383,8 +397,7 @@ export class HospitalityFlowService {
             type: 'booked',
             actor: 'ai',
             data: {
-              booking_id: booking.booking_id,
-              booking_reference: (booking as any).booking_reference,
+              booking_id: booking.order_id,
               check_in: check_in,
               check_out: check_out,
             } as any,
@@ -393,7 +406,7 @@ export class HospitalityFlowService {
       ]);
     }
 
-    this.logger.log(`Booking created: ${booking.booking_id}`);
+    this.logger.log(`Order/booking created: ${booking.order_id}`);
 
     return {
       screen: 'SUCCESS',
@@ -401,7 +414,7 @@ export class HospitalityFlowService {
         extension_message_response: {
           params: {
             flow_token: data.flow_token ?? '',
-            booking_id: booking.booking_id,
+            booking_id: booking.order_id,
           },
         },
       },

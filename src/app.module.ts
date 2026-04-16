@@ -24,16 +24,12 @@ import { WhatsAppModule } from "./features/whatsapp/whatsapp.module";
 import { InstagramModule } from "./features/instagram/instagram.module";
 import { ChatWidgetModule } from "./features/chat-widget/chat-widget.module";
 import { WorkflowsModule } from "./features/workflows/workflows.module";
-import { ProductsModule } from "./features/products/products.module";
-import { CategoriesModule } from "./features/categories/categories.module";
 // import { UploadsModule } from "./features/uploads/uploads.module";
 import { CustomersModule } from "./features/customers/customers.module";
 import { OrdersModule } from "./features/orders/orders.module";
 import { PaymentsModule } from "./features/payments/payments.module";
-import { ReviewsModule } from "./features/reviews/reviews.module";
 import { NotificationsModule } from "./features/notifications/notifications.module";
-import { InventoryModule } from "./features/inventory/inventory.module";
-import { BookingsModule } from "./features/bookings/bookings.module";
+import { CatalogModule } from "./features/catalog/catalog.module";
 import { AnalyticsModule } from "./features/analytics/analytics.module";
 import { TemplatesModule } from "./features/notification-templates/templates.module";
 import { ContactsModule } from "./features/contacts/contacts.module";
@@ -106,16 +102,12 @@ import { AgentModule } from "./features/agent/agent.module";
     RolesModule,
     UsersModule,
     LeadModule,
-    ProductsModule,
-    CategoriesModule,
     // UploadsModule,
     CustomersModule,
     OrdersModule,
     PaymentsModule,
-    ReviewsModule,
     NotificationsModule,
-    InventoryModule,
-    BookingsModule,
+    CatalogModule,
     AnalyticsModule,
     TemplatesModule,
     ContactsModule,

@@ -1087,33 +1087,28 @@ export class WorkflowsService implements OnModuleInit {
 
   /**
    * Enrich a WhatsApp Flow response with full DB data based on known IDs.
-   * Supports: booking_id (service_bookings) and order_id (orders).
+   * Supports: booking_id (order_id) and order_id (orders).
    */
   private async enrichFlowResponse(data: Record<string, any>): Promise<Record<string, any>> {
-    // --- Service booking ---
+    // --- Accommodation booking (now stored as order) ---
     if (data.booking_id) {
-      const booking = await this.prisma.service_bookings.findUnique({
-        where: { booking_id: data.booking_id },
-        include: { services: true, booking_guests: true },
+      const order = await this.prisma.orders.findFirst({
+        where: { order_id: data.booking_id },
       });
-      if (booking) {
-        const nights = Math.ceil(
-          (booking.check_out_date.getTime() - booking.check_in_date.getTime()) / 86_400_000,
-        );
+      if (order) {
+        const items = (order.items as any[]) ?? [];
+        const item = items[0] ?? {};
         return {
-          booking_id: booking.booking_id,
-          booking_reference: booking.booking_reference,
-          service_name: booking.services.name,
-          service_type: booking.services.type,
-          check_in_date: booking.check_in_date.toISOString().split('T')[0],
-          check_out_date: booking.check_out_date.toISOString().split('T')[0],
-          nights,
-          total_price: Number(booking.total_price),
-          booking_status: booking.status,
-          payment_status: booking.payment_status,
-          num_guests: booking.booking_guests?.num_guests ?? booking.slots_booked,
-          customer_name: booking.customer_name,
-          customer_phone: booking.customer_phone,
+          booking_id: order.order_id,
+          check_in_date: item.check_in ?? null,
+          check_out_date: item.check_out ?? null,
+          nights: item.nights ?? null,
+          total_price: Number(order.total_amount),
+          booking_status: order.delivery_status,
+          payment_status: order.payment_status,
+          customer_name: item.guest_name ?? null,
+          customer_phone: item.phone ?? null,
+          num_guests: item.num_guests ?? 1,
         };
       }
     }
