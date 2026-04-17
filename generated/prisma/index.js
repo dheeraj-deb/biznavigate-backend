@@ -851,7 +851,7 @@ const config = {
       "value": "prisma-client-js"
     },
     "output": {
-      "value": "C:\\Users\\MY PC\\OneDrive\\Desktop\\Biznav\\biznavigate-backend\\generated\\prisma",
+      "value": "/Users/dheerajt/Downloads/biznavigate/biznavigate-backend/generated/prisma",
       "fromEnvVar": null
     },
     "config": {
@@ -860,12 +860,12 @@ const config = {
     "binaryTargets": [
       {
         "fromEnvVar": null,
-        "value": "windows",
+        "value": "darwin-arm64",
         "native": true
       }
     ],
     "previewFeatures": [],
-    "sourceFilePath": "C:\\Users\\MY PC\\OneDrive\\Desktop\\Biznav\\biznavigate-backend\\prisma\\schema.prisma",
+    "sourceFilePath": "/Users/dheerajt/Downloads/biznavigate/biznavigate-backend/prisma/schema.prisma",
     "isCustomOutput": true
   },
   "relativeEnvPaths": {
@@ -879,12 +879,11 @@ const config = {
     "db"
   ],
   "activeProvider": "postgresql",
-  "postinstall": false,
   "inlineDatasources": {
     "db": {
       "url": {
         "fromEnvVar": "DATABASE_URL",
-        "value": null
+        "value": "postgresql://jbemamdcapumbwenkiip:zisvhqahuxihaftfjepjriwjvjjdyw@9qasp5v56q8ckkf5dc.leapcellpool.com:6438/ceornhhrbplkecjugron?sslmode=require"
       }
     }
   },
@@ -928,8 +927,8 @@ exports.PrismaClient = PrismaClient
 Object.assign(exports, Prisma)
 
 // file annotations for bundling tools to include these files
-path.join(__dirname, "query_engine-windows.dll.node");
-path.join(process.cwd(), "generated/prisma/query_engine-windows.dll.node")
+path.join(__dirname, "libquery_engine-darwin-arm64.dylib.node");
+path.join(process.cwd(), "generated/prisma/libquery_engine-darwin-arm64.dylib.node")
 // file annotations for bundling tools to include these files
 path.join(__dirname, "schema.prisma");
 path.join(process.cwd(), "generated/prisma/schema.prisma")

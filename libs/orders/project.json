@@ -1,0 +1,24 @@
+{
+  "name": "orders",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/orders/src",
+  "projectType": "library",
+  "targets": {
+    "build": {
+      "executor": "@nx/js:tsc",
+      "options": {
+        "outputPath": "dist/libs/orders",
+        "main": "libs/orders/src/index.ts",
+        "tsConfig": "libs/orders/tsconfig.lib.json",
+        "assets": []
+      }
+    },
+    "test": {
+      "executor": "@nx/jest:jest",
+      "options": {
+        "jestConfig": "libs/orders/jest.config.ts"
+      }
+    }
+  },
+  "tags": ["type:lib", "scope:orders"]
+}

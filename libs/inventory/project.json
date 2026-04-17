@@ -1,0 +1,24 @@
+{
+  "name": "inventory",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/inventory/src",
+  "projectType": "library",
+  "targets": {
+    "build": {
+      "executor": "@nx/js:tsc",
+      "options": {
+        "outputPath": "dist/libs/inventory",
+        "main": "libs/inventory/src/index.ts",
+        "tsConfig": "libs/inventory/tsconfig.lib.json",
+        "assets": []
+      }
+    },
+    "test": {
+      "executor": "@nx/jest:jest",
+      "options": {
+        "jestConfig": "libs/inventory/jest.config.ts"
+      }
+    }
+  },
+  "tags": ["type:lib", "scope:inventory"]
+}

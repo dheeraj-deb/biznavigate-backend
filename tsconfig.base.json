@@ -1,0 +1,33 @@
+{
+  "compilerOptions": {
+    "module": "commonjs",
+    "declaration": true,
+    "removeComments": true,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "allowSyntheticDefaultImports": true,
+    "target": "es2017",
+    "sourceMap": true,
+    "baseUrl": ".",
+    "incremental": true,
+    "paths": {
+      "@generated/prisma": ["generated/prisma"],
+      "@generated/prisma/*": ["generated/prisma/*"],
+      "src/*": ["apps/api/src/*"],
+      "@biznavigate/prisma": ["libs/prisma/src/index.ts"],
+      "@biznavigate/prisma/*": ["libs/prisma/src/*"],
+      "@biznavigate/shared": ["libs/shared/src/index.ts"],
+      "@biznavigate/shared/*": ["libs/shared/src/*"],
+      "@biznavigate/common": ["libs/common/src/index.ts"],
+      "@biznavigate/common/*": ["libs/common/src/*"],
+      "@biznavigate/lead": ["libs/lead/src/index.ts"],
+      "@biznavigate/lead/*": ["libs/lead/src/*"],
+      "@biznavigate/orders": ["libs/orders/src/index.ts"],
+      "@biznavigate/orders/*": ["libs/orders/src/*"],
+      "@biznavigate/inventory": ["libs/inventory/src/index.ts"],
+      "@biznavigate/inventory/*": ["libs/inventory/src/*"],
+      "@biznavigate/catalog": ["libs/catalog/src/index.ts"],
+      "@biznavigate/catalog/*": ["libs/catalog/src/*"]
+    }
+  }
+}

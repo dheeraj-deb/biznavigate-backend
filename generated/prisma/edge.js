@@ -850,7 +850,7 @@ const config = {
       "value": "prisma-client-js"
     },
     "output": {
-      "value": "C:\\Users\\MY PC\\OneDrive\\Desktop\\Biznav\\biznavigate-backend\\generated\\prisma",
+      "value": "/Users/dheerajt/Downloads/biznavigate/biznavigate-backend/generated/prisma",
       "fromEnvVar": null
     },
     "config": {
@@ -859,12 +859,12 @@ const config = {
     "binaryTargets": [
       {
         "fromEnvVar": null,
-        "value": "windows",
+        "value": "darwin-arm64",
         "native": true
       }
     ],
     "previewFeatures": [],
-    "sourceFilePath": "C:\\Users\\MY PC\\OneDrive\\Desktop\\Biznav\\biznavigate-backend\\prisma\\schema.prisma",
+    "sourceFilePath": "/Users/dheerajt/Downloads/biznavigate/biznavigate-backend/prisma/schema.prisma",
     "isCustomOutput": true
   },
   "relativeEnvPaths": {
@@ -878,12 +878,11 @@ const config = {
     "db"
   ],
   "activeProvider": "postgresql",
-  "postinstall": false,
   "inlineDatasources": {
     "db": {
       "url": {
         "fromEnvVar": "DATABASE_URL",
-        "value": null
+        "value": "postgresql://jbemamdcapumbwenkiip:zisvhqahuxihaftfjepjriwjvjjdyw@9qasp5v56q8ckkf5dc.leapcellpool.com:6438/ceornhhrbplkecjugron?sslmode=require"
       }
     }
   },

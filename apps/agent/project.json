@@ -1,0 +1,36 @@
+{
+  "name": "agent",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "apps/agent/src",
+  "projectType": "application",
+  "targets": {
+    "build": {
+      "executor": "@nx/js:tsc",
+      "options": {
+        "outputPath": "dist/apps/agent",
+        "main": "apps/agent/src/main.ts",
+        "tsConfig": "apps/agent/tsconfig.json",
+        "assets": []
+      }
+    },
+    "start": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "node -r tsconfig-paths/register dist/apps/agent/main.js"
+      }
+    },
+    "dev": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "npx ts-node-dev --respawn --transpile-only -r tsconfig-paths/register apps/agent/src/main.ts"
+      }
+    },
+    "test": {
+      "executor": "@nx/jest:jest",
+      "options": {
+        "jestConfig": "apps/agent/jest.config.ts"
+      }
+    }
+  },
+  "tags": ["type:app", "scope:agent"]
+}

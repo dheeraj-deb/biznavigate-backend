@@ -1,0 +1,24 @@
+{
+  "name": "lead",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/lead/src",
+  "projectType": "library",
+  "targets": {
+    "build": {
+      "executor": "@nx/js:tsc",
+      "options": {
+        "outputPath": "dist/libs/lead",
+        "main": "libs/lead/src/index.ts",
+        "tsConfig": "libs/lead/tsconfig.lib.json",
+        "assets": []
+      }
+    },
+    "test": {
+      "executor": "@nx/jest:jest",
+      "options": {
+        "jestConfig": "libs/lead/jest.config.ts"
+      }
+    }
+  },
+  "tags": ["type:lib", "scope:lead"]
+}
