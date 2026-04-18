@@ -19,6 +19,7 @@ import { WhatsAppWebhookDto } from './dto/webhook-event.dto';
 import { WebhookValidatorService } from './infrastructure/webhook-validator.service';
 import { WhatsAppTemplatesService } from '../whatsapp-templates/whatsapp-templates.service';
 import { WhatsAppFlowsService } from '../whatsapp-flows/whatsapp-flows.service';
+import { AcknowledgmentService } from '../agent/services/acknowledgment.service';
 
 
 
@@ -41,6 +42,7 @@ export class WhatsAppService {
     private readonly webhookValidator: WebhookValidatorService,
     private readonly whatsappTemplatesService: WhatsAppTemplatesService,
     private readonly _whatsappFlowsService: WhatsAppFlowsService,
+    private readonly acknowledgmentService: AcknowledgmentService,
     @InjectQueue('message-debounce') private readonly debounceQueue: Queue,
   ) { }
 
@@ -465,6 +467,29 @@ export class WhatsAppService {
             removeOnFail: true,
           },
         );
+
+        // Send an immediate human-like acknowledgment while the agent processes.
+        // This fires async — does NOT block the webhook response.
+        const businessType = (account.businesses.business_type ?? 'default').toLowerCase();
+        this.acknowledgmentService.generateAck(userInput, businessType).then(async (ack) => {
+          if (!ack) return;
+          try {
+            await this.sendAgentReply(
+              account.business_id,
+              phoneNumberId,
+              from,
+              ack,
+              {
+                conversationId: conversation.conversation_id,
+                leadId: lead.lead_id,
+                tenantId: account.businesses.tenant_id,
+              },
+            );
+            this.logger.debug(`Ack sent to ${from}: "${ack}"`);
+          } catch (e) {
+            this.logger.warn(`Failed to send ack: ${e.message}`);
+          }
+        });
       }
 
     } catch (error) {

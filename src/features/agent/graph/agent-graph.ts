@@ -2,41 +2,45 @@ import { StateGraph, END } from '@langchain/langgraph';
 import { PostgresSaver } from '@langchain/langgraph-checkpoint-postgres';
 import { AIMessage } from '@langchain/core/messages';
 import { AgentState, AgentStateType } from './agent-state';
-import { makeIntentDetectorNode } from '../nodes/intent-detector.node';
+import { makeTriageNode } from '../nodes/triage.node';
 import { makeToolCallerNode } from '../nodes/tool-caller.node';
 import { makeResponderNode } from '../nodes/responder.node';
-import { buildTools, ToolDeps } from '../tools';
+import { buildToolsForVertical, ToolDeps } from '../tools';
+import { PrismaService } from '../../../prisma/prisma.service';
 
 export type AgentGraphDeps = {
   openaiApiKey: string;
+  databaseUrl: string;
+  prisma: PrismaService;
 } & ToolDeps;
 
-// Intents that need tool calls vs. intents the LLM can answer directly
-const TOOL_INTENTS = new Set(['booking', 'cancellation', 'status', 'payment', 'handoff', 'complaint', 'support']);
+// Intents that require tool calls; others go straight to the responder
+const TOOL_INTENTS = new Set([
+  'browse', 'booking', 'cancellation', 'status', 'payment', 'handoff', 'complaint', 'support',
+]);
 
-function routeAfterIntent(state: AgentStateType): string {
+function routeAfterTriage(state: AgentStateType): string {
   if (TOOL_INTENTS.has(state.intent)) return 'tool_caller';
-  // greeting, faq, complaint, support, handoff, other → responder handles directly
   return 'responder';
 }
 
 function shouldContinueAfterTools(state: AgentStateType): string {
   const last = state.messages.at(-1);
-  // If the last message is a HANDOFF or FLOW signal, go directly to END via responder (which will pass it through)
   if (last instanceof AIMessage) {
     const content = typeof last.content === 'string' ? last.content : '';
     if (content.startsWith('HANDOFF:') || content.startsWith('FLOW:')) return 'responder';
-    // If the LLM returned tool_calls, loop back to execute them
     if (last.tool_calls?.length) return 'tool_caller';
-    // No tool calls — if we still have retries left, loop back (tool_caller handles the nudge)
-    if (!last.tool_calls?.length && state.toolRetries < 1) return 'tool_caller';
   }
   return 'responder';
 }
 
-export async function buildAgentGraph(deps: AgentGraphDeps & { databaseUrl: string }) {
-  const tools = buildTools(deps);
-  const intentDetector = makeIntentDetectorNode(deps.openaiApiKey);
+export async function buildAgentGraph(deps: AgentGraphDeps) {
+  // Build a universal tool set that covers all verticals.
+  // The tool-caller prompt + system prompt adapt based on businessType at runtime.
+  // This means one compiled graph handles every business on the platform.
+  const tools = buildToolsForVertical('default', deps);
+
+  const triage = makeTriageNode(deps.openaiApiKey, deps.prisma);
   const toolCaller = makeToolCallerNode(deps.openaiApiKey, tools);
   const responder = makeResponderNode(deps.openaiApiKey, tools);
 
@@ -46,14 +50,14 @@ export async function buildAgentGraph(deps: AgentGraphDeps & { databaseUrl: stri
       ssl: { rejectUnauthorized: false },
     }),
   );
-  await checkpointer.setup(); // creates langgraph checkpoint tables if they don't exist
+  await checkpointer.setup();
 
   const graph = new StateGraph(AgentState)
-    .addNode('intent_detector', intentDetector)
+    .addNode('triage', triage)
     .addNode('tool_caller', toolCaller)
     .addNode('responder', responder)
-    .addEdge('__start__', 'intent_detector')
-    .addConditionalEdges('intent_detector', routeAfterIntent, {
+    .addEdge('__start__', 'triage')
+    .addConditionalEdges('triage', routeAfterTriage, {
       tool_caller: 'tool_caller',
       responder: 'responder',
     })

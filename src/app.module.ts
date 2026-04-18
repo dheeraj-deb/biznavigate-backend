@@ -46,6 +46,7 @@ import { HumanHandoffModule } from "./features/human-handoff/human-handoff.modul
 import { HotelPricingModule } from "./features/hotel-pricing/hotel-pricing.module";
 import { S3Module } from "./s3/s3.module";
 import { AgentModule } from "./features/agent/agent.module";
+import { GupshupModule } from "./features/gupshup/gupshup.module";
 
 @Module({
   imports: [
@@ -114,6 +115,7 @@ import { AgentModule } from "./features/agent/agent.module";
     InstagramModule,
     S3Module,
     AgentModule,
+    GupshupModule,
     ...(process.env.MONGODB_URI
       ? [CampaignModule, InboxModule, GatewayModule, HumanHandoffModule, WhatsAppModule, ChatWidgetModule, WorkflowsModule, HotelPricingModule]
       : []),

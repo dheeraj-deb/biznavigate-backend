@@ -8,9 +8,11 @@ export const AgentState = Annotation.Root({
   }),
   intent: Annotation<string>(),
   businessId: Annotation<string>(),
+  businessType: Annotation<string>(), // e.g. 'hospitality', 'retail', 'ecommerce', 'services'
   leadId: Annotation<string | undefined>(),
   phone: Annotation<string>(),
   toolRetries: Annotation<number>({ reducer: (_, update: number) => update, default: () => 0 }),
+  turnCount: Annotation<number>({ reducer: (_, update: number) => update, default: () => 0 }),
 });
 
 export type AgentStateType = typeof AgentState.State;

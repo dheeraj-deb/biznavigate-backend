@@ -45,7 +45,9 @@ export class AuthService {
     // Find admin role outside transaction (read-only, no need to lock)
     const roles = await this.prisma.roles.findMany();
     console.log('[SIGNUP] Found roles:', roles.map(r => r.role_name));
-    const adminRole = roles.find((r) => r.role_name.toUpperCase() === "ADMIN");
+    const adminRole = roles.find((r) =>
+      ['admin', 'administrator'].includes(r.role_name.toLowerCase()),
+    );
 
     if (!adminRole) {
       throw new BadRequestException("Admin role not found in system");

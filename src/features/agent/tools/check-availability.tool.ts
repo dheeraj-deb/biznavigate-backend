@@ -2,10 +2,13 @@ import { tool } from '@langchain/core/tools';
 import { z } from 'zod';
 import { CatalogService } from '../../catalog/catalog.service';
 import { resolveDate, isValidDate } from '../utils/date-resolver';
+import { getRunContext } from '../context/agent-run-context';
+import { encodeFlow } from '../types/handoff';
 
 export function makeCheckAvailabilityTool(catalogService: CatalogService) {
   return tool(
-    async ({ businessId, checkIn, checkOut }) => {
+    async ({ checkIn, checkOut }) => {
+      const { businessId } = getRunContext();
       const resolvedCheckIn = resolveDate(checkIn);
       const resolvedCheckOut = resolveDate(checkOut);
 
@@ -32,13 +35,12 @@ export function makeCheckAvailabilityTool(catalogService: CatalogService) {
       }
 
       // Signal the debounce processor to trigger the hospitality flow
-      return `FLOW:${JSON.stringify({ businessId, checkIn: resolvedCheckIn, checkOut: resolvedCheckOut })}`;
+      return encodeFlow({ businessId, flowType: 'availability', checkIn: resolvedCheckIn, checkOut: resolvedCheckOut });
     },
     {
       name: 'check_availability',
       description: 'Check available rooms/services for given check-in and check-out dates',
       schema: z.object({
-        businessId: z.string().describe('The business ID'),
         checkIn: z.string().describe('Check-in date in YYYY-MM-DD format'),
         checkOut: z.string().describe('Check-out date in YYYY-MM-DD format'),
       }),

@@ -1,7 +1,9 @@
 import { makeCheckAvailabilityTool } from './check-availability.tool';
+import { makeBrowseCatalogTool } from './browse-catalog.tool';
+import { makeCheckSlotsTool } from './check-slots.tool';
 import { makeCancelBookingTool } from './cancel-booking.tool';
-import { getBookingTool } from './get-booking.tool';
-import { getPaymentTool } from './get-payment.tool';
+import { makeGetBookingTool } from './get-booking.tool';
+import { makeGetPaymentTool } from './get-payment.tool';
 import { faqTool } from './faq.tool';
 import { handoffTool } from './handoff.tool';
 import { CatalogService } from '../../catalog/catalog.service';
@@ -12,13 +14,47 @@ export interface ToolDeps {
   prisma: PrismaService;
 }
 
-export function buildTools(deps: ToolDeps) {
+// Shared tools available to every specialist agent
+function sharedTools(deps: ToolDeps) {
   return [
-    makeCheckAvailabilityTool(deps.catalogService),               // availability
-    getBookingTool,                                                // status    (stub)
-    makeCancelBookingTool(deps.prisma),                           // cancellation
-    getPaymentTool,                                               // payment   (stub)
-    faqTool,                                                      // faq       (stub)
-    handoffTool,                                                  // handoff
+    makeCancelBookingTool(deps.prisma),
+    makeGetBookingTool(deps.prisma),
+    makeGetPaymentTool(deps.prisma),
+    faqTool,
+    handoffTool,
   ];
+}
+
+// Tool set per business vertical — only expose what's relevant so the LLM isn't confused
+export function buildToolsForVertical(vertical: string, deps: ToolDeps) {
+  const shared = sharedTools(deps);
+
+  switch (vertical.toLowerCase()) {
+    case 'hospitality':
+      return [makeCheckAvailabilityTool(deps.catalogService), ...shared];
+
+    case 'retail':
+    case 'ecommerce':
+      return [makeBrowseCatalogTool(deps.catalogService), ...shared];
+
+    case 'services':
+    case 'healthcare':
+    case 'education':
+    case 'consulting':
+      return [makeCheckSlotsTool(deps.catalogService), makeBrowseCatalogTool(deps.catalogService), ...shared];
+
+    default:
+      // Generic: give all catalog tools so the agent can figure it out
+      return [
+        makeCheckAvailabilityTool(deps.catalogService),
+        makeBrowseCatalogTool(deps.catalogService),
+        makeCheckSlotsTool(deps.catalogService),
+        ...shared,
+      ];
+  }
+}
+
+// Legacy alias used by existing agent-graph.ts — builds tools for hospitality (default)
+export function buildTools(deps: ToolDeps) {
+  return buildToolsForVertical('hospitality', deps);
 }

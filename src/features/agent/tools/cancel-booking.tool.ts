@@ -1,10 +1,12 @@
 import { tool } from '@langchain/core/tools';
 import { z } from 'zod';
 import { PrismaService } from '../../../prisma/prisma.service';
+import { getRunContext } from '../context/agent-run-context';
 
 export function makeCancelBookingTool(prisma: PrismaService) {
   return tool(
-    async ({ bookingId, phone, businessId }) => {
+    async ({ bookingId, phone }) => {
+      const { businessId } = getRunContext();
       let resolvedBookingId = bookingId;
 
       // If no bookingId provided, look up the most recent pending/confirmed order for this phone
@@ -67,7 +69,6 @@ export function makeCancelBookingTool(prisma: PrismaService) {
       name: 'cancel_booking',
       description: 'Cancel an existing booking by booking ID or customer phone number',
       schema: z.object({
-        businessId: z.string().describe('The business ID'),
         bookingId: z.string().optional().describe('Booking ID to cancel'),
         phone: z.string().optional().describe('Customer phone number — used to look up the booking if no ID given'),
       }),
