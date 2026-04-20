@@ -47,11 +47,8 @@ import { HotelPricingModule } from "./features/hotel-pricing/hotel-pricing.modul
 import { S3Module } from "./s3/s3.module";
 import { AgentModule } from "./features/agent/agent.module";
 import { GupshupModule } from "./features/gupshup/gupshup.module";
-<<<<<<< HEAD
 import { InventoryModule } from "./features/inventory/inventory.module";
-=======
 import { RagModule } from "./features/rag/rag.module";
->>>>>>> daeb707a0b823904f997bd55116c7a725f7ad9c3
 
 @Module({
   imports: [
@@ -121,11 +118,8 @@ import { RagModule } from "./features/rag/rag.module";
     S3Module,
     AgentModule,
     GupshupModule,
-<<<<<<< HEAD
     InventoryModule,
-=======
     RagModule,
->>>>>>> daeb707a0b823904f997bd55116c7a725f7ad9c3
     ...(process.env.MONGODB_URI
       ? [CampaignModule, InboxModule, GatewayModule, HumanHandoffModule, WhatsAppModule, ChatWidgetModule, WorkflowsModule, HotelPricingModule]
       : []),

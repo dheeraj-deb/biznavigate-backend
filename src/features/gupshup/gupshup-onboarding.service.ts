@@ -34,7 +34,7 @@ export class GupshupOnboardingService implements OnModuleInit {
       await this.subscribeWebhook();
       this.logger.log("Gupshup webhook subscription registered");
     } catch (e) {
-      this.logger.error("Failed to register Gupshup webhook", e.message);
+      this.logger.error("Failed to register Gupshup webhook", e?.response?.data ?? e.message);
     }
   }
 
