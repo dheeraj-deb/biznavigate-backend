@@ -4,14 +4,16 @@ import { makeCheckSlotsTool } from './check-slots.tool';
 import { makeCancelBookingTool } from './cancel-booking.tool';
 import { makeGetBookingTool } from './get-booking.tool';
 import { makeGetPaymentTool } from './get-payment.tool';
-import { faqTool } from './faq.tool';
+import { makeFaqTool } from './faq.tool';
 import { handoffTool } from './handoff.tool';
 import { CatalogService } from '../../catalog/catalog.service';
 import { PrismaService } from '../../../prisma/prisma.service';
+import { RagService } from '../../rag/rag.service';
 
 export interface ToolDeps {
   catalogService: CatalogService;
   prisma: PrismaService;
+  ragService: RagService;
 }
 
 // Shared tools available to every specialist agent
@@ -20,7 +22,7 @@ function sharedTools(deps: ToolDeps) {
     makeCancelBookingTool(deps.prisma),
     makeGetBookingTool(deps.prisma),
     makeGetPaymentTool(deps.prisma),
-    faqTool,
+    makeFaqTool(deps.ragService),
     handoffTool,
   ];
 }
@@ -44,7 +46,6 @@ export function buildToolsForVertical(vertical: string, deps: ToolDeps) {
       return [makeCheckSlotsTool(deps.catalogService), makeBrowseCatalogTool(deps.catalogService), ...shared];
 
     default:
-      // Generic: give all catalog tools so the agent can figure it out
       return [
         makeCheckAvailabilityTool(deps.catalogService),
         makeBrowseCatalogTool(deps.catalogService),
