@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(xargs ls:*)",
+      "Bash(npx ts-node -e ':*)",
+      "Bash(npm install:*)"
+    ]
+  }
+}

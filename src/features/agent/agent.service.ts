@@ -5,6 +5,7 @@ import { HumanMessage } from '@langchain/core/messages';
 import { buildAgentGraph } from './graph/agent-graph';
 import { CatalogService } from '../catalog/catalog.service';
 import { PrismaService } from '../../prisma/prisma.service';
+import { RagService } from '../rag/rag.service';
 import { agentRunContextStorage } from './context/agent-run-context';
 import { GenerationHandle } from './types/generation-handle';
 import { decodeHandoff } from './types/handoff';
@@ -31,10 +32,12 @@ export class AgentService implements OnModuleInit {
     private readonly catalogService: CatalogService,
     private readonly prisma: PrismaService,
     private readonly eventEmitter: EventEmitter2,
+    private readonly ragService: RagService,
   ) {}
 
   async onModuleInit() {
     const openaiApiKey = this.configService.get<string>('OPENAI_API_KEY') ?? '';
+<<<<<<< HEAD
     try {
       this.graph = await buildAgentGraph({
         openaiApiKey,
@@ -45,6 +48,17 @@ export class AgentService implements OnModuleInit {
     } catch (err: any) {
       this.logger.warn(`Agent graph init failed (agent unavailable): ${err?.message}`);
     }
+=======
+    const databaseUrl = this.configService.get<string>('DATABASE_URL') ?? '';
+    this.graph = await buildAgentGraph({
+      openaiApiKey,
+      databaseUrl,
+      catalogService: this.catalogService,
+      prisma: this.prisma,
+      ragService: this.ragService,
+    });
+    this.logger.log('Agent graph initialized');
+>>>>>>> daeb707a0b823904f997bd55116c7a725f7ad9c3
   }
 
   async processMessage(text: string, ctx: AgentContext): Promise<string | null> {
