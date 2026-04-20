@@ -125,7 +125,7 @@ export class CustomerAnalyticsService {
     const topCustomersData = await this.prisma.$queryRaw<
       Array<{
         customer_id: string;
-        customer_name: string;
+        name: string;
         email: string;
         total_orders: bigint;
         total_spent: number;
@@ -134,7 +134,7 @@ export class CustomerAnalyticsService {
     >`
       SELECT
         c.customer_id,
-        c.customer_name,
+        c.name,
         c.email,
         COUNT(o.order_id)::BIGINT as total_orders,
         SUM(o.total_amount)::DECIMAL as total_spent,
@@ -145,7 +145,7 @@ export class CustomerAnalyticsService {
         AND o.status != 'cancelled'
       WHERE c.business_id = ${businessId}::uuid
         AND c.tenant_id = ${tenantId}::uuid
-      GROUP BY c.customer_id, c.customer_name, c.email
+      GROUP BY c.customer_id, c.name, c.email
       HAVING COUNT(o.order_id) > 0
       ORDER BY total_spent DESC
       LIMIT 10
@@ -165,7 +165,7 @@ export class CustomerAnalyticsService {
       averageLifetimeValue,
       topCustomers: topCustomersData.map((c) => ({
         customerId: c.customer_id,
-        customerName: c.customer_name,
+        customerName: c.name,
         totalOrders: Number(c.total_orders),
         totalSpent: Number(c.total_spent),
         lastOrderDate: c.last_order_date,
@@ -387,7 +387,7 @@ export class CustomerAnalyticsService {
     >`
       SELECT
         c.customer_id,
-        c.customer_name,
+        c.name,
         MAX(o.created_at) as last_order_date,
         COUNT(o.order_id)::BIGINT as total_orders,
         SUM(o.total_amount)::DECIMAL as total_spent,
@@ -398,7 +398,7 @@ export class CustomerAnalyticsService {
         AND o.status != 'cancelled'
       WHERE c.business_id = ${businessId}::uuid
         AND c.tenant_id = ${tenantId}::uuid
-      GROUP BY c.customer_id, c.customer_name
+      GROUP BY c.customer_id, c.name
       HAVING MAX(o.created_at) < ${inactiveThreshold}::timestamp
       ORDER BY total_spent DESC
     `;
@@ -417,7 +417,7 @@ export class CustomerAnalyticsService {
           : 0,
       churnedCustomers: churnedCustomers.map((c) => ({
         customerId: c.customer_id,
-        customerName: c.customer_name,
+        customerName: (c as any).name,
         lastOrderDate: c.last_order_date,
         totalOrders: Number(c.total_orders),
         totalSpent: Number(c.total_spent),

@@ -7,6 +7,7 @@ import {
   Body,
   Param,
   Query,
+  Req,
   UseGuards,
   HttpCode,
   HttpStatus,
@@ -24,12 +25,36 @@ import { User } from '../../../common/decorators';
 export class LeadController {
   constructor(private readonly leadService: LeadService) {}
 
+  // ─── Create ──────────────────────────────────────────────────
+
+  @Post()
+  @HttpCode(HttpStatus.CREATED)
+  @ApiOperation({ summary: 'Create a new lead' })
+  createLead(
+    @Body() body: {
+      businessId: string;
+      tenantId: string;
+      name?: string;
+      phone?: string;
+      email?: string;
+      channel?: string;
+      source?: string;
+      status?: string;
+      context?: any;
+      tags?: string[];
+      quotedAmount?: number;
+    },
+  ) {
+    return this.leadService.createLead(body);
+  }
+
   // ─── List & detail ───────────────────────────────────────────
 
   @Get()
   @ApiOperation({ summary: 'List leads with filters. Returns { data, meta }.' })
   getLeads(
-    @Query('businessId') businessId: string,
+    @Req() req: any,
+    @Query('businessId') businessId?: string,
     @Query('status') status?: string,
     @Query('channel') channel?: string,
     @Query('source') source?: string,
@@ -41,18 +66,21 @@ export class LeadController {
     @Query('page') page?: number,
     @Query('limit') limit?: number,
   ) {
-    return this.leadService.getLeads(businessId, { status, channel, source, assignedTo, search, intent_type, sortBy, sortOrder, page, limit });
+    const bId = businessId ?? req.user?.business_id;
+    return this.leadService.getLeads(bId, { status, channel, source, assignedTo, search, intent_type, sortBy, sortOrder, page, limit });
   }
 
   @Get('stats/overview')
   @ApiOperation({ summary: 'Lead funnel stats for a date range. Returns totals, by_status, by_source, by_quality.' })
   getStatsOverview(
-    @Query('businessId') businessId: string,
+    @Req() req: any,
+    @Query('businessId') businessId?: string,
     @Query('from') from?: string,
     @Query('to') to?: string,
     @Query('intent_type') intent_type?: string,
   ) {
-    return this.leadService.getStatsOverview(businessId, { from, to, intent_type });
+    const bId = businessId ?? req.user?.business_id;
+    return this.leadService.getStatsOverview(bId, { from, to, intent_type });
   }
 
   @Get(':leadId')
@@ -160,47 +188,57 @@ export class LeadController {
   @Get('dashboard/daily-overview')
   @ApiOperation({ summary: 'Owner home screen: today\'s enquiries, bookings, revenue' })
   getDailyOverview(
-    @Query('businessId') businessId: string,
+    @Req() req: any,
+    @Query('businessId') businessId?: string,
     @Query('date') date?: string,
   ) {
-    return this.leadService.getDailyOverview(businessId, date ? new Date(date) : undefined);
+    const bId = businessId ?? req.user?.business_id;
+    return this.leadService.getDailyOverview(bId, date ? new Date(date) : undefined);
   }
 
   @Get('dashboard/needs-attention')
   @ApiOperation({ summary: 'Leads that need immediate owner follow-up' })
   getNeedsAttention(
-    @Query('businessId') businessId: string,
-    @Query('limit') limit?: number,
+    @Req() req: any,
+    @Query('businessId') businessId?: string,
+    @Query('limit') limit?: string,
   ) {
-    return this.leadService.getNeedsAttention(businessId, limit);
+    const bId = businessId ?? req.user?.business_id;
+    return this.leadService.getNeedsAttention(bId, limit ? Number(limit) : 20);
   }
 
   @Get('dashboard/channel-analytics')
   @ApiOperation({ summary: 'Conversion rates per channel and source' })
   getChannelAnalytics(
-    @Query('businessId') businessId: string,
-    @Query('days') days?: number,
+    @Req() req: any,
+    @Query('businessId') businessId?: string,
+    @Query('days') days?: string,
   ) {
-    return this.leadService.getChannelAnalytics(businessId, days ?? 30);
+    const bId = businessId ?? req.user?.business_id;
+    return this.leadService.getChannelAnalytics(bId, days ? Number(days) : 30);
   }
 
   @Get('dashboard/demand-signals')
   @ApiOperation({ summary: 'Services/products asked but unavailable — missed revenue' })
   getDemandSignals(
-    @Query('businessId') businessId: string,
-    @Query('days') days?: number,
+    @Req() req: any,
+    @Query('businessId') businessId?: string,
+    @Query('days') days?: string,
   ) {
-    return this.leadService.getDemandSignals(businessId, days ?? 7);
+    const bId = businessId ?? req.user?.business_id;
+    return this.leadService.getDemandSignals(bId, days ? Number(days) : 7);
   }
 
   @Get('dashboard/followup-queue')
   @ApiOperation({ summary: 'Staff follow-up queue with call script hints' })
   getFollowupQueue(
-    @Query('businessId') businessId: string,
+    @Req() req: any,
+    @Query('businessId') businessId?: string,
     @Query('assignedTo') assignedTo?: string,
-    @Query('limit') limit?: number,
+    @Query('limit') limit?: string,
   ) {
-    return this.leadService.getFollowupQueue(businessId, assignedTo, limit);
+    const bId = businessId ?? req.user?.business_id;
+    return this.leadService.getFollowupQueue(bId, assignedTo, limit ? Number(limit) : 30);
   }
 
   // ─── Inbox (MongoDB) ──────────────────────────────────────────

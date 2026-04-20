@@ -35,14 +35,16 @@ export class AgentService implements OnModuleInit {
 
   async onModuleInit() {
     const openaiApiKey = this.configService.get<string>('OPENAI_API_KEY') ?? '';
-    const databaseUrl = this.configService.get<string>('DATABASE_URL') ?? '';
-    this.graph = await buildAgentGraph({
-      openaiApiKey,
-      databaseUrl,
-      catalogService: this.catalogService,
-      prisma: this.prisma,
-    });
-    this.logger.log('Agent graph initialized');
+    try {
+      this.graph = await buildAgentGraph({
+        openaiApiKey,
+        catalogService: this.catalogService,
+        prisma: this.prisma,
+      });
+      this.logger.log('Agent graph initialized');
+    } catch (err: any) {
+      this.logger.warn(`Agent graph init failed (agent unavailable): ${err?.message}`);
+    }
   }
 
   async processMessage(text: string, ctx: AgentContext): Promise<string | null> {

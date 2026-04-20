@@ -16,13 +16,20 @@ export class GupshupOnboardingService implements OnModuleInit {
   private cachedAppToken: string | null = null;
   private appTokenExpiresAt: number = 0;
 
+  private readonly configured: boolean;
+
   constructor(private readonly config: ConfigService) {
-    this.appId = this.config.getOrThrow<string>("GUPSHUP_APP_ID");
-    this.email = this.config.getOrThrow<string>("GUPSHUP_EMAIL");
-    this.password = this.config.getOrThrow<string>("GUPSHUP_PASSWORD");
+    this.appId = this.config.get<string>("GUPSHUP_APP_ID") ?? "";
+    this.email = this.config.get<string>("GUPSHUP_EMAIL") ?? "";
+    this.password = this.config.get<string>("GUPSHUP_PASSWORD") ?? "";
+    this.configured = !!(this.appId && this.email && this.password);
+    if (!this.configured) {
+      this.logger.warn("Gupshup credentials not configured. Gupshup features will be disabled.");
+    }
   }
 
   async onModuleInit() {
+    if (!this.configured) return;
     try {
       await this.subscribeWebhook();
       this.logger.log("Gupshup webhook subscription registered");

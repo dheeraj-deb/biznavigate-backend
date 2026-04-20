@@ -2,8 +2,9 @@ import { IsString, IsOptional, IsNumber, IsBoolean, Min } from 'class-validator'
 import { Type } from 'class-transformer';
 
 export class QueryCatalogDto {
+  @IsOptional()
   @IsString()
-  businessId: string;
+  businessId?: string;
 
   @IsOptional()
   @IsString()

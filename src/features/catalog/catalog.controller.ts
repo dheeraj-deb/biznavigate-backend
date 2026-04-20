@@ -67,14 +67,16 @@ export class CatalogController {
   // ─── Chatbot / agent query ────────────────────────────────────────────────
 
   @Get('query')
-  queryForAgent(@Query() filters: QueryCatalogDto) {
+  queryForAgent(@Req() req: any, @Query() filters: QueryCatalogDto) {
+    filters.businessId ??= req.user?.business_id;
     return this.catalogService.queryForAgent(filters);
   }
 
   // ─── Catalog CRUD ─────────────────────────────────────────────────────────
 
   @Get()
-  getItems(@Query() filters: QueryCatalogDto) {
+  getItems(@Req() req: any, @Query() filters: QueryCatalogDto) {
+    filters.businessId ??= req.user?.business_id;
     return this.catalogService.getItems(filters);
   }
 

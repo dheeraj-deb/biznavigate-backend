@@ -5,6 +5,21 @@
 
 services:
 
+  # ── Redis (required by BullMQ) ────────────────────────────────────────────
+  redis:
+    image: redis:7-alpine
+    container_name: biznavigate-redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    networks:
+      - biznavigate-network
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "5m"
+        max-file: "2"
+
   # ── Zookeeper (required by Kafka) ─────────────────────────────────────────
   zookeeper:
     image: confluentinc/cp-zookeeper:7.5.0

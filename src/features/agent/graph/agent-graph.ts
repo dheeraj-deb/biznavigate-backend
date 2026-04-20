@@ -1,5 +1,4 @@
-import { StateGraph, END } from '@langchain/langgraph';
-import { PostgresSaver } from '@langchain/langgraph-checkpoint-postgres';
+import { StateGraph, END, MemorySaver } from '@langchain/langgraph';
 import { AIMessage } from '@langchain/core/messages';
 import { AgentState, AgentStateType } from './agent-state';
 import { makeTriageNode } from '../nodes/triage.node';
@@ -10,7 +9,6 @@ import { PrismaService } from '../../../prisma/prisma.service';
 
 export type AgentGraphDeps = {
   openaiApiKey: string;
-  databaseUrl: string;
   prisma: PrismaService;
 } & ToolDeps;
 
@@ -44,13 +42,9 @@ export async function buildAgentGraph(deps: AgentGraphDeps) {
   const toolCaller = makeToolCallerNode(deps.openaiApiKey, tools);
   const responder = makeResponderNode(deps.openaiApiKey, tools);
 
-  const checkpointer = new PostgresSaver(
-    new (await import('pg')).Pool({
-      connectionString: deps.databaseUrl,
-      ssl: { rejectUnauthorized: false },
-    }),
-  );
-  await checkpointer.setup();
+  // MemorySaver avoids pg.Pool which contaminates PgCat transaction-mode backends
+  // with prepared statements (PGCAT_XXXX), breaking all other Prisma queries.
+  const checkpointer = new MemorySaver();
 
   const graph = new StateGraph(AgentState)
     .addNode('triage', triage)

@@ -175,6 +175,43 @@ export class LeadService {
   }
 
   // ─────────────────────────────────────────────────────────────
+  // Create lead (PostgreSQL)
+  // ─────────────────────────────────────────────────────────────
+
+  async createLead(dto: {
+    businessId: string;
+    tenantId: string;
+    name?: string;
+    phone?: string;
+    email?: string;
+    channel?: string;
+    source?: string;
+    status?: string;
+    context?: any;
+    tags?: string[];
+    quotedAmount?: number;
+  }) {
+    return this.prisma.leads.create({
+      data: {
+        lead_id: uuidv4(),
+        business_id: dto.businessId,
+        tenant_id: dto.tenantId,
+        name: dto.name,
+        phone: dto.phone,
+        email: dto.email,
+        channel: (dto.channel ?? 'whatsapp') as any,
+        source: dto.source ?? 'direct',
+        status: dto.status ?? 'new',
+        context: dto.context ?? undefined,
+        tags: dto.tags ?? [],
+        quoted_amount: dto.quotedAmount ?? undefined,
+        created_at: new Date(),
+        updated_at: new Date(),
+      },
+    });
+  }
+
+  // ─────────────────────────────────────────────────────────────
   // Status & context updates (PostgreSQL)
   // ─────────────────────────────────────────────────────────────
 
@@ -524,6 +561,7 @@ export class LeadService {
   }
 
   async getChannelAnalytics(businessId: string, days = 30) {
+    const safeDays = Math.max(1, Number(days) || 30);
     return this.prisma.$queryRaw<any[]>`
       SELECT
         channel,
@@ -537,7 +575,7 @@ export class LeadService {
         COALESCE(SUM(converted_value) FILTER (WHERE status = 'won'), 0)     AS revenue
       FROM leads
       WHERE business_id = ${businessId}::uuid
-        AND created_at > NOW() - (${days} || ' days')::interval
+        AND created_at > NOW() - (${safeDays} * INTERVAL '1 day')
         AND deleted_at IS NULL
       GROUP BY channel, source
       ORDER BY leads DESC
@@ -545,6 +583,7 @@ export class LeadService {
   }
 
   async getDemandSignals(businessId: string, days = 7) {
+    const safeDays = Math.max(1, Number(days) || 7);
     return this.prisma.$queryRaw<any[]>`
       SELECT
         data->>'service_name' AS service_name,
@@ -555,35 +594,47 @@ export class LeadService {
       FROM lead_events
       WHERE business_id = ${businessId}::uuid
         AND type = 'demand_miss'
-        AND created_at > NOW() - (${days} || ' days')::interval
+        AND created_at > NOW() - (${safeDays} * INTERVAL '1 day')
       GROUP BY data->>'service_name', data->>'service_id'
       ORDER BY miss_count DESC
     `;
   }
 
   async getFollowupQueue(businessId: string, assignedTo?: string, limit = 30) {
+    const safeLimit = Math.max(1, Math.min(100, Number(limit) || 30));
     const where: any = { business_id: businessId, done: false };
     if (assignedTo) where.assigned_to = assignedTo;
 
     const followups = await this.prisma.lead_followups.findMany({
       where,
       orderBy: { scheduled_at: 'asc' },
-      take: limit,
-      include: { lead: true },
+      take: safeLimit,
     });
 
-    return followups.map((f) => ({
-      followup_id: f.followup_id,
-      lead_id: f.lead_id,
-      note: f.note,
-      scheduled_at: f.scheduled_at,
-      assigned_to: f.assigned_to,
-      customer_name: (f as any).lead?.name,
-      phone: (f as any).lead?.phone,
-      context: (f as any).lead?.context,
-      quoted_amount: (f as any).lead?.quoted_amount,
-      call_script_hint: this.buildCallScriptHint((f as any).lead),
-    }));
+    if (followups.length === 0) return [];
+
+    const leadIds = followups.map((f) => f.lead_id);
+    const leads = await this.prisma.leads.findMany({
+      where: { lead_id: { in: leadIds } },
+      select: { lead_id: true, name: true, phone: true, context: true, quoted_amount: true },
+    });
+    const leadMap = new Map(leads.map((l) => [l.lead_id, l]));
+
+    return followups.map((f) => {
+      const lead = leadMap.get(f.lead_id);
+      return {
+        followup_id: f.followup_id,
+        lead_id: f.lead_id,
+        note: f.note,
+        scheduled_at: f.scheduled_at,
+        assigned_to: f.assigned_to,
+        customer_name: lead?.name ?? null,
+        phone: lead?.phone ?? null,
+        context: lead?.context ?? null,
+        quoted_amount: lead?.quoted_amount ? Number(lead.quoted_amount) : null,
+        call_script_hint: this.buildCallScriptHint(lead),
+      };
+    });
   }
 
   async scheduleFollowup(params: {

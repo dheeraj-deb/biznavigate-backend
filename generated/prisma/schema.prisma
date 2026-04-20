@@ -1,6 +1,7 @@
 generator client {
-  provider = "prisma-client-js"
-  output   = "../generated/prisma"
+  provider        = "prisma-client-js"
+  output          = "../generated/prisma"
+  previewFeatures = ["driverAdapters"]
 }
 
 datasource db {
@@ -28,6 +29,7 @@ model businesses {
   business_workflows       business_workflows[]
   tenants                  tenants                    @relation(fields: [tenant_id], references: [tenant_id], onDelete: Cascade)
   carts                    carts[]
+  catalog_items            catalog_items[]
   leads                    leads[]
   notification_messages    notification_messages[]    @relation("notification_messages_business")
   notification_preferences notification_preferences[] @relation("notification_prefs_business")
@@ -37,7 +39,6 @@ model businesses {
   social_accounts          social_accounts[]
   users                    users[]
   workflow_executions      workflow_executions[]
-  catalog_items            catalog_items[]
 }
 
 model business_employees {
@@ -169,8 +170,8 @@ model users {
   password_reset_token       String?          @db.VarChar(255)
   two_factor_enabled         Boolean?         @default(false)
   two_factor_secret          String?          @db.VarChar(255)
-  leads_assigned             leads[]          @relation("lead_agent")
   lead_followups             lead_followups[] @relation("followup_assignee")
+  leads_assigned             leads[]          @relation("lead_agent")
   notifications              notifications[]
   businesses                 businesses       @relation(fields: [business_id], references: [business_id], onDelete: Cascade)
   roles                      roles            @relation(fields: [role_id], references: [role_id])
@@ -181,52 +182,42 @@ model users {
 /// source:  "direct" | "instagram" (attribution — Instagram redirects to WhatsApp, not a separate channel)
 /// status:  "new" | "active" | "quoted" | "booked" | "won" | "lost"
 model leads {
-  lead_id     String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  business_id String @db.Uuid
-  tenant_id   String @db.Uuid
-
-  name  String? @db.VarChar(200)
-  phone String? @db.VarChar(20)
-  email String? @db.VarChar(255)
-
-  channel     String  @db.VarChar(20)
-  source      String  @default("direct") @db.VarChar(20)
-  platform_id String? @db.VarChar(255)
-
-  status      String  @default("new") @db.VarChar(20)
-  lost_reason String? @db.VarChar(50)
-
+  lead_id             String                @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  business_id         String                @db.Uuid
+  tenant_id           String                @db.Uuid
+  name                String?               @db.VarChar(200)
+  phone               String?               @db.VarChar(20)
+  email               String?               @db.VarChar(255)
+  channel             String                @db.VarChar(20)
+  source              String                @default("direct") @db.VarChar(20)
+  platform_id         String?               @db.VarChar(255)
+  status              String                @default("new") @db.VarChar(20)
+  lost_reason         String?               @db.VarChar(50)
   /// AI-extracted business-type context
   /// Resort:  { type:"resort",  check_in, check_out, nights, guests, room_pref, budget }
   /// Camp:    { type:"camp",    event, date, date_is_fixed:true, group_size, package, food_pref }
   /// Product: { type:"product", items:[{id,name,variant,qty,price}], pincode, budget }
-  context Json?
-
-  quoted_amount   Decimal?  @db.Decimal(10, 2)
-  quoted_at       DateTime? @db.Timestamptz(6)
-  converted_value Decimal?  @db.Decimal(10, 2)
-  converted_at    DateTime? @db.Timestamptz(6)
-
+  context             Json?
+  quoted_amount       Decimal?              @db.Decimal(10, 2)
+  quoted_at           DateTime?             @db.Timestamptz(6)
+  converted_value     Decimal?              @db.Decimal(10, 2)
+  converted_at        DateTime?             @db.Timestamptz(6)
   /// PostgreSQL array — GIN indexed, no join table needed
-  tags String[] @default([])
-
-  assigned_to String?   @db.Uuid
-  followup_at DateTime? @db.Timestamptz(6)
-
-  deleted_at DateTime? @db.Timestamptz(6)
-  created_at DateTime  @default(now()) @db.Timestamptz(6)
-  updated_at DateTime  @default(now()) @db.Timestamptz(6)
-
-  businesses          businesses            @relation(fields: [business_id], references: [business_id])
-  tenants             tenants               @relation(fields: [tenant_id], references: [tenant_id])
-  assigned_user       users?                @relation("lead_agent", fields: [assigned_to], references: [user_id])
-  events              lead_events[]
-  followups           lead_followups[]
+  tags                String[]              @default([])
+  assigned_to         String?               @db.Uuid
+  followup_at         DateTime?             @db.Timestamptz(6)
+  deleted_at          DateTime?             @db.Timestamptz(6)
+  created_at          DateTime              @default(now()) @db.Timestamptz(6)
+  updated_at          DateTime              @default(now()) @db.Timestamptz(6)
   cart_reservations   cart_reservations[]
   carts               carts[]
+  events              lead_events[]
+  followups           lead_followups[]
+  assigned_user       users?                @relation("lead_agent", fields: [assigned_to], references: [user_id])
+  businesses          businesses            @relation(fields: [business_id], references: [business_id])
+  tenants             tenants               @relation(fields: [tenant_id], references: [tenant_id])
   orders              orders[]
   workflow_executions workflow_executions[]
-  // Run after migration: CREATE INDEX idx_leads_tags ON leads USING GIN(tags);
 
   @@index([business_id, status], map: "idx_leads_business_status")
   @@index([business_id, channel, source], map: "idx_leads_business_channel_source")
@@ -243,14 +234,12 @@ model leads {
 /// type: "status_changed" | "quoted" | "booked" | "won" | "lost" | "note" | "assigned" | "followup_set" | "demand_miss" | "handoff"
 /// actor: "ai" | "human" | "system"
 model lead_events {
-  event_id    String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  lead_id     String @db.Uuid
-  business_id String @db.Uuid
-
-  type     String  @db.VarChar(30)
-  actor    String  @db.VarChar(10)
-  actor_id String? @db.Uuid
-
+  event_id    String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  lead_id     String   @db.Uuid
+  business_id String   @db.Uuid
+  type        String   @db.VarChar(30)
+  actor       String   @db.VarChar(10)
+  actor_id    String?  @db.Uuid
   /// Type-specific payload:
   /// status_changed: { from, to }
   /// quoted:         { amount, service, service_id }
@@ -258,11 +247,9 @@ model lead_events {
   /// lost:           { reason, note }
   /// demand_miss:    { service_id, service_name, date, guests }
   /// assigned:       { to_user_id, to_user_name }
-  data Json?
-
-  created_at DateTime @default(now()) @db.Timestamptz(6)
-
-  leads leads @relation(fields: [lead_id], references: [lead_id], onDelete: Cascade)
+  data        Json?
+  created_at  DateTime @default(now()) @db.Timestamptz(6)
+  leads       leads    @relation(fields: [lead_id], references: [lead_id], onDelete: Cascade)
 
   @@index([lead_id, created_at(sort: Desc)], map: "idx_lead_events_lead_created")
   @@index([business_id, type], map: "idx_lead_events_business_type")
@@ -271,30 +258,24 @@ model lead_events {
 
 /// Staff follow-up task list — replaces lead_followups + tasks
 model lead_followups {
-  followup_id String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  lead_id     String @db.Uuid
-  business_id String @db.Uuid
-
+  followup_id  String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  lead_id      String    @db.Uuid
+  business_id  String    @db.Uuid
   note         String?
-  scheduled_at DateTime @db.Timestamptz(6)
-  assigned_to  String   @db.Uuid
-
-  done      Boolean   @default(false)
-  done_at   DateTime? @db.Timestamptz(6)
-  done_note String?
-
-  created_by String?  @db.Uuid
-  created_at DateTime @default(now()) @db.Timestamptz(6)
-
-  lead     leads @relation(fields: [lead_id], references: [lead_id], onDelete: Cascade)
-  assignee users @relation("followup_assignee", fields: [assigned_to], references: [user_id])
+  scheduled_at DateTime  @db.Timestamptz(6)
+  assigned_to  String    @db.Uuid
+  done         Boolean   @default(false)
+  done_at      DateTime? @db.Timestamptz(6)
+  done_note    String?
+  created_by   String?   @db.Uuid
+  created_at   DateTime  @default(now()) @db.Timestamptz(6)
+  assignee     users     @relation("followup_assignee", fields: [assigned_to], references: [user_id])
+  lead         leads     @relation(fields: [lead_id], references: [lead_id], onDelete: Cascade)
 
   @@index([lead_id], map: "idx_lead_followups_lead_id")
   @@index([assigned_to, done, scheduled_at], map: "idx_lead_followups_assignee_done_scheduled")
   @@index([business_id, done, scheduled_at], map: "idx_lead_followups_business_done_scheduled")
 }
-
-/// Products - physical products and courses
 
 /// Customers - end customers who purchase products/services
 model customers {
@@ -400,8 +381,8 @@ model order_items {
   snapshot      Json?
   created_at    DateTime       @default(now()) @db.Timestamptz(6)
   updated_at    DateTime       @default(now()) @db.Timestamptz(6)
-  orders        orders         @relation(fields: [order_id], references: [order_id], onDelete: Cascade)
   catalog_item  catalog_items  @relation(fields: [item_id], references: [item_id])
+  orders        orders         @relation(fields: [order_id], references: [order_id], onDelete: Cascade)
   item_variant  item_variants? @relation(fields: [variant_id], references: [variant_id])
 
   @@index([order_id], map: "idx_order_items_order_id")
@@ -419,8 +400,8 @@ model cart_reservations {
   status         String        @default("active") @db.VarChar(20)
   created_at     DateTime      @default(now()) @db.Timestamptz(6)
   updated_at     DateTime      @default(now()) @db.Timestamptz(6)
-  leads          leads         @relation(fields: [lead_id], references: [lead_id], onDelete: Cascade)
   catalog_item   catalog_items @relation(fields: [item_id], references: [item_id])
+  leads          leads         @relation(fields: [lead_id], references: [lead_id], onDelete: Cascade)
 
   @@index([lead_id], map: "idx_cart_reservations_lead_id")
   @@index([item_id], map: "idx_cart_reservations_item_id")
@@ -889,8 +870,6 @@ model campaign_analytics {
   @@index([business_id], map: "idx_analytics_business")
 }
 
-// ─── Hotel Pricing Engine ────────────────────────────────────────────────────
-
 model hotel_pricing_recommendations {
   id                   String                   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   hotel_id             String                   @db.VarChar(50)
@@ -947,58 +926,42 @@ model hotel_pricing_notifications {
   @@index([hotel_id])
 }
 
-// ─────────────────────────────────────────────────────────────────────────────
-// INVENTORY: SERVICES (Hotels, Resorts, Events, Camping)
-// ─────────────────────────────────────────────────────────────────────────────
-
-/// Services - Bookable items: rooms, villas, dormitories, events, camping spots
-// ─── Unified Catalog ──────────────────────────────────────────────────────────
-
 /// catalog_items - single table for all sellable items across all business types
 /// item_type: "physical_product" | "accommodation" | "activity" | "service"
 model catalog_items {
-  item_id     String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  business_id String @db.Uuid
-  tenant_id   String @db.Uuid
-
+  item_id           String              @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  business_id       String              @db.Uuid
+  tenant_id         String              @db.Uuid
   /// "physical_product" | "accommodation" | "activity" | "service"
-  item_type String @db.VarChar(30)
-
-  name        String  @db.VarChar(255)
-  description String? @db.Text
-  category    String? @db.VarChar(100)
-
-  base_price    Decimal  @db.Decimal(10, 2)
-  compare_price Decimal? @db.Decimal(10, 2)
-  currency      String   @default("INR") @db.VarChar(10)
-
+  item_type         String              @db.VarChar(30)
+  name              String              @db.VarChar(255)
+  description       String?
+  category          String?             @db.VarChar(100)
+  base_price        Decimal             @db.Decimal(10, 2)
+  compare_price     Decimal?            @db.Decimal(10, 2)
+  currency          String              @default("INR") @db.VarChar(10)
   /// stock count — used for physical_product only (null for accommodation/activity/service)
-  stock_quantity Int?
-
-  primary_image_url String? @db.VarChar(500)
+  stock_quantity    Int?
+  primary_image_url String?             @db.VarChar(500)
   image_urls        Json?
-
   /// Type-specific fields stored as JSONB — GIN indexed after migration
   /// accommodation: { capacity, total_units, check_in_time, check_out_time, bed_type, has_ac, has_wifi, has_pool, meal_plan, extra_guest_charge }
   /// activity:      { total_slots, group_size_min, group_size_max, duration_hours, duration_days, difficulty, includes, excludes, location, start_times }
   /// service:       { duration_minutes, concurrent_slots, requires_appointment }
   /// physical_product: { brand, condition, weight, dimensions }
-  attributes Json?
-
+  attributes        Json?
   /// AI-generated tags for chatbot fuzzy search — GIN indexed after migration
-  ai_tags String[] @default([])
-
-  is_active  Boolean   @default(true)
-  deleted_at DateTime? @db.Timestamptz(6)
-  created_at DateTime  @default(now()) @db.Timestamptz(6)
-  updated_at DateTime  @default(now()) @db.Timestamptz(6)
-
-  businesses        businesses          @relation(fields: [business_id], references: [business_id], onDelete: Cascade)
-  variants          item_variants[]
-  availability      item_availability[]
-  order_items       order_items[]
+  ai_tags           String[]            @default([])
+  is_active         Boolean             @default(true)
+  deleted_at        DateTime?           @db.Timestamptz(6)
+  created_at        DateTime            @default(now()) @db.Timestamptz(6)
+  updated_at        DateTime            @default(now()) @db.Timestamptz(6)
   cart_items        cart_items[]
   cart_reservations cart_reservations[]
+  businesses        businesses          @relation(fields: [business_id], references: [business_id], onDelete: Cascade)
+  availability      item_availability[]
+  variants          item_variants[]
+  order_items       order_items[]
 
   @@index([business_id, item_type, is_active])
   @@index([business_id, created_at(sort: Desc)])
@@ -1007,25 +970,21 @@ model catalog_items {
 
 /// item_variants - size/color/SKU variants for physical_product items only
 model item_variants {
-  variant_id  String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  item_id     String @db.Uuid
-  business_id String @db.Uuid
-
-  name           String  @db.VarChar(100)
-  sku            String? @db.VarChar(100)
-  price          Decimal @db.Decimal(10, 2)
-  stock_quantity Int     @default(0)
-
+  variant_id     String        @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  item_id        String        @db.Uuid
+  business_id    String        @db.Uuid
+  name           String        @db.VarChar(100)
+  sku            String?       @db.VarChar(100)
+  price          Decimal       @db.Decimal(10, 2)
+  stock_quantity Int           @default(0)
   /// e.g. { "color": "Red", "size": "M" } — GIN indexed via attributes on parent
-  options Json?
-
-  is_active  Boolean  @default(true)
-  created_at DateTime @default(now()) @db.Timestamptz(6)
-  updated_at DateTime @default(now()) @db.Timestamptz(6)
-
-  item        catalog_items @relation(fields: [item_id], references: [item_id], onDelete: Cascade)
-  order_items order_items[]
-  cart_items  cart_items[]
+  options        Json?
+  is_active      Boolean       @default(true)
+  created_at     DateTime      @default(now()) @db.Timestamptz(6)
+  updated_at     DateTime      @default(now()) @db.Timestamptz(6)
+  cart_items     cart_items[]
+  item           catalog_items @relation(fields: [item_id], references: [item_id], onDelete: Cascade)
+  order_items    order_items[]
 
   @@index([item_id])
   @@index([business_id])
@@ -1033,24 +992,60 @@ model item_variants {
 
 /// item_availability - date-based slot availability for accommodation, activity, service items
 model item_availability {
-  avail_id    String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  item_id     String @db.Uuid
-  business_id String @db.Uuid
-
-  date         DateTime @db.Date
-  total_slots  Int
-  booked_slots Int      @default(0)
-
+  avail_id       String        @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  item_id        String        @db.Uuid
+  business_id    String        @db.Uuid
+  date           DateTime      @db.Date
+  total_slots    Int
+  booked_slots   Int           @default(0)
   /// date-specific price override (e.g. weekend surge) — null means use base_price
-  price_override Decimal? @db.Decimal(10, 2)
-  is_blocked     Boolean  @default(false)
-
-  created_at DateTime @default(now()) @db.Timestamptz(6)
-  updated_at DateTime @default(now()) @db.Timestamptz(6)
-
-  item catalog_items @relation(fields: [item_id], references: [item_id], onDelete: Cascade)
+  price_override Decimal?      @db.Decimal(10, 2)
+  is_blocked     Boolean       @default(false)
+  created_at     DateTime      @default(now()) @db.Timestamptz(6)
+  updated_at     DateTime      @default(now()) @db.Timestamptz(6)
+  item           catalog_items @relation(fields: [item_id], references: [item_id], onDelete: Cascade)
 
   @@unique([item_id, date])
   @@index([item_id, date])
   @@index([business_id, date])
+}
+
+model checkpoint_blobs {
+  thread_id     String
+  checkpoint_ns String @default("")
+  channel       String
+  version       String
+  type          String
+  blob          Bytes?
+
+  @@id([thread_id, checkpoint_ns, channel, version])
+}
+
+model checkpoint_migrations {
+  v Int @id
+}
+
+model checkpoint_writes {
+  thread_id     String
+  checkpoint_ns String  @default("")
+  checkpoint_id String
+  task_id       String
+  idx           Int
+  channel       String
+  type          String?
+  blob          Bytes
+
+  @@id([thread_id, checkpoint_ns, checkpoint_id, task_id, idx])
+}
+
+model checkpoints {
+  thread_id            String
+  checkpoint_ns        String  @default("")
+  checkpoint_id        String
+  parent_checkpoint_id String?
+  type                 String?
+  checkpoint           Json
+  metadata             Json    @default("{}")
+
+  @@id([thread_id, checkpoint_ns, checkpoint_id])
 }

@@ -794,6 +794,40 @@ exports.Prisma.Item_availabilityScalarFieldEnum = {
   updated_at: 'updated_at'
 };
 
+exports.Prisma.Checkpoint_blobsScalarFieldEnum = {
+  thread_id: 'thread_id',
+  checkpoint_ns: 'checkpoint_ns',
+  channel: 'channel',
+  version: 'version',
+  type: 'type',
+  blob: 'blob'
+};
+
+exports.Prisma.Checkpoint_migrationsScalarFieldEnum = {
+  v: 'v'
+};
+
+exports.Prisma.Checkpoint_writesScalarFieldEnum = {
+  thread_id: 'thread_id',
+  checkpoint_ns: 'checkpoint_ns',
+  checkpoint_id: 'checkpoint_id',
+  task_id: 'task_id',
+  idx: 'idx',
+  channel: 'channel',
+  type: 'type',
+  blob: 'blob'
+};
+
+exports.Prisma.CheckpointsScalarFieldEnum = {
+  thread_id: 'thread_id',
+  checkpoint_ns: 'checkpoint_ns',
+  checkpoint_id: 'checkpoint_id',
+  parent_checkpoint_id: 'parent_checkpoint_id',
+  type: 'type',
+  checkpoint: 'checkpoint',
+  metadata: 'metadata'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -865,7 +899,11 @@ exports.Prisma.ModelName = {
   hotel_pricing_notifications: 'hotel_pricing_notifications',
   catalog_items: 'catalog_items',
   item_variants: 'item_variants',
-  item_availability: 'item_availability'
+  item_availability: 'item_availability',
+  checkpoint_blobs: 'checkpoint_blobs',
+  checkpoint_migrations: 'checkpoint_migrations',
+  checkpoint_writes: 'checkpoint_writes',
+  checkpoints: 'checkpoints'
 };
 
 /**
