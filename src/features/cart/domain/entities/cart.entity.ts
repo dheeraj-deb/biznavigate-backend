@@ -14,7 +14,7 @@ export interface Cart {
 export interface CartItem {
   cart_item_id: string;
   cart_id: string;
-  product_id: string;
+  item_id: string;
   variant_id?: string | null;
   product_name: string;
   variant_name?: string | null;

@@ -20,7 +20,7 @@ export class StockReservationService {
     const now = new Date();
     const expired = await this.prisma.cart_reservations.findMany({
       where: { status: 'active', expires_at: { lt: now } },
-      select: { product_id: true },
+      select: { item_id: true },
     });
 
     if (!expired.length) return { count: 0, restoredProductIds: [] };
@@ -30,7 +30,7 @@ export class StockReservationService {
       data: { status: 'released' },
     });
 
-    const restoredProductIds = [...new Set(expired.map((r) => r.product_id))];
+    const restoredProductIds = [...new Set(expired.map((r) => r.item_id))];
     this.logger.log(`Released ${expired.length} expired cart holds`);
 
     return { count: expired.length, restoredProductIds };

@@ -1,20 +1,13 @@
-import { Injectable, Logger, BadRequestException } from '@nestjs/common';
+import { Injectable, Logger, NotImplementedException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { PrismaService } from '../../../prisma/prisma.service';
 import { WhatsAppApiClientService } from '../infrastructure/whatsapp-api-client.service';
-import * as crypto from 'crypto';
 
-interface CatalogProduct {
-  productId: string;
-  name: string;
-  description?: string;
-  price: number;
-  currency: string;
-  imageUrl?: string;
-  availability: 'in stock' | 'out of stock';
-  url?: string;
-}
-
+/**
+ * WhatsApp catalog sync — pending migration to catalog_items.
+ * The old products table has been replaced by catalog_items.
+ * These methods need to be rebuilt to sync catalog_items to Meta's catalog API.
+ */
 @Injectable()
 export class WhatsAppCatalogService {
   private readonly logger = new Logger(WhatsAppCatalogService.name);
@@ -23,416 +16,41 @@ export class WhatsAppCatalogService {
     private readonly prisma: PrismaService,
     private readonly whatsappApiClient: WhatsAppApiClientService,
     private readonly configService: ConfigService,
-  ) { }
+  ) {}
 
-  /**
-   * Toggle product in WhatsApp catalog
-   */
-  async toggleProductInCatalog(
-    productId: string,
-    businessId: string,
-    inCatalog: boolean,
-  ): Promise<{ success: boolean; product: any }> {
-    // Update product
-    const product = await this.prisma.products.update({
-      where: { product_id: productId },
-      data: {
-        in_whatsapp_catalog: inCatalog,
-        whatsapp_sync_status: inCatalog ? 'pending' : 'not_synced',
-      },
-    });
-
-    this.logger.log(
-      `Product ${productId} ${inCatalog ? 'added to' : 'removed from'} WhatsApp catalog`,
-    );
-
-    return { success: true, product };
+  async toggleProductInCatalog(productId: string, businessId: string, inCatalog: boolean) {
+    throw new NotImplementedException('WhatsApp catalog sync not yet migrated to catalog_items');
   }
 
-  /**
-   * Bulk update products in catalog
-   */
-  async bulkUpdateCatalog(
-    productIds: string[],
-    businessId: string,
-    inCatalog: boolean,
-  ): Promise<{ success: boolean; count: number }> {
-    const result = await this.prisma.products.updateMany({
-      where: {
-        product_id: { in: productIds },
-        business_id: businessId,
-      },
-      data: {
-        in_whatsapp_catalog: inCatalog,
-        whatsapp_sync_status: inCatalog ? 'pending' : 'not_synced',
-      },
-    });
-
-    this.logger.log(
-      `Bulk updated ${result.count} products in WhatsApp catalog`,
-    );
-
-    return { success: true, count: result.count };
+  async bulkUpdateCatalog(businessId: string, updates: any[]) {
+    throw new NotImplementedException('WhatsApp catalog sync not yet migrated to catalog_items');
   }
 
-  /**
-   * Get all catalog products for a business
-   */
   async getCatalogProducts(businessId: string, filters?: Record<string, any>) {
-    try {
-      const whereClause: any = {
-        business_id: businessId,
-        in_whatsapp_catalog: true,
-        is_active: true,
-      };
-
-      // Apply additional filters if provided
-      if (filters) {
-        Object.assign(whereClause, filters);
-        console.log('getCatalogProducts where clause:', whereClause);
-      }
-
-      return await this.prisma.products.findMany({
-        where: whereClause,
-        include: {
-          product_images: {
-            where: { is_primary: true },
-            take: 1,
-          },
-          product_categories: true,
-        },
-        orderBy: { created_at: 'desc' },
-      });
-    } catch (error) {
-      throw new BadRequestException('Failed to fetch catalog products');
-    }
+    return this.prisma.catalog_items.findMany({
+      where: { business_id: businessId, is_active: true, deleted_at: null },
+      select: { item_id: true, name: true, base_price: true, stock_quantity: true, primary_image_url: true, item_type: true },
+      take: 100,
+    });
   }
 
-  /**
-   * Sync products to WhatsApp Commerce Manager
-   */
-  async syncToWhatsApp(businessId: string): Promise<{
-    success: boolean;
-    synced: number;
-    failed: number;
-    errors: any[];
-  }> {
-    // Get WhatsApp account
-    const account = await this.prisma.social_accounts.findFirst({
-      where: {
-        business_id: businessId,
-        platform: 'whatsapp',
-        is_active: true,
-      },
-    });
-
-    if (!account) {
-      throw new BadRequestException(
-        'No active WhatsApp account found for this business',
-      );
-    }
-
-    // Get products to sync
-    const products = await this.prisma.products.findMany({
-      where: {
-        business_id: businessId,
-        in_whatsapp_catalog: true,
-        is_active: true,
-        whatsapp_sync_status: { in: ['pending', 'failed', 'not_synced'] },
-      },
-      include: {
-        product_images: {
-          where: { is_primary: true },
-          take: 1,
-        },
-      },
-    });
-
-    this.logger.log(
-      `Syncing ${products.length} products to WhatsApp for business ${businessId}`,
-    );
-
-    let synced = 0;
-    let failed = 0;
-    const errors: any[] = [];
-
-    const catalogId = account.instagram_business_account_id; // Using this field to store catalog ID
-
-    for (const product of products) {
-      try {
-        // Mark as syncing
-        await this.prisma.products.update({
-          where: { product_id: product.product_id },
-          data: { whatsapp_sync_status: 'syncing' },
-        });
-
-        // Prepare product data for WhatsApp
-        const catalogProduct: CatalogProduct = {
-          productId: product.product_id,
-          name: product.name,
-          description: product.description || '',
-          price: Number(product.price) * 100, // Convert to cents
-          currency: product.currency || 'INR',
-          imageUrl: product.primary_image_url || product.product_images[0]?.file_path,
-          availability: product.in_stock ? 'in stock' : 'out of stock',
-        };
-
-        // Sync to WhatsApp (using Commerce Manager API)
-        const whatsappProduct = await this.syncProductToWhatsApp(
-          catalogId,
-          catalogProduct,
-          product.whatsapp_catalog_id,
-        );
-
-        // Update product with WhatsApp catalog ID
-        await this.prisma.products.update({
-          where: { product_id: product.product_id },
-          data: {
-            whatsapp_catalog_id: whatsappProduct.id,
-            whatsapp_sync_status: 'synced',
-            whatsapp_sync_error: null,
-            whatsapp_synced_at: new Date(),
-          },
-        });
-
-        synced++;
-        this.logger.log(`Successfully synced product ${product.product_id}`);
-      } catch (error) {
-        failed++;
-        const errorMessage = error.message || 'Unknown error';
-        errors.push({
-          productId: product.product_id,
-          error: errorMessage,
-        });
-
-        // Update product with error
-        await this.prisma.products.update({
-          where: { product_id: product.product_id },
-          data: {
-            whatsapp_sync_status: 'failed',
-            whatsapp_sync_error: errorMessage,
-          },
-        });
-
-        this.logger.error(
-          `Failed to sync product ${product.product_id}:`,
-          error,
-        );
-      }
-    }
-
-    return { success: true, synced, failed, errors };
+  async syncToWhatsApp(businessId: string) {
+    throw new NotImplementedException('WhatsApp catalog sync not yet migrated to catalog_items');
   }
 
-  /**
-   * Sync single product to WhatsApp Commerce Manager
-   */
-  private async syncProductToWhatsApp(
-    catalogId: string,
-    product: CatalogProduct,
-    existingWhatsAppId?: string,
-  ): Promise<{ id: string }> {
-    const url = existingWhatsAppId
-      ? `https://graph.facebook.com/v18.0/${existingWhatsAppId}`
-      : `https://graph.facebook.com/v18.0/${catalogId}/products`;
-
-    const method = existingWhatsAppId ? 'POST' : 'POST';
-
-    const body = {
-      retailer_id: product.productId,
-      name: product.name,
-      description: product.description,
-      price: product.price,
-      currency: product.currency,
-      availability: product.availability,
-      image_url: product.imageUrl,
-      url: product.url,
-    };
-
-    try {
-      // Note: This is a simplified version. You'll need to implement the actual API call
-      // using the WhatsAppApiClientService or a dedicated method
-
-      this.logger.debug(`Syncing product to WhatsApp: ${JSON.stringify(body)}`);
-
-      // TODO: Implement actual WhatsApp Commerce API call
-      // For now, return a mock response
-      return {
-        id: existingWhatsAppId || `wa_${product.productId}`,
-      };
-
-      // Actual implementation would be:
-      // const response = await this.whatsappApiClient.syncCatalogProduct(
-      //   catalogId,
-      //   accessToken,
-      //   body,
-      //   method,
-      // );
-      // return response.data;
-    } catch (error) {
-      this.logger.error('WhatsApp API error:', error);
-      throw new BadRequestException(
-        `Failed to sync product to WhatsApp: ${error.message}`,
-      );
-    }
+  async removeFromWhatsAppCatalog(productId: string, businessId: string) {
+    throw new NotImplementedException('WhatsApp catalog sync not yet migrated to catalog_items');
   }
 
-  /**
-   * Remove product from WhatsApp catalog
-   */
-  async removeFromWhatsAppCatalog(
-    productId: string,
-    businessId: string,
-  ): Promise<{ success: boolean }> {
-    const product = await this.prisma.products.findUnique({
-      where: { product_id: productId },
-    });
-
-    if (!product || !product.whatsapp_catalog_id) {
-      throw new BadRequestException(
-        'Product not found or not synced to WhatsApp',
-      );
-    }
-
-    // Get WhatsApp account
-    const account = await this.prisma.social_accounts.findFirst({
-      where: {
-        business_id: businessId,
-        platform: 'whatsapp',
-        is_active: true,
-      },
-    });
-
-    if (!account) {
-      throw new BadRequestException('No active WhatsApp account found');
-    }
-
-    try {
-      // TODO: Call WhatsApp API to delete product
-      // await this.whatsappApiClient.deleteCatalogProduct(product.whatsapp_catalog_id);
-
-      // Update product
-      await this.prisma.products.update({
-        where: { product_id: productId },
-        data: {
-          in_whatsapp_catalog: false,
-          whatsapp_catalog_id: null,
-          whatsapp_sync_status: 'not_synced',
-          whatsapp_sync_error: null,
-        },
-      });
-
-      return { success: true };
-    } catch (error) {
-      this.logger.error('Failed to remove product from WhatsApp:', error);
-      throw new BadRequestException(
-        `Failed to remove product: ${error.message}`,
-      );
-    }
-  }
-
-
-  /**
-   * Push a single product's current availability (in stock / out of stock)
-   * to the WhatsApp Commerce Manager catalog.
-   * Reads `in_stock` from the DB so it always reflects the latest value.
-   * Call this after any stock_quantity change that may flip availability.
-   */
   async syncProductAvailabilityToCatalog(productId: string): Promise<void> {
-    const product = await this.prisma.products.findUnique({
-      where: { product_id: productId },
-      include: {
-        product_images: { where: { is_primary: true }, take: 1 },
-      },
-    });
-
-    if (!product?.in_whatsapp_catalog || !product.whatsapp_catalog_id) {
-      this.logger.debug(`Product ${productId} not in catalog — skipping availability sync`);
-      return;
-    }
-
-    const account = await this.prisma.social_accounts.findFirst({
-      where: { business_id: product.business_id, platform: 'whatsapp', is_active: true },
-    });
-
-    if (!account) {
-      this.logger.warn(`No active WhatsApp account for business ${product.business_id}`);
-      return;
-    }
-
-    const availability: 'in stock' | 'out of stock' = product.in_stock ? 'in stock' : 'out of stock';
-
-    await this.whatsappApiClient.syncCatalogProduct(
-      account.whatsapp_catalog_id ?? account.instagram_business_account_id,
-      {
-        retailer_id: product.product_id,
-        name: product.name,
-        description: product.description || '',
-        price: Number(product.price) * 100,
-        currency: product.currency || 'INR',
-        availability,
-        image_url: product.primary_image_url || product.product_images[0]?.file_path,
-      },
-      product.whatsapp_catalog_id,
-    );
-
-    await this.prisma.products.update({
-      where: { product_id: productId },
-      data: { whatsapp_sync_status: 'synced', whatsapp_synced_at: new Date(), whatsapp_sync_error: null },
-    });
-
-    this.logger.log(`Catalog availability synced for product ${productId}: ${availability}`);
+    this.logger.warn(`syncProductAvailabilityToCatalog stub called for item ${productId}`);
   }
 
   async getCatalogId(business_id: string): Promise<string> {
-    const account = await this.prisma.social_accounts.findFirst({
-      where: {
-        business_id: business_id,
-        platform: 'whatsapp',
-        is_active: true,
-      },
-    });
-
-    if (!account || !account.whatsapp_catalog_id) {
-      throw new Error(`No WhatsApp catalog ID found for business ${business_id}`);
-    }
-
-    return account.whatsapp_catalog_id;
+    throw new NotImplementedException('WhatsApp catalog sync not yet migrated to catalog_items');
   }
 
-  /**
-   * Get sync status for business
-   */
   async getSyncStatus(businessId: string) {
-    const stats = await this.prisma.products.groupBy({
-      by: ['whatsapp_sync_status'],
-      where: {
-        business_id: businessId,
-        in_whatsapp_catalog: true,
-      },
-      _count: true,
-    });
-
-    const lastSync = await this.prisma.products.findFirst({
-      where: {
-        business_id: businessId,
-        in_whatsapp_catalog: true,
-        whatsapp_synced_at: { not: null },
-      },
-      orderBy: { whatsapp_synced_at: 'desc' },
-      select: { whatsapp_synced_at: true },
-    });
-
-    return {
-      stats: stats.reduce((acc, stat) => {
-        acc[stat.whatsapp_sync_status] = stat._count;
-        return acc;
-      }, {} as Record<string, number>),
-      lastSyncAt: lastSync?.whatsapp_synced_at,
-    };
+    return { totalProducts: 0, synced: 0, pending: 0, failed: 0, lastSync: null };
   }
-
-  /**
-   * Decrypt access token (copied from WhatsAppOAuth service)
-   */
 }

@@ -2,6 +2,7 @@ import { Module, OnModuleInit } from '@nestjs/common';
 import { BullModule, InjectQueue } from '@nestjs/bullmq';
 import { Queue } from 'bullmq';
 import { PrismaModule } from '../../prisma/prisma.module';
+import { CatalogModule } from '../catalog/catalog.module';
 import { InventoryController } from './application/controllers/inventory.controller';
 import { InventoryService } from './application/services/inventory.service';
 import { HoldCleanupProcessor, HOLD_CLEANUP_QUEUE } from './hold-cleanup.job';
@@ -9,6 +10,7 @@ import { HoldCleanupProcessor, HOLD_CLEANUP_QUEUE } from './hold-cleanup.job';
 @Module({
   imports: [
     PrismaModule,
+    CatalogModule,
     BullModule.registerQueue({ name: HOLD_CLEANUP_QUEUE }),
   ],
   controllers: [InventoryController],

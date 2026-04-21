@@ -71,7 +71,7 @@ export class BusinessKPIsService {
       >`
         SELECT
           0::DECIMAL as avg_inventory_value,
-          COALESCE(SUM(oi.price * oi.quantity), 0)::DECIMAL as total_sold_value
+          COALESCE(SUM(oi.unit_price * oi.quantity), 0)::DECIMAL as total_sold_value
         FROM order_items oi
         JOIN orders o ON oi.order_id = o.order_id
         WHERE o.business_id = ${businessId}::uuid
@@ -223,6 +223,29 @@ export class BusinessKPIsService {
         conversionChange: pct(conversionRate, prevConvRate),
       },
     };
+  }
+
+  async getOccupancy(businessId: string, tenantId: string, days: number = 30) {
+    const startDate = new Date(Date.now() - days * 24 * 60 * 60 * 1000);
+    const rows = await this.prisma.$queryRaw<
+      Array<{ date: string; bookings: number; revenue: number }>
+    >`
+      SELECT
+        TO_CHAR(created_at, 'YYYY-MM-DD') as date,
+        COUNT(*)::INTEGER as bookings,
+        COALESCE(SUM(total_amount), 0)::DECIMAL as revenue
+      FROM orders
+      WHERE business_id = ${businessId}::uuid
+        AND created_at >= ${startDate}::timestamp
+        AND status != 'cancelled'
+      GROUP BY TO_CHAR(created_at, 'YYYY-MM-DD')
+      ORDER BY date ASC
+    `;
+    return rows.map((r) => ({
+      date: r.date,
+      bookings: r.bookings,
+      revenue: Number(r.revenue),
+    }));
   }
 
   async getLeadFunnel(businessId: string) {

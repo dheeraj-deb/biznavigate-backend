@@ -152,6 +152,16 @@ export class AnalyticsController {
     return this.businessKPIsService.getLeadFunnel(businessId);
   }
 
+  @Get('occupancy')
+  @ApiOperation({ summary: 'Daily bookings and revenue for occupancy chart widget' })
+  getOccupancy(
+    @Query('businessId') businessId: string,
+    @Query('tenantId') tenantId: string,
+    @Query('days') days?: string,
+  ) {
+    return this.businessKPIsService.getOccupancy(businessId, tenantId, days ? Number(days) : 30);
+  }
+
   /**
    * Get inventory analytics
    */
@@ -292,14 +302,14 @@ export class AnalyticsController {
   async getCustomerChurnAnalysis(
     @Query('businessId') businessId: string,
     @Query('tenantId') tenantId: string,
-    @Query('inactiveDays') inactiveDays: number = 90,
+    @Query('inactiveDays') inactiveDays?: string,
   ) {
     this.logger.log(`Churn analysis requested for business ${businessId}`);
 
     return this.customerAnalyticsService.getCustomerChurnAnalysis(
       businessId,
       tenantId,
-      Number(inactiveDays),
+      Number(inactiveDays || '90'),
     );
   }
 

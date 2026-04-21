@@ -110,7 +110,7 @@ export class SalesAnalyticsService {
 
     // Format daily revenue
     const dailyRevenue = dailyStats.map((stat) => ({
-      date: stat.date.toISOString().split('T')[0],
+      date: String(stat.date).split('T')[0],
       revenue: Number(stat.revenue),
       orders: stat.orders,
     }));
@@ -147,34 +147,34 @@ export class SalesAnalyticsService {
 
     const topProducts = await this.prisma.$queryRaw<
       Array<{
-        product_id: string;
-        product_name: string;
+        item_id: string;
+        name: string;
         quantity_sold: bigint;
         revenue: number;
         order_count: bigint;
       }>
     >`
       SELECT
-        p.product_id,
-        p.product_name,
+        p.item_id,
+        p.name,
         SUM(oi.quantity)::BIGINT as quantity_sold,
-        SUM(oi.price * oi.quantity)::DECIMAL as revenue,
+        SUM(oi.unit_price * oi.quantity)::DECIMAL as revenue,
         COUNT(DISTINCT o.order_id)::BIGINT as order_count
       FROM order_items oi
       JOIN orders o ON oi.order_id = o.order_id
-      JOIN products p ON oi.product_id = p.product_id
+      JOIN catalog_items p ON oi.item_id = p.item_id
       WHERE o.business_id = ${businessId}::uuid
         AND o.created_at >= ${startDate}::timestamp
         AND o.created_at <= ${endDate}::timestamp
         AND o.status != 'cancelled'
-      GROUP BY p.product_id, p.product_name
+      GROUP BY p.item_id, p.name
       ORDER BY quantity_sold DESC
       LIMIT ${limit}
     `;
 
     return topProducts.map((product) => ({
-      productId: product.product_id,
-      productName: product.product_name,
+      productId: product.item_id,
+      productName: product.name,
       quantitySold: Number(product.quantity_sold),
       revenue: Number(product.revenue),
       orderCount: Number(product.order_count),

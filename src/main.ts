@@ -6,6 +6,30 @@ import * as express from "express";
 import { join } from "path";
 import helmet from "helmet";
 
+// postgres.js queues socket writes via setImmediate. When PgCat terminates a
+// connection (idle_in_transaction_session_timeout) between the queue and the
+// flush, the socket reference becomes null and nextWrite crashes the process.
+// This guard catches only that specific error so the crash is swallowed and
+// the connection is discarded; all other uncaught exceptions still exit.
+process.on("uncaughtException", (err) => {
+  if (
+    err instanceof TypeError &&
+    err.message.includes("null") &&
+    err.stack?.includes("nextWrite")
+  ) {
+    return; // postgres.js stale-socket write — safe to ignore
+  }
+  // PgCat transaction-mode pooler: stale prepared statement on a recycled backend.
+  // Happens with pg (node-postgres) Pool in background. Log and ignore — the pool
+  // will recover by getting a fresh connection on the next request.
+  if ((err as any)?.code === "26000") {
+    console.warn("PgCat stale prepared statement (ignored):", err.message);
+    return;
+  }
+  console.error("Uncaught exception:", err);
+  process.exit(1);
+});
+
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
     bodyParser: false, // Disable default body parser

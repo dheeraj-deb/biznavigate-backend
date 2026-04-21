@@ -137,7 +137,7 @@ export class ProductController {
     const result = await this.productService.bulkCreate(bulkUploadDto);
     return {
       totalProcessed: bulkUploadDto.products.length,
-      successCount: result.success,
+      successCount: result.created,
       failedCount: result.failed,
       errors: result.errors,
     };
