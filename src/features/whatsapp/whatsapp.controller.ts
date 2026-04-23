@@ -30,6 +30,7 @@ import {
   GetAccountsDto,
 } from './dto/whatsapp-auth.dto';
 import { WhatsAppSignatureGuard } from './guards/whatsapp-signature.guard';
+import { GupshupOnboardingService } from '../gupshup/gupshup-onboarding.service';
 
 @ApiTags('WhatsApp')
 @Controller('whatsapp')
@@ -39,6 +40,7 @@ export class WhatsAppController {
   constructor(
     private readonly whatsappService: WhatsAppService,
     private readonly webhookValidator: WebhookValidatorService,
+    private readonly gupshupOnboarding: GupshupOnboardingService,
   ) { }
 
   // ==================== Account Management ====================
@@ -196,5 +198,46 @@ export class WhatsAppController {
     );
   }
 
+  // ==================== Gupshup Live Event ====================
+
+  /**
+   * Receives Gupshup's "docker-status-event" live-event webhook.
+   * Gupshup POSTs here when a WABA app has finished provisioning and gone live.
+   * This triggers Step 4 (webhook subscription) and marks the account active.
+   *
+   * Route: POST /whatsapp/gupshup/live-event
+   * No auth guard — Gupshup calls this without a JWT.
+   */
+  @Post('gupshup/live-event')
+  @HttpCode(HttpStatus.OK)
+  @ApiOperation({
+    summary: 'Gupshup live-event callback (TPP hosted embed flow)',
+    description: 'Called by Gupshup when a WABA app goes live. Triggers Step 4 webhook subscription.',
+  })
+  async handleGupshupLiveEvent(@Body() body: any) {
+    this.logger.log(`[GupshupLiveEvent] Received: ${JSON.stringify(body)}`);
+
+    // Only process the docker-status-event with status=live
+    const type = body?.type;
+    const innerType = body?.payload?.type;
+    const innerStatus = body?.payload?.payload?.status;
+
+    if (type !== 'onboarding-event' || innerType !== 'docker-status-event' || innerStatus !== 'live') {
+      this.logger.log(`[GupshupLiveEvent] Ignoring non-live event: type=${type} innerType=${innerType} innerStatus=${innerStatus}`);
+      return { received: true };
+    }
+
+    const waId: string | undefined = body?.payload?.payload?.waId;
+    const appId: string | undefined = body?.appId;
+    const phone: string | undefined = body?.phone;
+
+    setImmediate(() =>
+      this.gupshupOnboarding
+        .handleLiveEvent({ appId, phone, waId })
+        .catch((err) => this.logger.error('[GupshupLiveEvent] Handler error:', err?.message)),
+    );
+
+    return { received: true };
+  }
 
 }

@@ -23,7 +23,7 @@ export class WhatsAppOAuthController {
   constructor(
     private readonly oauthService: WhatsAppOAuthService,
     private readonly configService: ConfigService,
-  ) {}
+  ) { }
 
   /**
    * Frontend calls this to get the Facebook OAuth URL
@@ -62,12 +62,12 @@ export class WhatsAppOAuthController {
   @ApiBearerAuth()
   @ApiOperation({ summary: 'Handle WhatsApp Embedded Signup code from frontend' })
   async handleEmbeddedCallback(
-    @Body() body: { code: string; businessId: string; wabaId?: string; phoneNumberId?: string },
+    @Body() body: { code: string; businessId: string; waba_id: string, phone_number_id: string, whatsapp_business_id: string },
   ) {
     if (!body.code || !body.businessId) {
       throw new BadRequestException('code and businessId are required');
     }
-    const result = await this.oauthService.handleEmbeddedCallback(body.code, body.businessId, body.wabaId, body.phoneNumberId);
+    const result = await this.oauthService.handleEmbeddedCallback(body.code, body.businessId, body.waba_id, body.phone_number_id, body.whatsapp_business_id);
     return { success: true, data: result };
   }
 

@@ -112,12 +112,18 @@ model social_accounts {
   username                      String?           @db.VarChar(255)
   instagram_catalog_id          String?           @db.VarChar(255)
   whatsapp_catalog_id           String?           @db.VarChar(255)
+  /// Gupshup app UUID assigned by the /partner/tpp/app API (Step 1 of TPP onboarding)
+  gupshup_app_id                String?           @db.VarChar(255)
+  /// TPP onboarding state: "pending" | "live" | "error"
+  gupshup_app_status            String?           @db.VarChar(50)
   instagram_media               instagram_media[]
   businesses                    businesses        @relation(fields: [business_id], references: [business_id], onDelete: Cascade, onUpdate: NoAction)
 
   @@index([business_id], map: "idx_social_accounts_business_id")
   @@index([platform_user_id], map: "idx_social_accounts_platform_user")
+  @@index([gupshup_app_id], map: "idx_social_accounts_gupshup_app_id")
 }
+
 
 model subscription_plans {
   subscription_plan_id String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
