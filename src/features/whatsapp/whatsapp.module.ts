@@ -23,6 +23,7 @@ import { GatewayModule } from '../inbox/gateway/gateway.module';
 import { HumanHandoffGatewayModule } from '../human-handoff/human-handoff-gateway.module';
 import { AgentModule } from '../agent/agent.module';
 import { WorkflowsModule } from '../workflows/workflows.module';
+import { GupshupOnboardingService } from '../gupshup/gupshup-onboarding.service';
 
 @Module({
   imports: [
@@ -54,6 +55,7 @@ import { WorkflowsModule } from '../workflows/workflows.module';
     WebhookValidatorService,
     CircuitBreakerService,
     ConversationStateService,
+    GupshupOnboardingService,
   ],
   exports: [WhatsAppService, WhatsAppApiClientService, WhatsAppCatalogService],
 })

@@ -195,7 +195,9 @@ exports.Prisma.Social_accountsScalarFieldEnum = {
   updated_at: 'updated_at',
   username: 'username',
   instagram_catalog_id: 'instagram_catalog_id',
-  whatsapp_catalog_id: 'whatsapp_catalog_id'
+  whatsapp_catalog_id: 'whatsapp_catalog_id',
+  gupshup_app_id: 'gupshup_app_id',
+  gupshup_app_status: 'gupshup_app_status'
 };
 
 exports.Prisma.Subscription_plansScalarFieldEnum = {

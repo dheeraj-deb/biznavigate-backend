@@ -145,7 +145,15 @@ export class WhatsAppService {
    */
   async getWhatsAppAccounts(businessId: string): Promise<any[]> {
     const accounts = await this.prisma.social_accounts.findMany({
-      where: { business_id: businessId, platform: 'whatsapp', is_active: true },
+      where: { 
+        business_id: businessId, 
+        platform: 'whatsapp', 
+        OR: [
+          { is_active: true },
+          { gupshup_app_status: 'pending' },
+          { gupshup_app_status: 'error' }
+        ]
+      },
       select: {
         account_id: true,
         username: true,
@@ -153,6 +161,8 @@ export class WhatsAppService {
         instagram_business_account_id: true,
         is_active: true,
         created_at: true,
+        gupshup_app_id: true,
+        gupshup_app_status: true,
       },
     });
 

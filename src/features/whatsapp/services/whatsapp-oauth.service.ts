@@ -3,6 +3,7 @@ import { ConfigService } from '@nestjs/config';
 import { PrismaService } from '../../../prisma/prisma.service';
 import { WhatsAppApiClientService } from '../infrastructure/whatsapp-api-client.service';
 import * as crypto from 'crypto';
+import { GupshupOnboardingService } from 'src/features/gupshup/gupshup-onboarding.service';
 
 interface StateData {
   businessId: string;
@@ -30,7 +31,8 @@ export class WhatsAppOAuthService {
     private readonly configService: ConfigService,
     private readonly prisma: PrismaService,
     private readonly apiClient: WhatsAppApiClientService,
-  ) {}
+    private readonly gupshupOnboardingService: GupshupOnboardingService,
+  ) { }
 
   /**
    * Generate OAuth URL for user authorization
@@ -75,8 +77,9 @@ export class WhatsAppOAuthService {
   async handleEmbeddedCallback(
     code: string,
     businessId: string,
-    wabaId?: string,
-    phoneNumberId?: string,
+    wabaId: string,
+    phone_number_id: string,
+    whatsapp_business_id: string,
   ): Promise<{ accountId: string; phoneNumber: string; verifiedName: string }> {
     const business = await this.prisma.businesses.findUnique({
       where: { business_id: businessId },
@@ -90,10 +93,13 @@ export class WhatsAppOAuthService {
 
     const permanentToken = this.configService.get<string>('whatsapp.permanentToken');
 
-    if (wabaId && phoneNumberId) {
+    //const debugInfo = await this.debugTokenInfo(tokenData.access_token, permanentToken);
+    //console.log("Debug token info:", debugInfo);
+
+    if (wabaId && phone_number_id) {
       // IDs are known from the Embedded Signup session event — fetch just this phone number directly
       // using the permanent token (System User has access after Embedded Signup)
-      const fetched = await this.getPhoneNumberById(phoneNumberId, permanentToken);
+      const fetched = await this.getPhoneNumberById(phone_number_id, permanentToken);
       if (!fetched) throw new BadRequestException('Phone number not found.');
       phoneNumber = fetched;
     } else {
@@ -143,15 +149,24 @@ export class WhatsAppOAuthService {
       });
     }
 
-    await this.subscribeToWebhooks(resolvedWabaId);
+    // Subscribe this platform to webhooks (optional for Gupshup, but good for our backend)
+    // await this.subscribeToWebhooks(resolvedWabaId);
 
-    // Register the phone number on Cloud API (required if status is pending)
     try {
-      await this.apiClient.registerPhoneNumber(phoneNumber.id, '000000');
-      this.logger.log(`Phone number ${phoneNumber.id} registered on Cloud API`);
-    } catch (err) {
-      // Non-fatal — number may already be registered
-      this.logger.warn(`Phone number registration skipped: ${err?.message}`);
+      const backendUrl = this.configService.get<string>('BACKEND_URL');
+      const result = await this.gupshupOnboardingService.completeTppOnboarding({
+        businessId,
+        appName: business.business_name,
+        wabaId: resolvedWabaId,
+        phone: phoneNumber.display_phone_number,
+        // Gupshup will POST live-event notifications here when the WABA is ready
+        callbackUrl: `${backendUrl}/whatsapp/gupshup/live-event`,
+      });
+      this.logger.log(`TPP onboarding initiated: gupshupAppId=${result.gupshupAppId}`);
+    } catch (error) {
+      // Non-fatal: the social_account is already saved.
+      // The background poll will keep retrying; admin can also check /gupshup/onboarding/pipeline-status/:appId
+      this.logger.error('TPP Gupshup onboarding initiation failed:', error?.message ?? error);
     }
 
     return {
@@ -331,10 +346,18 @@ export class WhatsAppOAuthService {
     const apiVersion = this.configService.get<string>('whatsapp.apiVersion');
     const url = `https://graph.facebook.com/${apiVersion}/me/businesses?fields=name,id,owned_whatsapp_business_accounts{id,name}`;
 
+    const deburl = `https://graph.facebook.com/${apiVersion}/me/businesses`
+
     this.logger.log('Fetching WhatsApp Business Accounts...');
+
+    const debresponse = await fetch(deburl, { headers: { Authorization: `Bearer ${accessToken}` } });
+    const debresponseData = await debresponse.json();
+    console.log("Debug fetch response", debresponseData);
 
     const response = await fetch(url, { headers: { Authorization: `Bearer ${accessToken}` } });
     const data = await response.json();
+
+    console.log("getWhatsAppBusinessAccounts response", data);
 
     if (data.error) {
       this.logger.error('Failed to fetch WA Business Accounts:', data.error);
@@ -354,6 +377,17 @@ export class WhatsAppOAuthService {
     this.logger.log(`Found ${wabas.length} WhatsApp Business Account(s)`);
 
     return wabas;
+  }
+
+  private async debugTokenInfo(token: string, accessToken: string,): Promise<any> {
+    const apiVersion = this.configService.get<string>('whatsapp.apiVersion');
+
+    const url = `https://graph.facebook.com/${apiVersion}/debug_token?input_token=${token}`;
+
+    const response = await fetch(url, { headers: { Authorization: `Bearer ${accessToken}` } });
+    const data = await response.json();
+    console.dir(data, { depth: null });
+    return data;
   }
 
   /**
