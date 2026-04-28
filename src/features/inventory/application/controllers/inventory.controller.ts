@@ -2,6 +2,7 @@ import {
   Controller, Get, Post, Patch, Delete,
   Body, Param, Query, Request, UseGuards, HttpCode, HttpStatus,
 } from '@nestjs/common';
+import { ApiBearerAuth, ApiOperation, ApiQuery, ApiTags } from '@nestjs/swagger';
 import { SkipThrottle } from '@nestjs/throttler';
 import { JwtAuthGuard } from '../../../../common/guards/jwt-auth.guard';
 import { CatalogService } from '../../../catalog/catalog.service';
@@ -37,14 +38,19 @@ const INVENTORY_CONFIG: Record<string, { service_types: string[]; attribute_sche
   products: { service_types: [], attribute_schema: {} },
 };
 
-@SkipThrottle()@UseGuards(JwtAuthGuard)
+@SkipThrottle()
+@ApiTags('Inventory')
+@ApiBearerAuth()
+@UseGuards(JwtAuthGuard)
 @Controller('inventory')
 export class InventoryController {
   constructor(private readonly catalogService: CatalogService) {}
 
   // ── CONFIG ──────────────────────────────────────────────────────────────────
 
-  @Get('config')  getConfig(@Request() req) {
+  @Get('config')
+  @ApiOperation({ summary: 'Get service types and attribute schema for this business type' })
+  getConfig(@Request() req) {
     const businessType: string = req.user.business_type ?? 'hospitality';
     const config = INVENTORY_CONFIG[businessType] ?? INVENTORY_CONFIG['hospitality'];
     return { business_type: businessType, ...config };
@@ -52,7 +58,9 @@ export class InventoryController {
 
   // ── SERVICES (delegated to CatalogService) ──────────────────────────────────
 
-  @Post('services')  createService(@Request() req, @Body() dto: CreateServiceDto) {
+  @Post('services')
+  @ApiOperation({ summary: 'Add a new bookable service — delegates to catalog' })
+  createService(@Request() req, @Body() dto: CreateServiceDto) {
     const item_type = SERVICE_TYPE_MAP[dto.type] ?? 'service';
     return this.catalogService.createItem(req.user.business_id, req.user.tenant_id, {
       item_type,
@@ -76,7 +84,10 @@ export class InventoryController {
     });
   }
 
-  @Get('services')  getServices(@Request() req, @Query('type') type?: string) {
+  @Get('services')
+  @ApiOperation({ summary: 'List all services for the business' })
+  @ApiQuery({ name: 'type', required: false })
+  getServices(@Request() req, @Query('type') type?: string) {
     const item_type = type ? (SERVICE_TYPE_MAP[type] ?? type) : undefined;
     return this.catalogService.getItems({
       businessId: req.user.business_id,
@@ -84,11 +95,15 @@ export class InventoryController {
     });
   }
 
-  @Get('services/:serviceId')  getService(@Request() req, @Param('serviceId') serviceId: string) {
+  @Get('services/:serviceId')
+  @ApiOperation({ summary: 'Get a single service by ID' })
+  getService(@Request() req, @Param('serviceId') serviceId: string) {
     return this.catalogService.getItemById(serviceId, req.user.business_id);
   }
 
-  @Patch('services/:serviceId')  updateService(@Request() req, @Param('serviceId') serviceId: string, @Body() dto: Partial<CreateServiceDto>) {
+  @Patch('services/:serviceId')
+  @ApiOperation({ summary: 'Update service details' })
+  updateService(@Request() req, @Param('serviceId') serviceId: string, @Body() dto: Partial<CreateServiceDto>) {
     const attrs: any = {};
     if (dto.capacity !== undefined) attrs.capacity = dto.capacity;
     if (dto.total_units !== undefined) attrs.total_units = dto.total_units;
@@ -110,53 +125,75 @@ export class InventoryController {
     });
   }
 
-  @Delete('services/:serviceId')  deleteService(@Request() req, @Param('serviceId') serviceId: string) {
+  @Delete('services/:serviceId')
+  @ApiOperation({ summary: 'Deactivate a service' })
+  deleteService(@Request() req, @Param('serviceId') serviceId: string) {
     return this.catalogService.deleteItem(serviceId, req.user.business_id);
   }
 
   // ── AVAILABILITY ────────────────────────────────────────────────────────────
 
-  @Post('services/:serviceId/availability')  setAvailability(@Request() req, @Param('serviceId') serviceId: string, @Body() dto: any) {
+  @Post('services/:serviceId/availability')
+  @ApiOperation({ summary: 'Set available dates and slot counts for a service' })
+  setAvailability(@Request() req, @Param('serviceId') serviceId: string, @Body() dto: any) {
     return this.catalogService.setAvailability(serviceId, req.user.business_id, dto);
   }
 
-  @Get('services/:serviceId/availability')  getAvailability(@Param('serviceId') serviceId: string, @Request() req, @Query('from') from: string, @Query('to') to: string) {
+  @Get('services/:serviceId/availability')
+  @ApiOperation({ summary: 'Get availability for a service between two dates' })
+  @ApiQuery({ name: 'from', required: true, example: '2026-04-10' })
+  @ApiQuery({ name: 'to', required: true, example: '2026-04-15' })
+  getAvailability(@Param('serviceId') serviceId: string, @Request() req, @Query('from') from: string, @Query('to') to: string) {
     return this.catalogService.getAvailability(serviceId, req.user.business_id, from, to);
   }
 
-  @Patch('services/:serviceId/availability/block')  blockDate(@Request() req, @Param('serviceId') serviceId: string, @Body('date') date: string) {
+  @Patch('services/:serviceId/availability/block')
+  @ApiOperation({ summary: 'Block a specific date' })
+  blockDate(@Request() req, @Param('serviceId') serviceId: string, @Body('date') date: string) {
     return this.catalogService.blockDate(serviceId, req.user.business_id, { date });
   }
 
   // ── PRODUCT STOCK ───────────────────────────────────────────────────────────
 
-  @Patch('products/:productId/stock')  updateProductStock(@Request() req, @Param('productId') productId: string, @Body() dto: UpdateStockDto) {
+  @Patch('products/:productId/stock')
+  @ApiOperation({ summary: 'Update product stock' })
+  updateProductStock(@Request() req, @Param('productId') productId: string, @Body() dto: UpdateStockDto) {
     return this.catalogService.updateStock(productId, req.user.business_id, dto.quantity);
   }
 
-  @Patch('products/variants/:variantId/stock')  updateVariantStock(@Request() req, @Param('variantId') variantId: string, @Body() dto: UpdateStockDto) {
+  @Patch('products/variants/:variantId/stock')
+  @ApiOperation({ summary: 'Update variant stock' })
+  updateVariantStock(@Request() req, @Param('variantId') variantId: string, @Body() dto: UpdateStockDto) {
     return this.catalogService.updateStock(variantId, req.user.business_id, dto.quantity);
   }
 
   // ── HOLDS (not supported in catalog) ────────────────────────────────────────
 
   @Post('holds')
+  @ApiOperation({ summary: 'Hold slots — not implemented (use booking flow)' })
   createHold() {
     return { message: 'Hold management is handled by the booking flow' };
   }
 
   @Delete('holds/:holdId')
-  @HttpCode(HttpStatus.OK)  releaseHold() {
+  @HttpCode(HttpStatus.OK)
+  @ApiOperation({ summary: 'Release a hold — not implemented' })
+  releaseHold() {
     return { message: 'Hold management is handled by the booking flow' };
   }
 
   // ── STOCK ALERTS (not yet in catalog) ───────────────────────────────────────
 
-  @Get('alerts')  getAlerts() {
+  @Get('alerts')
+  @ApiOperation({ summary: 'Get low-stock alerts' })
+  @ApiQuery({ name: 'status', required: false })
+  getAlerts() {
     return [];
   }
 
-  @Patch('alerts/:alertId/acknowledge')  acknowledgeAlert() {
+  @Patch('alerts/:alertId/acknowledge')
+  @ApiOperation({ summary: 'Acknowledge a low-stock alert' })
+  acknowledgeAlert() {
     return { message: 'Alert acknowledged' };
   }
 }

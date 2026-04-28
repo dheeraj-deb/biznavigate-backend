@@ -4,17 +4,7 @@
       "Bash(xargs ls:*)",
       "Bash(npx ts-node -e ':*)",
       "Bash(npm install:*)",
-      "Read(//Users/dheerajt/Downloads/biznavigate/**)",
-      "WebSearch",
-      "WebFetch(domain:partner-docs.gupshup.io)",
-      "WebFetch(domain:docs.gupshup.io)",
-      "WebFetch(domain:developers.facebook.com)",
-      "WebFetch(domain:www.infobip.com)",
-      "WebFetch(domain:respond.io)",
-      "Bash(npm uninstall:*)"
-    ],
-    "additionalDirectories": [
-      "/Users/dheerajt/Downloads/biznavigate/biznavigate-dashboard/src/hooks"
+      "Read(//Users/dheerajt/Downloads/biznavigate/**)"
     ]
   }
 }

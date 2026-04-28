@@ -1,40 +1,50 @@
 import { IsString, IsOptional, IsObject, ValidateNested, IsArray, IsNumber } from 'class-validator';
 import { Type } from 'class-transformer';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
 export class WebhookChangeValueDto {
-    @IsString()
+  @ApiPropertyOptional()
+  @IsString()
   @IsOptional()
   id?: string;
 
-    @IsObject()
+  @ApiPropertyOptional()
+  @IsObject()
   @IsOptional()
   from?: { id: string; username?: string };
 
-    @IsString()
+  @ApiPropertyOptional()
+  @IsString()
   @IsOptional()
   text?: string;
 
-    @IsString()
+  @ApiPropertyOptional()
+  @IsString()
   @IsOptional()
   media_id?: string;
 
-    @IsString()
+  @ApiPropertyOptional()
+  @IsString()
   @IsOptional()
   media_type?: string;
 
-    @IsString()
+  @ApiPropertyOptional()
+  @IsString()
   @IsOptional()
   parent_id?: string;
 
-    @IsString()
+  @ApiPropertyOptional()
+  @IsString()
   @IsOptional()
   post_id?: string;
 
-    @IsString()
+  @ApiPropertyOptional()
+  @IsString()
   @IsOptional()
   comment_id?: string;
 
-    @IsObject()
+  @ApiPropertyOptional()
+  @IsObject()
   @IsOptional()
   sender?: {
     id: string;
@@ -42,7 +52,8 @@ export class WebhookChangeValueDto {
     name?: string;
   };
 
-    @IsObject()
+  @ApiPropertyOptional()
+  @IsObject()
   @IsOptional()
   recipient?: {
     id: string;
@@ -50,28 +61,34 @@ export class WebhookChangeValueDto {
 }
 
 export class WebhookChangeDto {
-    @IsString()
+  @ApiProperty()
+  @IsString()
   field: string; // 'comments', 'messages', 'mentions'
 
-    @ValidateNested()
+  @ApiProperty({ type: WebhookChangeValueDto })
+  @ValidateNested()
   @Type(() => WebhookChangeValueDto)
   value: WebhookChangeValueDto;
 }
 
 export class MessagingItemDto {
-    @IsObject()
+  @ApiPropertyOptional()
+  @IsObject()
   @IsOptional()
   sender?: { id: string };
 
-    @IsObject()
+  @ApiPropertyOptional()
+  @IsObject()
   @IsOptional()
   recipient?: { id: string };
 
-    @IsNumber()
+  @ApiPropertyOptional()
+  @IsNumber()
   @IsOptional()
   timestamp?: number;
 
-    @IsObject()
+  @ApiPropertyOptional()
+  @IsObject()
   @IsOptional()
   message?: {
     mid?: string;
@@ -81,19 +98,23 @@ export class MessagingItemDto {
 }
 
 export class WebhookEntryDto {
-    @IsString()
+  @ApiProperty()
+  @IsString()
   id: string; // Instagram Business Account ID or Page ID
 
-    @IsNumber()
+  @ApiProperty()
+  @IsNumber()
   time: number; // Unix timestamp
 
-    @IsArray()
+  @ApiPropertyOptional({ type: [WebhookChangeDto] })
+  @IsArray()
   @ValidateNested({ each: true })
   @Type(() => WebhookChangeDto)
   @IsOptional()
   changes?: WebhookChangeDto[];
 
-    @IsArray()
+  @ApiPropertyOptional({ type: [MessagingItemDto] })
+  @IsArray()
   @ValidateNested({ each: true })
   @Type(() => MessagingItemDto)
   @IsOptional()
@@ -101,22 +122,27 @@ export class WebhookEntryDto {
 }
 
 export class InstagramWebhookDto {
-    @IsString()
+  @ApiProperty()
+  @IsString()
   object: string; // 'instagram' or 'page'
 
-    @IsArray()
+  @ApiProperty({ type: [WebhookEntryDto] })
+  @IsArray()
   @ValidateNested({ each: true })
   @Type(() => WebhookEntryDto)
   entry: WebhookEntryDto[];
 }
 
 export class WebhookVerificationDto {
-    @IsString()
+  @ApiProperty()
+  @IsString()
   'hub.mode': string;
 
-    @IsString()
+  @ApiProperty()
+  @IsString()
   'hub.verify_token': string;
 
-    @IsString()
+  @ApiProperty()
+  @IsString()
   'hub.challenge': string;
 }

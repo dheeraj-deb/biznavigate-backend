@@ -1,11 +1,13 @@
 import { IsArray, IsDateString, IsNumber, IsOptional } from 'class-validator';
 import { Type } from 'class-transformer';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
 export class SetAvailabilityDto {
-    @IsArray()
+  @ApiProperty({ type: [String], example: ['2026-04-10', '2026-04-11'] })
+  @IsArray()
   @IsDateString({}, { each: true })
   dates: string[];
 
-  @IsNumber() @Type(() => Number) total_slots: number;
-  @IsOptional() @IsNumber() @Type(() => Number) effective_price?: number;
+  @ApiProperty() @IsNumber() @Type(() => Number) total_slots: number;
+  @ApiPropertyOptional() @IsOptional() @IsNumber() @Type(() => Number) effective_price?: number;
 }

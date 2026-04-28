@@ -1,4 +1,5 @@
 import { IsString, IsOptional, IsArray, IsEnum } from 'class-validator';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { Transform } from 'class-transformer';
 
 export enum InsightPeriod {
@@ -62,10 +63,12 @@ export enum MediaMetric {
 }
 
 export class GetAccountInsightsDto {
+  @ApiProperty({ description: 'Account ID (Instagram account)' })
   @IsString()
   accountId: string;
 
-    @Transform(({ value }) => {
+  @ApiProperty({ description: 'Metrics to fetch', enum: AccountMetric, isArray: true })
+  @Transform(({ value }) => {
     if (typeof value === 'string') {
       return value.split(',').map(v => v.trim());
     }
@@ -75,26 +78,32 @@ export class GetAccountInsightsDto {
   @IsEnum(AccountMetric, { each: true })
   metrics: AccountMetric[];
 
-    @IsEnum(InsightPeriod)
+  @ApiProperty({ description: 'Period for insights', enum: InsightPeriod })
+  @IsEnum(InsightPeriod)
   period: InsightPeriod;
 
+  @ApiPropertyOptional({ description: 'Start date (YYYY-MM-DD)' })
   @IsString()
   @IsOptional()
   since?: string;
 
+  @ApiPropertyOptional({ description: 'End date (YYYY-MM-DD)' })
   @IsString()
   @IsOptional()
   until?: string;
 }
 
 export class GetMediaInsightsDto {
+  @ApiProperty({ description: 'Media ID (Instagram post/video)' })
   @IsString()
   mediaId: string;
 
+  @ApiProperty({ description: 'Account ID (Instagram account)' })
   @IsString()
   accountId: string;
 
-    @Transform(({ value }) => {
+  @ApiProperty({ description: 'Metrics to fetch', enum: MediaMetric, isArray: true })
+  @Transform(({ value }) => {
     if (typeof value === 'string') {
       return value.split(',').map(v => v.trim());
     }
@@ -106,46 +115,57 @@ export class GetMediaInsightsDto {
 }
 
 export class GetMediaListDto {
+  @ApiProperty({ description: 'Account ID (Instagram account)' })
   @IsString()
   accountId: string;
 
-    @IsString()
+  @ApiPropertyOptional({ description: 'Limit number of media items' })
+  @IsString()
   @IsOptional()
   limit?: string;
 
-    @IsString()
+  @ApiPropertyOptional({ description: 'Pagination cursor' })
+  @IsString()
   @IsOptional()
   after?: string;
 
-    @IsString()
+  @ApiPropertyOptional({ description: 'Fields to include' })
+  @IsString()
   @IsOptional()
   fields?: string;
 }
 
 export class GetMediaDetailsDto {
+  @ApiProperty({ description: 'Media ID (Instagram post/video)' })
   @IsString()
   mediaId: string;
 
+  @ApiProperty({ description: 'Account ID (Instagram account)' })
   @IsString()
   accountId: string;
 
-    @IsString()
+  @ApiPropertyOptional({ description: 'Fields to include' })
+  @IsString()
   @IsOptional()
   fields?: string;
 }
 
 export class GetMediaCommentsDto {
+  @ApiProperty({ description: 'Media ID (Instagram post/video)' })
   @IsString()
   mediaId: string;
 
+  @ApiProperty({ description: 'Account ID (Instagram account)' })
   @IsString()
   accountId: string;
 
-    @IsString()
+  @ApiPropertyOptional({ description: 'Limit number of comments' })
+  @IsString()
   @IsOptional()
   limit?: string;
 
-    @IsString()
+  @ApiPropertyOptional({ description: 'Pagination cursor' })
+  @IsString()
   @IsOptional()
   after?: string;
 }

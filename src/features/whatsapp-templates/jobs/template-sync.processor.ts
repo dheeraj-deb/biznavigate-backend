@@ -7,8 +7,8 @@ import { WhatsAppTemplate, WhatsAppTemplateDocument } from '../schemas/template.
 import { WhatsAppApiClientService } from '../../whatsapp/infrastructure/whatsapp-api-client.service';
 import { PrismaService } from '../../../prisma/prisma.service';
 import { TemplateStatus } from '../enums/template.enum';
-import { GupshupOnboardingService } from '../../gupshup/gupshup-onboarding.service';
-import axios from 'axios';
+import { ConfigService } from '@nestjs/config';
+import * as crypto from 'crypto';
 
 @Processor('whatsapp-template-sync', {
     lockDuration: 120000,
@@ -22,7 +22,7 @@ export class TemplateSyncProcessor extends WorkerHost {
         private readonly templateModel: Model<WhatsAppTemplateDocument>,
         private readonly metaApi: WhatsAppApiClientService,
         private readonly prisma: PrismaService,
-        private readonly gupshupOnboarding: GupshupOnboardingService,
+        private readonly configService: ConfigService,
     ) {
         super();
     }
@@ -31,7 +31,9 @@ export class TemplateSyncProcessor extends WorkerHost {
         this.logger.log(`Processing template sync job: ${job.id}`);
 
         const pendingTemplates = await this.templateModel.find({
-            status: { $in: [TemplateStatus.PENDING] },
+            status: {
+                $in: [TemplateStatus.PENDING] //TemplateStatus.REJECTED
+            },
             metaTemplateId: { $exists: true, $ne: null },
             isDeleted: false,
         }).select('_id metaTemplateId businessId').lean();
@@ -46,23 +48,11 @@ export class TemplateSyncProcessor extends WorkerHost {
 
                 if (!account) continue;
 
-                let mappedStatus: TemplateStatus;
-                let rejectedReason: string | undefined;
+                const { status, rejectedReason } = await this.metaApi.getTemplateStatus(
+                    template.metaTemplateId,
+                );
 
-                if (account.gupshup_app_id) {
-                    // Gupshup-managed WABA: fetch status via Gupshup partner API
-                    const result = await this.getGupshupTemplateStatus(
-                        account.gupshup_app_id,
-                        template.metaTemplateId,
-                    );
-                    mappedStatus = result.status;
-                    rejectedReason = result.rejectedReason;
-                } else {
-                    // Meta-direct WABA
-                    const result = await this.metaApi.getTemplateStatus(template.metaTemplateId);
-                    mappedStatus = this.mapStatus(result.status);
-                    rejectedReason = result.rejectedReason;
-                }
+                const mappedStatus = this.mapMetaStatus(status);
 
                 if (mappedStatus !== TemplateStatus.PENDING) {
                     await this.templateModel.findByIdAndUpdate(template._id, {
@@ -75,52 +65,21 @@ export class TemplateSyncProcessor extends WorkerHost {
                     this.logger.log(`Template ${template._id} status updated: ${mappedStatus}`);
                 }
             } catch (err) {
-                const errDetail = JSON.stringify(err?.response?.data ?? err?.message);
-                this.logger.warn(`Failed to sync template ${template._id}: ${errDetail}`);
-
-                // If the template no longer exists on the provider side, mark it as rejected
-                const status = err?.response?.status;
-                if (status === 404 || status === 400) {
-                    await this.templateModel.findByIdAndUpdate(template._id, {
-                        status: TemplateStatus.REJECTED,
-                        rejectionReason: `Provider sync failed (${status}): ${errDetail}`,
-                    }).catch(() => {});
-                    this.logger.warn(`Template ${template._id} marked REJECTED after sync failure (${status})`);
-                }
+                this.logger.warn(`Failed to sync template ${template._id}: ${err.message}`);
             }
         }
 
         return { synced: pendingTemplates.length };
     }
 
-    private async getGupshupTemplateStatus(
-        appId: string,
-        templateId: string,
-    ): Promise<{ status: TemplateStatus; rejectedReason?: string }> {
-        const token = await this.gupshupOnboarding.getPartnerAppToken(appId);
-
-        // GET /partner/app/{appId}/templates/{templateId}
-        const { data } = await axios.get(
-            `https://partner.gupshup.io/partner/app/${appId}/templates/${templateId}`,
-            { headers: { Authorization: token } },
-        );
-
-        const t = data?.template ?? data;
-        const rawStatus: string = t?.status ?? 'PENDING';
-        return {
-            status: this.mapStatus(rawStatus),
-            rejectedReason: t?.rejectedReason ?? t?.reason ?? undefined,
-        };
-    }
-
-    private mapStatus(raw: string): TemplateStatus {
+    private mapMetaStatus(metaStatus: string): TemplateStatus {
         const map: Record<string, TemplateStatus> = {
             APPROVED: TemplateStatus.APPROVED,
             REJECTED: TemplateStatus.REJECTED,
             PENDING: TemplateStatus.PENDING,
             PAUSED: TemplateStatus.PAUSED,
-            ACTIVE: TemplateStatus.PENDING, // Gupshup uses ACTIVE for in-review
         };
-        return map[raw] ?? TemplateStatus.PENDING;
+        return map[metaStatus] ?? TemplateStatus.PENDING;
     }
+
 }

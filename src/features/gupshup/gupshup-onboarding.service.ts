@@ -1,4 +1,4 @@
-import { Injectable, InternalServerErrorException, Logger, OnModuleInit, OnApplicationBootstrap } from "@nestjs/common";
+import { Injectable, InternalServerErrorException, Logger, OnModuleInit } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import axios from "axios";
 import { PrismaService } from "../../prisma/prisma.service";
@@ -35,7 +35,7 @@ export interface TppOnboardingOptions {
 }
 
 @Injectable()
-export class GupshupOnboardingService implements OnApplicationBootstrap {
+export class GupshupOnboardingService implements OnModuleInit {
   private readonly logger = new Logger(GupshupOnboardingService.name);
   private readonly baseUrl = "https://partner.gupshup.io";
 
@@ -53,12 +53,10 @@ export class GupshupOnboardingService implements OnApplicationBootstrap {
   private masterAppTokenExpiresAt: number = 0;
 
   private readonly configured: boolean;
-  private static bootstrapDone = false;
 
   // Polling config for Step 3
   private readonly POLL_MAX_ATTEMPTS = 20;
   private readonly POLL_INTERVAL_MS = 30_000; // 30 s → 10 min total
-  private readonly STUCK_THRESHOLD = 3; // consecutive INITIAL polls before marking stuck
 
   constructor(
     private readonly config: ConfigService,
@@ -73,73 +71,13 @@ export class GupshupOnboardingService implements OnApplicationBootstrap {
     }
   }
 
-
-
-  /**
-   * On startup, auto-retry any WhatsApp accounts that are stuck or pending
-   * without a running poll (e.g. from a previous server restart).
-   */
-  async onApplicationBootstrap() {
-    if (!this.configured || GupshupOnboardingService.bootstrapDone) return;
-    GupshupOnboardingService.bootstrapDone = true;
-
+  async onModuleInit() {
+    if (!this.configured) return;
     try {
-      // Backfill page_id (Gupshup app name) for accounts that are missing it
-      const accountsMissingAppName = await this.prisma.social_accounts.findMany({
-        where: { platform: "whatsapp", gupshup_app_id: { not: null }, page_id: null },
-      });
-      if (accountsMissingAppName.length > 0) {
-        try {
-          const apps = await this.listApps();
-          for (const acc of accountsMissingAppName) {
-            const match = apps.find((a: any) => (a.id ?? a.appId) === acc.gupshup_app_id);
-            if (match?.name) {
-              await this.prisma.social_accounts.update({
-                where: { account_id: acc.account_id },
-                data: { page_id: match.name, updated_at: new Date() },
-              });
-              this.logger.log(`[Bootstrap] Backfilled page_id="${match.name}" for appId=${acc.gupshup_app_id}`);
-            }
-          }
-        } catch (err: any) {
-          this.logger.warn(`[Bootstrap] App name backfill failed: ${err?.message}`);
-        }
-      }
-
-      const stuckAccounts = await this.prisma.social_accounts.findMany({
-        where: {
-          platform: "whatsapp",
-          gupshup_app_status: { in: ["stuck", "error", "pending"] },
-          gupshup_app_id: { not: null },
-        },
-        include: { businesses: { select: { business_name: true } } },
-      });
-
-      if (stuckAccounts.length === 0) {
-        this.logger.log("[Bootstrap] No stuck WhatsApp accounts found.");
-        return;
-      }
-
-      this.logger.log(`[Bootstrap] Found ${stuckAccounts.length} stuck/pending WhatsApp account(s). Retrying...`);
-
-      for (const account of stuckAccounts) {
-        const businessName = (account as any).businesses?.business_name ?? account.business_id;
-        this.logger.log(`[Bootstrap] Retrying businessId=${account.business_id} appId=${account.gupshup_app_id} status=${account.gupshup_app_status}`);
-
-        try {
-          const result = await this.retryOnboarding({
-            businessId: account.business_id,
-            appName: businessName,
-            wabaId: account.instagram_business_account_id ?? "",
-            phone: account.username ?? "",
-          });
-          this.logger.log(`[Bootstrap] Retry result for businessId=${account.business_id}: action=${result.action} appId=${result.gupshupAppId}`);
-        } catch (err) {
-          this.logger.error(`[Bootstrap] Retry failed for businessId=${account.business_id}: ${err.message}`);
-        }
-      }
-    } catch (err) {
-      this.logger.error(`[Bootstrap] Failed to query stuck accounts: ${err.message}`);
+      await this.subscribeWebhook();
+      this.logger.log("Gupshup master webhook subscription registered");
+    } catch (e) {
+      this.logger.error("Failed to register Gupshup master webhook", e?.response?.data ?? e.message);
     }
   }
 
@@ -211,7 +149,7 @@ export class GupshupOnboardingService implements OnApplicationBootstrap {
     const webhookUrl = `${backendUrl}/whatsapp/webhook`;
 
     const params = new URLSearchParams();
-    params.append("modes", "2047"); // 2047 = all events in v3
+    params.append("modes", "MESSAGE,SENT,DELIVERED,READ,FAILED,OTHERS,FLOWS_MESSAGE");
     params.append("tag", "BizNavigate-V3");
     params.append("url", webhookUrl);
     params.append("version", "3");
@@ -268,30 +206,15 @@ export class GupshupOnboardingService implements OnApplicationBootstrap {
         },
       );
     } catch (error) {
-      const msg: string = error?.response?.data?.message ?? error.message ?? "";
-
-      // Case 1 — message contains UUID: "App {uuid} already exists with phone {phone}"
-      const match = msg.match(/App ([a-f0-9\-]{36}) already exists/i);
-      if (match?.[1]) {
-        this.logger.log(`[Step 1] App already exists (UUID in error), using existing appId=${match[1]}`);
-        return { appId: match[1] };
-      }
-
-      // Case 2 — "Bot Already Exists" or similar without UUID: look up app by phone
-      if (/bot already exists|app already exists|already exists/i.test(msg)) {
-        this.logger.log(`[Step 1] App already exists (no UUID in error), looking up app by phone=${phone}`);
-        const existingAppId = await this.findAppIdByPhone(phone, partnerToken);
-        if (existingAppId) {
-          this.logger.log(`[Step 1] Found existing appId=${existingAppId} via app list`);
-          return { appId: existingAppId };
-        }
-      }
-
-      // Case 3 — Rate limited (429): log and surface clearly
-      const status = error?.response?.status;
-      if (status === 429) {
-        this.logger.error(`[Step 1] Rate limited by Gupshup (429). Try again in 60s.`);
-        throw new InternalServerErrorException(`Gupshup rate limit hit. Please retry in a minute.`);
+      const msg = error?.response?.data?.message ?? error.message;
+      
+      // Handle idempotency: if app already exists for this phone, extract the appId
+      // Example: "App a97d8ef4-cb00-4c2e-ac5c-aa2401626d94 already exists with phone 919567907298"
+      const match = msg.match(/App ([a-f0-9\-]+) already exists/i);
+      if (match && match[1]) {
+        const existingAppId = match[1];
+        this.logger.log(`[Step 1] App already exists, using existing appId=${existingAppId}`);
+        return { appId: existingAppId };
       }
 
       this.logger.error(`[Step 1] createGupshupApp failed: ${msg}`);
@@ -305,51 +228,6 @@ export class GupshupOnboardingService implements OnApplicationBootstrap {
 
     this.logger.log(`[Step 1] App created successfully: appId=${data.appId}`);
     return { appId: data.appId };
-  }
-
-  /** Fetch app details (includes live status) via GET /partner/app/:appId */
-  private async getAppDetails(appId: string, partnerAppToken: string): Promise<{ live: boolean } | null> {
-    try {
-      const { data } = await axios.get(
-        `${this.baseUrl}/partner/app/${appId}`,
-        { headers: { Authorization: partnerAppToken } },
-      );
-      return data?.app ?? data?.appDetails ?? null;
-    } catch {
-      return null;
-    }
-  }
-
-  /** List all Gupshup partner apps (useful for finding appIds). */
-  async listApps(): Promise<any[]> {
-    const partnerToken = await this.getPartnerToken();
-    const { data } = await axios.get(`${this.baseUrl}/partner/app/list`, { headers: { Authorization: partnerToken } });
-    return data?.partnerAppList ?? data?.data ?? data?.apps ?? (Array.isArray(data) ? data : []);
-  }
-
-  /** Lookup an existing Gupshup app by phone number via GET /partner/app/list */
-  private async findAppIdByPhone(phone: string, partnerToken: string): Promise<string | null> {
-    try {
-      const { data } = await axios.get(
-        `${this.baseUrl}/partner/app/list`,
-        { headers: { Authorization: partnerToken } },
-      );
-      this.logger.log(`[Step 1] findAppIdByPhone raw response: ${JSON.stringify(data).substring(0, 500)}`);
-      const apps: any[] = data?.partnerAppList ?? data?.data ?? data?.apps ?? (Array.isArray(data) ? data : []);
-      // Normalize phone for comparison: strip leading +
-      const normalizedPhone = phone.replace(/^\+/, '');
-      const match = apps.find((app) => {
-        const appPhone: string = String(app.phone ?? app.phoneNumber ?? '').replace(/^\+/, '');
-        return appPhone === normalizedPhone || appPhone.endsWith(normalizedPhone) || normalizedPhone.endsWith(appPhone);
-      });
-      if (!match) {
-        this.logger.warn(`[Step 1] No app found for phone=${phone} among ${apps.length} apps`);
-      }
-      return match?.id ?? match?.appId ?? null;
-    } catch (err) {
-      this.logger.error(`[Step 1] findAppIdByPhone failed: ${err?.response?.data?.message ?? err.message}`);
-      return null;
-    }
   }
 
   /**
@@ -398,7 +276,7 @@ export class GupshupOnboardingService implements OnApplicationBootstrap {
     const webhookUrl = `${backendUrl}/whatsapp/webhook`;
 
     const params = new URLSearchParams();
-    params.append("modes", "2047"); // 2047 = all events in v3
+    params.append("modes", "MESSAGE,SENT,DELIVERED,READ,FAILED,OTHERS,FLOWS_MESSAGE");
     params.append("tag", "BizNavigate-V3");
     params.append("url", webhookUrl);
     params.append("version", "3");
@@ -406,30 +284,17 @@ export class GupshupOnboardingService implements OnApplicationBootstrap {
 
     this.logger.log(`[Step 4] Subscribing webhook for appId=${appId} → ${webhookUrl}`);
 
-    let data: any;
-    try {
-      ({ data } = await axios.post(
-        `${this.baseUrl}/partner/app/${appId}/subscription`,
-        params,
-        { headers: { Authorization: partnerAppToken, "Content-Type": "application/x-www-form-urlencoded" } },
-      ));
-    } catch (err: any) {
-      const errData = err?.response?.data;
-      const errMsg: string = errData?.message ?? errData?.error ?? JSON.stringify(errData) ?? err.message;
-      this.logger.warn(`[Step 4] Subscription call failed for appId=${appId}: ${errMsg}`);
-      // Already subscribed — treat as success
-      if (/already (subscribed|exists)/i.test(errMsg)) {
-        this.logger.log(`[Step 4] Webhook already subscribed for appId=${appId}, skipping`);
-        return null;
-      }
-      throw err;
-    }
+    const { data } = await axios.post(
+      `${this.baseUrl}/partner/app/${appId}/subscription`,
+      params,
+      { headers: { Authorization: partnerAppToken, "Content-Type": "application/x-www-form-urlencoded" } },
+    );
 
     if (data.status !== "success") {
-      this.logger.warn(`[Step 4] Subscription non-success for appId=${appId}: ${JSON.stringify(data)}`);
-    } else {
-      this.logger.log(`[Step 4] Webhook subscribed for appId=${appId}`);
+      throw new InternalServerErrorException(`Gupshup Step 4 failed: ${data.message ?? "Webhook subscription failed"}`);
     }
+
+    this.logger.log(`[Step 4] Webhook subscribed for appId=${appId}`);
     return data.subscription;
   }
 
@@ -448,26 +313,22 @@ export class GupshupOnboardingService implements OnApplicationBootstrap {
   async pollUntilLive(appId: string, partnerAppToken: string, businessId: string): Promise<void> {
     this.logger.log(`[Polling] Starting pipeline poll for appId=${appId} businessId=${businessId}`);
 
-    let stuckCount = 0;
-    let lastStage: string | undefined;
-    let lastPipeline: string | undefined;
-
     for (let attempt = 1; attempt <= this.POLL_MAX_ATTEMPTS; attempt++) {
       try {
         const result = await this.getPipelineStatus(appId, partnerAppToken);
+        console.log("result", result);
         const stage = result.whatsapp?.creationStage;
         const pipeline = result.whatsapp?.pipeLineStage;
 
         this.logger.log(`[Polling ${attempt}/${this.POLL_MAX_ATTEMPTS}] appId=${appId} creationStage=${stage} pipelineStage=${pipeline}`);
 
-        // Check live status from app details (more reliable than pipeline stage)
-        const appDetails = await this.getAppDetails(appId, partnerAppToken);
-        if (stage === "WHATSAPP_PROVISIONING_DONE" || appDetails?.live === true) {
+        if (stage === "WHATSAPP_PROVISIONING_DONE") {
           // ✅ App is live — subscribe webhook then mark account active
           try {
             await this.subscribeAppWebhook(appId, partnerAppToken);
           } catch (subErr) {
             this.logger.error(`[Polling] Webhook subscription failed for appId=${appId}: ${subErr.message}`);
+            // Non-fatal — account will still be marked live
           }
 
           await this.prisma.social_accounts.updateMany({
@@ -476,18 +337,6 @@ export class GupshupOnboardingService implements OnApplicationBootstrap {
           });
 
           this.logger.log(`[Polling] ✅ App ${appId} is live! Account activated for business=${businessId}`);
-
-          // Fetch Meta business verification status non-blocking
-          const liveAccount = await this.prisma.social_accounts.findFirst({
-            where: { gupshup_app_id: appId, business_id: businessId },
-            select: { account_id: true, instagram_business_account_id: true },
-          });
-          if (liveAccount?.instagram_business_account_id) {
-            setImmediate(() => this.fetchMetaVerificationStatus(
-              liveAccount.account_id,
-              liveAccount.instagram_business_account_id,
-            ));
-          }
           return;
         }
 
@@ -500,27 +349,6 @@ export class GupshupOnboardingService implements OnApplicationBootstrap {
           this.logger.error(`[Polling] ❌ Pipeline error for appId=${appId}`);
           return;
         }
-
-        // ── Stuck detection: INITIAL+NONE with no change across N consecutive polls ──
-        if (stage === lastStage && pipeline === lastPipeline && stage === "INITIAL" && pipeline === "NONE") {
-          stuckCount++;
-          if (stuckCount >= this.STUCK_THRESHOLD) {
-            await this.prisma.social_accounts.updateMany({
-              where: { gupshup_app_id: appId, business_id: businessId },
-              data: { gupshup_app_status: "stuck", updated_at: new Date() },
-            });
-            this.logger.warn(
-              `[Polling] ⚠️ App ${appId} is stuck at INITIAL/NONE for ${stuckCount} consecutive polls. ` +
-              `Stopping poll — use POST /gupshup/onboarding/retry to force a new app creation.`,
-            );
-            return;
-          }
-        } else {
-          stuckCount = 0;
-        }
-
-        lastStage = stage;
-        lastPipeline = pipeline;
       } catch (err) {
         this.logger.error(`[Polling] Error on attempt ${attempt} for appId=${appId}: ${err.message}`);
       }
@@ -532,10 +360,6 @@ export class GupshupOnboardingService implements OnApplicationBootstrap {
     }
 
     this.logger.warn(`[Polling] ⏰ Timed out waiting for appId=${appId} to go live after ${this.POLL_MAX_ATTEMPTS} attempts`);
-    await this.prisma.social_accounts.updateMany({
-      where: { gupshup_app_id: appId, business_id: businessId },
-      data: { gupshup_app_status: "stuck", updated_at: new Date() },
-    });
   }
 
   // ─────────────────────────────────────────────────────────────────────────────
@@ -555,12 +379,9 @@ export class GupshupOnboardingService implements OnApplicationBootstrap {
     const { businessId, appName, wabaId, phone, callbackUrl } = opts;
 
     // Sanitize app name for Gupshup: 6-150 chars, alphanumeric only
-    // Must be globally unique across ALL Gupshup partners — use wabaId (globally unique) as the primary key
     let safeName = appName.replace(/[^a-zA-Z0-9]/g, '').toLowerCase();
-    if (safeName.length < 4) safeName = safeName.padEnd(4, 'biz');
-    const wabaClean = wabaId.replace(/[^a-zA-Z0-9]/g, '');
-    // wabaId alone guarantees global uniqueness; prefix with business name for readability
-    const finalAppName = `${safeName.substring(0, 20)}${wabaClean}`.substring(0, 150);
+    if (safeName.length < 6) safeName = safeName.padEnd(6, 'abc123');
+    const finalAppName = `${safeName}${businessId.replace(/[^a-zA-Z0-9]/g, '').substring(0, 5)}`.substring(0, 150);
 
     // Sanitize phone number for Gupshup: remove spaces, dashes, parens
     const finalPhone = phone.replace(/[\s\-\(\)]/g, '');
@@ -574,7 +395,6 @@ export class GupshupOnboardingService implements OnApplicationBootstrap {
       data: {
         gupshup_app_id: gupshupAppId,
         gupshup_app_status: "pending",
-        page_id: finalAppName, // store app name for webhook routing (body.app)
         is_active: false,
         updated_at: new Date(),
       },
@@ -601,11 +421,11 @@ export class GupshupOnboardingService implements OnApplicationBootstrap {
    * If the WABA app is now live, subscribes the webhook and activates the account.
    * Use this as an alternative to polling (event-driven).
    */
-  async handleLiveEvent(payload: { appId?: string; phone?: string; waId?: string; status?: string }): Promise<void> {
-    const { appId, phone, waId, status } = payload;
+  async handleLiveEvent(payload: { appId?: string; phone?: string; waId?: string }): Promise<void> {
+    const { appId, phone, waId } = payload;
     const phoneToMatch = waId || phone;
 
-    this.logger.log(`[LiveEvent] Received live event: appId=${appId} phone=${phoneToMatch} status=${status}`);
+    this.logger.log(`[LiveEvent] Received live event: appId=${appId} phone=${phoneToMatch}`);
 
     // Find the account by gupshup_app_id or by phone number
     const account = await this.prisma.social_accounts.findFirst({
@@ -619,55 +439,22 @@ export class GupshupOnboardingService implements OnApplicationBootstrap {
       return;
     }
 
+    if (account.gupshup_app_status === "live") {
+      this.logger.log(`[LiveEvent] Account ${account.account_id} already live, skipping`);
+      return;
+    }
+
     const resolvedAppId = appId || account.gupshup_app_id;
     if (!resolvedAppId) {
       this.logger.warn(`[LiveEvent] No gupshup_app_id found for account ${account.account_id}`);
       return;
     }
 
-    // ── Option 6: Verify pipeline status before trusting the event ────────────
-    let pipelineConfirmed = false;
     try {
       const partnerAppToken = await this.getPartnerAppToken(resolvedAppId);
-      const pipelineStatus = await this.getPipelineStatus(resolvedAppId, partnerAppToken);
-      const stage = pipelineStatus.whatsapp?.creationStage;
-
-      this.logger.log(`[LiveEvent] Pipeline check for appId=${resolvedAppId}: creationStage=${stage}`);
-
-      if (stage === "WHATSAPP_PROVISIONING_DONE") {
-        pipelineConfirmed = true;
-        try {
-          await this.subscribeAppWebhook(resolvedAppId, partnerAppToken);
-        } catch (subErr) {
-          this.logger.error(`[LiveEvent] Webhook re-subscription failed: ${subErr.message}`);
-          // Non-fatal
-        }
-      } else if (stage === "INITIAL" || stage === "NONE") {
-        // Live event fired but pipeline hasn't progressed — resume polling
-        this.logger.warn(`[LiveEvent] Live event received but pipeline still at ${stage}. Resuming poll.`);
-        this.pollUntilLive(resolvedAppId, partnerAppToken, account.business_id).catch((err) =>
-          this.logger.error(`[LiveEvent] Resumed poll failed for appId=${resolvedAppId}: ${err.message}`),
-        );
-        await this.prisma.social_accounts.updateMany({
-          where: { gupshup_app_id: resolvedAppId },
-          data: { gupshup_app_status: "pending", updated_at: new Date() },
-        });
-        return;
-      }
+      await this.subscribeAppWebhook(resolvedAppId, partnerAppToken);
     } catch (err) {
-      this.logger.error(`[LiveEvent] Pipeline verification failed: ${err.message}. Trusting event payload.`);
-      // Fall back to trusting the event if pipeline check itself fails
-      pipelineConfirmed = status === "live";
-    }
-
-    if (!pipelineConfirmed) {
-      this.logger.warn(`[LiveEvent] Pipeline not confirmed live for appId=${resolvedAppId}, skipping activation`);
-      return;
-    }
-
-    if (account.gupshup_app_status === "live") {
-      this.logger.log(`[LiveEvent] Account ${account.account_id} already live, skipping`);
-      return;
+      this.logger.error(`[LiveEvent] Webhook subscription failed: ${err.message}`);
     }
 
     await this.prisma.social_accounts.update({
@@ -676,199 +463,6 @@ export class GupshupOnboardingService implements OnApplicationBootstrap {
     });
 
     this.logger.log(`[LiveEvent] ✅ Account ${account.account_id} (business=${account.business_id}) marked live`);
-
-    if (account.instagram_business_account_id) {
-      setImmediate(() => this.fetchMetaVerificationStatus(
-        account.account_id,
-        account.instagram_business_account_id,
-      ));
-    }
-  }
-
-  // ─────────────────────────────────────────────────────────────────────────────
-  // RETRY — Force a fresh app creation when stuck/error
-  // ─────────────────────────────────────────────────────────────────────────────
-
-  /**
-   * Option 2 — Update the callback URL on an existing Gupshup app via PUT /partner/app/{appId}.
-   * This can sometimes kick a stuck pipeline back into motion on Gupshup's side.
-   */
-  async updateCallbackUrl(appId: string, callbackUrl: string): Promise<{ isLive: boolean }> {
-    const partnerToken = await this.getPartnerToken();
-
-    const params = new URLSearchParams();
-    params.append("callbackUrl", callbackUrl);
-
-    this.logger.log(`[Retry] Updating callbackUrl for appId=${appId} to kick pipeline`);
-
-    try {
-      const { data } = await axios.put(
-        `${this.baseUrl}/partner/app/${appId}`,
-        params,
-        { headers: { Authorization: partnerToken, "Content-Type": "application/x-www-form-urlencoded" } },
-      );
-      this.logger.log(`[Retry] callbackUrl update result for appId=${appId}: ${JSON.stringify(data)}`);
-      // The PUT response includes appDetails with live status — use this as source of truth
-      const isLive = data?.appDetails?.live === true;
-      return { isLive };
-    } catch (err) {
-      this.logger.error(`[Retry] callbackUrl update failed for appId=${appId}: ${err?.response?.data?.message ?? err.message}`);
-      throw err;
-    }
-  }
-
-  /**
-   * Option 4 — Force retry for a stuck/error business.
-   *
-   * Strategy (since Gupshup has no delete/reset API):
-   *   1. Try updating the callbackUrl (Option 2) to nudge the existing pipeline.
-   *   2. Re-poll the pipeline — if it progresses, great.
-   *   3. If still stuck, create a brand-new Gupshup app with a unique name suffix
-   *      (Gupshup allows multiple apps per WABA; we link the newest one).
-   *   4. Start a fresh poll for the new appId.
-   */
-  async retryOnboarding(opts: TppOnboardingOptions): Promise<{ gupshupAppId: string; action: string }> {
-    const { businessId, appName, wabaId, phone, callbackUrl } = opts;
-
-    // Find the current stuck/error account
-    const account = await this.prisma.social_accounts.findFirst({
-      where: { business_id: businessId, platform: "whatsapp" },
-    });
-
-    const backendUrl = this.config.get<string>("BACKEND_URL");
-    const resolvedCallbackUrl = callbackUrl ?? `${backendUrl}/whatsapp/gupshup/live-event`;
-
-    // ── Option 2: Try nudging existing app first ──────────────────────────────
-    if (account?.gupshup_app_id) {
-      try {
-        const { isLive } = await this.updateCallbackUrl(account.gupshup_app_id, resolvedCallbackUrl);
-
-        // PUT /partner/app returns appDetails.live — use this as source of truth
-        // The pipeline API (creationStage) can lag behind the actual live status
-        if (isLive) {
-          const partnerAppToken = await this.getPartnerAppToken(account.gupshup_app_id);
-          try { await this.subscribeAppWebhook(account.gupshup_app_id, partnerAppToken); } catch (_) { /* non-fatal */ }
-          await this.prisma.social_accounts.updateMany({
-            where: { gupshup_app_id: account.gupshup_app_id, business_id: businessId },
-            data: { gupshup_app_status: "live", is_active: true, updated_at: new Date() },
-          });
-          this.logger.log(`[Retry] ✅ App ${account.gupshup_app_id} is live (confirmed via appDetails) — activated`);
-          return { gupshupAppId: account.gupshup_app_id, action: "activated_existing" };
-        }
-
-        const partnerAppToken = await this.getPartnerAppToken(account.gupshup_app_id);
-        const status = await this.getPipelineStatus(account.gupshup_app_id, partnerAppToken);
-        const stage = status.whatsapp?.creationStage;
-
-        this.logger.log(`[Retry] Post-nudge pipeline stage for appId=${account.gupshup_app_id}: ${stage}`);
-
-        if (stage === "WHATSAPP_PROVISIONING_DONE") {
-          try { await this.subscribeAppWebhook(account.gupshup_app_id, partnerAppToken); } catch (_) { /* non-fatal */ }
-          await this.prisma.social_accounts.updateMany({
-            where: { gupshup_app_id: account.gupshup_app_id, business_id: businessId },
-            data: { gupshup_app_status: "live", is_active: true, updated_at: new Date() },
-          });
-          this.logger.log(`[Retry] ✅ Existing app was already provisioned — activated appId=${account.gupshup_app_id}`);
-          return { gupshupAppId: account.gupshup_app_id, action: "activated_existing" };
-        }
-
-        if (stage !== "INITIAL" && stage !== "ERROR") {
-          // Pipeline is progressing — re-start polling
-          this.pollUntilLive(account.gupshup_app_id, partnerAppToken, businessId).catch((err) =>
-            this.logger.error(`[Retry] Background poll failed for appId=${account.gupshup_app_id}: ${err.message}`),
-          );
-          await this.prisma.social_accounts.updateMany({
-            where: { gupshup_app_id: account.gupshup_app_id, business_id: businessId },
-            data: { gupshup_app_status: "pending", updated_at: new Date() },
-          });
-          return { gupshupAppId: account.gupshup_app_id, action: "resumed_existing" };
-        }
-      } catch (_) {
-        // Nudge failed — fall through to Option 4 (new app)
-      }
-    }
-
-    // ── Option 4: Create a brand-new app with a unique name suffix ────────────
-    // Gupshup only allows one app per phone. If the phone is already registered,
-    // extract the existing appId from the 409 error and re-poll it instead.
-    let safeName = appName.replace(/[^a-zA-Z0-9]/g, '').toLowerCase();
-    if (safeName.length < 6) safeName = safeName.padEnd(6, 'abc123');
-    const suffix = Date.now().toString(36); // short base-36 timestamp
-    const finalAppName = `${safeName}${suffix}`.substring(0, 150);
-    const finalPhone = phone.replace(/[\s\-\(\)]/g, '');
-
-    this.logger.log(`[Retry] Creating new Gupshup app: name=${finalAppName} wabaId=${wabaId} phone=${finalPhone}`);
-
-    let resolvedAppId: string;
-
-    try {
-      const { data } = await axios.post(
-        `${this.baseUrl}/partner/tpp/app`,
-        new URLSearchParams({ name: finalAppName, wabaId, phone: finalPhone, ...(resolvedCallbackUrl ? { callbackUrl: resolvedCallbackUrl } : {}) }),
-        { headers: { Authorization: await this.getPartnerToken(), "Content-Type": "application/x-www-form-urlencoded" } },
-      );
-
-      if (data.status !== "success" || !data.appId) {
-        throw new InternalServerErrorException(`[Retry] New app creation failed: ${data.message ?? "Unknown error"}`);
-      }
-
-      resolvedAppId = data.appId;
-      this.logger.log(`[Retry] New app created: appId=${resolvedAppId}`);
-    } catch (err) {
-      const errMsg: string = err?.response?.data?.message ?? err.message ?? "";
-
-      // 409 — phone already linked to an existing Gupshup app; extract that appId
-      const match = errMsg.match(/App ([a-f0-9\-]{36}) already exists/i);
-      if (match?.[1]) {
-        resolvedAppId = match[1];
-        this.logger.log(`[Retry] Phone already registered — reusing existing appId=${resolvedAppId}`);
-      } else {
-        throw new InternalServerErrorException(`[Retry] New app creation failed: ${errMsg}`);
-      }
-    }
-
-    // Persist appId and reset status
-    await this.prisma.social_accounts.updateMany({
-      where: { business_id: businessId, platform: "whatsapp" },
-      data: { gupshup_app_id: resolvedAppId, gupshup_app_status: "pending", is_active: false, updated_at: new Date() },
-    });
-
-    const partnerAppToken = await this.getPartnerAppToken(resolvedAppId);
-
-    // Check pipeline once before committing to a full poll
-    const immediateStatus = await this.getPipelineStatus(resolvedAppId, partnerAppToken);
-    const immediateStage = immediateStatus.whatsapp?.creationStage;
-    this.logger.log(`[Retry] Pipeline stage for appId=${resolvedAppId}: ${immediateStage}`);
-
-    if (immediateStage === "WHATSAPP_PROVISIONING_DONE") {
-      try { await this.subscribeAppWebhook(resolvedAppId, partnerAppToken); } catch (_) { /* non-fatal */ }
-      await this.prisma.social_accounts.updateMany({
-        where: { business_id: businessId, platform: "whatsapp" },
-        data: { gupshup_app_status: "live", is_active: true, updated_at: new Date() },
-      });
-      this.logger.log(`[Retry] ✅ App ${resolvedAppId} already provisioned — activated immediately`);
-      return { gupshupAppId: resolvedAppId, action: "activated_existing" };
-    }
-
-    if (immediateStage === "INITIAL") {
-      // Pipeline never started on Gupshup's side — polling won't help.
-      // Mark as stuck so bootstrap doesn't retry endlessly. Requires Gupshup support to reset.
-      await this.prisma.social_accounts.updateMany({
-        where: { business_id: businessId, platform: "whatsapp" },
-        data: { gupshup_app_status: "stuck", updated_at: new Date() },
-      });
-      this.logger.warn(
-        `[Retry] ⚠️ App ${resolvedAppId} is stuck at INITIAL on Gupshup's side. ` +
-        `Contact Gupshup support to reset pipeline for wabaId=${wabaId} phone=${finalPhone}.`,
-      );
-      return { gupshupAppId: resolvedAppId, action: "stuck" };
-    }
-
-    this.pollUntilLive(resolvedAppId, partnerAppToken, businessId).catch((err) =>
-      this.logger.error(`[Retry] Background poll failed for appId=${resolvedAppId}: ${err.message}`),
-    );
-
-    return { gupshupAppId: resolvedAppId, action: "polling" };
   }
 
   // ─────────────────────────────────────────────────────────────────────────────
@@ -963,33 +557,5 @@ export class GupshupOnboardingService implements OnApplicationBootstrap {
 
     this.logger.log(`WhatsApp account saved for business=${businessId} phone=${phone}`);
     return { accountId: account.account_id, phoneNumber: phone };
-  }
-
-  /**
-   * Fetch Meta WABA account_review_status and store it in social_accounts.
-   * Non-fatal — called via setImmediate after account goes live.
-   */
-  private async fetchMetaVerificationStatus(accountId: string, wabaId: string): Promise<void> {
-    try {
-      const apiVersion = this.config.get<string>('WHATSAPP_API_VERSION', 'v24.0');
-      const token = this.config.get<string>('WHATSAPP_PERMANENT_TOKEN', '');
-      const { data } = await axios.get(
-        `https://graph.facebook.com/${apiVersion}/${wabaId}`,
-        {
-          params: { fields: 'id,name,account_review_status,business_verification_status' },
-          headers: { Authorization: `Bearer ${token}` },
-        },
-      );
-      await this.prisma.social_accounts.update({
-        where: { account_id: accountId },
-        data: {
-          meta_account_review_status: data.account_review_status ?? null,
-          meta_verification_checked_at: new Date(),
-        },
-      });
-      this.logger.log(`[Verification] account ${accountId} → ${data.account_review_status}`);
-    } catch (err) {
-      this.logger.warn(`[Verification] Could not fetch status for account ${accountId}: ${err.message}`);
-    }
   }
 }

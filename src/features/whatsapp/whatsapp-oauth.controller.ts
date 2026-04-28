@@ -9,10 +9,14 @@ import {
   Logger,
   UseGuards,
 } from '@nestjs/common';
+import { ApiTags, ApiOperation, ApiBearerAuth, ApiResponse } from '@nestjs/swagger';
 import { Response } from 'express';
 import { WhatsAppOAuthService } from './services/whatsapp-oauth.service';
 import { ConfigService } from '@nestjs/config';
-import { JwtAuthGuard } from '../../common/guards';@Controller('whatsapp/oauth')
+import { JwtAuthGuard } from '../../common/guards';
+
+@ApiTags('WhatsApp OAuth')
+@Controller('whatsapp/oauth')
 export class WhatsAppOAuthController {
   private readonly logger = new Logger(WhatsAppOAuthController.name);
 
@@ -25,7 +29,11 @@ export class WhatsAppOAuthController {
    * Frontend calls this to get the Facebook OAuth URL
    */
   @Get('url')
-  @UseGuards(JwtAuthGuard)  async getOAuthUrl(
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'Get WhatsApp OAuth URL' })
+  @ApiResponse({ status: 200, description: 'OAuth URL generated successfully' })
+  async getOAuthUrl(
     @Query('businessId') businessId: string,
     @Query('redirectUri') redirectUri?: string,
   ) {
@@ -50,7 +58,10 @@ export class WhatsAppOAuthController {
    * Handle Embedded Signup code posted directly from the frontend FB SDK popup
    */
   @Post('embedded-callback')
-  @UseGuards(JwtAuthGuard)  async handleEmbeddedCallback(
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'Handle WhatsApp Embedded Signup code from frontend' })
+  async handleEmbeddedCallback(
     @Body() body: { code: string; businessId: string; waba_id: string, phone_number_id: string, whatsapp_business_id: string },
   ) {
     if (!body.code || !body.businessId) {
@@ -64,7 +75,10 @@ export class WhatsAppOAuthController {
    * Step 2: Handle OAuth Callback
    * Facebook redirects here after user authorizes
    */
-  @Get('callback')  async handleCallback(
+  @Get('callback')
+  @ApiOperation({ summary: 'Handle WhatsApp OAuth callback from Facebook' })
+  @ApiResponse({ status: 302, description: 'Redirects to frontend with result' })
+  async handleCallback(
     @Query('code') code: string,
     @Query('state') state: string,
     @Query('error') error: string,
