@@ -8,16 +8,11 @@ import {
   Param,
   UseGuards,
 } from "@nestjs/common";
-import { ApiBearerAuth, ApiTags } from "@nestjs/swagger";
 import { JwtAuthGuard } from "../../../common/guards/jwt-auth.guard";
 import { TenantsService } from "../application/tenants.service";
 import { CreateTenantDto } from "../application/dto/create-tenant.dto";
 import { TenantResponseDto } from "../application/dto/tenant-response.dto";
-import { UpdateTenantDto } from "../application/dto/update-tenant.dto";
-
-@ApiTags("Tenants")
-@ApiBearerAuth()
-@UseGuards(JwtAuthGuard)
+import { UpdateTenantDto } from "../application/dto/update-tenant.dto";@UseGuards(JwtAuthGuard)
 @Controller("tenants")
 export class TenantsController {
   constructor(private readonly service: TenantsService) {}

@@ -1,43 +1,34 @@
 import { IsString, IsOptional } from 'class-validator';
-import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
 export class ConnectWhatsAppAccountDto {
-  @ApiProperty({ description: 'Business ID' })
-  @IsString()
+    @IsString()
   businessId: string;
 
-  @ApiProperty({ description: 'WhatsApp Business Account ID' })
-  @IsString()
+    @IsString()
   whatsappBusinessAccountId: string;
 
-  @ApiProperty({ description: 'Phone Number ID from WhatsApp Business API' })
-  @IsString()
+    @IsString()
   phoneNumberId: string;
 
-  @ApiPropertyOptional({ description: 'Access Token from Facebook/Meta (deprecated — platform uses permanent token)' })
   @IsString()
   @IsOptional()
   accessToken?: string;
 
-  @ApiPropertyOptional({ description: 'Display phone number' })
-  @IsString()
+    @IsString()
   @IsOptional()
   displayPhoneNumber?: string;
 }
 
 export class DisconnectWhatsAppAccountDto {
-  @ApiProperty({ description: 'Business ID that owns the account' })
-  @IsString()
+    @IsString()
   businessId: string;
 
-  @ApiPropertyOptional({ description: 'Reason for disconnecting' })
-  @IsString()
+    @IsString()
   @IsOptional()
   reason?: string;
 }
 
 export class GetAccountsDto {
-  @ApiProperty({ description: 'Business ID' })
-  @IsString()
+    @IsString()
   businessId: string;
 }

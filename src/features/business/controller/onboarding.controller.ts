@@ -1,5 +1,4 @@
 import { Body, Controller, Post, Request, UseGuards } from "@nestjs/common";
-import { ApiBearerAuth, ApiTags } from "@nestjs/swagger";
 import { JwtAuthGuard } from "../../../common/guards/jwt-auth.guard";
 import { PrismaService } from "src/prisma/prisma.service";
 import { UpdateBusinessDto } from "../application/dto/update-business.dto";
@@ -35,11 +34,7 @@ class CompleteOnboardingDto extends UpdateBusinessDto {
   @ValidateNested({ each: true })
   @Type(() => OnboardingEmployeeDto)
   employees?: OnboardingEmployeeDto[];
-}
-
-@ApiTags("Onboarding")
-@ApiBearerAuth()
-@UseGuards(JwtAuthGuard)
+}@UseGuards(JwtAuthGuard)
 @Controller("onboarding")
 export class OnboardingController {
   constructor(private readonly prisma: PrismaService) {}

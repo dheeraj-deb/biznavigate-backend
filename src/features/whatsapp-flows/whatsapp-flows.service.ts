@@ -203,11 +203,6 @@ export class WhatsAppFlowsService {
         return { message: 'Flow deleted' };
     }
 
-    /**
-     * Regenerate RSA key pair and update endpoint URI on Meta.
-     * Use this when a flow was synced from Meta and has no private key,
-     * or when the endpoint URI is stale (points to a deleted document).
-     */
     async rekey(businessId: string, id: string) {
         const flow = await this.findOneOrFail(businessId, id);
 
@@ -307,7 +302,6 @@ export class WhatsAppFlowsService {
                 updated++;
             }
 
-            // Generate RSA key pair and update endpoint URI on Meta
             const docId = doc._id.toString();
             const endpointUri = `${baseUrl}/whatsapp/flows/exchange/${docId}`;
 
@@ -355,18 +349,19 @@ export class WhatsAppFlowsService {
         return { status };
     }
 
-    /**
-     * Returns the Meta flow ID for the business's APPOINTMENT_BOOKING (hospitality) flow.
-     * Used by the AI agent to trigger the availability result screen directly.
-     */
     async findHospitalityFlowId(businessId: string): Promise<string | null> {
+        // First try business-owned flow
         const flow = await this.flowModel.findOne({
             businessId,
             category: FlowCategory.APPOINTMENT_BOOKING,
             isDeleted: false,
             metaFlowId: { $exists: true, $ne: null },
         });
-        return flow?.metaFlowId ?? null;
+        if (flow?.metaFlowId) return flow.metaFlowId;
+
+        // Fall back to BizNavigate's platform-level published flow
+        const platformFlowId = this.configService.get<string>('PLATFORM_HOSPITALITY_FLOW_ID');
+        return platformFlowId ?? null;
     }
 
     // ── Helpers ───────────────────────────────────────────────────────────────

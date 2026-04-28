@@ -5,6 +5,7 @@ import { Queue } from 'bullmq';
 import { getRedis } from 'src/utils/redis';
 import { PrismaService } from '../../prisma/prisma.service';
 import { WhatsAppApiClientService } from './infrastructure/whatsapp-api-client.service';
+import { GupshupApiClientService } from './infrastructure/gupshup-api-client.service';
 import { CircuitBreakerService } from './infrastructure/circuit-breaker.service';
 import { KafkaProducerService } from '../kafka/kafka-producer.service';
 import { KafkaConsumerService } from '../kafka/kafka-consumer.service';
@@ -15,7 +16,6 @@ import { WhatsAppCatalogOrderService } from './services/whatsapp-catalog-order.s
 import { ConversationService } from '../conversation/conversation.service';
 import { InboxGateway } from '../inbox/gateway/inbox.gateway';
 import { HumanHandoffGateway } from '../human-handoff/human-handoff.gateway';
-import { WhatsAppWebhookDto } from './dto/webhook-event.dto';
 import { WebhookValidatorService } from './infrastructure/webhook-validator.service';
 import { WhatsAppTemplatesService } from '../whatsapp-templates/whatsapp-templates.service';
 import { WhatsAppFlowsService } from '../whatsapp-flows/whatsapp-flows.service';
@@ -30,6 +30,7 @@ export class WhatsAppService {
   constructor(
     private readonly prisma: PrismaService,
     private readonly apiClient: WhatsAppApiClientService,
+    private readonly gupshupApiClient: GupshupApiClientService,
     private readonly circuitBreaker: CircuitBreakerService,
     private readonly kafkaProducer: KafkaProducerService,
     private readonly _kafkaConsumer: KafkaConsumerService,
@@ -99,10 +100,13 @@ export class WhatsAppService {
     }
   }
 
-  async processWebhook(webhookData: WhatsAppWebhookDto): Promise<void> {
+  async processWebhook(webhookData: any): Promise<void> {
     if (!this.webhookValidator.validateWebhookEvent(webhookData)) {
       throw new BadRequestException('Invalid webhook event structure');
     }
+
+    // gs_app_id is present on Gupshup V3 webhooks — pass it through for account lookup
+    const gsAppId: string | undefined = (webhookData as any).gs_app_id;
 
     try {
       for (const entry of webhookData.entry) {
@@ -120,12 +124,11 @@ export class WhatsAppService {
           if (messages.length > 0) {
             await Promise.all(
               messages.map(msg =>
-                this.handleMessageWebhook(msg, value.metadata, value.contacts || [])
+                this.handleMessageWebhook(msg, value.metadata, value.contacts || [], gsAppId)
               )
             );
           }
 
-          // Handle message statuses (sent, delivered, read, failed)
           const statuses = this.webhookValidator.extractStatuses(value);
           if (statuses.length > 0) {
             for (const status of statuses) {
@@ -135,7 +138,6 @@ export class WhatsAppService {
         }
       }
     } catch (error) {
-      console.log("error", error);
       this.logger.error('Error processing webhook:', error);
     }
   }
@@ -145,9 +147,9 @@ export class WhatsAppService {
    */
   async getWhatsAppAccounts(businessId: string): Promise<any[]> {
     const accounts = await this.prisma.social_accounts.findMany({
-      where: { 
-        business_id: businessId, 
-        platform: 'whatsapp', 
+      where: {
+        business_id: businessId,
+        platform: 'whatsapp',
         OR: [
           { is_active: true },
           { gupshup_app_status: 'pending' },
@@ -163,6 +165,9 @@ export class WhatsAppService {
         created_at: true,
         gupshup_app_id: true,
         gupshup_app_status: true,
+        meta_account_review_status: true,
+        meta_verification_checked_at: true,
+        meta_verified_name: true,
       },
     });
 
@@ -170,7 +175,45 @@ export class WhatsAppService {
       ...acc,
       phone_number_id: acc.page_id,
       whatsapp_business_account_id: acc.instagram_business_account_id,
+      business_verification_status: acc.meta_account_review_status ?? 'UNKNOWN',
+      business_verification_url: 'https://business.facebook.com/settings/security',
     }));
+  }
+
+  async fetchAndStoreVerificationStatus(accountId: string, wabaId: string): Promise<void> {
+    try {
+      const details = await this.apiClient.getBusinessAccountDetails(wabaId);
+      await this.prisma.social_accounts.update({
+        where: { account_id: accountId },
+        data: {
+          meta_account_review_status: details.account_review_status ?? null,
+          meta_verification_checked_at: new Date(),
+        },
+      });
+      this.logger.log(`Verification status for account ${accountId}: ${details.account_review_status}`);
+    } catch (err) {
+      this.logger.warn(`Could not fetch verification status for account ${accountId}: ${err.message}`);
+    }
+  }
+
+  async refreshAccountVerification(accountId: string, businessId: string) {
+    const account = await this.prisma.social_accounts.findFirst({
+      where: { account_id: accountId, business_id: businessId, platform: 'whatsapp' },
+    });
+    if (!account) throw new NotFoundException('WhatsApp account not found');
+
+    await this.fetchAndStoreVerificationStatus(accountId, account.instagram_business_account_id);
+
+    const updated = await this.prisma.social_accounts.findUnique({
+      where: { account_id: accountId },
+      select: { meta_account_review_status: true, meta_verification_checked_at: true },
+    });
+
+    return {
+      business_verification_status: updated?.meta_account_review_status ?? 'UNKNOWN',
+      meta_verification_checked_at: updated?.meta_verification_checked_at,
+      business_verification_url: 'https://business.facebook.com/settings/security',
+    };
   }
 
   /**
@@ -196,7 +239,7 @@ export class WhatsAppService {
   /**
    * Handle incoming message webhook
    */
-  async handleMessageWebhook(message: any, metadata: any, contacts: any[]): Promise<void> {
+  async handleMessageWebhook(message: any, metadata: any, contacts: any[], gsAppId?: string): Promise<void> {
     try {
       const phoneNumberId = metadata.phone_number_id;
       const from = message.from;
@@ -217,14 +260,16 @@ export class WhatsAppService {
         return;
       }
 
-      // Find business by phone number ID
+      // Find business — prefer Gupshup app ID lookup (more reliable than phone_number_id)
       const account = await this.prisma.social_accounts.findFirst({
-        where: { platform: 'whatsapp', page_id: phoneNumberId, is_active: true },
+        where: gsAppId
+          ? { platform: 'whatsapp', gupshup_app_id: gsAppId }
+          : { platform: 'whatsapp', page_id: phoneNumberId, is_active: true },
         include: { businesses: true },
       });
 
       if (!account) {
-        this.logger.warn(`No active WhatsApp account found for phone number ID: ${phoneNumberId}`);
+        this.logger.warn(`No WhatsApp account found for ${gsAppId ? `gs_app_id=${gsAppId}` : `phone_number_id=${phoneNumberId}`}`);
         return;
       }
 
@@ -407,10 +452,7 @@ export class WhatsAppService {
       }
 
       // Mark as read + show typing indicator while AI processes
-      await this.circuitBreaker.execute(
-        `whatsapp-mark-read-${phoneNumberId}`,
-        () => this.apiClient.markAsRead(phoneNumberId, messageId),
-      );
+      await this.markMessageAsRead(account, phoneNumberId, messageId);
 
       // Map business_type to AI service expected values
       // const businessTypeMap: Record<string, string> = {
@@ -526,7 +568,7 @@ export class WhatsAppService {
       this.logger.warn(`sendAgentReply: no active WhatsApp account for business ${businessId}`);
       return;
     }
-    const apiResult = await this.apiClient.sendMessage(phoneNumberId, {
+    const apiResult = await this.dispatchMessage(account, phoneNumberId, {
       messaging_product: 'whatsapp',
       recipient_type: 'individual',
       to,
@@ -715,7 +757,7 @@ export class WhatsAppService {
       this.logger.log('Sending message via WhatsApp Business API');
       const result = await this.circuitBreaker.execute(
         `whatsapp-send-${phoneNumberId}`,
-        () => this.apiClient.sendMessage(phoneNumberId, message),
+        () => this.dispatchMessage(account, phoneNumberId, message),
       );
 
       // Find lead (stays in Postgres)
@@ -985,6 +1027,17 @@ export class WhatsAppService {
       this.logger.error('Failed to get conversation stats:', error);
       throw error;
     }
+  }
+
+  /**
+   * Send via Gupshup V3 passthrough API.
+   */
+  private async dispatchMessage(account: any, _phoneNumberId: string, message: any): Promise<any> {
+    return this.gupshupApiClient.sendMessage(account.gupshup_app_id, message);
+  }
+
+  private async markMessageAsRead(account: any, _phoneNumberId: string, messageId: string): Promise<void> {
+    await this.gupshupApiClient.markAsRead(account.gupshup_app_id, messageId);
   }
 
   /**

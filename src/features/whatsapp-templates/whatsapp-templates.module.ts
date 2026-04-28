@@ -10,11 +10,13 @@ import { WhatsAppApiClientService } from '../whatsapp/infrastructure/whatsapp-ap
 import { PrismaModule } from '../../prisma/prisma.module';
 import { TemplateSyncProcessor } from './jobs/template-sync.processor';
 import { TemplateSyncSchedulerService } from './jobs/template-sync-scheduler.service';
+import { GupshupModule } from '../gupshup/gupshup.module';
 
 @Module({
     imports: [
         ConfigModule,
         PrismaModule,
+        GupshupModule,
         MongooseModule.forFeature([
             { name: WhatsAppTemplate.name, schema: WhatsAppTemplateSchema },
         ]),
