@@ -1,6 +1,5 @@
 import { IsString, IsOptional, ValidateNested, IsArray, IsNumber, IsEnum } from 'class-validator';
 import { Type } from 'class-transformer';
-import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
 // Message Types
 export enum WhatsAppMessageType {
@@ -35,138 +34,113 @@ export enum MessageStatus {
 
 // Message Context (Reply to message)
 export class MessageContextDto {
-  @ApiProperty()
-  @IsString()
+    @IsString()
   from: string;
 
-  @ApiPropertyOptional()
-  @IsString()
+    @IsString()
   @IsOptional()
   id?: string;
 }
 
 // Text Message
 export class TextMessageDto {
-  @ApiProperty()
-  @IsString()
+    @IsString()
   body: string;
 }
 
 // Image/Video/Audio/Document
 export class MediaMessageDto {
-  @ApiPropertyOptional()
-  @IsString()
+    @IsString()
   @IsOptional()
   id?: string;
 
-  @ApiPropertyOptional()
-  @IsString()
+    @IsString()
   @IsOptional()
   link?: string;
 
-  @ApiPropertyOptional()
-  @IsString()
+    @IsString()
   @IsOptional()
   mime_type?: string;
 
-  @ApiPropertyOptional()
-  @IsString()
+    @IsString()
   @IsOptional()
   sha256?: string;
 
-  @ApiPropertyOptional()
-  @IsString()
+    @IsString()
   @IsOptional()
   caption?: string;
 
-  @ApiPropertyOptional()
-  @IsString()
+    @IsString()
   @IsOptional()
   filename?: string;
 }
 
 // Location Message
 export class LocationMessageDto {
-  @ApiProperty()
-  @IsNumber()
+    @IsNumber()
   latitude: number;
 
-  @ApiProperty()
-  @IsNumber()
+    @IsNumber()
   longitude: number;
 
-  @ApiPropertyOptional()
-  @IsString()
+    @IsString()
   @IsOptional()
   name?: string;
 
-  @ApiPropertyOptional()
-  @IsString()
+    @IsString()
   @IsOptional()
   address?: string;
 }
 
 // Interactive Message Reply
 export class ButtonReplyDto {
-  @ApiProperty()
-  @IsString()
+    @IsString()
   id: string;
 
-  @ApiProperty()
-  @IsString()
+    @IsString()
   title: string;
 }
 
 export class ListReplyDto {
-  @ApiProperty()
-  @IsString()
+    @IsString()
   id: string;
 
-  @ApiProperty()
-  @IsString()
+    @IsString()
   title: string;
 
-  @ApiPropertyOptional()
-  @IsString()
+    @IsString()
   @IsOptional()
   description?: string;
 }
 
 export class NfmReplyDto {
-  @ApiProperty()
-  @IsString()
+    @IsString()
   response_json: string;
 
-  @ApiPropertyOptional()
-  @IsString()
+    @IsString()
   @IsOptional()
   body?: string;
 
-  @ApiPropertyOptional()
-  @IsString()
+    @IsString()
   @IsOptional()
   name?: string;
 }
 
 export class InteractiveMessageDto {
-  @ApiProperty()
-  @IsEnum(InteractiveType)
+    @IsEnum(InteractiveType)
   type: InteractiveType;
 
-  @ApiPropertyOptional({ type: ButtonReplyDto })
-  @ValidateNested()
+    @ValidateNested()
   @Type(() => ButtonReplyDto)
   @IsOptional()
   button_reply?: ButtonReplyDto;
 
-  @ApiPropertyOptional({ type: ListReplyDto })
-  @ValidateNested()
+    @ValidateNested()
   @Type(() => ListReplyDto)
   @IsOptional()
   list_reply?: ListReplyDto;
 
-  @ApiPropertyOptional({ type: NfmReplyDto })
-  @ValidateNested()
+    @ValidateNested()
   @Type(() => NfmReplyDto)
   @IsOptional()
   nfm_reply?: NfmReplyDto;
@@ -174,50 +148,41 @@ export class InteractiveMessageDto {
 
 // Reaction Message
 export class ReactionMessageDto {
-  @ApiProperty()
-  @IsString()
+    @IsString()
   message_id: string;
 
-  @ApiPropertyOptional()
-  @IsString()
+    @IsString()
   @IsOptional()
   emoji?: string;
 }
 
 // Order Message (for catalog orders)
 export class OrderProductItemDto {
-  @ApiProperty()
-  @IsString()
+    @IsString()
   product_retailer_id: string;
 
-  @ApiPropertyOptional()
-  @IsNumber()
+    @IsNumber()
   @IsOptional()
   quantity?: number;
 
-  @ApiPropertyOptional()
-  @IsNumber()
+    @IsNumber()
   @IsOptional()
   item_price?: number;
 
-  @ApiPropertyOptional()
-  @IsString()
+    @IsString()
   @IsOptional()
   currency?: string;
 }
 
 export class OrderMessageDto {
-  @ApiProperty()
-  @IsString()
+    @IsString()
   catalog_id: string;
 
-  @ApiPropertyOptional()
-  @IsString()
+    @IsString()
   @IsOptional()
   text?: string;
 
-  @ApiProperty({ type: [OrderProductItemDto] })
-  @IsArray()
+    @IsArray()
   @ValidateNested({ each: true })
   @Type(() => OrderProductItemDto)
   product_items: OrderProductItemDto[];
@@ -225,99 +190,82 @@ export class OrderMessageDto {
 
 // Profile
 export class ProfileDto {
-  @ApiProperty()
-  @IsString()
+    @IsString()
   name: string;
 }
 
 // Contact
 export class ContactDto {
-  @ApiPropertyOptional({ type: ProfileDto })
-  @ValidateNested()
+    @ValidateNested()
   @Type(() => ProfileDto)
   @IsOptional()
   profile?: ProfileDto;
 
-  @ApiProperty()
-  @IsString()
+    @IsString()
   wa_id: string;
 }
 
 // Message
 export class WhatsAppMessageDto {
-  @ApiProperty()
-  @IsString()
+    @IsString()
   from: string;
 
-  @ApiProperty()
-  @IsString()
+    @IsString()
   id: string;
 
-  @ApiProperty()
-  @Type(() => Number)
+    @Type(() => Number)
   @IsNumber()
   timestamp: number;
 
-  @ApiProperty()
-  @IsString()
+    @IsString()
   type: string; // kept as string — Meta can send 'unsupported', 'system', future types
 
-  @ApiPropertyOptional({ type: MessageContextDto })
-  @ValidateNested()
+    @ValidateNested()
   @Type(() => MessageContextDto)
   @IsOptional()
   context?: MessageContextDto;
 
-  @ApiPropertyOptional({ type: TextMessageDto })
-  @ValidateNested()
+    @ValidateNested()
   @Type(() => TextMessageDto)
   @IsOptional()
   text?: TextMessageDto;
 
-  @ApiPropertyOptional({ type: MediaMessageDto })
-  @ValidateNested()
+    @ValidateNested()
   @Type(() => MediaMessageDto)
   @IsOptional()
   image?: MediaMessageDto;
 
-  @ApiPropertyOptional({ type: MediaMessageDto })
-  @ValidateNested()
+    @ValidateNested()
   @Type(() => MediaMessageDto)
   @IsOptional()
   video?: MediaMessageDto;
 
-  @ApiPropertyOptional({ type: MediaMessageDto })
-  @ValidateNested()
+    @ValidateNested()
   @Type(() => MediaMessageDto)
   @IsOptional()
   audio?: MediaMessageDto;
 
-  @ApiPropertyOptional({ type: MediaMessageDto })
-  @ValidateNested()
+    @ValidateNested()
   @Type(() => MediaMessageDto)
   @IsOptional()
   document?: MediaMessageDto;
 
-  @ApiPropertyOptional({ type: LocationMessageDto })
-  @ValidateNested()
+    @ValidateNested()
   @Type(() => LocationMessageDto)
   @IsOptional()
   location?: LocationMessageDto;
 
-  @ApiPropertyOptional({ type: InteractiveMessageDto })
-  @ValidateNested()
+    @ValidateNested()
   @Type(() => InteractiveMessageDto)
   @IsOptional()
   interactive?: InteractiveMessageDto;
 
-  @ApiPropertyOptional({ type: ReactionMessageDto })
-  @ValidateNested()
+    @ValidateNested()
   @Type(() => ReactionMessageDto)
   @IsOptional()
   reaction?: ReactionMessageDto;
 
-  @ApiPropertyOptional({ type: OrderMessageDto })
-  @ValidateNested()
+    @ValidateNested()
   @Type(() => OrderMessageDto)
   @IsOptional()
   order?: OrderMessageDto;
@@ -325,69 +273,57 @@ export class WhatsAppMessageDto {
 
 // Status
 export class StatusDto {
-  @ApiProperty()
-  @IsString()
+    @IsString()
   id: string;
 
-  @ApiProperty()
-  @IsString()
+    @IsString()
   status: string; // kept as string — Meta can send 'deleted' and future statuses
 
-  @ApiProperty()
-  @Type(() => Number)
+    @Type(() => Number)
   @IsNumber()
   timestamp: number;
 
-  @ApiProperty()
-  @IsString()
+    @IsString()
   recipient_id: string;
 
-  @ApiPropertyOptional()
-  @IsArray()
+    @IsArray()
   @IsOptional()
   errors?: any[];
 }
 
 // Metadata
 export class MetadataDto {
-  @ApiProperty()
-  @IsString()
+    @IsString()
   display_phone_number: string;
 
-  @ApiProperty()
-  @IsString()
+    @IsString()
   phone_number_id: string;
 }
 
 // Value (contains messages or statuses)
 export class ValueDto {
-  @ApiPropertyOptional()
-  @IsString()
+    @IsString()
   @IsOptional()
   messaging_product?: string;
 
-  @ApiPropertyOptional({ type: MetadataDto })
-  @ValidateNested()
+    @ValidateNested()
   @Type(() => MetadataDto)
   @IsOptional()
   metadata?: MetadataDto;
 
-  @ApiPropertyOptional({ type: [ContactDto] })
-  @IsArray()
+    @IsArray()
   @ValidateNested({ each: true })
   @Type(() => ContactDto)
   @IsOptional()
   contacts?: ContactDto[];
 
-  @ApiPropertyOptional({ type: [WhatsAppMessageDto] })
-  @IsArray()
+    @IsArray()
   @ValidateNested({ each: true })
   @Type(() => WhatsAppMessageDto)
   @IsOptional()
   messages?: WhatsAppMessageDto[];
 
-  @ApiPropertyOptional({ type: [StatusDto] })
-  @IsArray()
+    @IsArray()
   @ValidateNested({ each: true })
   @Type(() => StatusDto)
   @IsOptional()
@@ -396,24 +332,20 @@ export class ValueDto {
 
 // Change
 export class ChangeDto {
-  @ApiProperty({ type: ValueDto })
-  @ValidateNested()
+    @ValidateNested()
   @Type(() => ValueDto)
   value: ValueDto;
 
-  @ApiProperty()
-  @IsString()
+    @IsString()
   field: string;
 }
 
 // Entry
 export class EntryDto {
-  @ApiProperty()
-  @IsString()
+    @IsString()
   id: string; // WhatsApp Business Account ID
 
-  @ApiProperty({ type: [ChangeDto] })
-  @IsArray()
+    @IsArray()
   @ValidateNested({ each: true })
   @Type(() => ChangeDto)
   changes: ChangeDto[];
@@ -421,12 +353,10 @@ export class EntryDto {
 
 // Webhook Event
 export class WhatsAppWebhookDto {
-  @ApiProperty()
-  @IsString()
+    @IsString()
   object: string; // Always 'whatsapp_business_account'
 
-  @ApiProperty({ type: [EntryDto] })
-  @IsArray()
+    @IsArray()
   @ValidateNested({ each: true })
   @Type(() => EntryDto)
   entry: EntryDto[];
@@ -434,15 +364,12 @@ export class WhatsAppWebhookDto {
 
 // Webhook Verification
 export class WebhookVerificationDto {
-  @ApiProperty()
-  @IsString()
+    @IsString()
   'hub.mode': string;
 
-  @ApiProperty()
-  @IsString()
+    @IsString()
   'hub.verify_token': string;
 
-  @ApiProperty()
-  @IsString()
+    @IsString()
   'hub.challenge': string;
 }

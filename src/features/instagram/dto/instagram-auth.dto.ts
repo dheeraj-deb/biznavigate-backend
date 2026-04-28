@@ -1,64 +1,51 @@
 import { IsString, IsOptional, IsArray, IsBoolean } from 'class-validator';
-import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
 export class ExchangeCodeDto {
-  @ApiProperty({ description: 'Authorization code from Facebook OAuth' })
-  @IsString()
+    @IsString()
   code: string;
 
-  @ApiPropertyOptional({ description: 'State parameter for CSRF protection' })
-  @IsString()
+    @IsString()
   @IsOptional()
   state?: string;
 }
 
 export class ConnectInstagramAccountDto {
-  @ApiProperty({ description: 'Facebook page ID' })
-  @IsString()
+    @IsString()
   facebookPageId: string;
 
-  @ApiProperty({ description: 'Instagram business account ID' })
-  @IsString()
+    @IsString()
   instagramBusinessAccountId: string;
 
-  @ApiProperty({ description: 'Access token for the account' })
-  @IsString()
+    @IsString()
   accessToken: string;
 
-  @ApiPropertyOptional({ description: 'Permissions granted' })
-  @IsArray()
+    @IsArray()
   @IsOptional()
   permissions?: string[];
 
-  @ApiProperty({ description: 'Business ID to link the account to' })
-  @IsString()
+    @IsString()
   businessId: string;
 }
 
 export class RefreshTokenDto {
-  @ApiProperty({ description: 'Account ID to refresh token for' })
-  @IsString()
+    @IsString()
   accountId: string;
 }
 
 export class DisconnectAccountDto {
-  @ApiProperty({ description: 'Business ID that owns the account' })
-  @IsString()
+    @IsString()
   businessId: string;
 
-  @ApiPropertyOptional({ description: 'Reason for disconnecting' })
-  @IsString()
+    @IsString()
   @IsOptional()
   reason?: string;
 }
 
 export class GetOAuthUrlDto {
-  @ApiProperty({ description: 'Business ID for the OAuth flow' })
-  @IsString()
+    @IsString()
   businessId: string;
 
-  @ApiPropertyOptional({ description: 'Custom redirect URI' })
-  @IsString()
+    @IsString()
   @IsOptional()
   redirectUri?: string;
 }

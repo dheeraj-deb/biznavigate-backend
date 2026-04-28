@@ -1,4 +1,3 @@
-import { ApiProperty } from "@nestjs/swagger";
 import {
   IsEmail,
   IsNotEmpty,
@@ -11,45 +10,24 @@ import {
 import { IsStrongPassword } from "../../../../common/validators/password.validator";
 
 export class SignupDto {
-  @ApiProperty({
-    description: "Tenant name",
-    example: "Acme Corporation",
-  })
-  @IsString()
+    @IsString()
   @IsNotEmpty()
   tenant_name: string;
 
-  @ApiProperty({
-    description: "User email address",
-    example: "user@example.com",
-  })
-  @IsEmail()
+    @IsEmail()
   @IsNotEmpty()
   email: string;
 
-  @ApiProperty({
-    description: "User password (minimum 8 characters, must contain uppercase, lowercase, number, and special character)",
-    example: "SecureP@ssw0rd123",
-    minLength: 8,
-  })
   @IsString()
   @IsNotEmpty()
   @IsStrongPassword()
   password: string;
 
-  @ApiProperty({
-    description: "User full name",
-    example: "John Doe",
-  })
-  @IsOptional()
+    @IsOptional()
   @IsString()
   name: string;
 
-  @ApiProperty({
-    description: "User phone number",
-    example: "+1234567890",
-  })
-  // @IsPhoneNumber()
+    // @IsPhoneNumber()
   @IsNotEmpty()
   phone_number: string;
 }

@@ -12,12 +12,6 @@ import {
   HttpStatus,
   NotImplementedException,
 } from '@nestjs/common';
-import {
-  ApiTags,
-  ApiOperation,
-  ApiResponse,
-  ApiBearerAuth,
-} from '@nestjs/swagger';
 import { InstagramCatalogService } from './services/instagram-catalog.service';
 import {
   ToggleProductInCatalogDto,
@@ -27,7 +21,6 @@ import {
 } from './dto/instagram-catalog.dto';
 import { JwtAuthGuard } from '../../common/guards/jwt-auth.guard';
 
-@ApiTags('Instagram Catalog')
 @Controller('instagram/catalog')
 @UseGuards(JwtAuthGuard)
 export class InstagramCatalogController {
@@ -40,11 +33,7 @@ export class InstagramCatalogController {
   /**
    * Get all products in Instagram catalog
    */
-  @Get(':businessId')
-  @ApiBearerAuth()
-  @ApiOperation({ summary: 'Get all products in Instagram catalog for a business' })
-  @ApiResponse({ status: 200, description: 'Products retrieved successfully' })
-  async getCatalogProducts(@Param('businessId') businessId: string) {
+  @Get(':businessId')  async getCatalogProducts(@Param('businessId') businessId: string) {
     this.logger.log(`Getting catalog products for business ${businessId}`);
     const products = await this.catalogService.getCatalogProducts(businessId);
     return {
@@ -57,11 +46,7 @@ export class InstagramCatalogController {
   /**
    * Toggle single product in Instagram catalog
    */
-  @Post(':businessId/toggle')
-  @ApiBearerAuth()
-  @ApiOperation({ summary: 'Add or remove a single product from Instagram catalog' })
-  @ApiResponse({ status: 200, description: 'Product toggled successfully' })
-  async toggleProduct(
+  @Post(':businessId/toggle')  async toggleProduct(
     @Param('businessId') businessId: string,
     @Body() dto: ToggleProductInCatalogDto,
   ) {
@@ -74,11 +59,7 @@ export class InstagramCatalogController {
   /**
    * Bulk toggle products in Instagram catalog
    */
-  @Post(':businessId/bulk-toggle')
-  @ApiBearerAuth()
-  @ApiOperation({ summary: 'Bulk add or remove products from Instagram catalog' })
-  @ApiResponse({ status: 200, description: 'Products toggled successfully' })
-  async bulkToggle(
+  @Post(':businessId/bulk-toggle')  async bulkToggle(
     @Param('businessId') businessId: string,
     @Body() dto: BulkToggleCatalogDto,
   ) {
@@ -92,17 +73,7 @@ export class InstagramCatalogController {
    * Sync catalog products to Instagram using Meta Graph API Batch
    */
   @Post(':businessId/sync')
-  @HttpCode(HttpStatus.OK)
-  @ApiBearerAuth()
-  @ApiOperation({
-    summary: 'Sync products to Instagram Commerce Manager using Meta Graph API v24.0 Batch',
-    description: 'Syncs products in batches of up to 5,000 items. Returns batch handles for status tracking.',
-  })
-  @ApiResponse({
-    status: 200,
-    description: 'Sync initiated successfully',
-  })
-  async syncCatalog(
+  @HttpCode(HttpStatus.OK)  async syncCatalog(
     @Param('businessId') businessId: string,
     @Body() dto: SyncCatalogDto,
   ) {
@@ -116,14 +87,7 @@ export class InstagramCatalogController {
   /**
    * Check batch request status
    */
-  @Get(':businessId/batch-status')
-  @ApiBearerAuth()
-  @ApiOperation({
-    summary: 'Check the status of a batch request',
-    description: 'Get detailed status of a batch sync operation using the batch handle',
-  })
-  @ApiResponse({ status: 200, description: 'Batch status retrieved' })
-  async checkBatchStatus(
+  @Get(':businessId/batch-status')  async checkBatchStatus(
     @Param('businessId') businessId: string,
     @Query() dto: CheckBatchStatusDto,
   ) {
@@ -151,14 +115,7 @@ export class InstagramCatalogController {
   /**
    * Remove products from Instagram catalog (batch delete)
    */
-  @Delete(':businessId/products')
-  @ApiBearerAuth()
-  @ApiOperation({
-    summary: 'Remove products from Instagram catalog',
-    description: 'Batch delete products from Instagram Commerce Manager',
-  })
-  @ApiResponse({ status: 200, description: 'Products removed successfully' })
-  async removeProducts(
+  @Delete(':businessId/products')  async removeProducts(
     @Param('businessId') businessId: string,
     @Body() dto: { productIds: string[] },
   ) {
@@ -181,14 +138,7 @@ export class InstagramCatalogController {
   /**
    * Get sync status for business
    */
-  @Get(':businessId/sync-status')
-  @ApiBearerAuth()
-  @ApiOperation({
-    summary: 'Get catalog sync status and statistics',
-    description: 'Returns sync statistics and last sync timestamp',
-  })
-  @ApiResponse({ status: 200, description: 'Sync status retrieved' })
-  async getSyncStatus(@Param('businessId') businessId: string) {
+  @Get(':businessId/sync-status')  async getSyncStatus(@Param('businessId') businessId: string) {
     this.logger.log(`Getting sync status for business ${businessId}`);
 
     const status = await this.catalogService.getSyncStatus(businessId);

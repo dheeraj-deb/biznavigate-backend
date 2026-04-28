@@ -12574,6 +12574,9 @@ export namespace Prisma {
     whatsapp_catalog_id: string | null
     gupshup_app_id: string | null
     gupshup_app_status: string | null
+    meta_account_review_status: string | null
+    meta_verification_checked_at: Date | null
+    meta_verified_name: string | null
   }
 
   export type Social_accountsMaxAggregateOutputType = {
@@ -12597,6 +12600,9 @@ export namespace Prisma {
     whatsapp_catalog_id: string | null
     gupshup_app_id: string | null
     gupshup_app_status: string | null
+    meta_account_review_status: string | null
+    meta_verification_checked_at: Date | null
+    meta_verified_name: string | null
   }
 
   export type Social_accountsCountAggregateOutputType = {
@@ -12621,6 +12627,9 @@ export namespace Prisma {
     whatsapp_catalog_id: number
     gupshup_app_id: number
     gupshup_app_status: number
+    meta_account_review_status: number
+    meta_verification_checked_at: number
+    meta_verified_name: number
     _all: number
   }
 
@@ -12658,6 +12667,9 @@ export namespace Prisma {
     whatsapp_catalog_id?: true
     gupshup_app_id?: true
     gupshup_app_status?: true
+    meta_account_review_status?: true
+    meta_verification_checked_at?: true
+    meta_verified_name?: true
   }
 
   export type Social_accountsMaxAggregateInputType = {
@@ -12681,6 +12693,9 @@ export namespace Prisma {
     whatsapp_catalog_id?: true
     gupshup_app_id?: true
     gupshup_app_status?: true
+    meta_account_review_status?: true
+    meta_verification_checked_at?: true
+    meta_verified_name?: true
   }
 
   export type Social_accountsCountAggregateInputType = {
@@ -12705,6 +12720,9 @@ export namespace Prisma {
     whatsapp_catalog_id?: true
     gupshup_app_id?: true
     gupshup_app_status?: true
+    meta_account_review_status?: true
+    meta_verification_checked_at?: true
+    meta_verified_name?: true
     _all?: true
   }
 
@@ -12816,6 +12834,9 @@ export namespace Prisma {
     whatsapp_catalog_id: string | null
     gupshup_app_id: string | null
     gupshup_app_status: string | null
+    meta_account_review_status: string | null
+    meta_verification_checked_at: Date | null
+    meta_verified_name: string | null
     _count: Social_accountsCountAggregateOutputType | null
     _avg: Social_accountsAvgAggregateOutputType | null
     _sum: Social_accountsSumAggregateOutputType | null
@@ -12859,6 +12880,9 @@ export namespace Prisma {
     whatsapp_catalog_id?: boolean
     gupshup_app_id?: boolean
     gupshup_app_status?: boolean
+    meta_account_review_status?: boolean
+    meta_verification_checked_at?: boolean
+    meta_verified_name?: boolean
     instagram_media?: boolean | social_accounts$instagram_mediaArgs<ExtArgs>
     businesses?: boolean | businessesDefaultArgs<ExtArgs>
     _count?: boolean | Social_accountsCountOutputTypeDefaultArgs<ExtArgs>
@@ -12886,6 +12910,9 @@ export namespace Prisma {
     whatsapp_catalog_id?: boolean
     gupshup_app_id?: boolean
     gupshup_app_status?: boolean
+    meta_account_review_status?: boolean
+    meta_verification_checked_at?: boolean
+    meta_verified_name?: boolean
     businesses?: boolean | businessesDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["social_accounts"]>
 
@@ -12911,6 +12938,9 @@ export namespace Prisma {
     whatsapp_catalog_id?: boolean
     gupshup_app_id?: boolean
     gupshup_app_status?: boolean
+    meta_account_review_status?: boolean
+    meta_verification_checked_at?: boolean
+    meta_verified_name?: boolean
     businesses?: boolean | businessesDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["social_accounts"]>
 
@@ -12936,9 +12966,12 @@ export namespace Prisma {
     whatsapp_catalog_id?: boolean
     gupshup_app_id?: boolean
     gupshup_app_status?: boolean
+    meta_account_review_status?: boolean
+    meta_verification_checked_at?: boolean
+    meta_verified_name?: boolean
   }
 
-  export type social_accountsOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"account_id" | "business_id" | "platform" | "platform_user_id" | "page_id" | "access_token" | "permissions" | "token_expiry" | "is_active" | "created_at" | "follower_count" | "following_count" | "instagram_business_account_id" | "media_count" | "profile_picture" | "updated_at" | "username" | "instagram_catalog_id" | "whatsapp_catalog_id" | "gupshup_app_id" | "gupshup_app_status", ExtArgs["result"]["social_accounts"]>
+  export type social_accountsOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"account_id" | "business_id" | "platform" | "platform_user_id" | "page_id" | "access_token" | "permissions" | "token_expiry" | "is_active" | "created_at" | "follower_count" | "following_count" | "instagram_business_account_id" | "media_count" | "profile_picture" | "updated_at" | "username" | "instagram_catalog_id" | "whatsapp_catalog_id" | "gupshup_app_id" | "gupshup_app_status" | "meta_account_review_status" | "meta_verification_checked_at" | "meta_verified_name", ExtArgs["result"]["social_accounts"]>
   export type social_accountsInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     instagram_media?: boolean | social_accounts$instagram_mediaArgs<ExtArgs>
     businesses?: boolean | businessesDefaultArgs<ExtArgs>
@@ -12985,6 +13018,18 @@ export namespace Prisma {
        * TPP onboarding state: "pending" | "live" | "error"
        */
       gupshup_app_status: string | null
+      /**
+       * Meta WABA account review status: "APPROVED" | "PENDING" | "REJECTED" | "LIMIT_EXCEEDED"
+       */
+      meta_account_review_status: string | null
+      /**
+       * When we last fetched verification status from Meta
+       */
+      meta_verification_checked_at: Date | null
+      /**
+       * Verified display name from Meta phone number
+       */
+      meta_verified_name: string | null
     }, ExtArgs["result"]["social_accounts"]>
     composites: {}
   }
@@ -13431,6 +13476,9 @@ export namespace Prisma {
     readonly whatsapp_catalog_id: FieldRef<"social_accounts", 'String'>
     readonly gupshup_app_id: FieldRef<"social_accounts", 'String'>
     readonly gupshup_app_status: FieldRef<"social_accounts", 'String'>
+    readonly meta_account_review_status: FieldRef<"social_accounts", 'String'>
+    readonly meta_verification_checked_at: FieldRef<"social_accounts", 'DateTime'>
+    readonly meta_verified_name: FieldRef<"social_accounts", 'String'>
   }
     
 
@@ -59344,7 +59392,10 @@ export namespace Prisma {
     instagram_catalog_id: 'instagram_catalog_id',
     whatsapp_catalog_id: 'whatsapp_catalog_id',
     gupshup_app_id: 'gupshup_app_id',
-    gupshup_app_status: 'gupshup_app_status'
+    gupshup_app_status: 'gupshup_app_status',
+    meta_account_review_status: 'meta_account_review_status',
+    meta_verification_checked_at: 'meta_verification_checked_at',
+    meta_verified_name: 'meta_verified_name'
   };
 
   export type Social_accountsScalarFieldEnum = (typeof Social_accountsScalarFieldEnum)[keyof typeof Social_accountsScalarFieldEnum]
@@ -60707,6 +60758,9 @@ export namespace Prisma {
     whatsapp_catalog_id?: StringNullableFilter<"social_accounts"> | string | null
     gupshup_app_id?: StringNullableFilter<"social_accounts"> | string | null
     gupshup_app_status?: StringNullableFilter<"social_accounts"> | string | null
+    meta_account_review_status?: StringNullableFilter<"social_accounts"> | string | null
+    meta_verification_checked_at?: DateTimeNullableFilter<"social_accounts"> | Date | string | null
+    meta_verified_name?: StringNullableFilter<"social_accounts"> | string | null
     instagram_media?: Instagram_mediaListRelationFilter
     businesses?: XOR<BusinessesScalarRelationFilter, businessesWhereInput>
   }
@@ -60733,6 +60787,9 @@ export namespace Prisma {
     whatsapp_catalog_id?: SortOrderInput | SortOrder
     gupshup_app_id?: SortOrderInput | SortOrder
     gupshup_app_status?: SortOrderInput | SortOrder
+    meta_account_review_status?: SortOrderInput | SortOrder
+    meta_verification_checked_at?: SortOrderInput | SortOrder
+    meta_verified_name?: SortOrderInput | SortOrder
     instagram_media?: instagram_mediaOrderByRelationAggregateInput
     businesses?: businessesOrderByWithRelationInput
   }
@@ -60762,6 +60819,9 @@ export namespace Prisma {
     whatsapp_catalog_id?: StringNullableFilter<"social_accounts"> | string | null
     gupshup_app_id?: StringNullableFilter<"social_accounts"> | string | null
     gupshup_app_status?: StringNullableFilter<"social_accounts"> | string | null
+    meta_account_review_status?: StringNullableFilter<"social_accounts"> | string | null
+    meta_verification_checked_at?: DateTimeNullableFilter<"social_accounts"> | Date | string | null
+    meta_verified_name?: StringNullableFilter<"social_accounts"> | string | null
     instagram_media?: Instagram_mediaListRelationFilter
     businesses?: XOR<BusinessesScalarRelationFilter, businessesWhereInput>
   }, "account_id">
@@ -60788,6 +60848,9 @@ export namespace Prisma {
     whatsapp_catalog_id?: SortOrderInput | SortOrder
     gupshup_app_id?: SortOrderInput | SortOrder
     gupshup_app_status?: SortOrderInput | SortOrder
+    meta_account_review_status?: SortOrderInput | SortOrder
+    meta_verification_checked_at?: SortOrderInput | SortOrder
+    meta_verified_name?: SortOrderInput | SortOrder
     _count?: social_accountsCountOrderByAggregateInput
     _avg?: social_accountsAvgOrderByAggregateInput
     _max?: social_accountsMaxOrderByAggregateInput
@@ -60820,6 +60883,9 @@ export namespace Prisma {
     whatsapp_catalog_id?: StringNullableWithAggregatesFilter<"social_accounts"> | string | null
     gupshup_app_id?: StringNullableWithAggregatesFilter<"social_accounts"> | string | null
     gupshup_app_status?: StringNullableWithAggregatesFilter<"social_accounts"> | string | null
+    meta_account_review_status?: StringNullableWithAggregatesFilter<"social_accounts"> | string | null
+    meta_verification_checked_at?: DateTimeNullableWithAggregatesFilter<"social_accounts"> | Date | string | null
+    meta_verified_name?: StringNullableWithAggregatesFilter<"social_accounts"> | string | null
   }
 
   export type subscription_plansWhereInput = {
@@ -65207,6 +65273,9 @@ export namespace Prisma {
     whatsapp_catalog_id?: string | null
     gupshup_app_id?: string | null
     gupshup_app_status?: string | null
+    meta_account_review_status?: string | null
+    meta_verification_checked_at?: Date | string | null
+    meta_verified_name?: string | null
     instagram_media?: instagram_mediaCreateNestedManyWithoutSocial_accountsInput
     businesses: businessesCreateNestedOneWithoutSocial_accountsInput
   }
@@ -65233,6 +65302,9 @@ export namespace Prisma {
     whatsapp_catalog_id?: string | null
     gupshup_app_id?: string | null
     gupshup_app_status?: string | null
+    meta_account_review_status?: string | null
+    meta_verification_checked_at?: Date | string | null
+    meta_verified_name?: string | null
     instagram_media?: instagram_mediaUncheckedCreateNestedManyWithoutSocial_accountsInput
   }
 
@@ -65257,6 +65329,9 @@ export namespace Prisma {
     whatsapp_catalog_id?: NullableStringFieldUpdateOperationsInput | string | null
     gupshup_app_id?: NullableStringFieldUpdateOperationsInput | string | null
     gupshup_app_status?: NullableStringFieldUpdateOperationsInput | string | null
+    meta_account_review_status?: NullableStringFieldUpdateOperationsInput | string | null
+    meta_verification_checked_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    meta_verified_name?: NullableStringFieldUpdateOperationsInput | string | null
     instagram_media?: instagram_mediaUpdateManyWithoutSocial_accountsNestedInput
     businesses?: businessesUpdateOneRequiredWithoutSocial_accountsNestedInput
   }
@@ -65283,6 +65358,9 @@ export namespace Prisma {
     whatsapp_catalog_id?: NullableStringFieldUpdateOperationsInput | string | null
     gupshup_app_id?: NullableStringFieldUpdateOperationsInput | string | null
     gupshup_app_status?: NullableStringFieldUpdateOperationsInput | string | null
+    meta_account_review_status?: NullableStringFieldUpdateOperationsInput | string | null
+    meta_verification_checked_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    meta_verified_name?: NullableStringFieldUpdateOperationsInput | string | null
     instagram_media?: instagram_mediaUncheckedUpdateManyWithoutSocial_accountsNestedInput
   }
 
@@ -65308,6 +65386,9 @@ export namespace Prisma {
     whatsapp_catalog_id?: string | null
     gupshup_app_id?: string | null
     gupshup_app_status?: string | null
+    meta_account_review_status?: string | null
+    meta_verification_checked_at?: Date | string | null
+    meta_verified_name?: string | null
   }
 
   export type social_accountsUpdateManyMutationInput = {
@@ -65331,6 +65412,9 @@ export namespace Prisma {
     whatsapp_catalog_id?: NullableStringFieldUpdateOperationsInput | string | null
     gupshup_app_id?: NullableStringFieldUpdateOperationsInput | string | null
     gupshup_app_status?: NullableStringFieldUpdateOperationsInput | string | null
+    meta_account_review_status?: NullableStringFieldUpdateOperationsInput | string | null
+    meta_verification_checked_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    meta_verified_name?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type social_accountsUncheckedUpdateManyInput = {
@@ -65355,6 +65439,9 @@ export namespace Prisma {
     whatsapp_catalog_id?: NullableStringFieldUpdateOperationsInput | string | null
     gupshup_app_id?: NullableStringFieldUpdateOperationsInput | string | null
     gupshup_app_status?: NullableStringFieldUpdateOperationsInput | string | null
+    meta_account_review_status?: NullableStringFieldUpdateOperationsInput | string | null
+    meta_verification_checked_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    meta_verified_name?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type subscription_plansCreateInput = {
@@ -70466,6 +70553,9 @@ export namespace Prisma {
     whatsapp_catalog_id?: SortOrder
     gupshup_app_id?: SortOrder
     gupshup_app_status?: SortOrder
+    meta_account_review_status?: SortOrder
+    meta_verification_checked_at?: SortOrder
+    meta_verified_name?: SortOrder
   }
 
   export type social_accountsAvgOrderByAggregateInput = {
@@ -70495,6 +70585,9 @@ export namespace Prisma {
     whatsapp_catalog_id?: SortOrder
     gupshup_app_id?: SortOrder
     gupshup_app_status?: SortOrder
+    meta_account_review_status?: SortOrder
+    meta_verification_checked_at?: SortOrder
+    meta_verified_name?: SortOrder
   }
 
   export type social_accountsMinOrderByAggregateInput = {
@@ -70518,6 +70611,9 @@ export namespace Prisma {
     whatsapp_catalog_id?: SortOrder
     gupshup_app_id?: SortOrder
     gupshup_app_status?: SortOrder
+    meta_account_review_status?: SortOrder
+    meta_verification_checked_at?: SortOrder
+    meta_verified_name?: SortOrder
   }
 
   export type social_accountsSumOrderByAggregateInput = {
@@ -77413,6 +77509,9 @@ export namespace Prisma {
     whatsapp_catalog_id?: string | null
     gupshup_app_id?: string | null
     gupshup_app_status?: string | null
+    meta_account_review_status?: string | null
+    meta_verification_checked_at?: Date | string | null
+    meta_verified_name?: string | null
     instagram_media?: instagram_mediaCreateNestedManyWithoutSocial_accountsInput
   }
 
@@ -77437,6 +77536,9 @@ export namespace Prisma {
     whatsapp_catalog_id?: string | null
     gupshup_app_id?: string | null
     gupshup_app_status?: string | null
+    meta_account_review_status?: string | null
+    meta_verification_checked_at?: Date | string | null
+    meta_verified_name?: string | null
     instagram_media?: instagram_mediaUncheckedCreateNestedManyWithoutSocial_accountsInput
   }
 
@@ -78046,6 +78148,9 @@ export namespace Prisma {
     whatsapp_catalog_id?: StringNullableFilter<"social_accounts"> | string | null
     gupshup_app_id?: StringNullableFilter<"social_accounts"> | string | null
     gupshup_app_status?: StringNullableFilter<"social_accounts"> | string | null
+    meta_account_review_status?: StringNullableFilter<"social_accounts"> | string | null
+    meta_verification_checked_at?: DateTimeNullableFilter<"social_accounts"> | Date | string | null
+    meta_verified_name?: StringNullableFilter<"social_accounts"> | string | null
   }
 
   export type usersUpsertWithWhereUniqueWithoutBusinessesInput = {
@@ -84598,6 +84703,9 @@ export namespace Prisma {
     whatsapp_catalog_id?: string | null
     gupshup_app_id?: string | null
     gupshup_app_status?: string | null
+    meta_account_review_status?: string | null
+    meta_verification_checked_at?: Date | string | null
+    meta_verified_name?: string | null
     businesses: businessesCreateNestedOneWithoutSocial_accountsInput
   }
 
@@ -84623,6 +84731,9 @@ export namespace Prisma {
     whatsapp_catalog_id?: string | null
     gupshup_app_id?: string | null
     gupshup_app_status?: string | null
+    meta_account_review_status?: string | null
+    meta_verification_checked_at?: Date | string | null
+    meta_verified_name?: string | null
   }
 
   export type social_accountsCreateOrConnectWithoutInstagram_mediaInput = {
@@ -84662,6 +84773,9 @@ export namespace Prisma {
     whatsapp_catalog_id?: NullableStringFieldUpdateOperationsInput | string | null
     gupshup_app_id?: NullableStringFieldUpdateOperationsInput | string | null
     gupshup_app_status?: NullableStringFieldUpdateOperationsInput | string | null
+    meta_account_review_status?: NullableStringFieldUpdateOperationsInput | string | null
+    meta_verification_checked_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    meta_verified_name?: NullableStringFieldUpdateOperationsInput | string | null
     businesses?: businessesUpdateOneRequiredWithoutSocial_accountsNestedInput
   }
 
@@ -84687,6 +84801,9 @@ export namespace Prisma {
     whatsapp_catalog_id?: NullableStringFieldUpdateOperationsInput | string | null
     gupshup_app_id?: NullableStringFieldUpdateOperationsInput | string | null
     gupshup_app_status?: NullableStringFieldUpdateOperationsInput | string | null
+    meta_account_review_status?: NullableStringFieldUpdateOperationsInput | string | null
+    meta_verification_checked_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    meta_verified_name?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type business_workflowsCreateWithoutWorkflow_definitionsInput = {
@@ -87410,6 +87527,9 @@ export namespace Prisma {
     whatsapp_catalog_id?: string | null
     gupshup_app_id?: string | null
     gupshup_app_status?: string | null
+    meta_account_review_status?: string | null
+    meta_verification_checked_at?: Date | string | null
+    meta_verified_name?: string | null
   }
 
   export type usersCreateManyBusinessesInput = {
@@ -88096,6 +88216,9 @@ export namespace Prisma {
     whatsapp_catalog_id?: NullableStringFieldUpdateOperationsInput | string | null
     gupshup_app_id?: NullableStringFieldUpdateOperationsInput | string | null
     gupshup_app_status?: NullableStringFieldUpdateOperationsInput | string | null
+    meta_account_review_status?: NullableStringFieldUpdateOperationsInput | string | null
+    meta_verification_checked_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    meta_verified_name?: NullableStringFieldUpdateOperationsInput | string | null
     instagram_media?: instagram_mediaUpdateManyWithoutSocial_accountsNestedInput
   }
 
@@ -88120,6 +88243,9 @@ export namespace Prisma {
     whatsapp_catalog_id?: NullableStringFieldUpdateOperationsInput | string | null
     gupshup_app_id?: NullableStringFieldUpdateOperationsInput | string | null
     gupshup_app_status?: NullableStringFieldUpdateOperationsInput | string | null
+    meta_account_review_status?: NullableStringFieldUpdateOperationsInput | string | null
+    meta_verification_checked_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    meta_verified_name?: NullableStringFieldUpdateOperationsInput | string | null
     instagram_media?: instagram_mediaUncheckedUpdateManyWithoutSocial_accountsNestedInput
   }
 
@@ -88144,6 +88270,9 @@ export namespace Prisma {
     whatsapp_catalog_id?: NullableStringFieldUpdateOperationsInput | string | null
     gupshup_app_id?: NullableStringFieldUpdateOperationsInput | string | null
     gupshup_app_status?: NullableStringFieldUpdateOperationsInput | string | null
+    meta_account_review_status?: NullableStringFieldUpdateOperationsInput | string | null
+    meta_verification_checked_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    meta_verified_name?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type usersUpdateWithoutBusinessesInput = {

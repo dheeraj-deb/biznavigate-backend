@@ -24,6 +24,13 @@ export class WhatsAppFlowsController {
         return this.service.findAll(req.user.business_id, query);
     }
 
+    // POST /whatsapp/flows/sync-from-meta — import all flows from Meta into local DB
+    @Post('sync-from-meta')
+    @HttpCode(HttpStatus.OK)
+    syncFromMeta(@Req() req) {
+        return this.service.syncFromMeta(req.user.business_id);
+    }
+
     // GET /whatsapp/flows/:id
     @Get(':id')
     findOne(@Req() req, @Param('id') id: string) {
@@ -50,15 +57,7 @@ export class WhatsAppFlowsController {
         return this.service.migrate(req.user.business_id, id, targetBusinessId);
     }
 
-    // POST /whatsapp/flows/sync-from-meta — import all flows from Meta into local DB
-    @Post('sync-from-meta')
-    @HttpCode(HttpStatus.OK)
-    syncFromMeta(@Req() req) {
-        return this.service.syncFromMeta(req.user.business_id);
-    }
-
     // POST /whatsapp/flows/:id/submit — create on Meta + upload Flow JSON
-    // Pass { force: true } in body to re-create a stale/deleted Meta flow
     @Post(':id/submit')
     @HttpCode(HttpStatus.OK)
     submit(@Req() req, @Param('id') id: string, @Body('force') force?: boolean) {

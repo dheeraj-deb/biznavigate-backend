@@ -1,6 +1,5 @@
 import { IsString, IsOptional, IsEnum, IsArray, ValidateNested } from 'class-validator';
 import { Type } from 'class-transformer';
-import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
 export enum TemplateCategory {
   MARKETING = 'MARKETING',
@@ -16,45 +15,36 @@ export enum TemplateStatus {
 }
 
 export class CreateTemplateDto {
-  @ApiProperty()
-  @IsString()
+    @IsString()
   name: string;
 
-  @ApiProperty()
-  @IsEnum(TemplateCategory)
+    @IsEnum(TemplateCategory)
   category: TemplateCategory;
 
-  @ApiProperty()
-  @IsString()
+    @IsString()
   language: string; // 'en_US', 'pt_BR', etc.
 
-  @ApiPropertyOptional()
-  @IsString()
+    @IsString()
   @IsOptional()
   header?: string;
 
-  @ApiProperty()
-  @IsString()
+    @IsString()
   body: string;
 
-  @ApiPropertyOptional()
-  @IsString()
+    @IsString()
   @IsOptional()
   footer?: string;
 
-  @ApiPropertyOptional({ type: [String] })
-  @IsArray()
+    @IsArray()
   @IsOptional()
   buttons?: string[];
 }
 
 export class GetTemplatesDto {
-  @ApiProperty()
-  @IsString()
+    @IsString()
   businessId: string;
 
-  @ApiPropertyOptional()
-  @IsEnum(TemplateStatus)
+    @IsEnum(TemplateStatus)
   @IsOptional()
   status?: TemplateStatus;
 }
