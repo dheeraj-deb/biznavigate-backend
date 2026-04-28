@@ -10,7 +10,6 @@ import { WhatsAppOAuthService } from './services/whatsapp-oauth.service';
 import { WhatsAppCatalogService } from './services/whatsapp-catalog.service';
 import { WhatsAppCatalogOrderService } from './services/whatsapp-catalog-order.service';
 import { WhatsAppApiClientService } from './infrastructure/whatsapp-api-client.service';
-import { GupshupApiClientService } from './infrastructure/gupshup-api-client.service';
 import { WebhookValidatorService } from './infrastructure/webhook-validator.service';
 import { CircuitBreakerService } from './infrastructure/circuit-breaker.service';
 import { ConversationStateService } from './services/conversation-state.service';
@@ -57,8 +56,7 @@ import { GupshupOnboardingService } from '../gupshup/gupshup-onboarding.service'
     CircuitBreakerService,
     ConversationStateService,
     GupshupOnboardingService,
-    GupshupApiClientService,
   ],
-  exports: [WhatsAppService, WhatsAppApiClientService, GupshupApiClientService, WhatsAppCatalogService],
+  exports: [WhatsAppService, WhatsAppApiClientService, WhatsAppCatalogService],
 })
 export class WhatsAppModule { }

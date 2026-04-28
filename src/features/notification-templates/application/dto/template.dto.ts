@@ -1,4 +1,3 @@
-import { PartialType } from '@nestjs/mapped-types';
 import {
   IsString,
   IsOptional,
@@ -15,6 +14,7 @@ import {
   ArrayMinSize,
 } from 'class-validator';
 import { Type } from 'class-transformer';
+import { ApiProperty, ApiPropertyOptional, PartialType } from '@nestjs/swagger';
 
 /**
  * Notification Channels
@@ -42,6 +42,10 @@ export enum VariableType {
  * Template Variable Definition
  */
 export class TemplateVariableDto {
+  @ApiProperty({
+    description: 'Variable key (used in template as {{key}})',
+    example: 'customerName',
+  })
   @IsString()
   @IsNotEmpty()
   @Matches(/^[a-zA-Z_][a-zA-Z0-9_]*$/, {
@@ -49,25 +53,50 @@ export class TemplateVariableDto {
   })
   key: string;
 
-    @IsString()
+  @ApiProperty({
+    description: 'Variable display name',
+    example: 'Customer Name',
+  })
+  @IsString()
   @IsNotEmpty()
   label: string;
 
-    @IsEnum(VariableType)
+  @ApiProperty({
+    description: 'Variable type',
+    enum: VariableType,
+    example: VariableType.TEXT,
+  })
+  @IsEnum(VariableType)
   type: VariableType;
 
-    @IsString()
+  @ApiPropertyOptional({
+    description: 'Variable description',
+    example: 'The full name of the customer',
+  })
+  @IsString()
   @IsOptional()
   description?: string;
 
-    @IsOptional()
+  @ApiPropertyOptional({
+    description: 'Default value if not provided',
+    example: 'Valued Customer',
+  })
+  @IsOptional()
   defaultValue?: any;
 
-    @IsBoolean()
+  @ApiPropertyOptional({
+    description: 'Whether this variable is required',
+    example: true,
+  })
+  @IsBoolean()
   @IsOptional()
   required?: boolean;
 
-    @IsOptional()
+  @ApiPropertyOptional({
+    description: 'Example value for testing',
+    example: 'John Doe',
+  })
+  @IsOptional()
   exampleValue?: any;
 }
 
@@ -75,14 +104,26 @@ export class TemplateVariableDto {
  * Create Notification Template DTO
  */
 export class CreateTemplateDto {
-    @IsUUID()
+  @ApiProperty({
+    description: 'Business ID',
+    example: 'business-uuid-here',
+  })
+  @IsUUID()
   @IsNotEmpty()
   businessId: string;
 
-    @IsUUID()
+  @ApiProperty({
+    description: 'Tenant ID',
+    example: 'tenant-uuid-here',
+  })
+  @IsUUID()
   @IsNotEmpty()
   tenantId: string;
 
+  @ApiProperty({
+    description: 'Unique template key (used for programmatic access)',
+    example: 'order_confirmation',
+  })
   @IsString()
   @IsNotEmpty()
   @MinLength(3)
@@ -92,71 +133,145 @@ export class CreateTemplateDto {
   })
   templateKey: string;
 
-    @IsString()
+  @ApiProperty({
+    description: 'Template display name',
+    example: 'Order Confirmation',
+  })
+  @IsString()
   @IsNotEmpty()
   @MaxLength(255)
   templateName: string;
 
-    @IsString()
+  @ApiPropertyOptional({
+    description: 'Template description',
+    example: 'Sent when customer places an order',
+  })
+  @IsString()
   @IsOptional()
   description?: string;
 
   // Email Channel
-    @IsString()
+  @ApiPropertyOptional({
+    description: 'Email subject line',
+    example: 'Your Order #{{orderNumber}} has been confirmed!',
+  })
+  @IsString()
   @IsOptional()
   @MaxLength(500)
   emailSubject?: string;
 
+  @ApiPropertyOptional({
+    description: 'Email body (plain text)',
+    example: 'Hi {{customerName}}, thank you for your order!',
+  })
   @IsString()
   @IsOptional()
   emailBody?: string;
 
+  @ApiPropertyOptional({
+    description: 'Email body (HTML)',
+    example: '<h1>Thank you {{customerName}}!</h1><p>Your order is confirmed.</p>',
+  })
   @IsString()
   @IsOptional()
   emailHtml?: string;
 
   // SMS Channel
+  @ApiPropertyOptional({
+    description: 'SMS message body (max 1600 characters)',
+    example: 'Hi {{customerName}}! Your order #{{orderNumber}} is confirmed. Track: {{trackingUrl}}',
+  })
   @IsString()
   @IsOptional()
   @MaxLength(1600)
   smsBody?: string;
 
   // WhatsApp Channel
-    @IsString()
+  @ApiPropertyOptional({
+    description: 'WhatsApp message body',
+    example: 'Hello {{customerName}}! 🎉 Your order #{{orderNumber}} has been confirmed.',
+  })
+  @IsString()
   @IsOptional()
   whatsappBody?: string;
 
   // Push Notification
-    @IsString()
+  @ApiPropertyOptional({
+    description: 'Push notification title',
+    example: 'Order Confirmed!',
+  })
+  @IsString()
   @IsOptional()
   @MaxLength(255)
   pushTitle?: string;
 
-    @IsString()
+  @ApiPropertyOptional({
+    description: 'Push notification body',
+    example: 'Your order #{{orderNumber}} is on its way!',
+  })
+  @IsString()
   @IsOptional()
   pushBody?: string;
 
   // Variables
-    @IsArray()
+  @ApiProperty({
+    description: 'Template variables definition',
+    type: [TemplateVariableDto],
+    example: [
+      {
+        key: 'customerName',
+        label: 'Customer Name',
+        type: 'text',
+        required: true,
+        exampleValue: 'John Doe',
+      },
+      {
+        key: 'orderNumber',
+        label: 'Order Number',
+        type: 'text',
+        required: true,
+        exampleValue: 'ORD-12345',
+      },
+    ],
+  })
+  @IsArray()
   @ValidateNested({ each: true })
   @Type(() => TemplateVariableDto)
   variables: TemplateVariableDto[];
 
   // Enabled Channels
-    @IsArray()
+  @ApiProperty({
+    description: 'Channels enabled for this template',
+    enum: NotificationChannel,
+    isArray: true,
+    example: [NotificationChannel.EMAIL, NotificationChannel.WHATSAPP],
+  })
+  @IsArray()
   @ArrayMinSize(1, { message: 'At least one channel must be enabled' })
   @IsEnum(NotificationChannel, { each: true })
   enabledChannels: NotificationChannel[];
 
-    @IsBoolean()
+  @ApiPropertyOptional({
+    description: 'Whether template is active',
+    example: true,
+  })
+  @IsBoolean()
   @IsOptional()
   isActive?: boolean;
 
+  @ApiPropertyOptional({
+    description: 'Whether this is a system template (cannot be deleted)',
+    example: false,
+  })
   @IsBoolean()
   @IsOptional()
   isSystem?: boolean;
 
-    @IsUUID()
+  @ApiProperty({
+    description: 'User ID who created the template',
+    example: 'user-uuid-here',
+  })
+  @IsUUID()
   @IsNotEmpty()
   createdBy: string;
 }
@@ -165,48 +280,92 @@ export class CreateTemplateDto {
  * Update Template DTO
  */
 export class UpdateTemplateDto extends PartialType(CreateTemplateDto) {
-    templateName?: string;
+  @ApiPropertyOptional({
+    description: 'Template name',
+  })
+  templateName?: string;
 
-    description?: string;
+  @ApiPropertyOptional({
+    description: 'Description',
+  })
+  description?: string;
 }
 
 /**
  * Template Filter DTO
  */
 export class TemplateFilterDto {
-    @IsUUID()
+  @ApiPropertyOptional({
+    description: 'Filter by business ID',
+    example: 'business-uuid',
+  })
+  @IsUUID()
   @IsOptional()
   businessId?: string;
 
-    @IsUUID()
+  @ApiPropertyOptional({
+    description: 'Filter by tenant ID',
+    example: 'tenant-uuid',
+  })
+  @IsUUID()
   @IsOptional()
   tenantId?: string;
 
-    @IsString()
+  @ApiPropertyOptional({
+    description: 'Filter by template key',
+    example: 'order_confirmation',
+  })
+  @IsString()
   @IsOptional()
   templateKey?: string;
 
-    @IsEnum(NotificationChannel)
+  @ApiPropertyOptional({
+    description: 'Filter by channel',
+    enum: NotificationChannel,
+  })
+  @IsEnum(NotificationChannel)
   @IsOptional()
   channel?: NotificationChannel;
 
-    @IsBoolean()
+  @ApiPropertyOptional({
+    description: 'Filter by active status',
+    example: true,
+  })
+  @IsBoolean()
   @IsOptional()
   isActive?: boolean;
 
-    @IsBoolean()
+  @ApiPropertyOptional({
+    description: 'Filter by system template',
+    example: false,
+  })
+  @IsBoolean()
   @IsOptional()
   isSystem?: boolean;
 
+  @ApiPropertyOptional({
+    description: 'Search query (searches name, key, description)',
+    example: 'order',
+  })
   @IsString()
   @IsOptional()
   search?: string;
 
-    @IsOptional()
+  @ApiPropertyOptional({
+    description: 'Page number',
+    example: 1,
+    default: 1,
+  })
+  @IsOptional()
   @Type(() => Number)
   page?: number = 1;
 
-    @IsOptional()
+  @ApiPropertyOptional({
+    description: 'Items per page',
+    example: 20,
+    default: 20,
+  })
+  @IsOptional()
   @Type(() => Number)
   limit?: number = 20;
 }
@@ -215,14 +374,31 @@ export class TemplateFilterDto {
  * Template Preview/Test DTO
  */
 export class TemplatePreviewDto {
-    @IsUUID()
+  @ApiProperty({
+    description: 'Template ID',
+    example: 'template-uuid',
+  })
+  @IsUUID()
   @IsNotEmpty()
   templateId: string;
 
-    @IsEnum(NotificationChannel)
+  @ApiProperty({
+    description: 'Channel to preview',
+    enum: NotificationChannel,
+    example: NotificationChannel.WHATSAPP,
+  })
+  @IsEnum(NotificationChannel)
   channel: NotificationChannel;
 
-    @IsObject()
+  @ApiProperty({
+    description: 'Variable values for preview',
+    example: {
+      customerName: 'John Doe',
+      orderNumber: 'ORD-12345',
+      trackingUrl: 'https://example.com/track/12345',
+    },
+  })
+  @IsObject()
   variables: Record<string, any>;
 }
 
@@ -230,14 +406,26 @@ export class TemplatePreviewDto {
  * Send Test Notification DTO
  */
 export class SendTestNotificationDto extends TemplatePreviewDto {
+  @ApiProperty({
+    description: 'Test recipient email (for email channel)',
+    example: 'test@example.com',
+  })
   @IsString()
   @IsOptional()
   testEmail?: string;
 
+  @ApiProperty({
+    description: 'Test recipient phone (for SMS/WhatsApp)',
+    example: '+919876543210',
+  })
   @IsString()
   @IsOptional()
   testPhone?: string;
 
+  @ApiProperty({
+    description: 'Test device token (for push notifications)',
+    example: 'device-token-here',
+  })
   @IsString()
   @IsOptional()
   testDeviceToken?: string;
@@ -247,20 +435,36 @@ export class SendTestNotificationDto extends TemplatePreviewDto {
  * Clone Template DTO
  */
 export class CloneTemplateDto {
-    @IsUUID()
+  @ApiProperty({
+    description: 'Source template ID to clone from',
+    example: 'source-template-uuid',
+  })
+  @IsUUID()
   @IsNotEmpty()
   sourceTemplateId: string;
 
-    @IsString()
+  @ApiProperty({
+    description: 'New template key',
+    example: 'order_confirmation_v2',
+  })
+  @IsString()
   @IsNotEmpty()
   @Matches(/^[a-z0-9_]+$/)
   newTemplateKey: string;
 
-    @IsString()
+  @ApiProperty({
+    description: 'New template name',
+    example: 'Order Confirmation V2',
+  })
+  @IsString()
   @IsNotEmpty()
   newTemplateName: string;
 
-    @IsBoolean()
+  @ApiPropertyOptional({
+    description: 'Whether to copy as active or inactive',
+    example: false,
+  })
+  @IsBoolean()
   @IsOptional()
   copyAsActive?: boolean;
 }
@@ -269,12 +473,21 @@ export class CloneTemplateDto {
  * Bulk Template Action DTO
  */
 export class BulkTemplateActionDto {
-    @IsArray()
+  @ApiProperty({
+    description: 'Template IDs to act on',
+    example: ['template-uuid-1', 'template-uuid-2'],
+  })
+  @IsArray()
   @ArrayMinSize(1)
   @IsUUID(undefined, { each: true })
   templateIds: string[];
 
-    @IsEnum(['activate', 'deactivate', 'delete'])
+  @ApiProperty({
+    description: 'Action to perform',
+    enum: ['activate', 'deactivate', 'delete'],
+    example: 'activate',
+  })
+  @IsEnum(['activate', 'deactivate', 'delete'])
   action: 'activate' | 'deactivate' | 'delete';
 }
 
@@ -282,13 +495,33 @@ export class BulkTemplateActionDto {
  * Template Validation Result
  */
 export class TemplateValidationResultDto {
-    isValid: boolean;
+  @ApiProperty({
+    description: 'Whether template is valid',
+    example: true,
+  })
+  isValid: boolean;
 
-    errors: string[];
+  @ApiProperty({
+    description: 'Validation errors',
+    example: [],
+  })
+  errors: string[];
 
-    warnings: string[];
+  @ApiProperty({
+    description: 'Validation warnings',
+    example: ['Variable {{discount}} is defined but not used in any channel'],
+  })
+  warnings: string[];
 
-    detectedVariables: string[];
+  @ApiProperty({
+    description: 'Detected variables in template content',
+    example: ['customerName', 'orderNumber'],
+  })
+  detectedVariables: string[];
 
-    missingDefinitions: string[];
+  @ApiProperty({
+    description: 'Missing variable definitions',
+    example: [],
+  })
+  missingDefinitions: string[];
 }

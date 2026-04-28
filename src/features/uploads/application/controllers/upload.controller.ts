@@ -14,6 +14,7 @@
 //   BadRequestException,
 // } from '@nestjs/common';
 // import { FileInterceptor, FilesInterceptor } from '@nestjs/platform-express';
+// import { ApiTags, ApiOperation, ApiConsumes, ApiBody } from '@nestjs/swagger';
 // import { JwtAuthGuard } from '../../../../common/guards/jwt-auth.guard';
 // import { UploadService } from '../services/upload.service';
 // import {
@@ -22,13 +23,33 @@
 //   ImageResponseDto,
 // } from '../dto/upload-image.dto';
 
-//// @Controller('uploads')
+// @ApiTags('uploads')
+// @Controller('uploads')
 // @UseGuards(JwtAuthGuard)
 // export class UploadController {
 //   constructor(private readonly uploadService: UploadService) {}
 
 //   @Post('product-image')
-////////   @UseInterceptors(FileInterceptor('file'))
+//   @ApiOperation({ summary: 'Upload a single product image' })
+//   @ApiConsumes('multipart/form-data')
+//   @ApiBody({
+//     schema: {
+//       type: 'object',
+//       required: ['file', 'business_id', 'product_id'],
+//       properties: {
+//         file: {
+//           type: 'string',
+//           format: 'binary',
+//         },
+//         business_id: { type: 'string' },
+//         product_id: { type: 'string' },
+//         alt_text: { type: 'string' },
+//         display_order: { type: 'number' },
+//         is_primary: { type: 'boolean' },
+//       },
+//     },
+//   })
+//   @UseInterceptors(FileInterceptor('file'))
 //   async uploadSingleImage(
 //     @UploadedFile() file: Express.Multer.File,
 //     @Body() uploadData: UploadImageDto,
@@ -47,7 +68,29 @@
 //   }
 
 //   @Post('product-images/multiple')
-////////   @UseInterceptors(FilesInterceptor('files', 10)) // Max 10 files
+//   @ApiOperation({ summary: 'Upload multiple product images' })
+//   @ApiConsumes('multipart/form-data')
+//   @ApiBody({
+//     schema: {
+//       type: 'object',
+//       required: ['files', 'business_id', 'product_id'],
+//       properties: {
+//         files: {
+//           type: 'array',
+//           items: {
+//             type: 'string',
+//             format: 'binary',
+//           },
+//         },
+//         business_id: { type: 'string' },
+//         product_id: { type: 'string' },
+//         alt_text: { type: 'string' },
+//         display_order: { type: 'number' },
+//         is_primary: { type: 'boolean' },
+//       },
+//     },
+//   })
+//   @UseInterceptors(FilesInterceptor('files', 10)) // Max 10 files
 //   async uploadMultipleImages(
 //     @UploadedFiles() files: Express.Multer.File[],
 //     @Body() uploadData: UploadImageDto,
@@ -73,7 +116,8 @@
 //   }
 
 //   @Get('product/:productId/images')
-////   async getProductImages(
+//   @ApiOperation({ summary: 'Get all images for a product' })
+//   async getProductImages(
 //     @Param('productId') productId: string,
 //   ): Promise<{
 //     statusCode: number;
@@ -90,7 +134,8 @@
 //   }
 
 //   @Get('image/:imageId')
-////   async getImage(
+//   @ApiOperation({ summary: 'Get a single image by ID' })
+//   async getImage(
 //     @Param('imageId') imageId: string,
 //   ): Promise<{ statusCode: number; message: string; data: ImageResponseDto }> {
 //     const image = await this.uploadService.getImageById(imageId);
@@ -103,7 +148,8 @@
 //   }
 
 //   @Put('image/:imageId')
-//   //   async updateImage(
+//   @ApiOperation({ summary: 'Update image metadata (alt text, order, primary)' })
+//   async updateImage(
 //     @Param('imageId') imageId: string,
 //     @Body() updateData: UpdateImageDto,
 //   ): Promise<{ statusCode: number; message: string; data: ImageResponseDto }> {
@@ -117,7 +163,8 @@
 //   }
 
 //   @Delete('image/:imageId')
-////   async deleteImage(
+//   @ApiOperation({ summary: 'Delete an image' })
+//   async deleteImage(
 //     @Param('imageId') imageId: string,
 //   ): Promise<{ statusCode: number; message: string }> {
 //     await this.uploadService.deleteImage(imageId);
@@ -129,7 +176,25 @@
 //   }
 
 //   @Post('product/:productId/images/reorder')
-//////   async reorderImages(
+//   @ApiOperation({ summary: 'Reorder product images' })
+//   @ApiBody({
+//     schema: {
+//       type: 'object',
+//       properties: {
+//         imageOrders: {
+//           type: 'array',
+//           items: {
+//             type: 'object',
+//             properties: {
+//               imageId: { type: 'string' },
+//               order: { type: 'number' },
+//             },
+//           },
+//         },
+//       },
+//     },
+//   })
+//   async reorderImages(
 //     @Param('productId') productId: string,
 //     @Body('imageOrders') imageOrders: { imageId: string; order: number }[],
 //   ): Promise<{ statusCode: number; message: string }> {

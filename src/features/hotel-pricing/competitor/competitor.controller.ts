@@ -1,4 +1,5 @@
 import { Controller, Post, Get, Body, Query, UseGuards, Request } from '@nestjs/common';
+import { ApiTags, ApiOperation, ApiBearerAuth, ApiBody, ApiQuery } from '@nestjs/swagger';
 import { IsArray, IsString, IsNotEmpty, IsNumber, IsOptional, Min, Max } from 'class-validator';
 import { JwtAuthGuard } from '../../../common/guards/jwt-auth.guard';
 import { CompetitorService } from './competitor.service';
@@ -20,7 +21,11 @@ class ResolveByGeoDto {
   @IsString() @IsNotEmpty() checkout: string;
   @IsOptional() @IsNumber() @Min(1) @Max(50) radiusKm?: number;
   @IsOptional() @IsNumber() @Min(1) @Max(20) maxCompetitors?: number;
-}@UseGuards(JwtAuthGuard)
+}
+
+@ApiTags('Hotel Pricing — Competitors')
+@ApiBearerAuth()
+@UseGuards(JwtAuthGuard)
 @Controller('hotel-pricing/competitor')
 export class CompetitorController {
   constructor(
@@ -28,7 +33,13 @@ export class CompetitorController {
     private readonly hotelProfileService: HotelProfileService,
   ) {}
 
-  @Post('resolve')  async resolveAndSave(@Request() req, @Body() dto: ResolveCompetitorsDto) {
+  @Post('resolve')
+  @ApiOperation({
+    summary: 'Resolve competitor hotel names → Xotelo tokens and save to hotel profile',
+    description: 'One-time setup per hotel. Pass competitor hotel names and they are matched against Xotelo results.',
+  })
+  @ApiBody({ type: ResolveCompetitorsDto })
+  async resolveAndSave(@Request() req, @Body() dto: ResolveCompetitorsDto) {
     const orgId = req.user.business_id;
     const resolved = await this.competitorService.resolveCompetitorTokens(
       dto.location,
@@ -43,7 +54,15 @@ export class CompetitorController {
     return { resolved, tokensAdded: keys.length };
   }
 
-  @Post('resolve-by-geo')  async resolveByGeo(@Request() req: { user: { business_id: string } }, @Body() dto: ResolveByGeoDto) {
+  @Post('resolve-by-geo')
+  @ApiOperation({
+    summary: 'Auto-discover competitor hotels by GPS coordinates',
+    description:
+      'Reverse-geocodes the hotel\'s lat/lng → city → fetches Xotelo hotel list → ' +
+      'filters by haversine radius → saves tokens to the hotel profile.',
+  })
+  @ApiBody({ type: ResolveByGeoDto })
+  async resolveByGeo(@Request() req: { user: { business_id: string } }, @Body() dto: ResolveByGeoDto) {
     const orgId = req.user.business_id;
     return this.competitorService.resolveByCoordinates(
       orgId,
@@ -58,6 +77,15 @@ export class CompetitorController {
   }
 
   @Get('nearby')
+  @ApiOperation({
+    summary: 'Preview hotels within radius of coordinates (does NOT save tokens)',
+    description: 'Useful to preview results before committing. Use resolve-by-geo to save.',
+  })
+  @ApiQuery({ name: 'lat', required: true, example: 19.076 })
+  @ApiQuery({ name: 'lng', required: true, example: 72.8777 })
+  @ApiQuery({ name: 'radiusKm', required: false, example: 5 })
+  @ApiQuery({ name: 'checkin', required: true, example: '2026-04-01' })
+  @ApiQuery({ name: 'checkout', required: true, example: '2026-04-02' })
   async nearby(
     @Query('lat') lat: string,
     @Query('lng') lng: string,
@@ -75,6 +103,10 @@ export class CompetitorController {
   }
 
   @Get('rates')
+  @ApiOperation({ summary: 'Get live competitor rates for a hotel (respects Redis cache)' })
+  @ApiQuery({ name: 'hotelId', required: true })
+  @ApiQuery({ name: 'checkin', required: true, example: '2026-04-01' })
+  @ApiQuery({ name: 'checkout', required: true, example: '2026-04-02' })
   async getRates(
     @Request() req,
     @Query('hotelId') hotelId: string,

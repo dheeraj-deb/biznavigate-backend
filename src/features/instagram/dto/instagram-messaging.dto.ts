@@ -1,4 +1,5 @@
 import { IsString, IsOptional, IsEnum } from 'class-validator';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
 export enum MessageType {
   TEXT = 'text',
@@ -8,79 +9,99 @@ export enum MessageType {
 }
 
 export class ReplyToCommentDto {
-    @IsString()
+  @ApiProperty({ description: 'Comment ID to reply to' })
+  @IsString()
   commentId: string;
 
-    @IsString()
+  @ApiProperty({ description: 'Reply message text' })
+  @IsString()
   message: string;
 
+  @ApiProperty({ description: 'Account ID (Instagram account)' })
   @IsString()
   accountId: string;
 }
 
 export class ReplyToDirectMessageDto {
-    @IsString()
+  @ApiProperty({ description: 'Instagram user ID to send message to' })
+  @IsString()
   recipientId: string;
 
-    @IsString()
+  @ApiProperty({ description: 'Message text' })
+  @IsString()
   message: string;
 
+  @ApiProperty({ description: 'Account ID (Instagram account)' })
   @IsString()
   accountId: string;
 
-    @IsEnum(MessageType)
+  @ApiPropertyOptional({ description: 'Message type', enum: MessageType })
+  @IsEnum(MessageType)
   @IsOptional()
   messageType?: MessageType;
 
-    @IsString()
+  @ApiPropertyOptional({ description: 'Media URL for image/video messages' })
+  @IsString()
   @IsOptional()
   mediaUrl?: string;
 }
 
 export class GetConversationsDto {
+  @ApiProperty({ description: 'Account ID (Instagram account)' })
   @IsString()
   accountId: string;
 
-    @IsString()
+  @ApiPropertyOptional({ description: 'Limit number of conversations' })
+  @IsString()
   @IsOptional()
   limit?: string;
 
-    @IsString()
+  @ApiPropertyOptional({ description: 'Pagination cursor' })
+  @IsString()
   @IsOptional()
   after?: string;
 }
 
 export class GetMessagesDto {
-    @IsString()
+  @ApiProperty({ description: 'Conversation ID' })
+  @IsString()
   conversationId: string;
 
+  @ApiProperty({ description: 'Account ID (Instagram account)' })
   @IsString()
   accountId: string;
 
-    @IsString()
+  @ApiPropertyOptional({ description: 'Limit number of messages' })
+  @IsString()
   @IsOptional()
   limit?: string;
 
-    @IsString()
+  @ApiPropertyOptional({ description: 'Pagination cursor' })
+  @IsString()
   @IsOptional()
   after?: string;
 }
 
 export class DeleteCommentDto {
-    @IsString()
+  @ApiProperty({ description: 'Comment ID to delete' })
+  @IsString()
   commentId: string;
 
+  @ApiProperty({ description: 'Account ID (Instagram account)' })
   @IsString()
   accountId: string;
 }
 
 export class HideCommentDto {
-    @IsString()
+  @ApiProperty({ description: 'Comment ID to hide/unhide' })
+  @IsString()
   commentId: string;
 
+  @ApiProperty({ description: 'Account ID (Instagram account)' })
   @IsString()
   accountId: string;
 
-    @IsString()
+  @ApiProperty({ description: 'Hide or unhide' })
+  @IsString()
   hide: string; // 'true' or 'false'
 }
