@@ -43,6 +43,7 @@
     "@nestjs/platform-socket.io": "^10.4.20",
     "@nestjs/schedule": "^6.1.1",
     "@nestjs/serve-static": "^5.0.3",
+    "@nestjs/swagger": "^7.0.0",
     "@nestjs/throttler": "^6.4.0",
     "@nestjs/websockets": "^10.4.20",
     "@prisma/adapter-pg": "^6.7.0",

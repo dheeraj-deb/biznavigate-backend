@@ -1,5 +1,6 @@
 import { IsString, IsOptional, IsObject, ValidateNested, IsArray, IsEnum, IsUrl, IsBoolean, IsNumber } from 'class-validator';
 import { Type } from 'class-transformer';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
 // Send Message Types
 export enum SendMessageType {
@@ -26,10 +27,12 @@ export enum InteractiveSendType {
 // ==================== Text Message ====================
 
 export class TextDto {
-    @IsString()
+  @ApiProperty()
+  @IsString()
   body: string;
 
-    @IsBoolean()
+  @ApiPropertyOptional()
+  @IsBoolean()
   @IsOptional()
   preview_url?: boolean;
 }
@@ -37,14 +40,17 @@ export class TextDto {
 // ==================== Template Message ====================
 
 export class ParameterDto {
-    @IsString()
+  @ApiProperty()
+  @IsString()
   type: string; // 'text', 'currency', 'date_time', 'image', 'document', 'video'
 
-    @IsString()
+  @ApiPropertyOptional()
+  @IsString()
   @IsOptional()
   text?: string;
 
-    @IsObject()
+  @ApiPropertyOptional()
+  @IsObject()
   @IsOptional()
   currency?: {
     fallback_value: string;
@@ -52,20 +58,23 @@ export class ParameterDto {
     amount_1000: number;
   };
 
-    @IsObject()
+  @ApiPropertyOptional()
+  @IsObject()
   @IsOptional()
   date_time?: {
     fallback_value: string;
   };
 
-    @IsObject()
+  @ApiPropertyOptional()
+  @IsObject()
   @IsOptional()
   image?: {
     link?: string;
     id?: string;
   };
 
-    @IsObject()
+  @ApiPropertyOptional()
+  @IsObject()
   @IsOptional()
   document?: {
     link?: string;
@@ -73,7 +82,8 @@ export class ParameterDto {
     filename?: string;
   };
 
-    @IsObject()
+  @ApiPropertyOptional()
+  @IsObject()
   @IsOptional()
   video?: {
     link?: string;
@@ -82,18 +92,22 @@ export class ParameterDto {
 }
 
 export class ComponentDto {
-    @IsString()
+  @ApiProperty()
+  @IsString()
   type: string; // 'header', 'body', 'button'
 
-    @IsString()
+  @ApiPropertyOptional()
+  @IsString()
   @IsOptional()
   sub_type?: string; // For button: 'quick_reply', 'url'
 
-    @IsNumber()
+  @ApiPropertyOptional()
+  @IsNumber()
   @IsOptional()
   index?: number; // For button
 
-    @IsArray()
+  @ApiPropertyOptional({ type: [ParameterDto] })
+  @IsArray()
   @ValidateNested({ each: true })
   @Type(() => ParameterDto)
   @IsOptional()
@@ -101,19 +115,23 @@ export class ComponentDto {
 }
 
 export class LanguageDto {
-    @IsString()
+  @ApiProperty()
+  @IsString()
   code: string; // 'en_US', 'pt_BR', etc.
 }
 
 export class TemplateDto {
-    @IsString()
+  @ApiProperty()
+  @IsString()
   name: string;
 
-    @ValidateNested()
+  @ApiProperty({ type: LanguageDto })
+  @ValidateNested()
   @Type(() => LanguageDto)
   language: LanguageDto;
 
-    @IsArray()
+  @ApiPropertyOptional({ type: [ComponentDto] })
+  @IsArray()
   @ValidateNested({ each: true })
   @Type(() => ComponentDto)
   @IsOptional()
@@ -123,28 +141,33 @@ export class TemplateDto {
 // ==================== Interactive Message ====================
 
 export class HeaderDto {
-    @IsString()
+  @ApiProperty()
+  @IsString()
   type: string; // 'text', 'image', 'video', 'document'
 
-    @IsString()
+  @ApiPropertyOptional()
+  @IsString()
   @IsOptional()
   text?: string;
 
-    @IsObject()
+  @ApiPropertyOptional()
+  @IsObject()
   @IsOptional()
   image?: {
     link?: string;
     id?: string;
   };
 
-    @IsObject()
+  @ApiPropertyOptional()
+  @IsObject()
   @IsOptional()
   video?: {
     link?: string;
     id?: string;
   };
 
-    @IsObject()
+  @ApiPropertyOptional()
+  @IsObject()
   @IsOptional()
   document?: {
     link?: string;
@@ -154,60 +177,73 @@ export class HeaderDto {
 }
 
 export class BodyDto {
-    @IsString()
+  @ApiProperty()
+  @IsString()
   text: string;
 }
 
 export class FooterDto {
-    @IsString()
+  @ApiProperty()
+  @IsString()
   text: string;
 }
 
 export class ButtonReplyDto {
-    @IsString()
+  @ApiProperty()
+  @IsString()
   id: string;
 
-    @IsString()
+  @ApiProperty()
+  @IsString()
   title: string;
 }
 
 export class ActionButtonDto {
-    @IsString()
+  @ApiProperty()
+  @IsString()
   type: string; // 'reply'
 
-    @ValidateNested()
+  @ApiProperty()
+  @ValidateNested()
   @Type(() => ButtonReplyDto)
   reply: ButtonReplyDto;
 }
 
 export class RowDto {
-    @IsString()
+  @ApiProperty()
+  @IsString()
   id: string;
 
-    @IsString()
+  @ApiProperty()
+  @IsString()
   title: string;
 
-    @IsString()
+  @ApiPropertyOptional()
+  @IsString()
   @IsOptional()
   description?: string;
 }
 
 export class ProductItemDto {
-    @IsString()
+  @ApiProperty()
+  @IsString()
   product_retailer_id: string;
 }
 
 export class SectionDto {
-    @IsString()
+  @ApiProperty()
+  @IsString()
   title: string;
 
-    @IsArray()
+  @ApiPropertyOptional({ type: [RowDto] })
+  @IsArray()
   @ValidateNested({ each: true })
   @Type(() => RowDto)
   @IsOptional()
   rows?: RowDto[];
 
-    @IsArray()
+  @ApiPropertyOptional({ type: [ProductItemDto] })
+  @IsArray()
   @ValidateNested({ each: true })
   @Type(() => ProductItemDto)
   @IsOptional()
@@ -215,21 +251,25 @@ export class SectionDto {
 }
 
 export class ActionDto {
-    @IsArray()
+  @ApiPropertyOptional({ type: [ActionButtonDto] })
+  @IsArray()
   @ValidateNested({ each: true })
   @Type(() => ActionButtonDto)
   @IsOptional()
   buttons?: ActionButtonDto[];
 
-    @IsString()
+  @ApiPropertyOptional()
+  @IsString()
   @IsOptional()
   button?: string; // For list
 
-    @IsString()
+  @ApiPropertyOptional()
+  @IsString()
   @IsOptional()
   catalog_id?: string; // For product_list
 
-    @IsArray()
+  @ApiPropertyOptional({ type: [SectionDto] })
+  @IsArray()
   @ValidateNested({ each: true })
   @Type(() => SectionDto)
   @IsOptional()
@@ -237,24 +277,29 @@ export class ActionDto {
 }
 
 export class InteractiveDto {
-    @IsEnum(InteractiveSendType)
+  @ApiProperty()
+  @IsEnum(InteractiveSendType)
   type: InteractiveSendType;
 
-    @ValidateNested()
+  @ApiPropertyOptional({ type: HeaderDto })
+  @ValidateNested()
   @Type(() => HeaderDto)
   @IsOptional()
   header?: HeaderDto;
 
-    @ValidateNested()
+  @ApiProperty({ type: BodyDto })
+  @ValidateNested()
   @Type(() => BodyDto)
   body: BodyDto;
 
-    @ValidateNested()
+  @ApiPropertyOptional({ type: FooterDto })
+  @ValidateNested()
   @Type(() => FooterDto)
   @IsOptional()
   footer?: FooterDto;
 
-    @ValidateNested()
+  @ApiProperty({ type: ActionDto })
+  @ValidateNested()
   @Type(() => ActionDto)
   action: ActionDto;
 }
@@ -262,19 +307,23 @@ export class InteractiveDto {
 // ==================== Media Message ====================
 
 export class MediaDto {
-    @IsString()
+  @ApiPropertyOptional()
+  @IsString()
   @IsOptional()
   id?: string; // Media ID from upload
 
-    @IsUrl()
+  @ApiPropertyOptional()
+  @IsUrl()
   @IsOptional()
   link?: string; // External URL
 
-    @IsString()
+  @ApiPropertyOptional()
+  @IsString()
   @IsOptional()
   caption?: string;
 
-    @IsString()
+  @ApiPropertyOptional()
+  @IsString()
   @IsOptional()
   filename?: string; // For documents
 }
@@ -282,17 +331,21 @@ export class MediaDto {
 // ==================== Location Message ====================
 
 export class LocationDto {
-    @IsNumber()
+  @ApiProperty()
+  @IsNumber()
   latitude: number;
 
-    @IsNumber()
+  @ApiProperty()
+  @IsNumber()
   longitude: number;
 
-    @IsString()
+  @ApiPropertyOptional()
+  @IsString()
   @IsOptional()
   name?: string;
 
-    @IsString()
+  @ApiPropertyOptional()
+  @IsString()
   @IsOptional()
   address?: string;
 }
@@ -300,10 +353,12 @@ export class LocationDto {
 // ==================== Reaction Message ====================
 
 export class ReactionDto {
-    @IsString()
+  @ApiProperty()
+  @IsString()
   message_id: string;
 
-    @IsString()
+  @ApiPropertyOptional()
+  @IsString()
   @IsOptional()
   emoji?: string; // Empty string to remove reaction
 }
@@ -311,72 +366,87 @@ export class ReactionDto {
 // ==================== Context (Reply) ====================
 
 export class ContextDto {
-    @IsString()
+  @ApiProperty()
+  @IsString()
   message_id: string;
 }
 
 // ==================== Send Message DTO ====================
 
 export class SendWhatsAppMessageDto {
-    @IsString()
+  @ApiProperty()
+  @IsString()
   messaging_product: string = 'whatsapp';
 
-    @IsString()
+  @ApiPropertyOptional()
+  @IsString()
   @IsOptional()
   recipient_type?: string = 'individual';
 
-    @IsString()
+  @ApiProperty()
+  @IsString()
   to: string; // Phone number with country code (e.g., "1234567890")
 
-    @IsEnum(SendMessageType)
+  @ApiProperty()
+  @IsEnum(SendMessageType)
   type: SendMessageType;
 
-    @ValidateNested()
+  @ApiPropertyOptional({ type: ContextDto })
+  @ValidateNested()
   @Type(() => ContextDto)
   @IsOptional()
   context?: ContextDto;
 
-    @ValidateNested()
+  @ApiPropertyOptional({ type: TextDto })
+  @ValidateNested()
   @Type(() => TextDto)
   @IsOptional()
   text?: TextDto;
 
-    @ValidateNested()
+  @ApiPropertyOptional({ type: TemplateDto })
+  @ValidateNested()
   @Type(() => TemplateDto)
   @IsOptional()
   template?: TemplateDto;
 
-    @ValidateNested()
+  @ApiPropertyOptional({ type: InteractiveDto })
+  @ValidateNested()
   @Type(() => InteractiveDto)
   @IsOptional()
   interactive?: InteractiveDto;
 
-    @ValidateNested()
+  @ApiPropertyOptional({ type: MediaDto })
+  @ValidateNested()
   @Type(() => MediaDto)
   @IsOptional()
   image?: MediaDto;
 
-    @ValidateNested()
+  @ApiPropertyOptional({ type: MediaDto })
+  @ValidateNested()
   @Type(() => MediaDto)
   @IsOptional()
   video?: MediaDto;
 
-    @ValidateNested()
+  @ApiPropertyOptional({ type: MediaDto })
+  @ValidateNested()
   @Type(() => MediaDto)
   @IsOptional()
   audio?: MediaDto;
 
-    @ValidateNested()
+  @ApiPropertyOptional({ type: MediaDto })
+  @ValidateNested()
   @Type(() => MediaDto)
   @IsOptional()
   document?: MediaDto;
 
-    @ValidateNested()
+  @ApiPropertyOptional({ type: LocationDto })
+  @ValidateNested()
   @Type(() => LocationDto)
   @IsOptional()
   location?: LocationDto;
 
-    @ValidateNested()
+  @ApiPropertyOptional({ type: ReactionDto })
+  @ValidateNested()
   @Type(() => ReactionDto)
   @IsOptional()
   reaction?: ReactionDto;
@@ -385,21 +455,26 @@ export class SendWhatsAppMessageDto {
 // ==================== Mark as Read DTO ====================
 
 class TypingIndicatorDto {
-    @IsString()
+  @ApiProperty({ example: 'text' })
+  @IsString()
   type: string;
 }
 
 export class MarkAsReadDto {
-    @IsString()
+  @ApiProperty({ example: 'whatsapp' })
+  @IsString()
   messaging_product: string = 'whatsapp';
 
-    @IsString()
+  @ApiProperty({ example: 'read' })
+  @IsString()
   status: string = 'read';
 
-    @IsString()
+  @ApiProperty()
+  @IsString()
   message_id: string;
 
-    @IsOptional()
+  @ApiPropertyOptional({ type: TypingIndicatorDto })
+  @IsOptional()
   @ValidateNested()
   @Type(() => TypingIndicatorDto)
   typing_indicator?: TypingIndicatorDto;

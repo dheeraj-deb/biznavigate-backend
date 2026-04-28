@@ -1,19 +1,11 @@
 import { Body, Controller, Get, Param, Post, Query, Request, UseGuards } from "@nestjs/common";
-import { IsOptional, IsString } from "class-validator";
-
-class RetryOnboardingDto {
-    @IsString()
-  wabaId: string;
-
-  @IsString()
-  phone: string;
-
-    @IsOptional()
-  @IsString()
-  callbackUrl?: string;
-}
+import { ApiBearerAuth, ApiOperation, ApiParam, ApiQuery, ApiResponse, ApiTags } from "@nestjs/swagger";
 import { JwtAuthGuard } from "../../common/guards/jwt-auth.guard";
-import { GupshupOnboardingService } from "./gupshup-onboarding.service";@UseGuards(JwtAuthGuard)
+import { GupshupOnboardingService } from "./gupshup-onboarding.service";
+
+@ApiTags("Gupshup")
+@ApiBearerAuth()
+@UseGuards(JwtAuthGuard)
 @Controller("gupshup/onboarding")
 export class GupshupOnboardingController {
   constructor(private readonly gupshup: GupshupOnboardingService) {}
@@ -21,6 +13,10 @@ export class GupshupOnboardingController {
   // ── Embedded Signup link (Gupshup-hosted, legacy) ──────────────────────────
 
   @Get("embed-link")
+  @ApiOperation({ summary: "Generate a Gupshup-hosted Embedded Signup link (legacy flow)" })
+  @ApiQuery({ name: "user", required: true })
+  @ApiQuery({ name: "lang", required: true })
+  @ApiQuery({ name: "regenerate", required: false, type: Boolean })
   async getEmbedLink(
     @Query("user") user: string,
     @Query("lang") lang: string,
@@ -31,6 +27,7 @@ export class GupshupOnboardingController {
   }
 
   @Post("complete")
+  @ApiOperation({ summary: "Complete onboarding using Gupshup app details API (legacy flow)" })
   async completeOnboarding(@Request() req: { user: { business_id: string } }) {
     const { business_id } = req.user;
     return this.gupshup.completeOnboarding(business_id);
@@ -38,23 +35,29 @@ export class GupshupOnboardingController {
 
   // ── TPP Hosted Embed — Status endpoint ────────────────────────────────────
 
-  // ── Retry stuck/error onboarding ─────────────────────────────────────────
-
-  @Post("retry")
-  async retryOnboarding(
-    @Request() req: { user: { business_id: string; name?: string } },
-    @Body() dto: RetryOnboardingDto,
-  ) {
-    return this.gupshup.retryOnboarding({
-      businessId: req.user.business_id,
-      appName: req.user.name ?? req.user.business_id,
-      wabaId: dto.wabaId,
-      phone: dto.phone,
-      callbackUrl: dto.callbackUrl,
-    });
-  }
-
-@Get("pipeline-status/:appId")
+  @Get("pipeline-status/:appId")
+  @ApiOperation({
+    summary: "Get Gupshup pipeline status for a linked WABA app (TPP flow)",
+    description:
+      "Returns the current provisioning stage for a Gupshup app created via the TPP Hosted Embed flow. " +
+      "Poll this after POST /whatsapp/oauth/embedded-callback until creationStage = WHATSAPP_PROVISIONING_DONE.",
+  })
+  @ApiParam({ name: "appId", required: true, description: "Gupshup app UUID returned from the link-app step" })
+  @ApiResponse({
+    status: 200,
+    description: "Pipeline status from Gupshup",
+    schema: {
+      example: {
+        status: "success",
+        whatsapp: {
+          creationStage: "WHATSAPP_PROVISIONING_DONE",
+          pipeLineStage: "FINALIZE",
+          embedStage: "EMBED_STARTED",
+          whatsappVerificationStatus: "WHATSAPP_VERIFICATION_DONE",
+        },
+      },
+    },
+  })
   async getPipelineStatus(@Param("appId") appId: string) {
     return this.gupshup.getStatusForApp(appId);
   }

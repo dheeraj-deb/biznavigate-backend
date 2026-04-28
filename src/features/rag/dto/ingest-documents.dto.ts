@@ -1,20 +1,25 @@
 import { IsArray, IsObject, IsOptional, IsString, ValidateNested } from 'class-validator';
 import { Type } from 'class-transformer';
+import { ApiProperty } from '@nestjs/swagger';
 
 export class RagDocumentDto {
-    @IsString()
+  @ApiProperty()
+  @IsString()
   text: string;
 
-    @IsOptional()
+  @ApiProperty({ required: false })
+  @IsOptional()
   @IsObject()
   metadata?: Record<string, any>;
 }
 
 export class IngestDocumentsDto {
-    @IsString()
+  @ApiProperty()
+  @IsString()
   collection: string;
 
-    @IsArray()
+  @ApiProperty({ type: [RagDocumentDto] })
+  @IsArray()
   @ValidateNested({ each: true })
   @Type(() => RagDocumentDto)
   documents: RagDocumentDto[];
