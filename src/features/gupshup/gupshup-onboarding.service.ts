@@ -558,35 +558,5 @@ export class GupshupOnboardingService implements OnModuleInit {
     this.logger.log(`WhatsApp account saved for business=${businessId} phone=${phone}`);
     return { accountId: account.account_id, phoneNumber: phone };
   }
-
-  /**
-   * Fetch Meta WABA account_review_status and store it in social_accounts.
-   * Non-fatal — called via setImmediate after account goes live.
-   */
-  private async fetchMetaVerificationStatus(accountId: string, wabaId: string): Promise<void> {
-    try {
-      const apiVersion = this.config.get<string>('WHATSAPP_API_VERSION', 'v24.0');
-      const token = this.config.get<string>('WHATSAPP_PERMANENT_TOKEN', '');
-      const { data } = await axios.get(
-        `https://graph.facebook.com/${apiVersion}/${wabaId}`,
-        {
-          params: { fields: 'id,name,account_review_status,business_verification_status' },
-          headers: { Authorization: `Bearer ${token}` },
-        },
-      );
-      await this.prisma.social_accounts.update({
-        where: { account_id: accountId },
-        data: {
-          meta_account_review_status: data.account_review_status ?? null,
-          meta_verification_checked_at: new Date(),
-        },
-      });
-      this.logger.log(`[Verification] account ${accountId} → ${data.account_review_status}`);
-    } catch (err) {
-      this.logger.warn(`[Verification] Could not fetch status for account ${accountId}: ${err.message}`);
-    }
-  }
-
-
   
 }
