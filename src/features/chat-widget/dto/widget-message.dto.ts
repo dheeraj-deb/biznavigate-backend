@@ -1,91 +1,114 @@
 import { IsString, IsOptional, IsObject, IsUUID, IsUrl } from 'class-validator';
+import { ApiProperty } from '@nestjs/swagger';
 
 export class SendWidgetMessageDto {
-    @IsString()
+  @ApiProperty()
+  @IsString()
   businessId: string;
 
-    @IsString()
+  @ApiProperty()
+  @IsString()
   message: string;
 
-    @IsOptional()
+  @ApiProperty({ required: false })
+  @IsOptional()
   @IsString()
   visitorId?: string; // Anonymous visitor ID (generated client-side)
 
-    @IsOptional()
+  @ApiProperty({ required: false })
+  @IsOptional()
   @IsString()
   visitorName?: string;
 
-    @IsOptional()
+  @ApiProperty({ required: false })
+  @IsOptional()
   @IsString()
   visitorEmail?: string;
 
-    @IsOptional()
+  @ApiProperty({ required: false })
+  @IsOptional()
   @IsString()
   visitorPhone?: string;
 
-    @IsOptional()
+  @ApiProperty({ required: false })
+  @IsOptional()
   @IsUrl()
   pageUrl?: string; // URL where widget is embedded
 
-    @IsOptional()
+  @ApiProperty({ required: false })
+  @IsOptional()
   @IsString()
   pageTitle?: string;
 
-    @IsOptional()
+  @ApiProperty({ required: false })
+  @IsOptional()
   @IsObject()
   metadata?: Record<string, any>;
 }
 
 export class InitWidgetDto {
-    @IsString()
+  @ApiProperty()
+  @IsString()
   businessId: string;
 
-    @IsOptional()
+  @ApiProperty({ required: false })
+  @IsOptional()
   @IsString()
   visitorId?: string;
 
-    @IsOptional()
+  @ApiProperty({ required: false })
+  @IsOptional()
   @IsUrl()
   pageUrl?: string;
 }
 
 export class WidgetConfigDto {
-    @IsString()
+  @ApiProperty()
+  @IsString()
   businessId: string;
 
-    @IsOptional()
+  @ApiProperty({ required: false })
+  @IsOptional()
   @IsString()
   primaryColor?: string;
 
-    @IsOptional()
+  @ApiProperty({ required: false })
+  @IsOptional()
   @IsString()
   welcomeMessage?: string;
 
-    @IsOptional()
+  @ApiProperty({ required: false })
+  @IsOptional()
   @IsString()
   botName?: string;
 
-    @IsOptional()
+  @ApiProperty({ required: false })
+  @IsOptional()
   @IsString()
   position?: 'bottom-right' | 'bottom-left';
 }
 
 export class UpdateVisitorInfoDto {
-    @IsString()
+  @ApiProperty()
+  @IsString()
   businessId: string;
 
-    @IsString()
+  @ApiProperty()
+  @IsString()
   visitorId: string;
 
-    @IsOptional()
+  @ApiProperty({ required: false })
+  @IsOptional()
   @IsString()
   name?: string;
 
-    @IsOptional()
+  @ApiProperty({ required: false })
+  @IsOptional()
   @IsString()
   email?: string;
 
-    @IsOptional()
+  @ApiProperty({ required: false })
+  @IsOptional()
   @IsString()
   phone?: string;
 }

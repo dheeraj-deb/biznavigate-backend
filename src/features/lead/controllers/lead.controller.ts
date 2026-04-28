@@ -12,17 +12,25 @@ import {
   HttpCode,
   HttpStatus,
 } from '@nestjs/common';
+import { ApiTags, ApiOperation, ApiBearerAuth } from '@nestjs/swagger';
 import { LeadService } from '../application/services/lead.service';
 import { JwtAuthGuard } from '../../../common/guards/jwt-auth.guard';
 import { TenantGuard } from '../../../common/guards/tenant.guard';
-import { User } from '../../../common/decorators';@Controller('leads')
-@UseGuards(JwtAuthGuard, TenantGuard)export class LeadController {
+import { User } from '../../../common/decorators';
+
+@ApiTags('Leads')
+@Controller('leads')
+@UseGuards(JwtAuthGuard, TenantGuard)
+@ApiBearerAuth()
+export class LeadController {
   constructor(private readonly leadService: LeadService) {}
 
   // ─── Create ──────────────────────────────────────────────────
 
   @Post()
-  @HttpCode(HttpStatus.CREATED)  createLead(
+  @HttpCode(HttpStatus.CREATED)
+  @ApiOperation({ summary: 'Create a new lead' })
+  createLead(
     @Body() body: {
       businessId: string;
       tenantId: string;
@@ -42,7 +50,9 @@ import { User } from '../../../common/decorators';@Controller('leads')
 
   // ─── List & detail ───────────────────────────────────────────
 
-  @Get()  getLeads(
+  @Get()
+  @ApiOperation({ summary: 'List leads with filters. Returns { data, meta }.' })
+  getLeads(
     @Req() req: any,
     @Query('businessId') businessId?: string,
     @Query('status') status?: string,
@@ -60,7 +70,9 @@ import { User } from '../../../common/decorators';@Controller('leads')
     return this.leadService.getLeads(bId, { status, channel, source, assignedTo, search, intent_type, sortBy, sortOrder, page, limit });
   }
 
-  @Get('stats/overview')  getStatsOverview(
+  @Get('stats/overview')
+  @ApiOperation({ summary: 'Lead funnel stats for a date range. Returns totals, by_status, by_source, by_quality.' })
+  getStatsOverview(
     @Req() req: any,
     @Query('businessId') businessId?: string,
     @Query('from') from?: string,
@@ -71,22 +83,30 @@ import { User } from '../../../common/decorators';@Controller('leads')
     return this.leadService.getStatsOverview(bId, { from, to, intent_type });
   }
 
-  @Get(':leadId')  getLead(@Param('leadId') leadId: string) {
+  @Get(':leadId')
+  @ApiOperation({ summary: 'Get a single lead' })
+  getLead(@Param('leadId') leadId: string) {
     return this.leadService.getLeadById(leadId);
   }
 
-  @Get(':leadId/events')  getLeadEvents(@Param('leadId') leadId: string) {
+  @Get(':leadId/events')
+  @ApiOperation({ summary: 'Get event timeline for a lead' })
+  getLeadEvents(@Param('leadId') leadId: string) {
     return this.leadService.getLeadEvents(leadId);
   }
 
   @Delete(':leadId')
-  @HttpCode(HttpStatus.NO_CONTENT)  deleteLead(@Param('leadId') leadId: string) {
+  @HttpCode(HttpStatus.NO_CONTENT)
+  @ApiOperation({ summary: 'Soft delete a lead' })
+  deleteLead(@Param('leadId') leadId: string) {
     return this.leadService.softDeleteLead(leadId);
   }
 
   // ─── Status, context, notes ──────────────────────────────────
 
-  @Patch(':leadId/status')  updateStatus(
+  @Patch(':leadId/status')
+  @ApiOperation({ summary: 'Update lead status' })
+  updateStatus(
     @Param('leadId') leadId: string,
     @Body() body: { status: string; lostReason?: string; quotedAmount?: number; convertedValue?: number },
     @User() user: any,
@@ -101,11 +121,14 @@ import { User } from '../../../common/decorators';@Controller('leads')
   }
 
   @Patch(':leadId/context')
+  @ApiOperation({ summary: 'Update AI-extracted lead context (resort/camp/product)' })
   updateContext(@Param('leadId') leadId: string, @Body() context: any) {
     return this.leadService.updateContext(leadId, context);
   }
 
-  @Post(':leadId/notes')  addNote(
+  @Post(':leadId/notes')
+  @ApiOperation({ summary: 'Add a staff note to a lead' })
+  addNote(
     @Param('leadId') leadId: string,
     @Body() body: { text: string },
     @User() user: any,
@@ -114,6 +137,7 @@ import { User } from '../../../common/decorators';@Controller('leads')
   }
 
   @Patch(':leadId/tags')
+  @ApiOperation({ summary: 'Set tags on a lead (replaces existing tags)' })
   updateTags(
     @Param('leadId') leadId: string,
     @Body() body: { tags: string[] },
@@ -121,7 +145,9 @@ import { User } from '../../../common/decorators';@Controller('leads')
     return this.leadService.updateTags(leadId, body.tags ?? []);
   }
 
-  @Patch(':leadId/assign')  assignLead(
+  @Patch(':leadId/assign')
+  @ApiOperation({ summary: 'Assign lead to a staff member' })
+  assignLead(
     @Param('leadId') leadId: string,
     @Body() body: { assignedTo: string },
     @User() user: any,
@@ -131,7 +157,9 @@ import { User } from '../../../common/decorators';@Controller('leads')
 
   // ─── Follow-ups ───────────────────────────────────────────────
 
-  @Post(':leadId/followups')  scheduleFollowup(
+  @Post(':leadId/followups')
+  @ApiOperation({ summary: 'Schedule a follow-up for a lead' })
+  scheduleFollowup(
     @Param('leadId') leadId: string,
     @Body() body: { note: string; scheduledAt: string; assignedTo: string },
     @User() user: any,
@@ -146,7 +174,9 @@ import { User } from '../../../common/decorators';@Controller('leads')
     });
   }
 
-  @Patch('followups/:followupId/done')  completeFollowup(
+  @Patch('followups/:followupId/done')
+  @ApiOperation({ summary: 'Mark a follow-up as done' })
+  completeFollowup(
     @Param('followupId') followupId: string,
     @Body() body: { doneNote?: string },
   ) {
@@ -155,7 +185,9 @@ import { User } from '../../../common/decorators';@Controller('leads')
 
   // ─── Dashboard ────────────────────────────────────────────────
 
-  @Get('dashboard/daily-overview')  getDailyOverview(
+  @Get('dashboard/daily-overview')
+  @ApiOperation({ summary: 'Owner home screen: today\'s enquiries, bookings, revenue' })
+  getDailyOverview(
     @Req() req: any,
     @Query('businessId') businessId?: string,
     @Query('date') date?: string,
@@ -164,7 +196,9 @@ import { User } from '../../../common/decorators';@Controller('leads')
     return this.leadService.getDailyOverview(bId, date ? new Date(date) : undefined);
   }
 
-  @Get('dashboard/needs-attention')  getNeedsAttention(
+  @Get('dashboard/needs-attention')
+  @ApiOperation({ summary: 'Leads that need immediate owner follow-up' })
+  getNeedsAttention(
     @Req() req: any,
     @Query('businessId') businessId?: string,
     @Query('limit') limit?: string,
@@ -173,7 +207,9 @@ import { User } from '../../../common/decorators';@Controller('leads')
     return this.leadService.getNeedsAttention(bId, limit ? Number(limit) : 20);
   }
 
-  @Get('dashboard/channel-analytics')  getChannelAnalytics(
+  @Get('dashboard/channel-analytics')
+  @ApiOperation({ summary: 'Conversion rates per channel and source' })
+  getChannelAnalytics(
     @Req() req: any,
     @Query('businessId') businessId?: string,
     @Query('days') days?: string,
@@ -182,7 +218,9 @@ import { User } from '../../../common/decorators';@Controller('leads')
     return this.leadService.getChannelAnalytics(bId, days ? Number(days) : 30);
   }
 
-  @Get('dashboard/demand-signals')  getDemandSignals(
+  @Get('dashboard/demand-signals')
+  @ApiOperation({ summary: 'Services/products asked but unavailable — missed revenue' })
+  getDemandSignals(
     @Req() req: any,
     @Query('businessId') businessId?: string,
     @Query('days') days?: string,
@@ -191,7 +229,9 @@ import { User } from '../../../common/decorators';@Controller('leads')
     return this.leadService.getDemandSignals(bId, days ? Number(days) : 7);
   }
 
-  @Get('dashboard/followup-queue')  getFollowupQueue(
+  @Get('dashboard/followup-queue')
+  @ApiOperation({ summary: 'Staff follow-up queue with call script hints' })
+  getFollowupQueue(
     @Req() req: any,
     @Query('businessId') businessId?: string,
     @Query('assignedTo') assignedTo?: string,
@@ -203,14 +243,18 @@ import { User } from '../../../common/decorators';@Controller('leads')
 
   // ─── Inbox (MongoDB) ──────────────────────────────────────────
 
-  @Get('inbox/conversations')  getOpenConversations(
+  @Get('inbox/conversations')
+  @ApiOperation({ summary: 'Open conversations for inbox' })
+  getOpenConversations(
     @Query('businessId') businessId: string,
     @Query('limit') limit?: number,
   ) {
     return this.leadService.getOpenConversations(businessId, limit);
   }
 
-  @Get('inbox/conversations/:conversationId/messages')  getMessages(
+  @Get('inbox/conversations/:conversationId/messages')
+  @ApiOperation({ summary: 'Load message thread for a conversation' })
+  getMessages(
     @Param('conversationId') conversationId: string,
     @Query('limit') limit?: number,
   ) {

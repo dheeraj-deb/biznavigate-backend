@@ -1,62 +1,83 @@
+import { ApiProperty } from '@nestjs/swagger';
 
 /**
  * Sales Analytics Response
  */
 export class SalesAnalyticsDto {
-    totalRevenue: number;
+  @ApiProperty({ description: 'Total revenue in the period' })
+  totalRevenue: number;
 
-    totalOrders: number;
+  @ApiProperty({ description: 'Total number of orders' })
+  totalOrders: number;
 
-    averageOrderValue: number;
+  @ApiProperty({ description: 'Average order value' })
+  averageOrderValue: number;
 
-    totalItemsSold: number;
+  @ApiProperty({ description: 'Total number of items sold' })
+  totalItemsSold: number;
 
+  @ApiProperty({ description: 'Revenue growth compared to previous period (percentage)' })
   revenueGrowth: number;
 
+  @ApiProperty({ description: 'Orders growth compared to previous period (percentage)' })
   ordersGrowth: number;
 
-    dailyRevenue: Array<{ date: string; revenue: number; orders: number }>;
+  @ApiProperty({ description: 'Daily revenue breakdown', type: [Object] })
+  dailyRevenue: Array<{ date: string; revenue: number; orders: number }>;
 
-    ordersByStatus: Record<string, number>;
+  @ApiProperty({ description: 'Orders by status', type: Object })
+  ordersByStatus: Record<string, number>;
 }
 
 /**
  * Top Product Item
  */
 export class TopProductDto {
-    productId: string;
+  @ApiProperty({ description: 'Product ID' })
+  productId: string;
 
-    productName: string;
+  @ApiProperty({ description: 'Product name' })
+  productName: string;
 
-    quantitySold: number;
+  @ApiProperty({ description: 'Total quantity sold' })
+  quantitySold: number;
 
-    revenue: number;
+  @ApiProperty({ description: 'Total revenue from this product' })
+  revenue: number;
 
-    orderCount: number;
+  @ApiProperty({ description: 'Number of orders containing this product' })
+  orderCount: number;
 }
 
 /**
  * Inventory Analytics Response
  */
 export class InventoryAnalyticsDto {
+  @ApiProperty({ description: 'Total inventory value (cost)' })
   totalInventoryValue: number;
 
-    totalStockUnits: number;
+  @ApiProperty({ description: 'Total stock units across all warehouses' })
+  totalStockUnits: number;
 
-    lowStockCount: number;
+  @ApiProperty({ description: 'Number of low stock products' })
+  lowStockCount: number;
 
-    outOfStockCount: number;
+  @ApiProperty({ description: 'Number of out of stock products' })
+  outOfStockCount: number;
 
-    averageTurnoverRate: number;
+  @ApiProperty({ description: 'Average inventory turnover rate' })
+  averageTurnoverRate: number;
 
-    topProductsByValue: Array<{
+  @ApiProperty({ description: 'Top products by stock value', type: [Object] })
+  topProductsByValue: Array<{
     productId: string;
     productName: string;
     stockValue: number;
     quantity: number;
   }>;
 
-    warehouseInventory: Array<{
+  @ApiProperty({ description: 'Warehouse-wise inventory summary', type: [Object] })
+  warehouseInventory: Array<{
     warehouseId: string;
     warehouseName: string;
     totalValue: number;
@@ -68,17 +89,23 @@ export class InventoryAnalyticsDto {
  * Customer Analytics Response
  */
 export class CustomerAnalyticsDto {
-    totalCustomers: number;
+  @ApiProperty({ description: 'Total number of customers' })
+  totalCustomers: number;
 
-    newCustomers: number;
+  @ApiProperty({ description: 'New customers in the period' })
+  newCustomers: number;
 
+  @ApiProperty({ description: 'Repeat customers (placed more than one order)' })
   repeatCustomers: number;
 
+  @ApiProperty({ description: 'Customer retention rate (percentage)' })
   retentionRate: number;
 
-    averageLifetimeValue: number;
+  @ApiProperty({ description: 'Average customer lifetime value' })
+  averageLifetimeValue: number;
 
-    topCustomers: Array<{
+  @ApiProperty({ description: 'Top customers by revenue', type: [Object] })
+  topCustomers: Array<{
     customerId: string;
     customerName: string;
     totalOrders: number;
@@ -86,7 +113,8 @@ export class CustomerAnalyticsDto {
     lastOrderDate: Date;
   }>;
 
-    rfmSegmentation: {
+  @ApiProperty({ description: 'Customer segmentation by RFM', type: Object })
+  rfmSegmentation: {
     champions: number;
     loyalCustomers: number;
     potentialLoyalists: number;
@@ -104,22 +132,31 @@ export class CustomerAnalyticsDto {
  * Business KPIs Response
  */
 export class BusinessKPIsDto {
+  @ApiProperty({ description: 'Conversion rate (orders / total sessions, if tracked)' })
   conversionRate: number;
 
-    averageOrderValue: number;
+  @ApiProperty({ description: 'Average order value' })
+  averageOrderValue: number;
 
+  @ApiProperty({ description: 'Customer acquisition cost (if marketing data available)' })
   customerAcquisitionCost: number;
 
+  @ApiProperty({ description: 'Order fulfillment rate (shipped / total orders)' })
   orderFulfillmentRate: number;
 
+  @ApiProperty({ description: 'Average order processing time (hours)' })
   averageProcessingTime: number;
 
+  @ApiProperty({ description: 'Return rate (returned orders / total orders)' })
   returnRate: number;
 
-    revenuePerCustomer: number;
+  @ApiProperty({ description: 'Revenue per customer' })
+  revenuePerCustomer: number;
 
-    inventoryTurnoverRatio: number;
+  @ApiProperty({ description: 'Inventory turnover ratio' })
+  inventoryTurnoverRatio: number;
 
+  @ApiProperty({ description: 'Gross profit margin (if cost data available)' })
   grossProfitMargin: number;
 }
 
@@ -127,7 +164,8 @@ export class BusinessKPIsDto {
  * Dashboard Summary Response - All key metrics in one
  */
 export class DashboardSummaryDto {
-    sales: {
+  @ApiProperty({ description: 'Sales metrics' })
+  sales: {
     todayRevenue: number;
     weekRevenue: number;
     monthRevenue: number;
@@ -136,23 +174,27 @@ export class DashboardSummaryDto {
     completedOrders: number;
   };
 
-    inventory: {
+  @ApiProperty({ description: 'Inventory metrics' })
+  inventory: {
     totalProducts: number;
     lowStockProducts: number;
     outOfStockProducts: number;
     totalInventoryValue: number;
   };
 
-    customers: {
+  @ApiProperty({ description: 'Customer metrics' })
+  customers: {
     totalCustomers: number;
     newThisMonth: number;
     repeatCustomers: number;
     topCustomerSpend: number;
   };
 
-    topProducts: TopProductDto[];
+  @ApiProperty({ description: 'Top performing products', type: [TopProductDto] })
+  topProducts: TopProductDto[];
 
-    recentTrends: Array<{
+  @ApiProperty({ description: 'Recent trends', type: [Object] })
+  recentTrends: Array<{
     date: string;
     revenue: number;
     orders: number;

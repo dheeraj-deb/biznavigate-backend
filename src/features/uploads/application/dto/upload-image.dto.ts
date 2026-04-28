@@ -1,37 +1,46 @@
 import { IsString, IsOptional, IsBoolean, IsNumber, IsUUID } from 'class-validator';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
 export class UploadImageDto {
-    @IsUUID()
+  @ApiProperty({ description: 'Business ID' })
+  @IsUUID()
   @IsString()
   business_id: string;
 
-    @IsUUID()
+  @ApiProperty({ description: 'Product ID to attach image to' })
+  @IsUUID()
   @IsString()
   product_id: string;
 
-    @IsString()
+  @ApiPropertyOptional({ description: 'Alt text for accessibility' })
+  @IsString()
   @IsOptional()
   alt_text?: string;
 
+  @ApiPropertyOptional({ description: 'Display order (lower = first)', default: 0 })
   @IsNumber()
   @IsOptional()
   display_order?: number;
 
-    @IsBoolean()
+  @ApiPropertyOptional({ description: 'Set as primary product image', default: false })
+  @IsBoolean()
   @IsOptional()
   is_primary?: boolean;
 }
 
 export class UpdateImageDto {
-    @IsString()
+  @ApiPropertyOptional({ description: 'Alt text for accessibility' })
+  @IsString()
   @IsOptional()
   alt_text?: string;
 
-    @IsNumber()
+  @ApiPropertyOptional({ description: 'Display order' })
+  @IsNumber()
   @IsOptional()
   display_order?: number;
 
-    @IsBoolean()
+  @ApiPropertyOptional({ description: 'Set as primary image' })
+  @IsBoolean()
   @IsOptional()
   is_primary?: boolean;
 }

@@ -6,6 +6,7 @@ import {
   HttpStatus,
   Logger,
 } from '@nestjs/common';
+import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth } from '@nestjs/swagger';
 import { JwtAuthGuard } from '../../../common/guards/jwt-auth.guard';
 import { SalesAnalyticsService } from '../application/services/sales-analytics.service';
 import { InventoryAnalyticsService } from '../application/services/inventory-analytics.service';
@@ -27,7 +28,10 @@ import {
 /**
  * Analytics Controller
  * Provides comprehensive business analytics and reporting endpoints
- */@UseGuards(JwtAuthGuard)
+ */
+@ApiTags('Analytics')
+@ApiBearerAuth()
+@UseGuards(JwtAuthGuard)
 @Controller('analytics')
 export class AnalyticsController {
   private readonly logger = new Logger(AnalyticsController.name);
@@ -42,7 +46,12 @@ export class AnalyticsController {
   /**
    * Get dashboard summary with all key metrics
    */
-  @Get('dashboard')  async getDashboardSummary(
+  @Get('dashboard')
+  @ApiOperation({
+    summary: 'Get dashboard summary',
+    description: 'Returns flat stats: totalRevenue, totalOrders, totalCustomers, conversionRate with MoM change percentages',
+  })
+  async getDashboardSummary(
     @Query('businessId') businessId: string,
     @Query('tenantId') tenantId: string,
   ) {
@@ -53,7 +62,17 @@ export class AnalyticsController {
   /**
    * Get sales analytics
    */
-  @Get('sales')  async getSalesAnalytics(@Query() query: AnalyticsQueryDto) {
+  @Get('sales')
+  @ApiOperation({
+    summary: 'Get sales analytics',
+    description: 'Returns revenue trends, order statistics, and growth metrics',
+  })
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: 'Sales analytics retrieved successfully',
+    type: SalesAnalyticsDto,
+  })
+  async getSalesAnalytics(@Query() query: AnalyticsQueryDto) {
     this.logger.log(`Sales analytics requested for business ${query.businessId}`);
 
     const { startDate, endDate } = this.parseDateRange(query);
@@ -69,7 +88,17 @@ export class AnalyticsController {
   /**
    * Get top selling products
    */
-  @Get('sales/top-products')  async getTopProducts(@Query() query: TopProductsQueryDto) {
+  @Get('sales/top-products')
+  @ApiOperation({
+    summary: 'Get top selling products',
+    description: 'Returns products with highest sales volume',
+  })
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: 'Top products retrieved successfully',
+    type: [TopProductDto],
+  })
+  async getTopProducts(@Query() query: TopProductsQueryDto) {
     this.logger.log(`Top products requested for business ${query.businessId}`);
 
     const { startDate, endDate } = this.parseDateRange(query);
@@ -86,7 +115,16 @@ export class AnalyticsController {
   /**
    * Get revenue by time period
    */
-  @Get('sales/revenue-by-period')  async getRevenueByPeriod(
+  @Get('sales/revenue-by-period')
+  @ApiOperation({
+    summary: 'Get revenue breakdown by time period',
+    description: 'Returns revenue grouped by hour, day, week, or month',
+  })
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: 'Revenue breakdown retrieved successfully',
+  })
+  async getRevenueByPeriod(
     @Query('businessId') businessId: string,
     @Query('tenantId') tenantId: string,
     @Query('period') period: 'hour' | 'day' | 'week' | 'month' = 'day',
@@ -108,11 +146,15 @@ export class AnalyticsController {
     return raw.map((r) => ({ date: r.period, revenue: r.revenue, orders: r.orders }));
   }
 
-  @Get('funnel')  getFunnel(@Query('businessId') businessId: string) {
+  @Get('funnel')
+  @ApiOperation({ summary: 'Lead conversion funnel — counts per stage' })
+  getFunnel(@Query('businessId') businessId: string) {
     return this.businessKPIsService.getLeadFunnel(businessId);
   }
 
-  @Get('occupancy')  getOccupancy(
+  @Get('occupancy')
+  @ApiOperation({ summary: 'Daily bookings and revenue for occupancy chart widget' })
+  getOccupancy(
     @Query('businessId') businessId: string,
     @Query('tenantId') tenantId: string,
     @Query('days') days?: string,
@@ -123,7 +165,17 @@ export class AnalyticsController {
   /**
    * Get inventory analytics
    */
-  @Get('inventory')  async getInventoryAnalytics(
+  @Get('inventory')
+  @ApiOperation({
+    summary: 'Get inventory analytics',
+    description: 'Returns inventory health metrics, turnover rates, and stock insights',
+  })
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: 'Inventory analytics retrieved successfully',
+    type: InventoryAnalyticsDto,
+  })
+  async getInventoryAnalytics(
     @Query('businessId') businessId: string,
     @Query('tenantId') tenantId: string,
   ) {
@@ -138,7 +190,16 @@ export class AnalyticsController {
   /**
    * Get low stock alerts
    */
-  @Get('inventory/low-stock-alerts')  async getLowStockAlerts(
+  @Get('inventory/low-stock-alerts')
+  @ApiOperation({
+    summary: 'Get low stock alerts',
+    description: 'Returns products that are below reorder point or out of stock',
+  })
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: 'Low stock alerts retrieved successfully',
+  })
+  async getLowStockAlerts(
     @Query('businessId') businessId: string,
     @Query('tenantId') tenantId: string,
   ) {
@@ -150,7 +211,16 @@ export class AnalyticsController {
   /**
    * Get inventory turnover by product
    */
-  @Get('inventory/turnover-by-product')  async getInventoryTurnoverByProduct(@Query() query: AnalyticsQueryDto) {
+  @Get('inventory/turnover-by-product')
+  @ApiOperation({
+    summary: 'Get inventory turnover by product',
+    description: 'Returns turnover rate for each product',
+  })
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: 'Inventory turnover retrieved successfully',
+  })
+  async getInventoryTurnoverByProduct(@Query() query: AnalyticsQueryDto) {
     this.logger.log(`Inventory turnover requested for business ${query.businessId}`);
 
     const { startDate, endDate } = this.parseDateRange(query);
@@ -166,7 +236,17 @@ export class AnalyticsController {
   /**
    * Get customer analytics
    */
-  @Get('customers')  async getCustomerAnalytics(@Query() query: AnalyticsQueryDto) {
+  @Get('customers')
+  @ApiOperation({
+    summary: 'Get customer analytics',
+    description: 'Returns customer segmentation, retention, and lifetime value metrics',
+  })
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: 'Customer analytics retrieved successfully',
+    type: CustomerAnalyticsDto,
+  })
+  async getCustomerAnalytics(@Query() query: AnalyticsQueryDto) {
     this.logger.log(`Customer analytics requested for business ${query.businessId}`);
 
     const { startDate, endDate } = this.parseDateRange(query);
@@ -182,7 +262,16 @@ export class AnalyticsController {
   /**
    * Get customer cohort analysis
    */
-  @Get('customers/cohort-analysis')  async getCustomerCohortAnalysis(
+  @Get('customers/cohort-analysis')
+  @ApiOperation({
+    summary: 'Get customer cohort analysis',
+    description: 'Returns retention analysis for a specific customer cohort',
+  })
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: 'Cohort analysis retrieved successfully',
+  })
+  async getCustomerCohortAnalysis(
     @Query('businessId') businessId: string,
     @Query('tenantId') tenantId: string,
     @Query('cohortMonth') cohortMonth: string,
@@ -201,7 +290,16 @@ export class AnalyticsController {
   /**
    * Get customer churn analysis
    */
-  @Get('customers/churn-analysis')  async getCustomerChurnAnalysis(
+  @Get('customers/churn-analysis')
+  @ApiOperation({
+    summary: 'Get customer churn analysis',
+    description: 'Returns customers who have not made purchases in specified period',
+  })
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: 'Churn analysis retrieved successfully',
+  })
+  async getCustomerChurnAnalysis(
     @Query('businessId') businessId: string,
     @Query('tenantId') tenantId: string,
     @Query('inactiveDays') inactiveDays?: string,
@@ -218,7 +316,17 @@ export class AnalyticsController {
   /**
    * Get business KPIs
    */
-  @Get('kpis')  async getBusinessKPIs(@Query() query: AnalyticsQueryDto) {
+  @Get('kpis')
+  @ApiOperation({
+    summary: 'Get business KPIs',
+    description: 'Returns key performance indicators for business health',
+  })
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: 'Business KPIs retrieved successfully',
+    type: BusinessKPIsDto,
+  })
+  async getBusinessKPIs(@Query() query: AnalyticsQueryDto) {
     this.logger.log(`Business KPIs requested for business ${query.businessId}`);
 
     const { startDate, endDate } = this.parseDateRange(query);

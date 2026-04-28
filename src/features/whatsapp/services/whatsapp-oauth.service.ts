@@ -129,9 +129,7 @@ export class WhatsAppOAuthService {
           instagram_business_account_id: resolvedWabaId,
           access_token: '',
           token_expiry: tokenExpiry,
-          // Keep is_active false until Gupshup provisioning completes
-          is_active: false,
-          gupshup_app_status: 'pending',
+          is_active: true,
           updated_at: new Date(),
         },
       });
@@ -146,9 +144,7 @@ export class WhatsAppOAuthService {
           access_token: '',
           token_expiry: tokenExpiry,
           instagram_business_account_id: resolvedWabaId,
-          // Keep is_active false until Gupshup provisioning completes
-          is_active: false,
-          gupshup_app_status: 'pending',
+          is_active: true,
         },
       });
     }
@@ -163,6 +159,7 @@ export class WhatsAppOAuthService {
         appName: business.business_name,
         wabaId: resolvedWabaId,
         phone: phoneNumber.display_phone_number,
+        // Gupshup will POST live-event notifications here when the WABA is ready
         callbackUrl: `${backendUrl}/whatsapp/gupshup/live-event`,
       });
       this.logger.log(`TPP onboarding initiated: gupshupAppId=${result.gupshupAppId}`);
@@ -349,13 +346,13 @@ export class WhatsAppOAuthService {
     const apiVersion = this.configService.get<string>('whatsapp.apiVersion');
     const url = `https://graph.facebook.com/${apiVersion}/me/businesses?fields=name,id,owned_whatsapp_business_accounts{id,name}`;
 
-    //const deburl = `https://graph.facebook.com/${apiVersion}/me/businesses`
+    const deburl = `https://graph.facebook.com/${apiVersion}/me/businesses`
 
     this.logger.log('Fetching WhatsApp Business Accounts...');
 
-    //const debresponse = await fetch(deburl, { headers: { Authorization: `Bearer ${accessToken}` } });
-    //const debresponseData = await debresponse.json();
-    //console.log("Debug fetch response", debresponseData);
+    const debresponse = await fetch(deburl, { headers: { Authorization: `Bearer ${accessToken}` } });
+    const debresponseData = await debresponse.json();
+    console.log("Debug fetch response", debresponseData);
 
     const response = await fetch(url, { headers: { Authorization: `Bearer ${accessToken}` } });
     const data = await response.json();
