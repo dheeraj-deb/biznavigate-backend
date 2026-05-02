@@ -15,12 +15,6 @@ import {
   Req,
   Res,
 } from "@nestjs/common";
-import {
-  ApiTags,
-  ApiOperation,
-  ApiResponse,
-  ApiBearerAuth,
-} from "@nestjs/swagger";
 import { InstagramService } from "./instagram.service";
 import { WebhookValidatorService } from "./infrastructure/webhook-validator.service";
 // import { JwtAuthGuard } from '../auth/infrastructure/guards/jwt-auth.guard';
@@ -53,7 +47,6 @@ import * as crypto from "crypto";
 import { JwtAuthGuard } from "src/common/guards";
 import { Response } from "express";
 
-@ApiTags("Instagram")
 @Controller("instagram")
 export class InstagramController {
   constructor(
@@ -68,9 +61,6 @@ export class InstagramController {
 
   @Get("auth/url")
   @UseGuards(JwtAuthGuard)
-  @ApiBearerAuth()
-  @ApiOperation({ summary: "Get OAuth URL for Facebook/Instagram login" })
-  @ApiResponse({ status: 200, description: "OAuth URL generated" })
   async getOAuthUrl(@Query() query: GetOAuthUrlDto) {
     const url = await this.instagramService.getOAuthUrl(
       query.businessId,
@@ -80,8 +70,6 @@ export class InstagramController {
   }
 
   @Get("auth/callback")
-  @ApiOperation({ summary: "Handle OAuth callback from Facebook" })
-  @ApiResponse({ status: 200, description: "OAuth callback processed" })
   async handleOAuthCallback(
     @Query("code") code: string,
     @Query("state") state: string
@@ -95,9 +83,6 @@ export class InstagramController {
 
   @Post("accounts/connect")
   @UseGuards(JwtAuthGuard)
-  @ApiBearerAuth()
-  @ApiOperation({ summary: "Connect Instagram account to business" })
-  @ApiResponse({ status: 201, description: "Account connected successfully" })
   async connectAccount(
     @Body()
     body: {
@@ -120,9 +105,6 @@ export class InstagramController {
 
   @Get("accounts")
   @UseGuards(JwtAuthGuard)
-  @ApiBearerAuth()
-  @ApiOperation({ summary: "Get all Instagram accounts for a business" })
-  @ApiResponse({ status: 200, description: "Accounts retrieved" })
   async getAccounts(@Query("businessId") businessId: string) {
     const accounts =
       await this.instagramService.getInstagramAccounts(businessId);
@@ -131,9 +113,6 @@ export class InstagramController {
 
   @Delete("accounts/:accountId")
   @UseGuards(JwtAuthGuard)
-  @ApiBearerAuth()
-  @ApiOperation({ summary: "Disconnect Instagram account" })
-  @ApiResponse({ status: 200, description: "Account disconnected" })
   async disconnectAccount(
     @Param("accountId") accountId: string,
     @Body() dto: DisconnectAccountDto
@@ -144,9 +123,6 @@ export class InstagramController {
 
   @Post("accounts/:accountId/refresh")
   @UseGuards(JwtAuthGuard)
-  @ApiBearerAuth()
-  @ApiOperation({ summary: "Refresh access token for an account" })
-  @ApiResponse({ status: 200, description: "Token refreshed" })
   async refreshToken(@Param("accountId") accountId: string) {
     await this.instagramService.refreshAccessToken(accountId);
     return { success: true, message: "Access token refreshed successfully" };
@@ -154,9 +130,6 @@ export class InstagramController {
 
   @Post("accounts/:accountId/sync")
   @UseGuards(JwtAuthGuard)
-  @ApiBearerAuth()
-  @ApiOperation({ summary: "Sync account info (followers, media count, etc.)" })
-  @ApiResponse({ status: 200, description: "Account synced" })
   async syncAccount(@Param("accountId") accountId: string) {
     await this.instagramService.syncAccountInfo(accountId);
     return { success: true, message: "Account info synced successfully" };
@@ -165,8 +138,6 @@ export class InstagramController {
   // ==================== Webhook Handling ====================
 
   @Get("webhook")
-  @ApiOperation({ summary: "Verify Instagram webhook (Facebook Graph API)" })
-  @ApiResponse({ status: 200, description: "Webhook verified" })
   verifyWebhook(@Query() query: any, @Res() res: Response) {
     const mode = query["hub.mode"];
     const token = query["hub.verify_token"];
@@ -187,8 +158,6 @@ export class InstagramController {
 
   @Post("webhook")
   @HttpCode(HttpStatus.OK)
-  @ApiOperation({ summary: "Receive Instagram webhook events" })
-  @ApiResponse({ status: 200, description: "Webhook received" })
   async handleWebhook(
     @Req() req: RawBodyRequest<Request>,
     @Body() body: InstagramWebhookDto,
@@ -231,11 +200,6 @@ export class InstagramController {
   }
 
   @Get("webhook/examples")
-  @ApiOperation({
-    summary: "Get example webhook payloads for testing",
-    description: "Returns mock webhook payloads for different event types (comments, messages, mentions)"
-  })
-  @ApiResponse({ status: 200, description: "Example payloads returned" })
   getWebhookExamples(@Query("type") type?: string) {
     const examples = {
       comment: {
@@ -359,11 +323,6 @@ export class InstagramController {
 
   @Post("webhook/test")
   @HttpCode(HttpStatus.OK)
-  @ApiOperation({
-    summary: "Test webhook events with mock data (Development only)",
-    description: "Allows testing webhook processing without triggering actual Instagram events. Skips signature verification."
-  })
-  @ApiResponse({ status: 200, description: "Mock webhook processed successfully" })
   async testWebhook(@Body() body: InstagramWebhookDto) {
     console.log('🧪 Processing test webhook:', JSON.stringify(body, null, 2));
 
@@ -445,9 +404,6 @@ export class InstagramController {
 
   @Post("reply/comment")
   @UseGuards(JwtAuthGuard)
-  @ApiBearerAuth()
-  @ApiOperation({ summary: "Reply to an Instagram comment" })
-  @ApiResponse({ status: 200, description: "Reply sent" })
   async replyToComment(@Body() dto: ReplyToCommentDto) {
     const account = await this.prisma.social_accounts.findUnique({
       where: { account_id: dto.accountId },
@@ -468,9 +424,6 @@ export class InstagramController {
 
   @Post("reply/message")
   @UseGuards(JwtAuthGuard)
-  @ApiBearerAuth()
-  @ApiOperation({ summary: "Reply to an Instagram direct message" })
-  @ApiResponse({ status: 200, description: "Message sent" })
   async replyToDirectMessage(@Body() dto: ReplyToDirectMessageDto) {
     const account = await this.prisma.social_accounts.findUnique({
       where: { account_id: dto.accountId },
@@ -500,9 +453,6 @@ export class InstagramController {
 
   @Get("conversations")
   @UseGuards(JwtAuthGuard)
-  @ApiBearerAuth()
-  @ApiOperation({ summary: "Get Instagram conversations (DMs)" })
-  @ApiResponse({ status: 200, description: "Conversations retrieved" })
   async getConversations(@Query() dto: GetConversationsDto) {
     const account = await this.prisma.social_accounts.findUnique({
       where: { account_id: dto.accountId },
@@ -528,9 +478,6 @@ export class InstagramController {
 
   @Get("conversations/:conversationId/messages")
   @UseGuards(JwtAuthGuard)
-  @ApiBearerAuth()
-  @ApiOperation({ summary: "Get messages from a conversation" })
-  @ApiResponse({ status: 200, description: "Messages retrieved" })
   async getMessages(
     @Param("conversationId") conversationId: string,
     @Query() dto: GetMessagesDto
@@ -559,9 +506,6 @@ export class InstagramController {
 
   @Delete("comments/:commentId")
   @UseGuards(JwtAuthGuard)
-  @ApiBearerAuth()
-  @ApiOperation({ summary: "Delete a comment" })
-  @ApiResponse({ status: 200, description: "Comment deleted" })
   async deleteComment(
     @Param("commentId") commentId: string,
     @Query() dto: DeleteCommentDto
@@ -585,9 +529,6 @@ export class InstagramController {
 
   @Post("comments/:commentId/hide")
   @UseGuards(JwtAuthGuard)
-  @ApiBearerAuth()
-  @ApiOperation({ summary: "Hide/Unhide a comment" })
-  @ApiResponse({ status: 200, description: "Comment hidden/unhidden" })
   async hideComment(
     @Param("commentId") commentId: string,
     @Body() dto: HideCommentDto
@@ -616,9 +557,6 @@ export class InstagramController {
 
   @Get("media")
   @UseGuards(JwtAuthGuard)
-  @ApiBearerAuth()
-  @ApiOperation({ summary: "Get Instagram posts/media for an account" })
-  @ApiResponse({ status: 200, description: "Media retrieved" })
   async getMedia(@Query() dto: GetMediaListDto) {
     const account = await this.prisma.social_accounts.findUnique({
       where: { account_id: dto.accountId },
@@ -644,9 +582,6 @@ export class InstagramController {
 
   @Get("media/:mediaId")
   @UseGuards(JwtAuthGuard)
-  @ApiBearerAuth()
-  @ApiOperation({ summary: "Get details of a specific media/post" })
-  @ApiResponse({ status: 200, description: "Media details retrieved" })
   async getMediaDetails(
     @Param("mediaId") mediaId: string,
     @Query() dto: GetMediaDetailsDto
@@ -670,9 +605,6 @@ export class InstagramController {
 
   @Get("media/:mediaId/comments")
   @UseGuards(JwtAuthGuard)
-  @ApiBearerAuth()
-  @ApiOperation({ summary: "Get comments on a media/post" })
-  @ApiResponse({ status: 200, description: "Comments retrieved" })
   async getMediaComments(
     @Param("mediaId") mediaId: string,
     @Query() dto: GetMediaCommentsDto
@@ -703,9 +635,6 @@ export class InstagramController {
 
   @Get("insights/account")
   @UseGuards(JwtAuthGuard)
-  @ApiBearerAuth()
-  @ApiOperation({ summary: "Get account-level insights" })
-  @ApiResponse({ status: 200, description: "Account insights retrieved" })
   async getAccountInsights(@Query() dto: GetAccountInsightsDto) {
     const account = await this.prisma.social_accounts.findUnique({
       where: { account_id: dto.accountId },
@@ -733,9 +662,6 @@ export class InstagramController {
 
   @Get("insights/media/:mediaId")
   @UseGuards(JwtAuthGuard)
-  @ApiBearerAuth()
-  @ApiOperation({ summary: "Get media-level insights" })
-  @ApiResponse({ status: 200, description: "Media insights retrieved" })
   async getMediaInsights(
     @Param("mediaId") mediaId: string,
     @Query() dto: GetMediaInsightsDto

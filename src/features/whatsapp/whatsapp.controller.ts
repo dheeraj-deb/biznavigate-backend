@@ -13,7 +13,6 @@ import {
   Res,
   UseGuards,
 } from '@nestjs/common';
-import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth } from '@nestjs/swagger';
 import { Response } from 'express';
 import { WhatsAppService } from './whatsapp.service';
 import { WebhookValidatorService } from './infrastructure/webhook-validator.service';
@@ -32,7 +31,6 @@ import {
 import { WhatsAppSignatureGuard } from './guards/whatsapp-signature.guard';
 import { GupshupOnboardingService } from '../gupshup/gupshup-onboarding.service';
 
-@ApiTags('WhatsApp')
 @Controller('whatsapp')
 export class WhatsAppController {
   private readonly logger = new Logger(WhatsAppController.name);
@@ -46,9 +44,6 @@ export class WhatsAppController {
   // ==================== Account Management ====================
 
   @Post('accounts/connect')
-  @ApiBearerAuth()
-  @ApiOperation({ summary: 'Connect WhatsApp Business Account' })
-  @ApiResponse({ status: 201, description: 'Account connected successfully' })
   async connectAccount(@Body() dto: ConnectWhatsAppAccountDto) {
     this.logger.log(`Connecting WhatsApp account for business ${dto.businessId}`);
 
@@ -60,17 +55,19 @@ export class WhatsAppController {
   }
 
   @Get('accounts')
-  @ApiBearerAuth()
-  @ApiOperation({ summary: 'Get all WhatsApp accounts for a business' })
-  @ApiResponse({ status: 200, description: 'Accounts retrieved successfully' })
   async getAccounts(@Query() dto: GetAccountsDto) {
     return this.whatsappService.getWhatsAppAccounts(dto.businessId);
   }
 
+  @Post('accounts/:accountId/refresh-verification')
+  async refreshVerification(
+    @Param('accountId') accountId: string,
+    @Query('businessId') businessId: string,
+  ) {
+    return this.whatsappService.refreshAccountVerification(accountId, businessId);
+  }
+
   @Delete('accounts/:accountId')
-  @ApiBearerAuth()
-  @ApiOperation({ summary: 'Disconnect WhatsApp account' })
-  @ApiResponse({ status: 200, description: 'Account disconnected successfully' })
   async disconnectAccount(
     @Param('accountId') accountId: string,
     @Body() dto: DisconnectWhatsAppAccountDto,
@@ -80,11 +77,7 @@ export class WhatsAppController {
 
   // ==================== Webhooks ====================
 
-  // ========== META WHATSAPP WEBHOOKS (COMMENTED OUT) ==========
-
   @Get('webhook/debug')
-  @ApiOperation({ summary: 'Debug webhook configuration' })
-  @ApiResponse({ status: 200, description: 'Config details' })
   debugWebhookConfig() {
     return {
       hasVerifyToken: !!process.env.FACEBOOK_WEBHOOK_VERIFY_TOKEN,
@@ -97,8 +90,6 @@ export class WhatsAppController {
 
   @Get('webhook')
   @HttpCode(HttpStatus.OK)
-  @ApiOperation({ summary: 'Verify webhook (GET)' })
-  @ApiResponse({ status: 200, description: 'Webhook verified' })
   async verifyWebhook(@Query() query: WebhookVerificationDto, @Res() res: Response) {
     this.logger.log('🔔 Webhook verification request received');
     this.logger.log(`Query params: ${JSON.stringify(query)}`);
@@ -114,30 +105,21 @@ export class WhatsAppController {
     }
 
     this.logger.log('✅ Webhook verified successfully');
-
-    // Return plain text response (bypass interceptor)
-    // Facebook expects just the challenge string, not JSON
     res.status(200).send(challenge);
   }
 
   @Post('webhook')
   @HttpCode(HttpStatus.OK)
   @UseGuards(WhatsAppSignatureGuard)
-  @ApiOperation({ summary: 'Receive webhook events (POST)' })
-  @ApiResponse({ status: 200, description: 'Webhook processed' })
   async handleWebhook(
     @Res() res: Response,
     @Body() body: WhatsAppWebhookDto,
   ) {
     setImmediate(() => this.whatsappService.processWebhook(body));
-    res.status(200).json({ success: 200 })
+    res.status(200).json({ success: 200 });
   }
 
-
   @Post('messages/send')
-  @ApiBearerAuth()
-  @ApiOperation({ summary: 'Send a message' })
-  @ApiResponse({ status: 200, description: 'Message sent successfully' })
   async sendMessage(
     @Body() dto: { phoneNumberId: string; to: string; message: SendWhatsAppMessageDto },
   ) {
@@ -149,9 +131,6 @@ export class WhatsAppController {
   }
 
   @Post('messages/button')
-  @ApiBearerAuth()
-  @ApiOperation({ summary: 'Send a button message' })
-  @ApiResponse({ status: 200, description: 'Button message sent successfully' })
   async sendButtonMessage(
     @Body() dto: {
       phoneNumberId: string;
@@ -173,9 +152,6 @@ export class WhatsAppController {
   }
 
   @Post('messages/list')
-  @ApiBearerAuth()
-  @ApiOperation({ summary: 'Send a list message' })
-  @ApiResponse({ status: 200, description: 'List message sent successfully' })
   async sendListMessage(
     @Body() dto: {
       phoneNumberId: string;
@@ -202,22 +178,14 @@ export class WhatsAppController {
 
   /**
    * Receives Gupshup's "docker-status-event" live-event webhook.
-   * Gupshup POSTs here when a WABA app has finished provisioning and gone live.
-   * This triggers Step 4 (webhook subscription) and marks the account active.
-   *
    * Route: POST /whatsapp/gupshup/live-event
    * No auth guard — Gupshup calls this without a JWT.
    */
   @Post('gupshup/live-event')
   @HttpCode(HttpStatus.OK)
-  @ApiOperation({
-    summary: 'Gupshup live-event callback (TPP hosted embed flow)',
-    description: 'Called by Gupshup when a WABA app goes live. Triggers Step 4 webhook subscription.',
-  })
   async handleGupshupLiveEvent(@Body() body: any) {
     this.logger.log(`[GupshupLiveEvent] Received: ${JSON.stringify(body)}`);
 
-    // Only process the docker-status-event with status=live
     const type = body?.type;
     const innerType = body?.payload?.type;
     const innerStatus = body?.payload?.payload?.status;
@@ -239,5 +207,4 @@ export class WhatsAppController {
 
     return { received: true };
   }
-
 }

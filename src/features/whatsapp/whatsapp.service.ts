@@ -163,6 +163,9 @@ export class WhatsAppService {
         created_at: true,
         gupshup_app_id: true,
         gupshup_app_status: true,
+        meta_account_review_status: true,
+        meta_verification_checked_at: true,
+        meta_verified_name: true,
       },
     });
 
@@ -170,6 +173,8 @@ export class WhatsAppService {
       ...acc,
       phone_number_id: acc.page_id,
       whatsapp_business_account_id: acc.instagram_business_account_id,
+      business_verification_status: acc.meta_account_review_status ?? 'UNKNOWN',
+      business_verification_url: 'https://business.facebook.com/settings/security',
     }));
   }
 
@@ -930,6 +935,35 @@ export class WhatsAppService {
     }
 
     return this.sendMessage(phoneNumberId, to, message, nodeId);
+  }
+
+  async fetchAndStoreVerificationStatus(accountId: string, wabaId: string): Promise<void> {
+    try {
+      const details = await this.apiClient.getBusinessAccountDetails(wabaId);
+      await this.prisma.social_accounts.update({
+        where: { account_id: accountId },
+        data: {
+          meta_account_review_status: details.account_review_status ?? null,
+          meta_verification_checked_at: new Date(),
+        },
+      });
+    } catch (err) {
+      this.logger.warn(`Could not fetch verification status for account ${accountId}: ${err.message}`);
+    }
+  }
+
+  async refreshAccountVerification(accountId: string, businessId: string): Promise<any> {
+    const account = await this.prisma.social_accounts.findFirst({
+      where: { account_id: accountId, business_id: businessId, platform: 'whatsapp' },
+    });
+    if (!account) throw new NotFoundException('Account not found');
+
+    await this.fetchAndStoreVerificationStatus(accountId, account.instagram_business_account_id);
+
+    return this.prisma.social_accounts.findUnique({
+      where: { account_id: accountId },
+      select: { meta_account_review_status: true, meta_verification_checked_at: true },
+    });
   }
 
   /**

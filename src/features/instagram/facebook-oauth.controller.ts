@@ -1,5 +1,4 @@
 import { Controller, Get, Query, BadRequestException, Res } from '@nestjs/common';
-import { ApiTags, ApiOperation, ApiResponse, ApiExcludeEndpoint } from '@nestjs/swagger';
 import { Response } from 'express';
 import { InstagramService } from './instagram.service';
 import { ConfigService } from '@nestjs/config';
@@ -9,7 +8,6 @@ import { ConfigService } from '@nestjs/config';
  * This is needed because Facebook redirects to /facebook/auth/callback
  * but our main Instagram integration logic is under /instagram
  */
-@ApiTags('Facebook OAuth')
 @Controller('facebook')
 export class FacebookOAuthController {
   constructor(
@@ -18,7 +16,6 @@ export class FacebookOAuthController {
   ) {}
 
   @Get('auth/callback')
-  @ApiExcludeEndpoint()
   async handleOAuthCallback(
     @Query('code') code: string,
     @Query('state') state: string,

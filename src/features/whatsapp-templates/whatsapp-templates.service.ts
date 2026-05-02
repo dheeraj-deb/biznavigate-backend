@@ -7,8 +7,9 @@ import { WhatsAppApiClientService } from "../whatsapp/infrastructure/whatsapp-ap
 import { CreateTemplateDto } from "./dto/create-template.dto";
 import { ButtonType, HeaderType, TemplateCategory, TemplateStatus } from "./enums/template.enum";
 import { PrismaService } from "../../prisma/prisma.service";
-import { ConfigService } from "@nestjs/config";
 import { QueryTemplateDto } from "./dto/query-template.dto";
+import { GupshupOnboardingService } from "../gupshup/gupshup-onboarding.service";
+import axios from 'axios';
 
 @Injectable()
 export class WhatsAppTemplatesService {
@@ -19,7 +20,7 @@ export class WhatsAppTemplatesService {
         private readonly templateModel: Model<WhatsAppTemplateDocument>,
         private readonly metaApi: WhatsAppApiClientService,
         private readonly prisma: PrismaService,
-        private readonly configService: ConfigService,
+        private readonly gupshupOnboarding: GupshupOnboardingService,
     ) {
     }
 
@@ -96,18 +97,91 @@ export class WhatsAppTemplatesService {
 
         const whatsappBusinessAccountId = account.instagram_business_account_id;
 
+        // Use Gupshup partner app token if available (Gupshup-managed WABAs require this)
+        const gupshupAppId = account.gupshup_app_id;
+        const gupshupToken = gupshupAppId
+            ? await this.gupshupOnboarding.getPartnerAppToken(gupshupAppId).catch(() => null)
+            : null;
+
         let metaResult: { id: string; status: string };
         try {
-            metaResult = await this.metaApi.createTemplate(
-                whatsappBusinessAccountId,
-                {
-                    name: template.name,
-                    category: template.category,
-                    language: template.language,
-                    components: this.buildMetaComponents(template.components),
-                },
-            );
+            if (gupshupToken && gupshupAppId) {
+                // Build example by replacing {{N}} placeholders with sample values
+                const bodyText: string = template.components.body;
+                const bodyExamples: string[] = template.components.bodyExamples ?? [];
+                let exampleBody = bodyText;
+                bodyExamples.forEach((ex, i) => {
+                    exampleBody = exampleBody.replace(`{{${i + 1}}}`, ex);
+                });
+
+                // Gupshup elementName: lowercase, alphanumeric + underscores only
+                // Must be globally unique — append last 8 chars of appId as suffix
+                const baseName = template.name.toLowerCase().replace(/[^a-z0-9_]/g, '_').replace(/^_+|_+$/g, '');
+                const appSuffix = gupshupAppId.replace(/-/g, '').slice(-8);
+                const elementName = `${baseName}_${appSuffix}`;
+
+                const hasVariables = /\{\{\d+\}\}/.test(bodyText);
+
+                // Gupshup partner API requires application/x-www-form-urlencoded
+                const params = new URLSearchParams();
+                params.set('elementName', elementName);
+                params.set('languageCode', template.language === 'en' ? 'en_US' : template.language);
+                params.set('category', template.category);
+                params.set('templateType', template.components.header?.type === 'IMAGE' ? 'IMAGE'
+                    : template.components.header?.type === 'VIDEO' ? 'VIDEO'
+                    : template.components.header?.type === 'DOCUMENT' ? 'DOCUMENT'
+                    : 'TEXT');
+                params.set('vertical', template.category);
+                params.set('content', bodyText);
+                params.set('example', exampleBody);
+                params.set('enableSample', String(hasVariables));
+
+                if (template.components.header?.text) {
+                    params.set('header', template.components.header.text);
+                    params.set('exampleHeader', template.components.header.example ?? template.components.header.text);
+                }
+                if (template.components.footer) {
+                    params.set('footer', template.components.footer);
+                }
+                if (template.components.buttons?.length) {
+                    params.set('buttons', JSON.stringify(
+                        template.components.buttons.map((b: any) => ({
+                            type: b.type,
+                            text: b.text,
+                            ...(b.phone_number ? { phone_number: b.phone_number } : {}),
+                            ...(b.url ? { url: b.url } : {}),
+                        }))
+                    ));
+                }
+
+                this.logger.log(`[Template] Submitting to Gupshup — elementName=${elementName} appId=${gupshupAppId}`);
+
+                const { data } = await axios.post(
+                    `https://partner.gupshup.io/partner/app/${gupshupAppId}/templates`,
+                    params,
+                    { headers: { Authorization: gupshupToken, 'Content-Type': 'application/x-www-form-urlencoded' } },
+                );
+                this.logger.log(`[Template] Gupshup response: ${JSON.stringify(data)}`);
+                const gTemplate = data?.template ?? data;
+                metaResult = { id: gTemplate?.id ?? elementName, status: gTemplate?.status ?? 'PENDING' };
+            } else {
+                metaResult = await this.metaApi.createTemplate(
+                    whatsappBusinessAccountId,
+                    {
+                        name: template.name,
+                        category: template.category,
+                        language: template.language,
+                        components: this.buildMetaComponents(template.components),
+                    },
+                );
+            }
         } catch (err) {
+            this.logger.error(`[Template] API failure: ${JSON.stringify(err?.response?.data ?? err?.message)}`);
+            // Rollback: delete local draft if this was a fresh first submission
+            if (!template.metaTemplateId) {
+                await this.templateModel.findByIdAndDelete(templateId).catch(() => {});
+                this.logger.warn(`[Rollback] Deleted draft template ${templateId} after API failure`);
+            }
             const metaError = err?.response?.data?.error;
             if (metaError?.error_subcode === 2388023) {
                 throw new ConflictException(
@@ -260,15 +334,20 @@ export class WhatsAppTemplatesService {
             const language = mt.language ?? 'en';
             const category = (mt.category as TemplateCategory) ?? TemplateCategory.MARKETING;
 
+            // Match by metaTemplateId first, then name+language (covers Gupshup-submitted templates)
             const existing = await this.templateModel.findOne({
                 businessId,
-                metaTemplateId: String(mt.id),
-                language,
+                isDeleted: false,
+                $or: [
+                    { metaTemplateId: String(mt.id) },
+                    { name: mt.name, language },
+                ],
             });
 
             if (existing) {
                 await this.templateModel.findByIdAndUpdate(existing._id, {
                     status,
+                    metaTemplateId: String(mt.id), // update in case it was a Gupshup ID before
                     ...(mt.rejected_reason && { rejectionReason: mt.rejected_reason }),
                 });
                 updated++;

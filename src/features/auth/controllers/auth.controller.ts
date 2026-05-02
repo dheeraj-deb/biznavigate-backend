@@ -7,7 +7,6 @@ import {
   UseGuards,
   Request,
 } from '@nestjs/common';
-import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth } from '@nestjs/swagger';
 import { AuthGuard } from '@nestjs/passport';
 import { Throttle } from '@nestjs/throttler';
 import { AuthService } from '../application/services/auth.service';
@@ -16,7 +15,6 @@ import { LoginDto } from '../application/dto/login.dto';
 import { RefreshTokenDto } from '../application/dto/refresh-token.dto';
 import { AuthResponseDto } from '../application/dto/auth-response.dto';
 
-@ApiTags('Authentication')
 @Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
@@ -24,15 +22,6 @@ export class AuthController {
   @Post('signup')
   @Throttle({ short: { ttl: 60000, limit: 5 } }) // 5 signups per minute
   @HttpCode(HttpStatus.CREATED)
-  @ApiOperation({ summary: 'Register a new user' })
-  @ApiResponse({
-    status: 201,
-    description: 'User successfully registered',
-    type: AuthResponseDto,
-  })
-  @ApiResponse({ status: 400, description: 'Bad Request' })
-  @ApiResponse({ status: 409, description: 'User already exists' })
-  @ApiResponse({ status: 429, description: 'Too many requests' })
   async signup(@Body() signupDto: SignupDto): Promise<AuthResponseDto> {
     console.log('[CONTROLLER] Signup endpoint called with:', signupDto);
     const result = await this.authService.signup(signupDto);
@@ -43,14 +32,6 @@ export class AuthController {
   @Post('login')
   @Throttle({ short: { ttl: 60000, limit: 5 } }) // 5 login attempts per minute to prevent brute force
   @HttpCode(HttpStatus.OK)
-  @ApiOperation({ summary: 'Login user' })
-  @ApiResponse({
-    status: 200,
-    description: 'User successfully logged in',
-    type: AuthResponseDto,
-  })
-  @ApiResponse({ status: 401, description: 'Invalid credentials' })
-  @ApiResponse({ status: 429, description: 'Too many requests - please try again later' })
   async login(@Body() loginDto: LoginDto): Promise<AuthResponseDto> {
     return this.authService.login(loginDto);
   }
@@ -58,14 +39,6 @@ export class AuthController {
   @Post('refresh')
   @Throttle({ short: { ttl: 60000, limit: 10 } }) // 10 token refreshes per minute
   @HttpCode(HttpStatus.OK)
-  @ApiOperation({ summary: 'Refresh access token' })
-  @ApiResponse({
-    status: 200,
-    description: 'Token successfully refreshed',
-    type: AuthResponseDto,
-  })
-  @ApiResponse({ status: 401, description: 'Invalid refresh token' })
-  @ApiResponse({ status: 429, description: 'Too many requests' })
   async refresh(
     @Body() refreshTokenDto: RefreshTokenDto,
   ): Promise<AuthResponseDto> {
@@ -75,10 +48,6 @@ export class AuthController {
   @Post('logout')
   @UseGuards(AuthGuard('jwt'))
   @HttpCode(HttpStatus.OK)
-  @ApiBearerAuth()
-  @ApiOperation({ summary: 'Logout user' })
-  @ApiResponse({ status: 200, description: 'User successfully logged out' })
-  @ApiResponse({ status: 401, description: 'Unauthorized' })
   async logout(@Request() req): Promise<{ message: string }> {
     await this.authService.logout(req.user.user_id);
     return { message: 'Logged out successfully' };

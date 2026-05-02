@@ -4,7 +4,11 @@
       "Bash(xargs ls:*)",
       "Bash(npx ts-node -e ':*)",
       "Bash(npm install:*)",
-      "Read(//Users/dheerajt/Downloads/biznavigate/**)"
+      "Read(//Users/dheerajt/Downloads/biznavigate/**)",
+      "Bash(grep -v \"^$\")",
+      "Bash(git checkout:*)",
+      "Bash(xargs -I{} sed -i '' '/from .@nestjs\\\\/swagger./d' {})",
+      "Bash(git stash:*)"
     ]
   }
 }

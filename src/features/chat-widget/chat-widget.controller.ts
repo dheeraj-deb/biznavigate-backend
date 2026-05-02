@@ -9,7 +9,6 @@ import {
   Header,
   Logger,
 } from '@nestjs/common';
-import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { Response } from 'express';
 import { ChatWidgetService } from './chat-widget.service';
 import {
@@ -18,7 +17,6 @@ import {
   UpdateVisitorInfoDto,
 } from './dto/widget-message.dto';
 
-@ApiTags('Chat Widget')
 @Controller('widget')
 export class ChatWidgetController {
   private readonly logger = new Logger(ChatWidgetController.name);
@@ -30,7 +28,6 @@ export class ChatWidgetController {
    */
   @Get('script/:businessId')
   @Header('Content-Type', 'application/javascript')
-  @ApiOperation({ summary: 'Get widget script for embedding' })
   async getWidgetScript(
     @Param('businessId') businessId: string,
     @Res() res: Response,
@@ -52,8 +49,6 @@ export class ChatWidgetController {
    * Get widget configuration
    */
   @Get('config/:businessId')
-  @ApiOperation({ summary: 'Get widget configuration' })
-  @ApiResponse({ status: 200, description: 'Widget configuration' })
   async getConfig(@Param('businessId') businessId: string) {
     return this.chatWidgetService.getWidgetConfig(businessId);
   }
@@ -62,8 +57,6 @@ export class ChatWidgetController {
    * Initialize widget session (HTTP fallback)
    */
   @Post('init')
-  @ApiOperation({ summary: 'Initialize widget session' })
-  @ApiResponse({ status: 200, description: 'Widget initialized' })
   async initWidget(@Body() data: InitWidgetDto) {
     return this.chatWidgetService.initWidget(
       data.businessId,
@@ -76,8 +69,6 @@ export class ChatWidgetController {
    * Send message (HTTP fallback)
    */
   @Post('message')
-  @ApiOperation({ summary: 'Send message from widget' })
-  @ApiResponse({ status: 200, description: 'Message sent' })
   async sendMessage(@Body() data: SendWidgetMessageDto) {
     return this.chatWidgetService.processMessage(data);
   }
@@ -86,8 +77,6 @@ export class ChatWidgetController {
    * Get conversation history (HTTP fallback)
    */
   @Get('history')
-  @ApiOperation({ summary: 'Get conversation history' })
-  @ApiResponse({ status: 200, description: 'Conversation history' })
   async getHistory(
     @Query('businessId') businessId: string,
     @Query('visitorId') visitorId: string,
@@ -99,8 +88,6 @@ export class ChatWidgetController {
    * Update visitor information
    */
   @Post('visitor/update')
-  @ApiOperation({ summary: 'Update visitor information' })
-  @ApiResponse({ status: 200, description: 'Visitor information updated' })
   async updateVisitorInfo(@Body() data: UpdateVisitorInfoDto) {
     await this.chatWidgetService.updateVisitorInfo(data);
     return { success: true };
@@ -110,8 +97,6 @@ export class ChatWidgetController {
    * Generate embed code for business
    */
   @Get('embed/:businessId')
-  @ApiOperation({ summary: 'Get embed code for website' })
-  @ApiResponse({ status: 200, description: 'Embed code' })
   async getEmbedCode(@Param('businessId') businessId: string) {
     const baseUrl = process.env.API_URL || 'http://localhost:3000';
 

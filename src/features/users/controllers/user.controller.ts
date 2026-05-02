@@ -1,6 +1,5 @@
 import { Controller, Post, Body, Param, Patch, Get, UseGuards, Request } from "@nestjs/common";
 import { AuthGuard } from "@nestjs/passport";
-import { ApiBearerAuth, ApiTags } from "@nestjs/swagger";
 import { JwtAuthGuard } from "../../../common/guards/jwt-auth.guard";
 import { UsersService } from "../applications/user.service";
 import { CreateUserDto } from "../applications/dto/create-user.dto";
@@ -8,8 +7,6 @@ import { UpdateUserDto } from "../applications/dto/update-user.dto";
 import { AssignRoleDto } from "../applications/dto/assign-role.dto";
 import { UpdateProfileDto } from "../application/dto/update-profile.dto";
 
-@ApiTags('Users')
-@ApiBearerAuth()
 @UseGuards(JwtAuthGuard)
 @Controller("users")
 export class UsersController {

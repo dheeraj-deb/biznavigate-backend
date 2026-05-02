@@ -2,6 +2,7 @@ import { Injectable, InternalServerErrorException, Logger, OnModuleInit } from "
 import { ConfigService } from "@nestjs/config";
 import axios from "axios";
 import { PrismaService } from "../../prisma/prisma.service";
+import { WhatsAppApiClientService } from "../whatsapp/infrastructure/whatsapp-api-client.service";
 
 /** Gupshup pipeline status from GET /partner/app/:appId/pipeline */
 export interface GupshupPipelineStatus {
@@ -61,6 +62,7 @@ export class GupshupOnboardingService implements OnModuleInit {
   constructor(
     private readonly config: ConfigService,
     private readonly prisma: PrismaService,
+    private readonly metaApi: WhatsAppApiClientService,
   ) {
     this.masterAppId = this.config.get<string>("GUPSHUP_APP_ID") ?? "";
     this.email = this.config.get<string>("GUPSHUP_EMAIL") ?? "";
@@ -337,6 +339,19 @@ export class GupshupOnboardingService implements OnModuleInit {
           });
 
           this.logger.log(`[Polling] ✅ App ${appId} is live! Account activated for business=${businessId}`);
+
+          // Non-blocking: fetch Meta business verification status
+          const liveAccount = await this.prisma.social_accounts.findFirst({
+            where: { gupshup_app_id: appId, business_id: businessId },
+            select: { account_id: true, instagram_business_account_id: true },
+          });
+          if (liveAccount?.instagram_business_account_id) {
+            setImmediate(() => this.fetchMetaVerificationStatus(
+              liveAccount.account_id,
+              liveAccount.instagram_business_account_id,
+            ));
+          }
+
           return;
         }
 
@@ -463,6 +478,13 @@ export class GupshupOnboardingService implements OnModuleInit {
     });
 
     this.logger.log(`[LiveEvent] ✅ Account ${account.account_id} (business=${account.business_id}) marked live`);
+
+    if (account.instagram_business_account_id) {
+      setImmediate(() => this.fetchMetaVerificationStatus(
+        account.account_id,
+        account.instagram_business_account_id,
+      ));
+    }
   }
 
   // ─────────────────────────────────────────────────────────────────────────────
@@ -500,6 +522,22 @@ export class GupshupOnboardingService implements OnModuleInit {
       name: app.name,
       live: app.live,
     };
+  }
+
+  private async fetchMetaVerificationStatus(accountId: string, wabaId: string): Promise<void> {
+    try {
+      const details = await this.metaApi.getBusinessAccountDetails(wabaId);
+      await this.prisma.social_accounts.update({
+        where: { account_id: accountId },
+        data: {
+          meta_account_review_status: details.account_review_status ?? null,
+          meta_verification_checked_at: new Date(),
+        },
+      });
+      this.logger.log(`[Verification] Stored Meta review status for account ${accountId}: ${details.account_review_status}`);
+    } catch (err) {
+      this.logger.warn(`[Verification] Could not fetch Meta verification status for account ${accountId}: ${err.message}`);
+    }
   }
 
   /** Generate an Embedded Signup link (Gupshup-hosted flow, kept for backwards compat). */
