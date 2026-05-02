@@ -271,7 +271,7 @@ export class WhatsAppApiClientService {
         `/${whatsappBusinessAccountId}`,
         {
           params: {
-            fields: 'id,name,timezone_id,message_template_namespace,account_review_status',
+            fields: 'id,name,timezone_id,message_template_namespace,account_review_status,business_verification_status',
           },
         }
       );

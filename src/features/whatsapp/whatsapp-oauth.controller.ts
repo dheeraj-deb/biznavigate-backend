@@ -9,13 +9,11 @@ import {
   Logger,
   UseGuards,
 } from '@nestjs/common';
-import { ApiTags, ApiOperation, ApiBearerAuth, ApiResponse } from '@nestjs/swagger';
 import { Response } from 'express';
 import { WhatsAppOAuthService } from './services/whatsapp-oauth.service';
 import { ConfigService } from '@nestjs/config';
 import { JwtAuthGuard } from '../../common/guards';
 
-@ApiTags('WhatsApp OAuth')
 @Controller('whatsapp/oauth')
 export class WhatsAppOAuthController {
   private readonly logger = new Logger(WhatsAppOAuthController.name);
@@ -30,9 +28,6 @@ export class WhatsAppOAuthController {
    */
   @Get('url')
   @UseGuards(JwtAuthGuard)
-  @ApiBearerAuth()
-  @ApiOperation({ summary: 'Get WhatsApp OAuth URL' })
-  @ApiResponse({ status: 200, description: 'OAuth URL generated successfully' })
   async getOAuthUrl(
     @Query('businessId') businessId: string,
     @Query('redirectUri') redirectUri?: string,
@@ -59,8 +54,6 @@ export class WhatsAppOAuthController {
    */
   @Post('embedded-callback')
   @UseGuards(JwtAuthGuard)
-  @ApiBearerAuth()
-  @ApiOperation({ summary: 'Handle WhatsApp Embedded Signup code from frontend' })
   async handleEmbeddedCallback(
     @Body() body: { code: string; businessId: string; waba_id: string, phone_number_id: string, whatsapp_business_id: string },
   ) {
@@ -76,8 +69,6 @@ export class WhatsAppOAuthController {
    * Facebook redirects here after user authorizes
    */
   @Get('callback')
-  @ApiOperation({ summary: 'Handle WhatsApp OAuth callback from Facebook' })
-  @ApiResponse({ status: 302, description: 'Redirects to frontend with result' })
   async handleCallback(
     @Query('code') code: string,
     @Query('state') state: string,
