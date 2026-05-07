@@ -8,7 +8,12 @@
       "Bash(grep -v \"^$\")",
       "Bash(git checkout:*)",
       "Bash(xargs -I{} sed -i '' '/from .@nestjs\\\\/swagger./d' {})",
-      "Bash(git stash:*)"
+      "Bash(git stash:*)",
+      "Read(//Users/dheerajt/Downloads/biznavigate/biznavigate-backend/**)",
+      "WebFetch(domain:docs.gupshup.io)",
+      "WebFetch(domain:www.gupshup.io)",
+      "WebSearch",
+      "WebFetch(domain:partner-docs.gupshup.io)"
     ]
   }
 }

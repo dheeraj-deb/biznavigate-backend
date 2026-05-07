@@ -50,26 +50,71 @@ export class WhatsAppApiClientService {
   }
 
   /**
-   * Send a message
+   * Send a message via Meta Graph API (for Meta-managed WABAs)
    */
   async sendMessage(
     phoneNumberId: string,
     message: SendWhatsAppMessageDto
   ): Promise<any> {
-
-    console.dir(message, { depth: null })
     try {
       const response = await this.apiClient.post(
         `/${phoneNumberId}/messages`,
         message,
       );
-
-      console.dir(response.data, { depth: null })
-
       this.logger.log(`Message sent successfully: ${response.data.messages?.[0]?.id}`);
       return response.data;
     } catch (error) {
       this.logger.error('Failed to send message:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Send a text message via Gupshup partner API (for Gupshup-managed WABAs)
+   */
+  async sendGupshupMessage(
+    appToken: string,
+    appId: string,
+    sourcePhone: string,
+    to: string,
+    message: SendWhatsAppMessageDto,
+  ): Promise<any> {
+    const baseUrl = 'https://partner.gupshup.io';
+
+    // v3 passthrough API — mirrors Meta's WhatsApp Cloud API format exactly
+    let body: any = {
+      messaging_product: 'whatsapp',
+      recipient_type: 'individual',
+      to,
+    };
+
+    if (message.type === 'text' && message.text) {
+      body.type = 'text';
+      body.text = { body: message.text.body };
+    } else if (message.type === 'template' && message.template) {
+      body.type = 'template';
+      body.template = message.template;
+    } else if (message.type === 'interactive' && message.interactive) {
+      body.type = 'interactive';
+      body.interactive = message.interactive;
+    } else {
+      body.type = 'text';
+      body.text = { body: '[Unsupported message type]' };
+    }
+
+    this.logger.log(`[Gupshup v3] POST ${baseUrl}/partner/app/${appId}/v3/message | to=${to} type=${body.type}`);
+
+    try {
+      const { data } = await axios.post(
+        `${baseUrl}/partner/app/${appId}/v3/message`,
+        body,
+        { headers: { Authorization: appToken, 'Content-Type': 'application/json', accept: 'application/json' } },
+      );
+      this.logger.log(`Gupshup message sent to ${to}: ${JSON.stringify(data)}`);
+      // v3 response mirrors Meta format: { messages: [{ id: '...' }] }
+      return data;
+    } catch (error) {
+      this.logger.error(`Failed to send Gupshup message to ${to}: HTTP ${error?.response?.status} — ${JSON.stringify(error?.response?.data ?? error.message)}`);
       throw error;
     }
   }
@@ -101,6 +146,32 @@ export class WhatsAppApiClientService {
     } catch (error) {
       this.logger.error('Failed to mark message as read:', error);
       throw error;
+    }
+  }
+
+  /**
+   * Send typing indicator via Gupshup v1 event API.
+   * Call this after marking a message as read, before sending the agent reply.
+   */
+  async sendGupshupTypingIndicator(appToken: string, appId: string, messageId: string): Promise<void> {
+    try {
+      await axios.post(
+        `https://partner.gupshup.io/partner/app/${appId}/v1/event`,
+        {
+          type: 'message-event',
+          message: {
+            messaging_product: 'whatsapp',
+            status: 'read',
+            message_id: messageId,
+            typing_indicator: { type: 'text' },
+          },
+        },
+        { headers: { Authorization: appToken, 'Content-Type': 'application/json' } },
+      );
+      this.logger.debug(`Typing indicator sent for message ${messageId}`);
+    } catch (error) {
+      // Non-fatal — typing indicator failure should not block message sending
+      this.logger.warn(`Failed to send typing indicator: ${error?.response?.data?.message ?? error.message}`);
     }
   }
 
