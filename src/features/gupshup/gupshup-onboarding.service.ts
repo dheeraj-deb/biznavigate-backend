@@ -1,4 +1,4 @@
-import { Injectable, InternalServerErrorException, Logger, OnModuleInit } from "@nestjs/common";
+import { Injectable, InternalServerErrorException, Logger } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import axios from "axios";
 import { PrismaService } from "../../prisma/prisma.service";
@@ -36,7 +36,7 @@ export interface TppOnboardingOptions {
 }
 
 @Injectable()
-export class GupshupOnboardingService implements OnModuleInit {
+export class GupshupOnboardingService {
   private readonly logger = new Logger(GupshupOnboardingService.name);
   private readonly baseUrl = "https://partner.gupshup.io";
 
@@ -70,16 +70,6 @@ export class GupshupOnboardingService implements OnModuleInit {
     this.configured = !!(this.masterAppId && this.email && this.password);
     if (!this.configured) {
       this.logger.warn("Gupshup credentials not configured. Gupshup features will be disabled.");
-    }
-  }
-
-  async onModuleInit() {
-    if (!this.configured) return;
-    try {
-      await this.subscribeWebhook();
-      this.logger.log("Gupshup master webhook subscription registered");
-    } catch (e) {
-      this.logger.error("Failed to register Gupshup master webhook", e?.response?.data ?? e.message);
     }
   }
 
@@ -209,7 +199,7 @@ export class GupshupOnboardingService implements OnModuleInit {
       );
     } catch (error) {
       const msg = error?.response?.data?.message ?? error.message;
-      
+
       // Handle idempotency: if app already exists for this phone, extract the appId
       // Example: "App a97d8ef4-cb00-4c2e-ac5c-aa2401626d94 already exists with phone 919567907298"
       const match = msg.match(/App ([a-f0-9\-]+) already exists/i);
@@ -596,5 +586,5 @@ export class GupshupOnboardingService implements OnModuleInit {
     this.logger.log(`WhatsApp account saved for business=${businessId} phone=${phone}`);
     return { accountId: account.account_id, phoneNumber: phone };
   }
-  
+
 }

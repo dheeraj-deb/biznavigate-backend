@@ -19,7 +19,7 @@ import { WhatsAppWebhookDto } from './dto/webhook-event.dto';
 import { WebhookValidatorService } from './infrastructure/webhook-validator.service';
 import { WhatsAppTemplatesService } from '../whatsapp-templates/whatsapp-templates.service';
 import { WhatsAppFlowsService } from '../whatsapp-flows/whatsapp-flows.service';
-import { AcknowledgmentService } from '../agent/services/acknowledgment.service';
+import { GupshupOnboardingService } from '../gupshup/gupshup-onboarding.service';
 
 
 
@@ -42,9 +42,26 @@ export class WhatsAppService {
     private readonly webhookValidator: WebhookValidatorService,
     private readonly whatsappTemplatesService: WhatsAppTemplatesService,
     private readonly _whatsappFlowsService: WhatsAppFlowsService,
-    private readonly acknowledgmentService: AcknowledgmentService,
+    private readonly gupshupOnboarding: GupshupOnboardingService,
     @InjectQueue('message-debounce') private readonly debounceQueue: Queue,
   ) { }
+
+  /**
+   * Sends a message via the correct API based on whether the account is Gupshup-managed or Meta-managed.
+   */
+  private async sendViaProvider(
+    account: { page_id: string; gupshup_app_id: string | null; username?: string | null },
+    to: string,
+    message: SendWhatsAppMessageDto,
+  ): Promise<any> {
+    if (account.gupshup_app_id) {
+      // source = the business phone number (digits only, no +)
+      const sourcePhone = (account.username ?? '').replace(/\D/g, '');
+      const token = await this.gupshupOnboarding.getPartnerAppToken(account.gupshup_app_id);
+      return this.apiClient.sendGupshupMessage(token, account.gupshup_app_id, sourcePhone, to, message);
+    }
+    return this.apiClient.sendMessage(account.page_id, message);
+  }
 
 
   /**
@@ -196,6 +213,24 @@ export class WhatsAppService {
     });
 
     this.logger.log(`WhatsApp account ${accountId} disconnected`);
+  }
+
+  /**
+   * Handle inbound messages from Gupshup webhook.
+   * Looks up the account by Gupshup app ID, then routes to handleMessageWebhook.
+   */
+  async handleGupshupInboundMessage(gupshupAppId: string, normalizedMessage: any): Promise<void> {
+    const account = await this.prisma.social_accounts.findFirst({
+      where: { gupshup_app_id: gupshupAppId, platform: 'whatsapp', is_active: true },
+    });
+
+    if (!account) {
+      this.logger.warn(`[GupshupWebhook] No active account found for app ID ${gupshupAppId}`);
+      return;
+    }
+
+    const metadata = { phone_number_id: account.page_id, display_phone_number: account.username };
+    await this.handleMessageWebhook(normalizedMessage, metadata, []);
   }
 
   /**
@@ -411,11 +446,19 @@ export class WhatsAppService {
         });
       }
 
-      // Mark as read + show typing indicator while AI processes
-      await this.circuitBreaker.execute(
-        `whatsapp-mark-read-${phoneNumberId}`,
-        () => this.apiClient.markAsRead(phoneNumberId, messageId),
-      );
+      // Mark as read + typing indicator
+      if (account.gupshup_app_id) {
+        // Gupshup: use v1/event endpoint for read receipt + typing indicator
+        setImmediate(async () => {
+          const token = await this.gupshupOnboarding.getPartnerAppToken(account.gupshup_app_id).catch(() => null);
+          if (token) await this.apiClient.sendGupshupTypingIndicator(token, account.gupshup_app_id, messageId);
+        });
+      } else {
+        await this.circuitBreaker.execute(
+          `whatsapp-mark-read-${phoneNumberId}`,
+          () => this.apiClient.markAsRead(phoneNumberId, messageId),
+        );
+      }
 
       // Map business_type to AI service expected values
       // const businessTypeMap: Record<string, string> = {
@@ -483,28 +526,6 @@ export class WhatsAppService {
           },
         );
 
-        // Send an immediate human-like acknowledgment while the agent processes.
-        // This fires async — does NOT block the webhook response.
-        const businessType = (account.businesses.business_type ?? 'default').toLowerCase();
-        this.acknowledgmentService.generateAck(userInput, businessType).then(async (ack) => {
-          if (!ack) return;
-          try {
-            await this.sendAgentReply(
-              account.business_id,
-              phoneNumberId,
-              from,
-              ack,
-              {
-                conversationId: conversation.conversation_id,
-                leadId: lead.lead_id,
-                tenantId: account.businesses.tenant_id,
-              },
-            );
-            this.logger.debug(`Ack sent to ${from}: "${ack}"`);
-          } catch (e) {
-            this.logger.warn(`Failed to send ack: ${e.message}`);
-          }
-        });
       }
 
     } catch (error) {
@@ -531,7 +552,7 @@ export class WhatsAppService {
       this.logger.warn(`sendAgentReply: no active WhatsApp account for business ${businessId}`);
       return;
     }
-    const apiResult = await this.apiClient.sendMessage(phoneNumberId, {
+    const apiResult = await this.sendViaProvider(account, to, {
       messaging_product: 'whatsapp',
       recipient_type: 'individual',
       to,
@@ -720,7 +741,7 @@ export class WhatsAppService {
       this.logger.log('Sending message via WhatsApp Business API');
       const result = await this.circuitBreaker.execute(
         `whatsapp-send-${phoneNumberId}`,
-        () => this.apiClient.sendMessage(phoneNumberId, message),
+        () => this.sendViaProvider(account, to, message),
       );
 
       // Find lead (stays in Postgres)
