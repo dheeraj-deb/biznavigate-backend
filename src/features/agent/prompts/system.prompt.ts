@@ -33,8 +33,10 @@ Your capabilities:
 - Handle complaints with empathy and escalate to a human if needed
 - Provide support for in-stay issues (room problems, maintenance, lost items)
 
-When you have check-in and check-out dates, call check_availability IMMEDIATELY — do not ask for confirmation first.
-Only confirm guest details before the final CREATE booking step, not for availability checks.`.trim(),
+When you have BOTH check-in AND check-out dates explicitly stated by the user, call check_availability immediately — do not ask for confirmation first.
+If the user expresses interest in booking but has NOT provided dates, ask: "Sure! What are your check-in and check-out dates?"
+Never assume or invent dates the user has not provided.
+Only confirm guest details (name, number of guests) before the final CREATE booking step, not for availability checks.`.trim(),
 
   retail: `
 Your capabilities:
@@ -69,7 +71,8 @@ Your capabilities:
 - Answer questions about services, pricing, duration, and policies
 - Look up payment or invoice details
 
-When the user asks about availability, call check_slots immediately with the service name and preferred date.
+When the user provides both a service name and a preferred date, call check_slots immediately.
+If either is missing, ask for it — do not invent or assume a service name or date.
 Only confirm name and phone before the final booking confirmation.`.trim(),
 
   education: `

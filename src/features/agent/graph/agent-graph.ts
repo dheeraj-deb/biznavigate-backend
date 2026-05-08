@@ -24,6 +24,9 @@ function routeAfterTriage(state: AgentStateType): string {
 }
 
 function shouldContinueAfterTools(state: AgentStateType): string {
+  // If the tool_caller asked a clarifying question, send it directly to the user.
+  if (state.clarifyingQuestion) return 'end';
+
   const last = state.messages.at(-1);
   if (last instanceof AIMessage) {
     const content = typeof last.content === 'string' ? last.content : '';
@@ -65,6 +68,7 @@ export async function buildAgentGraph(deps: AgentGraphDeps) {
     .addConditionalEdges('tool_caller', shouldContinueAfterTools, {
       tool_caller: 'tool_caller',
       responder: 'responder',
+      end: END,
     })
     .addEdge('responder', END);
 
