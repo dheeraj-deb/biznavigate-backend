@@ -138,7 +138,7 @@ export class GupshupOnboardingService {
   async subscribeWebhook(): Promise<any> {
     const appToken = await this.getMasterAppToken();
     const backendUrl = this.config.getOrThrow<string>("BACKEND_URL");
-    const webhookUrl = `${backendUrl}/whatsapp/webhook`;
+    const webhookUrl = `${backendUrl}/whatsapp/gupshup/webhook`;
 
     const params = new URLSearchParams();
     params.append("modes", "MESSAGE,SENT,DELIVERED,READ,FAILED,OTHERS,FLOWS_MESSAGE");
@@ -281,7 +281,7 @@ export class GupshupOnboardingService {
    */
   async subscribeAppWebhook(appId: string, partnerAppToken: string): Promise<any> {
     const backendUrl = this.config.getOrThrow<string>("BACKEND_URL");
-    const webhookUrl = `${backendUrl}/whatsapp/webhook`;
+    const webhookUrl = `${backendUrl}/whatsapp/gupshup/webhook`;
 
     const params = new URLSearchParams();
     params.append("modes", "MESSAGE,SENT,DELIVERED,READ,FAILED,OTHERS,FLOWS_MESSAGE");
