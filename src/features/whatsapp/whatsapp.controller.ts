@@ -187,67 +187,35 @@ export class WhatsAppController {
   async handleGupshupWebhook(@Body() body: any) {
     this.logger.log(`[GupshupWebhook] Received: ${JSON.stringify(body)}`);
 
-    const payload = body?.payload;
-    if (!payload) {
-      return { received: true };
-    }
+    // Gupshup sends webhooks in Meta's exact format with gs_app_id at root.
+    // Route each message through the standard Meta handler, using gs_app_id
+    // to resolve the account instead of the phone_number_id.
+    const gupshupAppId: string | undefined = body?.gs_app_id;
+    const entries: any[] = body?.entry ?? [];
 
-    const type = payload?.type;
-    if (type !== 'message') {
-      this.logger.log(`[GupshupWebhook] Ignoring non-message event: type=${type}`);
-      return { received: true };
-    }
+    for (const entry of entries) {
+      for (const change of entry?.changes ?? []) {
+        if (change?.field !== 'messages') continue;
+        const value = change?.value;
+        const messages: any[] = value?.messages ?? [];
+        const contacts: any[] = value?.contacts ?? [];
 
-    // Find account by Gupshup app ID
-    const appId: string | undefined = body?.app;
-    if (!appId) {
-      this.logger.warn('[GupshupWebhook] No app ID in payload');
-      return { received: true };
-    }
-
-    // Normalize Gupshup message format to Meta-compatible structure
-    const from: string = payload?.sender?.phone ?? payload?.source;
-    const messageId: string = payload?.id;
-    const timestamp = Math.floor(Date.now() / 1000).toString();
-    const messagePayload = payload?.payload;
-    const msgType: string = payload?.type === 'message' ? (messagePayload?.type ?? 'text') : 'text';
-
-    // Build Meta-compatible message object
-    const normalizedMessage: any = {
-      id: messageId,
-      from,
-      timestamp,
-      type: msgType,
-    };
-
-    if (msgType === 'text') {
-      normalizedMessage.text = { body: messagePayload?.text ?? messagePayload?.payload ?? '' };
-    } else if (msgType === 'image') {
-      normalizedMessage.image = { id: messagePayload?.id, caption: messagePayload?.caption };
-    } else if (msgType === 'audio') {
-      normalizedMessage.audio = { id: messagePayload?.id };
-    } else if (msgType === 'video') {
-      normalizedMessage.video = { id: messagePayload?.id, caption: messagePayload?.caption };
-    } else if (msgType === 'document') {
-      normalizedMessage.document = { id: messagePayload?.id, filename: messagePayload?.filename };
-    } else if (msgType === 'location') {
-      normalizedMessage.location = {
-        latitude: messagePayload?.latitude,
-        longitude: messagePayload?.longitude,
-      };
-    } else {
-      normalizedMessage.text = { body: JSON.stringify(messagePayload) };
-      normalizedMessage.type = 'text';
-    }
-
-    // Look up account by Gupshup app ID to get phone_number_id
-    setImmediate(async () => {
-      try {
-        await this.whatsappService.handleGupshupInboundMessage(appId, normalizedMessage);
-      } catch (err) {
-        this.logger.error('[GupshupWebhook] Error handling inbound message:', err?.message);
+        for (const message of messages) {
+          setImmediate(async () => {
+            try {
+              if (gupshupAppId) {
+                await this.whatsappService.handleGupshupInboundMessage(gupshupAppId, message, contacts);
+              } else {
+                // Fallback: use metadata phone_number_id as normal
+                await this.whatsappService.handleMessageWebhook(message, value?.metadata, contacts);
+              }
+            } catch (err) {
+              this.logger.error('[GupshupWebhook] Error handling inbound message:', err?.message);
+            }
+          });
+        }
       }
-    });
+    }
 
     return { received: true };
   }
