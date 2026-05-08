@@ -206,6 +206,22 @@ export class GupshupOnboardingService {
       if (match && match[1]) {
         const existingAppId = match[1];
         this.logger.log(`[Step 1] App already exists, using existing appId=${existingAppId}`);
+
+        // Re-attempt callback URL registration in case it failed on first creation
+        if (callbackUrl) {
+          try {
+            const callbackParams = new URLSearchParams({ callbackUrl });
+            await axios.put(
+              `${this.baseUrl}/partner/app/${existingAppId}`,
+              callbackParams,
+              { headers: { Authorization: partnerToken, "Content-Type": "application/x-www-form-urlencoded" } },
+            );
+            this.logger.log(`[Step 1] Callback URL updated for existing appId=${existingAppId}`);
+          } catch (cbErr) {
+            this.logger.warn(`[Step 1] Could not update callback URL for appId=${existingAppId}: ${cbErr?.response?.data?.message ?? cbErr.message}`);
+          }
+        }
+
         return { appId: existingAppId };
       }
 
@@ -314,7 +330,15 @@ export class GupshupOnboardingService {
 
         this.logger.log(`[Polling ${attempt}/${this.POLL_MAX_ATTEMPTS}] appId=${appId} creationStage=${stage} pipelineStage=${pipeline}`);
 
-        if (stage === "WHATSAPP_PROVISIONING_DONE") {
+        // Gupshup TPP apps can reach "live" with either:
+        //   a) creationStage=WHATSAPP_PROVISIONING_DONE (standard path)
+        //   b) pipelineStage=FINALIZE + uiFormStage=ONBOARDING_COMPLETED (TPP embedded path)
+        const uiForm = result.whatsapp?.uiFormStage;
+        const isLive =
+          stage === "WHATSAPP_PROVISIONING_DONE" ||
+          (pipeline === "FINALIZE" && uiForm === "ONBOARDING_COMPLETED");
+
+        if (isLive) {
           // ✅ App is live — subscribe webhook then mark account active
           try {
             await this.subscribeAppWebhook(appId, partnerAppToken);
