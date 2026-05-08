@@ -292,11 +292,19 @@ export class GupshupOnboardingService {
 
     this.logger.log(`[Step 4] Subscribing webhook for appId=${appId} → ${webhookUrl}`);
 
-    const { data } = await axios.post(
-      `${this.baseUrl}/partner/app/${appId}/subscription`,
-      params,
-      { headers: { Authorization: partnerAppToken, "Content-Type": "application/x-www-form-urlencoded" } },
-    );
+    let data: any;
+    try {
+      const res = await axios.post(
+        `${this.baseUrl}/partner/app/${appId}/subscription`,
+        params,
+        { headers: { Authorization: partnerAppToken, "Content-Type": "application/x-www-form-urlencoded" } },
+      );
+      data = res.data;
+    } catch (err) {
+      const body = err?.response?.data;
+      this.logger.error(`[Step 4] Subscription HTTP error for appId=${appId}: status=${err?.response?.status} body=${JSON.stringify(body)}`);
+      throw err;
+    }
 
     if (data.status !== "success") {
       throw new InternalServerErrorException(`Gupshup Step 4 failed: ${data.message ?? "Webhook subscription failed"}`);
