@@ -219,7 +219,7 @@ export class WhatsAppService {
    * Handle inbound messages from Gupshup webhook.
    * Looks up the account by Gupshup app ID, then routes to handleMessageWebhook.
    */
-  async handleGupshupInboundMessage(gupshupAppId: string, normalizedMessage: any): Promise<void> {
+  async handleGupshupInboundMessage(gupshupAppId: string, normalizedMessage: any, contacts: any[] = []): Promise<void> {
     const account = await this.prisma.social_accounts.findFirst({
       where: { gupshup_app_id: gupshupAppId, platform: 'whatsapp', is_active: true },
     });
@@ -230,7 +230,7 @@ export class WhatsAppService {
     }
 
     const metadata = { phone_number_id: account.page_id, display_phone_number: account.username };
-    await this.handleMessageWebhook(normalizedMessage, metadata, []);
+    await this.handleMessageWebhook(normalizedMessage, metadata, contacts);
   }
 
   /**
