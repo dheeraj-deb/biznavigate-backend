@@ -103,6 +103,13 @@ export class WhatsAppApiClientService {
     }
 
     this.logger.log(`[Gupshup v3] POST ${baseUrl}/partner/app/${appId}/v3/message | to=${to} type=${body.type}`);
+    if (body.type === 'template') {
+      const components = Array.isArray(body.template?.components) ? body.template.components : [];
+      const bodyParams = components.find((c: any) => c.type === 'body')?.parameters?.length ?? 0;
+      this.logger.log(
+        `[Gupshup v3] Template submit | appId=${appId} to=${to} name=${body.template?.name} language=${body.template?.language?.code} bodyParams=${bodyParams}`,
+      );
+    }
 
     try {
       const { data } = await axios.post(
@@ -110,7 +117,7 @@ export class WhatsAppApiClientService {
         body,
         { headers: { Authorization: appToken, 'Content-Type': 'application/json', accept: 'application/json' } },
       );
-      this.logger.log(`Gupshup message sent to ${to}: ${JSON.stringify(data)}`);
+      this.logger.log(`Gupshup message accepted/submitted to ${to}: ${JSON.stringify(data)}`);
       // v3 response mirrors Meta format: { messages: [{ id: '...' }] }
       return data;
     } catch (error) {
@@ -599,10 +606,19 @@ export class WhatsAppApiClientService {
         fbtraceId: data.error?.fbtrace_id,
       });
 
+      const metaCode = data.error?.code;
+      const metaMessage = data.error?.message;
+
       // Handle specific error codes
       switch (status) {
         case 400:
-          this.logger.warn('Bad Request - Check message format');
+          if (metaCode === 10) {
+            this.logger.error(
+              `Permission denied by Meta - token/app cannot send for this WhatsApp Business Account: ${metaMessage}`,
+            );
+          } else {
+            this.logger.warn('Bad Request - Check message format');
+          }
           break;
         case 401:
           this.logger.error('Unauthorized - Invalid access token');

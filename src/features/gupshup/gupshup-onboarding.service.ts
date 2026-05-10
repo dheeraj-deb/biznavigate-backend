@@ -39,6 +39,8 @@ export interface TppOnboardingOptions {
 export class GupshupOnboardingService {
   private readonly logger = new Logger(GupshupOnboardingService.name);
   private readonly baseUrl = "https://partner.gupshup.io";
+  private readonly webhookTag = "BizNavigate-V3";
+  private readonly webhookModes = "MESSAGE,ENQUEUED,SENT,DELIVERED,READ,FAILED,DELETED,OTHERS,FLOWS_MESSAGE";
 
   /** Master Gupshup app ID used for the platform-level webhook subscription */
   private readonly masterAppId: string;
@@ -52,6 +54,10 @@ export class GupshupOnboardingService {
   /** Cached master app token (for platform-level subscriptions) */
   private cachedMasterAppToken: string | null = null;
   private masterAppTokenExpiresAt: number = 0;
+
+  /** Cached per-client app tokens, keyed by Gupshup app ID */
+  private readonly cachedPartnerAppTokens = new Map<string, { token: string; expiresAt: number }>();
+  private readonly webhookSubscriptionsEnsured = new Set<string>();
 
   private readonly configured: boolean;
 
@@ -140,24 +146,7 @@ export class GupshupOnboardingService {
     const backendUrl = this.config.getOrThrow<string>("BACKEND_URL");
     const webhookUrl = `${backendUrl}/whatsapp/gupshup/webhook`;
 
-    const params = new URLSearchParams();
-    params.append("modes", "MESSAGE,SENT,DELIVERED,READ,FAILED,OTHERS,FLOWS_MESSAGE");
-    params.append("tag", "BizNavigate-V3");
-    params.append("url", webhookUrl);
-    params.append("version", "3");
-    params.append("showOnUI", "false");
-
-    const { data } = await axios.post(
-      `${this.baseUrl}/partner/app/${this.masterAppId}/subscription`,
-      params,
-      { headers: { Authorization: appToken, "Content-Type": "application/x-www-form-urlencoded" } },
-    );
-
-    if (data.status !== "success") {
-      throw new InternalServerErrorException(data.message ?? "Failed to subscribe master webhook");
-    }
-
-    return data.subscription;
+    return this.upsertAppWebhookSubscription(this.masterAppId, appToken, webhookUrl);
   }
 
   // ─────────────────────────────────────────────────────────────────────────────
@@ -244,6 +233,11 @@ export class GupshupOnboardingService {
    * This token is scoped to the newly created Gupshup app.
    */
   async getPartnerAppToken(appId: string): Promise<string> {
+    const cached = this.cachedPartnerAppTokens.get(appId);
+    if (cached && Date.now() < cached.expiresAt - 5 * 60 * 1000) {
+      return cached.token;
+    }
+
     const partnerToken = await this.getPartnerToken();
 
     this.logger.log(`[Step 2] Fetching partner app token for appId=${appId}`);
@@ -258,7 +252,32 @@ export class GupshupOnboardingService {
     }
 
     this.logger.log(`[Step 2] Partner app token obtained for appId=${appId}`);
-    return data.token.token as string;
+    const token = data.token.token as string;
+    this.cachedPartnerAppTokens.set(appId, {
+      token,
+      expiresAt: Date.now() + 24 * 60 * 60 * 1000,
+    });
+
+    return token;
+  }
+
+  async ensureAppWebhookSubscription(appId: string): Promise<void> {
+    if (this.webhookSubscriptionsEnsured.has(appId)) {
+      return;
+    }
+
+    const partnerAppToken = await this.getPartnerAppToken(appId);
+    const backendUrl = this.config.getOrThrow<string>("BACKEND_URL");
+    const webhookUrl = `${backendUrl}/whatsapp/gupshup/webhook`;
+
+    try {
+      await this.upsertAppWebhookSubscription(appId, partnerAppToken, webhookUrl);
+      this.webhookSubscriptionsEnsured.add(appId);
+    } catch (err) {
+      this.logger.warn(
+        `[Subscription] Could not ensure webhook subscription for appId=${appId}: ${err?.response?.data?.message ?? err.message}`,
+      );
+    }
   }
 
   /**
@@ -283,35 +302,77 @@ export class GupshupOnboardingService {
     const backendUrl = this.config.getOrThrow<string>("BACKEND_URL");
     const webhookUrl = `${backendUrl}/whatsapp/gupshup/webhook`;
 
+    this.logger.log(`[Step 4] Subscribing webhook for appId=${appId} → ${webhookUrl}`);
+
+    const subscription = await this.upsertAppWebhookSubscription(appId, partnerAppToken, webhookUrl);
+    this.webhookSubscriptionsEnsured.add(appId);
+    return subscription;
+  }
+
+  private buildWebhookSubscriptionParams(webhookUrl: string): URLSearchParams {
     const params = new URLSearchParams();
-    params.append("modes", "MESSAGE,SENT,DELIVERED,READ,FAILED,OTHERS,FLOWS_MESSAGE");
-    params.append("tag", "BizNavigate-V3");
+    params.append("modes", this.webhookModes);
+    params.append("tag", this.webhookTag);
     params.append("url", webhookUrl);
     params.append("version", "3");
     params.append("showOnUI", "false");
+    return params;
+  }
 
-    this.logger.log(`[Step 4] Subscribing webhook for appId=${appId} → ${webhookUrl}`);
+  private async upsertAppWebhookSubscription(
+    appId: string,
+    appToken: string,
+    webhookUrl: string,
+  ): Promise<any> {
+    const existing = await this.findBizNavigateSubscription(appId, appToken, webhookUrl);
+    const params = this.buildWebhookSubscriptionParams(webhookUrl);
 
-    let data: any;
-    try {
-      const res = await axios.post(
-        `${this.baseUrl}/partner/app/${appId}/subscription`,
+    if (existing?.id) {
+      params.append("active", "true");
+      const { data } = await axios.put(
+        `${this.baseUrl}/partner/app/${appId}/subscription/${existing.id}`,
         params,
-        { headers: { Authorization: partnerAppToken, "Content-Type": "application/x-www-form-urlencoded" } },
+        { headers: { Authorization: appToken, "Content-Type": "application/x-www-form-urlencoded" } },
       );
-      data = res.data;
-    } catch (err) {
-      const body = err?.response?.data;
-      this.logger.error(`[Step 4] Subscription HTTP error for appId=${appId}: status=${err?.response?.status} body=${JSON.stringify(body)}`);
-      throw err;
+
+      if (data.status !== "success") {
+        throw new InternalServerErrorException(`Gupshup subscription update failed: ${data.message ?? "Unknown error"}`);
+      }
+
+      this.logger.log(`[Subscription] Webhook updated for appId=${appId} subscriptionId=${existing.id} modes=${this.webhookModes} url=${webhookUrl}`);
+      return data.subscription;
     }
+
+    const { data } = await axios.post(
+      `${this.baseUrl}/partner/app/${appId}/subscription`,
+      params,
+      { headers: { Authorization: appToken, "Content-Type": "application/x-www-form-urlencoded" } },
+    );
 
     if (data.status !== "success") {
-      throw new InternalServerErrorException(`Gupshup Step 4 failed: ${data.message ?? "Webhook subscription failed"}`);
+      throw new InternalServerErrorException(`Gupshup subscription create failed: ${data.message ?? "Unknown error"}`);
     }
 
-    this.logger.log(`[Step 4] Webhook subscribed for appId=${appId}`);
+    this.logger.log(`[Subscription] Webhook created for appId=${appId} subscriptionId=${data.subscription?.id ?? "unknown"} modes=${this.webhookModes} url=${webhookUrl}`);
     return data.subscription;
+  }
+
+  private async findBizNavigateSubscription(
+    appId: string,
+    appToken: string,
+    webhookUrl: string,
+  ): Promise<any | null> {
+    const { data } = await axios.get(
+      `${this.baseUrl}/partner/app/${appId}/subscription`,
+      { headers: { Authorization: appToken } },
+    );
+
+    if (data.status !== "success") {
+      throw new InternalServerErrorException(`Gupshup subscription lookup failed: ${data.message ?? "Unknown error"}`);
+    }
+
+    const subscriptions = Array.isArray(data.subscriptions) ? data.subscriptions : [];
+    return subscriptions.find((sub: any) => sub.tag === this.webhookTag || sub.url === webhookUrl) ?? null;
   }
 
   // ─────────────────────────────────────────────────────────────────────────────

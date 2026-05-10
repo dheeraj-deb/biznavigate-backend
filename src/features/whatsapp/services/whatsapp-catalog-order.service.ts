@@ -9,6 +9,13 @@ import { KafkaProducerService } from '../../kafka/kafka-producer.service';
 import { SendMessageType, InteractiveSendType } from '../dto/whatsapp-message.dto';
 import * as crypto from 'crypto';
 import { ConversationService } from '../../conversation/conversation.service';
+import { GupshupOnboardingService } from '../../gupshup/gupshup-onboarding.service';
+
+type GupshupSendAccount = {
+  page_id?: string | null;
+  gupshup_app_id: string | null;
+  username?: string | null;
+};
 
 /**
  * Handles WhatsApp Catalog Order events
@@ -22,6 +29,7 @@ export class WhatsAppCatalogOrderService {
     private readonly prisma: PrismaService,
     private readonly cartService: CartService,
     private readonly apiClient: WhatsAppApiClientService,
+    private readonly gupshupOnboarding: GupshupOnboardingService,
     private readonly catalogService: WhatsAppCatalogService,
     private readonly configService: ConfigService,
     private readonly kafkaProducer: KafkaProducerService,
@@ -114,7 +122,7 @@ export class WhatsAppCatalogOrderService {
           this.logger.warn(`Product not found for retailer_id: ${productRetailerId}`);
 
           await this.sendMessage(
-            phoneNumberId,
+            account,
             from,
             `Sorry, the product you selected is no longer available.`,
           );
@@ -144,7 +152,7 @@ export class WhatsAppCatalogOrderService {
           this.logger.error(`Failed to add product to cart: ${error.message}`);
 
           await this.sendMessage(
-            phoneNumberId,
+            account,
             from,
             `Sorry, we couldn't add "${product.name}" to your cart. ${error.message}`,
           );
@@ -213,7 +221,7 @@ export class WhatsAppCatalogOrderService {
    * Send cart confirmation with interactive buttons
    */
   private async sendCartConfirmation(
-    phoneNumberId: string,
+    account: GupshupSendAccount,
     to: string,
     cart: any,
     cartSummary: string,
@@ -257,7 +265,7 @@ export class WhatsAppCatalogOrderService {
         },
       };
 
-      await this.apiClient.sendMessage(phoneNumberId, messagePayload);
+      await this.sendViaGupshup(account, to, messagePayload);
     } catch (error) {
       this.logger.error(`Failed to send cart confirmation: ${error.message}`);
     }
@@ -267,7 +275,7 @@ export class WhatsAppCatalogOrderService {
    * Send WhatsApp message
    */
   private async sendMessage(
-    phoneNumberId: string,
+    account: GupshupSendAccount,
     to: string,
     message: string,
   ): Promise<void> {
@@ -283,10 +291,33 @@ export class WhatsAppCatalogOrderService {
         },
       };
 
-      await this.apiClient.sendMessage(phoneNumberId, messagePayload);
+      await this.sendViaGupshup(account, to, messagePayload);
     } catch (error) {
       this.logger.error(`Failed to send WhatsApp message: ${error.message}`);
     }
+  }
+
+  private async sendViaGupshup(
+    account: GupshupSendAccount,
+    to: string,
+    messagePayload: any,
+  ): Promise<any> {
+    if (!account.gupshup_app_id) {
+      throw new BadRequestException(
+        'Gupshup app is not configured for this WhatsApp account; refusing to send via Meta API.',
+      );
+    }
+
+    const sourcePhone = (account.username ?? '').replace(/\D/g, '');
+    await this.gupshupOnboarding.ensureAppWebhookSubscription(account.gupshup_app_id);
+    const token = await this.gupshupOnboarding.getPartnerAppToken(account.gupshup_app_id);
+    return this.apiClient.sendGupshupMessage(
+      token,
+      account.gupshup_app_id,
+      sourcePhone,
+      to,
+      messagePayload,
+    );
   }
 
   /**

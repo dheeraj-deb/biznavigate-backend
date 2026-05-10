@@ -9,7 +9,7 @@ import { Campaign, CampaignDocument } from '../schemas/campaign.schema';
 import { WhatsAppTemplate, WhatsAppTemplateDocument } from '../../whatsapp-templates/schemas/template.schema';
 import { CampaignStatus } from '../enums/enums';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { WhatsAppApiClientService } from '../../whatsapp/infrastructure/whatsapp-api-client.service';
+import { WhatsAppService } from '../../whatsapp/whatsapp.service';
 
 export const CAMPAIGN_DISPATCH_QUEUE = 'campaign-dispatch';
 export const DISPATCH_JOB = 'dispatch-campaign';
@@ -33,7 +33,7 @@ export class CampaignDispatchProcessor extends WorkerHost {
         @InjectModel(Campaign.name) private readonly campaignModel: Model<CampaignDocument>,
         @InjectModel(WhatsAppTemplate.name) private readonly templateModel: Model<WhatsAppTemplateDocument>,
         private readonly prisma: PrismaService,
-        private readonly apiClient: WhatsAppApiClientService,
+        private readonly whatsappService: WhatsAppService,
         private readonly configService: ConfigService,
     ) {
         super();
@@ -121,14 +121,23 @@ export class CampaignDispatchProcessor extends WorkerHost {
                     const resolvedVars = this.resolveVariables(campaign.variableMappings, contact, recipient.phone_number);
 
                     try {
+                        const providerTemplate = this.resolveProviderTemplate(template, account.gupshup_app_id);
                         const payload = this.buildTemplatePayload(
                             recipient.phone_number,
-                            template.name,
-                            template.language,
+                            providerTemplate.name,
+                            providerTemplate.language,
                             resolvedVars,
                         );
 
-                        const result = await this.apiClient.sendMessage(phoneNumberId, payload);
+                        const result = await this.whatsappService.sendViaAccount(
+                            {
+                                page_id: phoneNumberId,
+                                gupshup_app_id: account.gupshup_app_id,
+                                username: account.username,
+                            },
+                            recipient.phone_number,
+                            payload,
+                        );
                         const waMessageId: string | null = result?.messages?.[0]?.id ?? null;
 
                         await this.prisma.campaign_recipients.update({
@@ -227,13 +236,22 @@ export class CampaignDispatchProcessor extends WorkerHost {
                 const resolvedVars = this.resolveVariables(campaign.variableMappings, contact, recipient.phone_number);
 
                 try {
+                    const providerTemplate = this.resolveProviderTemplate(template, account.gupshup_app_id);
                     const payload = this.buildTemplatePayload(
                         recipient.phone_number,
-                        template.name,
-                        template.language,
+                        providerTemplate.name,
+                        providerTemplate.language,
                         resolvedVars,
                     );
-                    const result = await this.apiClient.sendMessage(account.page_id, payload);
+                    const result = await this.whatsappService.sendViaAccount(
+                        {
+                            page_id: account.page_id,
+                            gupshup_app_id: account.gupshup_app_id,
+                            username: account.username,
+                        },
+                        recipient.phone_number,
+                        payload,
+                    );
                     const waMessageId: string | null = result?.messages?.[0]?.id ?? null;
 
                     await this.prisma.campaign_recipients.update({
@@ -332,12 +350,55 @@ export class CampaignDispatchProcessor extends WorkerHost {
         };
     }
 
+    private resolveProviderTemplate(
+        template: WhatsAppTemplateDocument,
+        gupshupAppId?: string | null,
+    ): { name: string; language: string } {
+        if (!gupshupAppId) {
+            return { name: template.name, language: template.language };
+        }
+
+        const fallbackName = `${template.name.toLowerCase().replace(/[^a-z0-9_]/g, '_').replace(/^_+|_+$/g, '')}_${gupshupAppId.replace(/-/g, '').slice(-8)}`;
+        const storedProviderName = template.metaTemplateId && template.metaTemplateId.includes(fallbackName)
+            ? template.metaTemplateId
+            : null;
+
+        return {
+            name: storedProviderName || fallbackName,
+            language: template.language === 'en' ? 'en_US' : template.language,
+        };
+    }
+
     private async upsertAnalytics(campaignId: string, businessId: string): Promise<void> {
         const [total, sent, delivered, read, failed, pending] = await Promise.all([
             this.prisma.campaign_recipients.count({ where: { campaign_id: campaignId } }),
-            this.prisma.campaign_recipients.count({ where: { campaign_id: campaignId, status: 'SENT' } }),
-            this.prisma.campaign_recipients.count({ where: { campaign_id: campaignId, status: 'DELIVERED' } }),
-            this.prisma.campaign_recipients.count({ where: { campaign_id: campaignId, status: 'READ' } }),
+            this.prisma.campaign_recipients.count({
+                where: {
+                    campaign_id: campaignId,
+                    OR: [
+                        { sent_at: { not: null } },
+                        { status: { in: ['SENT', 'DELIVERED', 'READ'] } },
+                    ],
+                },
+            }),
+            this.prisma.campaign_recipients.count({
+                where: {
+                    campaign_id: campaignId,
+                    OR: [
+                        { delivered_at: { not: null } },
+                        { status: { in: ['DELIVERED', 'READ'] } },
+                    ],
+                },
+            }),
+            this.prisma.campaign_recipients.count({
+                where: {
+                    campaign_id: campaignId,
+                    OR: [
+                        { read_at: { not: null } },
+                        { status: 'READ' },
+                    ],
+                },
+            }),
             this.prisma.campaign_recipients.count({ where: { campaign_id: campaignId, status: 'FAILED' } }),
             this.prisma.campaign_recipients.count({ where: { campaign_id: campaignId, status: 'PENDING' } }),
         ]);

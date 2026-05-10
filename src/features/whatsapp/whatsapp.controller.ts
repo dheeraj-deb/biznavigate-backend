@@ -115,6 +115,8 @@ export class WhatsAppController {
     @Res() res: Response,
     @Body() body: WhatsAppWebhookDto,
   ) {
+    const summary = this.summarizeWebhookBody(body);
+    this.logger.log(`[MetaWebhook] Received ${summary}`);
     setImmediate(() => this.whatsappService.processWebhook(body));
     res.status(200).json({ success: 200 });
   }
@@ -187,6 +189,15 @@ export class WhatsAppController {
   async handleGupshupWebhook(@Body() body: any) {
     this.logger.log(`[GupshupWebhook] Received: ${JSON.stringify(body)}`);
 
+    if (body?.type === 'message-event' && body?.payload) {
+      setImmediate(() =>
+        this.whatsappService
+          .handleGupshupMessageEvent(body)
+          .catch((err) => this.logger.error('[GupshupWebhook] Error handling message event:', err?.message)),
+      );
+      return { received: true };
+    }
+
     // Gupshup sends webhooks in Meta's exact format with gs_app_id at root.
     // Route each message through the standard Meta handler, using gs_app_id
     // to resolve the account instead of the phone_number_id.
@@ -199,6 +210,7 @@ export class WhatsAppController {
         const value = change?.value;
         const messages: any[] = value?.messages ?? [];
         const contacts: any[] = value?.contacts ?? [];
+        const statuses: any[] = value?.statuses ?? [];
 
         for (const message of messages) {
           setImmediate(async () => {
@@ -214,10 +226,41 @@ export class WhatsAppController {
             }
           });
         }
+
+        for (const status of statuses) {
+          setImmediate(async () => {
+            try {
+              await this.whatsappService.handleStatusWebhook(status, {
+                ...value?.metadata,
+                gupshup_app_id: gupshupAppId,
+              });
+            } catch (err) {
+              this.logger.error('[GupshupWebhook] Error handling status:', err?.message);
+            }
+          });
+        }
       }
     }
 
     return { received: true };
+  }
+
+  private summarizeWebhookBody(body: any): string {
+    const entries: any[] = Array.isArray(body?.entry) ? body.entry : [];
+    const parts: string[] = [];
+
+    for (const entry of entries) {
+      for (const change of entry?.changes ?? []) {
+        const value = change?.value ?? {};
+        const messages = Array.isArray(value.messages) ? value.messages.length : 0;
+        const statuses = Array.isArray(value.statuses) ? value.statuses.length : 0;
+        parts.push(
+          `field=${change?.field ?? 'unknown'} phoneNumberId=${value.metadata?.phone_number_id ?? 'unknown'} messages=${messages} statuses=${statuses}`,
+        );
+      }
+    }
+
+    return parts.length ? parts.join('; ') : `object=${body?.object ?? 'unknown'} entries=${entries.length}`;
   }
 
   /**
