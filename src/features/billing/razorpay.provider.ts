@@ -1,6 +1,6 @@
 import { Provider } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import Razorpay from 'razorpay';
+import Razorpay = require('razorpay');
 import { RazorpayClient } from './razorpay.types';
 
 export const RAZORPAY_CLIENT = 'RAZORPAY_CLIENT';
