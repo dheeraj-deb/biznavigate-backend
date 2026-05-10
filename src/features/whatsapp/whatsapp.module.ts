@@ -1,6 +1,7 @@
 import { forwardRef, Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { BullModule } from '@nestjs/bullmq';
+import { MongooseModule } from '@nestjs/mongoose';
 import { MessageDebounceProcessor } from './processors/message-debounce.processor';
 import { WhatsAppController } from './whatsapp.controller';
 import { WhatsAppOAuthController } from './whatsapp-oauth.controller';
@@ -24,6 +25,7 @@ import { HumanHandoffGatewayModule } from '../human-handoff/human-handoff-gatewa
 import { AgentModule } from '../agent/agent.module';
 import { WorkflowsModule } from '../workflows/workflows.module';
 import { GupshupOnboardingService } from '../gupshup/gupshup-onboarding.service';
+import { Campaign, CampaignSchema } from '../campaign/schemas/campaign.schema';
 
 @Module({
   imports: [
@@ -38,6 +40,9 @@ import { GupshupOnboardingService } from '../gupshup/gupshup-onboarding.service'
     HumanHandoffGatewayModule,
     AgentModule,
     forwardRef(() => WorkflowsModule),
+    MongooseModule.forFeature([
+      { name: Campaign.name, schema: CampaignSchema },
+    ]),
     BullModule.registerQueue({ name: 'message-debounce' }),
   ],
   controllers: [
