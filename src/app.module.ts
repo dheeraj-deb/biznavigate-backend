@@ -14,7 +14,6 @@ import * as redisStore from "cache-manager-ioredis";
 import { BullMQModule } from "./config/bullmq.module";
 import { TenantsModule } from "./features/tenants/tenants.module";
 import { BusinessesModule } from "./features/business/business.module";
-import { SubscriptionsModule } from "./features/subscriptions/subscription.module";
 import { RolesModule } from "./features/roles/role.module";
 import { UsersModule } from "./features/users/user.module";
 import { LeadModule } from "./features/lead/lead.module";
@@ -49,6 +48,9 @@ import { AgentModule } from "./features/agent/agent.module";
 import { GupshupModule } from "./features/gupshup/gupshup.module";
 import { InventoryModule } from "./features/inventory/inventory.module";
 import { RagModule } from "./features/rag/rag.module";
+import { BillingModule } from "./features/billing/billing.module";
+import { AuditLogModule } from "./features/audit-log/audit-log.module";
+import { BusinessSettingsModule } from "./features/business-settings/business-settings.module";
 
 @Module({
   imports: [
@@ -87,11 +89,16 @@ import { RagModule } from "./features/rag/rag.module";
       rootPath: join(__dirname, '..', '..', 'public'),
       serveRoot: '/',
     }),
-    CacheModule.register({
-      store: redisStore,
-      host: "localhost", // update with your Redis host
-      port: 6379,
-      ttl: 60 * 60 * 24, // Cache expiry in seconds (24 hours)
+    CacheModule.registerAsync({
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      isGlobal: true,
+      useFactory: (config: ConfigService) => ({
+        store: redisStore,
+        host: config.get<string>("REDIS_HOST", "localhost"),
+        port: config.get<number>("REDIS_PORT", 6379),
+        ttl: 60 * 60 * 24,
+      }),
     }),
     EventEmitterModule.forRoot(),
     ScheduleModule.forRoot(),
@@ -101,7 +108,6 @@ import { RagModule } from "./features/rag/rag.module";
     AuthModule,
     TenantsModule,
     BusinessesModule,
-    SubscriptionsModule,
     RolesModule,
     UsersModule,
     LeadModule,
@@ -120,8 +126,11 @@ import { RagModule } from "./features/rag/rag.module";
     GupshupModule,
     InventoryModule,
     RagModule,
+    BillingModule,
+    AuditLogModule,
+    BusinessSettingsModule,
     ...(process.env.MONGODB_URI
-      ? [CampaignModule, InboxModule, GatewayModule, HumanHandoffModule, WhatsAppModule, ChatWidgetModule, WorkflowsModule, HotelPricingModule]
+      ? [KafkaModule, CampaignModule, InboxModule, GatewayModule, HumanHandoffModule, WhatsAppModule, ChatWidgetModule, WorkflowsModule, HotelPricingModule]
       : []),
   ],
   providers: [

@@ -36,8 +36,8 @@ export class RolesService {
     return this.repo.updateRole(role_id, role_name, permissions);
   }
 
-  async getAllRoles() {
-    return this.repo.getAllRoles();
+  async getAllRoles(page = 1, limit = 50) {
+    return this.repo.getAllRoles(page, limit);
   }
 
   async getRoleByName(role_name: string) {

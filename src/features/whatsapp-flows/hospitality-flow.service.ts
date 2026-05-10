@@ -359,9 +359,20 @@ export class HospitalityFlowService {
         total_amount: totalAmount,
         payment_status: 'pending',
         delivery_status: 'confirmed',
-        items: [{
-          item_id: service_id,
-          item_name: catalogItem?.name ?? '',
+      },
+    });
+
+    // Persist booking details as order item
+    await this.prisma.order_items.create({
+      data: {
+        order_id: booking.order_id,
+        item_id: service_id,
+        product_name: catalogItem?.name ?? '',
+        quantity: Math.max(nights, 1),
+        unit_price: catalogItem?.base_price ?? 0,
+        total_price: totalAmount,
+        discount: 0,
+        snapshot: {
           check_in,
           check_out,
           nights,
@@ -371,9 +382,10 @@ export class HospitalityFlowService {
           age: age ? Number(age) : null,
           address: address ?? null,
           pin_code: pin_code ?? null,
-        }],
+        } as any,
       },
     });
+
     // Increment booked_slots in item_availability for each date
     await this.prisma.$executeRaw`
       UPDATE item_availability

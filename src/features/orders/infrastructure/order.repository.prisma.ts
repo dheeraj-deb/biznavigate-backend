@@ -1,5 +1,4 @@
-// @ts-nocheck
-import { Injectable, Logger } from '@nestjs/common';
+import { Injectable, Logger, ConflictException, BadRequestException, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../../../prisma/prisma.service';
 import { Order, OrderItem, OrderStatus, PaymentStatus } from '../domain/entities/order.entity';
 import { CreateOrderDto } from '../application/dto/create-order.dto';
@@ -7,10 +6,6 @@ import { UpdateOrderDto } from '../application/dto/update-order.dto';
 import { OrderQueryDto } from '../application/dto/order-query.dto';
 import { StockReservationService } from '../application/services/stock-reservation.service';
 
-/**
- * Order Repository (Prisma Implementation)
- * Handles all database operations for orders
- */
 @Injectable()
 export class OrderRepositoryPrisma {
   private readonly logger = new Logger(OrderRepositoryPrisma.name);
@@ -21,33 +16,32 @@ export class OrderRepositoryPrisma {
     private readonly stockReservationService: StockReservationService,
   ) {}
 
-  /**
-   * Create a new order with items
-   * Uses transaction to ensure atomicity
-   */
   async create(createOrderDto: CreateOrderDto): Promise<Order> {
     try {
-      // Generate order number
-      const orderNumber = await this.generateOrderNumber(createOrderDto.business_id);
-
-      // Create order with items in a transaction
       const order = await this.prisma.$transaction(async (tx) => {
-        // First, calculate subtotal by fetching product prices
+        // MEDIUM-7: Catalog cache — each item_id fetched exactly once per transaction
+        const catalogCache = new Map<string, any>();
+        const getCatalogItem = async (itemId: string) => {
+          if (!catalogCache.has(itemId)) {
+            const item = await tx.catalog_items.findUnique({
+              where: { item_id: itemId },
+              include: { variants: true },
+            });
+            catalogCache.set(itemId, item);
+          }
+          return catalogCache.get(itemId);
+        };
+
+        // Single pass — subtotal computed from cache, no second DB round-trip
         let subtotal = 0;
-
         for (const item of createOrderDto.items) {
-          const product = await tx.products.findUnique({
-            where: { product_id: item.product_id },
-            include: { product_variants: true },
-          });
-
+          const catalogItem = await getCatalogItem(item.item_id);
+          if (!catalogItem) throw new NotFoundException(`Item not found: ${item.item_id}`);
           const variant = item.variant_id
-            ? product?.product_variants.find((v) => v.variant_id === item.variant_id)
+            ? catalogItem.variants.find((v: any) => v.variant_id === item.variant_id)
             : null;
-
-          const unitPrice = variant ? Number(variant.price) : Number(product?.price || 0);
-          const itemTotal = unitPrice * item.quantity - (item.discount || 0);
-          subtotal += itemTotal;
+          const unitPrice = variant ? Number(variant.price) : Number(catalogItem.base_price || 0);
+          subtotal += unitPrice * item.quantity - (item.discount || 0);
         }
 
         const totalAmount =
@@ -56,19 +50,18 @@ export class OrderRepositoryPrisma {
           (createOrderDto.shipping_fee || 0) -
           (createOrderDto.discount_amount || 0);
 
-        // Calculate payment expiry time
-        const paymentExpiresAt = new Date(
-          Date.now() + this.PAYMENT_TIMEOUT_MINUTES * 60 * 1000,
-        );
+        // CRITICAL-1: Order number generated INSIDE the transaction, collision-safe
+        const datePart = new Date().toISOString().slice(0, 10).replace(/-/g, '');
+        const randomPart = Math.random().toString(36).slice(2, 7).toUpperCase();
+        const orderNumber = `ORD-${datePart}-${randomPart}`;
 
-        // Create the order
         const createdOrder = await tx.orders.create({
           data: {
             business_id: createOrderDto.business_id,
             tenant_id: createOrderDto.tenant_id,
             customer_id: createOrderDto.customer_id,
             order_number: orderNumber,
-            order_type: createOrderDto.order_type || 'product', // Default to 'product'
+            order_type: createOrderDto.order_type || 'product',
             status: 'pending',
             subtotal,
             discount_amount: createOrderDto.discount_amount || 0,
@@ -76,7 +69,7 @@ export class OrderRepositoryPrisma {
             shipping_fee: createOrderDto.shipping_fee || 0,
             total_amount: totalAmount,
             payment_status: 'pending',
-            payment_expires_at: paymentExpiresAt,
+            payment_expires_at: new Date(Date.now() + this.PAYMENT_TIMEOUT_MINUTES * 60 * 1000),
             shipping_address: createOrderDto.shipping_address,
             shipping_city: createOrderDto.shipping_city,
             shipping_state: createOrderDto.shipping_state,
@@ -85,62 +78,53 @@ export class OrderRepositoryPrisma {
             notes: createOrderDto.notes,
             source: createOrderDto.source || 'whatsapp',
           },
-          include: {
-            order_items: true,
-          },
+          include: { order_items: true },
         });
 
-        // Create order items
+        // Create order items using already-cached catalog data
         for (const item of createOrderDto.items) {
-          // Fetch product details for snapshot
-          const product = await tx.products.findUnique({
-            where: { product_id: item.product_id },
-            include: { product_variants: true },
-          });
-
+          const catalogItem = await getCatalogItem(item.item_id);
           const variant = item.variant_id
-            ? product?.product_variants.find((v) => v.variant_id === item.variant_id)
+            ? catalogItem.variants.find((v: any) => v.variant_id === item.variant_id)
             : null;
-
-          const unitPrice = variant ? Number(variant.price) : Number(product?.price || 0);
+          const unitPrice = variant ? Number(variant.price) : Number(catalogItem.base_price || 0);
           const totalPrice = unitPrice * item.quantity - (item.discount || 0);
 
           await tx.order_items.create({
             data: {
               order_id: createdOrder.order_id,
-              product_id: item.product_id,
+              item_id: item.item_id,
               variant_id: item.variant_id,
-              product_name: product?.name || 'Unknown Product',
+              product_name: catalogItem.name || 'Unknown Item',
               variant_name: variant?.name,
-              sku: variant?.sku || product?.sku,
+              sku: variant?.sku ?? undefined,
               quantity: item.quantity,
               unit_price: unitPrice,
               discount: item.discount || 0,
               total_price: totalPrice,
               snapshot: {
-                product_name: product?.name,
-                product_description: product?.description,
+                item_name: catalogItem.name,
+                item_description: catalogItem.description,
+                item_type: catalogItem.item_type,
                 variant_name: variant?.name,
-                variant_options: variant?.variant_options,
+                variant_options: variant?.options,
                 price: unitPrice,
               },
             },
           });
 
-          // Reserve stock instead of immediate deduction (production-safe)
-          if (product?.track_inventory) {
+          if (catalogItem.stock_quantity !== null && catalogItem.stock_quantity !== undefined) {
             await this.stockReservationService.reserveStock(
               createdOrder.order_id,
-              item.product_id,
+              item.item_id,
               item.variant_id,
               item.quantity,
-              tx, // Pass transaction context to avoid nested transactions
+              tx,
             );
           }
         }
 
-        // Fetch complete order with items
-        return await tx.orders.findUnique({
+        return tx.orders.findUnique({
           where: { order_id: createdOrder.order_id },
           include: { order_items: true },
         });
@@ -154,16 +138,12 @@ export class OrderRepositoryPrisma {
     }
   }
 
-  /**
-   * Find order by ID with items
-   */
   async findById(orderId: string): Promise<Order | null> {
     try {
       const order = await this.prisma.orders.findUnique({
         where: { order_id: orderId },
         include: { order_items: true },
       });
-
       return order ? this.toDomainOrder(order) : null;
     } catch (error) {
       this.logger.error(`Failed to find order: ${error.message}`, error.stack);
@@ -171,9 +151,6 @@ export class OrderRepositoryPrisma {
     }
   }
 
-  /**
-   * Find all orders with filtering, pagination, and sorting
-   */
   async findAll(
     query: OrderQueryDto,
   ): Promise<{ data: Order[]; total: number; page: number; limit: number }> {
@@ -195,30 +172,25 @@ export class OrderRepositoryPrisma {
         order = 'desc',
       } = query;
 
-      // Build where clause
       const where: any = {};
-
       if (business_id) where.business_id = business_id;
       if (customer_id) where.customer_id = customer_id;
       if (status) where.status = status;
       if (payment_status) where.payment_status = payment_status;
       if (source) where.source = source;
 
-      // Date range filter
       if (from_date || to_date) {
         where.created_at = {};
         if (from_date) where.created_at.gte = new Date(from_date);
         if (to_date) where.created_at.lte = new Date(to_date);
       }
 
-      // Amount range filter
       if (min_amount !== undefined || max_amount !== undefined) {
         where.total_amount = {};
         if (min_amount !== undefined) where.total_amount.gte = min_amount;
         if (max_amount !== undefined) where.total_amount.lte = max_amount;
       }
 
-      // Search by order number or customer info
       if (search) {
         where.OR = [
           { order_number: { contains: search, mode: 'insensitive' } },
@@ -233,27 +205,20 @@ export class OrderRepositoryPrisma {
         ];
       }
 
-      // Pagination
       const skip = (page - 1) * limit;
-
-      // Sorting
-      const orderBy: any = {};
-      orderBy[sort_by] = order;
-
-      // Execute queries in parallel
       const [orders, total] = await Promise.all([
         this.prisma.orders.findMany({
           where,
           include: { order_items: true, customers: true },
           skip,
           take: limit,
-          orderBy,
+          orderBy: { [sort_by]: order },
         }),
         this.prisma.orders.count({ where }),
       ]);
 
       return {
-        data: orders.map((order) => this.toDomainOrder(order)),
+        data: orders.map((o) => this.toDomainOrder(o)),
         total,
         page,
         limit,
@@ -264,9 +229,6 @@ export class OrderRepositoryPrisma {
     }
   }
 
-  /**
-   * Update order
-   */
   async update(orderId: string, updateOrderDto: UpdateOrderDto): Promise<Order> {
     try {
       const updated = await this.prisma.orders.update({
@@ -283,7 +245,6 @@ export class OrderRepositoryPrisma {
         },
         include: { order_items: true },
       });
-
       this.logger.log(`Order updated: ${orderId}`);
       return this.toDomainOrder(updated);
     } catch (error) {
@@ -292,37 +253,19 @@ export class OrderRepositoryPrisma {
     }
   }
 
-  /**
-   * Update order status
-   */
-  async updateStatus(
-    orderId: string,
-    status: OrderStatus,
-    notes?: string,
-  ): Promise<Order> {
+  async updateStatus(orderId: string, status: OrderStatus, notes?: string): Promise<Order> {
     try {
-      const data: any = {
-        status,
-        updated_at: new Date(),
-      };
-
+      const data: any = { status, updated_at: new Date() };
       if (notes) data.admin_notes = notes;
-
-      // Set timestamps based on status
-      if (status === OrderStatus.SHIPPED) {
-        data.shipped_at = new Date();
-      } else if (status === OrderStatus.DELIVERED) {
-        data.delivered_at = new Date();
-      } else if (status === OrderStatus.CANCELLED) {
-        data.cancelled_at = new Date();
-      }
+      if (status === OrderStatus.SHIPPED) data.shipped_at = new Date();
+      else if (status === OrderStatus.DELIVERED) data.delivered_at = new Date();
+      else if (status === OrderStatus.CANCELLED) data.cancelled_at = new Date();
 
       const updated = await this.prisma.orders.update({
         where: { order_id: orderId },
         data,
         include: { order_items: true },
       });
-
       this.logger.log(`Order status updated: ${orderId} → ${status}`);
       return this.toDomainOrder(updated);
     } catch (error) {
@@ -331,16 +274,22 @@ export class OrderRepositoryPrisma {
     }
   }
 
-  /**
-   * Confirm payment
-   */
   async confirmPayment(
     orderId: string,
     paymentMethod: string,
     paymentReference?: string,
   ): Promise<Order> {
     try {
-      // Convert stock reservations to actual sales (production-safe)
+      // MEDIUM-3: Guard against double-confirmation
+      const existing = await this.prisma.orders.findUnique({
+        where: { order_id: orderId },
+        select: { payment_status: true },
+      });
+      if (!existing) throw new NotFoundException(`Order not found: ${orderId}`);
+      if (existing.payment_status === 'paid') {
+        throw new ConflictException('Order is already marked as paid');
+      }
+
       await this.stockReservationService.convertReservationToSale(orderId);
 
       const updated = await this.prisma.orders.update({
@@ -350,7 +299,7 @@ export class OrderRepositoryPrisma {
           payment_method: paymentMethod,
           payment_reference: paymentReference,
           paid_at: new Date(),
-          status: 'paid', // Auto-update status to paid
+          status: 'paid',
           updated_at: new Date(),
         },
         include: { order_items: true },
@@ -364,14 +313,7 @@ export class OrderRepositoryPrisma {
     }
   }
 
-  /**
-   * Update shipping info
-   */
-  async updateShipping(
-    orderId: string,
-    trackingNumber: string,
-    carrier?: string,
-  ): Promise<Order> {
+  async updateShipping(orderId: string, trackingNumber: string, carrier?: string): Promise<Order> {
     try {
       const updated = await this.prisma.orders.update({
         where: { order_id: orderId },
@@ -382,7 +324,6 @@ export class OrderRepositoryPrisma {
         },
         include: { order_items: true },
       });
-
       this.logger.log(`Shipping info updated for order: ${orderId}`);
       return this.toDomainOrder(updated);
     } catch (error) {
@@ -391,27 +332,27 @@ export class OrderRepositoryPrisma {
     }
   }
 
-  /**
-   * Cancel order
-   */
   async cancel(orderId: string, reason?: string): Promise<Order> {
     try {
       const order = await this.prisma.$transaction(async (tx) => {
-        // Get order with items
         const existingOrder = await tx.orders.findUnique({
           where: { order_id: orderId },
           include: { order_items: true },
         });
 
-        if (!existingOrder) {
-          throw new Error('Order not found');
+        if (!existingOrder) throw new NotFoundException(`Order not found: ${orderId}`);
+
+        // MEDIUM-2: Prevent re-cancelling or cancelling terminal states
+        if (existingOrder.status === OrderStatus.CANCELLED) {
+          throw new ConflictException('Order is already cancelled');
+        }
+        if (existingOrder.status === OrderStatus.DELIVERED) {
+          throw new BadRequestException('Cannot cancel a delivered order — initiate a refund instead');
         }
 
-        // Release stock reservations (production-safe)
         await this.stockReservationService.releaseReservation(orderId);
 
-        // Update order status
-        return await tx.orders.update({
+        return tx.orders.update({
           where: { order_id: orderId },
           data: {
             status: OrderStatus.CANCELLED,
@@ -431,10 +372,11 @@ export class OrderRepositoryPrisma {
     }
   }
 
-  /**
-   * Get order analytics for a business
-   */
-  async getOrderStats(businessId: string, startDate?: Date, endDate?: Date): Promise<{
+  async getOrderStats(
+    businessId: string,
+    startDate?: Date,
+    endDate?: Date,
+  ): Promise<{
     total_orders: number;
     total_revenue: number;
     pending_orders: number;
@@ -443,17 +385,18 @@ export class OrderRepositoryPrisma {
   }> {
     try {
       const where: any = { business_id: businessId };
-
       if (startDate || endDate) {
         where.created_at = {};
         if (startDate) where.created_at.gte = startDate;
         if (endDate) where.created_at.lte = endDate;
       }
 
-      const [total, pending, completed, revenueAgg] = await Promise.all([
+      const [total, pending, completed, paidCount, revenueAgg] = await Promise.all([
         this.prisma.orders.count({ where }),
         this.prisma.orders.count({ where: { ...where, status: 'pending' } }),
         this.prisma.orders.count({ where: { ...where, status: 'delivered' } }),
+        // MEDIUM-9: Count paid orders separately for correct AOV denominator
+        this.prisma.orders.count({ where: { ...where, payment_status: 'paid' } }),
         this.prisma.orders.aggregate({
           where: { ...where, payment_status: 'paid' },
           _sum: { total_amount: true },
@@ -461,7 +404,8 @@ export class OrderRepositoryPrisma {
       ]);
 
       const totalRevenue = Number(revenueAgg._sum.total_amount || 0);
-      const averageOrderValue = total > 0 ? totalRevenue / total : 0;
+      // AOV = revenue / paid orders only (not all orders)
+      const averageOrderValue = paidCount > 0 ? totalRevenue / paidCount : 0;
 
       return {
         total_orders: total,
@@ -476,23 +420,6 @@ export class OrderRepositoryPrisma {
     }
   }
 
-  /**
-   * Generate unique order number
-   */
-  private async generateOrderNumber(businessId: string): Promise<string> {
-    // Get count of orders for this business
-    const count = await this.prisma.orders.count({
-      where: { business_id: businessId },
-    });
-
-    // Format: ORD-00001, ORD-00002, etc.
-    const orderNum = String(count + 1).padStart(5, '0');
-    return `ORD-${orderNum}`;
-  }
-
-  /**
-   * Convert Prisma order to domain Order entity
-   */
   private toDomainOrder(prismaOrder: any): Order {
     return {
       order_id: prismaOrder.order_id,
@@ -529,14 +456,11 @@ export class OrderRepositoryPrisma {
     };
   }
 
-  /**
-   * Convert Prisma order_item to domain OrderItem entity
-   */
   private toDomainOrderItem(prismaItem: any): OrderItem {
     return {
       order_item_id: prismaItem.order_item_id,
       order_id: prismaItem.order_id,
-      product_id: prismaItem.product_id,
+      item_id: prismaItem.item_id,   // MEDIUM-10: corrected from product_id (non-existent field)
       variant_id: prismaItem.variant_id,
       product_name: prismaItem.product_name,
       variant_name: prismaItem.variant_name,

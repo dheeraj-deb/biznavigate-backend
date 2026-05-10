@@ -65,8 +65,8 @@ export class CustomerRepositoryPrisma implements ICustomerRepository {
    */
   async findById(customerId: string): Promise<Customer | null> {
     try {
-      const customer = await this.prisma.customers.findUnique({
-        where: { customer_id: customerId },
+      const customer = await this.prisma.customers.findFirst({
+        where: { customer_id: customerId, deleted_at: null },
       });
 
       return customer ? this.toDomainCustomer(customer) : null;
@@ -86,6 +86,7 @@ export class CustomerRepositoryPrisma implements ICustomerRepository {
         where: {
           business_id: businessId,
           phone: phone,
+          deleted_at: null,
         },
       });
 
@@ -107,6 +108,7 @@ export class CustomerRepositoryPrisma implements ICustomerRepository {
         where: {
           business_id: businessId,
           email: email,
+          deleted_at: null,
         },
       });
 
@@ -140,8 +142,8 @@ export class CustomerRepositoryPrisma implements ICustomerRepository {
         order = 'desc',
       } = query;
 
-      // Build where clause
-      const where: any = {};
+      // Build where clause — always exclude soft-deleted
+      const where: any = { deleted_at: null };
 
       if (business_id) {
         where.business_id = business_id;
@@ -232,18 +234,19 @@ export class CustomerRepositoryPrisma implements ICustomerRepository {
   }
 
   /**
-   * Delete customer (hard delete as per schema - customers table doesn't have soft delete)
-   * Consider: Might want to add is_active field in future for soft delete
+   * Soft-delete a customer — sets deleted_at, preserves all historical data.
+   * Hard delete is intentionally removed to maintain order/payment history integrity.
    */
   async delete(customerId: string): Promise<void> {
     try {
-      await this.prisma.customers.delete({
+      await this.prisma.customers.update({
         where: { customer_id: customerId },
+        data: { deleted_at: new Date() },
       });
 
-      this.logger.log(`Customer deleted: ${customerId}`);
+      this.logger.log(`Customer soft-deleted: ${customerId}`);
     } catch (error) {
-      this.logger.error(`Failed to delete customer: ${error.message}`, error.stack);
+      this.logger.error(`Failed to soft-delete customer: ${error.message}`, error.stack);
       throw error;
     }
   }

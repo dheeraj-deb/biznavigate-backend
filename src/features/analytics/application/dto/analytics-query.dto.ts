@@ -1,17 +1,6 @@
-import { IsUUID, IsOptional, IsDateString, IsIn } from 'class-validator';
+import { IsOptional, IsDateString, IsIn } from 'class-validator';
 
-/**
- * Query DTO for analytics endpoints
- * Supports filtering by business, tenant, and time range
- */
 export class AnalyticsQueryDto {
-  @IsUUID()
-  businessId: string;
-
-  @IsOptional()
-  @IsUUID()
-  tenantId?: string;
-
   @IsOptional()
   @IsDateString()
   startDate?: string;
@@ -25,9 +14,6 @@ export class AnalyticsQueryDto {
   period?: string;
 }
 
-/**
- * Query DTO for top products analytics
- */
 export class TopProductsQueryDto extends AnalyticsQueryDto {
   @IsOptional()
   limit?: number;

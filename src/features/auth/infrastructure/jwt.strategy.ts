@@ -13,6 +13,7 @@ export interface JwtPayload {
   business_id: string;
   tenant_id: string;
   role_id: string;
+  role_name?: string;
   iat?: number;
   exp?: number;
 }
@@ -67,6 +68,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
       business_id: payload.business_id,
       tenant_id: payload.tenant_id,
       role_id: payload.role_id,
+      role_name: payload.role_name,
     };
   }
 }

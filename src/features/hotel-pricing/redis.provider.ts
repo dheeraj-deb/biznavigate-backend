@@ -1,16 +1,15 @@
 import { Provider } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import Redis from 'ioredis';
 
-/**
- * Shared REDIS_CLIENT provider for the hotel-pricing feature.
- * Import this array into any sub-module that injects 'REDIS_CLIENT'.
- */
 export const RedisClientProvider: Provider = {
   provide: 'REDIS_CLIENT',
-  useFactory: () => {
+  inject: [ConfigService],
+  useFactory: (config: ConfigService) => {
     return new Redis({
-      host: process.env.REDIS_HOST ?? 'localhost',
-      port: parseInt(process.env.REDIS_PORT ?? '6379', 10),
+      host: config.get<string>('REDIS_HOST', 'localhost'),
+      port: config.get<number>('REDIS_PORT', 6379),
+      password: config.get<string>('REDIS_PASSWORD') || undefined,
       lazyConnect: true,
     });
   },

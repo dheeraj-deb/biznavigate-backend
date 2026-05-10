@@ -7,6 +7,7 @@ import {
   Body,
   Param,
   Query,
+  Req,
   HttpCode,
   HttpStatus,
   UseGuards,
@@ -57,16 +58,9 @@ export class ReviewsController {
    * Get reviews analytics for a business
    */
   @Get('analytics')
-  async getAnalytics(
-    @Query('business_id') businessId: string,
-    @Query('from_date') fromDate?: string,
-    @Query('to_date') toDate?: string,
-  ) {
-    const analytics = await this.reviewsService.getAnalytics(businessId, fromDate, toDate);
-    return {
-      success: true,
-      data: analytics,
-    };
+  async getAnalytics(@Req() req: any, @Query('from_date') fromDate?: string, @Query('to_date') toDate?: string) {
+    const analytics = await this.reviewsService.getAnalytics(req.user.business_id, fromDate, toDate);
+    return { success: true, data: analytics };
   }
 
   /**

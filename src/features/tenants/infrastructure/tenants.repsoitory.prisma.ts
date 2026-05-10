@@ -13,8 +13,13 @@ export class TenantsRepository {
     return this.prisma.tenants.create({ data: dto });
   }
 
-  async findAll(): Promise<Tenant[]> {
-    return this.prisma.tenants.findMany();
+  async findAll(page = 1, limit = 20): Promise<{ data: Tenant[]; meta: { page: number; limit: number; total: number; pages: number } }> {
+    const skip = (page - 1) * limit;
+    const [data, total] = await Promise.all([
+      this.prisma.tenants.findMany({ skip, take: limit, orderBy: { created_at: 'desc' } }),
+      this.prisma.tenants.count(),
+    ]);
+    return { data, meta: { page, limit, total, pages: Math.ceil(total / limit) } };
   }
 
   async findById(id: string): Promise<Tenant> {

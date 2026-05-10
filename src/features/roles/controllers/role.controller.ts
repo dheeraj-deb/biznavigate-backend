@@ -1,9 +1,11 @@
-import { Controller, Post, Body, Param, Get, Put } from "@nestjs/common";
+import { Controller, Post, Body, Param, Get, Put, Query, UseGuards } from "@nestjs/common";
 import { NotifyUserDto } from "../application/dto/notify-user.dto";
 import { RolePermissions } from "../infrastructure/role.repository.prisma";
 import { RolesService } from "../application/role.service";
+import { JwtAuthGuard } from "../../../common/guards/jwt-auth.guard";
 
 @Controller("roles")
+@UseGuards(JwtAuthGuard)
 export class RolesController {
   constructor(private readonly service: RolesService) {}
 
@@ -38,8 +40,8 @@ export class RolesController {
 
   // 5️⃣ Get All Roles
   @Get()
-  getAllRoles() {
-    return this.service.getAllRoles();
+  getAllRoles(@Query('page') page?: string, @Query('limit') limit?: string) {
+    return this.service.getAllRoles(Number(page ?? 1), Number(limit ?? 50));
   }
 
   // 6️⃣ Get Role By Name

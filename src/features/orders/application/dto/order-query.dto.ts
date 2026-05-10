@@ -1,4 +1,4 @@
-import { IsOptional, IsUUID, IsEnum, IsNumber, IsDateString, IsIn, Min } from 'class-validator';
+import { IsOptional, IsUUID, IsEnum, IsNumber, IsDateString, IsIn, Min, Max } from 'class-validator';
 import { Type } from 'class-transformer';
 import { OrderStatus, PaymentStatus, OrderSource } from '../../domain/entities/order.entity';
 
@@ -62,6 +62,7 @@ export class OrderQueryDto {
   @IsOptional()
   @Type(() => Number)
   @Min(1)
+  @Max(100)
   limit?: number = 20;
 
   // Sorting

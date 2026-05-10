@@ -10,6 +10,7 @@ import {
   Logger,
   HttpCode,
   HttpStatus,
+  Req,
   Res,
   UseGuards,
 } from '@nestjs/common';
@@ -26,10 +27,10 @@ import {
 import {
   ConnectWhatsAppAccountDto,
   DisconnectWhatsAppAccountDto,
-  GetAccountsDto,
 } from './dto/whatsapp-auth.dto';
 import { WhatsAppSignatureGuard } from './guards/whatsapp-signature.guard';
 import { GupshupOnboardingService } from '../gupshup/gupshup-onboarding.service';
+import { JwtAuthGuard } from '../../common/guards/jwt-auth.guard';
 
 @Controller('whatsapp')
 export class WhatsAppController {
@@ -44,6 +45,7 @@ export class WhatsAppController {
   // ==================== Account Management ====================
 
   @Post('accounts/connect')
+  @UseGuards(JwtAuthGuard)
   async connectAccount(@Body() dto: ConnectWhatsAppAccountDto) {
     this.logger.log(`Connecting WhatsApp account for business ${dto.businessId}`);
 
@@ -55,19 +57,19 @@ export class WhatsAppController {
   }
 
   @Get('accounts')
-  async getAccounts(@Query() dto: GetAccountsDto) {
-    return this.whatsappService.getWhatsAppAccounts(dto.businessId);
+  @UseGuards(JwtAuthGuard)
+  async getAccounts(@Req() req: any) {
+    return this.whatsappService.getWhatsAppAccounts(req.user.business_id);
   }
 
   @Post('accounts/:accountId/refresh-verification')
-  async refreshVerification(
-    @Param('accountId') accountId: string,
-    @Query('businessId') businessId: string,
-  ) {
-    return this.whatsappService.refreshAccountVerification(accountId, businessId);
+  @UseGuards(JwtAuthGuard)
+  async refreshVerification(@Param('accountId') accountId: string, @Req() req: any) {
+    return this.whatsappService.refreshAccountVerification(accountId, req.user.business_id);
   }
 
   @Delete('accounts/:accountId')
+  @UseGuards(JwtAuthGuard)
   async disconnectAccount(
     @Param('accountId') accountId: string,
     @Body() dto: DisconnectWhatsAppAccountDto,
@@ -120,6 +122,7 @@ export class WhatsAppController {
   }
 
   @Post('messages/send')
+  @UseGuards(JwtAuthGuard)
   async sendMessage(
     @Body() dto: { phoneNumberId: string; to: string; message: SendWhatsAppMessageDto },
   ) {
@@ -131,6 +134,7 @@ export class WhatsAppController {
   }
 
   @Post('messages/button')
+  @UseGuards(JwtAuthGuard)
   async sendButtonMessage(
     @Body() dto: {
       phoneNumberId: string;
@@ -152,6 +156,7 @@ export class WhatsAppController {
   }
 
   @Post('messages/list')
+  @UseGuards(JwtAuthGuard)
   async sendListMessage(
     @Body() dto: {
       phoneNumberId: string;

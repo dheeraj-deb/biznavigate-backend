@@ -6,6 +6,7 @@ import {
   Delete,
   Body,
   Param,
+  Query,
   UseGuards,
 } from "@nestjs/common";
 import { JwtAuthGuard } from "../../../common/guards/jwt-auth.guard";
@@ -29,9 +30,9 @@ export class TenantsController {
   }
 
   @Get()
-  async findAll(): Promise<TenantResponseDto[]> {
+  async findAll(@Query('page') page?: string, @Query('limit') limit?: string) {
     try {
-      return await this.service.getAllTenants();
+      return await this.service.getAllTenants(Number(page ?? 1), Number(limit ?? 20)) as any;
     } catch (error) {
       throw error;
     }

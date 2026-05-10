@@ -11,11 +11,12 @@ import {
     UseGuards,
 } from "@nestjs/common";
 import { JwtAuthGuard } from "src/common/guards";
+import { SubscriptionGuard } from "../billing/subscription/subscription.guard";
 import { CampaignService } from "./campaign.service";
 import { CreateCampaignDto, QueryCampaignDto } from "./dto/campaign.dto";
 
 @Controller('campaigns')
-@UseGuards(JwtAuthGuard)
+@UseGuards(JwtAuthGuard, SubscriptionGuard)
 export class CampaignController {
     constructor(private readonly service: CampaignService) { }
 
