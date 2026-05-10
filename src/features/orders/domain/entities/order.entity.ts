@@ -58,7 +58,7 @@ export class Order {
 export class OrderItem {
   order_item_id: string;
   order_id: string;
-  product_id: string;
+  item_id: string;
   variant_id?: string;
 
   // Item Details
