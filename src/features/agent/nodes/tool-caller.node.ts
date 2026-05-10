@@ -54,21 +54,24 @@ export function makeToolCallerNode(openaiApiKey: string, tools: StructuredTool[]
 
 IMPORTANT — TOOL EXECUTION RULES:
 - Today's date is ${today}. Use this to resolve relative or partial dates.
-- You MUST call a tool now. Do NOT respond with plain text.
 - If the user is reporting a complaint, problem, or needs support: call handoff_to_human immediately.
 - If the user explicitly wants a human agent: call handoff_to_human immediately.
-- If you have enough information to call a tool, do it now — do not say "let me check".
-- Only ask a question if you are genuinely missing required information.`;
+- If you have enough information to call a tool, call it now — do not say "let me check".
+- If required information is missing (e.g. check-in/check-out dates for availability, product name for browsing), do NOT invent or guess values. Instead, respond with a plain text question asking the user for the missing information.
+- NEVER fabricate dates, names, or any data the user has not provided.`;
 
     const response = await adapter.invoke([
       new SystemMessage(toolCallerDirective),
       ...state.messages,
     ]);
 
+    const hasCalls = response.tool_calls?.length > 0;
     logger.log(
-      `LLM tool selection → ${response.tool_calls?.length ? response.tool_calls.map((tc: any) => tc.name).join(', ') : 'no tool calls'}`,
+      `LLM tool selection → ${hasCalls ? response.tool_calls.map((tc: any) => tc.name).join(', ') : 'clarifying question'}`,
     );
 
-    return { messages: [response] };
+    // If the LLM returned a plain text question (no tool calls), mark it so the
+    // router skips the responder and sends the question directly to the user.
+    return { messages: [response], clarifyingQuestion: !hasCalls };
   };
 }

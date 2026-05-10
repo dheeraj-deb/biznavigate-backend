@@ -117,6 +117,8 @@ export class WhatsAppController {
     @Res() res: Response,
     @Body() body: WhatsAppWebhookDto,
   ) {
+    const summary = this.summarizeWebhookBody(body);
+    this.logger.log(`[MetaWebhook] Received ${summary}`);
     setImmediate(() => this.whatsappService.processWebhook(body));
     res.status(200).json({ success: 200 });
   }
@@ -179,7 +181,92 @@ export class WhatsAppController {
     );
   }
 
-  // ==================== Gupshup Live Event ====================
+  // ==================== Gupshup Webhooks ====================
+
+  /**
+   * Receives inbound messages from Gupshup (regular WhatsApp messages).
+   * Gupshup posts to this URL when a customer sends a message.
+   * Normalizes Gupshup format to Meta-compatible format and routes to the message pipeline.
+   * Route: POST /whatsapp/gupshup/webhook
+   */
+  @Post('gupshup/webhook')
+  @HttpCode(HttpStatus.OK)
+  async handleGupshupWebhook(@Body() body: any) {
+    this.logger.log(`[GupshupWebhook] Received: ${JSON.stringify(body)}`);
+
+    if (body?.type === 'message-event' && body?.payload) {
+      setImmediate(() =>
+        this.whatsappService
+          .handleGupshupMessageEvent(body)
+          .catch((err) => this.logger.error('[GupshupWebhook] Error handling message event:', err?.message)),
+      );
+      return { received: true };
+    }
+
+    // Gupshup sends webhooks in Meta's exact format with gs_app_id at root.
+    // Route each message through the standard Meta handler, using gs_app_id
+    // to resolve the account instead of the phone_number_id.
+    const gupshupAppId: string | undefined = body?.gs_app_id;
+    const entries: any[] = body?.entry ?? [];
+
+    for (const entry of entries) {
+      for (const change of entry?.changes ?? []) {
+        if (change?.field !== 'messages') continue;
+        const value = change?.value;
+        const messages: any[] = value?.messages ?? [];
+        const contacts: any[] = value?.contacts ?? [];
+        const statuses: any[] = value?.statuses ?? [];
+
+        for (const message of messages) {
+          setImmediate(async () => {
+            try {
+              if (gupshupAppId) {
+                await this.whatsappService.handleGupshupInboundMessage(gupshupAppId, message, contacts);
+              } else {
+                // Fallback: use metadata phone_number_id as normal
+                await this.whatsappService.handleMessageWebhook(message, value?.metadata, contacts);
+              }
+            } catch (err) {
+              this.logger.error('[GupshupWebhook] Error handling inbound message:', err?.message);
+            }
+          });
+        }
+
+        for (const status of statuses) {
+          setImmediate(async () => {
+            try {
+              await this.whatsappService.handleStatusWebhook(status, {
+                ...value?.metadata,
+                gupshup_app_id: gupshupAppId,
+              });
+            } catch (err) {
+              this.logger.error('[GupshupWebhook] Error handling status:', err?.message);
+            }
+          });
+        }
+      }
+    }
+
+    return { received: true };
+  }
+
+  private summarizeWebhookBody(body: any): string {
+    const entries: any[] = Array.isArray(body?.entry) ? body.entry : [];
+    const parts: string[] = [];
+
+    for (const entry of entries) {
+      for (const change of entry?.changes ?? []) {
+        const value = change?.value ?? {};
+        const messages = Array.isArray(value.messages) ? value.messages.length : 0;
+        const statuses = Array.isArray(value.statuses) ? value.statuses.length : 0;
+        parts.push(
+          `field=${change?.field ?? 'unknown'} phoneNumberId=${value.metadata?.phone_number_id ?? 'unknown'} messages=${messages} statuses=${statuses}`,
+        );
+      }
+    }
+
+    return parts.length ? parts.join('; ') : `object=${body?.object ?? 'unknown'} entries=${entries.length}`;
+  }
 
   /**
    * Receives Gupshup's "docker-status-event" live-event webhook.

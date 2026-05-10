@@ -18,11 +18,15 @@ const TOOL_INTENTS = new Set([
 ]);
 
 function routeAfterTriage(state: AgentStateType): string {
+  if (state.intent === 'other') return 'out_of_scope';
   if (TOOL_INTENTS.has(state.intent)) return 'tool_caller';
   return 'responder';
 }
 
 function shouldContinueAfterTools(state: AgentStateType): string {
+  // If the tool_caller asked a clarifying question, send it directly to the user.
+  if (state.clarifyingQuestion) return 'end';
+
   const last = state.messages.at(-1);
   if (last instanceof AIMessage) {
     const content = typeof last.content === 'string' ? last.content : '';
@@ -41,6 +45,9 @@ export async function buildAgentGraph(deps: AgentGraphDeps) {
   const triage = makeTriageNode(deps.openaiApiKey, deps.prisma);
   const toolCaller = makeToolCallerNode(deps.openaiApiKey, tools);
   const responder = makeResponderNode(deps.openaiApiKey, tools);
+  const outOfScope = async (_state: AgentStateType): Promise<Partial<AgentStateType>> => ({
+    messages: [new AIMessage("I can only help with questions about our products and services. How can I assist you today?")],
+  });
 
   // MemorySaver avoids pg.Pool which contaminates PgCat transaction-mode backends
   // with prepared statements (PGCAT_XXXX), breaking all other Prisma queries.
@@ -50,14 +57,18 @@ export async function buildAgentGraph(deps: AgentGraphDeps) {
     .addNode('triage', triage)
     .addNode('tool_caller', toolCaller)
     .addNode('responder', responder)
+    .addNode('out_of_scope', outOfScope)
     .addEdge('__start__', 'triage')
     .addConditionalEdges('triage', routeAfterTriage, {
       tool_caller: 'tool_caller',
       responder: 'responder',
+      out_of_scope: 'out_of_scope',
     })
+    .addEdge('out_of_scope', END)
     .addConditionalEdges('tool_caller', shouldContinueAfterTools, {
       tool_caller: 'tool_caller',
       responder: 'responder',
+      end: END,
     })
     .addEdge('responder', END);
 

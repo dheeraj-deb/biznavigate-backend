@@ -13,6 +13,9 @@ export const AgentState = Annotation.Root({
   phone: Annotation<string>(),
   toolRetries: Annotation<number>({ reducer: (_, update: number) => update, default: () => 0 }),
   turnCount: Annotation<number>({ reducer: (_, update: number) => update, default: () => 0 }),
+  // Set to true when the tool_caller asked a clarifying question instead of calling a tool.
+  // Signals the router to skip the responder and go straight to END.
+  clarifyingQuestion: Annotation<boolean>({ reducer: (_, update: boolean) => update, default: () => false }),
 });
 
 export type AgentStateType = typeof AgentState.State;

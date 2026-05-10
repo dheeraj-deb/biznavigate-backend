@@ -13,7 +13,13 @@ import { WhatsAppTemplate, WhatsAppTemplateDocument } from "../whatsapp-template
 import { AudienceFilterOperator, CampaignStatus } from "./enums/enums";
 import { PrismaService } from "src/prisma/prisma.service";
 import { CampaignSchedulerService } from "./jobs/campaign-scheduler.service";
-import { WhatsAppApiClientService } from "../whatsapp/infrastructure/whatsapp-api-client.service";
+import { WhatsAppService } from "../whatsapp/whatsapp.service";
+import { ConfigService } from "@nestjs/config";
+import {
+    getDefaultCampaignTimezone,
+    resolveCampaignSendAt,
+    resolveOptionalCampaignDate,
+} from "./utils/campaign-time.util";
 
 type ResolvedRecipient = {
     phone_number: string;
@@ -37,7 +43,8 @@ export class CampaignService {
         @InjectModel(WhatsAppTemplate.name) private readonly templateModel: Model<WhatsAppTemplateDocument>,
         private readonly prisma: PrismaService,
         private readonly campaignScheduler: CampaignSchedulerService,
-        private readonly whatsappApi: WhatsAppApiClientService,
+        private readonly whatsappService: WhatsAppService,
+        private readonly configService: ConfigService,
     ) { }
 
     async create(businessId: string, dto: CreateCampaignDto) {
@@ -62,8 +69,11 @@ export class CampaignService {
                 throw new BadRequestException(`Template selected with id ${dto.templateId} is invalid!`);
             }
 
+            const schedule = this.normalizeSchedule(dto.schedule);
+
             const campaign = await this.campaignModel.create({
                 ...dto,
+                schedule,
                 businessId,
                 templateLanguage: template.language,
                 status: CampaignStatus.DRAFT,
@@ -111,16 +121,41 @@ export class CampaignService {
             totalRecipients: recipients.length,
         });
 
+        const schedule = this.normalizeSchedule(campaign.schedule);
+
         await this.campaignScheduler.scheduleCampaign(
             campaignId,
             businessId,
-            new Date(campaign.schedule.sendAt),
+            schedule.sendAt,
+            schedule.timezone,
         );
 
         return {
             message: 'Campaign scheduled',
             totalRecipients: recipients.length,
-            sendAt: campaign.schedule.sendAt,
+            sendAt: schedule.sendAt,
+            timezone: schedule.timezone,
+        };
+    }
+
+    private normalizeSchedule(schedule: CreateCampaignDto['schedule']) {
+        const defaultTimezone = getDefaultCampaignTimezone(
+            this.configService.get<string>('CAMPAIGN_DEFAULT_TIMEZONE'),
+        );
+        const { sendAt, timezone } = resolveCampaignSendAt(
+            schedule.sendAt as unknown as string | Date,
+            schedule.timezone,
+            defaultTimezone,
+        );
+
+        return {
+            ...schedule,
+            timezone,
+            sendAt,
+            endsAt: resolveOptionalCampaignDate(
+                schedule.endsAt as unknown as string | Date | undefined,
+                timezone,
+            ),
         };
     }
 
@@ -193,11 +228,11 @@ export class CampaignService {
             ...campaign,
             analytics: {
                 total: analytics?.total ?? (campaign as any).totalRecipients ?? 0,
-                pending: counts['PENDING'] ?? 0,
-                sent: counts['SENT'] ?? 0,
-                delivered: counts['DELIVERED'] ?? 0,
-                read: counts['READ'] ?? 0,
-                failed: counts['FAILED'] ?? 0,
+                pending: analytics?.pending ?? counts['PENDING'] ?? 0,
+                sent: analytics?.sent ?? counts['SENT'] ?? 0,
+                delivered: analytics?.delivered ?? ((counts['DELIVERED'] ?? 0) + (counts['READ'] ?? 0)),
+                read: analytics?.read ?? counts['READ'] ?? 0,
+                failed: analytics?.failed ?? counts['FAILED'] ?? 0,
                 delivery_rate: analytics ? Number(analytics.delivery_rate) : 0,
                 read_rate: analytics ? Number(analytics.read_rate) : 0,
             },
@@ -237,11 +272,11 @@ export class CampaignService {
             },
             summary: {
                 total: analytics?.total ?? campaign.totalRecipients,
-                pending: counts['PENDING'] ?? 0,
-                sent: counts['SENT'] ?? 0,
-                delivered: counts['DELIVERED'] ?? 0,
-                read: counts['READ'] ?? 0,
-                failed: counts['FAILED'] ?? 0,
+                pending: analytics?.pending ?? counts['PENDING'] ?? 0,
+                sent: analytics?.sent ?? counts['SENT'] ?? 0,
+                delivered: analytics?.delivered ?? ((counts['DELIVERED'] ?? 0) + (counts['READ'] ?? 0)),
+                read: analytics?.read ?? counts['READ'] ?? 0,
+                failed: analytics?.failed ?? counts['FAILED'] ?? 0,
                 skipped: counts['SKIPPED'] ?? 0,
                 delivery_rate: analytics ? Number(analytics.delivery_rate) : 0,
                 read_rate: analytics ? Number(analytics.read_rate) : 0,
@@ -416,9 +451,9 @@ export class CampaignService {
         // Get the business WhatsApp phone number ID
         const account = await this.prisma.social_accounts.findFirst({
             where: { business_id: businessId, platform: 'whatsapp', is_active: true },
-            select: { page_id: true },
+            select: { page_id: true, gupshup_app_id: true, username: true },
         });
-        if (!account) throw new NotFoundException('No active WhatsApp account for this business');
+        if (!account?.page_id) throw new NotFoundException('No active WhatsApp account for this business');
 
         // Fetch leads
         const leads = await this.prisma.leads.findMany({
@@ -440,13 +475,21 @@ export class CampaignService {
             const text = message.replace(/\{\{name\}\}/gi, lead.name ?? 'there');
 
             try {
-                await this.whatsappApi.sendMessage(account.page_id, {
-                    messaging_product: 'whatsapp',
-                    recipient_type: 'individual',
-                    to: lead.phone,
-                    type: 'text' as any,
-                    text: { body: text, preview_url: false },
-                });
+                await this.whatsappService.sendViaAccount(
+                    {
+                        page_id: account.page_id,
+                        gupshup_app_id: account.gupshup_app_id,
+                        username: account.username,
+                    },
+                    lead.phone,
+                    {
+                        messaging_product: 'whatsapp',
+                        recipient_type: 'individual',
+                        to: lead.phone,
+                        type: 'text' as any,
+                        text: { body: text, preview_url: false },
+                    },
+                );
                 sent++;
             } catch {
                 failed++;
