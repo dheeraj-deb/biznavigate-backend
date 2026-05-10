@@ -14,6 +14,7 @@ import {
 } from '@nestjs/common';
 import { CatalogService } from './catalog.service';
 import { JwtAuthGuard } from '../../common/guards/jwt-auth.guard';
+import { SubscriptionGuard } from '../billing/subscription/subscription.guard';
 import { CreateCatalogItemDto } from './dto/create-catalog-item.dto';
 import { UpdateCatalogItemDto } from './dto/update-catalog-item.dto';
 import { QueryCatalogDto } from './dto/query-catalog.dto';
@@ -27,7 +28,7 @@ import {
 import { PrismaService } from '../../prisma/prisma.service';
 
 @Controller('catalog')
-@UseGuards(JwtAuthGuard)
+@UseGuards(JwtAuthGuard, SubscriptionGuard)
 export class CatalogController {
   constructor(
     private readonly catalogService: CatalogService,
@@ -37,7 +38,8 @@ export class CatalogController {
   // ─── Config (frontend form schema) ───────────────────────────────────────
 
   @Get('config')
-  async getConfig(@Query('businessId') businessId: string) {
+  async getConfig(@Req() req: any) {
+    const businessId: string = req.user.business_id;
     const business = await this.prisma.businesses.findUnique({
       where: { business_id: businessId },
       select: { business_type: true },

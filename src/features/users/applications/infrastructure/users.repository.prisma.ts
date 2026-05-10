@@ -51,30 +51,46 @@ export class UsersRepository {
     });
   }
 
-  // ✅ Get user by ID
+  // ✅ Get user by ID (excludes soft-deleted)
   async getUserById(user_id: string) {
-    return await this.prisma.users.findUnique({
-      where: { user_id },
+    return await this.prisma.users.findFirst({
+      where: { user_id, deleted_at: null },
       include: { businesses: true },
     });
   }
 
-  // ✅ Get all users (optionally by business)
-  async getAllUsers(business_id?: string) {
-    return await this.prisma.users.findMany({
-      where: business_id ? { business_id } : undefined,
-      include: { businesses: true },
-    });
+  async getAllUsers(business_id: string, page = 1, limit = 20) {
+    const skip = (page - 1) * limit;
+    const where = { business_id, deleted_at: null };
+    const [items, total] = await Promise.all([
+      this.prisma.users.findMany({
+        where,
+        include: { businesses: true },
+        skip,
+        take: limit,
+        orderBy: { created_at: 'desc' },
+      }),
+      this.prisma.users.count({ where }),
+    ]);
+    return { data: items, meta: { page, limit, total, pages: Math.ceil(total / limit) } };
   }
 
-  // ✅ Get users by Role (for notify intents etc.)
+  // ✅ Get users by Role (excludes soft-deleted)
   async getUsersByRole(role_id: string, business_id?: string) {
     return await this.prisma.users.findMany({
       where: {
         role_id,
+        deleted_at: null,
         ...(business_id && { business_id }),
       },
       include: { businesses: true },
+    });
+  }
+
+  async softDeleteUser(user_id: string) {
+    return await this.prisma.users.update({
+      where: { user_id },
+      data: { deleted_at: new Date(), is_active: false },
     });
   }
 }

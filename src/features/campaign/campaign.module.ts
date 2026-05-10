@@ -10,11 +10,13 @@ import { PrismaModule } from "../../prisma/prisma.module";
 import { WhatsAppModule } from "../whatsapp/whatsapp.module";
 import { CampaignDispatchProcessor, CAMPAIGN_DISPATCH_QUEUE } from "./jobs/campaign-dispatch.processor";
 import { CampaignSchedulerService } from "./jobs/campaign-scheduler.service";
+import { BillingModule } from "../billing/billing.module";
 
 @Module({
     imports: [
         PrismaModule,
         WhatsAppModule,
+        BillingModule,
         BullModule.registerQueue({ name: CAMPAIGN_DISPATCH_QUEUE }),
         MongooseModule.forFeature([
             { name: Campaign.name, schema: CampaignSchema },

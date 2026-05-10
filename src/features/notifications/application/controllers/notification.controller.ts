@@ -1,4 +1,4 @@
-import { Controller, Post, Get, Put, Delete, Body, Param, Query, HttpCode, HttpStatus, UseGuards, ParseUUIDPipe } from '@nestjs/common';
+import { Controller, Post, Get, Put, Delete, Body, Param, Query, Req, HttpCode, HttpStatus, UseGuards, ParseUUIDPipe } from '@nestjs/common';
 import { JwtAuthGuard } from '../../../../common/guards/jwt-auth.guard';
 import { NotificationService } from '../services/notification.service';
 import { NotificationRepositoryPrisma } from '../../infrastructure/notification.repository.prisma';
@@ -133,13 +133,12 @@ export class NotificationController {
   }
 
   /**
-   * Get all active templates
-   * GET /notifications/templates?business_id=xxx
+   * GET /notifications/templates
    */
   @Get('templates/list')
   @HttpCode(HttpStatus.OK)
-  async getTemplates(@Query('business_id') businessId?: string) {
-    const templates = await this.repository.findActiveTemplates(businessId);
+  async getTemplates(@Req() req: any) {
+    const templates = await this.repository.findActiveTemplates(req.user.business_id);
     return {
       success: true,
       data: templates,
@@ -195,16 +194,15 @@ export class NotificationController {
   // ========================================
 
   /**
-   * Get customer notification preferences
    * GET /notifications/preferences/customer/:customerId
    */
   @Get('preferences/customer/:customerId')
   @HttpCode(HttpStatus.OK)
   async getCustomerPreferences(
     @Param('customerId', ParseUUIDPipe) customerId: string,
-    @Query('business_id') businessId?: string,
+    @Req() req: any,
   ) {
-    const preferences = await this.repository.findPreferenceByCustomer(customerId, businessId);
+    const preferences = await this.repository.findPreferenceByCustomer(customerId, req.user.business_id);
     return {
       success: true,
       data: preferences,

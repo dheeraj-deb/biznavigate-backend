@@ -1,6 +1,5 @@
 import { Injectable } from "@nestjs/common";
 
-import { Tenant } from "../domain/entities/tenant.entity";
 import { TenantsRepository } from "../infrastructure/tenants.repsoitory.prisma";
 import { CreateTenantDto } from "./dto/create-tenant.dto";
 import { UpdateTenantDto } from "./dto/update-tenant.dto";
@@ -9,19 +8,19 @@ import { UpdateTenantDto } from "./dto/update-tenant.dto";
 export class TenantsService {
   constructor(private readonly repo: TenantsRepository) {}
 
-  createTenant(dto: CreateTenantDto): Promise<Tenant> {
+  createTenant(dto: CreateTenantDto) {
     return this.repo.create(dto);
   }
 
-  getAllTenants(): Promise<Tenant[]> {
-    return this.repo.findAll();
+  getAllTenants(page = 1, limit = 20) {
+    return this.repo.findAll(page, limit);
   }
 
-  getTenantById(id: string): Promise<Tenant> {
+  getTenantById(id: string) {
     return this.repo.findById(id);
   }
 
-  updateTenant(id: string, dto: UpdateTenantDto): Promise<Tenant> {
+  updateTenant(id: string, dto: UpdateTenantDto) {
     return this.repo.update(id, dto);
   }
 

@@ -1,8 +1,10 @@
 import Redis, { Cluster } from "ioredis";
 
+// Lazy singleton used by legacy callers (WhatsApp module).
+// New code should inject RedisService instead.
 let redisInstance: Redis | Cluster | null = null;
 
-export function getRedis() {
+export function getRedis(): Redis | Cluster {
   if (redisInstance) return redisInstance;
 
   const useCluster = process.env.REDIS_CLUSTER === "true";
@@ -27,6 +29,11 @@ export function getRedis() {
   redisInstance.on("error", (err) =>
     console.error("[redis] connection error", err?.message ?? err)
   );
+
+  // Clean up on process exit so the connection doesn't hang the process
+  const cleanup = () => { redisInstance?.quit().catch(() => {}); };
+  process.once("SIGTERM", cleanup);
+  process.once("SIGINT", cleanup);
 
   return redisInstance;
 }

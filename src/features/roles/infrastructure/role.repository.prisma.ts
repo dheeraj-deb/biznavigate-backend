@@ -80,9 +80,14 @@ export class RolesRepository {
     }
   }
 
-  async getAllRoles() {
+  async getAllRoles(page = 1, limit = 50) {
     try {
-      return await this.prisma.roles.findMany();
+      const skip = (page - 1) * limit;
+      const [data, total] = await Promise.all([
+        this.prisma.roles.findMany({ skip, take: limit, orderBy: { role_name: 'asc' } }),
+        this.prisma.roles.count(),
+      ]);
+      return { data, meta: { page, limit, total, pages: Math.ceil(total / limit) } };
     } catch (error: any) {
       throw new BadRequestException(error.message);
     }

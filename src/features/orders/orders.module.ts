@@ -6,6 +6,7 @@ import { StockReservationService } from './application/services/stock-reservatio
 import { ReservationCleanupScheduler } from './application/services/reservation-cleanup.scheduler';
 import { OrderRepositoryPrisma } from './infrastructure/order.repository.prisma';
 import { ReservationCleanupProcessor } from './application/jobs/reservation-cleanup.processor';
+import { OrderNotificationProcessor } from './application/jobs/order-notification.processor';
 import { PrismaModule } from '../../prisma/prisma.module';
 import { CustomersModule } from '../customers/customers.module';
 import { NotificationsModule } from '../notifications/notifications.module';
@@ -22,9 +23,8 @@ import { WhatsAppModule } from '../whatsapp/whatsapp.module';
     CustomersModule,
     NotificationsModule,
     WhatsAppModule,
-    BullModule.registerQueue({
-      name: 'reservation-cleanup',
-    }),
+    BullModule.registerQueue({ name: 'reservation-cleanup' }),
+    BullModule.registerQueue({ name: 'order-notifications' }),
   ],
   controllers: [OrderController],
   providers: [
@@ -33,6 +33,7 @@ import { WhatsAppModule } from '../whatsapp/whatsapp.module';
     StockReservationService,
     ReservationCleanupScheduler,
     ReservationCleanupProcessor,
+    OrderNotificationProcessor,
   ],
   exports: [OrderService, OrderRepositoryPrisma, StockReservationService],
 })

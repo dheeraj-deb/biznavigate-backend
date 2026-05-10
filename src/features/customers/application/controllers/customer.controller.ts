@@ -8,6 +8,7 @@ import {
   Body,
   Param,
   Query,
+  Req,
   UseGuards,
   HttpStatus,
   HttpCode,
@@ -38,8 +39,11 @@ export class CustomerController {
    */
   @Post()
   @HttpCode(HttpStatus.CREATED)
-  async create(@Body() createCustomerDto: CreateCustomerDto) {
+  async create(@Req() req: any, @Body() createCustomerDto: CreateCustomerDto) {
     try {
+      // Always use JWT identity — never trust body-supplied business_id
+      createCustomerDto.business_id = req.user.business_id;
+      createCustomerDto.tenant_id = req.user.tenant_id;
       this.logger.log(`Creating customer: ${createCustomerDto.phone}`);
       const customer = await this.customerService.create(createCustomerDto);
 
@@ -62,10 +66,9 @@ export class CustomerController {
   @Post('find-or-create')
   @HttpCode(HttpStatus.OK)
   async findOrCreate(
+    @Req() req: any,
     @Body()
     body: {
-      business_id: string;
-      tenant_id: string;
       phone: string;
       name?: string;
       email?: string;
@@ -75,8 +78,8 @@ export class CustomerController {
     try {
       this.logger.log(`Find or create customer: ${body.phone}`);
       const customer = await this.customerService.findOrCreate(
-        body.business_id,
-        body.tenant_id,
+        req.user.business_id,
+        req.user.tenant_id,
         body.phone,
         {
           name: body.name,
@@ -105,8 +108,13 @@ export class CustomerController {
    */
   @Post('bulk')
   @HttpCode(HttpStatus.OK)
-  async bulkCreate(@Body() bulkUploadDto: BulkUploadCustomerDto) {
+  async bulkCreate(@Req() req: any, @Body() bulkUploadDto: BulkUploadCustomerDto) {
     try {
+      // Stamp every row with the caller's business identity
+      bulkUploadDto.customers.forEach((c) => {
+        c.business_id = req.user.business_id;
+        c.tenant_id = req.user.tenant_id;
+      });
       this.logger.log(`Bulk uploading ${bulkUploadDto.customers.length} customers`);
       const results = await this.customerService.bulkCreate(bulkUploadDto);
 
@@ -128,8 +136,9 @@ export class CustomerController {
    */
   @Get()
   @HttpCode(HttpStatus.OK)
-  async findAll(@Query() query: CustomerQueryDto) {
+  async findAll(@Req() req: any, @Query() query: CustomerQueryDto) {
     try {
+      query.business_id = req.user.business_id;
       this.logger.log(`Fetching customers with filters: ${JSON.stringify(query)}`);
       const result = await this.customerService.findAll(query);
 
@@ -158,7 +167,7 @@ export class CustomerController {
   @Get('top')
   @HttpCode(HttpStatus.OK)
   async getTopCustomers(
-    @Query('business_id') businessId: string,
+    @Req() req: any,
     @Query('limit') limit?: string,
     @Query('sort_by') sortBy?: 'total_spent' | 'total_orders',
   ) {
@@ -168,7 +177,7 @@ export class CustomerController {
 
       this.logger.log(`Fetching top ${limitNum} customers by ${sortByField}`);
       const customers = await this.customerService.getTopCustomers(
-        businessId,
+        req.user.business_id,
         limitNum,
         sortByField,
       );
@@ -191,8 +200,9 @@ export class CustomerController {
    */
   @Get('segments')
   @HttpCode(HttpStatus.OK)
-  async getCustomerSegments(@Query('business_id') businessId: string) {
+  async getCustomerSegments(@Req() req: any) {
     try {
+      const businessId = req.user.business_id;
       this.logger.log(`Fetching customer segments for business: ${businessId}`);
       const segments = await this.customerService.getCustomerSegments(businessId);
 

@@ -2,6 +2,7 @@ import { NestFactory } from "@nestjs/core";
 import { AppModule } from "./app.module";
 import { ValidationPipe } from "@nestjs/common";
 import * as express from "express";
+import * as compression from "compression";
 import { join } from "path";
 import helmet from "helmet";
 
@@ -33,6 +34,9 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
     bodyParser: false, // Disable default body parser
   });
+
+  // Compress all responses (gzip/br) — reduces payload ~70% on JSON
+  app.use(compression());
 
   // Security: Helmet middleware for security headers
   app.use(
@@ -69,7 +73,11 @@ async function bootstrap() {
   );
 
   // Enable CORS with restrictions
+  const allowedOrigins = (process.env.ALLOWED_ORIGINS || 'http://localhost:5173')
+    .split(',')
+    .map(o => o.trim());
   app.enableCors({
+    origin: allowedOrigins,
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With'],
@@ -81,7 +89,7 @@ async function bootstrap() {
   // Widget static files (for widget.js and styles.css)
   app.use("/widget", express.static(join(__dirname, "..", "public", "widget")));
 
-  const port = process.env.PORT;
+  const port = process.env.PORT ?? 3000;
   await app.listen(port);
 
   console.log(`🚀 Application is running on: http://localhost:${port}`);

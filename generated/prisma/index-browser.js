@@ -135,7 +135,8 @@ exports.Prisma.BusinessesScalarFieldEnum = {
   address: 'address',
   country: 'country',
   gst_number: 'gst_number',
-  pan_number: 'pan_number'
+  pan_number: 'pan_number',
+  deleted_at: 'deleted_at'
 };
 
 exports.Prisma.Business_employeesScalarFieldEnum = {
@@ -203,14 +204,6 @@ exports.Prisma.Social_accountsScalarFieldEnum = {
   meta_verified_name: 'meta_verified_name'
 };
 
-exports.Prisma.Subscription_plansScalarFieldEnum = {
-  subscription_plan_id: 'subscription_plan_id',
-  plan_name: 'plan_name',
-  price: 'price',
-  duration_in_days: 'duration_in_days',
-  created_at: 'created_at'
-};
-
 exports.Prisma.TenantsScalarFieldEnum = {
   tenant_id: 'tenant_id',
   tenant_name: 'tenant_name',
@@ -234,6 +227,7 @@ exports.Prisma.UsersScalarFieldEnum = {
   phone_number: 'phone_number',
   is_active: 'is_active',
   profile_completed: 'profile_completed',
+  deleted_at: 'deleted_at',
   created_at: 'created_at',
   updated_at: 'updated_at',
   role_id: 'role_id',
@@ -312,6 +306,7 @@ exports.Prisma.CustomersScalarFieldEnum = {
   total_spent: 'total_spent',
   last_order_date: 'last_order_date',
   engagement_score: 'engagement_score',
+  deleted_at: 'deleted_at',
   created_at: 'created_at',
   updated_at: 'updated_at',
   platform_user_id: 'platform_user_id'
@@ -323,7 +318,6 @@ exports.Prisma.OrdersScalarFieldEnum = {
   tenant_id: 'tenant_id',
   lead_id: 'lead_id',
   order_type: 'order_type',
-  items: 'items',
   total_amount: 'total_amount',
   payment_status: 'payment_status',
   payment_id: 'payment_id',
@@ -707,6 +701,7 @@ exports.Prisma.Campaign_analyticsScalarFieldEnum = {
 
 exports.Prisma.Hotel_pricing_recommendationsScalarFieldEnum = {
   id: 'id',
+  business_id: 'business_id',
   hotel_id: 'hotel_id',
   org_id: 'org_id',
   room_type: 'room_type',
@@ -726,6 +721,7 @@ exports.Prisma.Hotel_pricing_recommendationsScalarFieldEnum = {
 
 exports.Prisma.Hotel_booking_outcomesScalarFieldEnum = {
   id: 'id',
+  business_id: 'business_id',
   recommendation_id: 'recommendation_id',
   hotel_id: 'hotel_id',
   org_id: 'org_id',
@@ -740,6 +736,7 @@ exports.Prisma.Hotel_booking_outcomesScalarFieldEnum = {
 
 exports.Prisma.Hotel_pricing_notificationsScalarFieldEnum = {
   id: 'id',
+  business_id: 'business_id',
   org_id: 'org_id',
   hotel_id: 'hotel_id',
   type: 'type',
@@ -805,7 +802,9 @@ exports.Prisma.Checkpoint_blobsScalarFieldEnum = {
   channel: 'channel',
   version: 'version',
   type: 'type',
-  blob: 'blob'
+  blob: 'blob',
+  business_id: 'business_id',
+  expires_at: 'expires_at'
 };
 
 exports.Prisma.Checkpoint_migrationsScalarFieldEnum = {
@@ -820,7 +819,9 @@ exports.Prisma.Checkpoint_writesScalarFieldEnum = {
   idx: 'idx',
   channel: 'channel',
   type: 'type',
-  blob: 'blob'
+  blob: 'blob',
+  business_id: 'business_id',
+  expires_at: 'expires_at'
 };
 
 exports.Prisma.CheckpointsScalarFieldEnum = {
@@ -830,7 +831,144 @@ exports.Prisma.CheckpointsScalarFieldEnum = {
   parent_checkpoint_id: 'parent_checkpoint_id',
   type: 'type',
   checkpoint: 'checkpoint',
-  metadata: 'metadata'
+  metadata: 'metadata',
+  business_id: 'business_id',
+  expires_at: 'expires_at'
+};
+
+exports.Prisma.Billing_plansScalarFieldEnum = {
+  plan_id: 'plan_id',
+  razorpay_plan_id: 'razorpay_plan_id',
+  name: 'name',
+  business_type: 'business_type',
+  tier: 'tier',
+  amount: 'amount',
+  interval: 'interval',
+  interval_count: 'interval_count',
+  initial_credits: 'initial_credits',
+  features: 'features',
+  is_active: 'is_active',
+  created_at: 'created_at'
+};
+
+exports.Prisma.Billing_subscriptionsScalarFieldEnum = {
+  subscription_id: 'subscription_id',
+  business_id: 'business_id',
+  plan_id: 'plan_id',
+  razorpay_subscription_id: 'razorpay_subscription_id',
+  status: 'status',
+  current_period_start: 'current_period_start',
+  current_period_end: 'current_period_end',
+  trial_end: 'trial_end',
+  pause_start: 'pause_start',
+  pause_end: 'pause_end',
+  cancel_at_period_end: 'cancel_at_period_end',
+  cancelled_at: 'cancelled_at',
+  metadata: 'metadata',
+  created_at: 'created_at',
+  updated_at: 'updated_at'
+};
+
+exports.Prisma.WalletsScalarFieldEnum = {
+  wallet_id: 'wallet_id',
+  business_id: 'business_id',
+  balance: 'balance',
+  currency: 'currency',
+  created_at: 'created_at',
+  updated_at: 'updated_at'
+};
+
+exports.Prisma.Wallet_transactionsScalarFieldEnum = {
+  txn_id: 'txn_id',
+  wallet_id: 'wallet_id',
+  type: 'type',
+  amount: 'amount',
+  balance_before: 'balance_before',
+  balance_after: 'balance_after',
+  description: 'description',
+  reference_id: 'reference_id',
+  reference_type: 'reference_type',
+  action_type: 'action_type',
+  status: 'status',
+  metadata: 'metadata',
+  created_at: 'created_at'
+};
+
+exports.Prisma.Billing_paymentsScalarFieldEnum = {
+  payment_id: 'payment_id',
+  business_id: 'business_id',
+  razorpay_payment_id: 'razorpay_payment_id',
+  razorpay_order_id: 'razorpay_order_id',
+  amount: 'amount',
+  type: 'type',
+  status: 'status',
+  idempotency_key: 'idempotency_key',
+  metadata: 'metadata',
+  created_at: 'created_at'
+};
+
+exports.Prisma.Billing_invoicesScalarFieldEnum = {
+  invoice_id: 'invoice_id',
+  business_id: 'business_id',
+  subscription_id: 'subscription_id',
+  razorpay_invoice_id: 'razorpay_invoice_id',
+  subtotal: 'subtotal',
+  tax_amount: 'tax_amount',
+  total_amount: 'total_amount',
+  status: 'status',
+  pdf_url: 'pdf_url',
+  due_date: 'due_date',
+  paid_at: 'paid_at',
+  created_at: 'created_at'
+};
+
+exports.Prisma.Billing_webhook_eventsScalarFieldEnum = {
+  event_id: 'event_id',
+  provider: 'provider',
+  event_type: 'event_type',
+  razorpay_event_id: 'razorpay_event_id',
+  payload: 'payload',
+  status: 'status',
+  attempts: 'attempts',
+  error: 'error',
+  processed_at: 'processed_at',
+  created_at: 'created_at'
+};
+
+exports.Prisma.Credit_pricingScalarFieldEnum = {
+  action_type: 'action_type',
+  cost: 'cost',
+  description: 'description',
+  is_active: 'is_active',
+  updated_at: 'updated_at'
+};
+
+exports.Prisma.Business_settingsScalarFieldEnum = {
+  business_id: 'business_id',
+  timezone: 'timezone',
+  language: 'language',
+  currency: 'currency',
+  business_hours: 'business_hours',
+  onboarding_step: 'onboarding_step',
+  onboarding_done: 'onboarding_done',
+  ai_agent_enabled: 'ai_agent_enabled',
+  auto_reply_enabled: 'auto_reply_enabled',
+  low_balance_alert: 'low_balance_alert',
+  updated_at: 'updated_at'
+};
+
+exports.Prisma.Audit_logsScalarFieldEnum = {
+  log_id: 'log_id',
+  business_id: 'business_id',
+  user_id: 'user_id',
+  action: 'action',
+  entity_type: 'entity_type',
+  entity_id: 'entity_id',
+  old_values: 'old_values',
+  new_values: 'new_values',
+  ip_address: 'ip_address',
+  user_agent: 'user_agent',
+  created_at: 'created_at'
 };
 
 exports.Prisma.SortOrder = {
@@ -872,7 +1010,6 @@ exports.Prisma.ModelName = {
   role_intents: 'role_intents',
   roles: 'roles',
   social_accounts: 'social_accounts',
-  subscription_plans: 'subscription_plans',
   tenants: 'tenants',
   users: 'users',
   leads: 'leads',
@@ -908,7 +1045,17 @@ exports.Prisma.ModelName = {
   checkpoint_blobs: 'checkpoint_blobs',
   checkpoint_migrations: 'checkpoint_migrations',
   checkpoint_writes: 'checkpoint_writes',
-  checkpoints: 'checkpoints'
+  checkpoints: 'checkpoints',
+  billing_plans: 'billing_plans',
+  billing_subscriptions: 'billing_subscriptions',
+  wallets: 'wallets',
+  wallet_transactions: 'wallet_transactions',
+  billing_payments: 'billing_payments',
+  billing_invoices: 'billing_invoices',
+  billing_webhook_events: 'billing_webhook_events',
+  credit_pricing: 'credit_pricing',
+  business_settings: 'business_settings',
+  audit_logs: 'audit_logs'
 };
 
 /**

@@ -7,6 +7,7 @@ import { AuthController } from './controllers/auth.controller';
 import { AuthService } from './application/services/auth.service';
 import { JwtStrategy } from './infrastructure/jwt.strategy';
 import { PrismaModule } from '../../prisma/prisma.module';
+import { AuditLogModule } from '../audit-log/audit-log.module';
 
 @Module({
   imports: [
@@ -15,6 +16,7 @@ import { PrismaModule } from '../../prisma/prisma.module';
     JwtModule.register({}), // Configuration is done in the service using ConfigService
     PrismaModule,
     CacheModule.register(), // Import CacheModule for AuthService and JwtStrategy
+    AuditLogModule,
   ],
   controllers: [AuthController],
   providers: [AuthService, JwtStrategy],

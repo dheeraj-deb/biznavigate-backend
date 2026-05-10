@@ -240,7 +240,9 @@ function buildAdapter() {
         prepare: false,
         ssl: "require",
         onnotice: () => {},
-        idle_timeout: 10,
+        max: 20,
+        idle_timeout: 20,
+        connect_timeout: 10,
         connection: { search_path: schema },
     });
 

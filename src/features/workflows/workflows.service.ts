@@ -1094,10 +1094,10 @@ export class WorkflowsService implements OnModuleInit {
     if (data.booking_id) {
       const order = await this.prisma.orders.findFirst({
         where: { order_id: data.booking_id },
+        include: { order_items: true },
       });
       if (order) {
-        const items = (order.items as any[]) ?? [];
-        const item = items[0] ?? {};
+        const item = (order.order_items?.[0]?.snapshot as any) ?? {};
         return {
           booking_id: order.order_id,
           check_in_date: item.check_in ?? null,

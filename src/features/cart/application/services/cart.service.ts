@@ -354,7 +354,6 @@ export class CartService {
         total_amount: cart.total_amount,
         payment_status: 'pending',
         delivery_status: 'pending',
-        items: orderItems,
       },
     });
 

@@ -15,10 +15,11 @@ import {
 import { LeadService } from '../application/services/lead.service';
 import { JwtAuthGuard } from '../../../common/guards/jwt-auth.guard';
 import { TenantGuard } from '../../../common/guards/tenant.guard';
+import { SubscriptionGuard } from '../../billing/subscription/subscription.guard';
 import { User } from '../../../common/decorators';
 
 @Controller('leads')
-@UseGuards(JwtAuthGuard, TenantGuard)
+@UseGuards(JwtAuthGuard, TenantGuard, SubscriptionGuard)
 export class LeadController {
   constructor(private readonly leadService: LeadService) {}
 
@@ -27,9 +28,8 @@ export class LeadController {
   @Post()
   @HttpCode(HttpStatus.CREATED)
   createLead(
+    @Req() req: any,
     @Body() body: {
-      businessId: string;
-      tenantId: string;
       name?: string;
       phone?: string;
       email?: string;
@@ -41,7 +41,11 @@ export class LeadController {
       quotedAmount?: number;
     },
   ) {
-    return this.leadService.createLead(body);
+    return this.leadService.createLead({
+      ...body,
+      businessId: req.user.business_id,
+      tenantId: req.user.tenant_id,
+    });
   }
 
   // ─── List & detail ───────────────────────────────────────────
@@ -49,7 +53,6 @@ export class LeadController {
   @Get()
   getLeads(
     @Req() req: any,
-    @Query('businessId') businessId?: string,
     @Query('status') status?: string,
     @Query('channel') channel?: string,
     @Query('source') source?: string,
@@ -61,20 +64,17 @@ export class LeadController {
     @Query('page') page?: number,
     @Query('limit') limit?: number,
   ) {
-    const bId = businessId ?? req.user?.business_id;
-    return this.leadService.getLeads(bId, { status, channel, source, assignedTo, search, intent_type, sortBy, sortOrder, page, limit });
+    return this.leadService.getLeads(req.user.business_id, { status, channel, source, assignedTo, search, intent_type, sortBy, sortOrder, page, limit });
   }
 
   @Get('stats/overview')
   getStatsOverview(
     @Req() req: any,
-    @Query('businessId') businessId?: string,
     @Query('from') from?: string,
     @Query('to') to?: string,
     @Query('intent_type') intent_type?: string,
   ) {
-    const bId = businessId ?? req.user?.business_id;
-    return this.leadService.getStatsOverview(bId, { from, to, intent_type });
+    return this.leadService.getStatsOverview(req.user.business_id, { from, to, intent_type });
   }
 
   @Get(':leadId')
@@ -170,64 +170,35 @@ export class LeadController {
   // ─── Dashboard ────────────────────────────────────────────────
 
   @Get('dashboard/daily-overview')
-  getDailyOverview(
-    @Req() req: any,
-    @Query('businessId') businessId?: string,
-    @Query('date') date?: string,
-  ) {
-    const bId = businessId ?? req.user?.business_id;
-    return this.leadService.getDailyOverview(bId, date ? new Date(date) : undefined);
+  getDailyOverview(@Req() req: any, @Query('date') date?: string) {
+    return this.leadService.getDailyOverview(req.user.business_id, date ? new Date(date) : undefined);
   }
 
   @Get('dashboard/needs-attention')
-  getNeedsAttention(
-    @Req() req: any,
-    @Query('businessId') businessId?: string,
-    @Query('limit') limit?: string,
-  ) {
-    const bId = businessId ?? req.user?.business_id;
-    return this.leadService.getNeedsAttention(bId, limit ? Number(limit) : 20);
+  getNeedsAttention(@Req() req: any, @Query('limit') limit?: string) {
+    return this.leadService.getNeedsAttention(req.user.business_id, limit ? Number(limit) : 20);
   }
 
   @Get('dashboard/channel-analytics')
-  getChannelAnalytics(
-    @Req() req: any,
-    @Query('businessId') businessId?: string,
-    @Query('days') days?: string,
-  ) {
-    const bId = businessId ?? req.user?.business_id;
-    return this.leadService.getChannelAnalytics(bId, days ? Number(days) : 30);
+  getChannelAnalytics(@Req() req: any, @Query('days') days?: string) {
+    return this.leadService.getChannelAnalytics(req.user.business_id, days ? Number(days) : 30);
   }
 
   @Get('dashboard/demand-signals')
-  getDemandSignals(
-    @Req() req: any,
-    @Query('businessId') businessId?: string,
-    @Query('days') days?: string,
-  ) {
-    const bId = businessId ?? req.user?.business_id;
-    return this.leadService.getDemandSignals(bId, days ? Number(days) : 7);
+  getDemandSignals(@Req() req: any, @Query('days') days?: string) {
+    return this.leadService.getDemandSignals(req.user.business_id, days ? Number(days) : 7);
   }
 
   @Get('dashboard/followup-queue')
-  getFollowupQueue(
-    @Req() req: any,
-    @Query('businessId') businessId?: string,
-    @Query('assignedTo') assignedTo?: string,
-    @Query('limit') limit?: string,
-  ) {
-    const bId = businessId ?? req.user?.business_id;
-    return this.leadService.getFollowupQueue(bId, assignedTo, limit ? Number(limit) : 30);
+  getFollowupQueue(@Req() req: any, @Query('assignedTo') assignedTo?: string, @Query('limit') limit?: string) {
+    return this.leadService.getFollowupQueue(req.user.business_id, assignedTo, limit ? Number(limit) : 30);
   }
 
   // ─── Inbox (MongoDB) ──────────────────────────────────────────
 
   @Get('inbox/conversations')
-  getOpenConversations(
-    @Query('businessId') businessId: string,
-    @Query('limit') limit?: number,
-  ) {
-    return this.leadService.getOpenConversations(businessId, limit);
+  getOpenConversations(@Req() req: any, @Query('limit') limit?: number) {
+    return this.leadService.getOpenConversations(req.user.business_id, limit);
   }
 
   @Get('inbox/conversations/:conversationId/messages')

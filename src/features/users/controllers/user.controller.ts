@@ -1,4 +1,4 @@
-import { Controller, Post, Body, Param, Patch, Get, UseGuards, Request } from "@nestjs/common";
+import { Controller, Post, Body, Param, Patch, Get, Query, UseGuards, Request } from "@nestjs/common";
 import { AuthGuard } from "@nestjs/passport";
 import { JwtAuthGuard } from "../../../common/guards/jwt-auth.guard";
 import { UsersService } from "../applications/user.service";
@@ -38,8 +38,8 @@ export class UsersController {
   }
 
   @Get()
-  getAllUsers() {
-    return this.service.getAllUsers();
+  getAllUsers(@Request() req, @Query('page') page?: string, @Query('limit') limit?: string) {
+    return this.service.getAllUsers(req.user.business_id, Number(page ?? 1), Number(limit ?? 20));
   }
 
   @Patch("profile")
