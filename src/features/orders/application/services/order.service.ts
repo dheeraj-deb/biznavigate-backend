@@ -5,15 +5,16 @@ import {
   BadRequestException,
   ConflictException,
 } from '@nestjs/common';
+import { InjectQueue } from '@nestjs/bullmq';
+import { Queue } from 'bullmq';
 import { OrderRepositoryPrisma } from '../../infrastructure/order.repository.prisma';
-import { Order, OrderStatus, PaymentMethod } from '../../domain/entities/order.entity';
+import { Order, OrderStatus } from '../../domain/entities/order.entity';
 import { CreateOrderDto } from '../dto/create-order.dto';
 import { UpdateOrderDto, UpdateOrderStatusDto, ConfirmPaymentDto, UpdateShippingDto } from '../dto/update-order.dto';
 import { OrderQueryDto } from '../dto/order-query.dto';
 import { PrismaService } from '../../../../prisma/prisma.service';
 import { CustomerService } from '../../../customers/application/services/customer.service';
-import { NotificationService } from '../../../notifications/application/services/notification.service';
-import { NotificationChannel } from '../../../notifications/domain/entities';
+import { OrderNotificationJobData } from '../jobs/order-notification.processor';
 
 /**
  * Order Service
@@ -28,7 +29,7 @@ export class OrderService {
     private readonly orderRepository: OrderRepositoryPrisma,
     private readonly customerService: CustomerService,
     private readonly prisma: PrismaService,
-    private readonly notificationService: NotificationService,
+    @InjectQueue('order-notifications') private readonly notificationQueue: Queue<OrderNotificationJobData>,
   ) {}
 
   /**
@@ -48,7 +49,7 @@ export class OrderService {
 
       // Validate all products exist and have sufficient stock
       for (const item of createOrderDto.items) {
-        await this.validateProductAndStock(item.product_id, item.variant_id, item.quantity);
+        await this.validateProductAndStock(item.item_id, item.variant_id, item.quantity);
       }
 
       // Create order with items (repository handles transaction)
@@ -59,9 +60,12 @@ export class OrderService {
         (error) => this.logger.error(`Failed to update customer stats: ${error.message}`),
       );
 
-      // Send order confirmation notification
-      this.sendOrderConfirmationNotification(order, customer).catch(
-        (error) => this.logger.error(`Failed to send order confirmation: ${error.message}`),
+      this.notificationQueue.add('send', {
+        type: 'confirmation',
+        order: { order_id: (order as any).order_id, order_number: order.order_number, business_id: (order as any).business_id, tenant_id: (order as any).tenant_id, customer_id: (order as any).customer_id, total_amount: order.total_amount },
+        customer: { name: customer.name, email: customer.email, phone: customer.phone },
+      }, { attempts: 3, backoff: { type: 'exponential', delay: 5000 } }).catch(
+        (err) => this.logger.error(`Failed to queue order confirmation: ${err.message}`),
       );
 
       this.logger.log(
@@ -172,11 +176,14 @@ export class OrderService {
         updateStatusDto.notes,
       );
 
-      // Send delivery notification when order is marked as delivered
       if (updateStatusDto.status === OrderStatus.DELIVERED) {
         const customer = await this.customerService.findById(existingOrder.customer_id);
-        this.sendDeliveryNotification(updated, customer).catch(
-          (error) => this.logger.error(`Failed to send delivery notification: ${error.message}`),
+        this.notificationQueue.add('send', {
+          type: 'delivery',
+          order: { order_id: (updated as any).order_id, order_number: updated.order_number, business_id: (updated as any).business_id, tenant_id: (updated as any).tenant_id, customer_id: (updated as any).customer_id, total_amount: updated.total_amount },
+          customer: { name: customer.name, email: customer.email, phone: customer.phone },
+        }, { attempts: 3, backoff: { type: 'exponential', delay: 5000 } }).catch(
+          (err) => this.logger.error(`Failed to queue delivery notification: ${err.message}`),
         );
       }
 
@@ -213,10 +220,13 @@ export class OrderService {
         confirmPaymentDto.payment_reference,
       );
 
-      // Send payment confirmation notification
       const customer = await this.customerService.findById(existingOrder.customer_id);
-      this.sendPaymentConfirmationNotification(updated, customer).catch(
-        (error) => this.logger.error(`Failed to send payment confirmation: ${error.message}`),
+      this.notificationQueue.add('send', {
+        type: 'payment',
+        order: { order_id: (updated as any).order_id, order_number: updated.order_number, business_id: (updated as any).business_id, tenant_id: (updated as any).tenant_id, customer_id: (updated as any).customer_id, total_amount: updated.total_amount, payment_method: (updated as any).payment_method },
+        customer: { name: customer.name, email: customer.email, phone: customer.phone },
+      }, { attempts: 3, backoff: { type: 'exponential', delay: 5000 } }).catch(
+        (err) => this.logger.error(`Failed to queue payment notification: ${err.message}`),
       );
 
       this.logger.log(
@@ -258,10 +268,15 @@ export class OrderService {
       // Auto-update status to shipped
       await this.orderRepository.updateStatus(orderId, OrderStatus.SHIPPED);
 
-      // Send shipping notification
       const customer = await this.customerService.findById(existingOrder.customer_id);
-      this.sendShippingNotification(updated, customer, updateShippingDto.tracking_number, updateShippingDto.carrier).catch(
-        (error) => this.logger.error(`Failed to send shipping notification: ${error.message}`),
+      this.notificationQueue.add('send', {
+        type: 'shipping',
+        order: { order_id: (updated as any).order_id, order_number: updated.order_number, business_id: (updated as any).business_id, tenant_id: (updated as any).tenant_id, customer_id: (updated as any).customer_id, total_amount: updated.total_amount },
+        customer: { name: customer.name, email: customer.email, phone: customer.phone },
+        trackingNumber: updateShippingDto.tracking_number,
+        carrier: updateShippingDto.carrier,
+      }, { attempts: 3, backoff: { type: 'exponential', delay: 5000 } }).catch(
+        (err) => this.logger.error(`Failed to queue shipping notification: ${err.message}`),
       );
 
       this.logger.log(`Shipping info updated for order: ${orderId}`);
@@ -423,130 +438,4 @@ export class OrderService {
     }
   }
 
-  /**
-   * Send order confirmation notification
-   */
-  private async sendOrderConfirmationNotification(order: any, customer: any): Promise<void> {
-    try {
-      await this.notificationService.send({
-        business_id: order.business_id,
-        tenant_id: order.tenant_id,
-        customer_id: order.customer_id,
-        recipient_email: customer.email,
-        recipient_phone: customer.phone,
-        recipient_name: customer.name,
-        channel: NotificationChannel.EMAIL,
-        subject: `Order Confirmation - ${order.order_number}`,
-        body: `Thank you for your order! Your order ${order.order_number} has been received and is being processed.`,
-        html_body: `
-          <h2>Order Confirmation</h2>
-          <p>Thank you for your order, ${customer.name || 'valued customer'}!</p>
-          <p>Order Number: <strong>${order.order_number}</strong></p>
-          <p>Order Total: <strong>₹${Number(order.total_amount).toFixed(2)}</strong></p>
-          <p>We'll notify you when your order is shipped.</p>
-        `,
-        related_entity_type: 'order',
-        related_entity_id: order.order_id,
-      });
-    } catch (error) {
-      this.logger.warn(`Failed to send order confirmation: ${error.message}`);
-    }
-  }
-
-  /**
-   * Send payment confirmation notification
-   */
-  private async sendPaymentConfirmationNotification(order: any, customer: any): Promise<void> {
-    try {
-      await this.notificationService.send({
-        business_id: order.business_id,
-        tenant_id: order.tenant_id,
-        customer_id: order.customer_id,
-        recipient_email: customer.email,
-        recipient_phone: customer.phone,
-        recipient_name: customer.name,
-        channel: NotificationChannel.EMAIL,
-        subject: `Payment Received - ${order.order_number}`,
-        body: `Payment received for order ${order.order_number}. Your order is now being processed.`,
-        html_body: `
-          <h2>Payment Confirmation</h2>
-          <p>Hi ${customer.name || 'valued customer'},</p>
-          <p>We've received your payment for order <strong>${order.order_number}</strong></p>
-          <p>Amount Paid: <strong>₹${Number(order.total_amount).toFixed(2)}</strong></p>
-          <p>Payment Method: <strong>${order.payment_method}</strong></p>
-          <p>Your order is now being prepared for shipment.</p>
-        `,
-        related_entity_type: 'order',
-        related_entity_id: order.order_id,
-      });
-    } catch (error) {
-      this.logger.warn(`Failed to send payment confirmation: ${error.message}`);
-    }
-  }
-
-  /**
-   * Send shipping notification
-   */
-  private async sendShippingNotification(
-    order: any,
-    customer: any,
-    trackingNumber: string,
-    carrier: string,
-  ): Promise<void> {
-    try {
-      await this.notificationService.send({
-        business_id: order.business_id,
-        tenant_id: order.tenant_id,
-        customer_id: order.customer_id,
-        recipient_email: customer.email,
-        recipient_phone: customer.phone,
-        recipient_name: customer.name,
-        channel: NotificationChannel.EMAIL,
-        subject: `Order Shipped - ${order.order_number}`,
-        body: `Your order ${order.order_number} has been shipped! Tracking: ${trackingNumber} (${carrier})`,
-        html_body: `
-          <h2>Order Shipped</h2>
-          <p>Great news ${customer.name || 'valued customer'}!</p>
-          <p>Your order <strong>${order.order_number}</strong> has been shipped.</p>
-          <p>Carrier: <strong>${carrier}</strong></p>
-          <p>Tracking Number: <strong>${trackingNumber}</strong></p>
-          <p>You'll receive another notification when your order is delivered.</p>
-        `,
-        related_entity_type: 'order',
-        related_entity_id: order.order_id,
-      });
-    } catch (error) {
-      this.logger.warn(`Failed to send shipping notification: ${error.message}`);
-    }
-  }
-
-  /**
-   * Send delivery notification
-   */
-  private async sendDeliveryNotification(order: any, customer: any): Promise<void> {
-    try {
-      await this.notificationService.send({
-        business_id: order.business_id,
-        tenant_id: order.tenant_id,
-        customer_id: order.customer_id,
-        recipient_email: customer.email,
-        recipient_phone: customer.phone,
-        recipient_name: customer.name,
-        channel: NotificationChannel.EMAIL,
-        subject: `Order Delivered - ${order.order_number}`,
-        body: `Your order ${order.order_number} has been delivered! We hope you enjoy your purchase.`,
-        html_body: `
-          <h2>Order Delivered</h2>
-          <p>Hi ${customer.name || 'valued customer'},</p>
-          <p>Your order <strong>${order.order_number}</strong> has been successfully delivered!</p>
-          <p>We hope you're satisfied with your purchase. If you have any questions or concerns, please don't hesitate to reach out.</p>
-          <p>Thank you for shopping with us!</p>
-        `,
-        related_entity_type: 'order',
-        related_entity_id: order.order_id,
-      });
-    } catch (error) {
-      this.logger.warn(`Failed to send delivery notification: ${error.message}`);
-    }
-  }
 }

@@ -23,10 +23,7 @@ export class AuthController {
   @Throttle({ short: { ttl: 60000, limit: 5 } }) // 5 signups per minute
   @HttpCode(HttpStatus.CREATED)
   async signup(@Body() signupDto: SignupDto): Promise<AuthResponseDto> {
-    console.log('[CONTROLLER] Signup endpoint called with:', signupDto);
-    const result = await this.authService.signup(signupDto);
-    console.log('[CONTROLLER] Signup completed successfully');
-    return result;
+    return this.authService.signup(signupDto);
   }
 
   @Post('login')

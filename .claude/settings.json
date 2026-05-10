@@ -13,7 +13,8 @@
       "WebFetch(domain:docs.gupshup.io)",
       "WebFetch(domain:www.gupshup.io)",
       "WebSearch",
-      "WebFetch(domain:partner-docs.gupshup.io)"
+      "WebFetch(domain:partner-docs.gupshup.io)",
+      "Bash(grep -E \"\\\\.\\(ts|js\\)$\")"
     ]
   }
 }

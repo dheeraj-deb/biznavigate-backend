@@ -11,6 +11,7 @@ import { CACHE_MANAGER } from "@nestjs/cache-manager";
 import { Cache } from "cache-manager";
 import * as bcrypt from "bcrypt";
 import { PrismaService } from "../../../../prisma/prisma.service";
+import { AuditLogService } from "../../../audit-log/audit-log.service";
 import { SignupDto } from "../dto/signup.dto";
 import { LoginDto } from "../dto/login.dto";
 import { AuthResponseDto } from "../dto/auth-response.dto";
@@ -21,6 +22,7 @@ export class AuthService {
     private readonly prisma: PrismaService,
     private readonly jwtService: JwtService,
     private readonly configService: ConfigService,
+    private readonly auditLogService: AuditLogService,
     @Inject(CACHE_MANAGER) private readonly cacheManager: Cache
   ) {}
 
@@ -30,8 +32,6 @@ export class AuthService {
   async signup(signupDto: SignupDto): Promise<AuthResponseDto> {
     const { email, password, tenant_name, phone_number } = signupDto;
 
-    console.log('[SIGNUP] Starting signup process for:', email);
-
     // Check if user already exists (outside transaction for performance)
     const existingUser = await this.prisma.users.findUnique({
       where: { email },
@@ -40,23 +40,18 @@ export class AuthService {
     if (existingUser) {
       throw new ConflictException("User with this email already exists");
     }
-    console.log('[SIGNUP] User check passed');
 
     // Find admin role outside transaction (read-only, no need to lock)
-    const roles = await this.prisma.roles.findMany();
-    console.log('[SIGNUP] Found roles:', roles.map(r => r.role_name));
-    const adminRole = roles.find((r) =>
-      ['admin', 'administrator'].includes(r.role_name.toLowerCase()),
-    );
+    const adminRole = await this.prisma.roles.findFirst({
+      where: { role_name: { in: ['admin', 'administrator'], mode: 'insensitive' } },
+    });
 
     if (!adminRole) {
       throw new BadRequestException("Admin role not found in system");
     }
-    console.log('[SIGNUP] Admin role found:', adminRole.role_id);
 
     // Hash password before transaction (CPU-intensive, no DB access)
     const hashedPassword = await this.hashPassword(password);
-    console.log('[SIGNUP] Password hashed');
 
     try {
       // Execute all database writes in a single atomic transaction
@@ -69,7 +64,6 @@ export class AuthService {
             phone_number: phone_number,
           },
         });
-        console.log('[SIGNUP] Tenant created:', tenant.tenant_id);
 
         // 2. Create business linked to tenant
         const business = await tx.businesses.create({
@@ -78,7 +72,6 @@ export class AuthService {
             tenant_id: tenant.tenant_id,
           },
         });
-        console.log('[SIGNUP] Business created:', business.business_id);
 
         // 3. Create user linked to business
         const user = await tx.users.create({
@@ -95,7 +88,6 @@ export class AuthService {
             failed_login_attempts: 0,
           },
         });
-        console.log('[SIGNUP] User created:', user.user_id);
 
         return { tenant, business, user };
       });
@@ -108,17 +100,22 @@ export class AuthService {
         business_id: result.business.business_id,
         tenant_id: result.business.tenant_id,
         role_id: result.user.role_id,
+        role_name: adminRole.role_name,
       });
-      console.log('[SIGNUP] Tokens generated');
-
       // Store refresh token (separate operation, can retry if fails)
       await this.updateRefreshToken(result.user.user_id, tokens.refresh_token);
-      console.log('[SIGNUP] Refresh token stored');
 
       // Pre-populate cache with is_active = true to prevent race conditions
       const cacheKey = `user:${result.user.user_id}:active`;
-      await this.cacheManager.set(cacheKey, true, 300000); // 5 minutes TTL
-      console.log('[SIGNUP] Cache initialized with is_active = true');
+      await this.cacheManager.set(cacheKey, true, 300000);
+
+      void this.auditLogService.log({
+        business_id: result.business.business_id,
+        user_id: result.user.user_id,
+        action: 'signup',
+        entity_type: 'user',
+        entity_id: result.user.user_id,
+      });
 
       return {
         access_token: tokens.access_token,
@@ -133,14 +130,9 @@ export class AuthService {
         },
       };
     } catch (error) {
-      console.error('[SIGNUP] Error occurred:', error.message);
-      console.error('[SIGNUP] Error stack:', error.stack);
-
-      // If error is already a NestJS exception, rethrow it
       if (error instanceof ConflictException || error instanceof BadRequestException) {
         throw error;
       }
-      // Otherwise wrap in BadRequestException
       throw new BadRequestException(
         `Signup failed: ${error.message || "Unknown error"}`
       );
@@ -162,13 +154,13 @@ export class AuthService {
             tenants: true,
           },
         },
+        roles: true,
       },
     });
 
-    console.log("User found during login:", user);
-
-    if (!user) {
-      throw new UnauthorizedException("User not found");
+    // CRITICAL-4: Always use the same message for missing user/password — prevents email enumeration
+    if (!user || !user.password) {
+      throw new UnauthorizedException("Invalid credentials");
     }
 
     // Check if user is active
@@ -176,33 +168,7 @@ export class AuthService {
       throw new UnauthorizedException("Account is inactive");
     }
 
-    // Check if password exists
-    if (!user.password) {
-      throw new UnauthorizedException("Please set a password for your account");
-    }
-
-    // Verify password
-    const isPasswordValid = await this.comparePassword(password, user.password);
-
-    console.log("Password valid:", isPasswordValid);
-
-    if (!isPasswordValid) {
-      // Increment failed login attempts
-      await this.prisma.users.update({
-        where: { user_id: user.user_id },
-        data: {
-          failed_login_attempts: (user.failed_login_attempts || 0) + 1,
-          // Lock account after 5 failed attempts for 15 minutes
-          account_locked_until:
-            (user.failed_login_attempts || 0) + 1 >= 5
-              ? new Date(Date.now() + 15 * 60 * 1000)
-              : undefined,
-        },
-      });
-      throw new UnauthorizedException("Invalid credentials");
-    }
-
-    // Check if account is locked
+    // CRITICAL-3: Check lockout BEFORE bcrypt (cheap date check vs expensive hash)
     if (user.account_locked_until && user.account_locked_until > new Date()) {
       const minutesLeft = Math.ceil(
         (user.account_locked_until.getTime() - Date.now()) / 60000
@@ -210,6 +176,24 @@ export class AuthService {
       throw new UnauthorizedException(
         `Account is locked due to multiple failed login attempts. Please try again in ${minutesLeft} minutes.`
       );
+    }
+
+    // Verify password (expensive bcrypt — only reached if account is not locked)
+    const isPasswordValid = await this.comparePassword(password, user.password);
+
+    if (!isPasswordValid) {
+      const newFailedAttempts = (user.failed_login_attempts || 0) + 1;
+      await this.prisma.users.update({
+        where: { user_id: user.user_id },
+        data: {
+          failed_login_attempts: newFailedAttempts,
+          account_locked_until:
+            newFailedAttempts >= 5
+              ? new Date(Date.now() + 15 * 60 * 1000)
+              : undefined,
+        },
+      });
+      throw new UnauthorizedException("Invalid credentials");
     }
 
     // Validate business and tenant relationship
@@ -225,6 +209,7 @@ export class AuthService {
       business_id: user.business_id,
       tenant_id: user.businesses.tenant_id,
       role_id: user.role_id,
+      role_name: user.roles?.role_name ?? '',
     });
 
     // Store refresh token and update security fields
@@ -242,8 +227,15 @@ export class AuthService {
 
     // Pre-populate cache with is_active = true to prevent race conditions
     const cacheKey = `user:${user.user_id}:active`;
-    await this.cacheManager.set(cacheKey, true, 300000); // 5 minutes TTL
-    console.log('[LOGIN] Cache initialized with is_active = true');
+    await this.cacheManager.set(cacheKey, true, 300000);
+
+    void this.auditLogService.log({
+      business_id: user.business_id,
+      user_id: user.user_id,
+      action: 'login',
+      entity_type: 'user',
+      entity_id: user.user_id,
+    });
 
     return {
       access_token: tokens.access_token,
@@ -278,6 +270,7 @@ export class AuthService {
               tenants: true,
             },
           },
+          roles: true,
         },
       });
 
@@ -307,6 +300,7 @@ export class AuthService {
         business_id: user.business_id,
         tenant_id: user.businesses.tenant_id,
         role_id: user.role_id,
+        role_name: user.roles?.role_name ?? '',
       });
 
       // Update refresh token
@@ -314,8 +308,7 @@ export class AuthService {
 
       // Pre-populate cache with is_active = true to prevent race conditions
       const cacheKey = `user:${user.user_id}:active`;
-      await this.cacheManager.set(cacheKey, true, 300000); // 5 minutes TTL
-      console.log('[REFRESH] Cache initialized with is_active = true');
+      await this.cacheManager.set(cacheKey, true, 300000);
 
       return {
         access_token: tokens.access_token,
@@ -338,13 +331,21 @@ export class AuthService {
    * Logout user (invalidate refresh token and clear cache)
    */
   async logout(userId: string): Promise<void> {
-    await this.prisma.users.update({
+    const user = await this.prisma.users.update({
       where: { user_id: userId },
       data: { refresh_token: null },
+      select: { business_id: true },
     });
 
-    // Clear user cache to force revalidation on next request
     await this.clearUserCache(userId);
+
+    void this.auditLogService.log({
+      business_id: user.business_id,
+      user_id: userId,
+      action: 'logout',
+      entity_type: 'user',
+      entity_id: userId,
+    });
   }
 
   /**
@@ -365,6 +366,7 @@ export class AuthService {
     business_id: string;
     tenant_id: string;
     role_id: string;
+    role_name: string;
   }): Promise<{ access_token: string; refresh_token: string }> {
     const accessExpiration =
       this.configService.get<string>("JWT_ACCESS_EXPIRATION") || "15m";

@@ -65,9 +65,9 @@ export class UsersService {
     }
   }
 
-  async getAllUsers() {
+  async getAllUsers(businessId: string, page = 1, limit = 20) {
     try {
-      return await this.repo.getAllUsers();
+      return await this.repo.getAllUsers(businessId, page, limit);
     } catch (error) {
       throw new BadRequestException(error.message);
     }

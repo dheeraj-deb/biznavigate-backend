@@ -2,6 +2,8 @@ import { Injectable, Logger, NotFoundException, BadRequestException } from '@nes
 import { ConfigService } from '@nestjs/config';
 import { InjectQueue } from '@nestjs/bullmq';
 import { Queue } from 'bullmq';
+import { InjectModel } from '@nestjs/mongoose';
+import { Model } from 'mongoose';
 import { getRedis } from 'src/utils/redis';
 import { PrismaService } from '../../prisma/prisma.service';
 import { WhatsAppApiClientService } from './infrastructure/whatsapp-api-client.service';
@@ -20,6 +22,8 @@ import { WebhookValidatorService } from './infrastructure/webhook-validator.serv
 import { WhatsAppTemplatesService } from '../whatsapp-templates/whatsapp-templates.service';
 import { WhatsAppFlowsService } from '../whatsapp-flows/whatsapp-flows.service';
 import { GupshupOnboardingService } from '../gupshup/gupshup-onboarding.service';
+import { Campaign, CampaignDocument } from '../campaign/schemas/campaign.schema';
+import { CampaignStatus } from '../campaign/enums/enums';
 
 
 
@@ -43,6 +47,7 @@ export class WhatsAppService {
     private readonly whatsappTemplatesService: WhatsAppTemplatesService,
     private readonly _whatsappFlowsService: WhatsAppFlowsService,
     private readonly gupshupOnboarding: GupshupOnboardingService,
+    @InjectModel(Campaign.name) private readonly campaignModel: Model<CampaignDocument>,
     @InjectQueue('message-debounce') private readonly debounceQueue: Queue,
   ) { }
 
@@ -824,13 +829,25 @@ export class WhatsAppService {
       data: recipientUpdate,
     });
 
-    await this.recomputeCampaignAnalytics(recipient.campaign_id, recipient.business_id);
+    const snapshot = await this.recomputeCampaignAnalytics(recipient.campaign_id, recipient.business_id);
+    await this.syncCampaignStatusFromDelivery(recipient.campaign_id, snapshot);
 
     this.logger.log(`[Campaign ${recipient.campaign_id}] Recipient ${waMessageId} → ${campaignStatus}`);
   }
 
-  private async recomputeCampaignAnalytics(campaignId: string, businessId: string): Promise<void> {
-    const [total, sent, delivered, read, failed, pending] = await Promise.all([
+  private async recomputeCampaignAnalytics(
+    campaignId: string,
+    businessId: string,
+  ): Promise<{
+    total: number;
+    sent: number;
+    delivered: number;
+    read: number;
+    failed: number;
+    pending: number;
+    awaitingDelivery: number;
+  }> {
+    const [total, sent, delivered, read, failed, pending, awaitingDelivery] = await Promise.all([
       this.prisma.campaign_recipients.count({ where: { campaign_id: campaignId } }),
       this.prisma.campaign_recipients.count({
         where: {
@@ -861,6 +878,7 @@ export class WhatsAppService {
       }),
       this.prisma.campaign_recipients.count({ where: { campaign_id: campaignId, status: 'FAILED' } }),
       this.prisma.campaign_recipients.count({ where: { campaign_id: campaignId, status: 'PENDING' } }),
+      this.prisma.campaign_recipients.count({ where: { campaign_id: campaignId, status: { in: ['PENDING', 'SENT'] } } }),
     ]);
 
     const deliveryRate = sent > 0 ? (delivered / sent) * 100 : 0;
@@ -885,6 +903,68 @@ export class WhatsAppService {
         updated_at: new Date(),
       },
     });
+
+    return { total, sent, delivered, read, failed, pending, awaitingDelivery };
+  }
+
+  private async syncCampaignStatusFromDelivery(
+    campaignId: string,
+    snapshot: { total: number; failed: number; awaitingDelivery: number },
+  ): Promise<void> {
+    if (snapshot.total === 0) return;
+
+    const campaign = await this.campaignModel
+      .findById(campaignId)
+      .select('status completedAt')
+      .lean();
+
+    if (!campaign) {
+      this.logger.warn(`[CampaignDelivery] Campaign ${campaignId} not found while syncing delivery status`);
+      return;
+    }
+
+    const currentStatus = (campaign as any).status as CampaignStatus;
+    if ([CampaignStatus.CANCELLED, CampaignStatus.PAUSED, CampaignStatus.DRAFT].includes(currentStatus)) {
+      return;
+    }
+
+    if (snapshot.awaitingDelivery > 0) {
+      if (currentStatus === CampaignStatus.COMPLETED) {
+        await this.campaignModel.findByIdAndUpdate(campaignId, {
+          $set: { status: CampaignStatus.RUNNING },
+          $unset: { completedAt: 1, failureReason: 1 },
+        });
+        this.logger.log(
+          `[Campaign ${campaignId}] Status → RUNNING (${snapshot.awaitingDelivery} recipient(s) still awaiting delivery status)`,
+        );
+      }
+      return;
+    }
+
+    const nextStatus = snapshot.failed === snapshot.total
+      ? CampaignStatus.FAILED
+      : CampaignStatus.COMPLETED;
+
+    if (currentStatus === nextStatus && (campaign as any).completedAt) {
+      return;
+    }
+
+    if (nextStatus === CampaignStatus.FAILED) {
+      await this.campaignModel.findByIdAndUpdate(campaignId, {
+        $set: {
+          status: CampaignStatus.FAILED,
+          completedAt: new Date(),
+          failureReason: 'All campaign recipients failed delivery',
+        },
+      });
+    } else {
+      await this.campaignModel.findByIdAndUpdate(campaignId, {
+        $set: { status: CampaignStatus.COMPLETED, completedAt: new Date() },
+        $unset: { failureReason: 1 },
+      });
+    }
+
+    this.logger.log(`[Campaign ${campaignId}] Status → ${nextStatus} from webhook delivery statuses`);
   }
 
   private async findRecentCampaignRecipientForStatus(

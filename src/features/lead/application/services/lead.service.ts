@@ -416,40 +416,49 @@ export class LeadService {
       if (filters.from) where.created_at.gte = new Date(filters.from);
       if (filters.to) where.created_at.lte = new Date(filters.to);
     }
-
-    const rows = await this.prisma.leads.findMany({
-      where,
-      select: { status: true, source: true, channel: true, context: true, quoted_amount: true, converted_value: true },
-    });
-
-    const leads = filters?.intent_type
-      ? rows.filter((l) => (l.context as any)?.type === filters.intent_type)
-      : rows;
-
-    const total_leads = leads.length;
-    const converted_leads = leads.filter((l) => ['booked', 'won'].includes(l.status)).length;
-
-    const statusMap: Record<string, number> = {};
-    const sourceMap: Record<string, number> = {};
-    const qualityMap: Record<string, number> = { hot: 0, warm: 0, cold: 0 };
-
-    for (const lead of leads) {
-      statusMap[lead.status] = (statusMap[lead.status] ?? 0) + 1;
-      const src = (lead as any).source ?? 'direct';
-      sourceMap[src] = (sourceMap[src] ?? 0) + 1;
-      const q = this.computeLeadQuality(lead);
-      qualityMap[q]++;
+    if (filters?.intent_type) {
+      where.context = { path: ['type'], equals: filters.intent_type };
     }
+
+    // All aggregations run as DB-side COUNT/GROUP BY — no rows transferred to Node
+    const [total, converted, byStatus, bySource, hotCount, warmCount] = await Promise.all([
+      this.prisma.leads.count({ where }),
+      this.prisma.leads.count({ where: { ...where, status: { in: ['booked', 'won'] } } }),
+      this.prisma.leads.groupBy({ by: ['status'], where, _count: { _all: true }, orderBy: { _count: { status: 'desc' } } }),
+      this.prisma.leads.groupBy({ by: ['source'], where, _count: { _all: true } }),
+      this.prisma.leads.count({
+        where: {
+          ...where,
+          OR: [
+            { status: { in: ['quoted', 'booked', 'won'] } },
+            { quoted_amount: { gt: 0 } },
+          ],
+        },
+      }),
+      this.prisma.leads.count({
+        where: {
+          ...where,
+          status: { in: ['active', 'contacted', 'qualified'] },
+          AND: [
+            { NOT: { status: { in: ['quoted', 'booked', 'won'] } } },
+            { OR: [{ quoted_amount: null }, { quoted_amount: { lte: 0 } }] },
+          ],
+        },
+      }),
+    ]);
 
     return {
       data: {
-        total_leads,
-        converted_leads,
-        conversion_rate:
-          total_leads > 0 ? ((converted_leads / total_leads) * 100).toFixed(2) : '0.00',
-        by_status: Object.entries(statusMap).map(([status, count]) => ({ status, count })),
-        by_source: Object.entries(sourceMap).map(([source, count]) => ({ source, count })),
-        by_quality: Object.entries(qualityMap).map(([quality, count]) => ({ quality, count })),
+        total_leads: total,
+        converted_leads: converted,
+        conversion_rate: total > 0 ? ((converted / total) * 100).toFixed(2) : '0.00',
+        by_status: byStatus.map((s) => ({ status: s.status, count: s._count._all })),
+        by_source: bySource.map((s) => ({ source: s.source ?? 'direct', count: s._count._all })),
+        by_quality: [
+          { quality: 'hot',  count: hotCount },
+          { quality: 'warm', count: warmCount },
+          { quality: 'cold', count: Math.max(0, total - hotCount - warmCount) },
+        ],
       },
     };
   }

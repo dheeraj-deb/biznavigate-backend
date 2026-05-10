@@ -8,6 +8,7 @@ import {
   Body,
   Param,
   Query,
+  Req,
   UseGuards,
   HttpCode,
   HttpStatus,
@@ -34,16 +35,19 @@ export class OrderController {
    */
   @Post()
   @HttpCode(HttpStatus.CREATED)
-  async create(@Body() createOrderDto: CreateOrderDto) {
+  async create(@Req() req: any, @Body() createOrderDto: CreateOrderDto) {
+    createOrderDto.business_id = req.user.business_id;
+    createOrderDto.tenant_id = req.user.tenant_id;
     return this.orderService.create(createOrderDto);
   }
 
   /**
    * Get all orders with filters
-   * GET /orders?business_id=xxx&status=pending&page=1&limit=20
+   * GET /orders?status=pending&page=1&limit=20
    */
   @Get()
-  async findAll(@Query() query: OrderQueryDto) {
+  async findAll(@Req() req: any, @Query() query: OrderQueryDto) {
+    query.business_id = req.user.business_id;
     return this.orderService.findAll(query);
   }
 
@@ -122,13 +126,15 @@ export class OrderController {
    */
   @Get('stats/:businessId')
   async getStats(
+    @Req() req: any,
     @Param('businessId') businessId: string,
     @Query('startDate') startDate?: string,
     @Query('endDate') endDate?: string,
   ) {
+    // Ignore the URL param — always scope to the caller's business
     const start = startDate ? new Date(startDate) : undefined;
     const end = endDate ? new Date(endDate) : undefined;
 
-    return this.orderService.getOrderStats(businessId, start, end);
+    return this.orderService.getOrderStats(req.user.business_id, start, end);
   }
 }

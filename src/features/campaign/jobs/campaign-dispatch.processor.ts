@@ -176,14 +176,10 @@ export class CampaignDispatchProcessor extends WorkerHost {
             }
 
             await this.upsertAnalytics(campaignId, businessId);
-
-            await this.campaignModel.findByIdAndUpdate(campaignId, {
-                status: CampaignStatus.COMPLETED,
-                completedAt: new Date(),
-            });
+            await this.updateCampaignStatusAfterDispatch(campaignId);
 
             this.logger.log(
-                `[Campaign ${campaignId}] Completed — sent: ${totalSent}, failed: ${totalFailed}`,
+                `[Campaign ${campaignId}] Dispatch finished — sent: ${totalSent}, immediate failed: ${totalFailed}`,
             );
         } catch (err: any) {
             this.logger.error(`[Campaign ${campaignId}] Dispatch crashed: ${err.message}`, err.stack);
@@ -424,6 +420,40 @@ export class CampaignDispatchProcessor extends WorkerHost {
                 last_synced_at: new Date(),
                 updated_at: new Date(),
             },
+        });
+    }
+
+    private async updateCampaignStatusAfterDispatch(campaignId: string): Promise<void> {
+        const [total, awaitingDelivery, failed] = await Promise.all([
+            this.prisma.campaign_recipients.count({ where: { campaign_id: campaignId } }),
+            this.prisma.campaign_recipients.count({
+                where: { campaign_id: campaignId, status: { in: ['PENDING', 'SENT'] } },
+            }),
+            this.prisma.campaign_recipients.count({ where: { campaign_id: campaignId, status: 'FAILED' } }),
+        ]);
+
+        if (total > 0 && failed === total) {
+            await this.campaignModel.findByIdAndUpdate(campaignId, {
+                $set: {
+                    status: CampaignStatus.FAILED,
+                    completedAt: new Date(),
+                    failureReason: 'All campaign send attempts failed',
+                },
+            });
+            return;
+        }
+
+        if (awaitingDelivery > 0) {
+            await this.campaignModel.findByIdAndUpdate(campaignId, {
+                $set: { status: CampaignStatus.RUNNING },
+                $unset: { completedAt: 1, failureReason: 1 },
+            });
+            return;
+        }
+
+        await this.campaignModel.findByIdAndUpdate(campaignId, {
+            $set: { status: CampaignStatus.COMPLETED, completedAt: new Date() },
+            $unset: { failureReason: 1 },
         });
     }
 

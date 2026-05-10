@@ -15,8 +15,8 @@ model businesses {
   business_name            String                     @db.VarChar(255)
   business_type            String?                    @db.VarChar(50)
   whatsapp_number          String?                    @db.VarChar(20)
-  created_at               DateTime?                  @default(now()) @db.Timestamptz(6)
-  updated_at               DateTime?                  @default(now()) @db.Timestamptz(6)
+  created_at               DateTime                   @default(now()) @db.Timestamptz(6)
+  updated_at               DateTime                   @default(now()) @db.Timestamptz(6)
   email                    String?                    @db.VarChar(255)
   phone                    String?                    @db.VarChar(20)
   website                  String?                    @db.VarChar(255)
@@ -25,9 +25,10 @@ model businesses {
   country                  String?                    @db.VarChar(100)
   gst_number               String?                    @db.VarChar(50)
   pan_number               String?                    @db.VarChar(20)
+  deleted_at               DateTime?                  @db.Timestamptz(6)
   business_employees       business_employees[]
   business_workflows       business_workflows[]
-  tenants                  tenants                    @relation(fields: [tenant_id], references: [tenant_id], onDelete: Cascade)
+  tenants                  tenants                    @relation(fields: [tenant_id], references: [tenant_id], onDelete: Restrict)
   carts                    carts[]
   catalog_items            catalog_items[]
   leads                    leads[]
@@ -39,6 +40,16 @@ model businesses {
   social_accounts          social_accounts[]
   users                    users[]
   workflow_executions      workflow_executions[]
+  billing_subscription     billing_subscriptions?     @relation("business_billing_subscription")
+  wallet                   wallets?                   @relation("business_wallet")
+  billing_payments_list    billing_payments[]         @relation("business_billing_payments")
+  billing_invoices_list    billing_invoices[]         @relation("business_billing_invoices")
+  settings                 business_settings?         @relation("business_settings")
+  audit_logs               audit_logs[]
+
+  @@index([tenant_id], map: "idx_businesses_tenant_id")
+  @@index([business_type], map: "idx_businesses_business_type")
+  @@index([deleted_at], map: "idx_businesses_deleted_at")
 }
 
 model business_employees {
@@ -48,7 +59,7 @@ model business_employees {
   email       String?    @db.VarChar(255)
   phone       String?    @db.VarChar(20)
   role        String?    @db.VarChar(100)
-  created_at  DateTime?  @default(now()) @db.Timestamptz(6)
+  created_at  DateTime   @default(now()) @db.Timestamptz(6)
   businesses  businesses @relation(fields: [business_id], references: [business_id], onDelete: Cascade)
 
   @@index([business_id], map: "idx_business_employees_business_id")
@@ -102,7 +113,7 @@ model social_accounts {
   permissions                   Json?
   token_expiry                  DateTime?         @db.Timestamptz(6)
   is_active                     Boolean?          @default(true)
-  created_at                    DateTime?         @default(now()) @db.Timestamptz(6)
+  created_at                    DateTime          @default(now()) @db.Timestamptz(6)
   follower_count                Int?
   following_count               Int?
   instagram_business_account_id String?           @db.VarChar(255)
@@ -127,21 +138,13 @@ model social_accounts {
   @@index([gupshup_app_id], map: "idx_social_accounts_gupshup_app_id")
 }
 
-model subscription_plans {
-  subscription_plan_id String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  plan_name            String    @db.VarChar(100)
-  price                Decimal?  @db.Decimal(10, 2)
-  duration_in_days     Int?
-  created_at           DateTime? @default(now()) @db.Timestamptz(6)
-}
-
 model tenants {
   tenant_id              String                   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   tenant_name            String                   @db.VarChar(255)
   email                  String                   @unique
   phone_number           String?                  @db.VarChar(20)
-  created_at             DateTime?                @default(now()) @db.Timestamptz(6)
-  updated_at             DateTime?                @default(now()) @db.Timestamptz(6)
+  created_at             DateTime                 @default(now()) @db.Timestamptz(6)
+  updated_at             DateTime                 @default(now()) @db.Timestamptz(6)
   address                String?                  @db.VarChar(255)
   gst_number             String?                  @db.VarChar(20)
   pan_number             String?                  @db.VarChar(20)
@@ -164,8 +167,9 @@ model users {
   phone_number               String           @db.VarChar(20)
   is_active                  Boolean?         @default(true)
   profile_completed          Boolean?         @default(false)
-  created_at                 DateTime?        @default(now()) @db.Timestamptz(6)
-  updated_at                 DateTime?        @default(now()) @db.Timestamptz(6)
+  deleted_at                 DateTime?        @db.Timestamptz(6)
+  created_at                 DateTime         @default(now()) @db.Timestamptz(6)
+  updated_at                 DateTime         @default(now()) @db.Timestamptz(6)
   role_id                    String           @db.Uuid
   account_locked_until       DateTime?        @db.Timestamptz(6)
   email_verification_expires DateTime?        @db.Timestamptz(6)
@@ -183,6 +187,11 @@ model users {
   notifications              notifications[]
   businesses                 businesses       @relation(fields: [business_id], references: [business_id], onDelete: Cascade)
   roles                      roles            @relation(fields: [role_id], references: [role_id])
+  audit_logs                 audit_logs[]
+
+  @@index([business_id], map: "idx_users_business_id")
+  @@index([role_id], map: "idx_users_role_id")
+  @@index([deleted_at], map: "idx_users_deleted_at")
 }
 
 /// Lead table — slim, fast, owner-dashboard oriented
@@ -298,6 +307,7 @@ model customers {
   total_spent              Decimal                    @default(0) @db.Decimal(10, 2)
   last_order_date          DateTime?                  @db.Timestamptz(6)
   engagement_score         Int                        @default(10)
+  deleted_at               DateTime?                  @db.Timestamptz(6)
   created_at               DateTime                   @default(now()) @db.Timestamptz(6)
   updated_at               DateTime                   @default(now()) @db.Timestamptz(6)
   platform_user_id         String?                    @db.VarChar(255)
@@ -316,6 +326,7 @@ model customers {
   @@index([engagement_score], map: "idx_customers_engagement")
   @@index([total_spent], map: "idx_customers_total_spent")
   @@index([last_order_date], map: "idx_customers_last_order")
+  @@index([deleted_at], map: "idx_customers_deleted_at")
 }
 
 /// Orders - purchases and enrollments (Enhanced for E-commerce)
@@ -325,7 +336,6 @@ model orders {
   tenant_id           String        @db.Uuid
   lead_id             String?       @db.Uuid
   order_type          String        @db.VarChar(50)
-  items               Json?
   total_amount        Decimal       @db.Decimal(10, 2)
   payment_status      String        @default("pending") @db.VarChar(20)
   payment_id          String?       @db.VarChar(255)
@@ -363,6 +373,8 @@ model orders {
   leads               leads?        @relation(fields: [lead_id], references: [lead_id])
   payments            payments[]
 
+  @@index([business_id, created_at(sort: Desc)], map: "idx_orders_business_created")
+  @@index([business_id, status], map: "idx_orders_business_status")
   @@index([business_id, payment_status], map: "idx_orders_business_payment_status")
   @@index([lead_id], map: "idx_orders_lead_id")
   @@index([customer_id], map: "idx_orders_customer_id")
@@ -417,7 +429,10 @@ model cart_reservations {
   @@index([expires_at], map: "idx_cart_reservations_expires_at")
 }
 
-/// Campaigns - marketing campaigns
+/// Campaigns - notification/scheduling campaigns stored in PostgreSQL.
+/// NOTE: The primary campaign system (create, launch, dispatch) lives in MongoDB (CampaignService uses Mongoose).
+/// This table is used by notification_templates for scheduling. campaign_recipients and campaign_analytics
+/// reference MongoDB campaign ObjectIDs (24-char hex), not the UUID campaign_id here.
 model campaigns {
   campaign_id                String                  @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   business_id                String                  @db.Uuid
@@ -458,7 +473,9 @@ model campaigns {
   @@index([template_id], map: "idx_campaigns_template_id")
 }
 
-/// Campaign recipients - tracks WhatsApp campaign delivery and engagement
+/// Campaign recipients - tracks WhatsApp campaign delivery and engagement.
+/// campaign_id stores the MongoDB ObjectID (24-char hex) from the MongoDB campaigns collection,
+/// NOT the UUID from the PostgreSQL campaigns table. No FK is intentional (cross-DB reference).
 model campaign_recipients {
   id                  BigInt    @id @default(autoincrement())
   campaign_id         String    @db.VarChar(24)
@@ -483,6 +500,7 @@ model campaign_recipients {
   @@index([business_id], map: "idx_campaign_recipients_business")
   @@index([campaign_id, status], map: "idx_campaign_recipients_status")
   @@index([whatsapp_message_id], map: "idx_campaign_recipients_wa_msg_id")
+  @@index([campaign_id, business_id], map: "idx_campaign_recipients_campaign_business")
 }
 
 /// Notification Templates - Reusable message templates
@@ -570,7 +588,6 @@ model notification_messages {
   @@index([related_entity_type, related_entity_id], map: "idx_notification_messages_related_entity")
   @@index([scheduled_at], map: "idx_notification_messages_scheduled_at")
   @@index([created_at], map: "idx_notification_messages_created_at")
-  @@index([status], map: "idx_notification_messages_pending")
 }
 
 /// Notification Preferences - User/Customer notification settings
@@ -809,8 +826,8 @@ model cart_items {
   unit_price   Decimal        @db.Decimal(10, 2)
   total_price  Decimal        @db.Decimal(10, 2)
   snapshot     Json?          @db.Json
-  created_at   DateTime?      @default(now()) @db.Timestamptz(6)
-  updated_at   DateTime?      @default(now()) @db.Timestamptz(6)
+  created_at   DateTime       @default(now()) @db.Timestamptz(6)
+  updated_at   DateTime       @default(now()) @db.Timestamptz(6)
   carts        carts          @relation(fields: [cart_id], references: [cart_id], onDelete: Cascade, onUpdate: NoAction)
   catalog_item catalog_items  @relation(fields: [item_id], references: [item_id], onDelete: Cascade, onUpdate: NoAction)
   item_variant item_variants? @relation(fields: [variant_id], references: [variant_id], onUpdate: NoAction)
@@ -831,8 +848,8 @@ model carts {
   total_amount Decimal?     @default(0) @db.Decimal(10, 2)
   total_items  Int?         @default(0)
   expires_at   DateTime?    @db.Timestamptz(6)
-  created_at   DateTime?    @default(now()) @db.Timestamptz(6)
-  updated_at   DateTime?    @default(now()) @db.Timestamptz(6)
+  created_at   DateTime     @default(now()) @db.Timestamptz(6)
+  updated_at   DateTime     @default(now()) @db.Timestamptz(6)
   customer_id  String?      @db.Uuid
   cart_items   cart_items[]
   businesses   businesses   @relation(fields: [business_id], references: [business_id], onDelete: Cascade, onUpdate: NoAction)
@@ -880,6 +897,7 @@ model campaign_analytics {
 
 model hotel_pricing_recommendations {
   id                   String                   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  business_id          String?                  @db.Uuid
   hotel_id             String                   @db.VarChar(50)
   org_id               String                   @db.VarChar(255)
   room_type            String                   @db.VarChar(100)
@@ -899,10 +917,12 @@ model hotel_pricing_recommendations {
 
   @@index([hotel_id, checkin_date])
   @@index([org_id])
+  @@index([business_id])
 }
 
 model hotel_booking_outcomes {
   id                String                        @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  business_id       String?                       @db.Uuid
   recommendation_id String                        @db.Uuid
   hotel_id          String                        @db.VarChar(50)
   org_id            String                        @db.VarChar(255)
@@ -920,18 +940,20 @@ model hotel_booking_outcomes {
 }
 
 model hotel_pricing_notifications {
-  id         String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  org_id     String    @db.VarChar(255)
-  hotel_id   String    @db.VarChar(50)
-  type       String    @db.VarChar(50)
-  title      String    @db.VarChar(255)
-  body       String
-  metadata   Json?
-  read_at    DateTime?
-  created_at DateTime  @default(now()) @db.Timestamptz(6)
+  id          String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  business_id String?   @db.Uuid
+  org_id      String    @db.VarChar(255)
+  hotel_id    String    @db.VarChar(50)
+  type        String    @db.VarChar(50)
+  title       String    @db.VarChar(255)
+  body        String
+  metadata    Json?
+  read_at     DateTime?
+  created_at  DateTime  @default(now()) @db.Timestamptz(6)
 
   @@index([org_id, created_at(sort: Desc)])
   @@index([hotel_id])
+  @@index([business_id])
 }
 
 /// catalog_items - single table for all sellable items across all business types
@@ -1020,13 +1042,17 @@ model item_availability {
 
 model checkpoint_blobs {
   thread_id     String
-  checkpoint_ns String @default("")
+  checkpoint_ns String    @default("")
   channel       String
   version       String
   type          String
   blob          Bytes?
+  business_id   String?   @db.Uuid
+  expires_at    DateTime? @db.Timestamptz(6)
 
   @@id([thread_id, checkpoint_ns, channel, version])
+  @@index([business_id])
+  @@index([expires_at])
 }
 
 model checkpoint_migrations {
@@ -1035,25 +1061,207 @@ model checkpoint_migrations {
 
 model checkpoint_writes {
   thread_id     String
-  checkpoint_ns String  @default("")
+  checkpoint_ns String    @default("")
   checkpoint_id String
   task_id       String
   idx           Int
   channel       String
   type          String?
   blob          Bytes
+  business_id   String?   @db.Uuid
+  expires_at    DateTime? @db.Timestamptz(6)
 
   @@id([thread_id, checkpoint_ns, checkpoint_id, task_id, idx])
+  @@index([business_id])
+  @@index([expires_at])
 }
 
 model checkpoints {
   thread_id            String
-  checkpoint_ns        String  @default("")
+  checkpoint_ns        String    @default("")
   checkpoint_id        String
   parent_checkpoint_id String?
   type                 String?
   checkpoint           Json
-  metadata             Json    @default("{}")
+  metadata             Json      @default("{}")
+  business_id          String?   @db.Uuid
+  expires_at           DateTime? @db.Timestamptz(6)
 
   @@id([thread_id, checkpoint_ns, checkpoint_id])
+  @@index([business_id])
+  @@index([expires_at])
+}
+
+// ─── BILLING SYSTEM ───────────────────────────────────────────────────────────
+
+model billing_plans {
+  plan_id               String                  @id @db.VarChar(50)
+  razorpay_plan_id      String?                 @unique @db.VarChar(100)
+  name                  String                  @db.VarChar(100)
+  business_type         String                  @db.VarChar(30)
+  tier                  String                  @db.VarChar(20)
+  amount                Int
+  interval              String                  @db.VarChar(20)
+  interval_count        Int                     @default(1)
+  initial_credits       Decimal                 @default(0) @db.Decimal(12, 2)
+  features              Json
+  is_active             Boolean                 @default(true)
+  created_at            DateTime                @default(now()) @db.Timestamptz(6)
+  billing_subscriptions billing_subscriptions[]
+
+  @@index([business_type, interval, is_active])
+}
+
+model billing_subscriptions {
+  subscription_id          String             @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  business_id              String             @unique @db.Uuid
+  plan_id                  String             @db.VarChar(50)
+  razorpay_subscription_id String?            @unique @db.VarChar(100)
+  status                   String             @db.VarChar(30)
+  current_period_start     DateTime?          @db.Timestamptz(6)
+  current_period_end       DateTime?          @db.Timestamptz(6)
+  trial_end                DateTime?          @db.Timestamptz(6)
+  pause_start              DateTime?          @db.Timestamptz(6)
+  pause_end                DateTime?          @db.Timestamptz(6)
+  cancel_at_period_end     Boolean            @default(false)
+  cancelled_at             DateTime?          @db.Timestamptz(6)
+  metadata                 Json?
+  created_at               DateTime           @default(now()) @db.Timestamptz(6)
+  updated_at               DateTime           @default(now()) @db.Timestamptz(6)
+  businesses               businesses         @relation("business_billing_subscription", fields: [business_id], references: [business_id])
+  plan                     billing_plans      @relation(fields: [plan_id], references: [plan_id])
+  billing_invoices         billing_invoices[]
+
+  @@index([status])
+  @@index([razorpay_subscription_id])
+  @@index([plan_id])
+  @@index([current_period_end])
+}
+
+model wallets {
+  wallet_id    String                @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  business_id  String                @unique @db.Uuid
+  balance      Decimal               @default(0) @db.Decimal(12, 2)
+  currency     String                @default("INR") @db.VarChar(10)
+  created_at   DateTime              @default(now()) @db.Timestamptz(6)
+  updated_at   DateTime              @default(now()) @db.Timestamptz(6)
+  businesses   businesses            @relation("business_wallet", fields: [business_id], references: [business_id])
+  transactions wallet_transactions[]
+}
+
+model wallet_transactions {
+  txn_id         String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  wallet_id      String   @db.Uuid
+  type           String   @db.VarChar(10)
+  amount         Decimal  @db.Decimal(12, 2)
+  balance_before Decimal  @db.Decimal(12, 2)
+  balance_after  Decimal  @db.Decimal(12, 2)
+  description    String   @db.VarChar(255)
+  reference_id   String?  @db.VarChar(100)
+  reference_type String?  @db.VarChar(50)
+  action_type    String?  @db.VarChar(50)
+  status         String   @default("completed") @db.VarChar(20)
+  metadata       Json?
+  created_at     DateTime @default(now()) @db.Timestamptz(6)
+  wallet         wallets  @relation(fields: [wallet_id], references: [wallet_id])
+
+  @@index([wallet_id, created_at(sort: Desc)])
+  @@index([reference_id])
+}
+
+model billing_payments {
+  payment_id          String     @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  business_id         String     @db.Uuid
+  razorpay_payment_id String     @unique @db.VarChar(100)
+  razorpay_order_id   String?    @db.VarChar(100)
+  amount              Int
+  type                String     @db.VarChar(30)
+  status              String     @db.VarChar(20)
+  idempotency_key     String     @unique @db.VarChar(100)
+  metadata            Json?
+  created_at          DateTime   @default(now()) @db.Timestamptz(6)
+  businesses          businesses @relation("business_billing_payments", fields: [business_id], references: [business_id])
+
+  @@index([business_id, created_at(sort: Desc)])
+}
+
+model billing_invoices {
+  invoice_id          String                 @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  business_id         String                 @db.Uuid
+  subscription_id     String?                @db.Uuid
+  razorpay_invoice_id String?                @db.VarChar(100)
+  subtotal            Int
+  tax_amount          Int
+  total_amount        Int
+  status              String                 @db.VarChar(20)
+  pdf_url             String?                @db.VarChar(500)
+  due_date            DateTime?              @db.Date
+  paid_at             DateTime?              @db.Timestamptz(6)
+  created_at          DateTime               @default(now()) @db.Timestamptz(6)
+  businesses          businesses             @relation("business_billing_invoices", fields: [business_id], references: [business_id])
+  subscription        billing_subscriptions? @relation(fields: [subscription_id], references: [subscription_id])
+
+  @@index([business_id, created_at(sort: Desc)])
+}
+
+model billing_webhook_events {
+  event_id          String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  provider          String    @db.VarChar(30)
+  event_type        String    @db.VarChar(100)
+  razorpay_event_id String?   @unique @db.VarChar(150)
+  payload           Json
+  status            String    @default("pending") @db.VarChar(20)
+  attempts          Int       @default(0)
+  error             String?
+  processed_at      DateTime? @db.Timestamptz(6)
+  created_at        DateTime  @default(now()) @db.Timestamptz(6)
+
+  @@index([status, created_at])
+}
+
+model credit_pricing {
+  action_type String   @id @db.VarChar(50)
+  cost        Decimal  @db.Decimal(8, 4)
+  description String   @db.VarChar(255)
+  is_active   Boolean  @default(true)
+  updated_at  DateTime @default(now()) @db.Timestamptz(6)
+}
+
+// ─── BUSINESS SETTINGS ────────────────────────────────────────────────────────
+
+model business_settings {
+  business_id        String     @id @db.Uuid
+  timezone           String     @default("Asia/Kolkata") @db.VarChar(50)
+  language           String     @default("en") @db.VarChar(10)
+  currency           String     @default("INR") @db.VarChar(10)
+  business_hours     Json?
+  onboarding_step    Int        @default(0)
+  onboarding_done    Boolean    @default(false)
+  ai_agent_enabled   Boolean    @default(true)
+  auto_reply_enabled Boolean    @default(true)
+  low_balance_alert  Decimal    @default(100) @db.Decimal(10, 2)
+  updated_at         DateTime   @default(now()) @db.Timestamptz(6)
+  businesses         businesses @relation("business_settings", fields: [business_id], references: [business_id], onDelete: Cascade)
+}
+
+// ─── AUDIT LOG ────────────────────────────────────────────────────────────────
+
+model audit_logs {
+  log_id      String     @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  business_id String     @db.Uuid
+  user_id     String?    @db.Uuid
+  action      String     @db.VarChar(100)
+  entity_type String     @db.VarChar(100)
+  entity_id   String?    @db.VarChar(100)
+  old_values  Json?
+  new_values  Json?
+  ip_address  String?    @db.VarChar(45)
+  user_agent  String?
+  created_at  DateTime   @default(now()) @db.Timestamptz(6)
+  businesses  businesses @relation(fields: [business_id], references: [business_id], onDelete: Cascade)
+  users       users?     @relation(fields: [user_id], references: [user_id])
+
+  @@index([business_id, created_at(sort: Desc)], map: "idx_audit_logs_business_created")
+  @@index([entity_type, entity_id], map: "idx_audit_logs_entity")
+  @@index([user_id], map: "idx_audit_logs_user_id")
 }

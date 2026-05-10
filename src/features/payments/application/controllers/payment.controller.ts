@@ -5,20 +5,16 @@ import {
   Body,
   Param,
   Query,
+  Req,
   UseGuards,
   HttpStatus,
   HttpCode,
   Logger,
-  Headers,
-  RawBodyRequest,
-  Req,
 } from '@nestjs/common';
-import { Request } from 'express';
 import { PaymentService } from '../services/payment.service';
-import { PaymentWebhookService } from '../services/payment-webhook.service';
 import { CreatePaymentDto } from '../dto/create-payment.dto';
 import { PaymentQueryDto } from '../dto/payment-query.dto';
-import { VerifyPaymentSignatureDto, PaymentWebhookDto } from '../dto/payment-webhook.dto';
+import { VerifyPaymentSignatureDto } from '../dto/payment-webhook.dto';
 import { CreateRefundDto } from '../dto/refund-payment.dto';
 import { JwtAuthGuard } from '../../../../common/guards/jwt-auth.guard';
 
@@ -31,10 +27,7 @@ import { JwtAuthGuard } from '../../../../common/guards/jwt-auth.guard';
 export class PaymentController {
   private readonly logger = new Logger(PaymentController.name);
 
-  constructor(
-    private readonly paymentService: PaymentService,
-    private readonly webhookService: PaymentWebhookService,
-  ) {}
+  constructor(private readonly paymentService: PaymentService) {}
 
   /**
    * POST /payments
@@ -155,51 +148,16 @@ export class PaymentController {
   }
 
   /**
-   * POST /payments/webhook
-   * Razorpay webhook endpoint
-   * No authentication (uses signature verification instead)
-   * Must accept raw body for signature verification
-   */
-  @Post('webhook')
-  @HttpCode(HttpStatus.OK)
-  async handleWebhook(
-    @Headers('x-razorpay-signature') signature: string,
-    @Body() webhookDto: PaymentWebhookDto,
-    @Req() req: RawBodyRequest<Request>,
-  ) {
-    try {
-      this.logger.log(`Received webhook: ${webhookDto.event}`);
-
-      // Get raw body for signature verification
-      // Note: NestJS needs raw body parser configured for this to work
-      const rawBody = req.rawBody ? req.rawBody.toString('utf8') : JSON.stringify(webhookDto);
-
-      const result = await this.webhookService.processWebhook(
-        rawBody,
-        signature,
-        webhookDto,
-      );
-
-      return result;
-    } catch (error) {
-      this.logger.error(`Webhook processing failed: ${error.message}`, error.stack);
-      // Return 200 even on error to prevent Razorpay from retrying invalid webhooks
-      return {
-        success: false,
-        message: error.message,
-      };
-    }
-  }
-
-  /**
    * GET /payments
    * Get all payments with filtering and pagination
    */
   @Get()
   @UseGuards(JwtAuthGuard)
   @HttpCode(HttpStatus.OK)
-  async findAll(@Query() query: PaymentQueryDto) {
+  async findAll(@Req() req: any, @Query() query: PaymentQueryDto) {
     try {
+      // CRITICAL-2: Always scope to caller's business — never trust query param
+      query.business_id = req.user.business_id;
       this.logger.log(`Fetching payments with filters: ${JSON.stringify(query)}`);
       const result = await this.paymentService.findAll(query);
 
@@ -229,23 +187,16 @@ export class PaymentController {
   @UseGuards(JwtAuthGuard)
   @HttpCode(HttpStatus.OK)
   async getAnalytics(
-    @Query('business_id') businessId: string,
+    @Req() req: any,
     @Query('from_date') fromDate?: string,
     @Query('to_date') toDate?: string,
   ) {
     try {
-      this.logger.log(`Fetching payment analytics for business: ${businessId}`);
-
+      const businessId: string = req.user.business_id;
       const from = fromDate ? new Date(fromDate) : undefined;
       const to = toDate ? new Date(toDate) : undefined;
-
       const analytics = await this.paymentService.getPaymentAnalytics(businessId, from, to);
-
-      return {
-        success: true,
-        message: 'Payment analytics retrieved successfully',
-        data: analytics,
-      };
+      return { success: true, message: 'Payment analytics retrieved successfully', data: analytics };
     } catch (error) {
       this.logger.error(`Failed to fetch analytics: ${error.message}`, error.stack);
       throw error;

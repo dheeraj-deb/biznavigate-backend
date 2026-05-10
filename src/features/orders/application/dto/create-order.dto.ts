@@ -19,7 +19,7 @@ import { OrderSource, PaymentMethod } from '../../domain/entities/order.entity';
 export class CreateOrderItemDto {
   @IsUUID()
   @IsNotEmpty()
-  product_id: string;
+  item_id: string;
 
   @IsUUID()
   @IsOptional()
