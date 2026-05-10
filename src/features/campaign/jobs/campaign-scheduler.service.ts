@@ -30,7 +30,7 @@ export class CampaignSchedulerService implements OnModuleInit {
      * Called from CampaignService when a campaign is scheduled.
      * Adds a delayed BullMQ job that fires exactly at sendAt.
      */
-    async scheduleCampaign(campaignId: string, businessId: string, sendAt: Date): Promise<void> {
+    async scheduleCampaign(campaignId: string, businessId: string, sendAt: Date, timezone?: string): Promise<void> {
         const delay = Math.max(0, sendAt.getTime() - Date.now());
 
         await this.dispatchQueue.add(
@@ -47,7 +47,7 @@ export class CampaignSchedulerService implements OnModuleInit {
         );
 
         this.logger.log(
-            `Campaign ${campaignId} scheduled — fires in ${Math.round(delay / 1000)}s at ${sendAt.toISOString()}`,
+            `Campaign ${campaignId} scheduled — fires in ${Math.round(delay / 1000)}s at ${sendAt.toISOString()}${timezone ? ` (${timezone})` : ''}`,
         );
     }
 
@@ -74,6 +74,7 @@ export class CampaignSchedulerService implements OnModuleInit {
                 String(c._id),
                 c.businessId,
                 new Date(c.schedule.sendAt),
+                c.schedule.timezone,
             );
         }
     }
