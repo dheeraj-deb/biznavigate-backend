@@ -73,14 +73,32 @@ async function bootstrap() {
   );
 
   // Enable CORS with restrictions
-  const allowedOrigins = (process.env.ALLOWED_ORIGINS || 'http://localhost:5173')
-    .split(',')
-    .map(o => o.trim());
+  const allowedOrigins = [
+    process.env.ALLOWED_ORIGINS,
+    process.env.CORS_ORIGIN,
+    process.env.FRONTEND_URL,
+    'https://app.biznavigo.com',
+    'http://localhost:5173',
+    'http://localhost:3000',
+  ]
+    .filter(Boolean)
+    .flatMap((origins) => origins.split(','))
+    .map((origin) => origin.trim())
+    .filter(Boolean);
+  const uniqueAllowedOrigins = [...new Set(allowedOrigins)];
+
   app.enableCors({
-    origin: allowedOrigins,
+    origin: (origin, callback) => {
+      if (!origin || uniqueAllowedOrigins.includes('*') || uniqueAllowedOrigins.includes(origin)) {
+        return callback(null, true);
+      }
+
+      return callback(null, false);
+    },
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With'],
+    optionsSuccessStatus: 204,
   });
 
   // Static files
