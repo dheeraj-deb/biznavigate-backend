@@ -924,11 +924,12 @@ const config = {
     "db"
   ],
   "activeProvider": "postgresql",
+  "postinstall": false,
   "inlineDatasources": {
     "db": {
       "url": {
         "fromEnvVar": "DATABASE_URL",
-        "value": "postgresql://pxydmqaoubsdafvctgis:uvfxlpxrfpqomingmvukcdoiplibdk@9qasp5v56q8ckkf5dc.leapcellpool.com:6438/lkwbodzpsbufwkztipoa?sslmode=require"
+        "value": null
       }
     }
   },
