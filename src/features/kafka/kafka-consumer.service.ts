@@ -35,6 +35,11 @@ export class KafkaConsumerService {
    * Start consuming messages
    */
   async consume() {
+    if (!this.kafkaService.isConnected()) {
+      this.logger.warn("Kafka consumer not started because Kafka is not connected");
+      return;
+    }
+
     const consumer = this.kafkaService.getConsumer();
 
     // Subscribe to topics
@@ -357,6 +362,10 @@ export class KafkaConsumerService {
    * Disconnect consumer
    */
   async disconnect() {
+    if (!this.kafkaService.isConnected()) {
+      return;
+    }
+
     const consumer = this.kafkaService.getConsumer();
     await consumer.disconnect();
     this.logger.log("Kafka consumer disconnected");
