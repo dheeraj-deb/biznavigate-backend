@@ -166,6 +166,13 @@ export class KafkaProducerService {
    */
   private async publishEvent(topic: string, event: any, key?: string) {
     try {
+      if (!this.kafkaService.isConnected()) {
+        this.logger.warn(
+          `Skipped publishing ${event.event_type} to ${topic} because Kafka is not connected`,
+        );
+        return;
+      }
+
       const producer = this.kafkaService.getProducer();
       
       const kafkaevt = await producer.send({
@@ -195,6 +202,11 @@ export class KafkaProducerService {
    */
   async publishBatch(topic: string, events: any[]) {
     try {
+      if (!this.kafkaService.isConnected()) {
+        this.logger.warn(`Skipped publishing batch to ${topic} because Kafka is not connected`);
+        return;
+      }
+
       const producer = this.kafkaService.getProducer();
       
       const messages = events.map((event) => ({
