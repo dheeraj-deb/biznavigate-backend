@@ -12,45 +12,22 @@ import { CacheModule } from "@nestjs/cache-manager";
 // import { RedisOptions } from "./config/redis.config";
 import * as redisStore from "cache-manager-ioredis";
 import { BullMQModule } from "./config/bullmq.module";
-import { TenantsModule } from "./features/tenants/tenants.module";
-import { BusinessesModule } from "./features/business/business.module";
-import { RolesModule } from "./features/roles/role.module";
-import { UsersModule } from "./features/users/user.module";
-import { LeadModule } from "./features/lead/lead.module";
-import { AuthModule } from "./features/auth/auth.module";
 import { KafkaModule } from "./features/kafka/kafka.module";
-import { WhatsAppModule } from "./features/whatsapp/whatsapp.module";
-import { InstagramModule } from "./features/instagram/instagram.module";
-import { ChatWidgetModule } from "./features/chat-widget/chat-widget.module";
-import { WorkflowsModule } from "./features/workflows/workflows.module";
 // import { UploadsModule } from "./features/uploads/uploads.module";
-import { CustomersModule } from "./features/customers/customers.module";
-import { OrdersModule } from "./features/orders/orders.module";
-import { PaymentsModule } from "./features/payments/payments.module";
-import { NotificationsModule } from "./features/notifications/notifications.module";
-import { CatalogModule } from "./features/catalog/catalog.module";
-import { AnalyticsModule } from "./features/analytics/analytics.module";
-import { TemplatesModule } from "./features/notification-templates/templates.module";
-import { ContactsModule } from "./features/contacts/contacts.module";
 import { ServeStaticModule } from "@nestjs/serve-static";
 import { join } from "path";
 import { MongooseModule } from "@nestjs/mongoose";
 import { ConfigModule, ConfigService } from "@nestjs/config";
 import { EventEmitterModule } from "@nestjs/event-emitter";
 import { ScheduleModule } from "@nestjs/schedule";
-import { CampaignModule } from "./features/campaign/campaign.module";
-import { InboxModule } from "./features/inbox/inbox.module";
-import { GatewayModule } from "./features/inbox/gateway/gateway.module";
-import { HumanHandoffModule } from "./features/human-handoff/human-handoff.module";
-import { HotelPricingModule } from "./features/hotel-pricing/hotel-pricing.module";
-import { S3Module } from "./s3/s3.module";
-import { AgentModule } from "./features/agent/agent.module";
-import { GupshupModule } from "./features/gupshup/gupshup.module";
-import { InventoryModule } from "./features/inventory/inventory.module";
-import { RagModule } from "./features/rag/rag.module";
-import { BillingModule } from "./features/billing/billing.module";
-import { AuditLogModule } from "./features/audit-log/audit-log.module";
-import { BusinessSettingsModule } from "./features/business-settings/business-settings.module";
+import { CommerceModule } from "./features/commerce/commerce.module";
+import { HospitalityIndustryModule } from "./features/industries/hospitality/hospitality-industry.module";
+import { CrmModule } from "./features/crm/crm.module";
+import { EngagementModule } from "./features/engagement/engagement.module";
+import { AutomationModule } from "./features/automation/automation.module";
+import { PlatformModule } from "./features/platform/platform.module";
+import { AiModule } from "./features/ai/ai.module";
+import { InsightsModule } from "./features/insights/insights.module";
 
 @Module({
   imports: [
@@ -105,32 +82,27 @@ import { BusinessSettingsModule } from "./features/business-settings/business-se
     LoggerModule,
     PrismaModule,
     BullMQModule,
-    AuthModule,
-    TenantsModule,
-    BusinessesModule,
-    RolesModule,
-    UsersModule,
-    LeadModule,
+    PlatformModule,
     // UploadsModule,
-    CustomersModule,
-    OrdersModule,
-    PaymentsModule,
-    NotificationsModule,
-    CatalogModule,
-    AnalyticsModule,
-    TemplatesModule,
-    ContactsModule,
-    InstagramModule,
-    S3Module,
-    AgentModule,
-    GupshupModule,
-    InventoryModule,
-    RagModule,
-    BillingModule,
-    AuditLogModule,
-    BusinessSettingsModule,
     ...(process.env.MONGODB_URI
-      ? [KafkaModule, CampaignModule, InboxModule, GatewayModule, HumanHandoffModule, WhatsAppModule, ChatWidgetModule, WorkflowsModule, HotelPricingModule]
+      ? [CrmModule.withRealtime()]
+      : [CrmModule]),
+    ...(process.env.MONGODB_URI
+      ? [EngagementModule.withChannels()]
+      : [EngagementModule]),
+    CommerceModule,
+    ...(process.env.MONGODB_URI
+      ? [HospitalityIndustryModule.withPricing()]
+      : [HospitalityIndustryModule]),
+    InsightsModule,
+    ...(process.env.MONGODB_URI
+      ? [AiModule.withRag()]
+      : [AiModule]),
+    ...(process.env.MONGODB_URI
+      ? [AutomationModule.withWorkflows()]
+      : [AutomationModule]),
+    ...(process.env.MONGODB_URI
+      ? [KafkaModule]
       : []),
   ],
   providers: [

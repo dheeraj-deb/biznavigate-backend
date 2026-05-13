@@ -3,7 +3,8 @@ import * as https from 'node:https';
 import * as http from 'node:http';
 import * as sharp from 'sharp';
 import { PrismaService } from '../../prisma/prisma.service';
-import { CatalogService } from '../catalog/catalog.service';
+import { CatalogService } from '../commerce/catalog/catalog.service';
+import { HospitalityBookingCommandService } from '../industries/hospitality/bookings/application/services/hospitality-booking-command.service';
 
 @Injectable()
 export class HospitalityFlowService {
@@ -12,7 +13,19 @@ export class HospitalityFlowService {
   constructor(
     private readonly prisma: PrismaService,
     private readonly catalogService: CatalogService,
+    private readonly hospitalityBookingCommandService: HospitalityBookingCommandService,
   ) { }
+
+  private successResponse(params: Record<string, any>) {
+    return {
+      screen: 'SUCCESS',
+      data: {
+        extension_message_response: {
+          params,
+        },
+      },
+    };
+  }
 
   async handleInit(data: any, businessId?: string, flowToken?: string) {
     this.logger.log(`Hospitality INIT for business ${businessId}`);
@@ -107,7 +120,14 @@ export class HospitalityFlowService {
     const [service, business] = await Promise.all([
       this.prisma.catalog_items.findFirst({
         where: { item_id: service_id, deleted_at: null },
-        select: { name: true, description: true, image_urls: true, base_price: true, attributes: true },
+        select: {
+          name: true,
+          description: true,
+          image_urls: true,
+          base_price: true,
+          attributes: true,
+          hospitality_detail: true,
+        },
       }),
       businessId
         ? this.prisma.businesses.findUnique({
@@ -151,17 +171,27 @@ export class HospitalityFlowService {
         : 'Fully booked';
 
     // --- facilities from attributes.amenities ---
-    const attrs = service?.attributes as Record<string, any> | null;
+    const attrs = {
+      ...((service?.attributes as Record<string, any> | null) ?? {}),
+      ...((service?.hospitality_detail?.metadata as Record<string, any> | null) ?? {}),
+      ...(service?.hospitality_detail
+        ? {
+            amenities: service.hospitality_detail.amenities,
+            capacity: service.hospitality_detail.capacity,
+            total_units: service.hospitality_detail.total_units,
+          }
+        : {}),
+    };
     const amenities = attrs?.amenities ?? {};
     // amenities can be { "Bathroom": ["Bidet", "Towels"], "Bedroom": ["Wardrobe"] }
     // or a flat string[]
     let facilitiesGroups: Array<{ category: string; items: string[] }> = [];
     if (Array.isArray(amenities)) {
-      facilitiesGroups = amenities.length ? [{ category: 'Amenities', items: amenities }] : [];
+      facilitiesGroups = amenities.length ? [{ category: 'Amenities', items: amenities.map(String) }] : [];
     } else if (typeof amenities === 'object') {
       facilitiesGroups = Object.entries(amenities).map(([cat, items]) => ({
         category: cat,
-        items: Array.isArray(items) ? items : [String(items)],
+        items: Array.isArray(items) ? items.map(String) : [String(items)],
       }));
     }
     const facilitiesText = facilitiesGroups
@@ -330,107 +360,15 @@ export class HospitalityFlowService {
   }
 
   private async createBooking(data: any, businessId?: string) {
-    const {
-      service_id, check_in, check_out,
-      guest_name, phone, num_guests, age, address, pin_code, _flowContext, hold_id,
-    } = data;
-
-    const customerPhone = _flowContext?.customerPhone || phone;
-    const leadId = _flowContext?.leadId;
-
-    // Look up item to get price
-    const catalogItem = await this.prisma.catalog_items.findFirst({
-      where: { item_id: service_id, deleted_at: null },
-      select: { base_price: true, name: true, tenant_id: true },
+    const response = await this.hospitalityBookingCommandService.createBooking({
+      ...data,
+      business_id: businessId ?? data?.business_id,
+      source: 'whatsapp',
+      actor: 'ai',
     });
 
-    const nights = Math.ceil(
-      (new Date(check_out).getTime() - new Date(check_in).getTime()) / 86_400_000,
-    );
-    const totalAmount = Number(catalogItem?.base_price ?? 0) * Math.max(nights, 1);
-
-    // Create order as the booking record
-    const booking = await this.prisma.orders.create({
-      data: {
-        business_id: businessId ?? '',
-        tenant_id: catalogItem?.tenant_id ?? '',
-        lead_id: leadId ?? null,
-        order_type: 'accommodation',
-        total_amount: totalAmount,
-        payment_status: 'pending',
-        delivery_status: 'confirmed',
-      },
-    });
-
-    // Persist booking details as order item
-    await this.prisma.order_items.create({
-      data: {
-        order_id: booking.order_id,
-        item_id: service_id,
-        product_name: catalogItem?.name ?? '',
-        quantity: Math.max(nights, 1),
-        unit_price: catalogItem?.base_price ?? 0,
-        total_price: totalAmount,
-        discount: 0,
-        snapshot: {
-          check_in,
-          check_out,
-          nights,
-          guest_name,
-          phone: customerPhone,
-          num_guests: Number(num_guests) || 1,
-          age: age ? Number(age) : null,
-          address: address ?? null,
-          pin_code: pin_code ?? null,
-        } as any,
-      },
-    });
-
-    // Increment booked_slots in item_availability for each date
-    await this.prisma.$executeRaw`
-      UPDATE item_availability
-      SET booked_slots = booked_slots + 1, updated_at = NOW()
-      WHERE item_id = ${service_id}::uuid
-        AND date >= ${check_in}::date
-        AND date < ${check_out}::date
-    `;
-
-    // Update lead status + write lead_event
-    if (leadId && businessId) {
-      await this.prisma.$transaction([
-        this.prisma.leads.update({
-          where: { lead_id: leadId },
-          data: { status: 'booked', updated_at: new Date() },
-        }),
-        this.prisma.lead_events.create({
-          data: {
-            lead_id: leadId,
-            business_id: businessId,
-            type: 'booked',
-            actor: 'ai',
-            data: {
-              booking_id: booking.order_id,
-              check_in: check_in,
-              check_out: check_out,
-            } as any,
-          },
-        }),
-      ]);
-    }
-
-    this.logger.log(`Order/booking created: ${booking.order_id}`);
-
-    return {
-      screen: 'SUCCESS',
-      data: {
-        extension_message_response: {
-          params: {
-            flow_token: data.flow_token ?? '',
-            booking_id: booking.order_id,
-          },
-        },
-      },
-    };
+    this.logger.log(`Order/booking created: ${response.legacy_order_id}`);
+    return this.successResponse(response);
   }
 
   private fetchImageAsBase64(url: string, maxBytes = Infinity): Promise<string> {
