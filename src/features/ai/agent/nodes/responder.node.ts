@@ -5,6 +5,7 @@ import { AgentStateType } from '../graph/agent-state';
 import { SYSTEM_PROMPT } from '../prompts/system.prompt';
 import { languageLabel } from '../utils/language-detector';
 import { AgentModelConfig, createChatModel } from '../graph/llm-factory';
+import { sanitizeMessagesForModel } from '../utils/message-sanitizer';
 
 const logger = new Logger('ResponderNode');
 
@@ -38,7 +39,7 @@ export function makeResponderNode(modelConfig: AgentModelConfig, _tools: Structu
     }
 
     const newTurnCount = (state.turnCount ?? 0) + 1;
-    let messages = state.messages;
+    let messages = sanitizeMessagesForModel(state.messages);
 
     // Summarize old turns to prevent unbounded context growth
     if (newTurnCount % SUMMARIZE_EVERY === 0 && messages.length > SUMMARIZE_EVERY) {
@@ -60,7 +61,8 @@ export function makeResponderNode(modelConfig: AgentModelConfig, _tools: Structu
       new SystemMessage(`${SYSTEM_PROMPT(state.businessId, state.businessType)}
 
 Customer language: ${customerLanguage}
-Reply in ${customerLanguage}. If tool results or FAQ data are in English, translate the customer-facing explanation to ${customerLanguage}, but keep IDs, dates, prices, proper nouns, addresses, and phone numbers unchanged.`),
+Reply in ${customerLanguage}. If tool results or business knowledge are in English, translate the customer-facing explanation to ${customerLanguage}, but keep IDs, dates, prices, proper nouns, addresses, and phone numbers unchanged.
+When faq_search returns business knowledge, answer from that context even if it is not formatted as an FAQ. If the exact detail is not specified, give the closest useful answer from the context and clearly mention only the missing detail.`),
       ...messages,
     ]);
     logger.log(`Response: ${String(response.content).slice(0, 300)}`);
