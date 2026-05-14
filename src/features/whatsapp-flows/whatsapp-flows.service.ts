@@ -5,7 +5,7 @@ import { Model } from 'mongoose';
 import { WhatsAppFlow, WhatsAppFlowDocument, FlowStatus, FlowCategory } from './schemas/flow.schema';
 import { CreateFlowDto } from './dto/create-flow.dto';
 import { QueryFlowDto } from './dto/query-flow.dto';
-import { WhatsAppApiClientService } from '../whatsapp/infrastructure/whatsapp-api-client.service';
+import { WhatsAppApiClientService } from '../engagement/whatsapp/infrastructure/whatsapp-api-client.service';
 import { PrismaService } from '../../prisma/prisma.service';
 import { ConfigService } from '@nestjs/config';
 

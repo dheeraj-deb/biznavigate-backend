@@ -4,7 +4,7 @@ import { KafkaController } from './kafka.controller';
 import { KafkaService } from './kafka.service';
 import { KafkaProducerService } from './kafka-producer.service';
 import { KafkaConsumerService } from './kafka-consumer.service';
-import { ConversationModule } from '../conversation/conversation.module';
+import { ConversationModule } from '../crm/conversation/conversation.module';
 
 @Module({
   imports: [ConfigModule, ConversationModule],

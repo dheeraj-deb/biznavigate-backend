@@ -255,6 +255,8 @@ exports.Prisma.LeadsScalarFieldEnum = {
   source: 'source',
   platform_id: 'platform_id',
   status: 'status',
+  stage_id: 'stage_id',
+  pipeline_id: 'pipeline_id',
   lost_reason: 'lost_reason',
   context: 'context',
   quoted_amount: 'quoted_amount',
@@ -267,6 +269,30 @@ exports.Prisma.LeadsScalarFieldEnum = {
   deleted_at: 'deleted_at',
   created_at: 'created_at',
   updated_at: 'updated_at'
+};
+
+exports.Prisma.PipelinesScalarFieldEnum = {
+  pipeline_id: 'pipeline_id',
+  business_id: 'business_id',
+  name: 'name',
+  industry: 'industry',
+  is_default: 'is_default',
+  is_archived: 'is_archived',
+  created_at: 'created_at',
+  updated_at: 'updated_at'
+};
+
+exports.Prisma.Pipeline_stagesScalarFieldEnum = {
+  stage_id: 'stage_id',
+  pipeline_id: 'pipeline_id',
+  business_id: 'business_id',
+  name: 'name',
+  slug: 'slug',
+  position: 'position',
+  is_won: 'is_won',
+  is_lost: 'is_lost',
+  color: 'color',
+  created_at: 'created_at'
 };
 
 exports.Prisma.Lead_eventsScalarFieldEnum = {
@@ -629,6 +655,7 @@ exports.Prisma.Workflow_executionsScalarFieldEnum = {
   execution_id: 'execution_id',
   workflow_id: 'workflow_id',
   business_id: 'business_id',
+  tenant_id: 'tenant_id',
   lead_id: 'lead_id',
   status: 'status',
   started_at: 'started_at',
@@ -641,7 +668,48 @@ exports.Prisma.Workflow_executionsScalarFieldEnum = {
   context: 'context',
   intent: 'intent',
   message_id: 'message_id',
-  chat_id: 'chat_id'
+  chat_id: 'chat_id',
+  conversation_id: 'conversation_id',
+  system_context: 'system_context'
+};
+
+exports.Prisma.Workflow_execution_stepsScalarFieldEnum = {
+  step_id: 'step_id',
+  execution_id: 'execution_id',
+  workflow_id: 'workflow_id',
+  business_id: 'business_id',
+  tenant_id: 'tenant_id',
+  node_id: 'node_id',
+  node_type: 'node_type',
+  node_name: 'node_name',
+  status: 'status',
+  input: 'input',
+  output: 'output',
+  error_message: 'error_message',
+  error_stack: 'error_stack',
+  started_at: 'started_at',
+  completed_at: 'completed_at',
+  duration_ms: 'duration_ms',
+  created_at: 'created_at'
+};
+
+exports.Prisma.Workflow_idempotency_keysScalarFieldEnum = {
+  key_id: 'key_id',
+  idempotency_key: 'idempotency_key',
+  business_id: 'business_id',
+  tenant_id: 'tenant_id',
+  workflow_id: 'workflow_id',
+  execution_id: 'execution_id',
+  lead_id: 'lead_id',
+  conversation_id: 'conversation_id',
+  message_id: 'message_id',
+  node_id: 'node_id',
+  purpose: 'purpose',
+  status: 'status',
+  response: 'response',
+  locked_until: 'locked_until',
+  created_at: 'created_at',
+  updated_at: 'updated_at'
 };
 
 exports.Prisma.Cart_itemsScalarFieldEnum = {
@@ -796,6 +864,192 @@ exports.Prisma.Item_availabilityScalarFieldEnum = {
   updated_at: 'updated_at'
 };
 
+exports.Prisma.Product_item_detailsScalarFieldEnum = {
+  item_id: 'item_id',
+  business_id: 'business_id',
+  brand: 'brand',
+  sku: 'sku',
+  condition: 'condition',
+  weight: 'weight',
+  dimensions: 'dimensions',
+  warranty: 'warranty',
+  metadata: 'metadata',
+  created_at: 'created_at',
+  updated_at: 'updated_at'
+};
+
+exports.Prisma.Product_inquiriesScalarFieldEnum = {
+  inquiry_id: 'inquiry_id',
+  business_id: 'business_id',
+  tenant_id: 'tenant_id',
+  lead_id: 'lead_id',
+  item_id: 'item_id',
+  variant_id: 'variant_id',
+  quantity: 'quantity',
+  delivery_pincode: 'delivery_pincode',
+  budget: 'budget',
+  status: 'status',
+  metadata: 'metadata',
+  created_at: 'created_at',
+  updated_at: 'updated_at'
+};
+
+exports.Prisma.Product_ordersScalarFieldEnum = {
+  product_order_id: 'product_order_id',
+  business_id: 'business_id',
+  tenant_id: 'tenant_id',
+  legacy_order_id: 'legacy_order_id',
+  customer_id: 'customer_id',
+  lead_id: 'lead_id',
+  order_number: 'order_number',
+  status: 'status',
+  payment_status: 'payment_status',
+  subtotal: 'subtotal',
+  discount_amount: 'discount_amount',
+  tax_amount: 'tax_amount',
+  shipping_fee: 'shipping_fee',
+  total_amount: 'total_amount',
+  source: 'source',
+  shipping_address: 'shipping_address',
+  shipping_city: 'shipping_city',
+  shipping_state: 'shipping_state',
+  shipping_pincode: 'shipping_pincode',
+  shipping_phone: 'shipping_phone',
+  notes: 'notes',
+  metadata: 'metadata',
+  paid_at: 'paid_at',
+  cancelled_at: 'cancelled_at',
+  created_at: 'created_at',
+  updated_at: 'updated_at'
+};
+
+exports.Prisma.Product_order_itemsScalarFieldEnum = {
+  product_order_item_id: 'product_order_item_id',
+  product_order_id: 'product_order_id',
+  item_id: 'item_id',
+  variant_id: 'variant_id',
+  product_name: 'product_name',
+  variant_name: 'variant_name',
+  sku: 'sku',
+  quantity: 'quantity',
+  unit_price: 'unit_price',
+  discount: 'discount',
+  total_price: 'total_price',
+  snapshot: 'snapshot',
+  created_at: 'created_at',
+  updated_at: 'updated_at'
+};
+
+exports.Prisma.Product_order_status_eventsScalarFieldEnum = {
+  event_id: 'event_id',
+  product_order_id: 'product_order_id',
+  business_id: 'business_id',
+  from_status: 'from_status',
+  to_status: 'to_status',
+  actor: 'actor',
+  actor_id: 'actor_id',
+  data: 'data',
+  created_at: 'created_at'
+};
+
+exports.Prisma.Hospitality_item_detailsScalarFieldEnum = {
+  item_id: 'item_id',
+  business_id: 'business_id',
+  service_type: 'service_type',
+  capacity: 'capacity',
+  total_units: 'total_units',
+  max_adults: 'max_adults',
+  bed_type: 'bed_type',
+  check_in_time: 'check_in_time',
+  check_out_time: 'check_out_time',
+  amenities: 'amenities',
+  cancellation_policy: 'cancellation_policy',
+  tax_percentage: 'tax_percentage',
+  extra_guest_charge: 'extra_guest_charge',
+  metadata: 'metadata',
+  created_at: 'created_at',
+  updated_at: 'updated_at'
+};
+
+exports.Prisma.Hospitality_inquiriesScalarFieldEnum = {
+  inquiry_id: 'inquiry_id',
+  business_id: 'business_id',
+  tenant_id: 'tenant_id',
+  lead_id: 'lead_id',
+  preferred_item_id: 'preferred_item_id',
+  check_in: 'check_in',
+  check_out: 'check_out',
+  guests: 'guests',
+  budget: 'budget',
+  status: 'status',
+  metadata: 'metadata',
+  created_at: 'created_at',
+  updated_at: 'updated_at'
+};
+
+exports.Prisma.Hospitality_bookingsScalarFieldEnum = {
+  hospitality_booking_id: 'hospitality_booking_id',
+  business_id: 'business_id',
+  tenant_id: 'tenant_id',
+  legacy_order_id: 'legacy_order_id',
+  customer_id: 'customer_id',
+  lead_id: 'lead_id',
+  booking_number: 'booking_number',
+  status: 'status',
+  payment_status: 'payment_status',
+  check_in: 'check_in',
+  check_out: 'check_out',
+  guests: 'guests',
+  subtotal: 'subtotal',
+  tax_amount: 'tax_amount',
+  discount_amount: 'discount_amount',
+  total_amount: 'total_amount',
+  source: 'source',
+  notes: 'notes',
+  metadata: 'metadata',
+  cancelled_at: 'cancelled_at',
+  created_at: 'created_at',
+  updated_at: 'updated_at'
+};
+
+exports.Prisma.Hospitality_booking_itemsScalarFieldEnum = {
+  booking_item_id: 'booking_item_id',
+  hospitality_booking_id: 'hospitality_booking_id',
+  item_id: 'item_id',
+  item_name: 'item_name',
+  quantity: 'quantity',
+  nights: 'nights',
+  unit_price: 'unit_price',
+  total_price: 'total_price',
+  snapshot: 'snapshot',
+  created_at: 'created_at',
+  updated_at: 'updated_at'
+};
+
+exports.Prisma.Hospitality_booking_guestsScalarFieldEnum = {
+  guest_id: 'guest_id',
+  hospitality_booking_id: 'hospitality_booking_id',
+  name: 'name',
+  phone: 'phone',
+  age: 'age',
+  address: 'address',
+  pin_code: 'pin_code',
+  metadata: 'metadata',
+  created_at: 'created_at'
+};
+
+exports.Prisma.Hospitality_booking_status_eventsScalarFieldEnum = {
+  event_id: 'event_id',
+  hospitality_booking_id: 'hospitality_booking_id',
+  business_id: 'business_id',
+  from_status: 'from_status',
+  to_status: 'to_status',
+  actor: 'actor',
+  actor_id: 'actor_id',
+  data: 'data',
+  created_at: 'created_at'
+};
+
 exports.Prisma.Checkpoint_blobsScalarFieldEnum = {
   thread_id: 'thread_id',
   checkpoint_ns: 'checkpoint_ns',
@@ -864,6 +1118,7 @@ exports.Prisma.Billing_subscriptionsScalarFieldEnum = {
   pause_end: 'pause_end',
   cancel_at_period_end: 'cancel_at_period_end',
   cancelled_at: 'cancelled_at',
+  past_due_since: 'past_due_since',
   metadata: 'metadata',
   created_at: 'created_at',
   updated_at: 'updated_at'
@@ -1013,6 +1268,8 @@ exports.Prisma.ModelName = {
   tenants: 'tenants',
   users: 'users',
   leads: 'leads',
+  pipelines: 'pipelines',
+  pipeline_stages: 'pipeline_stages',
   lead_events: 'lead_events',
   lead_followups: 'lead_followups',
   customers: 'customers',
@@ -1032,6 +1289,8 @@ exports.Prisma.ModelName = {
   workflow_definitions: 'workflow_definitions',
   business_workflows: 'business_workflows',
   workflow_executions: 'workflow_executions',
+  workflow_execution_steps: 'workflow_execution_steps',
+  workflow_idempotency_keys: 'workflow_idempotency_keys',
   cart_items: 'cart_items',
   carts: 'carts',
   whatsapp_optouts: 'whatsapp_optouts',
@@ -1042,6 +1301,17 @@ exports.Prisma.ModelName = {
   catalog_items: 'catalog_items',
   item_variants: 'item_variants',
   item_availability: 'item_availability',
+  product_item_details: 'product_item_details',
+  product_inquiries: 'product_inquiries',
+  product_orders: 'product_orders',
+  product_order_items: 'product_order_items',
+  product_order_status_events: 'product_order_status_events',
+  hospitality_item_details: 'hospitality_item_details',
+  hospitality_inquiries: 'hospitality_inquiries',
+  hospitality_bookings: 'hospitality_bookings',
+  hospitality_booking_items: 'hospitality_booking_items',
+  hospitality_booking_guests: 'hospitality_booking_guests',
+  hospitality_booking_status_events: 'hospitality_booking_status_events',
   checkpoint_blobs: 'checkpoint_blobs',
   checkpoint_migrations: 'checkpoint_migrations',
   checkpoint_writes: 'checkpoint_writes',
