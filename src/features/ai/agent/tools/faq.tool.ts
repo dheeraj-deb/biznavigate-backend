@@ -9,16 +9,24 @@ export function makeFaqTool(ragService: RagService) {
       const { businessId } = getRunContext();
 
       try {
-        const results = await ragService.search(businessId, 'docs', question, 3, 0.4);
+        const results = await ragService.search(businessId, 'docs', question, 5, 0.2);
 
         if (!results.length) {
-          return `I don't have specific information about that. You can contact us directly for more details.`;
+          return `No business knowledge has been uploaded for this question yet. Ask one short follow-up question or offer to connect the customer with a human.`;
         }
 
-        return results
-          .slice(0, 2)
-          .map((r) => r.text.trim())
+        const context = results
+          .map((r, index) => {
+            const source = r.metadata?.question
+              ?? r.metadata?.title
+              ?? r.metadata?.file_name
+              ?? r.metadata?.type
+              ?? `source_${index + 1}`;
+            return `Source ${index + 1}: ${source}\n${r.text.trim()}`;
+          })
           .join('\n\n');
+
+        return `Use the business knowledge below to answer the customer. If the exact answer is not explicit, give the closest helpful answer from this context and say what detail is not specified.\n\n${context}`;
       } catch {
         return `I don't have that information handy. Let me connect you with someone who can help.`;
       }

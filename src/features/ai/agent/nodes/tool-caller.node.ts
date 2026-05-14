@@ -5,6 +5,7 @@ import { AgentStateType } from '../graph/agent-state';
 import { SYSTEM_PROMPT } from '../prompts/system.prompt';
 import { AgentModelConfig, LLMFallbackAdapter } from '../graph/llm-factory';
 import { languageLabel } from '../utils/language-detector';
+import { sanitizeMessagesForModel } from '../utils/message-sanitizer';
 
 const logger = new Logger('ToolCallerNode');
 
@@ -68,14 +69,14 @@ IMPORTANT — TOOL EXECUTION RULES:
 - Customer language is ${customerLanguage}. Any plain text question or reply must be in ${customerLanguage}.
 - If the user is reporting a complaint, problem, or needs support: call handoff_to_human immediately.
 - If the user explicitly wants a human agent: call handoff_to_human immediately.
-- If the user asks a general business question about facilities, services, policies, directions, pricing, timings, documents, or FAQs: call faq_search.
+- If the user asks a general business question about facilities, services, policies, directions, pricing, timings, documents, amenities, rules, address, location, or FAQs: call faq_search.
 - If you have enough information to call a tool, call it now — do not say "let me check".
 - If required information is missing (e.g. check-in/check-out dates for availability, product name for browsing), do NOT invent or guess values. Instead, respond with a plain text question asking the user for the missing information.
 - NEVER fabricate dates, names, or any data the user has not provided.`;
 
     const response = await adapter.invoke([
       new SystemMessage(toolCallerDirective),
-      ...state.messages,
+      ...sanitizeMessagesForModel(state.messages),
     ]);
 
     const hasCalls = response.tool_calls?.length > 0;

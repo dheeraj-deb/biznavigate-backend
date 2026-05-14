@@ -2,6 +2,7 @@ import { Logger } from '@nestjs/common';
 import { HumanMessage, SystemMessage } from '@langchain/core/messages';
 import { AgentStateType } from '../graph/agent-state';
 import { AgentModelConfig, createChatModel } from '../graph/llm-factory';
+import { sanitizeMessagesForModel } from '../utils/message-sanitizer';
 
 const INTENT_PROMPT = `You are an intent classifier for a hospitality/service booking chatbot.
 Classify the user's last message into exactly one of:
@@ -35,7 +36,8 @@ export function makeIntentDetectorNode(modelConfig: AgentModelConfig) {
   });
 
   return async (state: AgentStateType): Promise<Partial<AgentStateType>> => {
-    const userMsg = state.messages.at(-1)?.content;
+    const messages = sanitizeMessagesForModel(state.messages);
+    const userMsg = messages.at(-1)?.content;
     logger.log(`Detecting intent for: "${String(userMsg).slice(0, 100)}"`);
 
     const response = await llm.invoke([

@@ -3,6 +3,7 @@ import { SystemMessage } from '@langchain/core/messages';
 import { AgentStateType } from '../graph/agent-state';
 import { PrismaService } from '../../../../prisma/prisma.service';
 import { AgentModelConfig, createChatModel } from '../graph/llm-factory';
+import { sanitizeMessagesForModel } from '../utils/message-sanitizer';
 
 // Intent labels shared across all verticals
 const INTENT_PROMPT = `You are an intent classifier for a business chatbot. The business may be in hospitality, retail, e-commerce, services, education, healthcare, or consulting.
@@ -17,7 +18,7 @@ Classify the user's LATEST message into exactly one of:
 - status        (asking about an existing booking/order — confirmation, tracking, check-in details)
 - complaint     (expressing dissatisfaction, reporting a problem, bad experience)
 - support       (needs help with something — issue, lost item, maintenance, in-session problem)
-- faq           (general question about the business, facilities, policies, directions, pricing)
+- faq           (general question about the business, facilities, amenities, policies, rules, address, directions, pricing, timings, documents, or uploaded business knowledge)
 - payment       (asking about charges, refunds, invoices, or payment methods)
 - handoff       (explicitly wants to speak to a human / live agent)
 - greeting      (just saying hi, hello, or starting a conversation)
@@ -68,7 +69,7 @@ export function makeTriageNode(modelConfig: AgentModelConfig, prisma: PrismaServ
 
     // Include last 5 messages as context so the classifier understands follow-up replies
     // (e.g. user says "20 to 21" after bot asked for check-in/check-out dates)
-    const contextMessages = state.messages.slice(-5);
+    const contextMessages = sanitizeMessagesForModel(state.messages).slice(-5);
     const response = await llm.invoke([
       new SystemMessage(INTENT_PROMPT),
       ...contextMessages,

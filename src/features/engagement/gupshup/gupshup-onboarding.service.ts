@@ -1,6 +1,7 @@
 import { Injectable, InternalServerErrorException, Logger } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import axios from "axios";
+import { randomBytes } from "crypto";
 import { PrismaService } from "../../../prisma/prisma.service";
 import { WhatsAppApiClientService } from "../whatsapp/infrastructure/whatsapp-api-client.service";
 
@@ -478,10 +479,15 @@ export class GupshupOnboardingService {
   async completeTppOnboarding(opts: TppOnboardingOptions): Promise<{ gupshupAppId: string }> {
     const { businessId, accountId, appName, wabaId, phone, callbackUrl } = opts;
 
-    // Sanitize app name for Gupshup: 6-150 chars, alphanumeric only
+    // Sanitize app name for Gupshup: 6-150 chars, alphanumeric only.
+    // Include wabaId (distinguishes different WhatsApp accounts) and a short
+    // random suffix so reconnect attempts don't collide with a previously
+    // created Gupshup bot of the same name.
     let safeName = appName.replace(/[^a-zA-Z0-9]/g, '').toLowerCase();
     if (safeName.length < 6) safeName = safeName.padEnd(6, 'abc123');
-    const finalAppName = `${safeName}${businessId.replace(/[^a-zA-Z0-9]/g, '').substring(0, 5)}`.substring(0, 150);
+    const wabaPart = wabaId.replace(/[^a-zA-Z0-9]/g, '').slice(-8);
+    const randomPart = randomBytes(4).toString('hex');
+    const finalAppName = `${safeName}${wabaPart}${randomPart}`.substring(0, 150);
 
     // Sanitize phone number for Gupshup: remove spaces, dashes, parens
     const finalPhone = phone.replace(/[\s\-\(\)]/g, '');
