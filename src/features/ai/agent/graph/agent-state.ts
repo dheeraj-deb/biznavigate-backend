@@ -9,6 +9,7 @@ export const AgentState = Annotation.Root({
   intent: Annotation<string>(),
   businessId: Annotation<string>(),
   businessType: Annotation<string>(), // e.g. 'hospitality', 'retail', 'ecommerce', 'services'
+  customerLanguage: Annotation<string>(),
   leadId: Annotation<string | undefined>(),
   phone: Annotation<string>(),
   toolRetries: Annotation<number>({ reducer: (_, update: number) => update, default: () => 0 }),

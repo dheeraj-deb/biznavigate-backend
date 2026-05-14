@@ -1,7 +1,7 @@
 import { Logger } from '@nestjs/common';
-import { ChatOpenAI } from '@langchain/openai';
 import { HumanMessage, SystemMessage } from '@langchain/core/messages';
 import { AgentStateType } from '../graph/agent-state';
+import { AgentModelConfig, createChatModel } from '../graph/llm-factory';
 
 const INTENT_PROMPT = `You are an intent classifier for a hospitality/service booking chatbot.
 Classify the user's last message into exactly one of:
@@ -26,8 +26,13 @@ Rules:
 
 const logger = new Logger('IntentDetectorNode');
 
-export function makeIntentDetectorNode(openaiApiKey: string) {
-  const llm = new ChatOpenAI({ model: 'gpt-4o-mini', apiKey: openaiApiKey, temperature: 0 });
+export function makeIntentDetectorNode(modelConfig: AgentModelConfig) {
+  const llm = createChatModel({
+    model: modelConfig.fastModel,
+    apiKey: modelConfig.apiKey,
+    baseUrl: modelConfig.baseUrl,
+    temperature: 0,
+  });
 
   return async (state: AgentStateType): Promise<Partial<AgentStateType>> => {
     const userMsg = state.messages.at(-1)?.content;

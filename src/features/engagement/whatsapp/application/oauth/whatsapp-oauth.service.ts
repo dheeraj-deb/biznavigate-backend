@@ -156,6 +156,7 @@ export class WhatsAppOAuthService {
       const backendUrl = this.configService.get<string>('BACKEND_URL');
       const result = await this.gupshupOnboardingService.completeTppOnboarding({
         businessId,
+        accountId: account.account_id,
         appName: business.business_name,
         wabaId: resolvedWabaId,
         phone: phoneNumber.display_phone_number,

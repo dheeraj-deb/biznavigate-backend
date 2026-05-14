@@ -33,7 +33,7 @@ MessageDebounceProcessor
 ```
                    ┌──────────────────────┐
   START ─────────► │   intent_detector    │
-                   │   gpt-4o-mini        │
+                   │   AI_FAST_MODEL      │
                    │   sees full history  │
                    └──────────┬───────────┘
                               │ intent label
@@ -45,7 +45,7 @@ MessageDebounceProcessor
                ▼                             ▼
   ┌────────────────────┐         ┌───────────────────────┐
   │    tool_caller     │◄─loop   │       responder       │
-  │    gpt-4o, t=0     │         │       gpt-4o, t=0.3   │
+  │ AI_PRIMARY_MODEL   │         │   AI_PRIMARY_MODEL    │
   │    tools bound     │         │       final reply     │
   └─────────┬──────────┘         └───────────────────────┘
             │                                ▲
@@ -82,14 +82,20 @@ State is persisted per conversation via **PostgresSaver** (LangGraph checkpointe
 
 ## Nodes
 
+Model selection is configured through environment variables:
+`AI_PRIMARY_MODEL`, `AI_FAST_MODEL`, `AI_TOOL_FALLBACK_MODEL`, `AI_SUMMARY_MODEL`, and
+`AI_EMBEDDING_MODEL`. `OPENAI_BASE_URL` can point the same client at an OpenAI-compatible
+gateway/provider when you want to test non-default model backends without changing node code.
+
 ### `intent_detector`
-- Model: `gpt-4o-mini` (fast, cheap classification)
+- Model: `AI_FAST_MODEL` (defaults to `gpt-4o-mini` for fast, cheap classification)
 - Sees full message history
 - Returns one of: `booking`, `cancellation`, `status`, `complaint`, `support`, `faq`, `payment`, `handoff`, `greeting`, `other`
 - Ambiguous / low-confidence → `handoff`
 
 ### `tool_caller`
-- Model: `gpt-4o`, temperature 0, all tools bound
+- Model: `AI_PRIMARY_MODEL`, temperature 0, all tools bound
+- Fallback: `AI_TOOL_FALLBACK_MODEL` if the primary model fails temporarily
 - Two responsibilities per turn:
   1. **Execute** any pending `tool_calls` from the previous AIMessage
   2. **Decide** what tool to call next (or hand off to responder)
@@ -97,7 +103,8 @@ State is persisted per conversation via **PostgresSaver** (LangGraph checkpointe
 - Short-circuits to END when a tool returns a `FLOW:` signal (no responder call needed)
 
 ### `responder`
-- Model: `gpt-4o`, temperature 0.3
+- Model: `AI_PRIMARY_MODEL`, temperature 0.3
+- Summaries use `AI_SUMMARY_MODEL`
 - Generates the final user-facing reply
 - Passes `FLOW:` signals through unchanged (does not call LLM if last message is already `FLOW:`)
 
@@ -111,7 +118,7 @@ State is persisted per conversation via **PostgresSaver** (LangGraph checkpointe
 | `cancel_booking` | cancellation | `makeCancelBookingTool(inventoryService, prisma)` | Looks up latest active booking by phone, cancels it |
 | `get_booking` | status | static stub | Booking lookup by ID / phone |
 | `get_payment` | payment | static stub | Payment / invoice lookup |
-| `faq` | faq | static stub | Property FAQ answers |
+| `faq_search` | faq | RAG-backed | Searches business FAQ/docs uploaded by the tenant |
 | `handoff` | handoff | static stub | Returns escalation message |
 
 All stateful tools use the **factory pattern** — NestJS services are captured in the closure at module init, so `@Inject` is never used inside tools.

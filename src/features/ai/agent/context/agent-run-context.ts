@@ -3,6 +3,7 @@ import { AsyncLocalStorage } from 'node:async_hooks';
 export interface AgentRunContext {
   businessId: string;
   businessType: string; // e.g. 'hospitality', 'retail', 'ecommerce', 'services'
+  customerLanguage: string;
   leadId?: string;
   phone: string;
   conversationId: string;

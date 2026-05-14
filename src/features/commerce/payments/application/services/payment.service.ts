@@ -8,6 +8,8 @@ import {
 import { PaymentRepositoryPrisma } from '../../infrastructure/payment.repository.prisma';
 import { RazorpayService } from '../../infrastructure/razorpay.service';
 import { OrderRepositoryPrisma } from '../../../orders/infrastructure/order.repository.prisma';
+import { PrismaService } from '../../../../../prisma/prisma.service';
+import { LeadCommandService } from '../../../../crm/lead/application/services/lead-command.service';
 import { CreatePaymentDto } from '../dto/create-payment.dto';
 import { PaymentQueryDto } from '../dto/payment-query.dto';
 import { VerifyPaymentSignatureDto } from '../dto/payment-webhook.dto';
@@ -27,6 +29,8 @@ export class PaymentService {
     private readonly paymentRepository: PaymentRepositoryPrisma,
     private readonly razorpayService: RazorpayService,
     private readonly orderRepository: OrderRepositoryPrisma,
+    private readonly prisma: PrismaService,
+    private readonly leadCommands: LeadCommandService,
   ) {}
 
   /**
@@ -171,6 +175,24 @@ export class PaymentService {
         payment.razorpay_payment_id,
         'razorpay',
       );
+
+      // Advance the linked lead to 'won' if the order has a lead_id.
+      try {
+        const order = await this.prisma.orders.findUnique({
+          where: { order_id: payment.order_id },
+          select: { lead_id: true },
+        });
+        if (order?.lead_id) {
+          await this.leadCommands.autoAdvance({
+            leadId: order.lead_id,
+            toSlug: 'won',
+            reason: 'payment_captured',
+            actor: 'system',
+          });
+        }
+      } catch (e: any) {
+        this.logger.warn(`Lead auto-advance after payment capture failed: ${e.message}`);
+      }
 
       this.logger.log(`Payment captured successfully: ${paymentId}`);
 

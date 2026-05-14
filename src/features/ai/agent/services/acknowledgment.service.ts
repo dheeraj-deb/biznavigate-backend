@@ -2,6 +2,7 @@ import { Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { ChatOpenAI } from '@langchain/openai';
 import { HumanMessage, SystemMessage } from '@langchain/core/messages';
+import { createChatModel, resolveAgentModelConfig } from '../graph/llm-factory';
 
 export interface ConversationalReply {
   // Immediate ack to send before the agent processes (e.g. "Let me check!")
@@ -17,11 +18,23 @@ export class AcknowledgmentService {
   private readonly splitLlm: ChatOpenAI;
 
   constructor(private readonly configService: ConfigService) {
-    const apiKey = this.configService.get<string>('OPENAI_API_KEY') ?? '';
+    const modelConfig = resolveAgentModelConfig(this.configService);
     // Fast, cheap model for the immediate ack
-    this.fastLlm = new ChatOpenAI({ model: 'gpt-4o-mini', apiKey, temperature: 0.8, maxTokens: 40 });
+    this.fastLlm = createChatModel({
+      model: modelConfig.fastModel,
+      apiKey: modelConfig.apiKey,
+      baseUrl: modelConfig.baseUrl,
+      temperature: 0.8,
+      maxTokens: 40,
+    });
     // Used to split the agent's reply into natural message chunks
-    this.splitLlm = new ChatOpenAI({ model: 'gpt-4o-mini', apiKey, temperature: 0.3, maxTokens: 300 });
+    this.splitLlm = createChatModel({
+      model: modelConfig.fastModel,
+      apiKey: modelConfig.apiKey,
+      baseUrl: modelConfig.baseUrl,
+      temperature: 0.3,
+      maxTokens: 300,
+    });
   }
 
   // Generates a short, situational acknowledgment to send immediately

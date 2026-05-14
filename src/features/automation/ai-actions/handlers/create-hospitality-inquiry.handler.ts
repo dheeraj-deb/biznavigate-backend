@@ -2,12 +2,16 @@ import { BadRequestException, Injectable, NotFoundException } from '@nestjs/comm
 import { PrismaService } from '../../../../prisma/prisma.service';
 import { ExecuteAiActionDto } from '../dto/ai-action.dto';
 import { AiActionHandler } from './ai-action-handler';
+import { LeadCommandService } from '../../../crm/lead/application/services/lead-command.service';
 
 @Injectable()
 export class CreateHospitalityInquiryHandler implements AiActionHandler {
   readonly action = 'create_hospitality_inquiry' as const;
 
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly leadCommands: LeadCommandService,
+  ) {}
 
   async execute(dto: ExecuteAiActionDto) {
     if (!dto.lead_id) throw new BadRequestException('lead_id is required');
@@ -60,6 +64,14 @@ export class CreateHospitalityInquiryHandler implements AiActionHandler {
           hospitality_inquiry_id: inquiry.inquiry_id,
         },
       },
+    });
+
+    // Advance pipeline to 'qualified' — AI has captured intent + key details.
+    await this.leadCommands.autoAdvance({
+      leadId: lead.lead_id,
+      toSlug: 'qualified',
+      reason: 'hospitality_inquiry_created',
+      actor: 'ai',
     });
 
     return {

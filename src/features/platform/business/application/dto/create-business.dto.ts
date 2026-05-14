@@ -14,6 +14,12 @@ export const BUSINESS_TYPES = [
   'hospitality',
   'events',
   'products',
+  'retail',
+  'healthcare',
+  'real_estate',
+  'professional_services',
+  'crm_automation',
+  'education',
 ] as const;
 
 export class CreateEmployeeDto {

@@ -65,7 +65,15 @@
       "Bash(sed -i '' \"s|this\\\\.leadService\\\\.getMessages|this.leadQueries.getMessages|g\" src/features/engagement/chat-widget/chat-widget.service.ts)",
       "Bash(awk '{print $1}')",
       "Bash(awk '{print $2}')",
-      "Bash(xargs -I{} basename {})"
+      "Bash(xargs -I{} basename {})",
+      "Bash(npx --yes depcheck --json)",
+      "Bash(echo \"exit=$?\")",
+      "Bash(ls src/app/crm src/app/lead-generation src/app/dashboard)",
+      "Bash(ls src/lib src/lib/services src/hooks)"
+    ],
+    "additionalDirectories": [
+      "/Users/dheerajt/Downloads/biznavigate/biznavigate-dashboard/src/hooks",
+      "/Users/dheerajt/Downloads/biznavigate/biznavigate-dashboard/src/lib"
     ]
   }
 }

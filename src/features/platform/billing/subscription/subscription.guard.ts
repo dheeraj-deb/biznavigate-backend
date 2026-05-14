@@ -10,8 +10,9 @@ export class SubscriptionGuard implements CanActivate {
     const businessId = req.user?.business_id;
     if (!businessId) throw new ForbiddenException('No business context');
 
-    const sub = await this.subscriptionService.getSubscription(businessId);
-    if (!sub) throw new ForbiddenException('No active subscription. Please subscribe to continue.');
+    const sub =
+      (await this.subscriptionService.getSubscription(businessId)) ??
+      (await this.subscriptionService.ensureTrialSubscription(businessId));
 
     if (['cancelled', 'expired'].includes(sub.status)) {
       throw new ForbiddenException('Subscription has expired. Please renew to continue.');

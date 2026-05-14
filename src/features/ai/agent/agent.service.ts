@@ -1,7 +1,9 @@
-import { Injectable, Logger, OnModuleInit, Optional } from '@nestjs/common';
+import { CACHE_MANAGER } from '@nestjs/cache-manager';
+import { Inject, Injectable, Logger, OnModuleInit, Optional } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { HumanMessage } from '@langchain/core/messages';
+import { Cache } from 'cache-manager';
 import { buildAgentGraph } from './graph/agent-graph';
 import { CatalogService } from '../../commerce/catalog/catalog.service';
 import { PrismaService } from '../../../prisma/prisma.service';
@@ -10,6 +12,8 @@ import { agentRunContextStorage } from './context/agent-run-context';
 import { GenerationHandle } from './types/generation-handle';
 import { decodeHandoff } from './types/handoff';
 import { AgentTurnMetrics } from './types/agent-metrics';
+import { CustomerLanguage, detectCustomerLanguage } from './utils/language-detector';
+import { AgentModelConfig, resolveAgentModelConfig } from './graph/llm-factory';
 
 export interface AgentContext {
   businessId: string;
@@ -26,24 +30,28 @@ export class AgentService implements OnModuleInit {
 
   // One in-flight GenerationHandle per conversationId — new message cancels previous
   private readonly inFlight = new Map<string, GenerationHandle>();
+  private readonly conversationLanguages = new Map<string, CustomerLanguage>();
+  private readonly maxLanguageMemoryEntries = 10_000;
+  private agentModelConfig!: AgentModelConfig;
 
   constructor(
     private readonly configService: ConfigService,
     private readonly catalogService: CatalogService,
     private readonly prisma: PrismaService,
     private readonly eventEmitter: EventEmitter2,
+    @Inject(CACHE_MANAGER) private readonly cache: Cache,
     @Optional() private readonly ragService: RagService | null,
   ) {}
 
   async onModuleInit() {
-    const openaiApiKey = this.configService.get<string>('OPENAI_API_KEY') ?? '';
+    this.agentModelConfig = resolveAgentModelConfig(this.configService);
     this.graph = await buildAgentGraph({
-      openaiApiKey,
+      modelConfig: this.agentModelConfig,
       catalogService: this.catalogService,
       prisma: this.prisma,
       ragService: this.ragService ?? null,
     });
-    this.logger.log('Agent graph initialized');
+    this.logger.log(`Agent graph initialized with primary=${this.agentModelConfig.primaryModel} fast=${this.agentModelConfig.fastModel}`);
   }
 
   async processMessage(text: string, ctx: AgentContext): Promise<string | null> {
@@ -77,10 +85,16 @@ export class AgentService implements OnModuleInit {
 
       // Wrap graph.invoke in AsyncLocalStorage so all tools can read context without
       // receiving businessId as an LLM-supplied parameter
+      const previousLanguage = await this.getPreviousConversationLanguage(ctx.conversationId);
+      const languageDetection = detectCustomerLanguage(text, previousLanguage);
+      const customerLanguage = languageDetection.language;
+      await this.rememberConversationLanguage(ctx.conversationId, customerLanguage);
+
       const result = await agentRunContextStorage.run(
         {
           businessId: ctx.businessId,
           businessType,
+          customerLanguage,
           leadId: ctx.leadId,
           phone: ctx.phone,
           conversationId: ctx.conversationId,
@@ -92,6 +106,7 @@ export class AgentService implements OnModuleInit {
               intent: '',
               businessId: ctx.businessId,
               businessType,
+              customerLanguage,
               leadId: ctx.leadId,
               phone: ctx.phone,
             },
@@ -114,7 +129,7 @@ export class AgentService implements OnModuleInit {
         businessId: ctx.businessId,
         turnId,
         intent: result.intent ?? '',
-        model: 'gpt-4o',
+        model: this.agentModelConfig.primaryModel,
         durationMs,
         toolsExecuted,
         cancelled: false,
@@ -205,5 +220,37 @@ export class AgentService implements OnModuleInit {
         }
       }
     }
+  }
+
+  private async getPreviousConversationLanguage(conversationId: string): Promise<CustomerLanguage | undefined> {
+    const cached = this.conversationLanguages.get(conversationId);
+    if (cached) return cached;
+
+    const stored = await this.cache.get<CustomerLanguage>(this.languageCacheKey(conversationId));
+    if (stored) {
+      this.rememberConversationLanguageInMemory(conversationId, stored);
+      return stored;
+    }
+
+    return undefined;
+  }
+
+  private async rememberConversationLanguage(conversationId: string, language: CustomerLanguage) {
+    this.rememberConversationLanguageInMemory(conversationId, language);
+    await this.cache.set(this.languageCacheKey(conversationId), language, 30 * 24 * 60 * 60 * 1000);
+  }
+
+  private rememberConversationLanguageInMemory(conversationId: string, language: CustomerLanguage) {
+    this.conversationLanguages.delete(conversationId);
+    this.conversationLanguages.set(conversationId, language);
+
+    if (this.conversationLanguages.size <= this.maxLanguageMemoryEntries) return;
+
+    const oldestKey = this.conversationLanguages.keys().next().value;
+    if (oldestKey) this.conversationLanguages.delete(oldestKey);
+  }
+
+  private languageCacheKey(conversationId: string): string {
+    return `agent:conversation_language:${conversationId}`;
   }
 }

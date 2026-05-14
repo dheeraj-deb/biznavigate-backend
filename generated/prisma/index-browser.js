@@ -255,6 +255,8 @@ exports.Prisma.LeadsScalarFieldEnum = {
   source: 'source',
   platform_id: 'platform_id',
   status: 'status',
+  stage_id: 'stage_id',
+  pipeline_id: 'pipeline_id',
   lost_reason: 'lost_reason',
   context: 'context',
   quoted_amount: 'quoted_amount',
@@ -267,6 +269,30 @@ exports.Prisma.LeadsScalarFieldEnum = {
   deleted_at: 'deleted_at',
   created_at: 'created_at',
   updated_at: 'updated_at'
+};
+
+exports.Prisma.PipelinesScalarFieldEnum = {
+  pipeline_id: 'pipeline_id',
+  business_id: 'business_id',
+  name: 'name',
+  industry: 'industry',
+  is_default: 'is_default',
+  is_archived: 'is_archived',
+  created_at: 'created_at',
+  updated_at: 'updated_at'
+};
+
+exports.Prisma.Pipeline_stagesScalarFieldEnum = {
+  stage_id: 'stage_id',
+  pipeline_id: 'pipeline_id',
+  business_id: 'business_id',
+  name: 'name',
+  slug: 'slug',
+  position: 'position',
+  is_won: 'is_won',
+  is_lost: 'is_lost',
+  color: 'color',
+  created_at: 'created_at'
 };
 
 exports.Prisma.Lead_eventsScalarFieldEnum = {
@@ -1242,6 +1268,8 @@ exports.Prisma.ModelName = {
   tenants: 'tenants',
   users: 'users',
   leads: 'leads',
+  pipelines: 'pipelines',
+  pipeline_stages: 'pipeline_stages',
   lead_events: 'lead_events',
   lead_followups: 'lead_followups',
   customers: 'customers',

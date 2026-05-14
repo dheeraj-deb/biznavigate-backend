@@ -33,6 +33,7 @@ import { GatewayModule } from '../../crm/inbox/gateway/gateway.module';
 import { HumanHandoffGatewayModule } from '../../crm/human-handoff/human-handoff-gateway.module';
 import { AgentModule } from '../../ai/agent/agent.module';
 import { WorkflowsModule } from '../../automation/workflows/workflows.module';
+import { LeadModule } from '../../crm/lead/lead.module';
 import { GupshupOnboardingService } from '../gupshup/gupshup-onboarding.service';
 import { Campaign, CampaignSchema } from '../campaign/schemas/campaign.schema';
 
@@ -48,6 +49,7 @@ import { Campaign, CampaignSchema } from '../campaign/schemas/campaign.schema';
     GatewayModule,
     HumanHandoffGatewayModule,
     AgentModule,
+    LeadModule,
     forwardRef(() => WorkflowsModule),
     MongooseModule.forFeature([
       { name: Campaign.name, schema: CampaignSchema },

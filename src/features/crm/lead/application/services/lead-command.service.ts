@@ -1,10 +1,11 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { PrismaService } from '../../../../../prisma/prisma.service';
 import { Conversation, ConversationDocument } from '../../schemas/conversation.schema';
 import { Message, MessageDocument } from '../../schemas/message.schema';
 import { v4 as uuidv4 } from 'uuid';
+import { assertValidLeadStatus } from '../lead-status';
 
 export interface LeadContext {
   type: 'resort' | 'camp' | 'product';
@@ -57,31 +58,103 @@ export interface InsertMessageInput {
 
 @Injectable()
 export class LeadCommandService {
+  private readonly logger = new Logger(LeadCommandService.name);
+
   constructor(
     private readonly prisma: PrismaService,
     @InjectModel(Conversation.name) private conversationModel: Model<ConversationDocument>,
     @InjectModel(Message.name) private messageModel: Model<MessageDocument>,
   ) {}
 
-  async upsertLead(input: UpsertLeadInput) {
-    const existing = await this.prisma.leads.findFirst({
-      where: { platform_id: input.platformId, business_id: input.businessId, deleted_at: null },
-    });
+  /**
+   * Auto-advance a lead to a target stage slug. Idempotent and forward-only:
+   *
+   *   - If lead has no pipeline yet, no-op (nothing to advance to).
+   *   - If target stage doesn't exist in pipeline, no-op.
+   *   - If lead is already at or past target stage, no-op.
+   *   - Otherwise: move + emit `lead_events.auto_progressed`.
+   *
+   * Designed to be called from AI handlers, webhooks, and side-effect listeners
+   * where the caller doesn't want to think about "is this a forward move?".
+   * Safe to call repeatedly on retries.
+   */
+  async autoAdvance(params: {
+    leadId: string;
+    toSlug: string;
+    reason: string;
+    actor?: 'ai' | 'system';
+  }): Promise<{ moved: boolean; reason?: string }> {
+    try {
+      const lead = await this.prisma.leads.findUnique({
+        where: { lead_id: params.leadId },
+        select: { lead_id: true, business_id: true, pipeline_id: true, stage_id: true, status: true },
+      });
+      if (!lead) return { moved: false, reason: 'lead_not_found' };
+      if (!lead.pipeline_id) return { moved: false, reason: 'no_pipeline' };
 
-    if (existing) {
-      const updateData: any = { updated_at: new Date() };
-      if (input.name && !existing.name) updateData.name = input.name;
-      if (input.phone && !existing.phone) updateData.phone = input.phone;
-      if (input.email && !existing.email) updateData.email = input.email;
+      const [currentStage, targetStage] = await Promise.all([
+        lead.stage_id
+          ? this.prisma.pipeline_stages.findUnique({ where: { stage_id: lead.stage_id }, select: { position: true } })
+          : Promise.resolve(null),
+        this.prisma.pipeline_stages.findFirst({
+          where: { pipeline_id: lead.pipeline_id, slug: params.toSlug },
+          select: { stage_id: true, pipeline_id: true, slug: true, position: true, is_won: true, is_lost: true },
+        }),
+      ]);
 
-      if (Object.keys(updateData).length > 1) {
-        return this.prisma.leads.update({ where: { lead_id: existing.lead_id }, data: updateData });
+      if (!targetStage) return { moved: false, reason: 'stage_slug_not_in_pipeline' };
+      if (currentStage && currentStage.position >= targetStage.position) {
+        return { moved: false, reason: 'already_at_or_past' };
       }
-      return existing;
-    }
 
-    return this.prisma.leads.create({
-      data: {
+      const now = new Date();
+      const updateData: any = {
+        stage_id: targetStage.stage_id,
+        pipeline_id: targetStage.pipeline_id,
+        status: targetStage.slug,
+        updated_at: now,
+      };
+      if (targetStage.is_won) updateData.converted_at = now;
+
+      await this.prisma.$transaction([
+        this.prisma.leads.update({ where: { lead_id: lead.lead_id }, data: updateData }),
+        this.prisma.lead_events.create({
+          data: {
+            event_id: uuidv4(),
+            lead_id: lead.lead_id,
+            business_id: lead.business_id,
+            type: 'auto_progressed',
+            actor: params.actor ?? 'ai',
+            data: {
+              from_status: lead.status,
+              to_status: targetStage.slug,
+              from_stage_id: lead.stage_id,
+              to_stage_id: targetStage.stage_id,
+              reason: params.reason,
+            } as any,
+            created_at: now,
+          },
+        }),
+      ]);
+
+      return { moved: true };
+    } catch (err: any) {
+      // Auto-advance must never break the calling flow. Log and swallow.
+      this.logger.warn(`autoAdvance failed for lead ${params.leadId}: ${err.message}`);
+      return { moved: false, reason: 'error' };
+    }
+  }
+
+  async upsertLead(input: UpsertLeadInput) {
+    const defaultStage = await this.getDefaultStageForBusiness(input.businessId);
+    return this.prisma.leads.upsert({
+      where: {
+        business_id_platform_id: {
+          business_id: input.businessId,
+          platform_id: input.platformId,
+        },
+      },
+      create: {
         lead_id: uuidv4(),
         business_id: input.businessId,
         tenant_id: input.tenantId,
@@ -92,10 +165,37 @@ export class LeadCommandService {
         name: input.name,
         email: input.email,
         status: 'new',
+        pipeline_id: defaultStage?.pipeline_id ?? null,
+        stage_id: defaultStage?.stage_id ?? null,
         created_at: new Date(),
         updated_at: new Date(),
       },
+      update: {
+        // Only fill missing identity fields; never overwrite human-entered data.
+        ...(input.name ? { name: input.name } : {}),
+        ...(input.phone ? { phone: input.phone } : {}),
+        ...(input.email ? { email: input.email } : {}),
+        updated_at: new Date(),
+      },
     });
+  }
+
+  /**
+   * Returns the default pipeline's first stage for a business.
+   * Falls back to null if no pipeline is configured (caller will leave stage unset).
+   */
+  private async getDefaultStageForBusiness(businessId: string) {
+    const pipeline = await this.prisma.pipelines.findFirst({
+      where: { business_id: businessId, is_default: true, is_archived: false },
+      select: { pipeline_id: true },
+    });
+    if (!pipeline) return null;
+    const stage = await this.prisma.pipeline_stages.findFirst({
+      where: { pipeline_id: pipeline.pipeline_id },
+      orderBy: { position: 'asc' },
+      select: { pipeline_id: true, stage_id: true },
+    });
+    return stage;
   }
 
   async upsertConversation(input: UpsertConversationInput): Promise<ConversationDocument> {
@@ -160,6 +260,8 @@ export class LeadCommandService {
     tags?: string[];
     quotedAmount?: number;
   }) {
+    if (dto.status) assertValidLeadStatus(dto.status);
+    const defaultStage = await this.getDefaultStageForBusiness(dto.businessId);
     return this.prisma.leads.create({
       data: {
         lead_id: uuidv4(),
@@ -171,6 +273,8 @@ export class LeadCommandService {
         channel: (dto.channel ?? 'whatsapp') as any,
         source: dto.source ?? 'direct',
         status: dto.status ?? 'new',
+        pipeline_id: defaultStage?.pipeline_id ?? null,
+        stage_id: defaultStage?.stage_id ?? null,
         context: dto.context ?? undefined,
         tags: dto.tags ?? [],
         quoted_amount: dto.quotedAmount ?? undefined,
@@ -183,12 +287,33 @@ export class LeadCommandService {
   async updateStatus(
     leadId: string,
     status: string,
-    opts?: { lostReason?: string; quotedAmount?: number; convertedValue?: number; actorId?: string; actor?: string },
+    opts?: {
+      lostReason?: string;
+      quotedAmount?: number;
+      convertedValue?: number;
+      actorId?: string;
+      actor?: string;
+      lead?: { lead_id: string; business_id: string; status: string; pipeline_id: string | null };
+    },
   ) {
-    const lead = await this.prisma.leads.findUnique({ where: { lead_id: leadId } });
+    assertValidLeadStatus(status);
+    const lead = opts?.lead ?? (await this.prisma.leads.findUnique({ where: { lead_id: leadId } }));
     if (!lead) throw new NotFoundException('Lead not found');
 
+    // If a pipeline is attached, try to find a stage whose slug == status so
+    // stage_id stays in sync. If no matching stage, just update the status
+    // column (the pipeline doesn't model this state).
+    let stageId: string | undefined;
+    if (lead.pipeline_id) {
+      const stage = await this.prisma.pipeline_stages.findFirst({
+        where: { pipeline_id: lead.pipeline_id, slug: status },
+        select: { stage_id: true },
+      });
+      if (stage) stageId = stage.stage_id;
+    }
+
     const data: any = { status, updated_at: new Date() };
+    if (stageId) data.stage_id = stageId;
     if (opts?.lostReason) data.lost_reason = opts.lostReason;
     if (opts?.quotedAmount != null) {
       data.quoted_amount = opts.quotedAmount;
@@ -217,10 +342,75 @@ export class LeadCommandService {
     return updated;
   }
 
+  /**
+   * Move a lead to a specific pipeline stage. Source of truth for the new
+   * pipeline-aware flow. Mirrors stage.slug into leads.status so legacy
+   * reporting queries keep working unchanged.
+   *
+   * Caller MUST have already verified ownership via LeadAccessService.
+   */
+  async moveToStage(params: {
+    leadId: string;
+    stageId: string;
+    businessId: string;
+    actorId?: string;
+    actor?: 'human' | 'ai' | 'system';
+  }) {
+    const stage = await this.prisma.pipeline_stages.findUnique({
+      where: { stage_id: params.stageId },
+      select: { stage_id: true, pipeline_id: true, slug: true, business_id: true, is_won: true, is_lost: true },
+    });
+    if (!stage) throw new NotFoundException('Stage not found');
+    if (stage.business_id !== params.businessId) {
+      throw new NotFoundException('Stage not found');
+    }
+
+    const lead = await this.prisma.leads.findUnique({
+      where: { lead_id: params.leadId },
+      select: { lead_id: true, business_id: true, status: true, stage_id: true, pipeline_id: true },
+    });
+    if (!lead) throw new NotFoundException('Lead not found');
+    if (lead.business_id !== params.businessId) throw new NotFoundException('Lead not found');
+
+    const now = new Date();
+    const data: any = {
+      stage_id: stage.stage_id,
+      pipeline_id: stage.pipeline_id,
+      status: stage.slug,
+      updated_at: now,
+    };
+    if (stage.is_won) data.converted_at = now;
+
+    const [updated] = await this.prisma.$transaction([
+      this.prisma.leads.update({ where: { lead_id: params.leadId }, data }),
+      this.prisma.lead_events.create({
+        data: {
+          event_id: uuidv4(),
+          lead_id: params.leadId,
+          business_id: lead.business_id,
+          type: 'stage_changed',
+          actor: params.actor ?? 'human',
+          actor_id: params.actorId ?? null,
+          data: {
+            from_stage_id: lead.stage_id,
+            to_stage_id: stage.stage_id,
+            from_status: lead.status,
+            to_status: stage.slug,
+          } as any,
+          created_at: now,
+        },
+      }),
+    ]);
+    return updated;
+  }
+
   async updateContext(leadId: string, context: LeadContext) {
+    // Don't force status='active' — that overrides legitimate states like
+    // 'quoted' or 'won' just because the AI re-extracted context. Status
+    // changes go through updateStatus / moveToStage.
     return this.prisma.leads.update({
       where: { lead_id: leadId },
-      data: { context: context as any, status: 'active', updated_at: new Date() },
+      data: { context: context as any, updated_at: new Date() },
     });
   }
 
@@ -302,11 +492,33 @@ export class LeadCommandService {
     });
   }
 
-  async softDeleteLead(leadId: string) {
-    return this.prisma.leads.update({
+  async softDeleteLead(leadId: string, opts?: { businessId?: string; actorId?: string }) {
+    const lead = await this.prisma.leads.findUnique({
       where: { lead_id: leadId },
-      data: { deleted_at: new Date() },
+      select: { lead_id: true, business_id: true },
     });
+    if (!lead) throw new NotFoundException('Lead not found');
+    const now = new Date();
+    const [updated] = await this.prisma.$transaction([
+      this.prisma.leads.update({ where: { lead_id: leadId }, data: { deleted_at: now, updated_at: now } }),
+      this.prisma.lead_followups.updateMany({
+        where: { lead_id: leadId, done: false },
+        data: { done: true, done_at: now, done_note: 'lead_deleted' },
+      }),
+      this.prisma.lead_events.create({
+        data: {
+          event_id: uuidv4(),
+          lead_id: leadId,
+          business_id: lead.business_id,
+          type: 'deleted',
+          actor: 'human',
+          actor_id: opts?.actorId ?? null,
+          data: {} as any,
+          created_at: now,
+        },
+      }),
+    ]);
+    return updated;
   }
 
   async scheduleFollowup(params: {
@@ -354,9 +566,22 @@ export class LeadCommandService {
   }
 
   async completeFollowup(followupId: string, doneNote?: string) {
-    return this.prisma.lead_followups.update({
+    const followup = await this.prisma.lead_followups.update({
       where: { followup_id: followupId },
       data: { done: true, done_at: new Date(), done_note: doneNote },
     });
+
+    // Roll lead.followup_at forward to the next pending followup, or null.
+    const next = await this.prisma.lead_followups.findFirst({
+      where: { lead_id: followup.lead_id, done: false },
+      orderBy: { scheduled_at: 'asc' },
+      select: { scheduled_at: true },
+    });
+    await this.prisma.leads.update({
+      where: { lead_id: followup.lead_id },
+      data: { followup_at: next?.scheduled_at ?? null, updated_at: new Date() },
+    });
+
+    return followup;
   }
 }

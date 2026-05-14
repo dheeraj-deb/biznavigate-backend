@@ -3,6 +3,7 @@ import { PrismaModule } from '../../../prisma/prisma.module';
 import { AuditLogModule } from '../../platform/audit-log/audit-log.module';
 import { BookingsModule } from '../../industries/hospitality/bookings/bookings.module';
 import { CartModule } from '../../commerce/cart/cart.module';
+import { LeadModule } from '../../crm/lead/lead.module';
 import { AiActionRouterService } from './ai-action-router.service';
 import { CheckRoomAvailabilityHandler } from './handlers/check-room-availability.handler';
 import { CreateHospitalityBookingHandler } from './handlers/create-hospitality-booking.handler';
@@ -12,7 +13,7 @@ import { CreateProductOrderHandler } from './handlers/create-product-order.handl
 import { HandoffToHumanHandler } from './handlers/handoff-to-human.handler';
 
 @Module({
-  imports: [PrismaModule, AuditLogModule, BookingsModule, CartModule],
+  imports: [PrismaModule, AuditLogModule, BookingsModule, CartModule, LeadModule],
   providers: [
     AiActionRouterService,
     CheckRoomAvailabilityHandler,

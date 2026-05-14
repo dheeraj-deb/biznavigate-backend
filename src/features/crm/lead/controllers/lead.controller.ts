@@ -14,10 +14,10 @@ import {
 } from '@nestjs/common';
 import { LeadCommandService } from '../application/services/lead-command.service';
 import { LeadQueryService } from '../application/services/lead-query.service';
+import { LeadAccessService } from '../application/services/lead-access.service';
 import { JwtAuthGuard } from '../../../../common/guards/jwt-auth.guard';
 import { TenantGuard } from '../../../../common/guards/tenant.guard';
 import { SubscriptionGuard } from '../../../platform/billing/subscription/subscription.guard';
-import { User } from '../../../../common/decorators';
 
 @Controller('leads')
 @UseGuards(JwtAuthGuard, TenantGuard, SubscriptionGuard)
@@ -25,6 +25,7 @@ export class LeadController {
   constructor(
     private readonly leadCommands: LeadCommandService,
     private readonly leadQueries: LeadQueryService,
+    private readonly access: LeadAccessService,
   ) {}
 
   // ─── Create ──────────────────────────────────────────────────
@@ -63,12 +64,17 @@ export class LeadController {
     @Query('assignedTo') assignedTo?: string,
     @Query('search') search?: string,
     @Query('intent_type') intent_type?: string,
+    @Query('stage_id') stage_id?: string,
+    @Query('pipeline_id') pipeline_id?: string,
     @Query('sortBy') sortBy?: string,
     @Query('sortOrder') sortOrder?: 'asc' | 'desc',
     @Query('page') page?: number,
     @Query('limit') limit?: number,
   ) {
-    return this.leadQueries.getLeads(req.user.business_id, { status, channel, source, assignedTo, search, intent_type, sortBy, sortOrder, page, limit });
+    return this.leadQueries.getLeads(req.user.business_id, {
+      status, channel, source, assignedTo, search, intent_type, stage_id, pipeline_id,
+      sortBy, sortOrder, page, limit,
+    });
   }
 
   @Get('stats/overview')
@@ -82,92 +88,127 @@ export class LeadController {
   }
 
   @Get(':leadId')
-  getLead(@Param('leadId') leadId: string) {
+  async getLead(@Req() req: any, @Param('leadId') leadId: string) {
+    await this.access.requireLead(leadId, req.user.business_id);
     return this.leadQueries.getLeadById(leadId);
   }
 
   @Get(':leadId/events')
-  getLeadEvents(@Param('leadId') leadId: string) {
+  async getLeadEvents(@Req() req: any, @Param('leadId') leadId: string) {
+    await this.access.requireLead(leadId, req.user.business_id);
     return this.leadQueries.getLeadEvents(leadId);
   }
 
   @Delete(':leadId')
   @HttpCode(HttpStatus.NO_CONTENT)
-  deleteLead(@Param('leadId') leadId: string) {
-    return this.leadCommands.softDeleteLead(leadId);
+  async deleteLead(@Req() req: any, @Param('leadId') leadId: string) {
+    await this.access.requireLead(leadId, req.user.business_id);
+    await this.leadCommands.softDeleteLead(leadId, {
+      businessId: req.user.business_id,
+      actorId: req.user.user_id,
+    });
   }
 
   // ─── Status, context, notes ──────────────────────────────────
 
   @Patch(':leadId/status')
-  updateStatus(
+  async updateStatus(
+    @Req() req: any,
     @Param('leadId') leadId: string,
     @Body() body: { status: string; lostReason?: string; quotedAmount?: number; convertedValue?: number },
-    @User() user: any,
   ) {
+    const lead = await this.access.requireLead(leadId, req.user.business_id);
     return this.leadCommands.updateStatus(leadId, body.status, {
       lostReason: body.lostReason,
       quotedAmount: body.quotedAmount,
       convertedValue: body.convertedValue,
-      actorId: user?.userId,
+      actorId: req.user.user_id,
+      actor: 'human',
+      lead: { lead_id: lead.lead_id, business_id: lead.business_id, status: lead.status, pipeline_id: lead.pipeline_id },
+    });
+  }
+
+  /** Pipeline-aware move. Source of truth when pipelines are used. */
+  @Patch(':leadId/stage')
+  async moveToStage(
+    @Req() req: any,
+    @Param('leadId') leadId: string,
+    @Body() body: { stage_id: string },
+  ) {
+    await this.access.requireLead(leadId, req.user.business_id);
+    return this.leadCommands.moveToStage({
+      leadId,
+      stageId: body.stage_id,
+      businessId: req.user.business_id,
+      actorId: req.user.user_id,
       actor: 'human',
     });
   }
 
   @Patch(':leadId/context')
-  updateContext(@Param('leadId') leadId: string, @Body() context: any) {
+  async updateContext(@Req() req: any, @Param('leadId') leadId: string, @Body() context: any) {
+    await this.access.requireLead(leadId, req.user.business_id);
     return this.leadCommands.updateContext(leadId, context);
   }
 
   @Post(':leadId/notes')
-  addNote(
+  async addNote(
+    @Req() req: any,
     @Param('leadId') leadId: string,
     @Body() body: { text: string },
-    @User() user: any,
   ) {
-    return this.leadCommands.addNote(leadId, body.text, user?.userId);
+    await this.access.requireLead(leadId, req.user.business_id);
+    return this.leadCommands.addNote(leadId, body.text, req.user.user_id);
   }
 
   @Patch(':leadId/tags')
-  updateTags(
+  async updateTags(
+    @Req() req: any,
     @Param('leadId') leadId: string,
     @Body() body: { tags: string[] },
   ) {
+    await this.access.requireLead(leadId, req.user.business_id);
     return this.leadCommands.updateTags(leadId, body.tags ?? []);
   }
 
   @Patch(':leadId/assign')
-  assignLead(
+  async assignLead(
+    @Req() req: any,
     @Param('leadId') leadId: string,
     @Body() body: { assignedTo: string },
-    @User() user: any,
   ) {
-    return this.leadCommands.assignLead(leadId, body.assignedTo, user?.userId);
+    await this.access.requireLead(leadId, req.user.business_id);
+    await this.access.assertAssigneeInBusiness(body.assignedTo, req.user.business_id);
+    return this.leadCommands.assignLead(leadId, body.assignedTo, req.user.user_id);
   }
 
   // ─── Follow-ups ───────────────────────────────────────────────
 
   @Post(':leadId/followups')
-  scheduleFollowup(
+  async scheduleFollowup(
+    @Req() req: any,
     @Param('leadId') leadId: string,
     @Body() body: { note: string; scheduledAt: string; assignedTo: string },
-    @User() user: any,
   ) {
+    await this.access.requireLead(leadId, req.user.business_id);
+    await this.access.assertAssigneeInBusiness(body.assignedTo, req.user.business_id);
     return this.leadCommands.scheduleFollowup({
       leadId,
-      businessId: user?.businessId,
+      businessId: req.user.business_id,
       note: body.note,
       scheduledAt: new Date(body.scheduledAt),
       assignedTo: body.assignedTo,
-      createdBy: user?.userId,
+      createdBy: req.user.user_id,
     });
   }
 
   @Patch('followups/:followupId/done')
-  completeFollowup(
+  async completeFollowup(
+    @Req() req: any,
     @Param('followupId') followupId: string,
     @Body() body: { doneNote?: string },
   ) {
+    await this.access.requireFollowup(followupId, req.user.business_id);
     return this.leadCommands.completeFollowup(followupId, body.doneNote);
   }
 
@@ -202,7 +243,8 @@ export class LeadController {
 
   @Get('inbox/conversations')
   getOpenConversations(@Req() req: any, @Query('limit') limit?: number) {
-    return this.leadQueries.getOpenConversations(req.user.business_id, limit);
+    const safeLimit = Math.min(100, Math.max(1, Number(limit) || 20));
+    return this.leadQueries.getOpenConversations(req.user.business_id, safeLimit);
   }
 
   @Get('inbox/conversations/:conversationId/messages')
@@ -210,6 +252,7 @@ export class LeadController {
     @Param('conversationId') conversationId: string,
     @Query('limit') limit?: number,
   ) {
-    return this.leadQueries.getMessages(conversationId, limit);
+    const safeLimit = Math.min(200, Math.max(1, Number(limit) || 50));
+    return this.leadQueries.getMessages(conversationId, safeLimit);
   }
 }

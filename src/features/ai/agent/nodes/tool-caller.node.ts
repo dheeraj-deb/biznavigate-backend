@@ -3,15 +3,25 @@ import { AIMessage, SystemMessage, ToolMessage } from '@langchain/core/messages'
 import { StructuredTool } from '@langchain/core/tools';
 import { AgentStateType } from '../graph/agent-state';
 import { SYSTEM_PROMPT } from '../prompts/system.prompt';
-import { LLMFallbackAdapter } from '../graph/llm-factory';
+import { AgentModelConfig, LLMFallbackAdapter } from '../graph/llm-factory';
+import { languageLabel } from '../utils/language-detector';
 
 const logger = new Logger('ToolCallerNode');
 
-export function makeToolCallerNode(openaiApiKey: string, tools: StructuredTool[]) {
-  // Primary: gpt-4o. Fallback: gpt-4o-mini if primary is unavailable.
+export function makeToolCallerNode(modelConfig: AgentModelConfig, tools: StructuredTool[]) {
   const adapter = new LLMFallbackAdapter([
-    { model: 'gpt-4o', apiKey: openaiApiKey, temperature: 0 },
-    { model: 'gpt-4o-mini', apiKey: openaiApiKey, temperature: 0 },
+    {
+      model: modelConfig.primaryModel,
+      apiKey: modelConfig.apiKey,
+      baseUrl: modelConfig.baseUrl,
+      temperature: 0,
+    },
+    {
+      model: modelConfig.toolFallbackModel,
+      apiKey: modelConfig.apiKey,
+      baseUrl: modelConfig.baseUrl,
+      temperature: 0,
+    },
   ]).bindTools(tools);
 
   return async (state: AgentStateType): Promise<Partial<AgentStateType>> => {
@@ -50,12 +60,15 @@ export function makeToolCallerNode(openaiApiKey: string, tools: StructuredTool[]
     logger.log(`Calling LLM for tool selection (intent=${state.intent} businessId=${state.businessId})`);
 
     const today = new Date().toISOString().split('T')[0];
+    const customerLanguage = languageLabel(state.customerLanguage);
     const toolCallerDirective = `${SYSTEM_PROMPT(state.businessId, state.businessType)}
 
 IMPORTANT — TOOL EXECUTION RULES:
 - Today's date is ${today}. Use this to resolve relative or partial dates.
+- Customer language is ${customerLanguage}. Any plain text question or reply must be in ${customerLanguage}.
 - If the user is reporting a complaint, problem, or needs support: call handoff_to_human immediately.
 - If the user explicitly wants a human agent: call handoff_to_human immediately.
+- If the user asks a general business question about facilities, services, policies, directions, pricing, timings, documents, or FAQs: call faq_search.
 - If you have enough information to call a tool, call it now — do not say "let me check".
 - If required information is missing (e.g. check-in/check-out dates for availability, product name for browsing), do NOT invent or guess values. Instead, respond with a plain text question asking the user for the missing information.
 - NEVER fabricate dates, names, or any data the user has not provided.`;

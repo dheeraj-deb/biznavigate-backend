@@ -2,6 +2,7 @@ import { BadRequestException, Injectable, NotFoundException, NotImplementedExcep
 import { PrismaService } from '../../../../../../prisma/prisma.service';
 import { CreateBookingDto } from '../dto/create-booking.dto';
 import { HospitalityBookingQueryDto } from '../dto/hospitality-booking-query.dto';
+import { LeadCommandService } from '../../../../../crm/lead/application/services/lead-command.service';
 
 /**
  * Hospitality booking read service.
@@ -9,7 +10,10 @@ import { HospitalityBookingQueryDto } from '../dto/hospitality-booking-query.dto
  */
 @Injectable()
 export class BookingService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly leadCommands: LeadCommandService,
+  ) {}
 
   async createBooking(_businessId: string, _dto: CreateBookingDto): Promise<any> {
     throw new NotImplementedException('Bookings are managed through the catalog orders system');
@@ -151,6 +155,16 @@ export class BookingService {
         });
       }
     });
+
+    // Advance the linked lead to 'lost' (idempotent, forward-only).
+    if (existing.lead_id) {
+      await this.leadCommands.autoAdvance({
+        leadId: existing.lead_id,
+        toSlug: 'lost',
+        reason: 'booking_cancelled',
+        actor: 'system',
+      });
+    }
 
     return this.getBookingById(bookingId, businessId);
   }

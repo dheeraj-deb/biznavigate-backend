@@ -50,28 +50,38 @@ export class ContactResolutionService {
       });
     }
 
-    let lead = await this.prisma.leads.findFirst({
-      where: { business_id: account.business_id, platform_id: params.from, deleted_at: null },
+    // Upsert on the new (business_id, platform_id) unique key — race-safe.
+    const defaultPipeline = await this.prisma.pipelines.findFirst({
+      where: { business_id: account.business_id, is_default: true, is_archived: false },
+      select: { pipeline_id: true, stages: { orderBy: { position: 'asc' }, take: 1, select: { stage_id: true } } },
     });
+    const defaultStageId = defaultPipeline?.stages?.[0]?.stage_id ?? null;
+    const defaultPipelineId = defaultPipeline?.pipeline_id ?? null;
 
-    if (!lead) {
-      lead = await this.prisma.leads.create({
-        data: {
-          lead_id: randomUUID(),
+    const lead = await this.prisma.leads.upsert({
+      where: {
+        business_id_platform_id: {
           business_id: account.business_id,
-          tenant_id: account.businesses.tenant_id,
-          channel: 'whatsapp',
-          source: 'direct',
           platform_id: params.from,
-          name: contactName,
-          phone: params.from,
-          status: 'new',
-          created_at: new Date(),
-          updated_at: new Date(),
         },
-      });
-      this.logger.log(`New lead created from WhatsApp: ${lead.lead_id}`);
-    }
+      },
+      create: {
+        lead_id: randomUUID(),
+        business_id: account.business_id,
+        tenant_id: account.businesses.tenant_id,
+        channel: 'whatsapp',
+        source: 'direct',
+        platform_id: params.from,
+        name: contactName,
+        phone: params.from,
+        status: 'new',
+        pipeline_id: defaultPipelineId,
+        stage_id: defaultStageId,
+        created_at: new Date(),
+        updated_at: new Date(),
+      },
+      update: { updated_at: new Date() },
+    });
 
     return {
       account,

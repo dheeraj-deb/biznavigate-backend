@@ -6,6 +6,7 @@ import { WhatsAppApiClientService } from '../../infrastructure/whatsapp-api-clie
 @Injectable()
 export class WhatsAppAccountService {
   private readonly logger = new Logger(WhatsAppAccountService.name);
+  private readonly businessVerificationUrl = 'https://business.facebook.com/settings/security';
 
   constructor(
     private readonly prisma: PrismaService,
@@ -87,13 +88,88 @@ export class WhatsAppAccountService {
       },
     });
 
-    return accounts.map((account) => ({
-      ...account,
-      phone_number_id: account.page_id,
-      whatsapp_business_account_id: account.instagram_business_account_id,
-      business_verification_status: account.meta_account_review_status ?? 'UNKNOWN',
-      business_verification_url: 'https://business.facebook.com/settings/security',
-    }));
+    return accounts.map((account) => {
+      const verificationStatus = account.meta_account_review_status ?? 'UNKNOWN';
+      const onboardingStatus = this.resolveOnboardingStatus(account.gupshup_app_status, verificationStatus);
+
+      return {
+        ...account,
+        phone_number_id: account.page_id,
+        whatsapp_business_account_id: account.instagram_business_account_id,
+        business_verification_status: verificationStatus,
+        business_verification_url: this.businessVerificationUrl,
+        onboarding_status: onboardingStatus,
+        verification_checklist: this.buildVerificationChecklist(verificationStatus),
+        usage_limits: this.resolveUsageLimits(onboardingStatus),
+      };
+    });
+  }
+
+  private resolveOnboardingStatus(
+    gupshupStatus: string | null,
+    verificationStatus: string,
+  ): string {
+    const status = verificationStatus.toUpperCase();
+
+    if (gupshupStatus === 'pending') return 'gupshup_provisioning';
+    if (gupshupStatus === 'stuck') return 'setup_requires_attention';
+    if (gupshupStatus === 'error') return 'setup_failed';
+    if (status === 'APPROVED' || status === 'VERIFIED') return 'verified';
+    if (status === 'PENDING' || status === 'PENDING_REVIEW') return 'business_verification_submitted';
+    if (status === 'REJECTED' || status === 'FAILED') return 'business_verification_rejected';
+    return 'live_trial';
+  }
+
+  private buildVerificationChecklist(verificationStatus: string): Array<{
+    key: string;
+    label: string;
+    completed: boolean;
+  }> {
+    const status = verificationStatus.toUpperCase();
+    const isVerified = status === 'APPROVED' || status === 'VERIFIED';
+
+    return [
+      {
+        key: 'phone_connected',
+        label: 'WhatsApp phone number connected',
+        completed: true,
+      },
+      {
+        key: 'business_details',
+        label: 'Business name, address, website, and contact details match Meta records',
+        completed: isVerified,
+      },
+      {
+        key: 'business_documents',
+        label: 'Legal business document ready or submitted',
+        completed: isVerified,
+      },
+      {
+        key: 'meta_business_verification',
+        label: 'Meta Business Verification approved',
+        completed: isVerified,
+      },
+    ];
+  }
+
+  private resolveUsageLimits(onboardingStatus: string): {
+    can_reply_to_customers: boolean;
+    can_send_campaigns: boolean;
+    message: string;
+  } {
+    if (onboardingStatus === 'verified') {
+      return {
+        can_reply_to_customers: true,
+        can_send_campaigns: true,
+        message: 'Business verification is approved. Campaign and template sending can scale based on Meta quality and messaging limits.',
+      };
+    }
+
+    return {
+      can_reply_to_customers: true,
+      can_send_campaigns: false,
+      message: 'Connected in limited mode. Customer replies can work now, but campaigns and higher-volume business-initiated messaging should wait for Meta Business Verification.',
+    };
   }
 
   async disconnectAccount(accountId: string, businessId: string): Promise<void> {
@@ -119,7 +195,7 @@ export class WhatsAppAccountService {
       await this.prisma.social_accounts.update({
         where: { account_id: accountId },
         data: {
-          meta_account_review_status: details.account_review_status ?? null,
+          meta_account_review_status: details.business_verification_status ?? details.account_review_status ?? null,
           meta_verification_checked_at: new Date(),
         },
       });

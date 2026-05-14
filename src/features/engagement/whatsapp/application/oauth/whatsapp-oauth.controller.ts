@@ -4,15 +4,17 @@ import {
   Post,
   Body,
   Query,
+  Req,
   Res,
   BadRequestException,
   Logger,
   UseGuards,
 } from '@nestjs/common';
-import { Response } from 'express';
+import { Request, Response } from 'express';
 import { WhatsAppOAuthService } from './whatsapp-oauth.service';
 import { ConfigService } from '@nestjs/config';
 import { JwtAuthGuard } from '../../../../../common/guards';
+import { JwtPayload } from '../../../../../common/guards/jwt-auth.guard';
 
 @Controller('whatsapp/oauth')
 export class WhatsAppOAuthController {
@@ -56,11 +58,17 @@ export class WhatsAppOAuthController {
   @UseGuards(JwtAuthGuard)
   async handleEmbeddedCallback(
     @Body() body: { code: string; businessId: string; waba_id: string, phone_number_id: string, whatsapp_business_id: string },
+    @Req() req: Request & { user: JwtPayload },
   ) {
     if (!body.code || !body.businessId) {
       throw new BadRequestException('code and businessId are required');
     }
-    const result = await this.oauthService.handleEmbeddedCallback(body.code, body.businessId, body.waba_id, body.phone_number_id, body.whatsapp_business_id);
+
+    if (body.businessId !== req.user.business_id) {
+      throw new BadRequestException('businessId does not match authenticated user');
+    }
+
+    const result = await this.oauthService.handleEmbeddedCallback(body.code, req.user.business_id, body.waba_id, body.phone_number_id, body.whatsapp_business_id);
     return { success: true, data: result };
   }
 

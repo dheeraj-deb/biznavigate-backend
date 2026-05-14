@@ -16,6 +16,7 @@ import { WhatsAppOutboundCommandService } from './outbound/whatsapp-outbound-com
 import { WhatsAppProviderSendService } from './outbound/whatsapp-provider-send.service';
 import { WhatsAppStatusCommandService } from './outbound/whatsapp-status-command.service';
 import { WhatsAppMessageNormalizer } from './inbound/whatsapp-message-normalizer.service';
+import { LeadCommandService } from '../../../crm/lead/application/services/lead-command.service';
 
 
 
@@ -39,6 +40,7 @@ export class WhatsAppService {
     private readonly contactResolutionService: ContactResolutionService,
     private readonly conversationCommandService: ConversationCommandService,
     private readonly automationRouter: AutomationRouter,
+    private readonly leadCommands: LeadCommandService,
   ) { }
 
   /**
@@ -55,6 +57,7 @@ export class WhatsAppService {
 
   async processWebhook(webhookData: WhatsAppWebhookDto): Promise<void> {
     try {
+      console.log('Received WhatsApp webhook:', JSON.stringify(webhookData));
       await this.webhookIngestionService.processMetaWebhook(webhookData, {
         onMessage: (message, metadata, contacts) => this.handleMessageWebhook(message, metadata, contacts),
         onStatus: (status, metadata) => this.handleStatusWebhook(status, metadata),
@@ -89,6 +92,8 @@ export class WhatsAppService {
     try {
       const phoneNumberId = metadata.phone_number_id;
       const normalizedMessage = this.messageNormalizer.normalize(message);
+
+      
 
       // Skip messages older than 5 minutes (Meta replays queued webhooks on restart)
       const messageTimestampSeconds = Number.parseInt(normalizedMessage.timestamp ?? '', 10);
@@ -198,6 +203,16 @@ export class WhatsAppService {
           lead_id: ctx.leadId,
           tenant_id: ctx.tenantId,
         },
+      });
+
+      // First AI reply → advance lead from `new` to `contacted`. autoAdvance
+      // is forward-only and idempotent, so calling on every AI reply is safe;
+      // subsequent replies are no-ops once the lead is past `contacted`.
+      await this.leadCommands.autoAdvance({
+        leadId: ctx.leadId,
+        toSlug: 'contacted',
+        reason: 'ai_reply_sent',
+        actor: 'ai',
       });
     }
   }

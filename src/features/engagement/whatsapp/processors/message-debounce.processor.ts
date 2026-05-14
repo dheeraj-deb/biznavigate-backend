@@ -1,6 +1,8 @@
 import { Processor, WorkerHost } from '@nestjs/bullmq';
-import { Logger } from '@nestjs/common';
+import { CACHE_MANAGER } from '@nestjs/cache-manager';
+import { Inject, Logger } from '@nestjs/common';
 import { Job } from 'bullmq';
+import { Cache } from 'cache-manager';
 import { KafkaProducerService } from 'src/features/kafka/kafka-producer.service';
 import { AgentService, AgentContext } from 'src/features/ai/agent/agent.service';
 import { WhatsAppService } from '../whatsapp.service';
@@ -14,6 +16,9 @@ import { HumanHandoffGateway } from 'src/features/crm/human-handoff/human-handof
 import { GenerationHandle } from 'src/features/ai/agent/types/generation-handle';
 import { decodeHandoff, decodeFlow } from 'src/features/ai/agent/types/handoff';
 import { AcknowledgmentService } from 'src/features/ai/agent/services/acknowledgment.service';
+import { CustomerLanguage, detectCustomerLanguage } from 'src/features/ai/agent/utils/language-detector';
+
+type LocalizedMessageKey = 'handoff' | 'error' | 'no_availability' | 'appointment_slots';
 
 @Processor('message-debounce')
 export class MessageDebounceProcessor extends WorkerHost {
@@ -21,6 +26,8 @@ export class MessageDebounceProcessor extends WorkerHost {
 
   // Track one speculative handle per conversationId (mirrors agents-js preemptive generation)
   private readonly speculativeHandles = new Map<string, { handle: GenerationHandle; promise: Promise<string | null> }>();
+  private readonly conversationLanguages = new Map<string, CustomerLanguage>();
+  private readonly maxLanguageMemoryEntries = 10_000;
 
   constructor(
     private readonly kafkaProducer: KafkaProducerService,
@@ -33,6 +40,7 @@ export class MessageDebounceProcessor extends WorkerHost {
     private readonly inboxGateway: InboxGateway,
     private readonly humanHandoffGateway: HumanHandoffGateway,
     private readonly acknowledgmentService: AcknowledgmentService,
+    @Inject(CACHE_MANAGER) private readonly cache: Cache,
   ) {
     super();
   }
@@ -54,6 +62,10 @@ export class MessageDebounceProcessor extends WorkerHost {
     const combinedText = payloads.map((p) => p.user_input).filter(Boolean).join(' ');
     const lastPayload = payloads[payloads.length - 1];
     const firstText = payloads[0]?.user_input ?? combinedText;
+    const previousLanguage = await this.getPreviousConversationLanguage(conversationId);
+    const languageDetection = detectCustomerLanguage(combinedText, previousLanguage);
+    const customerLanguage = languageDetection.language;
+    await this.rememberConversationLanguage(conversationId, customerLanguage);
 
     this.logger.log(`🔀 Debounce fired for conv ${conversationId}: ${payloads.length} msg(s) → "${combinedText}"`);
 
@@ -87,7 +99,7 @@ export class MessageDebounceProcessor extends WorkerHost {
 
       if (reply === null) return; // cancelled
 
-      await this.dispatchReply(reply, agentCtx, lastPayload, phoneNumberId, customerPhone, conversationId);
+      await this.dispatchReply(reply, agentCtx, lastPayload, phoneNumberId, customerPhone, conversationId, customerLanguage);
       this.logger.log(`🤖 Agent replied to ${customerPhone}`);
     } catch (err) {
       this.logger.error(`Agent failed for conv ${conversationId}, falling back to workflow: ${err.message}`);
@@ -122,16 +134,17 @@ export class MessageDebounceProcessor extends WorkerHost {
     phoneNumberId: string,
     customerPhone: string,
     conversationId: string,
+    customerLanguage: CustomerLanguage,
   ): Promise<void> {
     const handoff = decodeHandoff(reply);
     if (handoff) {
-      await this.handleHandoff(handoff, ctx, lastPayload, phoneNumberId, customerPhone);
+      await this.handleHandoff(handoff, ctx, lastPayload, phoneNumberId, customerPhone, customerLanguage);
       return;
     }
 
     const flow = decodeFlow(reply);
     if (flow) {
-      await this.handleFlow(flow, ctx, lastPayload, phoneNumberId, customerPhone);
+      await this.handleFlow(flow, ctx, lastPayload, phoneNumberId, customerPhone, customerLanguage);
       return;
     }
 
@@ -165,6 +178,7 @@ export class MessageDebounceProcessor extends WorkerHost {
     lastPayload: any,
     phoneNumberId: string,
     customerPhone: string,
+    customerLanguage: CustomerLanguage,
   ): Promise<void> {
     const activeConvId = lastPayload.context?.conversation_id ?? ctx.conversationId;
     const escalatedAt = new Date();
@@ -210,7 +224,7 @@ export class MessageDebounceProcessor extends WorkerHost {
       ctx.businessId,
       phoneNumberId,
       customerPhone,
-      "You're being connected to a human agent. Someone will be with you shortly.",
+      this.localizedMessage(customerLanguage, 'handoff'),
     );
 
     this.logger.log(`🙋 Escalated conv ${activeConvId} to human — reason: ${reason}`);
@@ -222,6 +236,7 @@ export class MessageDebounceProcessor extends WorkerHost {
     lastPayload: any,
     phoneNumberId: string,
     customerPhone: string,
+    customerLanguage: CustomerLanguage,
   ): Promise<void> {
     const { flowType } = flow!;
 
@@ -246,7 +261,7 @@ export class MessageDebounceProcessor extends WorkerHost {
         this.logger.log(`🏨 Started availability flow for ${customerPhone}`);
       } else {
         const fallbackText =
-          screenResult.data?.error_message ?? `No rooms available from ${checkIn} to ${checkOut}.`;
+          screenResult.data?.error_message ?? this.localizedMessage(customerLanguage, 'no_availability', { checkIn, checkOut });
         await this.whatsappService.sendAgentReply(ctx.businessId, phoneNumberId, customerPhone, fallbackText);
       }
       return;
@@ -256,7 +271,7 @@ export class MessageDebounceProcessor extends WorkerHost {
     if (flowType === 'appointment') {
       const { slots, date, serviceName } = flow as any;
       const slotList = Array.isArray(slots) ? slots.join('\n') : String(slots ?? '');
-      const msg = `Available slots${serviceName ? ` for ${serviceName}` : ''} on ${date}:\n${slotList}`;
+      const msg = this.localizedMessage(customerLanguage, 'appointment_slots', { serviceName, date, slotList });
       await this.whatsappService.sendAgentReply(ctx.businessId, phoneNumberId, customerPhone, msg);
       return;
     }
@@ -267,7 +282,74 @@ export class MessageDebounceProcessor extends WorkerHost {
       ctx.businessId,
       phoneNumberId,
       customerPhone,
-      `Something went wrong processing your request. Please try again.`,
+      this.localizedMessage(customerLanguage, 'error'),
     );
+  }
+
+  private localizedMessage(
+    language: CustomerLanguage,
+    key: LocalizedMessageKey,
+    data: Record<string, any> = {},
+  ): string {
+    const messages: Record<LocalizedMessageKey, Record<CustomerLanguage, string>> = {
+      handoff: {
+        english: "You're being connected to a human agent. Someone will be with you shortly.",
+        hindi: 'आपको human agent से जोड़ा जा रहा है। हमारी टीम जल्द ही आपसे बात करेगी।',
+        malayalam: 'നിങ്ങളെ human agent-ലേക്ക് connect ചെയ്യുകയാണ്. ഞങ്ങളുടെ ടീം ഉടൻ സഹായിക്കും.',
+        tamil: 'உங்களை human agent உடன் இணைக்கிறோம். எங்கள் குழு விரைவில் உதவும்.',
+      },
+      error: {
+        english: 'Something went wrong processing your request. Please try again.',
+        hindi: 'आपकी request process करते समय कुछ समस्या हुई। कृपया फिर से कोशिश करें।',
+        malayalam: 'നിങ്ങളുടെ request process ചെയ്യുമ്പോൾ പ്രശ്നം സംഭവിച്ചു. ദയവായി വീണ്ടും ശ്രമിക്കുക.',
+        tamil: 'உங்கள் request process செய்யும்போது ஒரு பிரச்சனை ஏற்பட்டது. மீண்டும் முயற்சிக்கவும்.',
+      },
+      no_availability: {
+        english: `No rooms available from ${data.checkIn} to ${data.checkOut}.`,
+        hindi: `${data.checkIn} से ${data.checkOut} तक rooms available नहीं हैं।`,
+        malayalam: `${data.checkIn} മുതൽ ${data.checkOut} വരെ rooms available അല്ല.`,
+        tamil: `${data.checkIn} முதல் ${data.checkOut} வரை rooms available இல்லை.`,
+      },
+      appointment_slots: {
+        english: `Available slots${data.serviceName ? ` for ${data.serviceName}` : ''} on ${data.date}:\n${data.slotList}`,
+        hindi: `${data.date} को${data.serviceName ? ` ${data.serviceName} के लिए` : ''} available slots:\n${data.slotList}`,
+        malayalam: `${data.date}-ന്${data.serviceName ? ` ${data.serviceName}ക്ക്` : ''} available slots:\n${data.slotList}`,
+        tamil: `${data.date} அன்று${data.serviceName ? ` ${data.serviceName} க்கு` : ''} available slots:\n${data.slotList}`,
+      },
+    };
+
+    return messages[key][language] ?? messages[key].english;
+  }
+
+  private async getPreviousConversationLanguage(conversationId: string): Promise<CustomerLanguage | undefined> {
+    const cached = this.conversationLanguages.get(conversationId);
+    if (cached) return cached;
+
+    const stored = await this.cache.get<CustomerLanguage>(this.languageCacheKey(conversationId));
+    if (stored) {
+      this.rememberConversationLanguageInMemory(conversationId, stored);
+      return stored;
+    }
+
+    return undefined;
+  }
+
+  private async rememberConversationLanguage(conversationId: string, language: CustomerLanguage) {
+    this.rememberConversationLanguageInMemory(conversationId, language);
+    await this.cache.set(this.languageCacheKey(conversationId), language, 30 * 24 * 60 * 60 * 1000);
+  }
+
+  private rememberConversationLanguageInMemory(conversationId: string, language: CustomerLanguage) {
+    this.conversationLanguages.delete(conversationId);
+    this.conversationLanguages.set(conversationId, language);
+
+    if (this.conversationLanguages.size <= this.maxLanguageMemoryEntries) return;
+
+    const oldestKey = this.conversationLanguages.keys().next().value;
+    if (oldestKey) this.conversationLanguages.delete(oldestKey);
+  }
+
+  private languageCacheKey(conversationId: string): string {
+    return `agent:conversation_language:${conversationId}`;
   }
 }

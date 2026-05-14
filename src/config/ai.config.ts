@@ -1,6 +1,22 @@
 import { registerAs } from '@nestjs/config';
 
 export default registerAs('ai', () => ({
+  agent: {
+    baseUrl: process.env.OPENAI_BASE_URL,
+    primaryModel: process.env.AI_PRIMARY_MODEL ?? process.env.OPENAI_PRIMARY_MODEL ?? 'gpt-4o',
+    fastModel: process.env.AI_FAST_MODEL ?? process.env.OPENAI_FAST_MODEL ?? 'gpt-4o-mini',
+    toolFallbackModel: process.env.AI_TOOL_FALLBACK_MODEL
+      ?? process.env.OPENAI_TOOL_FALLBACK_MODEL
+      ?? process.env.AI_FAST_MODEL
+      ?? process.env.OPENAI_FAST_MODEL
+      ?? 'gpt-4o-mini',
+    summaryModel: process.env.AI_SUMMARY_MODEL
+      ?? process.env.OPENAI_SUMMARY_MODEL
+      ?? process.env.AI_FAST_MODEL
+      ?? process.env.OPENAI_FAST_MODEL
+      ?? 'gpt-4o-mini',
+    embeddingModel: process.env.AI_EMBEDDING_MODEL ?? 'text-embedding-3-small',
+  },
   gemini: {
     apiKey: process.env.GEMINI_API_KEY,
     baseUrl: 'https://generativelanguage.googleapis.com/v1beta',

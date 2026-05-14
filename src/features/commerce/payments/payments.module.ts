@@ -8,6 +8,7 @@ import { PaymentRepositoryPrisma } from './infrastructure/payment.repository.pri
 import { RazorpayService } from './infrastructure/razorpay.service';
 import { PrismaModule } from '../../../prisma/prisma.module';
 import { OrdersModule } from '../orders/orders.module';
+import { LeadModule } from '../../crm/lead/lead.module';
 
 /**
  * Payments Module
@@ -20,6 +21,7 @@ import { OrdersModule } from '../orders/orders.module';
     PrismaModule,
     OrdersModule, // Import orders module for order confirmation
     ConfigModule,
+    LeadModule,
   ],
   controllers: [PaymentController],
   providers: [

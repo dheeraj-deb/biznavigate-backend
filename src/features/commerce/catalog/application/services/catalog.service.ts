@@ -205,22 +205,45 @@ export class CatalogService {
   // ─── Availability ─────────────────────────────────────────────────────────
 
   async getAvailability(itemId: string, businessId: string, from: string, to: string) {
-    await this.getItemById(itemId, businessId);
+    const item = await this.prisma.catalog_items.findFirst({
+      where: { item_id: itemId, business_id: businessId, is_active: true, deleted_at: null },
+      include: { hospitality_detail: true },
+    });
+    if (!item) throw new NotFoundException('Item not found');
+
+    const defaultSlots = this.resolveItemCapacity(item);
     const rows = await this.prisma.item_availability.findMany({
       where: {
         item_id: itemId,
-        date: { gte: new Date(from), lte: new Date(to) },
+        date: { gte: new Date(from), lt: new Date(to) },
       },
       orderBy: { date: 'asc' },
     });
-    return rows.map((r) => ({
-      date: r.date,
-      total_slots: r.total_slots,
-      booked_slots: r.booked_slots,
-      available_slots: r.is_blocked ? 0 : r.total_slots - r.booked_slots,
-      price: r.price_override ?? null,
-      is_blocked: r.is_blocked,
-    }));
+
+    const rowsByDate = new Map(rows.map((row) => [this.dateKey(row.date), row]));
+
+    return this.dateKeysInRange(from, to).map((date) => {
+      const row = rowsByDate.get(date);
+      if (row) {
+        return {
+          date: row.date,
+          total_slots: row.total_slots,
+          booked_slots: row.booked_slots,
+          available_slots: row.is_blocked ? 0 : row.total_slots - row.booked_slots,
+          price: row.price_override ?? null,
+          is_blocked: row.is_blocked,
+        };
+      }
+
+      return {
+        date: new Date(`${date}T00:00:00.000Z`),
+        total_slots: defaultSlots,
+        booked_slots: 0,
+        available_slots: defaultSlots,
+        price: null,
+        is_blocked: false,
+      };
+    });
   }
 
   async setAvailability(itemId: string, businessId: string, dto: SetAvailabilityDto) {
@@ -326,31 +349,40 @@ export class CatalogService {
     const results = await Promise.all(
       items.map(async (item) => {
         const details = this.hospitalityDetails(item.hospitality_detail, item.attributes);
-        let availableSlots = details?.total_units ?? item.attributes?.['total_slots'] ?? null;
+        let availableSlots = this.resolveItemCapacity(item);
         let effectivePrice = Number(item.base_price);
 
         if (checkIn && checkOut) {
+          // Sparse calendar: rows in item_availability are exceptions (blocks,
+          // existing bookings, price overrides). Absence of rows means the room
+          // is fully available at total_units, not unavailable.
           const avRows = await this.prisma.item_availability.findMany({
             where: {
               item_id: item.item_id,
               date: { gte: checkIn, lt: checkOut },
-              is_blocked: false,
             },
           });
 
-          if (avRows.length === 0) return null; // no availability set for these dates
+          const totalUnits = this.resolveItemCapacity(item);
 
-          const minAvailable = Math.min(
-            ...avRows.map((r) => r.total_slots - r.booked_slots),
-          );
-          if (minAvailable <= 0) return null; // fully booked
+          if (avRows.some((r) => r.is_blocked)) return null; // any blocked date in range disqualifies
 
-          availableSlots = minAvailable;
+          if (avRows.length === 0) {
+            if (!totalUnits) return null; // no calendar and no configured capacity
+            availableSlots = totalUnits;
+          } else {
+            const minAvailable = Math.min(
+              ...avRows.map((r) => r.total_slots - r.booked_slots),
+            );
+            if (minAvailable <= 0) return null; // fully booked on at least one night
 
-          // Use price_override if set on any date in range (take the first override found)
-          const overrideRow = avRows.find((r) => r.price_override !== null);
-          if (overrideRow?.price_override) {
-            effectivePrice = Number(overrideRow.price_override);
+            // Nights with no row default to totalUnits availability.
+            availableSlots = totalUnits ? Math.min(totalUnits, minAvailable) : minAvailable;
+
+            const overrideRow = avRows.find((r) => r.price_override !== null);
+            if (overrideRow?.price_override) {
+              effectivePrice = Number(overrideRow.price_override);
+            }
           }
         }
 
@@ -510,5 +542,36 @@ export class CatalogService {
     if (value === undefined || value === null || value === '') return undefined;
     const parsed = Number(value);
     return Number.isFinite(parsed) ? Math.trunc(parsed) : undefined;
+  }
+
+  private resolveItemCapacity(item: any): number {
+    const attrs = (item.attributes ?? {}) as Record<string, any>;
+    const detail = item.hospitality_detail ?? null;
+    const roomUnits = Array.isArray(attrs.rooms)
+      ? attrs.rooms.reduce((sum, room) => sum + (this.toOptionalInt(room?.qty) ?? 0), 0)
+      : 0;
+
+    return this.toOptionalInt(detail?.total_units)
+      ?? this.toOptionalInt(attrs.total_units)
+      ?? this.toOptionalInt(attrs.total_slots)
+      ?? roomUnits
+      ?? 0;
+  }
+
+  private dateKeysInRange(from: string, to: string): string[] {
+    const dates: string[] = [];
+    const cursor = new Date(`${from}T00:00:00.000Z`);
+    const end = new Date(`${to}T00:00:00.000Z`);
+
+    while (cursor < end) {
+      dates.push(this.dateKey(cursor));
+      cursor.setUTCDate(cursor.getUTCDate() + 1);
+    }
+
+    return dates;
+  }
+
+  private dateKey(date: Date): string {
+    return date.toISOString().split('T')[0];
   }
 }

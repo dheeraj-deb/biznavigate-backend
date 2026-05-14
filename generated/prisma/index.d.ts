@@ -68,6 +68,18 @@ export type users = $Result.DefaultSelection<Prisma.$usersPayload>
  */
 export type leads = $Result.DefaultSelection<Prisma.$leadsPayload>
 /**
+ * Model pipelines
+ * Per-business sales pipeline. A business can have multiple (e.g. "Bookings", "Events").
+ * One is_default per business is enforced at the application layer.
+ */
+export type pipelines = $Result.DefaultSelection<Prisma.$pipelinesPayload>
+/**
+ * Model pipeline_stages
+ * Ordered stages within a pipeline. `slug` mirrors leads.status for backwards
+ * compatibility with existing dashboards (new | contacted | qualified | quoted | won | lost | ...).
+ */
+export type pipeline_stages = $Result.DefaultSelection<Prisma.$pipeline_stagesPayload>
+/**
  * Model lead_events
  * Append-only business event log — never updated, only inserted
  * Replaces: lead_activities + lead_status_history + lead_notes + lead_score_history
@@ -583,6 +595,26 @@ export class PrismaClient<
     * ```
     */
   get leads(): Prisma.leadsDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.pipelines`: Exposes CRUD operations for the **pipelines** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more Pipelines
+    * const pipelines = await prisma.pipelines.findMany()
+    * ```
+    */
+  get pipelines(): Prisma.pipelinesDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.pipeline_stages`: Exposes CRUD operations for the **pipeline_stages** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more Pipeline_stages
+    * const pipeline_stages = await prisma.pipeline_stages.findMany()
+    * ```
+    */
+  get pipeline_stages(): Prisma.pipeline_stagesDelegate<ExtArgs, ClientOptions>;
 
   /**
    * `prisma.lead_events`: Exposes CRUD operations for the **lead_events** model.
@@ -1593,6 +1625,8 @@ export namespace Prisma {
     tenants: 'tenants',
     users: 'users',
     leads: 'leads',
+    pipelines: 'pipelines',
+    pipeline_stages: 'pipeline_stages',
     lead_events: 'lead_events',
     lead_followups: 'lead_followups',
     customers: 'customers',
@@ -1667,7 +1701,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "businesses" | "business_employees" | "intents" | "notifications" | "role_intents" | "roles" | "social_accounts" | "tenants" | "users" | "leads" | "lead_events" | "lead_followups" | "customers" | "orders" | "order_items" | "cart_reservations" | "campaigns" | "campaign_recipients" | "notification_templates" | "notification_messages" | "notification_preferences" | "payments" | "payment_reconciliation" | "notification_events" | "payment_webhooks" | "instagram_media" | "workflow_definitions" | "business_workflows" | "workflow_executions" | "workflow_execution_steps" | "workflow_idempotency_keys" | "cart_items" | "carts" | "whatsapp_optouts" | "campaign_analytics" | "hotel_pricing_recommendations" | "hotel_booking_outcomes" | "hotel_pricing_notifications" | "catalog_items" | "item_variants" | "item_availability" | "product_item_details" | "product_inquiries" | "product_orders" | "product_order_items" | "product_order_status_events" | "hospitality_item_details" | "hospitality_inquiries" | "hospitality_bookings" | "hospitality_booking_items" | "hospitality_booking_guests" | "hospitality_booking_status_events" | "checkpoint_blobs" | "checkpoint_migrations" | "checkpoint_writes" | "checkpoints" | "billing_plans" | "billing_subscriptions" | "wallets" | "wallet_transactions" | "billing_payments" | "billing_invoices" | "billing_webhook_events" | "credit_pricing" | "business_settings" | "audit_logs"
+      modelProps: "businesses" | "business_employees" | "intents" | "notifications" | "role_intents" | "roles" | "social_accounts" | "tenants" | "users" | "leads" | "pipelines" | "pipeline_stages" | "lead_events" | "lead_followups" | "customers" | "orders" | "order_items" | "cart_reservations" | "campaigns" | "campaign_recipients" | "notification_templates" | "notification_messages" | "notification_preferences" | "payments" | "payment_reconciliation" | "notification_events" | "payment_webhooks" | "instagram_media" | "workflow_definitions" | "business_workflows" | "workflow_executions" | "workflow_execution_steps" | "workflow_idempotency_keys" | "cart_items" | "carts" | "whatsapp_optouts" | "campaign_analytics" | "hotel_pricing_recommendations" | "hotel_booking_outcomes" | "hotel_pricing_notifications" | "catalog_items" | "item_variants" | "item_availability" | "product_item_details" | "product_inquiries" | "product_orders" | "product_order_items" | "product_order_status_events" | "hospitality_item_details" | "hospitality_inquiries" | "hospitality_bookings" | "hospitality_booking_items" | "hospitality_booking_guests" | "hospitality_booking_status_events" | "checkpoint_blobs" | "checkpoint_migrations" | "checkpoint_writes" | "checkpoints" | "billing_plans" | "billing_subscriptions" | "wallets" | "wallet_transactions" | "billing_payments" | "billing_invoices" | "billing_webhook_events" | "credit_pricing" | "business_settings" | "audit_logs"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -2408,6 +2442,154 @@ export namespace Prisma {
           count: {
             args: Prisma.leadsCountArgs<ExtArgs>
             result: $Utils.Optional<LeadsCountAggregateOutputType> | number
+          }
+        }
+      }
+      pipelines: {
+        payload: Prisma.$pipelinesPayload<ExtArgs>
+        fields: Prisma.pipelinesFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.pipelinesFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$pipelinesPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.pipelinesFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$pipelinesPayload>
+          }
+          findFirst: {
+            args: Prisma.pipelinesFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$pipelinesPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.pipelinesFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$pipelinesPayload>
+          }
+          findMany: {
+            args: Prisma.pipelinesFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$pipelinesPayload>[]
+          }
+          create: {
+            args: Prisma.pipelinesCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$pipelinesPayload>
+          }
+          createMany: {
+            args: Prisma.pipelinesCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.pipelinesCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$pipelinesPayload>[]
+          }
+          delete: {
+            args: Prisma.pipelinesDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$pipelinesPayload>
+          }
+          update: {
+            args: Prisma.pipelinesUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$pipelinesPayload>
+          }
+          deleteMany: {
+            args: Prisma.pipelinesDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.pipelinesUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.pipelinesUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$pipelinesPayload>[]
+          }
+          upsert: {
+            args: Prisma.pipelinesUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$pipelinesPayload>
+          }
+          aggregate: {
+            args: Prisma.PipelinesAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregatePipelines>
+          }
+          groupBy: {
+            args: Prisma.pipelinesGroupByArgs<ExtArgs>
+            result: $Utils.Optional<PipelinesGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.pipelinesCountArgs<ExtArgs>
+            result: $Utils.Optional<PipelinesCountAggregateOutputType> | number
+          }
+        }
+      }
+      pipeline_stages: {
+        payload: Prisma.$pipeline_stagesPayload<ExtArgs>
+        fields: Prisma.pipeline_stagesFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.pipeline_stagesFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$pipeline_stagesPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.pipeline_stagesFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$pipeline_stagesPayload>
+          }
+          findFirst: {
+            args: Prisma.pipeline_stagesFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$pipeline_stagesPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.pipeline_stagesFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$pipeline_stagesPayload>
+          }
+          findMany: {
+            args: Prisma.pipeline_stagesFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$pipeline_stagesPayload>[]
+          }
+          create: {
+            args: Prisma.pipeline_stagesCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$pipeline_stagesPayload>
+          }
+          createMany: {
+            args: Prisma.pipeline_stagesCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.pipeline_stagesCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$pipeline_stagesPayload>[]
+          }
+          delete: {
+            args: Prisma.pipeline_stagesDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$pipeline_stagesPayload>
+          }
+          update: {
+            args: Prisma.pipeline_stagesUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$pipeline_stagesPayload>
+          }
+          deleteMany: {
+            args: Prisma.pipeline_stagesDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.pipeline_stagesUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.pipeline_stagesUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$pipeline_stagesPayload>[]
+          }
+          upsert: {
+            args: Prisma.pipeline_stagesUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$pipeline_stagesPayload>
+          }
+          aggregate: {
+            args: Prisma.Pipeline_stagesAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregatePipeline_stages>
+          }
+          groupBy: {
+            args: Prisma.pipeline_stagesGroupByArgs<ExtArgs>
+            result: $Utils.Optional<Pipeline_stagesGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.pipeline_stagesCountArgs<ExtArgs>
+            result: $Utils.Optional<Pipeline_stagesCountAggregateOutputType> | number
           }
         }
       }
@@ -6653,6 +6835,8 @@ export namespace Prisma {
     tenants?: tenantsOmit
     users?: usersOmit
     leads?: leadsOmit
+    pipelines?: pipelinesOmit
+    pipeline_stages?: pipeline_stagesOmit
     lead_events?: lead_eventsOmit
     lead_followups?: lead_followupsOmit
     customers?: customersOmit
@@ -6814,6 +6998,7 @@ export namespace Prisma {
     hospitality_bookings: number
     hospitality_inquiries: number
     leads: number
+    pipelines: number
     notification_messages: number
     notification_preferences: number
     notification_templates: number
@@ -6841,6 +7026,7 @@ export namespace Prisma {
     hospitality_bookings?: boolean | BusinessesCountOutputTypeCountHospitality_bookingsArgs
     hospitality_inquiries?: boolean | BusinessesCountOutputTypeCountHospitality_inquiriesArgs
     leads?: boolean | BusinessesCountOutputTypeCountLeadsArgs
+    pipelines?: boolean | BusinessesCountOutputTypeCountPipelinesArgs
     notification_messages?: boolean | BusinessesCountOutputTypeCountNotification_messagesArgs
     notification_preferences?: boolean | BusinessesCountOutputTypeCountNotification_preferencesArgs
     notification_templates?: boolean | BusinessesCountOutputTypeCountNotification_templatesArgs
@@ -6942,6 +7128,13 @@ export namespace Prisma {
    */
   export type BusinessesCountOutputTypeCountLeadsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: leadsWhereInput
+  }
+
+  /**
+   * BusinessesCountOutputType without action
+   */
+  export type BusinessesCountOutputTypeCountPipelinesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: pipelinesWhereInput
   }
 
   /**
@@ -7444,6 +7637,77 @@ export namespace Prisma {
    */
   export type LeadsCountOutputTypeCountWorkflow_executionsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: workflow_executionsWhereInput
+  }
+
+
+  /**
+   * Count Type PipelinesCountOutputType
+   */
+
+  export type PipelinesCountOutputType = {
+    stages: number
+    leads: number
+  }
+
+  export type PipelinesCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    stages?: boolean | PipelinesCountOutputTypeCountStagesArgs
+    leads?: boolean | PipelinesCountOutputTypeCountLeadsArgs
+  }
+
+  // Custom InputTypes
+  /**
+   * PipelinesCountOutputType without action
+   */
+  export type PipelinesCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PipelinesCountOutputType
+     */
+    select?: PipelinesCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * PipelinesCountOutputType without action
+   */
+  export type PipelinesCountOutputTypeCountStagesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: pipeline_stagesWhereInput
+  }
+
+  /**
+   * PipelinesCountOutputType without action
+   */
+  export type PipelinesCountOutputTypeCountLeadsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: leadsWhereInput
+  }
+
+
+  /**
+   * Count Type Pipeline_stagesCountOutputType
+   */
+
+  export type Pipeline_stagesCountOutputType = {
+    leads: number
+  }
+
+  export type Pipeline_stagesCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    leads?: boolean | Pipeline_stagesCountOutputTypeCountLeadsArgs
+  }
+
+  // Custom InputTypes
+  /**
+   * Pipeline_stagesCountOutputType without action
+   */
+  export type Pipeline_stagesCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Pipeline_stagesCountOutputType
+     */
+    select?: Pipeline_stagesCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * Pipeline_stagesCountOutputType without action
+   */
+  export type Pipeline_stagesCountOutputTypeCountLeadsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: leadsWhereInput
   }
 
 
@@ -8436,6 +8700,7 @@ export namespace Prisma {
     hospitality_bookings?: boolean | businesses$hospitality_bookingsArgs<ExtArgs>
     hospitality_inquiries?: boolean | businesses$hospitality_inquiriesArgs<ExtArgs>
     leads?: boolean | businesses$leadsArgs<ExtArgs>
+    pipelines?: boolean | businesses$pipelinesArgs<ExtArgs>
     notification_messages?: boolean | businesses$notification_messagesArgs<ExtArgs>
     notification_preferences?: boolean | businesses$notification_preferencesArgs<ExtArgs>
     notification_templates?: boolean | businesses$notification_templatesArgs<ExtArgs>
@@ -8528,6 +8793,7 @@ export namespace Prisma {
     hospitality_bookings?: boolean | businesses$hospitality_bookingsArgs<ExtArgs>
     hospitality_inquiries?: boolean | businesses$hospitality_inquiriesArgs<ExtArgs>
     leads?: boolean | businesses$leadsArgs<ExtArgs>
+    pipelines?: boolean | businesses$pipelinesArgs<ExtArgs>
     notification_messages?: boolean | businesses$notification_messagesArgs<ExtArgs>
     notification_preferences?: boolean | businesses$notification_preferencesArgs<ExtArgs>
     notification_templates?: boolean | businesses$notification_templatesArgs<ExtArgs>
@@ -8568,6 +8834,7 @@ export namespace Prisma {
       hospitality_bookings: Prisma.$hospitality_bookingsPayload<ExtArgs>[]
       hospitality_inquiries: Prisma.$hospitality_inquiriesPayload<ExtArgs>[]
       leads: Prisma.$leadsPayload<ExtArgs>[]
+      pipelines: Prisma.$pipelinesPayload<ExtArgs>[]
       notification_messages: Prisma.$notification_messagesPayload<ExtArgs>[]
       notification_preferences: Prisma.$notification_preferencesPayload<ExtArgs>[]
       notification_templates: Prisma.$notification_templatesPayload<ExtArgs>[]
@@ -9008,6 +9275,7 @@ export namespace Prisma {
     hospitality_bookings<T extends businesses$hospitality_bookingsArgs<ExtArgs> = {}>(args?: Subset<T, businesses$hospitality_bookingsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$hospitality_bookingsPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     hospitality_inquiries<T extends businesses$hospitality_inquiriesArgs<ExtArgs> = {}>(args?: Subset<T, businesses$hospitality_inquiriesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$hospitality_inquiriesPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     leads<T extends businesses$leadsArgs<ExtArgs> = {}>(args?: Subset<T, businesses$leadsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$leadsPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    pipelines<T extends businesses$pipelinesArgs<ExtArgs> = {}>(args?: Subset<T, businesses$pipelinesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$pipelinesPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     notification_messages<T extends businesses$notification_messagesArgs<ExtArgs> = {}>(args?: Subset<T, businesses$notification_messagesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$notification_messagesPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     notification_preferences<T extends businesses$notification_preferencesArgs<ExtArgs> = {}>(args?: Subset<T, businesses$notification_preferencesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$notification_preferencesPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     notification_templates<T extends businesses$notification_templatesArgs<ExtArgs> = {}>(args?: Subset<T, businesses$notification_templatesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$notification_templatesPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
@@ -9726,6 +9994,30 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: LeadsScalarFieldEnum | LeadsScalarFieldEnum[]
+  }
+
+  /**
+   * businesses.pipelines
+   */
+  export type businesses$pipelinesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the pipelines
+     */
+    select?: pipelinesSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the pipelines
+     */
+    omit?: pipelinesOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: pipelinesInclude<ExtArgs> | null
+    where?: pipelinesWhereInput
+    orderBy?: pipelinesOrderByWithRelationInput | pipelinesOrderByWithRelationInput[]
+    cursor?: pipelinesWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: PipelinesScalarFieldEnum | PipelinesScalarFieldEnum[]
   }
 
   /**
@@ -19780,6 +20072,8 @@ export namespace Prisma {
     source: string | null
     platform_id: string | null
     status: string | null
+    stage_id: string | null
+    pipeline_id: string | null
     lost_reason: string | null
     quoted_amount: Decimal | null
     quoted_at: Date | null
@@ -19803,6 +20097,8 @@ export namespace Prisma {
     source: string | null
     platform_id: string | null
     status: string | null
+    stage_id: string | null
+    pipeline_id: string | null
     lost_reason: string | null
     quoted_amount: Decimal | null
     quoted_at: Date | null
@@ -19826,6 +20122,8 @@ export namespace Prisma {
     source: number
     platform_id: number
     status: number
+    stage_id: number
+    pipeline_id: number
     lost_reason: number
     context: number
     quoted_amount: number
@@ -19863,6 +20161,8 @@ export namespace Prisma {
     source?: true
     platform_id?: true
     status?: true
+    stage_id?: true
+    pipeline_id?: true
     lost_reason?: true
     quoted_amount?: true
     quoted_at?: true
@@ -19886,6 +20186,8 @@ export namespace Prisma {
     source?: true
     platform_id?: true
     status?: true
+    stage_id?: true
+    pipeline_id?: true
     lost_reason?: true
     quoted_amount?: true
     quoted_at?: true
@@ -19909,6 +20211,8 @@ export namespace Prisma {
     source?: true
     platform_id?: true
     status?: true
+    stage_id?: true
+    pipeline_id?: true
     lost_reason?: true
     context?: true
     quoted_amount?: true
@@ -20021,6 +20325,8 @@ export namespace Prisma {
     source: string
     platform_id: string | null
     status: string
+    stage_id: string | null
+    pipeline_id: string | null
     lost_reason: string | null
     context: JsonValue | null
     quoted_amount: Decimal | null
@@ -20065,6 +20371,8 @@ export namespace Prisma {
     source?: boolean
     platform_id?: boolean
     status?: boolean
+    stage_id?: boolean
+    pipeline_id?: boolean
     lost_reason?: boolean
     context?: boolean
     quoted_amount?: boolean
@@ -20088,6 +20396,8 @@ export namespace Prisma {
     assigned_user?: boolean | leads$assigned_userArgs<ExtArgs>
     businesses?: boolean | businessesDefaultArgs<ExtArgs>
     tenants?: boolean | tenantsDefaultArgs<ExtArgs>
+    pipeline?: boolean | leads$pipelineArgs<ExtArgs>
+    stage?: boolean | leads$stageArgs<ExtArgs>
     orders?: boolean | leads$ordersArgs<ExtArgs>
     workflow_executions?: boolean | leads$workflow_executionsArgs<ExtArgs>
     _count?: boolean | LeadsCountOutputTypeDefaultArgs<ExtArgs>
@@ -20104,6 +20414,8 @@ export namespace Prisma {
     source?: boolean
     platform_id?: boolean
     status?: boolean
+    stage_id?: boolean
+    pipeline_id?: boolean
     lost_reason?: boolean
     context?: boolean
     quoted_amount?: boolean
@@ -20119,6 +20431,8 @@ export namespace Prisma {
     assigned_user?: boolean | leads$assigned_userArgs<ExtArgs>
     businesses?: boolean | businessesDefaultArgs<ExtArgs>
     tenants?: boolean | tenantsDefaultArgs<ExtArgs>
+    pipeline?: boolean | leads$pipelineArgs<ExtArgs>
+    stage?: boolean | leads$stageArgs<ExtArgs>
   }, ExtArgs["result"]["leads"]>
 
   export type leadsSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -20132,6 +20446,8 @@ export namespace Prisma {
     source?: boolean
     platform_id?: boolean
     status?: boolean
+    stage_id?: boolean
+    pipeline_id?: boolean
     lost_reason?: boolean
     context?: boolean
     quoted_amount?: boolean
@@ -20147,6 +20463,8 @@ export namespace Prisma {
     assigned_user?: boolean | leads$assigned_userArgs<ExtArgs>
     businesses?: boolean | businessesDefaultArgs<ExtArgs>
     tenants?: boolean | tenantsDefaultArgs<ExtArgs>
+    pipeline?: boolean | leads$pipelineArgs<ExtArgs>
+    stage?: boolean | leads$stageArgs<ExtArgs>
   }, ExtArgs["result"]["leads"]>
 
   export type leadsSelectScalar = {
@@ -20160,6 +20478,8 @@ export namespace Prisma {
     source?: boolean
     platform_id?: boolean
     status?: boolean
+    stage_id?: boolean
+    pipeline_id?: boolean
     lost_reason?: boolean
     context?: boolean
     quoted_amount?: boolean
@@ -20174,7 +20494,7 @@ export namespace Prisma {
     updated_at?: boolean
   }
 
-  export type leadsOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"lead_id" | "business_id" | "tenant_id" | "name" | "phone" | "email" | "channel" | "source" | "platform_id" | "status" | "lost_reason" | "context" | "quoted_amount" | "quoted_at" | "converted_value" | "converted_at" | "tags" | "assigned_to" | "followup_at" | "deleted_at" | "created_at" | "updated_at", ExtArgs["result"]["leads"]>
+  export type leadsOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"lead_id" | "business_id" | "tenant_id" | "name" | "phone" | "email" | "channel" | "source" | "platform_id" | "status" | "stage_id" | "pipeline_id" | "lost_reason" | "context" | "quoted_amount" | "quoted_at" | "converted_value" | "converted_at" | "tags" | "assigned_to" | "followup_at" | "deleted_at" | "created_at" | "updated_at", ExtArgs["result"]["leads"]>
   export type leadsInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     cart_reservations?: boolean | leads$cart_reservationsArgs<ExtArgs>
     carts?: boolean | leads$cartsArgs<ExtArgs>
@@ -20187,6 +20507,8 @@ export namespace Prisma {
     assigned_user?: boolean | leads$assigned_userArgs<ExtArgs>
     businesses?: boolean | businessesDefaultArgs<ExtArgs>
     tenants?: boolean | tenantsDefaultArgs<ExtArgs>
+    pipeline?: boolean | leads$pipelineArgs<ExtArgs>
+    stage?: boolean | leads$stageArgs<ExtArgs>
     orders?: boolean | leads$ordersArgs<ExtArgs>
     workflow_executions?: boolean | leads$workflow_executionsArgs<ExtArgs>
     _count?: boolean | LeadsCountOutputTypeDefaultArgs<ExtArgs>
@@ -20195,11 +20517,15 @@ export namespace Prisma {
     assigned_user?: boolean | leads$assigned_userArgs<ExtArgs>
     businesses?: boolean | businessesDefaultArgs<ExtArgs>
     tenants?: boolean | tenantsDefaultArgs<ExtArgs>
+    pipeline?: boolean | leads$pipelineArgs<ExtArgs>
+    stage?: boolean | leads$stageArgs<ExtArgs>
   }
   export type leadsIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     assigned_user?: boolean | leads$assigned_userArgs<ExtArgs>
     businesses?: boolean | businessesDefaultArgs<ExtArgs>
     tenants?: boolean | tenantsDefaultArgs<ExtArgs>
+    pipeline?: boolean | leads$pipelineArgs<ExtArgs>
+    stage?: boolean | leads$stageArgs<ExtArgs>
   }
 
   export type $leadsPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -20216,6 +20542,8 @@ export namespace Prisma {
       assigned_user: Prisma.$usersPayload<ExtArgs> | null
       businesses: Prisma.$businessesPayload<ExtArgs>
       tenants: Prisma.$tenantsPayload<ExtArgs>
+      pipeline: Prisma.$pipelinesPayload<ExtArgs> | null
+      stage: Prisma.$pipeline_stagesPayload<ExtArgs> | null
       orders: Prisma.$ordersPayload<ExtArgs>[]
       workflow_executions: Prisma.$workflow_executionsPayload<ExtArgs>[]
     }
@@ -20230,6 +20558,8 @@ export namespace Prisma {
       source: string
       platform_id: string | null
       status: string
+      stage_id: string | null
+      pipeline_id: string | null
       lost_reason: string | null
       /**
        * AI-extracted business-type context
@@ -20656,6 +20986,8 @@ export namespace Prisma {
     assigned_user<T extends leads$assigned_userArgs<ExtArgs> = {}>(args?: Subset<T, leads$assigned_userArgs<ExtArgs>>): Prisma__usersClient<$Result.GetResult<Prisma.$usersPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     businesses<T extends businessesDefaultArgs<ExtArgs> = {}>(args?: Subset<T, businessesDefaultArgs<ExtArgs>>): Prisma__businessesClient<$Result.GetResult<Prisma.$businessesPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     tenants<T extends tenantsDefaultArgs<ExtArgs> = {}>(args?: Subset<T, tenantsDefaultArgs<ExtArgs>>): Prisma__tenantsClient<$Result.GetResult<Prisma.$tenantsPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    pipeline<T extends leads$pipelineArgs<ExtArgs> = {}>(args?: Subset<T, leads$pipelineArgs<ExtArgs>>): Prisma__pipelinesClient<$Result.GetResult<Prisma.$pipelinesPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    stage<T extends leads$stageArgs<ExtArgs> = {}>(args?: Subset<T, leads$stageArgs<ExtArgs>>): Prisma__pipeline_stagesClient<$Result.GetResult<Prisma.$pipeline_stagesPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     orders<T extends leads$ordersArgs<ExtArgs> = {}>(args?: Subset<T, leads$ordersArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ordersPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     workflow_executions<T extends leads$workflow_executionsArgs<ExtArgs> = {}>(args?: Subset<T, leads$workflow_executionsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$workflow_executionsPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
@@ -20697,6 +21029,8 @@ export namespace Prisma {
     readonly source: FieldRef<"leads", 'String'>
     readonly platform_id: FieldRef<"leads", 'String'>
     readonly status: FieldRef<"leads", 'String'>
+    readonly stage_id: FieldRef<"leads", 'String'>
+    readonly pipeline_id: FieldRef<"leads", 'String'>
     readonly lost_reason: FieldRef<"leads", 'String'>
     readonly context: FieldRef<"leads", 'Json'>
     readonly quoted_amount: FieldRef<"leads", 'Decimal'>
@@ -21316,6 +21650,44 @@ export namespace Prisma {
   }
 
   /**
+   * leads.pipeline
+   */
+  export type leads$pipelineArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the pipelines
+     */
+    select?: pipelinesSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the pipelines
+     */
+    omit?: pipelinesOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: pipelinesInclude<ExtArgs> | null
+    where?: pipelinesWhereInput
+  }
+
+  /**
+   * leads.stage
+   */
+  export type leads$stageArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the pipeline_stages
+     */
+    select?: pipeline_stagesSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the pipeline_stages
+     */
+    omit?: pipeline_stagesOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: pipeline_stagesInclude<ExtArgs> | null
+    where?: pipeline_stagesWhereInput
+  }
+
+  /**
    * leads.orders
    */
   export type leads$ordersArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -21379,6 +21751,2348 @@ export namespace Prisma {
      * Choose, which related nodes to fetch as well
      */
     include?: leadsInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model pipelines
+   */
+
+  export type AggregatePipelines = {
+    _count: PipelinesCountAggregateOutputType | null
+    _min: PipelinesMinAggregateOutputType | null
+    _max: PipelinesMaxAggregateOutputType | null
+  }
+
+  export type PipelinesMinAggregateOutputType = {
+    pipeline_id: string | null
+    business_id: string | null
+    name: string | null
+    industry: string | null
+    is_default: boolean | null
+    is_archived: boolean | null
+    created_at: Date | null
+    updated_at: Date | null
+  }
+
+  export type PipelinesMaxAggregateOutputType = {
+    pipeline_id: string | null
+    business_id: string | null
+    name: string | null
+    industry: string | null
+    is_default: boolean | null
+    is_archived: boolean | null
+    created_at: Date | null
+    updated_at: Date | null
+  }
+
+  export type PipelinesCountAggregateOutputType = {
+    pipeline_id: number
+    business_id: number
+    name: number
+    industry: number
+    is_default: number
+    is_archived: number
+    created_at: number
+    updated_at: number
+    _all: number
+  }
+
+
+  export type PipelinesMinAggregateInputType = {
+    pipeline_id?: true
+    business_id?: true
+    name?: true
+    industry?: true
+    is_default?: true
+    is_archived?: true
+    created_at?: true
+    updated_at?: true
+  }
+
+  export type PipelinesMaxAggregateInputType = {
+    pipeline_id?: true
+    business_id?: true
+    name?: true
+    industry?: true
+    is_default?: true
+    is_archived?: true
+    created_at?: true
+    updated_at?: true
+  }
+
+  export type PipelinesCountAggregateInputType = {
+    pipeline_id?: true
+    business_id?: true
+    name?: true
+    industry?: true
+    is_default?: true
+    is_archived?: true
+    created_at?: true
+    updated_at?: true
+    _all?: true
+  }
+
+  export type PipelinesAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which pipelines to aggregate.
+     */
+    where?: pipelinesWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of pipelines to fetch.
+     */
+    orderBy?: pipelinesOrderByWithRelationInput | pipelinesOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: pipelinesWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` pipelines from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` pipelines.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned pipelines
+    **/
+    _count?: true | PipelinesCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: PipelinesMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: PipelinesMaxAggregateInputType
+  }
+
+  export type GetPipelinesAggregateType<T extends PipelinesAggregateArgs> = {
+        [P in keyof T & keyof AggregatePipelines]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregatePipelines[P]>
+      : GetScalarType<T[P], AggregatePipelines[P]>
+  }
+
+
+
+
+  export type pipelinesGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: pipelinesWhereInput
+    orderBy?: pipelinesOrderByWithAggregationInput | pipelinesOrderByWithAggregationInput[]
+    by: PipelinesScalarFieldEnum[] | PipelinesScalarFieldEnum
+    having?: pipelinesScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: PipelinesCountAggregateInputType | true
+    _min?: PipelinesMinAggregateInputType
+    _max?: PipelinesMaxAggregateInputType
+  }
+
+  export type PipelinesGroupByOutputType = {
+    pipeline_id: string
+    business_id: string
+    name: string
+    industry: string | null
+    is_default: boolean
+    is_archived: boolean
+    created_at: Date
+    updated_at: Date
+    _count: PipelinesCountAggregateOutputType | null
+    _min: PipelinesMinAggregateOutputType | null
+    _max: PipelinesMaxAggregateOutputType | null
+  }
+
+  type GetPipelinesGroupByPayload<T extends pipelinesGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<PipelinesGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof PipelinesGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], PipelinesGroupByOutputType[P]>
+            : GetScalarType<T[P], PipelinesGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type pipelinesSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    pipeline_id?: boolean
+    business_id?: boolean
+    name?: boolean
+    industry?: boolean
+    is_default?: boolean
+    is_archived?: boolean
+    created_at?: boolean
+    updated_at?: boolean
+    businesses?: boolean | businessesDefaultArgs<ExtArgs>
+    stages?: boolean | pipelines$stagesArgs<ExtArgs>
+    leads?: boolean | pipelines$leadsArgs<ExtArgs>
+    _count?: boolean | PipelinesCountOutputTypeDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["pipelines"]>
+
+  export type pipelinesSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    pipeline_id?: boolean
+    business_id?: boolean
+    name?: boolean
+    industry?: boolean
+    is_default?: boolean
+    is_archived?: boolean
+    created_at?: boolean
+    updated_at?: boolean
+    businesses?: boolean | businessesDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["pipelines"]>
+
+  export type pipelinesSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    pipeline_id?: boolean
+    business_id?: boolean
+    name?: boolean
+    industry?: boolean
+    is_default?: boolean
+    is_archived?: boolean
+    created_at?: boolean
+    updated_at?: boolean
+    businesses?: boolean | businessesDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["pipelines"]>
+
+  export type pipelinesSelectScalar = {
+    pipeline_id?: boolean
+    business_id?: boolean
+    name?: boolean
+    industry?: boolean
+    is_default?: boolean
+    is_archived?: boolean
+    created_at?: boolean
+    updated_at?: boolean
+  }
+
+  export type pipelinesOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"pipeline_id" | "business_id" | "name" | "industry" | "is_default" | "is_archived" | "created_at" | "updated_at", ExtArgs["result"]["pipelines"]>
+  export type pipelinesInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    businesses?: boolean | businessesDefaultArgs<ExtArgs>
+    stages?: boolean | pipelines$stagesArgs<ExtArgs>
+    leads?: boolean | pipelines$leadsArgs<ExtArgs>
+    _count?: boolean | PipelinesCountOutputTypeDefaultArgs<ExtArgs>
+  }
+  export type pipelinesIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    businesses?: boolean | businessesDefaultArgs<ExtArgs>
+  }
+  export type pipelinesIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    businesses?: boolean | businessesDefaultArgs<ExtArgs>
+  }
+
+  export type $pipelinesPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "pipelines"
+    objects: {
+      businesses: Prisma.$businessesPayload<ExtArgs>
+      stages: Prisma.$pipeline_stagesPayload<ExtArgs>[]
+      leads: Prisma.$leadsPayload<ExtArgs>[]
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      pipeline_id: string
+      business_id: string
+      name: string
+      industry: string | null
+      is_default: boolean
+      is_archived: boolean
+      created_at: Date
+      updated_at: Date
+    }, ExtArgs["result"]["pipelines"]>
+    composites: {}
+  }
+
+  type pipelinesGetPayload<S extends boolean | null | undefined | pipelinesDefaultArgs> = $Result.GetResult<Prisma.$pipelinesPayload, S>
+
+  type pipelinesCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<pipelinesFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: PipelinesCountAggregateInputType | true
+    }
+
+  export interface pipelinesDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['pipelines'], meta: { name: 'pipelines' } }
+    /**
+     * Find zero or one Pipelines that matches the filter.
+     * @param {pipelinesFindUniqueArgs} args - Arguments to find a Pipelines
+     * @example
+     * // Get one Pipelines
+     * const pipelines = await prisma.pipelines.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends pipelinesFindUniqueArgs>(args: SelectSubset<T, pipelinesFindUniqueArgs<ExtArgs>>): Prisma__pipelinesClient<$Result.GetResult<Prisma.$pipelinesPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one Pipelines that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {pipelinesFindUniqueOrThrowArgs} args - Arguments to find a Pipelines
+     * @example
+     * // Get one Pipelines
+     * const pipelines = await prisma.pipelines.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends pipelinesFindUniqueOrThrowArgs>(args: SelectSubset<T, pipelinesFindUniqueOrThrowArgs<ExtArgs>>): Prisma__pipelinesClient<$Result.GetResult<Prisma.$pipelinesPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Pipelines that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {pipelinesFindFirstArgs} args - Arguments to find a Pipelines
+     * @example
+     * // Get one Pipelines
+     * const pipelines = await prisma.pipelines.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends pipelinesFindFirstArgs>(args?: SelectSubset<T, pipelinesFindFirstArgs<ExtArgs>>): Prisma__pipelinesClient<$Result.GetResult<Prisma.$pipelinesPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Pipelines that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {pipelinesFindFirstOrThrowArgs} args - Arguments to find a Pipelines
+     * @example
+     * // Get one Pipelines
+     * const pipelines = await prisma.pipelines.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends pipelinesFindFirstOrThrowArgs>(args?: SelectSubset<T, pipelinesFindFirstOrThrowArgs<ExtArgs>>): Prisma__pipelinesClient<$Result.GetResult<Prisma.$pipelinesPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more Pipelines that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {pipelinesFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all Pipelines
+     * const pipelines = await prisma.pipelines.findMany()
+     * 
+     * // Get first 10 Pipelines
+     * const pipelines = await prisma.pipelines.findMany({ take: 10 })
+     * 
+     * // Only select the `pipeline_id`
+     * const pipelinesWithPipeline_idOnly = await prisma.pipelines.findMany({ select: { pipeline_id: true } })
+     * 
+     */
+    findMany<T extends pipelinesFindManyArgs>(args?: SelectSubset<T, pipelinesFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$pipelinesPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a Pipelines.
+     * @param {pipelinesCreateArgs} args - Arguments to create a Pipelines.
+     * @example
+     * // Create one Pipelines
+     * const Pipelines = await prisma.pipelines.create({
+     *   data: {
+     *     // ... data to create a Pipelines
+     *   }
+     * })
+     * 
+     */
+    create<T extends pipelinesCreateArgs>(args: SelectSubset<T, pipelinesCreateArgs<ExtArgs>>): Prisma__pipelinesClient<$Result.GetResult<Prisma.$pipelinesPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many Pipelines.
+     * @param {pipelinesCreateManyArgs} args - Arguments to create many Pipelines.
+     * @example
+     * // Create many Pipelines
+     * const pipelines = await prisma.pipelines.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends pipelinesCreateManyArgs>(args?: SelectSubset<T, pipelinesCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many Pipelines and returns the data saved in the database.
+     * @param {pipelinesCreateManyAndReturnArgs} args - Arguments to create many Pipelines.
+     * @example
+     * // Create many Pipelines
+     * const pipelines = await prisma.pipelines.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many Pipelines and only return the `pipeline_id`
+     * const pipelinesWithPipeline_idOnly = await prisma.pipelines.createManyAndReturn({
+     *   select: { pipeline_id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends pipelinesCreateManyAndReturnArgs>(args?: SelectSubset<T, pipelinesCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$pipelinesPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a Pipelines.
+     * @param {pipelinesDeleteArgs} args - Arguments to delete one Pipelines.
+     * @example
+     * // Delete one Pipelines
+     * const Pipelines = await prisma.pipelines.delete({
+     *   where: {
+     *     // ... filter to delete one Pipelines
+     *   }
+     * })
+     * 
+     */
+    delete<T extends pipelinesDeleteArgs>(args: SelectSubset<T, pipelinesDeleteArgs<ExtArgs>>): Prisma__pipelinesClient<$Result.GetResult<Prisma.$pipelinesPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one Pipelines.
+     * @param {pipelinesUpdateArgs} args - Arguments to update one Pipelines.
+     * @example
+     * // Update one Pipelines
+     * const pipelines = await prisma.pipelines.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends pipelinesUpdateArgs>(args: SelectSubset<T, pipelinesUpdateArgs<ExtArgs>>): Prisma__pipelinesClient<$Result.GetResult<Prisma.$pipelinesPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more Pipelines.
+     * @param {pipelinesDeleteManyArgs} args - Arguments to filter Pipelines to delete.
+     * @example
+     * // Delete a few Pipelines
+     * const { count } = await prisma.pipelines.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends pipelinesDeleteManyArgs>(args?: SelectSubset<T, pipelinesDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Pipelines.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {pipelinesUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many Pipelines
+     * const pipelines = await prisma.pipelines.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends pipelinesUpdateManyArgs>(args: SelectSubset<T, pipelinesUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Pipelines and returns the data updated in the database.
+     * @param {pipelinesUpdateManyAndReturnArgs} args - Arguments to update many Pipelines.
+     * @example
+     * // Update many Pipelines
+     * const pipelines = await prisma.pipelines.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more Pipelines and only return the `pipeline_id`
+     * const pipelinesWithPipeline_idOnly = await prisma.pipelines.updateManyAndReturn({
+     *   select: { pipeline_id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends pipelinesUpdateManyAndReturnArgs>(args: SelectSubset<T, pipelinesUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$pipelinesPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one Pipelines.
+     * @param {pipelinesUpsertArgs} args - Arguments to update or create a Pipelines.
+     * @example
+     * // Update or create a Pipelines
+     * const pipelines = await prisma.pipelines.upsert({
+     *   create: {
+     *     // ... data to create a Pipelines
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the Pipelines we want to update
+     *   }
+     * })
+     */
+    upsert<T extends pipelinesUpsertArgs>(args: SelectSubset<T, pipelinesUpsertArgs<ExtArgs>>): Prisma__pipelinesClient<$Result.GetResult<Prisma.$pipelinesPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of Pipelines.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {pipelinesCountArgs} args - Arguments to filter Pipelines to count.
+     * @example
+     * // Count the number of Pipelines
+     * const count = await prisma.pipelines.count({
+     *   where: {
+     *     // ... the filter for the Pipelines we want to count
+     *   }
+     * })
+    **/
+    count<T extends pipelinesCountArgs>(
+      args?: Subset<T, pipelinesCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], PipelinesCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a Pipelines.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PipelinesAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends PipelinesAggregateArgs>(args: Subset<T, PipelinesAggregateArgs>): Prisma.PrismaPromise<GetPipelinesAggregateType<T>>
+
+    /**
+     * Group by Pipelines.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {pipelinesGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends pipelinesGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: pipelinesGroupByArgs['orderBy'] }
+        : { orderBy?: pipelinesGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, pipelinesGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetPipelinesGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the pipelines model
+   */
+  readonly fields: pipelinesFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for pipelines.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__pipelinesClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    businesses<T extends businessesDefaultArgs<ExtArgs> = {}>(args?: Subset<T, businessesDefaultArgs<ExtArgs>>): Prisma__businessesClient<$Result.GetResult<Prisma.$businessesPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    stages<T extends pipelines$stagesArgs<ExtArgs> = {}>(args?: Subset<T, pipelines$stagesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$pipeline_stagesPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    leads<T extends pipelines$leadsArgs<ExtArgs> = {}>(args?: Subset<T, pipelines$leadsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$leadsPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the pipelines model
+   */
+  interface pipelinesFieldRefs {
+    readonly pipeline_id: FieldRef<"pipelines", 'String'>
+    readonly business_id: FieldRef<"pipelines", 'String'>
+    readonly name: FieldRef<"pipelines", 'String'>
+    readonly industry: FieldRef<"pipelines", 'String'>
+    readonly is_default: FieldRef<"pipelines", 'Boolean'>
+    readonly is_archived: FieldRef<"pipelines", 'Boolean'>
+    readonly created_at: FieldRef<"pipelines", 'DateTime'>
+    readonly updated_at: FieldRef<"pipelines", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * pipelines findUnique
+   */
+  export type pipelinesFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the pipelines
+     */
+    select?: pipelinesSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the pipelines
+     */
+    omit?: pipelinesOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: pipelinesInclude<ExtArgs> | null
+    /**
+     * Filter, which pipelines to fetch.
+     */
+    where: pipelinesWhereUniqueInput
+  }
+
+  /**
+   * pipelines findUniqueOrThrow
+   */
+  export type pipelinesFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the pipelines
+     */
+    select?: pipelinesSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the pipelines
+     */
+    omit?: pipelinesOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: pipelinesInclude<ExtArgs> | null
+    /**
+     * Filter, which pipelines to fetch.
+     */
+    where: pipelinesWhereUniqueInput
+  }
+
+  /**
+   * pipelines findFirst
+   */
+  export type pipelinesFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the pipelines
+     */
+    select?: pipelinesSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the pipelines
+     */
+    omit?: pipelinesOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: pipelinesInclude<ExtArgs> | null
+    /**
+     * Filter, which pipelines to fetch.
+     */
+    where?: pipelinesWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of pipelines to fetch.
+     */
+    orderBy?: pipelinesOrderByWithRelationInput | pipelinesOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for pipelines.
+     */
+    cursor?: pipelinesWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` pipelines from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` pipelines.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of pipelines.
+     */
+    distinct?: PipelinesScalarFieldEnum | PipelinesScalarFieldEnum[]
+  }
+
+  /**
+   * pipelines findFirstOrThrow
+   */
+  export type pipelinesFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the pipelines
+     */
+    select?: pipelinesSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the pipelines
+     */
+    omit?: pipelinesOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: pipelinesInclude<ExtArgs> | null
+    /**
+     * Filter, which pipelines to fetch.
+     */
+    where?: pipelinesWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of pipelines to fetch.
+     */
+    orderBy?: pipelinesOrderByWithRelationInput | pipelinesOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for pipelines.
+     */
+    cursor?: pipelinesWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` pipelines from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` pipelines.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of pipelines.
+     */
+    distinct?: PipelinesScalarFieldEnum | PipelinesScalarFieldEnum[]
+  }
+
+  /**
+   * pipelines findMany
+   */
+  export type pipelinesFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the pipelines
+     */
+    select?: pipelinesSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the pipelines
+     */
+    omit?: pipelinesOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: pipelinesInclude<ExtArgs> | null
+    /**
+     * Filter, which pipelines to fetch.
+     */
+    where?: pipelinesWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of pipelines to fetch.
+     */
+    orderBy?: pipelinesOrderByWithRelationInput | pipelinesOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing pipelines.
+     */
+    cursor?: pipelinesWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` pipelines from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` pipelines.
+     */
+    skip?: number
+    distinct?: PipelinesScalarFieldEnum | PipelinesScalarFieldEnum[]
+  }
+
+  /**
+   * pipelines create
+   */
+  export type pipelinesCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the pipelines
+     */
+    select?: pipelinesSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the pipelines
+     */
+    omit?: pipelinesOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: pipelinesInclude<ExtArgs> | null
+    /**
+     * The data needed to create a pipelines.
+     */
+    data: XOR<pipelinesCreateInput, pipelinesUncheckedCreateInput>
+  }
+
+  /**
+   * pipelines createMany
+   */
+  export type pipelinesCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many pipelines.
+     */
+    data: pipelinesCreateManyInput | pipelinesCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * pipelines createManyAndReturn
+   */
+  export type pipelinesCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the pipelines
+     */
+    select?: pipelinesSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the pipelines
+     */
+    omit?: pipelinesOmit<ExtArgs> | null
+    /**
+     * The data used to create many pipelines.
+     */
+    data: pipelinesCreateManyInput | pipelinesCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: pipelinesIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * pipelines update
+   */
+  export type pipelinesUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the pipelines
+     */
+    select?: pipelinesSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the pipelines
+     */
+    omit?: pipelinesOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: pipelinesInclude<ExtArgs> | null
+    /**
+     * The data needed to update a pipelines.
+     */
+    data: XOR<pipelinesUpdateInput, pipelinesUncheckedUpdateInput>
+    /**
+     * Choose, which pipelines to update.
+     */
+    where: pipelinesWhereUniqueInput
+  }
+
+  /**
+   * pipelines updateMany
+   */
+  export type pipelinesUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update pipelines.
+     */
+    data: XOR<pipelinesUpdateManyMutationInput, pipelinesUncheckedUpdateManyInput>
+    /**
+     * Filter which pipelines to update
+     */
+    where?: pipelinesWhereInput
+    /**
+     * Limit how many pipelines to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * pipelines updateManyAndReturn
+   */
+  export type pipelinesUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the pipelines
+     */
+    select?: pipelinesSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the pipelines
+     */
+    omit?: pipelinesOmit<ExtArgs> | null
+    /**
+     * The data used to update pipelines.
+     */
+    data: XOR<pipelinesUpdateManyMutationInput, pipelinesUncheckedUpdateManyInput>
+    /**
+     * Filter which pipelines to update
+     */
+    where?: pipelinesWhereInput
+    /**
+     * Limit how many pipelines to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: pipelinesIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * pipelines upsert
+   */
+  export type pipelinesUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the pipelines
+     */
+    select?: pipelinesSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the pipelines
+     */
+    omit?: pipelinesOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: pipelinesInclude<ExtArgs> | null
+    /**
+     * The filter to search for the pipelines to update in case it exists.
+     */
+    where: pipelinesWhereUniqueInput
+    /**
+     * In case the pipelines found by the `where` argument doesn't exist, create a new pipelines with this data.
+     */
+    create: XOR<pipelinesCreateInput, pipelinesUncheckedCreateInput>
+    /**
+     * In case the pipelines was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<pipelinesUpdateInput, pipelinesUncheckedUpdateInput>
+  }
+
+  /**
+   * pipelines delete
+   */
+  export type pipelinesDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the pipelines
+     */
+    select?: pipelinesSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the pipelines
+     */
+    omit?: pipelinesOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: pipelinesInclude<ExtArgs> | null
+    /**
+     * Filter which pipelines to delete.
+     */
+    where: pipelinesWhereUniqueInput
+  }
+
+  /**
+   * pipelines deleteMany
+   */
+  export type pipelinesDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which pipelines to delete
+     */
+    where?: pipelinesWhereInput
+    /**
+     * Limit how many pipelines to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * pipelines.stages
+   */
+  export type pipelines$stagesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the pipeline_stages
+     */
+    select?: pipeline_stagesSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the pipeline_stages
+     */
+    omit?: pipeline_stagesOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: pipeline_stagesInclude<ExtArgs> | null
+    where?: pipeline_stagesWhereInput
+    orderBy?: pipeline_stagesOrderByWithRelationInput | pipeline_stagesOrderByWithRelationInput[]
+    cursor?: pipeline_stagesWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: Pipeline_stagesScalarFieldEnum | Pipeline_stagesScalarFieldEnum[]
+  }
+
+  /**
+   * pipelines.leads
+   */
+  export type pipelines$leadsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the leads
+     */
+    select?: leadsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the leads
+     */
+    omit?: leadsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: leadsInclude<ExtArgs> | null
+    where?: leadsWhereInput
+    orderBy?: leadsOrderByWithRelationInput | leadsOrderByWithRelationInput[]
+    cursor?: leadsWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: LeadsScalarFieldEnum | LeadsScalarFieldEnum[]
+  }
+
+  /**
+   * pipelines without action
+   */
+  export type pipelinesDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the pipelines
+     */
+    select?: pipelinesSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the pipelines
+     */
+    omit?: pipelinesOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: pipelinesInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model pipeline_stages
+   */
+
+  export type AggregatePipeline_stages = {
+    _count: Pipeline_stagesCountAggregateOutputType | null
+    _avg: Pipeline_stagesAvgAggregateOutputType | null
+    _sum: Pipeline_stagesSumAggregateOutputType | null
+    _min: Pipeline_stagesMinAggregateOutputType | null
+    _max: Pipeline_stagesMaxAggregateOutputType | null
+  }
+
+  export type Pipeline_stagesAvgAggregateOutputType = {
+    position: number | null
+  }
+
+  export type Pipeline_stagesSumAggregateOutputType = {
+    position: number | null
+  }
+
+  export type Pipeline_stagesMinAggregateOutputType = {
+    stage_id: string | null
+    pipeline_id: string | null
+    business_id: string | null
+    name: string | null
+    slug: string | null
+    position: number | null
+    is_won: boolean | null
+    is_lost: boolean | null
+    color: string | null
+    created_at: Date | null
+  }
+
+  export type Pipeline_stagesMaxAggregateOutputType = {
+    stage_id: string | null
+    pipeline_id: string | null
+    business_id: string | null
+    name: string | null
+    slug: string | null
+    position: number | null
+    is_won: boolean | null
+    is_lost: boolean | null
+    color: string | null
+    created_at: Date | null
+  }
+
+  export type Pipeline_stagesCountAggregateOutputType = {
+    stage_id: number
+    pipeline_id: number
+    business_id: number
+    name: number
+    slug: number
+    position: number
+    is_won: number
+    is_lost: number
+    color: number
+    created_at: number
+    _all: number
+  }
+
+
+  export type Pipeline_stagesAvgAggregateInputType = {
+    position?: true
+  }
+
+  export type Pipeline_stagesSumAggregateInputType = {
+    position?: true
+  }
+
+  export type Pipeline_stagesMinAggregateInputType = {
+    stage_id?: true
+    pipeline_id?: true
+    business_id?: true
+    name?: true
+    slug?: true
+    position?: true
+    is_won?: true
+    is_lost?: true
+    color?: true
+    created_at?: true
+  }
+
+  export type Pipeline_stagesMaxAggregateInputType = {
+    stage_id?: true
+    pipeline_id?: true
+    business_id?: true
+    name?: true
+    slug?: true
+    position?: true
+    is_won?: true
+    is_lost?: true
+    color?: true
+    created_at?: true
+  }
+
+  export type Pipeline_stagesCountAggregateInputType = {
+    stage_id?: true
+    pipeline_id?: true
+    business_id?: true
+    name?: true
+    slug?: true
+    position?: true
+    is_won?: true
+    is_lost?: true
+    color?: true
+    created_at?: true
+    _all?: true
+  }
+
+  export type Pipeline_stagesAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which pipeline_stages to aggregate.
+     */
+    where?: pipeline_stagesWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of pipeline_stages to fetch.
+     */
+    orderBy?: pipeline_stagesOrderByWithRelationInput | pipeline_stagesOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: pipeline_stagesWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` pipeline_stages from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` pipeline_stages.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned pipeline_stages
+    **/
+    _count?: true | Pipeline_stagesCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: Pipeline_stagesAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: Pipeline_stagesSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: Pipeline_stagesMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: Pipeline_stagesMaxAggregateInputType
+  }
+
+  export type GetPipeline_stagesAggregateType<T extends Pipeline_stagesAggregateArgs> = {
+        [P in keyof T & keyof AggregatePipeline_stages]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregatePipeline_stages[P]>
+      : GetScalarType<T[P], AggregatePipeline_stages[P]>
+  }
+
+
+
+
+  export type pipeline_stagesGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: pipeline_stagesWhereInput
+    orderBy?: pipeline_stagesOrderByWithAggregationInput | pipeline_stagesOrderByWithAggregationInput[]
+    by: Pipeline_stagesScalarFieldEnum[] | Pipeline_stagesScalarFieldEnum
+    having?: pipeline_stagesScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: Pipeline_stagesCountAggregateInputType | true
+    _avg?: Pipeline_stagesAvgAggregateInputType
+    _sum?: Pipeline_stagesSumAggregateInputType
+    _min?: Pipeline_stagesMinAggregateInputType
+    _max?: Pipeline_stagesMaxAggregateInputType
+  }
+
+  export type Pipeline_stagesGroupByOutputType = {
+    stage_id: string
+    pipeline_id: string
+    business_id: string
+    name: string
+    slug: string
+    position: number
+    is_won: boolean
+    is_lost: boolean
+    color: string | null
+    created_at: Date
+    _count: Pipeline_stagesCountAggregateOutputType | null
+    _avg: Pipeline_stagesAvgAggregateOutputType | null
+    _sum: Pipeline_stagesSumAggregateOutputType | null
+    _min: Pipeline_stagesMinAggregateOutputType | null
+    _max: Pipeline_stagesMaxAggregateOutputType | null
+  }
+
+  type GetPipeline_stagesGroupByPayload<T extends pipeline_stagesGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<Pipeline_stagesGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof Pipeline_stagesGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], Pipeline_stagesGroupByOutputType[P]>
+            : GetScalarType<T[P], Pipeline_stagesGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type pipeline_stagesSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    stage_id?: boolean
+    pipeline_id?: boolean
+    business_id?: boolean
+    name?: boolean
+    slug?: boolean
+    position?: boolean
+    is_won?: boolean
+    is_lost?: boolean
+    color?: boolean
+    created_at?: boolean
+    pipeline?: boolean | pipelinesDefaultArgs<ExtArgs>
+    leads?: boolean | pipeline_stages$leadsArgs<ExtArgs>
+    _count?: boolean | Pipeline_stagesCountOutputTypeDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["pipeline_stages"]>
+
+  export type pipeline_stagesSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    stage_id?: boolean
+    pipeline_id?: boolean
+    business_id?: boolean
+    name?: boolean
+    slug?: boolean
+    position?: boolean
+    is_won?: boolean
+    is_lost?: boolean
+    color?: boolean
+    created_at?: boolean
+    pipeline?: boolean | pipelinesDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["pipeline_stages"]>
+
+  export type pipeline_stagesSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    stage_id?: boolean
+    pipeline_id?: boolean
+    business_id?: boolean
+    name?: boolean
+    slug?: boolean
+    position?: boolean
+    is_won?: boolean
+    is_lost?: boolean
+    color?: boolean
+    created_at?: boolean
+    pipeline?: boolean | pipelinesDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["pipeline_stages"]>
+
+  export type pipeline_stagesSelectScalar = {
+    stage_id?: boolean
+    pipeline_id?: boolean
+    business_id?: boolean
+    name?: boolean
+    slug?: boolean
+    position?: boolean
+    is_won?: boolean
+    is_lost?: boolean
+    color?: boolean
+    created_at?: boolean
+  }
+
+  export type pipeline_stagesOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"stage_id" | "pipeline_id" | "business_id" | "name" | "slug" | "position" | "is_won" | "is_lost" | "color" | "created_at", ExtArgs["result"]["pipeline_stages"]>
+  export type pipeline_stagesInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    pipeline?: boolean | pipelinesDefaultArgs<ExtArgs>
+    leads?: boolean | pipeline_stages$leadsArgs<ExtArgs>
+    _count?: boolean | Pipeline_stagesCountOutputTypeDefaultArgs<ExtArgs>
+  }
+  export type pipeline_stagesIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    pipeline?: boolean | pipelinesDefaultArgs<ExtArgs>
+  }
+  export type pipeline_stagesIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    pipeline?: boolean | pipelinesDefaultArgs<ExtArgs>
+  }
+
+  export type $pipeline_stagesPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "pipeline_stages"
+    objects: {
+      pipeline: Prisma.$pipelinesPayload<ExtArgs>
+      leads: Prisma.$leadsPayload<ExtArgs>[]
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      stage_id: string
+      pipeline_id: string
+      business_id: string
+      name: string
+      slug: string
+      position: number
+      is_won: boolean
+      is_lost: boolean
+      color: string | null
+      created_at: Date
+    }, ExtArgs["result"]["pipeline_stages"]>
+    composites: {}
+  }
+
+  type pipeline_stagesGetPayload<S extends boolean | null | undefined | pipeline_stagesDefaultArgs> = $Result.GetResult<Prisma.$pipeline_stagesPayload, S>
+
+  type pipeline_stagesCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<pipeline_stagesFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: Pipeline_stagesCountAggregateInputType | true
+    }
+
+  export interface pipeline_stagesDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['pipeline_stages'], meta: { name: 'pipeline_stages' } }
+    /**
+     * Find zero or one Pipeline_stages that matches the filter.
+     * @param {pipeline_stagesFindUniqueArgs} args - Arguments to find a Pipeline_stages
+     * @example
+     * // Get one Pipeline_stages
+     * const pipeline_stages = await prisma.pipeline_stages.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends pipeline_stagesFindUniqueArgs>(args: SelectSubset<T, pipeline_stagesFindUniqueArgs<ExtArgs>>): Prisma__pipeline_stagesClient<$Result.GetResult<Prisma.$pipeline_stagesPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one Pipeline_stages that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {pipeline_stagesFindUniqueOrThrowArgs} args - Arguments to find a Pipeline_stages
+     * @example
+     * // Get one Pipeline_stages
+     * const pipeline_stages = await prisma.pipeline_stages.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends pipeline_stagesFindUniqueOrThrowArgs>(args: SelectSubset<T, pipeline_stagesFindUniqueOrThrowArgs<ExtArgs>>): Prisma__pipeline_stagesClient<$Result.GetResult<Prisma.$pipeline_stagesPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Pipeline_stages that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {pipeline_stagesFindFirstArgs} args - Arguments to find a Pipeline_stages
+     * @example
+     * // Get one Pipeline_stages
+     * const pipeline_stages = await prisma.pipeline_stages.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends pipeline_stagesFindFirstArgs>(args?: SelectSubset<T, pipeline_stagesFindFirstArgs<ExtArgs>>): Prisma__pipeline_stagesClient<$Result.GetResult<Prisma.$pipeline_stagesPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Pipeline_stages that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {pipeline_stagesFindFirstOrThrowArgs} args - Arguments to find a Pipeline_stages
+     * @example
+     * // Get one Pipeline_stages
+     * const pipeline_stages = await prisma.pipeline_stages.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends pipeline_stagesFindFirstOrThrowArgs>(args?: SelectSubset<T, pipeline_stagesFindFirstOrThrowArgs<ExtArgs>>): Prisma__pipeline_stagesClient<$Result.GetResult<Prisma.$pipeline_stagesPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more Pipeline_stages that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {pipeline_stagesFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all Pipeline_stages
+     * const pipeline_stages = await prisma.pipeline_stages.findMany()
+     * 
+     * // Get first 10 Pipeline_stages
+     * const pipeline_stages = await prisma.pipeline_stages.findMany({ take: 10 })
+     * 
+     * // Only select the `stage_id`
+     * const pipeline_stagesWithStage_idOnly = await prisma.pipeline_stages.findMany({ select: { stage_id: true } })
+     * 
+     */
+    findMany<T extends pipeline_stagesFindManyArgs>(args?: SelectSubset<T, pipeline_stagesFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$pipeline_stagesPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a Pipeline_stages.
+     * @param {pipeline_stagesCreateArgs} args - Arguments to create a Pipeline_stages.
+     * @example
+     * // Create one Pipeline_stages
+     * const Pipeline_stages = await prisma.pipeline_stages.create({
+     *   data: {
+     *     // ... data to create a Pipeline_stages
+     *   }
+     * })
+     * 
+     */
+    create<T extends pipeline_stagesCreateArgs>(args: SelectSubset<T, pipeline_stagesCreateArgs<ExtArgs>>): Prisma__pipeline_stagesClient<$Result.GetResult<Prisma.$pipeline_stagesPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many Pipeline_stages.
+     * @param {pipeline_stagesCreateManyArgs} args - Arguments to create many Pipeline_stages.
+     * @example
+     * // Create many Pipeline_stages
+     * const pipeline_stages = await prisma.pipeline_stages.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends pipeline_stagesCreateManyArgs>(args?: SelectSubset<T, pipeline_stagesCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many Pipeline_stages and returns the data saved in the database.
+     * @param {pipeline_stagesCreateManyAndReturnArgs} args - Arguments to create many Pipeline_stages.
+     * @example
+     * // Create many Pipeline_stages
+     * const pipeline_stages = await prisma.pipeline_stages.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many Pipeline_stages and only return the `stage_id`
+     * const pipeline_stagesWithStage_idOnly = await prisma.pipeline_stages.createManyAndReturn({
+     *   select: { stage_id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends pipeline_stagesCreateManyAndReturnArgs>(args?: SelectSubset<T, pipeline_stagesCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$pipeline_stagesPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a Pipeline_stages.
+     * @param {pipeline_stagesDeleteArgs} args - Arguments to delete one Pipeline_stages.
+     * @example
+     * // Delete one Pipeline_stages
+     * const Pipeline_stages = await prisma.pipeline_stages.delete({
+     *   where: {
+     *     // ... filter to delete one Pipeline_stages
+     *   }
+     * })
+     * 
+     */
+    delete<T extends pipeline_stagesDeleteArgs>(args: SelectSubset<T, pipeline_stagesDeleteArgs<ExtArgs>>): Prisma__pipeline_stagesClient<$Result.GetResult<Prisma.$pipeline_stagesPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one Pipeline_stages.
+     * @param {pipeline_stagesUpdateArgs} args - Arguments to update one Pipeline_stages.
+     * @example
+     * // Update one Pipeline_stages
+     * const pipeline_stages = await prisma.pipeline_stages.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends pipeline_stagesUpdateArgs>(args: SelectSubset<T, pipeline_stagesUpdateArgs<ExtArgs>>): Prisma__pipeline_stagesClient<$Result.GetResult<Prisma.$pipeline_stagesPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more Pipeline_stages.
+     * @param {pipeline_stagesDeleteManyArgs} args - Arguments to filter Pipeline_stages to delete.
+     * @example
+     * // Delete a few Pipeline_stages
+     * const { count } = await prisma.pipeline_stages.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends pipeline_stagesDeleteManyArgs>(args?: SelectSubset<T, pipeline_stagesDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Pipeline_stages.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {pipeline_stagesUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many Pipeline_stages
+     * const pipeline_stages = await prisma.pipeline_stages.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends pipeline_stagesUpdateManyArgs>(args: SelectSubset<T, pipeline_stagesUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Pipeline_stages and returns the data updated in the database.
+     * @param {pipeline_stagesUpdateManyAndReturnArgs} args - Arguments to update many Pipeline_stages.
+     * @example
+     * // Update many Pipeline_stages
+     * const pipeline_stages = await prisma.pipeline_stages.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more Pipeline_stages and only return the `stage_id`
+     * const pipeline_stagesWithStage_idOnly = await prisma.pipeline_stages.updateManyAndReturn({
+     *   select: { stage_id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends pipeline_stagesUpdateManyAndReturnArgs>(args: SelectSubset<T, pipeline_stagesUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$pipeline_stagesPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one Pipeline_stages.
+     * @param {pipeline_stagesUpsertArgs} args - Arguments to update or create a Pipeline_stages.
+     * @example
+     * // Update or create a Pipeline_stages
+     * const pipeline_stages = await prisma.pipeline_stages.upsert({
+     *   create: {
+     *     // ... data to create a Pipeline_stages
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the Pipeline_stages we want to update
+     *   }
+     * })
+     */
+    upsert<T extends pipeline_stagesUpsertArgs>(args: SelectSubset<T, pipeline_stagesUpsertArgs<ExtArgs>>): Prisma__pipeline_stagesClient<$Result.GetResult<Prisma.$pipeline_stagesPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of Pipeline_stages.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {pipeline_stagesCountArgs} args - Arguments to filter Pipeline_stages to count.
+     * @example
+     * // Count the number of Pipeline_stages
+     * const count = await prisma.pipeline_stages.count({
+     *   where: {
+     *     // ... the filter for the Pipeline_stages we want to count
+     *   }
+     * })
+    **/
+    count<T extends pipeline_stagesCountArgs>(
+      args?: Subset<T, pipeline_stagesCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], Pipeline_stagesCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a Pipeline_stages.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {Pipeline_stagesAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends Pipeline_stagesAggregateArgs>(args: Subset<T, Pipeline_stagesAggregateArgs>): Prisma.PrismaPromise<GetPipeline_stagesAggregateType<T>>
+
+    /**
+     * Group by Pipeline_stages.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {pipeline_stagesGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends pipeline_stagesGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: pipeline_stagesGroupByArgs['orderBy'] }
+        : { orderBy?: pipeline_stagesGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, pipeline_stagesGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetPipeline_stagesGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the pipeline_stages model
+   */
+  readonly fields: pipeline_stagesFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for pipeline_stages.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__pipeline_stagesClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    pipeline<T extends pipelinesDefaultArgs<ExtArgs> = {}>(args?: Subset<T, pipelinesDefaultArgs<ExtArgs>>): Prisma__pipelinesClient<$Result.GetResult<Prisma.$pipelinesPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    leads<T extends pipeline_stages$leadsArgs<ExtArgs> = {}>(args?: Subset<T, pipeline_stages$leadsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$leadsPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the pipeline_stages model
+   */
+  interface pipeline_stagesFieldRefs {
+    readonly stage_id: FieldRef<"pipeline_stages", 'String'>
+    readonly pipeline_id: FieldRef<"pipeline_stages", 'String'>
+    readonly business_id: FieldRef<"pipeline_stages", 'String'>
+    readonly name: FieldRef<"pipeline_stages", 'String'>
+    readonly slug: FieldRef<"pipeline_stages", 'String'>
+    readonly position: FieldRef<"pipeline_stages", 'Int'>
+    readonly is_won: FieldRef<"pipeline_stages", 'Boolean'>
+    readonly is_lost: FieldRef<"pipeline_stages", 'Boolean'>
+    readonly color: FieldRef<"pipeline_stages", 'String'>
+    readonly created_at: FieldRef<"pipeline_stages", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * pipeline_stages findUnique
+   */
+  export type pipeline_stagesFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the pipeline_stages
+     */
+    select?: pipeline_stagesSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the pipeline_stages
+     */
+    omit?: pipeline_stagesOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: pipeline_stagesInclude<ExtArgs> | null
+    /**
+     * Filter, which pipeline_stages to fetch.
+     */
+    where: pipeline_stagesWhereUniqueInput
+  }
+
+  /**
+   * pipeline_stages findUniqueOrThrow
+   */
+  export type pipeline_stagesFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the pipeline_stages
+     */
+    select?: pipeline_stagesSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the pipeline_stages
+     */
+    omit?: pipeline_stagesOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: pipeline_stagesInclude<ExtArgs> | null
+    /**
+     * Filter, which pipeline_stages to fetch.
+     */
+    where: pipeline_stagesWhereUniqueInput
+  }
+
+  /**
+   * pipeline_stages findFirst
+   */
+  export type pipeline_stagesFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the pipeline_stages
+     */
+    select?: pipeline_stagesSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the pipeline_stages
+     */
+    omit?: pipeline_stagesOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: pipeline_stagesInclude<ExtArgs> | null
+    /**
+     * Filter, which pipeline_stages to fetch.
+     */
+    where?: pipeline_stagesWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of pipeline_stages to fetch.
+     */
+    orderBy?: pipeline_stagesOrderByWithRelationInput | pipeline_stagesOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for pipeline_stages.
+     */
+    cursor?: pipeline_stagesWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` pipeline_stages from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` pipeline_stages.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of pipeline_stages.
+     */
+    distinct?: Pipeline_stagesScalarFieldEnum | Pipeline_stagesScalarFieldEnum[]
+  }
+
+  /**
+   * pipeline_stages findFirstOrThrow
+   */
+  export type pipeline_stagesFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the pipeline_stages
+     */
+    select?: pipeline_stagesSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the pipeline_stages
+     */
+    omit?: pipeline_stagesOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: pipeline_stagesInclude<ExtArgs> | null
+    /**
+     * Filter, which pipeline_stages to fetch.
+     */
+    where?: pipeline_stagesWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of pipeline_stages to fetch.
+     */
+    orderBy?: pipeline_stagesOrderByWithRelationInput | pipeline_stagesOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for pipeline_stages.
+     */
+    cursor?: pipeline_stagesWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` pipeline_stages from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` pipeline_stages.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of pipeline_stages.
+     */
+    distinct?: Pipeline_stagesScalarFieldEnum | Pipeline_stagesScalarFieldEnum[]
+  }
+
+  /**
+   * pipeline_stages findMany
+   */
+  export type pipeline_stagesFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the pipeline_stages
+     */
+    select?: pipeline_stagesSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the pipeline_stages
+     */
+    omit?: pipeline_stagesOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: pipeline_stagesInclude<ExtArgs> | null
+    /**
+     * Filter, which pipeline_stages to fetch.
+     */
+    where?: pipeline_stagesWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of pipeline_stages to fetch.
+     */
+    orderBy?: pipeline_stagesOrderByWithRelationInput | pipeline_stagesOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing pipeline_stages.
+     */
+    cursor?: pipeline_stagesWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` pipeline_stages from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` pipeline_stages.
+     */
+    skip?: number
+    distinct?: Pipeline_stagesScalarFieldEnum | Pipeline_stagesScalarFieldEnum[]
+  }
+
+  /**
+   * pipeline_stages create
+   */
+  export type pipeline_stagesCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the pipeline_stages
+     */
+    select?: pipeline_stagesSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the pipeline_stages
+     */
+    omit?: pipeline_stagesOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: pipeline_stagesInclude<ExtArgs> | null
+    /**
+     * The data needed to create a pipeline_stages.
+     */
+    data: XOR<pipeline_stagesCreateInput, pipeline_stagesUncheckedCreateInput>
+  }
+
+  /**
+   * pipeline_stages createMany
+   */
+  export type pipeline_stagesCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many pipeline_stages.
+     */
+    data: pipeline_stagesCreateManyInput | pipeline_stagesCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * pipeline_stages createManyAndReturn
+   */
+  export type pipeline_stagesCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the pipeline_stages
+     */
+    select?: pipeline_stagesSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the pipeline_stages
+     */
+    omit?: pipeline_stagesOmit<ExtArgs> | null
+    /**
+     * The data used to create many pipeline_stages.
+     */
+    data: pipeline_stagesCreateManyInput | pipeline_stagesCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: pipeline_stagesIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * pipeline_stages update
+   */
+  export type pipeline_stagesUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the pipeline_stages
+     */
+    select?: pipeline_stagesSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the pipeline_stages
+     */
+    omit?: pipeline_stagesOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: pipeline_stagesInclude<ExtArgs> | null
+    /**
+     * The data needed to update a pipeline_stages.
+     */
+    data: XOR<pipeline_stagesUpdateInput, pipeline_stagesUncheckedUpdateInput>
+    /**
+     * Choose, which pipeline_stages to update.
+     */
+    where: pipeline_stagesWhereUniqueInput
+  }
+
+  /**
+   * pipeline_stages updateMany
+   */
+  export type pipeline_stagesUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update pipeline_stages.
+     */
+    data: XOR<pipeline_stagesUpdateManyMutationInput, pipeline_stagesUncheckedUpdateManyInput>
+    /**
+     * Filter which pipeline_stages to update
+     */
+    where?: pipeline_stagesWhereInput
+    /**
+     * Limit how many pipeline_stages to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * pipeline_stages updateManyAndReturn
+   */
+  export type pipeline_stagesUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the pipeline_stages
+     */
+    select?: pipeline_stagesSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the pipeline_stages
+     */
+    omit?: pipeline_stagesOmit<ExtArgs> | null
+    /**
+     * The data used to update pipeline_stages.
+     */
+    data: XOR<pipeline_stagesUpdateManyMutationInput, pipeline_stagesUncheckedUpdateManyInput>
+    /**
+     * Filter which pipeline_stages to update
+     */
+    where?: pipeline_stagesWhereInput
+    /**
+     * Limit how many pipeline_stages to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: pipeline_stagesIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * pipeline_stages upsert
+   */
+  export type pipeline_stagesUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the pipeline_stages
+     */
+    select?: pipeline_stagesSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the pipeline_stages
+     */
+    omit?: pipeline_stagesOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: pipeline_stagesInclude<ExtArgs> | null
+    /**
+     * The filter to search for the pipeline_stages to update in case it exists.
+     */
+    where: pipeline_stagesWhereUniqueInput
+    /**
+     * In case the pipeline_stages found by the `where` argument doesn't exist, create a new pipeline_stages with this data.
+     */
+    create: XOR<pipeline_stagesCreateInput, pipeline_stagesUncheckedCreateInput>
+    /**
+     * In case the pipeline_stages was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<pipeline_stagesUpdateInput, pipeline_stagesUncheckedUpdateInput>
+  }
+
+  /**
+   * pipeline_stages delete
+   */
+  export type pipeline_stagesDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the pipeline_stages
+     */
+    select?: pipeline_stagesSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the pipeline_stages
+     */
+    omit?: pipeline_stagesOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: pipeline_stagesInclude<ExtArgs> | null
+    /**
+     * Filter which pipeline_stages to delete.
+     */
+    where: pipeline_stagesWhereUniqueInput
+  }
+
+  /**
+   * pipeline_stages deleteMany
+   */
+  export type pipeline_stagesDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which pipeline_stages to delete
+     */
+    where?: pipeline_stagesWhereInput
+    /**
+     * Limit how many pipeline_stages to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * pipeline_stages.leads
+   */
+  export type pipeline_stages$leadsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the leads
+     */
+    select?: leadsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the leads
+     */
+    omit?: leadsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: leadsInclude<ExtArgs> | null
+    where?: leadsWhereInput
+    orderBy?: leadsOrderByWithRelationInput | leadsOrderByWithRelationInput[]
+    cursor?: leadsWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: LeadsScalarFieldEnum | LeadsScalarFieldEnum[]
+  }
+
+  /**
+   * pipeline_stages without action
+   */
+  export type pipeline_stagesDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the pipeline_stages
+     */
+    select?: pipeline_stagesSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the pipeline_stages
+     */
+    omit?: pipeline_stagesOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: pipeline_stagesInclude<ExtArgs> | null
   }
 
 
@@ -90116,6 +92830,8 @@ export namespace Prisma {
     source: 'source',
     platform_id: 'platform_id',
     status: 'status',
+    stage_id: 'stage_id',
+    pipeline_id: 'pipeline_id',
     lost_reason: 'lost_reason',
     context: 'context',
     quoted_amount: 'quoted_amount',
@@ -90131,6 +92847,36 @@ export namespace Prisma {
   };
 
   export type LeadsScalarFieldEnum = (typeof LeadsScalarFieldEnum)[keyof typeof LeadsScalarFieldEnum]
+
+
+  export const PipelinesScalarFieldEnum: {
+    pipeline_id: 'pipeline_id',
+    business_id: 'business_id',
+    name: 'name',
+    industry: 'industry',
+    is_default: 'is_default',
+    is_archived: 'is_archived',
+    created_at: 'created_at',
+    updated_at: 'updated_at'
+  };
+
+  export type PipelinesScalarFieldEnum = (typeof PipelinesScalarFieldEnum)[keyof typeof PipelinesScalarFieldEnum]
+
+
+  export const Pipeline_stagesScalarFieldEnum: {
+    stage_id: 'stage_id',
+    pipeline_id: 'pipeline_id',
+    business_id: 'business_id',
+    name: 'name',
+    slug: 'slug',
+    position: 'position',
+    is_won: 'is_won',
+    is_lost: 'is_lost',
+    color: 'color',
+    created_at: 'created_at'
+  };
+
+  export type Pipeline_stagesScalarFieldEnum = (typeof Pipeline_stagesScalarFieldEnum)[keyof typeof Pipeline_stagesScalarFieldEnum]
 
 
   export const Lead_eventsScalarFieldEnum: {
@@ -91439,6 +94185,7 @@ export namespace Prisma {
     hospitality_bookings?: Hospitality_bookingsListRelationFilter
     hospitality_inquiries?: Hospitality_inquiriesListRelationFilter
     leads?: LeadsListRelationFilter
+    pipelines?: PipelinesListRelationFilter
     notification_messages?: Notification_messagesListRelationFilter
     notification_preferences?: Notification_preferencesListRelationFilter
     notification_templates?: Notification_templatesListRelationFilter
@@ -91486,6 +94233,7 @@ export namespace Prisma {
     hospitality_bookings?: hospitality_bookingsOrderByRelationAggregateInput
     hospitality_inquiries?: hospitality_inquiriesOrderByRelationAggregateInput
     leads?: leadsOrderByRelationAggregateInput
+    pipelines?: pipelinesOrderByRelationAggregateInput
     notification_messages?: notification_messagesOrderByRelationAggregateInput
     notification_preferences?: notification_preferencesOrderByRelationAggregateInput
     notification_templates?: notification_templatesOrderByRelationAggregateInput
@@ -91536,6 +94284,7 @@ export namespace Prisma {
     hospitality_bookings?: Hospitality_bookingsListRelationFilter
     hospitality_inquiries?: Hospitality_inquiriesListRelationFilter
     leads?: LeadsListRelationFilter
+    pipelines?: PipelinesListRelationFilter
     notification_messages?: Notification_messagesListRelationFilter
     notification_preferences?: Notification_preferencesListRelationFilter
     notification_templates?: Notification_templatesListRelationFilter
@@ -92322,6 +95071,8 @@ export namespace Prisma {
     source?: StringFilter<"leads"> | string
     platform_id?: StringNullableFilter<"leads"> | string | null
     status?: StringFilter<"leads"> | string
+    stage_id?: UuidNullableFilter<"leads"> | string | null
+    pipeline_id?: UuidNullableFilter<"leads"> | string | null
     lost_reason?: StringNullableFilter<"leads"> | string | null
     context?: JsonNullableFilter<"leads">
     quoted_amount?: DecimalNullableFilter<"leads"> | Decimal | DecimalJsLike | number | string | null
@@ -92345,6 +95096,8 @@ export namespace Prisma {
     assigned_user?: XOR<UsersNullableScalarRelationFilter, usersWhereInput> | null
     businesses?: XOR<BusinessesScalarRelationFilter, businessesWhereInput>
     tenants?: XOR<TenantsScalarRelationFilter, tenantsWhereInput>
+    pipeline?: XOR<PipelinesNullableScalarRelationFilter, pipelinesWhereInput> | null
+    stage?: XOR<Pipeline_stagesNullableScalarRelationFilter, pipeline_stagesWhereInput> | null
     orders?: OrdersListRelationFilter
     workflow_executions?: Workflow_executionsListRelationFilter
   }
@@ -92360,6 +95113,8 @@ export namespace Prisma {
     source?: SortOrder
     platform_id?: SortOrderInput | SortOrder
     status?: SortOrder
+    stage_id?: SortOrderInput | SortOrder
+    pipeline_id?: SortOrderInput | SortOrder
     lost_reason?: SortOrderInput | SortOrder
     context?: SortOrderInput | SortOrder
     quoted_amount?: SortOrderInput | SortOrder
@@ -92383,12 +95138,15 @@ export namespace Prisma {
     assigned_user?: usersOrderByWithRelationInput
     businesses?: businessesOrderByWithRelationInput
     tenants?: tenantsOrderByWithRelationInput
+    pipeline?: pipelinesOrderByWithRelationInput
+    stage?: pipeline_stagesOrderByWithRelationInput
     orders?: ordersOrderByRelationAggregateInput
     workflow_executions?: workflow_executionsOrderByRelationAggregateInput
   }
 
   export type leadsWhereUniqueInput = Prisma.AtLeast<{
     lead_id?: string
+    business_id_platform_id?: leadsBusiness_idPlatform_idCompoundUniqueInput
     AND?: leadsWhereInput | leadsWhereInput[]
     OR?: leadsWhereInput[]
     NOT?: leadsWhereInput | leadsWhereInput[]
@@ -92401,6 +95159,8 @@ export namespace Prisma {
     source?: StringFilter<"leads"> | string
     platform_id?: StringNullableFilter<"leads"> | string | null
     status?: StringFilter<"leads"> | string
+    stage_id?: UuidNullableFilter<"leads"> | string | null
+    pipeline_id?: UuidNullableFilter<"leads"> | string | null
     lost_reason?: StringNullableFilter<"leads"> | string | null
     context?: JsonNullableFilter<"leads">
     quoted_amount?: DecimalNullableFilter<"leads"> | Decimal | DecimalJsLike | number | string | null
@@ -92424,9 +95184,11 @@ export namespace Prisma {
     assigned_user?: XOR<UsersNullableScalarRelationFilter, usersWhereInput> | null
     businesses?: XOR<BusinessesScalarRelationFilter, businessesWhereInput>
     tenants?: XOR<TenantsScalarRelationFilter, tenantsWhereInput>
+    pipeline?: XOR<PipelinesNullableScalarRelationFilter, pipelinesWhereInput> | null
+    stage?: XOR<Pipeline_stagesNullableScalarRelationFilter, pipeline_stagesWhereInput> | null
     orders?: OrdersListRelationFilter
     workflow_executions?: Workflow_executionsListRelationFilter
-  }, "lead_id">
+  }, "lead_id" | "business_id_platform_id">
 
   export type leadsOrderByWithAggregationInput = {
     lead_id?: SortOrder
@@ -92439,6 +95201,8 @@ export namespace Prisma {
     source?: SortOrder
     platform_id?: SortOrderInput | SortOrder
     status?: SortOrder
+    stage_id?: SortOrderInput | SortOrder
+    pipeline_id?: SortOrderInput | SortOrder
     lost_reason?: SortOrderInput | SortOrder
     context?: SortOrderInput | SortOrder
     quoted_amount?: SortOrderInput | SortOrder
@@ -92472,6 +95236,8 @@ export namespace Prisma {
     source?: StringWithAggregatesFilter<"leads"> | string
     platform_id?: StringNullableWithAggregatesFilter<"leads"> | string | null
     status?: StringWithAggregatesFilter<"leads"> | string
+    stage_id?: UuidNullableWithAggregatesFilter<"leads"> | string | null
+    pipeline_id?: UuidNullableWithAggregatesFilter<"leads"> | string | null
     lost_reason?: StringNullableWithAggregatesFilter<"leads"> | string | null
     context?: JsonNullableWithAggregatesFilter<"leads">
     quoted_amount?: DecimalNullableWithAggregatesFilter<"leads"> | Decimal | DecimalJsLike | number | string | null
@@ -92484,6 +95250,169 @@ export namespace Prisma {
     deleted_at?: DateTimeNullableWithAggregatesFilter<"leads"> | Date | string | null
     created_at?: DateTimeWithAggregatesFilter<"leads"> | Date | string
     updated_at?: DateTimeWithAggregatesFilter<"leads"> | Date | string
+  }
+
+  export type pipelinesWhereInput = {
+    AND?: pipelinesWhereInput | pipelinesWhereInput[]
+    OR?: pipelinesWhereInput[]
+    NOT?: pipelinesWhereInput | pipelinesWhereInput[]
+    pipeline_id?: UuidFilter<"pipelines"> | string
+    business_id?: UuidFilter<"pipelines"> | string
+    name?: StringFilter<"pipelines"> | string
+    industry?: StringNullableFilter<"pipelines"> | string | null
+    is_default?: BoolFilter<"pipelines"> | boolean
+    is_archived?: BoolFilter<"pipelines"> | boolean
+    created_at?: DateTimeFilter<"pipelines"> | Date | string
+    updated_at?: DateTimeFilter<"pipelines"> | Date | string
+    businesses?: XOR<BusinessesScalarRelationFilter, businessesWhereInput>
+    stages?: Pipeline_stagesListRelationFilter
+    leads?: LeadsListRelationFilter
+  }
+
+  export type pipelinesOrderByWithRelationInput = {
+    pipeline_id?: SortOrder
+    business_id?: SortOrder
+    name?: SortOrder
+    industry?: SortOrderInput | SortOrder
+    is_default?: SortOrder
+    is_archived?: SortOrder
+    created_at?: SortOrder
+    updated_at?: SortOrder
+    businesses?: businessesOrderByWithRelationInput
+    stages?: pipeline_stagesOrderByRelationAggregateInput
+    leads?: leadsOrderByRelationAggregateInput
+  }
+
+  export type pipelinesWhereUniqueInput = Prisma.AtLeast<{
+    pipeline_id?: string
+    AND?: pipelinesWhereInput | pipelinesWhereInput[]
+    OR?: pipelinesWhereInput[]
+    NOT?: pipelinesWhereInput | pipelinesWhereInput[]
+    business_id?: UuidFilter<"pipelines"> | string
+    name?: StringFilter<"pipelines"> | string
+    industry?: StringNullableFilter<"pipelines"> | string | null
+    is_default?: BoolFilter<"pipelines"> | boolean
+    is_archived?: BoolFilter<"pipelines"> | boolean
+    created_at?: DateTimeFilter<"pipelines"> | Date | string
+    updated_at?: DateTimeFilter<"pipelines"> | Date | string
+    businesses?: XOR<BusinessesScalarRelationFilter, businessesWhereInput>
+    stages?: Pipeline_stagesListRelationFilter
+    leads?: LeadsListRelationFilter
+  }, "pipeline_id">
+
+  export type pipelinesOrderByWithAggregationInput = {
+    pipeline_id?: SortOrder
+    business_id?: SortOrder
+    name?: SortOrder
+    industry?: SortOrderInput | SortOrder
+    is_default?: SortOrder
+    is_archived?: SortOrder
+    created_at?: SortOrder
+    updated_at?: SortOrder
+    _count?: pipelinesCountOrderByAggregateInput
+    _max?: pipelinesMaxOrderByAggregateInput
+    _min?: pipelinesMinOrderByAggregateInput
+  }
+
+  export type pipelinesScalarWhereWithAggregatesInput = {
+    AND?: pipelinesScalarWhereWithAggregatesInput | pipelinesScalarWhereWithAggregatesInput[]
+    OR?: pipelinesScalarWhereWithAggregatesInput[]
+    NOT?: pipelinesScalarWhereWithAggregatesInput | pipelinesScalarWhereWithAggregatesInput[]
+    pipeline_id?: UuidWithAggregatesFilter<"pipelines"> | string
+    business_id?: UuidWithAggregatesFilter<"pipelines"> | string
+    name?: StringWithAggregatesFilter<"pipelines"> | string
+    industry?: StringNullableWithAggregatesFilter<"pipelines"> | string | null
+    is_default?: BoolWithAggregatesFilter<"pipelines"> | boolean
+    is_archived?: BoolWithAggregatesFilter<"pipelines"> | boolean
+    created_at?: DateTimeWithAggregatesFilter<"pipelines"> | Date | string
+    updated_at?: DateTimeWithAggregatesFilter<"pipelines"> | Date | string
+  }
+
+  export type pipeline_stagesWhereInput = {
+    AND?: pipeline_stagesWhereInput | pipeline_stagesWhereInput[]
+    OR?: pipeline_stagesWhereInput[]
+    NOT?: pipeline_stagesWhereInput | pipeline_stagesWhereInput[]
+    stage_id?: UuidFilter<"pipeline_stages"> | string
+    pipeline_id?: UuidFilter<"pipeline_stages"> | string
+    business_id?: UuidFilter<"pipeline_stages"> | string
+    name?: StringFilter<"pipeline_stages"> | string
+    slug?: StringFilter<"pipeline_stages"> | string
+    position?: IntFilter<"pipeline_stages"> | number
+    is_won?: BoolFilter<"pipeline_stages"> | boolean
+    is_lost?: BoolFilter<"pipeline_stages"> | boolean
+    color?: StringNullableFilter<"pipeline_stages"> | string | null
+    created_at?: DateTimeFilter<"pipeline_stages"> | Date | string
+    pipeline?: XOR<PipelinesScalarRelationFilter, pipelinesWhereInput>
+    leads?: LeadsListRelationFilter
+  }
+
+  export type pipeline_stagesOrderByWithRelationInput = {
+    stage_id?: SortOrder
+    pipeline_id?: SortOrder
+    business_id?: SortOrder
+    name?: SortOrder
+    slug?: SortOrder
+    position?: SortOrder
+    is_won?: SortOrder
+    is_lost?: SortOrder
+    color?: SortOrderInput | SortOrder
+    created_at?: SortOrder
+    pipeline?: pipelinesOrderByWithRelationInput
+    leads?: leadsOrderByRelationAggregateInput
+  }
+
+  export type pipeline_stagesWhereUniqueInput = Prisma.AtLeast<{
+    stage_id?: string
+    pipeline_id_slug?: pipeline_stagesPipeline_idSlugCompoundUniqueInput
+    pipeline_id_position?: pipeline_stagesPipeline_idPositionCompoundUniqueInput
+    AND?: pipeline_stagesWhereInput | pipeline_stagesWhereInput[]
+    OR?: pipeline_stagesWhereInput[]
+    NOT?: pipeline_stagesWhereInput | pipeline_stagesWhereInput[]
+    pipeline_id?: UuidFilter<"pipeline_stages"> | string
+    business_id?: UuidFilter<"pipeline_stages"> | string
+    name?: StringFilter<"pipeline_stages"> | string
+    slug?: StringFilter<"pipeline_stages"> | string
+    position?: IntFilter<"pipeline_stages"> | number
+    is_won?: BoolFilter<"pipeline_stages"> | boolean
+    is_lost?: BoolFilter<"pipeline_stages"> | boolean
+    color?: StringNullableFilter<"pipeline_stages"> | string | null
+    created_at?: DateTimeFilter<"pipeline_stages"> | Date | string
+    pipeline?: XOR<PipelinesScalarRelationFilter, pipelinesWhereInput>
+    leads?: LeadsListRelationFilter
+  }, "stage_id" | "pipeline_id_slug" | "pipeline_id_position">
+
+  export type pipeline_stagesOrderByWithAggregationInput = {
+    stage_id?: SortOrder
+    pipeline_id?: SortOrder
+    business_id?: SortOrder
+    name?: SortOrder
+    slug?: SortOrder
+    position?: SortOrder
+    is_won?: SortOrder
+    is_lost?: SortOrder
+    color?: SortOrderInput | SortOrder
+    created_at?: SortOrder
+    _count?: pipeline_stagesCountOrderByAggregateInput
+    _avg?: pipeline_stagesAvgOrderByAggregateInput
+    _max?: pipeline_stagesMaxOrderByAggregateInput
+    _min?: pipeline_stagesMinOrderByAggregateInput
+    _sum?: pipeline_stagesSumOrderByAggregateInput
+  }
+
+  export type pipeline_stagesScalarWhereWithAggregatesInput = {
+    AND?: pipeline_stagesScalarWhereWithAggregatesInput | pipeline_stagesScalarWhereWithAggregatesInput[]
+    OR?: pipeline_stagesScalarWhereWithAggregatesInput[]
+    NOT?: pipeline_stagesScalarWhereWithAggregatesInput | pipeline_stagesScalarWhereWithAggregatesInput[]
+    stage_id?: UuidWithAggregatesFilter<"pipeline_stages"> | string
+    pipeline_id?: UuidWithAggregatesFilter<"pipeline_stages"> | string
+    business_id?: UuidWithAggregatesFilter<"pipeline_stages"> | string
+    name?: StringWithAggregatesFilter<"pipeline_stages"> | string
+    slug?: StringWithAggregatesFilter<"pipeline_stages"> | string
+    position?: IntWithAggregatesFilter<"pipeline_stages"> | number
+    is_won?: BoolWithAggregatesFilter<"pipeline_stages"> | boolean
+    is_lost?: BoolWithAggregatesFilter<"pipeline_stages"> | boolean
+    color?: StringNullableWithAggregatesFilter<"pipeline_stages"> | string | null
+    created_at?: DateTimeWithAggregatesFilter<"pipeline_stages"> | Date | string
   }
 
   export type lead_eventsWhereInput = {
@@ -98346,6 +101275,7 @@ export namespace Prisma {
     hospitality_bookings?: hospitality_bookingsCreateNestedManyWithoutBusinessInput
     hospitality_inquiries?: hospitality_inquiriesCreateNestedManyWithoutBusinessInput
     leads?: leadsCreateNestedManyWithoutBusinessesInput
+    pipelines?: pipelinesCreateNestedManyWithoutBusinessesInput
     notification_messages?: notification_messagesCreateNestedManyWithoutBusinessesInput
     notification_preferences?: notification_preferencesCreateNestedManyWithoutBusinessesInput
     notification_templates?: notification_templatesCreateNestedManyWithoutBusinessesInput
@@ -98392,6 +101322,7 @@ export namespace Prisma {
     hospitality_bookings?: hospitality_bookingsUncheckedCreateNestedManyWithoutBusinessInput
     hospitality_inquiries?: hospitality_inquiriesUncheckedCreateNestedManyWithoutBusinessInput
     leads?: leadsUncheckedCreateNestedManyWithoutBusinessesInput
+    pipelines?: pipelinesUncheckedCreateNestedManyWithoutBusinessesInput
     notification_messages?: notification_messagesUncheckedCreateNestedManyWithoutBusinessesInput
     notification_preferences?: notification_preferencesUncheckedCreateNestedManyWithoutBusinessesInput
     notification_templates?: notification_templatesUncheckedCreateNestedManyWithoutBusinessesInput
@@ -98438,6 +101369,7 @@ export namespace Prisma {
     hospitality_bookings?: hospitality_bookingsUpdateManyWithoutBusinessNestedInput
     hospitality_inquiries?: hospitality_inquiriesUpdateManyWithoutBusinessNestedInput
     leads?: leadsUpdateManyWithoutBusinessesNestedInput
+    pipelines?: pipelinesUpdateManyWithoutBusinessesNestedInput
     notification_messages?: notification_messagesUpdateManyWithoutBusinessesNestedInput
     notification_preferences?: notification_preferencesUpdateManyWithoutBusinessesNestedInput
     notification_templates?: notification_templatesUpdateManyWithoutBusinessesNestedInput
@@ -98484,6 +101416,7 @@ export namespace Prisma {
     hospitality_bookings?: hospitality_bookingsUncheckedUpdateManyWithoutBusinessNestedInput
     hospitality_inquiries?: hospitality_inquiriesUncheckedUpdateManyWithoutBusinessNestedInput
     leads?: leadsUncheckedUpdateManyWithoutBusinessesNestedInput
+    pipelines?: pipelinesUncheckedUpdateManyWithoutBusinessesNestedInput
     notification_messages?: notification_messagesUncheckedUpdateManyWithoutBusinessesNestedInput
     notification_preferences?: notification_preferencesUncheckedUpdateManyWithoutBusinessesNestedInput
     notification_templates?: notification_templatesUncheckedUpdateManyWithoutBusinessesNestedInput
@@ -99401,6 +102334,8 @@ export namespace Prisma {
     assigned_user?: usersCreateNestedOneWithoutLeads_assignedInput
     businesses: businessesCreateNestedOneWithoutLeadsInput
     tenants: tenantsCreateNestedOneWithoutLeadsInput
+    pipeline?: pipelinesCreateNestedOneWithoutLeadsInput
+    stage?: pipeline_stagesCreateNestedOneWithoutLeadsInput
     orders?: ordersCreateNestedManyWithoutLeadsInput
     workflow_executions?: workflow_executionsCreateNestedManyWithoutLeadsInput
   }
@@ -99416,6 +102351,8 @@ export namespace Prisma {
     source?: string
     platform_id?: string | null
     status?: string
+    stage_id?: string | null
+    pipeline_id?: string | null
     lost_reason?: string | null
     context?: NullableJsonNullValueInput | InputJsonValue
     quoted_amount?: Decimal | DecimalJsLike | number | string | null
@@ -99471,6 +102408,8 @@ export namespace Prisma {
     assigned_user?: usersUpdateOneWithoutLeads_assignedNestedInput
     businesses?: businessesUpdateOneRequiredWithoutLeadsNestedInput
     tenants?: tenantsUpdateOneRequiredWithoutLeadsNestedInput
+    pipeline?: pipelinesUpdateOneWithoutLeadsNestedInput
+    stage?: pipeline_stagesUpdateOneWithoutLeadsNestedInput
     orders?: ordersUpdateManyWithoutLeadsNestedInput
     workflow_executions?: workflow_executionsUpdateManyWithoutLeadsNestedInput
   }
@@ -99486,6 +102425,8 @@ export namespace Prisma {
     source?: StringFieldUpdateOperationsInput | string
     platform_id?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
+    stage_id?: NullableStringFieldUpdateOperationsInput | string | null
+    pipeline_id?: NullableStringFieldUpdateOperationsInput | string | null
     lost_reason?: NullableStringFieldUpdateOperationsInput | string | null
     context?: NullableJsonNullValueInput | InputJsonValue
     quoted_amount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
@@ -99521,6 +102462,8 @@ export namespace Prisma {
     source?: string
     platform_id?: string | null
     status?: string
+    stage_id?: string | null
+    pipeline_id?: string | null
     lost_reason?: string | null
     context?: NullableJsonNullValueInput | InputJsonValue
     quoted_amount?: Decimal | DecimalJsLike | number | string | null
@@ -99568,6 +102511,8 @@ export namespace Prisma {
     source?: StringFieldUpdateOperationsInput | string
     platform_id?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
+    stage_id?: NullableStringFieldUpdateOperationsInput | string | null
+    pipeline_id?: NullableStringFieldUpdateOperationsInput | string | null
     lost_reason?: NullableStringFieldUpdateOperationsInput | string | null
     context?: NullableJsonNullValueInput | InputJsonValue
     quoted_amount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
@@ -99580,6 +102525,184 @@ export namespace Prisma {
     deleted_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type pipelinesCreateInput = {
+    pipeline_id?: string
+    name: string
+    industry?: string | null
+    is_default?: boolean
+    is_archived?: boolean
+    created_at?: Date | string
+    updated_at?: Date | string
+    businesses: businessesCreateNestedOneWithoutPipelinesInput
+    stages?: pipeline_stagesCreateNestedManyWithoutPipelineInput
+    leads?: leadsCreateNestedManyWithoutPipelineInput
+  }
+
+  export type pipelinesUncheckedCreateInput = {
+    pipeline_id?: string
+    business_id: string
+    name: string
+    industry?: string | null
+    is_default?: boolean
+    is_archived?: boolean
+    created_at?: Date | string
+    updated_at?: Date | string
+    stages?: pipeline_stagesUncheckedCreateNestedManyWithoutPipelineInput
+    leads?: leadsUncheckedCreateNestedManyWithoutPipelineInput
+  }
+
+  export type pipelinesUpdateInput = {
+    pipeline_id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    industry?: NullableStringFieldUpdateOperationsInput | string | null
+    is_default?: BoolFieldUpdateOperationsInput | boolean
+    is_archived?: BoolFieldUpdateOperationsInput | boolean
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    businesses?: businessesUpdateOneRequiredWithoutPipelinesNestedInput
+    stages?: pipeline_stagesUpdateManyWithoutPipelineNestedInput
+    leads?: leadsUpdateManyWithoutPipelineNestedInput
+  }
+
+  export type pipelinesUncheckedUpdateInput = {
+    pipeline_id?: StringFieldUpdateOperationsInput | string
+    business_id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    industry?: NullableStringFieldUpdateOperationsInput | string | null
+    is_default?: BoolFieldUpdateOperationsInput | boolean
+    is_archived?: BoolFieldUpdateOperationsInput | boolean
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    stages?: pipeline_stagesUncheckedUpdateManyWithoutPipelineNestedInput
+    leads?: leadsUncheckedUpdateManyWithoutPipelineNestedInput
+  }
+
+  export type pipelinesCreateManyInput = {
+    pipeline_id?: string
+    business_id: string
+    name: string
+    industry?: string | null
+    is_default?: boolean
+    is_archived?: boolean
+    created_at?: Date | string
+    updated_at?: Date | string
+  }
+
+  export type pipelinesUpdateManyMutationInput = {
+    pipeline_id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    industry?: NullableStringFieldUpdateOperationsInput | string | null
+    is_default?: BoolFieldUpdateOperationsInput | boolean
+    is_archived?: BoolFieldUpdateOperationsInput | boolean
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type pipelinesUncheckedUpdateManyInput = {
+    pipeline_id?: StringFieldUpdateOperationsInput | string
+    business_id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    industry?: NullableStringFieldUpdateOperationsInput | string | null
+    is_default?: BoolFieldUpdateOperationsInput | boolean
+    is_archived?: BoolFieldUpdateOperationsInput | boolean
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type pipeline_stagesCreateInput = {
+    stage_id?: string
+    business_id: string
+    name: string
+    slug: string
+    position: number
+    is_won?: boolean
+    is_lost?: boolean
+    color?: string | null
+    created_at?: Date | string
+    pipeline: pipelinesCreateNestedOneWithoutStagesInput
+    leads?: leadsCreateNestedManyWithoutStageInput
+  }
+
+  export type pipeline_stagesUncheckedCreateInput = {
+    stage_id?: string
+    pipeline_id: string
+    business_id: string
+    name: string
+    slug: string
+    position: number
+    is_won?: boolean
+    is_lost?: boolean
+    color?: string | null
+    created_at?: Date | string
+    leads?: leadsUncheckedCreateNestedManyWithoutStageInput
+  }
+
+  export type pipeline_stagesUpdateInput = {
+    stage_id?: StringFieldUpdateOperationsInput | string
+    business_id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    slug?: StringFieldUpdateOperationsInput | string
+    position?: IntFieldUpdateOperationsInput | number
+    is_won?: BoolFieldUpdateOperationsInput | boolean
+    is_lost?: BoolFieldUpdateOperationsInput | boolean
+    color?: NullableStringFieldUpdateOperationsInput | string | null
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    pipeline?: pipelinesUpdateOneRequiredWithoutStagesNestedInput
+    leads?: leadsUpdateManyWithoutStageNestedInput
+  }
+
+  export type pipeline_stagesUncheckedUpdateInput = {
+    stage_id?: StringFieldUpdateOperationsInput | string
+    pipeline_id?: StringFieldUpdateOperationsInput | string
+    business_id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    slug?: StringFieldUpdateOperationsInput | string
+    position?: IntFieldUpdateOperationsInput | number
+    is_won?: BoolFieldUpdateOperationsInput | boolean
+    is_lost?: BoolFieldUpdateOperationsInput | boolean
+    color?: NullableStringFieldUpdateOperationsInput | string | null
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    leads?: leadsUncheckedUpdateManyWithoutStageNestedInput
+  }
+
+  export type pipeline_stagesCreateManyInput = {
+    stage_id?: string
+    pipeline_id: string
+    business_id: string
+    name: string
+    slug: string
+    position: number
+    is_won?: boolean
+    is_lost?: boolean
+    color?: string | null
+    created_at?: Date | string
+  }
+
+  export type pipeline_stagesUpdateManyMutationInput = {
+    stage_id?: StringFieldUpdateOperationsInput | string
+    business_id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    slug?: StringFieldUpdateOperationsInput | string
+    position?: IntFieldUpdateOperationsInput | number
+    is_won?: BoolFieldUpdateOperationsInput | boolean
+    is_lost?: BoolFieldUpdateOperationsInput | boolean
+    color?: NullableStringFieldUpdateOperationsInput | string | null
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type pipeline_stagesUncheckedUpdateManyInput = {
+    stage_id?: StringFieldUpdateOperationsInput | string
+    pipeline_id?: StringFieldUpdateOperationsInput | string
+    business_id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    slug?: StringFieldUpdateOperationsInput | string
+    position?: IntFieldUpdateOperationsInput | number
+    is_won?: BoolFieldUpdateOperationsInput | boolean
+    is_lost?: BoolFieldUpdateOperationsInput | boolean
+    color?: NullableStringFieldUpdateOperationsInput | string | null
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type lead_eventsCreateInput = {
@@ -106322,6 +109445,12 @@ export namespace Prisma {
     none?: leadsWhereInput
   }
 
+  export type PipelinesListRelationFilter = {
+    every?: pipelinesWhereInput
+    some?: pipelinesWhereInput
+    none?: pipelinesWhereInput
+  }
+
   export type Notification_messagesListRelationFilter = {
     every?: notification_messagesWhereInput
     some?: notification_messagesWhereInput
@@ -106461,6 +109590,10 @@ export namespace Prisma {
   }
 
   export type leadsOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type pipelinesOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -107160,6 +110293,18 @@ export namespace Prisma {
     failed_login_attempts?: SortOrder
   }
 
+  export type UuidNullableFilter<$PrismaModel = never> = {
+    equals?: string | StringFieldRefInput<$PrismaModel> | null
+    in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    notIn?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    lt?: string | StringFieldRefInput<$PrismaModel>
+    lte?: string | StringFieldRefInput<$PrismaModel>
+    gt?: string | StringFieldRefInput<$PrismaModel>
+    gte?: string | StringFieldRefInput<$PrismaModel>
+    mode?: QueryMode
+    not?: NestedUuidNullableFilter<$PrismaModel> | string | null
+  }
+
   export type DecimalNullableFilter<$PrismaModel = never> = {
     equals?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel> | null
     in?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel> | null
@@ -107179,18 +110324,6 @@ export namespace Prisma {
     isEmpty?: boolean
   }
 
-  export type UuidNullableFilter<$PrismaModel = never> = {
-    equals?: string | StringFieldRefInput<$PrismaModel> | null
-    in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
-    notIn?: string[] | ListStringFieldRefInput<$PrismaModel> | null
-    lt?: string | StringFieldRefInput<$PrismaModel>
-    lte?: string | StringFieldRefInput<$PrismaModel>
-    gt?: string | StringFieldRefInput<$PrismaModel>
-    gte?: string | StringFieldRefInput<$PrismaModel>
-    mode?: QueryMode
-    not?: NestedUuidNullableFilter<$PrismaModel> | string | null
-  }
-
   export type Cart_reservationsListRelationFilter = {
     every?: cart_reservationsWhereInput
     some?: cart_reservationsWhereInput
@@ -107206,6 +110339,16 @@ export namespace Prisma {
   export type UsersNullableScalarRelationFilter = {
     is?: usersWhereInput | null
     isNot?: usersWhereInput | null
+  }
+
+  export type PipelinesNullableScalarRelationFilter = {
+    is?: pipelinesWhereInput | null
+    isNot?: pipelinesWhereInput | null
+  }
+
+  export type Pipeline_stagesNullableScalarRelationFilter = {
+    is?: pipeline_stagesWhereInput | null
+    isNot?: pipeline_stagesWhereInput | null
   }
 
   export type OrdersListRelationFilter = {
@@ -107226,6 +110369,11 @@ export namespace Prisma {
     _count?: SortOrder
   }
 
+  export type leadsBusiness_idPlatform_idCompoundUniqueInput = {
+    business_id: string
+    platform_id: string
+  }
+
   export type leadsCountOrderByAggregateInput = {
     lead_id?: SortOrder
     business_id?: SortOrder
@@ -107237,6 +110385,8 @@ export namespace Prisma {
     source?: SortOrder
     platform_id?: SortOrder
     status?: SortOrder
+    stage_id?: SortOrder
+    pipeline_id?: SortOrder
     lost_reason?: SortOrder
     context?: SortOrder
     quoted_amount?: SortOrder
@@ -107267,6 +110417,8 @@ export namespace Prisma {
     source?: SortOrder
     platform_id?: SortOrder
     status?: SortOrder
+    stage_id?: SortOrder
+    pipeline_id?: SortOrder
     lost_reason?: SortOrder
     quoted_amount?: SortOrder
     quoted_at?: SortOrder
@@ -107290,6 +110442,8 @@ export namespace Prisma {
     source?: SortOrder
     platform_id?: SortOrder
     status?: SortOrder
+    stage_id?: SortOrder
+    pipeline_id?: SortOrder
     lost_reason?: SortOrder
     quoted_amount?: SortOrder
     quoted_at?: SortOrder
@@ -107305,6 +110459,21 @@ export namespace Prisma {
   export type leadsSumOrderByAggregateInput = {
     quoted_amount?: SortOrder
     converted_value?: SortOrder
+  }
+
+  export type UuidNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: string | StringFieldRefInput<$PrismaModel> | null
+    in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    notIn?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    lt?: string | StringFieldRefInput<$PrismaModel>
+    lte?: string | StringFieldRefInput<$PrismaModel>
+    gt?: string | StringFieldRefInput<$PrismaModel>
+    gte?: string | StringFieldRefInput<$PrismaModel>
+    mode?: QueryMode
+    not?: NestedUuidNullableWithAggregatesFilter<$PrismaModel> | string | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedStringNullableFilter<$PrismaModel>
+    _max?: NestedStringNullableFilter<$PrismaModel>
   }
 
   export type DecimalNullableWithAggregatesFilter<$PrismaModel = never> = {
@@ -107323,19 +110492,136 @@ export namespace Prisma {
     _max?: NestedDecimalNullableFilter<$PrismaModel>
   }
 
-  export type UuidNullableWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: string | StringFieldRefInput<$PrismaModel> | null
-    in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
-    notIn?: string[] | ListStringFieldRefInput<$PrismaModel> | null
-    lt?: string | StringFieldRefInput<$PrismaModel>
-    lte?: string | StringFieldRefInput<$PrismaModel>
-    gt?: string | StringFieldRefInput<$PrismaModel>
-    gte?: string | StringFieldRefInput<$PrismaModel>
-    mode?: QueryMode
-    not?: NestedUuidNullableWithAggregatesFilter<$PrismaModel> | string | null
-    _count?: NestedIntNullableFilter<$PrismaModel>
-    _min?: NestedStringNullableFilter<$PrismaModel>
-    _max?: NestedStringNullableFilter<$PrismaModel>
+  export type Pipeline_stagesListRelationFilter = {
+    every?: pipeline_stagesWhereInput
+    some?: pipeline_stagesWhereInput
+    none?: pipeline_stagesWhereInput
+  }
+
+  export type pipeline_stagesOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type pipelinesCountOrderByAggregateInput = {
+    pipeline_id?: SortOrder
+    business_id?: SortOrder
+    name?: SortOrder
+    industry?: SortOrder
+    is_default?: SortOrder
+    is_archived?: SortOrder
+    created_at?: SortOrder
+    updated_at?: SortOrder
+  }
+
+  export type pipelinesMaxOrderByAggregateInput = {
+    pipeline_id?: SortOrder
+    business_id?: SortOrder
+    name?: SortOrder
+    industry?: SortOrder
+    is_default?: SortOrder
+    is_archived?: SortOrder
+    created_at?: SortOrder
+    updated_at?: SortOrder
+  }
+
+  export type pipelinesMinOrderByAggregateInput = {
+    pipeline_id?: SortOrder
+    business_id?: SortOrder
+    name?: SortOrder
+    industry?: SortOrder
+    is_default?: SortOrder
+    is_archived?: SortOrder
+    created_at?: SortOrder
+    updated_at?: SortOrder
+  }
+
+  export type IntFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel>
+    in?: number[] | ListIntFieldRefInput<$PrismaModel>
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel>
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntFilter<$PrismaModel> | number
+  }
+
+  export type PipelinesScalarRelationFilter = {
+    is?: pipelinesWhereInput
+    isNot?: pipelinesWhereInput
+  }
+
+  export type pipeline_stagesPipeline_idSlugCompoundUniqueInput = {
+    pipeline_id: string
+    slug: string
+  }
+
+  export type pipeline_stagesPipeline_idPositionCompoundUniqueInput = {
+    pipeline_id: string
+    position: number
+  }
+
+  export type pipeline_stagesCountOrderByAggregateInput = {
+    stage_id?: SortOrder
+    pipeline_id?: SortOrder
+    business_id?: SortOrder
+    name?: SortOrder
+    slug?: SortOrder
+    position?: SortOrder
+    is_won?: SortOrder
+    is_lost?: SortOrder
+    color?: SortOrder
+    created_at?: SortOrder
+  }
+
+  export type pipeline_stagesAvgOrderByAggregateInput = {
+    position?: SortOrder
+  }
+
+  export type pipeline_stagesMaxOrderByAggregateInput = {
+    stage_id?: SortOrder
+    pipeline_id?: SortOrder
+    business_id?: SortOrder
+    name?: SortOrder
+    slug?: SortOrder
+    position?: SortOrder
+    is_won?: SortOrder
+    is_lost?: SortOrder
+    color?: SortOrder
+    created_at?: SortOrder
+  }
+
+  export type pipeline_stagesMinOrderByAggregateInput = {
+    stage_id?: SortOrder
+    pipeline_id?: SortOrder
+    business_id?: SortOrder
+    name?: SortOrder
+    slug?: SortOrder
+    position?: SortOrder
+    is_won?: SortOrder
+    is_lost?: SortOrder
+    color?: SortOrder
+    created_at?: SortOrder
+  }
+
+  export type pipeline_stagesSumOrderByAggregateInput = {
+    position?: SortOrder
+  }
+
+  export type IntWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel>
+    in?: number[] | ListIntFieldRefInput<$PrismaModel>
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel>
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntWithAggregatesFilter<$PrismaModel> | number
+    _count?: NestedIntFilter<$PrismaModel>
+    _avg?: NestedFloatFilter<$PrismaModel>
+    _sum?: NestedIntFilter<$PrismaModel>
+    _min?: NestedIntFilter<$PrismaModel>
+    _max?: NestedIntFilter<$PrismaModel>
   }
 
   export type LeadsScalarRelationFilter = {
@@ -107414,17 +110700,6 @@ export namespace Prisma {
     done_note?: SortOrder
     created_by?: SortOrder
     created_at?: SortOrder
-  }
-
-  export type IntFilter<$PrismaModel = never> = {
-    equals?: number | IntFieldRefInput<$PrismaModel>
-    in?: number[] | ListIntFieldRefInput<$PrismaModel>
-    notIn?: number[] | ListIntFieldRefInput<$PrismaModel>
-    lt?: number | IntFieldRefInput<$PrismaModel>
-    lte?: number | IntFieldRefInput<$PrismaModel>
-    gt?: number | IntFieldRefInput<$PrismaModel>
-    gte?: number | IntFieldRefInput<$PrismaModel>
-    not?: NestedIntFilter<$PrismaModel> | number
   }
 
   export type DecimalFilter<$PrismaModel = never> = {
@@ -107512,22 +110787,6 @@ export namespace Prisma {
     total_orders?: SortOrder
     total_spent?: SortOrder
     engagement_score?: SortOrder
-  }
-
-  export type IntWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: number | IntFieldRefInput<$PrismaModel>
-    in?: number[] | ListIntFieldRefInput<$PrismaModel>
-    notIn?: number[] | ListIntFieldRefInput<$PrismaModel>
-    lt?: number | IntFieldRefInput<$PrismaModel>
-    lte?: number | IntFieldRefInput<$PrismaModel>
-    gt?: number | IntFieldRefInput<$PrismaModel>
-    gte?: number | IntFieldRefInput<$PrismaModel>
-    not?: NestedIntWithAggregatesFilter<$PrismaModel> | number
-    _count?: NestedIntFilter<$PrismaModel>
-    _avg?: NestedFloatFilter<$PrismaModel>
-    _sum?: NestedIntFilter<$PrismaModel>
-    _min?: NestedIntFilter<$PrismaModel>
-    _max?: NestedIntFilter<$PrismaModel>
   }
 
   export type DecimalWithAggregatesFilter<$PrismaModel = never> = {
@@ -111147,6 +114406,13 @@ export namespace Prisma {
     connect?: leadsWhereUniqueInput | leadsWhereUniqueInput[]
   }
 
+  export type pipelinesCreateNestedManyWithoutBusinessesInput = {
+    create?: XOR<pipelinesCreateWithoutBusinessesInput, pipelinesUncheckedCreateWithoutBusinessesInput> | pipelinesCreateWithoutBusinessesInput[] | pipelinesUncheckedCreateWithoutBusinessesInput[]
+    connectOrCreate?: pipelinesCreateOrConnectWithoutBusinessesInput | pipelinesCreateOrConnectWithoutBusinessesInput[]
+    createMany?: pipelinesCreateManyBusinessesInputEnvelope
+    connect?: pipelinesWhereUniqueInput | pipelinesWhereUniqueInput[]
+  }
+
   export type notification_messagesCreateNestedManyWithoutBusinessesInput = {
     create?: XOR<notification_messagesCreateWithoutBusinessesInput, notification_messagesUncheckedCreateWithoutBusinessesInput> | notification_messagesCreateWithoutBusinessesInput[] | notification_messagesUncheckedCreateWithoutBusinessesInput[]
     connectOrCreate?: notification_messagesCreateOrConnectWithoutBusinessesInput | notification_messagesCreateOrConnectWithoutBusinessesInput[]
@@ -111331,6 +114597,13 @@ export namespace Prisma {
     connectOrCreate?: leadsCreateOrConnectWithoutBusinessesInput | leadsCreateOrConnectWithoutBusinessesInput[]
     createMany?: leadsCreateManyBusinessesInputEnvelope
     connect?: leadsWhereUniqueInput | leadsWhereUniqueInput[]
+  }
+
+  export type pipelinesUncheckedCreateNestedManyWithoutBusinessesInput = {
+    create?: XOR<pipelinesCreateWithoutBusinessesInput, pipelinesUncheckedCreateWithoutBusinessesInput> | pipelinesCreateWithoutBusinessesInput[] | pipelinesUncheckedCreateWithoutBusinessesInput[]
+    connectOrCreate?: pipelinesCreateOrConnectWithoutBusinessesInput | pipelinesCreateOrConnectWithoutBusinessesInput[]
+    createMany?: pipelinesCreateManyBusinessesInputEnvelope
+    connect?: pipelinesWhereUniqueInput | pipelinesWhereUniqueInput[]
   }
 
   export type notification_messagesUncheckedCreateNestedManyWithoutBusinessesInput = {
@@ -111618,6 +114891,20 @@ export namespace Prisma {
     update?: leadsUpdateWithWhereUniqueWithoutBusinessesInput | leadsUpdateWithWhereUniqueWithoutBusinessesInput[]
     updateMany?: leadsUpdateManyWithWhereWithoutBusinessesInput | leadsUpdateManyWithWhereWithoutBusinessesInput[]
     deleteMany?: leadsScalarWhereInput | leadsScalarWhereInput[]
+  }
+
+  export type pipelinesUpdateManyWithoutBusinessesNestedInput = {
+    create?: XOR<pipelinesCreateWithoutBusinessesInput, pipelinesUncheckedCreateWithoutBusinessesInput> | pipelinesCreateWithoutBusinessesInput[] | pipelinesUncheckedCreateWithoutBusinessesInput[]
+    connectOrCreate?: pipelinesCreateOrConnectWithoutBusinessesInput | pipelinesCreateOrConnectWithoutBusinessesInput[]
+    upsert?: pipelinesUpsertWithWhereUniqueWithoutBusinessesInput | pipelinesUpsertWithWhereUniqueWithoutBusinessesInput[]
+    createMany?: pipelinesCreateManyBusinessesInputEnvelope
+    set?: pipelinesWhereUniqueInput | pipelinesWhereUniqueInput[]
+    disconnect?: pipelinesWhereUniqueInput | pipelinesWhereUniqueInput[]
+    delete?: pipelinesWhereUniqueInput | pipelinesWhereUniqueInput[]
+    connect?: pipelinesWhereUniqueInput | pipelinesWhereUniqueInput[]
+    update?: pipelinesUpdateWithWhereUniqueWithoutBusinessesInput | pipelinesUpdateWithWhereUniqueWithoutBusinessesInput[]
+    updateMany?: pipelinesUpdateManyWithWhereWithoutBusinessesInput | pipelinesUpdateManyWithWhereWithoutBusinessesInput[]
+    deleteMany?: pipelinesScalarWhereInput | pipelinesScalarWhereInput[]
   }
 
   export type notification_messagesUpdateManyWithoutBusinessesNestedInput = {
@@ -111984,6 +115271,20 @@ export namespace Prisma {
     update?: leadsUpdateWithWhereUniqueWithoutBusinessesInput | leadsUpdateWithWhereUniqueWithoutBusinessesInput[]
     updateMany?: leadsUpdateManyWithWhereWithoutBusinessesInput | leadsUpdateManyWithWhereWithoutBusinessesInput[]
     deleteMany?: leadsScalarWhereInput | leadsScalarWhereInput[]
+  }
+
+  export type pipelinesUncheckedUpdateManyWithoutBusinessesNestedInput = {
+    create?: XOR<pipelinesCreateWithoutBusinessesInput, pipelinesUncheckedCreateWithoutBusinessesInput> | pipelinesCreateWithoutBusinessesInput[] | pipelinesUncheckedCreateWithoutBusinessesInput[]
+    connectOrCreate?: pipelinesCreateOrConnectWithoutBusinessesInput | pipelinesCreateOrConnectWithoutBusinessesInput[]
+    upsert?: pipelinesUpsertWithWhereUniqueWithoutBusinessesInput | pipelinesUpsertWithWhereUniqueWithoutBusinessesInput[]
+    createMany?: pipelinesCreateManyBusinessesInputEnvelope
+    set?: pipelinesWhereUniqueInput | pipelinesWhereUniqueInput[]
+    disconnect?: pipelinesWhereUniqueInput | pipelinesWhereUniqueInput[]
+    delete?: pipelinesWhereUniqueInput | pipelinesWhereUniqueInput[]
+    connect?: pipelinesWhereUniqueInput | pipelinesWhereUniqueInput[]
+    update?: pipelinesUpdateWithWhereUniqueWithoutBusinessesInput | pipelinesUpdateWithWhereUniqueWithoutBusinessesInput[]
+    updateMany?: pipelinesUpdateManyWithWhereWithoutBusinessesInput | pipelinesUpdateManyWithWhereWithoutBusinessesInput[]
+    deleteMany?: pipelinesScalarWhereInput | pipelinesScalarWhereInput[]
   }
 
   export type notification_messagesUncheckedUpdateManyWithoutBusinessesNestedInput = {
@@ -113272,6 +116573,18 @@ export namespace Prisma {
     connect?: tenantsWhereUniqueInput
   }
 
+  export type pipelinesCreateNestedOneWithoutLeadsInput = {
+    create?: XOR<pipelinesCreateWithoutLeadsInput, pipelinesUncheckedCreateWithoutLeadsInput>
+    connectOrCreate?: pipelinesCreateOrConnectWithoutLeadsInput
+    connect?: pipelinesWhereUniqueInput
+  }
+
+  export type pipeline_stagesCreateNestedOneWithoutLeadsInput = {
+    create?: XOR<pipeline_stagesCreateWithoutLeadsInput, pipeline_stagesUncheckedCreateWithoutLeadsInput>
+    connectOrCreate?: pipeline_stagesCreateOrConnectWithoutLeadsInput
+    connect?: pipeline_stagesWhereUniqueInput
+  }
+
   export type ordersCreateNestedManyWithoutLeadsInput = {
     create?: XOR<ordersCreateWithoutLeadsInput, ordersUncheckedCreateWithoutLeadsInput> | ordersCreateWithoutLeadsInput[] | ordersUncheckedCreateWithoutLeadsInput[]
     connectOrCreate?: ordersCreateOrConnectWithoutLeadsInput | ordersCreateOrConnectWithoutLeadsInput[]
@@ -113507,6 +116820,26 @@ export namespace Prisma {
     update?: XOR<XOR<tenantsUpdateToOneWithWhereWithoutLeadsInput, tenantsUpdateWithoutLeadsInput>, tenantsUncheckedUpdateWithoutLeadsInput>
   }
 
+  export type pipelinesUpdateOneWithoutLeadsNestedInput = {
+    create?: XOR<pipelinesCreateWithoutLeadsInput, pipelinesUncheckedCreateWithoutLeadsInput>
+    connectOrCreate?: pipelinesCreateOrConnectWithoutLeadsInput
+    upsert?: pipelinesUpsertWithoutLeadsInput
+    disconnect?: pipelinesWhereInput | boolean
+    delete?: pipelinesWhereInput | boolean
+    connect?: pipelinesWhereUniqueInput
+    update?: XOR<XOR<pipelinesUpdateToOneWithWhereWithoutLeadsInput, pipelinesUpdateWithoutLeadsInput>, pipelinesUncheckedUpdateWithoutLeadsInput>
+  }
+
+  export type pipeline_stagesUpdateOneWithoutLeadsNestedInput = {
+    create?: XOR<pipeline_stagesCreateWithoutLeadsInput, pipeline_stagesUncheckedCreateWithoutLeadsInput>
+    connectOrCreate?: pipeline_stagesCreateOrConnectWithoutLeadsInput
+    upsert?: pipeline_stagesUpsertWithoutLeadsInput
+    disconnect?: pipeline_stagesWhereInput | boolean
+    delete?: pipeline_stagesWhereInput | boolean
+    connect?: pipeline_stagesWhereUniqueInput
+    update?: XOR<XOR<pipeline_stagesUpdateToOneWithWhereWithoutLeadsInput, pipeline_stagesUpdateWithoutLeadsInput>, pipeline_stagesUncheckedUpdateWithoutLeadsInput>
+  }
+
   export type ordersUpdateManyWithoutLeadsNestedInput = {
     create?: XOR<ordersCreateWithoutLeadsInput, ordersUncheckedCreateWithoutLeadsInput> | ordersCreateWithoutLeadsInput[] | ordersUncheckedCreateWithoutLeadsInput[]
     connectOrCreate?: ordersCreateOrConnectWithoutLeadsInput | ordersCreateOrConnectWithoutLeadsInput[]
@@ -113675,6 +117008,168 @@ export namespace Prisma {
     deleteMany?: workflow_executionsScalarWhereInput | workflow_executionsScalarWhereInput[]
   }
 
+  export type businessesCreateNestedOneWithoutPipelinesInput = {
+    create?: XOR<businessesCreateWithoutPipelinesInput, businessesUncheckedCreateWithoutPipelinesInput>
+    connectOrCreate?: businessesCreateOrConnectWithoutPipelinesInput
+    connect?: businessesWhereUniqueInput
+  }
+
+  export type pipeline_stagesCreateNestedManyWithoutPipelineInput = {
+    create?: XOR<pipeline_stagesCreateWithoutPipelineInput, pipeline_stagesUncheckedCreateWithoutPipelineInput> | pipeline_stagesCreateWithoutPipelineInput[] | pipeline_stagesUncheckedCreateWithoutPipelineInput[]
+    connectOrCreate?: pipeline_stagesCreateOrConnectWithoutPipelineInput | pipeline_stagesCreateOrConnectWithoutPipelineInput[]
+    createMany?: pipeline_stagesCreateManyPipelineInputEnvelope
+    connect?: pipeline_stagesWhereUniqueInput | pipeline_stagesWhereUniqueInput[]
+  }
+
+  export type leadsCreateNestedManyWithoutPipelineInput = {
+    create?: XOR<leadsCreateWithoutPipelineInput, leadsUncheckedCreateWithoutPipelineInput> | leadsCreateWithoutPipelineInput[] | leadsUncheckedCreateWithoutPipelineInput[]
+    connectOrCreate?: leadsCreateOrConnectWithoutPipelineInput | leadsCreateOrConnectWithoutPipelineInput[]
+    createMany?: leadsCreateManyPipelineInputEnvelope
+    connect?: leadsWhereUniqueInput | leadsWhereUniqueInput[]
+  }
+
+  export type pipeline_stagesUncheckedCreateNestedManyWithoutPipelineInput = {
+    create?: XOR<pipeline_stagesCreateWithoutPipelineInput, pipeline_stagesUncheckedCreateWithoutPipelineInput> | pipeline_stagesCreateWithoutPipelineInput[] | pipeline_stagesUncheckedCreateWithoutPipelineInput[]
+    connectOrCreate?: pipeline_stagesCreateOrConnectWithoutPipelineInput | pipeline_stagesCreateOrConnectWithoutPipelineInput[]
+    createMany?: pipeline_stagesCreateManyPipelineInputEnvelope
+    connect?: pipeline_stagesWhereUniqueInput | pipeline_stagesWhereUniqueInput[]
+  }
+
+  export type leadsUncheckedCreateNestedManyWithoutPipelineInput = {
+    create?: XOR<leadsCreateWithoutPipelineInput, leadsUncheckedCreateWithoutPipelineInput> | leadsCreateWithoutPipelineInput[] | leadsUncheckedCreateWithoutPipelineInput[]
+    connectOrCreate?: leadsCreateOrConnectWithoutPipelineInput | leadsCreateOrConnectWithoutPipelineInput[]
+    createMany?: leadsCreateManyPipelineInputEnvelope
+    connect?: leadsWhereUniqueInput | leadsWhereUniqueInput[]
+  }
+
+  export type businessesUpdateOneRequiredWithoutPipelinesNestedInput = {
+    create?: XOR<businessesCreateWithoutPipelinesInput, businessesUncheckedCreateWithoutPipelinesInput>
+    connectOrCreate?: businessesCreateOrConnectWithoutPipelinesInput
+    upsert?: businessesUpsertWithoutPipelinesInput
+    connect?: businessesWhereUniqueInput
+    update?: XOR<XOR<businessesUpdateToOneWithWhereWithoutPipelinesInput, businessesUpdateWithoutPipelinesInput>, businessesUncheckedUpdateWithoutPipelinesInput>
+  }
+
+  export type pipeline_stagesUpdateManyWithoutPipelineNestedInput = {
+    create?: XOR<pipeline_stagesCreateWithoutPipelineInput, pipeline_stagesUncheckedCreateWithoutPipelineInput> | pipeline_stagesCreateWithoutPipelineInput[] | pipeline_stagesUncheckedCreateWithoutPipelineInput[]
+    connectOrCreate?: pipeline_stagesCreateOrConnectWithoutPipelineInput | pipeline_stagesCreateOrConnectWithoutPipelineInput[]
+    upsert?: pipeline_stagesUpsertWithWhereUniqueWithoutPipelineInput | pipeline_stagesUpsertWithWhereUniqueWithoutPipelineInput[]
+    createMany?: pipeline_stagesCreateManyPipelineInputEnvelope
+    set?: pipeline_stagesWhereUniqueInput | pipeline_stagesWhereUniqueInput[]
+    disconnect?: pipeline_stagesWhereUniqueInput | pipeline_stagesWhereUniqueInput[]
+    delete?: pipeline_stagesWhereUniqueInput | pipeline_stagesWhereUniqueInput[]
+    connect?: pipeline_stagesWhereUniqueInput | pipeline_stagesWhereUniqueInput[]
+    update?: pipeline_stagesUpdateWithWhereUniqueWithoutPipelineInput | pipeline_stagesUpdateWithWhereUniqueWithoutPipelineInput[]
+    updateMany?: pipeline_stagesUpdateManyWithWhereWithoutPipelineInput | pipeline_stagesUpdateManyWithWhereWithoutPipelineInput[]
+    deleteMany?: pipeline_stagesScalarWhereInput | pipeline_stagesScalarWhereInput[]
+  }
+
+  export type leadsUpdateManyWithoutPipelineNestedInput = {
+    create?: XOR<leadsCreateWithoutPipelineInput, leadsUncheckedCreateWithoutPipelineInput> | leadsCreateWithoutPipelineInput[] | leadsUncheckedCreateWithoutPipelineInput[]
+    connectOrCreate?: leadsCreateOrConnectWithoutPipelineInput | leadsCreateOrConnectWithoutPipelineInput[]
+    upsert?: leadsUpsertWithWhereUniqueWithoutPipelineInput | leadsUpsertWithWhereUniqueWithoutPipelineInput[]
+    createMany?: leadsCreateManyPipelineInputEnvelope
+    set?: leadsWhereUniqueInput | leadsWhereUniqueInput[]
+    disconnect?: leadsWhereUniqueInput | leadsWhereUniqueInput[]
+    delete?: leadsWhereUniqueInput | leadsWhereUniqueInput[]
+    connect?: leadsWhereUniqueInput | leadsWhereUniqueInput[]
+    update?: leadsUpdateWithWhereUniqueWithoutPipelineInput | leadsUpdateWithWhereUniqueWithoutPipelineInput[]
+    updateMany?: leadsUpdateManyWithWhereWithoutPipelineInput | leadsUpdateManyWithWhereWithoutPipelineInput[]
+    deleteMany?: leadsScalarWhereInput | leadsScalarWhereInput[]
+  }
+
+  export type pipeline_stagesUncheckedUpdateManyWithoutPipelineNestedInput = {
+    create?: XOR<pipeline_stagesCreateWithoutPipelineInput, pipeline_stagesUncheckedCreateWithoutPipelineInput> | pipeline_stagesCreateWithoutPipelineInput[] | pipeline_stagesUncheckedCreateWithoutPipelineInput[]
+    connectOrCreate?: pipeline_stagesCreateOrConnectWithoutPipelineInput | pipeline_stagesCreateOrConnectWithoutPipelineInput[]
+    upsert?: pipeline_stagesUpsertWithWhereUniqueWithoutPipelineInput | pipeline_stagesUpsertWithWhereUniqueWithoutPipelineInput[]
+    createMany?: pipeline_stagesCreateManyPipelineInputEnvelope
+    set?: pipeline_stagesWhereUniqueInput | pipeline_stagesWhereUniqueInput[]
+    disconnect?: pipeline_stagesWhereUniqueInput | pipeline_stagesWhereUniqueInput[]
+    delete?: pipeline_stagesWhereUniqueInput | pipeline_stagesWhereUniqueInput[]
+    connect?: pipeline_stagesWhereUniqueInput | pipeline_stagesWhereUniqueInput[]
+    update?: pipeline_stagesUpdateWithWhereUniqueWithoutPipelineInput | pipeline_stagesUpdateWithWhereUniqueWithoutPipelineInput[]
+    updateMany?: pipeline_stagesUpdateManyWithWhereWithoutPipelineInput | pipeline_stagesUpdateManyWithWhereWithoutPipelineInput[]
+    deleteMany?: pipeline_stagesScalarWhereInput | pipeline_stagesScalarWhereInput[]
+  }
+
+  export type leadsUncheckedUpdateManyWithoutPipelineNestedInput = {
+    create?: XOR<leadsCreateWithoutPipelineInput, leadsUncheckedCreateWithoutPipelineInput> | leadsCreateWithoutPipelineInput[] | leadsUncheckedCreateWithoutPipelineInput[]
+    connectOrCreate?: leadsCreateOrConnectWithoutPipelineInput | leadsCreateOrConnectWithoutPipelineInput[]
+    upsert?: leadsUpsertWithWhereUniqueWithoutPipelineInput | leadsUpsertWithWhereUniqueWithoutPipelineInput[]
+    createMany?: leadsCreateManyPipelineInputEnvelope
+    set?: leadsWhereUniqueInput | leadsWhereUniqueInput[]
+    disconnect?: leadsWhereUniqueInput | leadsWhereUniqueInput[]
+    delete?: leadsWhereUniqueInput | leadsWhereUniqueInput[]
+    connect?: leadsWhereUniqueInput | leadsWhereUniqueInput[]
+    update?: leadsUpdateWithWhereUniqueWithoutPipelineInput | leadsUpdateWithWhereUniqueWithoutPipelineInput[]
+    updateMany?: leadsUpdateManyWithWhereWithoutPipelineInput | leadsUpdateManyWithWhereWithoutPipelineInput[]
+    deleteMany?: leadsScalarWhereInput | leadsScalarWhereInput[]
+  }
+
+  export type pipelinesCreateNestedOneWithoutStagesInput = {
+    create?: XOR<pipelinesCreateWithoutStagesInput, pipelinesUncheckedCreateWithoutStagesInput>
+    connectOrCreate?: pipelinesCreateOrConnectWithoutStagesInput
+    connect?: pipelinesWhereUniqueInput
+  }
+
+  export type leadsCreateNestedManyWithoutStageInput = {
+    create?: XOR<leadsCreateWithoutStageInput, leadsUncheckedCreateWithoutStageInput> | leadsCreateWithoutStageInput[] | leadsUncheckedCreateWithoutStageInput[]
+    connectOrCreate?: leadsCreateOrConnectWithoutStageInput | leadsCreateOrConnectWithoutStageInput[]
+    createMany?: leadsCreateManyStageInputEnvelope
+    connect?: leadsWhereUniqueInput | leadsWhereUniqueInput[]
+  }
+
+  export type leadsUncheckedCreateNestedManyWithoutStageInput = {
+    create?: XOR<leadsCreateWithoutStageInput, leadsUncheckedCreateWithoutStageInput> | leadsCreateWithoutStageInput[] | leadsUncheckedCreateWithoutStageInput[]
+    connectOrCreate?: leadsCreateOrConnectWithoutStageInput | leadsCreateOrConnectWithoutStageInput[]
+    createMany?: leadsCreateManyStageInputEnvelope
+    connect?: leadsWhereUniqueInput | leadsWhereUniqueInput[]
+  }
+
+  export type IntFieldUpdateOperationsInput = {
+    set?: number
+    increment?: number
+    decrement?: number
+    multiply?: number
+    divide?: number
+  }
+
+  export type pipelinesUpdateOneRequiredWithoutStagesNestedInput = {
+    create?: XOR<pipelinesCreateWithoutStagesInput, pipelinesUncheckedCreateWithoutStagesInput>
+    connectOrCreate?: pipelinesCreateOrConnectWithoutStagesInput
+    upsert?: pipelinesUpsertWithoutStagesInput
+    connect?: pipelinesWhereUniqueInput
+    update?: XOR<XOR<pipelinesUpdateToOneWithWhereWithoutStagesInput, pipelinesUpdateWithoutStagesInput>, pipelinesUncheckedUpdateWithoutStagesInput>
+  }
+
+  export type leadsUpdateManyWithoutStageNestedInput = {
+    create?: XOR<leadsCreateWithoutStageInput, leadsUncheckedCreateWithoutStageInput> | leadsCreateWithoutStageInput[] | leadsUncheckedCreateWithoutStageInput[]
+    connectOrCreate?: leadsCreateOrConnectWithoutStageInput | leadsCreateOrConnectWithoutStageInput[]
+    upsert?: leadsUpsertWithWhereUniqueWithoutStageInput | leadsUpsertWithWhereUniqueWithoutStageInput[]
+    createMany?: leadsCreateManyStageInputEnvelope
+    set?: leadsWhereUniqueInput | leadsWhereUniqueInput[]
+    disconnect?: leadsWhereUniqueInput | leadsWhereUniqueInput[]
+    delete?: leadsWhereUniqueInput | leadsWhereUniqueInput[]
+    connect?: leadsWhereUniqueInput | leadsWhereUniqueInput[]
+    update?: leadsUpdateWithWhereUniqueWithoutStageInput | leadsUpdateWithWhereUniqueWithoutStageInput[]
+    updateMany?: leadsUpdateManyWithWhereWithoutStageInput | leadsUpdateManyWithWhereWithoutStageInput[]
+    deleteMany?: leadsScalarWhereInput | leadsScalarWhereInput[]
+  }
+
+  export type leadsUncheckedUpdateManyWithoutStageNestedInput = {
+    create?: XOR<leadsCreateWithoutStageInput, leadsUncheckedCreateWithoutStageInput> | leadsCreateWithoutStageInput[] | leadsUncheckedCreateWithoutStageInput[]
+    connectOrCreate?: leadsCreateOrConnectWithoutStageInput | leadsCreateOrConnectWithoutStageInput[]
+    upsert?: leadsUpsertWithWhereUniqueWithoutStageInput | leadsUpsertWithWhereUniqueWithoutStageInput[]
+    createMany?: leadsCreateManyStageInputEnvelope
+    set?: leadsWhereUniqueInput | leadsWhereUniqueInput[]
+    disconnect?: leadsWhereUniqueInput | leadsWhereUniqueInput[]
+    delete?: leadsWhereUniqueInput | leadsWhereUniqueInput[]
+    connect?: leadsWhereUniqueInput | leadsWhereUniqueInput[]
+    update?: leadsUpdateWithWhereUniqueWithoutStageInput | leadsUpdateWithWhereUniqueWithoutStageInput[]
+    updateMany?: leadsUpdateManyWithWhereWithoutStageInput | leadsUpdateManyWithWhereWithoutStageInput[]
+    deleteMany?: leadsScalarWhereInput | leadsScalarWhereInput[]
+  }
+
   export type leadsCreateNestedOneWithoutEventsInput = {
     create?: XOR<leadsCreateWithoutEventsInput, leadsUncheckedCreateWithoutEventsInput>
     connectOrCreate?: leadsCreateOrConnectWithoutEventsInput
@@ -113813,14 +117308,6 @@ export namespace Prisma {
     connectOrCreate?: hospitality_bookingsCreateOrConnectWithoutCustomerInput | hospitality_bookingsCreateOrConnectWithoutCustomerInput[]
     createMany?: hospitality_bookingsCreateManyCustomerInputEnvelope
     connect?: hospitality_bookingsWhereUniqueInput | hospitality_bookingsWhereUniqueInput[]
-  }
-
-  export type IntFieldUpdateOperationsInput = {
-    set?: number
-    increment?: number
-    decrement?: number
-    multiply?: number
-    divide?: number
   }
 
   export type DecimalFieldUpdateOperationsInput = {
@@ -117157,17 +120644,6 @@ export namespace Prisma {
     not?: NestedFloatNullableFilter<$PrismaModel> | number | null
   }
 
-  export type NestedDecimalNullableFilter<$PrismaModel = never> = {
-    equals?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel> | null
-    in?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel> | null
-    notIn?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel> | null
-    lt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
-    lte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
-    gt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
-    gte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
-    not?: NestedDecimalNullableFilter<$PrismaModel> | Decimal | DecimalJsLike | number | string | null
-  }
-
   export type NestedUuidNullableFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel> | null
     in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
@@ -117179,7 +120655,7 @@ export namespace Prisma {
     not?: NestedUuidNullableFilter<$PrismaModel> | string | null
   }
 
-  export type NestedDecimalNullableWithAggregatesFilter<$PrismaModel = never> = {
+  export type NestedDecimalNullableFilter<$PrismaModel = never> = {
     equals?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel> | null
     in?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel> | null
     notIn?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel> | null
@@ -117187,12 +120663,7 @@ export namespace Prisma {
     lte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
     gt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
     gte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
-    not?: NestedDecimalNullableWithAggregatesFilter<$PrismaModel> | Decimal | DecimalJsLike | number | string | null
-    _count?: NestedIntNullableFilter<$PrismaModel>
-    _avg?: NestedDecimalNullableFilter<$PrismaModel>
-    _sum?: NestedDecimalNullableFilter<$PrismaModel>
-    _min?: NestedDecimalNullableFilter<$PrismaModel>
-    _max?: NestedDecimalNullableFilter<$PrismaModel>
+    not?: NestedDecimalNullableFilter<$PrismaModel> | Decimal | DecimalJsLike | number | string | null
   }
 
   export type NestedUuidNullableWithAggregatesFilter<$PrismaModel = never> = {
@@ -117209,15 +120680,20 @@ export namespace Prisma {
     _max?: NestedStringNullableFilter<$PrismaModel>
   }
 
-  export type NestedDecimalFilter<$PrismaModel = never> = {
-    equals?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
-    in?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel>
-    notIn?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel>
+  export type NestedDecimalNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel> | null
+    in?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel> | null
+    notIn?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel> | null
     lt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
     lte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
     gt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
     gte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
-    not?: NestedDecimalFilter<$PrismaModel> | Decimal | DecimalJsLike | number | string
+    not?: NestedDecimalNullableWithAggregatesFilter<$PrismaModel> | Decimal | DecimalJsLike | number | string | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _avg?: NestedDecimalNullableFilter<$PrismaModel>
+    _sum?: NestedDecimalNullableFilter<$PrismaModel>
+    _min?: NestedDecimalNullableFilter<$PrismaModel>
+    _max?: NestedDecimalNullableFilter<$PrismaModel>
   }
 
   export type NestedIntWithAggregatesFilter<$PrismaModel = never> = {
@@ -117245,6 +120721,17 @@ export namespace Prisma {
     gt?: number | FloatFieldRefInput<$PrismaModel>
     gte?: number | FloatFieldRefInput<$PrismaModel>
     not?: NestedFloatFilter<$PrismaModel> | number
+  }
+
+  export type NestedDecimalFilter<$PrismaModel = never> = {
+    equals?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    in?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel>
+    notIn?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel>
+    lt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    lte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    gt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    gte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    not?: NestedDecimalFilter<$PrismaModel> | Decimal | DecimalJsLike | number | string
   }
 
   export type NestedDecimalWithAggregatesFilter<$PrismaModel = never> = {
@@ -117914,6 +121401,8 @@ export namespace Prisma {
     hospitality_bookings?: hospitality_bookingsCreateNestedManyWithoutLeadInput
     assigned_user?: usersCreateNestedOneWithoutLeads_assignedInput
     tenants: tenantsCreateNestedOneWithoutLeadsInput
+    pipeline?: pipelinesCreateNestedOneWithoutLeadsInput
+    stage?: pipeline_stagesCreateNestedOneWithoutLeadsInput
     orders?: ordersCreateNestedManyWithoutLeadsInput
     workflow_executions?: workflow_executionsCreateNestedManyWithoutLeadsInput
   }
@@ -117928,6 +121417,8 @@ export namespace Prisma {
     source?: string
     platform_id?: string | null
     status?: string
+    stage_id?: string | null
+    pipeline_id?: string | null
     lost_reason?: string | null
     context?: NullableJsonNullValueInput | InputJsonValue
     quoted_amount?: Decimal | DecimalJsLike | number | string | null
@@ -117959,6 +121450,40 @@ export namespace Prisma {
 
   export type leadsCreateManyBusinessesInputEnvelope = {
     data: leadsCreateManyBusinessesInput | leadsCreateManyBusinessesInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type pipelinesCreateWithoutBusinessesInput = {
+    pipeline_id?: string
+    name: string
+    industry?: string | null
+    is_default?: boolean
+    is_archived?: boolean
+    created_at?: Date | string
+    updated_at?: Date | string
+    stages?: pipeline_stagesCreateNestedManyWithoutPipelineInput
+    leads?: leadsCreateNestedManyWithoutPipelineInput
+  }
+
+  export type pipelinesUncheckedCreateWithoutBusinessesInput = {
+    pipeline_id?: string
+    name: string
+    industry?: string | null
+    is_default?: boolean
+    is_archived?: boolean
+    created_at?: Date | string
+    updated_at?: Date | string
+    stages?: pipeline_stagesUncheckedCreateNestedManyWithoutPipelineInput
+    leads?: leadsUncheckedCreateNestedManyWithoutPipelineInput
+  }
+
+  export type pipelinesCreateOrConnectWithoutBusinessesInput = {
+    where: pipelinesWhereUniqueInput
+    create: XOR<pipelinesCreateWithoutBusinessesInput, pipelinesUncheckedCreateWithoutBusinessesInput>
+  }
+
+  export type pipelinesCreateManyBusinessesInputEnvelope = {
+    data: pipelinesCreateManyBusinessesInput | pipelinesCreateManyBusinessesInput[]
     skipDuplicates?: boolean
   }
 
@@ -119204,6 +122729,8 @@ export namespace Prisma {
     source?: StringFilter<"leads"> | string
     platform_id?: StringNullableFilter<"leads"> | string | null
     status?: StringFilter<"leads"> | string
+    stage_id?: UuidNullableFilter<"leads"> | string | null
+    pipeline_id?: UuidNullableFilter<"leads"> | string | null
     lost_reason?: StringNullableFilter<"leads"> | string | null
     context?: JsonNullableFilter<"leads">
     quoted_amount?: DecimalNullableFilter<"leads"> | Decimal | DecimalJsLike | number | string | null
@@ -119216,6 +122743,36 @@ export namespace Prisma {
     deleted_at?: DateTimeNullableFilter<"leads"> | Date | string | null
     created_at?: DateTimeFilter<"leads"> | Date | string
     updated_at?: DateTimeFilter<"leads"> | Date | string
+  }
+
+  export type pipelinesUpsertWithWhereUniqueWithoutBusinessesInput = {
+    where: pipelinesWhereUniqueInput
+    update: XOR<pipelinesUpdateWithoutBusinessesInput, pipelinesUncheckedUpdateWithoutBusinessesInput>
+    create: XOR<pipelinesCreateWithoutBusinessesInput, pipelinesUncheckedCreateWithoutBusinessesInput>
+  }
+
+  export type pipelinesUpdateWithWhereUniqueWithoutBusinessesInput = {
+    where: pipelinesWhereUniqueInput
+    data: XOR<pipelinesUpdateWithoutBusinessesInput, pipelinesUncheckedUpdateWithoutBusinessesInput>
+  }
+
+  export type pipelinesUpdateManyWithWhereWithoutBusinessesInput = {
+    where: pipelinesScalarWhereInput
+    data: XOR<pipelinesUpdateManyMutationInput, pipelinesUncheckedUpdateManyWithoutBusinessesInput>
+  }
+
+  export type pipelinesScalarWhereInput = {
+    AND?: pipelinesScalarWhereInput | pipelinesScalarWhereInput[]
+    OR?: pipelinesScalarWhereInput[]
+    NOT?: pipelinesScalarWhereInput | pipelinesScalarWhereInput[]
+    pipeline_id?: UuidFilter<"pipelines"> | string
+    business_id?: UuidFilter<"pipelines"> | string
+    name?: StringFilter<"pipelines"> | string
+    industry?: StringNullableFilter<"pipelines"> | string | null
+    is_default?: BoolFilter<"pipelines"> | boolean
+    is_archived?: BoolFilter<"pipelines"> | boolean
+    created_at?: DateTimeFilter<"pipelines"> | Date | string
+    updated_at?: DateTimeFilter<"pipelines"> | Date | string
   }
 
   export type notification_messagesUpsertWithWhereUniqueWithoutBusinessesInput = {
@@ -119888,6 +123445,7 @@ export namespace Prisma {
     hospitality_bookings?: hospitality_bookingsCreateNestedManyWithoutBusinessInput
     hospitality_inquiries?: hospitality_inquiriesCreateNestedManyWithoutBusinessInput
     leads?: leadsCreateNestedManyWithoutBusinessesInput
+    pipelines?: pipelinesCreateNestedManyWithoutBusinessesInput
     notification_messages?: notification_messagesCreateNestedManyWithoutBusinessesInput
     notification_preferences?: notification_preferencesCreateNestedManyWithoutBusinessesInput
     notification_templates?: notification_templatesCreateNestedManyWithoutBusinessesInput
@@ -119933,6 +123491,7 @@ export namespace Prisma {
     hospitality_bookings?: hospitality_bookingsUncheckedCreateNestedManyWithoutBusinessInput
     hospitality_inquiries?: hospitality_inquiriesUncheckedCreateNestedManyWithoutBusinessInput
     leads?: leadsUncheckedCreateNestedManyWithoutBusinessesInput
+    pipelines?: pipelinesUncheckedCreateNestedManyWithoutBusinessesInput
     notification_messages?: notification_messagesUncheckedCreateNestedManyWithoutBusinessesInput
     notification_preferences?: notification_preferencesUncheckedCreateNestedManyWithoutBusinessesInput
     notification_templates?: notification_templatesUncheckedCreateNestedManyWithoutBusinessesInput
@@ -119994,6 +123553,7 @@ export namespace Prisma {
     hospitality_bookings?: hospitality_bookingsUpdateManyWithoutBusinessNestedInput
     hospitality_inquiries?: hospitality_inquiriesUpdateManyWithoutBusinessNestedInput
     leads?: leadsUpdateManyWithoutBusinessesNestedInput
+    pipelines?: pipelinesUpdateManyWithoutBusinessesNestedInput
     notification_messages?: notification_messagesUpdateManyWithoutBusinessesNestedInput
     notification_preferences?: notification_preferencesUpdateManyWithoutBusinessesNestedInput
     notification_templates?: notification_templatesUpdateManyWithoutBusinessesNestedInput
@@ -120039,6 +123599,7 @@ export namespace Prisma {
     hospitality_bookings?: hospitality_bookingsUncheckedUpdateManyWithoutBusinessNestedInput
     hospitality_inquiries?: hospitality_inquiriesUncheckedUpdateManyWithoutBusinessNestedInput
     leads?: leadsUncheckedUpdateManyWithoutBusinessesNestedInput
+    pipelines?: pipelinesUncheckedUpdateManyWithoutBusinessesNestedInput
     notification_messages?: notification_messagesUncheckedUpdateManyWithoutBusinessesNestedInput
     notification_preferences?: notification_preferencesUncheckedUpdateManyWithoutBusinessesNestedInput
     notification_templates?: notification_templatesUncheckedUpdateManyWithoutBusinessesNestedInput
@@ -120536,6 +124097,7 @@ export namespace Prisma {
     hospitality_bookings?: hospitality_bookingsCreateNestedManyWithoutBusinessInput
     hospitality_inquiries?: hospitality_inquiriesCreateNestedManyWithoutBusinessInput
     leads?: leadsCreateNestedManyWithoutBusinessesInput
+    pipelines?: pipelinesCreateNestedManyWithoutBusinessesInput
     notification_messages?: notification_messagesCreateNestedManyWithoutBusinessesInput
     notification_preferences?: notification_preferencesCreateNestedManyWithoutBusinessesInput
     notification_templates?: notification_templatesCreateNestedManyWithoutBusinessesInput
@@ -120581,6 +124143,7 @@ export namespace Prisma {
     hospitality_bookings?: hospitality_bookingsUncheckedCreateNestedManyWithoutBusinessInput
     hospitality_inquiries?: hospitality_inquiriesUncheckedCreateNestedManyWithoutBusinessInput
     leads?: leadsUncheckedCreateNestedManyWithoutBusinessesInput
+    pipelines?: pipelinesUncheckedCreateNestedManyWithoutBusinessesInput
     notification_messages?: notification_messagesUncheckedCreateNestedManyWithoutBusinessesInput
     notification_preferences?: notification_preferencesUncheckedCreateNestedManyWithoutBusinessesInput
     notification_templates?: notification_templatesUncheckedCreateNestedManyWithoutBusinessesInput
@@ -120678,6 +124241,7 @@ export namespace Prisma {
     hospitality_bookings?: hospitality_bookingsUpdateManyWithoutBusinessNestedInput
     hospitality_inquiries?: hospitality_inquiriesUpdateManyWithoutBusinessNestedInput
     leads?: leadsUpdateManyWithoutBusinessesNestedInput
+    pipelines?: pipelinesUpdateManyWithoutBusinessesNestedInput
     notification_messages?: notification_messagesUpdateManyWithoutBusinessesNestedInput
     notification_preferences?: notification_preferencesUpdateManyWithoutBusinessesNestedInput
     notification_templates?: notification_templatesUpdateManyWithoutBusinessesNestedInput
@@ -120723,6 +124287,7 @@ export namespace Prisma {
     hospitality_bookings?: hospitality_bookingsUncheckedUpdateManyWithoutBusinessNestedInput
     hospitality_inquiries?: hospitality_inquiriesUncheckedUpdateManyWithoutBusinessNestedInput
     leads?: leadsUncheckedUpdateManyWithoutBusinessesNestedInput
+    pipelines?: pipelinesUncheckedUpdateManyWithoutBusinessesNestedInput
     notification_messages?: notification_messagesUncheckedUpdateManyWithoutBusinessesNestedInput
     notification_preferences?: notification_preferencesUncheckedUpdateManyWithoutBusinessesNestedInput
     notification_templates?: notification_templatesUncheckedUpdateManyWithoutBusinessesNestedInput
@@ -120797,6 +124362,7 @@ export namespace Prisma {
     hospitality_bookings?: hospitality_bookingsCreateNestedManyWithoutBusinessInput
     hospitality_inquiries?: hospitality_inquiriesCreateNestedManyWithoutBusinessInput
     leads?: leadsCreateNestedManyWithoutBusinessesInput
+    pipelines?: pipelinesCreateNestedManyWithoutBusinessesInput
     notification_messages?: notification_messagesCreateNestedManyWithoutBusinessesInput
     notification_preferences?: notification_preferencesCreateNestedManyWithoutBusinessesInput
     notification_templates?: notification_templatesCreateNestedManyWithoutBusinessesInput
@@ -120842,6 +124408,7 @@ export namespace Prisma {
     hospitality_bookings?: hospitality_bookingsUncheckedCreateNestedManyWithoutBusinessInput
     hospitality_inquiries?: hospitality_inquiriesUncheckedCreateNestedManyWithoutBusinessInput
     leads?: leadsUncheckedCreateNestedManyWithoutBusinessesInput
+    pipelines?: pipelinesUncheckedCreateNestedManyWithoutBusinessesInput
     notification_messages?: notification_messagesUncheckedCreateNestedManyWithoutBusinessesInput
     notification_preferences?: notification_preferencesUncheckedCreateNestedManyWithoutBusinessesInput
     notification_templates?: notification_templatesUncheckedCreateNestedManyWithoutBusinessesInput
@@ -120938,6 +124505,8 @@ export namespace Prisma {
     hospitality_bookings?: hospitality_bookingsCreateNestedManyWithoutLeadInput
     assigned_user?: usersCreateNestedOneWithoutLeads_assignedInput
     businesses: businessesCreateNestedOneWithoutLeadsInput
+    pipeline?: pipelinesCreateNestedOneWithoutLeadsInput
+    stage?: pipeline_stagesCreateNestedOneWithoutLeadsInput
     orders?: ordersCreateNestedManyWithoutLeadsInput
     workflow_executions?: workflow_executionsCreateNestedManyWithoutLeadsInput
   }
@@ -120952,6 +124521,8 @@ export namespace Prisma {
     source?: string
     platform_id?: string | null
     status?: string
+    stage_id?: string | null
+    pipeline_id?: string | null
     lost_reason?: string | null
     context?: NullableJsonNullValueInput | InputJsonValue
     quoted_amount?: Decimal | DecimalJsLike | number | string | null
@@ -121788,6 +125359,8 @@ export namespace Prisma {
     hospitality_bookings?: hospitality_bookingsCreateNestedManyWithoutLeadInput
     businesses: businessesCreateNestedOneWithoutLeadsInput
     tenants: tenantsCreateNestedOneWithoutLeadsInput
+    pipeline?: pipelinesCreateNestedOneWithoutLeadsInput
+    stage?: pipeline_stagesCreateNestedOneWithoutLeadsInput
     orders?: ordersCreateNestedManyWithoutLeadsInput
     workflow_executions?: workflow_executionsCreateNestedManyWithoutLeadsInput
   }
@@ -121803,6 +125376,8 @@ export namespace Prisma {
     source?: string
     platform_id?: string | null
     status?: string
+    stage_id?: string | null
+    pipeline_id?: string | null
     lost_reason?: string | null
     context?: NullableJsonNullValueInput | InputJsonValue
     quoted_amount?: Decimal | DecimalJsLike | number | string | null
@@ -121890,6 +125465,7 @@ export namespace Prisma {
     hospitality_bookings?: hospitality_bookingsCreateNestedManyWithoutBusinessInput
     hospitality_inquiries?: hospitality_inquiriesCreateNestedManyWithoutBusinessInput
     leads?: leadsCreateNestedManyWithoutBusinessesInput
+    pipelines?: pipelinesCreateNestedManyWithoutBusinessesInput
     notification_messages?: notification_messagesCreateNestedManyWithoutBusinessesInput
     notification_preferences?: notification_preferencesCreateNestedManyWithoutBusinessesInput
     notification_templates?: notification_templatesCreateNestedManyWithoutBusinessesInput
@@ -121935,6 +125511,7 @@ export namespace Prisma {
     hospitality_bookings?: hospitality_bookingsUncheckedCreateNestedManyWithoutBusinessInput
     hospitality_inquiries?: hospitality_inquiriesUncheckedCreateNestedManyWithoutBusinessInput
     leads?: leadsUncheckedCreateNestedManyWithoutBusinessesInput
+    pipelines?: pipelinesUncheckedCreateNestedManyWithoutBusinessesInput
     notification_messages?: notification_messagesUncheckedCreateNestedManyWithoutBusinessesInput
     notification_preferences?: notification_preferencesUncheckedCreateNestedManyWithoutBusinessesInput
     notification_templates?: notification_templatesUncheckedCreateNestedManyWithoutBusinessesInput
@@ -122116,6 +125693,7 @@ export namespace Prisma {
     hospitality_bookings?: hospitality_bookingsUpdateManyWithoutBusinessNestedInput
     hospitality_inquiries?: hospitality_inquiriesUpdateManyWithoutBusinessNestedInput
     leads?: leadsUpdateManyWithoutBusinessesNestedInput
+    pipelines?: pipelinesUpdateManyWithoutBusinessesNestedInput
     notification_messages?: notification_messagesUpdateManyWithoutBusinessesNestedInput
     notification_preferences?: notification_preferencesUpdateManyWithoutBusinessesNestedInput
     notification_templates?: notification_templatesUpdateManyWithoutBusinessesNestedInput
@@ -122161,6 +125739,7 @@ export namespace Prisma {
     hospitality_bookings?: hospitality_bookingsUncheckedUpdateManyWithoutBusinessNestedInput
     hospitality_inquiries?: hospitality_inquiriesUncheckedUpdateManyWithoutBusinessNestedInput
     leads?: leadsUncheckedUpdateManyWithoutBusinessesNestedInput
+    pipelines?: pipelinesUncheckedUpdateManyWithoutBusinessesNestedInput
     notification_messages?: notification_messagesUncheckedUpdateManyWithoutBusinessesNestedInput
     notification_preferences?: notification_preferencesUncheckedUpdateManyWithoutBusinessesNestedInput
     notification_templates?: notification_templatesUncheckedUpdateManyWithoutBusinessesNestedInput
@@ -122661,6 +126240,7 @@ export namespace Prisma {
     product_inquiries?: product_inquiriesCreateNestedManyWithoutBusinessInput
     hospitality_bookings?: hospitality_bookingsCreateNestedManyWithoutBusinessInput
     hospitality_inquiries?: hospitality_inquiriesCreateNestedManyWithoutBusinessInput
+    pipelines?: pipelinesCreateNestedManyWithoutBusinessesInput
     notification_messages?: notification_messagesCreateNestedManyWithoutBusinessesInput
     notification_preferences?: notification_preferencesCreateNestedManyWithoutBusinessesInput
     notification_templates?: notification_templatesCreateNestedManyWithoutBusinessesInput
@@ -122706,6 +126286,7 @@ export namespace Prisma {
     product_inquiries?: product_inquiriesUncheckedCreateNestedManyWithoutBusinessInput
     hospitality_bookings?: hospitality_bookingsUncheckedCreateNestedManyWithoutBusinessInput
     hospitality_inquiries?: hospitality_inquiriesUncheckedCreateNestedManyWithoutBusinessInput
+    pipelines?: pipelinesUncheckedCreateNestedManyWithoutBusinessesInput
     notification_messages?: notification_messagesUncheckedCreateNestedManyWithoutBusinessesInput
     notification_preferences?: notification_preferencesUncheckedCreateNestedManyWithoutBusinessesInput
     notification_templates?: notification_templatesUncheckedCreateNestedManyWithoutBusinessesInput
@@ -122782,6 +126363,66 @@ export namespace Prisma {
   export type tenantsCreateOrConnectWithoutLeadsInput = {
     where: tenantsWhereUniqueInput
     create: XOR<tenantsCreateWithoutLeadsInput, tenantsUncheckedCreateWithoutLeadsInput>
+  }
+
+  export type pipelinesCreateWithoutLeadsInput = {
+    pipeline_id?: string
+    name: string
+    industry?: string | null
+    is_default?: boolean
+    is_archived?: boolean
+    created_at?: Date | string
+    updated_at?: Date | string
+    businesses: businessesCreateNestedOneWithoutPipelinesInput
+    stages?: pipeline_stagesCreateNestedManyWithoutPipelineInput
+  }
+
+  export type pipelinesUncheckedCreateWithoutLeadsInput = {
+    pipeline_id?: string
+    business_id: string
+    name: string
+    industry?: string | null
+    is_default?: boolean
+    is_archived?: boolean
+    created_at?: Date | string
+    updated_at?: Date | string
+    stages?: pipeline_stagesUncheckedCreateNestedManyWithoutPipelineInput
+  }
+
+  export type pipelinesCreateOrConnectWithoutLeadsInput = {
+    where: pipelinesWhereUniqueInput
+    create: XOR<pipelinesCreateWithoutLeadsInput, pipelinesUncheckedCreateWithoutLeadsInput>
+  }
+
+  export type pipeline_stagesCreateWithoutLeadsInput = {
+    stage_id?: string
+    business_id: string
+    name: string
+    slug: string
+    position: number
+    is_won?: boolean
+    is_lost?: boolean
+    color?: string | null
+    created_at?: Date | string
+    pipeline: pipelinesCreateNestedOneWithoutStagesInput
+  }
+
+  export type pipeline_stagesUncheckedCreateWithoutLeadsInput = {
+    stage_id?: string
+    pipeline_id: string
+    business_id: string
+    name: string
+    slug: string
+    position: number
+    is_won?: boolean
+    is_lost?: boolean
+    color?: string | null
+    created_at?: Date | string
+  }
+
+  export type pipeline_stagesCreateOrConnectWithoutLeadsInput = {
+    where: pipeline_stagesWhereUniqueInput
+    create: XOR<pipeline_stagesCreateWithoutLeadsInput, pipeline_stagesUncheckedCreateWithoutLeadsInput>
   }
 
   export type ordersCreateWithoutLeadsInput = {
@@ -123202,6 +126843,7 @@ export namespace Prisma {
     product_inquiries?: product_inquiriesUpdateManyWithoutBusinessNestedInput
     hospitality_bookings?: hospitality_bookingsUpdateManyWithoutBusinessNestedInput
     hospitality_inquiries?: hospitality_inquiriesUpdateManyWithoutBusinessNestedInput
+    pipelines?: pipelinesUpdateManyWithoutBusinessesNestedInput
     notification_messages?: notification_messagesUpdateManyWithoutBusinessesNestedInput
     notification_preferences?: notification_preferencesUpdateManyWithoutBusinessesNestedInput
     notification_templates?: notification_templatesUpdateManyWithoutBusinessesNestedInput
@@ -123247,6 +126889,7 @@ export namespace Prisma {
     product_inquiries?: product_inquiriesUncheckedUpdateManyWithoutBusinessNestedInput
     hospitality_bookings?: hospitality_bookingsUncheckedUpdateManyWithoutBusinessNestedInput
     hospitality_inquiries?: hospitality_inquiriesUncheckedUpdateManyWithoutBusinessNestedInput
+    pipelines?: pipelinesUncheckedUpdateManyWithoutBusinessesNestedInput
     notification_messages?: notification_messagesUncheckedUpdateManyWithoutBusinessesNestedInput
     notification_preferences?: notification_preferencesUncheckedUpdateManyWithoutBusinessesNestedInput
     notification_templates?: notification_templatesUncheckedUpdateManyWithoutBusinessesNestedInput
@@ -123326,6 +126969,78 @@ export namespace Prisma {
     notification_templates?: notification_templatesUncheckedUpdateManyWithoutTenantsNestedInput
   }
 
+  export type pipelinesUpsertWithoutLeadsInput = {
+    update: XOR<pipelinesUpdateWithoutLeadsInput, pipelinesUncheckedUpdateWithoutLeadsInput>
+    create: XOR<pipelinesCreateWithoutLeadsInput, pipelinesUncheckedCreateWithoutLeadsInput>
+    where?: pipelinesWhereInput
+  }
+
+  export type pipelinesUpdateToOneWithWhereWithoutLeadsInput = {
+    where?: pipelinesWhereInput
+    data: XOR<pipelinesUpdateWithoutLeadsInput, pipelinesUncheckedUpdateWithoutLeadsInput>
+  }
+
+  export type pipelinesUpdateWithoutLeadsInput = {
+    pipeline_id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    industry?: NullableStringFieldUpdateOperationsInput | string | null
+    is_default?: BoolFieldUpdateOperationsInput | boolean
+    is_archived?: BoolFieldUpdateOperationsInput | boolean
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    businesses?: businessesUpdateOneRequiredWithoutPipelinesNestedInput
+    stages?: pipeline_stagesUpdateManyWithoutPipelineNestedInput
+  }
+
+  export type pipelinesUncheckedUpdateWithoutLeadsInput = {
+    pipeline_id?: StringFieldUpdateOperationsInput | string
+    business_id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    industry?: NullableStringFieldUpdateOperationsInput | string | null
+    is_default?: BoolFieldUpdateOperationsInput | boolean
+    is_archived?: BoolFieldUpdateOperationsInput | boolean
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    stages?: pipeline_stagesUncheckedUpdateManyWithoutPipelineNestedInput
+  }
+
+  export type pipeline_stagesUpsertWithoutLeadsInput = {
+    update: XOR<pipeline_stagesUpdateWithoutLeadsInput, pipeline_stagesUncheckedUpdateWithoutLeadsInput>
+    create: XOR<pipeline_stagesCreateWithoutLeadsInput, pipeline_stagesUncheckedCreateWithoutLeadsInput>
+    where?: pipeline_stagesWhereInput
+  }
+
+  export type pipeline_stagesUpdateToOneWithWhereWithoutLeadsInput = {
+    where?: pipeline_stagesWhereInput
+    data: XOR<pipeline_stagesUpdateWithoutLeadsInput, pipeline_stagesUncheckedUpdateWithoutLeadsInput>
+  }
+
+  export type pipeline_stagesUpdateWithoutLeadsInput = {
+    stage_id?: StringFieldUpdateOperationsInput | string
+    business_id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    slug?: StringFieldUpdateOperationsInput | string
+    position?: IntFieldUpdateOperationsInput | number
+    is_won?: BoolFieldUpdateOperationsInput | boolean
+    is_lost?: BoolFieldUpdateOperationsInput | boolean
+    color?: NullableStringFieldUpdateOperationsInput | string | null
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    pipeline?: pipelinesUpdateOneRequiredWithoutStagesNestedInput
+  }
+
+  export type pipeline_stagesUncheckedUpdateWithoutLeadsInput = {
+    stage_id?: StringFieldUpdateOperationsInput | string
+    pipeline_id?: StringFieldUpdateOperationsInput | string
+    business_id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    slug?: StringFieldUpdateOperationsInput | string
+    position?: IntFieldUpdateOperationsInput | number
+    is_won?: BoolFieldUpdateOperationsInput | boolean
+    is_lost?: BoolFieldUpdateOperationsInput | boolean
+    color?: NullableStringFieldUpdateOperationsInput | string | null
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type ordersUpsertWithWhereUniqueWithoutLeadsInput = {
     where: ordersWhereUniqueInput
     update: XOR<ordersUpdateWithoutLeadsInput, ordersUncheckedUpdateWithoutLeadsInput>
@@ -123401,6 +127116,534 @@ export namespace Prisma {
     data: XOR<workflow_executionsUpdateManyMutationInput, workflow_executionsUncheckedUpdateManyWithoutLeadsInput>
   }
 
+  export type businessesCreateWithoutPipelinesInput = {
+    business_id?: string
+    business_name: string
+    business_type?: string | null
+    whatsapp_number?: string | null
+    created_at?: Date | string
+    updated_at?: Date | string
+    email?: string | null
+    phone?: string | null
+    website?: string | null
+    city?: string | null
+    address?: string | null
+    country?: string | null
+    gst_number?: string | null
+    pan_number?: string | null
+    deleted_at?: Date | string | null
+    business_employees?: business_employeesCreateNestedManyWithoutBusinessesInput
+    business_workflows?: business_workflowsCreateNestedManyWithoutBusinessesInput
+    tenants: tenantsCreateNestedOneWithoutBusinessesInput
+    carts?: cartsCreateNestedManyWithoutBusinessesInput
+    catalog_items?: catalog_itemsCreateNestedManyWithoutBusinessesInput
+    product_item_details?: product_item_detailsCreateNestedManyWithoutBusinessInput
+    hospitality_item_details?: hospitality_item_detailsCreateNestedManyWithoutBusinessInput
+    product_orders?: product_ordersCreateNestedManyWithoutBusinessInput
+    product_inquiries?: product_inquiriesCreateNestedManyWithoutBusinessInput
+    hospitality_bookings?: hospitality_bookingsCreateNestedManyWithoutBusinessInput
+    hospitality_inquiries?: hospitality_inquiriesCreateNestedManyWithoutBusinessInput
+    leads?: leadsCreateNestedManyWithoutBusinessesInput
+    notification_messages?: notification_messagesCreateNestedManyWithoutBusinessesInput
+    notification_preferences?: notification_preferencesCreateNestedManyWithoutBusinessesInput
+    notification_templates?: notification_templatesCreateNestedManyWithoutBusinessesInput
+    payment_reconciliation?: payment_reconciliationCreateNestedManyWithoutBusinessesInput
+    payments?: paymentsCreateNestedManyWithoutBusinessesInput
+    social_accounts?: social_accountsCreateNestedManyWithoutBusinessesInput
+    users?: usersCreateNestedManyWithoutBusinessesInput
+    workflow_executions?: workflow_executionsCreateNestedManyWithoutBusinessesInput
+    workflow_execution_steps?: workflow_execution_stepsCreateNestedManyWithoutBusinessInput
+    workflow_idempotency_keys?: workflow_idempotency_keysCreateNestedManyWithoutBusinessInput
+    billing_subscription?: billing_subscriptionsCreateNestedOneWithoutBusinessesInput
+    wallet?: walletsCreateNestedOneWithoutBusinessesInput
+    billing_payments_list?: billing_paymentsCreateNestedManyWithoutBusinessesInput
+    billing_invoices_list?: billing_invoicesCreateNestedManyWithoutBusinessesInput
+    settings?: business_settingsCreateNestedOneWithoutBusinessesInput
+    audit_logs?: audit_logsCreateNestedManyWithoutBusinessesInput
+  }
+
+  export type businessesUncheckedCreateWithoutPipelinesInput = {
+    business_id?: string
+    tenant_id: string
+    business_name: string
+    business_type?: string | null
+    whatsapp_number?: string | null
+    created_at?: Date | string
+    updated_at?: Date | string
+    email?: string | null
+    phone?: string | null
+    website?: string | null
+    city?: string | null
+    address?: string | null
+    country?: string | null
+    gst_number?: string | null
+    pan_number?: string | null
+    deleted_at?: Date | string | null
+    business_employees?: business_employeesUncheckedCreateNestedManyWithoutBusinessesInput
+    business_workflows?: business_workflowsUncheckedCreateNestedManyWithoutBusinessesInput
+    carts?: cartsUncheckedCreateNestedManyWithoutBusinessesInput
+    catalog_items?: catalog_itemsUncheckedCreateNestedManyWithoutBusinessesInput
+    product_item_details?: product_item_detailsUncheckedCreateNestedManyWithoutBusinessInput
+    hospitality_item_details?: hospitality_item_detailsUncheckedCreateNestedManyWithoutBusinessInput
+    product_orders?: product_ordersUncheckedCreateNestedManyWithoutBusinessInput
+    product_inquiries?: product_inquiriesUncheckedCreateNestedManyWithoutBusinessInput
+    hospitality_bookings?: hospitality_bookingsUncheckedCreateNestedManyWithoutBusinessInput
+    hospitality_inquiries?: hospitality_inquiriesUncheckedCreateNestedManyWithoutBusinessInput
+    leads?: leadsUncheckedCreateNestedManyWithoutBusinessesInput
+    notification_messages?: notification_messagesUncheckedCreateNestedManyWithoutBusinessesInput
+    notification_preferences?: notification_preferencesUncheckedCreateNestedManyWithoutBusinessesInput
+    notification_templates?: notification_templatesUncheckedCreateNestedManyWithoutBusinessesInput
+    payment_reconciliation?: payment_reconciliationUncheckedCreateNestedManyWithoutBusinessesInput
+    payments?: paymentsUncheckedCreateNestedManyWithoutBusinessesInput
+    social_accounts?: social_accountsUncheckedCreateNestedManyWithoutBusinessesInput
+    users?: usersUncheckedCreateNestedManyWithoutBusinessesInput
+    workflow_executions?: workflow_executionsUncheckedCreateNestedManyWithoutBusinessesInput
+    workflow_execution_steps?: workflow_execution_stepsUncheckedCreateNestedManyWithoutBusinessInput
+    workflow_idempotency_keys?: workflow_idempotency_keysUncheckedCreateNestedManyWithoutBusinessInput
+    billing_subscription?: billing_subscriptionsUncheckedCreateNestedOneWithoutBusinessesInput
+    wallet?: walletsUncheckedCreateNestedOneWithoutBusinessesInput
+    billing_payments_list?: billing_paymentsUncheckedCreateNestedManyWithoutBusinessesInput
+    billing_invoices_list?: billing_invoicesUncheckedCreateNestedManyWithoutBusinessesInput
+    settings?: business_settingsUncheckedCreateNestedOneWithoutBusinessesInput
+    audit_logs?: audit_logsUncheckedCreateNestedManyWithoutBusinessesInput
+  }
+
+  export type businessesCreateOrConnectWithoutPipelinesInput = {
+    where: businessesWhereUniqueInput
+    create: XOR<businessesCreateWithoutPipelinesInput, businessesUncheckedCreateWithoutPipelinesInput>
+  }
+
+  export type pipeline_stagesCreateWithoutPipelineInput = {
+    stage_id?: string
+    business_id: string
+    name: string
+    slug: string
+    position: number
+    is_won?: boolean
+    is_lost?: boolean
+    color?: string | null
+    created_at?: Date | string
+    leads?: leadsCreateNestedManyWithoutStageInput
+  }
+
+  export type pipeline_stagesUncheckedCreateWithoutPipelineInput = {
+    stage_id?: string
+    business_id: string
+    name: string
+    slug: string
+    position: number
+    is_won?: boolean
+    is_lost?: boolean
+    color?: string | null
+    created_at?: Date | string
+    leads?: leadsUncheckedCreateNestedManyWithoutStageInput
+  }
+
+  export type pipeline_stagesCreateOrConnectWithoutPipelineInput = {
+    where: pipeline_stagesWhereUniqueInput
+    create: XOR<pipeline_stagesCreateWithoutPipelineInput, pipeline_stagesUncheckedCreateWithoutPipelineInput>
+  }
+
+  export type pipeline_stagesCreateManyPipelineInputEnvelope = {
+    data: pipeline_stagesCreateManyPipelineInput | pipeline_stagesCreateManyPipelineInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type leadsCreateWithoutPipelineInput = {
+    lead_id?: string
+    name?: string | null
+    phone?: string | null
+    email?: string | null
+    channel: string
+    source?: string
+    platform_id?: string | null
+    status?: string
+    lost_reason?: string | null
+    context?: NullableJsonNullValueInput | InputJsonValue
+    quoted_amount?: Decimal | DecimalJsLike | number | string | null
+    quoted_at?: Date | string | null
+    converted_value?: Decimal | DecimalJsLike | number | string | null
+    converted_at?: Date | string | null
+    tags?: leadsCreatetagsInput | string[]
+    followup_at?: Date | string | null
+    deleted_at?: Date | string | null
+    created_at?: Date | string
+    updated_at?: Date | string
+    cart_reservations?: cart_reservationsCreateNestedManyWithoutLeadsInput
+    carts?: cartsCreateNestedManyWithoutLeadsInput
+    events?: lead_eventsCreateNestedManyWithoutLeadsInput
+    followups?: lead_followupsCreateNestedManyWithoutLeadInput
+    product_inquiries?: product_inquiriesCreateNestedManyWithoutLeadInput
+    hospitality_inquiries?: hospitality_inquiriesCreateNestedManyWithoutLeadInput
+    product_orders?: product_ordersCreateNestedManyWithoutLeadInput
+    hospitality_bookings?: hospitality_bookingsCreateNestedManyWithoutLeadInput
+    assigned_user?: usersCreateNestedOneWithoutLeads_assignedInput
+    businesses: businessesCreateNestedOneWithoutLeadsInput
+    tenants: tenantsCreateNestedOneWithoutLeadsInput
+    stage?: pipeline_stagesCreateNestedOneWithoutLeadsInput
+    orders?: ordersCreateNestedManyWithoutLeadsInput
+    workflow_executions?: workflow_executionsCreateNestedManyWithoutLeadsInput
+  }
+
+  export type leadsUncheckedCreateWithoutPipelineInput = {
+    lead_id?: string
+    business_id: string
+    tenant_id: string
+    name?: string | null
+    phone?: string | null
+    email?: string | null
+    channel: string
+    source?: string
+    platform_id?: string | null
+    status?: string
+    stage_id?: string | null
+    lost_reason?: string | null
+    context?: NullableJsonNullValueInput | InputJsonValue
+    quoted_amount?: Decimal | DecimalJsLike | number | string | null
+    quoted_at?: Date | string | null
+    converted_value?: Decimal | DecimalJsLike | number | string | null
+    converted_at?: Date | string | null
+    tags?: leadsCreatetagsInput | string[]
+    assigned_to?: string | null
+    followup_at?: Date | string | null
+    deleted_at?: Date | string | null
+    created_at?: Date | string
+    updated_at?: Date | string
+    cart_reservations?: cart_reservationsUncheckedCreateNestedManyWithoutLeadsInput
+    carts?: cartsUncheckedCreateNestedManyWithoutLeadsInput
+    events?: lead_eventsUncheckedCreateNestedManyWithoutLeadsInput
+    followups?: lead_followupsUncheckedCreateNestedManyWithoutLeadInput
+    product_inquiries?: product_inquiriesUncheckedCreateNestedManyWithoutLeadInput
+    hospitality_inquiries?: hospitality_inquiriesUncheckedCreateNestedManyWithoutLeadInput
+    product_orders?: product_ordersUncheckedCreateNestedManyWithoutLeadInput
+    hospitality_bookings?: hospitality_bookingsUncheckedCreateNestedManyWithoutLeadInput
+    orders?: ordersUncheckedCreateNestedManyWithoutLeadsInput
+    workflow_executions?: workflow_executionsUncheckedCreateNestedManyWithoutLeadsInput
+  }
+
+  export type leadsCreateOrConnectWithoutPipelineInput = {
+    where: leadsWhereUniqueInput
+    create: XOR<leadsCreateWithoutPipelineInput, leadsUncheckedCreateWithoutPipelineInput>
+  }
+
+  export type leadsCreateManyPipelineInputEnvelope = {
+    data: leadsCreateManyPipelineInput | leadsCreateManyPipelineInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type businessesUpsertWithoutPipelinesInput = {
+    update: XOR<businessesUpdateWithoutPipelinesInput, businessesUncheckedUpdateWithoutPipelinesInput>
+    create: XOR<businessesCreateWithoutPipelinesInput, businessesUncheckedCreateWithoutPipelinesInput>
+    where?: businessesWhereInput
+  }
+
+  export type businessesUpdateToOneWithWhereWithoutPipelinesInput = {
+    where?: businessesWhereInput
+    data: XOR<businessesUpdateWithoutPipelinesInput, businessesUncheckedUpdateWithoutPipelinesInput>
+  }
+
+  export type businessesUpdateWithoutPipelinesInput = {
+    business_id?: StringFieldUpdateOperationsInput | string
+    business_name?: StringFieldUpdateOperationsInput | string
+    business_type?: NullableStringFieldUpdateOperationsInput | string | null
+    whatsapp_number?: NullableStringFieldUpdateOperationsInput | string | null
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    website?: NullableStringFieldUpdateOperationsInput | string | null
+    city?: NullableStringFieldUpdateOperationsInput | string | null
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    country?: NullableStringFieldUpdateOperationsInput | string | null
+    gst_number?: NullableStringFieldUpdateOperationsInput | string | null
+    pan_number?: NullableStringFieldUpdateOperationsInput | string | null
+    deleted_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    business_employees?: business_employeesUpdateManyWithoutBusinessesNestedInput
+    business_workflows?: business_workflowsUpdateManyWithoutBusinessesNestedInput
+    tenants?: tenantsUpdateOneRequiredWithoutBusinessesNestedInput
+    carts?: cartsUpdateManyWithoutBusinessesNestedInput
+    catalog_items?: catalog_itemsUpdateManyWithoutBusinessesNestedInput
+    product_item_details?: product_item_detailsUpdateManyWithoutBusinessNestedInput
+    hospitality_item_details?: hospitality_item_detailsUpdateManyWithoutBusinessNestedInput
+    product_orders?: product_ordersUpdateManyWithoutBusinessNestedInput
+    product_inquiries?: product_inquiriesUpdateManyWithoutBusinessNestedInput
+    hospitality_bookings?: hospitality_bookingsUpdateManyWithoutBusinessNestedInput
+    hospitality_inquiries?: hospitality_inquiriesUpdateManyWithoutBusinessNestedInput
+    leads?: leadsUpdateManyWithoutBusinessesNestedInput
+    notification_messages?: notification_messagesUpdateManyWithoutBusinessesNestedInput
+    notification_preferences?: notification_preferencesUpdateManyWithoutBusinessesNestedInput
+    notification_templates?: notification_templatesUpdateManyWithoutBusinessesNestedInput
+    payment_reconciliation?: payment_reconciliationUpdateManyWithoutBusinessesNestedInput
+    payments?: paymentsUpdateManyWithoutBusinessesNestedInput
+    social_accounts?: social_accountsUpdateManyWithoutBusinessesNestedInput
+    users?: usersUpdateManyWithoutBusinessesNestedInput
+    workflow_executions?: workflow_executionsUpdateManyWithoutBusinessesNestedInput
+    workflow_execution_steps?: workflow_execution_stepsUpdateManyWithoutBusinessNestedInput
+    workflow_idempotency_keys?: workflow_idempotency_keysUpdateManyWithoutBusinessNestedInput
+    billing_subscription?: billing_subscriptionsUpdateOneWithoutBusinessesNestedInput
+    wallet?: walletsUpdateOneWithoutBusinessesNestedInput
+    billing_payments_list?: billing_paymentsUpdateManyWithoutBusinessesNestedInput
+    billing_invoices_list?: billing_invoicesUpdateManyWithoutBusinessesNestedInput
+    settings?: business_settingsUpdateOneWithoutBusinessesNestedInput
+    audit_logs?: audit_logsUpdateManyWithoutBusinessesNestedInput
+  }
+
+  export type businessesUncheckedUpdateWithoutPipelinesInput = {
+    business_id?: StringFieldUpdateOperationsInput | string
+    tenant_id?: StringFieldUpdateOperationsInput | string
+    business_name?: StringFieldUpdateOperationsInput | string
+    business_type?: NullableStringFieldUpdateOperationsInput | string | null
+    whatsapp_number?: NullableStringFieldUpdateOperationsInput | string | null
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    website?: NullableStringFieldUpdateOperationsInput | string | null
+    city?: NullableStringFieldUpdateOperationsInput | string | null
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    country?: NullableStringFieldUpdateOperationsInput | string | null
+    gst_number?: NullableStringFieldUpdateOperationsInput | string | null
+    pan_number?: NullableStringFieldUpdateOperationsInput | string | null
+    deleted_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    business_employees?: business_employeesUncheckedUpdateManyWithoutBusinessesNestedInput
+    business_workflows?: business_workflowsUncheckedUpdateManyWithoutBusinessesNestedInput
+    carts?: cartsUncheckedUpdateManyWithoutBusinessesNestedInput
+    catalog_items?: catalog_itemsUncheckedUpdateManyWithoutBusinessesNestedInput
+    product_item_details?: product_item_detailsUncheckedUpdateManyWithoutBusinessNestedInput
+    hospitality_item_details?: hospitality_item_detailsUncheckedUpdateManyWithoutBusinessNestedInput
+    product_orders?: product_ordersUncheckedUpdateManyWithoutBusinessNestedInput
+    product_inquiries?: product_inquiriesUncheckedUpdateManyWithoutBusinessNestedInput
+    hospitality_bookings?: hospitality_bookingsUncheckedUpdateManyWithoutBusinessNestedInput
+    hospitality_inquiries?: hospitality_inquiriesUncheckedUpdateManyWithoutBusinessNestedInput
+    leads?: leadsUncheckedUpdateManyWithoutBusinessesNestedInput
+    notification_messages?: notification_messagesUncheckedUpdateManyWithoutBusinessesNestedInput
+    notification_preferences?: notification_preferencesUncheckedUpdateManyWithoutBusinessesNestedInput
+    notification_templates?: notification_templatesUncheckedUpdateManyWithoutBusinessesNestedInput
+    payment_reconciliation?: payment_reconciliationUncheckedUpdateManyWithoutBusinessesNestedInput
+    payments?: paymentsUncheckedUpdateManyWithoutBusinessesNestedInput
+    social_accounts?: social_accountsUncheckedUpdateManyWithoutBusinessesNestedInput
+    users?: usersUncheckedUpdateManyWithoutBusinessesNestedInput
+    workflow_executions?: workflow_executionsUncheckedUpdateManyWithoutBusinessesNestedInput
+    workflow_execution_steps?: workflow_execution_stepsUncheckedUpdateManyWithoutBusinessNestedInput
+    workflow_idempotency_keys?: workflow_idempotency_keysUncheckedUpdateManyWithoutBusinessNestedInput
+    billing_subscription?: billing_subscriptionsUncheckedUpdateOneWithoutBusinessesNestedInput
+    wallet?: walletsUncheckedUpdateOneWithoutBusinessesNestedInput
+    billing_payments_list?: billing_paymentsUncheckedUpdateManyWithoutBusinessesNestedInput
+    billing_invoices_list?: billing_invoicesUncheckedUpdateManyWithoutBusinessesNestedInput
+    settings?: business_settingsUncheckedUpdateOneWithoutBusinessesNestedInput
+    audit_logs?: audit_logsUncheckedUpdateManyWithoutBusinessesNestedInput
+  }
+
+  export type pipeline_stagesUpsertWithWhereUniqueWithoutPipelineInput = {
+    where: pipeline_stagesWhereUniqueInput
+    update: XOR<pipeline_stagesUpdateWithoutPipelineInput, pipeline_stagesUncheckedUpdateWithoutPipelineInput>
+    create: XOR<pipeline_stagesCreateWithoutPipelineInput, pipeline_stagesUncheckedCreateWithoutPipelineInput>
+  }
+
+  export type pipeline_stagesUpdateWithWhereUniqueWithoutPipelineInput = {
+    where: pipeline_stagesWhereUniqueInput
+    data: XOR<pipeline_stagesUpdateWithoutPipelineInput, pipeline_stagesUncheckedUpdateWithoutPipelineInput>
+  }
+
+  export type pipeline_stagesUpdateManyWithWhereWithoutPipelineInput = {
+    where: pipeline_stagesScalarWhereInput
+    data: XOR<pipeline_stagesUpdateManyMutationInput, pipeline_stagesUncheckedUpdateManyWithoutPipelineInput>
+  }
+
+  export type pipeline_stagesScalarWhereInput = {
+    AND?: pipeline_stagesScalarWhereInput | pipeline_stagesScalarWhereInput[]
+    OR?: pipeline_stagesScalarWhereInput[]
+    NOT?: pipeline_stagesScalarWhereInput | pipeline_stagesScalarWhereInput[]
+    stage_id?: UuidFilter<"pipeline_stages"> | string
+    pipeline_id?: UuidFilter<"pipeline_stages"> | string
+    business_id?: UuidFilter<"pipeline_stages"> | string
+    name?: StringFilter<"pipeline_stages"> | string
+    slug?: StringFilter<"pipeline_stages"> | string
+    position?: IntFilter<"pipeline_stages"> | number
+    is_won?: BoolFilter<"pipeline_stages"> | boolean
+    is_lost?: BoolFilter<"pipeline_stages"> | boolean
+    color?: StringNullableFilter<"pipeline_stages"> | string | null
+    created_at?: DateTimeFilter<"pipeline_stages"> | Date | string
+  }
+
+  export type leadsUpsertWithWhereUniqueWithoutPipelineInput = {
+    where: leadsWhereUniqueInput
+    update: XOR<leadsUpdateWithoutPipelineInput, leadsUncheckedUpdateWithoutPipelineInput>
+    create: XOR<leadsCreateWithoutPipelineInput, leadsUncheckedCreateWithoutPipelineInput>
+  }
+
+  export type leadsUpdateWithWhereUniqueWithoutPipelineInput = {
+    where: leadsWhereUniqueInput
+    data: XOR<leadsUpdateWithoutPipelineInput, leadsUncheckedUpdateWithoutPipelineInput>
+  }
+
+  export type leadsUpdateManyWithWhereWithoutPipelineInput = {
+    where: leadsScalarWhereInput
+    data: XOR<leadsUpdateManyMutationInput, leadsUncheckedUpdateManyWithoutPipelineInput>
+  }
+
+  export type pipelinesCreateWithoutStagesInput = {
+    pipeline_id?: string
+    name: string
+    industry?: string | null
+    is_default?: boolean
+    is_archived?: boolean
+    created_at?: Date | string
+    updated_at?: Date | string
+    businesses: businessesCreateNestedOneWithoutPipelinesInput
+    leads?: leadsCreateNestedManyWithoutPipelineInput
+  }
+
+  export type pipelinesUncheckedCreateWithoutStagesInput = {
+    pipeline_id?: string
+    business_id: string
+    name: string
+    industry?: string | null
+    is_default?: boolean
+    is_archived?: boolean
+    created_at?: Date | string
+    updated_at?: Date | string
+    leads?: leadsUncheckedCreateNestedManyWithoutPipelineInput
+  }
+
+  export type pipelinesCreateOrConnectWithoutStagesInput = {
+    where: pipelinesWhereUniqueInput
+    create: XOR<pipelinesCreateWithoutStagesInput, pipelinesUncheckedCreateWithoutStagesInput>
+  }
+
+  export type leadsCreateWithoutStageInput = {
+    lead_id?: string
+    name?: string | null
+    phone?: string | null
+    email?: string | null
+    channel: string
+    source?: string
+    platform_id?: string | null
+    status?: string
+    lost_reason?: string | null
+    context?: NullableJsonNullValueInput | InputJsonValue
+    quoted_amount?: Decimal | DecimalJsLike | number | string | null
+    quoted_at?: Date | string | null
+    converted_value?: Decimal | DecimalJsLike | number | string | null
+    converted_at?: Date | string | null
+    tags?: leadsCreatetagsInput | string[]
+    followup_at?: Date | string | null
+    deleted_at?: Date | string | null
+    created_at?: Date | string
+    updated_at?: Date | string
+    cart_reservations?: cart_reservationsCreateNestedManyWithoutLeadsInput
+    carts?: cartsCreateNestedManyWithoutLeadsInput
+    events?: lead_eventsCreateNestedManyWithoutLeadsInput
+    followups?: lead_followupsCreateNestedManyWithoutLeadInput
+    product_inquiries?: product_inquiriesCreateNestedManyWithoutLeadInput
+    hospitality_inquiries?: hospitality_inquiriesCreateNestedManyWithoutLeadInput
+    product_orders?: product_ordersCreateNestedManyWithoutLeadInput
+    hospitality_bookings?: hospitality_bookingsCreateNestedManyWithoutLeadInput
+    assigned_user?: usersCreateNestedOneWithoutLeads_assignedInput
+    businesses: businessesCreateNestedOneWithoutLeadsInput
+    tenants: tenantsCreateNestedOneWithoutLeadsInput
+    pipeline?: pipelinesCreateNestedOneWithoutLeadsInput
+    orders?: ordersCreateNestedManyWithoutLeadsInput
+    workflow_executions?: workflow_executionsCreateNestedManyWithoutLeadsInput
+  }
+
+  export type leadsUncheckedCreateWithoutStageInput = {
+    lead_id?: string
+    business_id: string
+    tenant_id: string
+    name?: string | null
+    phone?: string | null
+    email?: string | null
+    channel: string
+    source?: string
+    platform_id?: string | null
+    status?: string
+    pipeline_id?: string | null
+    lost_reason?: string | null
+    context?: NullableJsonNullValueInput | InputJsonValue
+    quoted_amount?: Decimal | DecimalJsLike | number | string | null
+    quoted_at?: Date | string | null
+    converted_value?: Decimal | DecimalJsLike | number | string | null
+    converted_at?: Date | string | null
+    tags?: leadsCreatetagsInput | string[]
+    assigned_to?: string | null
+    followup_at?: Date | string | null
+    deleted_at?: Date | string | null
+    created_at?: Date | string
+    updated_at?: Date | string
+    cart_reservations?: cart_reservationsUncheckedCreateNestedManyWithoutLeadsInput
+    carts?: cartsUncheckedCreateNestedManyWithoutLeadsInput
+    events?: lead_eventsUncheckedCreateNestedManyWithoutLeadsInput
+    followups?: lead_followupsUncheckedCreateNestedManyWithoutLeadInput
+    product_inquiries?: product_inquiriesUncheckedCreateNestedManyWithoutLeadInput
+    hospitality_inquiries?: hospitality_inquiriesUncheckedCreateNestedManyWithoutLeadInput
+    product_orders?: product_ordersUncheckedCreateNestedManyWithoutLeadInput
+    hospitality_bookings?: hospitality_bookingsUncheckedCreateNestedManyWithoutLeadInput
+    orders?: ordersUncheckedCreateNestedManyWithoutLeadsInput
+    workflow_executions?: workflow_executionsUncheckedCreateNestedManyWithoutLeadsInput
+  }
+
+  export type leadsCreateOrConnectWithoutStageInput = {
+    where: leadsWhereUniqueInput
+    create: XOR<leadsCreateWithoutStageInput, leadsUncheckedCreateWithoutStageInput>
+  }
+
+  export type leadsCreateManyStageInputEnvelope = {
+    data: leadsCreateManyStageInput | leadsCreateManyStageInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type pipelinesUpsertWithoutStagesInput = {
+    update: XOR<pipelinesUpdateWithoutStagesInput, pipelinesUncheckedUpdateWithoutStagesInput>
+    create: XOR<pipelinesCreateWithoutStagesInput, pipelinesUncheckedCreateWithoutStagesInput>
+    where?: pipelinesWhereInput
+  }
+
+  export type pipelinesUpdateToOneWithWhereWithoutStagesInput = {
+    where?: pipelinesWhereInput
+    data: XOR<pipelinesUpdateWithoutStagesInput, pipelinesUncheckedUpdateWithoutStagesInput>
+  }
+
+  export type pipelinesUpdateWithoutStagesInput = {
+    pipeline_id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    industry?: NullableStringFieldUpdateOperationsInput | string | null
+    is_default?: BoolFieldUpdateOperationsInput | boolean
+    is_archived?: BoolFieldUpdateOperationsInput | boolean
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    businesses?: businessesUpdateOneRequiredWithoutPipelinesNestedInput
+    leads?: leadsUpdateManyWithoutPipelineNestedInput
+  }
+
+  export type pipelinesUncheckedUpdateWithoutStagesInput = {
+    pipeline_id?: StringFieldUpdateOperationsInput | string
+    business_id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    industry?: NullableStringFieldUpdateOperationsInput | string | null
+    is_default?: BoolFieldUpdateOperationsInput | boolean
+    is_archived?: BoolFieldUpdateOperationsInput | boolean
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    leads?: leadsUncheckedUpdateManyWithoutPipelineNestedInput
+  }
+
+  export type leadsUpsertWithWhereUniqueWithoutStageInput = {
+    where: leadsWhereUniqueInput
+    update: XOR<leadsUpdateWithoutStageInput, leadsUncheckedUpdateWithoutStageInput>
+    create: XOR<leadsCreateWithoutStageInput, leadsUncheckedCreateWithoutStageInput>
+  }
+
+  export type leadsUpdateWithWhereUniqueWithoutStageInput = {
+    where: leadsWhereUniqueInput
+    data: XOR<leadsUpdateWithoutStageInput, leadsUncheckedUpdateWithoutStageInput>
+  }
+
+  export type leadsUpdateManyWithWhereWithoutStageInput = {
+    where: leadsScalarWhereInput
+    data: XOR<leadsUpdateManyMutationInput, leadsUncheckedUpdateManyWithoutStageInput>
+  }
+
   export type leadsCreateWithoutEventsInput = {
     lead_id?: string
     name?: string | null
@@ -123431,6 +127674,8 @@ export namespace Prisma {
     assigned_user?: usersCreateNestedOneWithoutLeads_assignedInput
     businesses: businessesCreateNestedOneWithoutLeadsInput
     tenants: tenantsCreateNestedOneWithoutLeadsInput
+    pipeline?: pipelinesCreateNestedOneWithoutLeadsInput
+    stage?: pipeline_stagesCreateNestedOneWithoutLeadsInput
     orders?: ordersCreateNestedManyWithoutLeadsInput
     workflow_executions?: workflow_executionsCreateNestedManyWithoutLeadsInput
   }
@@ -123446,6 +127691,8 @@ export namespace Prisma {
     source?: string
     platform_id?: string | null
     status?: string
+    stage_id?: string | null
+    pipeline_id?: string | null
     lost_reason?: string | null
     context?: NullableJsonNullValueInput | InputJsonValue
     quoted_amount?: Decimal | DecimalJsLike | number | string | null
@@ -123515,6 +127762,8 @@ export namespace Prisma {
     assigned_user?: usersUpdateOneWithoutLeads_assignedNestedInput
     businesses?: businessesUpdateOneRequiredWithoutLeadsNestedInput
     tenants?: tenantsUpdateOneRequiredWithoutLeadsNestedInput
+    pipeline?: pipelinesUpdateOneWithoutLeadsNestedInput
+    stage?: pipeline_stagesUpdateOneWithoutLeadsNestedInput
     orders?: ordersUpdateManyWithoutLeadsNestedInput
     workflow_executions?: workflow_executionsUpdateManyWithoutLeadsNestedInput
   }
@@ -123530,6 +127779,8 @@ export namespace Prisma {
     source?: StringFieldUpdateOperationsInput | string
     platform_id?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
+    stage_id?: NullableStringFieldUpdateOperationsInput | string | null
+    pipeline_id?: NullableStringFieldUpdateOperationsInput | string | null
     lost_reason?: NullableStringFieldUpdateOperationsInput | string | null
     context?: NullableJsonNullValueInput | InputJsonValue
     quoted_amount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
@@ -123648,6 +127899,8 @@ export namespace Prisma {
     assigned_user?: usersCreateNestedOneWithoutLeads_assignedInput
     businesses: businessesCreateNestedOneWithoutLeadsInput
     tenants: tenantsCreateNestedOneWithoutLeadsInput
+    pipeline?: pipelinesCreateNestedOneWithoutLeadsInput
+    stage?: pipeline_stagesCreateNestedOneWithoutLeadsInput
     orders?: ordersCreateNestedManyWithoutLeadsInput
     workflow_executions?: workflow_executionsCreateNestedManyWithoutLeadsInput
   }
@@ -123663,6 +127916,8 @@ export namespace Prisma {
     source?: string
     platform_id?: string | null
     status?: string
+    stage_id?: string | null
+    pipeline_id?: string | null
     lost_reason?: string | null
     context?: NullableJsonNullValueInput | InputJsonValue
     quoted_amount?: Decimal | DecimalJsLike | number | string | null
@@ -123803,6 +128058,8 @@ export namespace Prisma {
     assigned_user?: usersUpdateOneWithoutLeads_assignedNestedInput
     businesses?: businessesUpdateOneRequiredWithoutLeadsNestedInput
     tenants?: tenantsUpdateOneRequiredWithoutLeadsNestedInput
+    pipeline?: pipelinesUpdateOneWithoutLeadsNestedInput
+    stage?: pipeline_stagesUpdateOneWithoutLeadsNestedInput
     orders?: ordersUpdateManyWithoutLeadsNestedInput
     workflow_executions?: workflow_executionsUpdateManyWithoutLeadsNestedInput
   }
@@ -123818,6 +128075,8 @@ export namespace Prisma {
     source?: StringFieldUpdateOperationsInput | string
     platform_id?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
+    stage_id?: NullableStringFieldUpdateOperationsInput | string | null
+    pipeline_id?: NullableStringFieldUpdateOperationsInput | string | null
     lost_reason?: NullableStringFieldUpdateOperationsInput | string | null
     context?: NullableJsonNullValueInput | InputJsonValue
     quoted_amount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
@@ -124665,6 +128924,8 @@ export namespace Prisma {
     assigned_user?: usersCreateNestedOneWithoutLeads_assignedInput
     businesses: businessesCreateNestedOneWithoutLeadsInput
     tenants: tenantsCreateNestedOneWithoutLeadsInput
+    pipeline?: pipelinesCreateNestedOneWithoutLeadsInput
+    stage?: pipeline_stagesCreateNestedOneWithoutLeadsInput
     workflow_executions?: workflow_executionsCreateNestedManyWithoutLeadsInput
   }
 
@@ -124679,6 +128940,8 @@ export namespace Prisma {
     source?: string
     platform_id?: string | null
     status?: string
+    stage_id?: string | null
+    pipeline_id?: string | null
     lost_reason?: string | null
     context?: NullableJsonNullValueInput | InputJsonValue
     quoted_amount?: Decimal | DecimalJsLike | number | string | null
@@ -125050,6 +129313,8 @@ export namespace Prisma {
     assigned_user?: usersUpdateOneWithoutLeads_assignedNestedInput
     businesses?: businessesUpdateOneRequiredWithoutLeadsNestedInput
     tenants?: tenantsUpdateOneRequiredWithoutLeadsNestedInput
+    pipeline?: pipelinesUpdateOneWithoutLeadsNestedInput
+    stage?: pipeline_stagesUpdateOneWithoutLeadsNestedInput
     workflow_executions?: workflow_executionsUpdateManyWithoutLeadsNestedInput
   }
 
@@ -125064,6 +129329,8 @@ export namespace Prisma {
     source?: StringFieldUpdateOperationsInput | string
     platform_id?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
+    stage_id?: NullableStringFieldUpdateOperationsInput | string | null
+    pipeline_id?: NullableStringFieldUpdateOperationsInput | string | null
     lost_reason?: NullableStringFieldUpdateOperationsInput | string | null
     context?: NullableJsonNullValueInput | InputJsonValue
     quoted_amount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
@@ -125614,6 +129881,8 @@ export namespace Prisma {
     assigned_user?: usersCreateNestedOneWithoutLeads_assignedInput
     businesses: businessesCreateNestedOneWithoutLeadsInput
     tenants: tenantsCreateNestedOneWithoutLeadsInput
+    pipeline?: pipelinesCreateNestedOneWithoutLeadsInput
+    stage?: pipeline_stagesCreateNestedOneWithoutLeadsInput
     orders?: ordersCreateNestedManyWithoutLeadsInput
     workflow_executions?: workflow_executionsCreateNestedManyWithoutLeadsInput
   }
@@ -125629,6 +129898,8 @@ export namespace Prisma {
     source?: string
     platform_id?: string | null
     status?: string
+    stage_id?: string | null
+    pipeline_id?: string | null
     lost_reason?: string | null
     context?: NullableJsonNullValueInput | InputJsonValue
     quoted_amount?: Decimal | DecimalJsLike | number | string | null
@@ -125773,6 +130044,8 @@ export namespace Prisma {
     assigned_user?: usersUpdateOneWithoutLeads_assignedNestedInput
     businesses?: businessesUpdateOneRequiredWithoutLeadsNestedInput
     tenants?: tenantsUpdateOneRequiredWithoutLeadsNestedInput
+    pipeline?: pipelinesUpdateOneWithoutLeadsNestedInput
+    stage?: pipeline_stagesUpdateOneWithoutLeadsNestedInput
     orders?: ordersUpdateManyWithoutLeadsNestedInput
     workflow_executions?: workflow_executionsUpdateManyWithoutLeadsNestedInput
   }
@@ -125788,6 +130061,8 @@ export namespace Prisma {
     source?: StringFieldUpdateOperationsInput | string
     platform_id?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
+    stage_id?: NullableStringFieldUpdateOperationsInput | string | null
+    pipeline_id?: NullableStringFieldUpdateOperationsInput | string | null
     lost_reason?: NullableStringFieldUpdateOperationsInput | string | null
     context?: NullableJsonNullValueInput | InputJsonValue
     quoted_amount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
@@ -126107,6 +130382,7 @@ export namespace Prisma {
     hospitality_bookings?: hospitality_bookingsCreateNestedManyWithoutBusinessInput
     hospitality_inquiries?: hospitality_inquiriesCreateNestedManyWithoutBusinessInput
     leads?: leadsCreateNestedManyWithoutBusinessesInput
+    pipelines?: pipelinesCreateNestedManyWithoutBusinessesInput
     notification_messages?: notification_messagesCreateNestedManyWithoutBusinessesInput
     notification_preferences?: notification_preferencesCreateNestedManyWithoutBusinessesInput
     payment_reconciliation?: payment_reconciliationCreateNestedManyWithoutBusinessesInput
@@ -126152,6 +130428,7 @@ export namespace Prisma {
     hospitality_bookings?: hospitality_bookingsUncheckedCreateNestedManyWithoutBusinessInput
     hospitality_inquiries?: hospitality_inquiriesUncheckedCreateNestedManyWithoutBusinessInput
     leads?: leadsUncheckedCreateNestedManyWithoutBusinessesInput
+    pipelines?: pipelinesUncheckedCreateNestedManyWithoutBusinessesInput
     notification_messages?: notification_messagesUncheckedCreateNestedManyWithoutBusinessesInput
     notification_preferences?: notification_preferencesUncheckedCreateNestedManyWithoutBusinessesInput
     payment_reconciliation?: payment_reconciliationUncheckedCreateNestedManyWithoutBusinessesInput
@@ -126335,6 +130612,7 @@ export namespace Prisma {
     hospitality_bookings?: hospitality_bookingsUpdateManyWithoutBusinessNestedInput
     hospitality_inquiries?: hospitality_inquiriesUpdateManyWithoutBusinessNestedInput
     leads?: leadsUpdateManyWithoutBusinessesNestedInput
+    pipelines?: pipelinesUpdateManyWithoutBusinessesNestedInput
     notification_messages?: notification_messagesUpdateManyWithoutBusinessesNestedInput
     notification_preferences?: notification_preferencesUpdateManyWithoutBusinessesNestedInput
     payment_reconciliation?: payment_reconciliationUpdateManyWithoutBusinessesNestedInput
@@ -126380,6 +130658,7 @@ export namespace Prisma {
     hospitality_bookings?: hospitality_bookingsUncheckedUpdateManyWithoutBusinessNestedInput
     hospitality_inquiries?: hospitality_inquiriesUncheckedUpdateManyWithoutBusinessNestedInput
     leads?: leadsUncheckedUpdateManyWithoutBusinessesNestedInput
+    pipelines?: pipelinesUncheckedUpdateManyWithoutBusinessesNestedInput
     notification_messages?: notification_messagesUncheckedUpdateManyWithoutBusinessesNestedInput
     notification_preferences?: notification_preferencesUncheckedUpdateManyWithoutBusinessesNestedInput
     payment_reconciliation?: payment_reconciliationUncheckedUpdateManyWithoutBusinessesNestedInput
@@ -126514,6 +130793,7 @@ export namespace Prisma {
     hospitality_bookings?: hospitality_bookingsCreateNestedManyWithoutBusinessInput
     hospitality_inquiries?: hospitality_inquiriesCreateNestedManyWithoutBusinessInput
     leads?: leadsCreateNestedManyWithoutBusinessesInput
+    pipelines?: pipelinesCreateNestedManyWithoutBusinessesInput
     notification_preferences?: notification_preferencesCreateNestedManyWithoutBusinessesInput
     notification_templates?: notification_templatesCreateNestedManyWithoutBusinessesInput
     payment_reconciliation?: payment_reconciliationCreateNestedManyWithoutBusinessesInput
@@ -126559,6 +130839,7 @@ export namespace Prisma {
     hospitality_bookings?: hospitality_bookingsUncheckedCreateNestedManyWithoutBusinessInput
     hospitality_inquiries?: hospitality_inquiriesUncheckedCreateNestedManyWithoutBusinessInput
     leads?: leadsUncheckedCreateNestedManyWithoutBusinessesInput
+    pipelines?: pipelinesUncheckedCreateNestedManyWithoutBusinessesInput
     notification_preferences?: notification_preferencesUncheckedCreateNestedManyWithoutBusinessesInput
     notification_templates?: notification_templatesUncheckedCreateNestedManyWithoutBusinessesInput
     payment_reconciliation?: payment_reconciliationUncheckedCreateNestedManyWithoutBusinessesInput
@@ -126810,6 +131091,7 @@ export namespace Prisma {
     hospitality_bookings?: hospitality_bookingsUpdateManyWithoutBusinessNestedInput
     hospitality_inquiries?: hospitality_inquiriesUpdateManyWithoutBusinessNestedInput
     leads?: leadsUpdateManyWithoutBusinessesNestedInput
+    pipelines?: pipelinesUpdateManyWithoutBusinessesNestedInput
     notification_preferences?: notification_preferencesUpdateManyWithoutBusinessesNestedInput
     notification_templates?: notification_templatesUpdateManyWithoutBusinessesNestedInput
     payment_reconciliation?: payment_reconciliationUpdateManyWithoutBusinessesNestedInput
@@ -126855,6 +131137,7 @@ export namespace Prisma {
     hospitality_bookings?: hospitality_bookingsUncheckedUpdateManyWithoutBusinessNestedInput
     hospitality_inquiries?: hospitality_inquiriesUncheckedUpdateManyWithoutBusinessNestedInput
     leads?: leadsUncheckedUpdateManyWithoutBusinessesNestedInput
+    pipelines?: pipelinesUncheckedUpdateManyWithoutBusinessesNestedInput
     notification_preferences?: notification_preferencesUncheckedUpdateManyWithoutBusinessesNestedInput
     notification_templates?: notification_templatesUncheckedUpdateManyWithoutBusinessesNestedInput
     payment_reconciliation?: payment_reconciliationUncheckedUpdateManyWithoutBusinessesNestedInput
@@ -127079,6 +131362,7 @@ export namespace Prisma {
     hospitality_bookings?: hospitality_bookingsCreateNestedManyWithoutBusinessInput
     hospitality_inquiries?: hospitality_inquiriesCreateNestedManyWithoutBusinessInput
     leads?: leadsCreateNestedManyWithoutBusinessesInput
+    pipelines?: pipelinesCreateNestedManyWithoutBusinessesInput
     notification_messages?: notification_messagesCreateNestedManyWithoutBusinessesInput
     notification_templates?: notification_templatesCreateNestedManyWithoutBusinessesInput
     payment_reconciliation?: payment_reconciliationCreateNestedManyWithoutBusinessesInput
@@ -127124,6 +131408,7 @@ export namespace Prisma {
     hospitality_bookings?: hospitality_bookingsUncheckedCreateNestedManyWithoutBusinessInput
     hospitality_inquiries?: hospitality_inquiriesUncheckedCreateNestedManyWithoutBusinessInput
     leads?: leadsUncheckedCreateNestedManyWithoutBusinessesInput
+    pipelines?: pipelinesUncheckedCreateNestedManyWithoutBusinessesInput
     notification_messages?: notification_messagesUncheckedCreateNestedManyWithoutBusinessesInput
     notification_templates?: notification_templatesUncheckedCreateNestedManyWithoutBusinessesInput
     payment_reconciliation?: payment_reconciliationUncheckedCreateNestedManyWithoutBusinessesInput
@@ -127238,6 +131523,7 @@ export namespace Prisma {
     hospitality_bookings?: hospitality_bookingsUpdateManyWithoutBusinessNestedInput
     hospitality_inquiries?: hospitality_inquiriesUpdateManyWithoutBusinessNestedInput
     leads?: leadsUpdateManyWithoutBusinessesNestedInput
+    pipelines?: pipelinesUpdateManyWithoutBusinessesNestedInput
     notification_messages?: notification_messagesUpdateManyWithoutBusinessesNestedInput
     notification_templates?: notification_templatesUpdateManyWithoutBusinessesNestedInput
     payment_reconciliation?: payment_reconciliationUpdateManyWithoutBusinessesNestedInput
@@ -127283,6 +131569,7 @@ export namespace Prisma {
     hospitality_bookings?: hospitality_bookingsUncheckedUpdateManyWithoutBusinessNestedInput
     hospitality_inquiries?: hospitality_inquiriesUncheckedUpdateManyWithoutBusinessNestedInput
     leads?: leadsUncheckedUpdateManyWithoutBusinessesNestedInput
+    pipelines?: pipelinesUncheckedUpdateManyWithoutBusinessesNestedInput
     notification_messages?: notification_messagesUncheckedUpdateManyWithoutBusinessesNestedInput
     notification_templates?: notification_templatesUncheckedUpdateManyWithoutBusinessesNestedInput
     payment_reconciliation?: payment_reconciliationUncheckedUpdateManyWithoutBusinessesNestedInput
@@ -127425,6 +131712,7 @@ export namespace Prisma {
     hospitality_bookings?: hospitality_bookingsCreateNestedManyWithoutBusinessInput
     hospitality_inquiries?: hospitality_inquiriesCreateNestedManyWithoutBusinessInput
     leads?: leadsCreateNestedManyWithoutBusinessesInput
+    pipelines?: pipelinesCreateNestedManyWithoutBusinessesInput
     notification_messages?: notification_messagesCreateNestedManyWithoutBusinessesInput
     notification_preferences?: notification_preferencesCreateNestedManyWithoutBusinessesInput
     notification_templates?: notification_templatesCreateNestedManyWithoutBusinessesInput
@@ -127470,6 +131758,7 @@ export namespace Prisma {
     hospitality_bookings?: hospitality_bookingsUncheckedCreateNestedManyWithoutBusinessInput
     hospitality_inquiries?: hospitality_inquiriesUncheckedCreateNestedManyWithoutBusinessInput
     leads?: leadsUncheckedCreateNestedManyWithoutBusinessesInput
+    pipelines?: pipelinesUncheckedCreateNestedManyWithoutBusinessesInput
     notification_messages?: notification_messagesUncheckedCreateNestedManyWithoutBusinessesInput
     notification_preferences?: notification_preferencesUncheckedCreateNestedManyWithoutBusinessesInput
     notification_templates?: notification_templatesUncheckedCreateNestedManyWithoutBusinessesInput
@@ -127709,6 +131998,7 @@ export namespace Prisma {
     hospitality_bookings?: hospitality_bookingsUpdateManyWithoutBusinessNestedInput
     hospitality_inquiries?: hospitality_inquiriesUpdateManyWithoutBusinessNestedInput
     leads?: leadsUpdateManyWithoutBusinessesNestedInput
+    pipelines?: pipelinesUpdateManyWithoutBusinessesNestedInput
     notification_messages?: notification_messagesUpdateManyWithoutBusinessesNestedInput
     notification_preferences?: notification_preferencesUpdateManyWithoutBusinessesNestedInput
     notification_templates?: notification_templatesUpdateManyWithoutBusinessesNestedInput
@@ -127754,6 +132044,7 @@ export namespace Prisma {
     hospitality_bookings?: hospitality_bookingsUncheckedUpdateManyWithoutBusinessNestedInput
     hospitality_inquiries?: hospitality_inquiriesUncheckedUpdateManyWithoutBusinessNestedInput
     leads?: leadsUncheckedUpdateManyWithoutBusinessesNestedInput
+    pipelines?: pipelinesUncheckedUpdateManyWithoutBusinessesNestedInput
     notification_messages?: notification_messagesUncheckedUpdateManyWithoutBusinessesNestedInput
     notification_preferences?: notification_preferencesUncheckedUpdateManyWithoutBusinessesNestedInput
     notification_templates?: notification_templatesUncheckedUpdateManyWithoutBusinessesNestedInput
@@ -127955,6 +132246,7 @@ export namespace Prisma {
     hospitality_bookings?: hospitality_bookingsCreateNestedManyWithoutBusinessInput
     hospitality_inquiries?: hospitality_inquiriesCreateNestedManyWithoutBusinessInput
     leads?: leadsCreateNestedManyWithoutBusinessesInput
+    pipelines?: pipelinesCreateNestedManyWithoutBusinessesInput
     notification_messages?: notification_messagesCreateNestedManyWithoutBusinessesInput
     notification_preferences?: notification_preferencesCreateNestedManyWithoutBusinessesInput
     notification_templates?: notification_templatesCreateNestedManyWithoutBusinessesInput
@@ -128000,6 +132292,7 @@ export namespace Prisma {
     hospitality_bookings?: hospitality_bookingsUncheckedCreateNestedManyWithoutBusinessInput
     hospitality_inquiries?: hospitality_inquiriesUncheckedCreateNestedManyWithoutBusinessInput
     leads?: leadsUncheckedCreateNestedManyWithoutBusinessesInput
+    pipelines?: pipelinesUncheckedCreateNestedManyWithoutBusinessesInput
     notification_messages?: notification_messagesUncheckedCreateNestedManyWithoutBusinessesInput
     notification_preferences?: notification_preferencesUncheckedCreateNestedManyWithoutBusinessesInput
     notification_templates?: notification_templatesUncheckedCreateNestedManyWithoutBusinessesInput
@@ -128061,6 +132354,7 @@ export namespace Prisma {
     hospitality_bookings?: hospitality_bookingsUpdateManyWithoutBusinessNestedInput
     hospitality_inquiries?: hospitality_inquiriesUpdateManyWithoutBusinessNestedInput
     leads?: leadsUpdateManyWithoutBusinessesNestedInput
+    pipelines?: pipelinesUpdateManyWithoutBusinessesNestedInput
     notification_messages?: notification_messagesUpdateManyWithoutBusinessesNestedInput
     notification_preferences?: notification_preferencesUpdateManyWithoutBusinessesNestedInput
     notification_templates?: notification_templatesUpdateManyWithoutBusinessesNestedInput
@@ -128106,6 +132400,7 @@ export namespace Prisma {
     hospitality_bookings?: hospitality_bookingsUncheckedUpdateManyWithoutBusinessNestedInput
     hospitality_inquiries?: hospitality_inquiriesUncheckedUpdateManyWithoutBusinessNestedInput
     leads?: leadsUncheckedUpdateManyWithoutBusinessesNestedInput
+    pipelines?: pipelinesUncheckedUpdateManyWithoutBusinessesNestedInput
     notification_messages?: notification_messagesUncheckedUpdateManyWithoutBusinessesNestedInput
     notification_preferences?: notification_preferencesUncheckedUpdateManyWithoutBusinessesNestedInput
     notification_templates?: notification_templatesUncheckedUpdateManyWithoutBusinessesNestedInput
@@ -128818,6 +133113,7 @@ export namespace Prisma {
     hospitality_bookings?: hospitality_bookingsCreateNestedManyWithoutBusinessInput
     hospitality_inquiries?: hospitality_inquiriesCreateNestedManyWithoutBusinessInput
     leads?: leadsCreateNestedManyWithoutBusinessesInput
+    pipelines?: pipelinesCreateNestedManyWithoutBusinessesInput
     notification_messages?: notification_messagesCreateNestedManyWithoutBusinessesInput
     notification_preferences?: notification_preferencesCreateNestedManyWithoutBusinessesInput
     notification_templates?: notification_templatesCreateNestedManyWithoutBusinessesInput
@@ -128863,6 +133159,7 @@ export namespace Prisma {
     hospitality_bookings?: hospitality_bookingsUncheckedCreateNestedManyWithoutBusinessInput
     hospitality_inquiries?: hospitality_inquiriesUncheckedCreateNestedManyWithoutBusinessInput
     leads?: leadsUncheckedCreateNestedManyWithoutBusinessesInput
+    pipelines?: pipelinesUncheckedCreateNestedManyWithoutBusinessesInput
     notification_messages?: notification_messagesUncheckedCreateNestedManyWithoutBusinessesInput
     notification_preferences?: notification_preferencesUncheckedCreateNestedManyWithoutBusinessesInput
     notification_templates?: notification_templatesUncheckedCreateNestedManyWithoutBusinessesInput
@@ -129018,6 +133315,7 @@ export namespace Prisma {
     hospitality_bookings?: hospitality_bookingsUpdateManyWithoutBusinessNestedInput
     hospitality_inquiries?: hospitality_inquiriesUpdateManyWithoutBusinessNestedInput
     leads?: leadsUpdateManyWithoutBusinessesNestedInput
+    pipelines?: pipelinesUpdateManyWithoutBusinessesNestedInput
     notification_messages?: notification_messagesUpdateManyWithoutBusinessesNestedInput
     notification_preferences?: notification_preferencesUpdateManyWithoutBusinessesNestedInput
     notification_templates?: notification_templatesUpdateManyWithoutBusinessesNestedInput
@@ -129063,6 +133361,7 @@ export namespace Prisma {
     hospitality_bookings?: hospitality_bookingsUncheckedUpdateManyWithoutBusinessNestedInput
     hospitality_inquiries?: hospitality_inquiriesUncheckedUpdateManyWithoutBusinessNestedInput
     leads?: leadsUncheckedUpdateManyWithoutBusinessesNestedInput
+    pipelines?: pipelinesUncheckedUpdateManyWithoutBusinessesNestedInput
     notification_messages?: notification_messagesUncheckedUpdateManyWithoutBusinessesNestedInput
     notification_preferences?: notification_preferencesUncheckedUpdateManyWithoutBusinessesNestedInput
     notification_templates?: notification_templatesUncheckedUpdateManyWithoutBusinessesNestedInput
@@ -129215,6 +133514,7 @@ export namespace Prisma {
     hospitality_bookings?: hospitality_bookingsCreateNestedManyWithoutBusinessInput
     hospitality_inquiries?: hospitality_inquiriesCreateNestedManyWithoutBusinessInput
     leads?: leadsCreateNestedManyWithoutBusinessesInput
+    pipelines?: pipelinesCreateNestedManyWithoutBusinessesInput
     notification_messages?: notification_messagesCreateNestedManyWithoutBusinessesInput
     notification_preferences?: notification_preferencesCreateNestedManyWithoutBusinessesInput
     notification_templates?: notification_templatesCreateNestedManyWithoutBusinessesInput
@@ -129260,6 +133560,7 @@ export namespace Prisma {
     hospitality_bookings?: hospitality_bookingsUncheckedCreateNestedManyWithoutBusinessInput
     hospitality_inquiries?: hospitality_inquiriesUncheckedCreateNestedManyWithoutBusinessInput
     leads?: leadsUncheckedCreateNestedManyWithoutBusinessesInput
+    pipelines?: pipelinesUncheckedCreateNestedManyWithoutBusinessesInput
     notification_messages?: notification_messagesUncheckedCreateNestedManyWithoutBusinessesInput
     notification_preferences?: notification_preferencesUncheckedCreateNestedManyWithoutBusinessesInput
     notification_templates?: notification_templatesUncheckedCreateNestedManyWithoutBusinessesInput
@@ -129368,6 +133669,8 @@ export namespace Prisma {
     assigned_user?: usersCreateNestedOneWithoutLeads_assignedInput
     businesses: businessesCreateNestedOneWithoutLeadsInput
     tenants: tenantsCreateNestedOneWithoutLeadsInput
+    pipeline?: pipelinesCreateNestedOneWithoutLeadsInput
+    stage?: pipeline_stagesCreateNestedOneWithoutLeadsInput
     orders?: ordersCreateNestedManyWithoutLeadsInput
   }
 
@@ -129382,6 +133685,8 @@ export namespace Prisma {
     source?: string
     platform_id?: string | null
     status?: string
+    stage_id?: string | null
+    pipeline_id?: string | null
     lost_reason?: string | null
     context?: NullableJsonNullValueInput | InputJsonValue
     quoted_amount?: Decimal | DecimalJsLike | number | string | null
@@ -129582,6 +133887,7 @@ export namespace Prisma {
     hospitality_bookings?: hospitality_bookingsUpdateManyWithoutBusinessNestedInput
     hospitality_inquiries?: hospitality_inquiriesUpdateManyWithoutBusinessNestedInput
     leads?: leadsUpdateManyWithoutBusinessesNestedInput
+    pipelines?: pipelinesUpdateManyWithoutBusinessesNestedInput
     notification_messages?: notification_messagesUpdateManyWithoutBusinessesNestedInput
     notification_preferences?: notification_preferencesUpdateManyWithoutBusinessesNestedInput
     notification_templates?: notification_templatesUpdateManyWithoutBusinessesNestedInput
@@ -129627,6 +133933,7 @@ export namespace Prisma {
     hospitality_bookings?: hospitality_bookingsUncheckedUpdateManyWithoutBusinessNestedInput
     hospitality_inquiries?: hospitality_inquiriesUncheckedUpdateManyWithoutBusinessNestedInput
     leads?: leadsUncheckedUpdateManyWithoutBusinessesNestedInput
+    pipelines?: pipelinesUncheckedUpdateManyWithoutBusinessesNestedInput
     notification_messages?: notification_messagesUncheckedUpdateManyWithoutBusinessesNestedInput
     notification_preferences?: notification_preferencesUncheckedUpdateManyWithoutBusinessesNestedInput
     notification_templates?: notification_templatesUncheckedUpdateManyWithoutBusinessesNestedInput
@@ -129747,6 +134054,8 @@ export namespace Prisma {
     assigned_user?: usersUpdateOneWithoutLeads_assignedNestedInput
     businesses?: businessesUpdateOneRequiredWithoutLeadsNestedInput
     tenants?: tenantsUpdateOneRequiredWithoutLeadsNestedInput
+    pipeline?: pipelinesUpdateOneWithoutLeadsNestedInput
+    stage?: pipeline_stagesUpdateOneWithoutLeadsNestedInput
     orders?: ordersUpdateManyWithoutLeadsNestedInput
   }
 
@@ -129761,6 +134070,8 @@ export namespace Prisma {
     source?: StringFieldUpdateOperationsInput | string
     platform_id?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
+    stage_id?: NullableStringFieldUpdateOperationsInput | string | null
+    pipeline_id?: NullableStringFieldUpdateOperationsInput | string | null
     lost_reason?: NullableStringFieldUpdateOperationsInput | string | null
     context?: NullableJsonNullValueInput | InputJsonValue
     quoted_amount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
@@ -129940,6 +134251,7 @@ export namespace Prisma {
     hospitality_bookings?: hospitality_bookingsCreateNestedManyWithoutBusinessInput
     hospitality_inquiries?: hospitality_inquiriesCreateNestedManyWithoutBusinessInput
     leads?: leadsCreateNestedManyWithoutBusinessesInput
+    pipelines?: pipelinesCreateNestedManyWithoutBusinessesInput
     notification_messages?: notification_messagesCreateNestedManyWithoutBusinessesInput
     notification_preferences?: notification_preferencesCreateNestedManyWithoutBusinessesInput
     notification_templates?: notification_templatesCreateNestedManyWithoutBusinessesInput
@@ -129985,6 +134297,7 @@ export namespace Prisma {
     hospitality_bookings?: hospitality_bookingsUncheckedCreateNestedManyWithoutBusinessInput
     hospitality_inquiries?: hospitality_inquiriesUncheckedCreateNestedManyWithoutBusinessInput
     leads?: leadsUncheckedCreateNestedManyWithoutBusinessesInput
+    pipelines?: pipelinesUncheckedCreateNestedManyWithoutBusinessesInput
     notification_messages?: notification_messagesUncheckedCreateNestedManyWithoutBusinessesInput
     notification_preferences?: notification_preferencesUncheckedCreateNestedManyWithoutBusinessesInput
     notification_templates?: notification_templatesUncheckedCreateNestedManyWithoutBusinessesInput
@@ -130197,6 +134510,7 @@ export namespace Prisma {
     hospitality_bookings?: hospitality_bookingsUpdateManyWithoutBusinessNestedInput
     hospitality_inquiries?: hospitality_inquiriesUpdateManyWithoutBusinessNestedInput
     leads?: leadsUpdateManyWithoutBusinessesNestedInput
+    pipelines?: pipelinesUpdateManyWithoutBusinessesNestedInput
     notification_messages?: notification_messagesUpdateManyWithoutBusinessesNestedInput
     notification_preferences?: notification_preferencesUpdateManyWithoutBusinessesNestedInput
     notification_templates?: notification_templatesUpdateManyWithoutBusinessesNestedInput
@@ -130242,6 +134556,7 @@ export namespace Prisma {
     hospitality_bookings?: hospitality_bookingsUncheckedUpdateManyWithoutBusinessNestedInput
     hospitality_inquiries?: hospitality_inquiriesUncheckedUpdateManyWithoutBusinessNestedInput
     leads?: leadsUncheckedUpdateManyWithoutBusinessesNestedInput
+    pipelines?: pipelinesUncheckedUpdateManyWithoutBusinessesNestedInput
     notification_messages?: notification_messagesUncheckedUpdateManyWithoutBusinessesNestedInput
     notification_preferences?: notification_preferencesUncheckedUpdateManyWithoutBusinessesNestedInput
     notification_templates?: notification_templatesUncheckedUpdateManyWithoutBusinessesNestedInput
@@ -130393,6 +134708,7 @@ export namespace Prisma {
     hospitality_bookings?: hospitality_bookingsCreateNestedManyWithoutBusinessInput
     hospitality_inquiries?: hospitality_inquiriesCreateNestedManyWithoutBusinessInput
     leads?: leadsCreateNestedManyWithoutBusinessesInput
+    pipelines?: pipelinesCreateNestedManyWithoutBusinessesInput
     notification_messages?: notification_messagesCreateNestedManyWithoutBusinessesInput
     notification_preferences?: notification_preferencesCreateNestedManyWithoutBusinessesInput
     notification_templates?: notification_templatesCreateNestedManyWithoutBusinessesInput
@@ -130438,6 +134754,7 @@ export namespace Prisma {
     hospitality_bookings?: hospitality_bookingsUncheckedCreateNestedManyWithoutBusinessInput
     hospitality_inquiries?: hospitality_inquiriesUncheckedCreateNestedManyWithoutBusinessInput
     leads?: leadsUncheckedCreateNestedManyWithoutBusinessesInput
+    pipelines?: pipelinesUncheckedCreateNestedManyWithoutBusinessesInput
     notification_messages?: notification_messagesUncheckedCreateNestedManyWithoutBusinessesInput
     notification_preferences?: notification_preferencesUncheckedCreateNestedManyWithoutBusinessesInput
     notification_templates?: notification_templatesUncheckedCreateNestedManyWithoutBusinessesInput
@@ -130644,6 +134961,7 @@ export namespace Prisma {
     hospitality_bookings?: hospitality_bookingsUpdateManyWithoutBusinessNestedInput
     hospitality_inquiries?: hospitality_inquiriesUpdateManyWithoutBusinessNestedInput
     leads?: leadsUpdateManyWithoutBusinessesNestedInput
+    pipelines?: pipelinesUpdateManyWithoutBusinessesNestedInput
     notification_messages?: notification_messagesUpdateManyWithoutBusinessesNestedInput
     notification_preferences?: notification_preferencesUpdateManyWithoutBusinessesNestedInput
     notification_templates?: notification_templatesUpdateManyWithoutBusinessesNestedInput
@@ -130689,6 +135007,7 @@ export namespace Prisma {
     hospitality_bookings?: hospitality_bookingsUncheckedUpdateManyWithoutBusinessNestedInput
     hospitality_inquiries?: hospitality_inquiriesUncheckedUpdateManyWithoutBusinessNestedInput
     leads?: leadsUncheckedUpdateManyWithoutBusinessesNestedInput
+    pipelines?: pipelinesUncheckedUpdateManyWithoutBusinessesNestedInput
     notification_messages?: notification_messagesUncheckedUpdateManyWithoutBusinessesNestedInput
     notification_preferences?: notification_preferencesUncheckedUpdateManyWithoutBusinessesNestedInput
     notification_templates?: notification_templatesUncheckedUpdateManyWithoutBusinessesNestedInput
@@ -131230,6 +135549,7 @@ export namespace Prisma {
     hospitality_bookings?: hospitality_bookingsCreateNestedManyWithoutBusinessInput
     hospitality_inquiries?: hospitality_inquiriesCreateNestedManyWithoutBusinessInput
     leads?: leadsCreateNestedManyWithoutBusinessesInput
+    pipelines?: pipelinesCreateNestedManyWithoutBusinessesInput
     notification_messages?: notification_messagesCreateNestedManyWithoutBusinessesInput
     notification_preferences?: notification_preferencesCreateNestedManyWithoutBusinessesInput
     notification_templates?: notification_templatesCreateNestedManyWithoutBusinessesInput
@@ -131275,6 +135595,7 @@ export namespace Prisma {
     hospitality_bookings?: hospitality_bookingsUncheckedCreateNestedManyWithoutBusinessInput
     hospitality_inquiries?: hospitality_inquiriesUncheckedCreateNestedManyWithoutBusinessInput
     leads?: leadsUncheckedCreateNestedManyWithoutBusinessesInput
+    pipelines?: pipelinesUncheckedCreateNestedManyWithoutBusinessesInput
     notification_messages?: notification_messagesUncheckedCreateNestedManyWithoutBusinessesInput
     notification_preferences?: notification_preferencesUncheckedCreateNestedManyWithoutBusinessesInput
     notification_templates?: notification_templatesUncheckedCreateNestedManyWithoutBusinessesInput
@@ -131381,6 +135702,8 @@ export namespace Prisma {
     assigned_user?: usersCreateNestedOneWithoutLeads_assignedInput
     businesses: businessesCreateNestedOneWithoutLeadsInput
     tenants: tenantsCreateNestedOneWithoutLeadsInput
+    pipeline?: pipelinesCreateNestedOneWithoutLeadsInput
+    stage?: pipeline_stagesCreateNestedOneWithoutLeadsInput
     orders?: ordersCreateNestedManyWithoutLeadsInput
     workflow_executions?: workflow_executionsCreateNestedManyWithoutLeadsInput
   }
@@ -131396,6 +135719,8 @@ export namespace Prisma {
     source?: string
     platform_id?: string | null
     status?: string
+    stage_id?: string | null
+    pipeline_id?: string | null
     lost_reason?: string | null
     context?: NullableJsonNullValueInput | InputJsonValue
     quoted_amount?: Decimal | DecimalJsLike | number | string | null
@@ -131551,6 +135876,7 @@ export namespace Prisma {
     hospitality_bookings?: hospitality_bookingsUpdateManyWithoutBusinessNestedInput
     hospitality_inquiries?: hospitality_inquiriesUpdateManyWithoutBusinessNestedInput
     leads?: leadsUpdateManyWithoutBusinessesNestedInput
+    pipelines?: pipelinesUpdateManyWithoutBusinessesNestedInput
     notification_messages?: notification_messagesUpdateManyWithoutBusinessesNestedInput
     notification_preferences?: notification_preferencesUpdateManyWithoutBusinessesNestedInput
     notification_templates?: notification_templatesUpdateManyWithoutBusinessesNestedInput
@@ -131596,6 +135922,7 @@ export namespace Prisma {
     hospitality_bookings?: hospitality_bookingsUncheckedUpdateManyWithoutBusinessNestedInput
     hospitality_inquiries?: hospitality_inquiriesUncheckedUpdateManyWithoutBusinessNestedInput
     leads?: leadsUncheckedUpdateManyWithoutBusinessesNestedInput
+    pipelines?: pipelinesUncheckedUpdateManyWithoutBusinessesNestedInput
     notification_messages?: notification_messagesUncheckedUpdateManyWithoutBusinessesNestedInput
     notification_preferences?: notification_preferencesUncheckedUpdateManyWithoutBusinessesNestedInput
     notification_templates?: notification_templatesUncheckedUpdateManyWithoutBusinessesNestedInput
@@ -131714,6 +136041,8 @@ export namespace Prisma {
     assigned_user?: usersUpdateOneWithoutLeads_assignedNestedInput
     businesses?: businessesUpdateOneRequiredWithoutLeadsNestedInput
     tenants?: tenantsUpdateOneRequiredWithoutLeadsNestedInput
+    pipeline?: pipelinesUpdateOneWithoutLeadsNestedInput
+    stage?: pipeline_stagesUpdateOneWithoutLeadsNestedInput
     orders?: ordersUpdateManyWithoutLeadsNestedInput
     workflow_executions?: workflow_executionsUpdateManyWithoutLeadsNestedInput
   }
@@ -131729,6 +136058,8 @@ export namespace Prisma {
     source?: StringFieldUpdateOperationsInput | string
     platform_id?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
+    stage_id?: NullableStringFieldUpdateOperationsInput | string | null
+    pipeline_id?: NullableStringFieldUpdateOperationsInput | string | null
     lost_reason?: NullableStringFieldUpdateOperationsInput | string | null
     context?: NullableJsonNullValueInput | InputJsonValue
     quoted_amount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
@@ -132308,6 +136639,7 @@ export namespace Prisma {
     hospitality_bookings?: hospitality_bookingsCreateNestedManyWithoutBusinessInput
     hospitality_inquiries?: hospitality_inquiriesCreateNestedManyWithoutBusinessInput
     leads?: leadsCreateNestedManyWithoutBusinessesInput
+    pipelines?: pipelinesCreateNestedManyWithoutBusinessesInput
     notification_messages?: notification_messagesCreateNestedManyWithoutBusinessesInput
     notification_preferences?: notification_preferencesCreateNestedManyWithoutBusinessesInput
     notification_templates?: notification_templatesCreateNestedManyWithoutBusinessesInput
@@ -132353,6 +136685,7 @@ export namespace Prisma {
     hospitality_bookings?: hospitality_bookingsUncheckedCreateNestedManyWithoutBusinessInput
     hospitality_inquiries?: hospitality_inquiriesUncheckedCreateNestedManyWithoutBusinessInput
     leads?: leadsUncheckedCreateNestedManyWithoutBusinessesInput
+    pipelines?: pipelinesUncheckedCreateNestedManyWithoutBusinessesInput
     notification_messages?: notification_messagesUncheckedCreateNestedManyWithoutBusinessesInput
     notification_preferences?: notification_preferencesUncheckedCreateNestedManyWithoutBusinessesInput
     notification_templates?: notification_templatesUncheckedCreateNestedManyWithoutBusinessesInput
@@ -132749,6 +137082,7 @@ export namespace Prisma {
     hospitality_bookings?: hospitality_bookingsUpdateManyWithoutBusinessNestedInput
     hospitality_inquiries?: hospitality_inquiriesUpdateManyWithoutBusinessNestedInput
     leads?: leadsUpdateManyWithoutBusinessesNestedInput
+    pipelines?: pipelinesUpdateManyWithoutBusinessesNestedInput
     notification_messages?: notification_messagesUpdateManyWithoutBusinessesNestedInput
     notification_preferences?: notification_preferencesUpdateManyWithoutBusinessesNestedInput
     notification_templates?: notification_templatesUpdateManyWithoutBusinessesNestedInput
@@ -132794,6 +137128,7 @@ export namespace Prisma {
     hospitality_bookings?: hospitality_bookingsUncheckedUpdateManyWithoutBusinessNestedInput
     hospitality_inquiries?: hospitality_inquiriesUncheckedUpdateManyWithoutBusinessNestedInput
     leads?: leadsUncheckedUpdateManyWithoutBusinessesNestedInput
+    pipelines?: pipelinesUncheckedUpdateManyWithoutBusinessesNestedInput
     notification_messages?: notification_messagesUncheckedUpdateManyWithoutBusinessesNestedInput
     notification_preferences?: notification_preferencesUncheckedUpdateManyWithoutBusinessesNestedInput
     notification_templates?: notification_templatesUncheckedUpdateManyWithoutBusinessesNestedInput
@@ -133378,6 +137713,7 @@ export namespace Prisma {
     hospitality_bookings?: hospitality_bookingsCreateNestedManyWithoutBusinessInput
     hospitality_inquiries?: hospitality_inquiriesCreateNestedManyWithoutBusinessInput
     leads?: leadsCreateNestedManyWithoutBusinessesInput
+    pipelines?: pipelinesCreateNestedManyWithoutBusinessesInput
     notification_messages?: notification_messagesCreateNestedManyWithoutBusinessesInput
     notification_preferences?: notification_preferencesCreateNestedManyWithoutBusinessesInput
     notification_templates?: notification_templatesCreateNestedManyWithoutBusinessesInput
@@ -133423,6 +137759,7 @@ export namespace Prisma {
     hospitality_bookings?: hospitality_bookingsUncheckedCreateNestedManyWithoutBusinessInput
     hospitality_inquiries?: hospitality_inquiriesUncheckedCreateNestedManyWithoutBusinessInput
     leads?: leadsUncheckedCreateNestedManyWithoutBusinessesInput
+    pipelines?: pipelinesUncheckedCreateNestedManyWithoutBusinessesInput
     notification_messages?: notification_messagesUncheckedCreateNestedManyWithoutBusinessesInput
     notification_preferences?: notification_preferencesUncheckedCreateNestedManyWithoutBusinessesInput
     notification_templates?: notification_templatesUncheckedCreateNestedManyWithoutBusinessesInput
@@ -133553,6 +137890,7 @@ export namespace Prisma {
     hospitality_bookings?: hospitality_bookingsUpdateManyWithoutBusinessNestedInput
     hospitality_inquiries?: hospitality_inquiriesUpdateManyWithoutBusinessNestedInput
     leads?: leadsUpdateManyWithoutBusinessesNestedInput
+    pipelines?: pipelinesUpdateManyWithoutBusinessesNestedInput
     notification_messages?: notification_messagesUpdateManyWithoutBusinessesNestedInput
     notification_preferences?: notification_preferencesUpdateManyWithoutBusinessesNestedInput
     notification_templates?: notification_templatesUpdateManyWithoutBusinessesNestedInput
@@ -133598,6 +137936,7 @@ export namespace Prisma {
     hospitality_bookings?: hospitality_bookingsUncheckedUpdateManyWithoutBusinessNestedInput
     hospitality_inquiries?: hospitality_inquiriesUncheckedUpdateManyWithoutBusinessNestedInput
     leads?: leadsUncheckedUpdateManyWithoutBusinessesNestedInput
+    pipelines?: pipelinesUncheckedUpdateManyWithoutBusinessesNestedInput
     notification_messages?: notification_messagesUncheckedUpdateManyWithoutBusinessesNestedInput
     notification_preferences?: notification_preferencesUncheckedUpdateManyWithoutBusinessesNestedInput
     notification_templates?: notification_templatesUncheckedUpdateManyWithoutBusinessesNestedInput
@@ -133718,6 +138057,7 @@ export namespace Prisma {
     hospitality_bookings?: hospitality_bookingsCreateNestedManyWithoutBusinessInput
     hospitality_inquiries?: hospitality_inquiriesCreateNestedManyWithoutBusinessInput
     leads?: leadsCreateNestedManyWithoutBusinessesInput
+    pipelines?: pipelinesCreateNestedManyWithoutBusinessesInput
     notification_messages?: notification_messagesCreateNestedManyWithoutBusinessesInput
     notification_preferences?: notification_preferencesCreateNestedManyWithoutBusinessesInput
     notification_templates?: notification_templatesCreateNestedManyWithoutBusinessesInput
@@ -133763,6 +138103,7 @@ export namespace Prisma {
     hospitality_bookings?: hospitality_bookingsUncheckedCreateNestedManyWithoutBusinessInput
     hospitality_inquiries?: hospitality_inquiriesUncheckedCreateNestedManyWithoutBusinessInput
     leads?: leadsUncheckedCreateNestedManyWithoutBusinessesInput
+    pipelines?: pipelinesUncheckedCreateNestedManyWithoutBusinessesInput
     notification_messages?: notification_messagesUncheckedCreateNestedManyWithoutBusinessesInput
     notification_preferences?: notification_preferencesUncheckedCreateNestedManyWithoutBusinessesInput
     notification_templates?: notification_templatesUncheckedCreateNestedManyWithoutBusinessesInput
@@ -133871,6 +138212,8 @@ export namespace Prisma {
     assigned_user?: usersCreateNestedOneWithoutLeads_assignedInput
     businesses: businessesCreateNestedOneWithoutLeadsInput
     tenants: tenantsCreateNestedOneWithoutLeadsInput
+    pipeline?: pipelinesCreateNestedOneWithoutLeadsInput
+    stage?: pipeline_stagesCreateNestedOneWithoutLeadsInput
     orders?: ordersCreateNestedManyWithoutLeadsInput
     workflow_executions?: workflow_executionsCreateNestedManyWithoutLeadsInput
   }
@@ -133886,6 +138229,8 @@ export namespace Prisma {
     source?: string
     platform_id?: string | null
     status?: string
+    stage_id?: string | null
+    pipeline_id?: string | null
     lost_reason?: string | null
     context?: NullableJsonNullValueInput | InputJsonValue
     quoted_amount?: Decimal | DecimalJsLike | number | string | null
@@ -134021,6 +138366,7 @@ export namespace Prisma {
     hospitality_bookings?: hospitality_bookingsUpdateManyWithoutBusinessNestedInput
     hospitality_inquiries?: hospitality_inquiriesUpdateManyWithoutBusinessNestedInput
     leads?: leadsUpdateManyWithoutBusinessesNestedInput
+    pipelines?: pipelinesUpdateManyWithoutBusinessesNestedInput
     notification_messages?: notification_messagesUpdateManyWithoutBusinessesNestedInput
     notification_preferences?: notification_preferencesUpdateManyWithoutBusinessesNestedInput
     notification_templates?: notification_templatesUpdateManyWithoutBusinessesNestedInput
@@ -134066,6 +138412,7 @@ export namespace Prisma {
     hospitality_bookings?: hospitality_bookingsUncheckedUpdateManyWithoutBusinessNestedInput
     hospitality_inquiries?: hospitality_inquiriesUncheckedUpdateManyWithoutBusinessNestedInput
     leads?: leadsUncheckedUpdateManyWithoutBusinessesNestedInput
+    pipelines?: pipelinesUncheckedUpdateManyWithoutBusinessesNestedInput
     notification_messages?: notification_messagesUncheckedUpdateManyWithoutBusinessesNestedInput
     notification_preferences?: notification_preferencesUncheckedUpdateManyWithoutBusinessesNestedInput
     notification_templates?: notification_templatesUncheckedUpdateManyWithoutBusinessesNestedInput
@@ -134186,6 +138533,8 @@ export namespace Prisma {
     assigned_user?: usersUpdateOneWithoutLeads_assignedNestedInput
     businesses?: businessesUpdateOneRequiredWithoutLeadsNestedInput
     tenants?: tenantsUpdateOneRequiredWithoutLeadsNestedInput
+    pipeline?: pipelinesUpdateOneWithoutLeadsNestedInput
+    stage?: pipeline_stagesUpdateOneWithoutLeadsNestedInput
     orders?: ordersUpdateManyWithoutLeadsNestedInput
     workflow_executions?: workflow_executionsUpdateManyWithoutLeadsNestedInput
   }
@@ -134201,6 +138550,8 @@ export namespace Prisma {
     source?: StringFieldUpdateOperationsInput | string
     platform_id?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
+    stage_id?: NullableStringFieldUpdateOperationsInput | string | null
+    pipeline_id?: NullableStringFieldUpdateOperationsInput | string | null
     lost_reason?: NullableStringFieldUpdateOperationsInput | string | null
     context?: NullableJsonNullValueInput | InputJsonValue
     quoted_amount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
@@ -134326,6 +138677,7 @@ export namespace Prisma {
     hospitality_bookings?: hospitality_bookingsCreateNestedManyWithoutBusinessInput
     hospitality_inquiries?: hospitality_inquiriesCreateNestedManyWithoutBusinessInput
     leads?: leadsCreateNestedManyWithoutBusinessesInput
+    pipelines?: pipelinesCreateNestedManyWithoutBusinessesInput
     notification_messages?: notification_messagesCreateNestedManyWithoutBusinessesInput
     notification_preferences?: notification_preferencesCreateNestedManyWithoutBusinessesInput
     notification_templates?: notification_templatesCreateNestedManyWithoutBusinessesInput
@@ -134371,6 +138723,7 @@ export namespace Prisma {
     hospitality_bookings?: hospitality_bookingsUncheckedCreateNestedManyWithoutBusinessInput
     hospitality_inquiries?: hospitality_inquiriesUncheckedCreateNestedManyWithoutBusinessInput
     leads?: leadsUncheckedCreateNestedManyWithoutBusinessesInput
+    pipelines?: pipelinesUncheckedCreateNestedManyWithoutBusinessesInput
     notification_messages?: notification_messagesUncheckedCreateNestedManyWithoutBusinessesInput
     notification_preferences?: notification_preferencesUncheckedCreateNestedManyWithoutBusinessesInput
     notification_templates?: notification_templatesUncheckedCreateNestedManyWithoutBusinessesInput
@@ -134532,6 +138885,8 @@ export namespace Prisma {
     assigned_user?: usersCreateNestedOneWithoutLeads_assignedInput
     businesses: businessesCreateNestedOneWithoutLeadsInput
     tenants: tenantsCreateNestedOneWithoutLeadsInput
+    pipeline?: pipelinesCreateNestedOneWithoutLeadsInput
+    stage?: pipeline_stagesCreateNestedOneWithoutLeadsInput
     orders?: ordersCreateNestedManyWithoutLeadsInput
     workflow_executions?: workflow_executionsCreateNestedManyWithoutLeadsInput
   }
@@ -134547,6 +138902,8 @@ export namespace Prisma {
     source?: string
     platform_id?: string | null
     status?: string
+    stage_id?: string | null
+    pipeline_id?: string | null
     lost_reason?: string | null
     context?: NullableJsonNullValueInput | InputJsonValue
     quoted_amount?: Decimal | DecimalJsLike | number | string | null
@@ -134778,6 +139135,7 @@ export namespace Prisma {
     hospitality_bookings?: hospitality_bookingsUpdateManyWithoutBusinessNestedInput
     hospitality_inquiries?: hospitality_inquiriesUpdateManyWithoutBusinessNestedInput
     leads?: leadsUpdateManyWithoutBusinessesNestedInput
+    pipelines?: pipelinesUpdateManyWithoutBusinessesNestedInput
     notification_messages?: notification_messagesUpdateManyWithoutBusinessesNestedInput
     notification_preferences?: notification_preferencesUpdateManyWithoutBusinessesNestedInput
     notification_templates?: notification_templatesUpdateManyWithoutBusinessesNestedInput
@@ -134823,6 +139181,7 @@ export namespace Prisma {
     hospitality_bookings?: hospitality_bookingsUncheckedUpdateManyWithoutBusinessNestedInput
     hospitality_inquiries?: hospitality_inquiriesUncheckedUpdateManyWithoutBusinessNestedInput
     leads?: leadsUncheckedUpdateManyWithoutBusinessesNestedInput
+    pipelines?: pipelinesUncheckedUpdateManyWithoutBusinessesNestedInput
     notification_messages?: notification_messagesUncheckedUpdateManyWithoutBusinessesNestedInput
     notification_preferences?: notification_preferencesUncheckedUpdateManyWithoutBusinessesNestedInput
     notification_templates?: notification_templatesUncheckedUpdateManyWithoutBusinessesNestedInput
@@ -135002,6 +139361,8 @@ export namespace Prisma {
     assigned_user?: usersUpdateOneWithoutLeads_assignedNestedInput
     businesses?: businessesUpdateOneRequiredWithoutLeadsNestedInput
     tenants?: tenantsUpdateOneRequiredWithoutLeadsNestedInput
+    pipeline?: pipelinesUpdateOneWithoutLeadsNestedInput
+    stage?: pipeline_stagesUpdateOneWithoutLeadsNestedInput
     orders?: ordersUpdateManyWithoutLeadsNestedInput
     workflow_executions?: workflow_executionsUpdateManyWithoutLeadsNestedInput
   }
@@ -135017,6 +139378,8 @@ export namespace Prisma {
     source?: StringFieldUpdateOperationsInput | string
     platform_id?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
+    stage_id?: NullableStringFieldUpdateOperationsInput | string | null
+    pipeline_id?: NullableStringFieldUpdateOperationsInput | string | null
     lost_reason?: NullableStringFieldUpdateOperationsInput | string | null
     context?: NullableJsonNullValueInput | InputJsonValue
     quoted_amount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
@@ -135707,6 +140070,7 @@ export namespace Prisma {
     hospitality_bookings?: hospitality_bookingsCreateNestedManyWithoutBusinessInput
     hospitality_inquiries?: hospitality_inquiriesCreateNestedManyWithoutBusinessInput
     leads?: leadsCreateNestedManyWithoutBusinessesInput
+    pipelines?: pipelinesCreateNestedManyWithoutBusinessesInput
     notification_messages?: notification_messagesCreateNestedManyWithoutBusinessesInput
     notification_preferences?: notification_preferencesCreateNestedManyWithoutBusinessesInput
     notification_templates?: notification_templatesCreateNestedManyWithoutBusinessesInput
@@ -135752,6 +140116,7 @@ export namespace Prisma {
     hospitality_bookings?: hospitality_bookingsUncheckedCreateNestedManyWithoutBusinessInput
     hospitality_inquiries?: hospitality_inquiriesUncheckedCreateNestedManyWithoutBusinessInput
     leads?: leadsUncheckedCreateNestedManyWithoutBusinessesInput
+    pipelines?: pipelinesUncheckedCreateNestedManyWithoutBusinessesInput
     notification_messages?: notification_messagesUncheckedCreateNestedManyWithoutBusinessesInput
     notification_preferences?: notification_preferencesUncheckedCreateNestedManyWithoutBusinessesInput
     notification_templates?: notification_templatesUncheckedCreateNestedManyWithoutBusinessesInput
@@ -135882,6 +140247,7 @@ export namespace Prisma {
     hospitality_bookings?: hospitality_bookingsUpdateManyWithoutBusinessNestedInput
     hospitality_inquiries?: hospitality_inquiriesUpdateManyWithoutBusinessNestedInput
     leads?: leadsUpdateManyWithoutBusinessesNestedInput
+    pipelines?: pipelinesUpdateManyWithoutBusinessesNestedInput
     notification_messages?: notification_messagesUpdateManyWithoutBusinessesNestedInput
     notification_preferences?: notification_preferencesUpdateManyWithoutBusinessesNestedInput
     notification_templates?: notification_templatesUpdateManyWithoutBusinessesNestedInput
@@ -135927,6 +140293,7 @@ export namespace Prisma {
     hospitality_bookings?: hospitality_bookingsUncheckedUpdateManyWithoutBusinessNestedInput
     hospitality_inquiries?: hospitality_inquiriesUncheckedUpdateManyWithoutBusinessNestedInput
     leads?: leadsUncheckedUpdateManyWithoutBusinessesNestedInput
+    pipelines?: pipelinesUncheckedUpdateManyWithoutBusinessesNestedInput
     notification_messages?: notification_messagesUncheckedUpdateManyWithoutBusinessesNestedInput
     notification_preferences?: notification_preferencesUncheckedUpdateManyWithoutBusinessesNestedInput
     notification_templates?: notification_templatesUncheckedUpdateManyWithoutBusinessesNestedInput
@@ -136047,6 +140414,7 @@ export namespace Prisma {
     product_inquiries?: product_inquiriesCreateNestedManyWithoutBusinessInput
     hospitality_bookings?: hospitality_bookingsCreateNestedManyWithoutBusinessInput
     leads?: leadsCreateNestedManyWithoutBusinessesInput
+    pipelines?: pipelinesCreateNestedManyWithoutBusinessesInput
     notification_messages?: notification_messagesCreateNestedManyWithoutBusinessesInput
     notification_preferences?: notification_preferencesCreateNestedManyWithoutBusinessesInput
     notification_templates?: notification_templatesCreateNestedManyWithoutBusinessesInput
@@ -136092,6 +140460,7 @@ export namespace Prisma {
     product_inquiries?: product_inquiriesUncheckedCreateNestedManyWithoutBusinessInput
     hospitality_bookings?: hospitality_bookingsUncheckedCreateNestedManyWithoutBusinessInput
     leads?: leadsUncheckedCreateNestedManyWithoutBusinessesInput
+    pipelines?: pipelinesUncheckedCreateNestedManyWithoutBusinessesInput
     notification_messages?: notification_messagesUncheckedCreateNestedManyWithoutBusinessesInput
     notification_preferences?: notification_preferencesUncheckedCreateNestedManyWithoutBusinessesInput
     notification_templates?: notification_templatesUncheckedCreateNestedManyWithoutBusinessesInput
@@ -136200,6 +140569,8 @@ export namespace Prisma {
     assigned_user?: usersCreateNestedOneWithoutLeads_assignedInput
     businesses: businessesCreateNestedOneWithoutLeadsInput
     tenants: tenantsCreateNestedOneWithoutLeadsInput
+    pipeline?: pipelinesCreateNestedOneWithoutLeadsInput
+    stage?: pipeline_stagesCreateNestedOneWithoutLeadsInput
     orders?: ordersCreateNestedManyWithoutLeadsInput
     workflow_executions?: workflow_executionsCreateNestedManyWithoutLeadsInput
   }
@@ -136215,6 +140586,8 @@ export namespace Prisma {
     source?: string
     platform_id?: string | null
     status?: string
+    stage_id?: string | null
+    pipeline_id?: string | null
     lost_reason?: string | null
     context?: NullableJsonNullValueInput | InputJsonValue
     quoted_amount?: Decimal | DecimalJsLike | number | string | null
@@ -136350,6 +140723,7 @@ export namespace Prisma {
     product_inquiries?: product_inquiriesUpdateManyWithoutBusinessNestedInput
     hospitality_bookings?: hospitality_bookingsUpdateManyWithoutBusinessNestedInput
     leads?: leadsUpdateManyWithoutBusinessesNestedInput
+    pipelines?: pipelinesUpdateManyWithoutBusinessesNestedInput
     notification_messages?: notification_messagesUpdateManyWithoutBusinessesNestedInput
     notification_preferences?: notification_preferencesUpdateManyWithoutBusinessesNestedInput
     notification_templates?: notification_templatesUpdateManyWithoutBusinessesNestedInput
@@ -136395,6 +140769,7 @@ export namespace Prisma {
     product_inquiries?: product_inquiriesUncheckedUpdateManyWithoutBusinessNestedInput
     hospitality_bookings?: hospitality_bookingsUncheckedUpdateManyWithoutBusinessNestedInput
     leads?: leadsUncheckedUpdateManyWithoutBusinessesNestedInput
+    pipelines?: pipelinesUncheckedUpdateManyWithoutBusinessesNestedInput
     notification_messages?: notification_messagesUncheckedUpdateManyWithoutBusinessesNestedInput
     notification_preferences?: notification_preferencesUncheckedUpdateManyWithoutBusinessesNestedInput
     notification_templates?: notification_templatesUncheckedUpdateManyWithoutBusinessesNestedInput
@@ -136515,6 +140890,8 @@ export namespace Prisma {
     assigned_user?: usersUpdateOneWithoutLeads_assignedNestedInput
     businesses?: businessesUpdateOneRequiredWithoutLeadsNestedInput
     tenants?: tenantsUpdateOneRequiredWithoutLeadsNestedInput
+    pipeline?: pipelinesUpdateOneWithoutLeadsNestedInput
+    stage?: pipeline_stagesUpdateOneWithoutLeadsNestedInput
     orders?: ordersUpdateManyWithoutLeadsNestedInput
     workflow_executions?: workflow_executionsUpdateManyWithoutLeadsNestedInput
   }
@@ -136530,6 +140907,8 @@ export namespace Prisma {
     source?: StringFieldUpdateOperationsInput | string
     platform_id?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
+    stage_id?: NullableStringFieldUpdateOperationsInput | string | null
+    pipeline_id?: NullableStringFieldUpdateOperationsInput | string | null
     lost_reason?: NullableStringFieldUpdateOperationsInput | string | null
     context?: NullableJsonNullValueInput | InputJsonValue
     quoted_amount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
@@ -136655,6 +141034,7 @@ export namespace Prisma {
     product_inquiries?: product_inquiriesCreateNestedManyWithoutBusinessInput
     hospitality_inquiries?: hospitality_inquiriesCreateNestedManyWithoutBusinessInput
     leads?: leadsCreateNestedManyWithoutBusinessesInput
+    pipelines?: pipelinesCreateNestedManyWithoutBusinessesInput
     notification_messages?: notification_messagesCreateNestedManyWithoutBusinessesInput
     notification_preferences?: notification_preferencesCreateNestedManyWithoutBusinessesInput
     notification_templates?: notification_templatesCreateNestedManyWithoutBusinessesInput
@@ -136700,6 +141080,7 @@ export namespace Prisma {
     product_inquiries?: product_inquiriesUncheckedCreateNestedManyWithoutBusinessInput
     hospitality_inquiries?: hospitality_inquiriesUncheckedCreateNestedManyWithoutBusinessInput
     leads?: leadsUncheckedCreateNestedManyWithoutBusinessesInput
+    pipelines?: pipelinesUncheckedCreateNestedManyWithoutBusinessesInput
     notification_messages?: notification_messagesUncheckedCreateNestedManyWithoutBusinessesInput
     notification_preferences?: notification_preferencesUncheckedCreateNestedManyWithoutBusinessesInput
     notification_templates?: notification_templatesUncheckedCreateNestedManyWithoutBusinessesInput
@@ -136861,6 +141242,8 @@ export namespace Prisma {
     assigned_user?: usersCreateNestedOneWithoutLeads_assignedInput
     businesses: businessesCreateNestedOneWithoutLeadsInput
     tenants: tenantsCreateNestedOneWithoutLeadsInput
+    pipeline?: pipelinesCreateNestedOneWithoutLeadsInput
+    stage?: pipeline_stagesCreateNestedOneWithoutLeadsInput
     orders?: ordersCreateNestedManyWithoutLeadsInput
     workflow_executions?: workflow_executionsCreateNestedManyWithoutLeadsInput
   }
@@ -136876,6 +141259,8 @@ export namespace Prisma {
     source?: string
     platform_id?: string | null
     status?: string
+    stage_id?: string | null
+    pipeline_id?: string | null
     lost_reason?: string | null
     context?: NullableJsonNullValueInput | InputJsonValue
     quoted_amount?: Decimal | DecimalJsLike | number | string | null
@@ -137133,6 +141518,7 @@ export namespace Prisma {
     product_inquiries?: product_inquiriesUpdateManyWithoutBusinessNestedInput
     hospitality_inquiries?: hospitality_inquiriesUpdateManyWithoutBusinessNestedInput
     leads?: leadsUpdateManyWithoutBusinessesNestedInput
+    pipelines?: pipelinesUpdateManyWithoutBusinessesNestedInput
     notification_messages?: notification_messagesUpdateManyWithoutBusinessesNestedInput
     notification_preferences?: notification_preferencesUpdateManyWithoutBusinessesNestedInput
     notification_templates?: notification_templatesUpdateManyWithoutBusinessesNestedInput
@@ -137178,6 +141564,7 @@ export namespace Prisma {
     product_inquiries?: product_inquiriesUncheckedUpdateManyWithoutBusinessNestedInput
     hospitality_inquiries?: hospitality_inquiriesUncheckedUpdateManyWithoutBusinessNestedInput
     leads?: leadsUncheckedUpdateManyWithoutBusinessesNestedInput
+    pipelines?: pipelinesUncheckedUpdateManyWithoutBusinessesNestedInput
     notification_messages?: notification_messagesUncheckedUpdateManyWithoutBusinessesNestedInput
     notification_preferences?: notification_preferencesUncheckedUpdateManyWithoutBusinessesNestedInput
     notification_templates?: notification_templatesUncheckedUpdateManyWithoutBusinessesNestedInput
@@ -137357,6 +141744,8 @@ export namespace Prisma {
     assigned_user?: usersUpdateOneWithoutLeads_assignedNestedInput
     businesses?: businessesUpdateOneRequiredWithoutLeadsNestedInput
     tenants?: tenantsUpdateOneRequiredWithoutLeadsNestedInput
+    pipeline?: pipelinesUpdateOneWithoutLeadsNestedInput
+    stage?: pipeline_stagesUpdateOneWithoutLeadsNestedInput
     orders?: ordersUpdateManyWithoutLeadsNestedInput
     workflow_executions?: workflow_executionsUpdateManyWithoutLeadsNestedInput
   }
@@ -137372,6 +141761,8 @@ export namespace Prisma {
     source?: StringFieldUpdateOperationsInput | string
     platform_id?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
+    stage_id?: NullableStringFieldUpdateOperationsInput | string | null
+    pipeline_id?: NullableStringFieldUpdateOperationsInput | string | null
     lost_reason?: NullableStringFieldUpdateOperationsInput | string | null
     context?: NullableJsonNullValueInput | InputJsonValue
     quoted_amount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
@@ -138200,6 +142591,7 @@ export namespace Prisma {
     hospitality_bookings?: hospitality_bookingsCreateNestedManyWithoutBusinessInput
     hospitality_inquiries?: hospitality_inquiriesCreateNestedManyWithoutBusinessInput
     leads?: leadsCreateNestedManyWithoutBusinessesInput
+    pipelines?: pipelinesCreateNestedManyWithoutBusinessesInput
     notification_messages?: notification_messagesCreateNestedManyWithoutBusinessesInput
     notification_preferences?: notification_preferencesCreateNestedManyWithoutBusinessesInput
     notification_templates?: notification_templatesCreateNestedManyWithoutBusinessesInput
@@ -138245,6 +142637,7 @@ export namespace Prisma {
     hospitality_bookings?: hospitality_bookingsUncheckedCreateNestedManyWithoutBusinessInput
     hospitality_inquiries?: hospitality_inquiriesUncheckedCreateNestedManyWithoutBusinessInput
     leads?: leadsUncheckedCreateNestedManyWithoutBusinessesInput
+    pipelines?: pipelinesUncheckedCreateNestedManyWithoutBusinessesInput
     notification_messages?: notification_messagesUncheckedCreateNestedManyWithoutBusinessesInput
     notification_preferences?: notification_preferencesUncheckedCreateNestedManyWithoutBusinessesInput
     notification_templates?: notification_templatesUncheckedCreateNestedManyWithoutBusinessesInput
@@ -138379,6 +142772,7 @@ export namespace Prisma {
     hospitality_bookings?: hospitality_bookingsUpdateManyWithoutBusinessNestedInput
     hospitality_inquiries?: hospitality_inquiriesUpdateManyWithoutBusinessNestedInput
     leads?: leadsUpdateManyWithoutBusinessesNestedInput
+    pipelines?: pipelinesUpdateManyWithoutBusinessesNestedInput
     notification_messages?: notification_messagesUpdateManyWithoutBusinessesNestedInput
     notification_preferences?: notification_preferencesUpdateManyWithoutBusinessesNestedInput
     notification_templates?: notification_templatesUpdateManyWithoutBusinessesNestedInput
@@ -138424,6 +142818,7 @@ export namespace Prisma {
     hospitality_bookings?: hospitality_bookingsUncheckedUpdateManyWithoutBusinessNestedInput
     hospitality_inquiries?: hospitality_inquiriesUncheckedUpdateManyWithoutBusinessNestedInput
     leads?: leadsUncheckedUpdateManyWithoutBusinessesNestedInput
+    pipelines?: pipelinesUncheckedUpdateManyWithoutBusinessesNestedInput
     notification_messages?: notification_messagesUncheckedUpdateManyWithoutBusinessesNestedInput
     notification_preferences?: notification_preferencesUncheckedUpdateManyWithoutBusinessesNestedInput
     notification_templates?: notification_templatesUncheckedUpdateManyWithoutBusinessesNestedInput
@@ -138526,6 +142921,7 @@ export namespace Prisma {
     hospitality_bookings?: hospitality_bookingsCreateNestedManyWithoutBusinessInput
     hospitality_inquiries?: hospitality_inquiriesCreateNestedManyWithoutBusinessInput
     leads?: leadsCreateNestedManyWithoutBusinessesInput
+    pipelines?: pipelinesCreateNestedManyWithoutBusinessesInput
     notification_messages?: notification_messagesCreateNestedManyWithoutBusinessesInput
     notification_preferences?: notification_preferencesCreateNestedManyWithoutBusinessesInput
     notification_templates?: notification_templatesCreateNestedManyWithoutBusinessesInput
@@ -138571,6 +142967,7 @@ export namespace Prisma {
     hospitality_bookings?: hospitality_bookingsUncheckedCreateNestedManyWithoutBusinessInput
     hospitality_inquiries?: hospitality_inquiriesUncheckedCreateNestedManyWithoutBusinessInput
     leads?: leadsUncheckedCreateNestedManyWithoutBusinessesInput
+    pipelines?: pipelinesUncheckedCreateNestedManyWithoutBusinessesInput
     notification_messages?: notification_messagesUncheckedCreateNestedManyWithoutBusinessesInput
     notification_preferences?: notification_preferencesUncheckedCreateNestedManyWithoutBusinessesInput
     notification_templates?: notification_templatesUncheckedCreateNestedManyWithoutBusinessesInput
@@ -138672,6 +143069,7 @@ export namespace Prisma {
     hospitality_bookings?: hospitality_bookingsUpdateManyWithoutBusinessNestedInput
     hospitality_inquiries?: hospitality_inquiriesUpdateManyWithoutBusinessNestedInput
     leads?: leadsUpdateManyWithoutBusinessesNestedInput
+    pipelines?: pipelinesUpdateManyWithoutBusinessesNestedInput
     notification_messages?: notification_messagesUpdateManyWithoutBusinessesNestedInput
     notification_preferences?: notification_preferencesUpdateManyWithoutBusinessesNestedInput
     notification_templates?: notification_templatesUpdateManyWithoutBusinessesNestedInput
@@ -138717,6 +143115,7 @@ export namespace Prisma {
     hospitality_bookings?: hospitality_bookingsUncheckedUpdateManyWithoutBusinessNestedInput
     hospitality_inquiries?: hospitality_inquiriesUncheckedUpdateManyWithoutBusinessNestedInput
     leads?: leadsUncheckedUpdateManyWithoutBusinessesNestedInput
+    pipelines?: pipelinesUncheckedUpdateManyWithoutBusinessesNestedInput
     notification_messages?: notification_messagesUncheckedUpdateManyWithoutBusinessesNestedInput
     notification_preferences?: notification_preferencesUncheckedUpdateManyWithoutBusinessesNestedInput
     notification_templates?: notification_templatesUncheckedUpdateManyWithoutBusinessesNestedInput
@@ -138849,6 +143248,7 @@ export namespace Prisma {
     hospitality_bookings?: hospitality_bookingsCreateNestedManyWithoutBusinessInput
     hospitality_inquiries?: hospitality_inquiriesCreateNestedManyWithoutBusinessInput
     leads?: leadsCreateNestedManyWithoutBusinessesInput
+    pipelines?: pipelinesCreateNestedManyWithoutBusinessesInput
     notification_messages?: notification_messagesCreateNestedManyWithoutBusinessesInput
     notification_preferences?: notification_preferencesCreateNestedManyWithoutBusinessesInput
     notification_templates?: notification_templatesCreateNestedManyWithoutBusinessesInput
@@ -138894,6 +143294,7 @@ export namespace Prisma {
     hospitality_bookings?: hospitality_bookingsUncheckedCreateNestedManyWithoutBusinessInput
     hospitality_inquiries?: hospitality_inquiriesUncheckedCreateNestedManyWithoutBusinessInput
     leads?: leadsUncheckedCreateNestedManyWithoutBusinessesInput
+    pipelines?: pipelinesUncheckedCreateNestedManyWithoutBusinessesInput
     notification_messages?: notification_messagesUncheckedCreateNestedManyWithoutBusinessesInput
     notification_preferences?: notification_preferencesUncheckedCreateNestedManyWithoutBusinessesInput
     notification_templates?: notification_templatesUncheckedCreateNestedManyWithoutBusinessesInput
@@ -138955,6 +143356,7 @@ export namespace Prisma {
     hospitality_bookings?: hospitality_bookingsUpdateManyWithoutBusinessNestedInput
     hospitality_inquiries?: hospitality_inquiriesUpdateManyWithoutBusinessNestedInput
     leads?: leadsUpdateManyWithoutBusinessesNestedInput
+    pipelines?: pipelinesUpdateManyWithoutBusinessesNestedInput
     notification_messages?: notification_messagesUpdateManyWithoutBusinessesNestedInput
     notification_preferences?: notification_preferencesUpdateManyWithoutBusinessesNestedInput
     notification_templates?: notification_templatesUpdateManyWithoutBusinessesNestedInput
@@ -139000,6 +143402,7 @@ export namespace Prisma {
     hospitality_bookings?: hospitality_bookingsUncheckedUpdateManyWithoutBusinessNestedInput
     hospitality_inquiries?: hospitality_inquiriesUncheckedUpdateManyWithoutBusinessNestedInput
     leads?: leadsUncheckedUpdateManyWithoutBusinessesNestedInput
+    pipelines?: pipelinesUncheckedUpdateManyWithoutBusinessesNestedInput
     notification_messages?: notification_messagesUncheckedUpdateManyWithoutBusinessesNestedInput
     notification_preferences?: notification_preferencesUncheckedUpdateManyWithoutBusinessesNestedInput
     notification_templates?: notification_templatesUncheckedUpdateManyWithoutBusinessesNestedInput
@@ -139045,6 +143448,7 @@ export namespace Prisma {
     hospitality_bookings?: hospitality_bookingsCreateNestedManyWithoutBusinessInput
     hospitality_inquiries?: hospitality_inquiriesCreateNestedManyWithoutBusinessInput
     leads?: leadsCreateNestedManyWithoutBusinessesInput
+    pipelines?: pipelinesCreateNestedManyWithoutBusinessesInput
     notification_messages?: notification_messagesCreateNestedManyWithoutBusinessesInput
     notification_preferences?: notification_preferencesCreateNestedManyWithoutBusinessesInput
     notification_templates?: notification_templatesCreateNestedManyWithoutBusinessesInput
@@ -139090,6 +143494,7 @@ export namespace Prisma {
     hospitality_bookings?: hospitality_bookingsUncheckedCreateNestedManyWithoutBusinessInput
     hospitality_inquiries?: hospitality_inquiriesUncheckedCreateNestedManyWithoutBusinessInput
     leads?: leadsUncheckedCreateNestedManyWithoutBusinessesInput
+    pipelines?: pipelinesUncheckedCreateNestedManyWithoutBusinessesInput
     notification_messages?: notification_messagesUncheckedCreateNestedManyWithoutBusinessesInput
     notification_preferences?: notification_preferencesUncheckedCreateNestedManyWithoutBusinessesInput
     notification_templates?: notification_templatesUncheckedCreateNestedManyWithoutBusinessesInput
@@ -139194,6 +143599,7 @@ export namespace Prisma {
     hospitality_bookings?: hospitality_bookingsUpdateManyWithoutBusinessNestedInput
     hospitality_inquiries?: hospitality_inquiriesUpdateManyWithoutBusinessNestedInput
     leads?: leadsUpdateManyWithoutBusinessesNestedInput
+    pipelines?: pipelinesUpdateManyWithoutBusinessesNestedInput
     notification_messages?: notification_messagesUpdateManyWithoutBusinessesNestedInput
     notification_preferences?: notification_preferencesUpdateManyWithoutBusinessesNestedInput
     notification_templates?: notification_templatesUpdateManyWithoutBusinessesNestedInput
@@ -139239,6 +143645,7 @@ export namespace Prisma {
     hospitality_bookings?: hospitality_bookingsUncheckedUpdateManyWithoutBusinessNestedInput
     hospitality_inquiries?: hospitality_inquiriesUncheckedUpdateManyWithoutBusinessNestedInput
     leads?: leadsUncheckedUpdateManyWithoutBusinessesNestedInput
+    pipelines?: pipelinesUncheckedUpdateManyWithoutBusinessesNestedInput
     notification_messages?: notification_messagesUncheckedUpdateManyWithoutBusinessesNestedInput
     notification_preferences?: notification_preferencesUncheckedUpdateManyWithoutBusinessesNestedInput
     notification_templates?: notification_templatesUncheckedUpdateManyWithoutBusinessesNestedInput
@@ -139333,6 +143740,7 @@ export namespace Prisma {
     hospitality_bookings?: hospitality_bookingsCreateNestedManyWithoutBusinessInput
     hospitality_inquiries?: hospitality_inquiriesCreateNestedManyWithoutBusinessInput
     leads?: leadsCreateNestedManyWithoutBusinessesInput
+    pipelines?: pipelinesCreateNestedManyWithoutBusinessesInput
     notification_messages?: notification_messagesCreateNestedManyWithoutBusinessesInput
     notification_preferences?: notification_preferencesCreateNestedManyWithoutBusinessesInput
     notification_templates?: notification_templatesCreateNestedManyWithoutBusinessesInput
@@ -139378,6 +143786,7 @@ export namespace Prisma {
     hospitality_bookings?: hospitality_bookingsUncheckedCreateNestedManyWithoutBusinessInput
     hospitality_inquiries?: hospitality_inquiriesUncheckedCreateNestedManyWithoutBusinessInput
     leads?: leadsUncheckedCreateNestedManyWithoutBusinessesInput
+    pipelines?: pipelinesUncheckedCreateNestedManyWithoutBusinessesInput
     notification_messages?: notification_messagesUncheckedCreateNestedManyWithoutBusinessesInput
     notification_preferences?: notification_preferencesUncheckedCreateNestedManyWithoutBusinessesInput
     notification_templates?: notification_templatesUncheckedCreateNestedManyWithoutBusinessesInput
@@ -139439,6 +143848,7 @@ export namespace Prisma {
     hospitality_bookings?: hospitality_bookingsUpdateManyWithoutBusinessNestedInput
     hospitality_inquiries?: hospitality_inquiriesUpdateManyWithoutBusinessNestedInput
     leads?: leadsUpdateManyWithoutBusinessesNestedInput
+    pipelines?: pipelinesUpdateManyWithoutBusinessesNestedInput
     notification_messages?: notification_messagesUpdateManyWithoutBusinessesNestedInput
     notification_preferences?: notification_preferencesUpdateManyWithoutBusinessesNestedInput
     notification_templates?: notification_templatesUpdateManyWithoutBusinessesNestedInput
@@ -139484,6 +143894,7 @@ export namespace Prisma {
     hospitality_bookings?: hospitality_bookingsUncheckedUpdateManyWithoutBusinessNestedInput
     hospitality_inquiries?: hospitality_inquiriesUncheckedUpdateManyWithoutBusinessNestedInput
     leads?: leadsUncheckedUpdateManyWithoutBusinessesNestedInput
+    pipelines?: pipelinesUncheckedUpdateManyWithoutBusinessesNestedInput
     notification_messages?: notification_messagesUncheckedUpdateManyWithoutBusinessesNestedInput
     notification_preferences?: notification_preferencesUncheckedUpdateManyWithoutBusinessesNestedInput
     notification_templates?: notification_templatesUncheckedUpdateManyWithoutBusinessesNestedInput
@@ -139529,6 +143940,7 @@ export namespace Prisma {
     hospitality_bookings?: hospitality_bookingsCreateNestedManyWithoutBusinessInput
     hospitality_inquiries?: hospitality_inquiriesCreateNestedManyWithoutBusinessInput
     leads?: leadsCreateNestedManyWithoutBusinessesInput
+    pipelines?: pipelinesCreateNestedManyWithoutBusinessesInput
     notification_messages?: notification_messagesCreateNestedManyWithoutBusinessesInput
     notification_preferences?: notification_preferencesCreateNestedManyWithoutBusinessesInput
     notification_templates?: notification_templatesCreateNestedManyWithoutBusinessesInput
@@ -139574,6 +143986,7 @@ export namespace Prisma {
     hospitality_bookings?: hospitality_bookingsUncheckedCreateNestedManyWithoutBusinessInput
     hospitality_inquiries?: hospitality_inquiriesUncheckedCreateNestedManyWithoutBusinessInput
     leads?: leadsUncheckedCreateNestedManyWithoutBusinessesInput
+    pipelines?: pipelinesUncheckedCreateNestedManyWithoutBusinessesInput
     notification_messages?: notification_messagesUncheckedCreateNestedManyWithoutBusinessesInput
     notification_preferences?: notification_preferencesUncheckedCreateNestedManyWithoutBusinessesInput
     notification_templates?: notification_templatesUncheckedCreateNestedManyWithoutBusinessesInput
@@ -139700,6 +144113,7 @@ export namespace Prisma {
     hospitality_bookings?: hospitality_bookingsUpdateManyWithoutBusinessNestedInput
     hospitality_inquiries?: hospitality_inquiriesUpdateManyWithoutBusinessNestedInput
     leads?: leadsUpdateManyWithoutBusinessesNestedInput
+    pipelines?: pipelinesUpdateManyWithoutBusinessesNestedInput
     notification_messages?: notification_messagesUpdateManyWithoutBusinessesNestedInput
     notification_preferences?: notification_preferencesUpdateManyWithoutBusinessesNestedInput
     notification_templates?: notification_templatesUpdateManyWithoutBusinessesNestedInput
@@ -139745,6 +144159,7 @@ export namespace Prisma {
     hospitality_bookings?: hospitality_bookingsUncheckedUpdateManyWithoutBusinessNestedInput
     hospitality_inquiries?: hospitality_inquiriesUncheckedUpdateManyWithoutBusinessNestedInput
     leads?: leadsUncheckedUpdateManyWithoutBusinessesNestedInput
+    pipelines?: pipelinesUncheckedUpdateManyWithoutBusinessesNestedInput
     notification_messages?: notification_messagesUncheckedUpdateManyWithoutBusinessesNestedInput
     notification_preferences?: notification_preferencesUncheckedUpdateManyWithoutBusinessesNestedInput
     notification_templates?: notification_templatesUncheckedUpdateManyWithoutBusinessesNestedInput
@@ -140009,6 +144424,8 @@ export namespace Prisma {
     source?: string
     platform_id?: string | null
     status?: string
+    stage_id?: string | null
+    pipeline_id?: string | null
     lost_reason?: string | null
     context?: NullableJsonNullValueInput | InputJsonValue
     quoted_amount?: Decimal | DecimalJsLike | number | string | null
@@ -140019,6 +144436,16 @@ export namespace Prisma {
     assigned_to?: string | null
     followup_at?: Date | string | null
     deleted_at?: Date | string | null
+    created_at?: Date | string
+    updated_at?: Date | string
+  }
+
+  export type pipelinesCreateManyBusinessesInput = {
+    pipeline_id?: string
+    name: string
+    industry?: string | null
+    is_default?: boolean
+    is_archived?: boolean
     created_at?: Date | string
     updated_at?: Date | string
   }
@@ -140853,6 +145280,8 @@ export namespace Prisma {
     hospitality_bookings?: hospitality_bookingsUpdateManyWithoutLeadNestedInput
     assigned_user?: usersUpdateOneWithoutLeads_assignedNestedInput
     tenants?: tenantsUpdateOneRequiredWithoutLeadsNestedInput
+    pipeline?: pipelinesUpdateOneWithoutLeadsNestedInput
+    stage?: pipeline_stagesUpdateOneWithoutLeadsNestedInput
     orders?: ordersUpdateManyWithoutLeadsNestedInput
     workflow_executions?: workflow_executionsUpdateManyWithoutLeadsNestedInput
   }
@@ -140867,6 +145296,8 @@ export namespace Prisma {
     source?: StringFieldUpdateOperationsInput | string
     platform_id?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
+    stage_id?: NullableStringFieldUpdateOperationsInput | string | null
+    pipeline_id?: NullableStringFieldUpdateOperationsInput | string | null
     lost_reason?: NullableStringFieldUpdateOperationsInput | string | null
     context?: NullableJsonNullValueInput | InputJsonValue
     quoted_amount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
@@ -140901,6 +145332,8 @@ export namespace Prisma {
     source?: StringFieldUpdateOperationsInput | string
     platform_id?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
+    stage_id?: NullableStringFieldUpdateOperationsInput | string | null
+    pipeline_id?: NullableStringFieldUpdateOperationsInput | string | null
     lost_reason?: NullableStringFieldUpdateOperationsInput | string | null
     context?: NullableJsonNullValueInput | InputJsonValue
     quoted_amount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
@@ -140911,6 +145344,40 @@ export namespace Prisma {
     assigned_to?: NullableStringFieldUpdateOperationsInput | string | null
     followup_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     deleted_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type pipelinesUpdateWithoutBusinessesInput = {
+    pipeline_id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    industry?: NullableStringFieldUpdateOperationsInput | string | null
+    is_default?: BoolFieldUpdateOperationsInput | boolean
+    is_archived?: BoolFieldUpdateOperationsInput | boolean
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    stages?: pipeline_stagesUpdateManyWithoutPipelineNestedInput
+    leads?: leadsUpdateManyWithoutPipelineNestedInput
+  }
+
+  export type pipelinesUncheckedUpdateWithoutBusinessesInput = {
+    pipeline_id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    industry?: NullableStringFieldUpdateOperationsInput | string | null
+    is_default?: BoolFieldUpdateOperationsInput | boolean
+    is_archived?: BoolFieldUpdateOperationsInput | boolean
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    stages?: pipeline_stagesUncheckedUpdateManyWithoutPipelineNestedInput
+    leads?: leadsUncheckedUpdateManyWithoutPipelineNestedInput
+  }
+
+  export type pipelinesUncheckedUpdateManyWithoutBusinessesInput = {
+    pipeline_id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    industry?: NullableStringFieldUpdateOperationsInput | string | null
+    is_default?: BoolFieldUpdateOperationsInput | boolean
+    is_archived?: BoolFieldUpdateOperationsInput | boolean
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -142020,6 +146487,8 @@ export namespace Prisma {
     source?: string
     platform_id?: string | null
     status?: string
+    stage_id?: string | null
+    pipeline_id?: string | null
     lost_reason?: string | null
     context?: NullableJsonNullValueInput | InputJsonValue
     quoted_amount?: Decimal | DecimalJsLike | number | string | null
@@ -142289,6 +146758,7 @@ export namespace Prisma {
     hospitality_bookings?: hospitality_bookingsUpdateManyWithoutBusinessNestedInput
     hospitality_inquiries?: hospitality_inquiriesUpdateManyWithoutBusinessNestedInput
     leads?: leadsUpdateManyWithoutBusinessesNestedInput
+    pipelines?: pipelinesUpdateManyWithoutBusinessesNestedInput
     notification_messages?: notification_messagesUpdateManyWithoutBusinessesNestedInput
     notification_preferences?: notification_preferencesUpdateManyWithoutBusinessesNestedInput
     notification_templates?: notification_templatesUpdateManyWithoutBusinessesNestedInput
@@ -142334,6 +146804,7 @@ export namespace Prisma {
     hospitality_bookings?: hospitality_bookingsUncheckedUpdateManyWithoutBusinessNestedInput
     hospitality_inquiries?: hospitality_inquiriesUncheckedUpdateManyWithoutBusinessNestedInput
     leads?: leadsUncheckedUpdateManyWithoutBusinessesNestedInput
+    pipelines?: pipelinesUncheckedUpdateManyWithoutBusinessesNestedInput
     notification_messages?: notification_messagesUncheckedUpdateManyWithoutBusinessesNestedInput
     notification_preferences?: notification_preferencesUncheckedUpdateManyWithoutBusinessesNestedInput
     notification_templates?: notification_templatesUncheckedUpdateManyWithoutBusinessesNestedInput
@@ -142441,6 +146912,8 @@ export namespace Prisma {
     hospitality_bookings?: hospitality_bookingsUpdateManyWithoutLeadNestedInput
     assigned_user?: usersUpdateOneWithoutLeads_assignedNestedInput
     businesses?: businessesUpdateOneRequiredWithoutLeadsNestedInput
+    pipeline?: pipelinesUpdateOneWithoutLeadsNestedInput
+    stage?: pipeline_stagesUpdateOneWithoutLeadsNestedInput
     orders?: ordersUpdateManyWithoutLeadsNestedInput
     workflow_executions?: workflow_executionsUpdateManyWithoutLeadsNestedInput
   }
@@ -142455,6 +146928,8 @@ export namespace Prisma {
     source?: StringFieldUpdateOperationsInput | string
     platform_id?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
+    stage_id?: NullableStringFieldUpdateOperationsInput | string | null
+    pipeline_id?: NullableStringFieldUpdateOperationsInput | string | null
     lost_reason?: NullableStringFieldUpdateOperationsInput | string | null
     context?: NullableJsonNullValueInput | InputJsonValue
     quoted_amount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
@@ -142489,6 +146964,8 @@ export namespace Prisma {
     source?: StringFieldUpdateOperationsInput | string
     platform_id?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
+    stage_id?: NullableStringFieldUpdateOperationsInput | string | null
+    pipeline_id?: NullableStringFieldUpdateOperationsInput | string | null
     lost_reason?: NullableStringFieldUpdateOperationsInput | string | null
     context?: NullableJsonNullValueInput | InputJsonValue
     quoted_amount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
@@ -143141,6 +147618,8 @@ export namespace Prisma {
     source?: string
     platform_id?: string | null
     status?: string
+    stage_id?: string | null
+    pipeline_id?: string | null
     lost_reason?: string | null
     context?: NullableJsonNullValueInput | InputJsonValue
     quoted_amount?: Decimal | DecimalJsLike | number | string | null
@@ -143244,6 +147723,8 @@ export namespace Prisma {
     hospitality_bookings?: hospitality_bookingsUpdateManyWithoutLeadNestedInput
     businesses?: businessesUpdateOneRequiredWithoutLeadsNestedInput
     tenants?: tenantsUpdateOneRequiredWithoutLeadsNestedInput
+    pipeline?: pipelinesUpdateOneWithoutLeadsNestedInput
+    stage?: pipeline_stagesUpdateOneWithoutLeadsNestedInput
     orders?: ordersUpdateManyWithoutLeadsNestedInput
     workflow_executions?: workflow_executionsUpdateManyWithoutLeadsNestedInput
   }
@@ -143259,6 +147740,8 @@ export namespace Prisma {
     source?: StringFieldUpdateOperationsInput | string
     platform_id?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
+    stage_id?: NullableStringFieldUpdateOperationsInput | string | null
+    pipeline_id?: NullableStringFieldUpdateOperationsInput | string | null
     lost_reason?: NullableStringFieldUpdateOperationsInput | string | null
     context?: NullableJsonNullValueInput | InputJsonValue
     quoted_amount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
@@ -143293,6 +147776,8 @@ export namespace Prisma {
     source?: StringFieldUpdateOperationsInput | string
     platform_id?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
+    stage_id?: NullableStringFieldUpdateOperationsInput | string | null
+    pipeline_id?: NullableStringFieldUpdateOperationsInput | string | null
     lost_reason?: NullableStringFieldUpdateOperationsInput | string | null
     context?: NullableJsonNullValueInput | InputJsonValue
     quoted_amount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
@@ -144147,6 +148632,304 @@ export namespace Prisma {
     chat_id?: NullableStringFieldUpdateOperationsInput | string | null
     conversation_id?: NullableStringFieldUpdateOperationsInput | string | null
     system_context?: NullableJsonNullValueInput | InputJsonValue
+  }
+
+  export type pipeline_stagesCreateManyPipelineInput = {
+    stage_id?: string
+    business_id: string
+    name: string
+    slug: string
+    position: number
+    is_won?: boolean
+    is_lost?: boolean
+    color?: string | null
+    created_at?: Date | string
+  }
+
+  export type leadsCreateManyPipelineInput = {
+    lead_id?: string
+    business_id: string
+    tenant_id: string
+    name?: string | null
+    phone?: string | null
+    email?: string | null
+    channel: string
+    source?: string
+    platform_id?: string | null
+    status?: string
+    stage_id?: string | null
+    lost_reason?: string | null
+    context?: NullableJsonNullValueInput | InputJsonValue
+    quoted_amount?: Decimal | DecimalJsLike | number | string | null
+    quoted_at?: Date | string | null
+    converted_value?: Decimal | DecimalJsLike | number | string | null
+    converted_at?: Date | string | null
+    tags?: leadsCreatetagsInput | string[]
+    assigned_to?: string | null
+    followup_at?: Date | string | null
+    deleted_at?: Date | string | null
+    created_at?: Date | string
+    updated_at?: Date | string
+  }
+
+  export type pipeline_stagesUpdateWithoutPipelineInput = {
+    stage_id?: StringFieldUpdateOperationsInput | string
+    business_id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    slug?: StringFieldUpdateOperationsInput | string
+    position?: IntFieldUpdateOperationsInput | number
+    is_won?: BoolFieldUpdateOperationsInput | boolean
+    is_lost?: BoolFieldUpdateOperationsInput | boolean
+    color?: NullableStringFieldUpdateOperationsInput | string | null
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    leads?: leadsUpdateManyWithoutStageNestedInput
+  }
+
+  export type pipeline_stagesUncheckedUpdateWithoutPipelineInput = {
+    stage_id?: StringFieldUpdateOperationsInput | string
+    business_id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    slug?: StringFieldUpdateOperationsInput | string
+    position?: IntFieldUpdateOperationsInput | number
+    is_won?: BoolFieldUpdateOperationsInput | boolean
+    is_lost?: BoolFieldUpdateOperationsInput | boolean
+    color?: NullableStringFieldUpdateOperationsInput | string | null
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    leads?: leadsUncheckedUpdateManyWithoutStageNestedInput
+  }
+
+  export type pipeline_stagesUncheckedUpdateManyWithoutPipelineInput = {
+    stage_id?: StringFieldUpdateOperationsInput | string
+    business_id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    slug?: StringFieldUpdateOperationsInput | string
+    position?: IntFieldUpdateOperationsInput | number
+    is_won?: BoolFieldUpdateOperationsInput | boolean
+    is_lost?: BoolFieldUpdateOperationsInput | boolean
+    color?: NullableStringFieldUpdateOperationsInput | string | null
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type leadsUpdateWithoutPipelineInput = {
+    lead_id?: StringFieldUpdateOperationsInput | string
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    channel?: StringFieldUpdateOperationsInput | string
+    source?: StringFieldUpdateOperationsInput | string
+    platform_id?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    lost_reason?: NullableStringFieldUpdateOperationsInput | string | null
+    context?: NullableJsonNullValueInput | InputJsonValue
+    quoted_amount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    quoted_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    converted_value?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    converted_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    tags?: leadsUpdatetagsInput | string[]
+    followup_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deleted_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    cart_reservations?: cart_reservationsUpdateManyWithoutLeadsNestedInput
+    carts?: cartsUpdateManyWithoutLeadsNestedInput
+    events?: lead_eventsUpdateManyWithoutLeadsNestedInput
+    followups?: lead_followupsUpdateManyWithoutLeadNestedInput
+    product_inquiries?: product_inquiriesUpdateManyWithoutLeadNestedInput
+    hospitality_inquiries?: hospitality_inquiriesUpdateManyWithoutLeadNestedInput
+    product_orders?: product_ordersUpdateManyWithoutLeadNestedInput
+    hospitality_bookings?: hospitality_bookingsUpdateManyWithoutLeadNestedInput
+    assigned_user?: usersUpdateOneWithoutLeads_assignedNestedInput
+    businesses?: businessesUpdateOneRequiredWithoutLeadsNestedInput
+    tenants?: tenantsUpdateOneRequiredWithoutLeadsNestedInput
+    stage?: pipeline_stagesUpdateOneWithoutLeadsNestedInput
+    orders?: ordersUpdateManyWithoutLeadsNestedInput
+    workflow_executions?: workflow_executionsUpdateManyWithoutLeadsNestedInput
+  }
+
+  export type leadsUncheckedUpdateWithoutPipelineInput = {
+    lead_id?: StringFieldUpdateOperationsInput | string
+    business_id?: StringFieldUpdateOperationsInput | string
+    tenant_id?: StringFieldUpdateOperationsInput | string
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    channel?: StringFieldUpdateOperationsInput | string
+    source?: StringFieldUpdateOperationsInput | string
+    platform_id?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    stage_id?: NullableStringFieldUpdateOperationsInput | string | null
+    lost_reason?: NullableStringFieldUpdateOperationsInput | string | null
+    context?: NullableJsonNullValueInput | InputJsonValue
+    quoted_amount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    quoted_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    converted_value?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    converted_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    tags?: leadsUpdatetagsInput | string[]
+    assigned_to?: NullableStringFieldUpdateOperationsInput | string | null
+    followup_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deleted_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    cart_reservations?: cart_reservationsUncheckedUpdateManyWithoutLeadsNestedInput
+    carts?: cartsUncheckedUpdateManyWithoutLeadsNestedInput
+    events?: lead_eventsUncheckedUpdateManyWithoutLeadsNestedInput
+    followups?: lead_followupsUncheckedUpdateManyWithoutLeadNestedInput
+    product_inquiries?: product_inquiriesUncheckedUpdateManyWithoutLeadNestedInput
+    hospitality_inquiries?: hospitality_inquiriesUncheckedUpdateManyWithoutLeadNestedInput
+    product_orders?: product_ordersUncheckedUpdateManyWithoutLeadNestedInput
+    hospitality_bookings?: hospitality_bookingsUncheckedUpdateManyWithoutLeadNestedInput
+    orders?: ordersUncheckedUpdateManyWithoutLeadsNestedInput
+    workflow_executions?: workflow_executionsUncheckedUpdateManyWithoutLeadsNestedInput
+  }
+
+  export type leadsUncheckedUpdateManyWithoutPipelineInput = {
+    lead_id?: StringFieldUpdateOperationsInput | string
+    business_id?: StringFieldUpdateOperationsInput | string
+    tenant_id?: StringFieldUpdateOperationsInput | string
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    channel?: StringFieldUpdateOperationsInput | string
+    source?: StringFieldUpdateOperationsInput | string
+    platform_id?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    stage_id?: NullableStringFieldUpdateOperationsInput | string | null
+    lost_reason?: NullableStringFieldUpdateOperationsInput | string | null
+    context?: NullableJsonNullValueInput | InputJsonValue
+    quoted_amount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    quoted_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    converted_value?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    converted_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    tags?: leadsUpdatetagsInput | string[]
+    assigned_to?: NullableStringFieldUpdateOperationsInput | string | null
+    followup_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deleted_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type leadsCreateManyStageInput = {
+    lead_id?: string
+    business_id: string
+    tenant_id: string
+    name?: string | null
+    phone?: string | null
+    email?: string | null
+    channel: string
+    source?: string
+    platform_id?: string | null
+    status?: string
+    pipeline_id?: string | null
+    lost_reason?: string | null
+    context?: NullableJsonNullValueInput | InputJsonValue
+    quoted_amount?: Decimal | DecimalJsLike | number | string | null
+    quoted_at?: Date | string | null
+    converted_value?: Decimal | DecimalJsLike | number | string | null
+    converted_at?: Date | string | null
+    tags?: leadsCreatetagsInput | string[]
+    assigned_to?: string | null
+    followup_at?: Date | string | null
+    deleted_at?: Date | string | null
+    created_at?: Date | string
+    updated_at?: Date | string
+  }
+
+  export type leadsUpdateWithoutStageInput = {
+    lead_id?: StringFieldUpdateOperationsInput | string
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    channel?: StringFieldUpdateOperationsInput | string
+    source?: StringFieldUpdateOperationsInput | string
+    platform_id?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    lost_reason?: NullableStringFieldUpdateOperationsInput | string | null
+    context?: NullableJsonNullValueInput | InputJsonValue
+    quoted_amount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    quoted_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    converted_value?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    converted_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    tags?: leadsUpdatetagsInput | string[]
+    followup_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deleted_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    cart_reservations?: cart_reservationsUpdateManyWithoutLeadsNestedInput
+    carts?: cartsUpdateManyWithoutLeadsNestedInput
+    events?: lead_eventsUpdateManyWithoutLeadsNestedInput
+    followups?: lead_followupsUpdateManyWithoutLeadNestedInput
+    product_inquiries?: product_inquiriesUpdateManyWithoutLeadNestedInput
+    hospitality_inquiries?: hospitality_inquiriesUpdateManyWithoutLeadNestedInput
+    product_orders?: product_ordersUpdateManyWithoutLeadNestedInput
+    hospitality_bookings?: hospitality_bookingsUpdateManyWithoutLeadNestedInput
+    assigned_user?: usersUpdateOneWithoutLeads_assignedNestedInput
+    businesses?: businessesUpdateOneRequiredWithoutLeadsNestedInput
+    tenants?: tenantsUpdateOneRequiredWithoutLeadsNestedInput
+    pipeline?: pipelinesUpdateOneWithoutLeadsNestedInput
+    orders?: ordersUpdateManyWithoutLeadsNestedInput
+    workflow_executions?: workflow_executionsUpdateManyWithoutLeadsNestedInput
+  }
+
+  export type leadsUncheckedUpdateWithoutStageInput = {
+    lead_id?: StringFieldUpdateOperationsInput | string
+    business_id?: StringFieldUpdateOperationsInput | string
+    tenant_id?: StringFieldUpdateOperationsInput | string
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    channel?: StringFieldUpdateOperationsInput | string
+    source?: StringFieldUpdateOperationsInput | string
+    platform_id?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    pipeline_id?: NullableStringFieldUpdateOperationsInput | string | null
+    lost_reason?: NullableStringFieldUpdateOperationsInput | string | null
+    context?: NullableJsonNullValueInput | InputJsonValue
+    quoted_amount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    quoted_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    converted_value?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    converted_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    tags?: leadsUpdatetagsInput | string[]
+    assigned_to?: NullableStringFieldUpdateOperationsInput | string | null
+    followup_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deleted_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    cart_reservations?: cart_reservationsUncheckedUpdateManyWithoutLeadsNestedInput
+    carts?: cartsUncheckedUpdateManyWithoutLeadsNestedInput
+    events?: lead_eventsUncheckedUpdateManyWithoutLeadsNestedInput
+    followups?: lead_followupsUncheckedUpdateManyWithoutLeadNestedInput
+    product_inquiries?: product_inquiriesUncheckedUpdateManyWithoutLeadNestedInput
+    hospitality_inquiries?: hospitality_inquiriesUncheckedUpdateManyWithoutLeadNestedInput
+    product_orders?: product_ordersUncheckedUpdateManyWithoutLeadNestedInput
+    hospitality_bookings?: hospitality_bookingsUncheckedUpdateManyWithoutLeadNestedInput
+    orders?: ordersUncheckedUpdateManyWithoutLeadsNestedInput
+    workflow_executions?: workflow_executionsUncheckedUpdateManyWithoutLeadsNestedInput
+  }
+
+  export type leadsUncheckedUpdateManyWithoutStageInput = {
+    lead_id?: StringFieldUpdateOperationsInput | string
+    business_id?: StringFieldUpdateOperationsInput | string
+    tenant_id?: StringFieldUpdateOperationsInput | string
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    channel?: StringFieldUpdateOperationsInput | string
+    source?: StringFieldUpdateOperationsInput | string
+    platform_id?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    pipeline_id?: NullableStringFieldUpdateOperationsInput | string | null
+    lost_reason?: NullableStringFieldUpdateOperationsInput | string | null
+    context?: NullableJsonNullValueInput | InputJsonValue
+    quoted_amount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    quoted_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    converted_value?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    converted_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    tags?: leadsUpdatetagsInput | string[]
+    assigned_to?: NullableStringFieldUpdateOperationsInput | string | null
+    followup_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deleted_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type cartsCreateManyCustomersInput = {

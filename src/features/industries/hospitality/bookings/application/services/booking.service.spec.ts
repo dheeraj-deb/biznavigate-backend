@@ -69,7 +69,7 @@ describe('BookingService cancellation', () => {
 
   it('cancels a booking, rolls back availability, records event, and syncs legacy order', async () => {
     const prisma = buildPrismaMock();
-    const service = new BookingService(prisma as any);
+    const service = new BookingService(prisma as any, { autoAdvance: jest.fn().mockResolvedValue({ moved: false }) } as any);
 
     const result = await service.cancelBooking(bookingId, businessId);
 
@@ -116,7 +116,7 @@ describe('BookingService cancellation', () => {
 
   it('does not roll back availability again when booking is already cancelled', async () => {
     const prisma = buildPrismaMock(booking('cancelled'));
-    const service = new BookingService(prisma as any);
+    const service = new BookingService(prisma as any, { autoAdvance: jest.fn().mockResolvedValue({ moved: false }) } as any);
 
     const result = await service.cancelBooking(bookingId, businessId);
 
@@ -126,7 +126,7 @@ describe('BookingService cancellation', () => {
 
   it('rejects cancellation after checkout', async () => {
     const prisma = buildPrismaMock(booking('checked_out'));
-    const service = new BookingService(prisma as any);
+    const service = new BookingService(prisma as any, { autoAdvance: jest.fn().mockResolvedValue({ moved: false }) } as any);
 
     await expect(service.cancelBooking(bookingId, businessId)).rejects.toBeInstanceOf(BadRequestException);
 
@@ -139,7 +139,7 @@ describe('BookingService cancellation', () => {
         findFirst: jest.fn().mockResolvedValue(null),
       },
     };
-    const service = new BookingService(prisma as any);
+    const service = new BookingService(prisma as any, { autoAdvance: jest.fn().mockResolvedValue({ moved: false }) } as any);
 
     await expect(service.getBookingById(bookingId, businessId)).rejects.toBeInstanceOf(NotFoundException);
 
@@ -157,7 +157,7 @@ describe('BookingService cancellation', () => {
       },
       $transaction: jest.fn(),
     };
-    const service = new BookingService(prisma as any);
+    const service = new BookingService(prisma as any, { autoAdvance: jest.fn().mockResolvedValue({ moved: false }) } as any);
 
     await expect(service.cancelBooking(bookingId, businessId)).rejects.toBeInstanceOf(NotFoundException);
 

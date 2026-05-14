@@ -95,7 +95,7 @@ describe('HospitalityFlowService booking idempotency', () => {
 
   it('creates one booking and records the completed idempotency response', async () => {
     const prisma = buildPrismaMock();
-    const bookingCommandService = new HospitalityBookingCommandService(prisma as any);
+    const bookingCommandService = new HospitalityBookingCommandService(prisma as any, { autoAdvance: jest.fn().mockResolvedValue({ moved: false }) } as any);
     const service = new HospitalityFlowService(prisma as any, {} as any, bookingCommandService);
 
     const result = await service.handleDataExchange('BOOKING_DETAILS', bookingData, '', businessId);
@@ -142,7 +142,7 @@ describe('HospitalityFlowService booking idempotency', () => {
       idempotency_key: 'hospitality_booking:existing',
     };
     const prisma = buildPrismaMock({ status: 'completed', response });
-    const bookingCommandService = new HospitalityBookingCommandService(prisma as any);
+    const bookingCommandService = new HospitalityBookingCommandService(prisma as any, { autoAdvance: jest.fn().mockResolvedValue({ moved: false }) } as any);
     const service = new HospitalityFlowService(prisma as any, {} as any, bookingCommandService);
 
     const result = await service.handleDataExchange('BOOKING_DETAILS', bookingData, '', businessId);
@@ -156,7 +156,7 @@ describe('HospitalityFlowService booking idempotency', () => {
       status: 'started',
       locked_until: new Date(Date.now() + 60_000),
     });
-    const bookingCommandService = new HospitalityBookingCommandService(prisma as any);
+    const bookingCommandService = new HospitalityBookingCommandService(prisma as any, { autoAdvance: jest.fn().mockResolvedValue({ moved: false }) } as any);
     const service = new HospitalityFlowService(prisma as any, {} as any, bookingCommandService);
 
     await expect(
@@ -168,7 +168,7 @@ describe('HospitalityFlowService booking idempotency', () => {
 
   it('fails before creating booking rows when availability cannot be reserved for every night', async () => {
     const prisma = buildPrismaMock(null, 1);
-    const bookingCommandService = new HospitalityBookingCommandService(prisma as any);
+    const bookingCommandService = new HospitalityBookingCommandService(prisma as any, { autoAdvance: jest.fn().mockResolvedValue({ moved: false }) } as any);
     const service = new HospitalityFlowService(prisma as any, {} as any, bookingCommandService);
 
     await expect(

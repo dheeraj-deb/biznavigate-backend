@@ -1,6 +1,7 @@
 import { BadRequestException, ConflictException, Injectable, Logger } from '@nestjs/common';
 import { createHash } from 'node:crypto';
 import { PrismaService } from '../../../../../../prisma/prisma.service';
+import { LeadCommandService } from '../../../../../crm/lead/application/services/lead-command.service';
 
 export interface CreateHospitalityBookingCommand {
   business_id: string;
@@ -29,7 +30,10 @@ export interface CreateHospitalityBookingCommand {
 export class HospitalityBookingCommandService {
   private readonly logger = new Logger(HospitalityBookingCommandService.name);
 
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly leadCommands: LeadCommandService,
+  ) {}
 
   async createBooking(command: CreateHospitalityBookingCommand) {
     const {
@@ -68,7 +72,13 @@ export class HospitalityBookingCommandService {
         deleted_at: null,
         item_type: { in: ['accommodation', 'activity', 'service'] },
       },
-      select: { base_price: true, name: true, tenant_id: true },
+      select: {
+        base_price: true,
+        name: true,
+        tenant_id: true,
+        attributes: true,
+        hospitality_detail: { select: { total_units: true } },
+      },
     });
 
     if (!catalogItem) {
@@ -137,18 +147,27 @@ export class HospitalityBookingCommandService {
             })
           : null;
 
-        const bookedDateCount = await tx.$executeRaw`
-          UPDATE item_availability
-          SET booked_slots = booked_slots + 1, updated_at = NOW()
-          WHERE item_id = ${serviceId}::uuid
-            AND business_id = ${businessId}::uuid
-            AND date >= ${checkIn}::date
-            AND date < ${checkOut}::date
-            AND is_blocked = false
-            AND booked_slots < total_slots
+        const totalUnits = Math.max(
+          Number(catalogItem.hospitality_detail?.total_units ?? (catalogItem.attributes as any)?.total_slots ?? 1),
+          1,
+        );
+
+        // Sparse calendar: insert row with booked_slots=1 if missing, otherwise
+        // increment. ON CONFLICT WHERE guard ensures we don't overbook a row
+        // that's blocked or already at capacity — those rows are excluded from
+        // the update and won't be counted in the returned set.
+        const bookedRows = await tx.$queryRaw<Array<{ date: Date }>>`
+          INSERT INTO item_availability (item_id, business_id, date, total_slots, booked_slots)
+          SELECT ${serviceId}::uuid, ${businessId}::uuid, d::date, ${totalUnits}::int, 1
+          FROM generate_series(${checkIn}::date, (${checkOut}::date - INTERVAL '1 day'), INTERVAL '1 day') AS d
+          ON CONFLICT (item_id, date) DO UPDATE
+          SET booked_slots = item_availability.booked_slots + 1, updated_at = NOW()
+          WHERE item_availability.is_blocked = false
+            AND item_availability.booked_slots < item_availability.total_slots
+          RETURNING date
         `;
 
-        if (Number(bookedDateCount) !== nights) {
+        if (bookedRows.length !== nights) {
           throw new ConflictException('Room is no longer available for the selected dates');
         }
 
@@ -308,6 +327,17 @@ export class HospitalityBookingCommandService {
       });
 
       this.logger.log(`Hospitality booking created: ${booking.hospitality_booking_id}`);
+
+      // Auto-advance lead pipeline to 'booked' stage. Idempotent — safe on retries.
+      if (leadId) {
+        await this.leadCommands.autoAdvance({
+          leadId,
+          toSlug: 'booked',
+          reason: 'hospitality_booking_created',
+          actor: command.actor === 'human' ? 'system' : 'ai',
+        });
+      }
+
       return booking;
     } catch (error) {
       if (error?.code === 'P2002') {

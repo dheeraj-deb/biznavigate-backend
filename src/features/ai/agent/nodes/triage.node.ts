@@ -1,8 +1,8 @@
 import { Logger } from '@nestjs/common';
-import { ChatOpenAI } from '@langchain/openai';
 import { SystemMessage } from '@langchain/core/messages';
 import { AgentStateType } from '../graph/agent-state';
 import { PrismaService } from '../../../../prisma/prisma.service';
+import { AgentModelConfig, createChatModel } from '../graph/llm-factory';
 
 // Intent labels shared across all verticals
 const INTENT_PROMPT = `You are an intent classifier for a business chatbot. The business may be in hospitality, retail, e-commerce, services, education, healthcare, or consulting.
@@ -39,8 +39,13 @@ const VALID_INTENTS = new Set([
 
 const logger = new Logger('TriageNode');
 
-export function makeTriageNode(openaiApiKey: string, prisma: PrismaService) {
-  const llm = new ChatOpenAI({ model: 'gpt-4o-mini', apiKey: openaiApiKey, temperature: 0 });
+export function makeTriageNode(modelConfig: AgentModelConfig, prisma: PrismaService) {
+  const llm = createChatModel({
+    model: modelConfig.fastModel,
+    apiKey: modelConfig.apiKey,
+    baseUrl: modelConfig.baseUrl,
+    temperature: 0,
+  });
 
   return async (state: AgentStateType): Promise<Partial<AgentStateType>> => {
     const userMsg = state.messages.at(-1)?.content;

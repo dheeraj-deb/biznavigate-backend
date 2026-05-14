@@ -1,6 +1,6 @@
 import {
   Injectable, NotFoundException, ConflictException,
-  BadRequestException, Logger, Inject,
+  BadRequestException, Logger, Inject, InternalServerErrorException,
 } from '@nestjs/common';
 import { PrismaService } from '../../../../prisma/prisma.service';
 import { WalletService } from '../wallet/wallet.service';
@@ -22,6 +22,74 @@ export class SubscriptionService {
       where: { business_id: businessId },
       include: { plan: true },
     });
+  }
+
+  async ensureTrialSubscription(businessId: string) {
+    const existing = await this.getSubscription(businessId);
+    if (existing) return existing;
+
+    const now = new Date();
+    const trialEnd = new Date(now);
+    trialEnd.setDate(trialEnd.getDate() + 14);
+
+    const subscription = await this.prisma.$transaction(async (tx) => {
+      await tx.billing_plans.createMany({
+        data: [
+          {
+            plan_id: 'trial_default',
+            name: 'Trial',
+            business_type: 'all',
+            tier: 'trial',
+            amount: 0,
+            interval: 'monthly',
+            interval_count: 1,
+            initial_credits: 0,
+            features: {
+              crm: true,
+              whatsapp: true,
+              campaigns: true,
+              automations: true,
+            },
+            is_active: true,
+          },
+        ],
+        skipDuplicates: true,
+      });
+
+      await tx.billing_subscriptions.createMany({
+        data: [
+          {
+            business_id: businessId,
+            plan_id: 'trial_default',
+            status: 'active',
+            current_period_start: now,
+            current_period_end: trialEnd,
+            trial_end: trialEnd,
+            metadata: {
+              source: 'auto_trial',
+              created_by: 'subscription_guard',
+            },
+          },
+        ],
+        skipDuplicates: true,
+      });
+
+      const trial = await tx.billing_subscriptions.findUnique({
+        where: { business_id: businessId },
+        include: { plan: true },
+      });
+
+      if (!trial) {
+        throw new InternalServerErrorException('Failed to provision trial subscription');
+      }
+
+      return trial;
+    });
+
+    await this.walletService.ensureWallet(businessId);
+    this.logger.log(`Trial subscription provisioned: business=${businessId}`);
+
+    return subscription;
   }
 
   async create(businessId: string, planId: string) {

@@ -21,6 +21,8 @@ export class LeadQueryService {
     assignedTo?: string;
     search?: string;
     intent_type?: string;
+    stage_id?: string;
+    pipeline_id?: string;
     sortBy?: string;
     sortOrder?: 'asc' | 'desc';
     page?: number;
@@ -34,6 +36,12 @@ export class LeadQueryService {
     if (filters?.channel) where.channel = filters.channel;
     if (filters?.source) where.source = filters.source;
     if (filters?.assignedTo) where.assigned_to = filters.assignedTo;
+    if (filters?.stage_id) where.stage_id = filters.stage_id;
+    if (filters?.pipeline_id) where.pipeline_id = filters.pipeline_id;
+    if (filters?.intent_type) {
+      // Filter in DB via JSON path — keeps pagination + counts correct.
+      where.context = { path: ['type'], equals: filters.intent_type };
+    }
     if (filters?.search) {
       const s = filters.search.trim();
       where.OR = [
@@ -63,15 +71,11 @@ export class LeadQueryService {
       this.prisma.leads.count({ where }),
     ]);
 
-    const filtered = filters?.intent_type
-      ? rows.filter((l) => (l.context as any)?.type === filters.intent_type)
-      : rows;
-
     return {
-      data: filtered.map((l) => this.formatLead(l)),
+      data: rows.map((l) => this.formatLead(l)),
       meta: {
-        total: filters?.intent_type ? filtered.length : total,
-        totalPages: Math.ceil((filters?.intent_type ? filtered.length : total) / limit),
+        total,
+        totalPages: Math.ceil(total / limit),
         page,
         limit,
       },

@@ -38,6 +38,7 @@ model businesses {
   hospitality_bookings      hospitality_bookings[]
   hospitality_inquiries     hospitality_inquiries[]
   leads                     leads[]
+  pipelines                 pipelines[]
   notification_messages     notification_messages[]     @relation("notification_messages_business")
   notification_preferences  notification_preferences[]  @relation("notification_prefs_business")
   notification_templates    notification_templates[]    @relation("notification_templates_business")
@@ -224,6 +225,8 @@ model leads {
   source                String                  @default("direct") @db.VarChar(20)
   platform_id           String?                 @db.VarChar(255)
   status                String                  @default("new") @db.VarChar(20)
+  stage_id              String?                 @db.Uuid
+  pipeline_id           String?                 @db.Uuid
   lost_reason           String?                 @db.VarChar(50)
   /// AI-extracted business-type context
   /// Resort:  { type:"resort",  check_in, check_out, nights, guests, room_pref, budget }
@@ -252,17 +255,59 @@ model leads {
   assigned_user         users?                  @relation("lead_agent", fields: [assigned_to], references: [user_id])
   businesses            businesses              @relation(fields: [business_id], references: [business_id])
   tenants               tenants                 @relation(fields: [tenant_id], references: [tenant_id])
+  pipeline              pipelines?              @relation(fields: [pipeline_id], references: [pipeline_id])
+  stage                 pipeline_stages?        @relation(fields: [stage_id], references: [stage_id])
   orders                orders[]
   workflow_executions   workflow_executions[]
 
+  @@unique([business_id, platform_id], map: "uq_leads_business_platform")
   @@index([business_id, status], map: "idx_leads_business_status")
+  @@index([business_id, stage_id], map: "idx_leads_business_stage")
   @@index([business_id, channel, source], map: "idx_leads_business_channel_source")
   @@index([business_id, created_at(sort: Desc)], map: "idx_leads_business_created")
   @@index([business_id, quoted_at], map: "idx_leads_business_quoted_at")
   @@index([business_id, assigned_to, followup_at], map: "idx_leads_business_assignee_followup")
   @@index([phone], map: "idx_leads_phone")
-  @@index([platform_id], map: "idx_leads_platform_id")
   @@index([tenant_id], map: "idx_leads_tenant_id")
+}
+
+/// Per-business sales pipeline. A business can have multiple (e.g. "Bookings", "Events").
+/// One is_default per business is enforced at the application layer.
+model pipelines {
+  pipeline_id   String            @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  business_id   String            @db.Uuid
+  name          String            @db.VarChar(80)
+  industry      String?           @db.VarChar(30)
+  is_default    Boolean           @default(false)
+  is_archived   Boolean           @default(false)
+  created_at    DateTime          @default(now()) @db.Timestamptz(6)
+  updated_at    DateTime          @default(now()) @db.Timestamptz(6)
+  businesses    businesses        @relation(fields: [business_id], references: [business_id])
+  stages        pipeline_stages[]
+  leads         leads[]
+
+  @@index([business_id, is_archived], map: "idx_pipelines_business_archived")
+}
+
+/// Ordered stages within a pipeline. `slug` mirrors leads.status for backwards
+/// compatibility with existing dashboards (new | contacted | qualified | quoted | won | lost | ...).
+model pipeline_stages {
+  stage_id      String     @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  pipeline_id   String     @db.Uuid
+  business_id   String     @db.Uuid
+  name          String     @db.VarChar(80)
+  slug          String     @db.VarChar(30)
+  position      Int
+  is_won        Boolean    @default(false)
+  is_lost       Boolean    @default(false)
+  color         String?    @db.VarChar(20)
+  created_at    DateTime   @default(now()) @db.Timestamptz(6)
+  pipeline      pipelines  @relation(fields: [pipeline_id], references: [pipeline_id], onDelete: Cascade)
+  leads         leads[]
+
+  @@unique([pipeline_id, slug], map: "uq_pipeline_stage_slug")
+  @@unique([pipeline_id, position], map: "uq_pipeline_stage_position")
+  @@index([business_id], map: "idx_pipeline_stages_business")
 }
 
 /// Append-only business event log — never updated, only inserted

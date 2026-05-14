@@ -25,6 +25,8 @@ export interface GupshupPipelineStatus {
 export interface TppOnboardingOptions {
   /** BizNavigate business_id */
   businessId: string;
+  /** social_accounts.account_id for the WhatsApp phone being onboarded */
+  accountId: string;
   /** Name for the new Gupshup app (6-150 chars, no special chars) */
   appName: string;
   /** Live WABA ID returned from Meta Embedded Signup */
@@ -474,7 +476,7 @@ export class GupshupOnboardingService {
    * Steps 3 & 4 continue in the background.
    */
   async completeTppOnboarding(opts: TppOnboardingOptions): Promise<{ gupshupAppId: string }> {
-    const { businessId, appName, wabaId, phone, callbackUrl } = opts;
+    const { businessId, accountId, appName, wabaId, phone, callbackUrl } = opts;
 
     // Sanitize app name for Gupshup: 6-150 chars, alphanumeric only
     let safeName = appName.replace(/[^a-zA-Z0-9]/g, '').toLowerCase();
@@ -488,8 +490,8 @@ export class GupshupOnboardingService {
     const { appId: gupshupAppId } = await this.createGupshupApp(finalAppName, wabaId, finalPhone, callbackUrl);
 
     // Persist the Gupshup app ID and mark as pending
-    await this.prisma.social_accounts.updateMany({
-      where: { business_id: businessId, platform: "whatsapp" },
+    const updateResult = await this.prisma.social_accounts.updateMany({
+      where: { account_id: accountId, business_id: businessId, platform: "whatsapp" },
       data: {
         gupshup_app_id: gupshupAppId,
         gupshup_app_status: "pending",
@@ -497,6 +499,9 @@ export class GupshupOnboardingService {
         updated_at: new Date(),
       },
     });
+    if (updateResult.count === 0) {
+      throw new InternalServerErrorException(`Could not update WhatsApp account ${accountId} for Gupshup onboarding`);
+    }
 
     // ── Step 2: Get per-app token ─────────────────────────────────────────────
     const partnerAppToken = await this.getPartnerAppToken(gupshupAppId);

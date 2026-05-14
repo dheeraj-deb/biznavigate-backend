@@ -1,9 +1,10 @@
 import { Logger } from '@nestjs/common';
-import { ChatOpenAI } from '@langchain/openai';
 import { AIMessage, SystemMessage } from '@langchain/core/messages';
 import { StructuredTool } from '@langchain/core/tools';
 import { AgentStateType } from '../graph/agent-state';
 import { SYSTEM_PROMPT } from '../prompts/system.prompt';
+import { languageLabel } from '../utils/language-detector';
+import { AgentModelConfig, createChatModel } from '../graph/llm-factory';
 
 const logger = new Logger('ResponderNode');
 
@@ -11,9 +12,19 @@ const logger = new Logger('ResponderNode');
 // Mirrors agents-js ChatContext._summarize pattern.
 const SUMMARIZE_EVERY = 20;
 
-export function makeResponderNode(openaiApiKey: string, _tools: StructuredTool[]) {
-  const llm = new ChatOpenAI({ model: 'gpt-4o', apiKey: openaiApiKey, temperature: 0.3 });
-  const summaryLlm = new ChatOpenAI({ model: 'gpt-4o-mini', apiKey: openaiApiKey, temperature: 0 });
+export function makeResponderNode(modelConfig: AgentModelConfig, _tools: StructuredTool[]) {
+  const llm = createChatModel({
+    model: modelConfig.primaryModel,
+    apiKey: modelConfig.apiKey,
+    baseUrl: modelConfig.baseUrl,
+    temperature: 0.3,
+  });
+  const summaryLlm = createChatModel({
+    model: modelConfig.summaryModel,
+    apiKey: modelConfig.apiKey,
+    baseUrl: modelConfig.baseUrl,
+    temperature: 0,
+  });
 
   return async (state: AgentStateType): Promise<Partial<AgentStateType>> => {
     // Pass FLOW:/HANDOFF: signals through unchanged — debounce processor handles them
@@ -44,8 +55,12 @@ export function makeResponderNode(openaiApiKey: string, _tools: StructuredTool[]
     }
 
     logger.log(`Generating response (businessId=${state.businessId} businessType=${state.businessType} turn=${newTurnCount})`);
+    const customerLanguage = languageLabel(state.customerLanguage);
     const response = await llm.invoke([
-      new SystemMessage(SYSTEM_PROMPT(state.businessId, state.businessType)),
+      new SystemMessage(`${SYSTEM_PROMPT(state.businessId, state.businessType)}
+
+Customer language: ${customerLanguage}
+Reply in ${customerLanguage}. If tool results or FAQ data are in English, translate the customer-facing explanation to ${customerLanguage}, but keep IDs, dates, prices, proper nouns, addresses, and phone numbers unchanged.`),
       ...messages,
     ]);
     logger.log(`Response: ${String(response.content).slice(0, 300)}`);
