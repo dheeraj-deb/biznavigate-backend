@@ -14,6 +14,10 @@ import { decodeHandoff } from './types/handoff';
 import { AgentTurnMetrics } from './types/agent-metrics';
 import { CustomerLanguage, detectCustomerLanguage } from './utils/language-detector';
 import { AgentModelConfig, resolveAgentModelConfig } from './graph/llm-factory';
+import {
+  normalizeBookingMethodsConfig,
+  summarizeBookingMethodsForAgent,
+} from '../../platform/business-settings/booking-methods.config';
 
 export interface AgentContext {
   businessId: string;
@@ -89,6 +93,13 @@ export class AgentService implements OnModuleInit {
       const languageDetection = detectCustomerLanguage(text, previousLanguage);
       const customerLanguage = languageDetection.language;
       await this.rememberConversationLanguage(ctx.conversationId, customerLanguage);
+      const bookingMethods = await this.resolveBookingMethods(ctx.businessId);
+
+      if (!bookingMethods.ai_chat.enabled) {
+        return bookingMethods.human_handoff.enabled
+          ? 'I will connect you with our team to help with this booking.'
+          : 'Online booking support is currently disabled. Please contact the business directly.';
+      }
 
       const result = await agentRunContextStorage.run(
         {
@@ -106,6 +117,7 @@ export class AgentService implements OnModuleInit {
               intent: '',
               businessId: ctx.businessId,
               businessType,
+              bookingMethodsSummary: summarizeBookingMethodsForAgent(bookingMethods),
               customerLanguage,
               leadId: ctx.leadId,
               phone: ctx.phone,
@@ -252,5 +264,14 @@ export class AgentService implements OnModuleInit {
 
   private languageCacheKey(conversationId: string): string {
     return `agent:conversation_language:${conversationId}`;
+  }
+
+  private async resolveBookingMethods(businessId: string) {
+    const settings = await (this.prisma.business_settings as any).findUnique({
+      where: { business_id: businessId },
+      select: { booking_methods: true },
+    }).catch(() => null);
+
+    return normalizeBookingMethodsConfig(settings?.booking_methods);
   }
 }

@@ -1652,6 +1652,7 @@ model business_settings {
   onboarding_done    Boolean    @default(false)
   ai_agent_enabled   Boolean    @default(true)
   auto_reply_enabled Boolean    @default(true)
+  booking_methods    Json       @default("{\"ai_chat\":{\"enabled\":true,\"collect_guest_details\":true,\"require_confirmation\":true},\"interactive\":{\"enabled\":true,\"send_entry_buttons\":true,\"send_room_or_service_list\":true},\"catalog\":{\"enabled\":false,\"send_product_messages\":false},\"templates\":{\"enabled\":false,\"confirmation_template_name\":\"\",\"reminder_template_name\":\"\",\"language\":\"en\"},\"human_handoff\":{\"enabled\":true,\"on_unavailable\":true,\"on_low_confidence\":true,\"on_payment_issue\":true}}")
   low_balance_alert  Decimal    @default(100) @db.Decimal(10, 2)
   updated_at         DateTime   @default(now()) @db.Timestamptz(6)
   businesses         businesses @relation("business_settings", fields: [business_id], references: [business_id], onDelete: Cascade)

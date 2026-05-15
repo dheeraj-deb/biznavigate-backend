@@ -1,5 +1,9 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../../../prisma/prisma.service';
+import {
+  BookingMethodsConfig,
+  normalizeBookingMethodsConfig,
+} from './booking-methods.config';
 
 export interface UpdateBusinessSettingsDto {
   timezone?: string;
@@ -10,6 +14,7 @@ export interface UpdateBusinessSettingsDto {
   onboarding_done?: boolean;
   ai_agent_enabled?: boolean;
   auto_reply_enabled?: boolean;
+  booking_methods?: Partial<BookingMethodsConfig>;
   low_balance_alert?: number;
 }
 
@@ -58,6 +63,39 @@ export class BusinessSettingsService {
         updated_at: new Date(),
       },
     });
+  }
+
+  async getBookingMethods(businessId: string): Promise<BookingMethodsConfig> {
+    const settings = await this.getSettings(businessId);
+    return normalizeBookingMethodsConfig((settings as any).booking_methods);
+  }
+
+  async updateBookingMethods(businessId: string, dto: Partial<BookingMethodsConfig>): Promise<BookingMethodsConfig> {
+    const current = await this.getBookingMethods(businessId);
+    const next = normalizeBookingMethodsConfig({
+      ...current,
+      ...dto,
+      ai_chat: { ...current.ai_chat, ...dto.ai_chat },
+      interactive: { ...current.interactive, ...dto.interactive },
+      catalog: { ...current.catalog, ...dto.catalog },
+      templates: { ...current.templates, ...dto.templates },
+      human_handoff: { ...current.human_handoff, ...dto.human_handoff },
+    });
+
+    await this.prisma.business_settings.upsert({
+      where: { business_id: businessId },
+      create: {
+        business_id: businessId,
+        booking_methods: next as any,
+        updated_at: new Date(),
+      },
+      update: {
+        booking_methods: next as any,
+        updated_at: new Date(),
+      },
+    });
+
+    return next;
   }
 
   async advanceOnboardingStep(businessId: string) {

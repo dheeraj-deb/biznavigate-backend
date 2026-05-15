@@ -175,6 +175,84 @@ export class WhatsAppController {
     );
   }
 
+  @Post('booking/messages/entry-buttons')
+  @UseGuards(JwtAuthGuard)
+  async sendBookingEntryButtons(
+    @Body() dto: {
+      phoneNumberId: string;
+      to: string;
+      bodyText?: string;
+    },
+  ) {
+    return this.whatsappService.sendBookingEntryButtons(dto.phoneNumberId, dto.to, dto.bodyText);
+  }
+
+  @Post('booking/messages/product')
+  @UseGuards(JwtAuthGuard)
+  async sendBookingProductMessage(
+    @Body() dto: {
+      phoneNumberId: string;
+      to: string;
+      catalogId: string;
+      productRetailerId: string;
+      bodyText?: string;
+      footerText?: string;
+    },
+  ) {
+    return this.whatsappService.sendSingleProductMessage(
+      dto.phoneNumberId,
+      dto.to,
+      dto.catalogId,
+      dto.productRetailerId,
+      dto.bodyText,
+      dto.footerText,
+    );
+  }
+
+  @Post('booking/messages/product-list')
+  @UseGuards(JwtAuthGuard)
+  async sendBookingProductListMessage(
+    @Body() dto: {
+      phoneNumberId: string;
+      to: string;
+      catalogId: string;
+      bodyText?: string;
+      headerText?: string;
+      footerText?: string;
+      sections: { title: string; product_items: { product_retailer_id: string }[] }[];
+    },
+  ) {
+    return this.whatsappService.sendProductListMessage(
+      dto.phoneNumberId,
+      dto.to,
+      dto.catalogId,
+      dto.sections,
+      dto.bodyText,
+      dto.headerText,
+      dto.footerText,
+    );
+  }
+
+  @Post('booking/messages/template')
+  @UseGuards(JwtAuthGuard)
+  async sendBookingTemplateMessage(
+    @Body() dto: {
+      phoneNumberId: string;
+      to: string;
+      templateName: string;
+      languageCode?: string;
+      bodyParameters?: string[];
+    },
+  ) {
+    return this.whatsappService.sendBookingTemplateMessage(
+      dto.phoneNumberId,
+      dto.to,
+      dto.templateName,
+      dto.languageCode,
+      dto.bodyParameters ?? [],
+    );
+  }
+
   // ==================== Gupshup Webhooks ====================
 
   /**

@@ -350,6 +350,109 @@ export class WhatsAppService {
     return this.sendMessage(phoneNumberId, to, message, nodeId);
   }
 
+  async sendBookingEntryButtons(
+    phoneNumberId: string,
+    to: string,
+    bodyText = 'How would you like to continue with your booking?',
+    nodeId?: string,
+  ): Promise<any> {
+    return this.sendButtonMessage(
+      phoneNumberId,
+      to,
+      bodyText,
+      [
+        { id: 'booking_check_availability', title: 'Check availability' },
+        { id: 'booking_start', title: 'Book now' },
+        { id: 'booking_handoff', title: 'Talk to staff' },
+      ],
+      'Booking options',
+      undefined,
+      nodeId,
+    );
+  }
+
+  async sendSingleProductMessage(
+    phoneNumberId: string,
+    to: string,
+    catalogId: string,
+    productRetailerId: string,
+    bodyText = 'Here is an option you can review.',
+    footerText?: string,
+    nodeId?: string,
+  ): Promise<any> {
+    const message: SendWhatsAppMessageDto = {
+      messaging_product: 'whatsapp',
+      to,
+      type: SendMessageType.INTERACTIVE,
+      interactive: {
+        type: InteractiveSendType.PRODUCT,
+        body: { text: bodyText },
+        action: {
+          catalog_id: catalogId,
+          product_retailer_id: productRetailerId,
+        } as any,
+      },
+    };
+
+    if (footerText) message.interactive!.footer = { text: footerText };
+    return this.sendMessage(phoneNumberId, to, message, nodeId);
+  }
+
+  async sendProductListMessage(
+    phoneNumberId: string,
+    to: string,
+    catalogId: string,
+    sections: { title: string; product_items: { product_retailer_id: string }[] }[],
+    bodyText = 'Please choose an option from our catalog.',
+    headerText?: string,
+    footerText?: string,
+    nodeId?: string,
+  ): Promise<any> {
+    const message: SendWhatsAppMessageDto = {
+      messaging_product: 'whatsapp',
+      to,
+      type: SendMessageType.INTERACTIVE,
+      interactive: {
+        type: InteractiveSendType.PRODUCT_LIST,
+        body: { text: bodyText },
+        action: { catalog_id: catalogId, sections },
+      },
+    };
+
+    if (headerText) message.interactive!.header = { type: 'text', text: headerText };
+    if (footerText) message.interactive!.footer = { text: footerText };
+    return this.sendMessage(phoneNumberId, to, message, nodeId);
+  }
+
+  async sendBookingTemplateMessage(
+    phoneNumberId: string,
+    to: string,
+    templateName: string,
+    languageCode = 'en',
+    bodyParameters: string[] = [],
+    nodeId?: string,
+  ): Promise<any> {
+    const message: SendWhatsAppMessageDto = {
+      messaging_product: 'whatsapp',
+      to,
+      type: SendMessageType.TEMPLATE,
+      template: {
+        name: templateName,
+        language: { code: languageCode },
+        components: bodyParameters.length
+          ? [
+              {
+                type: 'body',
+                parameters: bodyParameters.map((text) => ({ type: 'text', text })),
+              },
+            ]
+          : undefined,
+      },
+    };
+
+    return this.sendMessage(phoneNumberId, to, message, nodeId);
+  }
+
   /**
    * Send a WhatsApp Flow message
    */
