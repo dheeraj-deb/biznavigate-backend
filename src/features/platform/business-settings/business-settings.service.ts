@@ -75,6 +75,7 @@ export class BusinessSettingsService {
     const next = normalizeBookingMethodsConfig({
       ...current,
       ...dto,
+      availability_response: { ...current.availability_response, ...dto.availability_response },
       ai_chat: { ...current.ai_chat, ...dto.ai_chat },
       interactive: { ...current.interactive, ...dto.interactive },
       catalog: { ...current.catalog, ...dto.catalog },

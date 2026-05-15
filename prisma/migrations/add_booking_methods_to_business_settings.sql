@@ -1,5 +1,8 @@
 ALTER TABLE business_settings
 ADD COLUMN IF NOT EXISTS booking_methods jsonb NOT NULL DEFAULT '{
+  "availability_response": {
+    "mode": "interactive"
+  },
   "ai_chat": {
     "enabled": true,
     "collect_guest_details": true,

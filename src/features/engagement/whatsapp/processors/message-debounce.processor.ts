@@ -17,6 +17,7 @@ import { GenerationHandle } from 'src/features/ai/agent/types/generation-handle'
 import { decodeHandoff, decodeFlow } from 'src/features/ai/agent/types/handoff';
 import { AcknowledgmentService } from 'src/features/ai/agent/services/acknowledgment.service';
 import { CustomerLanguage, detectCustomerLanguage } from 'src/features/ai/agent/utils/language-detector';
+import { normalizeBookingMethodsConfig } from 'src/features/platform/business-settings/booking-methods.config';
 
 type LocalizedMessageKey = 'handoff' | 'error' | 'no_availability' | 'appointment_slots';
 
@@ -248,8 +249,9 @@ export class MessageDebounceProcessor extends WorkerHost {
         businessId,
       );
       const nodeId = await this.workflowsService.findSendFlowNodeId(businessId);
+      const bookingMethods = await this.getBookingMethods(businessId);
 
-      if (nodeId && screenResult.screen === 'AVAILABILITY_RESULT') {
+      if (screenResult.screen === 'AVAILABILITY_RESULT' && bookingMethods.availability_response.mode === 'flow' && nodeId) {
         await this.workflowsService.startFromNode(
           businessId,
           nodeId,
@@ -259,9 +261,26 @@ export class MessageDebounceProcessor extends WorkerHost {
           { ...lastPayload, availability_navigate: screenResult },
         );
         this.logger.log(`🏨 Started availability flow for ${customerPhone}`);
+      } else if (
+        screenResult.screen === 'AVAILABILITY_RESULT' &&
+        bookingMethods.availability_response.mode === 'interactive' &&
+        bookingMethods.interactive.enabled
+      ) {
+        await this.sendAvailabilityOptions(
+          screenResult,
+          ctx,
+          phoneNumberId,
+          customerPhone,
+          checkIn,
+          checkOut,
+          customerLanguage,
+        );
+        this.logger.log(`🏨 Sent availability options for ${customerPhone}`);
       } else {
         const fallbackText =
-          screenResult.data?.error_message ?? this.localizedMessage(customerLanguage, 'no_availability', { checkIn, checkOut });
+          this.nonEmptyString(screenResult.data?.error_message) ??
+          this.availabilitySummary(screenResult, checkIn, checkOut, customerLanguage) ??
+          this.localizedMessage(customerLanguage, 'no_availability', { checkIn, checkOut });
         await this.whatsappService.sendAgentReply(ctx.businessId, phoneNumberId, customerPhone, fallbackText);
       }
       return;
@@ -284,6 +303,112 @@ export class MessageDebounceProcessor extends WorkerHost {
       customerPhone,
       this.localizedMessage(customerLanguage, 'error'),
     );
+  }
+
+  private async sendAvailabilityOptions(
+    screenResult: any,
+    ctx: AgentContext,
+    phoneNumberId: string,
+    customerPhone: string,
+    checkIn: string,
+    checkOut: string,
+    customerLanguage: CustomerLanguage,
+  ) {
+    const services = Array.isArray(screenResult?.data?.available_services)
+      ? screenResult.data.available_services
+      : [];
+
+    if (!services.length) {
+      await this.whatsappService.sendAgentReply(
+        ctx.businessId,
+        phoneNumberId,
+        customerPhone,
+        this.localizedMessage(customerLanguage, 'no_availability', { checkIn, checkOut }),
+      );
+      return;
+    }
+
+    const rows = services.slice(0, 10).map((service: any) => {
+      const title = this.truncateForWhatsAppList(
+        String(service?.['main-content']?.title ?? service?.name ?? 'Room option'),
+        24,
+      );
+      const metadata = this.truncateForWhatsAppList(String(service?.['main-content']?.metadata ?? ''), 72);
+      return {
+        id: `book_${String(service.id).slice(0, 80)}`,
+        title,
+        ...(metadata ? { description: metadata } : {}),
+      };
+    });
+
+    if (rows.length) {
+      await this.whatsappService.sendListMessage(
+        phoneNumberId,
+        customerPhone,
+        this.localizedAvailabilityIntro(customerLanguage, checkIn, checkOut),
+        'View rooms',
+        [{ title: 'Available rooms', rows }],
+        'Available rooms',
+      );
+      return;
+    }
+
+    await this.whatsappService.sendAgentReply(
+      ctx.businessId,
+      phoneNumberId,
+      customerPhone,
+      this.availabilitySummary(screenResult, checkIn, checkOut, customerLanguage) ??
+        this.localizedMessage(customerLanguage, 'no_availability', { checkIn, checkOut }),
+    );
+  }
+
+  private availabilitySummary(
+    screenResult: any,
+    checkIn: string,
+    checkOut: string,
+    language: CustomerLanguage,
+  ): string | null {
+    const services = Array.isArray(screenResult?.data?.available_services)
+      ? screenResult.data.available_services
+      : [];
+    if (!services.length) return null;
+
+    const lines = services.slice(0, 5).map((service: any, index: number) => {
+      const title = String(service?.['main-content']?.title ?? service?.name ?? `Room ${index + 1}`);
+      const price = String(service?.['main-content']?.metadata ?? '').trim();
+      return `${index + 1}. ${title}${price ? ` - ${price}` : ''}`;
+    });
+
+    return `${this.localizedAvailabilityIntro(language, checkIn, checkOut)}\n${lines.join('\n')}\n\nReply with the room number/name to continue booking.`;
+  }
+
+  private localizedAvailabilityIntro(language: CustomerLanguage, checkIn: string, checkOut: string): string {
+    const messages: Record<CustomerLanguage, string> = {
+      english: `Rooms are available from ${checkIn} to ${checkOut}. Please choose an option:`,
+      hindi: `${checkIn} से ${checkOut} तक rooms available हैं। कृपया option चुनें:`,
+      malayalam: `${checkIn} മുതൽ ${checkOut} വരെ rooms available ആണ്. ഒരു option തിരഞ്ഞെടുക്കൂ:`,
+      tamil: `${checkIn} முதல் ${checkOut} வரை rooms available உள்ளது. ஒரு option தேர்வு செய்யவும்:`,
+    };
+    return messages[language] ?? messages.english;
+  }
+
+  private truncateForWhatsAppList(value: string, maxLength: number): string {
+    const trimmed = value.replace(/\s+/g, ' ').trim();
+    if (trimmed.length <= maxLength) return trimmed;
+    return trimmed.slice(0, Math.max(0, maxLength - 1)).trimEnd();
+  }
+
+  private nonEmptyString(value: unknown): string | null {
+    return typeof value === 'string' && value.trim().length > 0 ? value.trim() : null;
+  }
+
+  private async getBookingMethods(businessId: string) {
+    const settings = await (this.prisma.business_settings as any).findUnique({
+      where: { business_id: businessId },
+      select: { booking_methods: true },
+    }).catch(() => null);
+
+    return normalizeBookingMethodsConfig(settings?.booking_methods);
   }
 
   private localizedMessage(
