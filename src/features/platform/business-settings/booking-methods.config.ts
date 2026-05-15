@@ -1,4 +1,7 @@
 export interface BookingMethodsConfig {
+  availability_response: {
+    mode: 'interactive' | 'flow' | 'text';
+  };
   ai_chat: {
     enabled: boolean;
     collect_guest_details: boolean;
@@ -28,6 +31,9 @@ export interface BookingMethodsConfig {
 }
 
 export const DEFAULT_BOOKING_METHODS: BookingMethodsConfig = {
+  availability_response: {
+    mode: 'interactive',
+  },
   ai_chat: {
     enabled: true,
     collect_guest_details: true,
@@ -64,11 +70,18 @@ function asString(value: unknown, fallback: string): string {
   return typeof value === 'string' ? value.trim() : fallback;
 }
 
+function asAvailabilityMode(value: unknown): BookingMethodsConfig['availability_response']['mode'] {
+  return value === 'flow' || value === 'text' || value === 'interactive' ? value : 'interactive';
+}
+
 export function normalizeBookingMethodsConfig(input: unknown): BookingMethodsConfig {
   const raw = input && typeof input === 'object' ? (input as Record<string, any>) : {};
   const defaults = DEFAULT_BOOKING_METHODS;
 
   return {
+    availability_response: {
+      mode: asAvailabilityMode(raw.availability_response?.mode),
+    },
     ai_chat: {
       enabled: asBoolean(raw.ai_chat?.enabled, defaults.ai_chat.enabled),
       collect_guest_details: asBoolean(raw.ai_chat?.collect_guest_details, defaults.ai_chat.collect_guest_details),
@@ -124,6 +137,7 @@ export function summarizeBookingMethodsForAgent(config: BookingMethodsConfig): s
   else disabled.push('human handoff fallback');
 
   return [
+    `Availability results should be sent as ${config.availability_response.mode}.`,
     `Enabled booking methods: ${enabled.join(', ') || 'none'}.`,
     `Disabled booking methods: ${disabled.join(', ') || 'none'}.`,
     config.ai_chat.require_confirmation
