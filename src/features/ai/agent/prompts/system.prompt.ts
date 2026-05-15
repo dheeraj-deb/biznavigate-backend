@@ -101,9 +101,12 @@ Your capabilities:
 Use the appropriate tool for each request. When you have enough information to call a tool, do so immediately.`.trim(),
 };
 
-export const SYSTEM_PROMPT = (businessId: string, businessType?: string): string => {
+export const SYSTEM_PROMPT = (businessId: string, businessType?: string, bookingMethodsSummary?: string): string => {
   const vertical = (businessType ?? 'default').toLowerCase();
   const capabilities = VERTICAL_CAPABILITIES[vertical] ?? VERTICAL_CAPABILITIES['default'];
+  const bookingMethods = bookingMethodsSummary
+    ? `\nBooking method configuration:\n${bookingMethodsSummary}\n`
+    : '';
 
   return `You are a helpful business assistant.
 Business ID: ${businessId}
@@ -111,6 +114,8 @@ Business type: ${vertical}
 Today's date: ${TODAY()}
 
 ${DATE_RULES}
+
+${bookingMethods}
 
 ${capabilities}
 

@@ -90387,6 +90387,7 @@ export namespace Prisma {
     onboarding_done: number
     ai_agent_enabled: number
     auto_reply_enabled: number
+    booking_methods: number
     low_balance_alert: number
     updated_at: number
     _all: number
@@ -90439,6 +90440,7 @@ export namespace Prisma {
     onboarding_done?: true
     ai_agent_enabled?: true
     auto_reply_enabled?: true
+    booking_methods?: true
     low_balance_alert?: true
     updated_at?: true
     _all?: true
@@ -90540,6 +90542,7 @@ export namespace Prisma {
     onboarding_done: boolean
     ai_agent_enabled: boolean
     auto_reply_enabled: boolean
+    booking_methods: JsonValue
     low_balance_alert: Decimal
     updated_at: Date
     _count: Business_settingsCountAggregateOutputType | null
@@ -90573,6 +90576,7 @@ export namespace Prisma {
     onboarding_done?: boolean
     ai_agent_enabled?: boolean
     auto_reply_enabled?: boolean
+    booking_methods?: boolean
     low_balance_alert?: boolean
     updated_at?: boolean
     businesses?: boolean | businessesDefaultArgs<ExtArgs>
@@ -90588,6 +90592,7 @@ export namespace Prisma {
     onboarding_done?: boolean
     ai_agent_enabled?: boolean
     auto_reply_enabled?: boolean
+    booking_methods?: boolean
     low_balance_alert?: boolean
     updated_at?: boolean
     businesses?: boolean | businessesDefaultArgs<ExtArgs>
@@ -90603,6 +90608,7 @@ export namespace Prisma {
     onboarding_done?: boolean
     ai_agent_enabled?: boolean
     auto_reply_enabled?: boolean
+    booking_methods?: boolean
     low_balance_alert?: boolean
     updated_at?: boolean
     businesses?: boolean | businessesDefaultArgs<ExtArgs>
@@ -90618,11 +90624,12 @@ export namespace Prisma {
     onboarding_done?: boolean
     ai_agent_enabled?: boolean
     auto_reply_enabled?: boolean
+    booking_methods?: boolean
     low_balance_alert?: boolean
     updated_at?: boolean
   }
 
-  export type business_settingsOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"business_id" | "timezone" | "language" | "currency" | "business_hours" | "onboarding_step" | "onboarding_done" | "ai_agent_enabled" | "auto_reply_enabled" | "low_balance_alert" | "updated_at", ExtArgs["result"]["business_settings"]>
+  export type business_settingsOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"business_id" | "timezone" | "language" | "currency" | "business_hours" | "onboarding_step" | "onboarding_done" | "ai_agent_enabled" | "auto_reply_enabled" | "booking_methods" | "low_balance_alert" | "updated_at", ExtArgs["result"]["business_settings"]>
   export type business_settingsInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     businesses?: boolean | businessesDefaultArgs<ExtArgs>
   }
@@ -90648,6 +90655,7 @@ export namespace Prisma {
       onboarding_done: boolean
       ai_agent_enabled: boolean
       auto_reply_enabled: boolean
+      booking_methods: Prisma.JsonValue
       low_balance_alert: Prisma.Decimal
       updated_at: Date
     }, ExtArgs["result"]["business_settings"]>
@@ -91083,6 +91091,7 @@ export namespace Prisma {
     readonly onboarding_done: FieldRef<"business_settings", 'Boolean'>
     readonly ai_agent_enabled: FieldRef<"business_settings", 'Boolean'>
     readonly auto_reply_enabled: FieldRef<"business_settings", 'Boolean'>
+    readonly booking_methods: FieldRef<"business_settings", 'Json'>
     readonly low_balance_alert: FieldRef<"business_settings", 'Decimal'>
     readonly updated_at: FieldRef<"business_settings", 'DateTime'>
   }
@@ -93954,6 +93963,7 @@ export namespace Prisma {
     onboarding_done: 'onboarding_done',
     ai_agent_enabled: 'ai_agent_enabled',
     auto_reply_enabled: 'auto_reply_enabled',
+    booking_methods: 'booking_methods',
     low_balance_alert: 'low_balance_alert',
     updated_at: 'updated_at'
   };
@@ -101085,6 +101095,7 @@ export namespace Prisma {
     onboarding_done?: BoolFilter<"business_settings"> | boolean
     ai_agent_enabled?: BoolFilter<"business_settings"> | boolean
     auto_reply_enabled?: BoolFilter<"business_settings"> | boolean
+    booking_methods?: JsonFilter<"business_settings">
     low_balance_alert?: DecimalFilter<"business_settings"> | Decimal | DecimalJsLike | number | string
     updated_at?: DateTimeFilter<"business_settings"> | Date | string
     businesses?: XOR<BusinessesScalarRelationFilter, businessesWhereInput>
@@ -101100,6 +101111,7 @@ export namespace Prisma {
     onboarding_done?: SortOrder
     ai_agent_enabled?: SortOrder
     auto_reply_enabled?: SortOrder
+    booking_methods?: SortOrder
     low_balance_alert?: SortOrder
     updated_at?: SortOrder
     businesses?: businessesOrderByWithRelationInput
@@ -101118,6 +101130,7 @@ export namespace Prisma {
     onboarding_done?: BoolFilter<"business_settings"> | boolean
     ai_agent_enabled?: BoolFilter<"business_settings"> | boolean
     auto_reply_enabled?: BoolFilter<"business_settings"> | boolean
+    booking_methods?: JsonFilter<"business_settings">
     low_balance_alert?: DecimalFilter<"business_settings"> | Decimal | DecimalJsLike | number | string
     updated_at?: DateTimeFilter<"business_settings"> | Date | string
     businesses?: XOR<BusinessesScalarRelationFilter, businessesWhereInput>
@@ -101133,6 +101146,7 @@ export namespace Prisma {
     onboarding_done?: SortOrder
     ai_agent_enabled?: SortOrder
     auto_reply_enabled?: SortOrder
+    booking_methods?: SortOrder
     low_balance_alert?: SortOrder
     updated_at?: SortOrder
     _count?: business_settingsCountOrderByAggregateInput
@@ -101155,6 +101169,7 @@ export namespace Prisma {
     onboarding_done?: BoolWithAggregatesFilter<"business_settings"> | boolean
     ai_agent_enabled?: BoolWithAggregatesFilter<"business_settings"> | boolean
     auto_reply_enabled?: BoolWithAggregatesFilter<"business_settings"> | boolean
+    booking_methods?: JsonWithAggregatesFilter<"business_settings">
     low_balance_alert?: DecimalWithAggregatesFilter<"business_settings"> | Decimal | DecimalJsLike | number | string
     updated_at?: DateTimeWithAggregatesFilter<"business_settings"> | Date | string
   }
@@ -109126,6 +109141,7 @@ export namespace Prisma {
     onboarding_done?: boolean
     ai_agent_enabled?: boolean
     auto_reply_enabled?: boolean
+    booking_methods?: JsonNullValueInput | InputJsonValue
     low_balance_alert?: Decimal | DecimalJsLike | number | string
     updated_at?: Date | string
     businesses: businessesCreateNestedOneWithoutSettingsInput
@@ -109141,6 +109157,7 @@ export namespace Prisma {
     onboarding_done?: boolean
     ai_agent_enabled?: boolean
     auto_reply_enabled?: boolean
+    booking_methods?: JsonNullValueInput | InputJsonValue
     low_balance_alert?: Decimal | DecimalJsLike | number | string
     updated_at?: Date | string
   }
@@ -109154,6 +109171,7 @@ export namespace Prisma {
     onboarding_done?: BoolFieldUpdateOperationsInput | boolean
     ai_agent_enabled?: BoolFieldUpdateOperationsInput | boolean
     auto_reply_enabled?: BoolFieldUpdateOperationsInput | boolean
+    booking_methods?: JsonNullValueInput | InputJsonValue
     low_balance_alert?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     businesses?: businessesUpdateOneRequiredWithoutSettingsNestedInput
@@ -109169,6 +109187,7 @@ export namespace Prisma {
     onboarding_done?: BoolFieldUpdateOperationsInput | boolean
     ai_agent_enabled?: BoolFieldUpdateOperationsInput | boolean
     auto_reply_enabled?: BoolFieldUpdateOperationsInput | boolean
+    booking_methods?: JsonNullValueInput | InputJsonValue
     low_balance_alert?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -109183,6 +109202,7 @@ export namespace Prisma {
     onboarding_done?: boolean
     ai_agent_enabled?: boolean
     auto_reply_enabled?: boolean
+    booking_methods?: JsonNullValueInput | InputJsonValue
     low_balance_alert?: Decimal | DecimalJsLike | number | string
     updated_at?: Date | string
   }
@@ -109196,6 +109216,7 @@ export namespace Prisma {
     onboarding_done?: BoolFieldUpdateOperationsInput | boolean
     ai_agent_enabled?: BoolFieldUpdateOperationsInput | boolean
     auto_reply_enabled?: BoolFieldUpdateOperationsInput | boolean
+    booking_methods?: JsonNullValueInput | InputJsonValue
     low_balance_alert?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -109210,6 +109231,7 @@ export namespace Prisma {
     onboarding_done?: BoolFieldUpdateOperationsInput | boolean
     ai_agent_enabled?: BoolFieldUpdateOperationsInput | boolean
     auto_reply_enabled?: BoolFieldUpdateOperationsInput | boolean
+    booking_methods?: JsonNullValueInput | InputJsonValue
     low_balance_alert?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -114245,6 +114267,7 @@ export namespace Prisma {
     onboarding_done?: SortOrder
     ai_agent_enabled?: SortOrder
     auto_reply_enabled?: SortOrder
+    booking_methods?: SortOrder
     low_balance_alert?: SortOrder
     updated_at?: SortOrder
   }
@@ -122214,6 +122237,7 @@ export namespace Prisma {
     onboarding_done?: boolean
     ai_agent_enabled?: boolean
     auto_reply_enabled?: boolean
+    booking_methods?: JsonNullValueInput | InputJsonValue
     low_balance_alert?: Decimal | DecimalJsLike | number | string
     updated_at?: Date | string
   }
@@ -122227,6 +122251,7 @@ export namespace Prisma {
     onboarding_done?: boolean
     ai_agent_enabled?: boolean
     auto_reply_enabled?: boolean
+    booking_methods?: JsonNullValueInput | InputJsonValue
     low_balance_alert?: Decimal | DecimalJsLike | number | string
     updated_at?: Date | string
   }
@@ -123368,6 +123393,7 @@ export namespace Prisma {
     onboarding_done?: BoolFieldUpdateOperationsInput | boolean
     ai_agent_enabled?: BoolFieldUpdateOperationsInput | boolean
     auto_reply_enabled?: BoolFieldUpdateOperationsInput | boolean
+    booking_methods?: JsonNullValueInput | InputJsonValue
     low_balance_alert?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -123381,6 +123407,7 @@ export namespace Prisma {
     onboarding_done?: BoolFieldUpdateOperationsInput | boolean
     ai_agent_enabled?: BoolFieldUpdateOperationsInput | boolean
     auto_reply_enabled?: BoolFieldUpdateOperationsInput | boolean
+    booking_methods?: JsonNullValueInput | InputJsonValue
     low_balance_alert?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
   }

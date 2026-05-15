@@ -62,7 +62,7 @@ export function makeToolCallerNode(modelConfig: AgentModelConfig, tools: Structu
 
     const today = new Date().toISOString().split('T')[0];
     const customerLanguage = languageLabel(state.customerLanguage);
-    const toolCallerDirective = `${SYSTEM_PROMPT(state.businessId, state.businessType)}
+    const toolCallerDirective = `${SYSTEM_PROMPT(state.businessId, state.businessType, state.bookingMethodsSummary)}
 
 IMPORTANT — TOOL EXECUTION RULES:
 - Today's date is ${today}. Use this to resolve relative or partial dates.

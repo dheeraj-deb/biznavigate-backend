@@ -1208,6 +1208,7 @@ exports.Prisma.Business_settingsScalarFieldEnum = {
   onboarding_done: 'onboarding_done',
   ai_agent_enabled: 'ai_agent_enabled',
   auto_reply_enabled: 'auto_reply_enabled',
+  booking_methods: 'booking_methods',
   low_balance_alert: 'low_balance_alert',
   updated_at: 'updated_at'
 };

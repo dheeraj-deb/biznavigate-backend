@@ -58,7 +58,7 @@ export function makeResponderNode(modelConfig: AgentModelConfig, _tools: Structu
     logger.log(`Generating response (businessId=${state.businessId} businessType=${state.businessType} turn=${newTurnCount})`);
     const customerLanguage = languageLabel(state.customerLanguage);
     const response = await llm.invoke([
-      new SystemMessage(`${SYSTEM_PROMPT(state.businessId, state.businessType)}
+      new SystemMessage(`${SYSTEM_PROMPT(state.businessId, state.businessType, state.bookingMethodsSummary)}
 
 Customer language: ${customerLanguage}
 Reply in ${customerLanguage}. If tool results or business knowledge are in English, translate the customer-facing explanation to ${customerLanguage}, but keep IDs, dates, prices, proper nouns, addresses, and phone numbers unchanged.
