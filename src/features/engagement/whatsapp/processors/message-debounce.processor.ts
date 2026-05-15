@@ -18,8 +18,27 @@ import { decodeHandoff, decodeFlow } from 'src/features/ai/agent/types/handoff';
 import { AcknowledgmentService } from 'src/features/ai/agent/services/acknowledgment.service';
 import { CustomerLanguage, detectCustomerLanguage } from 'src/features/ai/agent/utils/language-detector';
 import { normalizeBookingMethodsConfig } from 'src/features/platform/business-settings/booking-methods.config';
+import { HospitalityBookingCommandService } from 'src/features/industries/hospitality/bookings/application/services/hospitality-booking-command.service';
 
 type LocalizedMessageKey = 'handoff' | 'error' | 'no_availability' | 'appointment_slots';
+
+interface NativeBookingDraft {
+  businessId: string;
+  tenantId?: string;
+  leadId?: string;
+  conversationId: string;
+  customerPhone: string;
+  phoneNumberId: string;
+  checkIn: string;
+  checkOut: string;
+  selectedItemId?: string;
+  selectedItemName?: string;
+  selectedItemPrice?: string;
+  guestName?: string;
+  numGuests?: number;
+  step: 'awaiting_selection' | 'awaiting_guest_details' | 'awaiting_confirmation';
+  options: Array<{ itemId: string; name: string; price?: string }>;
+}
 
 @Processor('message-debounce')
 export class MessageDebounceProcessor extends WorkerHost {
@@ -41,6 +60,7 @@ export class MessageDebounceProcessor extends WorkerHost {
     private readonly inboxGateway: InboxGateway,
     private readonly humanHandoffGateway: HumanHandoffGateway,
     private readonly acknowledgmentService: AcknowledgmentService,
+    private readonly hospitalityBookingCommandService: HospitalityBookingCommandService,
     @Inject(CACHE_MANAGER) private readonly cache: Cache,
   ) {
     super();
@@ -80,6 +100,10 @@ export class MessageDebounceProcessor extends WorkerHost {
     const customerPhone = lastPayload.context?.contact?.from;
 
     try {
+      if (await this.handleNativeBookingDraftMessage(combinedText, lastPayload, agentCtx, phoneNumberId, customerPhone, conversationId, customerLanguage)) {
+        return;
+      }
+
       let reply: string | null = null;
 
       // ── Preemptive generation (mirrors agents-js onPreemptiveGeneration) ──────
@@ -269,6 +293,7 @@ export class MessageDebounceProcessor extends WorkerHost {
         await this.sendAvailabilityOptions(
           screenResult,
           ctx,
+          lastPayload,
           phoneNumberId,
           customerPhone,
           checkIn,
@@ -308,6 +333,7 @@ export class MessageDebounceProcessor extends WorkerHost {
   private async sendAvailabilityOptions(
     screenResult: any,
     ctx: AgentContext,
+    lastPayload: any,
     phoneNumberId: string,
     customerPhone: string,
     checkIn: string,
@@ -342,6 +368,22 @@ export class MessageDebounceProcessor extends WorkerHost {
     });
 
     if (rows.length) {
+      await this.saveNativeBookingDraft({
+        businessId: ctx.businessId,
+        tenantId: lastPayload.tenant_id,
+        leadId: lastPayload.lead_id,
+        conversationId: lastPayload.context?.conversation_id ?? ctx.conversationId,
+        customerPhone,
+        phoneNumberId,
+        checkIn,
+        checkOut,
+        step: 'awaiting_selection',
+        options: services.slice(0, 10).map((service: any) => ({
+          itemId: String(service.id),
+          name: String(service?.['main-content']?.title ?? service?.name ?? 'Room option'),
+          price: String(service?.['main-content']?.metadata ?? '').trim() || undefined,
+        })),
+      });
       await this.whatsappService.sendListMessage(
         phoneNumberId,
         customerPhone,
@@ -360,6 +402,190 @@ export class MessageDebounceProcessor extends WorkerHost {
       this.availabilitySummary(screenResult, checkIn, checkOut, customerLanguage) ??
         this.localizedMessage(customerLanguage, 'no_availability', { checkIn, checkOut }),
     );
+  }
+
+  private async handleNativeBookingDraftMessage(
+    input: string,
+    lastPayload: any,
+    ctx: AgentContext,
+    phoneNumberId: string,
+    customerPhone: string,
+    conversationId: string,
+    customerLanguage: CustomerLanguage,
+  ): Promise<boolean> {
+    const normalized = input.trim();
+    const draft = await this.getNativeBookingDraft(conversationId);
+
+    if (normalized.startsWith('book_')) {
+      if (!draft) {
+        await this.whatsappService.sendAgentReply(
+          ctx.businessId,
+          phoneNumberId,
+          customerPhone,
+          'Please check availability again, then choose a room from the latest list.',
+        );
+        return true;
+      }
+
+      const itemId = normalized.slice('book_'.length);
+      const option = draft.options.find((candidate) => candidate.itemId === itemId);
+      if (!option) {
+        await this.whatsappService.sendAgentReply(
+          ctx.businessId,
+          phoneNumberId,
+          customerPhone,
+          'That room option is no longer available in this booking session. Please check availability again.',
+        );
+        return true;
+      }
+
+      const nextDraft: NativeBookingDraft = {
+        ...draft,
+        selectedItemId: option.itemId,
+        selectedItemName: option.name,
+        selectedItemPrice: option.price,
+        step: 'awaiting_guest_details',
+      };
+      await this.saveNativeBookingDraft(nextDraft);
+      await this.whatsappService.sendAgentReply(
+        ctx.businessId,
+        phoneNumberId,
+        customerPhone,
+        `Great choice: ${option.name}${option.price ? ` (${option.price})` : ''}.\nPlease share guest name and number of guests.`,
+      );
+      return true;
+    }
+
+    if (!draft) return false;
+
+    if (normalized === 'booking_cancel' || /^(cancel|stop|no)$/i.test(normalized)) {
+      await this.clearNativeBookingDraft(conversationId);
+      await this.whatsappService.sendAgentReply(ctx.businessId, phoneNumberId, customerPhone, 'Booking cancelled. How else can I help?');
+      return true;
+    }
+
+    if (draft.step === 'awaiting_guest_details') {
+      const details = this.extractGuestDetails(normalized, customerPhone);
+      const nextDraft: NativeBookingDraft = {
+        ...draft,
+        guestName: details.guestName,
+        numGuests: details.numGuests,
+        step: 'awaiting_confirmation',
+        tenantId: draft.tenantId ?? lastPayload.tenant_id,
+        leadId: draft.leadId ?? lastPayload.lead_id,
+      };
+      await this.saveNativeBookingDraft(nextDraft);
+      await this.whatsappService.sendButtonMessage(
+        phoneNumberId,
+        customerPhone,
+        this.bookingConfirmationText(nextDraft),
+        [
+          { id: 'booking_confirm', title: 'Confirm' },
+          { id: 'booking_cancel', title: 'Cancel' },
+        ],
+        'Confirm booking',
+      );
+      return true;
+    }
+
+    if (draft.step === 'awaiting_confirmation') {
+      if (normalized === 'booking_confirm' || /^(yes|confirm|ok|okay|book|proceed)$/i.test(normalized)) {
+        await this.createNativeBooking(draft, ctx, phoneNumberId, customerPhone);
+        await this.clearNativeBookingDraft(conversationId);
+        return true;
+      }
+
+      await this.whatsappService.sendAgentReply(
+        ctx.businessId,
+        phoneNumberId,
+        customerPhone,
+        'Please tap Confirm to create the booking, or Cancel to stop.',
+      );
+      return true;
+    }
+
+    return false;
+  }
+
+  private bookingConfirmationText(draft: NativeBookingDraft): string {
+    return [
+      `Confirm booking for ${draft.selectedItemName ?? 'selected room'}?`,
+      `Dates: ${draft.checkIn} to ${draft.checkOut}`,
+      `Guest: ${draft.guestName ?? 'Guest'}`,
+      `Guests: ${draft.numGuests ?? 1}`,
+      draft.selectedItemPrice ? `Price: ${draft.selectedItemPrice}` : '',
+    ].filter(Boolean).join('\n');
+  }
+
+  private async createNativeBooking(
+    draft: NativeBookingDraft,
+    ctx: AgentContext,
+    phoneNumberId: string,
+    customerPhone: string,
+  ) {
+    if (!draft.selectedItemId) {
+      await this.whatsappService.sendAgentReply(ctx.businessId, phoneNumberId, customerPhone, 'Please choose a room before confirming.');
+      return;
+    }
+
+    const result = await this.hospitalityBookingCommandService.createBooking({
+      business_id: draft.businessId,
+      service_id: draft.selectedItemId,
+      check_in: draft.checkIn,
+      check_out: draft.checkOut,
+      guest_name: draft.guestName,
+      num_guests: draft.numGuests ?? 1,
+      customer_phone: draft.customerPhone,
+      lead_id: draft.leadId,
+      source: 'whatsapp_interactive',
+      actor: 'ai',
+    });
+
+    await this.whatsappService.sendAgentReply(
+      ctx.businessId,
+      phoneNumberId,
+      customerPhone,
+      `Booking confirmed. Booking ID: ${result.hospitality_booking_id ?? result.booking_id ?? result.legacy_order_id}`,
+    );
+  }
+
+  private extractGuestDetails(input: string, fallbackPhone: string) {
+    const guestsMatch = input.match(/\b(\d{1,2})\b/);
+    const numGuests = guestsMatch ? Math.max(1, Number(guestsMatch[1])) : 1;
+    const guestName = input
+      .replace(/\b\d{1,2}\b/g, '')
+      .replace(/\b(guest|guests|person|persons|people|adults|adult|pax|for)\b/gi, '')
+      .replace(/[,+]/g, ' ')
+      .replace(/\s+/g, ' ')
+      .trim() || fallbackPhone;
+
+    return { guestName, numGuests };
+  }
+
+  private nativeBookingDraftKey(conversationId: string) {
+    return `booking:draft:${conversationId}`;
+  }
+
+  private async saveNativeBookingDraft(draft: NativeBookingDraft) {
+    const redis = getRedis();
+    await redis.set(this.nativeBookingDraftKey(draft.conversationId), JSON.stringify(draft), 'EX', 60 * 60);
+  }
+
+  private async getNativeBookingDraft(conversationId: string): Promise<NativeBookingDraft | null> {
+    const redis = getRedis();
+    const raw = await redis.get(this.nativeBookingDraftKey(conversationId));
+    if (!raw) return null;
+    try {
+      return JSON.parse(raw) as NativeBookingDraft;
+    } catch {
+      await redis.del(this.nativeBookingDraftKey(conversationId));
+      return null;
+    }
+  }
+
+  private async clearNativeBookingDraft(conversationId: string) {
+    const redis = getRedis();
+    await redis.del(this.nativeBookingDraftKey(conversationId));
   }
 
   private availabilitySummary(
