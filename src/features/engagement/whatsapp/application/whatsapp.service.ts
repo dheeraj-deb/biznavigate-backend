@@ -371,6 +371,29 @@ export class WhatsAppService {
     );
   }
 
+  async sendImageMessage(
+    phoneNumberId: string,
+    to: string,
+    imageUrl: string,
+    caption?: string,
+    nodeId?: string,
+  ): Promise<any> {
+    return this.sendMessage(
+      phoneNumberId,
+      to,
+      {
+        messaging_product: 'whatsapp',
+        to,
+        type: SendMessageType.IMAGE,
+        image: {
+          link: imageUrl,
+          ...(caption ? { caption } : {}),
+        },
+      },
+      nodeId,
+    );
+  }
+
   async sendSingleProductMessage(
     phoneNumberId: string,
     to: string,

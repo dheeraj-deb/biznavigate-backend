@@ -97,6 +97,15 @@ export class WhatsAppApiClientService {
     } else if (message.type === 'interactive' && message.interactive) {
       body.type = 'interactive';
       body.interactive = message.interactive;
+    } else if (message.type === 'image' && message.image) {
+      body.type = 'image';
+      body.image = message.image;
+    } else if (message.type === 'document' && message.document) {
+      body.type = 'document';
+      body.document = message.document;
+    } else if (message.type === 'video' && message.video) {
+      body.type = 'video';
+      body.video = message.video;
     } else {
       body.type = 'text';
       body.text = { body: '[Unsupported message type]' };

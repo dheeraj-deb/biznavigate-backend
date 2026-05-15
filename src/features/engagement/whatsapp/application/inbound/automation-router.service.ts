@@ -81,6 +81,7 @@ export class AutomationRouter {
   private isNativeBookingSelection(input?: string | null): boolean {
     return !!input && (
       input.startsWith('book_') ||
+      input.startsWith('guest_count_') ||
       input === 'booking_confirm' ||
       input === 'booking_cancel'
     );
