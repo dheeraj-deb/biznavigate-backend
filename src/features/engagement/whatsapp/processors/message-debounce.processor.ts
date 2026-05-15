@@ -34,10 +34,30 @@ interface NativeBookingDraft {
   selectedItemId?: string;
   selectedItemName?: string;
   selectedItemPrice?: string;
+  roomDetails?: NativeBookingRoomDetails;
   guestName?: string;
   numGuests?: number;
-  step: 'awaiting_selection' | 'awaiting_guest_details' | 'awaiting_confirmation';
+  step: 'awaiting_selection' | 'awaiting_guest_name' | 'awaiting_guest_count' | 'awaiting_confirmation';
   options: Array<{ itemId: string; name: string; price?: string }>;
+}
+
+interface NativeBookingRoomDetails {
+  itemId: string;
+  name: string;
+  description?: string;
+  imageUrls: string[];
+  pricePerNight: number;
+  currency: string;
+  capacity?: number;
+  availableSlots?: number;
+  amenities: string[];
+  checkInTime?: string;
+  checkOutTime?: string;
+  cancellationPolicy?: string;
+  mealPlan?: string;
+  bedType?: string;
+  totalPrice: number;
+  nights: number;
 }
 
 @Processor('message-debounce')
@@ -302,6 +322,9 @@ export class MessageDebounceProcessor extends WorkerHost {
         );
         this.logger.log(`🏨 Sent availability options for ${customerPhone}`);
       } else {
+        if (screenResult.screen === 'AVAILABILITY_RESULT') {
+          await this.saveNativeBookingDraftFromAvailability(screenResult, ctx, lastPayload, phoneNumberId, customerPhone, checkIn, checkOut);
+        }
         const fallbackText =
           this.nonEmptyString(screenResult.data?.error_message) ??
           this.availabilitySummary(screenResult, checkIn, checkOut, customerLanguage) ??
@@ -368,22 +391,7 @@ export class MessageDebounceProcessor extends WorkerHost {
     });
 
     if (rows.length) {
-      await this.saveNativeBookingDraft({
-        businessId: ctx.businessId,
-        tenantId: lastPayload.tenant_id,
-        leadId: lastPayload.lead_id,
-        conversationId: lastPayload.context?.conversation_id ?? ctx.conversationId,
-        customerPhone,
-        phoneNumberId,
-        checkIn,
-        checkOut,
-        step: 'awaiting_selection',
-        options: services.slice(0, 10).map((service: any) => ({
-          itemId: String(service.id),
-          name: String(service?.['main-content']?.title ?? service?.name ?? 'Room option'),
-          price: String(service?.['main-content']?.metadata ?? '').trim() || undefined,
-        })),
-      });
+      await this.saveNativeBookingDraftFromAvailability(screenResult, ctx, lastPayload, phoneNumberId, customerPhone, checkIn, checkOut);
       await this.whatsappService.sendListMessage(
         phoneNumberId,
         customerPhone,
@@ -402,6 +410,38 @@ export class MessageDebounceProcessor extends WorkerHost {
       this.availabilitySummary(screenResult, checkIn, checkOut, customerLanguage) ??
         this.localizedMessage(customerLanguage, 'no_availability', { checkIn, checkOut }),
     );
+  }
+
+  private async saveNativeBookingDraftFromAvailability(
+    screenResult: any,
+    ctx: AgentContext,
+    lastPayload: any,
+    phoneNumberId: string,
+    customerPhone: string,
+    checkIn: string,
+    checkOut: string,
+  ) {
+    const services = Array.isArray(screenResult?.data?.available_services)
+      ? screenResult.data.available_services
+      : [];
+    if (!services.length) return;
+
+    await this.saveNativeBookingDraft({
+      businessId: ctx.businessId,
+      tenantId: lastPayload.tenant_id,
+      leadId: lastPayload.lead_id,
+      conversationId: lastPayload.context?.conversation_id ?? ctx.conversationId,
+      customerPhone,
+      phoneNumberId,
+      checkIn,
+      checkOut,
+      step: 'awaiting_selection',
+      options: services.slice(0, 10).map((service: any) => ({
+        itemId: String(service.id),
+        name: String(service?.['main-content']?.title ?? service?.name ?? 'Room option'),
+        price: String(service?.['main-content']?.metadata ?? '').trim() || undefined,
+      })),
+    });
   }
 
   private async handleNativeBookingDraftMessage(
@@ -427,32 +467,7 @@ export class MessageDebounceProcessor extends WorkerHost {
         return true;
       }
 
-      const itemId = normalized.slice('book_'.length);
-      const option = draft.options.find((candidate) => candidate.itemId === itemId);
-      if (!option) {
-        await this.whatsappService.sendAgentReply(
-          ctx.businessId,
-          phoneNumberId,
-          customerPhone,
-          'That room option is no longer available in this booking session. Please check availability again.',
-        );
-        return true;
-      }
-
-      const nextDraft: NativeBookingDraft = {
-        ...draft,
-        selectedItemId: option.itemId,
-        selectedItemName: option.name,
-        selectedItemPrice: option.price,
-        step: 'awaiting_guest_details',
-      };
-      await this.saveNativeBookingDraft(nextDraft);
-      await this.whatsappService.sendAgentReply(
-        ctx.businessId,
-        phoneNumberId,
-        customerPhone,
-        `Great choice: ${option.name}${option.price ? ` (${option.price})` : ''}.\nPlease share guest name and number of guests.`,
-      );
+      await this.selectNativeBookingOption(draft, normalized.slice('book_'.length), ctx, phoneNumberId, customerPhone);
       return true;
     }
 
@@ -464,15 +479,51 @@ export class MessageDebounceProcessor extends WorkerHost {
       return true;
     }
 
-    if (draft.step === 'awaiting_guest_details') {
-      const details = this.extractGuestDetails(normalized, customerPhone);
+    if (draft.step === 'awaiting_selection') {
+      const option = this.findDraftOptionFromText(draft, normalized);
+      if (!option) {
+        await this.whatsappService.sendAgentReply(
+          ctx.businessId,
+          phoneNumberId,
+          customerPhone,
+          'Please reply with the room number from the list, or type cancel.',
+        );
+        return true;
+      }
+
+      await this.selectNativeBookingOption(draft, option.itemId, ctx, phoneNumberId, customerPhone);
+      return true;
+    }
+
+    if (draft.step === 'awaiting_guest_name') {
       const nextDraft: NativeBookingDraft = {
         ...draft,
-        guestName: details.guestName,
-        numGuests: details.numGuests,
-        step: 'awaiting_confirmation',
+        guestName: this.cleanGuestName(normalized, customerPhone),
+        step: 'awaiting_guest_count',
         tenantId: draft.tenantId ?? lastPayload.tenant_id,
         leadId: draft.leadId ?? lastPayload.lead_id,
+      };
+      await this.saveNativeBookingDraft(nextDraft);
+      await this.askGuestCount(nextDraft, ctx, phoneNumberId, customerPhone);
+      return true;
+    }
+
+    if (draft.step === 'awaiting_guest_count') {
+      const guestCount = this.extractGuestCount(normalized);
+      if (!guestCount) {
+        await this.whatsappService.sendAgentReply(
+          ctx.businessId,
+          phoneNumberId,
+          customerPhone,
+          'How many guests should I add? Please reply with a number, for example 2.',
+        );
+        return true;
+      }
+
+      const nextDraft: NativeBookingDraft = {
+        ...draft,
+        numGuests: guestCount,
+        step: 'awaiting_confirmation',
       };
       await this.saveNativeBookingDraft(nextDraft);
       await this.whatsappService.sendButtonMessage(
@@ -499,7 +550,7 @@ export class MessageDebounceProcessor extends WorkerHost {
         ctx.businessId,
         phoneNumberId,
         customerPhone,
-        'Please tap Confirm to create the booking, or Cancel to stop.',
+        'Please tap Confirm to create the booking, or reply cancel to stop.',
       );
       return true;
     }
@@ -507,13 +558,88 @@ export class MessageDebounceProcessor extends WorkerHost {
     return false;
   }
 
+  private async selectNativeBookingOption(
+    draft: NativeBookingDraft,
+    itemId: string,
+    ctx: AgentContext,
+    phoneNumberId: string,
+    customerPhone: string,
+  ) {
+    const option = draft.options.find((candidate) => candidate.itemId === itemId);
+    if (!option) {
+      await this.whatsappService.sendAgentReply(
+        ctx.businessId,
+        phoneNumberId,
+        customerPhone,
+        'That room option is no longer available in this booking session. Please check availability again.',
+      );
+      return;
+    }
+
+    const roomDetails = await this.getNativeBookingRoomDetails(draft.businessId, option.itemId, draft.checkIn, draft.checkOut);
+    const nextDraft: NativeBookingDraft = {
+      ...draft,
+      selectedItemId: option.itemId,
+      selectedItemName: roomDetails?.name ?? option.name,
+      selectedItemPrice: roomDetails ? this.formatMoney(roomDetails.pricePerNight, roomDetails.currency) : option.price,
+      roomDetails: roomDetails ?? undefined,
+      step: 'awaiting_guest_name',
+    };
+    await this.saveNativeBookingDraft(nextDraft);
+    await this.sendRoomPhotoIfAvailable(nextDraft, phoneNumberId, customerPhone);
+    await this.whatsappService.sendAgentReply(
+      ctx.businessId,
+      phoneNumberId,
+      customerPhone,
+      `${this.roomSelectionSummary(nextDraft)}\n\nWhat name should I use for the booking?`,
+    );
+  }
+
+  private async askGuestCount(
+    draft: NativeBookingDraft,
+    ctx: AgentContext,
+    phoneNumberId: string,
+    customerPhone: string,
+  ) {
+    const bookingMethods = await this.getBookingMethods(draft.businessId);
+    if (bookingMethods.availability_response.mode === 'interactive' && bookingMethods.interactive.enabled) {
+      await this.whatsappService.sendButtonMessage(
+        phoneNumberId,
+        customerPhone,
+        `Thanks, ${draft.guestName}. How many guests?`,
+        [
+          { id: 'guest_count_1', title: '1 Guest' },
+          { id: 'guest_count_2', title: '2 Guests' },
+          { id: 'guest_count_more', title: 'More' },
+        ],
+        'Guest count',
+      );
+      return;
+    }
+
+    await this.whatsappService.sendAgentReply(
+      ctx.businessId,
+      phoneNumberId,
+      customerPhone,
+      `Thanks, ${draft.guestName}. How many guests should I add?`,
+    );
+  }
+
   private bookingConfirmationText(draft: NativeBookingDraft): string {
+    const details = draft.roomDetails;
     return [
-      `Confirm booking for ${draft.selectedItemName ?? 'selected room'}?`,
+      `Please confirm your booking:`,
+      `Room: ${draft.selectedItemName ?? 'Selected room'}`,
       `Dates: ${draft.checkIn} to ${draft.checkOut}`,
+      `Nights: ${details?.nights ?? this.calculateNights(draft.checkIn, draft.checkOut)}`,
       `Guest: ${draft.guestName ?? 'Guest'}`,
       `Guests: ${draft.numGuests ?? 1}`,
-      draft.selectedItemPrice ? `Price: ${draft.selectedItemPrice}` : '',
+      details ? `Price: ${this.formatMoney(details.pricePerNight, details.currency)} / night` : draft.selectedItemPrice ? `Price: ${draft.selectedItemPrice}` : '',
+      details ? `Total: ${this.formatMoney(details.totalPrice, details.currency)}` : '',
+      details?.checkInTime ? `Check-in: ${details.checkInTime}` : 'Check-in: As per property policy',
+      details?.checkOutTime ? `Check-out: ${details.checkOutTime}` : 'Check-out: As per property policy',
+      details?.cancellationPolicy ? `Cancellation: ${this.compact(details.cancellationPolicy, 120)}` : 'Cancellation: As per property policy',
+      'Payment: Pay at property',
     ].filter(Boolean).join('\n');
   }
 
@@ -545,21 +671,191 @@ export class MessageDebounceProcessor extends WorkerHost {
       ctx.businessId,
       phoneNumberId,
       customerPhone,
-      `Booking confirmed. Booking ID: ${result.hospitality_booking_id ?? result.booking_id ?? result.legacy_order_id}`,
+      this.bookingSuccessText(draft, result),
     );
   }
 
-  private extractGuestDetails(input: string, fallbackPhone: string) {
-    const guestsMatch = input.match(/\b(\d{1,2})\b/);
-    const numGuests = guestsMatch ? Math.max(1, Number(guestsMatch[1])) : 1;
-    const guestName = input
-      .replace(/\b\d{1,2}\b/g, '')
+  private findDraftOptionFromText(draft: NativeBookingDraft, input: string) {
+    const numeric = input.match(/\b(\d{1,2})\b/)?.[1];
+    if (numeric) {
+      const byIndex = draft.options[Number(numeric) - 1];
+      if (byIndex) return byIndex;
+    }
+
+    const normalized = input.toLowerCase();
+    return draft.options.find((option) => normalized.includes(option.name.toLowerCase()));
+  }
+
+  private extractGuestCount(input: string): number | null {
+    const buttonMatch = input.match(/^guest_count_(\d+)$/);
+    if (buttonMatch) return Math.max(1, Number(buttonMatch[1]));
+    if (input === 'guest_count_more') return null;
+
+    const textMatch = input.match(/\b(\d{1,2})\b/);
+    return textMatch ? Math.max(1, Number(textMatch[1])) : null;
+  }
+
+  private cleanGuestName(input: string, fallbackPhone: string) {
+    return input
       .replace(/\b(guest|guests|person|persons|people|adults|adult|pax|for)\b/gi, '')
       .replace(/[,+]/g, ' ')
       .replace(/\s+/g, ' ')
       .trim() || fallbackPhone;
+  }
 
-    return { guestName, numGuests };
+  private async getNativeBookingRoomDetails(
+    businessId: string,
+    itemId: string,
+    checkIn: string,
+    checkOut: string,
+  ): Promise<NativeBookingRoomDetails | null> {
+    const item = await this.prisma.catalog_items.findFirst({
+      where: { business_id: businessId, item_id: itemId, deleted_at: null, is_active: true },
+      include: { hospitality_detail: true },
+    });
+    if (!item) return null;
+
+    const attrs = (item.attributes as Record<string, any> | null) ?? {};
+    const detail = item.hospitality_detail;
+    const imageUrls = this.resolveImageUrls(item.primary_image_url, item.image_urls);
+    const amenities = this.resolveAmenities(detail?.amenities ?? attrs.amenities);
+    const nights = this.calculateNights(checkIn, checkOut);
+    const availability = await this.resolveStayAvailability(itemId, businessId, checkIn, checkOut);
+    const pricePerNight = availability.pricePerNight ?? Number(item.base_price ?? 0);
+    const totalPrice = pricePerNight * nights;
+
+    return {
+      itemId,
+      name: item.name,
+      description: item.description ?? undefined,
+      imageUrls,
+      pricePerNight,
+      currency: item.currency ?? 'INR',
+      capacity: detail?.capacity ?? this.toOptionalNumber(attrs.capacity),
+      availableSlots: availability.availableSlots,
+      amenities,
+      checkInTime: detail?.check_in_time ?? attrs.check_in_time,
+      checkOutTime: detail?.check_out_time ?? attrs.check_out_time,
+      cancellationPolicy: detail?.cancellation_policy ?? attrs.cancellation_policy,
+      mealPlan: attrs.meal_plan,
+      bedType: detail?.bed_type ?? attrs.bed_type,
+      totalPrice,
+      nights,
+    };
+  }
+
+  private async resolveStayAvailability(itemId: string, businessId: string, checkIn: string, checkOut: string) {
+    const rows = await this.prisma.item_availability.findMany({
+      where: {
+        item_id: itemId,
+        business_id: businessId,
+        date: { gte: new Date(checkIn), lt: new Date(checkOut) },
+      },
+    });
+    const item = await this.prisma.catalog_items.findFirst({
+      where: { item_id: itemId, business_id: businessId },
+      select: { hospitality_detail: { select: { total_units: true } }, attributes: true, base_price: true },
+    });
+    const attrs = (item?.attributes as Record<string, any> | null) ?? {};
+    const totalUnits = Number(item?.hospitality_detail?.total_units ?? attrs.total_units ?? attrs.total_slots ?? 1);
+    const availableSlots = rows.length
+      ? Math.min(...rows.map((row) => row.total_slots - row.booked_slots))
+      : totalUnits;
+    const override = rows.find((row) => row.price_override !== null)?.price_override;
+    return {
+      availableSlots,
+      pricePerNight: override ? Number(override) : undefined,
+    };
+  }
+
+  private async sendRoomPhotoIfAvailable(draft: NativeBookingDraft, phoneNumberId: string, customerPhone: string) {
+    const imageUrl = draft.roomDetails?.imageUrls?.[0];
+    if (!imageUrl) return;
+
+    await this.whatsappService.sendImageMessage(
+      phoneNumberId,
+      customerPhone,
+      imageUrl,
+      draft.selectedItemName,
+    ).catch((error) => {
+      this.logger.warn(`Failed to send room image: ${error?.message ?? error}`);
+    });
+  }
+
+  private roomSelectionSummary(draft: NativeBookingDraft): string {
+    const details = draft.roomDetails;
+    if (!details) {
+      return `Great choice: ${draft.selectedItemName ?? 'selected room'}${draft.selectedItemPrice ? ` (${draft.selectedItemPrice})` : ''}.`;
+    }
+
+    return [
+      `${details.name}`,
+      `${this.formatMoney(details.pricePerNight, details.currency)} / night • Total ${this.formatMoney(details.totalPrice, details.currency)}`,
+      `${draft.checkIn} to ${draft.checkOut} • ${details.nights} night${details.nights === 1 ? '' : 's'}`,
+      details.capacity ? `Capacity: ${details.capacity} guest${details.capacity === 1 ? '' : 's'}` : '',
+      details.availableSlots && details.availableSlots <= 5 ? `Only ${details.availableSlots} left` : '',
+      details.bedType ? `Bed: ${details.bedType}` : '',
+      details.mealPlan ? `Meal: ${details.mealPlan}` : '',
+      details.amenities.length ? `Amenities: ${details.amenities.slice(0, 5).join(', ')}` : '',
+      details.checkInTime || details.checkOutTime
+        ? `Check-in: ${details.checkInTime ?? 'as per policy'} • Check-out: ${details.checkOutTime ?? 'as per policy'}`
+        : '',
+      details.cancellationPolicy ? `Cancellation: ${this.compact(details.cancellationPolicy, 120)}` : '',
+    ].filter(Boolean).join('\n');
+  }
+
+  private bookingSuccessText(draft: NativeBookingDraft, result: any): string {
+    const details = draft.roomDetails;
+    const bookingId = result.hospitality_booking_id ?? result.booking_id ?? result.legacy_order_id;
+    return [
+      'Booking confirmed.',
+      `Booking ID: ${bookingId}`,
+      `Room: ${draft.selectedItemName ?? 'Selected room'}`,
+      `Dates: ${draft.checkIn} to ${draft.checkOut}`,
+      `Guests: ${draft.numGuests ?? 1}`,
+      details ? `Total: ${this.formatMoney(details.totalPrice, details.currency)}` : '',
+      'Payment: Pay at property',
+    ].filter(Boolean).join('\n');
+  }
+
+  private resolveImageUrls(primary: string | null | undefined, imageUrls: any): string[] {
+    const urls = [
+      primary,
+      ...(Array.isArray(imageUrls) ? imageUrls : []),
+    ].filter((url): url is string => typeof url === 'string' && /^https?:\/\//i.test(url));
+
+    return Array.from(new Set(urls));
+  }
+
+  private resolveAmenities(raw: any): string[] {
+    if (Array.isArray(raw)) return raw.map(String).filter(Boolean);
+    if (raw && typeof raw === 'object') {
+      return Object.values(raw)
+        .flatMap((value) => Array.isArray(value) ? value : [value])
+        .map(String)
+        .filter(Boolean);
+    }
+    return [];
+  }
+
+  private calculateNights(checkIn: string, checkOut: string): number {
+    return Math.max(1, Math.round((new Date(checkOut).getTime() - new Date(checkIn).getTime()) / 86_400_000));
+  }
+
+  private formatMoney(amount: number, currency = 'INR'): string {
+    const symbol = currency === 'INR' ? '₹' : `${currency} `;
+    return `${symbol}${Number(amount || 0).toLocaleString('en-IN', { maximumFractionDigits: 0 })}`;
+  }
+
+  private compact(value: string, maxLength: number): string {
+    const normalized = value.replace(/\s+/g, ' ').trim();
+    if (normalized.length <= maxLength) return normalized;
+    return `${normalized.slice(0, Math.max(0, maxLength - 1)).trimEnd()}...`;
+  }
+
+  private toOptionalNumber(value: unknown): number | undefined {
+    const num = Number(value);
+    return Number.isFinite(num) && num > 0 ? num : undefined;
   }
 
   private nativeBookingDraftKey(conversationId: string) {
