@@ -49,24 +49,40 @@ export class AutomationRouter {
 
     if (params.message.is_interactive) {
       this.logger.log(`Interactive selection: ${params.message.user_input}`);
+      if (this.isNativeBookingSelection(params.message.user_input)) {
+        await this.enqueueDebouncedMessage(params.conversation.conversation_id, workflowPayload, 500);
+        return;
+      }
       await this.kafkaProducer.publishInteractiveSelection(workflowPayload);
       return;
     }
 
-    const bufferKey = `msg_buffer:${params.conversation.conversation_id}`;
+    await this.enqueueDebouncedMessage(params.conversation.conversation_id, workflowPayload);
+  }
+
+  private async enqueueDebouncedMessage(conversationId: string, workflowPayload: any, delay = 10000) {
+    const bufferKey = `msg_buffer:${conversationId}`;
     const redis = getRedis();
     await redis.rpush(bufferKey, JSON.stringify(workflowPayload));
     await redis.expire(bufferKey, 30);
 
     await this.debounceQueue.add(
       'process-messages',
-      { conversationId: params.conversation.conversation_id },
+      { conversationId },
       {
-        jobId: `conv:${params.conversation.conversation_id}`,
-        delay: 10000,
+        jobId: `conv:${conversationId}`,
+        delay,
         removeOnComplete: true,
         removeOnFail: true,
       },
+    );
+  }
+
+  private isNativeBookingSelection(input?: string | null): boolean {
+    return !!input && (
+      input.startsWith('book_') ||
+      input === 'booking_confirm' ||
+      input === 'booking_cancel'
     );
   }
 }
