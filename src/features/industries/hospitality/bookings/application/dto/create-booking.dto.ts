@@ -1,6 +1,49 @@
-import { IsOptional, IsUUID, IsString, IsDateString, IsNumber, Min } from 'class-validator';
+import { IsDateString, IsInt, IsNumber, IsOptional, IsString, IsUUID, Min } from 'class-validator';
 import { Type } from 'class-transformer';
 
 export class CreateBookingDto {
-  @IsOptional() @IsUUID() hold_id?: string;
+  @IsUUID()
+  service_id!: string;
+
+  @IsDateString()
+  check_in!: string;
+
+  @IsDateString()
+  check_out!: string;
+
+  @IsOptional()
+  @IsString()
+  guest_name?: string;
+
+  @IsOptional()
+  @IsString()
+  phone?: string;
+
+  @IsOptional()
+  @IsUUID()
+  lead_id?: string;
+
+  @IsOptional()
+  @Type(() => Number)
+  @IsInt()
+  @Min(1)
+  num_guests?: number;
+
+  @IsOptional()
+  @IsString()
+  payment_status?: string;
+
+  @IsOptional()
+  @IsString()
+  status?: string;
+
+  @IsOptional()
+  @IsString()
+  notes?: string;
+
+  @IsOptional()
+  @Type(() => Number)
+  @IsNumber()
+  @Min(0)
+  amount_paid?: number;
 }

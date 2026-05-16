@@ -20,6 +20,7 @@ model businesses {
   email                     String?                     @db.VarChar(255)
   phone                     String?                     @db.VarChar(20)
   website                   String?                     @db.VarChar(255)
+  public_booking_slug       String?                     @unique @db.VarChar(120)
   city                      String?                     @db.VarChar(100)
   address                   String?                     @db.VarChar(500)
   country                   String?                     @db.VarChar(100)
@@ -58,6 +59,7 @@ model businesses {
 
   @@index([tenant_id], map: "idx_businesses_tenant_id")
   @@index([business_type], map: "idx_businesses_business_type")
+  @@index([public_booking_slug], map: "idx_businesses_public_booking_slug")
   @@index([deleted_at], map: "idx_businesses_deleted_at")
 }
 
@@ -1653,6 +1655,7 @@ model business_settings {
   ai_agent_enabled   Boolean    @default(true)
   auto_reply_enabled Boolean    @default(true)
   booking_methods    Json       @default("{\"availability_response\":{\"mode\":\"interactive\"},\"ai_chat\":{\"enabled\":true,\"collect_guest_details\":true,\"require_confirmation\":true},\"interactive\":{\"enabled\":true,\"send_entry_buttons\":true,\"send_room_or_service_list\":true},\"catalog\":{\"enabled\":false,\"send_product_messages\":false},\"templates\":{\"enabled\":false,\"confirmation_template_name\":\"\",\"reminder_template_name\":\"\",\"language\":\"en\"},\"human_handoff\":{\"enabled\":true,\"on_unavailable\":true,\"on_low_confidence\":true,\"on_payment_issue\":true}}")
+  booking_link       Json       @default("{\"enabled\":false,\"experience_type\":\"generic\",\"payment_mode\":\"manual\",\"advance_type\":\"fixed\",\"advance_amount\":0,\"theme\":{\"primary_color\":\"#0066FF\",\"show_logo\":true,\"show_banner\":true},\"policies\":{\"cancellation\":\"\",\"refund\":\"\",\"terms\":\"\"},\"contact\":{\"phone\":\"\",\"whatsapp\":\"\",\"address\":\"\"},\"required_fields\":{\"name\":true,\"phone\":true,\"email\":false,\"address\":false,\"notes\":false}}")
   low_balance_alert  Decimal    @default(100) @db.Decimal(10, 2)
   updated_at         DateTime   @default(now()) @db.Timestamptz(6)
   businesses         businesses @relation("business_settings", fields: [business_id], references: [business_id], onDelete: Cascade)
