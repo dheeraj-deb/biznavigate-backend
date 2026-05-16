@@ -140,7 +140,17 @@ export class PublicBookingService {
     if (!business) throw new NotFoundException('Booking link not found');
     const config = this.resolveConfig(business);
     if (!config.enabled) throw new NotFoundException('Booking link is not active');
-    return business;
+
+    const whatsappAccount = await this.prisma.social_accounts.findFirst({
+      where: { business_id: business.business_id, platform: 'whatsapp', is_active: true },
+      select: { username: true },
+      orderBy: { updated_at: 'desc' },
+    });
+
+    return {
+      ...business,
+      whatsapp_number: whatsappAccount?.username ?? business.whatsapp_number,
+    };
   }
 
   private resolveConfig(business: PublicBusiness): BookingLinkConfig {
