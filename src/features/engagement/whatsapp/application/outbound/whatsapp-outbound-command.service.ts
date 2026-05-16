@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { randomUUID } from 'node:crypto';
 import { ConversationService } from '../../../../crm/conversation/conversation.service';
 import { InboxGateway } from '../../../../crm/inbox/gateway/inbox.gateway';
@@ -23,34 +23,48 @@ export interface PersistOutboundMessageCommand {
 
 @Injectable()
 export class WhatsAppOutboundCommandService {
+  private readonly logger = new Logger(WhatsAppOutboundCommandService.name);
+
   constructor(
     private readonly conversationService: ConversationService,
     private readonly inboxGateway: InboxGateway,
   ) {}
 
   async persistSentMessage(command: PersistOutboundMessageCommand): Promise<void> {
-    if (!command.platform_message_id) return;
-
     const context = command.conversation_context ?? await this.resolveConversationContext(command);
-    if (!context) return;
+    if (!context) {
+      this.logger.warn(`persistSentMessage: no context resolved for to=${command.to} text="${command.text?.slice(0, 60)}"`);
+      return;
+    }
+
+    // Persist even if the provider didn't return a platform id (e.g. interactive sends).
+    // Use a synthetic id so the unique index doesn't collide across messages.
+    const platformMessageId = command.platform_message_id ?? `local_${randomUUID()}`;
+    this.logger.log(`persistSentMessage: convId=${context.conversation_id} platformId=${platformMessageId} text="${command.text?.slice(0, 60)}"`);
 
     const senderName = command.sender_name ?? command.account.businesses?.business_name ?? 'Business';
-    const saved = await this.conversationService.createMessage({
-      conversation_id: context.conversation_id,
-      lead_id: context.lead_id,
-      business_id: command.account.business_id,
-      tenant_id: context.tenant_id,
-      sender_type: 'business',
-      sender_id: command.account.page_id,
-      sender_name: senderName,
-      message_text: command.text,
-      message_type: command.message_type,
-      platform_message_id: command.platform_message_id,
-      delivery_status: 'sent',
-      workflow_node_id: command.workflow_node_id,
-      assigned_to: command.assigned_to,
-      ...(command.metadata && { metadata: command.metadata }),
-    });
+    let saved;
+    try {
+      saved = await this.conversationService.createMessage({
+        conversation_id: context.conversation_id,
+        lead_id: context.lead_id,
+        business_id: command.account.business_id,
+        tenant_id: context.tenant_id,
+        sender_type: 'business',
+        sender_id: command.account.page_id,
+        sender_name: senderName,
+        message_text: command.text,
+        message_type: command.message_type,
+        platform_message_id: platformMessageId,
+        delivery_status: 'sent',
+        workflow_node_id: command.workflow_node_id,
+        assigned_to: command.assigned_to,
+        ...(command.metadata && { metadata: command.metadata }),
+      });
+    } catch (err: any) {
+      this.logger.error(`persistSentMessage createMessage failed: ${err?.code ?? ''} ${err?.message}`);
+      return;
+    }
 
     const timestamp = new Date();
     await this.conversationService.touchConversation(context.conversation_id, command.text);
@@ -62,7 +76,7 @@ export class WhatsAppOutboundCommandService {
       sender_name: senderName,
       message_type: command.message_type,
       message_text: command.text,
-      platform_message_id: command.platform_message_id,
+      platform_message_id: platformMessageId,
       delivery_status: 'sent',
       timestamp,
       ...(command.metadata && { metadata: command.metadata }),

@@ -54,10 +54,24 @@ export class InboxService {
             limit,
         );
 
+        // Fetch lead names/phones for any conversation missing customer_id / sender_name
+        const leadIds = Array.from(new Set(data.map(c => c.lead_id).filter(Boolean)));
+        const leads = leadIds.length
+            ? await this.prisma.leads.findMany({
+                where: { lead_id: { in: leadIds } },
+                select: { lead_id: true, name: true, phone: true },
+            })
+            : [];
+        const leadById = new Map(leads.map(l => [l.lead_id, l]));
+
         // All conversation state lives in MongoDB — return directly
         const enriched = data.map(conv => {
+            const obj = conv.toObject() as any;
+            const lead = leadById.get(conv.lead_id);
             return {
-                ...conv.toObject(),
+                ...obj,
+                customer_id: obj.customer_id ?? lead?.phone ?? conv.platform_id ?? conv.lead_id,
+                sender_name: obj.sender_name ?? lead?.name ?? lead?.phone ?? conv.platform_id ?? 'Customer',
                 is_ai_handled: conv.is_ai ?? conv.is_ai_handled ?? true,
                 is_resolved: conv.status === 'resolved',
                 agent_id: conv.agent_id ?? null,
@@ -130,7 +144,18 @@ export class InboxService {
         }
 
         const phoneNumberId = account.page_id;
-        const to = conversation.customer_id; // customer's phone number
+
+        const lead = conversation.lead_id
+            ? await this.prisma.leads.findUnique({
+                where: { lead_id: conversation.lead_id },
+                select: { phone: true },
+            })
+            : null;
+        const to = lead?.phone ?? conversation.customer_id ?? conversation.platform_id;
+
+        if (!to) {
+            throw new BadRequestException('Conversation has no recipient phone number');
+        }
 
         const result = await this.whatsappService.sendMessage(phoneNumberId, to, {
             messaging_product: 'whatsapp',
