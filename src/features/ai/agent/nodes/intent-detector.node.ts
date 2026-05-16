@@ -5,6 +5,8 @@ import { AgentModelConfig, createChatModel } from '../graph/llm-factory';
 import { sanitizeMessagesForModel } from '../utils/message-sanitizer';
 
 const INTENT_PROMPT = `You are an intent classifier for a hospitality/service booking chatbot.
+Customers may write in English, Hindi, Malayalam, or Tamil — in native script OR Romanized/transliterated form (e.g. Manglish, Hinglish, Tanglish). Interpret the message in the customer's language before classifying; do NOT treat transliterated words as English homographs.
+
 Classify the user's last message into exactly one of:
 
 - booking       (wants to check availability, get pricing, or make a new reservation)
@@ -22,6 +24,13 @@ Rules:
 - Pick the SINGLE best match even if the message could fit multiple.
 - Complaints about a booking are "complaint", not "status".
 - "Can I cancel?" is "cancellation", not "faq".
+- Transliteration hints (NOT English):
+  - Malayalam "undo" / "und" / "undo?" = "ഉണ്ടോ" = "is there / do you have" → availability check (booking), NOT the English word "undo".
+  - Malayalam "venam" / "vendam" = want / don't want.
+  - Hindi "hai" / "hai kya" = "is there" → booking/status depending on context.
+  - Tamil "irukka" / "irukku" = "is there / available" → booking.
+  - "room undo", "room und", "room available aano" → booking (availability).
+  - Only treat "undo / cancel / refund" as cancellation when the surrounding words clearly indicate cancelling an existing booking (e.g. "booking cancel cheyyanam", "cancel my booking").
 - If you are NOT confident (ambiguous, mixed signals, or unusual message), return "handoff" so a human can take over.
 - Respond with ONLY the intent label, nothing else.`;
 
