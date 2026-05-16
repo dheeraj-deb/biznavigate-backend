@@ -44,7 +44,7 @@ export async function buildAgentGraph(deps: AgentGraphDeps) {
   // This means one compiled graph handles every business on the platform.
   const tools = buildToolsForVertical('default', deps);
 
-  const triage = makeTriageNode(deps.modelConfig, deps.prisma);
+  const triage = makeTriageNode(deps.modelConfig);
   const toolCaller = makeToolCallerNode(deps.modelConfig, tools);
   const responder = makeResponderNode(deps.modelConfig, tools);
   const outOfScope = async (state: AgentStateType): Promise<Partial<AgentStateType>> => {

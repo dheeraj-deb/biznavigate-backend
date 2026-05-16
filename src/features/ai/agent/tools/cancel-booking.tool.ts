@@ -5,21 +5,14 @@ import { getRunContext } from '../context/agent-run-context';
 
 export function makeCancelBookingTool(prisma: PrismaService) {
   return tool(
-    async ({ bookingId, phone }) => {
-      const { businessId } = getRunContext();
+    async ({ bookingId }) => {
+      const { businessId, lead } = getRunContext();
       let resolvedBookingId = bookingId;
 
-      // If no bookingId provided, look up the most recent pending/confirmed order for this phone
+      // If no bookingId provided, use the lead resolved at run start
       if (!resolvedBookingId) {
-        if (!phone) return 'Please provide either a booking ID or your phone number so I can find your booking.';
-
-        const lead = await prisma.leads.findFirst({
-          where: { business_id: businessId, phone },
-          select: { lead_id: true },
-        });
-
         if (!lead) {
-          return `No booking found for phone number ${phone}.`;
+          return 'Please share the booking ID you want to cancel.';
         }
 
         const order = await prisma.orders.findFirst({
@@ -33,7 +26,7 @@ export function makeCancelBookingTool(prisma: PrismaService) {
         });
 
         if (!order) {
-          return `No active booking found for phone number ${phone}.`;
+          return `No active booking found for this customer.`;
         }
 
         resolvedBookingId = order.order_id;
@@ -67,10 +60,10 @@ export function makeCancelBookingTool(prisma: PrismaService) {
     },
     {
       name: 'cancel_booking',
-      description: 'Cancel an existing booking by booking ID or customer phone number',
+      description:
+        "Cancel a booking. If bookingId is omitted, cancels the customer's most recent active booking.",
       schema: z.object({
-        bookingId: z.string().optional().describe('Booking ID to cancel'),
-        phone: z.string().optional().describe('Customer phone number — used to look up the booking if no ID given'),
+        bookingId: z.string().optional().describe('Booking ID to cancel. Optional.'),
       }),
     },
   );

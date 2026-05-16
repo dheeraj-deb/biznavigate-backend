@@ -1,16 +1,25 @@
 import { AsyncLocalStorage } from 'node:async_hooks';
+import type {
+  BusinessProfileSnapshot,
+  LeadSnapshot,
+  RecentBookingSummary,
+} from './agent-context-builder.service';
 
 export interface AgentRunContext {
   businessId: string;
-  businessType: string; // e.g. 'hospitality', 'retail', 'ecommerce', 'services'
+  businessType: string;
   customerLanguage: string;
   leadId?: string;
   phone: string;
   conversationId: string;
+  /** Resolved once at run start so tools don't re-query by phone. */
+  lead: LeadSnapshot | null;
+  /** Business profile cached per businessId — name, policies, currency, etc. */
+  businessProfile: BusinessProfileSnapshot;
+  /** Up to 2 most recent bookings/orders for this lead. */
+  recentBookings: RecentBookingSummary[];
 }
 
-// Mirrors agents-js agentActivityStorage — ambient context available inside graph.invoke()
-// Tools read from this instead of receiving businessId as an LLM-supplied parameter
 export const agentRunContextStorage = new AsyncLocalStorage<AgentRunContext>();
 
 export function getRunContext(): AgentRunContext {

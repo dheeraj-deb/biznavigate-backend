@@ -9,10 +9,10 @@ function isUuid(value: string): boolean {
 
 export function makeGetBookingTool(prisma: PrismaService) {
   return tool(
-    async ({ phone, bookingId }) => {
-      const { businessId } = getRunContext();
+    async ({ bookingId }) => {
+      const { businessId, lead } = getRunContext();
 
-      // Resolve by bookingId first, fall back to phone lookup
+      // Resolve by bookingId first, fall back to the lead resolved at run start
       let order: any = null;
       let hospitalityBooking: any = null;
 
@@ -41,41 +41,35 @@ export function makeGetBookingTool(prisma: PrismaService) {
           });
           order = hospitalityBooking?.legacy_order ?? null;
         }
-      } else if (phone) {
-        const lead = await prisma.leads.findFirst({
-          where: { business_id: businessId, phone },
-          select: { lead_id: true },
+      } else if (lead) {
+        hospitalityBooking = await prisma.hospitality_bookings.findFirst({
+          where: {
+            business_id: businessId,
+            lead_id: lead.lead_id,
+            status: { not: 'cancelled' },
+          },
+          orderBy: { created_at: 'desc' },
+          include: { rooms: true, guests_list: true, legacy_order: { include: { order_items: true } } },
         });
-        if (lead) {
-          hospitalityBooking = await prisma.hospitality_bookings.findFirst({
+        order = hospitalityBooking?.legacy_order ?? null;
+
+        if (!order) {
+          order = await prisma.orders.findFirst({
             where: {
               business_id: businessId,
               lead_id: lead.lead_id,
-              status: { not: 'cancelled' },
+              payment_status: { not: 'cancelled' },
             },
             orderBy: { created_at: 'desc' },
-            include: { rooms: true, guests_list: true, legacy_order: { include: { order_items: true } } },
+            include: { order_items: true },
           });
-          order = hospitalityBooking?.legacy_order ?? null;
-
-          if (!order) {
-            order = await prisma.orders.findFirst({
-              where: {
-                business_id: businessId,
-                lead_id: lead.lead_id,
-                payment_status: { not: 'cancelled' },
-              },
-              orderBy: { created_at: 'desc' },
-              include: { order_items: true },
-            });
-          }
         }
       }
 
       if (!order) {
         return bookingId
           ? `No booking found with ID ${bookingId}.`
-          : `No active booking found for phone number ${phone}.`;
+          : `No active booking found for this customer.`;
       }
 
       const firstOrderItem = (order.order_items as any[])?.[0];
@@ -114,10 +108,13 @@ export function makeGetBookingTool(prisma: PrismaService) {
     },
     {
       name: 'get_booking',
-      description: 'Look up an existing booking or order by customer phone number or booking ID',
+      description:
+        "Look up an existing booking or order. If no bookingId is given, returns the customer's most recent active booking.",
       schema: z.object({
-        phone: z.string().optional().describe('Customer phone number'),
-        bookingId: z.string().optional().describe('Booking or order ID'),
+        bookingId: z
+          .string()
+          .optional()
+          .describe('Booking or order ID. Omit to fetch this customer&rsquo;s most recent booking.'),
       }),
     },
   );

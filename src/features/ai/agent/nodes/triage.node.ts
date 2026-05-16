@@ -1,7 +1,6 @@
 import { Logger } from '@nestjs/common';
 import { SystemMessage } from '@langchain/core/messages';
 import { AgentStateType } from '../graph/agent-state';
-import { PrismaService } from '../../../../prisma/prisma.service';
 import { AgentModelConfig, createChatModel } from '../graph/llm-factory';
 import { sanitizeMessagesForModel } from '../utils/message-sanitizer';
 
@@ -40,7 +39,7 @@ const VALID_INTENTS = new Set([
 
 const logger = new Logger('TriageNode');
 
-export function makeTriageNode(modelConfig: AgentModelConfig, prisma: PrismaService) {
+export function makeTriageNode(modelConfig: AgentModelConfig) {
   const llm = createChatModel({
     model: modelConfig.fastModel,
     apiKey: modelConfig.apiKey,
@@ -52,20 +51,8 @@ export function makeTriageNode(modelConfig: AgentModelConfig, prisma: PrismaServ
     const userMsg = state.messages.at(-1)?.content;
     logger.log(`Triaging: "${String(userMsg).slice(0, 100)}"`);
 
-    // Resolve business_type from DB (cached in state after first turn)
-    let businessType = state.businessType;
-    if (!businessType && state.businessId) {
-      try {
-        const biz = await prisma.businesses.findUnique({
-          where: { business_id: state.businessId },
-          select: { business_type: true },
-        });
-        businessType = (biz?.business_type ?? 'default').toLowerCase();
-        logger.log(`Resolved business_type=${businessType} for ${state.businessId}`);
-      } catch {
-        businessType = 'default';
-      }
-    }
+    // businessType is already resolved by AgentContextBuilder via state.businessProfile
+    const businessType = state.businessType ?? state.businessProfile?.business_type ?? 'default';
 
     // Include last 5 messages as context so the classifier understands follow-up replies
     // (e.g. user says "20 to 21" after bot asked for check-in/check-out dates)

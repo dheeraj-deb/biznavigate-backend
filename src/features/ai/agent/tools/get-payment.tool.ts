@@ -5,29 +5,23 @@ import { getRunContext } from '../context/agent-run-context';
 
 export function makeGetPaymentTool(prisma: PrismaService) {
   return tool(
-    async ({ bookingId, phone }) => {
-      const { businessId } = getRunContext();
+    async ({ bookingId }) => {
+      const { businessId, lead } = getRunContext();
 
       let orderId = bookingId;
 
-      // Resolve orderId via phone if no bookingId given
-      if (!orderId && phone) {
-        const lead = await prisma.leads.findFirst({
-          where: { business_id: businessId, phone },
-          select: { lead_id: true },
+      // Resolve orderId via the lead resolved at run start
+      if (!orderId && lead) {
+        const order = await prisma.orders.findFirst({
+          where: { business_id: businessId, lead_id: lead.lead_id },
+          orderBy: { created_at: 'desc' },
+          select: { order_id: true, order_number: true },
         });
-        if (lead) {
-          const order = await prisma.orders.findFirst({
-            where: { business_id: businessId, lead_id: lead.lead_id },
-            orderBy: { created_at: 'desc' },
-            select: { order_id: true, order_number: true },
-          });
-          orderId = order?.order_id;
-        }
+        orderId = order?.order_id;
       }
 
       if (!orderId) {
-        return 'Please provide a booking ID or your phone number so I can look up the payment.';
+        return 'Please share the booking ID so I can look up the payment.';
       }
 
       const payment = await prisma.payments.findFirst({
@@ -58,10 +52,10 @@ export function makeGetPaymentTool(prisma: PrismaService) {
     },
     {
       name: 'get_payment_info',
-      description: 'Retrieve payment details, invoice, or refund status for a booking or order',
+      description:
+        "Retrieve payment details, invoice, or refund status. If bookingId is omitted, uses the customer's most recent order.",
       schema: z.object({
-        bookingId: z.string().optional().describe('Booking or order ID'),
-        phone: z.string().optional().describe('Customer phone number'),
+        bookingId: z.string().optional().describe('Booking or order ID. Optional.'),
       }),
     },
   );
