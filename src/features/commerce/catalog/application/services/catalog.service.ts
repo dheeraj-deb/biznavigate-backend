@@ -320,7 +320,11 @@ export class CatalogService {
         item_id: i.item_id,
         item_type: i.item_type,
         name: i.name,
+        description: i.description,
+        category: i.category,
         base_price: Number(i.base_price),
+        effective_price: Number(i.base_price),
+        currency: i.currency,
         attributes: i.attributes,
         details: this.productDetails(i.product_detail, i.attributes),
         stock_quantity: i.stock_quantity,
@@ -332,6 +336,7 @@ export class CatalogService {
           options: v.options,
         })),
         primary_image_url: i.primary_image_url,
+        image_urls: i.image_urls,
       }));
     }
 
@@ -395,12 +400,16 @@ export class CatalogService {
           item_id: item.item_id,
           item_type: item.item_type,
           name: item.name,
+          description: item.description,
+          category: item.category,
           base_price: Number(item.base_price),
           effective_price: effectivePrice,
+          currency: item.currency,
           attributes: item.attributes,
           details,
           available_slots: availableSlots,
           primary_image_url: item.primary_image_url,
+          image_urls: item.image_urls,
         };
       }),
     );

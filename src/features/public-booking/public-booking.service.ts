@@ -287,7 +287,10 @@ export class PublicBookingService {
       reference_id: inquiry.inquiry_id,
       status: 'received',
       payment_status: 'pending',
-      message: 'Your request has been received. The team will contact you shortly.',
+      continue_on_whatsapp: Boolean(body.continue_on_whatsapp),
+      message: body.continue_on_whatsapp
+        ? 'Your details are saved. Continue on WhatsApp to confirm the order.'
+        : 'Your request has been received. The team will contact you shortly.',
     };
   }
 
@@ -306,7 +309,7 @@ export class PublicBookingService {
     const name = customer.name ?? body.name;
     const phone = customer.phone ?? body.phone;
 
-    if (item.item_type === 'accommodation') {
+    if (item.item_type === 'accommodation' && !body.continue_on_whatsapp) {
       const booking = await this.hospitalityBookingCommandService.createBooking({
         business_id: business.business_id,
         service_id: item.item_id,
@@ -369,7 +372,10 @@ export class PublicBookingService {
       reference_id: inquiry.inquiry_id,
       status: 'received',
       payment_status: 'pending',
-      message: 'Your request has been received. The team will confirm availability shortly.',
+      continue_on_whatsapp: Boolean(body.continue_on_whatsapp),
+      message: body.continue_on_whatsapp
+        ? 'Your details are saved. Continue on WhatsApp to confirm the booking.'
+        : 'Your request has been received. The team will confirm availability shortly.',
     };
   }
 
