@@ -9,6 +9,7 @@ import { CatalogService } from '../../commerce/catalog/catalog.service';
 import { PrismaService } from '../../../prisma/prisma.service';
 import { RagService } from '../rag/rag.service';
 import { agentRunContextStorage } from './context/agent-run-context';
+import { AgentContextBuilder } from './context/agent-context-builder.service';
 import { GenerationHandle } from './types/generation-handle';
 import { decodeHandoff } from './types/handoff';
 import { AgentTurnMetrics } from './types/agent-metrics';
@@ -44,6 +45,7 @@ export class AgentService implements OnModuleInit {
     private readonly prisma: PrismaService,
     private readonly eventEmitter: EventEmitter2,
     @Inject(CACHE_MANAGER) private readonly cache: Cache,
+    private readonly contextBuilder: AgentContextBuilder,
     @Optional() private readonly ragService: RagService | null,
   ) {}
 
@@ -77,18 +79,15 @@ export class AgentService implements OnModuleInit {
     try {
       if (handle.cancelled) return null;
 
-      // Resolve businessType if not supplied by the caller
-      let businessType = ctx.businessType;
-      if (!businessType) {
-        const biz = await this.prisma.businesses.findUnique({
-          where: { business_id: ctx.businessId },
-          select: { business_type: true },
-        });
-        businessType = (biz?.business_type ?? 'default').toLowerCase();
-      }
+      // Build agent context (business profile + lead + recent bookings).
+      // The business profile is cached for 5min so this is cheap on repeat turns.
+      const builtContext = await this.contextBuilder.build({
+        businessId: ctx.businessId,
+        leadId: ctx.leadId,
+        phone: ctx.phone,
+      });
+      const businessType = ctx.businessType ?? builtContext.businessProfile.business_type;
 
-      // Wrap graph.invoke in AsyncLocalStorage so all tools can read context without
-      // receiving businessId as an LLM-supplied parameter
       const previousLanguage = await this.getPreviousConversationLanguage(ctx.conversationId);
       const languageDetection = detectCustomerLanguage(text, previousLanguage);
       const customerLanguage = languageDetection.language;
@@ -106,9 +105,12 @@ export class AgentService implements OnModuleInit {
           businessId: ctx.businessId,
           businessType,
           customerLanguage,
-          leadId: ctx.leadId,
+          leadId: ctx.leadId ?? builtContext.lead?.lead_id,
           phone: ctx.phone,
           conversationId: ctx.conversationId,
+          lead: builtContext.lead,
+          businessProfile: builtContext.businessProfile,
+          recentBookings: builtContext.recentBookings,
         },
         () =>
           this.graph.invoke(
@@ -119,8 +121,11 @@ export class AgentService implements OnModuleInit {
               businessType,
               bookingMethodsSummary: summarizeBookingMethodsForAgent(bookingMethods),
               customerLanguage,
-              leadId: ctx.leadId,
+              leadId: ctx.leadId ?? builtContext.lead?.lead_id,
               phone: ctx.phone,
+              businessProfile: builtContext.businessProfile,
+              lead: builtContext.lead,
+              recentBookings: builtContext.recentBookings,
             },
             { configurable: { thread_id: ctx.conversationId } },
           ),

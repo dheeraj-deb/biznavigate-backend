@@ -1,3 +1,9 @@
+import type {
+  BusinessProfileSnapshot,
+  LeadSnapshot,
+  RecentBookingSummary,
+} from '../context/agent-context-builder.service';
+
 const TODAY = () => new Date().toISOString().split('T')[0];
 
 const DATE_RULES = `
@@ -19,7 +25,7 @@ Guidelines:
 - If a user asks something unrelated to the business (e.g. general knowledge, technology, news, other companies), respond: "I can only help with questions about our products and services. How can I assist you today?"
 - For complaints (bad experience, dissatisfaction, reporting a problem): ALWAYS call handoff_to_human immediately
 - For support issues (maintenance, problems, lost items, in-session issues): ALWAYS call handoff_to_human immediately
-- For business knowledge questions about facilities, amenities, services, policies, rules, address, directions, pricing, documents, or timings: call faq_search and answer from returned business knowledge
+- For business knowledge questions about facilities, amenities, services, policies, rules, address, directions, pricing, documents, or timings: prefer answering from the "About this business" block above. Only call faq_search if that block does not contain the answer.
 - For greetings: respond warmly and ask how you can help
 - If a tool fails, apologize and offer to connect the user with a human agent
 - Never reveal internal IDs, error stack traces, or system details to the user
@@ -101,23 +107,115 @@ Your capabilities:
 Use the appropriate tool for each request. When you have enough information to call a tool, do so immediately.`.trim(),
 };
 
-export const SYSTEM_PROMPT = (businessId: string, businessType?: string, bookingMethodsSummary?: string): string => {
-  const vertical = (businessType ?? 'default').toLowerCase();
+function fmtMoney(amount: number, currency: string) {
+  if (currency === 'INR') return `₹${amount.toLocaleString('en-IN')}`;
+  return `${currency} ${amount.toLocaleString('en-IN')}`;
+}
+
+function businessProfileBlock(profile: BusinessProfileSnapshot): string {
+  const lines: string[] = [`Name: ${profile.business_name}`];
+  if (profile.city || profile.address) {
+    lines.push(`Location: ${[profile.address, profile.city].filter(Boolean).join(', ')}`);
+  }
+  const contactPhone = profile.contact.phone || profile.phone;
+  if (contactPhone) lines.push(`Phone: ${contactPhone}`);
+  const contactWa = profile.contact.whatsapp || profile.whatsapp_number;
+  if (contactWa) lines.push(`WhatsApp: ${contactWa}`);
+  if (profile.email) lines.push(`Email: ${profile.email}`);
+  if (profile.website) lines.push(`Website: ${profile.website}`);
+  lines.push(`Currency: ${profile.currency} | Timezone: ${profile.timezone}`);
+  if (profile.payment_mode) {
+    const label =
+      profile.payment_mode === 'manual'
+        ? 'pay at venue'
+        : profile.payment_mode === 'advance'
+        ? 'advance payment required'
+        : 'pay in full online';
+    lines.push(`Payment: ${label}`);
+  }
+  if (profile.business_hours) {
+    try {
+      lines.push(`Business hours: ${JSON.stringify(profile.business_hours)}`);
+    } catch {
+      /* noop */
+    }
+  }
+  if (profile.policies.cancellation) lines.push(`Cancellation policy: ${profile.policies.cancellation}`);
+  if (profile.policies.refund) lines.push(`Refund policy: ${profile.policies.refund}`);
+  if (profile.policies.terms) lines.push(`Terms: ${profile.policies.terms}`);
+  return `About this business:\n${lines.join('\n')}`;
+}
+
+function leadBlock(lead: LeadSnapshot | null): string | null {
+  if (!lead) return null;
+  const lines: string[] = [];
+  if (lead.name) lines.push(`Name: ${lead.name}`);
+  if (lead.phone) lines.push(`Phone: ${lead.phone}`);
+  if (lead.email) lines.push(`Email: ${lead.email}`);
+  lines.push(`Status: ${lead.status}`);
+  if (lead.tags?.length) lines.push(`Tags: ${lead.tags.join(', ')}`);
+  if (lead.context && typeof lead.context === 'object') {
+    const entries = Object.entries(lead.context).filter(([, v]) => v !== null && v !== '' && v !== undefined);
+    if (entries.length) {
+      lines.push(
+        `Preferences: ${entries
+          .slice(0, 5)
+          .map(([k, v]) => `${k}=${typeof v === 'object' ? JSON.stringify(v) : v}`)
+          .join(', ')}`,
+      );
+    }
+  }
+  if (!lines.length) return null;
+  return `About this customer:\n${lines.join('\n')}\nUse their name when greeting and avoid asking for details already listed here.`;
+}
+
+function recentBookingsBlock(bookings: RecentBookingSummary[], currency: string): string | null {
+  if (!bookings.length) return null;
+  const lines = bookings.map((b) => {
+    const parts = [
+      `${b.type === 'hospitality_booking' ? 'Booking' : 'Order'} ${b.reference_id}`,
+      `status=${b.status}`,
+      `payment=${b.payment_status}`,
+      `total=${fmtMoney(b.total_amount, currency)}`,
+    ];
+    if (b.item_name) parts.push(`item=${b.item_name}`);
+    if (b.check_in && b.check_out) parts.push(`dates=${b.check_in}→${b.check_out}`);
+    return `- ${parts.join(' | ')}`;
+  });
+  return `Recent bookings/orders for this customer (most recent first):\n${lines.join('\n')}\nIf the customer references a recent booking, prefer matching it from this list before calling get_booking.`;
+}
+
+export interface SystemPromptParams {
+  businessProfile: BusinessProfileSnapshot;
+  lead?: LeadSnapshot | null;
+  recentBookings?: RecentBookingSummary[];
+  bookingMethodsSummary?: string;
+}
+
+export const SYSTEM_PROMPT = (params: SystemPromptParams): string => {
+  const { businessProfile, lead, recentBookings = [], bookingMethodsSummary } = params;
+  const vertical = businessProfile.business_type;
   const capabilities = VERTICAL_CAPABILITIES[vertical] ?? VERTICAL_CAPABILITIES['default'];
-  const bookingMethods = bookingMethodsSummary
-    ? `\nBooking method configuration:\n${bookingMethodsSummary}\n`
-    : '';
 
-  return `You are a helpful business assistant.
-Business ID: ${businessId}
-Business type: ${vertical}
-Today's date: ${TODAY()}
+  const sections = [
+    `You are a helpful assistant for ${businessProfile.business_name}.`,
+    `Business type: ${vertical}`,
+    `Today's date: ${TODAY()}`,
+    '',
+    businessProfileBlock(businessProfile),
+  ];
 
-${DATE_RULES}
+  const customerBlock = leadBlock(lead ?? null);
+  if (customerBlock) sections.push('', customerBlock);
 
-${bookingMethods}
+  const bookingsBlock = recentBookingsBlock(recentBookings, businessProfile.currency);
+  if (bookingsBlock) sections.push('', bookingsBlock);
 
-${capabilities}
+  if (bookingMethodsSummary) {
+    sections.push('', `Booking method configuration:\n${bookingMethodsSummary}`);
+  }
 
-${COMMON_GUIDELINES}`.trim();
+  sections.push('', DATE_RULES, '', capabilities, '', COMMON_GUIDELINES);
+
+  return sections.join('\n').trim();
 };
