@@ -56,17 +56,26 @@ export class ConversationService {
     page: number = 1,
     limit: number = 20,
   ): Promise<{ data: ConversationDocument[]; total: number }> {
-    const query: any = { business_id, tenant_id };
+    const query: any = { business_id };
+    const andClauses: any[] = [];
+    if (tenant_id) {
+      andClauses.push({
+        $or: [{ tenant_id }, { tenant_id: { $exists: false } }, { tenant_id: null }],
+      });
+    }
 
     if (filter.status) query.status = filter.status;
     if (filter.channel) query.channel = filter.channel;
     if (filter.search) {
-      query.$or = [
-        { sender_name: { $regex: filter.search, $options: 'i' } },
-        { message_text: { $regex: filter.search, $options: 'i' } },
-        { customer_id: { $regex: filter.search, $options: 'i' } },
-      ];
+      andClauses.push({
+        $or: [
+          { sender_name: { $regex: filter.search, $options: 'i' } },
+          { message_text: { $regex: filter.search, $options: 'i' } },
+          { customer_id: { $regex: filter.search, $options: 'i' } },
+        ],
+      });
     }
+    if (andClauses.length) query.$and = andClauses;
 
     const skip = (page - 1) * limit;
 

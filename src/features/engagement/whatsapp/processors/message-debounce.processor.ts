@@ -189,7 +189,12 @@ export class MessageDebounceProcessor extends WorkerHost {
 
     const flow = decodeFlow(reply);
     if (flow) {
-      await this.handleFlow(flow, ctx, lastPayload, phoneNumberId, customerPhone, customerLanguage);
+      const flowReplyCtx = {
+        conversationId: lastPayload.context?.conversation_id ?? conversationId,
+        leadId: lastPayload.lead_id,
+        tenantId: lastPayload.tenant_id,
+      };
+      await this.handleFlow(flow, ctx, lastPayload, phoneNumberId, customerPhone, customerLanguage, flowReplyCtx);
       return;
     }
 
@@ -282,6 +287,7 @@ export class MessageDebounceProcessor extends WorkerHost {
     phoneNumberId: string,
     customerPhone: string,
     customerLanguage: CustomerLanguage,
+    replyCtx?: { conversationId: string; leadId: string; tenantId: string },
   ): Promise<void> {
     const { flowType } = flow!;
 
@@ -316,6 +322,7 @@ export class MessageDebounceProcessor extends WorkerHost {
             phoneNumberId,
             customerPhone,
             `${this.localizedAvailabilityIntro(customerLanguage, checkIn, checkOut)}\n\nPlease complete your booking here:\n${bookingLink}`,
+            replyCtx,
           );
           this.logger.log(`🔗 Sent website booking link for ${customerPhone}`);
         } else {
@@ -325,6 +332,7 @@ export class MessageDebounceProcessor extends WorkerHost {
             customerPhone,
             this.availabilitySummary(screenResult, checkIn, checkOut, customerLanguage) ??
               this.localizedMessage(customerLanguage, 'no_availability', { checkIn, checkOut }),
+            replyCtx,
           );
         }
       } else if (
@@ -351,7 +359,7 @@ export class MessageDebounceProcessor extends WorkerHost {
           this.nonEmptyString(screenResult.data?.error_message) ??
           this.availabilitySummary(screenResult, checkIn, checkOut, customerLanguage) ??
           this.localizedMessage(customerLanguage, 'no_availability', { checkIn, checkOut });
-        await this.whatsappService.sendAgentReply(ctx.businessId, phoneNumberId, customerPhone, fallbackText);
+        await this.whatsappService.sendAgentReply(ctx.businessId, phoneNumberId, customerPhone, fallbackText, replyCtx);
       }
       return;
     }
@@ -361,7 +369,7 @@ export class MessageDebounceProcessor extends WorkerHost {
       const { slots, date, serviceName } = flow as any;
       const slotList = Array.isArray(slots) ? slots.join('\n') : String(slots ?? '');
       const msg = this.localizedMessage(customerLanguage, 'appointment_slots', { serviceName, date, slotList });
-      await this.whatsappService.sendAgentReply(ctx.businessId, phoneNumberId, customerPhone, msg);
+      await this.whatsappService.sendAgentReply(ctx.businessId, phoneNumberId, customerPhone, msg, replyCtx);
       return;
     }
 
@@ -372,6 +380,7 @@ export class MessageDebounceProcessor extends WorkerHost {
       phoneNumberId,
       customerPhone,
       this.localizedMessage(customerLanguage, 'error'),
+      replyCtx,
     );
   }
 

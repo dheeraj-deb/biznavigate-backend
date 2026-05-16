@@ -188,7 +188,34 @@ export class WhatsAppService {
     });
     const platformMessageId = apiResult?.messages?.[0]?.id;
 
-    if (ctx) {
+    // If caller didn't supply a context, derive one so persistence still happens.
+    let resolvedCtx = ctx;
+    if (!resolvedCtx) {
+      const lead = await this.prisma.leads.findFirst({
+        where: { business_id: businessId, platform_id: to, deleted_at: null },
+        select: { lead_id: true, tenant_id: true },
+      });
+      if (lead) {
+        const conversation = await this.conversationService.findActiveConversation(
+          lead.lead_id,
+          'whatsapp',
+          businessId,
+        );
+        if (conversation) {
+          resolvedCtx = {
+            conversationId: conversation.conversation_id,
+            leadId: lead.lead_id,
+            tenantId: lead.tenant_id,
+          };
+        }
+      }
+    }
+
+    this.logger.log(
+      `sendAgentReply persistence — to=${to} businessId=${businessId} ctxProvided=${!!ctx} resolved=${!!resolvedCtx} convId=${resolvedCtx?.conversationId} platformId=${platformMessageId}`,
+    );
+
+    if (resolvedCtx) {
       await this.outboundCommandService.persistSentMessage({
         account: { ...account, business_id: businessId, page_id: phoneNumberId },
         to,
@@ -199,9 +226,9 @@ export class WhatsAppService {
         assigned_to: 'bot',
         metadata: { is_ai: true },
         conversation_context: {
-          conversation_id: ctx.conversationId,
-          lead_id: ctx.leadId,
-          tenant_id: ctx.tenantId,
+          conversation_id: resolvedCtx.conversationId,
+          lead_id: resolvedCtx.leadId,
+          tenant_id: resolvedCtx.tenantId,
         },
       });
 
@@ -209,11 +236,13 @@ export class WhatsAppService {
       // is forward-only and idempotent, so calling on every AI reply is safe;
       // subsequent replies are no-ops once the lead is past `contacted`.
       await this.leadCommands.autoAdvance({
-        leadId: ctx.leadId,
+        leadId: resolvedCtx.leadId,
         toSlug: 'contacted',
         reason: 'ai_reply_sent',
         actor: 'ai',
       });
+    } else {
+      this.logger.warn(`sendAgentReply: could not resolve conversation context for ${to} — message not persisted`);
     }
   }
 
