@@ -15,6 +15,47 @@ describe('sanitizeMessagesForModel', () => {
     expect(sanitized.every((message) => message.getType() !== 'tool')).toBe(true);
   });
 
+  it('drops deserialized orphan tool messages', () => {
+    const messages = [
+      new HumanMessage('booking id 258f049a-0a8c-45f5-b27c-3a9369b01f76'),
+      {
+        content: 'FLOW:{}',
+        role: 'tool',
+        tool_call_id: 'stale_call',
+        getType: () => 'tool',
+      } as any,
+    ];
+
+    const sanitized = sanitizeMessagesForModel(messages);
+
+    expect(sanitized).toHaveLength(1);
+    expect(sanitized[0].getType()).toBe('human');
+  });
+
+  it('keeps complete deserialized assistant tool call groups', () => {
+    const messages = [
+      new HumanMessage('22, 23'),
+      {
+        content: '',
+        role: 'assistant',
+        tool_calls: [{ id: 'call_1', name: 'check_availability', args: {} }],
+        getType: () => 'ai',
+      } as any,
+      {
+        content: 'FLOW:{}',
+        role: 'tool',
+        tool_call_id: 'call_1',
+        getType: () => 'tool',
+      } as any,
+    ];
+
+    const sanitized = sanitizeMessagesForModel(messages);
+
+    expect(sanitized).toHaveLength(3);
+    expect((sanitized[1] as any).tool_calls[0].id).toBe('call_1');
+    expect((sanitized[2] as any).tool_call_id).toBe('call_1');
+  });
+
   it('keeps complete assistant tool call groups', () => {
     const messages = [
       new HumanMessage('22, 23'),

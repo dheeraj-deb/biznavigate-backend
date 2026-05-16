@@ -28,6 +28,7 @@ import { AutomationModule } from "./features/automation/automation.module";
 import { PlatformModule } from "./features/platform/platform.module";
 import { AiModule } from "./features/ai/ai.module";
 import { InsightsModule } from "./features/insights/insights.module";
+import { PublicBookingModule } from "./features/public-booking/public-booking.module";
 
 @Module({
   imports: [
@@ -95,6 +96,7 @@ import { InsightsModule } from "./features/insights/insights.module";
       ? [HospitalityIndustryModule.withPricing()]
       : [HospitalityIndustryModule]),
     InsightsModule,
+    PublicBookingModule,
     ...(process.env.MONGODB_URI
       ? [AiModule.withRag()]
       : [AiModule]),

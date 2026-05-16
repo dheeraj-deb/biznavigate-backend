@@ -1,5 +1,23 @@
 import { AIMessage, BaseMessage, ToolMessage } from '@langchain/core/messages';
 
+function messageType(message: BaseMessage): string {
+  return typeof (message as any).getType === 'function'
+    ? (message as any).getType()
+    : typeof (message as any)._getType === 'function'
+      ? (message as any)._getType()
+      : (message as any).role ?? '';
+}
+
+function isToolMessage(message: BaseMessage): message is ToolMessage {
+  return message instanceof ToolMessage || messageType(message) === 'tool';
+}
+
+function isAiMessageWithToolCalls(message: BaseMessage): message is AIMessage {
+  return (message instanceof AIMessage || messageType(message) === 'ai' || messageType(message) === 'assistant') &&
+    Array.isArray((message as any).tool_calls) &&
+    (message as any).tool_calls.length > 0;
+}
+
 function getToolCallId(message: ToolMessage): string | undefined {
   return (message as any).tool_call_id ?? (message as any).toolCallId;
 }
@@ -32,7 +50,7 @@ export function sanitizeMessagesForModel(messages: BaseMessage[]): BaseMessage[]
 
   for (const message of messages) {
     if (pendingAiMessage) {
-      if (message instanceof ToolMessage) {
+      if (isToolMessage(message)) {
         const id = getToolCallId(message);
         if (id && pendingToolIds.has(id)) {
           pendingToolMessages.push(message);
@@ -44,8 +62,8 @@ export function sanitizeMessagesForModel(messages: BaseMessage[]): BaseMessage[]
       flushPendingToolGroup();
     }
 
-    if (message instanceof AIMessage && message.tool_calls?.length) {
-      const ids = toolCallIds(message);
+    if (isAiMessageWithToolCalls(message)) {
+      const ids = toolCallIds(message as AIMessage);
       if (ids.length > 0) {
         pendingAiMessage = message;
         pendingToolIds = new Set(ids);
@@ -54,7 +72,7 @@ export function sanitizeMessagesForModel(messages: BaseMessage[]): BaseMessage[]
       continue;
     }
 
-    if (message instanceof ToolMessage) continue;
+    if (isToolMessage(message)) continue;
 
     sanitized.push(message);
   }

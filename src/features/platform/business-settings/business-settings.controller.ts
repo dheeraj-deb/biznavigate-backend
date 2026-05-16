@@ -26,4 +26,14 @@ export class BusinessSettingsController {
   async updateBookingMethods(@Req() req: any, @Body() dto: UpdateBusinessSettingsDto['booking_methods']) {
     return this.settingsService.updateBookingMethods(req.user.business_id, dto ?? {});
   }
+
+  @Get('booking-link')
+  async getBookingLink(@Req() req: any) {
+    return this.settingsService.getBookingLink(req.user.business_id);
+  }
+
+  @Patch('booking-link')
+  async updateBookingLink(@Req() req: any, @Body() dto: UpdateBusinessSettingsDto['booking_link']) {
+    return this.settingsService.updateBookingLink(req.user.business_id, dto ?? {});
+  }
 }

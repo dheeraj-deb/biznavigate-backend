@@ -307,6 +307,28 @@ export class MessageDebounceProcessor extends WorkerHost {
         this.logger.log(`🏨 Started availability flow for ${customerPhone}`);
       } else if (
         screenResult.screen === 'AVAILABILITY_RESULT' &&
+        bookingMethods.availability_response.mode === 'website_link'
+      ) {
+        const bookingLink = await this.buildPublicBookingLink(businessId, { checkIn, checkOut });
+        if (bookingLink) {
+          await this.whatsappService.sendAgentReply(
+            ctx.businessId,
+            phoneNumberId,
+            customerPhone,
+            `${this.localizedAvailabilityIntro(customerLanguage, checkIn, checkOut)}\n\nPlease complete your booking here:\n${bookingLink}`,
+          );
+          this.logger.log(`🔗 Sent website booking link for ${customerPhone}`);
+        } else {
+          await this.whatsappService.sendAgentReply(
+            ctx.businessId,
+            phoneNumberId,
+            customerPhone,
+            this.availabilitySummary(screenResult, checkIn, checkOut, customerLanguage) ??
+              this.localizedMessage(customerLanguage, 'no_availability', { checkIn, checkOut }),
+          );
+        }
+      } else if (
+        screenResult.screen === 'AVAILABILITY_RESULT' &&
         bookingMethods.availability_response.mode === 'interactive' &&
         bookingMethods.interactive.enabled
       ) {
@@ -931,6 +953,36 @@ export class MessageDebounceProcessor extends WorkerHost {
     }).catch(() => null);
 
     return normalizeBookingMethodsConfig(settings?.booking_methods);
+  }
+
+  private async buildPublicBookingLink(
+    businessId: string,
+    params: { checkIn?: string; checkOut?: string; guests?: number; itemId?: string },
+  ): Promise<string | null> {
+    const business = await (this.prisma.businesses as any).findUnique({
+      where: { business_id: businessId },
+      select: {
+        public_booking_slug: true,
+        settings: { select: { booking_link: true } },
+      },
+    }).catch(() => null);
+
+    if (!business?.public_booking_slug) return null;
+    const bookingLink = business.settings?.booking_link;
+    if (bookingLink && typeof bookingLink === 'object' && bookingLink.enabled === false) return null;
+
+    const baseUrl = (
+      process.env.PUBLIC_BOOKING_BASE_URL ||
+      process.env.NEXT_PUBLIC_APP_URL ||
+      process.env.FRONTEND_URL ||
+      'https://app.biznavigo.com'
+    ).replace(/\/$/, '');
+    const url = new URL(`/book/${business.public_booking_slug}`, baseUrl);
+    if (params.checkIn) url.searchParams.set('checkIn', params.checkIn);
+    if (params.checkOut) url.searchParams.set('checkOut', params.checkOut);
+    if (params.guests) url.searchParams.set('guests', String(params.guests));
+    if (params.itemId) url.searchParams.set('itemId', params.itemId);
+    return url.toString();
   }
 
   private localizedMessage(

@@ -1,6 +1,6 @@
 export interface BookingMethodsConfig {
   availability_response: {
-    mode: 'interactive' | 'flow' | 'text';
+    mode: 'interactive' | 'flow' | 'text' | 'website_link';
   };
   ai_chat: {
     enabled: boolean;
@@ -71,7 +71,9 @@ function asString(value: unknown, fallback: string): string {
 }
 
 function asAvailabilityMode(value: unknown): BookingMethodsConfig['availability_response']['mode'] {
-  return value === 'flow' || value === 'text' || value === 'interactive' ? value : 'interactive';
+  return value === 'flow' || value === 'text' || value === 'interactive' || value === 'website_link'
+    ? value
+    : 'interactive';
 }
 
 export function normalizeBookingMethodsConfig(input: unknown): BookingMethodsConfig {
@@ -129,6 +131,8 @@ export function summarizeBookingMethodsForAgent(config: BookingMethodsConfig): s
 
   if (config.catalog.enabled) enabled.push('WhatsApp catalog/product messages');
   else disabled.push('WhatsApp catalog/product messages');
+
+  if (config.availability_response.mode === 'website_link') enabled.push('website booking link response');
 
   if (config.templates.enabled) enabled.push('approved WhatsApp booking templates');
   else disabled.push('approved WhatsApp booking templates');
