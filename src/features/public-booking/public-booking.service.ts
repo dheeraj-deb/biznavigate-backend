@@ -297,10 +297,7 @@ export class PublicBookingService {
       reference_id: inquiry.inquiry_id,
       status: 'received',
       payment_status: 'pending',
-      continue_on_whatsapp: Boolean(body.continue_on_whatsapp),
-      message: body.continue_on_whatsapp
-        ? 'Your details are saved. Continue on WhatsApp to confirm the order.'
-        : 'Your request has been received. The team will contact you shortly.',
+      message: 'Your order request has been received. You will receive a confirmation shortly.',
     };
   }
 
@@ -319,73 +316,30 @@ export class PublicBookingService {
     const name = customer.name ?? body.name;
     const phone = customer.phone ?? body.phone;
 
-    if (item.item_type === 'accommodation' && !body.continue_on_whatsapp) {
-      const booking = await this.hospitalityBookingCommandService.createBooking({
-        business_id: business.business_id,
-        service_id: item.item_id,
-        check_in: checkIn,
-        check_out: checkOut,
-        guest_name: name,
-        phone,
-        customer_phone: phone,
-        lead_id: leadId,
-        num_guests: body.guests ?? body.quantity ?? 1,
-        source: 'public_booking_link',
-        actor: 'customer',
-        idempotency_key: `public_booking:${randomUUID()}`,
-      });
-
-      return {
-        type: 'booking',
-        reference_id: booking.hospitality_booking_id ?? booking.booking_id,
-        legacy_order_id: booking.legacy_order_id,
-        status: 'confirmed',
-        payment_status: 'pending',
-        message: config.payment_mode === 'manual'
-          ? 'Your booking request has been confirmed. Payment can be completed with the business.'
-          : 'Your booking has been created and is awaiting payment.',
-      };
-    }
-
-    const inquiry = await this.prisma.hospitality_inquiries.create({
-      data: {
-        business_id: business.business_id,
-        tenant_id: business.tenant_id,
-        lead_id: leadId,
-        preferred_item_id: item.item_id,
-        check_in: new Date(checkIn),
-        check_out: new Date(checkOut),
-        guests: Number(body.guests ?? body.quantity ?? 1),
-        status: 'open',
-        metadata: {
-          source: 'public_booking_link',
-          customer,
-          notes: body.notes,
-          item_type: item.item_type,
-          item_name: item.name,
-        },
-      },
-    });
-
-    await this.prisma.lead_events.create({
-      data: {
-        lead_id: leadId,
-        business_id: business.business_id,
-        type: 'public_booking_request',
-        actor: 'customer',
-        data: { inquiry_id: inquiry.inquiry_id, item_id: item.item_id, check_in: checkIn, check_out: checkOut },
-      },
+    const booking = await this.hospitalityBookingCommandService.createBooking({
+      business_id: business.business_id,
+      service_id: item.item_id,
+      check_in: checkIn,
+      check_out: checkOut,
+      guest_name: name,
+      phone,
+      customer_phone: phone,
+      lead_id: leadId,
+      num_guests: body.guests ?? body.quantity ?? 1,
+      source: 'public_booking_link',
+      actor: 'customer',
+      idempotency_key: `public_booking:${randomUUID()}`,
     });
 
     return {
-      type: 'booking_request',
-      reference_id: inquiry.inquiry_id,
-      status: 'received',
+      type: 'booking',
+      reference_id: booking.hospitality_booking_id ?? booking.booking_id,
+      legacy_order_id: booking.legacy_order_id,
+      status: 'confirmed',
       payment_status: 'pending',
-      continue_on_whatsapp: Boolean(body.continue_on_whatsapp),
-      message: body.continue_on_whatsapp
-        ? 'Your details are saved. Continue on WhatsApp to confirm the booking.'
-        : 'Your request has been received. The team will confirm availability shortly.',
+      message: config.payment_mode === 'manual'
+        ? 'Your booking is confirmed. Payment will be collected by the business.'
+        : 'Your booking is confirmed and is awaiting payment.',
     };
   }
 

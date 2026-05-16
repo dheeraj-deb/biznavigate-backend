@@ -15,8 +15,6 @@ export function makeGetBookingTool(prisma: PrismaService) {
       // Resolve by bookingId first, fall back to phone lookup
       let order: any = null;
       let hospitalityBooking: any = null;
-      let hospitalityInquiry: any = null;
-      let productInquiry: any = null;
 
       if (bookingId) {
         const orderFilters: any[] = [{ order_number: bookingId }];
@@ -42,18 +40,6 @@ export function makeGetBookingTool(prisma: PrismaService) {
             include: { rooms: true, guests_list: true, legacy_order: { include: { order_items: true } } },
           });
           order = hospitalityBooking?.legacy_order ?? null;
-        }
-
-        // Last resort: maybe the reference is an inquiry_id (e.g. "continue on WhatsApp" public-booking flow)
-        if (!order && !hospitalityBooking && isUuid(bookingId)) {
-          hospitalityInquiry = await prisma.hospitality_inquiries.findFirst({
-            where: { business_id: businessId, inquiry_id: bookingId },
-          });
-          if (!hospitalityInquiry) {
-            productInquiry = await prisma.product_inquiries.findFirst({
-              where: { business_id: businessId, inquiry_id: bookingId },
-            });
-          }
         }
       } else if (phone) {
         const lead = await prisma.leads.findFirst({
@@ -87,31 +73,6 @@ export function makeGetBookingTool(prisma: PrismaService) {
       }
 
       if (!order) {
-        if (hospitalityInquiry) {
-          const meta = (hospitalityInquiry.metadata as any) ?? {};
-          const customer = meta.customer ?? {};
-          return (
-            `Pending inquiry ${hospitalityInquiry.inquiry_id}` +
-            ` | Status: ${hospitalityInquiry.status} (not yet confirmed)` +
-            ` | Item: ${meta.item_name ?? hospitalityInquiry.preferred_item_id}` +
-            ` | Check-in: ${hospitalityInquiry.check_in.toISOString().slice(0, 10)}` +
-            `, Check-out: ${hospitalityInquiry.check_out.toISOString().slice(0, 10)}` +
-            ` | Guests: ${hospitalityInquiry.guests}` +
-            (customer.name ? ` | Guest: ${customer.name}` : '') +
-            (customer.phone ? ` | Phone: ${customer.phone}` : '') +
-            ` — This inquiry was created from the public booking link and needs to be confirmed.`
-          );
-        }
-        if (productInquiry) {
-          const meta = (productInquiry.metadata as any) ?? {};
-          return (
-            `Pending product inquiry ${productInquiry.inquiry_id}` +
-            ` | Status: ${productInquiry.status} (not yet confirmed)` +
-            ` | Item: ${meta.item_name ?? productInquiry.item_id}` +
-            ` | Quantity: ${productInquiry.quantity}` +
-            ` — This inquiry was created from the public booking link and needs to be confirmed.`
-          );
-        }
         return bookingId
           ? `No booking found with ID ${bookingId}.`
           : `No active booking found for phone number ${phone}.`;
@@ -153,14 +114,10 @@ export function makeGetBookingTool(prisma: PrismaService) {
     },
     {
       name: 'get_booking',
-      description:
-        'Look up an existing booking, order, or pending inquiry (e.g. a public-booking-link reference the customer wants to confirm) by customer phone number or reference ID',
+      description: 'Look up an existing booking or order by customer phone number or booking ID',
       schema: z.object({
         phone: z.string().optional().describe('Customer phone number'),
-        bookingId: z
-          .string()
-          .optional()
-          .describe('Booking, order, or inquiry reference ID (UUID or booking/order number)'),
+        bookingId: z.string().optional().describe('Booking or order ID'),
       }),
     },
   );
