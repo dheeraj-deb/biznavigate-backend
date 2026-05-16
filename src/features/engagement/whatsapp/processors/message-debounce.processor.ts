@@ -261,6 +261,14 @@ export class MessageDebounceProcessor extends WorkerHost {
       lead_id: lastPayload.lead_id,
     });
 
+    // Also emit an inbox-side escalation event so the inbox UI updates its
+    // conversation row state (is_ai_handled → false) without a refetch.
+    this.inboxGateway.notifyEscalation(ctx.businessId, activeConvId, {
+      reason,
+      phone: customerPhone,
+      escalated_at: escalatedAt,
+    });
+
     this.inboxGateway.notifyNewMessage(ctx.businessId, activeConvId, {
       _id: (saved._id as any).toString(),
       conversation_id: activeConvId,
@@ -268,6 +276,8 @@ export class MessageDebounceProcessor extends WorkerHost {
       message_type: 'text',
       message_text: `Conversation escalated to human agent: ${reason}`,
       timestamp: escalatedAt,
+      is_escalation: true,
+      reason,
     });
 
     await this.whatsappService.sendAgentReply(

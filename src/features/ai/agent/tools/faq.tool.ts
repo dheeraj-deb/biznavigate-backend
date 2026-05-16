@@ -12,7 +12,7 @@ export function makeFaqTool(ragService: RagService) {
         const results = await ragService.search(businessId, 'docs', question, 5, 0.2);
 
         if (!results.length) {
-          return `No business knowledge has been uploaded for this question yet. Ask one short follow-up question or offer to connect the customer with a human.`;
+          return `No business knowledge matches this question. Do NOT invent an answer or refuse the request based on what is "not listed". If the customer is asking for a special request, custom item, or anything the business may or may not accommodate, call handoff_to_human so a team member can confirm. Only if the question is purely informational (e.g. address, timings) and clearly outside the business's scope, briefly say you don't have that detail and offer to connect them with the team.`;
         }
 
         const context = results
