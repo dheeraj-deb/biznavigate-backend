@@ -19,7 +19,7 @@ Classify the user's LATEST message into exactly one of:
 - support       (needs help with something — issue, lost item, maintenance, in-session problem)
 - faq           (general question about the business, facilities, amenities, policies, rules, address, directions, pricing, timings, documents, or uploaded business knowledge)
 - payment       (asking about charges, refunds, invoices, or payment methods)
-- handoff       (explicitly wants to speak to a human / live agent)
+- handoff       (explicitly wants to speak to a human / live agent, OR is making a special/custom request that requires staff confirmation — e.g. "can you cook X for me", "can you arrange Y", "I'd like to request Z")
 - greeting      (just saying hi, hello, or starting a conversation)
 - other         (unrelated or spam — confident it has nothing to do with the business)
 
@@ -55,8 +55,12 @@ export function makeTriageNode(modelConfig: AgentModelConfig) {
     const businessType = state.businessType ?? state.businessProfile?.business_type ?? 'default';
 
     // Include last 5 messages as context so the classifier understands follow-up replies
-    // (e.g. user says "20 to 21" after bot asked for check-in/check-out dates)
-    const contextMessages = sanitizeMessagesForModel(state.messages).slice(-5);
+    // (e.g. user says "20 to 21" after bot asked for check-in/check-out dates).
+    // Sanitize after slicing — slicing can orphan a ToolMessage whose paired AIMessage
+    // sits just outside the window, and OpenAI rejects orphan tool results.
+    const contextMessages = sanitizeMessagesForModel(
+      sanitizeMessagesForModel(state.messages).slice(-5),
+    );
     const response = await llm.invoke([
       new SystemMessage(INTENT_PROMPT),
       ...contextMessages,

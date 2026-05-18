@@ -11,6 +11,10 @@ import { NodeFactory } from './factories/node-factory';
 import { ConversationService } from '../../crm/conversation/conversation.service';
 import { CreateWorkflowDto, InitiateWorkflowDto, UpdateWorkflowDto } from './dto/save-workflow.dto';
 import { WorkflowAnalyzerService } from './workflow-analyzer.service';
+import { WorkflowDefinitionValidator } from './validation/workflow-definition.validator';
+import { evaluateTrigger } from './triggers/trigger-evaluator';
+import { WorkflowSchedulerService } from './schedule/workflow-scheduler.service';
+import { ScheduleTriggerParams } from './triggers/trigger-schemas';
 import { WorkflowDefinition, WorkflowDefinitionDocument } from './schema/workflow-definition.schema';
 import { BusinessWorkflow, BusinessWorkflowDocument } from './schema/business-workflow.schema';
 import { WorkflowExecution, WorkflowExecutionDocument } from './schema/workflow-execution.schema';
@@ -30,6 +34,8 @@ export class WorkflowsService implements OnModuleInit {
     @InjectModel(BusinessWorkflow.name) private readonly businessWorkflowModel: Model<BusinessWorkflowDocument>,
     @InjectModel(WorkflowExecution.name) private readonly workflowExecutionModel: Model<WorkflowExecutionDocument>,
     private readonly workflowAnalyzer: WorkflowAnalyzerService,
+    private readonly definitionValidator: WorkflowDefinitionValidator,
+    private readonly scheduler: WorkflowSchedulerService,
     @InjectQueue('workflow-timeouts') private readonly workflowTimeoutQueue: Queue,
   ) {
   }
@@ -40,6 +46,25 @@ export class WorkflowsService implements OnModuleInit {
         await this.handleIncomingMessage(aiResult);
       },
     });
+
+    await this.dropStaleBusinessWorkflowIndexes();
+  }
+
+  // One-time cleanup: a previous schema had an `intent_name` field with a unique
+  // (business_id, intent_name) index. The field is gone but the index lingers in
+  // existing Mongo deployments, so every insert writes intent_name: null and the
+  // second insert per business collides. Drop it if present.
+  private async dropStaleBusinessWorkflowIndexes() {
+    const STALE = 'business_id_1_intent_name_1';
+    try {
+      const indexes = await this.businessWorkflowModel.collection.indexes();
+      if (indexes.some((i) => i.name === STALE)) {
+        await this.businessWorkflowModel.collection.dropIndex(STALE);
+        this.logger.log(`Dropped stale index ${STALE} on business_workflows`);
+      }
+    } catch (err: any) {
+      this.logger.warn(`Could not drop stale index ${STALE}: ${err?.message ?? err}`);
+    }
   }
 
   getNodeDefinitions() {
@@ -178,7 +203,23 @@ export class WorkflowsService implements OnModuleInit {
 
     const business_type: string = business.business_type ?? 'general';
 
+    // Validate before any analyzer/persist work. Drafts may be incomplete, so we
+    // only HARD-fail when the caller is activating the workflow. Otherwise we log
+    // the errors and let the user keep iterating.
     const enrichedConnections = this.enrichConnectionsWithConditions(nodes, connections);
+    if (is_active) {
+      this.definitionValidator.validateOrThrow({ nodes, connections: enrichedConnections });
+    } else {
+      const errors = this.definitionValidator.collectErrors({ nodes, connections: enrichedConnections });
+      if (errors.length) {
+        this.logger.warn(
+          `Workflow saved as draft with ${errors.length} validation issue(s): ${errors
+            .slice(0, 5)
+            .map((e) => `${e.path}: ${e.message}`)
+            .join('; ')}`,
+        );
+      }
+    }
 
     // AI variable mapping — auto-maps template node variables before saving
     let analyzedNodes = nodes;
@@ -216,6 +257,7 @@ export class WorkflowsService implements OnModuleInit {
         { upsert: true, returnDocument: 'after' },
       );
 
+      await this.syncSchedule(workflow_id, business_id, analyzedNodes, is_active ?? true);
       return workflowDef;
     }
 
@@ -238,6 +280,7 @@ export class WorkflowsService implements OnModuleInit {
         { _id: existingLink._id },
         { $set: { is_active: is_active ?? true } },
       );
+      await this.syncSchedule(existingLink.workflow_id, business_id, analyzedNodes, is_active ?? true);
       return workflowDef;
     }
 
@@ -259,13 +302,55 @@ export class WorkflowsService implements OnModuleInit {
       is_active: is_active ?? true,
     });
 
+    await this.syncSchedule(new_workflow_id, business_id, analyzedNodes, is_active ?? true);
     return workflowDef;
+  }
+
+  /**
+   * After any persistence event for a workflow, make sure BullMQ matches the
+   * current desired state. If the workflow is active and has a schedule
+   * trigger, (re)register it. Otherwise tear down any previous schedule.
+   */
+  private async syncSchedule(
+    workflow_id: string,
+    business_id: string,
+    nodes: any[],
+    isActive: boolean,
+  ): Promise<void> {
+    const scheduleNode = (nodes ?? []).find((n) => n?.type === 'trigger.schedule');
+    try {
+      if (isActive && scheduleNode?.params) {
+        await this.scheduler.schedule(workflow_id, business_id, scheduleNode.params as ScheduleTriggerParams);
+      } else {
+        await this.scheduler.unschedule(workflow_id);
+      }
+    } catch (err: any) {
+      this.logger.error(`syncSchedule for ${workflow_id} failed: ${err.message}`, err.stack);
+    }
   }
 
   async updateWorkflow(dto: UpdateWorkflowDto) {
     const { workflow_id, workflow_name, nodes, connections, description, is_active } = dto;
 
-    return this.workflowDefinitionModel.findOneAndUpdate(
+    // If activating, validate against the definition that will be active after
+    // this write (caller-supplied if present, otherwise the stored definition).
+    if (is_active) {
+      let candidateNodes = nodes;
+      let candidateConnections = connections;
+      if (!candidateNodes || !candidateConnections) {
+        const existing = await this.workflowDefinitionModel.findOne({ workflow_id }).lean();
+        candidateNodes = candidateNodes ?? (existing?.workflow_definition?.nodes as any[]);
+        candidateConnections = candidateConnections ?? (existing?.workflow_definition?.connections as Record<string, any>);
+      }
+      if (candidateNodes && candidateConnections) {
+        this.definitionValidator.validateOrThrow({
+          nodes: candidateNodes,
+          connections: candidateConnections,
+        });
+      }
+    }
+
+    const updated = await this.workflowDefinitionModel.findOneAndUpdate(
       { workflow_id },
       {
         $set: {
@@ -277,6 +362,39 @@ export class WorkflowsService implements OnModuleInit {
       },
       { returnDocument: 'after' },
     );
+
+    // Keep BullMQ in sync with the new state. Look up the business via the
+    // business_workflows link since UpdateWorkflowDto doesn't carry business_id.
+    const link = await this.businessWorkflowModel.findOne({ workflow_id }).lean();
+    if (link?.business_id) {
+      const effectiveNodes = nodes ?? (updated?.workflow_definition?.nodes as any[]) ?? [];
+      const effectiveActive = is_active ?? !!updated?.is_active;
+      await this.syncSchedule(workflow_id, link.business_id, effectiveNodes, effectiveActive);
+    }
+
+    return updated;
+  }
+
+  /**
+   * Flip a workflow to inactive. Called by the schedule runner after a one-time
+   * schedule fires so it doesn't sit around in the active list, and could be
+   * called by future cleanup paths (e.g. an admin bulk-deactivate).
+   */
+  async deactivateWorkflow(workflow_id: string): Promise<void> {
+    try {
+      await this.workflowDefinitionModel.updateOne(
+        { workflow_id },
+        { $set: { is_active: false } },
+      );
+      await this.businessWorkflowModel.updateOne(
+        { workflow_id },
+        { $set: { is_active: false } },
+      );
+      await this.scheduler.unschedule(workflow_id);
+      this.logger.log(`Workflow ${workflow_id} deactivated`);
+    } catch (err: any) {
+      this.logger.warn(`Could not deactivate workflow ${workflow_id}: ${err.message}`);
+    }
   }
 
   async getWorkflowsByBusiness(businessId: string) {
@@ -542,7 +660,18 @@ export class WorkflowsService implements OnModuleInit {
   }
 
 
-  async startWorkflow(lead_id: string, chat_id: string, channel: 'whatsapp' | 'instagram', workflowInput: WorkflowProcessingContext) {
+  async startWorkflow(
+    lead_id: string,
+    chat_id: string,
+    channel: 'whatsapp' | 'instagram',
+    workflowInput: WorkflowProcessingContext,
+    /**
+     * Optional explicit workflow id. When set (used by scheduled and event
+     * triggers), we skip the (business, intent) → active workflow resolver
+     * because those triggers know exactly which workflow they fire.
+     */
+    workflowIdOverride?: string,
+  ) {
     let business_id = workflowInput.business_id;
     if (!business_id) {
       const lead = await this.prisma.leads.findUnique({ where: { lead_id } });
@@ -554,9 +683,15 @@ export class WorkflowsService implements OnModuleInit {
     }
 
     const intent = workflowInput.intent?.intent ?? '';
-    const activeWorkflow = await this.getActiveWorkflowForBusiness(business_id, intent);
+    const activeWorkflow = workflowIdOverride
+      ? await this.loadWorkflowById(workflowIdOverride)
+      : await this.getActiveWorkflowForBusiness(business_id, intent);
     if (!activeWorkflow) {
-      this.logger.warn(`No active workflow found for business ${business_id} intent "${intent}"`);
+      this.logger.warn(
+        workflowIdOverride
+          ? `Workflow ${workflowIdOverride} not found / inactive`
+          : `No active workflow found for business ${business_id} intent "${intent}"`,
+      );
       return;
     }
 
@@ -588,9 +723,46 @@ export class WorkflowsService implements OnModuleInit {
           phone: true,
           email: true,
           status: true,
+          tags: true,
+          source: true,
         },
       }),
     ]);
+
+    // Trigger gating — evaluate conditions/business-hours configured on the
+    // trigger node. If they don't match, abort the workflow start. This is the
+    // only place trigger-level params are honoured because matches() is never
+    // called by the active-workflow lookup path.
+    const triggerNode = (activeWorkflow.definition?.nodes ?? []).find((n: any) =>
+      typeof n?.type === 'string' && n.type.startsWith('trigger.'),
+    );
+    if (triggerNode?.params) {
+      const triggerParams = triggerNode.params as Record<string, any>;
+      const settings = await (this.prisma.business_settings as any)
+        .findUnique({ where: { business_id }, select: { timezone: true } })
+        .catch(() => null);
+      // business_hours is stored as a single-element array (the validator can recurse
+      // into items[]), but the evaluator wants a flat object. Unwrap both shapes.
+      const rawHours = Array.isArray(triggerParams.business_hours)
+        ? triggerParams.business_hours[0]
+        : triggerParams.business_hours;
+      const triggerEval = evaluateTrigger({
+        conditions: triggerParams.conditions ?? [],
+        businessHours: rawHours?.enabled
+          ? { ...rawHours, timezone: rawHours.timezone || settings?.timezone || 'Asia/Kolkata' }
+          : undefined,
+        context: {
+          lead: lead ? { status: lead.status, tags: lead.tags as string[], source: lead.source } : null,
+          message: { text: workflowInput.user_input ?? '' },
+        },
+      });
+      if (!triggerEval.matched) {
+        this.logger.log(
+          `Workflow ${activeWorkflow.workflowId} skipped for lead ${lead_id} — trigger gate: ${triggerEval.reason}`,
+        );
+        return;
+      }
+    }
 
     const system_context: Record<string, any> = {
       business_id: business?.business_id ?? business_id,
@@ -609,9 +781,17 @@ export class WorkflowsService implements OnModuleInit {
       lead_phone: lead?.phone ?? null,
       lead_email: lead?.email ?? null,
       lead_status: lead?.status ?? null,
+      lead_tags: lead?.tags ?? [],
+      lead_source: lead?.source ?? null,
       channel,
       intent: intent || null,
       workflow_id: activeWorkflow.workflowId,
+      // Constant variables defined on the trigger flow into the same nodeContext
+      // namespace under `trigger.var.*`, so node template strings can reference
+      // them as ${trigger.var.foo}.
+      trigger: {
+        var: triggerVarsToObject((triggerNode?.params as any)?.vars),
+      },
     };
 
     workflowInput.context = {
@@ -969,6 +1149,20 @@ export class WorkflowsService implements OnModuleInit {
     return null;
   }
 
+  /**
+   * Direct lookup used by schedule/event runners that already know which
+   * workflow they want to fire. Returns null if the workflow is inactive or
+   * missing so callers can no-op gracefully.
+   */
+  private async loadWorkflowById(workflow_id: string): Promise<{ workflowId: string; definition: WorkflowParameters } | null> {
+    const def = await this.workflowDefinitionModel.findOne({ workflow_id, is_active: true }).lean();
+    if (!def?.workflow_definition) return null;
+    return {
+      workflowId: def.workflow_id,
+      definition: def.workflow_definition as WorkflowParameters,
+    };
+  }
+
   private async getActiveWorkflowForBusiness(businessId: string, intentName: string): Promise<{ workflowId: string; definition: WorkflowParameters } | null> {
     const link = await this.businessWorkflowModel.findOne({ business_id: businessId, is_active: true }).lean();
     if (!link) return null;
@@ -1251,4 +1445,19 @@ export class WorkflowsService implements OnModuleInit {
     return data;
   }
 
+}
+
+// Trigger constants are stored as [{ name, value }] (row-editor shape) but read
+// by the runtime as a flat object. Convert here so the rest of the service can
+// stay typed-agnostic.
+function triggerVarsToObject(vars: unknown): Record<string, string> {
+  if (!Array.isArray(vars)) return {};
+  const out: Record<string, string> = {};
+  for (const row of vars) {
+    if (row && typeof row === 'object' && typeof (row as any).name === 'string') {
+      const name = (row as any).name.trim();
+      if (name) out[name] = String((row as any).value ?? '');
+    }
+  }
+  return out;
 }

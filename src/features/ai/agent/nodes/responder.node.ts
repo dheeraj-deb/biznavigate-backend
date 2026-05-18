@@ -44,8 +44,9 @@ export function makeResponderNode(modelConfig: AgentModelConfig, _tools: Structu
     // Summarize old turns to prevent unbounded context growth
     if (newTurnCount % SUMMARIZE_EVERY === 0 && messages.length > SUMMARIZE_EVERY) {
       logger.log(`Turn ${newTurnCount}: summarizing ${messages.length - 6} old messages to cap context`);
-      const toSummarize = messages.slice(0, -6);
-      const recent = messages.slice(-6);
+      // Re-sanitize after slicing — boundary cuts can orphan tool messages/calls.
+      const toSummarize = sanitizeMessagesForModel(messages.slice(0, -6));
+      const recent = sanitizeMessagesForModel(messages.slice(-6));
       const summaryResp = await summaryLlm.invoke([
         new SystemMessage(
           'Summarize this conversation briefly, preserving key facts: names, booking dates, confirmed items, amounts, and any decisions made.',

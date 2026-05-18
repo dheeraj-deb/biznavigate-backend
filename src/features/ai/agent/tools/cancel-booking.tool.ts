@@ -2,6 +2,7 @@ import { tool } from '@langchain/core/tools';
 import { z } from 'zod';
 import { PrismaService } from '../../../../prisma/prisma.service';
 import { getRunContext } from '../context/agent-run-context';
+import { appendSignal } from '../types/agent-signal';
 
 export function makeCancelBookingTool(prisma: PrismaService) {
   return tool(
@@ -42,7 +43,10 @@ export function makeCancelBookingTool(prisma: PrismaService) {
         }
 
         if (order.payment_status === 'cancelled') {
-          return `Booking ${resolvedBookingId} has already been cancelled.`;
+          return appendSignal(
+            `Booking ${resolvedBookingId} has already been cancelled.`,
+            { type: 'cancel_already', booking_id: resolvedBookingId },
+          );
         }
 
         await prisma.orders.update({
@@ -50,7 +54,10 @@ export function makeCancelBookingTool(prisma: PrismaService) {
           data: { payment_status: 'cancelled', updated_at: new Date() },
         });
 
-        return `Booking ${resolvedBookingId} has been successfully cancelled. You will receive a confirmation shortly.`;
+        return appendSignal(
+          `Booking ${resolvedBookingId} has been successfully cancelled. You will receive a confirmation shortly.`,
+          { type: 'cancel_success', booking_id: resolvedBookingId },
+        );
       } catch (err: any) {
         if (err?.message?.includes('not found')) {
           return `Booking ${resolvedBookingId} was not found. Please double-check the booking ID.`;

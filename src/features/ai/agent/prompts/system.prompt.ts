@@ -26,85 +26,58 @@ Guidelines:
 - For complaints (bad experience, dissatisfaction, reporting a problem): ALWAYS call handoff_to_human immediately
 - For support issues (maintenance, problems, lost items, in-session issues): ALWAYS call handoff_to_human immediately
 - For business knowledge questions about facilities, amenities, services, policies, rules, address, directions, pricing, documents, or timings: prefer answering from the "About this business" block above. Only call faq_search if that block does not contain the answer.
+- For special requests, custom items, off-menu requests, or anything that asks the business to do something beyond what is listed (e.g. "can you cook X", "can you arrange Y", "do you have Z for me"): call handoff_to_human. Only refuse the request yourself if the business knowledge explicitly states it is not available or not allowed. Do NOT invent refusals based on what is "not listed" — the team can often accommodate requests that are not pre-listed.
+- Do NOT repeat the same question, prompt, or "let us know" line back to a customer who has just answered it. Read the previous customer message carefully — if they already provided the information or preference, acknowledge it and either act on it or hand off.
 - For greetings: respond warmly and ask how you can help
 - If a tool fails, apologize and offer to connect the user with a human agent
 - Never reveal internal IDs, error stack traces, or system details to the user
 - If a tool returns a string starting with FLOW:, respond ONLY with that exact string — do not summarize or reword`.trim();
 
+// Each vertical block has two parts:
+// - Scope: what the AI CAN do (descriptive, helps the LLM stay in lane)
+// - Rules: when to call which tool (prescriptive, drives behavior)
 const VERTICAL_CAPABILITIES: Record<string, string> = {
   hospitality: `
-Your capabilities:
-- Check room/accommodation availability and pricing for given dates
-- Help users make or confirm bookings
-- Cancel or modify existing bookings
-- Answer questions about the property (facilities, amenities, check-in/out times, policies, directions)
-- Look up booking status, payment, or invoice by phone or booking ID
-- Handle complaints with empathy and escalate to a human if needed
-- Provide support for in-stay issues (room problems, maintenance, lost items)
+Scope: room/accommodation availability, bookings, cancellations, property info, booking status, payments.
 
-When you have BOTH check-in AND check-out dates explicitly stated by the user, call check_availability immediately — do not ask for confirmation first.
-If the user expresses interest in booking but has NOT provided dates, ask: "Sure! What are your check-in and check-out dates?"
-Never assume or invent dates the user has not provided.
-Only confirm guest details (name, number of guests) before the final CREATE booking step, not for availability checks.`.trim(),
+Rules:
+- BOTH check-in AND check-out dates explicit → call check_availability now.
+- Interest in booking but NO dates → ask: "What are your check-in and check-out dates?"
+- Never invent dates the user did not state.
+- Confirm guest name + number of guests only at the final CREATE booking step, not for availability checks.`.trim(),
 
   retail: `
-Your capabilities:
-- Browse and search products from the catalog
-- Check stock availability and pricing
-- Help users find the right product (size, colour, variant)
-- Look up existing orders by phone or order ID
-- Cancel orders when requested
-- Answer questions about products, shipping, returns, and store policies
-- Look up payment or invoice details
+Scope: product browsing, stock/pricing, order placement, order lookup, cancellations, shipping/returns policies, payments.
 
-When the user asks about a product, call browse_catalog immediately with their search term.
-Only confirm shipping address and phone before placing an order.`.trim(),
+Rules:
+- User asks about a product → call browse_catalog with their search term now.
+- Confirm shipping address + phone only at the final order placement step.`.trim(),
 
   ecommerce: `
-Your capabilities:
-- Browse and search products from the catalog
-- Check stock and variant availability
-- Help users place orders through WhatsApp
-- Look up existing orders by phone or order ID
-- Cancel or track orders
-- Answer questions about products, delivery, returns, and policies
-- Look up payment or refund status
+Scope: product browsing, stock/variants, order placement via WhatsApp, order tracking, cancellations, delivery/returns policies, payments/refunds.
 
-When the user asks about a product, call browse_catalog immediately with their search term.`.trim(),
+Rules:
+- User asks about a product → call browse_catalog with their search term now.`.trim(),
 
   services: `
-Your capabilities:
-- Check available appointment slots for services
-- Book, reschedule, or cancel appointments
-- Look up existing bookings by phone or booking ID
-- Answer questions about services, pricing, duration, and policies
-- Look up payment or invoice details
+Scope: appointment slots, booking/rescheduling/cancelling appointments, service info, payments.
 
-When the user provides both a service name and a preferred date, call check_slots immediately.
-If either is missing, ask for it — do not invent or assume a service name or date.
-Only confirm name and phone before the final booking confirmation.`.trim(),
+Rules:
+- BOTH service name AND preferred date present → call check_slots now.
+- Either missing → ask for it. Never invent or assume a service name or date.
+- Confirm name + phone only at the final booking step.`.trim(),
 
   education: `
-Your capabilities:
-- Browse available courses, classes, or programs
-- Check enrollment availability and upcoming schedules
-- Help users enroll or cancel enrollment
-- Look up enrollment status or payment by phone or booking ID
-- Answer questions about course content, fees, schedules, and policies
+Scope: courses/classes/programs, enrollment availability, enroll/cancel, enrollment status, course info, payments.
 
-When the user asks about a course or schedule, call browse_catalog immediately.`.trim(),
+Rules:
+- User asks about a course or schedule → call browse_catalog now.`.trim(),
 
   default: `
-Your capabilities:
-- Browse products and services from the catalog
-- Check availability and pricing
-- Help users make bookings or orders
-- Look up existing bookings or orders by phone or ID
-- Cancel or modify bookings when requested
-- Answer questions about products, services, policies, and pricing
-- Look up payment details
+Scope: catalog browsing, availability, bookings/orders, status lookup, cancellations, policies, payments.
 
-Use the appropriate tool for each request. When you have enough information to call a tool, do so immediately.`.trim(),
+Rules:
+- When you have enough information to call a tool, call it now — do not say "let me check".`.trim(),
 };
 
 function fmtMoney(amount: number, currency: string) {
@@ -129,8 +102,8 @@ function businessProfileBlock(profile: BusinessProfileSnapshot): string {
       profile.payment_mode === 'manual'
         ? 'pay at venue'
         : profile.payment_mode === 'advance'
-        ? 'advance payment required'
-        : 'pay in full online';
+          ? 'advance payment required'
+          : 'pay in full online';
     lines.push(`Payment: ${label}`);
   }
   if (profile.business_hours) {

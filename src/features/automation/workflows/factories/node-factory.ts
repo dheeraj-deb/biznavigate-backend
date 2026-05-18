@@ -6,6 +6,8 @@ import { WhatsAppCatalogService } from "src/features/engagement/whatsapp/applica
 import { CartService } from "src/features/commerce/cart/application/services/cart.service";
 import { WhatsAppIntentTriggerNode } from "../nodes/triggers/whatsapp-intent-trigger-node";
 import { WhatsAppTriggerNode } from "../nodes/triggers/whatsapp-trigger-node";
+import { ScheduleTriggerNode } from "../nodes/triggers/schedule-trigger-node";
+import { EventTriggerNode } from "../nodes/triggers/event-trigger-node";
 import { SendMessageNode } from "../nodes/actions/send-message-node";
 import { SendMessageWithMenuNode } from "../nodes/actions/send-message-with-menu-node";
 import { SendCatalogNode } from "../nodes/actions/send-catalog-node";
@@ -58,6 +60,47 @@ export interface NodeDefinition {
 
 // ──────────────────────────────────────────────────────────────────────────
 
+// Optional gating + variable params shared by every trigger node. Evaluated by
+// WorkflowsService.startWorkflow → trigger-evaluator.ts. Treated as arrays/
+// objects by the validator — no required fields, so triggers without any of
+// these set behave identically to before.
+const COMMON_TRIGGER_PARAMS: NodeParamDefinition[] = [
+    {
+        key: 'conditions',
+        type: 'array',
+        items: [
+            { key: 'field', type: 'select', constraints: { enum: ['lead.status', 'lead.tags', 'lead.source', 'message.text'] } },
+            { key: 'operator', type: 'select', constraints: { enum: ['equals', 'not_equals', 'contains', 'not_contains', 'in', 'not_in'] } },
+            { key: 'value', type: 'string' },
+        ],
+    },
+    {
+        key: 'business_hours',
+        type: 'array', // single-object shape stored as a one-item array so the validator can recurse into items[]
+        items: [
+            { key: 'enabled', type: 'boolean' },
+            { key: 'timezone', type: 'string' },
+            {
+                key: 'ranges',
+                type: 'array',
+                items: [
+                    { key: 'day', type: 'number', constraints: { min: 0, max: 6 } },
+                    { key: 'start', type: 'string' },
+                    { key: 'end', type: 'string' },
+                ],
+            },
+        ],
+    },
+    {
+        key: 'vars',
+        type: 'array',
+        items: [
+            { key: 'name', type: 'string' },
+            { key: 'value', type: 'string' },
+        ],
+    },
+];
+
 @Injectable()
 export class NodeFactory {
     private nodeRegistry: Map<string, NodeConstructor> = new Map();
@@ -73,7 +116,9 @@ export class NodeFactory {
             icon: '💬',
             waitForInput: false,
             output_variable: null,
-            params: [],
+            params: [
+                ...COMMON_TRIGGER_PARAMS,
+            ],
         },
         {
             type: 'trigger.whatsapp.intent',
@@ -85,6 +130,86 @@ export class NodeFactory {
             output_variable: null,
             params: [
                 { key: 'intent', type: 'string' },
+                ...COMMON_TRIGGER_PARAMS,
+            ],
+        },
+        // The schedule + event triggers fire from BullMQ / event bus rather than
+        // the inbound message path. Their params are stored as nested objects
+        // (`schedule`, `audience`, `target`, ...) — the validator's type system
+        // only knows simple arrays/strings/numbers, so we mark these as opaque
+        // 'string' params here and rely on the runtime (scheduler / event-bus)
+        // for shape validation. See triggers/trigger-schemas.ts for the real
+        // schema documentation.
+        {
+            type: 'trigger.schedule',
+            category: 'trigger',
+            label: 'Schedule',
+            description: 'Run on a recurring schedule (daily, weekly, interval) or once at a specific time.',
+            icon: '⏰',
+            waitForInput: false,
+            output_variable: null,
+            params: [
+                ...COMMON_TRIGGER_PARAMS,
+            ],
+        },
+        {
+            type: 'trigger.event.lead_status_changed',
+            category: 'trigger',
+            label: 'When lead status changes',
+            description: 'Run when a lead transitions between statuses (e.g. new → booked).',
+            icon: '🔁',
+            waitForInput: false,
+            output_variable: null,
+            params: [
+                ...COMMON_TRIGGER_PARAMS,
+            ],
+        },
+        {
+            type: 'trigger.event.booking_created',
+            category: 'trigger',
+            label: 'When a booking is created',
+            description: 'Run when a hospitality booking row is created.',
+            icon: '📥',
+            waitForInput: false,
+            output_variable: null,
+            params: [
+                ...COMMON_TRIGGER_PARAMS,
+            ],
+        },
+        {
+            type: 'trigger.event.booking_cancelled',
+            category: 'trigger',
+            label: 'When a booking is cancelled',
+            description: 'Run when a hospitality booking is cancelled.',
+            icon: '❌',
+            waitForInput: false,
+            output_variable: null,
+            params: [
+                ...COMMON_TRIGGER_PARAMS,
+            ],
+        },
+        {
+            type: 'trigger.event.payment_captured',
+            category: 'trigger',
+            label: 'When a payment is captured',
+            description: 'Run when a payment reaches captured status (paid).',
+            icon: '💰',
+            waitForInput: false,
+            output_variable: null,
+            params: [
+                ...COMMON_TRIGGER_PARAMS,
+            ],
+        },
+        {
+            type: 'trigger.event.lead_inactive',
+            category: 'trigger',
+            label: 'When a lead goes inactive',
+            description: 'Run N days after a lead\'s last activity. Inactive scanner fires this hourly.',
+            icon: '💤',
+            waitForInput: false,
+            output_variable: null,
+            params: [
+                ...COMMON_TRIGGER_PARAMS,
             ],
         },
 
@@ -310,6 +435,12 @@ export class NodeFactory {
         //Triggers
         this.register('trigger.whatsapp', WhatsAppTriggerNode);
         this.register('trigger.whatsapp.intent', WhatsAppIntentTriggerNode);
+        this.register('trigger.schedule', ScheduleTriggerNode);
+        this.register('trigger.event.lead_status_changed', EventTriggerNode);
+        this.register('trigger.event.booking_created', EventTriggerNode);
+        this.register('trigger.event.booking_cancelled', EventTriggerNode);
+        this.register('trigger.event.payment_captured', EventTriggerNode);
+        this.register('trigger.event.lead_inactive', EventTriggerNode);
 
         //Actions
         this.register('action.send_message', SendMessageNode);

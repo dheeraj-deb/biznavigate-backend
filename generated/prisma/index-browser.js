@@ -131,6 +131,7 @@ exports.Prisma.BusinessesScalarFieldEnum = {
   email: 'email',
   phone: 'phone',
   website: 'website',
+  public_booking_slug: 'public_booking_slug',
   city: 'city',
   address: 'address',
   country: 'country',
@@ -1209,6 +1210,7 @@ exports.Prisma.Business_settingsScalarFieldEnum = {
   ai_agent_enabled: 'ai_agent_enabled',
   auto_reply_enabled: 'auto_reply_enabled',
   booking_methods: 'booking_methods',
+  booking_link: 'booking_link',
   low_balance_alert: 'low_balance_alert',
   updated_at: 'updated_at'
 };

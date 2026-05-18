@@ -2,6 +2,7 @@ import { tool } from '@langchain/core/tools';
 import { z } from 'zod';
 import { CatalogService } from '../../../commerce/catalog/catalog.service';
 import { getRunContext } from '../context/agent-run-context';
+import { appendSignal } from '../types/agent-signal';
 
 // Used by retail, ecommerce, education verticals — generic catalog browse/search
 export function makeBrowseCatalogTool(catalogService: CatalogService) {
@@ -16,9 +17,10 @@ export function makeBrowseCatalogTool(catalogService: CatalogService) {
       });
 
       if (!results || results.length === 0) {
-        return search
+        const message = search
           ? `No items found matching "${search}".`
           : 'No items available in the catalog right now.';
+        return search ? appendSignal(message, { type: 'browse_empty', query: search }) : message;
       }
 
       const lines = results.slice(0, 5).map((item: any) => {
