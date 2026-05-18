@@ -12,6 +12,7 @@ import { agentRunContextStorage } from './context/agent-run-context';
 import { AgentContextBuilder } from './context/agent-context-builder.service';
 import { GenerationHandle } from './types/generation-handle';
 import { decodeHandoff } from './types/handoff';
+import { AgentSignal } from './types/agent-signal';
 import { AgentTurnMetrics } from './types/agent-metrics';
 import { CustomerLanguage, detectCustomerLanguage } from './utils/language-detector';
 import { AgentModelConfig, resolveAgentModelConfig } from './graph/llm-factory';
@@ -213,29 +214,41 @@ export class AgentService implements OnModuleInit {
       this.logger.log(`Lead ${leadId} handoff event written`);
     }
 
-    // Demand miss — detect from check_availability / check_slots tool results
+    // Read structured signals attached to ToolMessages by the tool-caller node.
+    // Tools emit these via appendSignal() — see types/agent-signal.ts. This replaces
+    // brittle regex parsing of tool result strings.
     for (const msg of messages) {
       const msgType = typeof msg.getType === 'function' ? msg.getType() : (msg._getType?.() ?? '');
-      if (msgType === 'tool') {
-        const content = String(msg.content ?? '');
-        if (content.startsWith('No rooms available') || content.startsWith('No availability') || content.startsWith('No available slots')) {
-          const match = content.match(/from (\d{4}-\d{2}-\d{2}) to (\d{4}-\d{2}-\d{2})/);
-          await this.prisma.lead_events.create({
-            data: {
-              lead_id: leadId,
-              business_id: businessId,
-              type: 'demand_miss',
-              actor: 'ai',
-              data: {
-                check_in: match?.[1] ?? null,
-                check_out: match?.[2] ?? null,
-                message: content,
-              } as any,
-            },
-          });
-          this.logger.log(`Lead ${leadId} demand_miss event written`);
-        }
+      if (msgType !== 'tool') continue;
+      const signals = (msg.additional_kwargs?.signals ?? []) as AgentSignal[];
+      for (const signal of signals) {
+        await this.recordSignalAsLeadEvent(leadId, businessId, signal);
       }
+    }
+  }
+
+  private async recordSignalAsLeadEvent(leadId: string, businessId: string, signal: AgentSignal): Promise<void> {
+    const eventTypeBySignal: Partial<Record<AgentSignal['type'], string>> = {
+      demand_miss: 'demand_miss',
+      browse_empty: 'demand_miss',
+      cancel_success: 'cancelled',
+    };
+    const eventType = eventTypeBySignal[signal.type];
+    if (!eventType) return;
+
+    try {
+      await this.prisma.lead_events.create({
+        data: {
+          lead_id: leadId,
+          business_id: businessId,
+          type: eventType,
+          actor: 'ai',
+          data: signal as any,
+        },
+      });
+      this.logger.log(`Lead ${leadId} ${eventType} event written (signal=${signal.type})`);
+    } catch (err: any) {
+      this.logger.warn(`Failed to write lead event ${eventType} for ${leadId}: ${err.message}`);
     }
   }
 

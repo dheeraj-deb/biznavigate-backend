@@ -4,6 +4,7 @@ import { CatalogService } from '../../../commerce/catalog/catalog.service';
 import { resolveDate, isValidDate } from '../utils/date-resolver';
 import { getRunContext } from '../context/agent-run-context';
 import { encodeFlow } from '../types/handoff';
+import { appendSignal } from '../types/agent-signal';
 
 export function makeCheckAvailabilityTool(catalogService: CatalogService) {
   return tool(
@@ -31,7 +32,10 @@ export function makeCheckAvailabilityTool(catalogService: CatalogService) {
       });
 
       if (!results || results.length === 0) {
-        return `No rooms available from ${resolvedCheckIn} to ${resolvedCheckOut}.`;
+        return appendSignal(
+          `No rooms available from ${resolvedCheckIn} to ${resolvedCheckOut}.`,
+          { type: 'demand_miss', check_in: resolvedCheckIn, check_out: resolvedCheckOut },
+        );
       }
 
       // Signal the debounce processor to trigger the hospitality flow

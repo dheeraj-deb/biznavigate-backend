@@ -1,4 +1,5 @@
 import { BadRequestException, ConflictException, Injectable, Logger } from '@nestjs/common';
+import { EventEmitter2 } from '@nestjs/event-emitter';
 import { createHash } from 'node:crypto';
 import { PrismaService } from '../../../../../../prisma/prisma.service';
 import { LeadCommandService } from '../../../../../crm/lead/application/services/lead-command.service';
@@ -33,6 +34,7 @@ export class HospitalityBookingCommandService {
   constructor(
     private readonly prisma: PrismaService,
     private readonly leadCommands: LeadCommandService,
+    private readonly eventEmitter: EventEmitter2,
   ) {}
 
   async createBooking(command: CreateHospitalityBookingCommand) {
@@ -327,6 +329,27 @@ export class HospitalityBookingCommandService {
       });
 
       this.logger.log(`Hospitality booking created: ${booking.hospitality_booking_id}`);
+
+      try {
+        // Resolve tenant from the business; the booking row doesn't carry it directly
+        // but business_id → tenant_id is 1:1. Synthetic context downstream uses this
+        // for the audit-trail lead_events row, even though event-bus dispatch only
+        // scopes by business_id.
+        const biz = await this.prisma.businesses.findUnique({
+          where: { business_id: command.business_id },
+          select: { tenant_id: true },
+        }).catch(() => null);
+        this.eventEmitter.emit('workflow.event.booking.created', {
+          business_id: command.business_id,
+          tenant_id: biz?.tenant_id ?? null,
+          lead_id: leadId ?? undefined,
+          hospitality_booking_id: booking.hospitality_booking_id,
+          booking_number: (booking as any).booking_number ?? null,
+          emitted_at: new Date().toISOString(),
+        });
+      } catch (err: any) {
+        this.logger.warn(`Could not emit booking.created: ${err.message}`);
+      }
 
       // Auto-advance lead pipeline to 'booked' stage. Idempotent — safe on retries.
       if (leadId) {

@@ -1,5 +1,6 @@
 import { randomUUID } from 'node:crypto';
-import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Injectable, Logger, NotFoundException } from '@nestjs/common';
+import { EventEmitter2 } from '@nestjs/event-emitter';
 import { PrismaService } from '../../../../../../prisma/prisma.service';
 import { CreateBookingDto } from '../dto/create-booking.dto';
 import { HospitalityBookingQueryDto } from '../dto/hospitality-booking-query.dto';
@@ -9,10 +10,13 @@ import { UpdateBookingDto } from '../dto/update-booking.dto';
 
 @Injectable()
 export class BookingService {
+  private readonly logger = new Logger(BookingService.name);
+
   constructor(
     private readonly prisma: PrismaService,
     private readonly leadCommands: LeadCommandService,
     private readonly bookingCommands: HospitalityBookingCommandService,
+    private readonly eventEmitter: EventEmitter2,
   ) {}
 
   async createBooking(businessId: string, dto: CreateBookingDto): Promise<any> {
@@ -192,6 +196,19 @@ export class BookingService {
         reason: 'booking_cancelled',
         actor: 'system',
       });
+    }
+
+    try {
+      this.eventEmitter.emit('workflow.event.booking.cancelled', {
+        business_id: existing.business_id,
+        tenant_id: existing.tenant_id ?? null,
+        lead_id: existing.lead_id ?? undefined,
+        hospitality_booking_id: bookingId,
+        booking_number: existing.booking_number ?? null,
+        emitted_at: new Date().toISOString(),
+      });
+    } catch (err: any) {
+      this.logger.warn(`Could not emit booking.cancelled: ${err.message}`);
     }
 
     return this.getBookingById(bookingId, businessId);

@@ -6,6 +6,7 @@ import { SYSTEM_PROMPT } from '../prompts/system.prompt';
 import { AgentModelConfig, LLMFallbackAdapter } from '../graph/llm-factory';
 import { languageLabel } from '../utils/language-detector';
 import { sanitizeMessagesForModel } from '../utils/message-sanitizer';
+import { extractSignals } from '../types/agent-signal';
 
 const logger = new Logger('ToolCallerNode');
 
@@ -39,8 +40,16 @@ export function makeToolCallerNode(modelConfig: AgentModelConfig, tools: Structu
           const result = tool
             ? await tool.invoke(tc.args).catch((e: Error) => `Error: ${e.message}`)
             : `Unknown tool: ${tc.name}`;
-          logger.log(`Tool [${tc.name}] → ${String(result).slice(0, 200)}`);
-          return new ToolMessage({ content: String(result), tool_call_id: tc.id });
+          // Strip SIGNAL lines before they reach the LLM. Signals are downstream-only telemetry
+          // (lead_events, metrics). The LLM only sees the clean customer-facing text.
+          const { cleanText, signals } = extractSignals(String(result));
+          if (signals.length) logger.log(`Tool [${tc.name}] signals: ${signals.map((s) => s.type).join(', ')}`);
+          logger.log(`Tool [${tc.name}] → ${cleanText.slice(0, 200)}`);
+          return new ToolMessage({
+            content: cleanText,
+            tool_call_id: tc.id,
+            additional_kwargs: { signals },
+          });
         }),
       );
 
@@ -74,7 +83,8 @@ IMPORTANT — TOOL EXECUTION RULES:
 - Customer language is ${customerLanguage}. Any plain text question or reply must be in ${customerLanguage}.
 - If the user is reporting a complaint, problem, or needs support: call handoff_to_human immediately.
 - If the user explicitly wants a human agent: call handoff_to_human immediately.
-- If the user asks a general business question about facilities, services, policies, directions, pricing, timings, documents, amenities, rules, address, location, or FAQs: call faq_search.
+- If the user asks a general business question about facilities, services, policies, directions, pricing, timings, documents, amenities, rules, address, location, or FAQs: first check the "About this business" block in the system prompt. If the answer is NOT there, call faq_search. Do not call faq_search for questions the system prompt already answers.
+- If the user makes a special/custom/off-menu request that is not explicitly covered by business knowledge: call handoff_to_human. Do not invent refusals.
 - If you have enough information to call a tool, call it now — do not say "let me check".
 - If required information is missing (e.g. check-in/check-out dates for availability, product name for browsing), do NOT invent or guess values. Instead, respond with a plain text question asking the user for the missing information.
 - NEVER fabricate dates, names, or any data the user has not provided.`;

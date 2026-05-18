@@ -4,6 +4,7 @@ import { CatalogService } from '../../../commerce/catalog/catalog.service';
 import { resolveDate, isValidDate } from '../utils/date-resolver';
 import { getRunContext } from '../context/agent-run-context';
 import { encodeFlow } from '../types/handoff';
+import { appendSignal } from '../types/agent-signal';
 
 // Used by services, education, activity verticals — slot-based availability check
 export function makeCheckSlotsTool(catalogService: CatalogService) {
@@ -25,9 +26,15 @@ export function makeCheckSlotsTool(catalogService: CatalogService) {
       });
 
       if (!results || results.length === 0) {
-        return serviceName
+        const message = serviceName
           ? `No available slots for "${serviceName}" on ${resolvedDate}.`
           : `No available slots on ${resolvedDate}.`;
+        return appendSignal(message, {
+          type: 'demand_miss',
+          service_name: serviceName,
+          check_in: resolvedDate,
+          check_out: resolvedDate,
+        });
       }
 
       const lines = results.slice(0, 5).map((item: any) => {

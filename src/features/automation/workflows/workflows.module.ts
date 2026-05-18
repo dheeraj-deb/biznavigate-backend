@@ -18,6 +18,17 @@ import { WorkflowExecution, WorkflowExecutionSchema } from './schema/workflow-ex
 import { WhatsAppTemplatesModule } from '../../engagement/whatsapp-templates/whatsapp-templates.module';
 import { WorkflowAnalyzerService } from './workflow-analyzer.service';
 import { WorkflowTimeoutProcessor } from './workflow-timeout.processor';
+import { WorkflowDefinitionValidator } from './validation/workflow-definition.validator';
+import { WorkflowSchedulerService } from './schedule/workflow-scheduler.service';
+import { ScheduleTriggerRunner } from './schedule/schedule-trigger-runner';
+import { WorkflowScheduleProcessor } from './schedule/workflow-schedule.processor';
+import { WorkflowEventBusService } from './events/workflow-event-bus.service';
+import { InactiveLeadScannerService } from './events/inactive-lead-scanner.service';
+import { InactiveScannerProcessor } from './events/inactive-scanner.processor';
+import {
+  WorkflowInactiveFire,
+  WorkflowInactiveFireSchema,
+} from './schema/workflow-inactive-fire.schema';
 
 @Module({
   imports: [
@@ -29,10 +40,13 @@ import { WorkflowTimeoutProcessor } from './workflow-timeout.processor';
     ConversationModule,
     WhatsAppTemplatesModule,
     BullModule.registerQueue({ name: 'workflow-timeouts' }),
+    BullModule.registerQueue({ name: 'workflow-schedules' }),
+    BullModule.registerQueue({ name: 'workflow-inactive-scanner' }),
     MongooseModule.forFeature([
       { name: WorkflowDefinition.name, schema: WorkflowDefinitionSchema },
       { name: BusinessWorkflow.name, schema: BusinessWorkflowSchema },
       { name: WorkflowExecution.name, schema: WorkflowExecutionSchema },
+      { name: WorkflowInactiveFire.name, schema: WorkflowInactiveFireSchema },
     ]),
   ],
   controllers: [
@@ -45,6 +59,13 @@ import { WorkflowTimeoutProcessor } from './workflow-timeout.processor';
     Workflow,
     WorkflowAnalyzerService,
     WorkflowTimeoutProcessor,
+    WorkflowDefinitionValidator,
+    WorkflowSchedulerService,
+    ScheduleTriggerRunner,
+    WorkflowScheduleProcessor,
+    WorkflowEventBusService,
+    InactiveLeadScannerService,
+    InactiveScannerProcessor,
   ],
   exports: [
     WorkflowsService,

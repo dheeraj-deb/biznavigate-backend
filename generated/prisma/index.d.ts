@@ -8457,6 +8457,7 @@ export namespace Prisma {
     email: string | null
     phone: string | null
     website: string | null
+    public_booking_slug: string | null
     city: string | null
     address: string | null
     country: string | null
@@ -8476,6 +8477,7 @@ export namespace Prisma {
     email: string | null
     phone: string | null
     website: string | null
+    public_booking_slug: string | null
     city: string | null
     address: string | null
     country: string | null
@@ -8495,6 +8497,7 @@ export namespace Prisma {
     email: number
     phone: number
     website: number
+    public_booking_slug: number
     city: number
     address: number
     country: number
@@ -8516,6 +8519,7 @@ export namespace Prisma {
     email?: true
     phone?: true
     website?: true
+    public_booking_slug?: true
     city?: true
     address?: true
     country?: true
@@ -8535,6 +8539,7 @@ export namespace Prisma {
     email?: true
     phone?: true
     website?: true
+    public_booking_slug?: true
     city?: true
     address?: true
     country?: true
@@ -8554,6 +8559,7 @@ export namespace Prisma {
     email?: true
     phone?: true
     website?: true
+    public_booking_slug?: true
     city?: true
     address?: true
     country?: true
@@ -8646,6 +8652,7 @@ export namespace Prisma {
     email: string | null
     phone: string | null
     website: string | null
+    public_booking_slug: string | null
     city: string | null
     address: string | null
     country: string | null
@@ -8682,6 +8689,7 @@ export namespace Prisma {
     email?: boolean
     phone?: boolean
     website?: boolean
+    public_booking_slug?: boolean
     city?: boolean
     address?: boolean
     country?: boolean
@@ -8731,6 +8739,7 @@ export namespace Prisma {
     email?: boolean
     phone?: boolean
     website?: boolean
+    public_booking_slug?: boolean
     city?: boolean
     address?: boolean
     country?: boolean
@@ -8751,6 +8760,7 @@ export namespace Prisma {
     email?: boolean
     phone?: boolean
     website?: boolean
+    public_booking_slug?: boolean
     city?: boolean
     address?: boolean
     country?: boolean
@@ -8771,6 +8781,7 @@ export namespace Prisma {
     email?: boolean
     phone?: boolean
     website?: boolean
+    public_booking_slug?: boolean
     city?: boolean
     address?: boolean
     country?: boolean
@@ -8779,7 +8790,7 @@ export namespace Prisma {
     deleted_at?: boolean
   }
 
-  export type businessesOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"business_id" | "tenant_id" | "business_name" | "business_type" | "whatsapp_number" | "created_at" | "updated_at" | "email" | "phone" | "website" | "city" | "address" | "country" | "gst_number" | "pan_number" | "deleted_at", ExtArgs["result"]["businesses"]>
+  export type businessesOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"business_id" | "tenant_id" | "business_name" | "business_type" | "whatsapp_number" | "created_at" | "updated_at" | "email" | "phone" | "website" | "public_booking_slug" | "city" | "address" | "country" | "gst_number" | "pan_number" | "deleted_at", ExtArgs["result"]["businesses"]>
   export type businessesInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     business_employees?: boolean | businesses$business_employeesArgs<ExtArgs>
     business_workflows?: boolean | businesses$business_workflowsArgs<ExtArgs>
@@ -8863,6 +8874,7 @@ export namespace Prisma {
       email: string | null
       phone: string | null
       website: string | null
+      public_booking_slug: string | null
       city: string | null
       address: string | null
       country: string | null
@@ -9331,6 +9343,7 @@ export namespace Prisma {
     readonly email: FieldRef<"businesses", 'String'>
     readonly phone: FieldRef<"businesses", 'String'>
     readonly website: FieldRef<"businesses", 'String'>
+    readonly public_booking_slug: FieldRef<"businesses", 'String'>
     readonly city: FieldRef<"businesses", 'String'>
     readonly address: FieldRef<"businesses", 'String'>
     readonly country: FieldRef<"businesses", 'String'>
@@ -90388,6 +90401,7 @@ export namespace Prisma {
     ai_agent_enabled: number
     auto_reply_enabled: number
     booking_methods: number
+    booking_link: number
     low_balance_alert: number
     updated_at: number
     _all: number
@@ -90441,6 +90455,7 @@ export namespace Prisma {
     ai_agent_enabled?: true
     auto_reply_enabled?: true
     booking_methods?: true
+    booking_link?: true
     low_balance_alert?: true
     updated_at?: true
     _all?: true
@@ -90543,6 +90558,7 @@ export namespace Prisma {
     ai_agent_enabled: boolean
     auto_reply_enabled: boolean
     booking_methods: JsonValue
+    booking_link: JsonValue
     low_balance_alert: Decimal
     updated_at: Date
     _count: Business_settingsCountAggregateOutputType | null
@@ -90577,6 +90593,7 @@ export namespace Prisma {
     ai_agent_enabled?: boolean
     auto_reply_enabled?: boolean
     booking_methods?: boolean
+    booking_link?: boolean
     low_balance_alert?: boolean
     updated_at?: boolean
     businesses?: boolean | businessesDefaultArgs<ExtArgs>
@@ -90593,6 +90610,7 @@ export namespace Prisma {
     ai_agent_enabled?: boolean
     auto_reply_enabled?: boolean
     booking_methods?: boolean
+    booking_link?: boolean
     low_balance_alert?: boolean
     updated_at?: boolean
     businesses?: boolean | businessesDefaultArgs<ExtArgs>
@@ -90609,6 +90627,7 @@ export namespace Prisma {
     ai_agent_enabled?: boolean
     auto_reply_enabled?: boolean
     booking_methods?: boolean
+    booking_link?: boolean
     low_balance_alert?: boolean
     updated_at?: boolean
     businesses?: boolean | businessesDefaultArgs<ExtArgs>
@@ -90625,11 +90644,12 @@ export namespace Prisma {
     ai_agent_enabled?: boolean
     auto_reply_enabled?: boolean
     booking_methods?: boolean
+    booking_link?: boolean
     low_balance_alert?: boolean
     updated_at?: boolean
   }
 
-  export type business_settingsOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"business_id" | "timezone" | "language" | "currency" | "business_hours" | "onboarding_step" | "onboarding_done" | "ai_agent_enabled" | "auto_reply_enabled" | "booking_methods" | "low_balance_alert" | "updated_at", ExtArgs["result"]["business_settings"]>
+  export type business_settingsOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"business_id" | "timezone" | "language" | "currency" | "business_hours" | "onboarding_step" | "onboarding_done" | "ai_agent_enabled" | "auto_reply_enabled" | "booking_methods" | "booking_link" | "low_balance_alert" | "updated_at", ExtArgs["result"]["business_settings"]>
   export type business_settingsInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     businesses?: boolean | businessesDefaultArgs<ExtArgs>
   }
@@ -90656,6 +90676,7 @@ export namespace Prisma {
       ai_agent_enabled: boolean
       auto_reply_enabled: boolean
       booking_methods: Prisma.JsonValue
+      booking_link: Prisma.JsonValue
       low_balance_alert: Prisma.Decimal
       updated_at: Date
     }, ExtArgs["result"]["business_settings"]>
@@ -91092,6 +91113,7 @@ export namespace Prisma {
     readonly ai_agent_enabled: FieldRef<"business_settings", 'Boolean'>
     readonly auto_reply_enabled: FieldRef<"business_settings", 'Boolean'>
     readonly booking_methods: FieldRef<"business_settings", 'Json'>
+    readonly booking_link: FieldRef<"business_settings", 'Json'>
     readonly low_balance_alert: FieldRef<"business_settings", 'Decimal'>
     readonly updated_at: FieldRef<"business_settings", 'DateTime'>
   }
@@ -92688,6 +92710,7 @@ export namespace Prisma {
     email: 'email',
     phone: 'phone',
     website: 'website',
+    public_booking_slug: 'public_booking_slug',
     city: 'city',
     address: 'address',
     country: 'country',
@@ -93964,6 +93987,7 @@ export namespace Prisma {
     ai_agent_enabled: 'ai_agent_enabled',
     auto_reply_enabled: 'auto_reply_enabled',
     booking_methods: 'booking_methods',
+    booking_link: 'booking_link',
     low_balance_alert: 'low_balance_alert',
     updated_at: 'updated_at'
   };
@@ -94177,6 +94201,7 @@ export namespace Prisma {
     email?: StringNullableFilter<"businesses"> | string | null
     phone?: StringNullableFilter<"businesses"> | string | null
     website?: StringNullableFilter<"businesses"> | string | null
+    public_booking_slug?: StringNullableFilter<"businesses"> | string | null
     city?: StringNullableFilter<"businesses"> | string | null
     address?: StringNullableFilter<"businesses"> | string | null
     country?: StringNullableFilter<"businesses"> | string | null
@@ -94225,6 +94250,7 @@ export namespace Prisma {
     email?: SortOrderInput | SortOrder
     phone?: SortOrderInput | SortOrder
     website?: SortOrderInput | SortOrder
+    public_booking_slug?: SortOrderInput | SortOrder
     city?: SortOrderInput | SortOrder
     address?: SortOrderInput | SortOrder
     country?: SortOrderInput | SortOrder
@@ -94264,6 +94290,7 @@ export namespace Prisma {
 
   export type businessesWhereUniqueInput = Prisma.AtLeast<{
     business_id?: string
+    public_booking_slug?: string
     AND?: businessesWhereInput | businessesWhereInput[]
     OR?: businessesWhereInput[]
     NOT?: businessesWhereInput | businessesWhereInput[]
@@ -94311,7 +94338,7 @@ export namespace Prisma {
     billing_invoices_list?: Billing_invoicesListRelationFilter
     settings?: XOR<Business_settingsNullableScalarRelationFilter, business_settingsWhereInput> | null
     audit_logs?: Audit_logsListRelationFilter
-  }, "business_id">
+  }, "business_id" | "public_booking_slug">
 
   export type businessesOrderByWithAggregationInput = {
     business_id?: SortOrder
@@ -94324,6 +94351,7 @@ export namespace Prisma {
     email?: SortOrderInput | SortOrder
     phone?: SortOrderInput | SortOrder
     website?: SortOrderInput | SortOrder
+    public_booking_slug?: SortOrderInput | SortOrder
     city?: SortOrderInput | SortOrder
     address?: SortOrderInput | SortOrder
     country?: SortOrderInput | SortOrder
@@ -94349,6 +94377,7 @@ export namespace Prisma {
     email?: StringNullableWithAggregatesFilter<"businesses"> | string | null
     phone?: StringNullableWithAggregatesFilter<"businesses"> | string | null
     website?: StringNullableWithAggregatesFilter<"businesses"> | string | null
+    public_booking_slug?: StringNullableWithAggregatesFilter<"businesses"> | string | null
     city?: StringNullableWithAggregatesFilter<"businesses"> | string | null
     address?: StringNullableWithAggregatesFilter<"businesses"> | string | null
     country?: StringNullableWithAggregatesFilter<"businesses"> | string | null
@@ -101096,6 +101125,7 @@ export namespace Prisma {
     ai_agent_enabled?: BoolFilter<"business_settings"> | boolean
     auto_reply_enabled?: BoolFilter<"business_settings"> | boolean
     booking_methods?: JsonFilter<"business_settings">
+    booking_link?: JsonFilter<"business_settings">
     low_balance_alert?: DecimalFilter<"business_settings"> | Decimal | DecimalJsLike | number | string
     updated_at?: DateTimeFilter<"business_settings"> | Date | string
     businesses?: XOR<BusinessesScalarRelationFilter, businessesWhereInput>
@@ -101112,6 +101142,7 @@ export namespace Prisma {
     ai_agent_enabled?: SortOrder
     auto_reply_enabled?: SortOrder
     booking_methods?: SortOrder
+    booking_link?: SortOrder
     low_balance_alert?: SortOrder
     updated_at?: SortOrder
     businesses?: businessesOrderByWithRelationInput
@@ -101131,6 +101162,7 @@ export namespace Prisma {
     ai_agent_enabled?: BoolFilter<"business_settings"> | boolean
     auto_reply_enabled?: BoolFilter<"business_settings"> | boolean
     booking_methods?: JsonFilter<"business_settings">
+    booking_link?: JsonFilter<"business_settings">
     low_balance_alert?: DecimalFilter<"business_settings"> | Decimal | DecimalJsLike | number | string
     updated_at?: DateTimeFilter<"business_settings"> | Date | string
     businesses?: XOR<BusinessesScalarRelationFilter, businessesWhereInput>
@@ -101147,6 +101179,7 @@ export namespace Prisma {
     ai_agent_enabled?: SortOrder
     auto_reply_enabled?: SortOrder
     booking_methods?: SortOrder
+    booking_link?: SortOrder
     low_balance_alert?: SortOrder
     updated_at?: SortOrder
     _count?: business_settingsCountOrderByAggregateInput
@@ -101170,6 +101203,7 @@ export namespace Prisma {
     ai_agent_enabled?: BoolWithAggregatesFilter<"business_settings"> | boolean
     auto_reply_enabled?: BoolWithAggregatesFilter<"business_settings"> | boolean
     booking_methods?: JsonWithAggregatesFilter<"business_settings">
+    booking_link?: JsonWithAggregatesFilter<"business_settings">
     low_balance_alert?: DecimalWithAggregatesFilter<"business_settings"> | Decimal | DecimalJsLike | number | string
     updated_at?: DateTimeWithAggregatesFilter<"business_settings"> | Date | string
   }
@@ -101272,6 +101306,7 @@ export namespace Prisma {
     email?: string | null
     phone?: string | null
     website?: string | null
+    public_booking_slug?: string | null
     city?: string | null
     address?: string | null
     country?: string | null
@@ -101320,6 +101355,7 @@ export namespace Prisma {
     email?: string | null
     phone?: string | null
     website?: string | null
+    public_booking_slug?: string | null
     city?: string | null
     address?: string | null
     country?: string | null
@@ -101366,6 +101402,7 @@ export namespace Prisma {
     email?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     website?: NullableStringFieldUpdateOperationsInput | string | null
+    public_booking_slug?: NullableStringFieldUpdateOperationsInput | string | null
     city?: NullableStringFieldUpdateOperationsInput | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
     country?: NullableStringFieldUpdateOperationsInput | string | null
@@ -101414,6 +101451,7 @@ export namespace Prisma {
     email?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     website?: NullableStringFieldUpdateOperationsInput | string | null
+    public_booking_slug?: NullableStringFieldUpdateOperationsInput | string | null
     city?: NullableStringFieldUpdateOperationsInput | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
     country?: NullableStringFieldUpdateOperationsInput | string | null
@@ -101461,6 +101499,7 @@ export namespace Prisma {
     email?: string | null
     phone?: string | null
     website?: string | null
+    public_booking_slug?: string | null
     city?: string | null
     address?: string | null
     country?: string | null
@@ -101479,6 +101518,7 @@ export namespace Prisma {
     email?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     website?: NullableStringFieldUpdateOperationsInput | string | null
+    public_booking_slug?: NullableStringFieldUpdateOperationsInput | string | null
     city?: NullableStringFieldUpdateOperationsInput | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
     country?: NullableStringFieldUpdateOperationsInput | string | null
@@ -101498,6 +101538,7 @@ export namespace Prisma {
     email?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     website?: NullableStringFieldUpdateOperationsInput | string | null
+    public_booking_slug?: NullableStringFieldUpdateOperationsInput | string | null
     city?: NullableStringFieldUpdateOperationsInput | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
     country?: NullableStringFieldUpdateOperationsInput | string | null
@@ -109142,6 +109183,7 @@ export namespace Prisma {
     ai_agent_enabled?: boolean
     auto_reply_enabled?: boolean
     booking_methods?: JsonNullValueInput | InputJsonValue
+    booking_link?: JsonNullValueInput | InputJsonValue
     low_balance_alert?: Decimal | DecimalJsLike | number | string
     updated_at?: Date | string
     businesses: businessesCreateNestedOneWithoutSettingsInput
@@ -109158,6 +109200,7 @@ export namespace Prisma {
     ai_agent_enabled?: boolean
     auto_reply_enabled?: boolean
     booking_methods?: JsonNullValueInput | InputJsonValue
+    booking_link?: JsonNullValueInput | InputJsonValue
     low_balance_alert?: Decimal | DecimalJsLike | number | string
     updated_at?: Date | string
   }
@@ -109172,6 +109215,7 @@ export namespace Prisma {
     ai_agent_enabled?: BoolFieldUpdateOperationsInput | boolean
     auto_reply_enabled?: BoolFieldUpdateOperationsInput | boolean
     booking_methods?: JsonNullValueInput | InputJsonValue
+    booking_link?: JsonNullValueInput | InputJsonValue
     low_balance_alert?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     businesses?: businessesUpdateOneRequiredWithoutSettingsNestedInput
@@ -109188,6 +109232,7 @@ export namespace Prisma {
     ai_agent_enabled?: BoolFieldUpdateOperationsInput | boolean
     auto_reply_enabled?: BoolFieldUpdateOperationsInput | boolean
     booking_methods?: JsonNullValueInput | InputJsonValue
+    booking_link?: JsonNullValueInput | InputJsonValue
     low_balance_alert?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -109203,6 +109248,7 @@ export namespace Prisma {
     ai_agent_enabled?: boolean
     auto_reply_enabled?: boolean
     booking_methods?: JsonNullValueInput | InputJsonValue
+    booking_link?: JsonNullValueInput | InputJsonValue
     low_balance_alert?: Decimal | DecimalJsLike | number | string
     updated_at?: Date | string
   }
@@ -109217,6 +109263,7 @@ export namespace Prisma {
     ai_agent_enabled?: BoolFieldUpdateOperationsInput | boolean
     auto_reply_enabled?: BoolFieldUpdateOperationsInput | boolean
     booking_methods?: JsonNullValueInput | InputJsonValue
+    booking_link?: JsonNullValueInput | InputJsonValue
     low_balance_alert?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -109232,6 +109279,7 @@ export namespace Prisma {
     ai_agent_enabled?: BoolFieldUpdateOperationsInput | boolean
     auto_reply_enabled?: BoolFieldUpdateOperationsInput | boolean
     booking_methods?: JsonNullValueInput | InputJsonValue
+    booking_link?: JsonNullValueInput | InputJsonValue
     low_balance_alert?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -109682,6 +109730,7 @@ export namespace Prisma {
     email?: SortOrder
     phone?: SortOrder
     website?: SortOrder
+    public_booking_slug?: SortOrder
     city?: SortOrder
     address?: SortOrder
     country?: SortOrder
@@ -109701,6 +109750,7 @@ export namespace Prisma {
     email?: SortOrder
     phone?: SortOrder
     website?: SortOrder
+    public_booking_slug?: SortOrder
     city?: SortOrder
     address?: SortOrder
     country?: SortOrder
@@ -109720,6 +109770,7 @@ export namespace Prisma {
     email?: SortOrder
     phone?: SortOrder
     website?: SortOrder
+    public_booking_slug?: SortOrder
     city?: SortOrder
     address?: SortOrder
     country?: SortOrder
@@ -114268,6 +114319,7 @@ export namespace Prisma {
     ai_agent_enabled?: SortOrder
     auto_reply_enabled?: SortOrder
     booking_methods?: SortOrder
+    booking_link?: SortOrder
     low_balance_alert?: SortOrder
     updated_at?: SortOrder
   }
@@ -122238,6 +122290,7 @@ export namespace Prisma {
     ai_agent_enabled?: boolean
     auto_reply_enabled?: boolean
     booking_methods?: JsonNullValueInput | InputJsonValue
+    booking_link?: JsonNullValueInput | InputJsonValue
     low_balance_alert?: Decimal | DecimalJsLike | number | string
     updated_at?: Date | string
   }
@@ -122252,6 +122305,7 @@ export namespace Prisma {
     ai_agent_enabled?: boolean
     auto_reply_enabled?: boolean
     booking_methods?: JsonNullValueInput | InputJsonValue
+    booking_link?: JsonNullValueInput | InputJsonValue
     low_balance_alert?: Decimal | DecimalJsLike | number | string
     updated_at?: Date | string
   }
@@ -123394,6 +123448,7 @@ export namespace Prisma {
     ai_agent_enabled?: BoolFieldUpdateOperationsInput | boolean
     auto_reply_enabled?: BoolFieldUpdateOperationsInput | boolean
     booking_methods?: JsonNullValueInput | InputJsonValue
+    booking_link?: JsonNullValueInput | InputJsonValue
     low_balance_alert?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -123408,6 +123463,7 @@ export namespace Prisma {
     ai_agent_enabled?: BoolFieldUpdateOperationsInput | boolean
     auto_reply_enabled?: BoolFieldUpdateOperationsInput | boolean
     booking_methods?: JsonNullValueInput | InputJsonValue
+    booking_link?: JsonNullValueInput | InputJsonValue
     low_balance_alert?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -123455,6 +123511,7 @@ export namespace Prisma {
     email?: string | null
     phone?: string | null
     website?: string | null
+    public_booking_slug?: string | null
     city?: string | null
     address?: string | null
     country?: string | null
@@ -123502,6 +123559,7 @@ export namespace Prisma {
     email?: string | null
     phone?: string | null
     website?: string | null
+    public_booking_slug?: string | null
     city?: string | null
     address?: string | null
     country?: string | null
@@ -123563,6 +123621,7 @@ export namespace Prisma {
     email?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     website?: NullableStringFieldUpdateOperationsInput | string | null
+    public_booking_slug?: NullableStringFieldUpdateOperationsInput | string | null
     city?: NullableStringFieldUpdateOperationsInput | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
     country?: NullableStringFieldUpdateOperationsInput | string | null
@@ -123610,6 +123669,7 @@ export namespace Prisma {
     email?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     website?: NullableStringFieldUpdateOperationsInput | string | null
+    public_booking_slug?: NullableStringFieldUpdateOperationsInput | string | null
     city?: NullableStringFieldUpdateOperationsInput | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
     country?: NullableStringFieldUpdateOperationsInput | string | null
@@ -124106,6 +124166,7 @@ export namespace Prisma {
     email?: string | null
     phone?: string | null
     website?: string | null
+    public_booking_slug?: string | null
     city?: string | null
     address?: string | null
     country?: string | null
@@ -124153,6 +124214,7 @@ export namespace Prisma {
     email?: string | null
     phone?: string | null
     website?: string | null
+    public_booking_slug?: string | null
     city?: string | null
     address?: string | null
     country?: string | null
@@ -124250,6 +124312,7 @@ export namespace Prisma {
     email?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     website?: NullableStringFieldUpdateOperationsInput | string | null
+    public_booking_slug?: NullableStringFieldUpdateOperationsInput | string | null
     city?: NullableStringFieldUpdateOperationsInput | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
     country?: NullableStringFieldUpdateOperationsInput | string | null
@@ -124297,6 +124360,7 @@ export namespace Prisma {
     email?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     website?: NullableStringFieldUpdateOperationsInput | string | null
+    public_booking_slug?: NullableStringFieldUpdateOperationsInput | string | null
     city?: NullableStringFieldUpdateOperationsInput | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
     country?: NullableStringFieldUpdateOperationsInput | string | null
@@ -124372,6 +124436,7 @@ export namespace Prisma {
     email?: string | null
     phone?: string | null
     website?: string | null
+    public_booking_slug?: string | null
     city?: string | null
     address?: string | null
     country?: string | null
@@ -124418,6 +124483,7 @@ export namespace Prisma {
     email?: string | null
     phone?: string | null
     website?: string | null
+    public_booking_slug?: string | null
     city?: string | null
     address?: string | null
     country?: string | null
@@ -125136,6 +125202,7 @@ export namespace Prisma {
     email?: StringNullableFilter<"businesses"> | string | null
     phone?: StringNullableFilter<"businesses"> | string | null
     website?: StringNullableFilter<"businesses"> | string | null
+    public_booking_slug?: StringNullableFilter<"businesses"> | string | null
     city?: StringNullableFilter<"businesses"> | string | null
     address?: StringNullableFilter<"businesses"> | string | null
     country?: StringNullableFilter<"businesses"> | string | null
@@ -125474,6 +125541,7 @@ export namespace Prisma {
     email?: string | null
     phone?: string | null
     website?: string | null
+    public_booking_slug?: string | null
     city?: string | null
     address?: string | null
     country?: string | null
@@ -125521,6 +125589,7 @@ export namespace Prisma {
     email?: string | null
     phone?: string | null
     website?: string | null
+    public_booking_slug?: string | null
     city?: string | null
     address?: string | null
     country?: string | null
@@ -125702,6 +125771,7 @@ export namespace Prisma {
     email?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     website?: NullableStringFieldUpdateOperationsInput | string | null
+    public_booking_slug?: NullableStringFieldUpdateOperationsInput | string | null
     city?: NullableStringFieldUpdateOperationsInput | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
     country?: NullableStringFieldUpdateOperationsInput | string | null
@@ -125749,6 +125819,7 @@ export namespace Prisma {
     email?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     website?: NullableStringFieldUpdateOperationsInput | string | null
+    public_booking_slug?: NullableStringFieldUpdateOperationsInput | string | null
     city?: NullableStringFieldUpdateOperationsInput | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
     country?: NullableStringFieldUpdateOperationsInput | string | null
@@ -126250,6 +126321,7 @@ export namespace Prisma {
     email?: string | null
     phone?: string | null
     website?: string | null
+    public_booking_slug?: string | null
     city?: string | null
     address?: string | null
     country?: string | null
@@ -126297,6 +126369,7 @@ export namespace Prisma {
     email?: string | null
     phone?: string | null
     website?: string | null
+    public_booking_slug?: string | null
     city?: string | null
     address?: string | null
     country?: string | null
@@ -126853,6 +126926,7 @@ export namespace Prisma {
     email?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     website?: NullableStringFieldUpdateOperationsInput | string | null
+    public_booking_slug?: NullableStringFieldUpdateOperationsInput | string | null
     city?: NullableStringFieldUpdateOperationsInput | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
     country?: NullableStringFieldUpdateOperationsInput | string | null
@@ -126900,6 +126974,7 @@ export namespace Prisma {
     email?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     website?: NullableStringFieldUpdateOperationsInput | string | null
+    public_booking_slug?: NullableStringFieldUpdateOperationsInput | string | null
     city?: NullableStringFieldUpdateOperationsInput | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
     country?: NullableStringFieldUpdateOperationsInput | string | null
@@ -127153,6 +127228,7 @@ export namespace Prisma {
     email?: string | null
     phone?: string | null
     website?: string | null
+    public_booking_slug?: string | null
     city?: string | null
     address?: string | null
     country?: string | null
@@ -127200,6 +127276,7 @@ export namespace Prisma {
     email?: string | null
     phone?: string | null
     website?: string | null
+    public_booking_slug?: string | null
     city?: string | null
     address?: string | null
     country?: string | null
@@ -127379,6 +127456,7 @@ export namespace Prisma {
     email?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     website?: NullableStringFieldUpdateOperationsInput | string | null
+    public_booking_slug?: NullableStringFieldUpdateOperationsInput | string | null
     city?: NullableStringFieldUpdateOperationsInput | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
     country?: NullableStringFieldUpdateOperationsInput | string | null
@@ -127426,6 +127504,7 @@ export namespace Prisma {
     email?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     website?: NullableStringFieldUpdateOperationsInput | string | null
+    public_booking_slug?: NullableStringFieldUpdateOperationsInput | string | null
     city?: NullableStringFieldUpdateOperationsInput | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
     country?: NullableStringFieldUpdateOperationsInput | string | null
@@ -130391,6 +130470,7 @@ export namespace Prisma {
     email?: string | null
     phone?: string | null
     website?: string | null
+    public_booking_slug?: string | null
     city?: string | null
     address?: string | null
     country?: string | null
@@ -130438,6 +130518,7 @@ export namespace Prisma {
     email?: string | null
     phone?: string | null
     website?: string | null
+    public_booking_slug?: string | null
     city?: string | null
     address?: string | null
     country?: string | null
@@ -130621,6 +130702,7 @@ export namespace Prisma {
     email?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     website?: NullableStringFieldUpdateOperationsInput | string | null
+    public_booking_slug?: NullableStringFieldUpdateOperationsInput | string | null
     city?: NullableStringFieldUpdateOperationsInput | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
     country?: NullableStringFieldUpdateOperationsInput | string | null
@@ -130668,6 +130750,7 @@ export namespace Prisma {
     email?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     website?: NullableStringFieldUpdateOperationsInput | string | null
+    public_booking_slug?: NullableStringFieldUpdateOperationsInput | string | null
     city?: NullableStringFieldUpdateOperationsInput | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
     country?: NullableStringFieldUpdateOperationsInput | string | null
@@ -130802,6 +130885,7 @@ export namespace Prisma {
     email?: string | null
     phone?: string | null
     website?: string | null
+    public_booking_slug?: string | null
     city?: string | null
     address?: string | null
     country?: string | null
@@ -130849,6 +130933,7 @@ export namespace Prisma {
     email?: string | null
     phone?: string | null
     website?: string | null
+    public_booking_slug?: string | null
     city?: string | null
     address?: string | null
     country?: string | null
@@ -131100,6 +131185,7 @@ export namespace Prisma {
     email?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     website?: NullableStringFieldUpdateOperationsInput | string | null
+    public_booking_slug?: NullableStringFieldUpdateOperationsInput | string | null
     city?: NullableStringFieldUpdateOperationsInput | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
     country?: NullableStringFieldUpdateOperationsInput | string | null
@@ -131147,6 +131233,7 @@ export namespace Prisma {
     email?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     website?: NullableStringFieldUpdateOperationsInput | string | null
+    public_booking_slug?: NullableStringFieldUpdateOperationsInput | string | null
     city?: NullableStringFieldUpdateOperationsInput | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
     country?: NullableStringFieldUpdateOperationsInput | string | null
@@ -131371,6 +131458,7 @@ export namespace Prisma {
     email?: string | null
     phone?: string | null
     website?: string | null
+    public_booking_slug?: string | null
     city?: string | null
     address?: string | null
     country?: string | null
@@ -131418,6 +131506,7 @@ export namespace Prisma {
     email?: string | null
     phone?: string | null
     website?: string | null
+    public_booking_slug?: string | null
     city?: string | null
     address?: string | null
     country?: string | null
@@ -131532,6 +131621,7 @@ export namespace Prisma {
     email?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     website?: NullableStringFieldUpdateOperationsInput | string | null
+    public_booking_slug?: NullableStringFieldUpdateOperationsInput | string | null
     city?: NullableStringFieldUpdateOperationsInput | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
     country?: NullableStringFieldUpdateOperationsInput | string | null
@@ -131579,6 +131669,7 @@ export namespace Prisma {
     email?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     website?: NullableStringFieldUpdateOperationsInput | string | null
+    public_booking_slug?: NullableStringFieldUpdateOperationsInput | string | null
     city?: NullableStringFieldUpdateOperationsInput | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
     country?: NullableStringFieldUpdateOperationsInput | string | null
@@ -131721,6 +131812,7 @@ export namespace Prisma {
     email?: string | null
     phone?: string | null
     website?: string | null
+    public_booking_slug?: string | null
     city?: string | null
     address?: string | null
     country?: string | null
@@ -131768,6 +131860,7 @@ export namespace Prisma {
     email?: string | null
     phone?: string | null
     website?: string | null
+    public_booking_slug?: string | null
     city?: string | null
     address?: string | null
     country?: string | null
@@ -132007,6 +132100,7 @@ export namespace Prisma {
     email?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     website?: NullableStringFieldUpdateOperationsInput | string | null
+    public_booking_slug?: NullableStringFieldUpdateOperationsInput | string | null
     city?: NullableStringFieldUpdateOperationsInput | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
     country?: NullableStringFieldUpdateOperationsInput | string | null
@@ -132054,6 +132148,7 @@ export namespace Prisma {
     email?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     website?: NullableStringFieldUpdateOperationsInput | string | null
+    public_booking_slug?: NullableStringFieldUpdateOperationsInput | string | null
     city?: NullableStringFieldUpdateOperationsInput | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
     country?: NullableStringFieldUpdateOperationsInput | string | null
@@ -132255,6 +132350,7 @@ export namespace Prisma {
     email?: string | null
     phone?: string | null
     website?: string | null
+    public_booking_slug?: string | null
     city?: string | null
     address?: string | null
     country?: string | null
@@ -132302,6 +132398,7 @@ export namespace Prisma {
     email?: string | null
     phone?: string | null
     website?: string | null
+    public_booking_slug?: string | null
     city?: string | null
     address?: string | null
     country?: string | null
@@ -132363,6 +132460,7 @@ export namespace Prisma {
     email?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     website?: NullableStringFieldUpdateOperationsInput | string | null
+    public_booking_slug?: NullableStringFieldUpdateOperationsInput | string | null
     city?: NullableStringFieldUpdateOperationsInput | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
     country?: NullableStringFieldUpdateOperationsInput | string | null
@@ -132410,6 +132508,7 @@ export namespace Prisma {
     email?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     website?: NullableStringFieldUpdateOperationsInput | string | null
+    public_booking_slug?: NullableStringFieldUpdateOperationsInput | string | null
     city?: NullableStringFieldUpdateOperationsInput | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
     country?: NullableStringFieldUpdateOperationsInput | string | null
@@ -133123,6 +133222,7 @@ export namespace Prisma {
     email?: string | null
     phone?: string | null
     website?: string | null
+    public_booking_slug?: string | null
     city?: string | null
     address?: string | null
     country?: string | null
@@ -133170,6 +133270,7 @@ export namespace Prisma {
     email?: string | null
     phone?: string | null
     website?: string | null
+    public_booking_slug?: string | null
     city?: string | null
     address?: string | null
     country?: string | null
@@ -133325,6 +133426,7 @@ export namespace Prisma {
     email?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     website?: NullableStringFieldUpdateOperationsInput | string | null
+    public_booking_slug?: NullableStringFieldUpdateOperationsInput | string | null
     city?: NullableStringFieldUpdateOperationsInput | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
     country?: NullableStringFieldUpdateOperationsInput | string | null
@@ -133372,6 +133474,7 @@ export namespace Prisma {
     email?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     website?: NullableStringFieldUpdateOperationsInput | string | null
+    public_booking_slug?: NullableStringFieldUpdateOperationsInput | string | null
     city?: NullableStringFieldUpdateOperationsInput | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
     country?: NullableStringFieldUpdateOperationsInput | string | null
@@ -133523,6 +133626,7 @@ export namespace Prisma {
     email?: string | null
     phone?: string | null
     website?: string | null
+    public_booking_slug?: string | null
     city?: string | null
     address?: string | null
     country?: string | null
@@ -133570,6 +133674,7 @@ export namespace Prisma {
     email?: string | null
     phone?: string | null
     website?: string | null
+    public_booking_slug?: string | null
     city?: string | null
     address?: string | null
     country?: string | null
@@ -133896,6 +134001,7 @@ export namespace Prisma {
     email?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     website?: NullableStringFieldUpdateOperationsInput | string | null
+    public_booking_slug?: NullableStringFieldUpdateOperationsInput | string | null
     city?: NullableStringFieldUpdateOperationsInput | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
     country?: NullableStringFieldUpdateOperationsInput | string | null
@@ -133943,6 +134049,7 @@ export namespace Prisma {
     email?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     website?: NullableStringFieldUpdateOperationsInput | string | null
+    public_booking_slug?: NullableStringFieldUpdateOperationsInput | string | null
     city?: NullableStringFieldUpdateOperationsInput | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
     country?: NullableStringFieldUpdateOperationsInput | string | null
@@ -134260,6 +134367,7 @@ export namespace Prisma {
     email?: string | null
     phone?: string | null
     website?: string | null
+    public_booking_slug?: string | null
     city?: string | null
     address?: string | null
     country?: string | null
@@ -134307,6 +134415,7 @@ export namespace Prisma {
     email?: string | null
     phone?: string | null
     website?: string | null
+    public_booking_slug?: string | null
     city?: string | null
     address?: string | null
     country?: string | null
@@ -134519,6 +134628,7 @@ export namespace Prisma {
     email?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     website?: NullableStringFieldUpdateOperationsInput | string | null
+    public_booking_slug?: NullableStringFieldUpdateOperationsInput | string | null
     city?: NullableStringFieldUpdateOperationsInput | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
     country?: NullableStringFieldUpdateOperationsInput | string | null
@@ -134566,6 +134676,7 @@ export namespace Prisma {
     email?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     website?: NullableStringFieldUpdateOperationsInput | string | null
+    public_booking_slug?: NullableStringFieldUpdateOperationsInput | string | null
     city?: NullableStringFieldUpdateOperationsInput | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
     country?: NullableStringFieldUpdateOperationsInput | string | null
@@ -134717,6 +134828,7 @@ export namespace Prisma {
     email?: string | null
     phone?: string | null
     website?: string | null
+    public_booking_slug?: string | null
     city?: string | null
     address?: string | null
     country?: string | null
@@ -134764,6 +134876,7 @@ export namespace Prisma {
     email?: string | null
     phone?: string | null
     website?: string | null
+    public_booking_slug?: string | null
     city?: string | null
     address?: string | null
     country?: string | null
@@ -134970,6 +135083,7 @@ export namespace Prisma {
     email?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     website?: NullableStringFieldUpdateOperationsInput | string | null
+    public_booking_slug?: NullableStringFieldUpdateOperationsInput | string | null
     city?: NullableStringFieldUpdateOperationsInput | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
     country?: NullableStringFieldUpdateOperationsInput | string | null
@@ -135017,6 +135131,7 @@ export namespace Prisma {
     email?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     website?: NullableStringFieldUpdateOperationsInput | string | null
+    public_booking_slug?: NullableStringFieldUpdateOperationsInput | string | null
     city?: NullableStringFieldUpdateOperationsInput | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
     country?: NullableStringFieldUpdateOperationsInput | string | null
@@ -135559,6 +135674,7 @@ export namespace Prisma {
     email?: string | null
     phone?: string | null
     website?: string | null
+    public_booking_slug?: string | null
     city?: string | null
     address?: string | null
     country?: string | null
@@ -135606,6 +135722,7 @@ export namespace Prisma {
     email?: string | null
     phone?: string | null
     website?: string | null
+    public_booking_slug?: string | null
     city?: string | null
     address?: string | null
     country?: string | null
@@ -135886,6 +136003,7 @@ export namespace Prisma {
     email?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     website?: NullableStringFieldUpdateOperationsInput | string | null
+    public_booking_slug?: NullableStringFieldUpdateOperationsInput | string | null
     city?: NullableStringFieldUpdateOperationsInput | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
     country?: NullableStringFieldUpdateOperationsInput | string | null
@@ -135933,6 +136051,7 @@ export namespace Prisma {
     email?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     website?: NullableStringFieldUpdateOperationsInput | string | null
+    public_booking_slug?: NullableStringFieldUpdateOperationsInput | string | null
     city?: NullableStringFieldUpdateOperationsInput | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
     country?: NullableStringFieldUpdateOperationsInput | string | null
@@ -136649,6 +136768,7 @@ export namespace Prisma {
     email?: string | null
     phone?: string | null
     website?: string | null
+    public_booking_slug?: string | null
     city?: string | null
     address?: string | null
     country?: string | null
@@ -136696,6 +136816,7 @@ export namespace Prisma {
     email?: string | null
     phone?: string | null
     website?: string | null
+    public_booking_slug?: string | null
     city?: string | null
     address?: string | null
     country?: string | null
@@ -137092,6 +137213,7 @@ export namespace Prisma {
     email?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     website?: NullableStringFieldUpdateOperationsInput | string | null
+    public_booking_slug?: NullableStringFieldUpdateOperationsInput | string | null
     city?: NullableStringFieldUpdateOperationsInput | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
     country?: NullableStringFieldUpdateOperationsInput | string | null
@@ -137139,6 +137261,7 @@ export namespace Prisma {
     email?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     website?: NullableStringFieldUpdateOperationsInput | string | null
+    public_booking_slug?: NullableStringFieldUpdateOperationsInput | string | null
     city?: NullableStringFieldUpdateOperationsInput | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
     country?: NullableStringFieldUpdateOperationsInput | string | null
@@ -137723,6 +137846,7 @@ export namespace Prisma {
     email?: string | null
     phone?: string | null
     website?: string | null
+    public_booking_slug?: string | null
     city?: string | null
     address?: string | null
     country?: string | null
@@ -137770,6 +137894,7 @@ export namespace Prisma {
     email?: string | null
     phone?: string | null
     website?: string | null
+    public_booking_slug?: string | null
     city?: string | null
     address?: string | null
     country?: string | null
@@ -137900,6 +138025,7 @@ export namespace Prisma {
     email?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     website?: NullableStringFieldUpdateOperationsInput | string | null
+    public_booking_slug?: NullableStringFieldUpdateOperationsInput | string | null
     city?: NullableStringFieldUpdateOperationsInput | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
     country?: NullableStringFieldUpdateOperationsInput | string | null
@@ -137947,6 +138073,7 @@ export namespace Prisma {
     email?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     website?: NullableStringFieldUpdateOperationsInput | string | null
+    public_booking_slug?: NullableStringFieldUpdateOperationsInput | string | null
     city?: NullableStringFieldUpdateOperationsInput | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
     country?: NullableStringFieldUpdateOperationsInput | string | null
@@ -138067,6 +138194,7 @@ export namespace Prisma {
     email?: string | null
     phone?: string | null
     website?: string | null
+    public_booking_slug?: string | null
     city?: string | null
     address?: string | null
     country?: string | null
@@ -138114,6 +138242,7 @@ export namespace Prisma {
     email?: string | null
     phone?: string | null
     website?: string | null
+    public_booking_slug?: string | null
     city?: string | null
     address?: string | null
     country?: string | null
@@ -138376,6 +138505,7 @@ export namespace Prisma {
     email?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     website?: NullableStringFieldUpdateOperationsInput | string | null
+    public_booking_slug?: NullableStringFieldUpdateOperationsInput | string | null
     city?: NullableStringFieldUpdateOperationsInput | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
     country?: NullableStringFieldUpdateOperationsInput | string | null
@@ -138423,6 +138553,7 @@ export namespace Prisma {
     email?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     website?: NullableStringFieldUpdateOperationsInput | string | null
+    public_booking_slug?: NullableStringFieldUpdateOperationsInput | string | null
     city?: NullableStringFieldUpdateOperationsInput | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
     country?: NullableStringFieldUpdateOperationsInput | string | null
@@ -138687,6 +138818,7 @@ export namespace Prisma {
     email?: string | null
     phone?: string | null
     website?: string | null
+    public_booking_slug?: string | null
     city?: string | null
     address?: string | null
     country?: string | null
@@ -138734,6 +138866,7 @@ export namespace Prisma {
     email?: string | null
     phone?: string | null
     website?: string | null
+    public_booking_slug?: string | null
     city?: string | null
     address?: string | null
     country?: string | null
@@ -139145,6 +139278,7 @@ export namespace Prisma {
     email?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     website?: NullableStringFieldUpdateOperationsInput | string | null
+    public_booking_slug?: NullableStringFieldUpdateOperationsInput | string | null
     city?: NullableStringFieldUpdateOperationsInput | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
     country?: NullableStringFieldUpdateOperationsInput | string | null
@@ -139192,6 +139326,7 @@ export namespace Prisma {
     email?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     website?: NullableStringFieldUpdateOperationsInput | string | null
+    public_booking_slug?: NullableStringFieldUpdateOperationsInput | string | null
     city?: NullableStringFieldUpdateOperationsInput | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
     country?: NullableStringFieldUpdateOperationsInput | string | null
@@ -140080,6 +140215,7 @@ export namespace Prisma {
     email?: string | null
     phone?: string | null
     website?: string | null
+    public_booking_slug?: string | null
     city?: string | null
     address?: string | null
     country?: string | null
@@ -140127,6 +140263,7 @@ export namespace Prisma {
     email?: string | null
     phone?: string | null
     website?: string | null
+    public_booking_slug?: string | null
     city?: string | null
     address?: string | null
     country?: string | null
@@ -140257,6 +140394,7 @@ export namespace Prisma {
     email?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     website?: NullableStringFieldUpdateOperationsInput | string | null
+    public_booking_slug?: NullableStringFieldUpdateOperationsInput | string | null
     city?: NullableStringFieldUpdateOperationsInput | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
     country?: NullableStringFieldUpdateOperationsInput | string | null
@@ -140304,6 +140442,7 @@ export namespace Prisma {
     email?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     website?: NullableStringFieldUpdateOperationsInput | string | null
+    public_booking_slug?: NullableStringFieldUpdateOperationsInput | string | null
     city?: NullableStringFieldUpdateOperationsInput | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
     country?: NullableStringFieldUpdateOperationsInput | string | null
@@ -140424,6 +140563,7 @@ export namespace Prisma {
     email?: string | null
     phone?: string | null
     website?: string | null
+    public_booking_slug?: string | null
     city?: string | null
     address?: string | null
     country?: string | null
@@ -140471,6 +140611,7 @@ export namespace Prisma {
     email?: string | null
     phone?: string | null
     website?: string | null
+    public_booking_slug?: string | null
     city?: string | null
     address?: string | null
     country?: string | null
@@ -140733,6 +140874,7 @@ export namespace Prisma {
     email?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     website?: NullableStringFieldUpdateOperationsInput | string | null
+    public_booking_slug?: NullableStringFieldUpdateOperationsInput | string | null
     city?: NullableStringFieldUpdateOperationsInput | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
     country?: NullableStringFieldUpdateOperationsInput | string | null
@@ -140780,6 +140922,7 @@ export namespace Prisma {
     email?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     website?: NullableStringFieldUpdateOperationsInput | string | null
+    public_booking_slug?: NullableStringFieldUpdateOperationsInput | string | null
     city?: NullableStringFieldUpdateOperationsInput | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
     country?: NullableStringFieldUpdateOperationsInput | string | null
@@ -141044,6 +141187,7 @@ export namespace Prisma {
     email?: string | null
     phone?: string | null
     website?: string | null
+    public_booking_slug?: string | null
     city?: string | null
     address?: string | null
     country?: string | null
@@ -141091,6 +141235,7 @@ export namespace Prisma {
     email?: string | null
     phone?: string | null
     website?: string | null
+    public_booking_slug?: string | null
     city?: string | null
     address?: string | null
     country?: string | null
@@ -141528,6 +141673,7 @@ export namespace Prisma {
     email?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     website?: NullableStringFieldUpdateOperationsInput | string | null
+    public_booking_slug?: NullableStringFieldUpdateOperationsInput | string | null
     city?: NullableStringFieldUpdateOperationsInput | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
     country?: NullableStringFieldUpdateOperationsInput | string | null
@@ -141575,6 +141721,7 @@ export namespace Prisma {
     email?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     website?: NullableStringFieldUpdateOperationsInput | string | null
+    public_booking_slug?: NullableStringFieldUpdateOperationsInput | string | null
     city?: NullableStringFieldUpdateOperationsInput | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
     country?: NullableStringFieldUpdateOperationsInput | string | null
@@ -142600,6 +142747,7 @@ export namespace Prisma {
     email?: string | null
     phone?: string | null
     website?: string | null
+    public_booking_slug?: string | null
     city?: string | null
     address?: string | null
     country?: string | null
@@ -142647,6 +142795,7 @@ export namespace Prisma {
     email?: string | null
     phone?: string | null
     website?: string | null
+    public_booking_slug?: string | null
     city?: string | null
     address?: string | null
     country?: string | null
@@ -142781,6 +142930,7 @@ export namespace Prisma {
     email?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     website?: NullableStringFieldUpdateOperationsInput | string | null
+    public_booking_slug?: NullableStringFieldUpdateOperationsInput | string | null
     city?: NullableStringFieldUpdateOperationsInput | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
     country?: NullableStringFieldUpdateOperationsInput | string | null
@@ -142828,6 +142978,7 @@ export namespace Prisma {
     email?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     website?: NullableStringFieldUpdateOperationsInput | string | null
+    public_booking_slug?: NullableStringFieldUpdateOperationsInput | string | null
     city?: NullableStringFieldUpdateOperationsInput | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
     country?: NullableStringFieldUpdateOperationsInput | string | null
@@ -142930,6 +143081,7 @@ export namespace Prisma {
     email?: string | null
     phone?: string | null
     website?: string | null
+    public_booking_slug?: string | null
     city?: string | null
     address?: string | null
     country?: string | null
@@ -142977,6 +143129,7 @@ export namespace Prisma {
     email?: string | null
     phone?: string | null
     website?: string | null
+    public_booking_slug?: string | null
     city?: string | null
     address?: string | null
     country?: string | null
@@ -143078,6 +143231,7 @@ export namespace Prisma {
     email?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     website?: NullableStringFieldUpdateOperationsInput | string | null
+    public_booking_slug?: NullableStringFieldUpdateOperationsInput | string | null
     city?: NullableStringFieldUpdateOperationsInput | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
     country?: NullableStringFieldUpdateOperationsInput | string | null
@@ -143125,6 +143279,7 @@ export namespace Prisma {
     email?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     website?: NullableStringFieldUpdateOperationsInput | string | null
+    public_booking_slug?: NullableStringFieldUpdateOperationsInput | string | null
     city?: NullableStringFieldUpdateOperationsInput | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
     country?: NullableStringFieldUpdateOperationsInput | string | null
@@ -143257,6 +143412,7 @@ export namespace Prisma {
     email?: string | null
     phone?: string | null
     website?: string | null
+    public_booking_slug?: string | null
     city?: string | null
     address?: string | null
     country?: string | null
@@ -143304,6 +143460,7 @@ export namespace Prisma {
     email?: string | null
     phone?: string | null
     website?: string | null
+    public_booking_slug?: string | null
     city?: string | null
     address?: string | null
     country?: string | null
@@ -143365,6 +143522,7 @@ export namespace Prisma {
     email?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     website?: NullableStringFieldUpdateOperationsInput | string | null
+    public_booking_slug?: NullableStringFieldUpdateOperationsInput | string | null
     city?: NullableStringFieldUpdateOperationsInput | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
     country?: NullableStringFieldUpdateOperationsInput | string | null
@@ -143412,6 +143570,7 @@ export namespace Prisma {
     email?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     website?: NullableStringFieldUpdateOperationsInput | string | null
+    public_booking_slug?: NullableStringFieldUpdateOperationsInput | string | null
     city?: NullableStringFieldUpdateOperationsInput | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
     country?: NullableStringFieldUpdateOperationsInput | string | null
@@ -143457,6 +143616,7 @@ export namespace Prisma {
     email?: string | null
     phone?: string | null
     website?: string | null
+    public_booking_slug?: string | null
     city?: string | null
     address?: string | null
     country?: string | null
@@ -143504,6 +143664,7 @@ export namespace Prisma {
     email?: string | null
     phone?: string | null
     website?: string | null
+    public_booking_slug?: string | null
     city?: string | null
     address?: string | null
     country?: string | null
@@ -143608,6 +143769,7 @@ export namespace Prisma {
     email?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     website?: NullableStringFieldUpdateOperationsInput | string | null
+    public_booking_slug?: NullableStringFieldUpdateOperationsInput | string | null
     city?: NullableStringFieldUpdateOperationsInput | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
     country?: NullableStringFieldUpdateOperationsInput | string | null
@@ -143655,6 +143817,7 @@ export namespace Prisma {
     email?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     website?: NullableStringFieldUpdateOperationsInput | string | null
+    public_booking_slug?: NullableStringFieldUpdateOperationsInput | string | null
     city?: NullableStringFieldUpdateOperationsInput | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
     country?: NullableStringFieldUpdateOperationsInput | string | null
@@ -143749,6 +143912,7 @@ export namespace Prisma {
     email?: string | null
     phone?: string | null
     website?: string | null
+    public_booking_slug?: string | null
     city?: string | null
     address?: string | null
     country?: string | null
@@ -143796,6 +143960,7 @@ export namespace Prisma {
     email?: string | null
     phone?: string | null
     website?: string | null
+    public_booking_slug?: string | null
     city?: string | null
     address?: string | null
     country?: string | null
@@ -143857,6 +144022,7 @@ export namespace Prisma {
     email?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     website?: NullableStringFieldUpdateOperationsInput | string | null
+    public_booking_slug?: NullableStringFieldUpdateOperationsInput | string | null
     city?: NullableStringFieldUpdateOperationsInput | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
     country?: NullableStringFieldUpdateOperationsInput | string | null
@@ -143904,6 +144070,7 @@ export namespace Prisma {
     email?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     website?: NullableStringFieldUpdateOperationsInput | string | null
+    public_booking_slug?: NullableStringFieldUpdateOperationsInput | string | null
     city?: NullableStringFieldUpdateOperationsInput | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
     country?: NullableStringFieldUpdateOperationsInput | string | null
@@ -143949,6 +144116,7 @@ export namespace Prisma {
     email?: string | null
     phone?: string | null
     website?: string | null
+    public_booking_slug?: string | null
     city?: string | null
     address?: string | null
     country?: string | null
@@ -143996,6 +144164,7 @@ export namespace Prisma {
     email?: string | null
     phone?: string | null
     website?: string | null
+    public_booking_slug?: string | null
     city?: string | null
     address?: string | null
     country?: string | null
@@ -144122,6 +144291,7 @@ export namespace Prisma {
     email?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     website?: NullableStringFieldUpdateOperationsInput | string | null
+    public_booking_slug?: NullableStringFieldUpdateOperationsInput | string | null
     city?: NullableStringFieldUpdateOperationsInput | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
     country?: NullableStringFieldUpdateOperationsInput | string | null
@@ -144169,6 +144339,7 @@ export namespace Prisma {
     email?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     website?: NullableStringFieldUpdateOperationsInput | string | null
+    public_booking_slug?: NullableStringFieldUpdateOperationsInput | string | null
     city?: NullableStringFieldUpdateOperationsInput | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
     country?: NullableStringFieldUpdateOperationsInput | string | null
@@ -146483,6 +146654,7 @@ export namespace Prisma {
     email?: string | null
     phone?: string | null
     website?: string | null
+    public_booking_slug?: string | null
     city?: string | null
     address?: string | null
     country?: string | null
@@ -146768,6 +146940,7 @@ export namespace Prisma {
     email?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     website?: NullableStringFieldUpdateOperationsInput | string | null
+    public_booking_slug?: NullableStringFieldUpdateOperationsInput | string | null
     city?: NullableStringFieldUpdateOperationsInput | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
     country?: NullableStringFieldUpdateOperationsInput | string | null
@@ -146814,6 +146987,7 @@ export namespace Prisma {
     email?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     website?: NullableStringFieldUpdateOperationsInput | string | null
+    public_booking_slug?: NullableStringFieldUpdateOperationsInput | string | null
     city?: NullableStringFieldUpdateOperationsInput | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
     country?: NullableStringFieldUpdateOperationsInput | string | null
@@ -146860,6 +147034,7 @@ export namespace Prisma {
     email?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     website?: NullableStringFieldUpdateOperationsInput | string | null
+    public_booking_slug?: NullableStringFieldUpdateOperationsInput | string | null
     city?: NullableStringFieldUpdateOperationsInput | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
     country?: NullableStringFieldUpdateOperationsInput | string | null

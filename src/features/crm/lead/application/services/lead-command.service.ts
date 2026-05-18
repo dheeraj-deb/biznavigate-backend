@@ -1,5 +1,6 @@
 import { Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
+import { EventEmitter2 } from '@nestjs/event-emitter';
 import { Model } from 'mongoose';
 import { PrismaService } from '../../../../../prisma/prisma.service';
 import { Conversation, ConversationDocument } from '../../schemas/conversation.schema';
@@ -64,7 +65,34 @@ export class LeadCommandService {
     private readonly prisma: PrismaService,
     @InjectModel(Conversation.name) private conversationModel: Model<ConversationDocument>,
     @InjectModel(Message.name) private messageModel: Model<MessageDocument>,
+    private readonly eventEmitter: EventEmitter2,
   ) {}
+
+  /**
+   * Fired whenever a lead's status changes. Consumed by WorkflowEventBus to
+   * fire workflows with `trigger.event.lead_status_changed`. Other listeners
+   * (analytics, etc.) may subscribe too.
+   */
+  private emitStatusChanged(params: {
+    business_id: string;
+    tenant_id: string | null;
+    lead_id: string;
+    from_status: string | null;
+    to_status: string;
+  }) {
+    try {
+      this.eventEmitter.emit('workflow.event.lead.status_changed', {
+        business_id: params.business_id,
+        tenant_id: params.tenant_id,
+        lead_id: params.lead_id,
+        from_status: params.from_status,
+        to_status: params.to_status,
+        emitted_at: new Date().toISOString(),
+      });
+    } catch (err: any) {
+      this.logger.warn(`Could not emit lead.status_changed for ${params.lead_id}: ${err.message}`);
+    }
+  }
 
   /**
    * Auto-advance a lead to a target stage slug. Idempotent and forward-only:
@@ -87,7 +115,7 @@ export class LeadCommandService {
     try {
       const lead = await this.prisma.leads.findUnique({
         where: { lead_id: params.leadId },
-        select: { lead_id: true, business_id: true, pipeline_id: true, stage_id: true, status: true },
+        select: { lead_id: true, business_id: true, tenant_id: true, pipeline_id: true, stage_id: true, status: true },
       });
       if (!lead) return { moved: false, reason: 'lead_not_found' };
       if (!lead.pipeline_id) return { moved: false, reason: 'no_pipeline' };
@@ -136,6 +164,14 @@ export class LeadCommandService {
           },
         }),
       ]);
+
+      this.emitStatusChanged({
+        business_id: lead.business_id,
+        tenant_id: lead.tenant_id,
+        lead_id: lead.lead_id,
+        from_status: lead.status,
+        to_status: targetStage.slug,
+      });
 
       return { moved: true };
     } catch (err: any) {
@@ -339,6 +375,17 @@ export class LeadCommandService {
         },
       }),
     ]);
+
+    if (lead.status !== status) {
+      this.emitStatusChanged({
+        business_id: lead.business_id,
+        tenant_id: (lead as any).tenant_id ?? null,
+        lead_id: leadId,
+        from_status: lead.status,
+        to_status: status,
+      });
+    }
+
     return updated;
   }
 
@@ -367,7 +414,7 @@ export class LeadCommandService {
 
     const lead = await this.prisma.leads.findUnique({
       where: { lead_id: params.leadId },
-      select: { lead_id: true, business_id: true, status: true, stage_id: true, pipeline_id: true },
+      select: { lead_id: true, business_id: true, tenant_id: true, status: true, stage_id: true, pipeline_id: true },
     });
     if (!lead) throw new NotFoundException('Lead not found');
     if (lead.business_id !== params.businessId) throw new NotFoundException('Lead not found');
@@ -401,6 +448,17 @@ export class LeadCommandService {
         },
       }),
     ]);
+
+    if (lead.status !== stage.slug) {
+      this.emitStatusChanged({
+        business_id: lead.business_id,
+        tenant_id: lead.tenant_id,
+        lead_id: params.leadId,
+        from_status: lead.status,
+        to_status: stage.slug,
+      });
+    }
+
     return updated;
   }
 
