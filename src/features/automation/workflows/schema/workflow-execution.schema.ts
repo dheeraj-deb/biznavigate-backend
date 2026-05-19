@@ -8,9 +8,11 @@ export class WorkflowExecution {
     @Prop({ required: true, unique: true }) execution_id: string;
     @Prop({ required: true }) workflow_id: string;
     @Prop({ required: true }) business_id: string;
-    @Prop({ required: true }) lead_id: string;
+    // Optional because schedule + event triggers run without a customer message —
+    // there's no chat_id, and business_only schedules also have no lead_id.
+    @Prop() lead_id: string;
     @Prop({ required: true, enum: ['whatsapp', 'instagram', 'chatbot'] }) channel: string;
-    @Prop({ required: true }) chat_id: string;
+    @Prop() chat_id: string;
     @Prop({ required: true, enum: ['running', 'paused', 'completed', 'failed', 'dropped'], default: 'running' }) status: string;
     @Prop() current_node_id: string;
     @Prop({ default: false }) waiting_for_input: boolean;
