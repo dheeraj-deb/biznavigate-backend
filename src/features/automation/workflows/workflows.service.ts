@@ -376,6 +376,90 @@ export class WorkflowsService implements OnModuleInit {
   }
 
   /**
+   * Flip the active flag on both Mongo documents, validate before activating,
+   * and keep the BullMQ schedule in sync. The list-page Activate/Deactivate
+   * dropdown lands here. Returns the updated definition.
+   */
+  async setActive(workflow_id: string, is_active: boolean) {
+    const def = await this.workflowDefinitionModel.findOne({ workflow_id }).lean();
+    if (!def) throw new NotFoundException(`Workflow ${workflow_id} not found`);
+
+    if (is_active) {
+      this.definitionValidator.validateOrThrow({
+        nodes: (def.workflow_definition?.nodes as any[]) ?? [],
+        connections: (def.workflow_definition?.connections as Record<string, any>) ?? {},
+      });
+    }
+
+    await this.workflowDefinitionModel.updateOne({ workflow_id }, { $set: { is_active } });
+    await this.businessWorkflowModel.updateOne({ workflow_id }, { $set: { is_active } });
+
+    const link = await this.businessWorkflowModel.findOne({ workflow_id }).lean();
+    if (link?.business_id) {
+      await this.syncSchedule(workflow_id, link.business_id, (def.workflow_definition?.nodes as any[]) ?? [], is_active);
+    }
+    return { workflow_id, is_active };
+  }
+
+  /**
+   * Paginated execution history for a workflow. Used by the /runs page in the
+   * dashboard. Falls back to an empty list when the durable execution row was
+   * never written (early adopters / failed inserts).
+   */
+  async listExecutions(workflow_id: string, take: number) {
+    const rows = await this.prisma.workflow_executions.findMany({
+      where: { workflow_id },
+      orderBy: { created_at: 'desc' },
+      take,
+      select: {
+        execution_id: true,
+        status: true,
+        waiting_for_input: true,
+        current_node_id: true,
+        lead_id: true,
+        channel: true,
+        chat_id: true,
+        created_at: true,
+        updated_at: true,
+        completed_at: true,
+      },
+    });
+    return rows;
+  }
+
+  async getExecutionDetail(workflow_id: string, execution_id: string) {
+    const execution = await this.prisma.workflow_executions.findFirst({
+      where: { execution_id, workflow_id },
+    });
+    if (!execution) throw new NotFoundException(`Execution ${execution_id} not found`);
+
+    const steps = await this.prisma.workflow_execution_steps.findMany({
+      where: { execution_id },
+      orderBy: { started_at: 'asc' },
+    });
+
+    return { execution, steps };
+  }
+
+  /**
+   * Permanently remove a workflow. Cleans up BullMQ schedules first so we don't
+   * leave orphan recurring jobs firing for a workflow that no longer exists,
+   * then drops both Mongo documents. Execution history (workflow_executions /
+   * workflow_execution_steps) is left in place for audit.
+   */
+  async deleteWorkflow(workflow_id: string): Promise<{ deleted: boolean }> {
+    try {
+      await this.scheduler.unschedule(workflow_id);
+    } catch (err: any) {
+      this.logger.warn(`unschedule during delete failed for ${workflow_id}: ${err.message}`);
+    }
+    await this.workflowDefinitionModel.deleteOne({ workflow_id });
+    await this.businessWorkflowModel.deleteOne({ workflow_id });
+    this.logger.log(`Workflow ${workflow_id} deleted`);
+    return { deleted: true };
+  }
+
+  /**
    * Flip a workflow to inactive. Called by the schedule runner after a one-time
    * schedule fires so it doesn't sit around in the active list, and could be
    * called by future cleanup paths (e.g. an admin bulk-deactivate).

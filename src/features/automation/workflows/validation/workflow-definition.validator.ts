@@ -226,8 +226,14 @@ export class WorkflowDefinitionValidator {
         }
         if (mode === 'one_time') {
           const ts = Date.parse(params.schedule.run_at ?? '');
-          if (Number.isNaN(ts)) errors.push({ path: `${path}.schedule.run_at`, message: 'One-time schedule needs a valid run_at' });
-          else if (ts <= Date.now()) errors.push({ path: `${path}.schedule.run_at`, message: 'run_at must be in the future' });
+          if (Number.isNaN(ts)) {
+            errors.push({ path: `${path}.schedule.run_at`, message: 'One-time schedule needs a valid run_at' });
+          } else if (ts < Date.now() - 60_000) {
+            // Allow up to 1 minute in the past so a user who clicks Activate
+            // just after their chosen time isn't blocked. BullMQ runs immediately
+            // when the delay is zero, which is what we want here.
+            errors.push({ path: `${path}.schedule.run_at`, message: 'run_at must not be in the past' });
+          }
         }
         if (!['each_lead', 'business_only'].includes(params.target)) {
           errors.push({ path: `${path}.target`, message: 'Target must be each_lead or business_only' });
