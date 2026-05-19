@@ -1,4 +1,4 @@
-import { BadRequestException, Body, Controller, Get, NotFoundException, Param, Post, Put, Query, UseGuards } from '@nestjs/common';
+import { BadRequestException, Body, Controller, Delete, Get, NotFoundException, Param, Post, Put, Query, UseGuards } from '@nestjs/common';
 import { WorkflowsService } from './workflows.service';
 import { CreateWorkflowDto, InitiateWorkflowDto, UpdateWorkflowDto } from './dto/save-workflow.dto';
 import { JwtAuthGuard } from '../../../common/guards/jwt-auth.guard';
@@ -94,5 +94,29 @@ export class WorkflowsController {
     @Get(':workflowId')
     getWorkflow(@Param('workflowId') workflowId: string) {
         return this.workflowsService.getWorkflow(workflowId);
+    }
+
+    @Get(':workflowId/runs')
+    listRuns(@Param('workflowId') workflowId: string, @Query('limit') limit?: string) {
+        const take = Math.min(Math.max(Number(limit) || 50, 1), 200);
+        return this.workflowsService.listExecutions(workflowId, take);
+    }
+
+    @Get(':workflowId/runs/:executionId')
+    getRunDetail(
+        @Param('workflowId') workflowId: string,
+        @Param('executionId') executionId: string,
+    ) {
+        return this.workflowsService.getExecutionDetail(workflowId, executionId);
+    }
+
+    @Post(':workflowId/toggle')
+    toggleActive(@Param('workflowId') workflowId: string, @Body() body: { is_active: boolean }) {
+        return this.workflowsService.setActive(workflowId, !!body?.is_active);
+    }
+
+    @Delete(':workflowId')
+    deleteWorkflow(@Param('workflowId') workflowId: string) {
+        return this.workflowsService.deleteWorkflow(workflowId);
     }
 }
