@@ -29,7 +29,7 @@ RUN apk add --no-cache libc6-compat
 
 # Copy package files and install PRODUCTION dependencies only
 COPY package.json yarn.lock ./
-RUN yarn install --frozen-lockfile --production
+RUN npm install --omit=dev
 
 # Copy built output from builder stage
 COPY --from=builder /app/dist ./dist
