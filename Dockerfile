@@ -7,8 +7,8 @@ WORKDIR /app
 RUN apk add --no-cache python3 make g++ libc6-compat
 
 # Copy package files and install ALL dependencies (including devDeps for build)
-COPY package.json yarn.lock ./
-RUN npm install -f
+COPY package.json package-lock.json ./
+RUN npm ci
 
 # Copy source code
 COPY . .
@@ -17,7 +17,7 @@ COPY . .
 RUN npx prisma generate
 
 # Build the NestJS app
-RUN yarn build
+RUN npm run build
 
 # ─── Stage 2: Production Runner ────────────────────────────────────────────────
 FROM node:20-alpine AS production
@@ -28,8 +28,8 @@ WORKDIR /app
 RUN apk add --no-cache libc6-compat
 
 # Copy package files and install PRODUCTION dependencies only
-COPY package.json yarn.lock ./
-RUN yarn install --frozen-lockfile --production
+COPY package.json package-lock.json ./
+RUN npm ci --omit=dev
 
 # Copy built output from builder stage
 COPY --from=builder /app/dist ./dist
