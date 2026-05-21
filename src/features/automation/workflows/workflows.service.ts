@@ -13,11 +13,27 @@ import { CreateWorkflowDto, InitiateWorkflowDto, UpdateWorkflowDto } from './dto
 import { WorkflowAnalyzerService } from './workflow-analyzer.service';
 import { WorkflowDefinitionValidator } from './validation/workflow-definition.validator';
 import { evaluateTrigger } from './triggers/trigger-evaluator';
+import { MessageWindowService } from '../../crm/conversation/messaging-window/message-window.service';
 import { WorkflowSchedulerService } from './schedule/workflow-scheduler.service';
 import { ScheduleTriggerParams } from './triggers/trigger-schemas';
 import { WorkflowDefinition, WorkflowDefinitionDocument } from './schema/workflow-definition.schema';
 import { BusinessWorkflow, BusinessWorkflowDocument } from './schema/business-workflow.schema';
 import { WorkflowExecution, WorkflowExecutionDocument } from './schema/workflow-execution.schema';
+
+// Action node types that produce a free-form WhatsApp message. Sends from these
+// require an open 24-hour customer-service window. Templates (action.send_template)
+// and approved interactive flows (action.send_flow) are intentionally excluded
+// because they're allowed outside the window.
+const FREE_FORM_WHATSAPP_SEND_TYPES = new Set([
+  'action.send_message',
+  'action.send_message_withmenu',
+  'action.send_message_with_btns',
+  'action.wait_for_text',
+  'action.collect_filter',
+  'action.send_catalog',
+  'action.send_payment_request',
+  'action.rag_chat',
+]);
 
 @Injectable()
 export class WorkflowsService implements OnModuleInit {
@@ -36,6 +52,7 @@ export class WorkflowsService implements OnModuleInit {
     private readonly workflowAnalyzer: WorkflowAnalyzerService,
     private readonly definitionValidator: WorkflowDefinitionValidator,
     private readonly scheduler: WorkflowSchedulerService,
+    private readonly messageWindow: MessageWindowService,
     @InjectQueue('workflow-timeouts') private readonly workflowTimeoutQueue: Queue,
   ) {
   }
@@ -402,9 +419,10 @@ export class WorkflowsService implements OnModuleInit {
   }
 
   /**
-   * Paginated execution history for a workflow. Used by the /runs page in the
-   * dashboard. Falls back to an empty list when the durable execution row was
-   * never written (early adopters / failed inserts).
+   * Paginated execution history for a workflow. Reads the Postgres durable
+   * mirror first because it carries step-by-step audit data; falls back to
+   * MongoDB when the Postgres mirror is empty (e.g. a past mirror write failed
+   * for that workflow, or executions predate the durability layer).
    */
   async listExecutions(workflow_id: string, take: number) {
     const rows = await this.prisma.workflow_executions.findMany({
@@ -424,21 +442,66 @@ export class WorkflowsService implements OnModuleInit {
         completed_at: true,
       },
     });
-    return rows;
+    if (rows.length > 0) return rows;
+
+    // Mongo fallback — shape matches the Postgres select() so the dashboard
+    // doesn't need to branch on source.
+    const mongoRows = await this.workflowExecutionModel
+      .find({ workflow_id })
+      .sort({ _id: -1 })
+      .limit(take)
+      .lean();
+    return mongoRows.map((m: any) => ({
+      execution_id: m.execution_id,
+      status: m.status ?? null,
+      waiting_for_input: m.waiting_for_input ?? null,
+      current_node_id: m.current_node_id ?? null,
+      lead_id: m.lead_id ?? null,
+      channel: m.channel ?? null,
+      chat_id: m.chat_id ?? null,
+      created_at: m.created_at ?? m._id?.getTimestamp?.() ?? null,
+      updated_at: m.updated_at ?? null,
+      completed_at: m.completed_at ?? null,
+    }));
   }
 
   async getExecutionDetail(workflow_id: string, execution_id: string) {
     const execution = await this.prisma.workflow_executions.findFirst({
       where: { execution_id, workflow_id },
     });
-    if (!execution) throw new NotFoundException(`Execution ${execution_id} not found`);
+    if (execution) {
+      const steps = await this.prisma.workflow_execution_steps.findMany({
+        where: { execution_id },
+        orderBy: { started_at: 'asc' },
+      });
+      return { execution, steps };
+    }
 
-    const steps = await this.prisma.workflow_execution_steps.findMany({
-      where: { execution_id },
-      orderBy: { started_at: 'asc' },
-    });
-
-    return { execution, steps };
+    // Mongo fallback — same shape minus the step trace, which only Postgres
+    // captures today. The dashboard handles the empty steps array gracefully.
+    const mongoExecution = await this.workflowExecutionModel
+      .findOne({ workflow_id, execution_id })
+      .lean();
+    if (!mongoExecution) throw new NotFoundException(`Execution ${execution_id} not found`);
+    return {
+      execution: {
+        execution_id: mongoExecution.execution_id,
+        workflow_id: mongoExecution.workflow_id,
+        business_id: mongoExecution.business_id,
+        status: mongoExecution.status,
+        waiting_for_input: mongoExecution.waiting_for_input,
+        current_node_id: mongoExecution.current_node_id ?? null,
+        lead_id: mongoExecution.lead_id ?? null,
+        channel: mongoExecution.channel ?? null,
+        chat_id: mongoExecution.chat_id ?? null,
+        context: mongoExecution.context,
+        system_context: mongoExecution.system_context,
+        created_at: (mongoExecution as any).created_at ?? null,
+        updated_at: (mongoExecution as any).updated_at ?? null,
+        completed_at: null,
+      },
+      steps: [] as any[],
+    };
   }
 
   /**
@@ -603,7 +666,12 @@ export class WorkflowsService implements OnModuleInit {
         where: { execution_id },
         data,
       });
-    } catch (error) {
+    } catch (error: any) {
+      // P2025 = record-not-found. The durable mirror is best-effort: if the
+      // create-side failed earlier (e.g. legacy unique constraint), there's no
+      // row to update and the update naturally cascades into this error. Silently
+      // swallow it — anything else is worth logging.
+      if (error?.code === 'P2025') return;
       this.logger.warn(`Could not update durable workflow execution ${execution_id}: ${error.message}`);
     }
   }
@@ -848,6 +916,29 @@ export class WorkflowsService implements OnModuleInit {
       }
     }
 
+    // WhatsApp 24-hour-window gate. Synthetic runs (schedule + event triggers)
+    // are dispatching unsolicited free-form messages to leads who may not have
+    // contacted us in days. Meta only allows free-form text inside 24h of the
+    // customer's last inbound message; outside that window we'd need an approved
+    // template. For now we conservatively skip the entire run when the window
+    // is closed and a free-form WhatsApp send is on the workflow path. Inbound
+    // runs naturally pass because last_inbound_at was just updated.
+    const isSyntheticRun = !!(workflowInput.context as any)?.metadata?.synthetic;
+    if (isSyntheticRun && lead_id && channel === 'whatsapp') {
+      const hasFreeFormSend = (activeWorkflow.definition?.nodes ?? []).some((n: any) =>
+        FREE_FORM_WHATSAPP_SEND_TYPES.has(n?.type),
+      );
+      if (hasFreeFormSend) {
+        const status = await this.messageWindow.getStatus({ business_id, lead_id });
+        if (!status.open) {
+          this.logger.log(
+            `Workflow ${activeWorkflow.workflowId} skipped for lead ${lead_id} — outside 24h window (last_inbound_at=${status.lastInboundAt ?? 'never'})`,
+          );
+          return;
+        }
+      }
+    }
+
     const system_context: Record<string, any> = {
       business_id: business?.business_id ?? business_id,
       business_name: business?.business_name ?? workflowInput.context?.business?.name ?? '',
@@ -878,8 +969,34 @@ export class WorkflowsService implements OnModuleInit {
       },
     };
 
+    // For synthetic runs (schedule / event triggers) there's no inbound message
+    // upstream populating `context.contact`. Synthesize one from the lead row so
+    // downstream action nodes that reference ${contact.name} / ${contact.from}
+    // work the same as inbound runs. We also need a phoneNumberId so the send
+    // nodes have somewhere to dispatch — read it from the business's active
+    // WhatsApp social account.
+    const isSynthetic = !!(workflowInput.context as any)?.metadata?.synthetic;
+    let syntheticContact: any = undefined;
+    if (isSynthetic && lead) {
+      const waAccount = await this.prisma.social_accounts.findFirst({
+        where: { business_id, platform: 'whatsapp', is_active: true },
+        select: { page_id: true },
+      }).catch(() => null);
+      syntheticContact = {
+        name: lead.name ?? null,
+        from: lead.phone ?? null,
+        phoneNumberId: waAccount?.page_id ?? null,
+      };
+    }
+
     workflowInput.context = {
       ...workflowInput.context,
+      // Channel needs to live on workflowInput.context (not just system_context)
+      // because Workflow.buildNodeContext only spreads context.context into the
+      // node-level execution context. Without this, action nodes that branch on
+      // `context.channel === 'whatsapp'` skip their send path silently.
+      channel,
+      ...(syntheticContact ? { contact: syntheticContact } : {}),
       business: {
         id: system_context.business_id,
         name: system_context.business_name,

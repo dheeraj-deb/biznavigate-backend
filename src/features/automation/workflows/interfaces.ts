@@ -44,7 +44,10 @@ export interface NodeConnectionCondition {
 }
 
 export interface NodeConnectionEdge {
-    to: string;
+    /** Target node id. Wizard/templates/validator write `node`; legacy canvas data wrote `to`. */
+    node?: string;
+    /** Legacy alias for `node` — kept so older saved workflows still traverse. */
+    to?: string;
     condition?: NodeConnectionCondition;
 }
 

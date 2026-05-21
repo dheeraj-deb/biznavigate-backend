@@ -831,7 +831,10 @@ model workflow_definitions {
   workflow_execution_steps  workflow_execution_steps[]
   workflow_idempotency_keys workflow_idempotency_keys[]
 
-  @@unique([business_type, intent_name], map: "unique_business_type_intent")
+  // unique_business_type_intent was dropped: the runtime now supports many
+  // workflows per (business_type, intent_name) and the constraint was blocking
+  // legitimate inserts when more than one schedule/event workflow lived in the
+  // same business. See migration drop_workflow_definitions_unique_business_type_intent.
   @@index([business_type], map: "idx_workflow_definitions_business_type")
   @@index([intent_name], map: "idx_workflow_definitions_intent")
   @@index([is_active], map: "idx_workflow_definitions_active")
@@ -1657,6 +1660,11 @@ model business_settings {
   booking_methods    Json       @default("{\"availability_response\":{\"mode\":\"interactive\"},\"ai_chat\":{\"enabled\":true,\"collect_guest_details\":true,\"require_confirmation\":true},\"interactive\":{\"enabled\":true,\"send_entry_buttons\":true,\"send_room_or_service_list\":true},\"catalog\":{\"enabled\":false,\"send_product_messages\":false},\"templates\":{\"enabled\":false,\"confirmation_template_name\":\"\",\"reminder_template_name\":\"\",\"language\":\"en\"},\"human_handoff\":{\"enabled\":true,\"on_unavailable\":true,\"on_low_confidence\":true,\"on_payment_issue\":true}}")
   booking_link       Json       @default("{\"enabled\":false,\"experience_type\":\"generic\",\"payment_mode\":\"manual\",\"advance_type\":\"fixed\",\"advance_amount\":0,\"theme\":{\"primary_color\":\"#0066FF\",\"show_logo\":true,\"show_banner\":true},\"policies\":{\"cancellation\":\"\",\"refund\":\"\",\"terms\":\"\"},\"contact\":{\"phone\":\"\",\"whatsapp\":\"\",\"address\":\"\"},\"required_fields\":{\"name\":true,\"phone\":true,\"email\":false,\"address\":false,\"notes\":false}}")
   low_balance_alert  Decimal    @default(100) @db.Decimal(10, 2)
+  /// E.164-style dial code without the "+" (e.g. "91" for India, "1" for US).
+  /// Used to canonicalise leads.phone so the same human entering "9539192684"
+  /// on the booking form and messaging "919539192684" on WhatsApp resolves to
+  /// one lead row.
+  default_country_code String  @default("91") @db.VarChar(5)
   updated_at         DateTime   @default(now()) @db.Timestamptz(6)
   businesses         businesses @relation("business_settings", fields: [business_id], references: [business_id], onDelete: Cascade)
 }
