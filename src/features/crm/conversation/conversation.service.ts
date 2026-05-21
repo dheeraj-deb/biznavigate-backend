@@ -169,6 +169,19 @@ export class ConversationService {
       .exec();
   }
 
+  /**
+   * Records the time of the latest INBOUND message on this conversation. This
+   * is the canonical signal the WhatsApp 24-hour-window gate reads to decide
+   * whether automations can send free-form messages. Called only from inbound
+   * persist paths — never from outbound, otherwise automations could
+   * accidentally extend their own window.
+   */
+  async markInbound(conversation_id: string, at: Date = new Date()): Promise<void> {
+    await this.conversationModel
+      .updateOne({ conversation_id }, { $set: { last_inbound_at: at } })
+      .exec();
+  }
+
   async findConversationsByIds(conversationIds: string[]): Promise<ConversationDocument[]> {
     return this.conversationModel
       .find({ conversation_id: { $in: conversationIds } })

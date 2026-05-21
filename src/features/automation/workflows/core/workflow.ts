@@ -133,25 +133,22 @@ export class Workflow {
     private async traverse(nodeId: string): Promise<any> {
         const connections = this.connections[nodeId]?.main ?? [];
 
-        console.log('connections', connections)
-
         for (const conn of connections) {
-            console.log("conn", conn)
-            if (conn.hasOwnProperty('condition')) {
-                const validCondition = this.evaluateCondition(conn.condition);
-                console.log("validCondition", validCondition)
-                if (!validCondition) {
-                    continue;
-                }
-                const nextNode = this.getNode(conn.to);
-                console.log('nextNode', nextNode?.params?.items)
+            // Connection target is stored as `node` by the wizard / templates /
+            // validator. Legacy canvas-builder data used `to` — accept both so
+            // workflows authored before the wizard still traverse correctly.
+            const targetId = conn.node ?? conn.to;
+            if (!targetId) continue;
+
+            if (conn.hasOwnProperty('condition') && conn.condition) {
+                if (!this.evaluateCondition(conn.condition)) continue;
+                const nextNode = this.getNode(targetId);
                 if (nextNode) {
                     await this.executeNode(nextNode);
                     return;
                 }
             } else {
-                const nextNode = this.getNode(conn.to);
-                console.log("nextNode=>", nextNode?.params?.items)
+                const nextNode = this.getNode(targetId);
                 if (nextNode) {
                     await this.executeNode(nextNode);
                     return;
@@ -326,7 +323,7 @@ export class Workflow {
 
         if (errorConnections.length > 0) {
             for (const conn of errorConnections) {
-                const nextNode = this.getNode(conn.to);
+                const nextNode = this.getNode(conn.node ?? conn.to);
                 if (nextNode) {
                     this.nodeContext['lastError'] = {
                         nodeId,
@@ -341,7 +338,7 @@ export class Workflow {
         const fallbackConnections = this.connections[nodeId]?.fallback ?? [];
 
         for (const conn of fallbackConnections) {
-            const nextNode = this.getNode(conn.to);
+            const nextNode = this.getNode(conn.node ?? conn.to);
             if (nextNode) {
                 this.nodeContext['lastError'] = {
                     nodeId,
