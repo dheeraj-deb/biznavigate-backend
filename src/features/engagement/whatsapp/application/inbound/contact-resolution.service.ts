@@ -1,6 +1,7 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { randomUUID } from 'node:crypto';
 import { PrismaService } from '../../../../../prisma/prisma.service';
+import { LeadPhoneResolverService } from '../../../../crm/lead/utils/lead-phone-resolver.service';
 
 export interface ResolvedWhatsAppContact {
   account: any;
@@ -12,7 +13,10 @@ export interface ResolvedWhatsAppContact {
 export class ContactResolutionService {
   private readonly logger = new Logger(ContactResolutionService.name);
 
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly phoneResolver: LeadPhoneResolverService,
+  ) {}
 
   async resolveForInboundMessage(params: {
     phone_number_id: string;
@@ -58,30 +62,47 @@ export class ContactResolutionService {
     const defaultStageId = defaultPipeline?.stages?.[0]?.stage_id ?? null;
     const defaultPipelineId = defaultPipeline?.pipeline_id ?? null;
 
-    const lead = await this.prisma.leads.upsert({
-      where: {
-        business_id_platform_id: {
-          business_id: account.business_id,
-          platform_id: params.from,
-        },
-      },
-      create: {
-        lead_id: randomUUID(),
-        business_id: account.business_id,
-        tenant_id: account.businesses.tenant_id,
-        channel: 'whatsapp',
-        source: 'direct',
-        platform_id: params.from,
-        name: contactName,
-        phone: params.from,
-        status: 'new',
-        pipeline_id: defaultPipelineId,
-        stage_id: defaultStageId,
-        created_at: new Date(),
-        updated_at: new Date(),
-      },
-      update: { updated_at: new Date() },
+    // Resolve to canonical phone first so two leads representing the same human
+    // (WhatsApp's "919…" form and the public-booking form's bare local form)
+    // collapse onto one row. We look up by `(business_id, phone)`; the platform_id
+    // is still populated for the WhatsApp channel so legacy callers that match on
+    // it continue to work.
+    const normalizedPhone =
+      (await this.phoneResolver.normalize(account.business_id, params.from)) ?? params.from;
+
+    let lead = await this.prisma.leads.findFirst({
+      where: { business_id: account.business_id, phone: normalizedPhone, deleted_at: null },
     });
+
+    if (!lead) {
+      lead = await this.prisma.leads.create({
+        data: {
+          lead_id: randomUUID(),
+          business_id: account.business_id,
+          tenant_id: account.businesses.tenant_id,
+          channel: 'whatsapp',
+          source: 'direct',
+          platform_id: params.from,
+          name: contactName,
+          phone: normalizedPhone,
+          status: 'new',
+          pipeline_id: defaultPipelineId,
+          stage_id: defaultStageId,
+          created_at: new Date(),
+          updated_at: new Date(),
+        },
+      });
+    } else {
+      lead = await this.prisma.leads.update({
+        where: { lead_id: lead.lead_id },
+        data: {
+          // Backfill the WhatsApp platform_id on leads created by other channels so
+          // the inbound resolver can still find them via platform_id paths if needed.
+          ...(lead.platform_id ? {} : { platform_id: params.from }),
+          updated_at: new Date(),
+        },
+      });
+    }
 
     return {
       account,

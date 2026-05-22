@@ -3,6 +3,7 @@ import { randomUUID } from 'node:crypto';
 import { PrismaService } from '../../prisma/prisma.service';
 import { CatalogService } from '../commerce/catalog/application/services/catalog.service';
 import { HospitalityBookingCommandService } from '../industries/hospitality/bookings/application/services/hospitality-booking-command.service';
+import { LeadPhoneResolverService } from '../crm/lead/utils/lead-phone-resolver.service';
 import {
   BookingLinkConfig,
   inferExperienceType,
@@ -28,6 +29,7 @@ export class PublicBookingService {
     private readonly prisma: PrismaService,
     private readonly catalogService: CatalogService,
     private readonly hospitalityBookingCommandService: HospitalityBookingCommandService,
+    private readonly phoneResolver: LeadPhoneResolverService,
   ) {}
 
   async getPage(slug: string) {
@@ -211,19 +213,44 @@ export class PublicBookingService {
     if (config.required_fields.address && !address) throw new BadRequestException('Address is required');
     if (config.required_fields.notes && !notes) throw new BadRequestException('Notes are required');
 
-    const platformId = `public:${business.public_booking_slug}:${phone || email || randomUUID()}`;
-    return this.prisma.leads.upsert({
-      where: {
-        business_id_platform_id: {
-          business_id: business.business_id,
-          platform_id: platformId,
+    // Normalise the phone so the same human entering "9539192684" on the form
+    // and messaging via WhatsApp as "919539192684" resolves to one lead row.
+    const normalizedPhone = phone
+      ? (await this.phoneResolver.normalize(business.business_id, phone)) ?? phone
+      : null;
+
+    // Existing-lead lookup priority: phone first (the strongest identity match),
+    // then fall back to the legacy platform_id key so older booking-link leads
+    // without a phone still resolve.
+    const platformId = `public:${business.public_booking_slug}:${normalizedPhone || phone || email || randomUUID()}`;
+    const existing = normalizedPhone
+      ? await this.prisma.leads.findFirst({
+          where: { business_id: business.business_id, phone: normalizedPhone, deleted_at: null },
+        })
+      : await this.prisma.leads.findFirst({
+          where: { business_id: business.business_id, platform_id: platformId, deleted_at: null },
+        });
+
+    if (existing) {
+      return this.prisma.leads.update({
+        where: { lead_id: existing.lead_id },
+        data: {
+          ...(name ? { name } : {}),
+          ...(normalizedPhone ? { phone: normalizedPhone } : {}),
+          ...(email ? { email } : {}),
+          ...(existing.tags?.includes('public-booking-link') ? {} : { tags: { push: 'public-booking-link' } as any }),
+          context: this.leadContext(item, body),
+          updated_at: new Date(),
         },
-      },
-      create: {
+      });
+    }
+
+    return this.prisma.leads.create({
+      data: {
         business_id: business.business_id,
         tenant_id: business.tenant_id,
         name: name || null,
-        phone: phone || null,
+        phone: normalizedPhone,
         email: email || null,
         channel: 'website',
         source: 'public_booking_link',
@@ -231,13 +258,6 @@ export class PublicBookingService {
         status: 'new',
         context: this.leadContext(item, body),
         tags: ['public-booking-link'],
-      },
-      update: {
-        ...(name ? { name } : {}),
-        ...(phone ? { phone } : {}),
-        ...(email ? { email } : {}),
-        context: this.leadContext(item, body),
-        updated_at: new Date(),
       },
     });
   }

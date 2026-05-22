@@ -5,6 +5,7 @@ import { ConversationService } from '../../../../crm/conversation/conversation.s
 import { HumanHandoffGateway } from '../../../../crm/human-handoff/human-handoff.gateway';
 import { InboxGateway } from '../../../../crm/inbox/gateway/inbox.gateway';
 import { NormalizedWhatsAppMessage } from './whatsapp-message-normalizer.service';
+import { MessageWindowService } from '../../../../crm/conversation/messaging-window/message-window.service';
 
 export interface PersistedInboundConversationMessage {
   conversation: any;
@@ -20,6 +21,7 @@ export class ConversationCommandService {
     private readonly conversationService: ConversationService,
     private readonly inboxGateway: InboxGateway,
     private readonly humanHandoffGateway: HumanHandoffGateway,
+    private readonly messageWindow: MessageWindowService,
   ) {}
 
   async persistInboundMessage(params: {
@@ -88,6 +90,10 @@ export class ConversationCommandService {
 
     const leadMessageId = (leadMessage._id as any).toString();
     await this.conversationService.touchConversation(conversation.conversation_id, params.message.message_text);
+    // Anchor the 24-hour messaging window. Automations check this when deciding
+    // whether they can send free-form text to this customer.
+    await this.conversationService.markInbound(conversation.conversation_id);
+    this.messageWindow.invalidate(params.account.business_id, params.lead.lead_id);
 
     const msgTimestamp = new Date();
     this.inboxGateway.notifyNewMessage(params.account.business_id, conversation.conversation_id, {

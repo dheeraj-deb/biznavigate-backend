@@ -6,6 +6,7 @@ import { LeadCommandService } from './application/services/lead-command.service'
 import { LeadQueryService } from './application/services/lead-query.service';
 import { LeadAccessService } from './application/services/lead-access.service';
 import { PipelineService } from './application/services/pipeline.service';
+import { LeadPhoneResolverService } from './utils/lead-phone-resolver.service';
 import { Conversation, ConversationSchema } from './schemas/conversation.schema';
 import { Message, MessageSchema } from './schemas/message.schema';
 import { BillingModule } from '../../platform/billing/billing.module';
@@ -19,7 +20,7 @@ import { BillingModule } from '../../platform/billing/billing.module';
     ]),
   ],
   controllers: [LeadController, PipelineController],
-  providers: [LeadCommandService, LeadQueryService, LeadAccessService, PipelineService],
-  exports: [LeadCommandService, LeadQueryService, LeadAccessService, PipelineService],
+  providers: [LeadCommandService, LeadQueryService, LeadAccessService, PipelineService, LeadPhoneResolverService],
+  exports: [LeadCommandService, LeadQueryService, LeadAccessService, PipelineService, LeadPhoneResolverService],
 })
 export class LeadModule {}

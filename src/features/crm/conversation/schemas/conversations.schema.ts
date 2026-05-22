@@ -27,6 +27,14 @@ export class Conversation {
     @Prop() human_takeover_at?: Date;
     @Prop() human_takeover_reason?: string;
     @Prop() is_resolved?: boolean;
+    /**
+     * Last time we received an inbound message from the customer on this
+     * conversation. Drives the WhatsApp 24-hour-window gate — automations can
+     * only send free-form text within 24h of this timestamp. Indexed below for
+     * fast per-conversation lookup.
+     */
+    @Prop({ default: null }) last_inbound_at?: Date | null;
 }
 
 export const ConversationSchema = SchemaFactory.createForClass(Conversation);
+ConversationSchema.index({ business_id: 1, platform_id: 1, last_inbound_at: -1 });
