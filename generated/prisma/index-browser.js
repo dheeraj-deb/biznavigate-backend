@@ -260,6 +260,11 @@ exports.Prisma.LeadsScalarFieldEnum = {
   pipeline_id: 'pipeline_id',
   lost_reason: 'lost_reason',
   context: 'context',
+  lead_type: 'lead_type',
+  qualification_score: 'qualification_score',
+  exit_intent_sent_at: 'exit_intent_sent_at',
+  exit_captured_at: 'exit_captured_at',
+  exit_reason: 'exit_reason',
   quoted_amount: 'quoted_amount',
   quoted_at: 'quoted_at',
   converted_value: 'converted_value',
@@ -972,6 +977,22 @@ exports.Prisma.Hospitality_item_detailsScalarFieldEnum = {
   updated_at: 'updated_at'
 };
 
+exports.Prisma.Vehicle_item_detailsScalarFieldEnum = {
+  item_id: 'item_id',
+  business_id: 'business_id',
+  make: 'make',
+  model_name: 'model_name',
+  year: 'year',
+  fuel_type: 'fuel_type',
+  transmission: 'transmission',
+  color: 'color',
+  km_driven: 'km_driven',
+  condition: 'condition',
+  metadata: 'metadata',
+  created_at: 'created_at',
+  updated_at: 'updated_at'
+};
+
 exports.Prisma.Hospitality_inquiriesScalarFieldEnum = {
   inquiry_id: 'inquiry_id',
   business_id: 'business_id',
@@ -1212,6 +1233,7 @@ exports.Prisma.Business_settingsScalarFieldEnum = {
   booking_methods: 'booking_methods',
   booking_link: 'booking_link',
   low_balance_alert: 'low_balance_alert',
+  default_country_code: 'default_country_code',
   updated_at: 'updated_at'
 };
 
@@ -1226,6 +1248,32 @@ exports.Prisma.Audit_logsScalarFieldEnum = {
   new_values: 'new_values',
   ip_address: 'ip_address',
   user_agent: 'user_agent',
+  created_at: 'created_at'
+};
+
+exports.Prisma.Lead_item_interestsScalarFieldEnum = {
+  interest_id: 'interest_id',
+  lead_id: 'lead_id',
+  business_id: 'business_id',
+  item_id: 'item_id',
+  item_type: 'item_type',
+  item_name: 'item_name',
+  interest_level: 'interest_level',
+  last_price_seen: 'last_price_seen',
+  is_alert_active: 'is_alert_active',
+  created_at: 'created_at',
+  updated_at: 'updated_at'
+};
+
+exports.Prisma.Lead_preference_watchesScalarFieldEnum = {
+  watch_id: 'watch_id',
+  lead_id: 'lead_id',
+  business_id: 'business_id',
+  watch_type: 'watch_type',
+  criteria: 'criteria',
+  is_active: 'is_active',
+  notified_at: 'notified_at',
+  expires_at: 'expires_at',
   created_at: 'created_at'
 };
 
@@ -1310,6 +1358,7 @@ exports.Prisma.ModelName = {
   product_order_items: 'product_order_items',
   product_order_status_events: 'product_order_status_events',
   hospitality_item_details: 'hospitality_item_details',
+  vehicle_item_details: 'vehicle_item_details',
   hospitality_inquiries: 'hospitality_inquiries',
   hospitality_bookings: 'hospitality_bookings',
   hospitality_booking_items: 'hospitality_booking_items',
@@ -1328,7 +1377,9 @@ exports.Prisma.ModelName = {
   billing_webhook_events: 'billing_webhook_events',
   credit_pricing: 'credit_pricing',
   business_settings: 'business_settings',
-  audit_logs: 'audit_logs'
+  audit_logs: 'audit_logs',
+  lead_item_interests: 'lead_item_interests',
+  lead_preference_watches: 'lead_preference_watches'
 };
 
 /**

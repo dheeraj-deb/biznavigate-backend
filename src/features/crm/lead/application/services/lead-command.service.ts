@@ -8,23 +8,81 @@ import { Message, MessageDocument } from '../../schemas/message.schema';
 import { v4 as uuidv4 } from 'uuid';
 import { assertValidLeadStatus } from '../lead-status';
 
-export interface LeadContext {
-  type: 'resort' | 'camp' | 'product';
+interface ResortContext {
+  type: 'resort';
   check_in?: string;
   check_out?: string;
   nights?: number;
   guests?: number;
   room_pref?: string;
   budget?: number;
+}
+
+interface CampContext {
+  type: 'camp';
   event?: string;
   date?: string;
   date_is_fixed?: boolean;
   group_size?: number;
   package?: string;
   food_pref?: string;
+}
+
+interface ProductContext {
+  type: 'product';
   items?: Array<{ id?: string; name: string; variant?: string; qty: number; price?: number }>;
   pincode?: string;
+  budget?: number;
 }
+
+interface AutomotiveContext {
+  type: 'automotive';
+  budget_max?: number;
+  make?: string;
+  model?: string;
+  fuel_type?: string;
+  year_min?: number;
+  items_viewed?: string[];
+  last_quoted_price?: number;
+}
+
+interface PropertyContext {
+  type: 'property';
+  budget_max?: number;
+  property_type?: string;
+  bedrooms?: number;
+  locality?: string;
+  items_viewed?: string[];
+  last_quoted_price?: number;
+}
+
+interface TourContext {
+  type: 'tour';
+  activity?: string;
+  date?: string;
+  guests?: number;
+  duration?: string;
+  budget?: number;
+  wants_activity_updates?: boolean;
+}
+
+interface EducationContext {
+  type: 'education';
+  course_name?: string;
+  fee_budget?: number;
+  preferred_timing?: string;
+  preferred_days?: string[];
+  batch_id?: string;
+}
+
+export type LeadContext =
+  | ResortContext
+  | CampContext
+  | ProductContext
+  | AutomotiveContext
+  | PropertyContext
+  | TourContext
+  | EducationContext;
 
 export interface UpsertLeadInput {
   businessId: string;

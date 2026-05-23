@@ -67,6 +67,54 @@ const PIPELINE_TEMPLATES = {
       { slug: 'lost',      name: 'Lost',          position: 6, color: '#ef4444', is_lost: true },
     ],
   },
+  automotive: {
+    name: 'Vehicle Sales',
+    stages: [
+      { slug: 'new',       name: 'New Enquiry',  position: 1, color: '#94a3b8' },
+      { slug: 'contacted', name: 'Contacted',    position: 2, color: '#60a5fa' },
+      { slug: 'qualified', name: 'Cars Shown',   position: 3, color: '#a78bfa' },
+      { slug: 'quoted',    name: 'Price Shared', position: 4, color: '#f59e0b' },
+      { slug: 'booked',    name: 'Test Drive',   position: 5, color: '#10b981' },
+      { slug: 'won',       name: 'Sold',         position: 6, color: '#059669', is_won: true },
+      { slug: 'lost',      name: 'Lost',         position: 7, color: '#ef4444', is_lost: true },
+    ],
+  },
+  tours_activities: {
+    name: 'Tour Bookings',
+    stages: [
+      { slug: 'new',       name: 'New Enquiry', position: 1, color: '#94a3b8' },
+      { slug: 'contacted', name: 'Contacted',   position: 2, color: '#60a5fa' },
+      { slug: 'qualified', name: 'Dates Fixed', position: 3, color: '#a78bfa' },
+      { slug: 'quoted',    name: 'Quote Sent',  position: 4, color: '#f59e0b' },
+      { slug: 'booked',    name: 'Booked',      position: 5, color: '#10b981' },
+      { slug: 'won',       name: 'Completed',   position: 6, color: '#059669', is_won: true },
+      { slug: 'lost',      name: 'Lost',        position: 7, color: '#ef4444', is_lost: true },
+    ],
+  },
+  event_venues: {
+    name: 'Event Bookings',
+    stages: [
+      { slug: 'new',       name: 'New Enquiry',   position: 1, color: '#94a3b8' },
+      { slug: 'contacted', name: 'Contacted',     position: 2, color: '#60a5fa' },
+      { slug: 'qualified', name: 'Date Checked',  position: 3, color: '#a78bfa' },
+      { slug: 'quoted',    name: 'Proposal Sent', position: 4, color: '#f59e0b' },
+      { slug: 'booked',    name: 'Confirmed',     position: 5, color: '#10b981' },
+      { slug: 'won',       name: 'Event Done',    position: 6, color: '#059669', is_won: true },
+      { slug: 'lost',      name: 'Lost',          position: 7, color: '#ef4444', is_lost: true },
+    ],
+  },
+  education: {
+    name: 'Course Enrollments',
+    stages: [
+      { slug: 'new',       name: 'New Enquiry',     position: 1, color: '#94a3b8' },
+      { slug: 'contacted', name: 'Contacted',       position: 2, color: '#60a5fa' },
+      { slug: 'qualified', name: 'Details Shared',  position: 3, color: '#a78bfa' },
+      { slug: 'quoted',    name: 'Fee Quoted',      position: 4, color: '#f59e0b' },
+      { slug: 'booked',    name: 'Enrolled',        position: 5, color: '#10b981' },
+      { slug: 'won',       name: 'Completed',       position: 6, color: '#059669', is_won: true },
+      { slug: 'lost',      name: 'Lost',            position: 7, color: '#ef4444', is_lost: true },
+    ],
+  },
 } as const;
 
 type IndustryKey = keyof typeof PIPELINE_TEMPLATES;
@@ -83,11 +131,28 @@ export class PipelineService {
   private pickIndustry(businessType?: string | null): IndustryKey {
     const t = (businessType ?? '').toLowerCase();
 
+    // Automotive / used-car — check before "real_estate" to avoid prefix collisions
+    if (t.includes('automotive') || t.includes('used car') || t.includes('used_car') ||
+        t.includes('new car') || t.includes('vehicle') || t.includes('dealer')) return 'automotive';
+
     // Real estate first (matches "realty" before "retail"-style fallbacks).
     if (t.includes('real estate') || t.includes('realestate') || t.includes('realty') ||
         t.includes('property') || t.includes('broker')) return 'real_estate';
 
-    if (t.includes('hotel') || t.includes('resort') || t.includes('camp') ||
+    // Tours / camping / activities
+    if (t.includes('tour') || t.includes('trek') || t.includes('camp') ||
+        t.includes('activity') || t.includes('adventure') || t.includes('bonfire') ||
+        t.includes('yoga') || t.includes('retreat')) return 'tours_activities';
+
+    // Event venues
+    if (t.includes('event') || t.includes('venue') || t.includes('wedding') ||
+        t.includes('party hall') || t.includes('studio booking')) return 'event_venues';
+
+    // Education
+    if (t.includes('education') || t.includes('coaching') || t.includes('training') ||
+        t.includes('course') || t.includes('school') || t.includes('institute')) return 'education';
+
+    if (t.includes('hotel') || t.includes('resort') || t.includes('homestay') ||
         t.includes('hospitality')) return 'hospitality';
 
     if (t.includes('product') || t.includes('commerce') || t.includes('retail') ||

@@ -34,6 +34,7 @@ model businesses {
   catalog_items             catalog_items[]
   product_item_details      product_item_details[]
   hospitality_item_details  hospitality_item_details[]
+  vehicle_item_details      vehicle_item_details[]
   product_orders            product_orders[]
   product_inquiries         product_inquiries[]
   hospitality_bookings      hospitality_bookings[]
@@ -56,7 +57,6 @@ model businesses {
   billing_invoices_list     billing_invoices[]          @relation("business_billing_invoices")
   settings                  business_settings?          @relation("business_settings")
   audit_logs                audit_logs[]
-
   @@index([tenant_id], map: "idx_businesses_tenant_id")
   @@index([business_type], map: "idx_businesses_business_type")
   @@index([public_booking_slug], map: "idx_businesses_public_booking_slug")
@@ -231,10 +231,22 @@ model leads {
   pipeline_id           String?                 @db.Uuid
   lost_reason           String?                 @db.VarChar(50)
   /// AI-extracted business-type context
-  /// Resort:  { type:"resort",  check_in, check_out, nights, guests, room_pref, budget }
-  /// Camp:    { type:"camp",    event, date, date_is_fixed:true, group_size, package, food_pref }
-  /// Product: { type:"product", items:[{id,name,variant,qty,price}], pincode, budget }
+  /// Resort:     { type:"resort",     check_in, check_out, nights, guests, room_pref, budget }
+  /// Camp:       { type:"camp",       event, date, date_is_fixed, group_size, package, food_pref }
+  /// Product:    { type:"product",    items:[{id,name,variant,qty,price}], pincode, budget }
+  /// Automotive: { type:"automotive", budget_max, make, model, fuel_type, year_min, items_viewed[], last_quoted_price }
+  /// Property:   { type:"property",   budget_max, property_type, bedrooms, locality, items_viewed[] }
+  /// Tour:       { type:"tour",       activity, date, guests, duration, budget, wants_activity_updates }
+  /// Education:  { type:"education",  course_name, fee_budget, preferred_timing, preferred_days[], batch_id }
   context               Json?
+  /// Lead classification within business group (window_shopper, price_checker, price_alert_subscriber, etc.)
+  lead_type             String?                 @db.VarChar(30)
+  /// 0–100 score derived from engagement signals
+  qualification_score   Int                     @default(0)
+  exit_intent_sent_at   DateTime?               @db.Timestamptz(6)
+  exit_captured_at      DateTime?               @db.Timestamptz(6)
+  /// price_too_high | need_more_time | not_interested | changed_dates | not_anymore
+  exit_reason           String?                 @db.VarChar(30)
   quoted_amount         Decimal?                @db.Decimal(10, 2)
   quoted_at             DateTime?               @db.Timestamptz(6)
   converted_value       Decimal?                @db.Decimal(10, 2)
@@ -254,6 +266,8 @@ model leads {
   hospitality_inquiries hospitality_inquiries[]
   product_orders        product_orders[]
   hospitality_bookings  hospitality_bookings[]
+  item_interests        lead_item_interests[]
+  preference_watches    lead_preference_watches[]
   assigned_user         users?                  @relation("lead_agent", fields: [assigned_to], references: [user_id])
   businesses            businesses              @relation(fields: [business_id], references: [business_id])
   tenants               tenants                 @relation(fields: [tenant_id], references: [tenant_id])
@@ -265,6 +279,8 @@ model leads {
   @@unique([business_id, platform_id], map: "uq_leads_business_platform")
   @@index([business_id, status], map: "idx_leads_business_status")
   @@index([business_id, stage_id], map: "idx_leads_business_stage")
+  @@index([business_id, lead_type], map: "idx_leads_business_lead_type")
+  @@index([business_id, qualification_score(sort: Desc)], map: "idx_leads_business_qual_score")
   @@index([business_id, channel, source], map: "idx_leads_business_channel_source")
   @@index([business_id, created_at(sort: Desc)], map: "idx_leads_business_created")
   @@index([business_id, quoted_at], map: "idx_leads_business_quoted_at")
@@ -1101,7 +1117,7 @@ model hotel_pricing_notifications {
 }
 
 /// catalog_items - single table for all sellable items across all business types
-/// item_type: "physical_product" | "accommodation" | "activity" | "service"
+/// item_type: "physical_product" | "accommodation" | "activity" | "service" | "vehicle"
 model catalog_items {
   item_id                   String                      @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   business_id               String                      @db.Uuid
@@ -1134,6 +1150,7 @@ model catalog_items {
   cart_reservations         cart_reservations[]
   product_detail            product_item_details?
   hospitality_detail        hospitality_item_details?
+  vehicle_detail            vehicle_item_details?
   product_order_items       product_order_items[]
   hospitality_booking_items hospitality_booking_items[]
   product_inquiries         product_inquiries[]
@@ -1341,6 +1358,31 @@ model hospitality_item_details {
 
   @@index([business_id])
   @@index([service_type])
+}
+
+// ─── INDUSTRY EXTENSIONS: AUTOMOTIVE ─────────────────────────────────────────
+
+model vehicle_item_details {
+  item_id      String        @id @db.Uuid
+  business_id  String        @db.Uuid
+  make         String        @db.VarChar(80)
+  model_name   String        @db.VarChar(80)
+  year         Int
+  fuel_type    String?       @db.VarChar(30)
+  transmission String?       @db.VarChar(30)
+  color        String?       @db.VarChar(50)
+  km_driven    Int?
+  /// new | used | certified_pre_owned
+  condition    String        @default("used") @db.VarChar(30)
+  metadata     Json?
+  created_at   DateTime      @default(now()) @db.Timestamptz(6)
+  updated_at   DateTime      @default(now()) @db.Timestamptz(6)
+  business     businesses    @relation(fields: [business_id], references: [business_id], onDelete: Cascade)
+  item         catalog_items @relation(fields: [item_id], references: [item_id], onDelete: Cascade)
+
+  @@index([business_id])
+  @@index([make, model_name])
+  @@index([year])
 }
 
 model hospitality_inquiries {
@@ -1690,3 +1732,52 @@ model audit_logs {
   @@index([entity_type, entity_id], map: "idx_audit_logs_entity")
   @@index([user_id], map: "idx_audit_logs_user_id")
 }
+
+/// Tracks which inventory items / catalog items a lead has shown interest in.
+/// Used to trigger price-drop and availability alerts (confirmation-first rule).
+model lead_item_interests {
+  interest_id     String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  lead_id         String   @db.Uuid
+  business_id     String   @db.Uuid
+  /// UUID of the item (vehicle_inventory.vehicle_id, catalog_items.item_id, etc.) — nullable for free-text items
+  item_id         String?  @db.Uuid
+  /// vehicle | catalog_item | property | course | activity
+  item_type       String   @db.VarChar(30)
+  item_name       String   @db.VarChar(255)
+  /// viewed | price_checked | visit_requested
+  interest_level  String   @default("viewed") @db.VarChar(20)
+  last_price_seen Decimal? @db.Decimal(12, 2)
+  /// true when lead tapped "notify me" — only these leads get campaigns
+  is_alert_active Boolean  @default(false)
+  created_at      DateTime @default(now()) @db.Timestamptz(6)
+  updated_at      DateTime @default(now()) @db.Timestamptz(6)
+  leads           leads    @relation(fields: [lead_id], references: [lead_id], onDelete: Cascade)
+
+  @@unique([lead_id, item_id], map: "uq_lead_item_interest")
+  @@index([lead_id], map: "idx_lead_item_interests_lead")
+  @@index([business_id, is_alert_active], map: "idx_lead_item_interests_business_alert")
+}
+
+/// Stores what a lead is watching for when no match exists yet.
+/// AI creates this automatically after a failed search if lead opts in.
+model lead_preference_watches {
+  watch_id    String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  lead_id     String    @db.Uuid
+  business_id String    @db.Uuid
+  /// price_range | item_match | date_available | stock_available | batch_available
+  watch_type  String    @db.VarChar(30)
+  /// JSONB: budget_max, make, model, date_from, date_to, variant, course_id, etc.
+  criteria    Json
+  is_active   Boolean   @default(true)
+  /// Set when campaign is sent — prevents duplicate alerts for same event
+  notified_at DateTime? @db.Timestamptz(6)
+  /// Auto-expire after 90 days with no match
+  expires_at  DateTime? @db.Timestamptz(6)
+  created_at  DateTime  @default(now()) @db.Timestamptz(6)
+  leads       leads     @relation(fields: [lead_id], references: [lead_id], onDelete: Cascade)
+
+  @@index([business_id, watch_type, is_active], map: "idx_pref_watches_business_type_active")
+  @@index([lead_id], map: "idx_pref_watches_lead")
+  @@index([expires_at], map: "idx_pref_watches_expires")
+}
+

@@ -232,7 +232,7 @@ export type hotel_pricing_notifications = $Result.DefaultSelection<Prisma.$hotel
 /**
  * Model catalog_items
  * catalog_items - single table for all sellable items across all business types
- * item_type: "physical_product" | "accommodation" | "activity" | "service"
+ * item_type: "physical_product" | "accommodation" | "activity" | "service" | "vehicle"
  */
 export type catalog_items = $Result.DefaultSelection<Prisma.$catalog_itemsPayload>
 /**
@@ -275,6 +275,11 @@ export type product_order_status_events = $Result.DefaultSelection<Prisma.$produ
  * 
  */
 export type hospitality_item_details = $Result.DefaultSelection<Prisma.$hospitality_item_detailsPayload>
+/**
+ * Model vehicle_item_details
+ * 
+ */
+export type vehicle_item_details = $Result.DefaultSelection<Prisma.$vehicle_item_detailsPayload>
 /**
  * Model hospitality_inquiries
  * 
@@ -370,6 +375,18 @@ export type business_settings = $Result.DefaultSelection<Prisma.$business_settin
  * 
  */
 export type audit_logs = $Result.DefaultSelection<Prisma.$audit_logsPayload>
+/**
+ * Model lead_item_interests
+ * Tracks which inventory items / catalog items a lead has shown interest in.
+ * Used to trigger price-drop and availability alerts (confirmation-first rule).
+ */
+export type lead_item_interests = $Result.DefaultSelection<Prisma.$lead_item_interestsPayload>
+/**
+ * Model lead_preference_watches
+ * Stores what a lead is watching for when no match exists yet.
+ * AI creates this automatically after a failed search if lead opts in.
+ */
+export type lead_preference_watches = $Result.DefaultSelection<Prisma.$lead_preference_watchesPayload>
 
 /**
  * ##  Prisma Client ʲˢ
@@ -987,6 +1004,16 @@ export class PrismaClient<
   get hospitality_item_details(): Prisma.hospitality_item_detailsDelegate<ExtArgs, ClientOptions>;
 
   /**
+   * `prisma.vehicle_item_details`: Exposes CRUD operations for the **vehicle_item_details** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more Vehicle_item_details
+    * const vehicle_item_details = await prisma.vehicle_item_details.findMany()
+    * ```
+    */
+  get vehicle_item_details(): Prisma.vehicle_item_detailsDelegate<ExtArgs, ClientOptions>;
+
+  /**
    * `prisma.hospitality_inquiries`: Exposes CRUD operations for the **hospitality_inquiries** model.
     * Example usage:
     * ```ts
@@ -1175,6 +1202,26 @@ export class PrismaClient<
     * ```
     */
   get audit_logs(): Prisma.audit_logsDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.lead_item_interests`: Exposes CRUD operations for the **lead_item_interests** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more Lead_item_interests
+    * const lead_item_interests = await prisma.lead_item_interests.findMany()
+    * ```
+    */
+  get lead_item_interests(): Prisma.lead_item_interestsDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.lead_preference_watches`: Exposes CRUD operations for the **lead_preference_watches** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more Lead_preference_watches
+    * const lead_preference_watches = await prisma.lead_preference_watches.findMany()
+    * ```
+    */
+  get lead_preference_watches(): Prisma.lead_preference_watchesDelegate<ExtArgs, ClientOptions>;
 }
 
 export namespace Prisma {
@@ -1664,6 +1711,7 @@ export namespace Prisma {
     product_order_items: 'product_order_items',
     product_order_status_events: 'product_order_status_events',
     hospitality_item_details: 'hospitality_item_details',
+    vehicle_item_details: 'vehicle_item_details',
     hospitality_inquiries: 'hospitality_inquiries',
     hospitality_bookings: 'hospitality_bookings',
     hospitality_booking_items: 'hospitality_booking_items',
@@ -1682,7 +1730,9 @@ export namespace Prisma {
     billing_webhook_events: 'billing_webhook_events',
     credit_pricing: 'credit_pricing',
     business_settings: 'business_settings',
-    audit_logs: 'audit_logs'
+    audit_logs: 'audit_logs',
+    lead_item_interests: 'lead_item_interests',
+    lead_preference_watches: 'lead_preference_watches'
   };
 
   export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -1701,7 +1751,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "businesses" | "business_employees" | "intents" | "notifications" | "role_intents" | "roles" | "social_accounts" | "tenants" | "users" | "leads" | "pipelines" | "pipeline_stages" | "lead_events" | "lead_followups" | "customers" | "orders" | "order_items" | "cart_reservations" | "campaigns" | "campaign_recipients" | "notification_templates" | "notification_messages" | "notification_preferences" | "payments" | "payment_reconciliation" | "notification_events" | "payment_webhooks" | "instagram_media" | "workflow_definitions" | "business_workflows" | "workflow_executions" | "workflow_execution_steps" | "workflow_idempotency_keys" | "cart_items" | "carts" | "whatsapp_optouts" | "campaign_analytics" | "hotel_pricing_recommendations" | "hotel_booking_outcomes" | "hotel_pricing_notifications" | "catalog_items" | "item_variants" | "item_availability" | "product_item_details" | "product_inquiries" | "product_orders" | "product_order_items" | "product_order_status_events" | "hospitality_item_details" | "hospitality_inquiries" | "hospitality_bookings" | "hospitality_booking_items" | "hospitality_booking_guests" | "hospitality_booking_status_events" | "checkpoint_blobs" | "checkpoint_migrations" | "checkpoint_writes" | "checkpoints" | "billing_plans" | "billing_subscriptions" | "wallets" | "wallet_transactions" | "billing_payments" | "billing_invoices" | "billing_webhook_events" | "credit_pricing" | "business_settings" | "audit_logs"
+      modelProps: "businesses" | "business_employees" | "intents" | "notifications" | "role_intents" | "roles" | "social_accounts" | "tenants" | "users" | "leads" | "pipelines" | "pipeline_stages" | "lead_events" | "lead_followups" | "customers" | "orders" | "order_items" | "cart_reservations" | "campaigns" | "campaign_recipients" | "notification_templates" | "notification_messages" | "notification_preferences" | "payments" | "payment_reconciliation" | "notification_events" | "payment_webhooks" | "instagram_media" | "workflow_definitions" | "business_workflows" | "workflow_executions" | "workflow_execution_steps" | "workflow_idempotency_keys" | "cart_items" | "carts" | "whatsapp_optouts" | "campaign_analytics" | "hotel_pricing_recommendations" | "hotel_booking_outcomes" | "hotel_pricing_notifications" | "catalog_items" | "item_variants" | "item_availability" | "product_item_details" | "product_inquiries" | "product_orders" | "product_order_items" | "product_order_status_events" | "hospitality_item_details" | "vehicle_item_details" | "hospitality_inquiries" | "hospitality_bookings" | "hospitality_booking_items" | "hospitality_booking_guests" | "hospitality_booking_status_events" | "checkpoint_blobs" | "checkpoint_migrations" | "checkpoint_writes" | "checkpoints" | "billing_plans" | "billing_subscriptions" | "wallets" | "wallet_transactions" | "billing_payments" | "billing_invoices" | "billing_webhook_events" | "credit_pricing" | "business_settings" | "audit_logs" | "lead_item_interests" | "lead_preference_watches"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -5331,6 +5381,80 @@ export namespace Prisma {
           }
         }
       }
+      vehicle_item_details: {
+        payload: Prisma.$vehicle_item_detailsPayload<ExtArgs>
+        fields: Prisma.vehicle_item_detailsFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.vehicle_item_detailsFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$vehicle_item_detailsPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.vehicle_item_detailsFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$vehicle_item_detailsPayload>
+          }
+          findFirst: {
+            args: Prisma.vehicle_item_detailsFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$vehicle_item_detailsPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.vehicle_item_detailsFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$vehicle_item_detailsPayload>
+          }
+          findMany: {
+            args: Prisma.vehicle_item_detailsFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$vehicle_item_detailsPayload>[]
+          }
+          create: {
+            args: Prisma.vehicle_item_detailsCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$vehicle_item_detailsPayload>
+          }
+          createMany: {
+            args: Prisma.vehicle_item_detailsCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.vehicle_item_detailsCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$vehicle_item_detailsPayload>[]
+          }
+          delete: {
+            args: Prisma.vehicle_item_detailsDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$vehicle_item_detailsPayload>
+          }
+          update: {
+            args: Prisma.vehicle_item_detailsUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$vehicle_item_detailsPayload>
+          }
+          deleteMany: {
+            args: Prisma.vehicle_item_detailsDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.vehicle_item_detailsUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.vehicle_item_detailsUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$vehicle_item_detailsPayload>[]
+          }
+          upsert: {
+            args: Prisma.vehicle_item_detailsUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$vehicle_item_detailsPayload>
+          }
+          aggregate: {
+            args: Prisma.Vehicle_item_detailsAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateVehicle_item_details>
+          }
+          groupBy: {
+            args: Prisma.vehicle_item_detailsGroupByArgs<ExtArgs>
+            result: $Utils.Optional<Vehicle_item_detailsGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.vehicle_item_detailsCountArgs<ExtArgs>
+            result: $Utils.Optional<Vehicle_item_detailsCountAggregateOutputType> | number
+          }
+        }
+      }
       hospitality_inquiries: {
         payload: Prisma.$hospitality_inquiriesPayload<ExtArgs>
         fields: Prisma.hospitality_inquiriesFieldRefs
@@ -6737,6 +6861,154 @@ export namespace Prisma {
           }
         }
       }
+      lead_item_interests: {
+        payload: Prisma.$lead_item_interestsPayload<ExtArgs>
+        fields: Prisma.lead_item_interestsFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.lead_item_interestsFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$lead_item_interestsPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.lead_item_interestsFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$lead_item_interestsPayload>
+          }
+          findFirst: {
+            args: Prisma.lead_item_interestsFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$lead_item_interestsPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.lead_item_interestsFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$lead_item_interestsPayload>
+          }
+          findMany: {
+            args: Prisma.lead_item_interestsFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$lead_item_interestsPayload>[]
+          }
+          create: {
+            args: Prisma.lead_item_interestsCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$lead_item_interestsPayload>
+          }
+          createMany: {
+            args: Prisma.lead_item_interestsCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.lead_item_interestsCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$lead_item_interestsPayload>[]
+          }
+          delete: {
+            args: Prisma.lead_item_interestsDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$lead_item_interestsPayload>
+          }
+          update: {
+            args: Prisma.lead_item_interestsUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$lead_item_interestsPayload>
+          }
+          deleteMany: {
+            args: Prisma.lead_item_interestsDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.lead_item_interestsUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.lead_item_interestsUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$lead_item_interestsPayload>[]
+          }
+          upsert: {
+            args: Prisma.lead_item_interestsUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$lead_item_interestsPayload>
+          }
+          aggregate: {
+            args: Prisma.Lead_item_interestsAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateLead_item_interests>
+          }
+          groupBy: {
+            args: Prisma.lead_item_interestsGroupByArgs<ExtArgs>
+            result: $Utils.Optional<Lead_item_interestsGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.lead_item_interestsCountArgs<ExtArgs>
+            result: $Utils.Optional<Lead_item_interestsCountAggregateOutputType> | number
+          }
+        }
+      }
+      lead_preference_watches: {
+        payload: Prisma.$lead_preference_watchesPayload<ExtArgs>
+        fields: Prisma.lead_preference_watchesFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.lead_preference_watchesFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$lead_preference_watchesPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.lead_preference_watchesFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$lead_preference_watchesPayload>
+          }
+          findFirst: {
+            args: Prisma.lead_preference_watchesFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$lead_preference_watchesPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.lead_preference_watchesFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$lead_preference_watchesPayload>
+          }
+          findMany: {
+            args: Prisma.lead_preference_watchesFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$lead_preference_watchesPayload>[]
+          }
+          create: {
+            args: Prisma.lead_preference_watchesCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$lead_preference_watchesPayload>
+          }
+          createMany: {
+            args: Prisma.lead_preference_watchesCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.lead_preference_watchesCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$lead_preference_watchesPayload>[]
+          }
+          delete: {
+            args: Prisma.lead_preference_watchesDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$lead_preference_watchesPayload>
+          }
+          update: {
+            args: Prisma.lead_preference_watchesUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$lead_preference_watchesPayload>
+          }
+          deleteMany: {
+            args: Prisma.lead_preference_watchesDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.lead_preference_watchesUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.lead_preference_watchesUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$lead_preference_watchesPayload>[]
+          }
+          upsert: {
+            args: Prisma.lead_preference_watchesUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$lead_preference_watchesPayload>
+          }
+          aggregate: {
+            args: Prisma.Lead_preference_watchesAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateLead_preference_watches>
+          }
+          groupBy: {
+            args: Prisma.lead_preference_watchesGroupByArgs<ExtArgs>
+            result: $Utils.Optional<Lead_preference_watchesGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.lead_preference_watchesCountArgs<ExtArgs>
+            result: $Utils.Optional<Lead_preference_watchesCountAggregateOutputType> | number
+          }
+        }
+      }
     }
   } & {
     other: {
@@ -6874,6 +7146,7 @@ export namespace Prisma {
     product_order_items?: product_order_itemsOmit
     product_order_status_events?: product_order_status_eventsOmit
     hospitality_item_details?: hospitality_item_detailsOmit
+    vehicle_item_details?: vehicle_item_detailsOmit
     hospitality_inquiries?: hospitality_inquiriesOmit
     hospitality_bookings?: hospitality_bookingsOmit
     hospitality_booking_items?: hospitality_booking_itemsOmit
@@ -6893,6 +7166,8 @@ export namespace Prisma {
     credit_pricing?: credit_pricingOmit
     business_settings?: business_settingsOmit
     audit_logs?: audit_logsOmit
+    lead_item_interests?: lead_item_interestsOmit
+    lead_preference_watches?: lead_preference_watchesOmit
   }
 
   /* Types for Logging */
@@ -6993,6 +7268,7 @@ export namespace Prisma {
     catalog_items: number
     product_item_details: number
     hospitality_item_details: number
+    vehicle_item_details: number
     product_orders: number
     product_inquiries: number
     hospitality_bookings: number
@@ -7021,6 +7297,7 @@ export namespace Prisma {
     catalog_items?: boolean | BusinessesCountOutputTypeCountCatalog_itemsArgs
     product_item_details?: boolean | BusinessesCountOutputTypeCountProduct_item_detailsArgs
     hospitality_item_details?: boolean | BusinessesCountOutputTypeCountHospitality_item_detailsArgs
+    vehicle_item_details?: boolean | BusinessesCountOutputTypeCountVehicle_item_detailsArgs
     product_orders?: boolean | BusinessesCountOutputTypeCountProduct_ordersArgs
     product_inquiries?: boolean | BusinessesCountOutputTypeCountProduct_inquiriesArgs
     hospitality_bookings?: boolean | BusinessesCountOutputTypeCountHospitality_bookingsArgs
@@ -7093,6 +7370,13 @@ export namespace Prisma {
    */
   export type BusinessesCountOutputTypeCountHospitality_item_detailsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: hospitality_item_detailsWhereInput
+  }
+
+  /**
+   * BusinessesCountOutputType without action
+   */
+  export type BusinessesCountOutputTypeCountVehicle_item_detailsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: vehicle_item_detailsWhereInput
   }
 
   /**
@@ -7541,6 +7825,8 @@ export namespace Prisma {
     hospitality_inquiries: number
     product_orders: number
     hospitality_bookings: number
+    item_interests: number
+    preference_watches: number
     orders: number
     workflow_executions: number
   }
@@ -7554,6 +7840,8 @@ export namespace Prisma {
     hospitality_inquiries?: boolean | LeadsCountOutputTypeCountHospitality_inquiriesArgs
     product_orders?: boolean | LeadsCountOutputTypeCountProduct_ordersArgs
     hospitality_bookings?: boolean | LeadsCountOutputTypeCountHospitality_bookingsArgs
+    item_interests?: boolean | LeadsCountOutputTypeCountItem_interestsArgs
+    preference_watches?: boolean | LeadsCountOutputTypeCountPreference_watchesArgs
     orders?: boolean | LeadsCountOutputTypeCountOrdersArgs
     workflow_executions?: boolean | LeadsCountOutputTypeCountWorkflow_executionsArgs
   }
@@ -7623,6 +7911,20 @@ export namespace Prisma {
    */
   export type LeadsCountOutputTypeCountHospitality_bookingsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: hospitality_bookingsWhereInput
+  }
+
+  /**
+   * LeadsCountOutputType without action
+   */
+  export type LeadsCountOutputTypeCountItem_interestsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: lead_item_interestsWhereInput
+  }
+
+  /**
+   * LeadsCountOutputType without action
+   */
+  export type LeadsCountOutputTypeCountPreference_watchesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: lead_preference_watchesWhereInput
   }
 
   /**
@@ -8703,6 +9005,7 @@ export namespace Prisma {
     catalog_items?: boolean | businesses$catalog_itemsArgs<ExtArgs>
     product_item_details?: boolean | businesses$product_item_detailsArgs<ExtArgs>
     hospitality_item_details?: boolean | businesses$hospitality_item_detailsArgs<ExtArgs>
+    vehicle_item_details?: boolean | businesses$vehicle_item_detailsArgs<ExtArgs>
     product_orders?: boolean | businesses$product_ordersArgs<ExtArgs>
     product_inquiries?: boolean | businesses$product_inquiriesArgs<ExtArgs>
     hospitality_bookings?: boolean | businesses$hospitality_bookingsArgs<ExtArgs>
@@ -8799,6 +9102,7 @@ export namespace Prisma {
     catalog_items?: boolean | businesses$catalog_itemsArgs<ExtArgs>
     product_item_details?: boolean | businesses$product_item_detailsArgs<ExtArgs>
     hospitality_item_details?: boolean | businesses$hospitality_item_detailsArgs<ExtArgs>
+    vehicle_item_details?: boolean | businesses$vehicle_item_detailsArgs<ExtArgs>
     product_orders?: boolean | businesses$product_ordersArgs<ExtArgs>
     product_inquiries?: boolean | businesses$product_inquiriesArgs<ExtArgs>
     hospitality_bookings?: boolean | businesses$hospitality_bookingsArgs<ExtArgs>
@@ -8840,6 +9144,7 @@ export namespace Prisma {
       catalog_items: Prisma.$catalog_itemsPayload<ExtArgs>[]
       product_item_details: Prisma.$product_item_detailsPayload<ExtArgs>[]
       hospitality_item_details: Prisma.$hospitality_item_detailsPayload<ExtArgs>[]
+      vehicle_item_details: Prisma.$vehicle_item_detailsPayload<ExtArgs>[]
       product_orders: Prisma.$product_ordersPayload<ExtArgs>[]
       product_inquiries: Prisma.$product_inquiriesPayload<ExtArgs>[]
       hospitality_bookings: Prisma.$hospitality_bookingsPayload<ExtArgs>[]
@@ -9282,6 +9587,7 @@ export namespace Prisma {
     catalog_items<T extends businesses$catalog_itemsArgs<ExtArgs> = {}>(args?: Subset<T, businesses$catalog_itemsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$catalog_itemsPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     product_item_details<T extends businesses$product_item_detailsArgs<ExtArgs> = {}>(args?: Subset<T, businesses$product_item_detailsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$product_item_detailsPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     hospitality_item_details<T extends businesses$hospitality_item_detailsArgs<ExtArgs> = {}>(args?: Subset<T, businesses$hospitality_item_detailsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$hospitality_item_detailsPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    vehicle_item_details<T extends businesses$vehicle_item_detailsArgs<ExtArgs> = {}>(args?: Subset<T, businesses$vehicle_item_detailsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$vehicle_item_detailsPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     product_orders<T extends businesses$product_ordersArgs<ExtArgs> = {}>(args?: Subset<T, businesses$product_ordersArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$product_ordersPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     product_inquiries<T extends businesses$product_inquiriesArgs<ExtArgs> = {}>(args?: Subset<T, businesses$product_inquiriesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$product_inquiriesPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     hospitality_bookings<T extends businesses$hospitality_bookingsArgs<ExtArgs> = {}>(args?: Subset<T, businesses$hospitality_bookingsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$hospitality_bookingsPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
@@ -9887,6 +10193,30 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: Hospitality_item_detailsScalarFieldEnum | Hospitality_item_detailsScalarFieldEnum[]
+  }
+
+  /**
+   * businesses.vehicle_item_details
+   */
+  export type businesses$vehicle_item_detailsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the vehicle_item_details
+     */
+    select?: vehicle_item_detailsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the vehicle_item_details
+     */
+    omit?: vehicle_item_detailsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: vehicle_item_detailsInclude<ExtArgs> | null
+    where?: vehicle_item_detailsWhereInput
+    orderBy?: vehicle_item_detailsOrderByWithRelationInput | vehicle_item_detailsOrderByWithRelationInput[]
+    cursor?: vehicle_item_detailsWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: Vehicle_item_detailsScalarFieldEnum | Vehicle_item_detailsScalarFieldEnum[]
   }
 
   /**
@@ -20065,11 +20395,13 @@ export namespace Prisma {
   }
 
   export type LeadsAvgAggregateOutputType = {
+    qualification_score: number | null
     quoted_amount: Decimal | null
     converted_value: Decimal | null
   }
 
   export type LeadsSumAggregateOutputType = {
+    qualification_score: number | null
     quoted_amount: Decimal | null
     converted_value: Decimal | null
   }
@@ -20088,6 +20420,11 @@ export namespace Prisma {
     stage_id: string | null
     pipeline_id: string | null
     lost_reason: string | null
+    lead_type: string | null
+    qualification_score: number | null
+    exit_intent_sent_at: Date | null
+    exit_captured_at: Date | null
+    exit_reason: string | null
     quoted_amount: Decimal | null
     quoted_at: Date | null
     converted_value: Decimal | null
@@ -20113,6 +20450,11 @@ export namespace Prisma {
     stage_id: string | null
     pipeline_id: string | null
     lost_reason: string | null
+    lead_type: string | null
+    qualification_score: number | null
+    exit_intent_sent_at: Date | null
+    exit_captured_at: Date | null
+    exit_reason: string | null
     quoted_amount: Decimal | null
     quoted_at: Date | null
     converted_value: Decimal | null
@@ -20139,6 +20481,11 @@ export namespace Prisma {
     pipeline_id: number
     lost_reason: number
     context: number
+    lead_type: number
+    qualification_score: number
+    exit_intent_sent_at: number
+    exit_captured_at: number
+    exit_reason: number
     quoted_amount: number
     quoted_at: number
     converted_value: number
@@ -20154,11 +20501,13 @@ export namespace Prisma {
 
 
   export type LeadsAvgAggregateInputType = {
+    qualification_score?: true
     quoted_amount?: true
     converted_value?: true
   }
 
   export type LeadsSumAggregateInputType = {
+    qualification_score?: true
     quoted_amount?: true
     converted_value?: true
   }
@@ -20177,6 +20526,11 @@ export namespace Prisma {
     stage_id?: true
     pipeline_id?: true
     lost_reason?: true
+    lead_type?: true
+    qualification_score?: true
+    exit_intent_sent_at?: true
+    exit_captured_at?: true
+    exit_reason?: true
     quoted_amount?: true
     quoted_at?: true
     converted_value?: true
@@ -20202,6 +20556,11 @@ export namespace Prisma {
     stage_id?: true
     pipeline_id?: true
     lost_reason?: true
+    lead_type?: true
+    qualification_score?: true
+    exit_intent_sent_at?: true
+    exit_captured_at?: true
+    exit_reason?: true
     quoted_amount?: true
     quoted_at?: true
     converted_value?: true
@@ -20228,6 +20587,11 @@ export namespace Prisma {
     pipeline_id?: true
     lost_reason?: true
     context?: true
+    lead_type?: true
+    qualification_score?: true
+    exit_intent_sent_at?: true
+    exit_captured_at?: true
+    exit_reason?: true
     quoted_amount?: true
     quoted_at?: true
     converted_value?: true
@@ -20342,6 +20706,11 @@ export namespace Prisma {
     pipeline_id: string | null
     lost_reason: string | null
     context: JsonValue | null
+    lead_type: string | null
+    qualification_score: number
+    exit_intent_sent_at: Date | null
+    exit_captured_at: Date | null
+    exit_reason: string | null
     quoted_amount: Decimal | null
     quoted_at: Date | null
     converted_value: Decimal | null
@@ -20388,6 +20757,11 @@ export namespace Prisma {
     pipeline_id?: boolean
     lost_reason?: boolean
     context?: boolean
+    lead_type?: boolean
+    qualification_score?: boolean
+    exit_intent_sent_at?: boolean
+    exit_captured_at?: boolean
+    exit_reason?: boolean
     quoted_amount?: boolean
     quoted_at?: boolean
     converted_value?: boolean
@@ -20406,6 +20780,8 @@ export namespace Prisma {
     hospitality_inquiries?: boolean | leads$hospitality_inquiriesArgs<ExtArgs>
     product_orders?: boolean | leads$product_ordersArgs<ExtArgs>
     hospitality_bookings?: boolean | leads$hospitality_bookingsArgs<ExtArgs>
+    item_interests?: boolean | leads$item_interestsArgs<ExtArgs>
+    preference_watches?: boolean | leads$preference_watchesArgs<ExtArgs>
     assigned_user?: boolean | leads$assigned_userArgs<ExtArgs>
     businesses?: boolean | businessesDefaultArgs<ExtArgs>
     tenants?: boolean | tenantsDefaultArgs<ExtArgs>
@@ -20431,6 +20807,11 @@ export namespace Prisma {
     pipeline_id?: boolean
     lost_reason?: boolean
     context?: boolean
+    lead_type?: boolean
+    qualification_score?: boolean
+    exit_intent_sent_at?: boolean
+    exit_captured_at?: boolean
+    exit_reason?: boolean
     quoted_amount?: boolean
     quoted_at?: boolean
     converted_value?: boolean
@@ -20463,6 +20844,11 @@ export namespace Prisma {
     pipeline_id?: boolean
     lost_reason?: boolean
     context?: boolean
+    lead_type?: boolean
+    qualification_score?: boolean
+    exit_intent_sent_at?: boolean
+    exit_captured_at?: boolean
+    exit_reason?: boolean
     quoted_amount?: boolean
     quoted_at?: boolean
     converted_value?: boolean
@@ -20495,6 +20881,11 @@ export namespace Prisma {
     pipeline_id?: boolean
     lost_reason?: boolean
     context?: boolean
+    lead_type?: boolean
+    qualification_score?: boolean
+    exit_intent_sent_at?: boolean
+    exit_captured_at?: boolean
+    exit_reason?: boolean
     quoted_amount?: boolean
     quoted_at?: boolean
     converted_value?: boolean
@@ -20507,7 +20898,7 @@ export namespace Prisma {
     updated_at?: boolean
   }
 
-  export type leadsOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"lead_id" | "business_id" | "tenant_id" | "name" | "phone" | "email" | "channel" | "source" | "platform_id" | "status" | "stage_id" | "pipeline_id" | "lost_reason" | "context" | "quoted_amount" | "quoted_at" | "converted_value" | "converted_at" | "tags" | "assigned_to" | "followup_at" | "deleted_at" | "created_at" | "updated_at", ExtArgs["result"]["leads"]>
+  export type leadsOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"lead_id" | "business_id" | "tenant_id" | "name" | "phone" | "email" | "channel" | "source" | "platform_id" | "status" | "stage_id" | "pipeline_id" | "lost_reason" | "context" | "lead_type" | "qualification_score" | "exit_intent_sent_at" | "exit_captured_at" | "exit_reason" | "quoted_amount" | "quoted_at" | "converted_value" | "converted_at" | "tags" | "assigned_to" | "followup_at" | "deleted_at" | "created_at" | "updated_at", ExtArgs["result"]["leads"]>
   export type leadsInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     cart_reservations?: boolean | leads$cart_reservationsArgs<ExtArgs>
     carts?: boolean | leads$cartsArgs<ExtArgs>
@@ -20517,6 +20908,8 @@ export namespace Prisma {
     hospitality_inquiries?: boolean | leads$hospitality_inquiriesArgs<ExtArgs>
     product_orders?: boolean | leads$product_ordersArgs<ExtArgs>
     hospitality_bookings?: boolean | leads$hospitality_bookingsArgs<ExtArgs>
+    item_interests?: boolean | leads$item_interestsArgs<ExtArgs>
+    preference_watches?: boolean | leads$preference_watchesArgs<ExtArgs>
     assigned_user?: boolean | leads$assigned_userArgs<ExtArgs>
     businesses?: boolean | businessesDefaultArgs<ExtArgs>
     tenants?: boolean | tenantsDefaultArgs<ExtArgs>
@@ -20552,6 +20945,8 @@ export namespace Prisma {
       hospitality_inquiries: Prisma.$hospitality_inquiriesPayload<ExtArgs>[]
       product_orders: Prisma.$product_ordersPayload<ExtArgs>[]
       hospitality_bookings: Prisma.$hospitality_bookingsPayload<ExtArgs>[]
+      item_interests: Prisma.$lead_item_interestsPayload<ExtArgs>[]
+      preference_watches: Prisma.$lead_preference_watchesPayload<ExtArgs>[]
       assigned_user: Prisma.$usersPayload<ExtArgs> | null
       businesses: Prisma.$businessesPayload<ExtArgs>
       tenants: Prisma.$tenantsPayload<ExtArgs>
@@ -20576,11 +20971,29 @@ export namespace Prisma {
       lost_reason: string | null
       /**
        * AI-extracted business-type context
-       * Resort:  { type:"resort",  check_in, check_out, nights, guests, room_pref, budget }
-       * Camp:    { type:"camp",    event, date, date_is_fixed:true, group_size, package, food_pref }
-       * Product: { type:"product", items:[{id,name,variant,qty,price}], pincode, budget }
+       * Resort:     { type:"resort",     check_in, check_out, nights, guests, room_pref, budget }
+       * Camp:       { type:"camp",       event, date, date_is_fixed, group_size, package, food_pref }
+       * Product:    { type:"product",    items:[{id,name,variant,qty,price}], pincode, budget }
+       * Automotive: { type:"automotive", budget_max, make, model, fuel_type, year_min, items_viewed[], last_quoted_price }
+       * Property:   { type:"property",   budget_max, property_type, bedrooms, locality, items_viewed[] }
+       * Tour:       { type:"tour",       activity, date, guests, duration, budget, wants_activity_updates }
+       * Education:  { type:"education",  course_name, fee_budget, preferred_timing, preferred_days[], batch_id }
        */
       context: Prisma.JsonValue | null
+      /**
+       * Lead classification within business group (window_shopper, price_checker, price_alert_subscriber, etc.)
+       */
+      lead_type: string | null
+      /**
+       * 0–100 score derived from engagement signals
+       */
+      qualification_score: number
+      exit_intent_sent_at: Date | null
+      exit_captured_at: Date | null
+      /**
+       * price_too_high | need_more_time | not_interested | changed_dates | not_anymore
+       */
+      exit_reason: string | null
       quoted_amount: Prisma.Decimal | null
       quoted_at: Date | null
       converted_value: Prisma.Decimal | null
@@ -20996,6 +21409,8 @@ export namespace Prisma {
     hospitality_inquiries<T extends leads$hospitality_inquiriesArgs<ExtArgs> = {}>(args?: Subset<T, leads$hospitality_inquiriesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$hospitality_inquiriesPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     product_orders<T extends leads$product_ordersArgs<ExtArgs> = {}>(args?: Subset<T, leads$product_ordersArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$product_ordersPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     hospitality_bookings<T extends leads$hospitality_bookingsArgs<ExtArgs> = {}>(args?: Subset<T, leads$hospitality_bookingsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$hospitality_bookingsPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    item_interests<T extends leads$item_interestsArgs<ExtArgs> = {}>(args?: Subset<T, leads$item_interestsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$lead_item_interestsPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    preference_watches<T extends leads$preference_watchesArgs<ExtArgs> = {}>(args?: Subset<T, leads$preference_watchesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$lead_preference_watchesPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     assigned_user<T extends leads$assigned_userArgs<ExtArgs> = {}>(args?: Subset<T, leads$assigned_userArgs<ExtArgs>>): Prisma__usersClient<$Result.GetResult<Prisma.$usersPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     businesses<T extends businessesDefaultArgs<ExtArgs> = {}>(args?: Subset<T, businessesDefaultArgs<ExtArgs>>): Prisma__businessesClient<$Result.GetResult<Prisma.$businessesPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     tenants<T extends tenantsDefaultArgs<ExtArgs> = {}>(args?: Subset<T, tenantsDefaultArgs<ExtArgs>>): Prisma__tenantsClient<$Result.GetResult<Prisma.$tenantsPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
@@ -21046,6 +21461,11 @@ export namespace Prisma {
     readonly pipeline_id: FieldRef<"leads", 'String'>
     readonly lost_reason: FieldRef<"leads", 'String'>
     readonly context: FieldRef<"leads", 'Json'>
+    readonly lead_type: FieldRef<"leads", 'String'>
+    readonly qualification_score: FieldRef<"leads", 'Int'>
+    readonly exit_intent_sent_at: FieldRef<"leads", 'DateTime'>
+    readonly exit_captured_at: FieldRef<"leads", 'DateTime'>
+    readonly exit_reason: FieldRef<"leads", 'String'>
     readonly quoted_amount: FieldRef<"leads", 'Decimal'>
     readonly quoted_at: FieldRef<"leads", 'DateTime'>
     readonly converted_value: FieldRef<"leads", 'Decimal'>
@@ -21641,6 +22061,54 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: Hospitality_bookingsScalarFieldEnum | Hospitality_bookingsScalarFieldEnum[]
+  }
+
+  /**
+   * leads.item_interests
+   */
+  export type leads$item_interestsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the lead_item_interests
+     */
+    select?: lead_item_interestsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the lead_item_interests
+     */
+    omit?: lead_item_interestsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: lead_item_interestsInclude<ExtArgs> | null
+    where?: lead_item_interestsWhereInput
+    orderBy?: lead_item_interestsOrderByWithRelationInput | lead_item_interestsOrderByWithRelationInput[]
+    cursor?: lead_item_interestsWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: Lead_item_interestsScalarFieldEnum | Lead_item_interestsScalarFieldEnum[]
+  }
+
+  /**
+   * leads.preference_watches
+   */
+  export type leads$preference_watchesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the lead_preference_watches
+     */
+    select?: lead_preference_watchesSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the lead_preference_watches
+     */
+    omit?: lead_preference_watchesOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: lead_preference_watchesInclude<ExtArgs> | null
+    where?: lead_preference_watchesWhereInput
+    orderBy?: lead_preference_watchesOrderByWithRelationInput | lead_preference_watchesOrderByWithRelationInput[]
+    cursor?: lead_preference_watchesWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: Lead_preference_watchesScalarFieldEnum | Lead_preference_watchesScalarFieldEnum[]
   }
 
   /**
@@ -59523,6 +59991,7 @@ export namespace Prisma {
     cart_reservations?: boolean | catalog_items$cart_reservationsArgs<ExtArgs>
     product_detail?: boolean | catalog_items$product_detailArgs<ExtArgs>
     hospitality_detail?: boolean | catalog_items$hospitality_detailArgs<ExtArgs>
+    vehicle_detail?: boolean | catalog_items$vehicle_detailArgs<ExtArgs>
     product_order_items?: boolean | catalog_items$product_order_itemsArgs<ExtArgs>
     hospitality_booking_items?: boolean | catalog_items$hospitality_booking_itemsArgs<ExtArgs>
     product_inquiries?: boolean | catalog_items$product_inquiriesArgs<ExtArgs>
@@ -59608,6 +60077,7 @@ export namespace Prisma {
     cart_reservations?: boolean | catalog_items$cart_reservationsArgs<ExtArgs>
     product_detail?: boolean | catalog_items$product_detailArgs<ExtArgs>
     hospitality_detail?: boolean | catalog_items$hospitality_detailArgs<ExtArgs>
+    vehicle_detail?: boolean | catalog_items$vehicle_detailArgs<ExtArgs>
     product_order_items?: boolean | catalog_items$product_order_itemsArgs<ExtArgs>
     hospitality_booking_items?: boolean | catalog_items$hospitality_booking_itemsArgs<ExtArgs>
     product_inquiries?: boolean | catalog_items$product_inquiriesArgs<ExtArgs>
@@ -59632,6 +60102,7 @@ export namespace Prisma {
       cart_reservations: Prisma.$cart_reservationsPayload<ExtArgs>[]
       product_detail: Prisma.$product_item_detailsPayload<ExtArgs> | null
       hospitality_detail: Prisma.$hospitality_item_detailsPayload<ExtArgs> | null
+      vehicle_detail: Prisma.$vehicle_item_detailsPayload<ExtArgs> | null
       product_order_items: Prisma.$product_order_itemsPayload<ExtArgs>[]
       hospitality_booking_items: Prisma.$hospitality_booking_itemsPayload<ExtArgs>[]
       product_inquiries: Prisma.$product_inquiriesPayload<ExtArgs>[]
@@ -60075,6 +60546,7 @@ export namespace Prisma {
     cart_reservations<T extends catalog_items$cart_reservationsArgs<ExtArgs> = {}>(args?: Subset<T, catalog_items$cart_reservationsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$cart_reservationsPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     product_detail<T extends catalog_items$product_detailArgs<ExtArgs> = {}>(args?: Subset<T, catalog_items$product_detailArgs<ExtArgs>>): Prisma__product_item_detailsClient<$Result.GetResult<Prisma.$product_item_detailsPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     hospitality_detail<T extends catalog_items$hospitality_detailArgs<ExtArgs> = {}>(args?: Subset<T, catalog_items$hospitality_detailArgs<ExtArgs>>): Prisma__hospitality_item_detailsClient<$Result.GetResult<Prisma.$hospitality_item_detailsPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    vehicle_detail<T extends catalog_items$vehicle_detailArgs<ExtArgs> = {}>(args?: Subset<T, catalog_items$vehicle_detailArgs<ExtArgs>>): Prisma__vehicle_item_detailsClient<$Result.GetResult<Prisma.$vehicle_item_detailsPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     product_order_items<T extends catalog_items$product_order_itemsArgs<ExtArgs> = {}>(args?: Subset<T, catalog_items$product_order_itemsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$product_order_itemsPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     hospitality_booking_items<T extends catalog_items$hospitality_booking_itemsArgs<ExtArgs> = {}>(args?: Subset<T, catalog_items$hospitality_booking_itemsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$hospitality_booking_itemsPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     product_inquiries<T extends catalog_items$product_inquiriesArgs<ExtArgs> = {}>(args?: Subset<T, catalog_items$product_inquiriesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$product_inquiriesPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
@@ -60610,6 +61082,25 @@ export namespace Prisma {
      */
     include?: hospitality_item_detailsInclude<ExtArgs> | null
     where?: hospitality_item_detailsWhereInput
+  }
+
+  /**
+   * catalog_items.vehicle_detail
+   */
+  export type catalog_items$vehicle_detailArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the vehicle_item_details
+     */
+    select?: vehicle_item_detailsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the vehicle_item_details
+     */
+    omit?: vehicle_item_detailsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: vehicle_item_detailsInclude<ExtArgs> | null
+    where?: vehicle_item_detailsWhereInput
   }
 
   /**
@@ -70765,6 +71256,1213 @@ export namespace Prisma {
      * Choose, which related nodes to fetch as well
      */
     include?: hospitality_item_detailsInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model vehicle_item_details
+   */
+
+  export type AggregateVehicle_item_details = {
+    _count: Vehicle_item_detailsCountAggregateOutputType | null
+    _avg: Vehicle_item_detailsAvgAggregateOutputType | null
+    _sum: Vehicle_item_detailsSumAggregateOutputType | null
+    _min: Vehicle_item_detailsMinAggregateOutputType | null
+    _max: Vehicle_item_detailsMaxAggregateOutputType | null
+  }
+
+  export type Vehicle_item_detailsAvgAggregateOutputType = {
+    year: number | null
+    km_driven: number | null
+  }
+
+  export type Vehicle_item_detailsSumAggregateOutputType = {
+    year: number | null
+    km_driven: number | null
+  }
+
+  export type Vehicle_item_detailsMinAggregateOutputType = {
+    item_id: string | null
+    business_id: string | null
+    make: string | null
+    model_name: string | null
+    year: number | null
+    fuel_type: string | null
+    transmission: string | null
+    color: string | null
+    km_driven: number | null
+    condition: string | null
+    created_at: Date | null
+    updated_at: Date | null
+  }
+
+  export type Vehicle_item_detailsMaxAggregateOutputType = {
+    item_id: string | null
+    business_id: string | null
+    make: string | null
+    model_name: string | null
+    year: number | null
+    fuel_type: string | null
+    transmission: string | null
+    color: string | null
+    km_driven: number | null
+    condition: string | null
+    created_at: Date | null
+    updated_at: Date | null
+  }
+
+  export type Vehicle_item_detailsCountAggregateOutputType = {
+    item_id: number
+    business_id: number
+    make: number
+    model_name: number
+    year: number
+    fuel_type: number
+    transmission: number
+    color: number
+    km_driven: number
+    condition: number
+    metadata: number
+    created_at: number
+    updated_at: number
+    _all: number
+  }
+
+
+  export type Vehicle_item_detailsAvgAggregateInputType = {
+    year?: true
+    km_driven?: true
+  }
+
+  export type Vehicle_item_detailsSumAggregateInputType = {
+    year?: true
+    km_driven?: true
+  }
+
+  export type Vehicle_item_detailsMinAggregateInputType = {
+    item_id?: true
+    business_id?: true
+    make?: true
+    model_name?: true
+    year?: true
+    fuel_type?: true
+    transmission?: true
+    color?: true
+    km_driven?: true
+    condition?: true
+    created_at?: true
+    updated_at?: true
+  }
+
+  export type Vehicle_item_detailsMaxAggregateInputType = {
+    item_id?: true
+    business_id?: true
+    make?: true
+    model_name?: true
+    year?: true
+    fuel_type?: true
+    transmission?: true
+    color?: true
+    km_driven?: true
+    condition?: true
+    created_at?: true
+    updated_at?: true
+  }
+
+  export type Vehicle_item_detailsCountAggregateInputType = {
+    item_id?: true
+    business_id?: true
+    make?: true
+    model_name?: true
+    year?: true
+    fuel_type?: true
+    transmission?: true
+    color?: true
+    km_driven?: true
+    condition?: true
+    metadata?: true
+    created_at?: true
+    updated_at?: true
+    _all?: true
+  }
+
+  export type Vehicle_item_detailsAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which vehicle_item_details to aggregate.
+     */
+    where?: vehicle_item_detailsWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of vehicle_item_details to fetch.
+     */
+    orderBy?: vehicle_item_detailsOrderByWithRelationInput | vehicle_item_detailsOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: vehicle_item_detailsWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` vehicle_item_details from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` vehicle_item_details.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned vehicle_item_details
+    **/
+    _count?: true | Vehicle_item_detailsCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: Vehicle_item_detailsAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: Vehicle_item_detailsSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: Vehicle_item_detailsMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: Vehicle_item_detailsMaxAggregateInputType
+  }
+
+  export type GetVehicle_item_detailsAggregateType<T extends Vehicle_item_detailsAggregateArgs> = {
+        [P in keyof T & keyof AggregateVehicle_item_details]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateVehicle_item_details[P]>
+      : GetScalarType<T[P], AggregateVehicle_item_details[P]>
+  }
+
+
+
+
+  export type vehicle_item_detailsGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: vehicle_item_detailsWhereInput
+    orderBy?: vehicle_item_detailsOrderByWithAggregationInput | vehicle_item_detailsOrderByWithAggregationInput[]
+    by: Vehicle_item_detailsScalarFieldEnum[] | Vehicle_item_detailsScalarFieldEnum
+    having?: vehicle_item_detailsScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: Vehicle_item_detailsCountAggregateInputType | true
+    _avg?: Vehicle_item_detailsAvgAggregateInputType
+    _sum?: Vehicle_item_detailsSumAggregateInputType
+    _min?: Vehicle_item_detailsMinAggregateInputType
+    _max?: Vehicle_item_detailsMaxAggregateInputType
+  }
+
+  export type Vehicle_item_detailsGroupByOutputType = {
+    item_id: string
+    business_id: string
+    make: string
+    model_name: string
+    year: number
+    fuel_type: string | null
+    transmission: string | null
+    color: string | null
+    km_driven: number | null
+    condition: string
+    metadata: JsonValue | null
+    created_at: Date
+    updated_at: Date
+    _count: Vehicle_item_detailsCountAggregateOutputType | null
+    _avg: Vehicle_item_detailsAvgAggregateOutputType | null
+    _sum: Vehicle_item_detailsSumAggregateOutputType | null
+    _min: Vehicle_item_detailsMinAggregateOutputType | null
+    _max: Vehicle_item_detailsMaxAggregateOutputType | null
+  }
+
+  type GetVehicle_item_detailsGroupByPayload<T extends vehicle_item_detailsGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<Vehicle_item_detailsGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof Vehicle_item_detailsGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], Vehicle_item_detailsGroupByOutputType[P]>
+            : GetScalarType<T[P], Vehicle_item_detailsGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type vehicle_item_detailsSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    item_id?: boolean
+    business_id?: boolean
+    make?: boolean
+    model_name?: boolean
+    year?: boolean
+    fuel_type?: boolean
+    transmission?: boolean
+    color?: boolean
+    km_driven?: boolean
+    condition?: boolean
+    metadata?: boolean
+    created_at?: boolean
+    updated_at?: boolean
+    business?: boolean | businessesDefaultArgs<ExtArgs>
+    item?: boolean | catalog_itemsDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["vehicle_item_details"]>
+
+  export type vehicle_item_detailsSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    item_id?: boolean
+    business_id?: boolean
+    make?: boolean
+    model_name?: boolean
+    year?: boolean
+    fuel_type?: boolean
+    transmission?: boolean
+    color?: boolean
+    km_driven?: boolean
+    condition?: boolean
+    metadata?: boolean
+    created_at?: boolean
+    updated_at?: boolean
+    business?: boolean | businessesDefaultArgs<ExtArgs>
+    item?: boolean | catalog_itemsDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["vehicle_item_details"]>
+
+  export type vehicle_item_detailsSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    item_id?: boolean
+    business_id?: boolean
+    make?: boolean
+    model_name?: boolean
+    year?: boolean
+    fuel_type?: boolean
+    transmission?: boolean
+    color?: boolean
+    km_driven?: boolean
+    condition?: boolean
+    metadata?: boolean
+    created_at?: boolean
+    updated_at?: boolean
+    business?: boolean | businessesDefaultArgs<ExtArgs>
+    item?: boolean | catalog_itemsDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["vehicle_item_details"]>
+
+  export type vehicle_item_detailsSelectScalar = {
+    item_id?: boolean
+    business_id?: boolean
+    make?: boolean
+    model_name?: boolean
+    year?: boolean
+    fuel_type?: boolean
+    transmission?: boolean
+    color?: boolean
+    km_driven?: boolean
+    condition?: boolean
+    metadata?: boolean
+    created_at?: boolean
+    updated_at?: boolean
+  }
+
+  export type vehicle_item_detailsOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"item_id" | "business_id" | "make" | "model_name" | "year" | "fuel_type" | "transmission" | "color" | "km_driven" | "condition" | "metadata" | "created_at" | "updated_at", ExtArgs["result"]["vehicle_item_details"]>
+  export type vehicle_item_detailsInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    business?: boolean | businessesDefaultArgs<ExtArgs>
+    item?: boolean | catalog_itemsDefaultArgs<ExtArgs>
+  }
+  export type vehicle_item_detailsIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    business?: boolean | businessesDefaultArgs<ExtArgs>
+    item?: boolean | catalog_itemsDefaultArgs<ExtArgs>
+  }
+  export type vehicle_item_detailsIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    business?: boolean | businessesDefaultArgs<ExtArgs>
+    item?: boolean | catalog_itemsDefaultArgs<ExtArgs>
+  }
+
+  export type $vehicle_item_detailsPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "vehicle_item_details"
+    objects: {
+      business: Prisma.$businessesPayload<ExtArgs>
+      item: Prisma.$catalog_itemsPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      item_id: string
+      business_id: string
+      make: string
+      model_name: string
+      year: number
+      fuel_type: string | null
+      transmission: string | null
+      color: string | null
+      km_driven: number | null
+      /**
+       * new | used | certified_pre_owned
+       */
+      condition: string
+      metadata: Prisma.JsonValue | null
+      created_at: Date
+      updated_at: Date
+    }, ExtArgs["result"]["vehicle_item_details"]>
+    composites: {}
+  }
+
+  type vehicle_item_detailsGetPayload<S extends boolean | null | undefined | vehicle_item_detailsDefaultArgs> = $Result.GetResult<Prisma.$vehicle_item_detailsPayload, S>
+
+  type vehicle_item_detailsCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<vehicle_item_detailsFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: Vehicle_item_detailsCountAggregateInputType | true
+    }
+
+  export interface vehicle_item_detailsDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['vehicle_item_details'], meta: { name: 'vehicle_item_details' } }
+    /**
+     * Find zero or one Vehicle_item_details that matches the filter.
+     * @param {vehicle_item_detailsFindUniqueArgs} args - Arguments to find a Vehicle_item_details
+     * @example
+     * // Get one Vehicle_item_details
+     * const vehicle_item_details = await prisma.vehicle_item_details.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends vehicle_item_detailsFindUniqueArgs>(args: SelectSubset<T, vehicle_item_detailsFindUniqueArgs<ExtArgs>>): Prisma__vehicle_item_detailsClient<$Result.GetResult<Prisma.$vehicle_item_detailsPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one Vehicle_item_details that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {vehicle_item_detailsFindUniqueOrThrowArgs} args - Arguments to find a Vehicle_item_details
+     * @example
+     * // Get one Vehicle_item_details
+     * const vehicle_item_details = await prisma.vehicle_item_details.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends vehicle_item_detailsFindUniqueOrThrowArgs>(args: SelectSubset<T, vehicle_item_detailsFindUniqueOrThrowArgs<ExtArgs>>): Prisma__vehicle_item_detailsClient<$Result.GetResult<Prisma.$vehicle_item_detailsPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Vehicle_item_details that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {vehicle_item_detailsFindFirstArgs} args - Arguments to find a Vehicle_item_details
+     * @example
+     * // Get one Vehicle_item_details
+     * const vehicle_item_details = await prisma.vehicle_item_details.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends vehicle_item_detailsFindFirstArgs>(args?: SelectSubset<T, vehicle_item_detailsFindFirstArgs<ExtArgs>>): Prisma__vehicle_item_detailsClient<$Result.GetResult<Prisma.$vehicle_item_detailsPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Vehicle_item_details that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {vehicle_item_detailsFindFirstOrThrowArgs} args - Arguments to find a Vehicle_item_details
+     * @example
+     * // Get one Vehicle_item_details
+     * const vehicle_item_details = await prisma.vehicle_item_details.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends vehicle_item_detailsFindFirstOrThrowArgs>(args?: SelectSubset<T, vehicle_item_detailsFindFirstOrThrowArgs<ExtArgs>>): Prisma__vehicle_item_detailsClient<$Result.GetResult<Prisma.$vehicle_item_detailsPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more Vehicle_item_details that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {vehicle_item_detailsFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all Vehicle_item_details
+     * const vehicle_item_details = await prisma.vehicle_item_details.findMany()
+     * 
+     * // Get first 10 Vehicle_item_details
+     * const vehicle_item_details = await prisma.vehicle_item_details.findMany({ take: 10 })
+     * 
+     * // Only select the `item_id`
+     * const vehicle_item_detailsWithItem_idOnly = await prisma.vehicle_item_details.findMany({ select: { item_id: true } })
+     * 
+     */
+    findMany<T extends vehicle_item_detailsFindManyArgs>(args?: SelectSubset<T, vehicle_item_detailsFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$vehicle_item_detailsPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a Vehicle_item_details.
+     * @param {vehicle_item_detailsCreateArgs} args - Arguments to create a Vehicle_item_details.
+     * @example
+     * // Create one Vehicle_item_details
+     * const Vehicle_item_details = await prisma.vehicle_item_details.create({
+     *   data: {
+     *     // ... data to create a Vehicle_item_details
+     *   }
+     * })
+     * 
+     */
+    create<T extends vehicle_item_detailsCreateArgs>(args: SelectSubset<T, vehicle_item_detailsCreateArgs<ExtArgs>>): Prisma__vehicle_item_detailsClient<$Result.GetResult<Prisma.$vehicle_item_detailsPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many Vehicle_item_details.
+     * @param {vehicle_item_detailsCreateManyArgs} args - Arguments to create many Vehicle_item_details.
+     * @example
+     * // Create many Vehicle_item_details
+     * const vehicle_item_details = await prisma.vehicle_item_details.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends vehicle_item_detailsCreateManyArgs>(args?: SelectSubset<T, vehicle_item_detailsCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many Vehicle_item_details and returns the data saved in the database.
+     * @param {vehicle_item_detailsCreateManyAndReturnArgs} args - Arguments to create many Vehicle_item_details.
+     * @example
+     * // Create many Vehicle_item_details
+     * const vehicle_item_details = await prisma.vehicle_item_details.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many Vehicle_item_details and only return the `item_id`
+     * const vehicle_item_detailsWithItem_idOnly = await prisma.vehicle_item_details.createManyAndReturn({
+     *   select: { item_id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends vehicle_item_detailsCreateManyAndReturnArgs>(args?: SelectSubset<T, vehicle_item_detailsCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$vehicle_item_detailsPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a Vehicle_item_details.
+     * @param {vehicle_item_detailsDeleteArgs} args - Arguments to delete one Vehicle_item_details.
+     * @example
+     * // Delete one Vehicle_item_details
+     * const Vehicle_item_details = await prisma.vehicle_item_details.delete({
+     *   where: {
+     *     // ... filter to delete one Vehicle_item_details
+     *   }
+     * })
+     * 
+     */
+    delete<T extends vehicle_item_detailsDeleteArgs>(args: SelectSubset<T, vehicle_item_detailsDeleteArgs<ExtArgs>>): Prisma__vehicle_item_detailsClient<$Result.GetResult<Prisma.$vehicle_item_detailsPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one Vehicle_item_details.
+     * @param {vehicle_item_detailsUpdateArgs} args - Arguments to update one Vehicle_item_details.
+     * @example
+     * // Update one Vehicle_item_details
+     * const vehicle_item_details = await prisma.vehicle_item_details.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends vehicle_item_detailsUpdateArgs>(args: SelectSubset<T, vehicle_item_detailsUpdateArgs<ExtArgs>>): Prisma__vehicle_item_detailsClient<$Result.GetResult<Prisma.$vehicle_item_detailsPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more Vehicle_item_details.
+     * @param {vehicle_item_detailsDeleteManyArgs} args - Arguments to filter Vehicle_item_details to delete.
+     * @example
+     * // Delete a few Vehicle_item_details
+     * const { count } = await prisma.vehicle_item_details.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends vehicle_item_detailsDeleteManyArgs>(args?: SelectSubset<T, vehicle_item_detailsDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Vehicle_item_details.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {vehicle_item_detailsUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many Vehicle_item_details
+     * const vehicle_item_details = await prisma.vehicle_item_details.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends vehicle_item_detailsUpdateManyArgs>(args: SelectSubset<T, vehicle_item_detailsUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Vehicle_item_details and returns the data updated in the database.
+     * @param {vehicle_item_detailsUpdateManyAndReturnArgs} args - Arguments to update many Vehicle_item_details.
+     * @example
+     * // Update many Vehicle_item_details
+     * const vehicle_item_details = await prisma.vehicle_item_details.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more Vehicle_item_details and only return the `item_id`
+     * const vehicle_item_detailsWithItem_idOnly = await prisma.vehicle_item_details.updateManyAndReturn({
+     *   select: { item_id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends vehicle_item_detailsUpdateManyAndReturnArgs>(args: SelectSubset<T, vehicle_item_detailsUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$vehicle_item_detailsPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one Vehicle_item_details.
+     * @param {vehicle_item_detailsUpsertArgs} args - Arguments to update or create a Vehicle_item_details.
+     * @example
+     * // Update or create a Vehicle_item_details
+     * const vehicle_item_details = await prisma.vehicle_item_details.upsert({
+     *   create: {
+     *     // ... data to create a Vehicle_item_details
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the Vehicle_item_details we want to update
+     *   }
+     * })
+     */
+    upsert<T extends vehicle_item_detailsUpsertArgs>(args: SelectSubset<T, vehicle_item_detailsUpsertArgs<ExtArgs>>): Prisma__vehicle_item_detailsClient<$Result.GetResult<Prisma.$vehicle_item_detailsPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of Vehicle_item_details.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {vehicle_item_detailsCountArgs} args - Arguments to filter Vehicle_item_details to count.
+     * @example
+     * // Count the number of Vehicle_item_details
+     * const count = await prisma.vehicle_item_details.count({
+     *   where: {
+     *     // ... the filter for the Vehicle_item_details we want to count
+     *   }
+     * })
+    **/
+    count<T extends vehicle_item_detailsCountArgs>(
+      args?: Subset<T, vehicle_item_detailsCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], Vehicle_item_detailsCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a Vehicle_item_details.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {Vehicle_item_detailsAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends Vehicle_item_detailsAggregateArgs>(args: Subset<T, Vehicle_item_detailsAggregateArgs>): Prisma.PrismaPromise<GetVehicle_item_detailsAggregateType<T>>
+
+    /**
+     * Group by Vehicle_item_details.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {vehicle_item_detailsGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends vehicle_item_detailsGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: vehicle_item_detailsGroupByArgs['orderBy'] }
+        : { orderBy?: vehicle_item_detailsGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, vehicle_item_detailsGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetVehicle_item_detailsGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the vehicle_item_details model
+   */
+  readonly fields: vehicle_item_detailsFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for vehicle_item_details.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__vehicle_item_detailsClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    business<T extends businessesDefaultArgs<ExtArgs> = {}>(args?: Subset<T, businessesDefaultArgs<ExtArgs>>): Prisma__businessesClient<$Result.GetResult<Prisma.$businessesPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    item<T extends catalog_itemsDefaultArgs<ExtArgs> = {}>(args?: Subset<T, catalog_itemsDefaultArgs<ExtArgs>>): Prisma__catalog_itemsClient<$Result.GetResult<Prisma.$catalog_itemsPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the vehicle_item_details model
+   */
+  interface vehicle_item_detailsFieldRefs {
+    readonly item_id: FieldRef<"vehicle_item_details", 'String'>
+    readonly business_id: FieldRef<"vehicle_item_details", 'String'>
+    readonly make: FieldRef<"vehicle_item_details", 'String'>
+    readonly model_name: FieldRef<"vehicle_item_details", 'String'>
+    readonly year: FieldRef<"vehicle_item_details", 'Int'>
+    readonly fuel_type: FieldRef<"vehicle_item_details", 'String'>
+    readonly transmission: FieldRef<"vehicle_item_details", 'String'>
+    readonly color: FieldRef<"vehicle_item_details", 'String'>
+    readonly km_driven: FieldRef<"vehicle_item_details", 'Int'>
+    readonly condition: FieldRef<"vehicle_item_details", 'String'>
+    readonly metadata: FieldRef<"vehicle_item_details", 'Json'>
+    readonly created_at: FieldRef<"vehicle_item_details", 'DateTime'>
+    readonly updated_at: FieldRef<"vehicle_item_details", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * vehicle_item_details findUnique
+   */
+  export type vehicle_item_detailsFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the vehicle_item_details
+     */
+    select?: vehicle_item_detailsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the vehicle_item_details
+     */
+    omit?: vehicle_item_detailsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: vehicle_item_detailsInclude<ExtArgs> | null
+    /**
+     * Filter, which vehicle_item_details to fetch.
+     */
+    where: vehicle_item_detailsWhereUniqueInput
+  }
+
+  /**
+   * vehicle_item_details findUniqueOrThrow
+   */
+  export type vehicle_item_detailsFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the vehicle_item_details
+     */
+    select?: vehicle_item_detailsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the vehicle_item_details
+     */
+    omit?: vehicle_item_detailsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: vehicle_item_detailsInclude<ExtArgs> | null
+    /**
+     * Filter, which vehicle_item_details to fetch.
+     */
+    where: vehicle_item_detailsWhereUniqueInput
+  }
+
+  /**
+   * vehicle_item_details findFirst
+   */
+  export type vehicle_item_detailsFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the vehicle_item_details
+     */
+    select?: vehicle_item_detailsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the vehicle_item_details
+     */
+    omit?: vehicle_item_detailsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: vehicle_item_detailsInclude<ExtArgs> | null
+    /**
+     * Filter, which vehicle_item_details to fetch.
+     */
+    where?: vehicle_item_detailsWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of vehicle_item_details to fetch.
+     */
+    orderBy?: vehicle_item_detailsOrderByWithRelationInput | vehicle_item_detailsOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for vehicle_item_details.
+     */
+    cursor?: vehicle_item_detailsWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` vehicle_item_details from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` vehicle_item_details.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of vehicle_item_details.
+     */
+    distinct?: Vehicle_item_detailsScalarFieldEnum | Vehicle_item_detailsScalarFieldEnum[]
+  }
+
+  /**
+   * vehicle_item_details findFirstOrThrow
+   */
+  export type vehicle_item_detailsFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the vehicle_item_details
+     */
+    select?: vehicle_item_detailsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the vehicle_item_details
+     */
+    omit?: vehicle_item_detailsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: vehicle_item_detailsInclude<ExtArgs> | null
+    /**
+     * Filter, which vehicle_item_details to fetch.
+     */
+    where?: vehicle_item_detailsWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of vehicle_item_details to fetch.
+     */
+    orderBy?: vehicle_item_detailsOrderByWithRelationInput | vehicle_item_detailsOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for vehicle_item_details.
+     */
+    cursor?: vehicle_item_detailsWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` vehicle_item_details from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` vehicle_item_details.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of vehicle_item_details.
+     */
+    distinct?: Vehicle_item_detailsScalarFieldEnum | Vehicle_item_detailsScalarFieldEnum[]
+  }
+
+  /**
+   * vehicle_item_details findMany
+   */
+  export type vehicle_item_detailsFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the vehicle_item_details
+     */
+    select?: vehicle_item_detailsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the vehicle_item_details
+     */
+    omit?: vehicle_item_detailsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: vehicle_item_detailsInclude<ExtArgs> | null
+    /**
+     * Filter, which vehicle_item_details to fetch.
+     */
+    where?: vehicle_item_detailsWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of vehicle_item_details to fetch.
+     */
+    orderBy?: vehicle_item_detailsOrderByWithRelationInput | vehicle_item_detailsOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing vehicle_item_details.
+     */
+    cursor?: vehicle_item_detailsWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` vehicle_item_details from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` vehicle_item_details.
+     */
+    skip?: number
+    distinct?: Vehicle_item_detailsScalarFieldEnum | Vehicle_item_detailsScalarFieldEnum[]
+  }
+
+  /**
+   * vehicle_item_details create
+   */
+  export type vehicle_item_detailsCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the vehicle_item_details
+     */
+    select?: vehicle_item_detailsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the vehicle_item_details
+     */
+    omit?: vehicle_item_detailsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: vehicle_item_detailsInclude<ExtArgs> | null
+    /**
+     * The data needed to create a vehicle_item_details.
+     */
+    data: XOR<vehicle_item_detailsCreateInput, vehicle_item_detailsUncheckedCreateInput>
+  }
+
+  /**
+   * vehicle_item_details createMany
+   */
+  export type vehicle_item_detailsCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many vehicle_item_details.
+     */
+    data: vehicle_item_detailsCreateManyInput | vehicle_item_detailsCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * vehicle_item_details createManyAndReturn
+   */
+  export type vehicle_item_detailsCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the vehicle_item_details
+     */
+    select?: vehicle_item_detailsSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the vehicle_item_details
+     */
+    omit?: vehicle_item_detailsOmit<ExtArgs> | null
+    /**
+     * The data used to create many vehicle_item_details.
+     */
+    data: vehicle_item_detailsCreateManyInput | vehicle_item_detailsCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: vehicle_item_detailsIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * vehicle_item_details update
+   */
+  export type vehicle_item_detailsUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the vehicle_item_details
+     */
+    select?: vehicle_item_detailsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the vehicle_item_details
+     */
+    omit?: vehicle_item_detailsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: vehicle_item_detailsInclude<ExtArgs> | null
+    /**
+     * The data needed to update a vehicle_item_details.
+     */
+    data: XOR<vehicle_item_detailsUpdateInput, vehicle_item_detailsUncheckedUpdateInput>
+    /**
+     * Choose, which vehicle_item_details to update.
+     */
+    where: vehicle_item_detailsWhereUniqueInput
+  }
+
+  /**
+   * vehicle_item_details updateMany
+   */
+  export type vehicle_item_detailsUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update vehicle_item_details.
+     */
+    data: XOR<vehicle_item_detailsUpdateManyMutationInput, vehicle_item_detailsUncheckedUpdateManyInput>
+    /**
+     * Filter which vehicle_item_details to update
+     */
+    where?: vehicle_item_detailsWhereInput
+    /**
+     * Limit how many vehicle_item_details to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * vehicle_item_details updateManyAndReturn
+   */
+  export type vehicle_item_detailsUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the vehicle_item_details
+     */
+    select?: vehicle_item_detailsSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the vehicle_item_details
+     */
+    omit?: vehicle_item_detailsOmit<ExtArgs> | null
+    /**
+     * The data used to update vehicle_item_details.
+     */
+    data: XOR<vehicle_item_detailsUpdateManyMutationInput, vehicle_item_detailsUncheckedUpdateManyInput>
+    /**
+     * Filter which vehicle_item_details to update
+     */
+    where?: vehicle_item_detailsWhereInput
+    /**
+     * Limit how many vehicle_item_details to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: vehicle_item_detailsIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * vehicle_item_details upsert
+   */
+  export type vehicle_item_detailsUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the vehicle_item_details
+     */
+    select?: vehicle_item_detailsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the vehicle_item_details
+     */
+    omit?: vehicle_item_detailsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: vehicle_item_detailsInclude<ExtArgs> | null
+    /**
+     * The filter to search for the vehicle_item_details to update in case it exists.
+     */
+    where: vehicle_item_detailsWhereUniqueInput
+    /**
+     * In case the vehicle_item_details found by the `where` argument doesn't exist, create a new vehicle_item_details with this data.
+     */
+    create: XOR<vehicle_item_detailsCreateInput, vehicle_item_detailsUncheckedCreateInput>
+    /**
+     * In case the vehicle_item_details was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<vehicle_item_detailsUpdateInput, vehicle_item_detailsUncheckedUpdateInput>
+  }
+
+  /**
+   * vehicle_item_details delete
+   */
+  export type vehicle_item_detailsDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the vehicle_item_details
+     */
+    select?: vehicle_item_detailsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the vehicle_item_details
+     */
+    omit?: vehicle_item_detailsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: vehicle_item_detailsInclude<ExtArgs> | null
+    /**
+     * Filter which vehicle_item_details to delete.
+     */
+    where: vehicle_item_detailsWhereUniqueInput
+  }
+
+  /**
+   * vehicle_item_details deleteMany
+   */
+  export type vehicle_item_detailsDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which vehicle_item_details to delete
+     */
+    where?: vehicle_item_detailsWhereInput
+    /**
+     * Limit how many vehicle_item_details to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * vehicle_item_details without action
+   */
+  export type vehicle_item_detailsDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the vehicle_item_details
+     */
+    select?: vehicle_item_detailsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the vehicle_item_details
+     */
+    omit?: vehicle_item_detailsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: vehicle_item_detailsInclude<ExtArgs> | null
   }
 
 
@@ -90374,6 +92072,7 @@ export namespace Prisma {
     ai_agent_enabled: boolean | null
     auto_reply_enabled: boolean | null
     low_balance_alert: Decimal | null
+    default_country_code: string | null
     updated_at: Date | null
   }
 
@@ -90387,6 +92086,7 @@ export namespace Prisma {
     ai_agent_enabled: boolean | null
     auto_reply_enabled: boolean | null
     low_balance_alert: Decimal | null
+    default_country_code: string | null
     updated_at: Date | null
   }
 
@@ -90403,6 +92103,7 @@ export namespace Prisma {
     booking_methods: number
     booking_link: number
     low_balance_alert: number
+    default_country_code: number
     updated_at: number
     _all: number
   }
@@ -90428,6 +92129,7 @@ export namespace Prisma {
     ai_agent_enabled?: true
     auto_reply_enabled?: true
     low_balance_alert?: true
+    default_country_code?: true
     updated_at?: true
   }
 
@@ -90441,6 +92143,7 @@ export namespace Prisma {
     ai_agent_enabled?: true
     auto_reply_enabled?: true
     low_balance_alert?: true
+    default_country_code?: true
     updated_at?: true
   }
 
@@ -90457,6 +92160,7 @@ export namespace Prisma {
     booking_methods?: true
     booking_link?: true
     low_balance_alert?: true
+    default_country_code?: true
     updated_at?: true
     _all?: true
   }
@@ -90560,6 +92264,7 @@ export namespace Prisma {
     booking_methods: JsonValue
     booking_link: JsonValue
     low_balance_alert: Decimal
+    default_country_code: string
     updated_at: Date
     _count: Business_settingsCountAggregateOutputType | null
     _avg: Business_settingsAvgAggregateOutputType | null
@@ -90595,6 +92300,7 @@ export namespace Prisma {
     booking_methods?: boolean
     booking_link?: boolean
     low_balance_alert?: boolean
+    default_country_code?: boolean
     updated_at?: boolean
     businesses?: boolean | businessesDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["business_settings"]>
@@ -90612,6 +92318,7 @@ export namespace Prisma {
     booking_methods?: boolean
     booking_link?: boolean
     low_balance_alert?: boolean
+    default_country_code?: boolean
     updated_at?: boolean
     businesses?: boolean | businessesDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["business_settings"]>
@@ -90629,6 +92336,7 @@ export namespace Prisma {
     booking_methods?: boolean
     booking_link?: boolean
     low_balance_alert?: boolean
+    default_country_code?: boolean
     updated_at?: boolean
     businesses?: boolean | businessesDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["business_settings"]>
@@ -90646,10 +92354,11 @@ export namespace Prisma {
     booking_methods?: boolean
     booking_link?: boolean
     low_balance_alert?: boolean
+    default_country_code?: boolean
     updated_at?: boolean
   }
 
-  export type business_settingsOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"business_id" | "timezone" | "language" | "currency" | "business_hours" | "onboarding_step" | "onboarding_done" | "ai_agent_enabled" | "auto_reply_enabled" | "booking_methods" | "booking_link" | "low_balance_alert" | "updated_at", ExtArgs["result"]["business_settings"]>
+  export type business_settingsOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"business_id" | "timezone" | "language" | "currency" | "business_hours" | "onboarding_step" | "onboarding_done" | "ai_agent_enabled" | "auto_reply_enabled" | "booking_methods" | "booking_link" | "low_balance_alert" | "default_country_code" | "updated_at", ExtArgs["result"]["business_settings"]>
   export type business_settingsInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     businesses?: boolean | businessesDefaultArgs<ExtArgs>
   }
@@ -90678,6 +92387,13 @@ export namespace Prisma {
       booking_methods: Prisma.JsonValue
       booking_link: Prisma.JsonValue
       low_balance_alert: Prisma.Decimal
+      /**
+       * E.164-style dial code without the "+" (e.g. "91" for India, "1" for US).
+       * Used to canonicalise leads.phone so the same human entering "9539192684"
+       * on the booking form and messaging "919539192684" on WhatsApp resolves to
+       * one lead row.
+       */
+      default_country_code: string
       updated_at: Date
     }, ExtArgs["result"]["business_settings"]>
     composites: {}
@@ -91115,6 +92831,7 @@ export namespace Prisma {
     readonly booking_methods: FieldRef<"business_settings", 'Json'>
     readonly booking_link: FieldRef<"business_settings", 'Json'>
     readonly low_balance_alert: FieldRef<"business_settings", 'Decimal'>
+    readonly default_country_code: FieldRef<"business_settings", 'String'>
     readonly updated_at: FieldRef<"business_settings", 'DateTime'>
   }
     
@@ -92686,6 +94403,2306 @@ export namespace Prisma {
 
 
   /**
+   * Model lead_item_interests
+   */
+
+  export type AggregateLead_item_interests = {
+    _count: Lead_item_interestsCountAggregateOutputType | null
+    _avg: Lead_item_interestsAvgAggregateOutputType | null
+    _sum: Lead_item_interestsSumAggregateOutputType | null
+    _min: Lead_item_interestsMinAggregateOutputType | null
+    _max: Lead_item_interestsMaxAggregateOutputType | null
+  }
+
+  export type Lead_item_interestsAvgAggregateOutputType = {
+    last_price_seen: Decimal | null
+  }
+
+  export type Lead_item_interestsSumAggregateOutputType = {
+    last_price_seen: Decimal | null
+  }
+
+  export type Lead_item_interestsMinAggregateOutputType = {
+    interest_id: string | null
+    lead_id: string | null
+    business_id: string | null
+    item_id: string | null
+    item_type: string | null
+    item_name: string | null
+    interest_level: string | null
+    last_price_seen: Decimal | null
+    is_alert_active: boolean | null
+    created_at: Date | null
+    updated_at: Date | null
+  }
+
+  export type Lead_item_interestsMaxAggregateOutputType = {
+    interest_id: string | null
+    lead_id: string | null
+    business_id: string | null
+    item_id: string | null
+    item_type: string | null
+    item_name: string | null
+    interest_level: string | null
+    last_price_seen: Decimal | null
+    is_alert_active: boolean | null
+    created_at: Date | null
+    updated_at: Date | null
+  }
+
+  export type Lead_item_interestsCountAggregateOutputType = {
+    interest_id: number
+    lead_id: number
+    business_id: number
+    item_id: number
+    item_type: number
+    item_name: number
+    interest_level: number
+    last_price_seen: number
+    is_alert_active: number
+    created_at: number
+    updated_at: number
+    _all: number
+  }
+
+
+  export type Lead_item_interestsAvgAggregateInputType = {
+    last_price_seen?: true
+  }
+
+  export type Lead_item_interestsSumAggregateInputType = {
+    last_price_seen?: true
+  }
+
+  export type Lead_item_interestsMinAggregateInputType = {
+    interest_id?: true
+    lead_id?: true
+    business_id?: true
+    item_id?: true
+    item_type?: true
+    item_name?: true
+    interest_level?: true
+    last_price_seen?: true
+    is_alert_active?: true
+    created_at?: true
+    updated_at?: true
+  }
+
+  export type Lead_item_interestsMaxAggregateInputType = {
+    interest_id?: true
+    lead_id?: true
+    business_id?: true
+    item_id?: true
+    item_type?: true
+    item_name?: true
+    interest_level?: true
+    last_price_seen?: true
+    is_alert_active?: true
+    created_at?: true
+    updated_at?: true
+  }
+
+  export type Lead_item_interestsCountAggregateInputType = {
+    interest_id?: true
+    lead_id?: true
+    business_id?: true
+    item_id?: true
+    item_type?: true
+    item_name?: true
+    interest_level?: true
+    last_price_seen?: true
+    is_alert_active?: true
+    created_at?: true
+    updated_at?: true
+    _all?: true
+  }
+
+  export type Lead_item_interestsAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which lead_item_interests to aggregate.
+     */
+    where?: lead_item_interestsWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of lead_item_interests to fetch.
+     */
+    orderBy?: lead_item_interestsOrderByWithRelationInput | lead_item_interestsOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: lead_item_interestsWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` lead_item_interests from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` lead_item_interests.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned lead_item_interests
+    **/
+    _count?: true | Lead_item_interestsCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: Lead_item_interestsAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: Lead_item_interestsSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: Lead_item_interestsMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: Lead_item_interestsMaxAggregateInputType
+  }
+
+  export type GetLead_item_interestsAggregateType<T extends Lead_item_interestsAggregateArgs> = {
+        [P in keyof T & keyof AggregateLead_item_interests]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateLead_item_interests[P]>
+      : GetScalarType<T[P], AggregateLead_item_interests[P]>
+  }
+
+
+
+
+  export type lead_item_interestsGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: lead_item_interestsWhereInput
+    orderBy?: lead_item_interestsOrderByWithAggregationInput | lead_item_interestsOrderByWithAggregationInput[]
+    by: Lead_item_interestsScalarFieldEnum[] | Lead_item_interestsScalarFieldEnum
+    having?: lead_item_interestsScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: Lead_item_interestsCountAggregateInputType | true
+    _avg?: Lead_item_interestsAvgAggregateInputType
+    _sum?: Lead_item_interestsSumAggregateInputType
+    _min?: Lead_item_interestsMinAggregateInputType
+    _max?: Lead_item_interestsMaxAggregateInputType
+  }
+
+  export type Lead_item_interestsGroupByOutputType = {
+    interest_id: string
+    lead_id: string
+    business_id: string
+    item_id: string | null
+    item_type: string
+    item_name: string
+    interest_level: string
+    last_price_seen: Decimal | null
+    is_alert_active: boolean
+    created_at: Date
+    updated_at: Date
+    _count: Lead_item_interestsCountAggregateOutputType | null
+    _avg: Lead_item_interestsAvgAggregateOutputType | null
+    _sum: Lead_item_interestsSumAggregateOutputType | null
+    _min: Lead_item_interestsMinAggregateOutputType | null
+    _max: Lead_item_interestsMaxAggregateOutputType | null
+  }
+
+  type GetLead_item_interestsGroupByPayload<T extends lead_item_interestsGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<Lead_item_interestsGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof Lead_item_interestsGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], Lead_item_interestsGroupByOutputType[P]>
+            : GetScalarType<T[P], Lead_item_interestsGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type lead_item_interestsSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    interest_id?: boolean
+    lead_id?: boolean
+    business_id?: boolean
+    item_id?: boolean
+    item_type?: boolean
+    item_name?: boolean
+    interest_level?: boolean
+    last_price_seen?: boolean
+    is_alert_active?: boolean
+    created_at?: boolean
+    updated_at?: boolean
+    leads?: boolean | leadsDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["lead_item_interests"]>
+
+  export type lead_item_interestsSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    interest_id?: boolean
+    lead_id?: boolean
+    business_id?: boolean
+    item_id?: boolean
+    item_type?: boolean
+    item_name?: boolean
+    interest_level?: boolean
+    last_price_seen?: boolean
+    is_alert_active?: boolean
+    created_at?: boolean
+    updated_at?: boolean
+    leads?: boolean | leadsDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["lead_item_interests"]>
+
+  export type lead_item_interestsSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    interest_id?: boolean
+    lead_id?: boolean
+    business_id?: boolean
+    item_id?: boolean
+    item_type?: boolean
+    item_name?: boolean
+    interest_level?: boolean
+    last_price_seen?: boolean
+    is_alert_active?: boolean
+    created_at?: boolean
+    updated_at?: boolean
+    leads?: boolean | leadsDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["lead_item_interests"]>
+
+  export type lead_item_interestsSelectScalar = {
+    interest_id?: boolean
+    lead_id?: boolean
+    business_id?: boolean
+    item_id?: boolean
+    item_type?: boolean
+    item_name?: boolean
+    interest_level?: boolean
+    last_price_seen?: boolean
+    is_alert_active?: boolean
+    created_at?: boolean
+    updated_at?: boolean
+  }
+
+  export type lead_item_interestsOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"interest_id" | "lead_id" | "business_id" | "item_id" | "item_type" | "item_name" | "interest_level" | "last_price_seen" | "is_alert_active" | "created_at" | "updated_at", ExtArgs["result"]["lead_item_interests"]>
+  export type lead_item_interestsInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    leads?: boolean | leadsDefaultArgs<ExtArgs>
+  }
+  export type lead_item_interestsIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    leads?: boolean | leadsDefaultArgs<ExtArgs>
+  }
+  export type lead_item_interestsIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    leads?: boolean | leadsDefaultArgs<ExtArgs>
+  }
+
+  export type $lead_item_interestsPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "lead_item_interests"
+    objects: {
+      leads: Prisma.$leadsPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      interest_id: string
+      lead_id: string
+      business_id: string
+      /**
+       * UUID of the item (vehicle_inventory.vehicle_id, catalog_items.item_id, etc.) — nullable for free-text items
+       */
+      item_id: string | null
+      /**
+       * vehicle | catalog_item | property | course | activity
+       */
+      item_type: string
+      item_name: string
+      /**
+       * viewed | price_checked | visit_requested
+       */
+      interest_level: string
+      last_price_seen: Prisma.Decimal | null
+      /**
+       * true when lead tapped "notify me" — only these leads get campaigns
+       */
+      is_alert_active: boolean
+      created_at: Date
+      updated_at: Date
+    }, ExtArgs["result"]["lead_item_interests"]>
+    composites: {}
+  }
+
+  type lead_item_interestsGetPayload<S extends boolean | null | undefined | lead_item_interestsDefaultArgs> = $Result.GetResult<Prisma.$lead_item_interestsPayload, S>
+
+  type lead_item_interestsCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<lead_item_interestsFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: Lead_item_interestsCountAggregateInputType | true
+    }
+
+  export interface lead_item_interestsDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['lead_item_interests'], meta: { name: 'lead_item_interests' } }
+    /**
+     * Find zero or one Lead_item_interests that matches the filter.
+     * @param {lead_item_interestsFindUniqueArgs} args - Arguments to find a Lead_item_interests
+     * @example
+     * // Get one Lead_item_interests
+     * const lead_item_interests = await prisma.lead_item_interests.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends lead_item_interestsFindUniqueArgs>(args: SelectSubset<T, lead_item_interestsFindUniqueArgs<ExtArgs>>): Prisma__lead_item_interestsClient<$Result.GetResult<Prisma.$lead_item_interestsPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one Lead_item_interests that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {lead_item_interestsFindUniqueOrThrowArgs} args - Arguments to find a Lead_item_interests
+     * @example
+     * // Get one Lead_item_interests
+     * const lead_item_interests = await prisma.lead_item_interests.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends lead_item_interestsFindUniqueOrThrowArgs>(args: SelectSubset<T, lead_item_interestsFindUniqueOrThrowArgs<ExtArgs>>): Prisma__lead_item_interestsClient<$Result.GetResult<Prisma.$lead_item_interestsPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Lead_item_interests that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {lead_item_interestsFindFirstArgs} args - Arguments to find a Lead_item_interests
+     * @example
+     * // Get one Lead_item_interests
+     * const lead_item_interests = await prisma.lead_item_interests.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends lead_item_interestsFindFirstArgs>(args?: SelectSubset<T, lead_item_interestsFindFirstArgs<ExtArgs>>): Prisma__lead_item_interestsClient<$Result.GetResult<Prisma.$lead_item_interestsPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Lead_item_interests that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {lead_item_interestsFindFirstOrThrowArgs} args - Arguments to find a Lead_item_interests
+     * @example
+     * // Get one Lead_item_interests
+     * const lead_item_interests = await prisma.lead_item_interests.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends lead_item_interestsFindFirstOrThrowArgs>(args?: SelectSubset<T, lead_item_interestsFindFirstOrThrowArgs<ExtArgs>>): Prisma__lead_item_interestsClient<$Result.GetResult<Prisma.$lead_item_interestsPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more Lead_item_interests that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {lead_item_interestsFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all Lead_item_interests
+     * const lead_item_interests = await prisma.lead_item_interests.findMany()
+     * 
+     * // Get first 10 Lead_item_interests
+     * const lead_item_interests = await prisma.lead_item_interests.findMany({ take: 10 })
+     * 
+     * // Only select the `interest_id`
+     * const lead_item_interestsWithInterest_idOnly = await prisma.lead_item_interests.findMany({ select: { interest_id: true } })
+     * 
+     */
+    findMany<T extends lead_item_interestsFindManyArgs>(args?: SelectSubset<T, lead_item_interestsFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$lead_item_interestsPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a Lead_item_interests.
+     * @param {lead_item_interestsCreateArgs} args - Arguments to create a Lead_item_interests.
+     * @example
+     * // Create one Lead_item_interests
+     * const Lead_item_interests = await prisma.lead_item_interests.create({
+     *   data: {
+     *     // ... data to create a Lead_item_interests
+     *   }
+     * })
+     * 
+     */
+    create<T extends lead_item_interestsCreateArgs>(args: SelectSubset<T, lead_item_interestsCreateArgs<ExtArgs>>): Prisma__lead_item_interestsClient<$Result.GetResult<Prisma.$lead_item_interestsPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many Lead_item_interests.
+     * @param {lead_item_interestsCreateManyArgs} args - Arguments to create many Lead_item_interests.
+     * @example
+     * // Create many Lead_item_interests
+     * const lead_item_interests = await prisma.lead_item_interests.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends lead_item_interestsCreateManyArgs>(args?: SelectSubset<T, lead_item_interestsCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many Lead_item_interests and returns the data saved in the database.
+     * @param {lead_item_interestsCreateManyAndReturnArgs} args - Arguments to create many Lead_item_interests.
+     * @example
+     * // Create many Lead_item_interests
+     * const lead_item_interests = await prisma.lead_item_interests.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many Lead_item_interests and only return the `interest_id`
+     * const lead_item_interestsWithInterest_idOnly = await prisma.lead_item_interests.createManyAndReturn({
+     *   select: { interest_id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends lead_item_interestsCreateManyAndReturnArgs>(args?: SelectSubset<T, lead_item_interestsCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$lead_item_interestsPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a Lead_item_interests.
+     * @param {lead_item_interestsDeleteArgs} args - Arguments to delete one Lead_item_interests.
+     * @example
+     * // Delete one Lead_item_interests
+     * const Lead_item_interests = await prisma.lead_item_interests.delete({
+     *   where: {
+     *     // ... filter to delete one Lead_item_interests
+     *   }
+     * })
+     * 
+     */
+    delete<T extends lead_item_interestsDeleteArgs>(args: SelectSubset<T, lead_item_interestsDeleteArgs<ExtArgs>>): Prisma__lead_item_interestsClient<$Result.GetResult<Prisma.$lead_item_interestsPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one Lead_item_interests.
+     * @param {lead_item_interestsUpdateArgs} args - Arguments to update one Lead_item_interests.
+     * @example
+     * // Update one Lead_item_interests
+     * const lead_item_interests = await prisma.lead_item_interests.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends lead_item_interestsUpdateArgs>(args: SelectSubset<T, lead_item_interestsUpdateArgs<ExtArgs>>): Prisma__lead_item_interestsClient<$Result.GetResult<Prisma.$lead_item_interestsPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more Lead_item_interests.
+     * @param {lead_item_interestsDeleteManyArgs} args - Arguments to filter Lead_item_interests to delete.
+     * @example
+     * // Delete a few Lead_item_interests
+     * const { count } = await prisma.lead_item_interests.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends lead_item_interestsDeleteManyArgs>(args?: SelectSubset<T, lead_item_interestsDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Lead_item_interests.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {lead_item_interestsUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many Lead_item_interests
+     * const lead_item_interests = await prisma.lead_item_interests.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends lead_item_interestsUpdateManyArgs>(args: SelectSubset<T, lead_item_interestsUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Lead_item_interests and returns the data updated in the database.
+     * @param {lead_item_interestsUpdateManyAndReturnArgs} args - Arguments to update many Lead_item_interests.
+     * @example
+     * // Update many Lead_item_interests
+     * const lead_item_interests = await prisma.lead_item_interests.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more Lead_item_interests and only return the `interest_id`
+     * const lead_item_interestsWithInterest_idOnly = await prisma.lead_item_interests.updateManyAndReturn({
+     *   select: { interest_id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends lead_item_interestsUpdateManyAndReturnArgs>(args: SelectSubset<T, lead_item_interestsUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$lead_item_interestsPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one Lead_item_interests.
+     * @param {lead_item_interestsUpsertArgs} args - Arguments to update or create a Lead_item_interests.
+     * @example
+     * // Update or create a Lead_item_interests
+     * const lead_item_interests = await prisma.lead_item_interests.upsert({
+     *   create: {
+     *     // ... data to create a Lead_item_interests
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the Lead_item_interests we want to update
+     *   }
+     * })
+     */
+    upsert<T extends lead_item_interestsUpsertArgs>(args: SelectSubset<T, lead_item_interestsUpsertArgs<ExtArgs>>): Prisma__lead_item_interestsClient<$Result.GetResult<Prisma.$lead_item_interestsPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of Lead_item_interests.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {lead_item_interestsCountArgs} args - Arguments to filter Lead_item_interests to count.
+     * @example
+     * // Count the number of Lead_item_interests
+     * const count = await prisma.lead_item_interests.count({
+     *   where: {
+     *     // ... the filter for the Lead_item_interests we want to count
+     *   }
+     * })
+    **/
+    count<T extends lead_item_interestsCountArgs>(
+      args?: Subset<T, lead_item_interestsCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], Lead_item_interestsCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a Lead_item_interests.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {Lead_item_interestsAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends Lead_item_interestsAggregateArgs>(args: Subset<T, Lead_item_interestsAggregateArgs>): Prisma.PrismaPromise<GetLead_item_interestsAggregateType<T>>
+
+    /**
+     * Group by Lead_item_interests.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {lead_item_interestsGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends lead_item_interestsGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: lead_item_interestsGroupByArgs['orderBy'] }
+        : { orderBy?: lead_item_interestsGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, lead_item_interestsGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetLead_item_interestsGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the lead_item_interests model
+   */
+  readonly fields: lead_item_interestsFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for lead_item_interests.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__lead_item_interestsClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    leads<T extends leadsDefaultArgs<ExtArgs> = {}>(args?: Subset<T, leadsDefaultArgs<ExtArgs>>): Prisma__leadsClient<$Result.GetResult<Prisma.$leadsPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the lead_item_interests model
+   */
+  interface lead_item_interestsFieldRefs {
+    readonly interest_id: FieldRef<"lead_item_interests", 'String'>
+    readonly lead_id: FieldRef<"lead_item_interests", 'String'>
+    readonly business_id: FieldRef<"lead_item_interests", 'String'>
+    readonly item_id: FieldRef<"lead_item_interests", 'String'>
+    readonly item_type: FieldRef<"lead_item_interests", 'String'>
+    readonly item_name: FieldRef<"lead_item_interests", 'String'>
+    readonly interest_level: FieldRef<"lead_item_interests", 'String'>
+    readonly last_price_seen: FieldRef<"lead_item_interests", 'Decimal'>
+    readonly is_alert_active: FieldRef<"lead_item_interests", 'Boolean'>
+    readonly created_at: FieldRef<"lead_item_interests", 'DateTime'>
+    readonly updated_at: FieldRef<"lead_item_interests", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * lead_item_interests findUnique
+   */
+  export type lead_item_interestsFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the lead_item_interests
+     */
+    select?: lead_item_interestsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the lead_item_interests
+     */
+    omit?: lead_item_interestsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: lead_item_interestsInclude<ExtArgs> | null
+    /**
+     * Filter, which lead_item_interests to fetch.
+     */
+    where: lead_item_interestsWhereUniqueInput
+  }
+
+  /**
+   * lead_item_interests findUniqueOrThrow
+   */
+  export type lead_item_interestsFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the lead_item_interests
+     */
+    select?: lead_item_interestsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the lead_item_interests
+     */
+    omit?: lead_item_interestsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: lead_item_interestsInclude<ExtArgs> | null
+    /**
+     * Filter, which lead_item_interests to fetch.
+     */
+    where: lead_item_interestsWhereUniqueInput
+  }
+
+  /**
+   * lead_item_interests findFirst
+   */
+  export type lead_item_interestsFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the lead_item_interests
+     */
+    select?: lead_item_interestsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the lead_item_interests
+     */
+    omit?: lead_item_interestsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: lead_item_interestsInclude<ExtArgs> | null
+    /**
+     * Filter, which lead_item_interests to fetch.
+     */
+    where?: lead_item_interestsWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of lead_item_interests to fetch.
+     */
+    orderBy?: lead_item_interestsOrderByWithRelationInput | lead_item_interestsOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for lead_item_interests.
+     */
+    cursor?: lead_item_interestsWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` lead_item_interests from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` lead_item_interests.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of lead_item_interests.
+     */
+    distinct?: Lead_item_interestsScalarFieldEnum | Lead_item_interestsScalarFieldEnum[]
+  }
+
+  /**
+   * lead_item_interests findFirstOrThrow
+   */
+  export type lead_item_interestsFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the lead_item_interests
+     */
+    select?: lead_item_interestsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the lead_item_interests
+     */
+    omit?: lead_item_interestsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: lead_item_interestsInclude<ExtArgs> | null
+    /**
+     * Filter, which lead_item_interests to fetch.
+     */
+    where?: lead_item_interestsWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of lead_item_interests to fetch.
+     */
+    orderBy?: lead_item_interestsOrderByWithRelationInput | lead_item_interestsOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for lead_item_interests.
+     */
+    cursor?: lead_item_interestsWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` lead_item_interests from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` lead_item_interests.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of lead_item_interests.
+     */
+    distinct?: Lead_item_interestsScalarFieldEnum | Lead_item_interestsScalarFieldEnum[]
+  }
+
+  /**
+   * lead_item_interests findMany
+   */
+  export type lead_item_interestsFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the lead_item_interests
+     */
+    select?: lead_item_interestsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the lead_item_interests
+     */
+    omit?: lead_item_interestsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: lead_item_interestsInclude<ExtArgs> | null
+    /**
+     * Filter, which lead_item_interests to fetch.
+     */
+    where?: lead_item_interestsWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of lead_item_interests to fetch.
+     */
+    orderBy?: lead_item_interestsOrderByWithRelationInput | lead_item_interestsOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing lead_item_interests.
+     */
+    cursor?: lead_item_interestsWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` lead_item_interests from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` lead_item_interests.
+     */
+    skip?: number
+    distinct?: Lead_item_interestsScalarFieldEnum | Lead_item_interestsScalarFieldEnum[]
+  }
+
+  /**
+   * lead_item_interests create
+   */
+  export type lead_item_interestsCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the lead_item_interests
+     */
+    select?: lead_item_interestsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the lead_item_interests
+     */
+    omit?: lead_item_interestsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: lead_item_interestsInclude<ExtArgs> | null
+    /**
+     * The data needed to create a lead_item_interests.
+     */
+    data: XOR<lead_item_interestsCreateInput, lead_item_interestsUncheckedCreateInput>
+  }
+
+  /**
+   * lead_item_interests createMany
+   */
+  export type lead_item_interestsCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many lead_item_interests.
+     */
+    data: lead_item_interestsCreateManyInput | lead_item_interestsCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * lead_item_interests createManyAndReturn
+   */
+  export type lead_item_interestsCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the lead_item_interests
+     */
+    select?: lead_item_interestsSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the lead_item_interests
+     */
+    omit?: lead_item_interestsOmit<ExtArgs> | null
+    /**
+     * The data used to create many lead_item_interests.
+     */
+    data: lead_item_interestsCreateManyInput | lead_item_interestsCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: lead_item_interestsIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * lead_item_interests update
+   */
+  export type lead_item_interestsUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the lead_item_interests
+     */
+    select?: lead_item_interestsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the lead_item_interests
+     */
+    omit?: lead_item_interestsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: lead_item_interestsInclude<ExtArgs> | null
+    /**
+     * The data needed to update a lead_item_interests.
+     */
+    data: XOR<lead_item_interestsUpdateInput, lead_item_interestsUncheckedUpdateInput>
+    /**
+     * Choose, which lead_item_interests to update.
+     */
+    where: lead_item_interestsWhereUniqueInput
+  }
+
+  /**
+   * lead_item_interests updateMany
+   */
+  export type lead_item_interestsUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update lead_item_interests.
+     */
+    data: XOR<lead_item_interestsUpdateManyMutationInput, lead_item_interestsUncheckedUpdateManyInput>
+    /**
+     * Filter which lead_item_interests to update
+     */
+    where?: lead_item_interestsWhereInput
+    /**
+     * Limit how many lead_item_interests to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * lead_item_interests updateManyAndReturn
+   */
+  export type lead_item_interestsUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the lead_item_interests
+     */
+    select?: lead_item_interestsSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the lead_item_interests
+     */
+    omit?: lead_item_interestsOmit<ExtArgs> | null
+    /**
+     * The data used to update lead_item_interests.
+     */
+    data: XOR<lead_item_interestsUpdateManyMutationInput, lead_item_interestsUncheckedUpdateManyInput>
+    /**
+     * Filter which lead_item_interests to update
+     */
+    where?: lead_item_interestsWhereInput
+    /**
+     * Limit how many lead_item_interests to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: lead_item_interestsIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * lead_item_interests upsert
+   */
+  export type lead_item_interestsUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the lead_item_interests
+     */
+    select?: lead_item_interestsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the lead_item_interests
+     */
+    omit?: lead_item_interestsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: lead_item_interestsInclude<ExtArgs> | null
+    /**
+     * The filter to search for the lead_item_interests to update in case it exists.
+     */
+    where: lead_item_interestsWhereUniqueInput
+    /**
+     * In case the lead_item_interests found by the `where` argument doesn't exist, create a new lead_item_interests with this data.
+     */
+    create: XOR<lead_item_interestsCreateInput, lead_item_interestsUncheckedCreateInput>
+    /**
+     * In case the lead_item_interests was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<lead_item_interestsUpdateInput, lead_item_interestsUncheckedUpdateInput>
+  }
+
+  /**
+   * lead_item_interests delete
+   */
+  export type lead_item_interestsDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the lead_item_interests
+     */
+    select?: lead_item_interestsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the lead_item_interests
+     */
+    omit?: lead_item_interestsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: lead_item_interestsInclude<ExtArgs> | null
+    /**
+     * Filter which lead_item_interests to delete.
+     */
+    where: lead_item_interestsWhereUniqueInput
+  }
+
+  /**
+   * lead_item_interests deleteMany
+   */
+  export type lead_item_interestsDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which lead_item_interests to delete
+     */
+    where?: lead_item_interestsWhereInput
+    /**
+     * Limit how many lead_item_interests to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * lead_item_interests without action
+   */
+  export type lead_item_interestsDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the lead_item_interests
+     */
+    select?: lead_item_interestsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the lead_item_interests
+     */
+    omit?: lead_item_interestsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: lead_item_interestsInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model lead_preference_watches
+   */
+
+  export type AggregateLead_preference_watches = {
+    _count: Lead_preference_watchesCountAggregateOutputType | null
+    _min: Lead_preference_watchesMinAggregateOutputType | null
+    _max: Lead_preference_watchesMaxAggregateOutputType | null
+  }
+
+  export type Lead_preference_watchesMinAggregateOutputType = {
+    watch_id: string | null
+    lead_id: string | null
+    business_id: string | null
+    watch_type: string | null
+    is_active: boolean | null
+    notified_at: Date | null
+    expires_at: Date | null
+    created_at: Date | null
+  }
+
+  export type Lead_preference_watchesMaxAggregateOutputType = {
+    watch_id: string | null
+    lead_id: string | null
+    business_id: string | null
+    watch_type: string | null
+    is_active: boolean | null
+    notified_at: Date | null
+    expires_at: Date | null
+    created_at: Date | null
+  }
+
+  export type Lead_preference_watchesCountAggregateOutputType = {
+    watch_id: number
+    lead_id: number
+    business_id: number
+    watch_type: number
+    criteria: number
+    is_active: number
+    notified_at: number
+    expires_at: number
+    created_at: number
+    _all: number
+  }
+
+
+  export type Lead_preference_watchesMinAggregateInputType = {
+    watch_id?: true
+    lead_id?: true
+    business_id?: true
+    watch_type?: true
+    is_active?: true
+    notified_at?: true
+    expires_at?: true
+    created_at?: true
+  }
+
+  export type Lead_preference_watchesMaxAggregateInputType = {
+    watch_id?: true
+    lead_id?: true
+    business_id?: true
+    watch_type?: true
+    is_active?: true
+    notified_at?: true
+    expires_at?: true
+    created_at?: true
+  }
+
+  export type Lead_preference_watchesCountAggregateInputType = {
+    watch_id?: true
+    lead_id?: true
+    business_id?: true
+    watch_type?: true
+    criteria?: true
+    is_active?: true
+    notified_at?: true
+    expires_at?: true
+    created_at?: true
+    _all?: true
+  }
+
+  export type Lead_preference_watchesAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which lead_preference_watches to aggregate.
+     */
+    where?: lead_preference_watchesWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of lead_preference_watches to fetch.
+     */
+    orderBy?: lead_preference_watchesOrderByWithRelationInput | lead_preference_watchesOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: lead_preference_watchesWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` lead_preference_watches from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` lead_preference_watches.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned lead_preference_watches
+    **/
+    _count?: true | Lead_preference_watchesCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: Lead_preference_watchesMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: Lead_preference_watchesMaxAggregateInputType
+  }
+
+  export type GetLead_preference_watchesAggregateType<T extends Lead_preference_watchesAggregateArgs> = {
+        [P in keyof T & keyof AggregateLead_preference_watches]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateLead_preference_watches[P]>
+      : GetScalarType<T[P], AggregateLead_preference_watches[P]>
+  }
+
+
+
+
+  export type lead_preference_watchesGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: lead_preference_watchesWhereInput
+    orderBy?: lead_preference_watchesOrderByWithAggregationInput | lead_preference_watchesOrderByWithAggregationInput[]
+    by: Lead_preference_watchesScalarFieldEnum[] | Lead_preference_watchesScalarFieldEnum
+    having?: lead_preference_watchesScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: Lead_preference_watchesCountAggregateInputType | true
+    _min?: Lead_preference_watchesMinAggregateInputType
+    _max?: Lead_preference_watchesMaxAggregateInputType
+  }
+
+  export type Lead_preference_watchesGroupByOutputType = {
+    watch_id: string
+    lead_id: string
+    business_id: string
+    watch_type: string
+    criteria: JsonValue
+    is_active: boolean
+    notified_at: Date | null
+    expires_at: Date | null
+    created_at: Date
+    _count: Lead_preference_watchesCountAggregateOutputType | null
+    _min: Lead_preference_watchesMinAggregateOutputType | null
+    _max: Lead_preference_watchesMaxAggregateOutputType | null
+  }
+
+  type GetLead_preference_watchesGroupByPayload<T extends lead_preference_watchesGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<Lead_preference_watchesGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof Lead_preference_watchesGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], Lead_preference_watchesGroupByOutputType[P]>
+            : GetScalarType<T[P], Lead_preference_watchesGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type lead_preference_watchesSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    watch_id?: boolean
+    lead_id?: boolean
+    business_id?: boolean
+    watch_type?: boolean
+    criteria?: boolean
+    is_active?: boolean
+    notified_at?: boolean
+    expires_at?: boolean
+    created_at?: boolean
+    leads?: boolean | leadsDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["lead_preference_watches"]>
+
+  export type lead_preference_watchesSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    watch_id?: boolean
+    lead_id?: boolean
+    business_id?: boolean
+    watch_type?: boolean
+    criteria?: boolean
+    is_active?: boolean
+    notified_at?: boolean
+    expires_at?: boolean
+    created_at?: boolean
+    leads?: boolean | leadsDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["lead_preference_watches"]>
+
+  export type lead_preference_watchesSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    watch_id?: boolean
+    lead_id?: boolean
+    business_id?: boolean
+    watch_type?: boolean
+    criteria?: boolean
+    is_active?: boolean
+    notified_at?: boolean
+    expires_at?: boolean
+    created_at?: boolean
+    leads?: boolean | leadsDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["lead_preference_watches"]>
+
+  export type lead_preference_watchesSelectScalar = {
+    watch_id?: boolean
+    lead_id?: boolean
+    business_id?: boolean
+    watch_type?: boolean
+    criteria?: boolean
+    is_active?: boolean
+    notified_at?: boolean
+    expires_at?: boolean
+    created_at?: boolean
+  }
+
+  export type lead_preference_watchesOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"watch_id" | "lead_id" | "business_id" | "watch_type" | "criteria" | "is_active" | "notified_at" | "expires_at" | "created_at", ExtArgs["result"]["lead_preference_watches"]>
+  export type lead_preference_watchesInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    leads?: boolean | leadsDefaultArgs<ExtArgs>
+  }
+  export type lead_preference_watchesIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    leads?: boolean | leadsDefaultArgs<ExtArgs>
+  }
+  export type lead_preference_watchesIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    leads?: boolean | leadsDefaultArgs<ExtArgs>
+  }
+
+  export type $lead_preference_watchesPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "lead_preference_watches"
+    objects: {
+      leads: Prisma.$leadsPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      watch_id: string
+      lead_id: string
+      business_id: string
+      /**
+       * price_range | item_match | date_available | stock_available | batch_available
+       */
+      watch_type: string
+      /**
+       * JSONB: budget_max, make, model, date_from, date_to, variant, course_id, etc.
+       */
+      criteria: Prisma.JsonValue
+      is_active: boolean
+      /**
+       * Set when campaign is sent — prevents duplicate alerts for same event
+       */
+      notified_at: Date | null
+      /**
+       * Auto-expire after 90 days with no match
+       */
+      expires_at: Date | null
+      created_at: Date
+    }, ExtArgs["result"]["lead_preference_watches"]>
+    composites: {}
+  }
+
+  type lead_preference_watchesGetPayload<S extends boolean | null | undefined | lead_preference_watchesDefaultArgs> = $Result.GetResult<Prisma.$lead_preference_watchesPayload, S>
+
+  type lead_preference_watchesCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<lead_preference_watchesFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: Lead_preference_watchesCountAggregateInputType | true
+    }
+
+  export interface lead_preference_watchesDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['lead_preference_watches'], meta: { name: 'lead_preference_watches' } }
+    /**
+     * Find zero or one Lead_preference_watches that matches the filter.
+     * @param {lead_preference_watchesFindUniqueArgs} args - Arguments to find a Lead_preference_watches
+     * @example
+     * // Get one Lead_preference_watches
+     * const lead_preference_watches = await prisma.lead_preference_watches.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends lead_preference_watchesFindUniqueArgs>(args: SelectSubset<T, lead_preference_watchesFindUniqueArgs<ExtArgs>>): Prisma__lead_preference_watchesClient<$Result.GetResult<Prisma.$lead_preference_watchesPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one Lead_preference_watches that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {lead_preference_watchesFindUniqueOrThrowArgs} args - Arguments to find a Lead_preference_watches
+     * @example
+     * // Get one Lead_preference_watches
+     * const lead_preference_watches = await prisma.lead_preference_watches.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends lead_preference_watchesFindUniqueOrThrowArgs>(args: SelectSubset<T, lead_preference_watchesFindUniqueOrThrowArgs<ExtArgs>>): Prisma__lead_preference_watchesClient<$Result.GetResult<Prisma.$lead_preference_watchesPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Lead_preference_watches that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {lead_preference_watchesFindFirstArgs} args - Arguments to find a Lead_preference_watches
+     * @example
+     * // Get one Lead_preference_watches
+     * const lead_preference_watches = await prisma.lead_preference_watches.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends lead_preference_watchesFindFirstArgs>(args?: SelectSubset<T, lead_preference_watchesFindFirstArgs<ExtArgs>>): Prisma__lead_preference_watchesClient<$Result.GetResult<Prisma.$lead_preference_watchesPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Lead_preference_watches that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {lead_preference_watchesFindFirstOrThrowArgs} args - Arguments to find a Lead_preference_watches
+     * @example
+     * // Get one Lead_preference_watches
+     * const lead_preference_watches = await prisma.lead_preference_watches.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends lead_preference_watchesFindFirstOrThrowArgs>(args?: SelectSubset<T, lead_preference_watchesFindFirstOrThrowArgs<ExtArgs>>): Prisma__lead_preference_watchesClient<$Result.GetResult<Prisma.$lead_preference_watchesPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more Lead_preference_watches that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {lead_preference_watchesFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all Lead_preference_watches
+     * const lead_preference_watches = await prisma.lead_preference_watches.findMany()
+     * 
+     * // Get first 10 Lead_preference_watches
+     * const lead_preference_watches = await prisma.lead_preference_watches.findMany({ take: 10 })
+     * 
+     * // Only select the `watch_id`
+     * const lead_preference_watchesWithWatch_idOnly = await prisma.lead_preference_watches.findMany({ select: { watch_id: true } })
+     * 
+     */
+    findMany<T extends lead_preference_watchesFindManyArgs>(args?: SelectSubset<T, lead_preference_watchesFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$lead_preference_watchesPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a Lead_preference_watches.
+     * @param {lead_preference_watchesCreateArgs} args - Arguments to create a Lead_preference_watches.
+     * @example
+     * // Create one Lead_preference_watches
+     * const Lead_preference_watches = await prisma.lead_preference_watches.create({
+     *   data: {
+     *     // ... data to create a Lead_preference_watches
+     *   }
+     * })
+     * 
+     */
+    create<T extends lead_preference_watchesCreateArgs>(args: SelectSubset<T, lead_preference_watchesCreateArgs<ExtArgs>>): Prisma__lead_preference_watchesClient<$Result.GetResult<Prisma.$lead_preference_watchesPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many Lead_preference_watches.
+     * @param {lead_preference_watchesCreateManyArgs} args - Arguments to create many Lead_preference_watches.
+     * @example
+     * // Create many Lead_preference_watches
+     * const lead_preference_watches = await prisma.lead_preference_watches.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends lead_preference_watchesCreateManyArgs>(args?: SelectSubset<T, lead_preference_watchesCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many Lead_preference_watches and returns the data saved in the database.
+     * @param {lead_preference_watchesCreateManyAndReturnArgs} args - Arguments to create many Lead_preference_watches.
+     * @example
+     * // Create many Lead_preference_watches
+     * const lead_preference_watches = await prisma.lead_preference_watches.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many Lead_preference_watches and only return the `watch_id`
+     * const lead_preference_watchesWithWatch_idOnly = await prisma.lead_preference_watches.createManyAndReturn({
+     *   select: { watch_id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends lead_preference_watchesCreateManyAndReturnArgs>(args?: SelectSubset<T, lead_preference_watchesCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$lead_preference_watchesPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a Lead_preference_watches.
+     * @param {lead_preference_watchesDeleteArgs} args - Arguments to delete one Lead_preference_watches.
+     * @example
+     * // Delete one Lead_preference_watches
+     * const Lead_preference_watches = await prisma.lead_preference_watches.delete({
+     *   where: {
+     *     // ... filter to delete one Lead_preference_watches
+     *   }
+     * })
+     * 
+     */
+    delete<T extends lead_preference_watchesDeleteArgs>(args: SelectSubset<T, lead_preference_watchesDeleteArgs<ExtArgs>>): Prisma__lead_preference_watchesClient<$Result.GetResult<Prisma.$lead_preference_watchesPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one Lead_preference_watches.
+     * @param {lead_preference_watchesUpdateArgs} args - Arguments to update one Lead_preference_watches.
+     * @example
+     * // Update one Lead_preference_watches
+     * const lead_preference_watches = await prisma.lead_preference_watches.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends lead_preference_watchesUpdateArgs>(args: SelectSubset<T, lead_preference_watchesUpdateArgs<ExtArgs>>): Prisma__lead_preference_watchesClient<$Result.GetResult<Prisma.$lead_preference_watchesPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more Lead_preference_watches.
+     * @param {lead_preference_watchesDeleteManyArgs} args - Arguments to filter Lead_preference_watches to delete.
+     * @example
+     * // Delete a few Lead_preference_watches
+     * const { count } = await prisma.lead_preference_watches.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends lead_preference_watchesDeleteManyArgs>(args?: SelectSubset<T, lead_preference_watchesDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Lead_preference_watches.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {lead_preference_watchesUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many Lead_preference_watches
+     * const lead_preference_watches = await prisma.lead_preference_watches.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends lead_preference_watchesUpdateManyArgs>(args: SelectSubset<T, lead_preference_watchesUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Lead_preference_watches and returns the data updated in the database.
+     * @param {lead_preference_watchesUpdateManyAndReturnArgs} args - Arguments to update many Lead_preference_watches.
+     * @example
+     * // Update many Lead_preference_watches
+     * const lead_preference_watches = await prisma.lead_preference_watches.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more Lead_preference_watches and only return the `watch_id`
+     * const lead_preference_watchesWithWatch_idOnly = await prisma.lead_preference_watches.updateManyAndReturn({
+     *   select: { watch_id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends lead_preference_watchesUpdateManyAndReturnArgs>(args: SelectSubset<T, lead_preference_watchesUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$lead_preference_watchesPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one Lead_preference_watches.
+     * @param {lead_preference_watchesUpsertArgs} args - Arguments to update or create a Lead_preference_watches.
+     * @example
+     * // Update or create a Lead_preference_watches
+     * const lead_preference_watches = await prisma.lead_preference_watches.upsert({
+     *   create: {
+     *     // ... data to create a Lead_preference_watches
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the Lead_preference_watches we want to update
+     *   }
+     * })
+     */
+    upsert<T extends lead_preference_watchesUpsertArgs>(args: SelectSubset<T, lead_preference_watchesUpsertArgs<ExtArgs>>): Prisma__lead_preference_watchesClient<$Result.GetResult<Prisma.$lead_preference_watchesPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of Lead_preference_watches.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {lead_preference_watchesCountArgs} args - Arguments to filter Lead_preference_watches to count.
+     * @example
+     * // Count the number of Lead_preference_watches
+     * const count = await prisma.lead_preference_watches.count({
+     *   where: {
+     *     // ... the filter for the Lead_preference_watches we want to count
+     *   }
+     * })
+    **/
+    count<T extends lead_preference_watchesCountArgs>(
+      args?: Subset<T, lead_preference_watchesCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], Lead_preference_watchesCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a Lead_preference_watches.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {Lead_preference_watchesAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends Lead_preference_watchesAggregateArgs>(args: Subset<T, Lead_preference_watchesAggregateArgs>): Prisma.PrismaPromise<GetLead_preference_watchesAggregateType<T>>
+
+    /**
+     * Group by Lead_preference_watches.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {lead_preference_watchesGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends lead_preference_watchesGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: lead_preference_watchesGroupByArgs['orderBy'] }
+        : { orderBy?: lead_preference_watchesGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, lead_preference_watchesGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetLead_preference_watchesGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the lead_preference_watches model
+   */
+  readonly fields: lead_preference_watchesFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for lead_preference_watches.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__lead_preference_watchesClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    leads<T extends leadsDefaultArgs<ExtArgs> = {}>(args?: Subset<T, leadsDefaultArgs<ExtArgs>>): Prisma__leadsClient<$Result.GetResult<Prisma.$leadsPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the lead_preference_watches model
+   */
+  interface lead_preference_watchesFieldRefs {
+    readonly watch_id: FieldRef<"lead_preference_watches", 'String'>
+    readonly lead_id: FieldRef<"lead_preference_watches", 'String'>
+    readonly business_id: FieldRef<"lead_preference_watches", 'String'>
+    readonly watch_type: FieldRef<"lead_preference_watches", 'String'>
+    readonly criteria: FieldRef<"lead_preference_watches", 'Json'>
+    readonly is_active: FieldRef<"lead_preference_watches", 'Boolean'>
+    readonly notified_at: FieldRef<"lead_preference_watches", 'DateTime'>
+    readonly expires_at: FieldRef<"lead_preference_watches", 'DateTime'>
+    readonly created_at: FieldRef<"lead_preference_watches", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * lead_preference_watches findUnique
+   */
+  export type lead_preference_watchesFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the lead_preference_watches
+     */
+    select?: lead_preference_watchesSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the lead_preference_watches
+     */
+    omit?: lead_preference_watchesOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: lead_preference_watchesInclude<ExtArgs> | null
+    /**
+     * Filter, which lead_preference_watches to fetch.
+     */
+    where: lead_preference_watchesWhereUniqueInput
+  }
+
+  /**
+   * lead_preference_watches findUniqueOrThrow
+   */
+  export type lead_preference_watchesFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the lead_preference_watches
+     */
+    select?: lead_preference_watchesSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the lead_preference_watches
+     */
+    omit?: lead_preference_watchesOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: lead_preference_watchesInclude<ExtArgs> | null
+    /**
+     * Filter, which lead_preference_watches to fetch.
+     */
+    where: lead_preference_watchesWhereUniqueInput
+  }
+
+  /**
+   * lead_preference_watches findFirst
+   */
+  export type lead_preference_watchesFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the lead_preference_watches
+     */
+    select?: lead_preference_watchesSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the lead_preference_watches
+     */
+    omit?: lead_preference_watchesOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: lead_preference_watchesInclude<ExtArgs> | null
+    /**
+     * Filter, which lead_preference_watches to fetch.
+     */
+    where?: lead_preference_watchesWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of lead_preference_watches to fetch.
+     */
+    orderBy?: lead_preference_watchesOrderByWithRelationInput | lead_preference_watchesOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for lead_preference_watches.
+     */
+    cursor?: lead_preference_watchesWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` lead_preference_watches from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` lead_preference_watches.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of lead_preference_watches.
+     */
+    distinct?: Lead_preference_watchesScalarFieldEnum | Lead_preference_watchesScalarFieldEnum[]
+  }
+
+  /**
+   * lead_preference_watches findFirstOrThrow
+   */
+  export type lead_preference_watchesFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the lead_preference_watches
+     */
+    select?: lead_preference_watchesSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the lead_preference_watches
+     */
+    omit?: lead_preference_watchesOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: lead_preference_watchesInclude<ExtArgs> | null
+    /**
+     * Filter, which lead_preference_watches to fetch.
+     */
+    where?: lead_preference_watchesWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of lead_preference_watches to fetch.
+     */
+    orderBy?: lead_preference_watchesOrderByWithRelationInput | lead_preference_watchesOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for lead_preference_watches.
+     */
+    cursor?: lead_preference_watchesWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` lead_preference_watches from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` lead_preference_watches.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of lead_preference_watches.
+     */
+    distinct?: Lead_preference_watchesScalarFieldEnum | Lead_preference_watchesScalarFieldEnum[]
+  }
+
+  /**
+   * lead_preference_watches findMany
+   */
+  export type lead_preference_watchesFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the lead_preference_watches
+     */
+    select?: lead_preference_watchesSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the lead_preference_watches
+     */
+    omit?: lead_preference_watchesOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: lead_preference_watchesInclude<ExtArgs> | null
+    /**
+     * Filter, which lead_preference_watches to fetch.
+     */
+    where?: lead_preference_watchesWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of lead_preference_watches to fetch.
+     */
+    orderBy?: lead_preference_watchesOrderByWithRelationInput | lead_preference_watchesOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing lead_preference_watches.
+     */
+    cursor?: lead_preference_watchesWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` lead_preference_watches from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` lead_preference_watches.
+     */
+    skip?: number
+    distinct?: Lead_preference_watchesScalarFieldEnum | Lead_preference_watchesScalarFieldEnum[]
+  }
+
+  /**
+   * lead_preference_watches create
+   */
+  export type lead_preference_watchesCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the lead_preference_watches
+     */
+    select?: lead_preference_watchesSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the lead_preference_watches
+     */
+    omit?: lead_preference_watchesOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: lead_preference_watchesInclude<ExtArgs> | null
+    /**
+     * The data needed to create a lead_preference_watches.
+     */
+    data: XOR<lead_preference_watchesCreateInput, lead_preference_watchesUncheckedCreateInput>
+  }
+
+  /**
+   * lead_preference_watches createMany
+   */
+  export type lead_preference_watchesCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many lead_preference_watches.
+     */
+    data: lead_preference_watchesCreateManyInput | lead_preference_watchesCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * lead_preference_watches createManyAndReturn
+   */
+  export type lead_preference_watchesCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the lead_preference_watches
+     */
+    select?: lead_preference_watchesSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the lead_preference_watches
+     */
+    omit?: lead_preference_watchesOmit<ExtArgs> | null
+    /**
+     * The data used to create many lead_preference_watches.
+     */
+    data: lead_preference_watchesCreateManyInput | lead_preference_watchesCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: lead_preference_watchesIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * lead_preference_watches update
+   */
+  export type lead_preference_watchesUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the lead_preference_watches
+     */
+    select?: lead_preference_watchesSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the lead_preference_watches
+     */
+    omit?: lead_preference_watchesOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: lead_preference_watchesInclude<ExtArgs> | null
+    /**
+     * The data needed to update a lead_preference_watches.
+     */
+    data: XOR<lead_preference_watchesUpdateInput, lead_preference_watchesUncheckedUpdateInput>
+    /**
+     * Choose, which lead_preference_watches to update.
+     */
+    where: lead_preference_watchesWhereUniqueInput
+  }
+
+  /**
+   * lead_preference_watches updateMany
+   */
+  export type lead_preference_watchesUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update lead_preference_watches.
+     */
+    data: XOR<lead_preference_watchesUpdateManyMutationInput, lead_preference_watchesUncheckedUpdateManyInput>
+    /**
+     * Filter which lead_preference_watches to update
+     */
+    where?: lead_preference_watchesWhereInput
+    /**
+     * Limit how many lead_preference_watches to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * lead_preference_watches updateManyAndReturn
+   */
+  export type lead_preference_watchesUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the lead_preference_watches
+     */
+    select?: lead_preference_watchesSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the lead_preference_watches
+     */
+    omit?: lead_preference_watchesOmit<ExtArgs> | null
+    /**
+     * The data used to update lead_preference_watches.
+     */
+    data: XOR<lead_preference_watchesUpdateManyMutationInput, lead_preference_watchesUncheckedUpdateManyInput>
+    /**
+     * Filter which lead_preference_watches to update
+     */
+    where?: lead_preference_watchesWhereInput
+    /**
+     * Limit how many lead_preference_watches to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: lead_preference_watchesIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * lead_preference_watches upsert
+   */
+  export type lead_preference_watchesUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the lead_preference_watches
+     */
+    select?: lead_preference_watchesSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the lead_preference_watches
+     */
+    omit?: lead_preference_watchesOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: lead_preference_watchesInclude<ExtArgs> | null
+    /**
+     * The filter to search for the lead_preference_watches to update in case it exists.
+     */
+    where: lead_preference_watchesWhereUniqueInput
+    /**
+     * In case the lead_preference_watches found by the `where` argument doesn't exist, create a new lead_preference_watches with this data.
+     */
+    create: XOR<lead_preference_watchesCreateInput, lead_preference_watchesUncheckedCreateInput>
+    /**
+     * In case the lead_preference_watches was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<lead_preference_watchesUpdateInput, lead_preference_watchesUncheckedUpdateInput>
+  }
+
+  /**
+   * lead_preference_watches delete
+   */
+  export type lead_preference_watchesDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the lead_preference_watches
+     */
+    select?: lead_preference_watchesSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the lead_preference_watches
+     */
+    omit?: lead_preference_watchesOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: lead_preference_watchesInclude<ExtArgs> | null
+    /**
+     * Filter which lead_preference_watches to delete.
+     */
+    where: lead_preference_watchesWhereUniqueInput
+  }
+
+  /**
+   * lead_preference_watches deleteMany
+   */
+  export type lead_preference_watchesDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which lead_preference_watches to delete
+     */
+    where?: lead_preference_watchesWhereInput
+    /**
+     * Limit how many lead_preference_watches to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * lead_preference_watches without action
+   */
+  export type lead_preference_watchesDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the lead_preference_watches
+     */
+    select?: lead_preference_watchesSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the lead_preference_watches
+     */
+    omit?: lead_preference_watchesOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: lead_preference_watchesInclude<ExtArgs> | null
+  }
+
+
+  /**
    * Enums
    */
 
@@ -92866,6 +96883,11 @@ export namespace Prisma {
     pipeline_id: 'pipeline_id',
     lost_reason: 'lost_reason',
     context: 'context',
+    lead_type: 'lead_type',
+    qualification_score: 'qualification_score',
+    exit_intent_sent_at: 'exit_intent_sent_at',
+    exit_captured_at: 'exit_captured_at',
+    exit_reason: 'exit_reason',
     quoted_amount: 'quoted_amount',
     quoted_at: 'quoted_at',
     converted_value: 'converted_value',
@@ -93698,6 +97720,25 @@ export namespace Prisma {
   export type Hospitality_item_detailsScalarFieldEnum = (typeof Hospitality_item_detailsScalarFieldEnum)[keyof typeof Hospitality_item_detailsScalarFieldEnum]
 
 
+  export const Vehicle_item_detailsScalarFieldEnum: {
+    item_id: 'item_id',
+    business_id: 'business_id',
+    make: 'make',
+    model_name: 'model_name',
+    year: 'year',
+    fuel_type: 'fuel_type',
+    transmission: 'transmission',
+    color: 'color',
+    km_driven: 'km_driven',
+    condition: 'condition',
+    metadata: 'metadata',
+    created_at: 'created_at',
+    updated_at: 'updated_at'
+  };
+
+  export type Vehicle_item_detailsScalarFieldEnum = (typeof Vehicle_item_detailsScalarFieldEnum)[keyof typeof Vehicle_item_detailsScalarFieldEnum]
+
+
   export const Hospitality_inquiriesScalarFieldEnum: {
     inquiry_id: 'inquiry_id',
     business_id: 'business_id',
@@ -93989,6 +98030,7 @@ export namespace Prisma {
     booking_methods: 'booking_methods',
     booking_link: 'booking_link',
     low_balance_alert: 'low_balance_alert',
+    default_country_code: 'default_country_code',
     updated_at: 'updated_at'
   };
 
@@ -94010,6 +98052,38 @@ export namespace Prisma {
   };
 
   export type Audit_logsScalarFieldEnum = (typeof Audit_logsScalarFieldEnum)[keyof typeof Audit_logsScalarFieldEnum]
+
+
+  export const Lead_item_interestsScalarFieldEnum: {
+    interest_id: 'interest_id',
+    lead_id: 'lead_id',
+    business_id: 'business_id',
+    item_id: 'item_id',
+    item_type: 'item_type',
+    item_name: 'item_name',
+    interest_level: 'interest_level',
+    last_price_seen: 'last_price_seen',
+    is_alert_active: 'is_alert_active',
+    created_at: 'created_at',
+    updated_at: 'updated_at'
+  };
+
+  export type Lead_item_interestsScalarFieldEnum = (typeof Lead_item_interestsScalarFieldEnum)[keyof typeof Lead_item_interestsScalarFieldEnum]
+
+
+  export const Lead_preference_watchesScalarFieldEnum: {
+    watch_id: 'watch_id',
+    lead_id: 'lead_id',
+    business_id: 'business_id',
+    watch_type: 'watch_type',
+    criteria: 'criteria',
+    is_active: 'is_active',
+    notified_at: 'notified_at',
+    expires_at: 'expires_at',
+    created_at: 'created_at'
+  };
+
+  export type Lead_preference_watchesScalarFieldEnum = (typeof Lead_preference_watchesScalarFieldEnum)[keyof typeof Lead_preference_watchesScalarFieldEnum]
 
 
   export const SortOrder: {
@@ -94215,6 +98289,7 @@ export namespace Prisma {
     catalog_items?: Catalog_itemsListRelationFilter
     product_item_details?: Product_item_detailsListRelationFilter
     hospitality_item_details?: Hospitality_item_detailsListRelationFilter
+    vehicle_item_details?: Vehicle_item_detailsListRelationFilter
     product_orders?: Product_ordersListRelationFilter
     product_inquiries?: Product_inquiriesListRelationFilter
     hospitality_bookings?: Hospitality_bookingsListRelationFilter
@@ -94264,6 +98339,7 @@ export namespace Prisma {
     catalog_items?: catalog_itemsOrderByRelationAggregateInput
     product_item_details?: product_item_detailsOrderByRelationAggregateInput
     hospitality_item_details?: hospitality_item_detailsOrderByRelationAggregateInput
+    vehicle_item_details?: vehicle_item_detailsOrderByRelationAggregateInput
     product_orders?: product_ordersOrderByRelationAggregateInput
     product_inquiries?: product_inquiriesOrderByRelationAggregateInput
     hospitality_bookings?: hospitality_bookingsOrderByRelationAggregateInput
@@ -94316,6 +98392,7 @@ export namespace Prisma {
     catalog_items?: Catalog_itemsListRelationFilter
     product_item_details?: Product_item_detailsListRelationFilter
     hospitality_item_details?: Hospitality_item_detailsListRelationFilter
+    vehicle_item_details?: Vehicle_item_detailsListRelationFilter
     product_orders?: Product_ordersListRelationFilter
     product_inquiries?: Product_inquiriesListRelationFilter
     hospitality_bookings?: Hospitality_bookingsListRelationFilter
@@ -95114,6 +99191,11 @@ export namespace Prisma {
     pipeline_id?: UuidNullableFilter<"leads"> | string | null
     lost_reason?: StringNullableFilter<"leads"> | string | null
     context?: JsonNullableFilter<"leads">
+    lead_type?: StringNullableFilter<"leads"> | string | null
+    qualification_score?: IntFilter<"leads"> | number
+    exit_intent_sent_at?: DateTimeNullableFilter<"leads"> | Date | string | null
+    exit_captured_at?: DateTimeNullableFilter<"leads"> | Date | string | null
+    exit_reason?: StringNullableFilter<"leads"> | string | null
     quoted_amount?: DecimalNullableFilter<"leads"> | Decimal | DecimalJsLike | number | string | null
     quoted_at?: DateTimeNullableFilter<"leads"> | Date | string | null
     converted_value?: DecimalNullableFilter<"leads"> | Decimal | DecimalJsLike | number | string | null
@@ -95132,6 +99214,8 @@ export namespace Prisma {
     hospitality_inquiries?: Hospitality_inquiriesListRelationFilter
     product_orders?: Product_ordersListRelationFilter
     hospitality_bookings?: Hospitality_bookingsListRelationFilter
+    item_interests?: Lead_item_interestsListRelationFilter
+    preference_watches?: Lead_preference_watchesListRelationFilter
     assigned_user?: XOR<UsersNullableScalarRelationFilter, usersWhereInput> | null
     businesses?: XOR<BusinessesScalarRelationFilter, businessesWhereInput>
     tenants?: XOR<TenantsScalarRelationFilter, tenantsWhereInput>
@@ -95156,6 +99240,11 @@ export namespace Prisma {
     pipeline_id?: SortOrderInput | SortOrder
     lost_reason?: SortOrderInput | SortOrder
     context?: SortOrderInput | SortOrder
+    lead_type?: SortOrderInput | SortOrder
+    qualification_score?: SortOrder
+    exit_intent_sent_at?: SortOrderInput | SortOrder
+    exit_captured_at?: SortOrderInput | SortOrder
+    exit_reason?: SortOrderInput | SortOrder
     quoted_amount?: SortOrderInput | SortOrder
     quoted_at?: SortOrderInput | SortOrder
     converted_value?: SortOrderInput | SortOrder
@@ -95174,6 +99263,8 @@ export namespace Prisma {
     hospitality_inquiries?: hospitality_inquiriesOrderByRelationAggregateInput
     product_orders?: product_ordersOrderByRelationAggregateInput
     hospitality_bookings?: hospitality_bookingsOrderByRelationAggregateInput
+    item_interests?: lead_item_interestsOrderByRelationAggregateInput
+    preference_watches?: lead_preference_watchesOrderByRelationAggregateInput
     assigned_user?: usersOrderByWithRelationInput
     businesses?: businessesOrderByWithRelationInput
     tenants?: tenantsOrderByWithRelationInput
@@ -95202,6 +99293,11 @@ export namespace Prisma {
     pipeline_id?: UuidNullableFilter<"leads"> | string | null
     lost_reason?: StringNullableFilter<"leads"> | string | null
     context?: JsonNullableFilter<"leads">
+    lead_type?: StringNullableFilter<"leads"> | string | null
+    qualification_score?: IntFilter<"leads"> | number
+    exit_intent_sent_at?: DateTimeNullableFilter<"leads"> | Date | string | null
+    exit_captured_at?: DateTimeNullableFilter<"leads"> | Date | string | null
+    exit_reason?: StringNullableFilter<"leads"> | string | null
     quoted_amount?: DecimalNullableFilter<"leads"> | Decimal | DecimalJsLike | number | string | null
     quoted_at?: DateTimeNullableFilter<"leads"> | Date | string | null
     converted_value?: DecimalNullableFilter<"leads"> | Decimal | DecimalJsLike | number | string | null
@@ -95220,6 +99316,8 @@ export namespace Prisma {
     hospitality_inquiries?: Hospitality_inquiriesListRelationFilter
     product_orders?: Product_ordersListRelationFilter
     hospitality_bookings?: Hospitality_bookingsListRelationFilter
+    item_interests?: Lead_item_interestsListRelationFilter
+    preference_watches?: Lead_preference_watchesListRelationFilter
     assigned_user?: XOR<UsersNullableScalarRelationFilter, usersWhereInput> | null
     businesses?: XOR<BusinessesScalarRelationFilter, businessesWhereInput>
     tenants?: XOR<TenantsScalarRelationFilter, tenantsWhereInput>
@@ -95244,6 +99342,11 @@ export namespace Prisma {
     pipeline_id?: SortOrderInput | SortOrder
     lost_reason?: SortOrderInput | SortOrder
     context?: SortOrderInput | SortOrder
+    lead_type?: SortOrderInput | SortOrder
+    qualification_score?: SortOrder
+    exit_intent_sent_at?: SortOrderInput | SortOrder
+    exit_captured_at?: SortOrderInput | SortOrder
+    exit_reason?: SortOrderInput | SortOrder
     quoted_amount?: SortOrderInput | SortOrder
     quoted_at?: SortOrderInput | SortOrder
     converted_value?: SortOrderInput | SortOrder
@@ -95279,6 +99382,11 @@ export namespace Prisma {
     pipeline_id?: UuidNullableWithAggregatesFilter<"leads"> | string | null
     lost_reason?: StringNullableWithAggregatesFilter<"leads"> | string | null
     context?: JsonNullableWithAggregatesFilter<"leads">
+    lead_type?: StringNullableWithAggregatesFilter<"leads"> | string | null
+    qualification_score?: IntWithAggregatesFilter<"leads"> | number
+    exit_intent_sent_at?: DateTimeNullableWithAggregatesFilter<"leads"> | Date | string | null
+    exit_captured_at?: DateTimeNullableWithAggregatesFilter<"leads"> | Date | string | null
+    exit_reason?: StringNullableWithAggregatesFilter<"leads"> | string | null
     quoted_amount?: DecimalNullableWithAggregatesFilter<"leads"> | Decimal | DecimalJsLike | number | string | null
     quoted_at?: DateTimeNullableWithAggregatesFilter<"leads"> | Date | string | null
     converted_value?: DecimalNullableWithAggregatesFilter<"leads"> | Decimal | DecimalJsLike | number | string | null
@@ -97493,7 +101601,6 @@ export namespace Prisma {
 
   export type workflow_definitionsWhereUniqueInput = Prisma.AtLeast<{
     workflow_id?: string
-    business_type_intent_name?: workflow_definitionsBusiness_typeIntent_nameCompoundUniqueInput
     AND?: workflow_definitionsWhereInput | workflow_definitionsWhereInput[]
     OR?: workflow_definitionsWhereInput[]
     NOT?: workflow_definitionsWhereInput | workflow_definitionsWhereInput[]
@@ -97511,7 +101618,7 @@ export namespace Prisma {
     workflow_executions?: Workflow_executionsListRelationFilter
     workflow_execution_steps?: Workflow_execution_stepsListRelationFilter
     workflow_idempotency_keys?: Workflow_idempotency_keysListRelationFilter
-  }, "workflow_id" | "business_type_intent_name">
+  }, "workflow_id">
 
   export type workflow_definitionsOrderByWithAggregationInput = {
     workflow_id?: SortOrder
@@ -98679,6 +102786,7 @@ export namespace Prisma {
     cart_reservations?: Cart_reservationsListRelationFilter
     product_detail?: XOR<Product_item_detailsNullableScalarRelationFilter, product_item_detailsWhereInput> | null
     hospitality_detail?: XOR<Hospitality_item_detailsNullableScalarRelationFilter, hospitality_item_detailsWhereInput> | null
+    vehicle_detail?: XOR<Vehicle_item_detailsNullableScalarRelationFilter, vehicle_item_detailsWhereInput> | null
     product_order_items?: Product_order_itemsListRelationFilter
     hospitality_booking_items?: Hospitality_booking_itemsListRelationFilter
     product_inquiries?: Product_inquiriesListRelationFilter
@@ -98713,6 +102821,7 @@ export namespace Prisma {
     cart_reservations?: cart_reservationsOrderByRelationAggregateInput
     product_detail?: product_item_detailsOrderByWithRelationInput
     hospitality_detail?: hospitality_item_detailsOrderByWithRelationInput
+    vehicle_detail?: vehicle_item_detailsOrderByWithRelationInput
     product_order_items?: product_order_itemsOrderByRelationAggregateInput
     hospitality_booking_items?: hospitality_booking_itemsOrderByRelationAggregateInput
     product_inquiries?: product_inquiriesOrderByRelationAggregateInput
@@ -98750,6 +102859,7 @@ export namespace Prisma {
     cart_reservations?: Cart_reservationsListRelationFilter
     product_detail?: XOR<Product_item_detailsNullableScalarRelationFilter, product_item_detailsWhereInput> | null
     hospitality_detail?: XOR<Hospitality_item_detailsNullableScalarRelationFilter, hospitality_item_detailsWhereInput> | null
+    vehicle_detail?: XOR<Vehicle_item_detailsNullableScalarRelationFilter, vehicle_item_detailsWhereInput> | null
     product_order_items?: Product_order_itemsListRelationFilter
     hospitality_booking_items?: Hospitality_booking_itemsListRelationFilter
     product_inquiries?: Product_inquiriesListRelationFilter
@@ -99663,6 +103773,106 @@ export namespace Prisma {
     metadata?: JsonNullableWithAggregatesFilter<"hospitality_item_details">
     created_at?: DateTimeWithAggregatesFilter<"hospitality_item_details"> | Date | string
     updated_at?: DateTimeWithAggregatesFilter<"hospitality_item_details"> | Date | string
+  }
+
+  export type vehicle_item_detailsWhereInput = {
+    AND?: vehicle_item_detailsWhereInput | vehicle_item_detailsWhereInput[]
+    OR?: vehicle_item_detailsWhereInput[]
+    NOT?: vehicle_item_detailsWhereInput | vehicle_item_detailsWhereInput[]
+    item_id?: UuidFilter<"vehicle_item_details"> | string
+    business_id?: UuidFilter<"vehicle_item_details"> | string
+    make?: StringFilter<"vehicle_item_details"> | string
+    model_name?: StringFilter<"vehicle_item_details"> | string
+    year?: IntFilter<"vehicle_item_details"> | number
+    fuel_type?: StringNullableFilter<"vehicle_item_details"> | string | null
+    transmission?: StringNullableFilter<"vehicle_item_details"> | string | null
+    color?: StringNullableFilter<"vehicle_item_details"> | string | null
+    km_driven?: IntNullableFilter<"vehicle_item_details"> | number | null
+    condition?: StringFilter<"vehicle_item_details"> | string
+    metadata?: JsonNullableFilter<"vehicle_item_details">
+    created_at?: DateTimeFilter<"vehicle_item_details"> | Date | string
+    updated_at?: DateTimeFilter<"vehicle_item_details"> | Date | string
+    business?: XOR<BusinessesScalarRelationFilter, businessesWhereInput>
+    item?: XOR<Catalog_itemsScalarRelationFilter, catalog_itemsWhereInput>
+  }
+
+  export type vehicle_item_detailsOrderByWithRelationInput = {
+    item_id?: SortOrder
+    business_id?: SortOrder
+    make?: SortOrder
+    model_name?: SortOrder
+    year?: SortOrder
+    fuel_type?: SortOrderInput | SortOrder
+    transmission?: SortOrderInput | SortOrder
+    color?: SortOrderInput | SortOrder
+    km_driven?: SortOrderInput | SortOrder
+    condition?: SortOrder
+    metadata?: SortOrderInput | SortOrder
+    created_at?: SortOrder
+    updated_at?: SortOrder
+    business?: businessesOrderByWithRelationInput
+    item?: catalog_itemsOrderByWithRelationInput
+  }
+
+  export type vehicle_item_detailsWhereUniqueInput = Prisma.AtLeast<{
+    item_id?: string
+    AND?: vehicle_item_detailsWhereInput | vehicle_item_detailsWhereInput[]
+    OR?: vehicle_item_detailsWhereInput[]
+    NOT?: vehicle_item_detailsWhereInput | vehicle_item_detailsWhereInput[]
+    business_id?: UuidFilter<"vehicle_item_details"> | string
+    make?: StringFilter<"vehicle_item_details"> | string
+    model_name?: StringFilter<"vehicle_item_details"> | string
+    year?: IntFilter<"vehicle_item_details"> | number
+    fuel_type?: StringNullableFilter<"vehicle_item_details"> | string | null
+    transmission?: StringNullableFilter<"vehicle_item_details"> | string | null
+    color?: StringNullableFilter<"vehicle_item_details"> | string | null
+    km_driven?: IntNullableFilter<"vehicle_item_details"> | number | null
+    condition?: StringFilter<"vehicle_item_details"> | string
+    metadata?: JsonNullableFilter<"vehicle_item_details">
+    created_at?: DateTimeFilter<"vehicle_item_details"> | Date | string
+    updated_at?: DateTimeFilter<"vehicle_item_details"> | Date | string
+    business?: XOR<BusinessesScalarRelationFilter, businessesWhereInput>
+    item?: XOR<Catalog_itemsScalarRelationFilter, catalog_itemsWhereInput>
+  }, "item_id">
+
+  export type vehicle_item_detailsOrderByWithAggregationInput = {
+    item_id?: SortOrder
+    business_id?: SortOrder
+    make?: SortOrder
+    model_name?: SortOrder
+    year?: SortOrder
+    fuel_type?: SortOrderInput | SortOrder
+    transmission?: SortOrderInput | SortOrder
+    color?: SortOrderInput | SortOrder
+    km_driven?: SortOrderInput | SortOrder
+    condition?: SortOrder
+    metadata?: SortOrderInput | SortOrder
+    created_at?: SortOrder
+    updated_at?: SortOrder
+    _count?: vehicle_item_detailsCountOrderByAggregateInput
+    _avg?: vehicle_item_detailsAvgOrderByAggregateInput
+    _max?: vehicle_item_detailsMaxOrderByAggregateInput
+    _min?: vehicle_item_detailsMinOrderByAggregateInput
+    _sum?: vehicle_item_detailsSumOrderByAggregateInput
+  }
+
+  export type vehicle_item_detailsScalarWhereWithAggregatesInput = {
+    AND?: vehicle_item_detailsScalarWhereWithAggregatesInput | vehicle_item_detailsScalarWhereWithAggregatesInput[]
+    OR?: vehicle_item_detailsScalarWhereWithAggregatesInput[]
+    NOT?: vehicle_item_detailsScalarWhereWithAggregatesInput | vehicle_item_detailsScalarWhereWithAggregatesInput[]
+    item_id?: UuidWithAggregatesFilter<"vehicle_item_details"> | string
+    business_id?: UuidWithAggregatesFilter<"vehicle_item_details"> | string
+    make?: StringWithAggregatesFilter<"vehicle_item_details"> | string
+    model_name?: StringWithAggregatesFilter<"vehicle_item_details"> | string
+    year?: IntWithAggregatesFilter<"vehicle_item_details"> | number
+    fuel_type?: StringNullableWithAggregatesFilter<"vehicle_item_details"> | string | null
+    transmission?: StringNullableWithAggregatesFilter<"vehicle_item_details"> | string | null
+    color?: StringNullableWithAggregatesFilter<"vehicle_item_details"> | string | null
+    km_driven?: IntNullableWithAggregatesFilter<"vehicle_item_details"> | number | null
+    condition?: StringWithAggregatesFilter<"vehicle_item_details"> | string
+    metadata?: JsonNullableWithAggregatesFilter<"vehicle_item_details">
+    created_at?: DateTimeWithAggregatesFilter<"vehicle_item_details"> | Date | string
+    updated_at?: DateTimeWithAggregatesFilter<"vehicle_item_details"> | Date | string
   }
 
   export type hospitality_inquiriesWhereInput = {
@@ -101127,6 +105337,7 @@ export namespace Prisma {
     booking_methods?: JsonFilter<"business_settings">
     booking_link?: JsonFilter<"business_settings">
     low_balance_alert?: DecimalFilter<"business_settings"> | Decimal | DecimalJsLike | number | string
+    default_country_code?: StringFilter<"business_settings"> | string
     updated_at?: DateTimeFilter<"business_settings"> | Date | string
     businesses?: XOR<BusinessesScalarRelationFilter, businessesWhereInput>
   }
@@ -101144,6 +105355,7 @@ export namespace Prisma {
     booking_methods?: SortOrder
     booking_link?: SortOrder
     low_balance_alert?: SortOrder
+    default_country_code?: SortOrder
     updated_at?: SortOrder
     businesses?: businessesOrderByWithRelationInput
   }
@@ -101164,6 +105376,7 @@ export namespace Prisma {
     booking_methods?: JsonFilter<"business_settings">
     booking_link?: JsonFilter<"business_settings">
     low_balance_alert?: DecimalFilter<"business_settings"> | Decimal | DecimalJsLike | number | string
+    default_country_code?: StringFilter<"business_settings"> | string
     updated_at?: DateTimeFilter<"business_settings"> | Date | string
     businesses?: XOR<BusinessesScalarRelationFilter, businessesWhereInput>
   }, "business_id">
@@ -101181,6 +105394,7 @@ export namespace Prisma {
     booking_methods?: SortOrder
     booking_link?: SortOrder
     low_balance_alert?: SortOrder
+    default_country_code?: SortOrder
     updated_at?: SortOrder
     _count?: business_settingsCountOrderByAggregateInput
     _avg?: business_settingsAvgOrderByAggregateInput
@@ -101205,6 +105419,7 @@ export namespace Prisma {
     booking_methods?: JsonWithAggregatesFilter<"business_settings">
     booking_link?: JsonWithAggregatesFilter<"business_settings">
     low_balance_alert?: DecimalWithAggregatesFilter<"business_settings"> | Decimal | DecimalJsLike | number | string
+    default_country_code?: StringWithAggregatesFilter<"business_settings"> | string
     updated_at?: DateTimeWithAggregatesFilter<"business_settings"> | Date | string
   }
 
@@ -101296,6 +105511,169 @@ export namespace Prisma {
     created_at?: DateTimeWithAggregatesFilter<"audit_logs"> | Date | string
   }
 
+  export type lead_item_interestsWhereInput = {
+    AND?: lead_item_interestsWhereInput | lead_item_interestsWhereInput[]
+    OR?: lead_item_interestsWhereInput[]
+    NOT?: lead_item_interestsWhereInput | lead_item_interestsWhereInput[]
+    interest_id?: UuidFilter<"lead_item_interests"> | string
+    lead_id?: UuidFilter<"lead_item_interests"> | string
+    business_id?: UuidFilter<"lead_item_interests"> | string
+    item_id?: UuidNullableFilter<"lead_item_interests"> | string | null
+    item_type?: StringFilter<"lead_item_interests"> | string
+    item_name?: StringFilter<"lead_item_interests"> | string
+    interest_level?: StringFilter<"lead_item_interests"> | string
+    last_price_seen?: DecimalNullableFilter<"lead_item_interests"> | Decimal | DecimalJsLike | number | string | null
+    is_alert_active?: BoolFilter<"lead_item_interests"> | boolean
+    created_at?: DateTimeFilter<"lead_item_interests"> | Date | string
+    updated_at?: DateTimeFilter<"lead_item_interests"> | Date | string
+    leads?: XOR<LeadsScalarRelationFilter, leadsWhereInput>
+  }
+
+  export type lead_item_interestsOrderByWithRelationInput = {
+    interest_id?: SortOrder
+    lead_id?: SortOrder
+    business_id?: SortOrder
+    item_id?: SortOrderInput | SortOrder
+    item_type?: SortOrder
+    item_name?: SortOrder
+    interest_level?: SortOrder
+    last_price_seen?: SortOrderInput | SortOrder
+    is_alert_active?: SortOrder
+    created_at?: SortOrder
+    updated_at?: SortOrder
+    leads?: leadsOrderByWithRelationInput
+  }
+
+  export type lead_item_interestsWhereUniqueInput = Prisma.AtLeast<{
+    interest_id?: string
+    lead_id_item_id?: lead_item_interestsLead_idItem_idCompoundUniqueInput
+    AND?: lead_item_interestsWhereInput | lead_item_interestsWhereInput[]
+    OR?: lead_item_interestsWhereInput[]
+    NOT?: lead_item_interestsWhereInput | lead_item_interestsWhereInput[]
+    lead_id?: UuidFilter<"lead_item_interests"> | string
+    business_id?: UuidFilter<"lead_item_interests"> | string
+    item_id?: UuidNullableFilter<"lead_item_interests"> | string | null
+    item_type?: StringFilter<"lead_item_interests"> | string
+    item_name?: StringFilter<"lead_item_interests"> | string
+    interest_level?: StringFilter<"lead_item_interests"> | string
+    last_price_seen?: DecimalNullableFilter<"lead_item_interests"> | Decimal | DecimalJsLike | number | string | null
+    is_alert_active?: BoolFilter<"lead_item_interests"> | boolean
+    created_at?: DateTimeFilter<"lead_item_interests"> | Date | string
+    updated_at?: DateTimeFilter<"lead_item_interests"> | Date | string
+    leads?: XOR<LeadsScalarRelationFilter, leadsWhereInput>
+  }, "interest_id" | "lead_id_item_id">
+
+  export type lead_item_interestsOrderByWithAggregationInput = {
+    interest_id?: SortOrder
+    lead_id?: SortOrder
+    business_id?: SortOrder
+    item_id?: SortOrderInput | SortOrder
+    item_type?: SortOrder
+    item_name?: SortOrder
+    interest_level?: SortOrder
+    last_price_seen?: SortOrderInput | SortOrder
+    is_alert_active?: SortOrder
+    created_at?: SortOrder
+    updated_at?: SortOrder
+    _count?: lead_item_interestsCountOrderByAggregateInput
+    _avg?: lead_item_interestsAvgOrderByAggregateInput
+    _max?: lead_item_interestsMaxOrderByAggregateInput
+    _min?: lead_item_interestsMinOrderByAggregateInput
+    _sum?: lead_item_interestsSumOrderByAggregateInput
+  }
+
+  export type lead_item_interestsScalarWhereWithAggregatesInput = {
+    AND?: lead_item_interestsScalarWhereWithAggregatesInput | lead_item_interestsScalarWhereWithAggregatesInput[]
+    OR?: lead_item_interestsScalarWhereWithAggregatesInput[]
+    NOT?: lead_item_interestsScalarWhereWithAggregatesInput | lead_item_interestsScalarWhereWithAggregatesInput[]
+    interest_id?: UuidWithAggregatesFilter<"lead_item_interests"> | string
+    lead_id?: UuidWithAggregatesFilter<"lead_item_interests"> | string
+    business_id?: UuidWithAggregatesFilter<"lead_item_interests"> | string
+    item_id?: UuidNullableWithAggregatesFilter<"lead_item_interests"> | string | null
+    item_type?: StringWithAggregatesFilter<"lead_item_interests"> | string
+    item_name?: StringWithAggregatesFilter<"lead_item_interests"> | string
+    interest_level?: StringWithAggregatesFilter<"lead_item_interests"> | string
+    last_price_seen?: DecimalNullableWithAggregatesFilter<"lead_item_interests"> | Decimal | DecimalJsLike | number | string | null
+    is_alert_active?: BoolWithAggregatesFilter<"lead_item_interests"> | boolean
+    created_at?: DateTimeWithAggregatesFilter<"lead_item_interests"> | Date | string
+    updated_at?: DateTimeWithAggregatesFilter<"lead_item_interests"> | Date | string
+  }
+
+  export type lead_preference_watchesWhereInput = {
+    AND?: lead_preference_watchesWhereInput | lead_preference_watchesWhereInput[]
+    OR?: lead_preference_watchesWhereInput[]
+    NOT?: lead_preference_watchesWhereInput | lead_preference_watchesWhereInput[]
+    watch_id?: UuidFilter<"lead_preference_watches"> | string
+    lead_id?: UuidFilter<"lead_preference_watches"> | string
+    business_id?: UuidFilter<"lead_preference_watches"> | string
+    watch_type?: StringFilter<"lead_preference_watches"> | string
+    criteria?: JsonFilter<"lead_preference_watches">
+    is_active?: BoolFilter<"lead_preference_watches"> | boolean
+    notified_at?: DateTimeNullableFilter<"lead_preference_watches"> | Date | string | null
+    expires_at?: DateTimeNullableFilter<"lead_preference_watches"> | Date | string | null
+    created_at?: DateTimeFilter<"lead_preference_watches"> | Date | string
+    leads?: XOR<LeadsScalarRelationFilter, leadsWhereInput>
+  }
+
+  export type lead_preference_watchesOrderByWithRelationInput = {
+    watch_id?: SortOrder
+    lead_id?: SortOrder
+    business_id?: SortOrder
+    watch_type?: SortOrder
+    criteria?: SortOrder
+    is_active?: SortOrder
+    notified_at?: SortOrderInput | SortOrder
+    expires_at?: SortOrderInput | SortOrder
+    created_at?: SortOrder
+    leads?: leadsOrderByWithRelationInput
+  }
+
+  export type lead_preference_watchesWhereUniqueInput = Prisma.AtLeast<{
+    watch_id?: string
+    AND?: lead_preference_watchesWhereInput | lead_preference_watchesWhereInput[]
+    OR?: lead_preference_watchesWhereInput[]
+    NOT?: lead_preference_watchesWhereInput | lead_preference_watchesWhereInput[]
+    lead_id?: UuidFilter<"lead_preference_watches"> | string
+    business_id?: UuidFilter<"lead_preference_watches"> | string
+    watch_type?: StringFilter<"lead_preference_watches"> | string
+    criteria?: JsonFilter<"lead_preference_watches">
+    is_active?: BoolFilter<"lead_preference_watches"> | boolean
+    notified_at?: DateTimeNullableFilter<"lead_preference_watches"> | Date | string | null
+    expires_at?: DateTimeNullableFilter<"lead_preference_watches"> | Date | string | null
+    created_at?: DateTimeFilter<"lead_preference_watches"> | Date | string
+    leads?: XOR<LeadsScalarRelationFilter, leadsWhereInput>
+  }, "watch_id">
+
+  export type lead_preference_watchesOrderByWithAggregationInput = {
+    watch_id?: SortOrder
+    lead_id?: SortOrder
+    business_id?: SortOrder
+    watch_type?: SortOrder
+    criteria?: SortOrder
+    is_active?: SortOrder
+    notified_at?: SortOrderInput | SortOrder
+    expires_at?: SortOrderInput | SortOrder
+    created_at?: SortOrder
+    _count?: lead_preference_watchesCountOrderByAggregateInput
+    _max?: lead_preference_watchesMaxOrderByAggregateInput
+    _min?: lead_preference_watchesMinOrderByAggregateInput
+  }
+
+  export type lead_preference_watchesScalarWhereWithAggregatesInput = {
+    AND?: lead_preference_watchesScalarWhereWithAggregatesInput | lead_preference_watchesScalarWhereWithAggregatesInput[]
+    OR?: lead_preference_watchesScalarWhereWithAggregatesInput[]
+    NOT?: lead_preference_watchesScalarWhereWithAggregatesInput | lead_preference_watchesScalarWhereWithAggregatesInput[]
+    watch_id?: UuidWithAggregatesFilter<"lead_preference_watches"> | string
+    lead_id?: UuidWithAggregatesFilter<"lead_preference_watches"> | string
+    business_id?: UuidWithAggregatesFilter<"lead_preference_watches"> | string
+    watch_type?: StringWithAggregatesFilter<"lead_preference_watches"> | string
+    criteria?: JsonWithAggregatesFilter<"lead_preference_watches">
+    is_active?: BoolWithAggregatesFilter<"lead_preference_watches"> | boolean
+    notified_at?: DateTimeNullableWithAggregatesFilter<"lead_preference_watches"> | Date | string | null
+    expires_at?: DateTimeNullableWithAggregatesFilter<"lead_preference_watches"> | Date | string | null
+    created_at?: DateTimeWithAggregatesFilter<"lead_preference_watches"> | Date | string
+  }
+
   export type businessesCreateInput = {
     business_id?: string
     business_name: string
@@ -101320,6 +105698,7 @@ export namespace Prisma {
     catalog_items?: catalog_itemsCreateNestedManyWithoutBusinessesInput
     product_item_details?: product_item_detailsCreateNestedManyWithoutBusinessInput
     hospitality_item_details?: hospitality_item_detailsCreateNestedManyWithoutBusinessInput
+    vehicle_item_details?: vehicle_item_detailsCreateNestedManyWithoutBusinessInput
     product_orders?: product_ordersCreateNestedManyWithoutBusinessInput
     product_inquiries?: product_inquiriesCreateNestedManyWithoutBusinessInput
     hospitality_bookings?: hospitality_bookingsCreateNestedManyWithoutBusinessInput
@@ -101368,6 +105747,7 @@ export namespace Prisma {
     catalog_items?: catalog_itemsUncheckedCreateNestedManyWithoutBusinessesInput
     product_item_details?: product_item_detailsUncheckedCreateNestedManyWithoutBusinessInput
     hospitality_item_details?: hospitality_item_detailsUncheckedCreateNestedManyWithoutBusinessInput
+    vehicle_item_details?: vehicle_item_detailsUncheckedCreateNestedManyWithoutBusinessInput
     product_orders?: product_ordersUncheckedCreateNestedManyWithoutBusinessInput
     product_inquiries?: product_inquiriesUncheckedCreateNestedManyWithoutBusinessInput
     hospitality_bookings?: hospitality_bookingsUncheckedCreateNestedManyWithoutBusinessInput
@@ -101416,6 +105796,7 @@ export namespace Prisma {
     catalog_items?: catalog_itemsUpdateManyWithoutBusinessesNestedInput
     product_item_details?: product_item_detailsUpdateManyWithoutBusinessNestedInput
     hospitality_item_details?: hospitality_item_detailsUpdateManyWithoutBusinessNestedInput
+    vehicle_item_details?: vehicle_item_detailsUpdateManyWithoutBusinessNestedInput
     product_orders?: product_ordersUpdateManyWithoutBusinessNestedInput
     product_inquiries?: product_inquiriesUpdateManyWithoutBusinessNestedInput
     hospitality_bookings?: hospitality_bookingsUpdateManyWithoutBusinessNestedInput
@@ -101464,6 +105845,7 @@ export namespace Prisma {
     catalog_items?: catalog_itemsUncheckedUpdateManyWithoutBusinessesNestedInput
     product_item_details?: product_item_detailsUncheckedUpdateManyWithoutBusinessNestedInput
     hospitality_item_details?: hospitality_item_detailsUncheckedUpdateManyWithoutBusinessNestedInput
+    vehicle_item_details?: vehicle_item_detailsUncheckedUpdateManyWithoutBusinessNestedInput
     product_orders?: product_ordersUncheckedUpdateManyWithoutBusinessNestedInput
     product_inquiries?: product_inquiriesUncheckedUpdateManyWithoutBusinessNestedInput
     hospitality_bookings?: hospitality_bookingsUncheckedUpdateManyWithoutBusinessNestedInput
@@ -102370,6 +106752,11 @@ export namespace Prisma {
     status?: string
     lost_reason?: string | null
     context?: NullableJsonNullValueInput | InputJsonValue
+    lead_type?: string | null
+    qualification_score?: number
+    exit_intent_sent_at?: Date | string | null
+    exit_captured_at?: Date | string | null
+    exit_reason?: string | null
     quoted_amount?: Decimal | DecimalJsLike | number | string | null
     quoted_at?: Date | string | null
     converted_value?: Decimal | DecimalJsLike | number | string | null
@@ -102387,6 +106774,8 @@ export namespace Prisma {
     hospitality_inquiries?: hospitality_inquiriesCreateNestedManyWithoutLeadInput
     product_orders?: product_ordersCreateNestedManyWithoutLeadInput
     hospitality_bookings?: hospitality_bookingsCreateNestedManyWithoutLeadInput
+    item_interests?: lead_item_interestsCreateNestedManyWithoutLeadsInput
+    preference_watches?: lead_preference_watchesCreateNestedManyWithoutLeadsInput
     assigned_user?: usersCreateNestedOneWithoutLeads_assignedInput
     businesses: businessesCreateNestedOneWithoutLeadsInput
     tenants: tenantsCreateNestedOneWithoutLeadsInput
@@ -102411,6 +106800,11 @@ export namespace Prisma {
     pipeline_id?: string | null
     lost_reason?: string | null
     context?: NullableJsonNullValueInput | InputJsonValue
+    lead_type?: string | null
+    qualification_score?: number
+    exit_intent_sent_at?: Date | string | null
+    exit_captured_at?: Date | string | null
+    exit_reason?: string | null
     quoted_amount?: Decimal | DecimalJsLike | number | string | null
     quoted_at?: Date | string | null
     converted_value?: Decimal | DecimalJsLike | number | string | null
@@ -102429,6 +106823,8 @@ export namespace Prisma {
     hospitality_inquiries?: hospitality_inquiriesUncheckedCreateNestedManyWithoutLeadInput
     product_orders?: product_ordersUncheckedCreateNestedManyWithoutLeadInput
     hospitality_bookings?: hospitality_bookingsUncheckedCreateNestedManyWithoutLeadInput
+    item_interests?: lead_item_interestsUncheckedCreateNestedManyWithoutLeadsInput
+    preference_watches?: lead_preference_watchesUncheckedCreateNestedManyWithoutLeadsInput
     orders?: ordersUncheckedCreateNestedManyWithoutLeadsInput
     workflow_executions?: workflow_executionsUncheckedCreateNestedManyWithoutLeadsInput
   }
@@ -102444,6 +106840,11 @@ export namespace Prisma {
     status?: StringFieldUpdateOperationsInput | string
     lost_reason?: NullableStringFieldUpdateOperationsInput | string | null
     context?: NullableJsonNullValueInput | InputJsonValue
+    lead_type?: NullableStringFieldUpdateOperationsInput | string | null
+    qualification_score?: IntFieldUpdateOperationsInput | number
+    exit_intent_sent_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    exit_captured_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    exit_reason?: NullableStringFieldUpdateOperationsInput | string | null
     quoted_amount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     quoted_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     converted_value?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
@@ -102461,6 +106862,8 @@ export namespace Prisma {
     hospitality_inquiries?: hospitality_inquiriesUpdateManyWithoutLeadNestedInput
     product_orders?: product_ordersUpdateManyWithoutLeadNestedInput
     hospitality_bookings?: hospitality_bookingsUpdateManyWithoutLeadNestedInput
+    item_interests?: lead_item_interestsUpdateManyWithoutLeadsNestedInput
+    preference_watches?: lead_preference_watchesUpdateManyWithoutLeadsNestedInput
     assigned_user?: usersUpdateOneWithoutLeads_assignedNestedInput
     businesses?: businessesUpdateOneRequiredWithoutLeadsNestedInput
     tenants?: tenantsUpdateOneRequiredWithoutLeadsNestedInput
@@ -102485,6 +106888,11 @@ export namespace Prisma {
     pipeline_id?: NullableStringFieldUpdateOperationsInput | string | null
     lost_reason?: NullableStringFieldUpdateOperationsInput | string | null
     context?: NullableJsonNullValueInput | InputJsonValue
+    lead_type?: NullableStringFieldUpdateOperationsInput | string | null
+    qualification_score?: IntFieldUpdateOperationsInput | number
+    exit_intent_sent_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    exit_captured_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    exit_reason?: NullableStringFieldUpdateOperationsInput | string | null
     quoted_amount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     quoted_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     converted_value?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
@@ -102503,6 +106911,8 @@ export namespace Prisma {
     hospitality_inquiries?: hospitality_inquiriesUncheckedUpdateManyWithoutLeadNestedInput
     product_orders?: product_ordersUncheckedUpdateManyWithoutLeadNestedInput
     hospitality_bookings?: hospitality_bookingsUncheckedUpdateManyWithoutLeadNestedInput
+    item_interests?: lead_item_interestsUncheckedUpdateManyWithoutLeadsNestedInput
+    preference_watches?: lead_preference_watchesUncheckedUpdateManyWithoutLeadsNestedInput
     orders?: ordersUncheckedUpdateManyWithoutLeadsNestedInput
     workflow_executions?: workflow_executionsUncheckedUpdateManyWithoutLeadsNestedInput
   }
@@ -102522,6 +106932,11 @@ export namespace Prisma {
     pipeline_id?: string | null
     lost_reason?: string | null
     context?: NullableJsonNullValueInput | InputJsonValue
+    lead_type?: string | null
+    qualification_score?: number
+    exit_intent_sent_at?: Date | string | null
+    exit_captured_at?: Date | string | null
+    exit_reason?: string | null
     quoted_amount?: Decimal | DecimalJsLike | number | string | null
     quoted_at?: Date | string | null
     converted_value?: Decimal | DecimalJsLike | number | string | null
@@ -102545,6 +106960,11 @@ export namespace Prisma {
     status?: StringFieldUpdateOperationsInput | string
     lost_reason?: NullableStringFieldUpdateOperationsInput | string | null
     context?: NullableJsonNullValueInput | InputJsonValue
+    lead_type?: NullableStringFieldUpdateOperationsInput | string | null
+    qualification_score?: IntFieldUpdateOperationsInput | number
+    exit_intent_sent_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    exit_captured_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    exit_reason?: NullableStringFieldUpdateOperationsInput | string | null
     quoted_amount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     quoted_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     converted_value?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
@@ -102571,6 +106991,11 @@ export namespace Prisma {
     pipeline_id?: NullableStringFieldUpdateOperationsInput | string | null
     lost_reason?: NullableStringFieldUpdateOperationsInput | string | null
     context?: NullableJsonNullValueInput | InputJsonValue
+    lead_type?: NullableStringFieldUpdateOperationsInput | string | null
+    qualification_score?: IntFieldUpdateOperationsInput | number
+    exit_intent_sent_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    exit_captured_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    exit_reason?: NullableStringFieldUpdateOperationsInput | string | null
     quoted_amount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     quoted_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     converted_value?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
@@ -106467,6 +110892,7 @@ export namespace Prisma {
     cart_reservations?: cart_reservationsCreateNestedManyWithoutCatalog_itemInput
     product_detail?: product_item_detailsCreateNestedOneWithoutItemInput
     hospitality_detail?: hospitality_item_detailsCreateNestedOneWithoutItemInput
+    vehicle_detail?: vehicle_item_detailsCreateNestedOneWithoutItemInput
     product_order_items?: product_order_itemsCreateNestedManyWithoutItemInput
     hospitality_booking_items?: hospitality_booking_itemsCreateNestedManyWithoutItemInput
     product_inquiries?: product_inquiriesCreateNestedManyWithoutItemInput
@@ -106501,6 +110927,7 @@ export namespace Prisma {
     cart_reservations?: cart_reservationsUncheckedCreateNestedManyWithoutCatalog_itemInput
     product_detail?: product_item_detailsUncheckedCreateNestedOneWithoutItemInput
     hospitality_detail?: hospitality_item_detailsUncheckedCreateNestedOneWithoutItemInput
+    vehicle_detail?: vehicle_item_detailsUncheckedCreateNestedOneWithoutItemInput
     product_order_items?: product_order_itemsUncheckedCreateNestedManyWithoutItemInput
     hospitality_booking_items?: hospitality_booking_itemsUncheckedCreateNestedManyWithoutItemInput
     product_inquiries?: product_inquiriesUncheckedCreateNestedManyWithoutItemInput
@@ -106533,6 +110960,7 @@ export namespace Prisma {
     cart_reservations?: cart_reservationsUpdateManyWithoutCatalog_itemNestedInput
     product_detail?: product_item_detailsUpdateOneWithoutItemNestedInput
     hospitality_detail?: hospitality_item_detailsUpdateOneWithoutItemNestedInput
+    vehicle_detail?: vehicle_item_detailsUpdateOneWithoutItemNestedInput
     product_order_items?: product_order_itemsUpdateManyWithoutItemNestedInput
     hospitality_booking_items?: hospitality_booking_itemsUpdateManyWithoutItemNestedInput
     product_inquiries?: product_inquiriesUpdateManyWithoutItemNestedInput
@@ -106567,6 +110995,7 @@ export namespace Prisma {
     cart_reservations?: cart_reservationsUncheckedUpdateManyWithoutCatalog_itemNestedInput
     product_detail?: product_item_detailsUncheckedUpdateOneWithoutItemNestedInput
     hospitality_detail?: hospitality_item_detailsUncheckedUpdateOneWithoutItemNestedInput
+    vehicle_detail?: vehicle_item_detailsUncheckedUpdateOneWithoutItemNestedInput
     product_order_items?: product_order_itemsUncheckedUpdateManyWithoutItemNestedInput
     hospitality_booking_items?: hospitality_booking_itemsUncheckedUpdateManyWithoutItemNestedInput
     product_inquiries?: product_inquiriesUncheckedUpdateManyWithoutItemNestedInput
@@ -107575,6 +112004,116 @@ export namespace Prisma {
     cancellation_policy?: NullableStringFieldUpdateOperationsInput | string | null
     tax_percentage?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     extra_guest_charge?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type vehicle_item_detailsCreateInput = {
+    make: string
+    model_name: string
+    year: number
+    fuel_type?: string | null
+    transmission?: string | null
+    color?: string | null
+    km_driven?: number | null
+    condition?: string
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    created_at?: Date | string
+    updated_at?: Date | string
+    business: businessesCreateNestedOneWithoutVehicle_item_detailsInput
+    item: catalog_itemsCreateNestedOneWithoutVehicle_detailInput
+  }
+
+  export type vehicle_item_detailsUncheckedCreateInput = {
+    item_id: string
+    business_id: string
+    make: string
+    model_name: string
+    year: number
+    fuel_type?: string | null
+    transmission?: string | null
+    color?: string | null
+    km_driven?: number | null
+    condition?: string
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    created_at?: Date | string
+    updated_at?: Date | string
+  }
+
+  export type vehicle_item_detailsUpdateInput = {
+    make?: StringFieldUpdateOperationsInput | string
+    model_name?: StringFieldUpdateOperationsInput | string
+    year?: IntFieldUpdateOperationsInput | number
+    fuel_type?: NullableStringFieldUpdateOperationsInput | string | null
+    transmission?: NullableStringFieldUpdateOperationsInput | string | null
+    color?: NullableStringFieldUpdateOperationsInput | string | null
+    km_driven?: NullableIntFieldUpdateOperationsInput | number | null
+    condition?: StringFieldUpdateOperationsInput | string
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    business?: businessesUpdateOneRequiredWithoutVehicle_item_detailsNestedInput
+    item?: catalog_itemsUpdateOneRequiredWithoutVehicle_detailNestedInput
+  }
+
+  export type vehicle_item_detailsUncheckedUpdateInput = {
+    item_id?: StringFieldUpdateOperationsInput | string
+    business_id?: StringFieldUpdateOperationsInput | string
+    make?: StringFieldUpdateOperationsInput | string
+    model_name?: StringFieldUpdateOperationsInput | string
+    year?: IntFieldUpdateOperationsInput | number
+    fuel_type?: NullableStringFieldUpdateOperationsInput | string | null
+    transmission?: NullableStringFieldUpdateOperationsInput | string | null
+    color?: NullableStringFieldUpdateOperationsInput | string | null
+    km_driven?: NullableIntFieldUpdateOperationsInput | number | null
+    condition?: StringFieldUpdateOperationsInput | string
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type vehicle_item_detailsCreateManyInput = {
+    item_id: string
+    business_id: string
+    make: string
+    model_name: string
+    year: number
+    fuel_type?: string | null
+    transmission?: string | null
+    color?: string | null
+    km_driven?: number | null
+    condition?: string
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    created_at?: Date | string
+    updated_at?: Date | string
+  }
+
+  export type vehicle_item_detailsUpdateManyMutationInput = {
+    make?: StringFieldUpdateOperationsInput | string
+    model_name?: StringFieldUpdateOperationsInput | string
+    year?: IntFieldUpdateOperationsInput | number
+    fuel_type?: NullableStringFieldUpdateOperationsInput | string | null
+    transmission?: NullableStringFieldUpdateOperationsInput | string | null
+    color?: NullableStringFieldUpdateOperationsInput | string | null
+    km_driven?: NullableIntFieldUpdateOperationsInput | number | null
+    condition?: StringFieldUpdateOperationsInput | string
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type vehicle_item_detailsUncheckedUpdateManyInput = {
+    item_id?: StringFieldUpdateOperationsInput | string
+    business_id?: StringFieldUpdateOperationsInput | string
+    make?: StringFieldUpdateOperationsInput | string
+    model_name?: StringFieldUpdateOperationsInput | string
+    year?: IntFieldUpdateOperationsInput | number
+    fuel_type?: NullableStringFieldUpdateOperationsInput | string | null
+    transmission?: NullableStringFieldUpdateOperationsInput | string | null
+    color?: NullableStringFieldUpdateOperationsInput | string | null
+    km_driven?: NullableIntFieldUpdateOperationsInput | number | null
+    condition?: StringFieldUpdateOperationsInput | string
     metadata?: NullableJsonNullValueInput | InputJsonValue
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -109185,6 +113724,7 @@ export namespace Prisma {
     booking_methods?: JsonNullValueInput | InputJsonValue
     booking_link?: JsonNullValueInput | InputJsonValue
     low_balance_alert?: Decimal | DecimalJsLike | number | string
+    default_country_code?: string
     updated_at?: Date | string
     businesses: businessesCreateNestedOneWithoutSettingsInput
   }
@@ -109202,6 +113742,7 @@ export namespace Prisma {
     booking_methods?: JsonNullValueInput | InputJsonValue
     booking_link?: JsonNullValueInput | InputJsonValue
     low_balance_alert?: Decimal | DecimalJsLike | number | string
+    default_country_code?: string
     updated_at?: Date | string
   }
 
@@ -109217,6 +113758,7 @@ export namespace Prisma {
     booking_methods?: JsonNullValueInput | InputJsonValue
     booking_link?: JsonNullValueInput | InputJsonValue
     low_balance_alert?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    default_country_code?: StringFieldUpdateOperationsInput | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     businesses?: businessesUpdateOneRequiredWithoutSettingsNestedInput
   }
@@ -109234,6 +113776,7 @@ export namespace Prisma {
     booking_methods?: JsonNullValueInput | InputJsonValue
     booking_link?: JsonNullValueInput | InputJsonValue
     low_balance_alert?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    default_country_code?: StringFieldUpdateOperationsInput | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -109250,6 +113793,7 @@ export namespace Prisma {
     booking_methods?: JsonNullValueInput | InputJsonValue
     booking_link?: JsonNullValueInput | InputJsonValue
     low_balance_alert?: Decimal | DecimalJsLike | number | string
+    default_country_code?: string
     updated_at?: Date | string
   }
 
@@ -109265,6 +113809,7 @@ export namespace Prisma {
     booking_methods?: JsonNullValueInput | InputJsonValue
     booking_link?: JsonNullValueInput | InputJsonValue
     low_balance_alert?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    default_country_code?: StringFieldUpdateOperationsInput | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -109281,6 +113826,7 @@ export namespace Prisma {
     booking_methods?: JsonNullValueInput | InputJsonValue
     booking_link?: JsonNullValueInput | InputJsonValue
     low_balance_alert?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    default_country_code?: StringFieldUpdateOperationsInput | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -109377,6 +113923,186 @@ export namespace Prisma {
     new_values?: NullableJsonNullValueInput | InputJsonValue
     ip_address?: NullableStringFieldUpdateOperationsInput | string | null
     user_agent?: NullableStringFieldUpdateOperationsInput | string | null
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type lead_item_interestsCreateInput = {
+    interest_id?: string
+    business_id: string
+    item_id?: string | null
+    item_type: string
+    item_name: string
+    interest_level?: string
+    last_price_seen?: Decimal | DecimalJsLike | number | string | null
+    is_alert_active?: boolean
+    created_at?: Date | string
+    updated_at?: Date | string
+    leads: leadsCreateNestedOneWithoutItem_interestsInput
+  }
+
+  export type lead_item_interestsUncheckedCreateInput = {
+    interest_id?: string
+    lead_id: string
+    business_id: string
+    item_id?: string | null
+    item_type: string
+    item_name: string
+    interest_level?: string
+    last_price_seen?: Decimal | DecimalJsLike | number | string | null
+    is_alert_active?: boolean
+    created_at?: Date | string
+    updated_at?: Date | string
+  }
+
+  export type lead_item_interestsUpdateInput = {
+    interest_id?: StringFieldUpdateOperationsInput | string
+    business_id?: StringFieldUpdateOperationsInput | string
+    item_id?: NullableStringFieldUpdateOperationsInput | string | null
+    item_type?: StringFieldUpdateOperationsInput | string
+    item_name?: StringFieldUpdateOperationsInput | string
+    interest_level?: StringFieldUpdateOperationsInput | string
+    last_price_seen?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    is_alert_active?: BoolFieldUpdateOperationsInput | boolean
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    leads?: leadsUpdateOneRequiredWithoutItem_interestsNestedInput
+  }
+
+  export type lead_item_interestsUncheckedUpdateInput = {
+    interest_id?: StringFieldUpdateOperationsInput | string
+    lead_id?: StringFieldUpdateOperationsInput | string
+    business_id?: StringFieldUpdateOperationsInput | string
+    item_id?: NullableStringFieldUpdateOperationsInput | string | null
+    item_type?: StringFieldUpdateOperationsInput | string
+    item_name?: StringFieldUpdateOperationsInput | string
+    interest_level?: StringFieldUpdateOperationsInput | string
+    last_price_seen?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    is_alert_active?: BoolFieldUpdateOperationsInput | boolean
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type lead_item_interestsCreateManyInput = {
+    interest_id?: string
+    lead_id: string
+    business_id: string
+    item_id?: string | null
+    item_type: string
+    item_name: string
+    interest_level?: string
+    last_price_seen?: Decimal | DecimalJsLike | number | string | null
+    is_alert_active?: boolean
+    created_at?: Date | string
+    updated_at?: Date | string
+  }
+
+  export type lead_item_interestsUpdateManyMutationInput = {
+    interest_id?: StringFieldUpdateOperationsInput | string
+    business_id?: StringFieldUpdateOperationsInput | string
+    item_id?: NullableStringFieldUpdateOperationsInput | string | null
+    item_type?: StringFieldUpdateOperationsInput | string
+    item_name?: StringFieldUpdateOperationsInput | string
+    interest_level?: StringFieldUpdateOperationsInput | string
+    last_price_seen?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    is_alert_active?: BoolFieldUpdateOperationsInput | boolean
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type lead_item_interestsUncheckedUpdateManyInput = {
+    interest_id?: StringFieldUpdateOperationsInput | string
+    lead_id?: StringFieldUpdateOperationsInput | string
+    business_id?: StringFieldUpdateOperationsInput | string
+    item_id?: NullableStringFieldUpdateOperationsInput | string | null
+    item_type?: StringFieldUpdateOperationsInput | string
+    item_name?: StringFieldUpdateOperationsInput | string
+    interest_level?: StringFieldUpdateOperationsInput | string
+    last_price_seen?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    is_alert_active?: BoolFieldUpdateOperationsInput | boolean
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type lead_preference_watchesCreateInput = {
+    watch_id?: string
+    business_id: string
+    watch_type: string
+    criteria: JsonNullValueInput | InputJsonValue
+    is_active?: boolean
+    notified_at?: Date | string | null
+    expires_at?: Date | string | null
+    created_at?: Date | string
+    leads: leadsCreateNestedOneWithoutPreference_watchesInput
+  }
+
+  export type lead_preference_watchesUncheckedCreateInput = {
+    watch_id?: string
+    lead_id: string
+    business_id: string
+    watch_type: string
+    criteria: JsonNullValueInput | InputJsonValue
+    is_active?: boolean
+    notified_at?: Date | string | null
+    expires_at?: Date | string | null
+    created_at?: Date | string
+  }
+
+  export type lead_preference_watchesUpdateInput = {
+    watch_id?: StringFieldUpdateOperationsInput | string
+    business_id?: StringFieldUpdateOperationsInput | string
+    watch_type?: StringFieldUpdateOperationsInput | string
+    criteria?: JsonNullValueInput | InputJsonValue
+    is_active?: BoolFieldUpdateOperationsInput | boolean
+    notified_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    expires_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    leads?: leadsUpdateOneRequiredWithoutPreference_watchesNestedInput
+  }
+
+  export type lead_preference_watchesUncheckedUpdateInput = {
+    watch_id?: StringFieldUpdateOperationsInput | string
+    lead_id?: StringFieldUpdateOperationsInput | string
+    business_id?: StringFieldUpdateOperationsInput | string
+    watch_type?: StringFieldUpdateOperationsInput | string
+    criteria?: JsonNullValueInput | InputJsonValue
+    is_active?: BoolFieldUpdateOperationsInput | boolean
+    notified_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    expires_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type lead_preference_watchesCreateManyInput = {
+    watch_id?: string
+    lead_id: string
+    business_id: string
+    watch_type: string
+    criteria: JsonNullValueInput | InputJsonValue
+    is_active?: boolean
+    notified_at?: Date | string | null
+    expires_at?: Date | string | null
+    created_at?: Date | string
+  }
+
+  export type lead_preference_watchesUpdateManyMutationInput = {
+    watch_id?: StringFieldUpdateOperationsInput | string
+    business_id?: StringFieldUpdateOperationsInput | string
+    watch_type?: StringFieldUpdateOperationsInput | string
+    criteria?: JsonNullValueInput | InputJsonValue
+    is_active?: BoolFieldUpdateOperationsInput | boolean
+    notified_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    expires_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type lead_preference_watchesUncheckedUpdateManyInput = {
+    watch_id?: StringFieldUpdateOperationsInput | string
+    lead_id?: StringFieldUpdateOperationsInput | string
+    business_id?: StringFieldUpdateOperationsInput | string
+    watch_type?: StringFieldUpdateOperationsInput | string
+    criteria?: JsonNullValueInput | InputJsonValue
+    is_active?: BoolFieldUpdateOperationsInput | boolean
+    notified_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    expires_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -109483,6 +114209,12 @@ export namespace Prisma {
     every?: hospitality_item_detailsWhereInput
     some?: hospitality_item_detailsWhereInput
     none?: hospitality_item_detailsWhereInput
+  }
+
+  export type Vehicle_item_detailsListRelationFilter = {
+    every?: vehicle_item_detailsWhereInput
+    some?: vehicle_item_detailsWhereInput
+    none?: vehicle_item_detailsWhereInput
   }
 
   export type Product_ordersListRelationFilter = {
@@ -109640,6 +114372,10 @@ export namespace Prisma {
   }
 
   export type hospitality_item_detailsOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type vehicle_item_detailsOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -110378,6 +115114,17 @@ export namespace Prisma {
     not?: NestedUuidNullableFilter<$PrismaModel> | string | null
   }
 
+  export type IntFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel>
+    in?: number[] | ListIntFieldRefInput<$PrismaModel>
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel>
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntFilter<$PrismaModel> | number
+  }
+
   export type DecimalNullableFilter<$PrismaModel = never> = {
     equals?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel> | null
     in?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel> | null
@@ -110409,6 +115156,18 @@ export namespace Prisma {
     none?: lead_eventsWhereInput
   }
 
+  export type Lead_item_interestsListRelationFilter = {
+    every?: lead_item_interestsWhereInput
+    some?: lead_item_interestsWhereInput
+    none?: lead_item_interestsWhereInput
+  }
+
+  export type Lead_preference_watchesListRelationFilter = {
+    every?: lead_preference_watchesWhereInput
+    some?: lead_preference_watchesWhereInput
+    none?: lead_preference_watchesWhereInput
+  }
+
   export type UsersNullableScalarRelationFilter = {
     is?: usersWhereInput | null
     isNot?: usersWhereInput | null
@@ -110438,6 +115197,14 @@ export namespace Prisma {
     _count?: SortOrder
   }
 
+  export type lead_item_interestsOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type lead_preference_watchesOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
   export type ordersOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
@@ -110462,6 +115229,11 @@ export namespace Prisma {
     pipeline_id?: SortOrder
     lost_reason?: SortOrder
     context?: SortOrder
+    lead_type?: SortOrder
+    qualification_score?: SortOrder
+    exit_intent_sent_at?: SortOrder
+    exit_captured_at?: SortOrder
+    exit_reason?: SortOrder
     quoted_amount?: SortOrder
     quoted_at?: SortOrder
     converted_value?: SortOrder
@@ -110475,6 +115247,7 @@ export namespace Prisma {
   }
 
   export type leadsAvgOrderByAggregateInput = {
+    qualification_score?: SortOrder
     quoted_amount?: SortOrder
     converted_value?: SortOrder
   }
@@ -110493,6 +115266,11 @@ export namespace Prisma {
     stage_id?: SortOrder
     pipeline_id?: SortOrder
     lost_reason?: SortOrder
+    lead_type?: SortOrder
+    qualification_score?: SortOrder
+    exit_intent_sent_at?: SortOrder
+    exit_captured_at?: SortOrder
+    exit_reason?: SortOrder
     quoted_amount?: SortOrder
     quoted_at?: SortOrder
     converted_value?: SortOrder
@@ -110518,6 +115296,11 @@ export namespace Prisma {
     stage_id?: SortOrder
     pipeline_id?: SortOrder
     lost_reason?: SortOrder
+    lead_type?: SortOrder
+    qualification_score?: SortOrder
+    exit_intent_sent_at?: SortOrder
+    exit_captured_at?: SortOrder
+    exit_reason?: SortOrder
     quoted_amount?: SortOrder
     quoted_at?: SortOrder
     converted_value?: SortOrder
@@ -110530,6 +115313,7 @@ export namespace Prisma {
   }
 
   export type leadsSumOrderByAggregateInput = {
+    qualification_score?: SortOrder
     quoted_amount?: SortOrder
     converted_value?: SortOrder
   }
@@ -110547,6 +115331,22 @@ export namespace Prisma {
     _count?: NestedIntNullableFilter<$PrismaModel>
     _min?: NestedStringNullableFilter<$PrismaModel>
     _max?: NestedStringNullableFilter<$PrismaModel>
+  }
+
+  export type IntWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel>
+    in?: number[] | ListIntFieldRefInput<$PrismaModel>
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel>
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntWithAggregatesFilter<$PrismaModel> | number
+    _count?: NestedIntFilter<$PrismaModel>
+    _avg?: NestedFloatFilter<$PrismaModel>
+    _sum?: NestedIntFilter<$PrismaModel>
+    _min?: NestedIntFilter<$PrismaModel>
+    _max?: NestedIntFilter<$PrismaModel>
   }
 
   export type DecimalNullableWithAggregatesFilter<$PrismaModel = never> = {
@@ -110606,17 +115406,6 @@ export namespace Prisma {
     is_archived?: SortOrder
     created_at?: SortOrder
     updated_at?: SortOrder
-  }
-
-  export type IntFilter<$PrismaModel = never> = {
-    equals?: number | IntFieldRefInput<$PrismaModel>
-    in?: number[] | ListIntFieldRefInput<$PrismaModel>
-    notIn?: number[] | ListIntFieldRefInput<$PrismaModel>
-    lt?: number | IntFieldRefInput<$PrismaModel>
-    lte?: number | IntFieldRefInput<$PrismaModel>
-    gt?: number | IntFieldRefInput<$PrismaModel>
-    gte?: number | IntFieldRefInput<$PrismaModel>
-    not?: NestedIntFilter<$PrismaModel> | number
   }
 
   export type PipelinesScalarRelationFilter = {
@@ -110679,22 +115468,6 @@ export namespace Prisma {
 
   export type pipeline_stagesSumOrderByAggregateInput = {
     position?: SortOrder
-  }
-
-  export type IntWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: number | IntFieldRefInput<$PrismaModel>
-    in?: number[] | ListIntFieldRefInput<$PrismaModel>
-    notIn?: number[] | ListIntFieldRefInput<$PrismaModel>
-    lt?: number | IntFieldRefInput<$PrismaModel>
-    lte?: number | IntFieldRefInput<$PrismaModel>
-    gt?: number | IntFieldRefInput<$PrismaModel>
-    gte?: number | IntFieldRefInput<$PrismaModel>
-    not?: NestedIntWithAggregatesFilter<$PrismaModel> | number
-    _count?: NestedIntFilter<$PrismaModel>
-    _avg?: NestedFloatFilter<$PrismaModel>
-    _sum?: NestedIntFilter<$PrismaModel>
-    _min?: NestedIntFilter<$PrismaModel>
-    _max?: NestedIntFilter<$PrismaModel>
   }
 
   export type LeadsScalarRelationFilter = {
@@ -112040,11 +116813,6 @@ export namespace Prisma {
     comment_count?: SortOrder
   }
 
-  export type workflow_definitionsBusiness_typeIntent_nameCompoundUniqueInput = {
-    business_type: string
-    intent_name: string
-  }
-
   export type workflow_definitionsCountOrderByAggregateInput = {
     workflow_id?: SortOrder
     workflow_key?: SortOrder
@@ -112797,6 +117565,11 @@ export namespace Prisma {
     isNot?: hospitality_item_detailsWhereInput | null
   }
 
+  export type Vehicle_item_detailsNullableScalarRelationFilter = {
+    is?: vehicle_item_detailsWhereInput | null
+    isNot?: vehicle_item_detailsWhereInput | null
+  }
+
   export type Product_order_itemsListRelationFilter = {
     every?: product_order_itemsWhereInput
     some?: product_order_itemsWhereInput
@@ -113407,6 +118180,62 @@ export namespace Prisma {
     max_adults?: SortOrder
     tax_percentage?: SortOrder
     extra_guest_charge?: SortOrder
+  }
+
+  export type vehicle_item_detailsCountOrderByAggregateInput = {
+    item_id?: SortOrder
+    business_id?: SortOrder
+    make?: SortOrder
+    model_name?: SortOrder
+    year?: SortOrder
+    fuel_type?: SortOrder
+    transmission?: SortOrder
+    color?: SortOrder
+    km_driven?: SortOrder
+    condition?: SortOrder
+    metadata?: SortOrder
+    created_at?: SortOrder
+    updated_at?: SortOrder
+  }
+
+  export type vehicle_item_detailsAvgOrderByAggregateInput = {
+    year?: SortOrder
+    km_driven?: SortOrder
+  }
+
+  export type vehicle_item_detailsMaxOrderByAggregateInput = {
+    item_id?: SortOrder
+    business_id?: SortOrder
+    make?: SortOrder
+    model_name?: SortOrder
+    year?: SortOrder
+    fuel_type?: SortOrder
+    transmission?: SortOrder
+    color?: SortOrder
+    km_driven?: SortOrder
+    condition?: SortOrder
+    created_at?: SortOrder
+    updated_at?: SortOrder
+  }
+
+  export type vehicle_item_detailsMinOrderByAggregateInput = {
+    item_id?: SortOrder
+    business_id?: SortOrder
+    make?: SortOrder
+    model_name?: SortOrder
+    year?: SortOrder
+    fuel_type?: SortOrder
+    transmission?: SortOrder
+    color?: SortOrder
+    km_driven?: SortOrder
+    condition?: SortOrder
+    created_at?: SortOrder
+    updated_at?: SortOrder
+  }
+
+  export type vehicle_item_detailsSumOrderByAggregateInput = {
+    year?: SortOrder
+    km_driven?: SortOrder
   }
 
   export type hospitality_inquiriesCountOrderByAggregateInput = {
@@ -114321,6 +119150,7 @@ export namespace Prisma {
     booking_methods?: SortOrder
     booking_link?: SortOrder
     low_balance_alert?: SortOrder
+    default_country_code?: SortOrder
     updated_at?: SortOrder
   }
 
@@ -114339,6 +119169,7 @@ export namespace Prisma {
     ai_agent_enabled?: SortOrder
     auto_reply_enabled?: SortOrder
     low_balance_alert?: SortOrder
+    default_country_code?: SortOrder
     updated_at?: SortOrder
   }
 
@@ -114352,6 +119183,7 @@ export namespace Prisma {
     ai_agent_enabled?: SortOrder
     auto_reply_enabled?: SortOrder
     low_balance_alert?: SortOrder
+    default_country_code?: SortOrder
     updated_at?: SortOrder
   }
 
@@ -114395,6 +119227,95 @@ export namespace Prisma {
     entity_id?: SortOrder
     ip_address?: SortOrder
     user_agent?: SortOrder
+    created_at?: SortOrder
+  }
+
+  export type lead_item_interestsLead_idItem_idCompoundUniqueInput = {
+    lead_id: string
+    item_id: string
+  }
+
+  export type lead_item_interestsCountOrderByAggregateInput = {
+    interest_id?: SortOrder
+    lead_id?: SortOrder
+    business_id?: SortOrder
+    item_id?: SortOrder
+    item_type?: SortOrder
+    item_name?: SortOrder
+    interest_level?: SortOrder
+    last_price_seen?: SortOrder
+    is_alert_active?: SortOrder
+    created_at?: SortOrder
+    updated_at?: SortOrder
+  }
+
+  export type lead_item_interestsAvgOrderByAggregateInput = {
+    last_price_seen?: SortOrder
+  }
+
+  export type lead_item_interestsMaxOrderByAggregateInput = {
+    interest_id?: SortOrder
+    lead_id?: SortOrder
+    business_id?: SortOrder
+    item_id?: SortOrder
+    item_type?: SortOrder
+    item_name?: SortOrder
+    interest_level?: SortOrder
+    last_price_seen?: SortOrder
+    is_alert_active?: SortOrder
+    created_at?: SortOrder
+    updated_at?: SortOrder
+  }
+
+  export type lead_item_interestsMinOrderByAggregateInput = {
+    interest_id?: SortOrder
+    lead_id?: SortOrder
+    business_id?: SortOrder
+    item_id?: SortOrder
+    item_type?: SortOrder
+    item_name?: SortOrder
+    interest_level?: SortOrder
+    last_price_seen?: SortOrder
+    is_alert_active?: SortOrder
+    created_at?: SortOrder
+    updated_at?: SortOrder
+  }
+
+  export type lead_item_interestsSumOrderByAggregateInput = {
+    last_price_seen?: SortOrder
+  }
+
+  export type lead_preference_watchesCountOrderByAggregateInput = {
+    watch_id?: SortOrder
+    lead_id?: SortOrder
+    business_id?: SortOrder
+    watch_type?: SortOrder
+    criteria?: SortOrder
+    is_active?: SortOrder
+    notified_at?: SortOrder
+    expires_at?: SortOrder
+    created_at?: SortOrder
+  }
+
+  export type lead_preference_watchesMaxOrderByAggregateInput = {
+    watch_id?: SortOrder
+    lead_id?: SortOrder
+    business_id?: SortOrder
+    watch_type?: SortOrder
+    is_active?: SortOrder
+    notified_at?: SortOrder
+    expires_at?: SortOrder
+    created_at?: SortOrder
+  }
+
+  export type lead_preference_watchesMinOrderByAggregateInput = {
+    watch_id?: SortOrder
+    lead_id?: SortOrder
+    business_id?: SortOrder
+    watch_type?: SortOrder
+    is_active?: SortOrder
+    notified_at?: SortOrder
+    expires_at?: SortOrder
     created_at?: SortOrder
   }
 
@@ -114444,6 +119365,13 @@ export namespace Prisma {
     connectOrCreate?: hospitality_item_detailsCreateOrConnectWithoutBusinessInput | hospitality_item_detailsCreateOrConnectWithoutBusinessInput[]
     createMany?: hospitality_item_detailsCreateManyBusinessInputEnvelope
     connect?: hospitality_item_detailsWhereUniqueInput | hospitality_item_detailsWhereUniqueInput[]
+  }
+
+  export type vehicle_item_detailsCreateNestedManyWithoutBusinessInput = {
+    create?: XOR<vehicle_item_detailsCreateWithoutBusinessInput, vehicle_item_detailsUncheckedCreateWithoutBusinessInput> | vehicle_item_detailsCreateWithoutBusinessInput[] | vehicle_item_detailsUncheckedCreateWithoutBusinessInput[]
+    connectOrCreate?: vehicle_item_detailsCreateOrConnectWithoutBusinessInput | vehicle_item_detailsCreateOrConnectWithoutBusinessInput[]
+    createMany?: vehicle_item_detailsCreateManyBusinessInputEnvelope
+    connect?: vehicle_item_detailsWhereUniqueInput | vehicle_item_detailsWhereUniqueInput[]
   }
 
   export type product_ordersCreateNestedManyWithoutBusinessInput = {
@@ -114637,6 +119565,13 @@ export namespace Prisma {
     connectOrCreate?: hospitality_item_detailsCreateOrConnectWithoutBusinessInput | hospitality_item_detailsCreateOrConnectWithoutBusinessInput[]
     createMany?: hospitality_item_detailsCreateManyBusinessInputEnvelope
     connect?: hospitality_item_detailsWhereUniqueInput | hospitality_item_detailsWhereUniqueInput[]
+  }
+
+  export type vehicle_item_detailsUncheckedCreateNestedManyWithoutBusinessInput = {
+    create?: XOR<vehicle_item_detailsCreateWithoutBusinessInput, vehicle_item_detailsUncheckedCreateWithoutBusinessInput> | vehicle_item_detailsCreateWithoutBusinessInput[] | vehicle_item_detailsUncheckedCreateWithoutBusinessInput[]
+    connectOrCreate?: vehicle_item_detailsCreateOrConnectWithoutBusinessInput | vehicle_item_detailsCreateOrConnectWithoutBusinessInput[]
+    createMany?: vehicle_item_detailsCreateManyBusinessInputEnvelope
+    connect?: vehicle_item_detailsWhereUniqueInput | vehicle_item_detailsWhereUniqueInput[]
   }
 
   export type product_ordersUncheckedCreateNestedManyWithoutBusinessInput = {
@@ -114896,6 +119831,20 @@ export namespace Prisma {
     update?: hospitality_item_detailsUpdateWithWhereUniqueWithoutBusinessInput | hospitality_item_detailsUpdateWithWhereUniqueWithoutBusinessInput[]
     updateMany?: hospitality_item_detailsUpdateManyWithWhereWithoutBusinessInput | hospitality_item_detailsUpdateManyWithWhereWithoutBusinessInput[]
     deleteMany?: hospitality_item_detailsScalarWhereInput | hospitality_item_detailsScalarWhereInput[]
+  }
+
+  export type vehicle_item_detailsUpdateManyWithoutBusinessNestedInput = {
+    create?: XOR<vehicle_item_detailsCreateWithoutBusinessInput, vehicle_item_detailsUncheckedCreateWithoutBusinessInput> | vehicle_item_detailsCreateWithoutBusinessInput[] | vehicle_item_detailsUncheckedCreateWithoutBusinessInput[]
+    connectOrCreate?: vehicle_item_detailsCreateOrConnectWithoutBusinessInput | vehicle_item_detailsCreateOrConnectWithoutBusinessInput[]
+    upsert?: vehicle_item_detailsUpsertWithWhereUniqueWithoutBusinessInput | vehicle_item_detailsUpsertWithWhereUniqueWithoutBusinessInput[]
+    createMany?: vehicle_item_detailsCreateManyBusinessInputEnvelope
+    set?: vehicle_item_detailsWhereUniqueInput | vehicle_item_detailsWhereUniqueInput[]
+    disconnect?: vehicle_item_detailsWhereUniqueInput | vehicle_item_detailsWhereUniqueInput[]
+    delete?: vehicle_item_detailsWhereUniqueInput | vehicle_item_detailsWhereUniqueInput[]
+    connect?: vehicle_item_detailsWhereUniqueInput | vehicle_item_detailsWhereUniqueInput[]
+    update?: vehicle_item_detailsUpdateWithWhereUniqueWithoutBusinessInput | vehicle_item_detailsUpdateWithWhereUniqueWithoutBusinessInput[]
+    updateMany?: vehicle_item_detailsUpdateManyWithWhereWithoutBusinessInput | vehicle_item_detailsUpdateManyWithWhereWithoutBusinessInput[]
+    deleteMany?: vehicle_item_detailsScalarWhereInput | vehicle_item_detailsScalarWhereInput[]
   }
 
   export type product_ordersUpdateManyWithoutBusinessNestedInput = {
@@ -115276,6 +120225,20 @@ export namespace Prisma {
     update?: hospitality_item_detailsUpdateWithWhereUniqueWithoutBusinessInput | hospitality_item_detailsUpdateWithWhereUniqueWithoutBusinessInput[]
     updateMany?: hospitality_item_detailsUpdateManyWithWhereWithoutBusinessInput | hospitality_item_detailsUpdateManyWithWhereWithoutBusinessInput[]
     deleteMany?: hospitality_item_detailsScalarWhereInput | hospitality_item_detailsScalarWhereInput[]
+  }
+
+  export type vehicle_item_detailsUncheckedUpdateManyWithoutBusinessNestedInput = {
+    create?: XOR<vehicle_item_detailsCreateWithoutBusinessInput, vehicle_item_detailsUncheckedCreateWithoutBusinessInput> | vehicle_item_detailsCreateWithoutBusinessInput[] | vehicle_item_detailsUncheckedCreateWithoutBusinessInput[]
+    connectOrCreate?: vehicle_item_detailsCreateOrConnectWithoutBusinessInput | vehicle_item_detailsCreateOrConnectWithoutBusinessInput[]
+    upsert?: vehicle_item_detailsUpsertWithWhereUniqueWithoutBusinessInput | vehicle_item_detailsUpsertWithWhereUniqueWithoutBusinessInput[]
+    createMany?: vehicle_item_detailsCreateManyBusinessInputEnvelope
+    set?: vehicle_item_detailsWhereUniqueInput | vehicle_item_detailsWhereUniqueInput[]
+    disconnect?: vehicle_item_detailsWhereUniqueInput | vehicle_item_detailsWhereUniqueInput[]
+    delete?: vehicle_item_detailsWhereUniqueInput | vehicle_item_detailsWhereUniqueInput[]
+    connect?: vehicle_item_detailsWhereUniqueInput | vehicle_item_detailsWhereUniqueInput[]
+    update?: vehicle_item_detailsUpdateWithWhereUniqueWithoutBusinessInput | vehicle_item_detailsUpdateWithWhereUniqueWithoutBusinessInput[]
+    updateMany?: vehicle_item_detailsUpdateManyWithWhereWithoutBusinessInput | vehicle_item_detailsUpdateManyWithWhereWithoutBusinessInput[]
+    deleteMany?: vehicle_item_detailsScalarWhereInput | vehicle_item_detailsScalarWhereInput[]
   }
 
   export type product_ordersUncheckedUpdateManyWithoutBusinessNestedInput = {
@@ -116630,6 +121593,20 @@ export namespace Prisma {
     connect?: hospitality_bookingsWhereUniqueInput | hospitality_bookingsWhereUniqueInput[]
   }
 
+  export type lead_item_interestsCreateNestedManyWithoutLeadsInput = {
+    create?: XOR<lead_item_interestsCreateWithoutLeadsInput, lead_item_interestsUncheckedCreateWithoutLeadsInput> | lead_item_interestsCreateWithoutLeadsInput[] | lead_item_interestsUncheckedCreateWithoutLeadsInput[]
+    connectOrCreate?: lead_item_interestsCreateOrConnectWithoutLeadsInput | lead_item_interestsCreateOrConnectWithoutLeadsInput[]
+    createMany?: lead_item_interestsCreateManyLeadsInputEnvelope
+    connect?: lead_item_interestsWhereUniqueInput | lead_item_interestsWhereUniqueInput[]
+  }
+
+  export type lead_preference_watchesCreateNestedManyWithoutLeadsInput = {
+    create?: XOR<lead_preference_watchesCreateWithoutLeadsInput, lead_preference_watchesUncheckedCreateWithoutLeadsInput> | lead_preference_watchesCreateWithoutLeadsInput[] | lead_preference_watchesUncheckedCreateWithoutLeadsInput[]
+    connectOrCreate?: lead_preference_watchesCreateOrConnectWithoutLeadsInput | lead_preference_watchesCreateOrConnectWithoutLeadsInput[]
+    createMany?: lead_preference_watchesCreateManyLeadsInputEnvelope
+    connect?: lead_preference_watchesWhereUniqueInput | lead_preference_watchesWhereUniqueInput[]
+  }
+
   export type usersCreateNestedOneWithoutLeads_assignedInput = {
     create?: XOR<usersCreateWithoutLeads_assignedInput, usersUncheckedCreateWithoutLeads_assignedInput>
     connectOrCreate?: usersCreateOrConnectWithoutLeads_assignedInput
@@ -116730,6 +121707,20 @@ export namespace Prisma {
     connect?: hospitality_bookingsWhereUniqueInput | hospitality_bookingsWhereUniqueInput[]
   }
 
+  export type lead_item_interestsUncheckedCreateNestedManyWithoutLeadsInput = {
+    create?: XOR<lead_item_interestsCreateWithoutLeadsInput, lead_item_interestsUncheckedCreateWithoutLeadsInput> | lead_item_interestsCreateWithoutLeadsInput[] | lead_item_interestsUncheckedCreateWithoutLeadsInput[]
+    connectOrCreate?: lead_item_interestsCreateOrConnectWithoutLeadsInput | lead_item_interestsCreateOrConnectWithoutLeadsInput[]
+    createMany?: lead_item_interestsCreateManyLeadsInputEnvelope
+    connect?: lead_item_interestsWhereUniqueInput | lead_item_interestsWhereUniqueInput[]
+  }
+
+  export type lead_preference_watchesUncheckedCreateNestedManyWithoutLeadsInput = {
+    create?: XOR<lead_preference_watchesCreateWithoutLeadsInput, lead_preference_watchesUncheckedCreateWithoutLeadsInput> | lead_preference_watchesCreateWithoutLeadsInput[] | lead_preference_watchesUncheckedCreateWithoutLeadsInput[]
+    connectOrCreate?: lead_preference_watchesCreateOrConnectWithoutLeadsInput | lead_preference_watchesCreateOrConnectWithoutLeadsInput[]
+    createMany?: lead_preference_watchesCreateManyLeadsInputEnvelope
+    connect?: lead_preference_watchesWhereUniqueInput | lead_preference_watchesWhereUniqueInput[]
+  }
+
   export type ordersUncheckedCreateNestedManyWithoutLeadsInput = {
     create?: XOR<ordersCreateWithoutLeadsInput, ordersUncheckedCreateWithoutLeadsInput> | ordersCreateWithoutLeadsInput[] | ordersUncheckedCreateWithoutLeadsInput[]
     connectOrCreate?: ordersCreateOrConnectWithoutLeadsInput | ordersCreateOrConnectWithoutLeadsInput[]
@@ -116742,6 +121733,14 @@ export namespace Prisma {
     connectOrCreate?: workflow_executionsCreateOrConnectWithoutLeadsInput | workflow_executionsCreateOrConnectWithoutLeadsInput[]
     createMany?: workflow_executionsCreateManyLeadsInputEnvelope
     connect?: workflow_executionsWhereUniqueInput | workflow_executionsWhereUniqueInput[]
+  }
+
+  export type IntFieldUpdateOperationsInput = {
+    set?: number
+    increment?: number
+    decrement?: number
+    multiply?: number
+    divide?: number
   }
 
   export type NullableDecimalFieldUpdateOperationsInput = {
@@ -116867,6 +121866,34 @@ export namespace Prisma {
     update?: hospitality_bookingsUpdateWithWhereUniqueWithoutLeadInput | hospitality_bookingsUpdateWithWhereUniqueWithoutLeadInput[]
     updateMany?: hospitality_bookingsUpdateManyWithWhereWithoutLeadInput | hospitality_bookingsUpdateManyWithWhereWithoutLeadInput[]
     deleteMany?: hospitality_bookingsScalarWhereInput | hospitality_bookingsScalarWhereInput[]
+  }
+
+  export type lead_item_interestsUpdateManyWithoutLeadsNestedInput = {
+    create?: XOR<lead_item_interestsCreateWithoutLeadsInput, lead_item_interestsUncheckedCreateWithoutLeadsInput> | lead_item_interestsCreateWithoutLeadsInput[] | lead_item_interestsUncheckedCreateWithoutLeadsInput[]
+    connectOrCreate?: lead_item_interestsCreateOrConnectWithoutLeadsInput | lead_item_interestsCreateOrConnectWithoutLeadsInput[]
+    upsert?: lead_item_interestsUpsertWithWhereUniqueWithoutLeadsInput | lead_item_interestsUpsertWithWhereUniqueWithoutLeadsInput[]
+    createMany?: lead_item_interestsCreateManyLeadsInputEnvelope
+    set?: lead_item_interestsWhereUniqueInput | lead_item_interestsWhereUniqueInput[]
+    disconnect?: lead_item_interestsWhereUniqueInput | lead_item_interestsWhereUniqueInput[]
+    delete?: lead_item_interestsWhereUniqueInput | lead_item_interestsWhereUniqueInput[]
+    connect?: lead_item_interestsWhereUniqueInput | lead_item_interestsWhereUniqueInput[]
+    update?: lead_item_interestsUpdateWithWhereUniqueWithoutLeadsInput | lead_item_interestsUpdateWithWhereUniqueWithoutLeadsInput[]
+    updateMany?: lead_item_interestsUpdateManyWithWhereWithoutLeadsInput | lead_item_interestsUpdateManyWithWhereWithoutLeadsInput[]
+    deleteMany?: lead_item_interestsScalarWhereInput | lead_item_interestsScalarWhereInput[]
+  }
+
+  export type lead_preference_watchesUpdateManyWithoutLeadsNestedInput = {
+    create?: XOR<lead_preference_watchesCreateWithoutLeadsInput, lead_preference_watchesUncheckedCreateWithoutLeadsInput> | lead_preference_watchesCreateWithoutLeadsInput[] | lead_preference_watchesUncheckedCreateWithoutLeadsInput[]
+    connectOrCreate?: lead_preference_watchesCreateOrConnectWithoutLeadsInput | lead_preference_watchesCreateOrConnectWithoutLeadsInput[]
+    upsert?: lead_preference_watchesUpsertWithWhereUniqueWithoutLeadsInput | lead_preference_watchesUpsertWithWhereUniqueWithoutLeadsInput[]
+    createMany?: lead_preference_watchesCreateManyLeadsInputEnvelope
+    set?: lead_preference_watchesWhereUniqueInput | lead_preference_watchesWhereUniqueInput[]
+    disconnect?: lead_preference_watchesWhereUniqueInput | lead_preference_watchesWhereUniqueInput[]
+    delete?: lead_preference_watchesWhereUniqueInput | lead_preference_watchesWhereUniqueInput[]
+    connect?: lead_preference_watchesWhereUniqueInput | lead_preference_watchesWhereUniqueInput[]
+    update?: lead_preference_watchesUpdateWithWhereUniqueWithoutLeadsInput | lead_preference_watchesUpdateWithWhereUniqueWithoutLeadsInput[]
+    updateMany?: lead_preference_watchesUpdateManyWithWhereWithoutLeadsInput | lead_preference_watchesUpdateManyWithWhereWithoutLeadsInput[]
+    deleteMany?: lead_preference_watchesScalarWhereInput | lead_preference_watchesScalarWhereInput[]
   }
 
   export type usersUpdateOneWithoutLeads_assignedNestedInput = {
@@ -117055,6 +122082,34 @@ export namespace Prisma {
     deleteMany?: hospitality_bookingsScalarWhereInput | hospitality_bookingsScalarWhereInput[]
   }
 
+  export type lead_item_interestsUncheckedUpdateManyWithoutLeadsNestedInput = {
+    create?: XOR<lead_item_interestsCreateWithoutLeadsInput, lead_item_interestsUncheckedCreateWithoutLeadsInput> | lead_item_interestsCreateWithoutLeadsInput[] | lead_item_interestsUncheckedCreateWithoutLeadsInput[]
+    connectOrCreate?: lead_item_interestsCreateOrConnectWithoutLeadsInput | lead_item_interestsCreateOrConnectWithoutLeadsInput[]
+    upsert?: lead_item_interestsUpsertWithWhereUniqueWithoutLeadsInput | lead_item_interestsUpsertWithWhereUniqueWithoutLeadsInput[]
+    createMany?: lead_item_interestsCreateManyLeadsInputEnvelope
+    set?: lead_item_interestsWhereUniqueInput | lead_item_interestsWhereUniqueInput[]
+    disconnect?: lead_item_interestsWhereUniqueInput | lead_item_interestsWhereUniqueInput[]
+    delete?: lead_item_interestsWhereUniqueInput | lead_item_interestsWhereUniqueInput[]
+    connect?: lead_item_interestsWhereUniqueInput | lead_item_interestsWhereUniqueInput[]
+    update?: lead_item_interestsUpdateWithWhereUniqueWithoutLeadsInput | lead_item_interestsUpdateWithWhereUniqueWithoutLeadsInput[]
+    updateMany?: lead_item_interestsUpdateManyWithWhereWithoutLeadsInput | lead_item_interestsUpdateManyWithWhereWithoutLeadsInput[]
+    deleteMany?: lead_item_interestsScalarWhereInput | lead_item_interestsScalarWhereInput[]
+  }
+
+  export type lead_preference_watchesUncheckedUpdateManyWithoutLeadsNestedInput = {
+    create?: XOR<lead_preference_watchesCreateWithoutLeadsInput, lead_preference_watchesUncheckedCreateWithoutLeadsInput> | lead_preference_watchesCreateWithoutLeadsInput[] | lead_preference_watchesUncheckedCreateWithoutLeadsInput[]
+    connectOrCreate?: lead_preference_watchesCreateOrConnectWithoutLeadsInput | lead_preference_watchesCreateOrConnectWithoutLeadsInput[]
+    upsert?: lead_preference_watchesUpsertWithWhereUniqueWithoutLeadsInput | lead_preference_watchesUpsertWithWhereUniqueWithoutLeadsInput[]
+    createMany?: lead_preference_watchesCreateManyLeadsInputEnvelope
+    set?: lead_preference_watchesWhereUniqueInput | lead_preference_watchesWhereUniqueInput[]
+    disconnect?: lead_preference_watchesWhereUniqueInput | lead_preference_watchesWhereUniqueInput[]
+    delete?: lead_preference_watchesWhereUniqueInput | lead_preference_watchesWhereUniqueInput[]
+    connect?: lead_preference_watchesWhereUniqueInput | lead_preference_watchesWhereUniqueInput[]
+    update?: lead_preference_watchesUpdateWithWhereUniqueWithoutLeadsInput | lead_preference_watchesUpdateWithWhereUniqueWithoutLeadsInput[]
+    updateMany?: lead_preference_watchesUpdateManyWithWhereWithoutLeadsInput | lead_preference_watchesUpdateManyWithWhereWithoutLeadsInput[]
+    deleteMany?: lead_preference_watchesScalarWhereInput | lead_preference_watchesScalarWhereInput[]
+  }
+
   export type ordersUncheckedUpdateManyWithoutLeadsNestedInput = {
     create?: XOR<ordersCreateWithoutLeadsInput, ordersUncheckedCreateWithoutLeadsInput> | ordersCreateWithoutLeadsInput[] | ordersUncheckedCreateWithoutLeadsInput[]
     connectOrCreate?: ordersCreateOrConnectWithoutLeadsInput | ordersCreateOrConnectWithoutLeadsInput[]
@@ -117199,14 +122254,6 @@ export namespace Prisma {
     connectOrCreate?: leadsCreateOrConnectWithoutStageInput | leadsCreateOrConnectWithoutStageInput[]
     createMany?: leadsCreateManyStageInputEnvelope
     connect?: leadsWhereUniqueInput | leadsWhereUniqueInput[]
-  }
-
-  export type IntFieldUpdateOperationsInput = {
-    set?: number
-    increment?: number
-    decrement?: number
-    multiply?: number
-    divide?: number
   }
 
   export type pipelinesUpdateOneRequiredWithoutStagesNestedInput = {
@@ -118969,6 +124016,12 @@ export namespace Prisma {
     connect?: hospitality_item_detailsWhereUniqueInput
   }
 
+  export type vehicle_item_detailsCreateNestedOneWithoutItemInput = {
+    create?: XOR<vehicle_item_detailsCreateWithoutItemInput, vehicle_item_detailsUncheckedCreateWithoutItemInput>
+    connectOrCreate?: vehicle_item_detailsCreateOrConnectWithoutItemInput
+    connect?: vehicle_item_detailsWhereUniqueInput
+  }
+
   export type product_order_itemsCreateNestedManyWithoutItemInput = {
     create?: XOR<product_order_itemsCreateWithoutItemInput, product_order_itemsUncheckedCreateWithoutItemInput> | product_order_itemsCreateWithoutItemInput[] | product_order_itemsUncheckedCreateWithoutItemInput[]
     connectOrCreate?: product_order_itemsCreateOrConnectWithoutItemInput | product_order_itemsCreateOrConnectWithoutItemInput[]
@@ -119048,6 +124101,12 @@ export namespace Prisma {
     create?: XOR<hospitality_item_detailsCreateWithoutItemInput, hospitality_item_detailsUncheckedCreateWithoutItemInput>
     connectOrCreate?: hospitality_item_detailsCreateOrConnectWithoutItemInput
     connect?: hospitality_item_detailsWhereUniqueInput
+  }
+
+  export type vehicle_item_detailsUncheckedCreateNestedOneWithoutItemInput = {
+    create?: XOR<vehicle_item_detailsCreateWithoutItemInput, vehicle_item_detailsUncheckedCreateWithoutItemInput>
+    connectOrCreate?: vehicle_item_detailsCreateOrConnectWithoutItemInput
+    connect?: vehicle_item_detailsWhereUniqueInput
   }
 
   export type product_order_itemsUncheckedCreateNestedManyWithoutItemInput = {
@@ -119150,6 +124209,16 @@ export namespace Prisma {
     delete?: hospitality_item_detailsWhereInput | boolean
     connect?: hospitality_item_detailsWhereUniqueInput
     update?: XOR<XOR<hospitality_item_detailsUpdateToOneWithWhereWithoutItemInput, hospitality_item_detailsUpdateWithoutItemInput>, hospitality_item_detailsUncheckedUpdateWithoutItemInput>
+  }
+
+  export type vehicle_item_detailsUpdateOneWithoutItemNestedInput = {
+    create?: XOR<vehicle_item_detailsCreateWithoutItemInput, vehicle_item_detailsUncheckedCreateWithoutItemInput>
+    connectOrCreate?: vehicle_item_detailsCreateOrConnectWithoutItemInput
+    upsert?: vehicle_item_detailsUpsertWithoutItemInput
+    disconnect?: vehicle_item_detailsWhereInput | boolean
+    delete?: vehicle_item_detailsWhereInput | boolean
+    connect?: vehicle_item_detailsWhereUniqueInput
+    update?: XOR<XOR<vehicle_item_detailsUpdateToOneWithWhereWithoutItemInput, vehicle_item_detailsUpdateWithoutItemInput>, vehicle_item_detailsUncheckedUpdateWithoutItemInput>
   }
 
   export type product_order_itemsUpdateManyWithoutItemNestedInput = {
@@ -119304,6 +124373,16 @@ export namespace Prisma {
     delete?: hospitality_item_detailsWhereInput | boolean
     connect?: hospitality_item_detailsWhereUniqueInput
     update?: XOR<XOR<hospitality_item_detailsUpdateToOneWithWhereWithoutItemInput, hospitality_item_detailsUpdateWithoutItemInput>, hospitality_item_detailsUncheckedUpdateWithoutItemInput>
+  }
+
+  export type vehicle_item_detailsUncheckedUpdateOneWithoutItemNestedInput = {
+    create?: XOR<vehicle_item_detailsCreateWithoutItemInput, vehicle_item_detailsUncheckedCreateWithoutItemInput>
+    connectOrCreate?: vehicle_item_detailsCreateOrConnectWithoutItemInput
+    upsert?: vehicle_item_detailsUpsertWithoutItemInput
+    disconnect?: vehicle_item_detailsWhereInput | boolean
+    delete?: vehicle_item_detailsWhereInput | boolean
+    connect?: vehicle_item_detailsWhereUniqueInput
+    update?: XOR<XOR<vehicle_item_detailsUpdateToOneWithWhereWithoutItemInput, vehicle_item_detailsUpdateWithoutItemInput>, vehicle_item_detailsUncheckedUpdateWithoutItemInput>
   }
 
   export type product_order_itemsUncheckedUpdateManyWithoutItemNestedInput = {
@@ -119888,6 +124967,34 @@ export namespace Prisma {
     upsert?: catalog_itemsUpsertWithoutHospitality_detailInput
     connect?: catalog_itemsWhereUniqueInput
     update?: XOR<XOR<catalog_itemsUpdateToOneWithWhereWithoutHospitality_detailInput, catalog_itemsUpdateWithoutHospitality_detailInput>, catalog_itemsUncheckedUpdateWithoutHospitality_detailInput>
+  }
+
+  export type businessesCreateNestedOneWithoutVehicle_item_detailsInput = {
+    create?: XOR<businessesCreateWithoutVehicle_item_detailsInput, businessesUncheckedCreateWithoutVehicle_item_detailsInput>
+    connectOrCreate?: businessesCreateOrConnectWithoutVehicle_item_detailsInput
+    connect?: businessesWhereUniqueInput
+  }
+
+  export type catalog_itemsCreateNestedOneWithoutVehicle_detailInput = {
+    create?: XOR<catalog_itemsCreateWithoutVehicle_detailInput, catalog_itemsUncheckedCreateWithoutVehicle_detailInput>
+    connectOrCreate?: catalog_itemsCreateOrConnectWithoutVehicle_detailInput
+    connect?: catalog_itemsWhereUniqueInput
+  }
+
+  export type businessesUpdateOneRequiredWithoutVehicle_item_detailsNestedInput = {
+    create?: XOR<businessesCreateWithoutVehicle_item_detailsInput, businessesUncheckedCreateWithoutVehicle_item_detailsInput>
+    connectOrCreate?: businessesCreateOrConnectWithoutVehicle_item_detailsInput
+    upsert?: businessesUpsertWithoutVehicle_item_detailsInput
+    connect?: businessesWhereUniqueInput
+    update?: XOR<XOR<businessesUpdateToOneWithWhereWithoutVehicle_item_detailsInput, businessesUpdateWithoutVehicle_item_detailsInput>, businessesUncheckedUpdateWithoutVehicle_item_detailsInput>
+  }
+
+  export type catalog_itemsUpdateOneRequiredWithoutVehicle_detailNestedInput = {
+    create?: XOR<catalog_itemsCreateWithoutVehicle_detailInput, catalog_itemsUncheckedCreateWithoutVehicle_detailInput>
+    connectOrCreate?: catalog_itemsCreateOrConnectWithoutVehicle_detailInput
+    upsert?: catalog_itemsUpsertWithoutVehicle_detailInput
+    connect?: catalog_itemsWhereUniqueInput
+    update?: XOR<XOR<catalog_itemsUpdateToOneWithWhereWithoutVehicle_detailInput, catalog_itemsUpdateWithoutVehicle_detailInput>, catalog_itemsUncheckedUpdateWithoutVehicle_detailInput>
   }
 
   export type businessesCreateNestedOneWithoutHospitality_inquiriesInput = {
@@ -120484,6 +125591,34 @@ export namespace Prisma {
     update?: XOR<XOR<usersUpdateToOneWithWhereWithoutAudit_logsInput, usersUpdateWithoutAudit_logsInput>, usersUncheckedUpdateWithoutAudit_logsInput>
   }
 
+  export type leadsCreateNestedOneWithoutItem_interestsInput = {
+    create?: XOR<leadsCreateWithoutItem_interestsInput, leadsUncheckedCreateWithoutItem_interestsInput>
+    connectOrCreate?: leadsCreateOrConnectWithoutItem_interestsInput
+    connect?: leadsWhereUniqueInput
+  }
+
+  export type leadsUpdateOneRequiredWithoutItem_interestsNestedInput = {
+    create?: XOR<leadsCreateWithoutItem_interestsInput, leadsUncheckedCreateWithoutItem_interestsInput>
+    connectOrCreate?: leadsCreateOrConnectWithoutItem_interestsInput
+    upsert?: leadsUpsertWithoutItem_interestsInput
+    connect?: leadsWhereUniqueInput
+    update?: XOR<XOR<leadsUpdateToOneWithWhereWithoutItem_interestsInput, leadsUpdateWithoutItem_interestsInput>, leadsUncheckedUpdateWithoutItem_interestsInput>
+  }
+
+  export type leadsCreateNestedOneWithoutPreference_watchesInput = {
+    create?: XOR<leadsCreateWithoutPreference_watchesInput, leadsUncheckedCreateWithoutPreference_watchesInput>
+    connectOrCreate?: leadsCreateOrConnectWithoutPreference_watchesInput
+    connect?: leadsWhereUniqueInput
+  }
+
+  export type leadsUpdateOneRequiredWithoutPreference_watchesNestedInput = {
+    create?: XOR<leadsCreateWithoutPreference_watchesInput, leadsUncheckedCreateWithoutPreference_watchesInput>
+    connectOrCreate?: leadsCreateOrConnectWithoutPreference_watchesInput
+    upsert?: leadsUpsertWithoutPreference_watchesInput
+    connect?: leadsWhereUniqueInput
+    update?: XOR<XOR<leadsUpdateToOneWithWhereWithoutPreference_watchesInput, leadsUpdateWithoutPreference_watchesInput>, leadsUncheckedUpdateWithoutPreference_watchesInput>
+  }
+
   export type NestedUuidFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel>
     in?: string[] | ListStringFieldRefInput<$PrismaModel>
@@ -120755,22 +125890,6 @@ export namespace Prisma {
     _max?: NestedStringNullableFilter<$PrismaModel>
   }
 
-  export type NestedDecimalNullableWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel> | null
-    in?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel> | null
-    notIn?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel> | null
-    lt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
-    lte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
-    gt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
-    gte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
-    not?: NestedDecimalNullableWithAggregatesFilter<$PrismaModel> | Decimal | DecimalJsLike | number | string | null
-    _count?: NestedIntNullableFilter<$PrismaModel>
-    _avg?: NestedDecimalNullableFilter<$PrismaModel>
-    _sum?: NestedDecimalNullableFilter<$PrismaModel>
-    _min?: NestedDecimalNullableFilter<$PrismaModel>
-    _max?: NestedDecimalNullableFilter<$PrismaModel>
-  }
-
   export type NestedIntWithAggregatesFilter<$PrismaModel = never> = {
     equals?: number | IntFieldRefInput<$PrismaModel>
     in?: number[] | ListIntFieldRefInput<$PrismaModel>
@@ -120796,6 +125915,22 @@ export namespace Prisma {
     gt?: number | FloatFieldRefInput<$PrismaModel>
     gte?: number | FloatFieldRefInput<$PrismaModel>
     not?: NestedFloatFilter<$PrismaModel> | number
+  }
+
+  export type NestedDecimalNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel> | null
+    in?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel> | null
+    notIn?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel> | null
+    lt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    lte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    gt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    gte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    not?: NestedDecimalNullableWithAggregatesFilter<$PrismaModel> | Decimal | DecimalJsLike | number | string | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _avg?: NestedDecimalNullableFilter<$PrismaModel>
+    _sum?: NestedDecimalNullableFilter<$PrismaModel>
+    _min?: NestedDecimalNullableFilter<$PrismaModel>
+    _max?: NestedDecimalNullableFilter<$PrismaModel>
   }
 
   export type NestedDecimalFilter<$PrismaModel = never> = {
@@ -121099,6 +126234,7 @@ export namespace Prisma {
     cart_reservations?: cart_reservationsCreateNestedManyWithoutCatalog_itemInput
     product_detail?: product_item_detailsCreateNestedOneWithoutItemInput
     hospitality_detail?: hospitality_item_detailsCreateNestedOneWithoutItemInput
+    vehicle_detail?: vehicle_item_detailsCreateNestedOneWithoutItemInput
     product_order_items?: product_order_itemsCreateNestedManyWithoutItemInput
     hospitality_booking_items?: hospitality_booking_itemsCreateNestedManyWithoutItemInput
     product_inquiries?: product_inquiriesCreateNestedManyWithoutItemInput
@@ -121131,6 +126267,7 @@ export namespace Prisma {
     cart_reservations?: cart_reservationsUncheckedCreateNestedManyWithoutCatalog_itemInput
     product_detail?: product_item_detailsUncheckedCreateNestedOneWithoutItemInput
     hospitality_detail?: hospitality_item_detailsUncheckedCreateNestedOneWithoutItemInput
+    vehicle_detail?: vehicle_item_detailsUncheckedCreateNestedOneWithoutItemInput
     product_order_items?: product_order_itemsUncheckedCreateNestedManyWithoutItemInput
     hospitality_booking_items?: hospitality_booking_itemsUncheckedCreateNestedManyWithoutItemInput
     product_inquiries?: product_inquiriesUncheckedCreateNestedManyWithoutItemInput
@@ -121229,6 +126366,46 @@ export namespace Prisma {
 
   export type hospitality_item_detailsCreateManyBusinessInputEnvelope = {
     data: hospitality_item_detailsCreateManyBusinessInput | hospitality_item_detailsCreateManyBusinessInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type vehicle_item_detailsCreateWithoutBusinessInput = {
+    make: string
+    model_name: string
+    year: number
+    fuel_type?: string | null
+    transmission?: string | null
+    color?: string | null
+    km_driven?: number | null
+    condition?: string
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    created_at?: Date | string
+    updated_at?: Date | string
+    item: catalog_itemsCreateNestedOneWithoutVehicle_detailInput
+  }
+
+  export type vehicle_item_detailsUncheckedCreateWithoutBusinessInput = {
+    item_id: string
+    make: string
+    model_name: string
+    year: number
+    fuel_type?: string | null
+    transmission?: string | null
+    color?: string | null
+    km_driven?: number | null
+    condition?: string
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    created_at?: Date | string
+    updated_at?: Date | string
+  }
+
+  export type vehicle_item_detailsCreateOrConnectWithoutBusinessInput = {
+    where: vehicle_item_detailsWhereUniqueInput
+    create: XOR<vehicle_item_detailsCreateWithoutBusinessInput, vehicle_item_detailsUncheckedCreateWithoutBusinessInput>
+  }
+
+  export type vehicle_item_detailsCreateManyBusinessInputEnvelope = {
+    data: vehicle_item_detailsCreateManyBusinessInput | vehicle_item_detailsCreateManyBusinessInput[]
     skipDuplicates?: boolean
   }
 
@@ -121457,6 +126634,11 @@ export namespace Prisma {
     status?: string
     lost_reason?: string | null
     context?: NullableJsonNullValueInput | InputJsonValue
+    lead_type?: string | null
+    qualification_score?: number
+    exit_intent_sent_at?: Date | string | null
+    exit_captured_at?: Date | string | null
+    exit_reason?: string | null
     quoted_amount?: Decimal | DecimalJsLike | number | string | null
     quoted_at?: Date | string | null
     converted_value?: Decimal | DecimalJsLike | number | string | null
@@ -121474,6 +126656,8 @@ export namespace Prisma {
     hospitality_inquiries?: hospitality_inquiriesCreateNestedManyWithoutLeadInput
     product_orders?: product_ordersCreateNestedManyWithoutLeadInput
     hospitality_bookings?: hospitality_bookingsCreateNestedManyWithoutLeadInput
+    item_interests?: lead_item_interestsCreateNestedManyWithoutLeadsInput
+    preference_watches?: lead_preference_watchesCreateNestedManyWithoutLeadsInput
     assigned_user?: usersCreateNestedOneWithoutLeads_assignedInput
     tenants: tenantsCreateNestedOneWithoutLeadsInput
     pipeline?: pipelinesCreateNestedOneWithoutLeadsInput
@@ -121496,6 +126680,11 @@ export namespace Prisma {
     pipeline_id?: string | null
     lost_reason?: string | null
     context?: NullableJsonNullValueInput | InputJsonValue
+    lead_type?: string | null
+    qualification_score?: number
+    exit_intent_sent_at?: Date | string | null
+    exit_captured_at?: Date | string | null
+    exit_reason?: string | null
     quoted_amount?: Decimal | DecimalJsLike | number | string | null
     quoted_at?: Date | string | null
     converted_value?: Decimal | DecimalJsLike | number | string | null
@@ -121514,6 +126703,8 @@ export namespace Prisma {
     hospitality_inquiries?: hospitality_inquiriesUncheckedCreateNestedManyWithoutLeadInput
     product_orders?: product_ordersUncheckedCreateNestedManyWithoutLeadInput
     hospitality_bookings?: hospitality_bookingsUncheckedCreateNestedManyWithoutLeadInput
+    item_interests?: lead_item_interestsUncheckedCreateNestedManyWithoutLeadsInput
+    preference_watches?: lead_preference_watchesUncheckedCreateNestedManyWithoutLeadsInput
     orders?: ordersUncheckedCreateNestedManyWithoutLeadsInput
     workflow_executions?: workflow_executionsUncheckedCreateNestedManyWithoutLeadsInput
   }
@@ -122292,6 +127483,7 @@ export namespace Prisma {
     booking_methods?: JsonNullValueInput | InputJsonValue
     booking_link?: JsonNullValueInput | InputJsonValue
     low_balance_alert?: Decimal | DecimalJsLike | number | string
+    default_country_code?: string
     updated_at?: Date | string
   }
 
@@ -122307,6 +127499,7 @@ export namespace Prisma {
     booking_methods?: JsonNullValueInput | InputJsonValue
     booking_link?: JsonNullValueInput | InputJsonValue
     low_balance_alert?: Decimal | DecimalJsLike | number | string
+    default_country_code?: string
     updated_at?: Date | string
   }
 
@@ -122616,6 +127809,41 @@ export namespace Prisma {
     updated_at?: DateTimeFilter<"hospitality_item_details"> | Date | string
   }
 
+  export type vehicle_item_detailsUpsertWithWhereUniqueWithoutBusinessInput = {
+    where: vehicle_item_detailsWhereUniqueInput
+    update: XOR<vehicle_item_detailsUpdateWithoutBusinessInput, vehicle_item_detailsUncheckedUpdateWithoutBusinessInput>
+    create: XOR<vehicle_item_detailsCreateWithoutBusinessInput, vehicle_item_detailsUncheckedCreateWithoutBusinessInput>
+  }
+
+  export type vehicle_item_detailsUpdateWithWhereUniqueWithoutBusinessInput = {
+    where: vehicle_item_detailsWhereUniqueInput
+    data: XOR<vehicle_item_detailsUpdateWithoutBusinessInput, vehicle_item_detailsUncheckedUpdateWithoutBusinessInput>
+  }
+
+  export type vehicle_item_detailsUpdateManyWithWhereWithoutBusinessInput = {
+    where: vehicle_item_detailsScalarWhereInput
+    data: XOR<vehicle_item_detailsUpdateManyMutationInput, vehicle_item_detailsUncheckedUpdateManyWithoutBusinessInput>
+  }
+
+  export type vehicle_item_detailsScalarWhereInput = {
+    AND?: vehicle_item_detailsScalarWhereInput | vehicle_item_detailsScalarWhereInput[]
+    OR?: vehicle_item_detailsScalarWhereInput[]
+    NOT?: vehicle_item_detailsScalarWhereInput | vehicle_item_detailsScalarWhereInput[]
+    item_id?: UuidFilter<"vehicle_item_details"> | string
+    business_id?: UuidFilter<"vehicle_item_details"> | string
+    make?: StringFilter<"vehicle_item_details"> | string
+    model_name?: StringFilter<"vehicle_item_details"> | string
+    year?: IntFilter<"vehicle_item_details"> | number
+    fuel_type?: StringNullableFilter<"vehicle_item_details"> | string | null
+    transmission?: StringNullableFilter<"vehicle_item_details"> | string | null
+    color?: StringNullableFilter<"vehicle_item_details"> | string | null
+    km_driven?: IntNullableFilter<"vehicle_item_details"> | number | null
+    condition?: StringFilter<"vehicle_item_details"> | string
+    metadata?: JsonNullableFilter<"vehicle_item_details">
+    created_at?: DateTimeFilter<"vehicle_item_details"> | Date | string
+    updated_at?: DateTimeFilter<"vehicle_item_details"> | Date | string
+  }
+
   export type product_ordersUpsertWithWhereUniqueWithoutBusinessInput = {
     where: product_ordersWhereUniqueInput
     update: XOR<product_ordersUpdateWithoutBusinessInput, product_ordersUncheckedUpdateWithoutBusinessInput>
@@ -122812,6 +128040,11 @@ export namespace Prisma {
     pipeline_id?: UuidNullableFilter<"leads"> | string | null
     lost_reason?: StringNullableFilter<"leads"> | string | null
     context?: JsonNullableFilter<"leads">
+    lead_type?: StringNullableFilter<"leads"> | string | null
+    qualification_score?: IntFilter<"leads"> | number
+    exit_intent_sent_at?: DateTimeNullableFilter<"leads"> | Date | string | null
+    exit_captured_at?: DateTimeNullableFilter<"leads"> | Date | string | null
+    exit_reason?: StringNullableFilter<"leads"> | string | null
     quoted_amount?: DecimalNullableFilter<"leads"> | Decimal | DecimalJsLike | number | string | null
     quoted_at?: DateTimeNullableFilter<"leads"> | Date | string | null
     converted_value?: DecimalNullableFilter<"leads"> | Decimal | DecimalJsLike | number | string | null
@@ -123450,6 +128683,7 @@ export namespace Prisma {
     booking_methods?: JsonNullValueInput | InputJsonValue
     booking_link?: JsonNullValueInput | InputJsonValue
     low_balance_alert?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    default_country_code?: StringFieldUpdateOperationsInput | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -123465,6 +128699,7 @@ export namespace Prisma {
     booking_methods?: JsonNullValueInput | InputJsonValue
     booking_link?: JsonNullValueInput | InputJsonValue
     low_balance_alert?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    default_country_code?: StringFieldUpdateOperationsInput | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -123524,6 +128759,7 @@ export namespace Prisma {
     catalog_items?: catalog_itemsCreateNestedManyWithoutBusinessesInput
     product_item_details?: product_item_detailsCreateNestedManyWithoutBusinessInput
     hospitality_item_details?: hospitality_item_detailsCreateNestedManyWithoutBusinessInput
+    vehicle_item_details?: vehicle_item_detailsCreateNestedManyWithoutBusinessInput
     product_orders?: product_ordersCreateNestedManyWithoutBusinessInput
     product_inquiries?: product_inquiriesCreateNestedManyWithoutBusinessInput
     hospitality_bookings?: hospitality_bookingsCreateNestedManyWithoutBusinessInput
@@ -123571,6 +128807,7 @@ export namespace Prisma {
     catalog_items?: catalog_itemsUncheckedCreateNestedManyWithoutBusinessesInput
     product_item_details?: product_item_detailsUncheckedCreateNestedManyWithoutBusinessInput
     hospitality_item_details?: hospitality_item_detailsUncheckedCreateNestedManyWithoutBusinessInput
+    vehicle_item_details?: vehicle_item_detailsUncheckedCreateNestedManyWithoutBusinessInput
     product_orders?: product_ordersUncheckedCreateNestedManyWithoutBusinessInput
     product_inquiries?: product_inquiriesUncheckedCreateNestedManyWithoutBusinessInput
     hospitality_bookings?: hospitality_bookingsUncheckedCreateNestedManyWithoutBusinessInput
@@ -123634,6 +128871,7 @@ export namespace Prisma {
     catalog_items?: catalog_itemsUpdateManyWithoutBusinessesNestedInput
     product_item_details?: product_item_detailsUpdateManyWithoutBusinessNestedInput
     hospitality_item_details?: hospitality_item_detailsUpdateManyWithoutBusinessNestedInput
+    vehicle_item_details?: vehicle_item_detailsUpdateManyWithoutBusinessNestedInput
     product_orders?: product_ordersUpdateManyWithoutBusinessNestedInput
     product_inquiries?: product_inquiriesUpdateManyWithoutBusinessNestedInput
     hospitality_bookings?: hospitality_bookingsUpdateManyWithoutBusinessNestedInput
@@ -123681,6 +128919,7 @@ export namespace Prisma {
     catalog_items?: catalog_itemsUncheckedUpdateManyWithoutBusinessesNestedInput
     product_item_details?: product_item_detailsUncheckedUpdateManyWithoutBusinessNestedInput
     hospitality_item_details?: hospitality_item_detailsUncheckedUpdateManyWithoutBusinessNestedInput
+    vehicle_item_details?: vehicle_item_detailsUncheckedUpdateManyWithoutBusinessNestedInput
     product_orders?: product_ordersUncheckedUpdateManyWithoutBusinessNestedInput
     product_inquiries?: product_inquiriesUncheckedUpdateManyWithoutBusinessNestedInput
     hospitality_bookings?: hospitality_bookingsUncheckedUpdateManyWithoutBusinessNestedInput
@@ -124180,6 +129419,7 @@ export namespace Prisma {
     catalog_items?: catalog_itemsCreateNestedManyWithoutBusinessesInput
     product_item_details?: product_item_detailsCreateNestedManyWithoutBusinessInput
     hospitality_item_details?: hospitality_item_detailsCreateNestedManyWithoutBusinessInput
+    vehicle_item_details?: vehicle_item_detailsCreateNestedManyWithoutBusinessInput
     product_orders?: product_ordersCreateNestedManyWithoutBusinessInput
     product_inquiries?: product_inquiriesCreateNestedManyWithoutBusinessInput
     hospitality_bookings?: hospitality_bookingsCreateNestedManyWithoutBusinessInput
@@ -124227,6 +129467,7 @@ export namespace Prisma {
     catalog_items?: catalog_itemsUncheckedCreateNestedManyWithoutBusinessesInput
     product_item_details?: product_item_detailsUncheckedCreateNestedManyWithoutBusinessInput
     hospitality_item_details?: hospitality_item_detailsUncheckedCreateNestedManyWithoutBusinessInput
+    vehicle_item_details?: vehicle_item_detailsUncheckedCreateNestedManyWithoutBusinessInput
     product_orders?: product_ordersUncheckedCreateNestedManyWithoutBusinessInput
     product_inquiries?: product_inquiriesUncheckedCreateNestedManyWithoutBusinessInput
     hospitality_bookings?: hospitality_bookingsUncheckedCreateNestedManyWithoutBusinessInput
@@ -124326,6 +129567,7 @@ export namespace Prisma {
     catalog_items?: catalog_itemsUpdateManyWithoutBusinessesNestedInput
     product_item_details?: product_item_detailsUpdateManyWithoutBusinessNestedInput
     hospitality_item_details?: hospitality_item_detailsUpdateManyWithoutBusinessNestedInput
+    vehicle_item_details?: vehicle_item_detailsUpdateManyWithoutBusinessNestedInput
     product_orders?: product_ordersUpdateManyWithoutBusinessNestedInput
     product_inquiries?: product_inquiriesUpdateManyWithoutBusinessNestedInput
     hospitality_bookings?: hospitality_bookingsUpdateManyWithoutBusinessNestedInput
@@ -124373,6 +129615,7 @@ export namespace Prisma {
     catalog_items?: catalog_itemsUncheckedUpdateManyWithoutBusinessesNestedInput
     product_item_details?: product_item_detailsUncheckedUpdateManyWithoutBusinessNestedInput
     hospitality_item_details?: hospitality_item_detailsUncheckedUpdateManyWithoutBusinessNestedInput
+    vehicle_item_details?: vehicle_item_detailsUncheckedUpdateManyWithoutBusinessNestedInput
     product_orders?: product_ordersUncheckedUpdateManyWithoutBusinessNestedInput
     product_inquiries?: product_inquiriesUncheckedUpdateManyWithoutBusinessNestedInput
     hospitality_bookings?: hospitality_bookingsUncheckedUpdateManyWithoutBusinessNestedInput
@@ -124449,6 +129692,7 @@ export namespace Prisma {
     catalog_items?: catalog_itemsCreateNestedManyWithoutBusinessesInput
     product_item_details?: product_item_detailsCreateNestedManyWithoutBusinessInput
     hospitality_item_details?: hospitality_item_detailsCreateNestedManyWithoutBusinessInput
+    vehicle_item_details?: vehicle_item_detailsCreateNestedManyWithoutBusinessInput
     product_orders?: product_ordersCreateNestedManyWithoutBusinessInput
     product_inquiries?: product_inquiriesCreateNestedManyWithoutBusinessInput
     hospitality_bookings?: hospitality_bookingsCreateNestedManyWithoutBusinessInput
@@ -124496,6 +129740,7 @@ export namespace Prisma {
     catalog_items?: catalog_itemsUncheckedCreateNestedManyWithoutBusinessesInput
     product_item_details?: product_item_detailsUncheckedCreateNestedManyWithoutBusinessInput
     hospitality_item_details?: hospitality_item_detailsUncheckedCreateNestedManyWithoutBusinessInput
+    vehicle_item_details?: vehicle_item_detailsUncheckedCreateNestedManyWithoutBusinessInput
     product_orders?: product_ordersUncheckedCreateNestedManyWithoutBusinessInput
     product_inquiries?: product_inquiriesUncheckedCreateNestedManyWithoutBusinessInput
     hospitality_bookings?: hospitality_bookingsUncheckedCreateNestedManyWithoutBusinessInput
@@ -124579,6 +129824,11 @@ export namespace Prisma {
     status?: string
     lost_reason?: string | null
     context?: NullableJsonNullValueInput | InputJsonValue
+    lead_type?: string | null
+    qualification_score?: number
+    exit_intent_sent_at?: Date | string | null
+    exit_captured_at?: Date | string | null
+    exit_reason?: string | null
     quoted_amount?: Decimal | DecimalJsLike | number | string | null
     quoted_at?: Date | string | null
     converted_value?: Decimal | DecimalJsLike | number | string | null
@@ -124596,6 +129846,8 @@ export namespace Prisma {
     hospitality_inquiries?: hospitality_inquiriesCreateNestedManyWithoutLeadInput
     product_orders?: product_ordersCreateNestedManyWithoutLeadInput
     hospitality_bookings?: hospitality_bookingsCreateNestedManyWithoutLeadInput
+    item_interests?: lead_item_interestsCreateNestedManyWithoutLeadsInput
+    preference_watches?: lead_preference_watchesCreateNestedManyWithoutLeadsInput
     assigned_user?: usersCreateNestedOneWithoutLeads_assignedInput
     businesses: businessesCreateNestedOneWithoutLeadsInput
     pipeline?: pipelinesCreateNestedOneWithoutLeadsInput
@@ -124618,6 +129870,11 @@ export namespace Prisma {
     pipeline_id?: string | null
     lost_reason?: string | null
     context?: NullableJsonNullValueInput | InputJsonValue
+    lead_type?: string | null
+    qualification_score?: number
+    exit_intent_sent_at?: Date | string | null
+    exit_captured_at?: Date | string | null
+    exit_reason?: string | null
     quoted_amount?: Decimal | DecimalJsLike | number | string | null
     quoted_at?: Date | string | null
     converted_value?: Decimal | DecimalJsLike | number | string | null
@@ -124636,6 +129893,8 @@ export namespace Prisma {
     hospitality_inquiries?: hospitality_inquiriesUncheckedCreateNestedManyWithoutLeadInput
     product_orders?: product_ordersUncheckedCreateNestedManyWithoutLeadInput
     hospitality_bookings?: hospitality_bookingsUncheckedCreateNestedManyWithoutLeadInput
+    item_interests?: lead_item_interestsUncheckedCreateNestedManyWithoutLeadsInput
+    preference_watches?: lead_preference_watchesUncheckedCreateNestedManyWithoutLeadsInput
     orders?: ordersUncheckedCreateNestedManyWithoutLeadsInput
     workflow_executions?: workflow_executionsUncheckedCreateNestedManyWithoutLeadsInput
   }
@@ -125434,6 +130693,11 @@ export namespace Prisma {
     status?: string
     lost_reason?: string | null
     context?: NullableJsonNullValueInput | InputJsonValue
+    lead_type?: string | null
+    qualification_score?: number
+    exit_intent_sent_at?: Date | string | null
+    exit_captured_at?: Date | string | null
+    exit_reason?: string | null
     quoted_amount?: Decimal | DecimalJsLike | number | string | null
     quoted_at?: Date | string | null
     converted_value?: Decimal | DecimalJsLike | number | string | null
@@ -125451,6 +130715,8 @@ export namespace Prisma {
     hospitality_inquiries?: hospitality_inquiriesCreateNestedManyWithoutLeadInput
     product_orders?: product_ordersCreateNestedManyWithoutLeadInput
     hospitality_bookings?: hospitality_bookingsCreateNestedManyWithoutLeadInput
+    item_interests?: lead_item_interestsCreateNestedManyWithoutLeadsInput
+    preference_watches?: lead_preference_watchesCreateNestedManyWithoutLeadsInput
     businesses: businessesCreateNestedOneWithoutLeadsInput
     tenants: tenantsCreateNestedOneWithoutLeadsInput
     pipeline?: pipelinesCreateNestedOneWithoutLeadsInput
@@ -125474,6 +130740,11 @@ export namespace Prisma {
     pipeline_id?: string | null
     lost_reason?: string | null
     context?: NullableJsonNullValueInput | InputJsonValue
+    lead_type?: string | null
+    qualification_score?: number
+    exit_intent_sent_at?: Date | string | null
+    exit_captured_at?: Date | string | null
+    exit_reason?: string | null
     quoted_amount?: Decimal | DecimalJsLike | number | string | null
     quoted_at?: Date | string | null
     converted_value?: Decimal | DecimalJsLike | number | string | null
@@ -125491,6 +130762,8 @@ export namespace Prisma {
     hospitality_inquiries?: hospitality_inquiriesUncheckedCreateNestedManyWithoutLeadInput
     product_orders?: product_ordersUncheckedCreateNestedManyWithoutLeadInput
     hospitality_bookings?: hospitality_bookingsUncheckedCreateNestedManyWithoutLeadInput
+    item_interests?: lead_item_interestsUncheckedCreateNestedManyWithoutLeadsInput
+    preference_watches?: lead_preference_watchesUncheckedCreateNestedManyWithoutLeadsInput
     orders?: ordersUncheckedCreateNestedManyWithoutLeadsInput
     workflow_executions?: workflow_executionsUncheckedCreateNestedManyWithoutLeadsInput
   }
@@ -125555,6 +130828,7 @@ export namespace Prisma {
     catalog_items?: catalog_itemsCreateNestedManyWithoutBusinessesInput
     product_item_details?: product_item_detailsCreateNestedManyWithoutBusinessInput
     hospitality_item_details?: hospitality_item_detailsCreateNestedManyWithoutBusinessInput
+    vehicle_item_details?: vehicle_item_detailsCreateNestedManyWithoutBusinessInput
     product_orders?: product_ordersCreateNestedManyWithoutBusinessInput
     product_inquiries?: product_inquiriesCreateNestedManyWithoutBusinessInput
     hospitality_bookings?: hospitality_bookingsCreateNestedManyWithoutBusinessInput
@@ -125602,6 +130876,7 @@ export namespace Prisma {
     catalog_items?: catalog_itemsUncheckedCreateNestedManyWithoutBusinessesInput
     product_item_details?: product_item_detailsUncheckedCreateNestedManyWithoutBusinessInput
     hospitality_item_details?: hospitality_item_detailsUncheckedCreateNestedManyWithoutBusinessInput
+    vehicle_item_details?: vehicle_item_detailsUncheckedCreateNestedManyWithoutBusinessInput
     product_orders?: product_ordersUncheckedCreateNestedManyWithoutBusinessInput
     product_inquiries?: product_inquiriesUncheckedCreateNestedManyWithoutBusinessInput
     hospitality_bookings?: hospitality_bookingsUncheckedCreateNestedManyWithoutBusinessInput
@@ -125785,6 +131060,7 @@ export namespace Prisma {
     catalog_items?: catalog_itemsUpdateManyWithoutBusinessesNestedInput
     product_item_details?: product_item_detailsUpdateManyWithoutBusinessNestedInput
     hospitality_item_details?: hospitality_item_detailsUpdateManyWithoutBusinessNestedInput
+    vehicle_item_details?: vehicle_item_detailsUpdateManyWithoutBusinessNestedInput
     product_orders?: product_ordersUpdateManyWithoutBusinessNestedInput
     product_inquiries?: product_inquiriesUpdateManyWithoutBusinessNestedInput
     hospitality_bookings?: hospitality_bookingsUpdateManyWithoutBusinessNestedInput
@@ -125832,6 +131108,7 @@ export namespace Prisma {
     catalog_items?: catalog_itemsUncheckedUpdateManyWithoutBusinessesNestedInput
     product_item_details?: product_item_detailsUncheckedUpdateManyWithoutBusinessNestedInput
     hospitality_item_details?: hospitality_item_detailsUncheckedUpdateManyWithoutBusinessNestedInput
+    vehicle_item_details?: vehicle_item_detailsUncheckedUpdateManyWithoutBusinessNestedInput
     product_orders?: product_ordersUncheckedUpdateManyWithoutBusinessNestedInput
     product_inquiries?: product_inquiriesUncheckedUpdateManyWithoutBusinessNestedInput
     hospitality_bookings?: hospitality_bookingsUncheckedUpdateManyWithoutBusinessNestedInput
@@ -126246,6 +131523,74 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type lead_item_interestsCreateWithoutLeadsInput = {
+    interest_id?: string
+    business_id: string
+    item_id?: string | null
+    item_type: string
+    item_name: string
+    interest_level?: string
+    last_price_seen?: Decimal | DecimalJsLike | number | string | null
+    is_alert_active?: boolean
+    created_at?: Date | string
+    updated_at?: Date | string
+  }
+
+  export type lead_item_interestsUncheckedCreateWithoutLeadsInput = {
+    interest_id?: string
+    business_id: string
+    item_id?: string | null
+    item_type: string
+    item_name: string
+    interest_level?: string
+    last_price_seen?: Decimal | DecimalJsLike | number | string | null
+    is_alert_active?: boolean
+    created_at?: Date | string
+    updated_at?: Date | string
+  }
+
+  export type lead_item_interestsCreateOrConnectWithoutLeadsInput = {
+    where: lead_item_interestsWhereUniqueInput
+    create: XOR<lead_item_interestsCreateWithoutLeadsInput, lead_item_interestsUncheckedCreateWithoutLeadsInput>
+  }
+
+  export type lead_item_interestsCreateManyLeadsInputEnvelope = {
+    data: lead_item_interestsCreateManyLeadsInput | lead_item_interestsCreateManyLeadsInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type lead_preference_watchesCreateWithoutLeadsInput = {
+    watch_id?: string
+    business_id: string
+    watch_type: string
+    criteria: JsonNullValueInput | InputJsonValue
+    is_active?: boolean
+    notified_at?: Date | string | null
+    expires_at?: Date | string | null
+    created_at?: Date | string
+  }
+
+  export type lead_preference_watchesUncheckedCreateWithoutLeadsInput = {
+    watch_id?: string
+    business_id: string
+    watch_type: string
+    criteria: JsonNullValueInput | InputJsonValue
+    is_active?: boolean
+    notified_at?: Date | string | null
+    expires_at?: Date | string | null
+    created_at?: Date | string
+  }
+
+  export type lead_preference_watchesCreateOrConnectWithoutLeadsInput = {
+    where: lead_preference_watchesWhereUniqueInput
+    create: XOR<lead_preference_watchesCreateWithoutLeadsInput, lead_preference_watchesUncheckedCreateWithoutLeadsInput>
+  }
+
+  export type lead_preference_watchesCreateManyLeadsInputEnvelope = {
+    data: lead_preference_watchesCreateManyLeadsInput | lead_preference_watchesCreateManyLeadsInput[]
+    skipDuplicates?: boolean
+  }
+
   export type usersCreateWithoutLeads_assignedInput = {
     user_id?: string
     email: string
@@ -126335,6 +131680,7 @@ export namespace Prisma {
     catalog_items?: catalog_itemsCreateNestedManyWithoutBusinessesInput
     product_item_details?: product_item_detailsCreateNestedManyWithoutBusinessInput
     hospitality_item_details?: hospitality_item_detailsCreateNestedManyWithoutBusinessInput
+    vehicle_item_details?: vehicle_item_detailsCreateNestedManyWithoutBusinessInput
     product_orders?: product_ordersCreateNestedManyWithoutBusinessInput
     product_inquiries?: product_inquiriesCreateNestedManyWithoutBusinessInput
     hospitality_bookings?: hospitality_bookingsCreateNestedManyWithoutBusinessInput
@@ -126382,6 +131728,7 @@ export namespace Prisma {
     catalog_items?: catalog_itemsUncheckedCreateNestedManyWithoutBusinessesInput
     product_item_details?: product_item_detailsUncheckedCreateNestedManyWithoutBusinessInput
     hospitality_item_details?: hospitality_item_detailsUncheckedCreateNestedManyWithoutBusinessInput
+    vehicle_item_details?: vehicle_item_detailsUncheckedCreateNestedManyWithoutBusinessInput
     product_orders?: product_ordersUncheckedCreateNestedManyWithoutBusinessInput
     product_inquiries?: product_inquiriesUncheckedCreateNestedManyWithoutBusinessInput
     hospitality_bookings?: hospitality_bookingsUncheckedCreateNestedManyWithoutBusinessInput
@@ -126834,6 +132181,70 @@ export namespace Prisma {
     data: XOR<hospitality_bookingsUpdateManyMutationInput, hospitality_bookingsUncheckedUpdateManyWithoutLeadInput>
   }
 
+  export type lead_item_interestsUpsertWithWhereUniqueWithoutLeadsInput = {
+    where: lead_item_interestsWhereUniqueInput
+    update: XOR<lead_item_interestsUpdateWithoutLeadsInput, lead_item_interestsUncheckedUpdateWithoutLeadsInput>
+    create: XOR<lead_item_interestsCreateWithoutLeadsInput, lead_item_interestsUncheckedCreateWithoutLeadsInput>
+  }
+
+  export type lead_item_interestsUpdateWithWhereUniqueWithoutLeadsInput = {
+    where: lead_item_interestsWhereUniqueInput
+    data: XOR<lead_item_interestsUpdateWithoutLeadsInput, lead_item_interestsUncheckedUpdateWithoutLeadsInput>
+  }
+
+  export type lead_item_interestsUpdateManyWithWhereWithoutLeadsInput = {
+    where: lead_item_interestsScalarWhereInput
+    data: XOR<lead_item_interestsUpdateManyMutationInput, lead_item_interestsUncheckedUpdateManyWithoutLeadsInput>
+  }
+
+  export type lead_item_interestsScalarWhereInput = {
+    AND?: lead_item_interestsScalarWhereInput | lead_item_interestsScalarWhereInput[]
+    OR?: lead_item_interestsScalarWhereInput[]
+    NOT?: lead_item_interestsScalarWhereInput | lead_item_interestsScalarWhereInput[]
+    interest_id?: UuidFilter<"lead_item_interests"> | string
+    lead_id?: UuidFilter<"lead_item_interests"> | string
+    business_id?: UuidFilter<"lead_item_interests"> | string
+    item_id?: UuidNullableFilter<"lead_item_interests"> | string | null
+    item_type?: StringFilter<"lead_item_interests"> | string
+    item_name?: StringFilter<"lead_item_interests"> | string
+    interest_level?: StringFilter<"lead_item_interests"> | string
+    last_price_seen?: DecimalNullableFilter<"lead_item_interests"> | Decimal | DecimalJsLike | number | string | null
+    is_alert_active?: BoolFilter<"lead_item_interests"> | boolean
+    created_at?: DateTimeFilter<"lead_item_interests"> | Date | string
+    updated_at?: DateTimeFilter<"lead_item_interests"> | Date | string
+  }
+
+  export type lead_preference_watchesUpsertWithWhereUniqueWithoutLeadsInput = {
+    where: lead_preference_watchesWhereUniqueInput
+    update: XOR<lead_preference_watchesUpdateWithoutLeadsInput, lead_preference_watchesUncheckedUpdateWithoutLeadsInput>
+    create: XOR<lead_preference_watchesCreateWithoutLeadsInput, lead_preference_watchesUncheckedCreateWithoutLeadsInput>
+  }
+
+  export type lead_preference_watchesUpdateWithWhereUniqueWithoutLeadsInput = {
+    where: lead_preference_watchesWhereUniqueInput
+    data: XOR<lead_preference_watchesUpdateWithoutLeadsInput, lead_preference_watchesUncheckedUpdateWithoutLeadsInput>
+  }
+
+  export type lead_preference_watchesUpdateManyWithWhereWithoutLeadsInput = {
+    where: lead_preference_watchesScalarWhereInput
+    data: XOR<lead_preference_watchesUpdateManyMutationInput, lead_preference_watchesUncheckedUpdateManyWithoutLeadsInput>
+  }
+
+  export type lead_preference_watchesScalarWhereInput = {
+    AND?: lead_preference_watchesScalarWhereInput | lead_preference_watchesScalarWhereInput[]
+    OR?: lead_preference_watchesScalarWhereInput[]
+    NOT?: lead_preference_watchesScalarWhereInput | lead_preference_watchesScalarWhereInput[]
+    watch_id?: UuidFilter<"lead_preference_watches"> | string
+    lead_id?: UuidFilter<"lead_preference_watches"> | string
+    business_id?: UuidFilter<"lead_preference_watches"> | string
+    watch_type?: StringFilter<"lead_preference_watches"> | string
+    criteria?: JsonFilter<"lead_preference_watches">
+    is_active?: BoolFilter<"lead_preference_watches"> | boolean
+    notified_at?: DateTimeNullableFilter<"lead_preference_watches"> | Date | string | null
+    expires_at?: DateTimeNullableFilter<"lead_preference_watches"> | Date | string | null
+    created_at?: DateTimeFilter<"lead_preference_watches"> | Date | string
+  }
+
   export type usersUpsertWithoutLeads_assignedInput = {
     update: XOR<usersUpdateWithoutLeads_assignedInput, usersUncheckedUpdateWithoutLeads_assignedInput>
     create: XOR<usersCreateWithoutLeads_assignedInput, usersUncheckedCreateWithoutLeads_assignedInput>
@@ -126940,6 +132351,7 @@ export namespace Prisma {
     catalog_items?: catalog_itemsUpdateManyWithoutBusinessesNestedInput
     product_item_details?: product_item_detailsUpdateManyWithoutBusinessNestedInput
     hospitality_item_details?: hospitality_item_detailsUpdateManyWithoutBusinessNestedInput
+    vehicle_item_details?: vehicle_item_detailsUpdateManyWithoutBusinessNestedInput
     product_orders?: product_ordersUpdateManyWithoutBusinessNestedInput
     product_inquiries?: product_inquiriesUpdateManyWithoutBusinessNestedInput
     hospitality_bookings?: hospitality_bookingsUpdateManyWithoutBusinessNestedInput
@@ -126987,6 +132399,7 @@ export namespace Prisma {
     catalog_items?: catalog_itemsUncheckedUpdateManyWithoutBusinessesNestedInput
     product_item_details?: product_item_detailsUncheckedUpdateManyWithoutBusinessNestedInput
     hospitality_item_details?: hospitality_item_detailsUncheckedUpdateManyWithoutBusinessNestedInput
+    vehicle_item_details?: vehicle_item_detailsUncheckedUpdateManyWithoutBusinessNestedInput
     product_orders?: product_ordersUncheckedUpdateManyWithoutBusinessNestedInput
     product_inquiries?: product_inquiriesUncheckedUpdateManyWithoutBusinessNestedInput
     hospitality_bookings?: hospitality_bookingsUncheckedUpdateManyWithoutBusinessNestedInput
@@ -127242,6 +132655,7 @@ export namespace Prisma {
     catalog_items?: catalog_itemsCreateNestedManyWithoutBusinessesInput
     product_item_details?: product_item_detailsCreateNestedManyWithoutBusinessInput
     hospitality_item_details?: hospitality_item_detailsCreateNestedManyWithoutBusinessInput
+    vehicle_item_details?: vehicle_item_detailsCreateNestedManyWithoutBusinessInput
     product_orders?: product_ordersCreateNestedManyWithoutBusinessInput
     product_inquiries?: product_inquiriesCreateNestedManyWithoutBusinessInput
     hospitality_bookings?: hospitality_bookingsCreateNestedManyWithoutBusinessInput
@@ -127289,6 +132703,7 @@ export namespace Prisma {
     catalog_items?: catalog_itemsUncheckedCreateNestedManyWithoutBusinessesInput
     product_item_details?: product_item_detailsUncheckedCreateNestedManyWithoutBusinessInput
     hospitality_item_details?: hospitality_item_detailsUncheckedCreateNestedManyWithoutBusinessInput
+    vehicle_item_details?: vehicle_item_detailsUncheckedCreateNestedManyWithoutBusinessInput
     product_orders?: product_ordersUncheckedCreateNestedManyWithoutBusinessInput
     product_inquiries?: product_inquiriesUncheckedCreateNestedManyWithoutBusinessInput
     hospitality_bookings?: hospitality_bookingsUncheckedCreateNestedManyWithoutBusinessInput
@@ -127364,6 +132779,11 @@ export namespace Prisma {
     status?: string
     lost_reason?: string | null
     context?: NullableJsonNullValueInput | InputJsonValue
+    lead_type?: string | null
+    qualification_score?: number
+    exit_intent_sent_at?: Date | string | null
+    exit_captured_at?: Date | string | null
+    exit_reason?: string | null
     quoted_amount?: Decimal | DecimalJsLike | number | string | null
     quoted_at?: Date | string | null
     converted_value?: Decimal | DecimalJsLike | number | string | null
@@ -127381,6 +132801,8 @@ export namespace Prisma {
     hospitality_inquiries?: hospitality_inquiriesCreateNestedManyWithoutLeadInput
     product_orders?: product_ordersCreateNestedManyWithoutLeadInput
     hospitality_bookings?: hospitality_bookingsCreateNestedManyWithoutLeadInput
+    item_interests?: lead_item_interestsCreateNestedManyWithoutLeadsInput
+    preference_watches?: lead_preference_watchesCreateNestedManyWithoutLeadsInput
     assigned_user?: usersCreateNestedOneWithoutLeads_assignedInput
     businesses: businessesCreateNestedOneWithoutLeadsInput
     tenants: tenantsCreateNestedOneWithoutLeadsInput
@@ -127403,6 +132825,11 @@ export namespace Prisma {
     stage_id?: string | null
     lost_reason?: string | null
     context?: NullableJsonNullValueInput | InputJsonValue
+    lead_type?: string | null
+    qualification_score?: number
+    exit_intent_sent_at?: Date | string | null
+    exit_captured_at?: Date | string | null
+    exit_reason?: string | null
     quoted_amount?: Decimal | DecimalJsLike | number | string | null
     quoted_at?: Date | string | null
     converted_value?: Decimal | DecimalJsLike | number | string | null
@@ -127421,6 +132848,8 @@ export namespace Prisma {
     hospitality_inquiries?: hospitality_inquiriesUncheckedCreateNestedManyWithoutLeadInput
     product_orders?: product_ordersUncheckedCreateNestedManyWithoutLeadInput
     hospitality_bookings?: hospitality_bookingsUncheckedCreateNestedManyWithoutLeadInput
+    item_interests?: lead_item_interestsUncheckedCreateNestedManyWithoutLeadsInput
+    preference_watches?: lead_preference_watchesUncheckedCreateNestedManyWithoutLeadsInput
     orders?: ordersUncheckedCreateNestedManyWithoutLeadsInput
     workflow_executions?: workflow_executionsUncheckedCreateNestedManyWithoutLeadsInput
   }
@@ -127470,6 +132899,7 @@ export namespace Prisma {
     catalog_items?: catalog_itemsUpdateManyWithoutBusinessesNestedInput
     product_item_details?: product_item_detailsUpdateManyWithoutBusinessNestedInput
     hospitality_item_details?: hospitality_item_detailsUpdateManyWithoutBusinessNestedInput
+    vehicle_item_details?: vehicle_item_detailsUpdateManyWithoutBusinessNestedInput
     product_orders?: product_ordersUpdateManyWithoutBusinessNestedInput
     product_inquiries?: product_inquiriesUpdateManyWithoutBusinessNestedInput
     hospitality_bookings?: hospitality_bookingsUpdateManyWithoutBusinessNestedInput
@@ -127517,6 +132947,7 @@ export namespace Prisma {
     catalog_items?: catalog_itemsUncheckedUpdateManyWithoutBusinessesNestedInput
     product_item_details?: product_item_detailsUncheckedUpdateManyWithoutBusinessNestedInput
     hospitality_item_details?: hospitality_item_detailsUncheckedUpdateManyWithoutBusinessNestedInput
+    vehicle_item_details?: vehicle_item_detailsUncheckedUpdateManyWithoutBusinessNestedInput
     product_orders?: product_ordersUncheckedUpdateManyWithoutBusinessNestedInput
     product_inquiries?: product_inquiriesUncheckedUpdateManyWithoutBusinessNestedInput
     hospitality_bookings?: hospitality_bookingsUncheckedUpdateManyWithoutBusinessNestedInput
@@ -127628,6 +133059,11 @@ export namespace Prisma {
     status?: string
     lost_reason?: string | null
     context?: NullableJsonNullValueInput | InputJsonValue
+    lead_type?: string | null
+    qualification_score?: number
+    exit_intent_sent_at?: Date | string | null
+    exit_captured_at?: Date | string | null
+    exit_reason?: string | null
     quoted_amount?: Decimal | DecimalJsLike | number | string | null
     quoted_at?: Date | string | null
     converted_value?: Decimal | DecimalJsLike | number | string | null
@@ -127645,6 +133081,8 @@ export namespace Prisma {
     hospitality_inquiries?: hospitality_inquiriesCreateNestedManyWithoutLeadInput
     product_orders?: product_ordersCreateNestedManyWithoutLeadInput
     hospitality_bookings?: hospitality_bookingsCreateNestedManyWithoutLeadInput
+    item_interests?: lead_item_interestsCreateNestedManyWithoutLeadsInput
+    preference_watches?: lead_preference_watchesCreateNestedManyWithoutLeadsInput
     assigned_user?: usersCreateNestedOneWithoutLeads_assignedInput
     businesses: businessesCreateNestedOneWithoutLeadsInput
     tenants: tenantsCreateNestedOneWithoutLeadsInput
@@ -127667,6 +133105,11 @@ export namespace Prisma {
     pipeline_id?: string | null
     lost_reason?: string | null
     context?: NullableJsonNullValueInput | InputJsonValue
+    lead_type?: string | null
+    qualification_score?: number
+    exit_intent_sent_at?: Date | string | null
+    exit_captured_at?: Date | string | null
+    exit_reason?: string | null
     quoted_amount?: Decimal | DecimalJsLike | number | string | null
     quoted_at?: Date | string | null
     converted_value?: Decimal | DecimalJsLike | number | string | null
@@ -127685,6 +133128,8 @@ export namespace Prisma {
     hospitality_inquiries?: hospitality_inquiriesUncheckedCreateNestedManyWithoutLeadInput
     product_orders?: product_ordersUncheckedCreateNestedManyWithoutLeadInput
     hospitality_bookings?: hospitality_bookingsUncheckedCreateNestedManyWithoutLeadInput
+    item_interests?: lead_item_interestsUncheckedCreateNestedManyWithoutLeadsInput
+    preference_watches?: lead_preference_watchesUncheckedCreateNestedManyWithoutLeadsInput
     orders?: ordersUncheckedCreateNestedManyWithoutLeadsInput
     workflow_executions?: workflow_executionsUncheckedCreateNestedManyWithoutLeadsInput
   }
@@ -127761,6 +133206,11 @@ export namespace Prisma {
     status?: string
     lost_reason?: string | null
     context?: NullableJsonNullValueInput | InputJsonValue
+    lead_type?: string | null
+    qualification_score?: number
+    exit_intent_sent_at?: Date | string | null
+    exit_captured_at?: Date | string | null
+    exit_reason?: string | null
     quoted_amount?: Decimal | DecimalJsLike | number | string | null
     quoted_at?: Date | string | null
     converted_value?: Decimal | DecimalJsLike | number | string | null
@@ -127777,6 +133227,8 @@ export namespace Prisma {
     hospitality_inquiries?: hospitality_inquiriesCreateNestedManyWithoutLeadInput
     product_orders?: product_ordersCreateNestedManyWithoutLeadInput
     hospitality_bookings?: hospitality_bookingsCreateNestedManyWithoutLeadInput
+    item_interests?: lead_item_interestsCreateNestedManyWithoutLeadsInput
+    preference_watches?: lead_preference_watchesCreateNestedManyWithoutLeadsInput
     assigned_user?: usersCreateNestedOneWithoutLeads_assignedInput
     businesses: businessesCreateNestedOneWithoutLeadsInput
     tenants: tenantsCreateNestedOneWithoutLeadsInput
@@ -127801,6 +133253,11 @@ export namespace Prisma {
     pipeline_id?: string | null
     lost_reason?: string | null
     context?: NullableJsonNullValueInput | InputJsonValue
+    lead_type?: string | null
+    qualification_score?: number
+    exit_intent_sent_at?: Date | string | null
+    exit_captured_at?: Date | string | null
+    exit_reason?: string | null
     quoted_amount?: Decimal | DecimalJsLike | number | string | null
     quoted_at?: Date | string | null
     converted_value?: Decimal | DecimalJsLike | number | string | null
@@ -127818,6 +133275,8 @@ export namespace Prisma {
     hospitality_inquiries?: hospitality_inquiriesUncheckedCreateNestedManyWithoutLeadInput
     product_orders?: product_ordersUncheckedCreateNestedManyWithoutLeadInput
     hospitality_bookings?: hospitality_bookingsUncheckedCreateNestedManyWithoutLeadInput
+    item_interests?: lead_item_interestsUncheckedCreateNestedManyWithoutLeadsInput
+    preference_watches?: lead_preference_watchesUncheckedCreateNestedManyWithoutLeadsInput
     orders?: ordersUncheckedCreateNestedManyWithoutLeadsInput
     workflow_executions?: workflow_executionsUncheckedCreateNestedManyWithoutLeadsInput
   }
@@ -127849,6 +133308,11 @@ export namespace Prisma {
     status?: StringFieldUpdateOperationsInput | string
     lost_reason?: NullableStringFieldUpdateOperationsInput | string | null
     context?: NullableJsonNullValueInput | InputJsonValue
+    lead_type?: NullableStringFieldUpdateOperationsInput | string | null
+    qualification_score?: IntFieldUpdateOperationsInput | number
+    exit_intent_sent_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    exit_captured_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    exit_reason?: NullableStringFieldUpdateOperationsInput | string | null
     quoted_amount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     quoted_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     converted_value?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
@@ -127865,6 +133329,8 @@ export namespace Prisma {
     hospitality_inquiries?: hospitality_inquiriesUpdateManyWithoutLeadNestedInput
     product_orders?: product_ordersUpdateManyWithoutLeadNestedInput
     hospitality_bookings?: hospitality_bookingsUpdateManyWithoutLeadNestedInput
+    item_interests?: lead_item_interestsUpdateManyWithoutLeadsNestedInput
+    preference_watches?: lead_preference_watchesUpdateManyWithoutLeadsNestedInput
     assigned_user?: usersUpdateOneWithoutLeads_assignedNestedInput
     businesses?: businessesUpdateOneRequiredWithoutLeadsNestedInput
     tenants?: tenantsUpdateOneRequiredWithoutLeadsNestedInput
@@ -127889,6 +133355,11 @@ export namespace Prisma {
     pipeline_id?: NullableStringFieldUpdateOperationsInput | string | null
     lost_reason?: NullableStringFieldUpdateOperationsInput | string | null
     context?: NullableJsonNullValueInput | InputJsonValue
+    lead_type?: NullableStringFieldUpdateOperationsInput | string | null
+    qualification_score?: IntFieldUpdateOperationsInput | number
+    exit_intent_sent_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    exit_captured_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    exit_reason?: NullableStringFieldUpdateOperationsInput | string | null
     quoted_amount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     quoted_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     converted_value?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
@@ -127906,6 +133377,8 @@ export namespace Prisma {
     hospitality_inquiries?: hospitality_inquiriesUncheckedUpdateManyWithoutLeadNestedInput
     product_orders?: product_ordersUncheckedUpdateManyWithoutLeadNestedInput
     hospitality_bookings?: hospitality_bookingsUncheckedUpdateManyWithoutLeadNestedInput
+    item_interests?: lead_item_interestsUncheckedUpdateManyWithoutLeadsNestedInput
+    preference_watches?: lead_preference_watchesUncheckedUpdateManyWithoutLeadsNestedInput
     orders?: ordersUncheckedUpdateManyWithoutLeadsNestedInput
     workflow_executions?: workflow_executionsUncheckedUpdateManyWithoutLeadsNestedInput
   }
@@ -127986,6 +133459,11 @@ export namespace Prisma {
     status?: string
     lost_reason?: string | null
     context?: NullableJsonNullValueInput | InputJsonValue
+    lead_type?: string | null
+    qualification_score?: number
+    exit_intent_sent_at?: Date | string | null
+    exit_captured_at?: Date | string | null
+    exit_reason?: string | null
     quoted_amount?: Decimal | DecimalJsLike | number | string | null
     quoted_at?: Date | string | null
     converted_value?: Decimal | DecimalJsLike | number | string | null
@@ -128002,6 +133480,8 @@ export namespace Prisma {
     hospitality_inquiries?: hospitality_inquiriesCreateNestedManyWithoutLeadInput
     product_orders?: product_ordersCreateNestedManyWithoutLeadInput
     hospitality_bookings?: hospitality_bookingsCreateNestedManyWithoutLeadInput
+    item_interests?: lead_item_interestsCreateNestedManyWithoutLeadsInput
+    preference_watches?: lead_preference_watchesCreateNestedManyWithoutLeadsInput
     assigned_user?: usersCreateNestedOneWithoutLeads_assignedInput
     businesses: businessesCreateNestedOneWithoutLeadsInput
     tenants: tenantsCreateNestedOneWithoutLeadsInput
@@ -128026,6 +133506,11 @@ export namespace Prisma {
     pipeline_id?: string | null
     lost_reason?: string | null
     context?: NullableJsonNullValueInput | InputJsonValue
+    lead_type?: string | null
+    qualification_score?: number
+    exit_intent_sent_at?: Date | string | null
+    exit_captured_at?: Date | string | null
+    exit_reason?: string | null
     quoted_amount?: Decimal | DecimalJsLike | number | string | null
     quoted_at?: Date | string | null
     converted_value?: Decimal | DecimalJsLike | number | string | null
@@ -128043,6 +133528,8 @@ export namespace Prisma {
     hospitality_inquiries?: hospitality_inquiriesUncheckedCreateNestedManyWithoutLeadInput
     product_orders?: product_ordersUncheckedCreateNestedManyWithoutLeadInput
     hospitality_bookings?: hospitality_bookingsUncheckedCreateNestedManyWithoutLeadInput
+    item_interests?: lead_item_interestsUncheckedCreateNestedManyWithoutLeadsInput
+    preference_watches?: lead_preference_watchesUncheckedCreateNestedManyWithoutLeadsInput
     orders?: ordersUncheckedCreateNestedManyWithoutLeadsInput
     workflow_executions?: workflow_executionsUncheckedCreateNestedManyWithoutLeadsInput
   }
@@ -128145,6 +133632,11 @@ export namespace Prisma {
     status?: StringFieldUpdateOperationsInput | string
     lost_reason?: NullableStringFieldUpdateOperationsInput | string | null
     context?: NullableJsonNullValueInput | InputJsonValue
+    lead_type?: NullableStringFieldUpdateOperationsInput | string | null
+    qualification_score?: IntFieldUpdateOperationsInput | number
+    exit_intent_sent_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    exit_captured_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    exit_reason?: NullableStringFieldUpdateOperationsInput | string | null
     quoted_amount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     quoted_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     converted_value?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
@@ -128161,6 +133653,8 @@ export namespace Prisma {
     hospitality_inquiries?: hospitality_inquiriesUpdateManyWithoutLeadNestedInput
     product_orders?: product_ordersUpdateManyWithoutLeadNestedInput
     hospitality_bookings?: hospitality_bookingsUpdateManyWithoutLeadNestedInput
+    item_interests?: lead_item_interestsUpdateManyWithoutLeadsNestedInput
+    preference_watches?: lead_preference_watchesUpdateManyWithoutLeadsNestedInput
     assigned_user?: usersUpdateOneWithoutLeads_assignedNestedInput
     businesses?: businessesUpdateOneRequiredWithoutLeadsNestedInput
     tenants?: tenantsUpdateOneRequiredWithoutLeadsNestedInput
@@ -128185,6 +133679,11 @@ export namespace Prisma {
     pipeline_id?: NullableStringFieldUpdateOperationsInput | string | null
     lost_reason?: NullableStringFieldUpdateOperationsInput | string | null
     context?: NullableJsonNullValueInput | InputJsonValue
+    lead_type?: NullableStringFieldUpdateOperationsInput | string | null
+    qualification_score?: IntFieldUpdateOperationsInput | number
+    exit_intent_sent_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    exit_captured_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    exit_reason?: NullableStringFieldUpdateOperationsInput | string | null
     quoted_amount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     quoted_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     converted_value?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
@@ -128202,6 +133701,8 @@ export namespace Prisma {
     hospitality_inquiries?: hospitality_inquiriesUncheckedUpdateManyWithoutLeadNestedInput
     product_orders?: product_ordersUncheckedUpdateManyWithoutLeadNestedInput
     hospitality_bookings?: hospitality_bookingsUncheckedUpdateManyWithoutLeadNestedInput
+    item_interests?: lead_item_interestsUncheckedUpdateManyWithoutLeadsNestedInput
+    preference_watches?: lead_preference_watchesUncheckedUpdateManyWithoutLeadsNestedInput
     orders?: ordersUncheckedUpdateManyWithoutLeadsNestedInput
     workflow_executions?: workflow_executionsUncheckedUpdateManyWithoutLeadsNestedInput
   }
@@ -129010,6 +134511,11 @@ export namespace Prisma {
     status?: string
     lost_reason?: string | null
     context?: NullableJsonNullValueInput | InputJsonValue
+    lead_type?: string | null
+    qualification_score?: number
+    exit_intent_sent_at?: Date | string | null
+    exit_captured_at?: Date | string | null
+    exit_reason?: string | null
     quoted_amount?: Decimal | DecimalJsLike | number | string | null
     quoted_at?: Date | string | null
     converted_value?: Decimal | DecimalJsLike | number | string | null
@@ -129027,6 +134533,8 @@ export namespace Prisma {
     hospitality_inquiries?: hospitality_inquiriesCreateNestedManyWithoutLeadInput
     product_orders?: product_ordersCreateNestedManyWithoutLeadInput
     hospitality_bookings?: hospitality_bookingsCreateNestedManyWithoutLeadInput
+    item_interests?: lead_item_interestsCreateNestedManyWithoutLeadsInput
+    preference_watches?: lead_preference_watchesCreateNestedManyWithoutLeadsInput
     assigned_user?: usersCreateNestedOneWithoutLeads_assignedInput
     businesses: businessesCreateNestedOneWithoutLeadsInput
     tenants: tenantsCreateNestedOneWithoutLeadsInput
@@ -129050,6 +134558,11 @@ export namespace Prisma {
     pipeline_id?: string | null
     lost_reason?: string | null
     context?: NullableJsonNullValueInput | InputJsonValue
+    lead_type?: string | null
+    qualification_score?: number
+    exit_intent_sent_at?: Date | string | null
+    exit_captured_at?: Date | string | null
+    exit_reason?: string | null
     quoted_amount?: Decimal | DecimalJsLike | number | string | null
     quoted_at?: Date | string | null
     converted_value?: Decimal | DecimalJsLike | number | string | null
@@ -129068,6 +134581,8 @@ export namespace Prisma {
     hospitality_inquiries?: hospitality_inquiriesUncheckedCreateNestedManyWithoutLeadInput
     product_orders?: product_ordersUncheckedCreateNestedManyWithoutLeadInput
     hospitality_bookings?: hospitality_bookingsUncheckedCreateNestedManyWithoutLeadInput
+    item_interests?: lead_item_interestsUncheckedCreateNestedManyWithoutLeadsInput
+    preference_watches?: lead_preference_watchesUncheckedCreateNestedManyWithoutLeadsInput
     workflow_executions?: workflow_executionsUncheckedCreateNestedManyWithoutLeadsInput
   }
 
@@ -129399,6 +134914,11 @@ export namespace Prisma {
     status?: StringFieldUpdateOperationsInput | string
     lost_reason?: NullableStringFieldUpdateOperationsInput | string | null
     context?: NullableJsonNullValueInput | InputJsonValue
+    lead_type?: NullableStringFieldUpdateOperationsInput | string | null
+    qualification_score?: IntFieldUpdateOperationsInput | number
+    exit_intent_sent_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    exit_captured_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    exit_reason?: NullableStringFieldUpdateOperationsInput | string | null
     quoted_amount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     quoted_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     converted_value?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
@@ -129416,6 +134936,8 @@ export namespace Prisma {
     hospitality_inquiries?: hospitality_inquiriesUpdateManyWithoutLeadNestedInput
     product_orders?: product_ordersUpdateManyWithoutLeadNestedInput
     hospitality_bookings?: hospitality_bookingsUpdateManyWithoutLeadNestedInput
+    item_interests?: lead_item_interestsUpdateManyWithoutLeadsNestedInput
+    preference_watches?: lead_preference_watchesUpdateManyWithoutLeadsNestedInput
     assigned_user?: usersUpdateOneWithoutLeads_assignedNestedInput
     businesses?: businessesUpdateOneRequiredWithoutLeadsNestedInput
     tenants?: tenantsUpdateOneRequiredWithoutLeadsNestedInput
@@ -129439,6 +134961,11 @@ export namespace Prisma {
     pipeline_id?: NullableStringFieldUpdateOperationsInput | string | null
     lost_reason?: NullableStringFieldUpdateOperationsInput | string | null
     context?: NullableJsonNullValueInput | InputJsonValue
+    lead_type?: NullableStringFieldUpdateOperationsInput | string | null
+    qualification_score?: IntFieldUpdateOperationsInput | number
+    exit_intent_sent_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    exit_captured_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    exit_reason?: NullableStringFieldUpdateOperationsInput | string | null
     quoted_amount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     quoted_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     converted_value?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
@@ -129457,6 +134984,8 @@ export namespace Prisma {
     hospitality_inquiries?: hospitality_inquiriesUncheckedUpdateManyWithoutLeadNestedInput
     product_orders?: product_ordersUncheckedUpdateManyWithoutLeadNestedInput
     hospitality_bookings?: hospitality_bookingsUncheckedUpdateManyWithoutLeadNestedInput
+    item_interests?: lead_item_interestsUncheckedUpdateManyWithoutLeadsNestedInput
+    preference_watches?: lead_preference_watchesUncheckedUpdateManyWithoutLeadsNestedInput
     workflow_executions?: workflow_executionsUncheckedUpdateManyWithoutLeadsNestedInput
   }
 
@@ -129499,6 +135028,7 @@ export namespace Prisma {
     cart_reservations?: cart_reservationsCreateNestedManyWithoutCatalog_itemInput
     product_detail?: product_item_detailsCreateNestedOneWithoutItemInput
     hospitality_detail?: hospitality_item_detailsCreateNestedOneWithoutItemInput
+    vehicle_detail?: vehicle_item_detailsCreateNestedOneWithoutItemInput
     product_order_items?: product_order_itemsCreateNestedManyWithoutItemInput
     hospitality_booking_items?: hospitality_booking_itemsCreateNestedManyWithoutItemInput
     product_inquiries?: product_inquiriesCreateNestedManyWithoutItemInput
@@ -129532,6 +135062,7 @@ export namespace Prisma {
     cart_reservations?: cart_reservationsUncheckedCreateNestedManyWithoutCatalog_itemInput
     product_detail?: product_item_detailsUncheckedCreateNestedOneWithoutItemInput
     hospitality_detail?: hospitality_item_detailsUncheckedCreateNestedOneWithoutItemInput
+    vehicle_detail?: vehicle_item_detailsUncheckedCreateNestedOneWithoutItemInput
     product_order_items?: product_order_itemsUncheckedCreateNestedManyWithoutItemInput
     hospitality_booking_items?: hospitality_booking_itemsUncheckedCreateNestedManyWithoutItemInput
     product_inquiries?: product_inquiriesUncheckedCreateNestedManyWithoutItemInput
@@ -129707,6 +135238,7 @@ export namespace Prisma {
     cart_reservations?: cart_reservationsUpdateManyWithoutCatalog_itemNestedInput
     product_detail?: product_item_detailsUpdateOneWithoutItemNestedInput
     hospitality_detail?: hospitality_item_detailsUpdateOneWithoutItemNestedInput
+    vehicle_detail?: vehicle_item_detailsUpdateOneWithoutItemNestedInput
     product_order_items?: product_order_itemsUpdateManyWithoutItemNestedInput
     hospitality_booking_items?: hospitality_booking_itemsUpdateManyWithoutItemNestedInput
     product_inquiries?: product_inquiriesUpdateManyWithoutItemNestedInput
@@ -129740,6 +135272,7 @@ export namespace Prisma {
     cart_reservations?: cart_reservationsUncheckedUpdateManyWithoutCatalog_itemNestedInput
     product_detail?: product_item_detailsUncheckedUpdateOneWithoutItemNestedInput
     hospitality_detail?: hospitality_item_detailsUncheckedUpdateOneWithoutItemNestedInput
+    vehicle_detail?: vehicle_item_detailsUncheckedUpdateOneWithoutItemNestedInput
     product_order_items?: product_order_itemsUncheckedUpdateManyWithoutItemNestedInput
     hospitality_booking_items?: hospitality_booking_itemsUncheckedUpdateManyWithoutItemNestedInput
     product_inquiries?: product_inquiriesUncheckedUpdateManyWithoutItemNestedInput
@@ -129910,6 +135443,7 @@ export namespace Prisma {
     cart_items?: cart_itemsCreateNestedManyWithoutCatalog_itemInput
     product_detail?: product_item_detailsCreateNestedOneWithoutItemInput
     hospitality_detail?: hospitality_item_detailsCreateNestedOneWithoutItemInput
+    vehicle_detail?: vehicle_item_detailsCreateNestedOneWithoutItemInput
     product_order_items?: product_order_itemsCreateNestedManyWithoutItemInput
     hospitality_booking_items?: hospitality_booking_itemsCreateNestedManyWithoutItemInput
     product_inquiries?: product_inquiriesCreateNestedManyWithoutItemInput
@@ -129943,6 +135477,7 @@ export namespace Prisma {
     cart_items?: cart_itemsUncheckedCreateNestedManyWithoutCatalog_itemInput
     product_detail?: product_item_detailsUncheckedCreateNestedOneWithoutItemInput
     hospitality_detail?: hospitality_item_detailsUncheckedCreateNestedOneWithoutItemInput
+    vehicle_detail?: vehicle_item_detailsUncheckedCreateNestedOneWithoutItemInput
     product_order_items?: product_order_itemsUncheckedCreateNestedManyWithoutItemInput
     hospitality_booking_items?: hospitality_booking_itemsUncheckedCreateNestedManyWithoutItemInput
     product_inquiries?: product_inquiriesUncheckedCreateNestedManyWithoutItemInput
@@ -129968,6 +135503,11 @@ export namespace Prisma {
     status?: string
     lost_reason?: string | null
     context?: NullableJsonNullValueInput | InputJsonValue
+    lead_type?: string | null
+    qualification_score?: number
+    exit_intent_sent_at?: Date | string | null
+    exit_captured_at?: Date | string | null
+    exit_reason?: string | null
     quoted_amount?: Decimal | DecimalJsLike | number | string | null
     quoted_at?: Date | string | null
     converted_value?: Decimal | DecimalJsLike | number | string | null
@@ -129984,6 +135524,8 @@ export namespace Prisma {
     hospitality_inquiries?: hospitality_inquiriesCreateNestedManyWithoutLeadInput
     product_orders?: product_ordersCreateNestedManyWithoutLeadInput
     hospitality_bookings?: hospitality_bookingsCreateNestedManyWithoutLeadInput
+    item_interests?: lead_item_interestsCreateNestedManyWithoutLeadsInput
+    preference_watches?: lead_preference_watchesCreateNestedManyWithoutLeadsInput
     assigned_user?: usersCreateNestedOneWithoutLeads_assignedInput
     businesses: businessesCreateNestedOneWithoutLeadsInput
     tenants: tenantsCreateNestedOneWithoutLeadsInput
@@ -130008,6 +135550,11 @@ export namespace Prisma {
     pipeline_id?: string | null
     lost_reason?: string | null
     context?: NullableJsonNullValueInput | InputJsonValue
+    lead_type?: string | null
+    qualification_score?: number
+    exit_intent_sent_at?: Date | string | null
+    exit_captured_at?: Date | string | null
+    exit_reason?: string | null
     quoted_amount?: Decimal | DecimalJsLike | number | string | null
     quoted_at?: Date | string | null
     converted_value?: Decimal | DecimalJsLike | number | string | null
@@ -130025,6 +135572,8 @@ export namespace Prisma {
     hospitality_inquiries?: hospitality_inquiriesUncheckedCreateNestedManyWithoutLeadInput
     product_orders?: product_ordersUncheckedCreateNestedManyWithoutLeadInput
     hospitality_bookings?: hospitality_bookingsUncheckedCreateNestedManyWithoutLeadInput
+    item_interests?: lead_item_interestsUncheckedCreateNestedManyWithoutLeadsInput
+    preference_watches?: lead_preference_watchesUncheckedCreateNestedManyWithoutLeadsInput
     orders?: ordersUncheckedCreateNestedManyWithoutLeadsInput
     workflow_executions?: workflow_executionsUncheckedCreateNestedManyWithoutLeadsInput
   }
@@ -130067,6 +135616,7 @@ export namespace Prisma {
     cart_items?: cart_itemsUpdateManyWithoutCatalog_itemNestedInput
     product_detail?: product_item_detailsUpdateOneWithoutItemNestedInput
     hospitality_detail?: hospitality_item_detailsUpdateOneWithoutItemNestedInput
+    vehicle_detail?: vehicle_item_detailsUpdateOneWithoutItemNestedInput
     product_order_items?: product_order_itemsUpdateManyWithoutItemNestedInput
     hospitality_booking_items?: hospitality_booking_itemsUpdateManyWithoutItemNestedInput
     product_inquiries?: product_inquiriesUpdateManyWithoutItemNestedInput
@@ -130100,6 +135650,7 @@ export namespace Prisma {
     cart_items?: cart_itemsUncheckedUpdateManyWithoutCatalog_itemNestedInput
     product_detail?: product_item_detailsUncheckedUpdateOneWithoutItemNestedInput
     hospitality_detail?: hospitality_item_detailsUncheckedUpdateOneWithoutItemNestedInput
+    vehicle_detail?: vehicle_item_detailsUncheckedUpdateOneWithoutItemNestedInput
     product_order_items?: product_order_itemsUncheckedUpdateManyWithoutItemNestedInput
     hospitality_booking_items?: hospitality_booking_itemsUncheckedUpdateManyWithoutItemNestedInput
     product_inquiries?: product_inquiriesUncheckedUpdateManyWithoutItemNestedInput
@@ -130131,6 +135682,11 @@ export namespace Prisma {
     status?: StringFieldUpdateOperationsInput | string
     lost_reason?: NullableStringFieldUpdateOperationsInput | string | null
     context?: NullableJsonNullValueInput | InputJsonValue
+    lead_type?: NullableStringFieldUpdateOperationsInput | string | null
+    qualification_score?: IntFieldUpdateOperationsInput | number
+    exit_intent_sent_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    exit_captured_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    exit_reason?: NullableStringFieldUpdateOperationsInput | string | null
     quoted_amount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     quoted_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     converted_value?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
@@ -130147,6 +135703,8 @@ export namespace Prisma {
     hospitality_inquiries?: hospitality_inquiriesUpdateManyWithoutLeadNestedInput
     product_orders?: product_ordersUpdateManyWithoutLeadNestedInput
     hospitality_bookings?: hospitality_bookingsUpdateManyWithoutLeadNestedInput
+    item_interests?: lead_item_interestsUpdateManyWithoutLeadsNestedInput
+    preference_watches?: lead_preference_watchesUpdateManyWithoutLeadsNestedInput
     assigned_user?: usersUpdateOneWithoutLeads_assignedNestedInput
     businesses?: businessesUpdateOneRequiredWithoutLeadsNestedInput
     tenants?: tenantsUpdateOneRequiredWithoutLeadsNestedInput
@@ -130171,6 +135729,11 @@ export namespace Prisma {
     pipeline_id?: NullableStringFieldUpdateOperationsInput | string | null
     lost_reason?: NullableStringFieldUpdateOperationsInput | string | null
     context?: NullableJsonNullValueInput | InputJsonValue
+    lead_type?: NullableStringFieldUpdateOperationsInput | string | null
+    qualification_score?: IntFieldUpdateOperationsInput | number
+    exit_intent_sent_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    exit_captured_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    exit_reason?: NullableStringFieldUpdateOperationsInput | string | null
     quoted_amount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     quoted_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     converted_value?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
@@ -130188,6 +135751,8 @@ export namespace Prisma {
     hospitality_inquiries?: hospitality_inquiriesUncheckedUpdateManyWithoutLeadNestedInput
     product_orders?: product_ordersUncheckedUpdateManyWithoutLeadNestedInput
     hospitality_bookings?: hospitality_bookingsUncheckedUpdateManyWithoutLeadNestedInput
+    item_interests?: lead_item_interestsUncheckedUpdateManyWithoutLeadsNestedInput
+    preference_watches?: lead_preference_watchesUncheckedUpdateManyWithoutLeadsNestedInput
     orders?: ordersUncheckedUpdateManyWithoutLeadsNestedInput
     workflow_executions?: workflow_executionsUncheckedUpdateManyWithoutLeadsNestedInput
   }
@@ -130484,6 +136049,7 @@ export namespace Prisma {
     catalog_items?: catalog_itemsCreateNestedManyWithoutBusinessesInput
     product_item_details?: product_item_detailsCreateNestedManyWithoutBusinessInput
     hospitality_item_details?: hospitality_item_detailsCreateNestedManyWithoutBusinessInput
+    vehicle_item_details?: vehicle_item_detailsCreateNestedManyWithoutBusinessInput
     product_orders?: product_ordersCreateNestedManyWithoutBusinessInput
     product_inquiries?: product_inquiriesCreateNestedManyWithoutBusinessInput
     hospitality_bookings?: hospitality_bookingsCreateNestedManyWithoutBusinessInput
@@ -130531,6 +136097,7 @@ export namespace Prisma {
     catalog_items?: catalog_itemsUncheckedCreateNestedManyWithoutBusinessesInput
     product_item_details?: product_item_detailsUncheckedCreateNestedManyWithoutBusinessInput
     hospitality_item_details?: hospitality_item_detailsUncheckedCreateNestedManyWithoutBusinessInput
+    vehicle_item_details?: vehicle_item_detailsUncheckedCreateNestedManyWithoutBusinessInput
     product_orders?: product_ordersUncheckedCreateNestedManyWithoutBusinessInput
     product_inquiries?: product_inquiriesUncheckedCreateNestedManyWithoutBusinessInput
     hospitality_bookings?: hospitality_bookingsUncheckedCreateNestedManyWithoutBusinessInput
@@ -130716,6 +136283,7 @@ export namespace Prisma {
     catalog_items?: catalog_itemsUpdateManyWithoutBusinessesNestedInput
     product_item_details?: product_item_detailsUpdateManyWithoutBusinessNestedInput
     hospitality_item_details?: hospitality_item_detailsUpdateManyWithoutBusinessNestedInput
+    vehicle_item_details?: vehicle_item_detailsUpdateManyWithoutBusinessNestedInput
     product_orders?: product_ordersUpdateManyWithoutBusinessNestedInput
     product_inquiries?: product_inquiriesUpdateManyWithoutBusinessNestedInput
     hospitality_bookings?: hospitality_bookingsUpdateManyWithoutBusinessNestedInput
@@ -130763,6 +136331,7 @@ export namespace Prisma {
     catalog_items?: catalog_itemsUncheckedUpdateManyWithoutBusinessesNestedInput
     product_item_details?: product_item_detailsUncheckedUpdateManyWithoutBusinessNestedInput
     hospitality_item_details?: hospitality_item_detailsUncheckedUpdateManyWithoutBusinessNestedInput
+    vehicle_item_details?: vehicle_item_detailsUncheckedUpdateManyWithoutBusinessNestedInput
     product_orders?: product_ordersUncheckedUpdateManyWithoutBusinessNestedInput
     product_inquiries?: product_inquiriesUncheckedUpdateManyWithoutBusinessNestedInput
     hospitality_bookings?: hospitality_bookingsUncheckedUpdateManyWithoutBusinessNestedInput
@@ -130899,6 +136468,7 @@ export namespace Prisma {
     catalog_items?: catalog_itemsCreateNestedManyWithoutBusinessesInput
     product_item_details?: product_item_detailsCreateNestedManyWithoutBusinessInput
     hospitality_item_details?: hospitality_item_detailsCreateNestedManyWithoutBusinessInput
+    vehicle_item_details?: vehicle_item_detailsCreateNestedManyWithoutBusinessInput
     product_orders?: product_ordersCreateNestedManyWithoutBusinessInput
     product_inquiries?: product_inquiriesCreateNestedManyWithoutBusinessInput
     hospitality_bookings?: hospitality_bookingsCreateNestedManyWithoutBusinessInput
@@ -130946,6 +136516,7 @@ export namespace Prisma {
     catalog_items?: catalog_itemsUncheckedCreateNestedManyWithoutBusinessesInput
     product_item_details?: product_item_detailsUncheckedCreateNestedManyWithoutBusinessInput
     hospitality_item_details?: hospitality_item_detailsUncheckedCreateNestedManyWithoutBusinessInput
+    vehicle_item_details?: vehicle_item_detailsUncheckedCreateNestedManyWithoutBusinessInput
     product_orders?: product_ordersUncheckedCreateNestedManyWithoutBusinessInput
     product_inquiries?: product_inquiriesUncheckedCreateNestedManyWithoutBusinessInput
     hospitality_bookings?: hospitality_bookingsUncheckedCreateNestedManyWithoutBusinessInput
@@ -131199,6 +136770,7 @@ export namespace Prisma {
     catalog_items?: catalog_itemsUpdateManyWithoutBusinessesNestedInput
     product_item_details?: product_item_detailsUpdateManyWithoutBusinessNestedInput
     hospitality_item_details?: hospitality_item_detailsUpdateManyWithoutBusinessNestedInput
+    vehicle_item_details?: vehicle_item_detailsUpdateManyWithoutBusinessNestedInput
     product_orders?: product_ordersUpdateManyWithoutBusinessNestedInput
     product_inquiries?: product_inquiriesUpdateManyWithoutBusinessNestedInput
     hospitality_bookings?: hospitality_bookingsUpdateManyWithoutBusinessNestedInput
@@ -131246,6 +136818,7 @@ export namespace Prisma {
     catalog_items?: catalog_itemsUncheckedUpdateManyWithoutBusinessesNestedInput
     product_item_details?: product_item_detailsUncheckedUpdateManyWithoutBusinessNestedInput
     hospitality_item_details?: hospitality_item_detailsUncheckedUpdateManyWithoutBusinessNestedInput
+    vehicle_item_details?: vehicle_item_detailsUncheckedUpdateManyWithoutBusinessNestedInput
     product_orders?: product_ordersUncheckedUpdateManyWithoutBusinessNestedInput
     product_inquiries?: product_inquiriesUncheckedUpdateManyWithoutBusinessNestedInput
     hospitality_bookings?: hospitality_bookingsUncheckedUpdateManyWithoutBusinessNestedInput
@@ -131472,6 +137045,7 @@ export namespace Prisma {
     catalog_items?: catalog_itemsCreateNestedManyWithoutBusinessesInput
     product_item_details?: product_item_detailsCreateNestedManyWithoutBusinessInput
     hospitality_item_details?: hospitality_item_detailsCreateNestedManyWithoutBusinessInput
+    vehicle_item_details?: vehicle_item_detailsCreateNestedManyWithoutBusinessInput
     product_orders?: product_ordersCreateNestedManyWithoutBusinessInput
     product_inquiries?: product_inquiriesCreateNestedManyWithoutBusinessInput
     hospitality_bookings?: hospitality_bookingsCreateNestedManyWithoutBusinessInput
@@ -131519,6 +137093,7 @@ export namespace Prisma {
     catalog_items?: catalog_itemsUncheckedCreateNestedManyWithoutBusinessesInput
     product_item_details?: product_item_detailsUncheckedCreateNestedManyWithoutBusinessInput
     hospitality_item_details?: hospitality_item_detailsUncheckedCreateNestedManyWithoutBusinessInput
+    vehicle_item_details?: vehicle_item_detailsUncheckedCreateNestedManyWithoutBusinessInput
     product_orders?: product_ordersUncheckedCreateNestedManyWithoutBusinessInput
     product_inquiries?: product_inquiriesUncheckedCreateNestedManyWithoutBusinessInput
     hospitality_bookings?: hospitality_bookingsUncheckedCreateNestedManyWithoutBusinessInput
@@ -131635,6 +137210,7 @@ export namespace Prisma {
     catalog_items?: catalog_itemsUpdateManyWithoutBusinessesNestedInput
     product_item_details?: product_item_detailsUpdateManyWithoutBusinessNestedInput
     hospitality_item_details?: hospitality_item_detailsUpdateManyWithoutBusinessNestedInput
+    vehicle_item_details?: vehicle_item_detailsUpdateManyWithoutBusinessNestedInput
     product_orders?: product_ordersUpdateManyWithoutBusinessNestedInput
     product_inquiries?: product_inquiriesUpdateManyWithoutBusinessNestedInput
     hospitality_bookings?: hospitality_bookingsUpdateManyWithoutBusinessNestedInput
@@ -131682,6 +137258,7 @@ export namespace Prisma {
     catalog_items?: catalog_itemsUncheckedUpdateManyWithoutBusinessesNestedInput
     product_item_details?: product_item_detailsUncheckedUpdateManyWithoutBusinessNestedInput
     hospitality_item_details?: hospitality_item_detailsUncheckedUpdateManyWithoutBusinessNestedInput
+    vehicle_item_details?: vehicle_item_detailsUncheckedUpdateManyWithoutBusinessNestedInput
     product_orders?: product_ordersUncheckedUpdateManyWithoutBusinessNestedInput
     product_inquiries?: product_inquiriesUncheckedUpdateManyWithoutBusinessNestedInput
     hospitality_bookings?: hospitality_bookingsUncheckedUpdateManyWithoutBusinessNestedInput
@@ -131826,6 +137403,7 @@ export namespace Prisma {
     catalog_items?: catalog_itemsCreateNestedManyWithoutBusinessesInput
     product_item_details?: product_item_detailsCreateNestedManyWithoutBusinessInput
     hospitality_item_details?: hospitality_item_detailsCreateNestedManyWithoutBusinessInput
+    vehicle_item_details?: vehicle_item_detailsCreateNestedManyWithoutBusinessInput
     product_orders?: product_ordersCreateNestedManyWithoutBusinessInput
     product_inquiries?: product_inquiriesCreateNestedManyWithoutBusinessInput
     hospitality_bookings?: hospitality_bookingsCreateNestedManyWithoutBusinessInput
@@ -131873,6 +137451,7 @@ export namespace Prisma {
     catalog_items?: catalog_itemsUncheckedCreateNestedManyWithoutBusinessesInput
     product_item_details?: product_item_detailsUncheckedCreateNestedManyWithoutBusinessInput
     hospitality_item_details?: hospitality_item_detailsUncheckedCreateNestedManyWithoutBusinessInput
+    vehicle_item_details?: vehicle_item_detailsUncheckedCreateNestedManyWithoutBusinessInput
     product_orders?: product_ordersUncheckedCreateNestedManyWithoutBusinessInput
     product_inquiries?: product_inquiriesUncheckedCreateNestedManyWithoutBusinessInput
     hospitality_bookings?: hospitality_bookingsUncheckedCreateNestedManyWithoutBusinessInput
@@ -132114,6 +137693,7 @@ export namespace Prisma {
     catalog_items?: catalog_itemsUpdateManyWithoutBusinessesNestedInput
     product_item_details?: product_item_detailsUpdateManyWithoutBusinessNestedInput
     hospitality_item_details?: hospitality_item_detailsUpdateManyWithoutBusinessNestedInput
+    vehicle_item_details?: vehicle_item_detailsUpdateManyWithoutBusinessNestedInput
     product_orders?: product_ordersUpdateManyWithoutBusinessNestedInput
     product_inquiries?: product_inquiriesUpdateManyWithoutBusinessNestedInput
     hospitality_bookings?: hospitality_bookingsUpdateManyWithoutBusinessNestedInput
@@ -132161,6 +137741,7 @@ export namespace Prisma {
     catalog_items?: catalog_itemsUncheckedUpdateManyWithoutBusinessesNestedInput
     product_item_details?: product_item_detailsUncheckedUpdateManyWithoutBusinessNestedInput
     hospitality_item_details?: hospitality_item_detailsUncheckedUpdateManyWithoutBusinessNestedInput
+    vehicle_item_details?: vehicle_item_detailsUncheckedUpdateManyWithoutBusinessNestedInput
     product_orders?: product_ordersUncheckedUpdateManyWithoutBusinessNestedInput
     product_inquiries?: product_inquiriesUncheckedUpdateManyWithoutBusinessNestedInput
     hospitality_bookings?: hospitality_bookingsUncheckedUpdateManyWithoutBusinessNestedInput
@@ -132364,6 +137945,7 @@ export namespace Prisma {
     catalog_items?: catalog_itemsCreateNestedManyWithoutBusinessesInput
     product_item_details?: product_item_detailsCreateNestedManyWithoutBusinessInput
     hospitality_item_details?: hospitality_item_detailsCreateNestedManyWithoutBusinessInput
+    vehicle_item_details?: vehicle_item_detailsCreateNestedManyWithoutBusinessInput
     product_orders?: product_ordersCreateNestedManyWithoutBusinessInput
     product_inquiries?: product_inquiriesCreateNestedManyWithoutBusinessInput
     hospitality_bookings?: hospitality_bookingsCreateNestedManyWithoutBusinessInput
@@ -132411,6 +137993,7 @@ export namespace Prisma {
     catalog_items?: catalog_itemsUncheckedCreateNestedManyWithoutBusinessesInput
     product_item_details?: product_item_detailsUncheckedCreateNestedManyWithoutBusinessInput
     hospitality_item_details?: hospitality_item_detailsUncheckedCreateNestedManyWithoutBusinessInput
+    vehicle_item_details?: vehicle_item_detailsUncheckedCreateNestedManyWithoutBusinessInput
     product_orders?: product_ordersUncheckedCreateNestedManyWithoutBusinessInput
     product_inquiries?: product_inquiriesUncheckedCreateNestedManyWithoutBusinessInput
     hospitality_bookings?: hospitality_bookingsUncheckedCreateNestedManyWithoutBusinessInput
@@ -132474,6 +138057,7 @@ export namespace Prisma {
     catalog_items?: catalog_itemsUpdateManyWithoutBusinessesNestedInput
     product_item_details?: product_item_detailsUpdateManyWithoutBusinessNestedInput
     hospitality_item_details?: hospitality_item_detailsUpdateManyWithoutBusinessNestedInput
+    vehicle_item_details?: vehicle_item_detailsUpdateManyWithoutBusinessNestedInput
     product_orders?: product_ordersUpdateManyWithoutBusinessNestedInput
     product_inquiries?: product_inquiriesUpdateManyWithoutBusinessNestedInput
     hospitality_bookings?: hospitality_bookingsUpdateManyWithoutBusinessNestedInput
@@ -132521,6 +138105,7 @@ export namespace Prisma {
     catalog_items?: catalog_itemsUncheckedUpdateManyWithoutBusinessesNestedInput
     product_item_details?: product_item_detailsUncheckedUpdateManyWithoutBusinessNestedInput
     hospitality_item_details?: hospitality_item_detailsUncheckedUpdateManyWithoutBusinessNestedInput
+    vehicle_item_details?: vehicle_item_detailsUncheckedUpdateManyWithoutBusinessNestedInput
     product_orders?: product_ordersUncheckedUpdateManyWithoutBusinessNestedInput
     product_inquiries?: product_inquiriesUncheckedUpdateManyWithoutBusinessNestedInput
     hospitality_bookings?: hospitality_bookingsUncheckedUpdateManyWithoutBusinessNestedInput
@@ -133235,6 +138820,7 @@ export namespace Prisma {
     catalog_items?: catalog_itemsCreateNestedManyWithoutBusinessesInput
     product_item_details?: product_item_detailsCreateNestedManyWithoutBusinessInput
     hospitality_item_details?: hospitality_item_detailsCreateNestedManyWithoutBusinessInput
+    vehicle_item_details?: vehicle_item_detailsCreateNestedManyWithoutBusinessInput
     product_orders?: product_ordersCreateNestedManyWithoutBusinessInput
     product_inquiries?: product_inquiriesCreateNestedManyWithoutBusinessInput
     hospitality_bookings?: hospitality_bookingsCreateNestedManyWithoutBusinessInput
@@ -133282,6 +138868,7 @@ export namespace Prisma {
     catalog_items?: catalog_itemsUncheckedCreateNestedManyWithoutBusinessesInput
     product_item_details?: product_item_detailsUncheckedCreateNestedManyWithoutBusinessInput
     hospitality_item_details?: hospitality_item_detailsUncheckedCreateNestedManyWithoutBusinessInput
+    vehicle_item_details?: vehicle_item_detailsUncheckedCreateNestedManyWithoutBusinessInput
     product_orders?: product_ordersUncheckedCreateNestedManyWithoutBusinessInput
     product_inquiries?: product_inquiriesUncheckedCreateNestedManyWithoutBusinessInput
     hospitality_bookings?: hospitality_bookingsUncheckedCreateNestedManyWithoutBusinessInput
@@ -133439,6 +139026,7 @@ export namespace Prisma {
     catalog_items?: catalog_itemsUpdateManyWithoutBusinessesNestedInput
     product_item_details?: product_item_detailsUpdateManyWithoutBusinessNestedInput
     hospitality_item_details?: hospitality_item_detailsUpdateManyWithoutBusinessNestedInput
+    vehicle_item_details?: vehicle_item_detailsUpdateManyWithoutBusinessNestedInput
     product_orders?: product_ordersUpdateManyWithoutBusinessNestedInput
     product_inquiries?: product_inquiriesUpdateManyWithoutBusinessNestedInput
     hospitality_bookings?: hospitality_bookingsUpdateManyWithoutBusinessNestedInput
@@ -133486,6 +139074,7 @@ export namespace Prisma {
     catalog_items?: catalog_itemsUncheckedUpdateManyWithoutBusinessesNestedInput
     product_item_details?: product_item_detailsUncheckedUpdateManyWithoutBusinessNestedInput
     hospitality_item_details?: hospitality_item_detailsUncheckedUpdateManyWithoutBusinessNestedInput
+    vehicle_item_details?: vehicle_item_detailsUncheckedUpdateManyWithoutBusinessNestedInput
     product_orders?: product_ordersUncheckedUpdateManyWithoutBusinessNestedInput
     product_inquiries?: product_inquiriesUncheckedUpdateManyWithoutBusinessNestedInput
     hospitality_bookings?: hospitality_bookingsUncheckedUpdateManyWithoutBusinessNestedInput
@@ -133640,6 +139229,7 @@ export namespace Prisma {
     catalog_items?: catalog_itemsCreateNestedManyWithoutBusinessesInput
     product_item_details?: product_item_detailsCreateNestedManyWithoutBusinessInput
     hospitality_item_details?: hospitality_item_detailsCreateNestedManyWithoutBusinessInput
+    vehicle_item_details?: vehicle_item_detailsCreateNestedManyWithoutBusinessInput
     product_orders?: product_ordersCreateNestedManyWithoutBusinessInput
     product_inquiries?: product_inquiriesCreateNestedManyWithoutBusinessInput
     hospitality_bookings?: hospitality_bookingsCreateNestedManyWithoutBusinessInput
@@ -133687,6 +139277,7 @@ export namespace Prisma {
     catalog_items?: catalog_itemsUncheckedCreateNestedManyWithoutBusinessesInput
     product_item_details?: product_item_detailsUncheckedCreateNestedManyWithoutBusinessInput
     hospitality_item_details?: hospitality_item_detailsUncheckedCreateNestedManyWithoutBusinessInput
+    vehicle_item_details?: vehicle_item_detailsUncheckedCreateNestedManyWithoutBusinessInput
     product_orders?: product_ordersUncheckedCreateNestedManyWithoutBusinessInput
     product_inquiries?: product_inquiriesUncheckedCreateNestedManyWithoutBusinessInput
     hospitality_bookings?: hospitality_bookingsUncheckedCreateNestedManyWithoutBusinessInput
@@ -133781,6 +139372,11 @@ export namespace Prisma {
     status?: string
     lost_reason?: string | null
     context?: NullableJsonNullValueInput | InputJsonValue
+    lead_type?: string | null
+    qualification_score?: number
+    exit_intent_sent_at?: Date | string | null
+    exit_captured_at?: Date | string | null
+    exit_reason?: string | null
     quoted_amount?: Decimal | DecimalJsLike | number | string | null
     quoted_at?: Date | string | null
     converted_value?: Decimal | DecimalJsLike | number | string | null
@@ -133798,6 +139394,8 @@ export namespace Prisma {
     hospitality_inquiries?: hospitality_inquiriesCreateNestedManyWithoutLeadInput
     product_orders?: product_ordersCreateNestedManyWithoutLeadInput
     hospitality_bookings?: hospitality_bookingsCreateNestedManyWithoutLeadInput
+    item_interests?: lead_item_interestsCreateNestedManyWithoutLeadsInput
+    preference_watches?: lead_preference_watchesCreateNestedManyWithoutLeadsInput
     assigned_user?: usersCreateNestedOneWithoutLeads_assignedInput
     businesses: businessesCreateNestedOneWithoutLeadsInput
     tenants: tenantsCreateNestedOneWithoutLeadsInput
@@ -133821,6 +139419,11 @@ export namespace Prisma {
     pipeline_id?: string | null
     lost_reason?: string | null
     context?: NullableJsonNullValueInput | InputJsonValue
+    lead_type?: string | null
+    qualification_score?: number
+    exit_intent_sent_at?: Date | string | null
+    exit_captured_at?: Date | string | null
+    exit_reason?: string | null
     quoted_amount?: Decimal | DecimalJsLike | number | string | null
     quoted_at?: Date | string | null
     converted_value?: Decimal | DecimalJsLike | number | string | null
@@ -133839,6 +139442,8 @@ export namespace Prisma {
     hospitality_inquiries?: hospitality_inquiriesUncheckedCreateNestedManyWithoutLeadInput
     product_orders?: product_ordersUncheckedCreateNestedManyWithoutLeadInput
     hospitality_bookings?: hospitality_bookingsUncheckedCreateNestedManyWithoutLeadInput
+    item_interests?: lead_item_interestsUncheckedCreateNestedManyWithoutLeadsInput
+    preference_watches?: lead_preference_watchesUncheckedCreateNestedManyWithoutLeadsInput
     orders?: ordersUncheckedCreateNestedManyWithoutLeadsInput
   }
 
@@ -134015,6 +139620,7 @@ export namespace Prisma {
     catalog_items?: catalog_itemsUpdateManyWithoutBusinessesNestedInput
     product_item_details?: product_item_detailsUpdateManyWithoutBusinessNestedInput
     hospitality_item_details?: hospitality_item_detailsUpdateManyWithoutBusinessNestedInput
+    vehicle_item_details?: vehicle_item_detailsUpdateManyWithoutBusinessNestedInput
     product_orders?: product_ordersUpdateManyWithoutBusinessNestedInput
     product_inquiries?: product_inquiriesUpdateManyWithoutBusinessNestedInput
     hospitality_bookings?: hospitality_bookingsUpdateManyWithoutBusinessNestedInput
@@ -134062,6 +139668,7 @@ export namespace Prisma {
     catalog_items?: catalog_itemsUncheckedUpdateManyWithoutBusinessesNestedInput
     product_item_details?: product_item_detailsUncheckedUpdateManyWithoutBusinessNestedInput
     hospitality_item_details?: hospitality_item_detailsUncheckedUpdateManyWithoutBusinessNestedInput
+    vehicle_item_details?: vehicle_item_detailsUncheckedUpdateManyWithoutBusinessNestedInput
     product_orders?: product_ordersUncheckedUpdateManyWithoutBusinessNestedInput
     product_inquiries?: product_inquiriesUncheckedUpdateManyWithoutBusinessNestedInput
     hospitality_bookings?: hospitality_bookingsUncheckedUpdateManyWithoutBusinessNestedInput
@@ -134168,6 +139775,11 @@ export namespace Prisma {
     status?: StringFieldUpdateOperationsInput | string
     lost_reason?: NullableStringFieldUpdateOperationsInput | string | null
     context?: NullableJsonNullValueInput | InputJsonValue
+    lead_type?: NullableStringFieldUpdateOperationsInput | string | null
+    qualification_score?: IntFieldUpdateOperationsInput | number
+    exit_intent_sent_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    exit_captured_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    exit_reason?: NullableStringFieldUpdateOperationsInput | string | null
     quoted_amount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     quoted_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     converted_value?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
@@ -134185,6 +139797,8 @@ export namespace Prisma {
     hospitality_inquiries?: hospitality_inquiriesUpdateManyWithoutLeadNestedInput
     product_orders?: product_ordersUpdateManyWithoutLeadNestedInput
     hospitality_bookings?: hospitality_bookingsUpdateManyWithoutLeadNestedInput
+    item_interests?: lead_item_interestsUpdateManyWithoutLeadsNestedInput
+    preference_watches?: lead_preference_watchesUpdateManyWithoutLeadsNestedInput
     assigned_user?: usersUpdateOneWithoutLeads_assignedNestedInput
     businesses?: businessesUpdateOneRequiredWithoutLeadsNestedInput
     tenants?: tenantsUpdateOneRequiredWithoutLeadsNestedInput
@@ -134208,6 +139822,11 @@ export namespace Prisma {
     pipeline_id?: NullableStringFieldUpdateOperationsInput | string | null
     lost_reason?: NullableStringFieldUpdateOperationsInput | string | null
     context?: NullableJsonNullValueInput | InputJsonValue
+    lead_type?: NullableStringFieldUpdateOperationsInput | string | null
+    qualification_score?: IntFieldUpdateOperationsInput | number
+    exit_intent_sent_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    exit_captured_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    exit_reason?: NullableStringFieldUpdateOperationsInput | string | null
     quoted_amount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     quoted_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     converted_value?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
@@ -134226,6 +139845,8 @@ export namespace Prisma {
     hospitality_inquiries?: hospitality_inquiriesUncheckedUpdateManyWithoutLeadNestedInput
     product_orders?: product_ordersUncheckedUpdateManyWithoutLeadNestedInput
     hospitality_bookings?: hospitality_bookingsUncheckedUpdateManyWithoutLeadNestedInput
+    item_interests?: lead_item_interestsUncheckedUpdateManyWithoutLeadsNestedInput
+    preference_watches?: lead_preference_watchesUncheckedUpdateManyWithoutLeadsNestedInput
     orders?: ordersUncheckedUpdateManyWithoutLeadsNestedInput
   }
 
@@ -134381,6 +140002,7 @@ export namespace Prisma {
     catalog_items?: catalog_itemsCreateNestedManyWithoutBusinessesInput
     product_item_details?: product_item_detailsCreateNestedManyWithoutBusinessInput
     hospitality_item_details?: hospitality_item_detailsCreateNestedManyWithoutBusinessInput
+    vehicle_item_details?: vehicle_item_detailsCreateNestedManyWithoutBusinessInput
     product_orders?: product_ordersCreateNestedManyWithoutBusinessInput
     product_inquiries?: product_inquiriesCreateNestedManyWithoutBusinessInput
     hospitality_bookings?: hospitality_bookingsCreateNestedManyWithoutBusinessInput
@@ -134428,6 +140050,7 @@ export namespace Prisma {
     catalog_items?: catalog_itemsUncheckedCreateNestedManyWithoutBusinessesInput
     product_item_details?: product_item_detailsUncheckedCreateNestedManyWithoutBusinessInput
     hospitality_item_details?: hospitality_item_detailsUncheckedCreateNestedManyWithoutBusinessInput
+    vehicle_item_details?: vehicle_item_detailsUncheckedCreateNestedManyWithoutBusinessInput
     product_orders?: product_ordersUncheckedCreateNestedManyWithoutBusinessInput
     product_inquiries?: product_inquiriesUncheckedCreateNestedManyWithoutBusinessInput
     hospitality_bookings?: hospitality_bookingsUncheckedCreateNestedManyWithoutBusinessInput
@@ -134642,6 +140265,7 @@ export namespace Prisma {
     catalog_items?: catalog_itemsUpdateManyWithoutBusinessesNestedInput
     product_item_details?: product_item_detailsUpdateManyWithoutBusinessNestedInput
     hospitality_item_details?: hospitality_item_detailsUpdateManyWithoutBusinessNestedInput
+    vehicle_item_details?: vehicle_item_detailsUpdateManyWithoutBusinessNestedInput
     product_orders?: product_ordersUpdateManyWithoutBusinessNestedInput
     product_inquiries?: product_inquiriesUpdateManyWithoutBusinessNestedInput
     hospitality_bookings?: hospitality_bookingsUpdateManyWithoutBusinessNestedInput
@@ -134689,6 +140313,7 @@ export namespace Prisma {
     catalog_items?: catalog_itemsUncheckedUpdateManyWithoutBusinessesNestedInput
     product_item_details?: product_item_detailsUncheckedUpdateManyWithoutBusinessNestedInput
     hospitality_item_details?: hospitality_item_detailsUncheckedUpdateManyWithoutBusinessNestedInput
+    vehicle_item_details?: vehicle_item_detailsUncheckedUpdateManyWithoutBusinessNestedInput
     product_orders?: product_ordersUncheckedUpdateManyWithoutBusinessNestedInput
     product_inquiries?: product_inquiriesUncheckedUpdateManyWithoutBusinessNestedInput
     hospitality_bookings?: hospitality_bookingsUncheckedUpdateManyWithoutBusinessNestedInput
@@ -134842,6 +140467,7 @@ export namespace Prisma {
     catalog_items?: catalog_itemsCreateNestedManyWithoutBusinessesInput
     product_item_details?: product_item_detailsCreateNestedManyWithoutBusinessInput
     hospitality_item_details?: hospitality_item_detailsCreateNestedManyWithoutBusinessInput
+    vehicle_item_details?: vehicle_item_detailsCreateNestedManyWithoutBusinessInput
     product_orders?: product_ordersCreateNestedManyWithoutBusinessInput
     product_inquiries?: product_inquiriesCreateNestedManyWithoutBusinessInput
     hospitality_bookings?: hospitality_bookingsCreateNestedManyWithoutBusinessInput
@@ -134889,6 +140515,7 @@ export namespace Prisma {
     catalog_items?: catalog_itemsUncheckedCreateNestedManyWithoutBusinessesInput
     product_item_details?: product_item_detailsUncheckedCreateNestedManyWithoutBusinessInput
     hospitality_item_details?: hospitality_item_detailsUncheckedCreateNestedManyWithoutBusinessInput
+    vehicle_item_details?: vehicle_item_detailsUncheckedCreateNestedManyWithoutBusinessInput
     product_orders?: product_ordersUncheckedCreateNestedManyWithoutBusinessInput
     product_inquiries?: product_inquiriesUncheckedCreateNestedManyWithoutBusinessInput
     hospitality_bookings?: hospitality_bookingsUncheckedCreateNestedManyWithoutBusinessInput
@@ -135097,6 +140724,7 @@ export namespace Prisma {
     catalog_items?: catalog_itemsUpdateManyWithoutBusinessesNestedInput
     product_item_details?: product_item_detailsUpdateManyWithoutBusinessNestedInput
     hospitality_item_details?: hospitality_item_detailsUpdateManyWithoutBusinessNestedInput
+    vehicle_item_details?: vehicle_item_detailsUpdateManyWithoutBusinessNestedInput
     product_orders?: product_ordersUpdateManyWithoutBusinessNestedInput
     product_inquiries?: product_inquiriesUpdateManyWithoutBusinessNestedInput
     hospitality_bookings?: hospitality_bookingsUpdateManyWithoutBusinessNestedInput
@@ -135144,6 +140772,7 @@ export namespace Prisma {
     catalog_items?: catalog_itemsUncheckedUpdateManyWithoutBusinessesNestedInput
     product_item_details?: product_item_detailsUncheckedUpdateManyWithoutBusinessNestedInput
     hospitality_item_details?: hospitality_item_detailsUncheckedUpdateManyWithoutBusinessNestedInput
+    vehicle_item_details?: vehicle_item_detailsUncheckedUpdateManyWithoutBusinessNestedInput
     product_orders?: product_ordersUncheckedUpdateManyWithoutBusinessNestedInput
     product_inquiries?: product_inquiriesUncheckedUpdateManyWithoutBusinessNestedInput
     hospitality_bookings?: hospitality_bookingsUncheckedUpdateManyWithoutBusinessNestedInput
@@ -135385,6 +141014,7 @@ export namespace Prisma {
     cart_reservations?: cart_reservationsCreateNestedManyWithoutCatalog_itemInput
     product_detail?: product_item_detailsCreateNestedOneWithoutItemInput
     hospitality_detail?: hospitality_item_detailsCreateNestedOneWithoutItemInput
+    vehicle_detail?: vehicle_item_detailsCreateNestedOneWithoutItemInput
     product_order_items?: product_order_itemsCreateNestedManyWithoutItemInput
     hospitality_booking_items?: hospitality_booking_itemsCreateNestedManyWithoutItemInput
     product_inquiries?: product_inquiriesCreateNestedManyWithoutItemInput
@@ -135418,6 +141048,7 @@ export namespace Prisma {
     cart_reservations?: cart_reservationsUncheckedCreateNestedManyWithoutCatalog_itemInput
     product_detail?: product_item_detailsUncheckedCreateNestedOneWithoutItemInput
     hospitality_detail?: hospitality_item_detailsUncheckedCreateNestedOneWithoutItemInput
+    vehicle_detail?: vehicle_item_detailsUncheckedCreateNestedOneWithoutItemInput
     product_order_items?: product_order_itemsUncheckedCreateNestedManyWithoutItemInput
     hospitality_booking_items?: hospitality_booking_itemsUncheckedCreateNestedManyWithoutItemInput
     product_inquiries?: product_inquiriesUncheckedCreateNestedManyWithoutItemInput
@@ -135541,6 +141172,7 @@ export namespace Prisma {
     cart_reservations?: cart_reservationsUpdateManyWithoutCatalog_itemNestedInput
     product_detail?: product_item_detailsUpdateOneWithoutItemNestedInput
     hospitality_detail?: hospitality_item_detailsUpdateOneWithoutItemNestedInput
+    vehicle_detail?: vehicle_item_detailsUpdateOneWithoutItemNestedInput
     product_order_items?: product_order_itemsUpdateManyWithoutItemNestedInput
     hospitality_booking_items?: hospitality_booking_itemsUpdateManyWithoutItemNestedInput
     product_inquiries?: product_inquiriesUpdateManyWithoutItemNestedInput
@@ -135574,6 +141206,7 @@ export namespace Prisma {
     cart_reservations?: cart_reservationsUncheckedUpdateManyWithoutCatalog_itemNestedInput
     product_detail?: product_item_detailsUncheckedUpdateOneWithoutItemNestedInput
     hospitality_detail?: hospitality_item_detailsUncheckedUpdateOneWithoutItemNestedInput
+    vehicle_detail?: vehicle_item_detailsUncheckedUpdateOneWithoutItemNestedInput
     product_order_items?: product_order_itemsUncheckedUpdateManyWithoutItemNestedInput
     hospitality_booking_items?: hospitality_booking_itemsUncheckedUpdateManyWithoutItemNestedInput
     product_inquiries?: product_inquiriesUncheckedUpdateManyWithoutItemNestedInput
@@ -135687,6 +141320,7 @@ export namespace Prisma {
     catalog_items?: catalog_itemsCreateNestedManyWithoutBusinessesInput
     product_item_details?: product_item_detailsCreateNestedManyWithoutBusinessInput
     hospitality_item_details?: hospitality_item_detailsCreateNestedManyWithoutBusinessInput
+    vehicle_item_details?: vehicle_item_detailsCreateNestedManyWithoutBusinessInput
     product_orders?: product_ordersCreateNestedManyWithoutBusinessInput
     product_inquiries?: product_inquiriesCreateNestedManyWithoutBusinessInput
     hospitality_bookings?: hospitality_bookingsCreateNestedManyWithoutBusinessInput
@@ -135734,6 +141368,7 @@ export namespace Prisma {
     catalog_items?: catalog_itemsUncheckedCreateNestedManyWithoutBusinessesInput
     product_item_details?: product_item_detailsUncheckedCreateNestedManyWithoutBusinessInput
     hospitality_item_details?: hospitality_item_detailsUncheckedCreateNestedManyWithoutBusinessInput
+    vehicle_item_details?: vehicle_item_detailsUncheckedCreateNestedManyWithoutBusinessInput
     product_orders?: product_ordersUncheckedCreateNestedManyWithoutBusinessInput
     product_inquiries?: product_inquiriesUncheckedCreateNestedManyWithoutBusinessInput
     hospitality_bookings?: hospitality_bookingsUncheckedCreateNestedManyWithoutBusinessInput
@@ -135827,6 +141462,11 @@ export namespace Prisma {
     status?: string
     lost_reason?: string | null
     context?: NullableJsonNullValueInput | InputJsonValue
+    lead_type?: string | null
+    qualification_score?: number
+    exit_intent_sent_at?: Date | string | null
+    exit_captured_at?: Date | string | null
+    exit_reason?: string | null
     quoted_amount?: Decimal | DecimalJsLike | number | string | null
     quoted_at?: Date | string | null
     converted_value?: Decimal | DecimalJsLike | number | string | null
@@ -135843,6 +141483,8 @@ export namespace Prisma {
     hospitality_inquiries?: hospitality_inquiriesCreateNestedManyWithoutLeadInput
     product_orders?: product_ordersCreateNestedManyWithoutLeadInput
     hospitality_bookings?: hospitality_bookingsCreateNestedManyWithoutLeadInput
+    item_interests?: lead_item_interestsCreateNestedManyWithoutLeadsInput
+    preference_watches?: lead_preference_watchesCreateNestedManyWithoutLeadsInput
     assigned_user?: usersCreateNestedOneWithoutLeads_assignedInput
     businesses: businessesCreateNestedOneWithoutLeadsInput
     tenants: tenantsCreateNestedOneWithoutLeadsInput
@@ -135867,6 +141509,11 @@ export namespace Prisma {
     pipeline_id?: string | null
     lost_reason?: string | null
     context?: NullableJsonNullValueInput | InputJsonValue
+    lead_type?: string | null
+    qualification_score?: number
+    exit_intent_sent_at?: Date | string | null
+    exit_captured_at?: Date | string | null
+    exit_reason?: string | null
     quoted_amount?: Decimal | DecimalJsLike | number | string | null
     quoted_at?: Date | string | null
     converted_value?: Decimal | DecimalJsLike | number | string | null
@@ -135884,6 +141531,8 @@ export namespace Prisma {
     hospitality_inquiries?: hospitality_inquiriesUncheckedCreateNestedManyWithoutLeadInput
     product_orders?: product_ordersUncheckedCreateNestedManyWithoutLeadInput
     hospitality_bookings?: hospitality_bookingsUncheckedCreateNestedManyWithoutLeadInput
+    item_interests?: lead_item_interestsUncheckedCreateNestedManyWithoutLeadsInput
+    preference_watches?: lead_preference_watchesUncheckedCreateNestedManyWithoutLeadsInput
     orders?: ordersUncheckedCreateNestedManyWithoutLeadsInput
     workflow_executions?: workflow_executionsUncheckedCreateNestedManyWithoutLeadsInput
   }
@@ -136016,6 +141665,7 @@ export namespace Prisma {
     catalog_items?: catalog_itemsUpdateManyWithoutBusinessesNestedInput
     product_item_details?: product_item_detailsUpdateManyWithoutBusinessNestedInput
     hospitality_item_details?: hospitality_item_detailsUpdateManyWithoutBusinessNestedInput
+    vehicle_item_details?: vehicle_item_detailsUpdateManyWithoutBusinessNestedInput
     product_orders?: product_ordersUpdateManyWithoutBusinessNestedInput
     product_inquiries?: product_inquiriesUpdateManyWithoutBusinessNestedInput
     hospitality_bookings?: hospitality_bookingsUpdateManyWithoutBusinessNestedInput
@@ -136063,6 +141713,7 @@ export namespace Prisma {
     catalog_items?: catalog_itemsUncheckedUpdateManyWithoutBusinessesNestedInput
     product_item_details?: product_item_detailsUncheckedUpdateManyWithoutBusinessNestedInput
     hospitality_item_details?: hospitality_item_detailsUncheckedUpdateManyWithoutBusinessNestedInput
+    vehicle_item_details?: vehicle_item_detailsUncheckedUpdateManyWithoutBusinessNestedInput
     product_orders?: product_ordersUncheckedUpdateManyWithoutBusinessNestedInput
     product_inquiries?: product_inquiriesUncheckedUpdateManyWithoutBusinessNestedInput
     hospitality_bookings?: hospitality_bookingsUncheckedUpdateManyWithoutBusinessNestedInput
@@ -136168,6 +141819,11 @@ export namespace Prisma {
     status?: StringFieldUpdateOperationsInput | string
     lost_reason?: NullableStringFieldUpdateOperationsInput | string | null
     context?: NullableJsonNullValueInput | InputJsonValue
+    lead_type?: NullableStringFieldUpdateOperationsInput | string | null
+    qualification_score?: IntFieldUpdateOperationsInput | number
+    exit_intent_sent_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    exit_captured_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    exit_reason?: NullableStringFieldUpdateOperationsInput | string | null
     quoted_amount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     quoted_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     converted_value?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
@@ -136184,6 +141840,8 @@ export namespace Prisma {
     hospitality_inquiries?: hospitality_inquiriesUpdateManyWithoutLeadNestedInput
     product_orders?: product_ordersUpdateManyWithoutLeadNestedInput
     hospitality_bookings?: hospitality_bookingsUpdateManyWithoutLeadNestedInput
+    item_interests?: lead_item_interestsUpdateManyWithoutLeadsNestedInput
+    preference_watches?: lead_preference_watchesUpdateManyWithoutLeadsNestedInput
     assigned_user?: usersUpdateOneWithoutLeads_assignedNestedInput
     businesses?: businessesUpdateOneRequiredWithoutLeadsNestedInput
     tenants?: tenantsUpdateOneRequiredWithoutLeadsNestedInput
@@ -136208,6 +141866,11 @@ export namespace Prisma {
     pipeline_id?: NullableStringFieldUpdateOperationsInput | string | null
     lost_reason?: NullableStringFieldUpdateOperationsInput | string | null
     context?: NullableJsonNullValueInput | InputJsonValue
+    lead_type?: NullableStringFieldUpdateOperationsInput | string | null
+    qualification_score?: IntFieldUpdateOperationsInput | number
+    exit_intent_sent_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    exit_captured_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    exit_reason?: NullableStringFieldUpdateOperationsInput | string | null
     quoted_amount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     quoted_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     converted_value?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
@@ -136225,6 +141888,8 @@ export namespace Prisma {
     hospitality_inquiries?: hospitality_inquiriesUncheckedUpdateManyWithoutLeadNestedInput
     product_orders?: product_ordersUncheckedUpdateManyWithoutLeadNestedInput
     hospitality_bookings?: hospitality_bookingsUncheckedUpdateManyWithoutLeadNestedInput
+    item_interests?: lead_item_interestsUncheckedUpdateManyWithoutLeadsNestedInput
+    preference_watches?: lead_preference_watchesUncheckedUpdateManyWithoutLeadsNestedInput
     orders?: ordersUncheckedUpdateManyWithoutLeadsNestedInput
     workflow_executions?: workflow_executionsUncheckedUpdateManyWithoutLeadsNestedInput
   }
@@ -136600,6 +142265,41 @@ export namespace Prisma {
     create: XOR<hospitality_item_detailsCreateWithoutItemInput, hospitality_item_detailsUncheckedCreateWithoutItemInput>
   }
 
+  export type vehicle_item_detailsCreateWithoutItemInput = {
+    make: string
+    model_name: string
+    year: number
+    fuel_type?: string | null
+    transmission?: string | null
+    color?: string | null
+    km_driven?: number | null
+    condition?: string
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    created_at?: Date | string
+    updated_at?: Date | string
+    business: businessesCreateNestedOneWithoutVehicle_item_detailsInput
+  }
+
+  export type vehicle_item_detailsUncheckedCreateWithoutItemInput = {
+    business_id: string
+    make: string
+    model_name: string
+    year: number
+    fuel_type?: string | null
+    transmission?: string | null
+    color?: string | null
+    km_driven?: number | null
+    condition?: string
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    created_at?: Date | string
+    updated_at?: Date | string
+  }
+
+  export type vehicle_item_detailsCreateOrConnectWithoutItemInput = {
+    where: vehicle_item_detailsWhereUniqueInput
+    create: XOR<vehicle_item_detailsCreateWithoutItemInput, vehicle_item_detailsUncheckedCreateWithoutItemInput>
+  }
+
   export type product_order_itemsCreateWithoutItemInput = {
     product_order_item_id?: string
     product_name: string
@@ -136781,6 +142481,7 @@ export namespace Prisma {
     carts?: cartsCreateNestedManyWithoutBusinessesInput
     product_item_details?: product_item_detailsCreateNestedManyWithoutBusinessInput
     hospitality_item_details?: hospitality_item_detailsCreateNestedManyWithoutBusinessInput
+    vehicle_item_details?: vehicle_item_detailsCreateNestedManyWithoutBusinessInput
     product_orders?: product_ordersCreateNestedManyWithoutBusinessInput
     product_inquiries?: product_inquiriesCreateNestedManyWithoutBusinessInput
     hospitality_bookings?: hospitality_bookingsCreateNestedManyWithoutBusinessInput
@@ -136828,6 +142529,7 @@ export namespace Prisma {
     carts?: cartsUncheckedCreateNestedManyWithoutBusinessesInput
     product_item_details?: product_item_detailsUncheckedCreateNestedManyWithoutBusinessInput
     hospitality_item_details?: hospitality_item_detailsUncheckedCreateNestedManyWithoutBusinessInput
+    vehicle_item_details?: vehicle_item_detailsUncheckedCreateNestedManyWithoutBusinessInput
     product_orders?: product_ordersUncheckedCreateNestedManyWithoutBusinessInput
     product_inquiries?: product_inquiriesUncheckedCreateNestedManyWithoutBusinessInput
     hospitality_bookings?: hospitality_bookingsUncheckedCreateNestedManyWithoutBusinessInput
@@ -137091,6 +142793,47 @@ export namespace Prisma {
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type vehicle_item_detailsUpsertWithoutItemInput = {
+    update: XOR<vehicle_item_detailsUpdateWithoutItemInput, vehicle_item_detailsUncheckedUpdateWithoutItemInput>
+    create: XOR<vehicle_item_detailsCreateWithoutItemInput, vehicle_item_detailsUncheckedCreateWithoutItemInput>
+    where?: vehicle_item_detailsWhereInput
+  }
+
+  export type vehicle_item_detailsUpdateToOneWithWhereWithoutItemInput = {
+    where?: vehicle_item_detailsWhereInput
+    data: XOR<vehicle_item_detailsUpdateWithoutItemInput, vehicle_item_detailsUncheckedUpdateWithoutItemInput>
+  }
+
+  export type vehicle_item_detailsUpdateWithoutItemInput = {
+    make?: StringFieldUpdateOperationsInput | string
+    model_name?: StringFieldUpdateOperationsInput | string
+    year?: IntFieldUpdateOperationsInput | number
+    fuel_type?: NullableStringFieldUpdateOperationsInput | string | null
+    transmission?: NullableStringFieldUpdateOperationsInput | string | null
+    color?: NullableStringFieldUpdateOperationsInput | string | null
+    km_driven?: NullableIntFieldUpdateOperationsInput | number | null
+    condition?: StringFieldUpdateOperationsInput | string
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    business?: businessesUpdateOneRequiredWithoutVehicle_item_detailsNestedInput
+  }
+
+  export type vehicle_item_detailsUncheckedUpdateWithoutItemInput = {
+    business_id?: StringFieldUpdateOperationsInput | string
+    make?: StringFieldUpdateOperationsInput | string
+    model_name?: StringFieldUpdateOperationsInput | string
+    year?: IntFieldUpdateOperationsInput | number
+    fuel_type?: NullableStringFieldUpdateOperationsInput | string | null
+    transmission?: NullableStringFieldUpdateOperationsInput | string | null
+    color?: NullableStringFieldUpdateOperationsInput | string | null
+    km_driven?: NullableIntFieldUpdateOperationsInput | number | null
+    condition?: StringFieldUpdateOperationsInput | string
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type product_order_itemsUpsertWithWhereUniqueWithoutItemInput = {
     where: product_order_itemsWhereUniqueInput
     update: XOR<product_order_itemsUpdateWithoutItemInput, product_order_itemsUncheckedUpdateWithoutItemInput>
@@ -137226,6 +142969,7 @@ export namespace Prisma {
     carts?: cartsUpdateManyWithoutBusinessesNestedInput
     product_item_details?: product_item_detailsUpdateManyWithoutBusinessNestedInput
     hospitality_item_details?: hospitality_item_detailsUpdateManyWithoutBusinessNestedInput
+    vehicle_item_details?: vehicle_item_detailsUpdateManyWithoutBusinessNestedInput
     product_orders?: product_ordersUpdateManyWithoutBusinessNestedInput
     product_inquiries?: product_inquiriesUpdateManyWithoutBusinessNestedInput
     hospitality_bookings?: hospitality_bookingsUpdateManyWithoutBusinessNestedInput
@@ -137273,6 +143017,7 @@ export namespace Prisma {
     carts?: cartsUncheckedUpdateManyWithoutBusinessesNestedInput
     product_item_details?: product_item_detailsUncheckedUpdateManyWithoutBusinessNestedInput
     hospitality_item_details?: hospitality_item_detailsUncheckedUpdateManyWithoutBusinessNestedInput
+    vehicle_item_details?: vehicle_item_detailsUncheckedUpdateManyWithoutBusinessNestedInput
     product_orders?: product_ordersUncheckedUpdateManyWithoutBusinessNestedInput
     product_inquiries?: product_inquiriesUncheckedUpdateManyWithoutBusinessNestedInput
     hospitality_bookings?: hospitality_bookingsUncheckedUpdateManyWithoutBusinessNestedInput
@@ -137439,6 +143184,7 @@ export namespace Prisma {
     cart_reservations?: cart_reservationsCreateNestedManyWithoutCatalog_itemInput
     product_detail?: product_item_detailsCreateNestedOneWithoutItemInput
     hospitality_detail?: hospitality_item_detailsCreateNestedOneWithoutItemInput
+    vehicle_detail?: vehicle_item_detailsCreateNestedOneWithoutItemInput
     product_order_items?: product_order_itemsCreateNestedManyWithoutItemInput
     hospitality_booking_items?: hospitality_booking_itemsCreateNestedManyWithoutItemInput
     product_inquiries?: product_inquiriesCreateNestedManyWithoutItemInput
@@ -137472,6 +143218,7 @@ export namespace Prisma {
     cart_reservations?: cart_reservationsUncheckedCreateNestedManyWithoutCatalog_itemInput
     product_detail?: product_item_detailsUncheckedCreateNestedOneWithoutItemInput
     hospitality_detail?: hospitality_item_detailsUncheckedCreateNestedOneWithoutItemInput
+    vehicle_detail?: vehicle_item_detailsUncheckedCreateNestedOneWithoutItemInput
     product_order_items?: product_order_itemsUncheckedCreateNestedManyWithoutItemInput
     hospitality_booking_items?: hospitality_booking_itemsUncheckedCreateNestedManyWithoutItemInput
     product_inquiries?: product_inquiriesUncheckedCreateNestedManyWithoutItemInput
@@ -137619,6 +143366,7 @@ export namespace Prisma {
     cart_reservations?: cart_reservationsUpdateManyWithoutCatalog_itemNestedInput
     product_detail?: product_item_detailsUpdateOneWithoutItemNestedInput
     hospitality_detail?: hospitality_item_detailsUpdateOneWithoutItemNestedInput
+    vehicle_detail?: vehicle_item_detailsUpdateOneWithoutItemNestedInput
     product_order_items?: product_order_itemsUpdateManyWithoutItemNestedInput
     hospitality_booking_items?: hospitality_booking_itemsUpdateManyWithoutItemNestedInput
     product_inquiries?: product_inquiriesUpdateManyWithoutItemNestedInput
@@ -137652,6 +143400,7 @@ export namespace Prisma {
     cart_reservations?: cart_reservationsUncheckedUpdateManyWithoutCatalog_itemNestedInput
     product_detail?: product_item_detailsUncheckedUpdateOneWithoutItemNestedInput
     hospitality_detail?: hospitality_item_detailsUncheckedUpdateOneWithoutItemNestedInput
+    vehicle_detail?: vehicle_item_detailsUncheckedUpdateOneWithoutItemNestedInput
     product_order_items?: product_order_itemsUncheckedUpdateManyWithoutItemNestedInput
     hospitality_booking_items?: hospitality_booking_itemsUncheckedUpdateManyWithoutItemNestedInput
     product_inquiries?: product_inquiriesUncheckedUpdateManyWithoutItemNestedInput
@@ -137715,6 +143464,7 @@ export namespace Prisma {
     cart_reservations?: cart_reservationsCreateNestedManyWithoutCatalog_itemInput
     product_detail?: product_item_detailsCreateNestedOneWithoutItemInput
     hospitality_detail?: hospitality_item_detailsCreateNestedOneWithoutItemInput
+    vehicle_detail?: vehicle_item_detailsCreateNestedOneWithoutItemInput
     product_order_items?: product_order_itemsCreateNestedManyWithoutItemInput
     hospitality_booking_items?: hospitality_booking_itemsCreateNestedManyWithoutItemInput
     product_inquiries?: product_inquiriesCreateNestedManyWithoutItemInput
@@ -137748,6 +143498,7 @@ export namespace Prisma {
     cart_reservations?: cart_reservationsUncheckedCreateNestedManyWithoutCatalog_itemInput
     product_detail?: product_item_detailsUncheckedCreateNestedOneWithoutItemInput
     hospitality_detail?: hospitality_item_detailsUncheckedCreateNestedOneWithoutItemInput
+    vehicle_detail?: vehicle_item_detailsUncheckedCreateNestedOneWithoutItemInput
     product_order_items?: product_order_itemsUncheckedCreateNestedManyWithoutItemInput
     hospitality_booking_items?: hospitality_booking_itemsUncheckedCreateNestedManyWithoutItemInput
     product_inquiries?: product_inquiriesUncheckedCreateNestedManyWithoutItemInput
@@ -137795,6 +143546,7 @@ export namespace Prisma {
     cart_reservations?: cart_reservationsUpdateManyWithoutCatalog_itemNestedInput
     product_detail?: product_item_detailsUpdateOneWithoutItemNestedInput
     hospitality_detail?: hospitality_item_detailsUpdateOneWithoutItemNestedInput
+    vehicle_detail?: vehicle_item_detailsUpdateOneWithoutItemNestedInput
     product_order_items?: product_order_itemsUpdateManyWithoutItemNestedInput
     hospitality_booking_items?: hospitality_booking_itemsUpdateManyWithoutItemNestedInput
     product_inquiries?: product_inquiriesUpdateManyWithoutItemNestedInput
@@ -137828,6 +143580,7 @@ export namespace Prisma {
     cart_reservations?: cart_reservationsUncheckedUpdateManyWithoutCatalog_itemNestedInput
     product_detail?: product_item_detailsUncheckedUpdateOneWithoutItemNestedInput
     hospitality_detail?: hospitality_item_detailsUncheckedUpdateOneWithoutItemNestedInput
+    vehicle_detail?: vehicle_item_detailsUncheckedUpdateOneWithoutItemNestedInput
     product_order_items?: product_order_itemsUncheckedUpdateManyWithoutItemNestedInput
     hospitality_booking_items?: hospitality_booking_itemsUncheckedUpdateManyWithoutItemNestedInput
     product_inquiries?: product_inquiriesUncheckedUpdateManyWithoutItemNestedInput
@@ -137859,6 +143612,7 @@ export namespace Prisma {
     carts?: cartsCreateNestedManyWithoutBusinessesInput
     catalog_items?: catalog_itemsCreateNestedManyWithoutBusinessesInput
     hospitality_item_details?: hospitality_item_detailsCreateNestedManyWithoutBusinessInput
+    vehicle_item_details?: vehicle_item_detailsCreateNestedManyWithoutBusinessInput
     product_orders?: product_ordersCreateNestedManyWithoutBusinessInput
     product_inquiries?: product_inquiriesCreateNestedManyWithoutBusinessInput
     hospitality_bookings?: hospitality_bookingsCreateNestedManyWithoutBusinessInput
@@ -137906,6 +143660,7 @@ export namespace Prisma {
     carts?: cartsUncheckedCreateNestedManyWithoutBusinessesInput
     catalog_items?: catalog_itemsUncheckedCreateNestedManyWithoutBusinessesInput
     hospitality_item_details?: hospitality_item_detailsUncheckedCreateNestedManyWithoutBusinessInput
+    vehicle_item_details?: vehicle_item_detailsUncheckedCreateNestedManyWithoutBusinessInput
     product_orders?: product_ordersUncheckedCreateNestedManyWithoutBusinessInput
     product_inquiries?: product_inquiriesUncheckedCreateNestedManyWithoutBusinessInput
     hospitality_bookings?: hospitality_bookingsUncheckedCreateNestedManyWithoutBusinessInput
@@ -137957,6 +143712,7 @@ export namespace Prisma {
     cart_items?: cart_itemsCreateNestedManyWithoutCatalog_itemInput
     cart_reservations?: cart_reservationsCreateNestedManyWithoutCatalog_itemInput
     hospitality_detail?: hospitality_item_detailsCreateNestedOneWithoutItemInput
+    vehicle_detail?: vehicle_item_detailsCreateNestedOneWithoutItemInput
     product_order_items?: product_order_itemsCreateNestedManyWithoutItemInput
     hospitality_booking_items?: hospitality_booking_itemsCreateNestedManyWithoutItemInput
     product_inquiries?: product_inquiriesCreateNestedManyWithoutItemInput
@@ -137990,6 +143746,7 @@ export namespace Prisma {
     cart_items?: cart_itemsUncheckedCreateNestedManyWithoutCatalog_itemInput
     cart_reservations?: cart_reservationsUncheckedCreateNestedManyWithoutCatalog_itemInput
     hospitality_detail?: hospitality_item_detailsUncheckedCreateNestedOneWithoutItemInput
+    vehicle_detail?: vehicle_item_detailsUncheckedCreateNestedOneWithoutItemInput
     product_order_items?: product_order_itemsUncheckedCreateNestedManyWithoutItemInput
     hospitality_booking_items?: hospitality_booking_itemsUncheckedCreateNestedManyWithoutItemInput
     product_inquiries?: product_inquiriesUncheckedCreateNestedManyWithoutItemInput
@@ -138038,6 +143795,7 @@ export namespace Prisma {
     carts?: cartsUpdateManyWithoutBusinessesNestedInput
     catalog_items?: catalog_itemsUpdateManyWithoutBusinessesNestedInput
     hospitality_item_details?: hospitality_item_detailsUpdateManyWithoutBusinessNestedInput
+    vehicle_item_details?: vehicle_item_detailsUpdateManyWithoutBusinessNestedInput
     product_orders?: product_ordersUpdateManyWithoutBusinessNestedInput
     product_inquiries?: product_inquiriesUpdateManyWithoutBusinessNestedInput
     hospitality_bookings?: hospitality_bookingsUpdateManyWithoutBusinessNestedInput
@@ -138085,6 +143843,7 @@ export namespace Prisma {
     carts?: cartsUncheckedUpdateManyWithoutBusinessesNestedInput
     catalog_items?: catalog_itemsUncheckedUpdateManyWithoutBusinessesNestedInput
     hospitality_item_details?: hospitality_item_detailsUncheckedUpdateManyWithoutBusinessNestedInput
+    vehicle_item_details?: vehicle_item_detailsUncheckedUpdateManyWithoutBusinessNestedInput
     product_orders?: product_ordersUncheckedUpdateManyWithoutBusinessNestedInput
     product_inquiries?: product_inquiriesUncheckedUpdateManyWithoutBusinessNestedInput
     hospitality_bookings?: hospitality_bookingsUncheckedUpdateManyWithoutBusinessNestedInput
@@ -138142,6 +143901,7 @@ export namespace Prisma {
     cart_items?: cart_itemsUpdateManyWithoutCatalog_itemNestedInput
     cart_reservations?: cart_reservationsUpdateManyWithoutCatalog_itemNestedInput
     hospitality_detail?: hospitality_item_detailsUpdateOneWithoutItemNestedInput
+    vehicle_detail?: vehicle_item_detailsUpdateOneWithoutItemNestedInput
     product_order_items?: product_order_itemsUpdateManyWithoutItemNestedInput
     hospitality_booking_items?: hospitality_booking_itemsUpdateManyWithoutItemNestedInput
     product_inquiries?: product_inquiriesUpdateManyWithoutItemNestedInput
@@ -138175,6 +143935,7 @@ export namespace Prisma {
     cart_items?: cart_itemsUncheckedUpdateManyWithoutCatalog_itemNestedInput
     cart_reservations?: cart_reservationsUncheckedUpdateManyWithoutCatalog_itemNestedInput
     hospitality_detail?: hospitality_item_detailsUncheckedUpdateOneWithoutItemNestedInput
+    vehicle_detail?: vehicle_item_detailsUncheckedUpdateOneWithoutItemNestedInput
     product_order_items?: product_order_itemsUncheckedUpdateManyWithoutItemNestedInput
     hospitality_booking_items?: hospitality_booking_itemsUncheckedUpdateManyWithoutItemNestedInput
     product_inquiries?: product_inquiriesUncheckedUpdateManyWithoutItemNestedInput
@@ -138208,6 +143969,7 @@ export namespace Prisma {
     catalog_items?: catalog_itemsCreateNestedManyWithoutBusinessesInput
     product_item_details?: product_item_detailsCreateNestedManyWithoutBusinessInput
     hospitality_item_details?: hospitality_item_detailsCreateNestedManyWithoutBusinessInput
+    vehicle_item_details?: vehicle_item_detailsCreateNestedManyWithoutBusinessInput
     product_orders?: product_ordersCreateNestedManyWithoutBusinessInput
     hospitality_bookings?: hospitality_bookingsCreateNestedManyWithoutBusinessInput
     hospitality_inquiries?: hospitality_inquiriesCreateNestedManyWithoutBusinessInput
@@ -138255,6 +144017,7 @@ export namespace Prisma {
     catalog_items?: catalog_itemsUncheckedCreateNestedManyWithoutBusinessesInput
     product_item_details?: product_item_detailsUncheckedCreateNestedManyWithoutBusinessInput
     hospitality_item_details?: hospitality_item_detailsUncheckedCreateNestedManyWithoutBusinessInput
+    vehicle_item_details?: vehicle_item_detailsUncheckedCreateNestedManyWithoutBusinessInput
     product_orders?: product_ordersUncheckedCreateNestedManyWithoutBusinessInput
     hospitality_bookings?: hospitality_bookingsUncheckedCreateNestedManyWithoutBusinessInput
     hospitality_inquiries?: hospitality_inquiriesUncheckedCreateNestedManyWithoutBusinessInput
@@ -138349,6 +144112,11 @@ export namespace Prisma {
     status?: string
     lost_reason?: string | null
     context?: NullableJsonNullValueInput | InputJsonValue
+    lead_type?: string | null
+    qualification_score?: number
+    exit_intent_sent_at?: Date | string | null
+    exit_captured_at?: Date | string | null
+    exit_reason?: string | null
     quoted_amount?: Decimal | DecimalJsLike | number | string | null
     quoted_at?: Date | string | null
     converted_value?: Decimal | DecimalJsLike | number | string | null
@@ -138365,6 +144133,8 @@ export namespace Prisma {
     hospitality_inquiries?: hospitality_inquiriesCreateNestedManyWithoutLeadInput
     product_orders?: product_ordersCreateNestedManyWithoutLeadInput
     hospitality_bookings?: hospitality_bookingsCreateNestedManyWithoutLeadInput
+    item_interests?: lead_item_interestsCreateNestedManyWithoutLeadsInput
+    preference_watches?: lead_preference_watchesCreateNestedManyWithoutLeadsInput
     assigned_user?: usersCreateNestedOneWithoutLeads_assignedInput
     businesses: businessesCreateNestedOneWithoutLeadsInput
     tenants: tenantsCreateNestedOneWithoutLeadsInput
@@ -138389,6 +144159,11 @@ export namespace Prisma {
     pipeline_id?: string | null
     lost_reason?: string | null
     context?: NullableJsonNullValueInput | InputJsonValue
+    lead_type?: string | null
+    qualification_score?: number
+    exit_intent_sent_at?: Date | string | null
+    exit_captured_at?: Date | string | null
+    exit_reason?: string | null
     quoted_amount?: Decimal | DecimalJsLike | number | string | null
     quoted_at?: Date | string | null
     converted_value?: Decimal | DecimalJsLike | number | string | null
@@ -138406,6 +144181,8 @@ export namespace Prisma {
     hospitality_inquiries?: hospitality_inquiriesUncheckedCreateNestedManyWithoutLeadInput
     product_orders?: product_ordersUncheckedCreateNestedManyWithoutLeadInput
     hospitality_bookings?: hospitality_bookingsUncheckedCreateNestedManyWithoutLeadInput
+    item_interests?: lead_item_interestsUncheckedCreateNestedManyWithoutLeadsInput
+    preference_watches?: lead_preference_watchesUncheckedCreateNestedManyWithoutLeadsInput
     orders?: ordersUncheckedCreateNestedManyWithoutLeadsInput
     workflow_executions?: workflow_executionsUncheckedCreateNestedManyWithoutLeadsInput
   }
@@ -138438,6 +144215,7 @@ export namespace Prisma {
     cart_reservations?: cart_reservationsCreateNestedManyWithoutCatalog_itemInput
     product_detail?: product_item_detailsCreateNestedOneWithoutItemInput
     hospitality_detail?: hospitality_item_detailsCreateNestedOneWithoutItemInput
+    vehicle_detail?: vehicle_item_detailsCreateNestedOneWithoutItemInput
     product_order_items?: product_order_itemsCreateNestedManyWithoutItemInput
     hospitality_booking_items?: hospitality_booking_itemsCreateNestedManyWithoutItemInput
     hospitality_inquiries?: hospitality_inquiriesCreateNestedManyWithoutPreferred_itemInput
@@ -138471,6 +144249,7 @@ export namespace Prisma {
     cart_reservations?: cart_reservationsUncheckedCreateNestedManyWithoutCatalog_itemInput
     product_detail?: product_item_detailsUncheckedCreateNestedOneWithoutItemInput
     hospitality_detail?: hospitality_item_detailsUncheckedCreateNestedOneWithoutItemInput
+    vehicle_detail?: vehicle_item_detailsUncheckedCreateNestedOneWithoutItemInput
     product_order_items?: product_order_itemsUncheckedCreateNestedManyWithoutItemInput
     hospitality_booking_items?: hospitality_booking_itemsUncheckedCreateNestedManyWithoutItemInput
     hospitality_inquiries?: hospitality_inquiriesUncheckedCreateNestedManyWithoutPreferred_itemInput
@@ -138519,6 +144298,7 @@ export namespace Prisma {
     catalog_items?: catalog_itemsUpdateManyWithoutBusinessesNestedInput
     product_item_details?: product_item_detailsUpdateManyWithoutBusinessNestedInput
     hospitality_item_details?: hospitality_item_detailsUpdateManyWithoutBusinessNestedInput
+    vehicle_item_details?: vehicle_item_detailsUpdateManyWithoutBusinessNestedInput
     product_orders?: product_ordersUpdateManyWithoutBusinessNestedInput
     hospitality_bookings?: hospitality_bookingsUpdateManyWithoutBusinessNestedInput
     hospitality_inquiries?: hospitality_inquiriesUpdateManyWithoutBusinessNestedInput
@@ -138566,6 +144346,7 @@ export namespace Prisma {
     catalog_items?: catalog_itemsUncheckedUpdateManyWithoutBusinessesNestedInput
     product_item_details?: product_item_detailsUncheckedUpdateManyWithoutBusinessNestedInput
     hospitality_item_details?: hospitality_item_detailsUncheckedUpdateManyWithoutBusinessNestedInput
+    vehicle_item_details?: vehicle_item_detailsUncheckedUpdateManyWithoutBusinessNestedInput
     product_orders?: product_ordersUncheckedUpdateManyWithoutBusinessNestedInput
     hospitality_bookings?: hospitality_bookingsUncheckedUpdateManyWithoutBusinessNestedInput
     hospitality_inquiries?: hospitality_inquiriesUncheckedUpdateManyWithoutBusinessNestedInput
@@ -138672,6 +144453,11 @@ export namespace Prisma {
     status?: StringFieldUpdateOperationsInput | string
     lost_reason?: NullableStringFieldUpdateOperationsInput | string | null
     context?: NullableJsonNullValueInput | InputJsonValue
+    lead_type?: NullableStringFieldUpdateOperationsInput | string | null
+    qualification_score?: IntFieldUpdateOperationsInput | number
+    exit_intent_sent_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    exit_captured_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    exit_reason?: NullableStringFieldUpdateOperationsInput | string | null
     quoted_amount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     quoted_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     converted_value?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
@@ -138688,6 +144474,8 @@ export namespace Prisma {
     hospitality_inquiries?: hospitality_inquiriesUpdateManyWithoutLeadNestedInput
     product_orders?: product_ordersUpdateManyWithoutLeadNestedInput
     hospitality_bookings?: hospitality_bookingsUpdateManyWithoutLeadNestedInput
+    item_interests?: lead_item_interestsUpdateManyWithoutLeadsNestedInput
+    preference_watches?: lead_preference_watchesUpdateManyWithoutLeadsNestedInput
     assigned_user?: usersUpdateOneWithoutLeads_assignedNestedInput
     businesses?: businessesUpdateOneRequiredWithoutLeadsNestedInput
     tenants?: tenantsUpdateOneRequiredWithoutLeadsNestedInput
@@ -138712,6 +144500,11 @@ export namespace Prisma {
     pipeline_id?: NullableStringFieldUpdateOperationsInput | string | null
     lost_reason?: NullableStringFieldUpdateOperationsInput | string | null
     context?: NullableJsonNullValueInput | InputJsonValue
+    lead_type?: NullableStringFieldUpdateOperationsInput | string | null
+    qualification_score?: IntFieldUpdateOperationsInput | number
+    exit_intent_sent_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    exit_captured_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    exit_reason?: NullableStringFieldUpdateOperationsInput | string | null
     quoted_amount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     quoted_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     converted_value?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
@@ -138729,6 +144522,8 @@ export namespace Prisma {
     hospitality_inquiries?: hospitality_inquiriesUncheckedUpdateManyWithoutLeadNestedInput
     product_orders?: product_ordersUncheckedUpdateManyWithoutLeadNestedInput
     hospitality_bookings?: hospitality_bookingsUncheckedUpdateManyWithoutLeadNestedInput
+    item_interests?: lead_item_interestsUncheckedUpdateManyWithoutLeadsNestedInput
+    preference_watches?: lead_preference_watchesUncheckedUpdateManyWithoutLeadsNestedInput
     orders?: ordersUncheckedUpdateManyWithoutLeadsNestedInput
     workflow_executions?: workflow_executionsUncheckedUpdateManyWithoutLeadsNestedInput
   }
@@ -138767,6 +144562,7 @@ export namespace Prisma {
     cart_reservations?: cart_reservationsUpdateManyWithoutCatalog_itemNestedInput
     product_detail?: product_item_detailsUpdateOneWithoutItemNestedInput
     hospitality_detail?: hospitality_item_detailsUpdateOneWithoutItemNestedInput
+    vehicle_detail?: vehicle_item_detailsUpdateOneWithoutItemNestedInput
     product_order_items?: product_order_itemsUpdateManyWithoutItemNestedInput
     hospitality_booking_items?: hospitality_booking_itemsUpdateManyWithoutItemNestedInput
     hospitality_inquiries?: hospitality_inquiriesUpdateManyWithoutPreferred_itemNestedInput
@@ -138800,6 +144596,7 @@ export namespace Prisma {
     cart_reservations?: cart_reservationsUncheckedUpdateManyWithoutCatalog_itemNestedInput
     product_detail?: product_item_detailsUncheckedUpdateOneWithoutItemNestedInput
     hospitality_detail?: hospitality_item_detailsUncheckedUpdateOneWithoutItemNestedInput
+    vehicle_detail?: vehicle_item_detailsUncheckedUpdateOneWithoutItemNestedInput
     product_order_items?: product_order_itemsUncheckedUpdateManyWithoutItemNestedInput
     hospitality_booking_items?: hospitality_booking_itemsUncheckedUpdateManyWithoutItemNestedInput
     hospitality_inquiries?: hospitality_inquiriesUncheckedUpdateManyWithoutPreferred_itemNestedInput
@@ -138832,6 +144629,7 @@ export namespace Prisma {
     catalog_items?: catalog_itemsCreateNestedManyWithoutBusinessesInput
     product_item_details?: product_item_detailsCreateNestedManyWithoutBusinessInput
     hospitality_item_details?: hospitality_item_detailsCreateNestedManyWithoutBusinessInput
+    vehicle_item_details?: vehicle_item_detailsCreateNestedManyWithoutBusinessInput
     product_inquiries?: product_inquiriesCreateNestedManyWithoutBusinessInput
     hospitality_bookings?: hospitality_bookingsCreateNestedManyWithoutBusinessInput
     hospitality_inquiries?: hospitality_inquiriesCreateNestedManyWithoutBusinessInput
@@ -138879,6 +144677,7 @@ export namespace Prisma {
     catalog_items?: catalog_itemsUncheckedCreateNestedManyWithoutBusinessesInput
     product_item_details?: product_item_detailsUncheckedCreateNestedManyWithoutBusinessInput
     hospitality_item_details?: hospitality_item_detailsUncheckedCreateNestedManyWithoutBusinessInput
+    vehicle_item_details?: vehicle_item_detailsUncheckedCreateNestedManyWithoutBusinessInput
     product_inquiries?: product_inquiriesUncheckedCreateNestedManyWithoutBusinessInput
     hospitality_bookings?: hospitality_bookingsUncheckedCreateNestedManyWithoutBusinessInput
     hospitality_inquiries?: hospitality_inquiriesUncheckedCreateNestedManyWithoutBusinessInput
@@ -139026,6 +144825,11 @@ export namespace Prisma {
     status?: string
     lost_reason?: string | null
     context?: NullableJsonNullValueInput | InputJsonValue
+    lead_type?: string | null
+    qualification_score?: number
+    exit_intent_sent_at?: Date | string | null
+    exit_captured_at?: Date | string | null
+    exit_reason?: string | null
     quoted_amount?: Decimal | DecimalJsLike | number | string | null
     quoted_at?: Date | string | null
     converted_value?: Decimal | DecimalJsLike | number | string | null
@@ -139042,6 +144846,8 @@ export namespace Prisma {
     product_inquiries?: product_inquiriesCreateNestedManyWithoutLeadInput
     hospitality_inquiries?: hospitality_inquiriesCreateNestedManyWithoutLeadInput
     hospitality_bookings?: hospitality_bookingsCreateNestedManyWithoutLeadInput
+    item_interests?: lead_item_interestsCreateNestedManyWithoutLeadsInput
+    preference_watches?: lead_preference_watchesCreateNestedManyWithoutLeadsInput
     assigned_user?: usersCreateNestedOneWithoutLeads_assignedInput
     businesses: businessesCreateNestedOneWithoutLeadsInput
     tenants: tenantsCreateNestedOneWithoutLeadsInput
@@ -139066,6 +144872,11 @@ export namespace Prisma {
     pipeline_id?: string | null
     lost_reason?: string | null
     context?: NullableJsonNullValueInput | InputJsonValue
+    lead_type?: string | null
+    qualification_score?: number
+    exit_intent_sent_at?: Date | string | null
+    exit_captured_at?: Date | string | null
+    exit_reason?: string | null
     quoted_amount?: Decimal | DecimalJsLike | number | string | null
     quoted_at?: Date | string | null
     converted_value?: Decimal | DecimalJsLike | number | string | null
@@ -139083,6 +144894,8 @@ export namespace Prisma {
     product_inquiries?: product_inquiriesUncheckedCreateNestedManyWithoutLeadInput
     hospitality_inquiries?: hospitality_inquiriesUncheckedCreateNestedManyWithoutLeadInput
     hospitality_bookings?: hospitality_bookingsUncheckedCreateNestedManyWithoutLeadInput
+    item_interests?: lead_item_interestsUncheckedCreateNestedManyWithoutLeadsInput
+    preference_watches?: lead_preference_watchesUncheckedCreateNestedManyWithoutLeadsInput
     orders?: ordersUncheckedCreateNestedManyWithoutLeadsInput
     workflow_executions?: workflow_executionsUncheckedCreateNestedManyWithoutLeadsInput
   }
@@ -139292,6 +145105,7 @@ export namespace Prisma {
     catalog_items?: catalog_itemsUpdateManyWithoutBusinessesNestedInput
     product_item_details?: product_item_detailsUpdateManyWithoutBusinessNestedInput
     hospitality_item_details?: hospitality_item_detailsUpdateManyWithoutBusinessNestedInput
+    vehicle_item_details?: vehicle_item_detailsUpdateManyWithoutBusinessNestedInput
     product_inquiries?: product_inquiriesUpdateManyWithoutBusinessNestedInput
     hospitality_bookings?: hospitality_bookingsUpdateManyWithoutBusinessNestedInput
     hospitality_inquiries?: hospitality_inquiriesUpdateManyWithoutBusinessNestedInput
@@ -139339,6 +145153,7 @@ export namespace Prisma {
     catalog_items?: catalog_itemsUncheckedUpdateManyWithoutBusinessesNestedInput
     product_item_details?: product_item_detailsUncheckedUpdateManyWithoutBusinessNestedInput
     hospitality_item_details?: hospitality_item_detailsUncheckedUpdateManyWithoutBusinessNestedInput
+    vehicle_item_details?: vehicle_item_detailsUncheckedUpdateManyWithoutBusinessNestedInput
     product_inquiries?: product_inquiriesUncheckedUpdateManyWithoutBusinessNestedInput
     hospitality_bookings?: hospitality_bookingsUncheckedUpdateManyWithoutBusinessNestedInput
     hospitality_inquiries?: hospitality_inquiriesUncheckedUpdateManyWithoutBusinessNestedInput
@@ -139504,6 +145319,11 @@ export namespace Prisma {
     status?: StringFieldUpdateOperationsInput | string
     lost_reason?: NullableStringFieldUpdateOperationsInput | string | null
     context?: NullableJsonNullValueInput | InputJsonValue
+    lead_type?: NullableStringFieldUpdateOperationsInput | string | null
+    qualification_score?: IntFieldUpdateOperationsInput | number
+    exit_intent_sent_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    exit_captured_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    exit_reason?: NullableStringFieldUpdateOperationsInput | string | null
     quoted_amount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     quoted_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     converted_value?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
@@ -139520,6 +145340,8 @@ export namespace Prisma {
     product_inquiries?: product_inquiriesUpdateManyWithoutLeadNestedInput
     hospitality_inquiries?: hospitality_inquiriesUpdateManyWithoutLeadNestedInput
     hospitality_bookings?: hospitality_bookingsUpdateManyWithoutLeadNestedInput
+    item_interests?: lead_item_interestsUpdateManyWithoutLeadsNestedInput
+    preference_watches?: lead_preference_watchesUpdateManyWithoutLeadsNestedInput
     assigned_user?: usersUpdateOneWithoutLeads_assignedNestedInput
     businesses?: businessesUpdateOneRequiredWithoutLeadsNestedInput
     tenants?: tenantsUpdateOneRequiredWithoutLeadsNestedInput
@@ -139544,6 +145366,11 @@ export namespace Prisma {
     pipeline_id?: NullableStringFieldUpdateOperationsInput | string | null
     lost_reason?: NullableStringFieldUpdateOperationsInput | string | null
     context?: NullableJsonNullValueInput | InputJsonValue
+    lead_type?: NullableStringFieldUpdateOperationsInput | string | null
+    qualification_score?: IntFieldUpdateOperationsInput | number
+    exit_intent_sent_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    exit_captured_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    exit_reason?: NullableStringFieldUpdateOperationsInput | string | null
     quoted_amount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     quoted_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     converted_value?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
@@ -139561,6 +145388,8 @@ export namespace Prisma {
     product_inquiries?: product_inquiriesUncheckedUpdateManyWithoutLeadNestedInput
     hospitality_inquiries?: hospitality_inquiriesUncheckedUpdateManyWithoutLeadNestedInput
     hospitality_bookings?: hospitality_bookingsUncheckedUpdateManyWithoutLeadNestedInput
+    item_interests?: lead_item_interestsUncheckedUpdateManyWithoutLeadsNestedInput
+    preference_watches?: lead_preference_watchesUncheckedUpdateManyWithoutLeadsNestedInput
     orders?: ordersUncheckedUpdateManyWithoutLeadsNestedInput
     workflow_executions?: workflow_executionsUncheckedUpdateManyWithoutLeadsNestedInput
   }
@@ -139797,6 +145626,7 @@ export namespace Prisma {
     cart_reservations?: cart_reservationsCreateNestedManyWithoutCatalog_itemInput
     product_detail?: product_item_detailsCreateNestedOneWithoutItemInput
     hospitality_detail?: hospitality_item_detailsCreateNestedOneWithoutItemInput
+    vehicle_detail?: vehicle_item_detailsCreateNestedOneWithoutItemInput
     hospitality_booking_items?: hospitality_booking_itemsCreateNestedManyWithoutItemInput
     product_inquiries?: product_inquiriesCreateNestedManyWithoutItemInput
     hospitality_inquiries?: hospitality_inquiriesCreateNestedManyWithoutPreferred_itemInput
@@ -139830,6 +145660,7 @@ export namespace Prisma {
     cart_reservations?: cart_reservationsUncheckedCreateNestedManyWithoutCatalog_itemInput
     product_detail?: product_item_detailsUncheckedCreateNestedOneWithoutItemInput
     hospitality_detail?: hospitality_item_detailsUncheckedCreateNestedOneWithoutItemInput
+    vehicle_detail?: vehicle_item_detailsUncheckedCreateNestedOneWithoutItemInput
     hospitality_booking_items?: hospitality_booking_itemsUncheckedCreateNestedManyWithoutItemInput
     product_inquiries?: product_inquiriesUncheckedCreateNestedManyWithoutItemInput
     hospitality_inquiries?: hospitality_inquiriesUncheckedCreateNestedManyWithoutPreferred_itemInput
@@ -139985,6 +145816,7 @@ export namespace Prisma {
     cart_reservations?: cart_reservationsUpdateManyWithoutCatalog_itemNestedInput
     product_detail?: product_item_detailsUpdateOneWithoutItemNestedInput
     hospitality_detail?: hospitality_item_detailsUpdateOneWithoutItemNestedInput
+    vehicle_detail?: vehicle_item_detailsUpdateOneWithoutItemNestedInput
     hospitality_booking_items?: hospitality_booking_itemsUpdateManyWithoutItemNestedInput
     product_inquiries?: product_inquiriesUpdateManyWithoutItemNestedInput
     hospitality_inquiries?: hospitality_inquiriesUpdateManyWithoutPreferred_itemNestedInput
@@ -140018,6 +145850,7 @@ export namespace Prisma {
     cart_reservations?: cart_reservationsUncheckedUpdateManyWithoutCatalog_itemNestedInput
     product_detail?: product_item_detailsUncheckedUpdateOneWithoutItemNestedInput
     hospitality_detail?: hospitality_item_detailsUncheckedUpdateOneWithoutItemNestedInput
+    vehicle_detail?: vehicle_item_detailsUncheckedUpdateOneWithoutItemNestedInput
     hospitality_booking_items?: hospitality_booking_itemsUncheckedUpdateManyWithoutItemNestedInput
     product_inquiries?: product_inquiriesUncheckedUpdateManyWithoutItemNestedInput
     hospitality_inquiries?: hospitality_inquiriesUncheckedUpdateManyWithoutPreferred_itemNestedInput
@@ -140228,6 +146061,7 @@ export namespace Prisma {
     carts?: cartsCreateNestedManyWithoutBusinessesInput
     catalog_items?: catalog_itemsCreateNestedManyWithoutBusinessesInput
     product_item_details?: product_item_detailsCreateNestedManyWithoutBusinessInput
+    vehicle_item_details?: vehicle_item_detailsCreateNestedManyWithoutBusinessInput
     product_orders?: product_ordersCreateNestedManyWithoutBusinessInput
     product_inquiries?: product_inquiriesCreateNestedManyWithoutBusinessInput
     hospitality_bookings?: hospitality_bookingsCreateNestedManyWithoutBusinessInput
@@ -140275,6 +146109,7 @@ export namespace Prisma {
     carts?: cartsUncheckedCreateNestedManyWithoutBusinessesInput
     catalog_items?: catalog_itemsUncheckedCreateNestedManyWithoutBusinessesInput
     product_item_details?: product_item_detailsUncheckedCreateNestedManyWithoutBusinessInput
+    vehicle_item_details?: vehicle_item_detailsUncheckedCreateNestedManyWithoutBusinessInput
     product_orders?: product_ordersUncheckedCreateNestedManyWithoutBusinessInput
     product_inquiries?: product_inquiriesUncheckedCreateNestedManyWithoutBusinessInput
     hospitality_bookings?: hospitality_bookingsUncheckedCreateNestedManyWithoutBusinessInput
@@ -140326,6 +146161,7 @@ export namespace Prisma {
     cart_items?: cart_itemsCreateNestedManyWithoutCatalog_itemInput
     cart_reservations?: cart_reservationsCreateNestedManyWithoutCatalog_itemInput
     product_detail?: product_item_detailsCreateNestedOneWithoutItemInput
+    vehicle_detail?: vehicle_item_detailsCreateNestedOneWithoutItemInput
     product_order_items?: product_order_itemsCreateNestedManyWithoutItemInput
     hospitality_booking_items?: hospitality_booking_itemsCreateNestedManyWithoutItemInput
     product_inquiries?: product_inquiriesCreateNestedManyWithoutItemInput
@@ -140359,6 +146195,7 @@ export namespace Prisma {
     cart_items?: cart_itemsUncheckedCreateNestedManyWithoutCatalog_itemInput
     cart_reservations?: cart_reservationsUncheckedCreateNestedManyWithoutCatalog_itemInput
     product_detail?: product_item_detailsUncheckedCreateNestedOneWithoutItemInput
+    vehicle_detail?: vehicle_item_detailsUncheckedCreateNestedOneWithoutItemInput
     product_order_items?: product_order_itemsUncheckedCreateNestedManyWithoutItemInput
     hospitality_booking_items?: hospitality_booking_itemsUncheckedCreateNestedManyWithoutItemInput
     product_inquiries?: product_inquiriesUncheckedCreateNestedManyWithoutItemInput
@@ -140407,6 +146244,7 @@ export namespace Prisma {
     carts?: cartsUpdateManyWithoutBusinessesNestedInput
     catalog_items?: catalog_itemsUpdateManyWithoutBusinessesNestedInput
     product_item_details?: product_item_detailsUpdateManyWithoutBusinessNestedInput
+    vehicle_item_details?: vehicle_item_detailsUpdateManyWithoutBusinessNestedInput
     product_orders?: product_ordersUpdateManyWithoutBusinessNestedInput
     product_inquiries?: product_inquiriesUpdateManyWithoutBusinessNestedInput
     hospitality_bookings?: hospitality_bookingsUpdateManyWithoutBusinessNestedInput
@@ -140454,6 +146292,7 @@ export namespace Prisma {
     carts?: cartsUncheckedUpdateManyWithoutBusinessesNestedInput
     catalog_items?: catalog_itemsUncheckedUpdateManyWithoutBusinessesNestedInput
     product_item_details?: product_item_detailsUncheckedUpdateManyWithoutBusinessNestedInput
+    vehicle_item_details?: vehicle_item_detailsUncheckedUpdateManyWithoutBusinessNestedInput
     product_orders?: product_ordersUncheckedUpdateManyWithoutBusinessNestedInput
     product_inquiries?: product_inquiriesUncheckedUpdateManyWithoutBusinessNestedInput
     hospitality_bookings?: hospitality_bookingsUncheckedUpdateManyWithoutBusinessNestedInput
@@ -140511,6 +146350,7 @@ export namespace Prisma {
     cart_items?: cart_itemsUpdateManyWithoutCatalog_itemNestedInput
     cart_reservations?: cart_reservationsUpdateManyWithoutCatalog_itemNestedInput
     product_detail?: product_item_detailsUpdateOneWithoutItemNestedInput
+    vehicle_detail?: vehicle_item_detailsUpdateOneWithoutItemNestedInput
     product_order_items?: product_order_itemsUpdateManyWithoutItemNestedInput
     hospitality_booking_items?: hospitality_booking_itemsUpdateManyWithoutItemNestedInput
     product_inquiries?: product_inquiriesUpdateManyWithoutItemNestedInput
@@ -140544,6 +146384,363 @@ export namespace Prisma {
     cart_items?: cart_itemsUncheckedUpdateManyWithoutCatalog_itemNestedInput
     cart_reservations?: cart_reservationsUncheckedUpdateManyWithoutCatalog_itemNestedInput
     product_detail?: product_item_detailsUncheckedUpdateOneWithoutItemNestedInput
+    vehicle_detail?: vehicle_item_detailsUncheckedUpdateOneWithoutItemNestedInput
+    product_order_items?: product_order_itemsUncheckedUpdateManyWithoutItemNestedInput
+    hospitality_booking_items?: hospitality_booking_itemsUncheckedUpdateManyWithoutItemNestedInput
+    product_inquiries?: product_inquiriesUncheckedUpdateManyWithoutItemNestedInput
+    hospitality_inquiries?: hospitality_inquiriesUncheckedUpdateManyWithoutPreferred_itemNestedInput
+    availability?: item_availabilityUncheckedUpdateManyWithoutItemNestedInput
+    variants?: item_variantsUncheckedUpdateManyWithoutItemNestedInput
+    order_items?: order_itemsUncheckedUpdateManyWithoutCatalog_itemNestedInput
+  }
+
+  export type businessesCreateWithoutVehicle_item_detailsInput = {
+    business_id?: string
+    business_name: string
+    business_type?: string | null
+    whatsapp_number?: string | null
+    created_at?: Date | string
+    updated_at?: Date | string
+    email?: string | null
+    phone?: string | null
+    website?: string | null
+    public_booking_slug?: string | null
+    city?: string | null
+    address?: string | null
+    country?: string | null
+    gst_number?: string | null
+    pan_number?: string | null
+    deleted_at?: Date | string | null
+    business_employees?: business_employeesCreateNestedManyWithoutBusinessesInput
+    business_workflows?: business_workflowsCreateNestedManyWithoutBusinessesInput
+    tenants: tenantsCreateNestedOneWithoutBusinessesInput
+    carts?: cartsCreateNestedManyWithoutBusinessesInput
+    catalog_items?: catalog_itemsCreateNestedManyWithoutBusinessesInput
+    product_item_details?: product_item_detailsCreateNestedManyWithoutBusinessInput
+    hospitality_item_details?: hospitality_item_detailsCreateNestedManyWithoutBusinessInput
+    product_orders?: product_ordersCreateNestedManyWithoutBusinessInput
+    product_inquiries?: product_inquiriesCreateNestedManyWithoutBusinessInput
+    hospitality_bookings?: hospitality_bookingsCreateNestedManyWithoutBusinessInput
+    hospitality_inquiries?: hospitality_inquiriesCreateNestedManyWithoutBusinessInput
+    leads?: leadsCreateNestedManyWithoutBusinessesInput
+    pipelines?: pipelinesCreateNestedManyWithoutBusinessesInput
+    notification_messages?: notification_messagesCreateNestedManyWithoutBusinessesInput
+    notification_preferences?: notification_preferencesCreateNestedManyWithoutBusinessesInput
+    notification_templates?: notification_templatesCreateNestedManyWithoutBusinessesInput
+    payment_reconciliation?: payment_reconciliationCreateNestedManyWithoutBusinessesInput
+    payments?: paymentsCreateNestedManyWithoutBusinessesInput
+    social_accounts?: social_accountsCreateNestedManyWithoutBusinessesInput
+    users?: usersCreateNestedManyWithoutBusinessesInput
+    workflow_executions?: workflow_executionsCreateNestedManyWithoutBusinessesInput
+    workflow_execution_steps?: workflow_execution_stepsCreateNestedManyWithoutBusinessInput
+    workflow_idempotency_keys?: workflow_idempotency_keysCreateNestedManyWithoutBusinessInput
+    billing_subscription?: billing_subscriptionsCreateNestedOneWithoutBusinessesInput
+    wallet?: walletsCreateNestedOneWithoutBusinessesInput
+    billing_payments_list?: billing_paymentsCreateNestedManyWithoutBusinessesInput
+    billing_invoices_list?: billing_invoicesCreateNestedManyWithoutBusinessesInput
+    settings?: business_settingsCreateNestedOneWithoutBusinessesInput
+    audit_logs?: audit_logsCreateNestedManyWithoutBusinessesInput
+  }
+
+  export type businessesUncheckedCreateWithoutVehicle_item_detailsInput = {
+    business_id?: string
+    tenant_id: string
+    business_name: string
+    business_type?: string | null
+    whatsapp_number?: string | null
+    created_at?: Date | string
+    updated_at?: Date | string
+    email?: string | null
+    phone?: string | null
+    website?: string | null
+    public_booking_slug?: string | null
+    city?: string | null
+    address?: string | null
+    country?: string | null
+    gst_number?: string | null
+    pan_number?: string | null
+    deleted_at?: Date | string | null
+    business_employees?: business_employeesUncheckedCreateNestedManyWithoutBusinessesInput
+    business_workflows?: business_workflowsUncheckedCreateNestedManyWithoutBusinessesInput
+    carts?: cartsUncheckedCreateNestedManyWithoutBusinessesInput
+    catalog_items?: catalog_itemsUncheckedCreateNestedManyWithoutBusinessesInput
+    product_item_details?: product_item_detailsUncheckedCreateNestedManyWithoutBusinessInput
+    hospitality_item_details?: hospitality_item_detailsUncheckedCreateNestedManyWithoutBusinessInput
+    product_orders?: product_ordersUncheckedCreateNestedManyWithoutBusinessInput
+    product_inquiries?: product_inquiriesUncheckedCreateNestedManyWithoutBusinessInput
+    hospitality_bookings?: hospitality_bookingsUncheckedCreateNestedManyWithoutBusinessInput
+    hospitality_inquiries?: hospitality_inquiriesUncheckedCreateNestedManyWithoutBusinessInput
+    leads?: leadsUncheckedCreateNestedManyWithoutBusinessesInput
+    pipelines?: pipelinesUncheckedCreateNestedManyWithoutBusinessesInput
+    notification_messages?: notification_messagesUncheckedCreateNestedManyWithoutBusinessesInput
+    notification_preferences?: notification_preferencesUncheckedCreateNestedManyWithoutBusinessesInput
+    notification_templates?: notification_templatesUncheckedCreateNestedManyWithoutBusinessesInput
+    payment_reconciliation?: payment_reconciliationUncheckedCreateNestedManyWithoutBusinessesInput
+    payments?: paymentsUncheckedCreateNestedManyWithoutBusinessesInput
+    social_accounts?: social_accountsUncheckedCreateNestedManyWithoutBusinessesInput
+    users?: usersUncheckedCreateNestedManyWithoutBusinessesInput
+    workflow_executions?: workflow_executionsUncheckedCreateNestedManyWithoutBusinessesInput
+    workflow_execution_steps?: workflow_execution_stepsUncheckedCreateNestedManyWithoutBusinessInput
+    workflow_idempotency_keys?: workflow_idempotency_keysUncheckedCreateNestedManyWithoutBusinessInput
+    billing_subscription?: billing_subscriptionsUncheckedCreateNestedOneWithoutBusinessesInput
+    wallet?: walletsUncheckedCreateNestedOneWithoutBusinessesInput
+    billing_payments_list?: billing_paymentsUncheckedCreateNestedManyWithoutBusinessesInput
+    billing_invoices_list?: billing_invoicesUncheckedCreateNestedManyWithoutBusinessesInput
+    settings?: business_settingsUncheckedCreateNestedOneWithoutBusinessesInput
+    audit_logs?: audit_logsUncheckedCreateNestedManyWithoutBusinessesInput
+  }
+
+  export type businessesCreateOrConnectWithoutVehicle_item_detailsInput = {
+    where: businessesWhereUniqueInput
+    create: XOR<businessesCreateWithoutVehicle_item_detailsInput, businessesUncheckedCreateWithoutVehicle_item_detailsInput>
+  }
+
+  export type catalog_itemsCreateWithoutVehicle_detailInput = {
+    item_id?: string
+    tenant_id: string
+    item_type: string
+    name: string
+    description?: string | null
+    category?: string | null
+    base_price: Decimal | DecimalJsLike | number | string
+    compare_price?: Decimal | DecimalJsLike | number | string | null
+    currency?: string
+    stock_quantity?: number | null
+    primary_image_url?: string | null
+    image_urls?: NullableJsonNullValueInput | InputJsonValue
+    attributes?: NullableJsonNullValueInput | InputJsonValue
+    ai_tags?: catalog_itemsCreateai_tagsInput | string[]
+    is_active?: boolean
+    deleted_at?: Date | string | null
+    created_at?: Date | string
+    updated_at?: Date | string
+    cart_items?: cart_itemsCreateNestedManyWithoutCatalog_itemInput
+    cart_reservations?: cart_reservationsCreateNestedManyWithoutCatalog_itemInput
+    product_detail?: product_item_detailsCreateNestedOneWithoutItemInput
+    hospitality_detail?: hospitality_item_detailsCreateNestedOneWithoutItemInput
+    product_order_items?: product_order_itemsCreateNestedManyWithoutItemInput
+    hospitality_booking_items?: hospitality_booking_itemsCreateNestedManyWithoutItemInput
+    product_inquiries?: product_inquiriesCreateNestedManyWithoutItemInput
+    hospitality_inquiries?: hospitality_inquiriesCreateNestedManyWithoutPreferred_itemInput
+    businesses: businessesCreateNestedOneWithoutCatalog_itemsInput
+    availability?: item_availabilityCreateNestedManyWithoutItemInput
+    variants?: item_variantsCreateNestedManyWithoutItemInput
+    order_items?: order_itemsCreateNestedManyWithoutCatalog_itemInput
+  }
+
+  export type catalog_itemsUncheckedCreateWithoutVehicle_detailInput = {
+    item_id?: string
+    business_id: string
+    tenant_id: string
+    item_type: string
+    name: string
+    description?: string | null
+    category?: string | null
+    base_price: Decimal | DecimalJsLike | number | string
+    compare_price?: Decimal | DecimalJsLike | number | string | null
+    currency?: string
+    stock_quantity?: number | null
+    primary_image_url?: string | null
+    image_urls?: NullableJsonNullValueInput | InputJsonValue
+    attributes?: NullableJsonNullValueInput | InputJsonValue
+    ai_tags?: catalog_itemsCreateai_tagsInput | string[]
+    is_active?: boolean
+    deleted_at?: Date | string | null
+    created_at?: Date | string
+    updated_at?: Date | string
+    cart_items?: cart_itemsUncheckedCreateNestedManyWithoutCatalog_itemInput
+    cart_reservations?: cart_reservationsUncheckedCreateNestedManyWithoutCatalog_itemInput
+    product_detail?: product_item_detailsUncheckedCreateNestedOneWithoutItemInput
+    hospitality_detail?: hospitality_item_detailsUncheckedCreateNestedOneWithoutItemInput
+    product_order_items?: product_order_itemsUncheckedCreateNestedManyWithoutItemInput
+    hospitality_booking_items?: hospitality_booking_itemsUncheckedCreateNestedManyWithoutItemInput
+    product_inquiries?: product_inquiriesUncheckedCreateNestedManyWithoutItemInput
+    hospitality_inquiries?: hospitality_inquiriesUncheckedCreateNestedManyWithoutPreferred_itemInput
+    availability?: item_availabilityUncheckedCreateNestedManyWithoutItemInput
+    variants?: item_variantsUncheckedCreateNestedManyWithoutItemInput
+    order_items?: order_itemsUncheckedCreateNestedManyWithoutCatalog_itemInput
+  }
+
+  export type catalog_itemsCreateOrConnectWithoutVehicle_detailInput = {
+    where: catalog_itemsWhereUniqueInput
+    create: XOR<catalog_itemsCreateWithoutVehicle_detailInput, catalog_itemsUncheckedCreateWithoutVehicle_detailInput>
+  }
+
+  export type businessesUpsertWithoutVehicle_item_detailsInput = {
+    update: XOR<businessesUpdateWithoutVehicle_item_detailsInput, businessesUncheckedUpdateWithoutVehicle_item_detailsInput>
+    create: XOR<businessesCreateWithoutVehicle_item_detailsInput, businessesUncheckedCreateWithoutVehicle_item_detailsInput>
+    where?: businessesWhereInput
+  }
+
+  export type businessesUpdateToOneWithWhereWithoutVehicle_item_detailsInput = {
+    where?: businessesWhereInput
+    data: XOR<businessesUpdateWithoutVehicle_item_detailsInput, businessesUncheckedUpdateWithoutVehicle_item_detailsInput>
+  }
+
+  export type businessesUpdateWithoutVehicle_item_detailsInput = {
+    business_id?: StringFieldUpdateOperationsInput | string
+    business_name?: StringFieldUpdateOperationsInput | string
+    business_type?: NullableStringFieldUpdateOperationsInput | string | null
+    whatsapp_number?: NullableStringFieldUpdateOperationsInput | string | null
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    website?: NullableStringFieldUpdateOperationsInput | string | null
+    public_booking_slug?: NullableStringFieldUpdateOperationsInput | string | null
+    city?: NullableStringFieldUpdateOperationsInput | string | null
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    country?: NullableStringFieldUpdateOperationsInput | string | null
+    gst_number?: NullableStringFieldUpdateOperationsInput | string | null
+    pan_number?: NullableStringFieldUpdateOperationsInput | string | null
+    deleted_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    business_employees?: business_employeesUpdateManyWithoutBusinessesNestedInput
+    business_workflows?: business_workflowsUpdateManyWithoutBusinessesNestedInput
+    tenants?: tenantsUpdateOneRequiredWithoutBusinessesNestedInput
+    carts?: cartsUpdateManyWithoutBusinessesNestedInput
+    catalog_items?: catalog_itemsUpdateManyWithoutBusinessesNestedInput
+    product_item_details?: product_item_detailsUpdateManyWithoutBusinessNestedInput
+    hospitality_item_details?: hospitality_item_detailsUpdateManyWithoutBusinessNestedInput
+    product_orders?: product_ordersUpdateManyWithoutBusinessNestedInput
+    product_inquiries?: product_inquiriesUpdateManyWithoutBusinessNestedInput
+    hospitality_bookings?: hospitality_bookingsUpdateManyWithoutBusinessNestedInput
+    hospitality_inquiries?: hospitality_inquiriesUpdateManyWithoutBusinessNestedInput
+    leads?: leadsUpdateManyWithoutBusinessesNestedInput
+    pipelines?: pipelinesUpdateManyWithoutBusinessesNestedInput
+    notification_messages?: notification_messagesUpdateManyWithoutBusinessesNestedInput
+    notification_preferences?: notification_preferencesUpdateManyWithoutBusinessesNestedInput
+    notification_templates?: notification_templatesUpdateManyWithoutBusinessesNestedInput
+    payment_reconciliation?: payment_reconciliationUpdateManyWithoutBusinessesNestedInput
+    payments?: paymentsUpdateManyWithoutBusinessesNestedInput
+    social_accounts?: social_accountsUpdateManyWithoutBusinessesNestedInput
+    users?: usersUpdateManyWithoutBusinessesNestedInput
+    workflow_executions?: workflow_executionsUpdateManyWithoutBusinessesNestedInput
+    workflow_execution_steps?: workflow_execution_stepsUpdateManyWithoutBusinessNestedInput
+    workflow_idempotency_keys?: workflow_idempotency_keysUpdateManyWithoutBusinessNestedInput
+    billing_subscription?: billing_subscriptionsUpdateOneWithoutBusinessesNestedInput
+    wallet?: walletsUpdateOneWithoutBusinessesNestedInput
+    billing_payments_list?: billing_paymentsUpdateManyWithoutBusinessesNestedInput
+    billing_invoices_list?: billing_invoicesUpdateManyWithoutBusinessesNestedInput
+    settings?: business_settingsUpdateOneWithoutBusinessesNestedInput
+    audit_logs?: audit_logsUpdateManyWithoutBusinessesNestedInput
+  }
+
+  export type businessesUncheckedUpdateWithoutVehicle_item_detailsInput = {
+    business_id?: StringFieldUpdateOperationsInput | string
+    tenant_id?: StringFieldUpdateOperationsInput | string
+    business_name?: StringFieldUpdateOperationsInput | string
+    business_type?: NullableStringFieldUpdateOperationsInput | string | null
+    whatsapp_number?: NullableStringFieldUpdateOperationsInput | string | null
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    website?: NullableStringFieldUpdateOperationsInput | string | null
+    public_booking_slug?: NullableStringFieldUpdateOperationsInput | string | null
+    city?: NullableStringFieldUpdateOperationsInput | string | null
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    country?: NullableStringFieldUpdateOperationsInput | string | null
+    gst_number?: NullableStringFieldUpdateOperationsInput | string | null
+    pan_number?: NullableStringFieldUpdateOperationsInput | string | null
+    deleted_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    business_employees?: business_employeesUncheckedUpdateManyWithoutBusinessesNestedInput
+    business_workflows?: business_workflowsUncheckedUpdateManyWithoutBusinessesNestedInput
+    carts?: cartsUncheckedUpdateManyWithoutBusinessesNestedInput
+    catalog_items?: catalog_itemsUncheckedUpdateManyWithoutBusinessesNestedInput
+    product_item_details?: product_item_detailsUncheckedUpdateManyWithoutBusinessNestedInput
+    hospitality_item_details?: hospitality_item_detailsUncheckedUpdateManyWithoutBusinessNestedInput
+    product_orders?: product_ordersUncheckedUpdateManyWithoutBusinessNestedInput
+    product_inquiries?: product_inquiriesUncheckedUpdateManyWithoutBusinessNestedInput
+    hospitality_bookings?: hospitality_bookingsUncheckedUpdateManyWithoutBusinessNestedInput
+    hospitality_inquiries?: hospitality_inquiriesUncheckedUpdateManyWithoutBusinessNestedInput
+    leads?: leadsUncheckedUpdateManyWithoutBusinessesNestedInput
+    pipelines?: pipelinesUncheckedUpdateManyWithoutBusinessesNestedInput
+    notification_messages?: notification_messagesUncheckedUpdateManyWithoutBusinessesNestedInput
+    notification_preferences?: notification_preferencesUncheckedUpdateManyWithoutBusinessesNestedInput
+    notification_templates?: notification_templatesUncheckedUpdateManyWithoutBusinessesNestedInput
+    payment_reconciliation?: payment_reconciliationUncheckedUpdateManyWithoutBusinessesNestedInput
+    payments?: paymentsUncheckedUpdateManyWithoutBusinessesNestedInput
+    social_accounts?: social_accountsUncheckedUpdateManyWithoutBusinessesNestedInput
+    users?: usersUncheckedUpdateManyWithoutBusinessesNestedInput
+    workflow_executions?: workflow_executionsUncheckedUpdateManyWithoutBusinessesNestedInput
+    workflow_execution_steps?: workflow_execution_stepsUncheckedUpdateManyWithoutBusinessNestedInput
+    workflow_idempotency_keys?: workflow_idempotency_keysUncheckedUpdateManyWithoutBusinessNestedInput
+    billing_subscription?: billing_subscriptionsUncheckedUpdateOneWithoutBusinessesNestedInput
+    wallet?: walletsUncheckedUpdateOneWithoutBusinessesNestedInput
+    billing_payments_list?: billing_paymentsUncheckedUpdateManyWithoutBusinessesNestedInput
+    billing_invoices_list?: billing_invoicesUncheckedUpdateManyWithoutBusinessesNestedInput
+    settings?: business_settingsUncheckedUpdateOneWithoutBusinessesNestedInput
+    audit_logs?: audit_logsUncheckedUpdateManyWithoutBusinessesNestedInput
+  }
+
+  export type catalog_itemsUpsertWithoutVehicle_detailInput = {
+    update: XOR<catalog_itemsUpdateWithoutVehicle_detailInput, catalog_itemsUncheckedUpdateWithoutVehicle_detailInput>
+    create: XOR<catalog_itemsCreateWithoutVehicle_detailInput, catalog_itemsUncheckedCreateWithoutVehicle_detailInput>
+    where?: catalog_itemsWhereInput
+  }
+
+  export type catalog_itemsUpdateToOneWithWhereWithoutVehicle_detailInput = {
+    where?: catalog_itemsWhereInput
+    data: XOR<catalog_itemsUpdateWithoutVehicle_detailInput, catalog_itemsUncheckedUpdateWithoutVehicle_detailInput>
+  }
+
+  export type catalog_itemsUpdateWithoutVehicle_detailInput = {
+    item_id?: StringFieldUpdateOperationsInput | string
+    tenant_id?: StringFieldUpdateOperationsInput | string
+    item_type?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    category?: NullableStringFieldUpdateOperationsInput | string | null
+    base_price?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    compare_price?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    currency?: StringFieldUpdateOperationsInput | string
+    stock_quantity?: NullableIntFieldUpdateOperationsInput | number | null
+    primary_image_url?: NullableStringFieldUpdateOperationsInput | string | null
+    image_urls?: NullableJsonNullValueInput | InputJsonValue
+    attributes?: NullableJsonNullValueInput | InputJsonValue
+    ai_tags?: catalog_itemsUpdateai_tagsInput | string[]
+    is_active?: BoolFieldUpdateOperationsInput | boolean
+    deleted_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    cart_items?: cart_itemsUpdateManyWithoutCatalog_itemNestedInput
+    cart_reservations?: cart_reservationsUpdateManyWithoutCatalog_itemNestedInput
+    product_detail?: product_item_detailsUpdateOneWithoutItemNestedInput
+    hospitality_detail?: hospitality_item_detailsUpdateOneWithoutItemNestedInput
+    product_order_items?: product_order_itemsUpdateManyWithoutItemNestedInput
+    hospitality_booking_items?: hospitality_booking_itemsUpdateManyWithoutItemNestedInput
+    product_inquiries?: product_inquiriesUpdateManyWithoutItemNestedInput
+    hospitality_inquiries?: hospitality_inquiriesUpdateManyWithoutPreferred_itemNestedInput
+    businesses?: businessesUpdateOneRequiredWithoutCatalog_itemsNestedInput
+    availability?: item_availabilityUpdateManyWithoutItemNestedInput
+    variants?: item_variantsUpdateManyWithoutItemNestedInput
+    order_items?: order_itemsUpdateManyWithoutCatalog_itemNestedInput
+  }
+
+  export type catalog_itemsUncheckedUpdateWithoutVehicle_detailInput = {
+    item_id?: StringFieldUpdateOperationsInput | string
+    business_id?: StringFieldUpdateOperationsInput | string
+    tenant_id?: StringFieldUpdateOperationsInput | string
+    item_type?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    category?: NullableStringFieldUpdateOperationsInput | string | null
+    base_price?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    compare_price?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    currency?: StringFieldUpdateOperationsInput | string
+    stock_quantity?: NullableIntFieldUpdateOperationsInput | number | null
+    primary_image_url?: NullableStringFieldUpdateOperationsInput | string | null
+    image_urls?: NullableJsonNullValueInput | InputJsonValue
+    attributes?: NullableJsonNullValueInput | InputJsonValue
+    ai_tags?: catalog_itemsUpdateai_tagsInput | string[]
+    is_active?: BoolFieldUpdateOperationsInput | boolean
+    deleted_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    cart_items?: cart_itemsUncheckedUpdateManyWithoutCatalog_itemNestedInput
+    cart_reservations?: cart_reservationsUncheckedUpdateManyWithoutCatalog_itemNestedInput
+    product_detail?: product_item_detailsUncheckedUpdateOneWithoutItemNestedInput
+    hospitality_detail?: hospitality_item_detailsUncheckedUpdateOneWithoutItemNestedInput
     product_order_items?: product_order_itemsUncheckedUpdateManyWithoutItemNestedInput
     hospitality_booking_items?: hospitality_booking_itemsUncheckedUpdateManyWithoutItemNestedInput
     product_inquiries?: product_inquiriesUncheckedUpdateManyWithoutItemNestedInput
@@ -140577,6 +146774,7 @@ export namespace Prisma {
     catalog_items?: catalog_itemsCreateNestedManyWithoutBusinessesInput
     product_item_details?: product_item_detailsCreateNestedManyWithoutBusinessInput
     hospitality_item_details?: hospitality_item_detailsCreateNestedManyWithoutBusinessInput
+    vehicle_item_details?: vehicle_item_detailsCreateNestedManyWithoutBusinessInput
     product_orders?: product_ordersCreateNestedManyWithoutBusinessInput
     product_inquiries?: product_inquiriesCreateNestedManyWithoutBusinessInput
     hospitality_bookings?: hospitality_bookingsCreateNestedManyWithoutBusinessInput
@@ -140624,6 +146822,7 @@ export namespace Prisma {
     catalog_items?: catalog_itemsUncheckedCreateNestedManyWithoutBusinessesInput
     product_item_details?: product_item_detailsUncheckedCreateNestedManyWithoutBusinessInput
     hospitality_item_details?: hospitality_item_detailsUncheckedCreateNestedManyWithoutBusinessInput
+    vehicle_item_details?: vehicle_item_detailsUncheckedCreateNestedManyWithoutBusinessInput
     product_orders?: product_ordersUncheckedCreateNestedManyWithoutBusinessInput
     product_inquiries?: product_inquiriesUncheckedCreateNestedManyWithoutBusinessInput
     hospitality_bookings?: hospitality_bookingsUncheckedCreateNestedManyWithoutBusinessInput
@@ -140718,6 +146917,11 @@ export namespace Prisma {
     status?: string
     lost_reason?: string | null
     context?: NullableJsonNullValueInput | InputJsonValue
+    lead_type?: string | null
+    qualification_score?: number
+    exit_intent_sent_at?: Date | string | null
+    exit_captured_at?: Date | string | null
+    exit_reason?: string | null
     quoted_amount?: Decimal | DecimalJsLike | number | string | null
     quoted_at?: Date | string | null
     converted_value?: Decimal | DecimalJsLike | number | string | null
@@ -140734,6 +146938,8 @@ export namespace Prisma {
     product_inquiries?: product_inquiriesCreateNestedManyWithoutLeadInput
     product_orders?: product_ordersCreateNestedManyWithoutLeadInput
     hospitality_bookings?: hospitality_bookingsCreateNestedManyWithoutLeadInput
+    item_interests?: lead_item_interestsCreateNestedManyWithoutLeadsInput
+    preference_watches?: lead_preference_watchesCreateNestedManyWithoutLeadsInput
     assigned_user?: usersCreateNestedOneWithoutLeads_assignedInput
     businesses: businessesCreateNestedOneWithoutLeadsInput
     tenants: tenantsCreateNestedOneWithoutLeadsInput
@@ -140758,6 +146964,11 @@ export namespace Prisma {
     pipeline_id?: string | null
     lost_reason?: string | null
     context?: NullableJsonNullValueInput | InputJsonValue
+    lead_type?: string | null
+    qualification_score?: number
+    exit_intent_sent_at?: Date | string | null
+    exit_captured_at?: Date | string | null
+    exit_reason?: string | null
     quoted_amount?: Decimal | DecimalJsLike | number | string | null
     quoted_at?: Date | string | null
     converted_value?: Decimal | DecimalJsLike | number | string | null
@@ -140775,6 +146986,8 @@ export namespace Prisma {
     product_inquiries?: product_inquiriesUncheckedCreateNestedManyWithoutLeadInput
     product_orders?: product_ordersUncheckedCreateNestedManyWithoutLeadInput
     hospitality_bookings?: hospitality_bookingsUncheckedCreateNestedManyWithoutLeadInput
+    item_interests?: lead_item_interestsUncheckedCreateNestedManyWithoutLeadsInput
+    preference_watches?: lead_preference_watchesUncheckedCreateNestedManyWithoutLeadsInput
     orders?: ordersUncheckedCreateNestedManyWithoutLeadsInput
     workflow_executions?: workflow_executionsUncheckedCreateNestedManyWithoutLeadsInput
   }
@@ -140807,6 +147020,7 @@ export namespace Prisma {
     cart_reservations?: cart_reservationsCreateNestedManyWithoutCatalog_itemInput
     product_detail?: product_item_detailsCreateNestedOneWithoutItemInput
     hospitality_detail?: hospitality_item_detailsCreateNestedOneWithoutItemInput
+    vehicle_detail?: vehicle_item_detailsCreateNestedOneWithoutItemInput
     product_order_items?: product_order_itemsCreateNestedManyWithoutItemInput
     hospitality_booking_items?: hospitality_booking_itemsCreateNestedManyWithoutItemInput
     product_inquiries?: product_inquiriesCreateNestedManyWithoutItemInput
@@ -140840,6 +147054,7 @@ export namespace Prisma {
     cart_reservations?: cart_reservationsUncheckedCreateNestedManyWithoutCatalog_itemInput
     product_detail?: product_item_detailsUncheckedCreateNestedOneWithoutItemInput
     hospitality_detail?: hospitality_item_detailsUncheckedCreateNestedOneWithoutItemInput
+    vehicle_detail?: vehicle_item_detailsUncheckedCreateNestedOneWithoutItemInput
     product_order_items?: product_order_itemsUncheckedCreateNestedManyWithoutItemInput
     hospitality_booking_items?: hospitality_booking_itemsUncheckedCreateNestedManyWithoutItemInput
     product_inquiries?: product_inquiriesUncheckedCreateNestedManyWithoutItemInput
@@ -140888,6 +147103,7 @@ export namespace Prisma {
     catalog_items?: catalog_itemsUpdateManyWithoutBusinessesNestedInput
     product_item_details?: product_item_detailsUpdateManyWithoutBusinessNestedInput
     hospitality_item_details?: hospitality_item_detailsUpdateManyWithoutBusinessNestedInput
+    vehicle_item_details?: vehicle_item_detailsUpdateManyWithoutBusinessNestedInput
     product_orders?: product_ordersUpdateManyWithoutBusinessNestedInput
     product_inquiries?: product_inquiriesUpdateManyWithoutBusinessNestedInput
     hospitality_bookings?: hospitality_bookingsUpdateManyWithoutBusinessNestedInput
@@ -140935,6 +147151,7 @@ export namespace Prisma {
     catalog_items?: catalog_itemsUncheckedUpdateManyWithoutBusinessesNestedInput
     product_item_details?: product_item_detailsUncheckedUpdateManyWithoutBusinessNestedInput
     hospitality_item_details?: hospitality_item_detailsUncheckedUpdateManyWithoutBusinessNestedInput
+    vehicle_item_details?: vehicle_item_detailsUncheckedUpdateManyWithoutBusinessNestedInput
     product_orders?: product_ordersUncheckedUpdateManyWithoutBusinessNestedInput
     product_inquiries?: product_inquiriesUncheckedUpdateManyWithoutBusinessNestedInput
     hospitality_bookings?: hospitality_bookingsUncheckedUpdateManyWithoutBusinessNestedInput
@@ -141041,6 +147258,11 @@ export namespace Prisma {
     status?: StringFieldUpdateOperationsInput | string
     lost_reason?: NullableStringFieldUpdateOperationsInput | string | null
     context?: NullableJsonNullValueInput | InputJsonValue
+    lead_type?: NullableStringFieldUpdateOperationsInput | string | null
+    qualification_score?: IntFieldUpdateOperationsInput | number
+    exit_intent_sent_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    exit_captured_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    exit_reason?: NullableStringFieldUpdateOperationsInput | string | null
     quoted_amount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     quoted_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     converted_value?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
@@ -141057,6 +147279,8 @@ export namespace Prisma {
     product_inquiries?: product_inquiriesUpdateManyWithoutLeadNestedInput
     product_orders?: product_ordersUpdateManyWithoutLeadNestedInput
     hospitality_bookings?: hospitality_bookingsUpdateManyWithoutLeadNestedInput
+    item_interests?: lead_item_interestsUpdateManyWithoutLeadsNestedInput
+    preference_watches?: lead_preference_watchesUpdateManyWithoutLeadsNestedInput
     assigned_user?: usersUpdateOneWithoutLeads_assignedNestedInput
     businesses?: businessesUpdateOneRequiredWithoutLeadsNestedInput
     tenants?: tenantsUpdateOneRequiredWithoutLeadsNestedInput
@@ -141081,6 +147305,11 @@ export namespace Prisma {
     pipeline_id?: NullableStringFieldUpdateOperationsInput | string | null
     lost_reason?: NullableStringFieldUpdateOperationsInput | string | null
     context?: NullableJsonNullValueInput | InputJsonValue
+    lead_type?: NullableStringFieldUpdateOperationsInput | string | null
+    qualification_score?: IntFieldUpdateOperationsInput | number
+    exit_intent_sent_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    exit_captured_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    exit_reason?: NullableStringFieldUpdateOperationsInput | string | null
     quoted_amount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     quoted_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     converted_value?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
@@ -141098,6 +147327,8 @@ export namespace Prisma {
     product_inquiries?: product_inquiriesUncheckedUpdateManyWithoutLeadNestedInput
     product_orders?: product_ordersUncheckedUpdateManyWithoutLeadNestedInput
     hospitality_bookings?: hospitality_bookingsUncheckedUpdateManyWithoutLeadNestedInput
+    item_interests?: lead_item_interestsUncheckedUpdateManyWithoutLeadsNestedInput
+    preference_watches?: lead_preference_watchesUncheckedUpdateManyWithoutLeadsNestedInput
     orders?: ordersUncheckedUpdateManyWithoutLeadsNestedInput
     workflow_executions?: workflow_executionsUncheckedUpdateManyWithoutLeadsNestedInput
   }
@@ -141136,6 +147367,7 @@ export namespace Prisma {
     cart_reservations?: cart_reservationsUpdateManyWithoutCatalog_itemNestedInput
     product_detail?: product_item_detailsUpdateOneWithoutItemNestedInput
     hospitality_detail?: hospitality_item_detailsUpdateOneWithoutItemNestedInput
+    vehicle_detail?: vehicle_item_detailsUpdateOneWithoutItemNestedInput
     product_order_items?: product_order_itemsUpdateManyWithoutItemNestedInput
     hospitality_booking_items?: hospitality_booking_itemsUpdateManyWithoutItemNestedInput
     product_inquiries?: product_inquiriesUpdateManyWithoutItemNestedInput
@@ -141169,6 +147401,7 @@ export namespace Prisma {
     cart_reservations?: cart_reservationsUncheckedUpdateManyWithoutCatalog_itemNestedInput
     product_detail?: product_item_detailsUncheckedUpdateOneWithoutItemNestedInput
     hospitality_detail?: hospitality_item_detailsUncheckedUpdateOneWithoutItemNestedInput
+    vehicle_detail?: vehicle_item_detailsUncheckedUpdateOneWithoutItemNestedInput
     product_order_items?: product_order_itemsUncheckedUpdateManyWithoutItemNestedInput
     hospitality_booking_items?: hospitality_booking_itemsUncheckedUpdateManyWithoutItemNestedInput
     product_inquiries?: product_inquiriesUncheckedUpdateManyWithoutItemNestedInput
@@ -141201,6 +147434,7 @@ export namespace Prisma {
     catalog_items?: catalog_itemsCreateNestedManyWithoutBusinessesInput
     product_item_details?: product_item_detailsCreateNestedManyWithoutBusinessInput
     hospitality_item_details?: hospitality_item_detailsCreateNestedManyWithoutBusinessInput
+    vehicle_item_details?: vehicle_item_detailsCreateNestedManyWithoutBusinessInput
     product_orders?: product_ordersCreateNestedManyWithoutBusinessInput
     product_inquiries?: product_inquiriesCreateNestedManyWithoutBusinessInput
     hospitality_inquiries?: hospitality_inquiriesCreateNestedManyWithoutBusinessInput
@@ -141248,6 +147482,7 @@ export namespace Prisma {
     catalog_items?: catalog_itemsUncheckedCreateNestedManyWithoutBusinessesInput
     product_item_details?: product_item_detailsUncheckedCreateNestedManyWithoutBusinessInput
     hospitality_item_details?: hospitality_item_detailsUncheckedCreateNestedManyWithoutBusinessInput
+    vehicle_item_details?: vehicle_item_detailsUncheckedCreateNestedManyWithoutBusinessInput
     product_orders?: product_ordersUncheckedCreateNestedManyWithoutBusinessInput
     product_inquiries?: product_inquiriesUncheckedCreateNestedManyWithoutBusinessInput
     hospitality_inquiries?: hospitality_inquiriesUncheckedCreateNestedManyWithoutBusinessInput
@@ -141395,6 +147630,11 @@ export namespace Prisma {
     status?: string
     lost_reason?: string | null
     context?: NullableJsonNullValueInput | InputJsonValue
+    lead_type?: string | null
+    qualification_score?: number
+    exit_intent_sent_at?: Date | string | null
+    exit_captured_at?: Date | string | null
+    exit_reason?: string | null
     quoted_amount?: Decimal | DecimalJsLike | number | string | null
     quoted_at?: Date | string | null
     converted_value?: Decimal | DecimalJsLike | number | string | null
@@ -141411,6 +147651,8 @@ export namespace Prisma {
     product_inquiries?: product_inquiriesCreateNestedManyWithoutLeadInput
     hospitality_inquiries?: hospitality_inquiriesCreateNestedManyWithoutLeadInput
     product_orders?: product_ordersCreateNestedManyWithoutLeadInput
+    item_interests?: lead_item_interestsCreateNestedManyWithoutLeadsInput
+    preference_watches?: lead_preference_watchesCreateNestedManyWithoutLeadsInput
     assigned_user?: usersCreateNestedOneWithoutLeads_assignedInput
     businesses: businessesCreateNestedOneWithoutLeadsInput
     tenants: tenantsCreateNestedOneWithoutLeadsInput
@@ -141435,6 +147677,11 @@ export namespace Prisma {
     pipeline_id?: string | null
     lost_reason?: string | null
     context?: NullableJsonNullValueInput | InputJsonValue
+    lead_type?: string | null
+    qualification_score?: number
+    exit_intent_sent_at?: Date | string | null
+    exit_captured_at?: Date | string | null
+    exit_reason?: string | null
     quoted_amount?: Decimal | DecimalJsLike | number | string | null
     quoted_at?: Date | string | null
     converted_value?: Decimal | DecimalJsLike | number | string | null
@@ -141452,6 +147699,8 @@ export namespace Prisma {
     product_inquiries?: product_inquiriesUncheckedCreateNestedManyWithoutLeadInput
     hospitality_inquiries?: hospitality_inquiriesUncheckedCreateNestedManyWithoutLeadInput
     product_orders?: product_ordersUncheckedCreateNestedManyWithoutLeadInput
+    item_interests?: lead_item_interestsUncheckedCreateNestedManyWithoutLeadsInput
+    preference_watches?: lead_preference_watchesUncheckedCreateNestedManyWithoutLeadsInput
     orders?: ordersUncheckedCreateNestedManyWithoutLeadsInput
     workflow_executions?: workflow_executionsUncheckedCreateNestedManyWithoutLeadsInput
   }
@@ -141687,6 +147936,7 @@ export namespace Prisma {
     catalog_items?: catalog_itemsUpdateManyWithoutBusinessesNestedInput
     product_item_details?: product_item_detailsUpdateManyWithoutBusinessNestedInput
     hospitality_item_details?: hospitality_item_detailsUpdateManyWithoutBusinessNestedInput
+    vehicle_item_details?: vehicle_item_detailsUpdateManyWithoutBusinessNestedInput
     product_orders?: product_ordersUpdateManyWithoutBusinessNestedInput
     product_inquiries?: product_inquiriesUpdateManyWithoutBusinessNestedInput
     hospitality_inquiries?: hospitality_inquiriesUpdateManyWithoutBusinessNestedInput
@@ -141734,6 +147984,7 @@ export namespace Prisma {
     catalog_items?: catalog_itemsUncheckedUpdateManyWithoutBusinessesNestedInput
     product_item_details?: product_item_detailsUncheckedUpdateManyWithoutBusinessNestedInput
     hospitality_item_details?: hospitality_item_detailsUncheckedUpdateManyWithoutBusinessNestedInput
+    vehicle_item_details?: vehicle_item_detailsUncheckedUpdateManyWithoutBusinessNestedInput
     product_orders?: product_ordersUncheckedUpdateManyWithoutBusinessNestedInput
     product_inquiries?: product_inquiriesUncheckedUpdateManyWithoutBusinessNestedInput
     hospitality_inquiries?: hospitality_inquiriesUncheckedUpdateManyWithoutBusinessNestedInput
@@ -141899,6 +148150,11 @@ export namespace Prisma {
     status?: StringFieldUpdateOperationsInput | string
     lost_reason?: NullableStringFieldUpdateOperationsInput | string | null
     context?: NullableJsonNullValueInput | InputJsonValue
+    lead_type?: NullableStringFieldUpdateOperationsInput | string | null
+    qualification_score?: IntFieldUpdateOperationsInput | number
+    exit_intent_sent_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    exit_captured_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    exit_reason?: NullableStringFieldUpdateOperationsInput | string | null
     quoted_amount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     quoted_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     converted_value?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
@@ -141915,6 +148171,8 @@ export namespace Prisma {
     product_inquiries?: product_inquiriesUpdateManyWithoutLeadNestedInput
     hospitality_inquiries?: hospitality_inquiriesUpdateManyWithoutLeadNestedInput
     product_orders?: product_ordersUpdateManyWithoutLeadNestedInput
+    item_interests?: lead_item_interestsUpdateManyWithoutLeadsNestedInput
+    preference_watches?: lead_preference_watchesUpdateManyWithoutLeadsNestedInput
     assigned_user?: usersUpdateOneWithoutLeads_assignedNestedInput
     businesses?: businessesUpdateOneRequiredWithoutLeadsNestedInput
     tenants?: tenantsUpdateOneRequiredWithoutLeadsNestedInput
@@ -141939,6 +148197,11 @@ export namespace Prisma {
     pipeline_id?: NullableStringFieldUpdateOperationsInput | string | null
     lost_reason?: NullableStringFieldUpdateOperationsInput | string | null
     context?: NullableJsonNullValueInput | InputJsonValue
+    lead_type?: NullableStringFieldUpdateOperationsInput | string | null
+    qualification_score?: IntFieldUpdateOperationsInput | number
+    exit_intent_sent_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    exit_captured_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    exit_reason?: NullableStringFieldUpdateOperationsInput | string | null
     quoted_amount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     quoted_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     converted_value?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
@@ -141956,6 +148219,8 @@ export namespace Prisma {
     product_inquiries?: product_inquiriesUncheckedUpdateManyWithoutLeadNestedInput
     hospitality_inquiries?: hospitality_inquiriesUncheckedUpdateManyWithoutLeadNestedInput
     product_orders?: product_ordersUncheckedUpdateManyWithoutLeadNestedInput
+    item_interests?: lead_item_interestsUncheckedUpdateManyWithoutLeadsNestedInput
+    preference_watches?: lead_preference_watchesUncheckedUpdateManyWithoutLeadsNestedInput
     orders?: ordersUncheckedUpdateManyWithoutLeadsNestedInput
     workflow_executions?: workflow_executionsUncheckedUpdateManyWithoutLeadsNestedInput
   }
@@ -142217,6 +148482,7 @@ export namespace Prisma {
     cart_reservations?: cart_reservationsCreateNestedManyWithoutCatalog_itemInput
     product_detail?: product_item_detailsCreateNestedOneWithoutItemInput
     hospitality_detail?: hospitality_item_detailsCreateNestedOneWithoutItemInput
+    vehicle_detail?: vehicle_item_detailsCreateNestedOneWithoutItemInput
     product_order_items?: product_order_itemsCreateNestedManyWithoutItemInput
     product_inquiries?: product_inquiriesCreateNestedManyWithoutItemInput
     hospitality_inquiries?: hospitality_inquiriesCreateNestedManyWithoutPreferred_itemInput
@@ -142250,6 +148516,7 @@ export namespace Prisma {
     cart_reservations?: cart_reservationsUncheckedCreateNestedManyWithoutCatalog_itemInput
     product_detail?: product_item_detailsUncheckedCreateNestedOneWithoutItemInput
     hospitality_detail?: hospitality_item_detailsUncheckedCreateNestedOneWithoutItemInput
+    vehicle_detail?: vehicle_item_detailsUncheckedCreateNestedOneWithoutItemInput
     product_order_items?: product_order_itemsUncheckedCreateNestedManyWithoutItemInput
     product_inquiries?: product_inquiriesUncheckedCreateNestedManyWithoutItemInput
     hospitality_inquiries?: hospitality_inquiriesUncheckedCreateNestedManyWithoutPreferred_itemInput
@@ -142362,6 +148629,7 @@ export namespace Prisma {
     cart_reservations?: cart_reservationsUpdateManyWithoutCatalog_itemNestedInput
     product_detail?: product_item_detailsUpdateOneWithoutItemNestedInput
     hospitality_detail?: hospitality_item_detailsUpdateOneWithoutItemNestedInput
+    vehicle_detail?: vehicle_item_detailsUpdateOneWithoutItemNestedInput
     product_order_items?: product_order_itemsUpdateManyWithoutItemNestedInput
     product_inquiries?: product_inquiriesUpdateManyWithoutItemNestedInput
     hospitality_inquiries?: hospitality_inquiriesUpdateManyWithoutPreferred_itemNestedInput
@@ -142395,6 +148663,7 @@ export namespace Prisma {
     cart_reservations?: cart_reservationsUncheckedUpdateManyWithoutCatalog_itemNestedInput
     product_detail?: product_item_detailsUncheckedUpdateOneWithoutItemNestedInput
     hospitality_detail?: hospitality_item_detailsUncheckedUpdateOneWithoutItemNestedInput
+    vehicle_detail?: vehicle_item_detailsUncheckedUpdateOneWithoutItemNestedInput
     product_order_items?: product_order_itemsUncheckedUpdateManyWithoutItemNestedInput
     product_inquiries?: product_inquiriesUncheckedUpdateManyWithoutItemNestedInput
     hospitality_inquiries?: hospitality_inquiriesUncheckedUpdateManyWithoutPreferred_itemNestedInput
@@ -142761,6 +149030,7 @@ export namespace Prisma {
     catalog_items?: catalog_itemsCreateNestedManyWithoutBusinessesInput
     product_item_details?: product_item_detailsCreateNestedManyWithoutBusinessInput
     hospitality_item_details?: hospitality_item_detailsCreateNestedManyWithoutBusinessInput
+    vehicle_item_details?: vehicle_item_detailsCreateNestedManyWithoutBusinessInput
     product_orders?: product_ordersCreateNestedManyWithoutBusinessInput
     product_inquiries?: product_inquiriesCreateNestedManyWithoutBusinessInput
     hospitality_bookings?: hospitality_bookingsCreateNestedManyWithoutBusinessInput
@@ -142808,6 +149078,7 @@ export namespace Prisma {
     catalog_items?: catalog_itemsUncheckedCreateNestedManyWithoutBusinessesInput
     product_item_details?: product_item_detailsUncheckedCreateNestedManyWithoutBusinessInput
     hospitality_item_details?: hospitality_item_detailsUncheckedCreateNestedManyWithoutBusinessInput
+    vehicle_item_details?: vehicle_item_detailsUncheckedCreateNestedManyWithoutBusinessInput
     product_orders?: product_ordersUncheckedCreateNestedManyWithoutBusinessInput
     product_inquiries?: product_inquiriesUncheckedCreateNestedManyWithoutBusinessInput
     hospitality_bookings?: hospitality_bookingsUncheckedCreateNestedManyWithoutBusinessInput
@@ -142944,6 +149215,7 @@ export namespace Prisma {
     catalog_items?: catalog_itemsUpdateManyWithoutBusinessesNestedInput
     product_item_details?: product_item_detailsUpdateManyWithoutBusinessNestedInput
     hospitality_item_details?: hospitality_item_detailsUpdateManyWithoutBusinessNestedInput
+    vehicle_item_details?: vehicle_item_detailsUpdateManyWithoutBusinessNestedInput
     product_orders?: product_ordersUpdateManyWithoutBusinessNestedInput
     product_inquiries?: product_inquiriesUpdateManyWithoutBusinessNestedInput
     hospitality_bookings?: hospitality_bookingsUpdateManyWithoutBusinessNestedInput
@@ -142991,6 +149263,7 @@ export namespace Prisma {
     catalog_items?: catalog_itemsUncheckedUpdateManyWithoutBusinessesNestedInput
     product_item_details?: product_item_detailsUncheckedUpdateManyWithoutBusinessNestedInput
     hospitality_item_details?: hospitality_item_detailsUncheckedUpdateManyWithoutBusinessNestedInput
+    vehicle_item_details?: vehicle_item_detailsUncheckedUpdateManyWithoutBusinessNestedInput
     product_orders?: product_ordersUncheckedUpdateManyWithoutBusinessNestedInput
     product_inquiries?: product_inquiriesUncheckedUpdateManyWithoutBusinessNestedInput
     hospitality_bookings?: hospitality_bookingsUncheckedUpdateManyWithoutBusinessNestedInput
@@ -143095,6 +149368,7 @@ export namespace Prisma {
     catalog_items?: catalog_itemsCreateNestedManyWithoutBusinessesInput
     product_item_details?: product_item_detailsCreateNestedManyWithoutBusinessInput
     hospitality_item_details?: hospitality_item_detailsCreateNestedManyWithoutBusinessInput
+    vehicle_item_details?: vehicle_item_detailsCreateNestedManyWithoutBusinessInput
     product_orders?: product_ordersCreateNestedManyWithoutBusinessInput
     product_inquiries?: product_inquiriesCreateNestedManyWithoutBusinessInput
     hospitality_bookings?: hospitality_bookingsCreateNestedManyWithoutBusinessInput
@@ -143142,6 +149416,7 @@ export namespace Prisma {
     catalog_items?: catalog_itemsUncheckedCreateNestedManyWithoutBusinessesInput
     product_item_details?: product_item_detailsUncheckedCreateNestedManyWithoutBusinessInput
     hospitality_item_details?: hospitality_item_detailsUncheckedCreateNestedManyWithoutBusinessInput
+    vehicle_item_details?: vehicle_item_detailsUncheckedCreateNestedManyWithoutBusinessInput
     product_orders?: product_ordersUncheckedCreateNestedManyWithoutBusinessInput
     product_inquiries?: product_inquiriesUncheckedCreateNestedManyWithoutBusinessInput
     hospitality_bookings?: hospitality_bookingsUncheckedCreateNestedManyWithoutBusinessInput
@@ -143245,6 +149520,7 @@ export namespace Prisma {
     catalog_items?: catalog_itemsUpdateManyWithoutBusinessesNestedInput
     product_item_details?: product_item_detailsUpdateManyWithoutBusinessNestedInput
     hospitality_item_details?: hospitality_item_detailsUpdateManyWithoutBusinessNestedInput
+    vehicle_item_details?: vehicle_item_detailsUpdateManyWithoutBusinessNestedInput
     product_orders?: product_ordersUpdateManyWithoutBusinessNestedInput
     product_inquiries?: product_inquiriesUpdateManyWithoutBusinessNestedInput
     hospitality_bookings?: hospitality_bookingsUpdateManyWithoutBusinessNestedInput
@@ -143292,6 +149568,7 @@ export namespace Prisma {
     catalog_items?: catalog_itemsUncheckedUpdateManyWithoutBusinessesNestedInput
     product_item_details?: product_item_detailsUncheckedUpdateManyWithoutBusinessNestedInput
     hospitality_item_details?: hospitality_item_detailsUncheckedUpdateManyWithoutBusinessNestedInput
+    vehicle_item_details?: vehicle_item_detailsUncheckedUpdateManyWithoutBusinessNestedInput
     product_orders?: product_ordersUncheckedUpdateManyWithoutBusinessNestedInput
     product_inquiries?: product_inquiriesUncheckedUpdateManyWithoutBusinessNestedInput
     hospitality_bookings?: hospitality_bookingsUncheckedUpdateManyWithoutBusinessNestedInput
@@ -143426,6 +149703,7 @@ export namespace Prisma {
     catalog_items?: catalog_itemsCreateNestedManyWithoutBusinessesInput
     product_item_details?: product_item_detailsCreateNestedManyWithoutBusinessInput
     hospitality_item_details?: hospitality_item_detailsCreateNestedManyWithoutBusinessInput
+    vehicle_item_details?: vehicle_item_detailsCreateNestedManyWithoutBusinessInput
     product_orders?: product_ordersCreateNestedManyWithoutBusinessInput
     product_inquiries?: product_inquiriesCreateNestedManyWithoutBusinessInput
     hospitality_bookings?: hospitality_bookingsCreateNestedManyWithoutBusinessInput
@@ -143473,6 +149751,7 @@ export namespace Prisma {
     catalog_items?: catalog_itemsUncheckedCreateNestedManyWithoutBusinessesInput
     product_item_details?: product_item_detailsUncheckedCreateNestedManyWithoutBusinessInput
     hospitality_item_details?: hospitality_item_detailsUncheckedCreateNestedManyWithoutBusinessInput
+    vehicle_item_details?: vehicle_item_detailsUncheckedCreateNestedManyWithoutBusinessInput
     product_orders?: product_ordersUncheckedCreateNestedManyWithoutBusinessInput
     product_inquiries?: product_inquiriesUncheckedCreateNestedManyWithoutBusinessInput
     hospitality_bookings?: hospitality_bookingsUncheckedCreateNestedManyWithoutBusinessInput
@@ -143536,6 +149815,7 @@ export namespace Prisma {
     catalog_items?: catalog_itemsUpdateManyWithoutBusinessesNestedInput
     product_item_details?: product_item_detailsUpdateManyWithoutBusinessNestedInput
     hospitality_item_details?: hospitality_item_detailsUpdateManyWithoutBusinessNestedInput
+    vehicle_item_details?: vehicle_item_detailsUpdateManyWithoutBusinessNestedInput
     product_orders?: product_ordersUpdateManyWithoutBusinessNestedInput
     product_inquiries?: product_inquiriesUpdateManyWithoutBusinessNestedInput
     hospitality_bookings?: hospitality_bookingsUpdateManyWithoutBusinessNestedInput
@@ -143583,6 +149863,7 @@ export namespace Prisma {
     catalog_items?: catalog_itemsUncheckedUpdateManyWithoutBusinessesNestedInput
     product_item_details?: product_item_detailsUncheckedUpdateManyWithoutBusinessNestedInput
     hospitality_item_details?: hospitality_item_detailsUncheckedUpdateManyWithoutBusinessNestedInput
+    vehicle_item_details?: vehicle_item_detailsUncheckedUpdateManyWithoutBusinessNestedInput
     product_orders?: product_ordersUncheckedUpdateManyWithoutBusinessNestedInput
     product_inquiries?: product_inquiriesUncheckedUpdateManyWithoutBusinessNestedInput
     hospitality_bookings?: hospitality_bookingsUncheckedUpdateManyWithoutBusinessNestedInput
@@ -143630,6 +149911,7 @@ export namespace Prisma {
     catalog_items?: catalog_itemsCreateNestedManyWithoutBusinessesInput
     product_item_details?: product_item_detailsCreateNestedManyWithoutBusinessInput
     hospitality_item_details?: hospitality_item_detailsCreateNestedManyWithoutBusinessInput
+    vehicle_item_details?: vehicle_item_detailsCreateNestedManyWithoutBusinessInput
     product_orders?: product_ordersCreateNestedManyWithoutBusinessInput
     product_inquiries?: product_inquiriesCreateNestedManyWithoutBusinessInput
     hospitality_bookings?: hospitality_bookingsCreateNestedManyWithoutBusinessInput
@@ -143677,6 +149959,7 @@ export namespace Prisma {
     catalog_items?: catalog_itemsUncheckedCreateNestedManyWithoutBusinessesInput
     product_item_details?: product_item_detailsUncheckedCreateNestedManyWithoutBusinessInput
     hospitality_item_details?: hospitality_item_detailsUncheckedCreateNestedManyWithoutBusinessInput
+    vehicle_item_details?: vehicle_item_detailsUncheckedCreateNestedManyWithoutBusinessInput
     product_orders?: product_ordersUncheckedCreateNestedManyWithoutBusinessInput
     product_inquiries?: product_inquiriesUncheckedCreateNestedManyWithoutBusinessInput
     hospitality_bookings?: hospitality_bookingsUncheckedCreateNestedManyWithoutBusinessInput
@@ -143783,6 +150066,7 @@ export namespace Prisma {
     catalog_items?: catalog_itemsUpdateManyWithoutBusinessesNestedInput
     product_item_details?: product_item_detailsUpdateManyWithoutBusinessNestedInput
     hospitality_item_details?: hospitality_item_detailsUpdateManyWithoutBusinessNestedInput
+    vehicle_item_details?: vehicle_item_detailsUpdateManyWithoutBusinessNestedInput
     product_orders?: product_ordersUpdateManyWithoutBusinessNestedInput
     product_inquiries?: product_inquiriesUpdateManyWithoutBusinessNestedInput
     hospitality_bookings?: hospitality_bookingsUpdateManyWithoutBusinessNestedInput
@@ -143830,6 +150114,7 @@ export namespace Prisma {
     catalog_items?: catalog_itemsUncheckedUpdateManyWithoutBusinessesNestedInput
     product_item_details?: product_item_detailsUncheckedUpdateManyWithoutBusinessNestedInput
     hospitality_item_details?: hospitality_item_detailsUncheckedUpdateManyWithoutBusinessNestedInput
+    vehicle_item_details?: vehicle_item_detailsUncheckedUpdateManyWithoutBusinessNestedInput
     product_orders?: product_ordersUncheckedUpdateManyWithoutBusinessNestedInput
     product_inquiries?: product_inquiriesUncheckedUpdateManyWithoutBusinessNestedInput
     hospitality_bookings?: hospitality_bookingsUncheckedUpdateManyWithoutBusinessNestedInput
@@ -143926,6 +150211,7 @@ export namespace Prisma {
     catalog_items?: catalog_itemsCreateNestedManyWithoutBusinessesInput
     product_item_details?: product_item_detailsCreateNestedManyWithoutBusinessInput
     hospitality_item_details?: hospitality_item_detailsCreateNestedManyWithoutBusinessInput
+    vehicle_item_details?: vehicle_item_detailsCreateNestedManyWithoutBusinessInput
     product_orders?: product_ordersCreateNestedManyWithoutBusinessInput
     product_inquiries?: product_inquiriesCreateNestedManyWithoutBusinessInput
     hospitality_bookings?: hospitality_bookingsCreateNestedManyWithoutBusinessInput
@@ -143973,6 +150259,7 @@ export namespace Prisma {
     catalog_items?: catalog_itemsUncheckedCreateNestedManyWithoutBusinessesInput
     product_item_details?: product_item_detailsUncheckedCreateNestedManyWithoutBusinessInput
     hospitality_item_details?: hospitality_item_detailsUncheckedCreateNestedManyWithoutBusinessInput
+    vehicle_item_details?: vehicle_item_detailsUncheckedCreateNestedManyWithoutBusinessInput
     product_orders?: product_ordersUncheckedCreateNestedManyWithoutBusinessInput
     product_inquiries?: product_inquiriesUncheckedCreateNestedManyWithoutBusinessInput
     hospitality_bookings?: hospitality_bookingsUncheckedCreateNestedManyWithoutBusinessInput
@@ -144036,6 +150323,7 @@ export namespace Prisma {
     catalog_items?: catalog_itemsUpdateManyWithoutBusinessesNestedInput
     product_item_details?: product_item_detailsUpdateManyWithoutBusinessNestedInput
     hospitality_item_details?: hospitality_item_detailsUpdateManyWithoutBusinessNestedInput
+    vehicle_item_details?: vehicle_item_detailsUpdateManyWithoutBusinessNestedInput
     product_orders?: product_ordersUpdateManyWithoutBusinessNestedInput
     product_inquiries?: product_inquiriesUpdateManyWithoutBusinessNestedInput
     hospitality_bookings?: hospitality_bookingsUpdateManyWithoutBusinessNestedInput
@@ -144083,6 +150371,7 @@ export namespace Prisma {
     catalog_items?: catalog_itemsUncheckedUpdateManyWithoutBusinessesNestedInput
     product_item_details?: product_item_detailsUncheckedUpdateManyWithoutBusinessNestedInput
     hospitality_item_details?: hospitality_item_detailsUncheckedUpdateManyWithoutBusinessNestedInput
+    vehicle_item_details?: vehicle_item_detailsUncheckedUpdateManyWithoutBusinessNestedInput
     product_orders?: product_ordersUncheckedUpdateManyWithoutBusinessNestedInput
     product_inquiries?: product_inquiriesUncheckedUpdateManyWithoutBusinessNestedInput
     hospitality_bookings?: hospitality_bookingsUncheckedUpdateManyWithoutBusinessNestedInput
@@ -144130,6 +150419,7 @@ export namespace Prisma {
     catalog_items?: catalog_itemsCreateNestedManyWithoutBusinessesInput
     product_item_details?: product_item_detailsCreateNestedManyWithoutBusinessInput
     hospitality_item_details?: hospitality_item_detailsCreateNestedManyWithoutBusinessInput
+    vehicle_item_details?: vehicle_item_detailsCreateNestedManyWithoutBusinessInput
     product_orders?: product_ordersCreateNestedManyWithoutBusinessInput
     product_inquiries?: product_inquiriesCreateNestedManyWithoutBusinessInput
     hospitality_bookings?: hospitality_bookingsCreateNestedManyWithoutBusinessInput
@@ -144177,6 +150467,7 @@ export namespace Prisma {
     catalog_items?: catalog_itemsUncheckedCreateNestedManyWithoutBusinessesInput
     product_item_details?: product_item_detailsUncheckedCreateNestedManyWithoutBusinessInput
     hospitality_item_details?: hospitality_item_detailsUncheckedCreateNestedManyWithoutBusinessInput
+    vehicle_item_details?: vehicle_item_detailsUncheckedCreateNestedManyWithoutBusinessInput
     product_orders?: product_ordersUncheckedCreateNestedManyWithoutBusinessInput
     product_inquiries?: product_inquiriesUncheckedCreateNestedManyWithoutBusinessInput
     hospitality_bookings?: hospitality_bookingsUncheckedCreateNestedManyWithoutBusinessInput
@@ -144305,6 +150596,7 @@ export namespace Prisma {
     catalog_items?: catalog_itemsUpdateManyWithoutBusinessesNestedInput
     product_item_details?: product_item_detailsUpdateManyWithoutBusinessNestedInput
     hospitality_item_details?: hospitality_item_detailsUpdateManyWithoutBusinessNestedInput
+    vehicle_item_details?: vehicle_item_detailsUpdateManyWithoutBusinessNestedInput
     product_orders?: product_ordersUpdateManyWithoutBusinessNestedInput
     product_inquiries?: product_inquiriesUpdateManyWithoutBusinessNestedInput
     hospitality_bookings?: hospitality_bookingsUpdateManyWithoutBusinessNestedInput
@@ -144352,6 +150644,7 @@ export namespace Prisma {
     catalog_items?: catalog_itemsUncheckedUpdateManyWithoutBusinessesNestedInput
     product_item_details?: product_item_detailsUncheckedUpdateManyWithoutBusinessNestedInput
     hospitality_item_details?: hospitality_item_detailsUncheckedUpdateManyWithoutBusinessNestedInput
+    vehicle_item_details?: vehicle_item_detailsUncheckedUpdateManyWithoutBusinessNestedInput
     product_orders?: product_ordersUncheckedUpdateManyWithoutBusinessNestedInput
     product_inquiries?: product_inquiriesUncheckedUpdateManyWithoutBusinessNestedInput
     hospitality_bookings?: hospitality_bookingsUncheckedUpdateManyWithoutBusinessNestedInput
@@ -144446,6 +150739,382 @@ export namespace Prisma {
     notifications?: notificationsUncheckedUpdateManyWithoutUsersNestedInput
   }
 
+  export type leadsCreateWithoutItem_interestsInput = {
+    lead_id?: string
+    name?: string | null
+    phone?: string | null
+    email?: string | null
+    channel: string
+    source?: string
+    platform_id?: string | null
+    status?: string
+    lost_reason?: string | null
+    context?: NullableJsonNullValueInput | InputJsonValue
+    lead_type?: string | null
+    qualification_score?: number
+    exit_intent_sent_at?: Date | string | null
+    exit_captured_at?: Date | string | null
+    exit_reason?: string | null
+    quoted_amount?: Decimal | DecimalJsLike | number | string | null
+    quoted_at?: Date | string | null
+    converted_value?: Decimal | DecimalJsLike | number | string | null
+    converted_at?: Date | string | null
+    tags?: leadsCreatetagsInput | string[]
+    followup_at?: Date | string | null
+    deleted_at?: Date | string | null
+    created_at?: Date | string
+    updated_at?: Date | string
+    cart_reservations?: cart_reservationsCreateNestedManyWithoutLeadsInput
+    carts?: cartsCreateNestedManyWithoutLeadsInput
+    events?: lead_eventsCreateNestedManyWithoutLeadsInput
+    followups?: lead_followupsCreateNestedManyWithoutLeadInput
+    product_inquiries?: product_inquiriesCreateNestedManyWithoutLeadInput
+    hospitality_inquiries?: hospitality_inquiriesCreateNestedManyWithoutLeadInput
+    product_orders?: product_ordersCreateNestedManyWithoutLeadInput
+    hospitality_bookings?: hospitality_bookingsCreateNestedManyWithoutLeadInput
+    preference_watches?: lead_preference_watchesCreateNestedManyWithoutLeadsInput
+    assigned_user?: usersCreateNestedOneWithoutLeads_assignedInput
+    businesses: businessesCreateNestedOneWithoutLeadsInput
+    tenants: tenantsCreateNestedOneWithoutLeadsInput
+    pipeline?: pipelinesCreateNestedOneWithoutLeadsInput
+    stage?: pipeline_stagesCreateNestedOneWithoutLeadsInput
+    orders?: ordersCreateNestedManyWithoutLeadsInput
+    workflow_executions?: workflow_executionsCreateNestedManyWithoutLeadsInput
+  }
+
+  export type leadsUncheckedCreateWithoutItem_interestsInput = {
+    lead_id?: string
+    business_id: string
+    tenant_id: string
+    name?: string | null
+    phone?: string | null
+    email?: string | null
+    channel: string
+    source?: string
+    platform_id?: string | null
+    status?: string
+    stage_id?: string | null
+    pipeline_id?: string | null
+    lost_reason?: string | null
+    context?: NullableJsonNullValueInput | InputJsonValue
+    lead_type?: string | null
+    qualification_score?: number
+    exit_intent_sent_at?: Date | string | null
+    exit_captured_at?: Date | string | null
+    exit_reason?: string | null
+    quoted_amount?: Decimal | DecimalJsLike | number | string | null
+    quoted_at?: Date | string | null
+    converted_value?: Decimal | DecimalJsLike | number | string | null
+    converted_at?: Date | string | null
+    tags?: leadsCreatetagsInput | string[]
+    assigned_to?: string | null
+    followup_at?: Date | string | null
+    deleted_at?: Date | string | null
+    created_at?: Date | string
+    updated_at?: Date | string
+    cart_reservations?: cart_reservationsUncheckedCreateNestedManyWithoutLeadsInput
+    carts?: cartsUncheckedCreateNestedManyWithoutLeadsInput
+    events?: lead_eventsUncheckedCreateNestedManyWithoutLeadsInput
+    followups?: lead_followupsUncheckedCreateNestedManyWithoutLeadInput
+    product_inquiries?: product_inquiriesUncheckedCreateNestedManyWithoutLeadInput
+    hospitality_inquiries?: hospitality_inquiriesUncheckedCreateNestedManyWithoutLeadInput
+    product_orders?: product_ordersUncheckedCreateNestedManyWithoutLeadInput
+    hospitality_bookings?: hospitality_bookingsUncheckedCreateNestedManyWithoutLeadInput
+    preference_watches?: lead_preference_watchesUncheckedCreateNestedManyWithoutLeadsInput
+    orders?: ordersUncheckedCreateNestedManyWithoutLeadsInput
+    workflow_executions?: workflow_executionsUncheckedCreateNestedManyWithoutLeadsInput
+  }
+
+  export type leadsCreateOrConnectWithoutItem_interestsInput = {
+    where: leadsWhereUniqueInput
+    create: XOR<leadsCreateWithoutItem_interestsInput, leadsUncheckedCreateWithoutItem_interestsInput>
+  }
+
+  export type leadsUpsertWithoutItem_interestsInput = {
+    update: XOR<leadsUpdateWithoutItem_interestsInput, leadsUncheckedUpdateWithoutItem_interestsInput>
+    create: XOR<leadsCreateWithoutItem_interestsInput, leadsUncheckedCreateWithoutItem_interestsInput>
+    where?: leadsWhereInput
+  }
+
+  export type leadsUpdateToOneWithWhereWithoutItem_interestsInput = {
+    where?: leadsWhereInput
+    data: XOR<leadsUpdateWithoutItem_interestsInput, leadsUncheckedUpdateWithoutItem_interestsInput>
+  }
+
+  export type leadsUpdateWithoutItem_interestsInput = {
+    lead_id?: StringFieldUpdateOperationsInput | string
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    channel?: StringFieldUpdateOperationsInput | string
+    source?: StringFieldUpdateOperationsInput | string
+    platform_id?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    lost_reason?: NullableStringFieldUpdateOperationsInput | string | null
+    context?: NullableJsonNullValueInput | InputJsonValue
+    lead_type?: NullableStringFieldUpdateOperationsInput | string | null
+    qualification_score?: IntFieldUpdateOperationsInput | number
+    exit_intent_sent_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    exit_captured_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    exit_reason?: NullableStringFieldUpdateOperationsInput | string | null
+    quoted_amount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    quoted_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    converted_value?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    converted_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    tags?: leadsUpdatetagsInput | string[]
+    followup_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deleted_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    cart_reservations?: cart_reservationsUpdateManyWithoutLeadsNestedInput
+    carts?: cartsUpdateManyWithoutLeadsNestedInput
+    events?: lead_eventsUpdateManyWithoutLeadsNestedInput
+    followups?: lead_followupsUpdateManyWithoutLeadNestedInput
+    product_inquiries?: product_inquiriesUpdateManyWithoutLeadNestedInput
+    hospitality_inquiries?: hospitality_inquiriesUpdateManyWithoutLeadNestedInput
+    product_orders?: product_ordersUpdateManyWithoutLeadNestedInput
+    hospitality_bookings?: hospitality_bookingsUpdateManyWithoutLeadNestedInput
+    preference_watches?: lead_preference_watchesUpdateManyWithoutLeadsNestedInput
+    assigned_user?: usersUpdateOneWithoutLeads_assignedNestedInput
+    businesses?: businessesUpdateOneRequiredWithoutLeadsNestedInput
+    tenants?: tenantsUpdateOneRequiredWithoutLeadsNestedInput
+    pipeline?: pipelinesUpdateOneWithoutLeadsNestedInput
+    stage?: pipeline_stagesUpdateOneWithoutLeadsNestedInput
+    orders?: ordersUpdateManyWithoutLeadsNestedInput
+    workflow_executions?: workflow_executionsUpdateManyWithoutLeadsNestedInput
+  }
+
+  export type leadsUncheckedUpdateWithoutItem_interestsInput = {
+    lead_id?: StringFieldUpdateOperationsInput | string
+    business_id?: StringFieldUpdateOperationsInput | string
+    tenant_id?: StringFieldUpdateOperationsInput | string
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    channel?: StringFieldUpdateOperationsInput | string
+    source?: StringFieldUpdateOperationsInput | string
+    platform_id?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    stage_id?: NullableStringFieldUpdateOperationsInput | string | null
+    pipeline_id?: NullableStringFieldUpdateOperationsInput | string | null
+    lost_reason?: NullableStringFieldUpdateOperationsInput | string | null
+    context?: NullableJsonNullValueInput | InputJsonValue
+    lead_type?: NullableStringFieldUpdateOperationsInput | string | null
+    qualification_score?: IntFieldUpdateOperationsInput | number
+    exit_intent_sent_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    exit_captured_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    exit_reason?: NullableStringFieldUpdateOperationsInput | string | null
+    quoted_amount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    quoted_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    converted_value?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    converted_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    tags?: leadsUpdatetagsInput | string[]
+    assigned_to?: NullableStringFieldUpdateOperationsInput | string | null
+    followup_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deleted_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    cart_reservations?: cart_reservationsUncheckedUpdateManyWithoutLeadsNestedInput
+    carts?: cartsUncheckedUpdateManyWithoutLeadsNestedInput
+    events?: lead_eventsUncheckedUpdateManyWithoutLeadsNestedInput
+    followups?: lead_followupsUncheckedUpdateManyWithoutLeadNestedInput
+    product_inquiries?: product_inquiriesUncheckedUpdateManyWithoutLeadNestedInput
+    hospitality_inquiries?: hospitality_inquiriesUncheckedUpdateManyWithoutLeadNestedInput
+    product_orders?: product_ordersUncheckedUpdateManyWithoutLeadNestedInput
+    hospitality_bookings?: hospitality_bookingsUncheckedUpdateManyWithoutLeadNestedInput
+    preference_watches?: lead_preference_watchesUncheckedUpdateManyWithoutLeadsNestedInput
+    orders?: ordersUncheckedUpdateManyWithoutLeadsNestedInput
+    workflow_executions?: workflow_executionsUncheckedUpdateManyWithoutLeadsNestedInput
+  }
+
+  export type leadsCreateWithoutPreference_watchesInput = {
+    lead_id?: string
+    name?: string | null
+    phone?: string | null
+    email?: string | null
+    channel: string
+    source?: string
+    platform_id?: string | null
+    status?: string
+    lost_reason?: string | null
+    context?: NullableJsonNullValueInput | InputJsonValue
+    lead_type?: string | null
+    qualification_score?: number
+    exit_intent_sent_at?: Date | string | null
+    exit_captured_at?: Date | string | null
+    exit_reason?: string | null
+    quoted_amount?: Decimal | DecimalJsLike | number | string | null
+    quoted_at?: Date | string | null
+    converted_value?: Decimal | DecimalJsLike | number | string | null
+    converted_at?: Date | string | null
+    tags?: leadsCreatetagsInput | string[]
+    followup_at?: Date | string | null
+    deleted_at?: Date | string | null
+    created_at?: Date | string
+    updated_at?: Date | string
+    cart_reservations?: cart_reservationsCreateNestedManyWithoutLeadsInput
+    carts?: cartsCreateNestedManyWithoutLeadsInput
+    events?: lead_eventsCreateNestedManyWithoutLeadsInput
+    followups?: lead_followupsCreateNestedManyWithoutLeadInput
+    product_inquiries?: product_inquiriesCreateNestedManyWithoutLeadInput
+    hospitality_inquiries?: hospitality_inquiriesCreateNestedManyWithoutLeadInput
+    product_orders?: product_ordersCreateNestedManyWithoutLeadInput
+    hospitality_bookings?: hospitality_bookingsCreateNestedManyWithoutLeadInput
+    item_interests?: lead_item_interestsCreateNestedManyWithoutLeadsInput
+    assigned_user?: usersCreateNestedOneWithoutLeads_assignedInput
+    businesses: businessesCreateNestedOneWithoutLeadsInput
+    tenants: tenantsCreateNestedOneWithoutLeadsInput
+    pipeline?: pipelinesCreateNestedOneWithoutLeadsInput
+    stage?: pipeline_stagesCreateNestedOneWithoutLeadsInput
+    orders?: ordersCreateNestedManyWithoutLeadsInput
+    workflow_executions?: workflow_executionsCreateNestedManyWithoutLeadsInput
+  }
+
+  export type leadsUncheckedCreateWithoutPreference_watchesInput = {
+    lead_id?: string
+    business_id: string
+    tenant_id: string
+    name?: string | null
+    phone?: string | null
+    email?: string | null
+    channel: string
+    source?: string
+    platform_id?: string | null
+    status?: string
+    stage_id?: string | null
+    pipeline_id?: string | null
+    lost_reason?: string | null
+    context?: NullableJsonNullValueInput | InputJsonValue
+    lead_type?: string | null
+    qualification_score?: number
+    exit_intent_sent_at?: Date | string | null
+    exit_captured_at?: Date | string | null
+    exit_reason?: string | null
+    quoted_amount?: Decimal | DecimalJsLike | number | string | null
+    quoted_at?: Date | string | null
+    converted_value?: Decimal | DecimalJsLike | number | string | null
+    converted_at?: Date | string | null
+    tags?: leadsCreatetagsInput | string[]
+    assigned_to?: string | null
+    followup_at?: Date | string | null
+    deleted_at?: Date | string | null
+    created_at?: Date | string
+    updated_at?: Date | string
+    cart_reservations?: cart_reservationsUncheckedCreateNestedManyWithoutLeadsInput
+    carts?: cartsUncheckedCreateNestedManyWithoutLeadsInput
+    events?: lead_eventsUncheckedCreateNestedManyWithoutLeadsInput
+    followups?: lead_followupsUncheckedCreateNestedManyWithoutLeadInput
+    product_inquiries?: product_inquiriesUncheckedCreateNestedManyWithoutLeadInput
+    hospitality_inquiries?: hospitality_inquiriesUncheckedCreateNestedManyWithoutLeadInput
+    product_orders?: product_ordersUncheckedCreateNestedManyWithoutLeadInput
+    hospitality_bookings?: hospitality_bookingsUncheckedCreateNestedManyWithoutLeadInput
+    item_interests?: lead_item_interestsUncheckedCreateNestedManyWithoutLeadsInput
+    orders?: ordersUncheckedCreateNestedManyWithoutLeadsInput
+    workflow_executions?: workflow_executionsUncheckedCreateNestedManyWithoutLeadsInput
+  }
+
+  export type leadsCreateOrConnectWithoutPreference_watchesInput = {
+    where: leadsWhereUniqueInput
+    create: XOR<leadsCreateWithoutPreference_watchesInput, leadsUncheckedCreateWithoutPreference_watchesInput>
+  }
+
+  export type leadsUpsertWithoutPreference_watchesInput = {
+    update: XOR<leadsUpdateWithoutPreference_watchesInput, leadsUncheckedUpdateWithoutPreference_watchesInput>
+    create: XOR<leadsCreateWithoutPreference_watchesInput, leadsUncheckedCreateWithoutPreference_watchesInput>
+    where?: leadsWhereInput
+  }
+
+  export type leadsUpdateToOneWithWhereWithoutPreference_watchesInput = {
+    where?: leadsWhereInput
+    data: XOR<leadsUpdateWithoutPreference_watchesInput, leadsUncheckedUpdateWithoutPreference_watchesInput>
+  }
+
+  export type leadsUpdateWithoutPreference_watchesInput = {
+    lead_id?: StringFieldUpdateOperationsInput | string
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    channel?: StringFieldUpdateOperationsInput | string
+    source?: StringFieldUpdateOperationsInput | string
+    platform_id?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    lost_reason?: NullableStringFieldUpdateOperationsInput | string | null
+    context?: NullableJsonNullValueInput | InputJsonValue
+    lead_type?: NullableStringFieldUpdateOperationsInput | string | null
+    qualification_score?: IntFieldUpdateOperationsInput | number
+    exit_intent_sent_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    exit_captured_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    exit_reason?: NullableStringFieldUpdateOperationsInput | string | null
+    quoted_amount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    quoted_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    converted_value?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    converted_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    tags?: leadsUpdatetagsInput | string[]
+    followup_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deleted_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    cart_reservations?: cart_reservationsUpdateManyWithoutLeadsNestedInput
+    carts?: cartsUpdateManyWithoutLeadsNestedInput
+    events?: lead_eventsUpdateManyWithoutLeadsNestedInput
+    followups?: lead_followupsUpdateManyWithoutLeadNestedInput
+    product_inquiries?: product_inquiriesUpdateManyWithoutLeadNestedInput
+    hospitality_inquiries?: hospitality_inquiriesUpdateManyWithoutLeadNestedInput
+    product_orders?: product_ordersUpdateManyWithoutLeadNestedInput
+    hospitality_bookings?: hospitality_bookingsUpdateManyWithoutLeadNestedInput
+    item_interests?: lead_item_interestsUpdateManyWithoutLeadsNestedInput
+    assigned_user?: usersUpdateOneWithoutLeads_assignedNestedInput
+    businesses?: businessesUpdateOneRequiredWithoutLeadsNestedInput
+    tenants?: tenantsUpdateOneRequiredWithoutLeadsNestedInput
+    pipeline?: pipelinesUpdateOneWithoutLeadsNestedInput
+    stage?: pipeline_stagesUpdateOneWithoutLeadsNestedInput
+    orders?: ordersUpdateManyWithoutLeadsNestedInput
+    workflow_executions?: workflow_executionsUpdateManyWithoutLeadsNestedInput
+  }
+
+  export type leadsUncheckedUpdateWithoutPreference_watchesInput = {
+    lead_id?: StringFieldUpdateOperationsInput | string
+    business_id?: StringFieldUpdateOperationsInput | string
+    tenant_id?: StringFieldUpdateOperationsInput | string
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    channel?: StringFieldUpdateOperationsInput | string
+    source?: StringFieldUpdateOperationsInput | string
+    platform_id?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    stage_id?: NullableStringFieldUpdateOperationsInput | string | null
+    pipeline_id?: NullableStringFieldUpdateOperationsInput | string | null
+    lost_reason?: NullableStringFieldUpdateOperationsInput | string | null
+    context?: NullableJsonNullValueInput | InputJsonValue
+    lead_type?: NullableStringFieldUpdateOperationsInput | string | null
+    qualification_score?: IntFieldUpdateOperationsInput | number
+    exit_intent_sent_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    exit_captured_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    exit_reason?: NullableStringFieldUpdateOperationsInput | string | null
+    quoted_amount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    quoted_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    converted_value?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    converted_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    tags?: leadsUpdatetagsInput | string[]
+    assigned_to?: NullableStringFieldUpdateOperationsInput | string | null
+    followup_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deleted_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    cart_reservations?: cart_reservationsUncheckedUpdateManyWithoutLeadsNestedInput
+    carts?: cartsUncheckedUpdateManyWithoutLeadsNestedInput
+    events?: lead_eventsUncheckedUpdateManyWithoutLeadsNestedInput
+    followups?: lead_followupsUncheckedUpdateManyWithoutLeadNestedInput
+    product_inquiries?: product_inquiriesUncheckedUpdateManyWithoutLeadNestedInput
+    hospitality_inquiries?: hospitality_inquiriesUncheckedUpdateManyWithoutLeadNestedInput
+    product_orders?: product_ordersUncheckedUpdateManyWithoutLeadNestedInput
+    hospitality_bookings?: hospitality_bookingsUncheckedUpdateManyWithoutLeadNestedInput
+    item_interests?: lead_item_interestsUncheckedUpdateManyWithoutLeadsNestedInput
+    orders?: ordersUncheckedUpdateManyWithoutLeadsNestedInput
+    workflow_executions?: workflow_executionsUncheckedUpdateManyWithoutLeadsNestedInput
+  }
+
   export type business_employeesCreateManyBusinessesInput = {
     employee_id?: string
     name: string
@@ -144525,6 +151194,21 @@ export namespace Prisma {
     cancellation_policy?: string | null
     tax_percentage?: Decimal | DecimalJsLike | number | string | null
     extra_guest_charge?: Decimal | DecimalJsLike | number | string | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    created_at?: Date | string
+    updated_at?: Date | string
+  }
+
+  export type vehicle_item_detailsCreateManyBusinessInput = {
+    item_id: string
+    make: string
+    model_name: string
+    year: number
+    fuel_type?: string | null
+    transmission?: string | null
+    color?: string | null
+    km_driven?: number | null
+    condition?: string
     metadata?: NullableJsonNullValueInput | InputJsonValue
     created_at?: Date | string
     updated_at?: Date | string
@@ -144626,6 +151310,11 @@ export namespace Prisma {
     pipeline_id?: string | null
     lost_reason?: string | null
     context?: NullableJsonNullValueInput | InputJsonValue
+    lead_type?: string | null
+    qualification_score?: number
+    exit_intent_sent_at?: Date | string | null
+    exit_captured_at?: Date | string | null
+    exit_reason?: string | null
     quoted_amount?: Decimal | DecimalJsLike | number | string | null
     quoted_at?: Date | string | null
     converted_value?: Decimal | DecimalJsLike | number | string | null
@@ -145037,6 +151726,7 @@ export namespace Prisma {
     cart_reservations?: cart_reservationsUpdateManyWithoutCatalog_itemNestedInput
     product_detail?: product_item_detailsUpdateOneWithoutItemNestedInput
     hospitality_detail?: hospitality_item_detailsUpdateOneWithoutItemNestedInput
+    vehicle_detail?: vehicle_item_detailsUpdateOneWithoutItemNestedInput
     product_order_items?: product_order_itemsUpdateManyWithoutItemNestedInput
     hospitality_booking_items?: hospitality_booking_itemsUpdateManyWithoutItemNestedInput
     product_inquiries?: product_inquiriesUpdateManyWithoutItemNestedInput
@@ -145069,6 +151759,7 @@ export namespace Prisma {
     cart_reservations?: cart_reservationsUncheckedUpdateManyWithoutCatalog_itemNestedInput
     product_detail?: product_item_detailsUncheckedUpdateOneWithoutItemNestedInput
     hospitality_detail?: hospitality_item_detailsUncheckedUpdateOneWithoutItemNestedInput
+    vehicle_detail?: vehicle_item_detailsUncheckedUpdateOneWithoutItemNestedInput
     product_order_items?: product_order_itemsUncheckedUpdateManyWithoutItemNestedInput
     hospitality_booking_items?: hospitality_booking_itemsUncheckedUpdateManyWithoutItemNestedInput
     product_inquiries?: product_inquiriesUncheckedUpdateManyWithoutItemNestedInput
@@ -145187,6 +151878,51 @@ export namespace Prisma {
     cancellation_policy?: NullableStringFieldUpdateOperationsInput | string | null
     tax_percentage?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     extra_guest_charge?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type vehicle_item_detailsUpdateWithoutBusinessInput = {
+    make?: StringFieldUpdateOperationsInput | string
+    model_name?: StringFieldUpdateOperationsInput | string
+    year?: IntFieldUpdateOperationsInput | number
+    fuel_type?: NullableStringFieldUpdateOperationsInput | string | null
+    transmission?: NullableStringFieldUpdateOperationsInput | string | null
+    color?: NullableStringFieldUpdateOperationsInput | string | null
+    km_driven?: NullableIntFieldUpdateOperationsInput | number | null
+    condition?: StringFieldUpdateOperationsInput | string
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    item?: catalog_itemsUpdateOneRequiredWithoutVehicle_detailNestedInput
+  }
+
+  export type vehicle_item_detailsUncheckedUpdateWithoutBusinessInput = {
+    item_id?: StringFieldUpdateOperationsInput | string
+    make?: StringFieldUpdateOperationsInput | string
+    model_name?: StringFieldUpdateOperationsInput | string
+    year?: IntFieldUpdateOperationsInput | number
+    fuel_type?: NullableStringFieldUpdateOperationsInput | string | null
+    transmission?: NullableStringFieldUpdateOperationsInput | string | null
+    color?: NullableStringFieldUpdateOperationsInput | string | null
+    km_driven?: NullableIntFieldUpdateOperationsInput | number | null
+    condition?: StringFieldUpdateOperationsInput | string
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type vehicle_item_detailsUncheckedUpdateManyWithoutBusinessInput = {
+    item_id?: StringFieldUpdateOperationsInput | string
+    make?: StringFieldUpdateOperationsInput | string
+    model_name?: StringFieldUpdateOperationsInput | string
+    year?: IntFieldUpdateOperationsInput | number
+    fuel_type?: NullableStringFieldUpdateOperationsInput | string | null
+    transmission?: NullableStringFieldUpdateOperationsInput | string | null
+    color?: NullableStringFieldUpdateOperationsInput | string | null
+    km_driven?: NullableIntFieldUpdateOperationsInput | number | null
+    condition?: StringFieldUpdateOperationsInput | string
     metadata?: NullableJsonNullValueInput | InputJsonValue
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -145459,6 +152195,11 @@ export namespace Prisma {
     status?: StringFieldUpdateOperationsInput | string
     lost_reason?: NullableStringFieldUpdateOperationsInput | string | null
     context?: NullableJsonNullValueInput | InputJsonValue
+    lead_type?: NullableStringFieldUpdateOperationsInput | string | null
+    qualification_score?: IntFieldUpdateOperationsInput | number
+    exit_intent_sent_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    exit_captured_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    exit_reason?: NullableStringFieldUpdateOperationsInput | string | null
     quoted_amount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     quoted_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     converted_value?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
@@ -145476,6 +152217,8 @@ export namespace Prisma {
     hospitality_inquiries?: hospitality_inquiriesUpdateManyWithoutLeadNestedInput
     product_orders?: product_ordersUpdateManyWithoutLeadNestedInput
     hospitality_bookings?: hospitality_bookingsUpdateManyWithoutLeadNestedInput
+    item_interests?: lead_item_interestsUpdateManyWithoutLeadsNestedInput
+    preference_watches?: lead_preference_watchesUpdateManyWithoutLeadsNestedInput
     assigned_user?: usersUpdateOneWithoutLeads_assignedNestedInput
     tenants?: tenantsUpdateOneRequiredWithoutLeadsNestedInput
     pipeline?: pipelinesUpdateOneWithoutLeadsNestedInput
@@ -145498,6 +152241,11 @@ export namespace Prisma {
     pipeline_id?: NullableStringFieldUpdateOperationsInput | string | null
     lost_reason?: NullableStringFieldUpdateOperationsInput | string | null
     context?: NullableJsonNullValueInput | InputJsonValue
+    lead_type?: NullableStringFieldUpdateOperationsInput | string | null
+    qualification_score?: IntFieldUpdateOperationsInput | number
+    exit_intent_sent_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    exit_captured_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    exit_reason?: NullableStringFieldUpdateOperationsInput | string | null
     quoted_amount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     quoted_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     converted_value?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
@@ -145516,6 +152264,8 @@ export namespace Prisma {
     hospitality_inquiries?: hospitality_inquiriesUncheckedUpdateManyWithoutLeadNestedInput
     product_orders?: product_ordersUncheckedUpdateManyWithoutLeadNestedInput
     hospitality_bookings?: hospitality_bookingsUncheckedUpdateManyWithoutLeadNestedInput
+    item_interests?: lead_item_interestsUncheckedUpdateManyWithoutLeadsNestedInput
+    preference_watches?: lead_preference_watchesUncheckedUpdateManyWithoutLeadsNestedInput
     orders?: ordersUncheckedUpdateManyWithoutLeadsNestedInput
     workflow_executions?: workflow_executionsUncheckedUpdateManyWithoutLeadsNestedInput
   }
@@ -145534,6 +152284,11 @@ export namespace Prisma {
     pipeline_id?: NullableStringFieldUpdateOperationsInput | string | null
     lost_reason?: NullableStringFieldUpdateOperationsInput | string | null
     context?: NullableJsonNullValueInput | InputJsonValue
+    lead_type?: NullableStringFieldUpdateOperationsInput | string | null
+    qualification_score?: IntFieldUpdateOperationsInput | number
+    exit_intent_sent_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    exit_captured_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    exit_reason?: NullableStringFieldUpdateOperationsInput | string | null
     quoted_amount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     quoted_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     converted_value?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
@@ -146690,6 +153445,11 @@ export namespace Prisma {
     pipeline_id?: string | null
     lost_reason?: string | null
     context?: NullableJsonNullValueInput | InputJsonValue
+    lead_type?: string | null
+    qualification_score?: number
+    exit_intent_sent_at?: Date | string | null
+    exit_captured_at?: Date | string | null
+    exit_reason?: string | null
     quoted_amount?: Decimal | DecimalJsLike | number | string | null
     quoted_at?: Date | string | null
     converted_value?: Decimal | DecimalJsLike | number | string | null
@@ -146953,6 +153713,7 @@ export namespace Prisma {
     catalog_items?: catalog_itemsUpdateManyWithoutBusinessesNestedInput
     product_item_details?: product_item_detailsUpdateManyWithoutBusinessNestedInput
     hospitality_item_details?: hospitality_item_detailsUpdateManyWithoutBusinessNestedInput
+    vehicle_item_details?: vehicle_item_detailsUpdateManyWithoutBusinessNestedInput
     product_orders?: product_ordersUpdateManyWithoutBusinessNestedInput
     product_inquiries?: product_inquiriesUpdateManyWithoutBusinessNestedInput
     hospitality_bookings?: hospitality_bookingsUpdateManyWithoutBusinessNestedInput
@@ -147000,6 +153761,7 @@ export namespace Prisma {
     catalog_items?: catalog_itemsUncheckedUpdateManyWithoutBusinessesNestedInput
     product_item_details?: product_item_detailsUncheckedUpdateManyWithoutBusinessNestedInput
     hospitality_item_details?: hospitality_item_detailsUncheckedUpdateManyWithoutBusinessNestedInput
+    vehicle_item_details?: vehicle_item_detailsUncheckedUpdateManyWithoutBusinessNestedInput
     product_orders?: product_ordersUncheckedUpdateManyWithoutBusinessNestedInput
     product_inquiries?: product_inquiriesUncheckedUpdateManyWithoutBusinessNestedInput
     hospitality_bookings?: hospitality_bookingsUncheckedUpdateManyWithoutBusinessNestedInput
@@ -147095,6 +153857,11 @@ export namespace Prisma {
     status?: StringFieldUpdateOperationsInput | string
     lost_reason?: NullableStringFieldUpdateOperationsInput | string | null
     context?: NullableJsonNullValueInput | InputJsonValue
+    lead_type?: NullableStringFieldUpdateOperationsInput | string | null
+    qualification_score?: IntFieldUpdateOperationsInput | number
+    exit_intent_sent_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    exit_captured_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    exit_reason?: NullableStringFieldUpdateOperationsInput | string | null
     quoted_amount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     quoted_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     converted_value?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
@@ -147112,6 +153879,8 @@ export namespace Prisma {
     hospitality_inquiries?: hospitality_inquiriesUpdateManyWithoutLeadNestedInput
     product_orders?: product_ordersUpdateManyWithoutLeadNestedInput
     hospitality_bookings?: hospitality_bookingsUpdateManyWithoutLeadNestedInput
+    item_interests?: lead_item_interestsUpdateManyWithoutLeadsNestedInput
+    preference_watches?: lead_preference_watchesUpdateManyWithoutLeadsNestedInput
     assigned_user?: usersUpdateOneWithoutLeads_assignedNestedInput
     businesses?: businessesUpdateOneRequiredWithoutLeadsNestedInput
     pipeline?: pipelinesUpdateOneWithoutLeadsNestedInput
@@ -147134,6 +153903,11 @@ export namespace Prisma {
     pipeline_id?: NullableStringFieldUpdateOperationsInput | string | null
     lost_reason?: NullableStringFieldUpdateOperationsInput | string | null
     context?: NullableJsonNullValueInput | InputJsonValue
+    lead_type?: NullableStringFieldUpdateOperationsInput | string | null
+    qualification_score?: IntFieldUpdateOperationsInput | number
+    exit_intent_sent_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    exit_captured_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    exit_reason?: NullableStringFieldUpdateOperationsInput | string | null
     quoted_amount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     quoted_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     converted_value?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
@@ -147152,6 +153926,8 @@ export namespace Prisma {
     hospitality_inquiries?: hospitality_inquiriesUncheckedUpdateManyWithoutLeadNestedInput
     product_orders?: product_ordersUncheckedUpdateManyWithoutLeadNestedInput
     hospitality_bookings?: hospitality_bookingsUncheckedUpdateManyWithoutLeadNestedInput
+    item_interests?: lead_item_interestsUncheckedUpdateManyWithoutLeadsNestedInput
+    preference_watches?: lead_preference_watchesUncheckedUpdateManyWithoutLeadsNestedInput
     orders?: ordersUncheckedUpdateManyWithoutLeadsNestedInput
     workflow_executions?: workflow_executionsUncheckedUpdateManyWithoutLeadsNestedInput
   }
@@ -147170,6 +153946,11 @@ export namespace Prisma {
     pipeline_id?: NullableStringFieldUpdateOperationsInput | string | null
     lost_reason?: NullableStringFieldUpdateOperationsInput | string | null
     context?: NullableJsonNullValueInput | InputJsonValue
+    lead_type?: NullableStringFieldUpdateOperationsInput | string | null
+    qualification_score?: IntFieldUpdateOperationsInput | number
+    exit_intent_sent_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    exit_captured_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    exit_reason?: NullableStringFieldUpdateOperationsInput | string | null
     quoted_amount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     quoted_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     converted_value?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
@@ -147824,6 +154605,11 @@ export namespace Prisma {
     pipeline_id?: string | null
     lost_reason?: string | null
     context?: NullableJsonNullValueInput | InputJsonValue
+    lead_type?: string | null
+    qualification_score?: number
+    exit_intent_sent_at?: Date | string | null
+    exit_captured_at?: Date | string | null
+    exit_reason?: string | null
     quoted_amount?: Decimal | DecimalJsLike | number | string | null
     quoted_at?: Date | string | null
     converted_value?: Decimal | DecimalJsLike | number | string | null
@@ -147906,6 +154692,11 @@ export namespace Prisma {
     status?: StringFieldUpdateOperationsInput | string
     lost_reason?: NullableStringFieldUpdateOperationsInput | string | null
     context?: NullableJsonNullValueInput | InputJsonValue
+    lead_type?: NullableStringFieldUpdateOperationsInput | string | null
+    qualification_score?: IntFieldUpdateOperationsInput | number
+    exit_intent_sent_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    exit_captured_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    exit_reason?: NullableStringFieldUpdateOperationsInput | string | null
     quoted_amount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     quoted_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     converted_value?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
@@ -147923,6 +154714,8 @@ export namespace Prisma {
     hospitality_inquiries?: hospitality_inquiriesUpdateManyWithoutLeadNestedInput
     product_orders?: product_ordersUpdateManyWithoutLeadNestedInput
     hospitality_bookings?: hospitality_bookingsUpdateManyWithoutLeadNestedInput
+    item_interests?: lead_item_interestsUpdateManyWithoutLeadsNestedInput
+    preference_watches?: lead_preference_watchesUpdateManyWithoutLeadsNestedInput
     businesses?: businessesUpdateOneRequiredWithoutLeadsNestedInput
     tenants?: tenantsUpdateOneRequiredWithoutLeadsNestedInput
     pipeline?: pipelinesUpdateOneWithoutLeadsNestedInput
@@ -147946,6 +154739,11 @@ export namespace Prisma {
     pipeline_id?: NullableStringFieldUpdateOperationsInput | string | null
     lost_reason?: NullableStringFieldUpdateOperationsInput | string | null
     context?: NullableJsonNullValueInput | InputJsonValue
+    lead_type?: NullableStringFieldUpdateOperationsInput | string | null
+    qualification_score?: IntFieldUpdateOperationsInput | number
+    exit_intent_sent_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    exit_captured_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    exit_reason?: NullableStringFieldUpdateOperationsInput | string | null
     quoted_amount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     quoted_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     converted_value?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
@@ -147963,6 +154761,8 @@ export namespace Prisma {
     hospitality_inquiries?: hospitality_inquiriesUncheckedUpdateManyWithoutLeadNestedInput
     product_orders?: product_ordersUncheckedUpdateManyWithoutLeadNestedInput
     hospitality_bookings?: hospitality_bookingsUncheckedUpdateManyWithoutLeadNestedInput
+    item_interests?: lead_item_interestsUncheckedUpdateManyWithoutLeadsNestedInput
+    preference_watches?: lead_preference_watchesUncheckedUpdateManyWithoutLeadsNestedInput
     orders?: ordersUncheckedUpdateManyWithoutLeadsNestedInput
     workflow_executions?: workflow_executionsUncheckedUpdateManyWithoutLeadsNestedInput
   }
@@ -147982,6 +154782,11 @@ export namespace Prisma {
     pipeline_id?: NullableStringFieldUpdateOperationsInput | string | null
     lost_reason?: NullableStringFieldUpdateOperationsInput | string | null
     context?: NullableJsonNullValueInput | InputJsonValue
+    lead_type?: NullableStringFieldUpdateOperationsInput | string | null
+    qualification_score?: IntFieldUpdateOperationsInput | number
+    exit_intent_sent_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    exit_captured_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    exit_reason?: NullableStringFieldUpdateOperationsInput | string | null
     quoted_amount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     quoted_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     converted_value?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
@@ -148183,6 +154988,30 @@ export namespace Prisma {
     cancelled_at?: Date | string | null
     created_at?: Date | string
     updated_at?: Date | string
+  }
+
+  export type lead_item_interestsCreateManyLeadsInput = {
+    interest_id?: string
+    business_id: string
+    item_id?: string | null
+    item_type: string
+    item_name: string
+    interest_level?: string
+    last_price_seen?: Decimal | DecimalJsLike | number | string | null
+    is_alert_active?: boolean
+    created_at?: Date | string
+    updated_at?: Date | string
+  }
+
+  export type lead_preference_watchesCreateManyLeadsInput = {
+    watch_id?: string
+    business_id: string
+    watch_type: string
+    criteria: JsonNullValueInput | InputJsonValue
+    is_active?: boolean
+    notified_at?: Date | string | null
+    expires_at?: Date | string | null
+    created_at?: Date | string
   }
 
   export type ordersCreateManyLeadsInput = {
@@ -148644,6 +155473,78 @@ export namespace Prisma {
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type lead_item_interestsUpdateWithoutLeadsInput = {
+    interest_id?: StringFieldUpdateOperationsInput | string
+    business_id?: StringFieldUpdateOperationsInput | string
+    item_id?: NullableStringFieldUpdateOperationsInput | string | null
+    item_type?: StringFieldUpdateOperationsInput | string
+    item_name?: StringFieldUpdateOperationsInput | string
+    interest_level?: StringFieldUpdateOperationsInput | string
+    last_price_seen?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    is_alert_active?: BoolFieldUpdateOperationsInput | boolean
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type lead_item_interestsUncheckedUpdateWithoutLeadsInput = {
+    interest_id?: StringFieldUpdateOperationsInput | string
+    business_id?: StringFieldUpdateOperationsInput | string
+    item_id?: NullableStringFieldUpdateOperationsInput | string | null
+    item_type?: StringFieldUpdateOperationsInput | string
+    item_name?: StringFieldUpdateOperationsInput | string
+    interest_level?: StringFieldUpdateOperationsInput | string
+    last_price_seen?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    is_alert_active?: BoolFieldUpdateOperationsInput | boolean
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type lead_item_interestsUncheckedUpdateManyWithoutLeadsInput = {
+    interest_id?: StringFieldUpdateOperationsInput | string
+    business_id?: StringFieldUpdateOperationsInput | string
+    item_id?: NullableStringFieldUpdateOperationsInput | string | null
+    item_type?: StringFieldUpdateOperationsInput | string
+    item_name?: StringFieldUpdateOperationsInput | string
+    interest_level?: StringFieldUpdateOperationsInput | string
+    last_price_seen?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    is_alert_active?: BoolFieldUpdateOperationsInput | boolean
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type lead_preference_watchesUpdateWithoutLeadsInput = {
+    watch_id?: StringFieldUpdateOperationsInput | string
+    business_id?: StringFieldUpdateOperationsInput | string
+    watch_type?: StringFieldUpdateOperationsInput | string
+    criteria?: JsonNullValueInput | InputJsonValue
+    is_active?: BoolFieldUpdateOperationsInput | boolean
+    notified_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    expires_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type lead_preference_watchesUncheckedUpdateWithoutLeadsInput = {
+    watch_id?: StringFieldUpdateOperationsInput | string
+    business_id?: StringFieldUpdateOperationsInput | string
+    watch_type?: StringFieldUpdateOperationsInput | string
+    criteria?: JsonNullValueInput | InputJsonValue
+    is_active?: BoolFieldUpdateOperationsInput | boolean
+    notified_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    expires_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type lead_preference_watchesUncheckedUpdateManyWithoutLeadsInput = {
+    watch_id?: StringFieldUpdateOperationsInput | string
+    business_id?: StringFieldUpdateOperationsInput | string
+    watch_type?: StringFieldUpdateOperationsInput | string
+    criteria?: JsonNullValueInput | InputJsonValue
+    is_active?: BoolFieldUpdateOperationsInput | boolean
+    notified_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    expires_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type ordersUpdateWithoutLeadsInput = {
     order_id?: StringFieldUpdateOperationsInput | string
     business_id?: StringFieldUpdateOperationsInput | string
@@ -148862,6 +155763,11 @@ export namespace Prisma {
     stage_id?: string | null
     lost_reason?: string | null
     context?: NullableJsonNullValueInput | InputJsonValue
+    lead_type?: string | null
+    qualification_score?: number
+    exit_intent_sent_at?: Date | string | null
+    exit_captured_at?: Date | string | null
+    exit_reason?: string | null
     quoted_amount?: Decimal | DecimalJsLike | number | string | null
     quoted_at?: Date | string | null
     converted_value?: Decimal | DecimalJsLike | number | string | null
@@ -148923,6 +155829,11 @@ export namespace Prisma {
     status?: StringFieldUpdateOperationsInput | string
     lost_reason?: NullableStringFieldUpdateOperationsInput | string | null
     context?: NullableJsonNullValueInput | InputJsonValue
+    lead_type?: NullableStringFieldUpdateOperationsInput | string | null
+    qualification_score?: IntFieldUpdateOperationsInput | number
+    exit_intent_sent_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    exit_captured_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    exit_reason?: NullableStringFieldUpdateOperationsInput | string | null
     quoted_amount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     quoted_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     converted_value?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
@@ -148940,6 +155851,8 @@ export namespace Prisma {
     hospitality_inquiries?: hospitality_inquiriesUpdateManyWithoutLeadNestedInput
     product_orders?: product_ordersUpdateManyWithoutLeadNestedInput
     hospitality_bookings?: hospitality_bookingsUpdateManyWithoutLeadNestedInput
+    item_interests?: lead_item_interestsUpdateManyWithoutLeadsNestedInput
+    preference_watches?: lead_preference_watchesUpdateManyWithoutLeadsNestedInput
     assigned_user?: usersUpdateOneWithoutLeads_assignedNestedInput
     businesses?: businessesUpdateOneRequiredWithoutLeadsNestedInput
     tenants?: tenantsUpdateOneRequiredWithoutLeadsNestedInput
@@ -148962,6 +155875,11 @@ export namespace Prisma {
     stage_id?: NullableStringFieldUpdateOperationsInput | string | null
     lost_reason?: NullableStringFieldUpdateOperationsInput | string | null
     context?: NullableJsonNullValueInput | InputJsonValue
+    lead_type?: NullableStringFieldUpdateOperationsInput | string | null
+    qualification_score?: IntFieldUpdateOperationsInput | number
+    exit_intent_sent_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    exit_captured_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    exit_reason?: NullableStringFieldUpdateOperationsInput | string | null
     quoted_amount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     quoted_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     converted_value?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
@@ -148980,6 +155898,8 @@ export namespace Prisma {
     hospitality_inquiries?: hospitality_inquiriesUncheckedUpdateManyWithoutLeadNestedInput
     product_orders?: product_ordersUncheckedUpdateManyWithoutLeadNestedInput
     hospitality_bookings?: hospitality_bookingsUncheckedUpdateManyWithoutLeadNestedInput
+    item_interests?: lead_item_interestsUncheckedUpdateManyWithoutLeadsNestedInput
+    preference_watches?: lead_preference_watchesUncheckedUpdateManyWithoutLeadsNestedInput
     orders?: ordersUncheckedUpdateManyWithoutLeadsNestedInput
     workflow_executions?: workflow_executionsUncheckedUpdateManyWithoutLeadsNestedInput
   }
@@ -148998,6 +155918,11 @@ export namespace Prisma {
     stage_id?: NullableStringFieldUpdateOperationsInput | string | null
     lost_reason?: NullableStringFieldUpdateOperationsInput | string | null
     context?: NullableJsonNullValueInput | InputJsonValue
+    lead_type?: NullableStringFieldUpdateOperationsInput | string | null
+    qualification_score?: IntFieldUpdateOperationsInput | number
+    exit_intent_sent_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    exit_captured_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    exit_reason?: NullableStringFieldUpdateOperationsInput | string | null
     quoted_amount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     quoted_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     converted_value?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
@@ -149024,6 +155949,11 @@ export namespace Prisma {
     pipeline_id?: string | null
     lost_reason?: string | null
     context?: NullableJsonNullValueInput | InputJsonValue
+    lead_type?: string | null
+    qualification_score?: number
+    exit_intent_sent_at?: Date | string | null
+    exit_captured_at?: Date | string | null
+    exit_reason?: string | null
     quoted_amount?: Decimal | DecimalJsLike | number | string | null
     quoted_at?: Date | string | null
     converted_value?: Decimal | DecimalJsLike | number | string | null
@@ -149047,6 +155977,11 @@ export namespace Prisma {
     status?: StringFieldUpdateOperationsInput | string
     lost_reason?: NullableStringFieldUpdateOperationsInput | string | null
     context?: NullableJsonNullValueInput | InputJsonValue
+    lead_type?: NullableStringFieldUpdateOperationsInput | string | null
+    qualification_score?: IntFieldUpdateOperationsInput | number
+    exit_intent_sent_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    exit_captured_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    exit_reason?: NullableStringFieldUpdateOperationsInput | string | null
     quoted_amount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     quoted_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     converted_value?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
@@ -149064,6 +155999,8 @@ export namespace Prisma {
     hospitality_inquiries?: hospitality_inquiriesUpdateManyWithoutLeadNestedInput
     product_orders?: product_ordersUpdateManyWithoutLeadNestedInput
     hospitality_bookings?: hospitality_bookingsUpdateManyWithoutLeadNestedInput
+    item_interests?: lead_item_interestsUpdateManyWithoutLeadsNestedInput
+    preference_watches?: lead_preference_watchesUpdateManyWithoutLeadsNestedInput
     assigned_user?: usersUpdateOneWithoutLeads_assignedNestedInput
     businesses?: businessesUpdateOneRequiredWithoutLeadsNestedInput
     tenants?: tenantsUpdateOneRequiredWithoutLeadsNestedInput
@@ -149086,6 +156023,11 @@ export namespace Prisma {
     pipeline_id?: NullableStringFieldUpdateOperationsInput | string | null
     lost_reason?: NullableStringFieldUpdateOperationsInput | string | null
     context?: NullableJsonNullValueInput | InputJsonValue
+    lead_type?: NullableStringFieldUpdateOperationsInput | string | null
+    qualification_score?: IntFieldUpdateOperationsInput | number
+    exit_intent_sent_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    exit_captured_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    exit_reason?: NullableStringFieldUpdateOperationsInput | string | null
     quoted_amount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     quoted_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     converted_value?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
@@ -149104,6 +156046,8 @@ export namespace Prisma {
     hospitality_inquiries?: hospitality_inquiriesUncheckedUpdateManyWithoutLeadNestedInput
     product_orders?: product_ordersUncheckedUpdateManyWithoutLeadNestedInput
     hospitality_bookings?: hospitality_bookingsUncheckedUpdateManyWithoutLeadNestedInput
+    item_interests?: lead_item_interestsUncheckedUpdateManyWithoutLeadsNestedInput
+    preference_watches?: lead_preference_watchesUncheckedUpdateManyWithoutLeadsNestedInput
     orders?: ordersUncheckedUpdateManyWithoutLeadsNestedInput
     workflow_executions?: workflow_executionsUncheckedUpdateManyWithoutLeadsNestedInput
   }
@@ -149122,6 +156066,11 @@ export namespace Prisma {
     pipeline_id?: NullableStringFieldUpdateOperationsInput | string | null
     lost_reason?: NullableStringFieldUpdateOperationsInput | string | null
     context?: NullableJsonNullValueInput | InputJsonValue
+    lead_type?: NullableStringFieldUpdateOperationsInput | string | null
+    qualification_score?: IntFieldUpdateOperationsInput | number
+    exit_intent_sent_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    exit_captured_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    exit_reason?: NullableStringFieldUpdateOperationsInput | string | null
     quoted_amount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     quoted_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     converted_value?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null

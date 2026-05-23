@@ -3,35 +3,74 @@
 // for each item_type. The frontend calls GET /catalog/config to get this
 // and renders the add-product form dynamically.
 
-export const BUSINESS_CATALOG_CONFIG: Record<
-  string,
-  { item_types: string[]; labels: Record<string, string> }
-> = {
-  product_seller: {
-    item_types: ['physical_product'],
-    labels: { physical_product: 'Products' },
+type CatalogConfig = { item_types: string[]; labels: Record<string, string> };
+
+// Ordered rule list — first match wins. Uses the same substring strategy as
+// pipeline.service.ts pickIndustry() so both systems are always consistent.
+const CATALOG_RULES: Array<{ keywords: string[]; config: CatalogConfig }> = [
+  {
+    keywords: ['automotive', 'used car', 'used_car', 'new car', 'new_car', 'vehicle', 'dealer'],
+    config: {
+      item_types: ['vehicle'],
+      labels: { vehicle: 'Vehicles' },
+    },
   },
-  hotel: {
-    item_types: ['accommodation'],
-    labels: { accommodation: 'Rooms & Villas' },
+  {
+    keywords: ['hotel', 'resort', 'homestay', 'cottage', 'villa'],
+    config: {
+      item_types: ['accommodation', 'activity'],
+      labels: { accommodation: 'Rooms & Stays', activity: 'Activities' },
+    },
   },
-  resort: {
-    item_types: ['accommodation', 'activity'],
-    labels: { accommodation: 'Stays', activity: 'Activities' },
+  {
+    keywords: ['camp', 'camping', 'trek', 'adventure', 'retreat', 'bonfire'],
+    config: {
+      item_types: ['accommodation', 'activity'],
+      labels: { accommodation: 'Campsites', activity: 'Activities' },
+    },
   },
-  camping: {
-    item_types: ['accommodation', 'activity'],
-    labels: { accommodation: 'Campsites', activity: 'Activities' },
+  {
+    keywords: ['tour', 'activity', 'event venue', 'venue', 'wedding', 'party hall'],
+    config: {
+      item_types: ['activity', 'service'],
+      labels: { activity: 'Activities', service: 'Services' },
+    },
   },
-  salon: {
-    item_types: ['service'],
-    labels: { service: 'Services' },
+  {
+    keywords: ['salon', 'spa', 'barber', 'beauty'],
+    config: {
+      item_types: ['service'],
+      labels: { service: 'Services' },
+    },
   },
-  workshop: {
-    item_types: ['activity', 'service'],
-    labels: { activity: 'Classes', service: 'Services' },
+  {
+    keywords: ['workshop', 'coaching', 'education', 'training', 'course', 'school', 'institute'],
+    config: {
+      item_types: ['activity', 'service'],
+      labels: { activity: 'Classes', service: 'Services' },
+    },
   },
-};
+  {
+    keywords: ['product', 'retail', 'commerce', 'store', 'shop', 'ecom'],
+    config: {
+      item_types: ['physical_product'],
+      labels: { physical_product: 'Products' },
+    },
+  },
+];
+
+/**
+ * Resolve catalog config for any business_type string using substring matching.
+ * Returns null for unrecognised types so callers can fall back to DEFAULT_ITEM_TYPES.
+ */
+export function resolveBusinessCatalogConfig(businessType: string | null | undefined): CatalogConfig | null {
+  if (!businessType) return null;
+  const t = businessType.toLowerCase();
+  for (const rule of CATALOG_RULES) {
+    if (rule.keywords.some((kw) => t.includes(kw))) return rule.config;
+  }
+  return null;
+}
 
 // Default when business_type is null or unrecognised
 export const DEFAULT_ITEM_TYPES = [
@@ -39,7 +78,15 @@ export const DEFAULT_ITEM_TYPES = [
   'accommodation',
   'activity',
   'service',
+  'vehicle',
 ];
+
+// Keep the named export for any legacy exact-key lookups elsewhere
+export const BUSINESS_CATALOG_CONFIG: Record<string, CatalogConfig> = Object.fromEntries(
+  CATALOG_RULES.flatMap((rule) =>
+    rule.keywords.map((kw) => [kw.replace(/\s/g, '_'), rule.config]),
+  ),
+);
 
 // Attribute field schema per item_type.
 // Each field: { type, required?, label, options? }
@@ -79,5 +126,15 @@ export const ATTRIBUTE_SCHEMAS: Record<string, Record<string, any>> = {
     duration_minutes:       { type: 'number',  label: 'Duration (minutes)' },
     concurrent_slots:       { type: 'number',  label: 'Concurrent Slots (chairs/staff)' },
     requires_appointment:   { type: 'boolean', label: 'Requires Appointment' },
+  },
+  vehicle: {
+    make:         { type: 'string',  required: true,  label: 'Make (e.g. Toyota, Honda)' },
+    model_name:   { type: 'string',  required: true,  label: 'Model (e.g. Corolla, City)' },
+    year:         { type: 'number',  required: true,  label: 'Year' },
+    fuel_type:    { type: 'select',  label: 'Fuel Type', options: ['petrol', 'diesel', 'electric', 'hybrid', 'cng'] },
+    transmission: { type: 'select',  label: 'Transmission', options: ['manual', 'automatic', 'amt'] },
+    color:        { type: 'string',  label: 'Color' },
+    km_driven:    { type: 'number',  label: 'KM Driven' },
+    condition:    { type: 'select',  label: 'Condition', options: ['new', 'used', 'certified_pre_owned'] },
   },
 };
