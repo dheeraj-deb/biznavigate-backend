@@ -34,6 +34,7 @@ model businesses {
   catalog_items             catalog_items[]
   product_item_details      product_item_details[]
   hospitality_item_details  hospitality_item_details[]
+  vehicle_item_details      vehicle_item_details[]
   product_orders            product_orders[]
   product_inquiries         product_inquiries[]
   hospitality_bookings      hospitality_bookings[]
@@ -217,35 +218,47 @@ model users {
 /// source:  "direct" | "instagram" (attribution — Instagram redirects to WhatsApp, not a separate channel)
 /// status:  "new" | "active" | "quoted" | "booked" | "won" | "lost"
 model leads {
-  lead_id               String                  @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  business_id           String                  @db.Uuid
-  tenant_id             String                  @db.Uuid
-  name                  String?                 @db.VarChar(200)
-  phone                 String?                 @db.VarChar(20)
-  email                 String?                 @db.VarChar(255)
-  channel               String                  @db.VarChar(20)
-  source                String                  @default("direct") @db.VarChar(20)
-  platform_id           String?                 @db.VarChar(255)
-  status                String                  @default("new") @db.VarChar(20)
-  stage_id              String?                 @db.Uuid
-  pipeline_id           String?                 @db.Uuid
-  lost_reason           String?                 @db.VarChar(50)
+  lead_id               String                    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  business_id           String                    @db.Uuid
+  tenant_id             String                    @db.Uuid
+  name                  String?                   @db.VarChar(200)
+  phone                 String?                   @db.VarChar(20)
+  email                 String?                   @db.VarChar(255)
+  channel               String                    @db.VarChar(20)
+  source                String                    @default("direct") @db.VarChar(20)
+  platform_id           String?                   @db.VarChar(255)
+  status                String                    @default("new") @db.VarChar(20)
+  stage_id              String?                   @db.Uuid
+  pipeline_id           String?                   @db.Uuid
+  lost_reason           String?                   @db.VarChar(50)
   /// AI-extracted business-type context
-  /// Resort:  { type:"resort",  check_in, check_out, nights, guests, room_pref, budget }
-  /// Camp:    { type:"camp",    event, date, date_is_fixed:true, group_size, package, food_pref }
-  /// Product: { type:"product", items:[{id,name,variant,qty,price}], pincode, budget }
+  /// Resort:     { type:"resort",     check_in, check_out, nights, guests, room_pref, budget }
+  /// Camp:       { type:"camp",       event, date, date_is_fixed, group_size, package, food_pref }
+  /// Product:    { type:"product",    items:[{id,name,variant,qty,price}], pincode, budget }
+  /// Automotive: { type:"automotive", budget_max, make, model, fuel_type, year_min, items_viewed[], last_quoted_price }
+  /// Property:   { type:"property",   budget_max, property_type, bedrooms, locality, items_viewed[] }
+  /// Tour:       { type:"tour",       activity, date, guests, duration, budget, wants_activity_updates }
+  /// Education:  { type:"education",  course_name, fee_budget, preferred_timing, preferred_days[], batch_id }
   context               Json?
-  quoted_amount         Decimal?                @db.Decimal(10, 2)
-  quoted_at             DateTime?               @db.Timestamptz(6)
-  converted_value       Decimal?                @db.Decimal(10, 2)
-  converted_at          DateTime?               @db.Timestamptz(6)
+  /// Lead classification within business group (window_shopper, price_checker, price_alert_subscriber, etc.)
+  lead_type             String?                   @db.VarChar(30)
+  /// 0–100 score derived from engagement signals
+  qualification_score   Int                       @default(0)
+  exit_intent_sent_at   DateTime?                 @db.Timestamptz(6)
+  exit_captured_at      DateTime?                 @db.Timestamptz(6)
+  /// price_too_high | need_more_time | not_interested | changed_dates | not_anymore
+  exit_reason           String?                   @db.VarChar(30)
+  quoted_amount         Decimal?                  @db.Decimal(10, 2)
+  quoted_at             DateTime?                 @db.Timestamptz(6)
+  converted_value       Decimal?                  @db.Decimal(10, 2)
+  converted_at          DateTime?                 @db.Timestamptz(6)
   /// PostgreSQL array — GIN indexed, no join table needed
-  tags                  String[]                @default([])
-  assigned_to           String?                 @db.Uuid
-  followup_at           DateTime?               @db.Timestamptz(6)
-  deleted_at            DateTime?               @db.Timestamptz(6)
-  created_at            DateTime                @default(now()) @db.Timestamptz(6)
-  updated_at            DateTime                @default(now()) @db.Timestamptz(6)
+  tags                  String[]                  @default([])
+  assigned_to           String?                   @db.Uuid
+  followup_at           DateTime?                 @db.Timestamptz(6)
+  deleted_at            DateTime?                 @db.Timestamptz(6)
+  created_at            DateTime                  @default(now()) @db.Timestamptz(6)
+  updated_at            DateTime                  @default(now()) @db.Timestamptz(6)
   cart_reservations     cart_reservations[]
   carts                 carts[]
   events                lead_events[]
@@ -254,17 +267,21 @@ model leads {
   hospitality_inquiries hospitality_inquiries[]
   product_orders        product_orders[]
   hospitality_bookings  hospitality_bookings[]
-  assigned_user         users?                  @relation("lead_agent", fields: [assigned_to], references: [user_id])
-  businesses            businesses              @relation(fields: [business_id], references: [business_id])
-  tenants               tenants                 @relation(fields: [tenant_id], references: [tenant_id])
-  pipeline              pipelines?              @relation(fields: [pipeline_id], references: [pipeline_id])
-  stage                 pipeline_stages?        @relation(fields: [stage_id], references: [stage_id])
+  item_interests        lead_item_interests[]
+  preference_watches    lead_preference_watches[]
+  assigned_user         users?                    @relation("lead_agent", fields: [assigned_to], references: [user_id])
+  businesses            businesses                @relation(fields: [business_id], references: [business_id])
+  tenants               tenants                   @relation(fields: [tenant_id], references: [tenant_id])
+  pipeline              pipelines?                @relation(fields: [pipeline_id], references: [pipeline_id])
+  stage                 pipeline_stages?          @relation(fields: [stage_id], references: [stage_id])
   orders                orders[]
   workflow_executions   workflow_executions[]
 
   @@unique([business_id, platform_id], map: "uq_leads_business_platform")
   @@index([business_id, status], map: "idx_leads_business_status")
   @@index([business_id, stage_id], map: "idx_leads_business_stage")
+  @@index([business_id, lead_type], map: "idx_leads_business_lead_type")
+  @@index([business_id, qualification_score(sort: Desc)], map: "idx_leads_business_qual_score")
   @@index([business_id, channel, source], map: "idx_leads_business_channel_source")
   @@index([business_id, created_at(sort: Desc)], map: "idx_leads_business_created")
   @@index([business_id, quoted_at], map: "idx_leads_business_quoted_at")
@@ -831,7 +848,10 @@ model workflow_definitions {
   workflow_execution_steps  workflow_execution_steps[]
   workflow_idempotency_keys workflow_idempotency_keys[]
 
-  @@unique([business_type, intent_name], map: "unique_business_type_intent")
+  // unique_business_type_intent was dropped: the runtime now supports many
+  // workflows per (business_type, intent_name) and the constraint was blocking
+  // legitimate inserts when more than one schedule/event workflow lived in the
+  // same business. See migration drop_workflow_definitions_unique_business_type_intent.
   @@index([business_type], map: "idx_workflow_definitions_business_type")
   @@index([intent_name], map: "idx_workflow_definitions_intent")
   @@index([is_active], map: "idx_workflow_definitions_active")
@@ -1098,7 +1118,7 @@ model hotel_pricing_notifications {
 }
 
 /// catalog_items - single table for all sellable items across all business types
-/// item_type: "physical_product" | "accommodation" | "activity" | "service"
+/// item_type: "physical_product" | "accommodation" | "activity" | "service" | "vehicle"
 model catalog_items {
   item_id                   String                      @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   business_id               String                      @db.Uuid
@@ -1131,6 +1151,7 @@ model catalog_items {
   cart_reservations         cart_reservations[]
   product_detail            product_item_details?
   hospitality_detail        hospitality_item_details?
+  vehicle_detail            vehicle_item_details?
   product_order_items       product_order_items[]
   hospitality_booking_items hospitality_booking_items[]
   product_inquiries         product_inquiries[]
@@ -1338,6 +1359,31 @@ model hospitality_item_details {
 
   @@index([business_id])
   @@index([service_type])
+}
+
+// ─── INDUSTRY EXTENSIONS: AUTOMOTIVE ─────────────────────────────────────────
+
+model vehicle_item_details {
+  item_id      String        @id @db.Uuid
+  business_id  String        @db.Uuid
+  make         String        @db.VarChar(80)
+  model_name   String        @db.VarChar(80)
+  year         Int
+  fuel_type    String?       @db.VarChar(30)
+  transmission String?       @db.VarChar(30)
+  color        String?       @db.VarChar(50)
+  km_driven    Int?
+  /// new | used | certified_pre_owned
+  condition    String        @default("used") @db.VarChar(30)
+  metadata     Json?
+  created_at   DateTime      @default(now()) @db.Timestamptz(6)
+  updated_at   DateTime      @default(now()) @db.Timestamptz(6)
+  business     businesses    @relation(fields: [business_id], references: [business_id], onDelete: Cascade)
+  item         catalog_items @relation(fields: [item_id], references: [item_id], onDelete: Cascade)
+
+  @@index([business_id])
+  @@index([make, model_name])
+  @@index([year])
 }
 
 model hospitality_inquiries {
@@ -1645,20 +1691,25 @@ model credit_pricing {
 // ─── BUSINESS SETTINGS ────────────────────────────────────────────────────────
 
 model business_settings {
-  business_id        String     @id @db.Uuid
-  timezone           String     @default("Asia/Kolkata") @db.VarChar(50)
-  language           String     @default("en") @db.VarChar(10)
-  currency           String     @default("INR") @db.VarChar(10)
-  business_hours     Json?
-  onboarding_step    Int        @default(0)
-  onboarding_done    Boolean    @default(false)
-  ai_agent_enabled   Boolean    @default(true)
-  auto_reply_enabled Boolean    @default(true)
-  booking_methods    Json       @default("{\"availability_response\":{\"mode\":\"interactive\"},\"ai_chat\":{\"enabled\":true,\"collect_guest_details\":true,\"require_confirmation\":true},\"interactive\":{\"enabled\":true,\"send_entry_buttons\":true,\"send_room_or_service_list\":true},\"catalog\":{\"enabled\":false,\"send_product_messages\":false},\"templates\":{\"enabled\":false,\"confirmation_template_name\":\"\",\"reminder_template_name\":\"\",\"language\":\"en\"},\"human_handoff\":{\"enabled\":true,\"on_unavailable\":true,\"on_low_confidence\":true,\"on_payment_issue\":true}}")
-  booking_link       Json       @default("{\"enabled\":false,\"experience_type\":\"generic\",\"payment_mode\":\"manual\",\"advance_type\":\"fixed\",\"advance_amount\":0,\"theme\":{\"primary_color\":\"#0066FF\",\"show_logo\":true,\"show_banner\":true},\"policies\":{\"cancellation\":\"\",\"refund\":\"\",\"terms\":\"\"},\"contact\":{\"phone\":\"\",\"whatsapp\":\"\",\"address\":\"\"},\"required_fields\":{\"name\":true,\"phone\":true,\"email\":false,\"address\":false,\"notes\":false}}")
-  low_balance_alert  Decimal    @default(100) @db.Decimal(10, 2)
-  updated_at         DateTime   @default(now()) @db.Timestamptz(6)
-  businesses         businesses @relation("business_settings", fields: [business_id], references: [business_id], onDelete: Cascade)
+  business_id          String     @id @db.Uuid
+  timezone             String     @default("Asia/Kolkata") @db.VarChar(50)
+  language             String     @default("en") @db.VarChar(10)
+  currency             String     @default("INR") @db.VarChar(10)
+  business_hours       Json?
+  onboarding_step      Int        @default(0)
+  onboarding_done      Boolean    @default(false)
+  ai_agent_enabled     Boolean    @default(true)
+  auto_reply_enabled   Boolean    @default(true)
+  booking_methods      Json       @default("{\"availability_response\":{\"mode\":\"interactive\"},\"ai_chat\":{\"enabled\":true,\"collect_guest_details\":true,\"require_confirmation\":true},\"interactive\":{\"enabled\":true,\"send_entry_buttons\":true,\"send_room_or_service_list\":true},\"catalog\":{\"enabled\":false,\"send_product_messages\":false},\"templates\":{\"enabled\":false,\"confirmation_template_name\":\"\",\"reminder_template_name\":\"\",\"language\":\"en\"},\"human_handoff\":{\"enabled\":true,\"on_unavailable\":true,\"on_low_confidence\":true,\"on_payment_issue\":true}}")
+  booking_link         Json       @default("{\"enabled\":false,\"experience_type\":\"generic\",\"payment_mode\":\"manual\",\"advance_type\":\"fixed\",\"advance_amount\":0,\"theme\":{\"primary_color\":\"#0066FF\",\"show_logo\":true,\"show_banner\":true},\"policies\":{\"cancellation\":\"\",\"refund\":\"\",\"terms\":\"\"},\"contact\":{\"phone\":\"\",\"whatsapp\":\"\",\"address\":\"\"},\"required_fields\":{\"name\":true,\"phone\":true,\"email\":false,\"address\":false,\"notes\":false}}")
+  low_balance_alert    Decimal    @default(100) @db.Decimal(10, 2)
+  /// E.164-style dial code without the "+" (e.g. "91" for India, "1" for US).
+  /// Used to canonicalise leads.phone so the same human entering "9539192684"
+  /// on the booking form and messaging "919539192684" on WhatsApp resolves to
+  /// one lead row.
+  default_country_code String     @default("91") @db.VarChar(5)
+  updated_at           DateTime   @default(now()) @db.Timestamptz(6)
+  businesses           businesses @relation("business_settings", fields: [business_id], references: [business_id], onDelete: Cascade)
 }
 
 // ─── AUDIT LOG ────────────────────────────────────────────────────────────────
@@ -1681,4 +1732,52 @@ model audit_logs {
   @@index([business_id, created_at(sort: Desc)], map: "idx_audit_logs_business_created")
   @@index([entity_type, entity_id], map: "idx_audit_logs_entity")
   @@index([user_id], map: "idx_audit_logs_user_id")
+}
+
+/// Tracks which inventory items / catalog items a lead has shown interest in.
+/// Used to trigger price-drop and availability alerts (confirmation-first rule).
+model lead_item_interests {
+  interest_id     String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  lead_id         String   @db.Uuid
+  business_id     String   @db.Uuid
+  /// UUID of the item (vehicle_inventory.vehicle_id, catalog_items.item_id, etc.) — nullable for free-text items
+  item_id         String?  @db.Uuid
+  /// vehicle | catalog_item | property | course | activity
+  item_type       String   @db.VarChar(30)
+  item_name       String   @db.VarChar(255)
+  /// viewed | price_checked | visit_requested
+  interest_level  String   @default("viewed") @db.VarChar(20)
+  last_price_seen Decimal? @db.Decimal(12, 2)
+  /// true when lead tapped "notify me" — only these leads get campaigns
+  is_alert_active Boolean  @default(false)
+  created_at      DateTime @default(now()) @db.Timestamptz(6)
+  updated_at      DateTime @default(now()) @db.Timestamptz(6)
+  leads           leads    @relation(fields: [lead_id], references: [lead_id], onDelete: Cascade)
+
+  @@unique([lead_id, item_id], map: "uq_lead_item_interest")
+  @@index([lead_id], map: "idx_lead_item_interests_lead")
+  @@index([business_id, is_alert_active], map: "idx_lead_item_interests_business_alert")
+}
+
+/// Stores what a lead is watching for when no match exists yet.
+/// AI creates this automatically after a failed search if lead opts in.
+model lead_preference_watches {
+  watch_id    String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  lead_id     String    @db.Uuid
+  business_id String    @db.Uuid
+  /// price_range | item_match | date_available | stock_available | batch_available
+  watch_type  String    @db.VarChar(30)
+  /// JSONB: budget_max, make, model, date_from, date_to, variant, course_id, etc.
+  criteria    Json
+  is_active   Boolean   @default(true)
+  /// Set when campaign is sent — prevents duplicate alerts for same event
+  notified_at DateTime? @db.Timestamptz(6)
+  /// Auto-expire after 90 days with no match
+  expires_at  DateTime? @db.Timestamptz(6)
+  created_at  DateTime  @default(now()) @db.Timestamptz(6)
+  leads       leads     @relation(fields: [lead_id], references: [lead_id], onDelete: Cascade)
+
+  @@index([business_id, watch_type, is_active], map: "idx_pref_watches_business_type_active")
+  @@index([lead_id], map: "idx_pref_watches_lead")
+  @@index([expires_at], map: "idx_pref_watches_expires")
 }

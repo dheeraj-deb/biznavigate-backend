@@ -23,6 +23,9 @@ export class LeadQueryService {
     intent_type?: string;
     stage_id?: string;
     pipeline_id?: string;
+    lead_type?: string;
+    qualification_score_min?: number;
+    exit_reason?: string;
     sortBy?: string;
     sortOrder?: 'asc' | 'desc';
     page?: number;
@@ -38,6 +41,11 @@ export class LeadQueryService {
     if (filters?.assignedTo) where.assigned_to = filters.assignedTo;
     if (filters?.stage_id) where.stage_id = filters.stage_id;
     if (filters?.pipeline_id) where.pipeline_id = filters.pipeline_id;
+    if (filters?.lead_type) where.lead_type = filters.lead_type;
+    if (filters?.exit_reason) where.exit_reason = filters.exit_reason;
+    if (filters?.qualification_score_min !== undefined) {
+      where.qualification_score = { gte: filters.qualification_score_min };
+    }
     if (filters?.intent_type) {
       // Filter in DB via JSON path — keeps pagination + counts correct.
       where.context = { path: ['type'], equals: filters.intent_type };
@@ -363,6 +371,8 @@ export class LeadQueryService {
       channel: lead.channel,
       source: lead.source,
       status: lead.status,
+      lead_type: lead.lead_type ?? null,
+      qualification_score: lead.qualification_score ?? 0,
       lead_quality: this.computeLeadQuality(lead),
       intent_type: ctx?.type ?? null,
       extracted_entities,

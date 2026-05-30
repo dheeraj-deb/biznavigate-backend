@@ -1,4 +1,6 @@
 import { forwardRef, Module } from '@nestjs/common';
+// Note: LeadModule and WhatsAppModule have a mutual dependency (WhatsApp sends messages on behalf of leads).
+// Both sides must use forwardRef() to avoid a circular-import crash at startup.
 import { ConfigModule } from '@nestjs/config';
 import { BullModule } from '@nestjs/bullmq';
 import { MongooseModule } from '@nestjs/mongoose';
@@ -50,7 +52,7 @@ import { Campaign, CampaignSchema } from '../campaign/schemas/campaign.schema';
     GatewayModule,
     HumanHandoffGatewayModule,
     AgentModule,
-    LeadModule,
+    forwardRef(() => LeadModule),
     BookingsModule,
     forwardRef(() => WorkflowsModule),
     MongooseModule.forFeature([

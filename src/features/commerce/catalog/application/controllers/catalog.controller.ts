@@ -21,7 +21,7 @@ import { QueryCatalogDto } from '../dto/query-catalog.dto';
 import { SetAvailabilityDto, BlockDateDto } from '../dto/set-availability.dto';
 import { CreateVariantDto, UpdateVariantDto } from '../dto/create-variant.dto';
 import {
-  BUSINESS_CATALOG_CONFIG,
+  resolveBusinessCatalogConfig,
   DEFAULT_ITEM_TYPES,
   ATTRIBUTE_SCHEMAS,
 } from '../../domain/catalog.config';
@@ -46,7 +46,7 @@ export class CatalogController {
     });
 
     const businessType = business?.business_type ?? null;
-    const config = businessType ? BUSINESS_CATALOG_CONFIG[businessType] : null;
+    const config = resolveBusinessCatalogConfig(businessType);
 
     const allowed_item_types = config?.item_types ?? DEFAULT_ITEM_TYPES;
     const item_type_labels = config?.labels ?? {
@@ -54,6 +54,7 @@ export class CatalogController {
       accommodation: 'Accommodation',
       activity: 'Activities',
       service: 'Services',
+      vehicle: 'Vehicles',
     };
 
     const attribute_schemas: Record<string, any> = {};

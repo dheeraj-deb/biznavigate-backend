@@ -1,4 +1,5 @@
 import { Injectable, NotFoundException, BadRequestException } from '@nestjs/common';
+import { EventEmitter2 } from '@nestjs/event-emitter';
 import { PrismaService } from '../../../../../prisma/prisma.service';
 import { CreateCatalogItemDto } from '../dto/create-catalog-item.dto';
 import { UpdateCatalogItemDto } from '../dto/update-catalog-item.dto';
@@ -8,12 +9,16 @@ import { CreateVariantDto, UpdateVariantDto } from '../dto/create-variant.dto';
 
 @Injectable()
 export class CatalogService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly eventEmitter: EventEmitter2,
+  ) {}
 
   // ─── Catalog Items ────────────────────────────────────────────────────────
 
   async getItems(filters: QueryCatalogDto) {
-    const { businessId, item_type, category, search, page = 1, limit = 20 } = filters;
+    const { businessId, item_type, category, search, page = 1, limit = 20,
+            make, model, fuel_type, year_min, budget_max, condition } = filters;
     const skip = (page - 1) * limit;
 
     const where: any = {
@@ -24,6 +29,7 @@ export class CatalogService {
 
     if (item_type) where.item_type = item_type;
     if (category) where.category = category;
+    if (budget_max) where.base_price = { lte: budget_max };
     if (search) {
       where.OR = [
         { name: { contains: search, mode: 'insensitive' } },
@@ -31,6 +37,15 @@ export class CatalogService {
         { ai_tags: { has: search.toLowerCase() } },
       ];
     }
+
+    // Vehicle-specific extension-table filters via relation
+    const vehicleWhere: any = {};
+    if (make) vehicleWhere.make = { contains: make, mode: 'insensitive' };
+    if (model) vehicleWhere.model_name = { contains: model, mode: 'insensitive' };
+    if (fuel_type) vehicleWhere.fuel_type = { equals: fuel_type, mode: 'insensitive' };
+    if (year_min) vehicleWhere.year = { gte: year_min };
+    if (condition) vehicleWhere.condition = condition;
+    if (Object.keys(vehicleWhere).length) where.vehicle_detail = { is: vehicleWhere };
 
     const [data, total] = await Promise.all([
       this.prisma.catalog_items.findMany({
@@ -42,6 +57,7 @@ export class CatalogService {
           variants: { where: { is_active: true }, orderBy: { price: 'asc' } },
           product_detail: true,
           hospitality_detail: true,
+          vehicle_detail: true,
         },
       }),
       this.prisma.catalog_items.count({ where }),
@@ -97,15 +113,24 @@ export class CatalogService {
           variants: { where: { is_active: true }, orderBy: { price: 'asc' } },
           product_detail: true,
           hospitality_detail: true,
+          vehicle_detail: true,
         },
       });
     });
+
+    if (item?.item_type === 'vehicle') {
+      void this.eventEmitter.emitAsync('catalog.vehicle.created', {
+        businessId,
+        itemId: item.item_id,
+      });
+    }
 
     return this.withDetails(item);
   }
 
   async updateItem(itemId: string, businessId: string, dto: UpdateCatalogItemDto) {
     const existing = await this.getItemById(itemId, businessId);
+    const oldPrice = Number(existing.base_price);
     const { details, attributes: incomingAttributes, ...catalogData } = dto;
     const attributes = incomingAttributes || details
       ? this.mergeLegacyAttributes(existing.item_type, incomingAttributes ?? existing.attributes, details)
@@ -127,9 +152,19 @@ export class CatalogService {
           variants: { where: { is_active: true }, orderBy: { price: 'asc' } },
           product_detail: true,
           hospitality_detail: true,
+          vehicle_detail: true,
         },
       });
     });
+
+    const newPrice = dto.base_price !== undefined ? Number(dto.base_price) : null;
+    if (existing.item_type === 'vehicle' && newPrice !== null && newPrice < oldPrice) {
+      void this.eventEmitter.emitAsync('catalog.vehicle.price_dropped', {
+        businessId,
+        itemId,
+        newPrice,
+      });
+    }
 
     return this.withDetails(item);
   }
@@ -295,7 +330,8 @@ export class CatalogService {
   // Optimized read — returns availability-merged results for WhatsApp chatbot
 
   async queryForAgent(filters: QueryCatalogDto) {
-    const { businessId, item_type, check_in, check_out, guests, search } = filters;
+    const { businessId, item_type, check_in, check_out, guests, search,
+            make, model, fuel_type, year_min, budget_max, condition } = filters;
 
     const where: any = {
       business_id: businessId,
@@ -303,6 +339,43 @@ export class CatalogService {
       deleted_at: null,
     };
     if (item_type) where.item_type = item_type;
+    if (budget_max) where.base_price = { lte: budget_max };
+
+    // For vehicle — filtered search against extension table
+    if (item_type === 'vehicle') {
+      const vehicleWhere: any = {};
+      if (make) vehicleWhere.make = { contains: make, mode: 'insensitive' };
+      if (model) vehicleWhere.model_name = { contains: model, mode: 'insensitive' };
+      if (fuel_type) vehicleWhere.fuel_type = { equals: fuel_type, mode: 'insensitive' };
+      if (year_min) vehicleWhere.year = { gte: year_min };
+      if (condition) vehicleWhere.condition = condition;
+      if (Object.keys(vehicleWhere).length) where.vehicle_detail = { is: vehicleWhere };
+
+      const items = await this.prisma.catalog_items.findMany({
+        where: search
+          ? { ...where, OR: [
+              { name: { contains: search, mode: 'insensitive' } },
+              { ai_tags: { has: search.toLowerCase() } },
+            ]}
+          : where,
+        include: { vehicle_detail: true },
+        orderBy: { base_price: 'asc' },
+        take: 10,
+      });
+
+      return items.map((i) => ({
+        item_id: i.item_id,
+        item_type: i.item_type,
+        name: i.name,
+        description: i.description,
+        base_price: Number(i.base_price),
+        effective_price: Number(i.base_price),
+        currency: i.currency,
+        details: this.vehicleDetails(i.vehicle_detail, i.attributes),
+        primary_image_url: i.primary_image_url,
+        image_urls: i.image_urls,
+      }));
+    }
 
     // For physical_product — simple stock check
     if (item_type === 'physical_product') {
@@ -423,9 +496,11 @@ export class CatalogService {
       ? this.productDetails(item.product_detail, item.attributes)
       : item.item_type === 'accommodation'
         ? this.hospitalityDetails(item.hospitality_detail, item.attributes)
-        : item.attributes ?? null;
+        : item.item_type === 'vehicle'
+          ? this.vehicleDetails(item.vehicle_detail, item.attributes)
+          : item.attributes ?? null;
 
-    const { product_detail, hospitality_detail, ...rest } = item;
+    const { product_detail, hospitality_detail, vehicle_detail, ...rest } = item;
     return { ...rest, details };
   }
 
@@ -514,6 +589,37 @@ export class CatalogService {
         },
       });
     }
+
+    if (itemType === 'vehicle') {
+      await tx.vehicle_item_details.upsert({
+        where: { item_id: itemId },
+        create: {
+          item_id: itemId,
+          business_id: businessId,
+          make: source.make ?? '',
+          model_name: source.model_name ?? '',
+          year: this.toOptionalInt(source.year) ?? new Date().getFullYear(),
+          fuel_type: source.fuel_type,
+          transmission: source.transmission,
+          color: source.color,
+          km_driven: this.toOptionalInt(source.km_driven),
+          condition: source.condition ?? 'used',
+          metadata: source,
+        },
+        update: {
+          make: source.make ?? '',
+          model_name: source.model_name ?? '',
+          year: this.toOptionalInt(source.year) ?? new Date().getFullYear(),
+          fuel_type: source.fuel_type,
+          transmission: source.transmission,
+          color: source.color,
+          km_driven: this.toOptionalInt(source.km_driven),
+          condition: source.condition ?? 'used',
+          metadata: source,
+          updated_at: new Date(),
+        },
+      });
+    }
   }
 
   private productDetails(detail: any, attributes: any) {
@@ -525,6 +631,21 @@ export class CatalogService {
       weight: detail.weight != null ? Number(detail.weight) : null,
       dimensions: detail.dimensions,
       warranty: detail.warranty,
+      metadata: detail.metadata,
+    };
+  }
+
+  private vehicleDetails(detail: any, attributes: any) {
+    if (!detail) return attributes ?? null;
+    return {
+      make: detail.make,
+      model_name: detail.model_name,
+      year: detail.year,
+      fuel_type: detail.fuel_type,
+      transmission: detail.transmission,
+      color: detail.color,
+      km_driven: detail.km_driven,
+      condition: detail.condition,
       metadata: detail.metadata,
     };
   }

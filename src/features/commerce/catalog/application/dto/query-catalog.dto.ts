@@ -43,4 +43,31 @@ export class QueryCatalogDto {
   @Type(() => Number)
   @IsNumber()
   guests?: number;
+
+  // Vehicle-specific filters
+  @IsOptional()
+  @IsString()
+  make?: string;
+
+  @IsOptional()
+  @IsString()
+  model?: string;
+
+  @IsOptional()
+  @IsString()
+  fuel_type?: string;
+
+  @IsOptional()
+  @Type(() => Number)
+  @IsNumber()
+  year_min?: number;
+
+  @IsOptional()
+  @Type(() => Number)
+  @IsNumber()
+  budget_max?: number;
+
+  @IsOptional()
+  @IsString()
+  condition?: string;
 }

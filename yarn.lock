@@ -2370,7 +2370,7 @@
   resolved "https://registry.npmjs.org/@pkgr/core/-/core-0.2.9.tgz"
   integrity sha512-QNqXyfVS2wm9hweSYD2O7F0G06uurj9kZ96TRQE5Y9hU7+tgdZwIkbAKc5Ocy1HxEY2kuDQa6cQ1WRs/O5LFKA==
 
-"@prisma/adapter-pg@^6.7.0":
+"@prisma/adapter-pg@6.7.0":
   version "6.7.0"
   resolved "https://registry.npmjs.org/@prisma/adapter-pg/-/adapter-pg-6.7.0.tgz"
   integrity sha512-+dwKGsLZ7v+DpekwotjH2EHenwJ5mtiMycuALeldf+5qotAvGkH8iu6Y/oCltBCJUMvvq8Cm958lfJXz3ScGWA==
@@ -2378,7 +2378,7 @@
     "@prisma/driver-adapter-utils" "6.7.0"
     postgres-array "3.0.4"
 
-"@prisma/client@^6.7.0":
+"@prisma/client@6.7.0":
   version "6.7.0"
   resolved "https://registry.npmjs.org/@prisma/client/-/client-6.7.0.tgz"
   integrity sha512-+k61zZn1XHjbZul8q6TdQLpuI/cvyfil87zqK2zpreNIXyXtpUv3+H/oM69hcsFcZXaokHJIzPAt5Z8C8eK2QA==
@@ -7560,7 +7560,7 @@ pretty-format@^29.0.0, pretty-format@^29.7.0:
     ansi-styles "^5.0.0"
     react-is "^18.0.0"
 
-prisma@^6.7.0:
+prisma@6.7.0:
   version "6.7.0"
   resolved "https://registry.npmjs.org/prisma/-/prisma-6.7.0.tgz"
   integrity sha512-vArg+4UqnQ13CVhc2WUosemwh6hr6cr6FY2uzDvCIFwH8pu8BXVv38PktoMLVjtX7sbYThxbnZF5YiR8sN2clw==
