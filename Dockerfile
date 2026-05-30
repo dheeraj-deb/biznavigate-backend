@@ -7,7 +7,7 @@ WORKDIR /app
 RUN apk add --no-cache python3 make g++ libc6-compat
 
 # Copy package files and install ALL dependencies (including devDeps for build)
-COPY package.json package-lock.json ./
+COPY package.json package-lock.json .npmrc ./
 RUN npm ci
 
 # Copy source code
@@ -28,7 +28,7 @@ WORKDIR /app
 RUN apk add --no-cache libc6-compat
 
 # Copy package files and install PRODUCTION dependencies only
-COPY package.json package-lock.json ./
+COPY package.json package-lock.json .npmrc ./
 RUN npm ci --omit=dev
 
 # Copy built output from builder stage
