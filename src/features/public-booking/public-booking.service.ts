@@ -207,6 +207,7 @@ export class PublicBookingService {
     const name = String(body.customer?.name ?? body.name ?? '').trim();
     const address = String(body.customer?.address ?? body.address ?? '').trim();
     const notes = String(body.customer?.notes ?? body.notes ?? '').trim();
+    const linkedLeadId = this.extractLeadId(body);
     if (config.required_fields.name && !name) throw new BadRequestException('Name is required');
     if (config.required_fields.phone && !phone) throw new BadRequestException('Phone is required');
     if (config.required_fields.email && !email) throw new BadRequestException('Email is required');
@@ -218,6 +219,31 @@ export class PublicBookingService {
     const normalizedPhone = phone
       ? (await this.phoneResolver.normalize(business.business_id, phone)) ?? phone
       : null;
+
+    if (linkedLeadId) {
+      const linkedLead = await this.prisma.leads.findFirst({
+        where: {
+          lead_id: linkedLeadId,
+          business_id: business.business_id,
+          deleted_at: null,
+        },
+      });
+
+      if (linkedLead) {
+        return this.prisma.leads.update({
+          where: { lead_id: linkedLead.lead_id },
+          data: {
+            ...(name ? { name } : {}),
+            ...(normalizedPhone && (!linkedLead.phone || linkedLead.phone === normalizedPhone) ? { phone: normalizedPhone } : {}),
+            ...(email ? { email } : {}),
+            ...(linkedLead.tags?.includes('public-booking-link') ? {} : { tags: { push: 'public-booking-link' } as any }),
+            context: this.leadContext(item, body),
+            status: linkedLead.status === 'new' ? 'contacted' : linkedLead.status,
+            updated_at: new Date(),
+          },
+        });
+      }
+    }
 
     // Existing-lead lookup priority: phone first (the strongest identity match),
     // then fall back to the legacy platform_id key so older booking-link leads
@@ -262,16 +288,34 @@ export class PublicBookingService {
     });
   }
 
+  private extractLeadId(body: any): string | null {
+    const value =
+      body?.lead_id ??
+      body?.leadId ??
+      body?.lead?.lead_id ??
+      body?.lead?.leadId ??
+      body?.metadata?.lead_id ??
+      body?.metadata?.leadId;
+    if (typeof value !== 'string') return null;
+    const trimmed = value.trim();
+    return /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(trimmed)
+      ? trimmed
+      : null;
+  }
+
   private leadContext(item: any, body: any) {
     return {
       type: item.item_type === 'physical_product' ? 'product' : 'public_booking',
       item_id: item.item_id,
       item_name: item.name,
+      property_name: item.name,
       check_in: body.check_in ?? body.checkIn ?? body.date,
       check_out: body.check_out ?? body.checkOut,
       guests: Number(body.guests ?? body.quantity ?? 1),
+      guest_count: Number(body.guests ?? body.quantity ?? 1),
       quantity: Number(body.quantity ?? 1),
       notes: body.notes ?? body.customer?.notes,
+      special_requests: body.special_requests ?? body.customer?.notes ?? body.notes,
       address: body.address ?? body.customer?.address,
     };
   }
@@ -346,6 +390,7 @@ export class PublicBookingService {
       customer_phone: phone,
       lead_id: leadId,
       num_guests: body.guests ?? body.quantity ?? 1,
+      notes: customer.notes ?? body.notes,
       source: 'public_booking_link',
       actor: 'customer',
       idempotency_key: `public_booking:${randomUUID()}`,

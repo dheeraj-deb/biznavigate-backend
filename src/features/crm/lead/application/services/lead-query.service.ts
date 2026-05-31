@@ -79,8 +79,36 @@ export class LeadQueryService {
       this.prisma.leads.count({ where }),
     ]);
 
+    const leadIds = rows.map((l) => l.lead_id);
+    const [conversations, followups] = await Promise.all([
+      leadIds.length
+        ? this.conversationModel
+            .find({ business_id: businessId, lead_id: { $in: leadIds }, status: { $in: ['open', 'handed_off', 'active'] } })
+            .sort({ updated_at: -1 })
+            .lean()
+        : [],
+      leadIds.length
+        ? this.prisma.lead_followups.findMany({
+            where: { business_id: businessId, lead_id: { in: leadIds }, done: false },
+            orderBy: { scheduled_at: 'asc' },
+            select: { lead_id: true, scheduled_at: true },
+          })
+        : [],
+    ]);
+    const conversationByLead = new Map<string, any>();
+    for (const conversation of conversations) {
+      if (!conversationByLead.has(conversation.lead_id)) conversationByLead.set(conversation.lead_id, conversation);
+    }
+    const followupByLead = new Map<string, any>();
+    for (const followup of followups) {
+      if (!followupByLead.has(followup.lead_id)) followupByLead.set(followup.lead_id, followup);
+    }
+
     return {
-      data: rows.map((l) => this.formatLead(l)),
+      data: rows.map((l) => this.formatLead(l, {
+        conversation: conversationByLead.get(l.lead_id),
+        followup: followupByLead.get(l.lead_id),
+      })),
       meta: {
         total,
         totalPages: Math.ceil(total / limit),
@@ -106,14 +134,14 @@ export class LeadQueryService {
 
     const [total, converted, byStatus, bySource, hotCount, warmCount] = await Promise.all([
       this.prisma.leads.count({ where }),
-      this.prisma.leads.count({ where: { ...where, status: { in: ['booked', 'won'] } } }),
+      this.prisma.leads.count({ where: { ...where, status: { in: ['booked', 'won', 'converted'] } } }),
       this.prisma.leads.groupBy({ by: ['status'], where, _count: { _all: true }, orderBy: { _count: { status: 'desc' } } }),
       this.prisma.leads.groupBy({ by: ['source'], where, _count: { _all: true } }),
       this.prisma.leads.count({
         where: {
           ...where,
           OR: [
-            { status: { in: ['quoted', 'booked', 'won'] } },
+            { status: { in: ['quoted', 'booked', 'won', 'converted'] } },
             { quoted_amount: { gt: 0 } },
           ],
         },
@@ -123,7 +151,7 @@ export class LeadQueryService {
           ...where,
           status: { in: ['active', 'contacted', 'qualified'] },
           AND: [
-            { NOT: { status: { in: ['quoted', 'booked', 'won'] } } },
+            { NOT: { status: { in: ['quoted', 'booked', 'won', 'converted'] } } },
             { OR: [{ quoted_amount: null }, { quoted_amount: { lte: 0 } }] },
           ],
         },
@@ -149,7 +177,15 @@ export class LeadQueryService {
   async getLeadById(leadId: string) {
     const lead = await this.prisma.leads.findUnique({ where: { lead_id: leadId } });
     if (!lead) throw new NotFoundException('Lead not found');
-    return this.formatLead(lead);
+    const [conversation, followup] = await Promise.all([
+      this.getConversationByLead(leadId, lead.business_id),
+      this.prisma.lead_followups.findFirst({
+        where: { lead_id: leadId, business_id: lead.business_id, done: false },
+        orderBy: { scheduled_at: 'asc' },
+        select: { scheduled_at: true },
+      }),
+    ]);
+    return this.formatLead(lead, { conversation, followup });
   }
 
   async getLeadEvents(leadId: string) {
@@ -169,8 +205,8 @@ export class LeadQueryService {
       this.prisma.$queryRaw<any[]>`
         SELECT
           COUNT(*)::int                                                        AS enquiries,
-          COUNT(*) FILTER (WHERE status IN ('booked','won'))::int              AS converted,
-          COALESCE(SUM(converted_value) FILTER (WHERE status = 'won'), 0)      AS revenue
+          COUNT(*) FILTER (WHERE status IN ('booked','won','converted'))::int  AS converted,
+          COALESCE(SUM(converted_value) FILTER (WHERE status IN ('won','converted','booked')), 0) AS revenue
         FROM leads
         WHERE business_id = ${businessId}::uuid
           AND created_at >= ${startOfDay}
@@ -180,7 +216,7 @@ export class LeadQueryService {
       this.prisma.$queryRaw<any[]>`
         SELECT
           COUNT(*)::int                                                        AS enquiries,
-          COALESCE(SUM(converted_value) FILTER (WHERE status = 'won'), 0)      AS revenue
+          COALESCE(SUM(converted_value) FILTER (WHERE status IN ('won','converted','booked')), 0) AS revenue
         FROM leads
         WHERE business_id = ${businessId}::uuid
           AND created_at >= ${yesterday}
@@ -226,7 +262,7 @@ export class LeadQueryService {
       FROM leads
       WHERE business_id = ${businessId}::uuid
         AND deleted_at IS NULL
-        AND status NOT IN ('won', 'lost')
+        AND status NOT IN ('won', 'booked', 'converted', 'lost', 'cancelled')
         AND (
           (status = 'quoted' AND quoted_at < NOW() - INTERVAL '12 hours')
           OR (status = 'new'  AND created_at < NOW() - INTERVAL '3 hours')
@@ -248,12 +284,12 @@ export class LeadQueryService {
         channel,
         source,
         COUNT(*)::int                                                       AS leads,
-        COUNT(*) FILTER (WHERE status = 'won')::int                         AS won,
+        COUNT(*) FILTER (WHERE status IN ('won','booked','converted'))::int  AS won,
         ROUND(
-          COUNT(*) FILTER (WHERE status = 'won') * 100.0 / NULLIF(COUNT(*),0),
+          COUNT(*) FILTER (WHERE status IN ('won','booked','converted')) * 100.0 / NULLIF(COUNT(*),0),
           1
         )                                                                   AS conversion_rate,
-        COALESCE(SUM(converted_value) FILTER (WHERE status = 'won'), 0)     AS revenue
+        COALESCE(SUM(converted_value) FILTER (WHERE status IN ('won','booked','converted')), 0) AS revenue
       FROM leads
       WHERE business_id = ${businessId}::uuid
         AND created_at > NOW() - (${safeDays} * INTERVAL '1 day')
@@ -342,22 +378,24 @@ export class LeadQueryService {
       .lean();
   }
 
-  private formatLead(lead: any) {
+  private formatLead(lead: any, related?: { conversation?: any; followup?: { scheduled_at: Date } | null }) {
     const nameParts = (lead.name ?? '').trim().split(/\s+/);
     const first_name = nameParts[0] || null;
     const last_name = nameParts.slice(1).join(' ') || null;
     const ctx = lead.context as any;
 
-    const extracted_entities = ctx
+    const normalizedContext = ctx ? this.normalizeLeadContext(ctx) : null;
+
+    const extracted_entities = normalizedContext
       ? {
-          check_in: ctx.check_in ?? null,
-          check_out: ctx.check_out ?? null,
-          guest_count: ctx.guests ?? ctx.group_size ?? null,
-          room_preference: ctx.room_pref ?? null,
-          budget: ctx.budget ?? null,
-          product_name: ctx.items?.[0]?.name ?? null,
-          quantity: ctx.items?.[0]?.qty ?? null,
-          delivery_city: ctx.pincode ?? null,
+          check_in: normalizedContext.check_in ?? null,
+          check_out: normalizedContext.check_out ?? null,
+          guest_count: normalizedContext.guest_count ?? null,
+          room_preference: normalizedContext.room_preference ?? null,
+          budget: normalizedContext.budget ?? null,
+          product_name: normalizedContext.items?.[0]?.name ?? normalizedContext.item_name ?? null,
+          quantity: normalizedContext.items?.[0]?.qty ?? normalizedContext.quantity ?? null,
+          delivery_city: normalizedContext.pincode ?? null,
         }
       : null;
 
@@ -376,19 +414,33 @@ export class LeadQueryService {
       lead_quality: this.computeLeadQuality(lead),
       intent_type: ctx?.type ?? null,
       extracted_entities,
-      is_converted: ['booked', 'won'].includes(lead.status),
+      is_converted: ['booked', 'won', 'converted'].includes(lead.status),
       quoted_amount: lead.quoted_amount ? Number(lead.quoted_amount) : null,
       converted_value: lead.converted_value ? Number(lead.converted_value) : null,
       tags: lead.tags ?? [],
       assigned_to: lead.assigned_to,
-      context: lead.context,
+      context: normalizedContext,
+      conversation_id: related?.conversation?.conversation_id ?? null,
+      followup_at: related?.followup?.scheduled_at ?? lead.followup_at ?? null,
       created_at: lead.created_at,
       updated_at: lead.updated_at,
     };
   }
 
+  private normalizeLeadContext(ctx: any) {
+    const itemName = ctx.item_name ?? ctx.property_name ?? ctx.service_name ?? ctx.items?.[0]?.name ?? null;
+    return {
+      ...ctx,
+      guest_count: ctx.guest_count ?? ctx.guests ?? ctx.group_size ?? null,
+      property_name: ctx.property_name ?? itemName,
+      item_name: ctx.item_name ?? itemName,
+      room_preference: ctx.room_preference ?? ctx.room_pref ?? null,
+      special_requests: ctx.special_requests ?? ctx.notes ?? null,
+    };
+  }
+
   private computeLeadQuality(lead: any): 'hot' | 'warm' | 'cold' {
-    if (['quoted', 'booked', 'won'].includes(lead.status)) return 'hot';
+    if (['quoted', 'booked', 'won', 'converted'].includes(lead.status)) return 'hot';
     if (lead.quoted_amount && Number(lead.quoted_amount) > 0) return 'hot';
     const ctx = lead.context as any;
     if (lead.status === 'active' || lead.status === 'contacted' || lead.status === 'qualified') return 'warm';

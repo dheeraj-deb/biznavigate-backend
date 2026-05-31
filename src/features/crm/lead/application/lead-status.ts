@@ -13,7 +13,9 @@ export const LEAD_STATUSES = [
   'quoted',
   'booked',
   'won',
+  'converted',
   'lost',
+  'cancelled',
 ] as const;
 
 export type LeadStatus = (typeof LEAD_STATUSES)[number];
