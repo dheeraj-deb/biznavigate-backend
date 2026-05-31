@@ -8,7 +8,7 @@ import { appendSignal } from '../types/agent-signal';
 
 export function makeCheckAvailabilityTool(catalogService: CatalogService) {
   return tool(
-    async ({ checkIn, checkOut }) => {
+    async ({ checkIn, checkOut, propertyName }) => {
       const { businessId } = getRunContext();
       const resolvedCheckIn = resolveDate(checkIn);
       const resolvedCheckOut = resolveDate(checkOut);
@@ -29,24 +29,32 @@ export function makeCheckAvailabilityTool(catalogService: CatalogService) {
         item_type: 'accommodation',
         check_in: resolvedCheckIn,
         check_out: resolvedCheckOut,
+        search: propertyName,
       });
 
       if (!results || results.length === 0) {
         return appendSignal(
           `No rooms available from ${resolvedCheckIn} to ${resolvedCheckOut}.`,
-          { type: 'demand_miss', check_in: resolvedCheckIn, check_out: resolvedCheckOut },
+          { type: 'demand_miss', check_in: resolvedCheckIn, check_out: resolvedCheckOut, service_name: propertyName },
         );
       }
 
       // Signal the debounce processor to trigger the hospitality flow
-      return encodeFlow({ businessId, flowType: 'availability', checkIn: resolvedCheckIn, checkOut: resolvedCheckOut });
+      return encodeFlow({
+        businessId,
+        flowType: 'availability',
+        checkIn: resolvedCheckIn,
+        checkOut: resolvedCheckOut,
+        propertyName,
+      });
     },
     {
       name: 'check_availability',
-      description: 'Check available rooms/services for given check-in and check-out dates',
+      description: 'Check available rooms/properties for given check-in and check-out dates. Include propertyName when the user names a specific resort/property/room.',
       schema: z.object({
         checkIn: z.string().describe('Check-in date in YYYY-MM-DD format'),
         checkOut: z.string().describe('Check-out date in YYYY-MM-DD format'),
+        propertyName: z.string().optional().describe('Specific resort/property/room name mentioned by the customer, if any'),
       }),
     },
   );

@@ -29,6 +29,7 @@ import { PlatformModule } from "./features/platform/platform.module";
 import { AiModule } from "./features/ai/ai.module";
 import { InsightsModule } from "./features/insights/insights.module";
 import { PublicBookingModule } from "./features/public-booking/public-booking.module";
+import { HealthController } from "./health.controller";
 
 @Module({
   imports: [
@@ -107,6 +108,7 @@ import { PublicBookingModule } from "./features/public-booking/public-booking.mo
       ? [KafkaModule]
       : []),
   ],
+  controllers: [HealthController],
   providers: [
     {
       provide: APP_FILTER,

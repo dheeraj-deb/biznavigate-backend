@@ -246,6 +246,13 @@ export class HospitalityFlowService {
     // Fall back to _flowContext (populated from flow_token) which always has the correct dates.
     const check_in = data._flowContext?.check_in ?? data.check_in;
     const check_out = data._flowContext?.check_out ?? data.check_out;
+    const propertySearch = this.nonEmptyString(
+      data._flowContext?.property_name ??
+      data.property_name ??
+      data.propertyName ??
+      data.search ??
+      data.item_name,
+    );
 
     if (!check_in || !check_out) {
       return {
@@ -280,7 +287,22 @@ export class HospitalityFlowService {
 
     const services = businessId
       ? await this.prisma.catalog_items.findMany({
-        where: { business_id: businessId, is_active: true, deleted_at: null, item_type: 'accommodation' },
+        where: {
+          business_id: businessId,
+          is_active: true,
+          deleted_at: null,
+          item_type: 'accommodation',
+          ...(propertySearch
+            ? {
+                OR: [
+                  { name: { contains: propertySearch, mode: 'insensitive' } },
+                  { description: { contains: propertySearch, mode: 'insensitive' } },
+                  { category: { contains: propertySearch, mode: 'insensitive' } },
+                  { ai_tags: { has: propertySearch.toLowerCase() } },
+                ],
+              }
+            : {}),
+        },
         select: { item_id: true, name: true, base_price: true, description: true, image_urls: true },
       })
       : [];
@@ -339,7 +361,9 @@ export class HospitalityFlowService {
       return {
         screen: 'SELECT_DATES',
         data: {
-          error_message: 'No rooms available for the selected dates.',
+          error_message: propertySearch
+            ? `No available rooms found for "${propertySearch}" on the selected dates.`
+            : 'No rooms available for the selected dates.',
           has_error: true,
         },
       };
@@ -369,6 +393,10 @@ export class HospitalityFlowService {
 
     this.logger.log(`Order/booking created: ${response.legacy_order_id}`);
     return this.successResponse(response);
+  }
+
+  private nonEmptyString(value: unknown): string | null {
+    return typeof value === 'string' && value.trim().length > 0 ? value.trim() : null;
   }
 
   private fetchImageAsBase64(url: string, maxBytes = Infinity): Promise<string> {

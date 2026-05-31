@@ -22,6 +22,7 @@ export class WhatsAppStatusCommandService {
     try {
       const messageId = status.id;
       const statusType = status.status;
+      const messageIds = this.extractStatusMessageIds(status);
 
       this.logger.log(
         `Message ${messageId} status: ${statusType} recipient=${status.recipient_id ?? 'unknown'} phoneNumberId=${metadata?.phone_number_id ?? 'unknown'}`,
@@ -48,24 +49,49 @@ export class WhatsAppStatusCommandService {
         updateData.failed_reason = status.errors?.[0]?.message || 'Unknown error';
       }
 
-      await this.conversationService.updateMessageStatus(messageId, updateData);
+      for (const id of messageIds) {
+        await this.conversationService.updateMessageStatus(id, updateData);
+      }
 
       if (status.errors && status.errors.length > 0) {
         this.logger.error(`Message ${messageId} failed:`, status.errors);
       }
 
-      const msg = await this.conversationService.findMessageByPlatformId(messageId);
+      const msg = await this.findFirstMessageByPlatformIds(messageIds);
       if (msg) {
         const conv = await this.conversationService.findConversationById(msg.conversation_id);
         if (conv) {
-          this.inboxGateway.notifyStatusUpdate(conv.business_id, conv.conversation_id, messageId, statusType);
+          this.inboxGateway.notifyStatusUpdate(conv.business_id, conv.conversation_id, msg.platform_message_id ?? messageId, statusType);
         }
+      } else {
+        this.logger.warn(
+          `[MessageDelivery] No persisted message matched status=${statusType} ids=${messageIds.join(',') || 'none'}`,
+        );
       }
 
       await this.updateCampaignRecipientStatus(messageId, statusType, timestamp, status.errors, status, metadata);
     } catch (error) {
       this.logger.error('Error processing status webhook:', error);
     }
+  }
+
+  private extractStatusMessageIds(status: any): string[] {
+    return Array.from(new Set([
+      status?.id,
+      status?.gsId,
+      status?.gs_id,
+      status?.meta_msg_id,
+      status?.messageId,
+      status?.message_id,
+    ].filter((id): id is string => typeof id === 'string' && id.length > 0)));
+  }
+
+  private async findFirstMessageByPlatformIds(messageIds: string[]) {
+    for (const id of messageIds) {
+      const message = await this.conversationService.findMessageByPlatformId(id);
+      if (message) return message;
+    }
+    return null;
   }
 
   async handleGupshupMessageEvent(event: any): Promise<void> {

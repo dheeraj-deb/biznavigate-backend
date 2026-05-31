@@ -186,7 +186,7 @@ export class WhatsAppService {
       type: SendMessageType.TEXT,
       text: { body: text },
     });
-    const platformMessageId = apiResult?.messages?.[0]?.id;
+    const platformMessageId = this.extractProviderMessageId(apiResult);
 
     // If caller didn't supply a context, derive one so persistence still happens.
     let resolvedCtx = ctx;
@@ -254,6 +254,22 @@ export class WhatsAppService {
     return this.statusCommandService.handleGupshupMessageEvent(event);
   }
 
+  private extractProviderMessageId(result: any): string | null {
+    const candidates = [
+      result?.messages?.[0]?.id,
+      result?.messageId,
+      result?.message_id,
+      result?.id,
+      result?.gsId,
+      result?.gs_id,
+      result?.data?.messages?.[0]?.id,
+      result?.data?.messageId,
+      result?.data?.id,
+    ];
+
+    return candidates.find((value) => typeof value === 'string' && value.length > 0) ?? null;
+  }
+
   /**
    * Send message via WhatsApp
    */
@@ -286,7 +302,7 @@ export class WhatsAppService {
       });
 
       // Extract message ID from WhatsApp API response (format: { messages: [{id: "wamid..."}] })
-      const platformMessageId = result?.messages?.[0]?.id;
+      const platformMessageId = this.extractProviderMessageId(result);
 
       await this.outboundCommandService.persistSentMessage({
         account,

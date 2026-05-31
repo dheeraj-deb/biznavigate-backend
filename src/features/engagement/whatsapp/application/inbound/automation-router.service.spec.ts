@@ -1,7 +1,7 @@
 import { getRedis } from '../../../../../utils/redis';
 import { AutomationRouter } from './automation-router.service';
 
-jest.mock('../../../../utils/redis', () => ({
+jest.mock('../../../../../utils/redis', () => ({
   getRedis: jest.fn(),
 }));
 

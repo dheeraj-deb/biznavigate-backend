@@ -78,7 +78,6 @@ export class WhatsAppController {
     return {
       hasVerifyToken: !!process.env.FACEBOOK_WEBHOOK_VERIFY_TOKEN,
       verifyTokenLength: process.env.FACEBOOK_WEBHOOK_VERIFY_TOKEN?.length || 0,
-      verifyTokenValue: process.env.FACEBOOK_WEBHOOK_VERIFY_TOKEN,
       hasAppId: !!process.env.FACEBOOK_APP_ID,
       hasAppSecret: !!process.env.FACEBOOK_APP_SECRET,
     };
