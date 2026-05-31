@@ -340,6 +340,14 @@ export class CatalogService {
     };
     if (item_type) where.item_type = item_type;
     if (budget_max) where.base_price = { lte: budget_max };
+    if (search && item_type !== 'physical_product' && item_type !== 'vehicle') {
+      where.OR = [
+        { name: { contains: search, mode: 'insensitive' } },
+        { description: { contains: search, mode: 'insensitive' } },
+        { category: { contains: search, mode: 'insensitive' } },
+        { ai_tags: { has: search.toLowerCase() } },
+      ];
+    }
 
     // For vehicle — filtered search against extension table
     if (item_type === 'vehicle') {

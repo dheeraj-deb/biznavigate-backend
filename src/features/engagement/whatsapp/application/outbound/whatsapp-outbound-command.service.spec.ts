@@ -20,7 +20,7 @@ describe('WhatsAppOutboundCommandService', () => {
     return { conversationService, inboxGateway };
   }
 
-  it('does nothing when provider did not return a platform message id', async () => {
+  it('persists a local message id when provider did not return a platform message id', async () => {
     const mocks = buildMocks();
     const service = new WhatsAppOutboundCommandService(mocks.conversationService as any, mocks.inboxGateway as any);
 
@@ -33,8 +33,20 @@ describe('WhatsAppOutboundCommandService', () => {
       platform_message_id: null,
     });
 
-    expect(mocks.conversationService.createMessage).not.toHaveBeenCalled();
-    expect(mocks.inboxGateway.notifyNewMessage).not.toHaveBeenCalled();
+    expect(mocks.conversationService.createMessage).toHaveBeenCalledWith(
+      expect.objectContaining({
+        platform_message_id: expect.stringMatching(/^local_/),
+        message_text: 'Hello',
+      }),
+    );
+    expect(mocks.inboxGateway.notifyNewMessage).toHaveBeenCalledWith(
+      businessId,
+      conversationId,
+      expect.objectContaining({
+        platform_message_id: expect.stringMatching(/^local_/),
+        message_text: 'Hello',
+      }),
+    );
   });
 
   it('finds an active conversation, stores outbound message, and publishes inbox updates', async () => {

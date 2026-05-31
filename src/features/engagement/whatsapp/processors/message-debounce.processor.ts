@@ -198,8 +198,11 @@ export class MessageDebounceProcessor extends WorkerHost {
       return;
     }
 
-    // Plain text reply — split into natural multi-message chunks and send with pacing
-    const chunks = await this.acknowledgmentService.splitIntoChunks(reply);
+    // Plain text reply. Keep production replies single-message by default so
+    // hotel guests do not receive several bot messages for one intent.
+    const chunks = this.shouldSplitAiReplies()
+      ? await this.acknowledgmentService.splitIntoChunks(reply)
+      : [reply];
     const replyCtx = {
       conversationId: lastPayload.context?.conversation_id ?? conversationId,
       leadId: lastPayload.lead_id,
@@ -302,9 +305,9 @@ export class MessageDebounceProcessor extends WorkerHost {
     const { flowType } = flow!;
 
     if (flowType === 'availability') {
-      const { businessId, checkIn, checkOut } = flow as any;
+      const { businessId, checkIn, checkOut, propertyName } = flow as any;
       const screenResult = await this.hospitalityFlowService.checkAvailability(
-        { check_in: checkIn, check_out: checkOut },
+        { check_in: checkIn, check_out: checkOut, property_name: propertyName },
         '',
         businessId,
       );
@@ -1069,5 +1072,9 @@ export class MessageDebounceProcessor extends WorkerHost {
 
   private languageCacheKey(conversationId: string): string {
     return `agent:conversation_language:${conversationId}`;
+  }
+
+  private shouldSplitAiReplies(): boolean {
+    return String(process.env.AI_REPLY_SPLIT_ENABLED ?? '').toLowerCase() === 'true';
   }
 }

@@ -71,7 +71,11 @@ describe('HospitalityFlowService booking idempotency', () => {
       lead_events: {
         create: jest.fn(),
       },
-      $executeRaw: jest.fn().mockResolvedValue(bookedDateCount),
+      $queryRaw: jest.fn().mockResolvedValue(
+        Array.from({ length: bookedDateCount }, (_, index) => ({
+          date: new Date(`2026-06-0${index + 1}T00:00:00.000Z`),
+        })),
+      ),
     };
 
     const prisma = {
@@ -93,9 +97,17 @@ describe('HospitalityFlowService booking idempotency', () => {
     return prisma;
   }
 
+  function buildBookingCommandService(prisma: any) {
+    return new HospitalityBookingCommandService(
+      prisma,
+      { autoAdvance: jest.fn().mockResolvedValue({ moved: false }) } as any,
+      { emit: jest.fn() } as any,
+    );
+  }
+
   it('creates one booking and records the completed idempotency response', async () => {
     const prisma = buildPrismaMock();
-    const bookingCommandService = new HospitalityBookingCommandService(prisma as any, { autoAdvance: jest.fn().mockResolvedValue({ moved: false }) } as any);
+    const bookingCommandService = buildBookingCommandService(prisma as any);
     const service = new HospitalityFlowService(prisma as any, {} as any, bookingCommandService);
 
     const result = await service.handleDataExchange('BOOKING_DETAILS', bookingData, '', businessId);
@@ -112,7 +124,7 @@ describe('HospitalityFlowService booking idempotency', () => {
         }),
       }),
     );
-    expect(prisma.__tx.$executeRaw).toHaveBeenCalledTimes(1);
+    expect(prisma.__tx.$queryRaw).toHaveBeenCalledTimes(1);
     expect(prisma.__tx.orders.create).toHaveBeenCalledTimes(1);
     expect(prisma.__tx.hospitality_bookings.create).toHaveBeenCalledTimes(1);
     expect(prisma.__tx.workflow_idempotency_keys.update).toHaveBeenCalledWith(
@@ -142,7 +154,7 @@ describe('HospitalityFlowService booking idempotency', () => {
       idempotency_key: 'hospitality_booking:existing',
     };
     const prisma = buildPrismaMock({ status: 'completed', response });
-    const bookingCommandService = new HospitalityBookingCommandService(prisma as any, { autoAdvance: jest.fn().mockResolvedValue({ moved: false }) } as any);
+    const bookingCommandService = buildBookingCommandService(prisma as any);
     const service = new HospitalityFlowService(prisma as any, {} as any, bookingCommandService);
 
     const result = await service.handleDataExchange('BOOKING_DETAILS', bookingData, '', businessId);
@@ -156,7 +168,7 @@ describe('HospitalityFlowService booking idempotency', () => {
       status: 'started',
       locked_until: new Date(Date.now() + 60_000),
     });
-    const bookingCommandService = new HospitalityBookingCommandService(prisma as any, { autoAdvance: jest.fn().mockResolvedValue({ moved: false }) } as any);
+    const bookingCommandService = buildBookingCommandService(prisma as any);
     const service = new HospitalityFlowService(prisma as any, {} as any, bookingCommandService);
 
     await expect(
@@ -168,14 +180,14 @@ describe('HospitalityFlowService booking idempotency', () => {
 
   it('fails before creating booking rows when availability cannot be reserved for every night', async () => {
     const prisma = buildPrismaMock(null, 1);
-    const bookingCommandService = new HospitalityBookingCommandService(prisma as any, { autoAdvance: jest.fn().mockResolvedValue({ moved: false }) } as any);
+    const bookingCommandService = buildBookingCommandService(prisma as any);
     const service = new HospitalityFlowService(prisma as any, {} as any, bookingCommandService);
 
     await expect(
       service.handleDataExchange('BOOKING_DETAILS', bookingData, '', businessId),
     ).rejects.toBeInstanceOf(ConflictException);
 
-    expect(prisma.__tx.$executeRaw).toHaveBeenCalledTimes(1);
+    expect(prisma.__tx.$queryRaw).toHaveBeenCalledTimes(1);
     expect(prisma.__tx.orders.create).not.toHaveBeenCalled();
     expect(prisma.__tx.hospitality_bookings.create).not.toHaveBeenCalled();
     expect(prisma.__tx.workflow_idempotency_keys.update).not.toHaveBeenCalledWith(
@@ -191,5 +203,75 @@ describe('HospitalityFlowService booking idempotency', () => {
         updated_at: expect.any(Date),
       }),
     });
+  });
+});
+
+describe('HospitalityFlowService availability filtering', () => {
+  const businessId = '00000000-0000-0000-0000-000000000001';
+
+  function buildService(items: any[], availabilityByItem: Record<string, any[]>) {
+    const prisma = {
+      catalog_items: {
+        findMany: jest.fn().mockResolvedValue(items),
+      },
+    };
+    const catalogService = {
+      getAvailability: jest.fn((itemId: string) => Promise.resolve(availabilityByItem[itemId] ?? [])),
+    };
+    const service = new HospitalityFlowService(prisma as any, catalogService as any, {} as any);
+    return { service, prisma, catalogService };
+  }
+
+  const availableRow = { available_slots: 1, is_blocked: false, price: null };
+  const fullRow = { available_slots: 0, is_blocked: false, price: null };
+
+  it('filters accommodation items by named property before checking availability', async () => {
+    const { service, prisma } = buildService(
+      [{ item_id: 'beach-room', name: 'Beach Resort Deluxe', base_price: 2500, image_urls: [] }],
+      { 'beach-room': [availableRow] },
+    );
+
+    const result = await service.checkAvailability(
+      { check_in: '2026-06-10', check_out: '2026-06-11', property_name: 'Beach Resort' },
+      '',
+      businessId,
+    );
+
+    expect(prisma.catalog_items.findMany).toHaveBeenCalledWith(
+      expect.objectContaining({
+        where: expect.objectContaining({
+          business_id: businessId,
+          item_type: 'accommodation',
+          OR: expect.arrayContaining([
+            { name: { contains: 'Beach Resort', mode: 'insensitive' } },
+          ]),
+        }),
+      }),
+    );
+    expect(result.screen).toBe('AVAILABILITY_RESULT');
+    expect(result.data.available_services).toHaveLength(1);
+    expect(result.data.available_services[0].id).toBe('beach-room');
+  });
+
+  it('hides fully booked items and returns only available rooms/properties', async () => {
+    const { service } = buildService(
+      [
+        { item_id: 'aslam-room', name: 'Aslam Resort Deluxe', base_price: 2000, image_urls: [] },
+        { item_id: 'beach-room', name: 'Beach Resort Standard', base_price: 2500, image_urls: [] },
+      ],
+      {
+        'aslam-room': [fullRow],
+        'beach-room': [availableRow],
+      },
+    );
+
+    const result = await service.checkAvailability(
+      { check_in: '2026-06-10', check_out: '2026-06-11' },
+      '',
+      businessId,
+    );
+
+    expect(result.screen).toBe('AVAILABILITY_RESULT');
+    expect(result.data.available_services.map((item: any) => item.id)).toEqual(['beach-room']);
   });
 });

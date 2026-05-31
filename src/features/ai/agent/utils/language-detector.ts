@@ -89,15 +89,6 @@ export function detectCustomerLanguage(text: string, previousLanguage?: Customer
     };
   }
 
-  if (previousLanguage && top.score < 5) {
-    return {
-      language: previousLanguage,
-      confidence: 0.65,
-      source: 'previous',
-      scores: romanizedScores,
-    };
-  }
-
   const englishScore = scoreEnglish(normalized);
   if (englishScore > 0 && top.score < 3) {
     return {
@@ -105,6 +96,15 @@ export function detectCustomerLanguage(text: string, previousLanguage?: Customer
       confidence: 0.75,
       source: 'romanized',
       scores: { ...romanizedScores, english: englishScore },
+    };
+  }
+
+  if (previousLanguage && top.score < 5) {
+    return {
+      language: previousLanguage,
+      confidence: 0.65,
+      source: 'previous',
+      scores: romanizedScores,
     };
   }
 

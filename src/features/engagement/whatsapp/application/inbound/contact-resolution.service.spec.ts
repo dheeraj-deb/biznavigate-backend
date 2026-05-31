@@ -21,16 +21,27 @@ describe('ContactResolutionService', () => {
         findFirst: jest.fn().mockResolvedValue(customer),
         create: jest.fn().mockResolvedValue({ customer_id: 'customer-created' }),
       },
+      pipelines: {
+        findFirst: jest.fn().mockResolvedValue(null),
+      },
       leads: {
         findFirst: jest.fn().mockResolvedValue(lead),
+        update: jest.fn().mockImplementation(({ data }) => Promise.resolve({ ...lead, ...data })),
         create: jest.fn().mockResolvedValue({ lead_id: leadId, name: 'Dheeraj', status: 'new', phone: '919999999999' }),
       },
     };
   }
 
+  function buildService(prisma: any) {
+    return new ContactResolutionService(
+      prisma,
+      { normalize: jest.fn().mockResolvedValue('919999999999') } as any,
+    );
+  }
+
   it('resolves account, existing customer, and existing lead scoped to business', async () => {
     const prisma = buildPrismaMock();
-    const service = new ContactResolutionService(prisma as any);
+    const service = buildService(prisma as any);
 
     const result = await service.resolveForInboundMessage({
       phone_number_id: 'phone-number-id',
@@ -47,7 +58,7 @@ describe('ContactResolutionService', () => {
       select: { customer_id: true },
     });
     expect(prisma.leads.findFirst).toHaveBeenCalledWith({
-      where: { business_id: businessId, platform_id: '919999999999', deleted_at: null },
+      where: { business_id: businessId, phone: '919999999999', deleted_at: null },
     });
     expect(prisma.customers.create).not.toHaveBeenCalled();
     expect(prisma.leads.create).not.toHaveBeenCalled();
@@ -59,7 +70,7 @@ describe('ContactResolutionService', () => {
 
   it('creates missing customer and lead using account business and tenant', async () => {
     const prisma = buildPrismaMock({ customer: null, lead: null });
-    const service = new ContactResolutionService(prisma as any);
+    const service = buildService(prisma as any);
 
     const result = await service.resolveForInboundMessage({
       phone_number_id: 'phone-number-id',
@@ -89,7 +100,7 @@ describe('ContactResolutionService', () => {
 
   it('returns null when no active account exists', async () => {
     const prisma = buildPrismaMock({ account: null });
-    const service = new ContactResolutionService(prisma as any);
+    const service = buildService(prisma as any);
 
     const result = await service.resolveForInboundMessage({
       phone_number_id: 'missing-phone-number-id',

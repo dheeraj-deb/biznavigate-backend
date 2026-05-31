@@ -41,6 +41,7 @@ describe('ConversationCommandService', () => {
       createConversation: jest.fn().mockResolvedValue({ conversation_id: conversationId }),
       createMessage: jest.fn().mockResolvedValue({ _id: { toString: () => 'mongo-message-id' } }),
       touchConversation: jest.fn().mockResolvedValue(undefined),
+      markInbound: jest.fn().mockResolvedValue(undefined),
       findConversationById: jest.fn().mockResolvedValue(mongoConversation),
     };
     const inboxGateway = {
@@ -50,18 +51,26 @@ describe('ConversationCommandService', () => {
     const humanHandoffGateway = {
       notifyCustomerMessage: jest.fn(),
     };
+    const messageWindow = {
+      invalidate: jest.fn(),
+    };
 
-    return { prisma, conversationService, inboxGateway, humanHandoffGateway };
+    return { prisma, conversationService, inboxGateway, humanHandoffGateway, messageWindow };
   }
 
-  it('skips duplicate platform messages', async () => {
-    const mocks = buildMocks({ existingMessage: { _id: 'existing' } });
-    const service = new ConversationCommandService(
+  function buildService(mocks: ReturnType<typeof buildMocks>) {
+    return new ConversationCommandService(
       mocks.prisma as any,
       mocks.conversationService as any,
       mocks.inboxGateway as any,
       mocks.humanHandoffGateway as any,
+      mocks.messageWindow as any,
     );
+  }
+
+  it('skips duplicate platform messages', async () => {
+    const mocks = buildMocks({ existingMessage: { _id: 'existing' } });
+    const service = buildService(mocks);
 
     const result = await service.persistInboundMessage({
       account,
@@ -77,12 +86,7 @@ describe('ConversationCommandService', () => {
 
   it('creates a conversation when none exists and stores inbound message with tenant scope', async () => {
     const mocks = buildMocks({ activeConversation: null });
-    const service = new ConversationCommandService(
-      mocks.prisma as any,
-      mocks.conversationService as any,
-      mocks.inboxGateway as any,
-      mocks.humanHandoffGateway as any,
-    );
+    const service = buildService(mocks);
 
     const result = await service.persistInboundMessage({
       account,
@@ -126,12 +130,7 @@ describe('ConversationCommandService', () => {
     const mocks = buildMocks({
       mongoConversation: { conversation_id: conversationId, is_ai: false, status: 'handed_off' },
     });
-    const service = new ConversationCommandService(
-      mocks.prisma as any,
-      mocks.conversationService as any,
-      mocks.inboxGateway as any,
-      mocks.humanHandoffGateway as any,
-    );
+    const service = buildService(mocks);
 
     await service.persistInboundMessage({
       account,
