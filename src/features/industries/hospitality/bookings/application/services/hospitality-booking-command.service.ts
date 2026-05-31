@@ -16,6 +16,7 @@ export interface CreateHospitalityBookingCommand {
   num_guests?: number | string;
   age?: number | string;
   address?: string;
+  notes?: string;
   pin_code?: string;
   flow_token?: string;
   source?: string;
@@ -270,6 +271,14 @@ export class HospitalityBookingCommandService {
         });
 
         if (leadId) {
+          const existingLead = await tx.leads.findUnique({
+            where: { lead_id: leadId },
+            select: { context: true },
+          });
+          const existingContext = existingLead?.context && typeof existingLead.context === 'object'
+            ? existingLead.context as Record<string, any>
+            : {};
+
           await tx.hospitality_inquiries.create({
             data: {
               business_id: businessId,
@@ -286,7 +295,25 @@ export class HospitalityBookingCommandService {
 
           await tx.leads.update({
             where: { lead_id: leadId },
-            data: { status: 'booked', updated_at: new Date() },
+            data: {
+              status: 'booked',
+              converted_value: totalAmount,
+              converted_at: new Date(),
+              context: {
+                ...existingContext,
+                type: existingContext.type ?? 'resort',
+                item_id: serviceId,
+                item_name: catalogItem.name ?? null,
+                property_name: existingContext.property_name ?? catalogItem.name ?? null,
+                check_in: checkIn,
+                check_out: checkOut,
+                guests,
+                guest_count: guests,
+                nights,
+                special_requests: existingContext.special_requests ?? command.notes ?? null,
+              },
+              updated_at: new Date(),
+            },
           });
           await tx.lead_events.create({
             data: {

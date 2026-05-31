@@ -328,7 +328,17 @@ export class MessageDebounceProcessor extends WorkerHost {
         screenResult.screen === 'AVAILABILITY_RESULT' &&
         bookingMethods.availability_response.mode === 'website_link'
       ) {
-        const bookingLink = await this.buildPublicBookingLink(businessId, { checkIn, checkOut });
+        await this.saveAvailabilityLeadContext(lastPayload.lead_id, screenResult, {
+          checkIn,
+          checkOut,
+          propertyName,
+        });
+        const bookingLink = await this.buildPublicBookingLink(businessId, {
+          checkIn,
+          checkOut,
+          leadId: lastPayload.lead_id,
+          itemId: this.singleAvailableServiceId(screenResult),
+        });
         if (bookingLink) {
           await this.whatsappService.sendAgentReply(
             ctx.businessId,
@@ -979,7 +989,7 @@ export class MessageDebounceProcessor extends WorkerHost {
 
   private async buildPublicBookingLink(
     businessId: string,
-    params: { checkIn?: string; checkOut?: string; guests?: number; itemId?: string },
+    params: { checkIn?: string; checkOut?: string; guests?: number; itemId?: string; leadId?: string },
   ): Promise<string | null> {
     const business = await (this.prisma.businesses as any).findUnique({
       where: { business_id: businessId },
@@ -1004,7 +1014,44 @@ export class MessageDebounceProcessor extends WorkerHost {
     if (params.checkOut) url.searchParams.set('checkOut', params.checkOut);
     if (params.guests) url.searchParams.set('guests', String(params.guests));
     if (params.itemId) url.searchParams.set('itemId', params.itemId);
+    if (params.leadId) url.searchParams.set('leadId', params.leadId);
     return url.toString();
+  }
+
+  private singleAvailableServiceId(screenResult: any): string | undefined {
+    const services = screenResult?.data?.available_services;
+    return Array.isArray(services) && services.length === 1 ? services[0]?.id : undefined;
+  }
+
+  private async saveAvailabilityLeadContext(
+    leadId: string | undefined,
+    screenResult: any,
+    params: { checkIn?: string; checkOut?: string; propertyName?: string },
+  ): Promise<void> {
+    if (!leadId) return;
+
+    const firstService = screenResult?.data?.available_services?.[0];
+    const itemName = firstService?.['main-content']?.title ?? params.propertyName ?? null;
+
+    await this.prisma.leads.update({
+      where: { lead_id: leadId },
+      data: {
+        context: {
+          type: 'resort',
+          check_in: params.checkIn ?? null,
+          check_out: params.checkOut ?? null,
+          guest_count: null,
+          guests: null,
+          item_name: itemName,
+          property_name: params.propertyName ?? itemName,
+          room_preference: null,
+          special_requests: null,
+        } as any,
+        updated_at: new Date(),
+      },
+    }).catch((err) => {
+      this.logger.warn(`Failed to save availability context for lead ${leadId}: ${err.message}`);
+    });
   }
 
   private localizedMessage(
