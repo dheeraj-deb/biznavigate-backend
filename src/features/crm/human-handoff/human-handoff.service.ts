@@ -116,6 +116,15 @@ export class HumanHandoffService {
             throw new NotFoundException('Conversation not found');
         }
 
+        const business = await this.prisma.businesses.findUnique({
+            where: { business_id: businessId },
+            select: { tenant_id: true },
+        });
+        const tenantId = conversation.tenant_id ?? business?.tenant_id;
+        if (!tenantId) {
+            throw new BadRequestException('Conversation is missing tenant context');
+        }
+
         const account = await this.prisma.social_accounts.findFirst({
             where: { business_id: businessId, platform: 'whatsapp', is_active: true },
         });
@@ -125,7 +134,16 @@ export class HumanHandoffService {
         }
 
         const phoneNumberId = account.page_id;
-        const to = conversation.customer_id;
+        const lead = conversation.lead_id
+            ? await this.prisma.leads.findUnique({
+                where: { lead_id: conversation.lead_id },
+                select: { phone: true },
+            })
+            : null;
+        const to = lead?.phone ?? conversation.customer_id ?? conversation.platform_id;
+        if (!to) {
+            throw new BadRequestException('Conversation has no recipient phone number');
+        }
 
         const apiResult = await this.whatsappService.sendMessage(phoneNumberId, to, {
             messaging_product: 'whatsapp',
@@ -141,7 +159,7 @@ export class HumanHandoffService {
             conversation_id: conversationId,
             lead_id: conversation.lead_id,
             business_id: businessId,
-            tenant_id: conversation.tenant_id,
+            tenant_id: tenantId,
             sender_type: 'business',
             sender_id: phoneNumberId,
             sender_name: 'Agent',
