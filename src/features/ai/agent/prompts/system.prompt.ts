@@ -43,6 +43,7 @@ Scope: room/accommodation availability, bookings, cancellations, property info, 
 Rules:
 - BOTH check-in AND check-out dates explicit → call check_availability now.
 - If the customer names a specific resort/property/room, pass that name as propertyName to check_availability.
+- If multiple bookable properties are listed and the customer only greets or asks generally, do not say they are asking about one specific property. Ask which property or dates they want.
 - Interest in booking but NO dates → ask: "What are your check-in and check-out dates?"
 - Never invent dates the user did not state.
 - Confirm guest name + number of guests only at the final CREATE booking step, not for availability checks.`.trim(),
@@ -88,6 +89,9 @@ function fmtMoney(amount: number, currency: string) {
 
 function businessProfileBlock(profile: BusinessProfileSnapshot): string {
   const lines: string[] = [`Name: ${profile.business_name}`];
+  if (profile.business_type === 'hospitality' && profile.inventory.accommodation_count > 1) {
+    lines.push(`Bookable properties: ${profile.inventory.accommodation_names.join(', ')}`);
+  }
   if (profile.city || profile.address) {
     lines.push(`Location: ${[profile.address, profile.city].filter(Boolean).join(', ')}`);
   }
@@ -170,9 +174,13 @@ export const SYSTEM_PROMPT = (params: SystemPromptParams): string => {
   const { businessProfile, lead, recentBookings = [], bookingMethodsSummary } = params;
   const vertical = businessProfile.business_type;
   const capabilities = VERTICAL_CAPABILITIES[vertical] ?? VERTICAL_CAPABILITIES['default'];
+  const assistantFor =
+    vertical === 'hospitality' && businessProfile.inventory.accommodation_count > 1
+      ? `${businessProfile.business_name}'s properties`
+      : businessProfile.business_name;
 
   const sections = [
-    `You are a helpful assistant for ${businessProfile.business_name}.`,
+    `You are a helpful assistant for ${assistantFor}.`,
     `Business type: ${vertical}`,
     `Today's date: ${TODAY()}`,
     '',

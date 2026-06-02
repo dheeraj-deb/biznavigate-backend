@@ -393,7 +393,6 @@ export class PublicBookingService {
       notes: customer.notes ?? body.notes,
       source: 'public_booking_link',
       actor: 'customer',
-      idempotency_key: `public_booking:${randomUUID()}`,
     });
 
     return {

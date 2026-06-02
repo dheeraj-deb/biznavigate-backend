@@ -354,6 +354,374 @@ export class LeadQueryService {
     });
   }
 
+  async getResortWorklist(businessId: string, days = 14) {
+    const safeDays = Math.max(1, Math.min(90, Number(days) || 14));
+    const demandCutoff = new Date(Date.now() - safeDays * 24 * 60 * 60 * 1000);
+    const bookingWindowEnd = new Date();
+    bookingWindowEnd.setDate(bookingWindowEnd.getDate() + safeDays);
+
+    const [bookingLinkSent, demandMissed, upcomingBookings, propertyOptions] = await Promise.all([
+      this.prisma.$queryRaw<any[]>`
+        SELECT
+          l.lead_id,
+          l.name,
+          l.phone,
+          l.channel,
+          l.source,
+          l.status,
+          l.context,
+          l.updated_at,
+          l.context->>'property_name' AS property_name,
+          l.context->>'item_name' AS item_name,
+          l.context->>'check_in' AS check_in,
+          l.context->>'check_out' AS check_out
+        FROM leads l
+        LEFT JOIN hospitality_bookings hb
+          ON hb.lead_id = l.lead_id
+          AND hb.status NOT IN ('cancelled', 'canceled')
+        WHERE l.business_id = ${businessId}::uuid
+          AND l.deleted_at IS NULL
+          AND hb.hospitality_booking_id IS NULL
+          AND l.status NOT IN ('booked', 'won', 'converted', 'lost', 'cancelled', 'canceled')
+          AND l.context->>'check_in' IS NOT NULL
+          AND l.context->>'check_out' IS NOT NULL
+          AND (
+            l.context->>'item_id' IS NOT NULL
+            OR l.context->>'item_name' IS NOT NULL
+            OR l.context->>'property_name' IS NOT NULL
+          )
+        ORDER BY l.updated_at DESC
+        LIMIT 20
+      `,
+      this.prisma.$queryRaw<any[]>`
+        SELECT
+          le.event_id,
+          le.lead_id,
+          l.name,
+          l.phone,
+          le.data,
+          le.created_at,
+          COALESCE(le.data->>'service_name', le.data->>'property_name', le.data->>'item_name') AS property_name,
+          le.data->>'check_in' AS check_in,
+          le.data->>'check_out' AS check_out
+        FROM lead_events le
+        LEFT JOIN leads l ON l.lead_id = le.lead_id
+        WHERE le.business_id = ${businessId}::uuid
+          AND le.type = 'demand_miss'
+          AND le.created_at > ${demandCutoff}
+        ORDER BY le.created_at DESC
+        LIMIT 20
+      `,
+      this.prisma.$queryRaw<any[]>`
+        SELECT
+          hb.hospitality_booking_id,
+          hb.booking_number,
+          hb.status,
+          hb.payment_status,
+          hb.check_in,
+          hb.check_out,
+          hb.guests,
+          hb.total_amount,
+          hb.created_at,
+          l.name AS guest_name,
+          l.phone,
+          hbi.item_id,
+          hbi.item_name
+        FROM hospitality_bookings hb
+        LEFT JOIN leads l ON l.lead_id = hb.lead_id
+        LEFT JOIN hospitality_booking_items hbi ON hbi.hospitality_booking_id = hb.hospitality_booking_id
+        WHERE hb.business_id = ${businessId}::uuid
+          AND hb.status NOT IN ('cancelled', 'canceled')
+          AND hb.check_in >= CURRENT_DATE
+          AND hb.check_in < ${bookingWindowEnd}
+        ORDER BY hb.check_in ASC, hb.created_at DESC
+        LIMIT 20
+      `,
+      this.prisma.catalog_items.findMany({
+        where: {
+          business_id: businessId,
+          item_type: 'accommodation',
+          is_active: true,
+          deleted_at: null,
+        },
+        select: { item_id: true, name: true },
+        orderBy: { name: 'asc' },
+      }),
+    ]);
+
+    return {
+      data: {
+        booking_link_sent: bookingLinkSent,
+        demand_missed: demandMissed,
+        upcoming_bookings: upcomingBookings,
+        property_options: propertyOptions,
+        counts: {
+          booking_link_sent: bookingLinkSent.length,
+          demand_missed: demandMissed.length,
+          upcoming_bookings: upcomingBookings.length,
+        },
+      },
+    };
+  }
+
+  async getResortReminderReadiness(businessId: string, days = 14) {
+    const safeDays = Math.max(1, Math.min(30, Number(days) || 14));
+    const since = new Date(Date.now() - safeDays * 24 * 60 * 60 * 1000);
+
+    const leads = await this.prisma.leads.findMany({
+      where: {
+        business_id: businessId,
+        deleted_at: null,
+        updated_at: { gte: since },
+        status: { notIn: ['booked', 'won', 'converted', 'lost', 'cancelled', 'canceled'] },
+      },
+      select: {
+        lead_id: true,
+        name: true,
+        phone: true,
+        status: true,
+        context: true,
+        updated_at: true,
+      },
+      orderBy: { updated_at: 'desc' },
+      take: 50,
+    });
+
+    const candidates = leads.filter((lead) => {
+      const ctx = (lead.context ?? {}) as any;
+      return Boolean(
+        this.contextDate(ctx, 'check_in') &&
+          this.contextDate(ctx, 'check_out') &&
+          (ctx.item_id || ctx.service_id || ctx.property_id || ctx.item_name || ctx.property_name || ctx.service_name),
+      );
+    });
+
+    const rows = await Promise.all(
+      candidates.map(async (lead) => {
+        const ctx = (lead.context ?? {}) as any;
+        const checkIn = this.contextDate(ctx, 'check_in');
+        const checkOut = this.contextDate(ctx, 'check_out');
+        const item = await this.resolveReminderItem(businessId, ctx);
+
+        if (!checkIn || !checkOut || !item) {
+          return this.reminderRow(lead, ctx, 'missing_details', 'Missing property or date details', null);
+        }
+
+        const availability = await this.checkAccommodationAvailability(item, checkIn, checkOut);
+        if (!availability.available) {
+          return this.reminderRow(lead, ctx, 'stopped', availability.reason, {
+            item_id: item.item_id,
+            item_name: item.name,
+            check_in: checkIn,
+            check_out: checkOut,
+            available_slots: availability.availableSlots,
+            checked_at: new Date().toISOString(),
+          });
+        }
+
+        return this.reminderRow(lead, ctx, 'ready', 'Available now. Safe to remind customer.', {
+          item_id: item.item_id,
+          item_name: item.name,
+          check_in: checkIn,
+          check_out: checkOut,
+          available_slots: availability.availableSlots,
+          checked_at: new Date().toISOString(),
+        });
+      }),
+    );
+
+    const ready = rows.filter((row) => row.readiness === 'ready');
+    const stopped = rows.filter((row) => row.readiness === 'stopped');
+    const missing = rows.filter((row) => row.readiness === 'missing_details');
+
+    return {
+      data: {
+        ready,
+        stopped,
+        missing_details: missing,
+        counts: {
+          ready: ready.length,
+          stopped: stopped.length,
+          missing_details: missing.length,
+          total: rows.length,
+        },
+        rule: 'Booking reminders are shown only after live occupancy is checked.',
+        checked_at: new Date().toISOString(),
+      },
+    };
+  }
+
+  async getAiManagerToday(businessId: string) {
+    const [reminders, worklist, needsAttention, conversations] = await Promise.all([
+      this.getResortReminderReadiness(businessId, 14),
+      this.getResortWorklist(businessId, 14),
+      this.getNeedsAttention(businessId, 10),
+      this.getOpenConversations(businessId, 20),
+    ]);
+
+    const reminderData = reminders.data;
+    const worklistData = worklist.data;
+    const waitingConversations = conversations.filter((conversation: any) =>
+      conversation.needs_attention ||
+      (conversation.unreadCount ?? 0) > 0 ||
+      conversation.status === 'waiting',
+    );
+
+    const suggestions: any[] = [];
+
+    if ((reminderData.counts.ready ?? 0) > 0) {
+      suggestions.push({
+        type: 'booking_reminder',
+        priority: 'high',
+        title: `Send ${reminderData.counts.ready} booking reminder${reminderData.counts.ready === 1 ? '' : 's'}`,
+        reason: 'These customers received booking links and rooms are still available for their selected dates.',
+        safety: 'Live occupancy checked',
+        status: 'needs_approval',
+        action_label: 'Review & send',
+        action_href: '/crm/leads',
+        count: reminderData.counts.ready,
+        data: reminderData.ready.slice(0, 5),
+      });
+    }
+
+    if ((reminderData.counts.stopped ?? 0) > 0) {
+      suggestions.push({
+        type: 'stop_reminder',
+        priority: 'high',
+        title: `${reminderData.counts.stopped} reminder${reminderData.counts.stopped === 1 ? '' : 's'} stopped`,
+        reason: 'Rooms are no longer available for those selected dates. Do not send a booking reminder.',
+        safety: 'Prevents wrong offers',
+        status: 'blocked',
+        action_label: 'Offer other dates',
+        action_href: '/crm/leads',
+        count: reminderData.counts.stopped,
+        data: reminderData.stopped.slice(0, 5),
+      });
+    }
+
+    if (waitingConversations.length > 0) {
+      suggestions.push({
+        type: 'reply_waiting',
+        priority: 'high',
+        title: `Reply to ${waitingConversations.length} waiting customer${waitingConversations.length === 1 ? '' : 's'}`,
+        reason: 'Fast replies improve booking conversion, especially for WhatsApp enquiries.',
+        safety: 'Owner can review conversation before replying',
+        status: 'needs_action',
+        action_label: 'Open inbox',
+        action_href: '/crm/inbox',
+        count: waitingConversations.length,
+        data: waitingConversations.slice(0, 5),
+      });
+    }
+
+    if (needsAttention.length > 0) {
+      suggestions.push({
+        type: 'follow_up',
+        priority: 'medium',
+        title: `Follow up ${needsAttention.length} warm lead${needsAttention.length === 1 ? '' : 's'}`,
+        reason: 'These enquiries are not booked yet and may need a call or WhatsApp reply.',
+        safety: 'No campaign is sent automatically',
+        status: 'needs_action',
+        action_label: 'Open follow-ups',
+        action_href: '/crm/leads',
+        count: needsAttention.length,
+        data: needsAttention.slice(0, 5),
+      });
+    }
+
+    if ((worklistData.counts.demand_missed ?? 0) > 0) {
+      suggestions.push({
+        type: 'alternate_dates',
+        priority: 'medium',
+        title: `Offer alternatives for ${worklistData.counts.demand_missed} unavailable date request${worklistData.counts.demand_missed === 1 ? '' : 's'}`,
+        reason: 'Customers asked for dates that were full. Offer another date or property instead of sending a normal campaign.',
+        safety: 'Avoids promoting unavailable rooms',
+        status: 'needs_approval',
+        action_label: 'Review dates',
+        action_href: '/crm/leads',
+        count: worklistData.counts.demand_missed,
+        data: worklistData.demand_missed.slice(0, 5),
+      });
+    }
+
+    if ((worklistData.counts.demand_missed ?? 0) >= 2) {
+      suggestions.push({
+        type: 'open_inventory',
+        priority: 'medium',
+        title: `Check if you can open rooms for ${worklistData.counts.demand_missed} missed request${worklistData.counts.demand_missed === 1 ? '' : 's'}`,
+        reason: 'Multiple customers asked for dates that were not available. The owner should decide whether to add another property, open blocked rooms or offer nearby dates.',
+        safety: 'No inventory is changed automatically',
+        status: 'recommended',
+        action_label: 'Manage inventory',
+        action_href: '/inventory/rooms',
+        count: worklistData.counts.demand_missed,
+        data: worklistData.demand_missed.slice(0, 5),
+      });
+    }
+
+    if ((worklistData.counts.booking_link_sent ?? 0) >= 3 && (reminderData.counts.ready ?? 0) > 0) {
+      suggestions.push({
+        type: 'price_review',
+        priority: 'low',
+        title: 'Review price before sending more links',
+        reason: 'Several customers are still interested and rooms are available. Check pricing once before sending more reminders.',
+        safety: 'AI only suggests. Owner must approve any price change.',
+        status: 'recommended',
+        action_label: 'Check inventory',
+        action_href: '/inventory/rooms',
+        count: worklistData.counts.booking_link_sent,
+        data: worklistData.booking_link_sent.slice(0, 5),
+      });
+    }
+
+    if ((worklistData.counts.upcoming_bookings ?? 0) > 0) {
+      suggestions.push({
+        type: 'prepare_checkins',
+        priority: 'low',
+        title: `Prepare ${worklistData.counts.upcoming_bookings} upcoming stay${worklistData.counts.upcoming_bookings === 1 ? '' : 's'}`,
+        reason: 'Guests with upcoming check-ins should be reviewed for payment, contact and room readiness.',
+        safety: 'Operational check only',
+        status: 'recommended',
+        action_label: 'View bookings',
+        action_href: '/inventory/bookings',
+        count: worklistData.counts.upcoming_bookings,
+        data: worklistData.upcoming_bookings.slice(0, 5),
+      });
+    }
+
+    if (suggestions.length === 0) {
+      suggestions.push({
+        type: 'all_clear',
+        priority: 'low',
+        title: 'No urgent action right now',
+        reason: 'No unsafe reminders, waiting conversations or urgent booking tasks were found.',
+        safety: 'Checked today',
+        status: 'ok',
+        action_label: 'Open dashboard',
+        action_href: '/dashboard',
+        count: 0,
+        data: [],
+      });
+    }
+
+    const priorityOrder: Record<string, number> = { high: 1, medium: 2, low: 3 };
+
+    return {
+      data: {
+        title: 'AI Resort Manager',
+        subtitle: 'What to do today to get bookings and avoid mistakes.',
+        checked_at: new Date().toISOString(),
+        suggestions: suggestions.sort((a, b) => (priorityOrder[a.priority] ?? 9) - (priorityOrder[b.priority] ?? 9)),
+        counts: {
+          total: suggestions.length,
+          high: suggestions.filter((s) => s.priority === 'high').length,
+          needs_approval: suggestions.filter((s) => s.status === 'needs_approval').length,
+          blocked: suggestions.filter((s) => s.status === 'blocked').length,
+        },
+      },
+    };
+  }
+
   async getConversationById(conversationId: string) {
     return this.conversationModel.findOne({ conversation_id: conversationId }).lean();
   }
@@ -376,6 +744,128 @@ export class LeadQueryService {
       .sort({ created_at: 1 })
       .limit(limit)
       .lean();
+  }
+
+  private contextDate(ctx: any, key: 'check_in' | 'check_out'): string | null {
+    const raw = ctx?.[key] ?? ctx?.[key.replace('_', '')];
+    if (!raw) return null;
+    const parsed = new Date(raw);
+    if (Number.isNaN(parsed.getTime())) return null;
+    return parsed.toISOString().slice(0, 10);
+  }
+
+  private async resolveReminderItem(businessId: string, ctx: any) {
+    const itemId = ctx?.item_id ?? ctx?.service_id ?? ctx?.property_id;
+    if (itemId) {
+      const item = await this.prisma.catalog_items.findFirst({
+        where: {
+          business_id: businessId,
+          item_id: itemId,
+          item_type: 'accommodation',
+          is_active: true,
+          deleted_at: null,
+        },
+        select: { item_id: true, name: true, base_price: true, attributes: true },
+      });
+      if (item) return item;
+    }
+
+    const name = String(ctx?.item_name ?? ctx?.property_name ?? ctx?.service_name ?? '').trim();
+    if (!name) return null;
+
+    return this.prisma.catalog_items.findFirst({
+      where: {
+        business_id: businessId,
+        item_type: 'accommodation',
+        is_active: true,
+        deleted_at: null,
+        name: { equals: name, mode: 'insensitive' },
+      },
+      select: { item_id: true, name: true, base_price: true, attributes: true },
+    });
+  }
+
+  private async checkAccommodationAvailability(
+    item: { item_id: string; attributes: any },
+    checkIn: string,
+    checkOut: string,
+  ) {
+    const start = new Date(checkIn);
+    const end = new Date(checkOut);
+    if (Number.isNaN(start.getTime()) || Number.isNaN(end.getTime()) || end <= start) {
+      return { available: false, reason: 'Invalid stay dates', availableSlots: 0 };
+    }
+
+    const totalUnits = this.resolveItemTotalUnits(item.attributes);
+    if (totalUnits <= 0) return { available: false, reason: 'No inventory count set for this property', availableSlots: 0 };
+
+    const rows = await this.prisma.item_availability.findMany({
+      where: {
+        item_id: item.item_id,
+        date: { gte: start, lt: end },
+      },
+      select: { date: true, total_slots: true, booked_slots: true, is_blocked: true },
+    });
+
+    if (rows.some((row) => row.is_blocked)) {
+      return { available: false, reason: 'Stopped because at least one selected date is blocked', availableSlots: 0 };
+    }
+
+    const bookedByDate = new Map(rows.map((row) => [row.date.toISOString().slice(0, 10), row]));
+    let minAvailable = totalUnits;
+    for (const date of this.eachNight(start, end)) {
+      const row = bookedByDate.get(date);
+      const availableForNight = row ? row.total_slots - row.booked_slots : totalUnits;
+      minAvailable = Math.min(minAvailable, availableForNight);
+    }
+
+    if (minAvailable <= 0) {
+      return { available: false, reason: 'Stopped because rooms are no longer available for these dates', availableSlots: 0 };
+    }
+
+    return { available: true, reason: 'Available now', availableSlots: minAvailable };
+  }
+
+  private resolveItemTotalUnits(attributes: any): number {
+    const attrs = attributes ?? {};
+    const totalUnits = Number(attrs.total_units ?? attrs.totalUnits ?? attrs.qty ?? attrs.rooms ?? attrs.capacity ?? 0);
+    return Number.isFinite(totalUnits) ? Math.max(0, Math.floor(totalUnits)) : 0;
+  }
+
+  private eachNight(start: Date, end: Date) {
+    const dates: string[] = [];
+    const cursor = new Date(start);
+    cursor.setHours(0, 0, 0, 0);
+    const limit = new Date(end);
+    limit.setHours(0, 0, 0, 0);
+    while (cursor < limit) {
+      dates.push(cursor.toISOString().slice(0, 10));
+      cursor.setDate(cursor.getDate() + 1);
+    }
+    return dates;
+  }
+
+  private reminderRow(lead: any, ctx: any, readiness: 'ready' | 'stopped' | 'missing_details', reason: string, availability: any) {
+    return {
+      lead_id: lead.lead_id,
+      name: lead.name,
+      phone: lead.phone,
+      status: lead.status,
+      updated_at: lead.updated_at,
+      readiness,
+      reason,
+      property_name: availability?.item_name ?? ctx?.item_name ?? ctx?.property_name ?? ctx?.service_name ?? null,
+      check_in: availability?.check_in ?? this.contextDate(ctx, 'check_in'),
+      check_out: availability?.check_out ?? this.contextDate(ctx, 'check_out'),
+      available_slots: availability?.available_slots ?? 0,
+      checked_at: availability?.checked_at ?? new Date().toISOString(),
+      suggested_action:
+        readiness === 'ready'
+          ? 'Send booking reminder'
+          : readiness === 'stopped'
+            ? 'Do not send reminder. Offer other dates or another property.'
+            : 'Check lead details before sending anything.',
+    };
   }
 
   private formatLead(lead: any, related?: { conversation?: any; followup?: { scheduled_at: Date } | null }) {

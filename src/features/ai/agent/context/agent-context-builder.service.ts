@@ -19,6 +19,10 @@ export interface BusinessProfileSnapshot {
   business_hours: any;
   policies: { cancellation: string; refund: string; terms: string };
   contact: { phone: string; whatsapp: string; address: string };
+  inventory: {
+    accommodation_count: number;
+    accommodation_names: string[];
+  };
 }
 
 export interface LeadSnapshot {
@@ -111,6 +115,17 @@ export class AgentContextBuilder {
         select: { currency: true, timezone: true, business_hours: true, booking_link: true },
       })
       .catch(() => null);
+    const accommodationItems = await this.prisma.catalog_items.findMany({
+      where: {
+        business_id: businessId,
+        item_type: 'accommodation',
+        is_active: true,
+        deleted_at: null,
+      },
+      select: { name: true },
+      orderBy: { name: 'asc' },
+      take: 8,
+    });
 
     const bookingLink = (settings?.booking_link as any) ?? {};
     const profile: BusinessProfileSnapshot = {
@@ -136,6 +151,10 @@ export class AgentContextBuilder {
         phone: bookingLink.contact?.phone ?? '',
         whatsapp: bookingLink.contact?.whatsapp ?? '',
         address: bookingLink.contact?.address ?? '',
+      },
+      inventory: {
+        accommodation_count: accommodationItems.length,
+        accommodation_names: accommodationItems.map((item) => item.name).filter(Boolean),
       },
     };
 
