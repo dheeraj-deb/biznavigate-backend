@@ -144,7 +144,7 @@ export class MessageDebounceProcessor extends WorkerHost {
 
       if (reply === null) return; // cancelled
 
-      await this.dispatchReply(reply, agentCtx, lastPayload, phoneNumberId, customerPhone, conversationId, customerLanguage);
+      await this.dispatchReply(reply, agentCtx, lastPayload, phoneNumberId, customerPhone, conversationId, customerLanguage, combinedText);
       this.logger.log(`🤖 Agent replied to ${customerPhone}`);
     } catch (err) {
       this.logger.error(`Agent failed for conv ${conversationId}, falling back to workflow: ${err.message}`);
@@ -180,6 +180,7 @@ export class MessageDebounceProcessor extends WorkerHost {
     customerPhone: string,
     conversationId: string,
     customerLanguage: CustomerLanguage,
+    customerInput?: string,
   ): Promise<void> {
     const handoff = decodeHandoff(reply);
     if (handoff) {
@@ -194,7 +195,7 @@ export class MessageDebounceProcessor extends WorkerHost {
         leadId: lastPayload.lead_id,
         tenantId: lastPayload.tenant_id,
       };
-      await this.handleFlow(flow, ctx, lastPayload, phoneNumberId, customerPhone, customerLanguage, flowReplyCtx);
+      await this.handleFlow(flow, ctx, lastPayload, phoneNumberId, customerPhone, customerLanguage, flowReplyCtx, customerInput);
       return;
     }
 
@@ -301,11 +302,13 @@ export class MessageDebounceProcessor extends WorkerHost {
     customerPhone: string,
     customerLanguage: CustomerLanguage,
     replyCtx?: { conversationId: string; leadId: string; tenantId: string },
+    customerInput?: string,
   ): Promise<void> {
     const { flowType } = flow!;
 
     if (flowType === 'availability') {
-      const { businessId, checkIn, checkOut, propertyName } = flow as any;
+      const { businessId, checkIn, checkOut, propertyName, guests } = flow as any;
+      const guestCount = this.normalizeGuestCount(guests) ?? this.extractGuestCount(customerInput ?? '');
       const screenResult = await this.hospitalityFlowService.checkAvailability(
         { check_in: checkIn, check_out: checkOut, property_name: propertyName },
         '',
@@ -332,10 +335,12 @@ export class MessageDebounceProcessor extends WorkerHost {
           checkIn,
           checkOut,
           propertyName,
+          guests: guestCount,
         });
         const bookingLink = await this.buildPublicBookingLink(businessId, {
           checkIn,
           checkOut,
+          guests: guestCount ?? undefined,
           leadId: lastPayload.lead_id,
           itemId: this.singleAvailableServiceId(screenResult),
         });
@@ -344,7 +349,7 @@ export class MessageDebounceProcessor extends WorkerHost {
             ctx.businessId,
             phoneNumberId,
             customerPhone,
-            `${this.localizedAvailabilityIntro(customerLanguage, checkIn, checkOut)}\n\nPlease complete your booking here:\n${bookingLink}`,
+            `${this.localizedAvailabilityIntro(customerLanguage, checkIn, checkOut, this.singleAvailableServiceName(screenResult))}\n\nPlease complete your booking here:\n${bookingLink}`,
             replyCtx,
           );
           this.logger.log(`🔗 Sent website booking link for ${customerPhone}`);
@@ -745,8 +750,20 @@ export class MessageDebounceProcessor extends WorkerHost {
     if (buttonMatch) return Math.max(1, Number(buttonMatch[1]));
     if (input === 'guest_count_more') return null;
 
-    const textMatch = input.match(/\b(\d{1,2})\b/);
+    const explicitGuestMatch = input.match(/\b(\d{1,2})\s*(guest|guests|person|persons|people|adult|adults|pax)\b/i);
+    if (explicitGuestMatch) return Math.max(1, Number(explicitGuestMatch[1]));
+
+    const forGuestMatch = input.match(/\bfor\s+(\d{1,2})\b/i);
+    if (forGuestMatch) return Math.max(1, Number(forGuestMatch[1]));
+
+    const textMatch = input.trim().match(/^(\d{1,2})$/);
     return textMatch ? Math.max(1, Number(textMatch[1])) : null;
+  }
+
+  private normalizeGuestCount(value: unknown): number | null {
+    if (typeof value === 'number' && Number.isFinite(value)) return Math.max(1, Math.floor(value));
+    if (typeof value === 'string') return this.extractGuestCount(value);
+    return null;
   }
 
   private cleanGuestName(input: string, fallbackPhone: string) {
@@ -958,7 +975,10 @@ export class MessageDebounceProcessor extends WorkerHost {
     return `${this.localizedAvailabilityIntro(language, checkIn, checkOut)}\n${lines.join('\n')}\n\nReply with the room number/name to continue booking.`;
   }
 
-  private localizedAvailabilityIntro(language: CustomerLanguage, checkIn: string, checkOut: string): string {
+  private localizedAvailabilityIntro(language: CustomerLanguage, checkIn: string, checkOut: string, itemName?: string): string {
+    const cleanItem = this.nonEmptyString(itemName);
+    if (cleanItem) return `${cleanItem} is available from ${checkIn} to ${checkOut}.`;
+
     const messages: Record<CustomerLanguage, string> = {
       english: `Rooms are available from ${checkIn} to ${checkOut}. Please choose an option:`,
       hindi: `${checkIn} से ${checkOut} तक rooms available हैं। कृपया option चुनें:`,
@@ -1023,15 +1043,35 @@ export class MessageDebounceProcessor extends WorkerHost {
     return Array.isArray(services) && services.length === 1 ? services[0]?.id : undefined;
   }
 
+  private singleAvailableServiceName(screenResult: any): string | undefined {
+    const services = screenResult?.data?.available_services;
+    if (!Array.isArray(services) || services.length !== 1) return undefined;
+    return this.nonEmptyString(services[0]?.['main-content']?.title)
+      ?? this.nonEmptyString(services[0]?.name)
+      ?? undefined;
+  }
+
   private async saveAvailabilityLeadContext(
     leadId: string | undefined,
     screenResult: any,
-    params: { checkIn?: string; checkOut?: string; propertyName?: string },
+    params: { checkIn?: string; checkOut?: string; propertyName?: string; guests?: number | null },
   ): Promise<void> {
     if (!leadId) return;
 
-    const firstService = screenResult?.data?.available_services?.[0];
-    const itemName = firstService?.['main-content']?.title ?? params.propertyName ?? null;
+    const services = Array.isArray(screenResult?.data?.available_services)
+      ? screenResult.data.available_services
+      : [];
+    const hasNamedProperty = typeof params.propertyName === 'string' && params.propertyName.trim().length > 0;
+    const firstService = services[0];
+    const firstServiceName = firstService?.['main-content']?.title ?? firstService?.name ?? null;
+    const itemName = hasNamedProperty || services.length === 1
+      ? firstServiceName ?? params.propertyName ?? null
+      : 'Multiple options available';
+    const propertyName = hasNamedProperty
+      ? params.propertyName!.trim()
+      : services.length === 1
+        ? itemName
+        : 'Multiple options available';
 
     await this.prisma.leads.update({
       where: { lead_id: leadId },
@@ -1040,10 +1080,11 @@ export class MessageDebounceProcessor extends WorkerHost {
           type: 'resort',
           check_in: params.checkIn ?? null,
           check_out: params.checkOut ?? null,
-          guest_count: null,
-          guests: null,
+          guest_count: params.guests ?? null,
+          guests: params.guests ?? null,
           item_name: itemName,
-          property_name: params.propertyName ?? itemName,
+          property_name: propertyName,
+          available_option_count: services.length,
           room_preference: null,
           special_requests: null,
         } as any,

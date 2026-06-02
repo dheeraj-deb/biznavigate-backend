@@ -97,19 +97,19 @@ export class LeadController {
     return this.leadQueries.getStatsOverview(req.user.business_id, { from, to, intent_type });
   }
 
-  @Get(':leadId')
+  @Get(':leadId([0-9a-fA-F-]{36})')
   async getLead(@Req() req: any, @Param('leadId') leadId: string) {
     await this.access.requireLead(leadId, req.user.business_id);
     return this.leadQueries.getLeadById(leadId);
   }
 
-  @Get(':leadId/events')
+  @Get(':leadId([0-9a-fA-F-]{36})/events')
   async getLeadEvents(@Req() req: any, @Param('leadId') leadId: string) {
     await this.access.requireLead(leadId, req.user.business_id);
     return this.leadQueries.getLeadEvents(leadId);
   }
 
-  @Delete(':leadId')
+  @Delete(':leadId([0-9a-fA-F-]{36})')
   @HttpCode(HttpStatus.NO_CONTENT)
   async deleteLead(@Req() req: any, @Param('leadId') leadId: string) {
     await this.access.requireLead(leadId, req.user.business_id);
@@ -121,7 +121,7 @@ export class LeadController {
 
   // ─── Status, context, notes ──────────────────────────────────
 
-  @Patch(':leadId/status')
+  @Patch(':leadId([0-9a-fA-F-]{36})/status')
   async updateStatus(
     @Req() req: any,
     @Param('leadId') leadId: string,
@@ -139,7 +139,7 @@ export class LeadController {
   }
 
   /** Pipeline-aware move. Source of truth when pipelines are used. */
-  @Patch(':leadId/stage')
+  @Patch(':leadId([0-9a-fA-F-]{36})/stage')
   async moveToStage(
     @Req() req: any,
     @Param('leadId') leadId: string,
@@ -155,13 +155,13 @@ export class LeadController {
     });
   }
 
-  @Patch(':leadId/context')
+  @Patch(':leadId([0-9a-fA-F-]{36})/context')
   async updateContext(@Req() req: any, @Param('leadId') leadId: string, @Body() context: any) {
     await this.access.requireLead(leadId, req.user.business_id);
     return this.leadCommands.updateContext(leadId, context);
   }
 
-  @Post(':leadId/notes')
+  @Post(':leadId([0-9a-fA-F-]{36})/notes')
   async addNote(
     @Req() req: any,
     @Param('leadId') leadId: string,
@@ -171,7 +171,7 @@ export class LeadController {
     return this.leadCommands.addNote(leadId, body.text, req.user.user_id);
   }
 
-  @Patch(':leadId/tags')
+  @Patch(':leadId([0-9a-fA-F-]{36})/tags')
   async updateTags(
     @Req() req: any,
     @Param('leadId') leadId: string,
@@ -181,7 +181,7 @@ export class LeadController {
     return this.leadCommands.updateTags(leadId, body.tags ?? []);
   }
 
-  @Patch(':leadId/assign')
+  @Patch(':leadId([0-9a-fA-F-]{36})/assign')
   async assignLead(
     @Req() req: any,
     @Param('leadId') leadId: string,
@@ -194,7 +194,7 @@ export class LeadController {
 
   // ─── Follow-ups ───────────────────────────────────────────────
 
-  @Post(':leadId/followups')
+  @Post(':leadId([0-9a-fA-F-]{36})/followups')
   async scheduleFollowup(
     @Req() req: any,
     @Param('leadId') leadId: string,
@@ -249,6 +249,16 @@ export class LeadController {
     return this.leadQueries.getFollowupQueue(req.user.business_id, assignedTo, limit ? Number(limit) : 30);
   }
 
+  @Get('dashboard/resort-worklist')
+  getResortWorklist(@Req() req: any, @Query('days') days?: string) {
+    return this.leadQueries.getResortWorklist(req.user.business_id, days ? Number(days) : 14);
+  }
+
+  @Get('dashboard/resort-reminders')
+  getResortReminderReadiness(@Req() req: any, @Query('days') days?: string) {
+    return this.leadQueries.getResortReminderReadiness(req.user.business_id, days ? Number(days) : 14);
+  }
+
   // ─── Inbox (MongoDB) ──────────────────────────────────────────
 
   @Get('inbox/conversations')
@@ -268,7 +278,7 @@ export class LeadController {
 
   // ─── Lead Item Interests ─────────────────────────────────────
 
-  @Get(':leadId/interests')
+  @Get(':leadId([0-9a-fA-F-]{36})/interests')
   async getLeadInterests(@Req() req: any, @Param('leadId') leadId: string) {
     await this.access.requireLead(leadId, req.user.business_id);
     return this.prisma.lead_item_interests.findMany({
@@ -277,7 +287,7 @@ export class LeadController {
     });
   }
 
-  @Post(':leadId/interests')
+  @Post(':leadId([0-9a-fA-F-]{36})/interests')
   async recordInterest(
     @Req() req: any,
     @Param('leadId') leadId: string,

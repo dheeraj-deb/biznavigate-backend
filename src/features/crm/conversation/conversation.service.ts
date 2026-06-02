@@ -158,13 +158,44 @@ export class ConversationService {
     return result;
   }
 
-  /** Update last-message preview and bump updated_at so the conversation surfaces to the top of the inbox list */
-  async touchConversation(conversation_id: string, message_text: string): Promise<void> {
+  /** Update last-message preview and summary so the conversation surfaces correctly in inbox/dashboard lists. */
+  async touchConversation(conversation_id: string, message_text: string, at: Date = new Date()): Promise<void> {
+    const [messageCount, latestMessage] = await Promise.all([
+      this.messagesModel.countDocuments({ conversation_id }).exec(),
+      this.messagesModel
+        .findOne({ conversation_id })
+        .sort({ timestamp: -1, created_at: -1 })
+        .select({ message_text: 1, timestamp: 1, created_at: 1 })
+        .lean()
+        .exec(),
+    ]);
+
     await this.conversationModel
       .findOneAndUpdate(
         { conversation_id },
-        { $set: { message_text } },
+        {
+          $set: {
+            message_text: latestMessage?.message_text ?? message_text,
+            last_message_at: latestMessage?.timestamp ?? latestMessage?.created_at ?? at,
+            message_count: messageCount,
+          },
+        },
         { new: false },
+      )
+      .exec();
+  }
+
+  async recordMessageSummary(conversation_id: string, message_text?: string, at: Date = new Date()): Promise<void> {
+    await this.conversationModel
+      .updateOne(
+        { conversation_id },
+        {
+          $set: {
+            ...(message_text !== undefined ? { message_text } : {}),
+            last_message_at: at,
+          },
+          $inc: { message_count: 1 },
+        },
       )
       .exec();
   }
@@ -211,7 +242,13 @@ export class ConversationService {
 
   async createMessage(data: Partial<Messages>): Promise<MessagesDocument> {
     const message = new this.messagesModel(data);
-    return message.save();
+    const saved = await message.save();
+    await this.recordMessageSummary(
+      saved.conversation_id,
+      saved.message_text,
+      saved.timestamp ? new Date(saved.timestamp) : new Date(),
+    );
+    return saved;
   }
 
   async findMessageByPlatformId(platform_message_id: string): Promise<MessagesDocument | null> {

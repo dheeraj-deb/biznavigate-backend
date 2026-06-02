@@ -19,7 +19,7 @@ import { WhatsAppService } from './whatsapp.service';
 import { WebhookValidatorService } from '../infrastructure/webhook-validator.service';
 import { WhatsAppWebhookDto, WebhookVerificationDto } from '../dto/webhook-event.dto';
 import { SendWhatsAppMessageDto } from '../dto/whatsapp-message.dto';
-import { ConnectWhatsAppAccountDto, DisconnectWhatsAppAccountDto } from '../dto/whatsapp-auth.dto';
+import { ConnectWhatsAppAccountDto } from '../dto/whatsapp-auth.dto';
 import { WhatsAppSignatureGuard } from '../guards/whatsapp-signature.guard';
 import { GupshupOnboardingService } from '../../gupshup/gupshup-onboarding.service';
 import { JwtAuthGuard } from '../../../../common/guards/jwt-auth.guard';
@@ -40,13 +40,13 @@ export class WhatsAppController {
 
   @Post('accounts/connect')
   @UseGuards(JwtAuthGuard)
-  async connectAccount(@Body() dto: ConnectWhatsAppAccountDto) {
-    this.logger.log(`Connecting WhatsApp account for business ${dto.businessId}`);
+  async connectAccount(@Body() dto: ConnectWhatsAppAccountDto, @Req() req: any) {
+    this.logger.log(`Connecting WhatsApp account for business ${req.user.business_id}`);
 
     return this.whatsappAccountService.connectWhatsAppAccount(
       dto.whatsappBusinessAccountId,
       dto.phoneNumberId,
-      dto.businessId,
+      req.user.business_id,
     );
   }
 
@@ -66,9 +66,9 @@ export class WhatsAppController {
   @UseGuards(JwtAuthGuard)
   async disconnectAccount(
     @Param('accountId') accountId: string,
-    @Body() dto: DisconnectWhatsAppAccountDto,
+    @Req() req: any,
   ) {
-    return this.whatsappAccountService.disconnectAccount(accountId, dto.businessId);
+    return this.whatsappAccountService.disconnectAccount(accountId, req.user.business_id);
   }
 
   // ==================== Webhooks ====================

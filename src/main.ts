@@ -35,6 +35,23 @@ async function bootstrap() {
     bodyParser: false, // Disable default body parser
   });
 
+  app.use((req: any, res: any, next: any) => {
+    if (req.method !== "OPTIONS") return next();
+
+    const origin = req.headers.origin;
+    if (origin) {
+      res.header("Access-Control-Allow-Origin", origin);
+      res.header("Vary", "Origin");
+      res.header("Access-Control-Allow-Credentials", "true");
+    }
+    res.header("Access-Control-Allow-Methods", "GET,POST,PUT,DELETE,PATCH,OPTIONS");
+    res.header(
+      "Access-Control-Allow-Headers",
+      req.headers["access-control-request-headers"] || "Content-Type, Authorization, X-Requested-With",
+    );
+    return res.sendStatus(204);
+  });
+
   // Compress all responses (gzip/br) — reduces payload ~70% on JSON
   app.use(compression());
 
@@ -53,15 +70,23 @@ async function bootstrap() {
     })
   );
 
-  // Configure body parser with raw body for webhook signature verification
-  // 50mb limit to support base64 image uploads
+  // Image upload routes can carry base64 payloads; keep this exception narrow.
+  app.use(['/s3/upload-base64', '/s3/upload-base64-multiple'], express.json({
+    limit: process.env.UPLOAD_JSON_BODY_LIMIT || '25mb',
+    verify: (req: any, res, buf) => {
+      req.rawBody = buf;
+    },
+  }));
+
+  // Configure body parser with raw body for webhook signature verification.
+  // Keep the global limit small; upload endpoints should opt into larger limits.
   app.use(express.json({
-    limit: '50mb',
+    limit: process.env.JSON_BODY_LIMIT || '1mb',
     verify: (req: any, res, buf) => {
       req.rawBody = buf;
     }
   }));
-  app.use(express.urlencoded({ extended: true, limit: '50mb' }));
+  app.use(express.urlencoded({ extended: true, limit: process.env.URLENCODED_BODY_LIMIT || '1mb' }));
 
   // Global Validation Pipe
   app.useGlobalPipes(
@@ -80,6 +105,7 @@ async function bootstrap() {
     'https://app.biznavigo.com',
     'http://localhost:5173',
     'http://localhost:3000',
+    'http://localhost:3001',
   ]
     .filter(Boolean)
     .flatMap((origins) => origins.split(','))

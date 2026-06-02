@@ -1364,7 +1364,7 @@ const config = {
       "value": "prisma-client-js"
     },
     "output": {
-      "value": "/Users/dheerajt/Downloads/biznavigate/biznavigate-backend/generated/prisma",
+      "value": "C:\\Users\\MY PC\\OneDrive\\Desktop\\Biznav\\biznavigate-backend\\generated\\prisma",
       "fromEnvVar": null
     },
     "config": {
@@ -1373,14 +1373,14 @@ const config = {
     "binaryTargets": [
       {
         "fromEnvVar": null,
-        "value": "darwin-arm64",
+        "value": "windows",
         "native": true
       }
     ],
     "previewFeatures": [
       "driverAdapters"
     ],
-    "sourceFilePath": "/Users/dheerajt/Downloads/biznavigate/biznavigate-backend/prisma/schema.prisma",
+    "sourceFilePath": "C:\\Users\\MY PC\\OneDrive\\Desktop\\Biznav\\biznavigate-backend\\prisma\\schema.prisma",
     "isCustomOutput": true
   },
   "relativeEnvPaths": {
