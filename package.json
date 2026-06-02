@@ -20,6 +20,7 @@
     "prisma:migrate": "npx --no-install prisma migrate dev",
     "prisma:studio": "npx --no-install prisma studio",
     "prisma:seed": "ts-node prisma/seed.ts",
+    "starter-templates:seed": "node scripts/seed-starter-templates.js",
     "backfill:industry-domains": "node scripts/backfill-industry-domain-tables.js"
   },
   "dependencies": {

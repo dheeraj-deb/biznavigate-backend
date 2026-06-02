@@ -1,7 +1,8 @@
-import { Body, Controller, Post, Request, UseGuards } from "@nestjs/common";
+import { Body, Controller, Logger, Post, Request, UseGuards } from "@nestjs/common";
 import { JwtAuthGuard } from "../../../../common/guards/jwt-auth.guard";
 import { PrismaService } from "src/prisma/prisma.service";
 import { UpdateBusinessDto } from "../application/dto/update-business.dto";
+import { StarterTemplatesService } from "../../starter-templates/starter-templates.service";
 import { Type } from "class-transformer";
 import {
   IsEmail,
@@ -39,7 +40,12 @@ class CompleteOnboardingDto extends UpdateBusinessDto {
 @UseGuards(JwtAuthGuard)
 @Controller("onboarding")
 export class OnboardingController {
-  constructor(private readonly prisma: PrismaService) {}
+  private readonly logger = new Logger(OnboardingController.name);
+
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly starterTemplates: StarterTemplatesService
+  ) {}
 
   @Post("complete")
   async complete(@Request() req, @Body() dto: CompleteOnboardingDto) {
@@ -64,6 +70,19 @@ export class OnboardingController {
       data: { profile_completed: true },
     });
 
+    let starter_templates: any = null;
+    try {
+      starter_templates = await this.starterTemplates.applyRecommendedTemplates(business_id, {
+        phase: "onboarding",
+      });
+    } catch (error: any) {
+      this.logger.warn(`Starter template install skipped: ${error?.message ?? error}`);
+      starter_templates = {
+        status: "skipped",
+        reason: error?.message ?? "starter_template_install_failed",
+      };
+    }
+
     const { business_employees, ...businessFields } = business;
 
     return {
@@ -87,6 +106,7 @@ export class OnboardingController {
           role: e.role ?? null,
           temp_password: e.temp_password ?? null,
         })),
+        starter_templates,
       },
     };
   }
