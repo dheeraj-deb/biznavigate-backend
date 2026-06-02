@@ -251,6 +251,11 @@ export type item_availability = $Result.DefaultSelection<Prisma.$item_availabili
  */
 export type product_item_details = $Result.DefaultSelection<Prisma.$product_item_detailsPayload>
 /**
+ * Model external_catalog_items
+ * 
+ */
+export type external_catalog_items = $Result.DefaultSelection<Prisma.$external_catalog_itemsPayload>
+/**
  * Model product_inquiries
  * 
  */
@@ -952,6 +957,16 @@ export class PrismaClient<
     * ```
     */
   get product_item_details(): Prisma.product_item_detailsDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.external_catalog_items`: Exposes CRUD operations for the **external_catalog_items** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more External_catalog_items
+    * const external_catalog_items = await prisma.external_catalog_items.findMany()
+    * ```
+    */
+  get external_catalog_items(): Prisma.external_catalog_itemsDelegate<ExtArgs, ClientOptions>;
 
   /**
    * `prisma.product_inquiries`: Exposes CRUD operations for the **product_inquiries** model.
@@ -1706,6 +1721,7 @@ export namespace Prisma {
     item_variants: 'item_variants',
     item_availability: 'item_availability',
     product_item_details: 'product_item_details',
+    external_catalog_items: 'external_catalog_items',
     product_inquiries: 'product_inquiries',
     product_orders: 'product_orders',
     product_order_items: 'product_order_items',
@@ -1751,7 +1767,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "businesses" | "business_employees" | "intents" | "notifications" | "role_intents" | "roles" | "social_accounts" | "tenants" | "users" | "leads" | "pipelines" | "pipeline_stages" | "lead_events" | "lead_followups" | "customers" | "orders" | "order_items" | "cart_reservations" | "campaigns" | "campaign_recipients" | "notification_templates" | "notification_messages" | "notification_preferences" | "payments" | "payment_reconciliation" | "notification_events" | "payment_webhooks" | "instagram_media" | "workflow_definitions" | "business_workflows" | "workflow_executions" | "workflow_execution_steps" | "workflow_idempotency_keys" | "cart_items" | "carts" | "whatsapp_optouts" | "campaign_analytics" | "hotel_pricing_recommendations" | "hotel_booking_outcomes" | "hotel_pricing_notifications" | "catalog_items" | "item_variants" | "item_availability" | "product_item_details" | "product_inquiries" | "product_orders" | "product_order_items" | "product_order_status_events" | "hospitality_item_details" | "vehicle_item_details" | "hospitality_inquiries" | "hospitality_bookings" | "hospitality_booking_items" | "hospitality_booking_guests" | "hospitality_booking_status_events" | "checkpoint_blobs" | "checkpoint_migrations" | "checkpoint_writes" | "checkpoints" | "billing_plans" | "billing_subscriptions" | "wallets" | "wallet_transactions" | "billing_payments" | "billing_invoices" | "billing_webhook_events" | "credit_pricing" | "business_settings" | "audit_logs" | "lead_item_interests" | "lead_preference_watches"
+      modelProps: "businesses" | "business_employees" | "intents" | "notifications" | "role_intents" | "roles" | "social_accounts" | "tenants" | "users" | "leads" | "pipelines" | "pipeline_stages" | "lead_events" | "lead_followups" | "customers" | "orders" | "order_items" | "cart_reservations" | "campaigns" | "campaign_recipients" | "notification_templates" | "notification_messages" | "notification_preferences" | "payments" | "payment_reconciliation" | "notification_events" | "payment_webhooks" | "instagram_media" | "workflow_definitions" | "business_workflows" | "workflow_executions" | "workflow_execution_steps" | "workflow_idempotency_keys" | "cart_items" | "carts" | "whatsapp_optouts" | "campaign_analytics" | "hotel_pricing_recommendations" | "hotel_booking_outcomes" | "hotel_pricing_notifications" | "catalog_items" | "item_variants" | "item_availability" | "product_item_details" | "external_catalog_items" | "product_inquiries" | "product_orders" | "product_order_items" | "product_order_status_events" | "hospitality_item_details" | "vehicle_item_details" | "hospitality_inquiries" | "hospitality_bookings" | "hospitality_booking_items" | "hospitality_booking_guests" | "hospitality_booking_status_events" | "checkpoint_blobs" | "checkpoint_migrations" | "checkpoint_writes" | "checkpoints" | "billing_plans" | "billing_subscriptions" | "wallets" | "wallet_transactions" | "billing_payments" | "billing_invoices" | "billing_webhook_events" | "credit_pricing" | "business_settings" | "audit_logs" | "lead_item_interests" | "lead_preference_watches"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -5011,6 +5027,80 @@ export namespace Prisma {
           }
         }
       }
+      external_catalog_items: {
+        payload: Prisma.$external_catalog_itemsPayload<ExtArgs>
+        fields: Prisma.external_catalog_itemsFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.external_catalog_itemsFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$external_catalog_itemsPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.external_catalog_itemsFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$external_catalog_itemsPayload>
+          }
+          findFirst: {
+            args: Prisma.external_catalog_itemsFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$external_catalog_itemsPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.external_catalog_itemsFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$external_catalog_itemsPayload>
+          }
+          findMany: {
+            args: Prisma.external_catalog_itemsFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$external_catalog_itemsPayload>[]
+          }
+          create: {
+            args: Prisma.external_catalog_itemsCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$external_catalog_itemsPayload>
+          }
+          createMany: {
+            args: Prisma.external_catalog_itemsCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.external_catalog_itemsCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$external_catalog_itemsPayload>[]
+          }
+          delete: {
+            args: Prisma.external_catalog_itemsDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$external_catalog_itemsPayload>
+          }
+          update: {
+            args: Prisma.external_catalog_itemsUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$external_catalog_itemsPayload>
+          }
+          deleteMany: {
+            args: Prisma.external_catalog_itemsDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.external_catalog_itemsUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.external_catalog_itemsUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$external_catalog_itemsPayload>[]
+          }
+          upsert: {
+            args: Prisma.external_catalog_itemsUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$external_catalog_itemsPayload>
+          }
+          aggregate: {
+            args: Prisma.External_catalog_itemsAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateExternal_catalog_items>
+          }
+          groupBy: {
+            args: Prisma.external_catalog_itemsGroupByArgs<ExtArgs>
+            result: $Utils.Optional<External_catalog_itemsGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.external_catalog_itemsCountArgs<ExtArgs>
+            result: $Utils.Optional<External_catalog_itemsCountAggregateOutputType> | number
+          }
+        }
+      }
       product_inquiries: {
         payload: Prisma.$product_inquiriesPayload<ExtArgs>
         fields: Prisma.product_inquiriesFieldRefs
@@ -7141,6 +7231,7 @@ export namespace Prisma {
     item_variants?: item_variantsOmit
     item_availability?: item_availabilityOmit
     product_item_details?: product_item_detailsOmit
+    external_catalog_items?: external_catalog_itemsOmit
     product_inquiries?: product_inquiriesOmit
     product_orders?: product_ordersOmit
     product_order_items?: product_order_itemsOmit
@@ -7266,6 +7357,7 @@ export namespace Prisma {
     business_workflows: number
     carts: number
     catalog_items: number
+    external_catalog_items: number
     product_item_details: number
     hospitality_item_details: number
     vehicle_item_details: number
@@ -7295,6 +7387,7 @@ export namespace Prisma {
     business_workflows?: boolean | BusinessesCountOutputTypeCountBusiness_workflowsArgs
     carts?: boolean | BusinessesCountOutputTypeCountCartsArgs
     catalog_items?: boolean | BusinessesCountOutputTypeCountCatalog_itemsArgs
+    external_catalog_items?: boolean | BusinessesCountOutputTypeCountExternal_catalog_itemsArgs
     product_item_details?: boolean | BusinessesCountOutputTypeCountProduct_item_detailsArgs
     hospitality_item_details?: boolean | BusinessesCountOutputTypeCountHospitality_item_detailsArgs
     vehicle_item_details?: boolean | BusinessesCountOutputTypeCountVehicle_item_detailsArgs
@@ -7356,6 +7449,13 @@ export namespace Prisma {
    */
   export type BusinessesCountOutputTypeCountCatalog_itemsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: catalog_itemsWhereInput
+  }
+
+  /**
+   * BusinessesCountOutputType without action
+   */
+  export type BusinessesCountOutputTypeCountExternal_catalog_itemsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: external_catalog_itemsWhereInput
   }
 
   /**
@@ -8414,6 +8514,7 @@ export namespace Prisma {
     availability: number
     variants: number
     order_items: number
+    external_catalog_items: number
   }
 
   export type Catalog_itemsCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -8426,6 +8527,7 @@ export namespace Prisma {
     availability?: boolean | Catalog_itemsCountOutputTypeCountAvailabilityArgs
     variants?: boolean | Catalog_itemsCountOutputTypeCountVariantsArgs
     order_items?: boolean | Catalog_itemsCountOutputTypeCountOrder_itemsArgs
+    external_catalog_items?: boolean | Catalog_itemsCountOutputTypeCountExternal_catalog_itemsArgs
   }
 
   // Custom InputTypes
@@ -8500,6 +8602,13 @@ export namespace Prisma {
    */
   export type Catalog_itemsCountOutputTypeCountOrder_itemsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: order_itemsWhereInput
+  }
+
+  /**
+   * Catalog_itemsCountOutputType without action
+   */
+  export type Catalog_itemsCountOutputTypeCountExternal_catalog_itemsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: external_catalog_itemsWhereInput
   }
 
 
@@ -9003,6 +9112,7 @@ export namespace Prisma {
     tenants?: boolean | tenantsDefaultArgs<ExtArgs>
     carts?: boolean | businesses$cartsArgs<ExtArgs>
     catalog_items?: boolean | businesses$catalog_itemsArgs<ExtArgs>
+    external_catalog_items?: boolean | businesses$external_catalog_itemsArgs<ExtArgs>
     product_item_details?: boolean | businesses$product_item_detailsArgs<ExtArgs>
     hospitality_item_details?: boolean | businesses$hospitality_item_detailsArgs<ExtArgs>
     vehicle_item_details?: boolean | businesses$vehicle_item_detailsArgs<ExtArgs>
@@ -9100,6 +9210,7 @@ export namespace Prisma {
     tenants?: boolean | tenantsDefaultArgs<ExtArgs>
     carts?: boolean | businesses$cartsArgs<ExtArgs>
     catalog_items?: boolean | businesses$catalog_itemsArgs<ExtArgs>
+    external_catalog_items?: boolean | businesses$external_catalog_itemsArgs<ExtArgs>
     product_item_details?: boolean | businesses$product_item_detailsArgs<ExtArgs>
     hospitality_item_details?: boolean | businesses$hospitality_item_detailsArgs<ExtArgs>
     vehicle_item_details?: boolean | businesses$vehicle_item_detailsArgs<ExtArgs>
@@ -9142,6 +9253,7 @@ export namespace Prisma {
       tenants: Prisma.$tenantsPayload<ExtArgs>
       carts: Prisma.$cartsPayload<ExtArgs>[]
       catalog_items: Prisma.$catalog_itemsPayload<ExtArgs>[]
+      external_catalog_items: Prisma.$external_catalog_itemsPayload<ExtArgs>[]
       product_item_details: Prisma.$product_item_detailsPayload<ExtArgs>[]
       hospitality_item_details: Prisma.$hospitality_item_detailsPayload<ExtArgs>[]
       vehicle_item_details: Prisma.$vehicle_item_detailsPayload<ExtArgs>[]
@@ -9585,6 +9697,7 @@ export namespace Prisma {
     tenants<T extends tenantsDefaultArgs<ExtArgs> = {}>(args?: Subset<T, tenantsDefaultArgs<ExtArgs>>): Prisma__tenantsClient<$Result.GetResult<Prisma.$tenantsPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     carts<T extends businesses$cartsArgs<ExtArgs> = {}>(args?: Subset<T, businesses$cartsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$cartsPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     catalog_items<T extends businesses$catalog_itemsArgs<ExtArgs> = {}>(args?: Subset<T, businesses$catalog_itemsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$catalog_itemsPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    external_catalog_items<T extends businesses$external_catalog_itemsArgs<ExtArgs> = {}>(args?: Subset<T, businesses$external_catalog_itemsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$external_catalog_itemsPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     product_item_details<T extends businesses$product_item_detailsArgs<ExtArgs> = {}>(args?: Subset<T, businesses$product_item_detailsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$product_item_detailsPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     hospitality_item_details<T extends businesses$hospitality_item_detailsArgs<ExtArgs> = {}>(args?: Subset<T, businesses$hospitality_item_detailsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$hospitality_item_detailsPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     vehicle_item_details<T extends businesses$vehicle_item_detailsArgs<ExtArgs> = {}>(args?: Subset<T, businesses$vehicle_item_detailsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$vehicle_item_detailsPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
@@ -10145,6 +10258,30 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: Catalog_itemsScalarFieldEnum | Catalog_itemsScalarFieldEnum[]
+  }
+
+  /**
+   * businesses.external_catalog_items
+   */
+  export type businesses$external_catalog_itemsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the external_catalog_items
+     */
+    select?: external_catalog_itemsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the external_catalog_items
+     */
+    omit?: external_catalog_itemsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: external_catalog_itemsInclude<ExtArgs> | null
+    where?: external_catalog_itemsWhereInput
+    orderBy?: external_catalog_itemsOrderByWithRelationInput | external_catalog_itemsOrderByWithRelationInput[]
+    cursor?: external_catalog_itemsWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: External_catalog_itemsScalarFieldEnum | External_catalog_itemsScalarFieldEnum[]
   }
 
   /**
@@ -60000,6 +60137,7 @@ export namespace Prisma {
     availability?: boolean | catalog_items$availabilityArgs<ExtArgs>
     variants?: boolean | catalog_items$variantsArgs<ExtArgs>
     order_items?: boolean | catalog_items$order_itemsArgs<ExtArgs>
+    external_catalog_items?: boolean | catalog_items$external_catalog_itemsArgs<ExtArgs>
     _count?: boolean | Catalog_itemsCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["catalog_items"]>
 
@@ -60086,6 +60224,7 @@ export namespace Prisma {
     availability?: boolean | catalog_items$availabilityArgs<ExtArgs>
     variants?: boolean | catalog_items$variantsArgs<ExtArgs>
     order_items?: boolean | catalog_items$order_itemsArgs<ExtArgs>
+    external_catalog_items?: boolean | catalog_items$external_catalog_itemsArgs<ExtArgs>
     _count?: boolean | Catalog_itemsCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type catalog_itemsIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -60111,6 +60250,7 @@ export namespace Prisma {
       availability: Prisma.$item_availabilityPayload<ExtArgs>[]
       variants: Prisma.$item_variantsPayload<ExtArgs>[]
       order_items: Prisma.$order_itemsPayload<ExtArgs>[]
+      external_catalog_items: Prisma.$external_catalog_itemsPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       item_id: string
@@ -60555,6 +60695,7 @@ export namespace Prisma {
     availability<T extends catalog_items$availabilityArgs<ExtArgs> = {}>(args?: Subset<T, catalog_items$availabilityArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$item_availabilityPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     variants<T extends catalog_items$variantsArgs<ExtArgs> = {}>(args?: Subset<T, catalog_items$variantsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$item_variantsPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     order_items<T extends catalog_items$order_itemsArgs<ExtArgs> = {}>(args?: Subset<T, catalog_items$order_itemsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$order_itemsPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    external_catalog_items<T extends catalog_items$external_catalog_itemsArgs<ExtArgs> = {}>(args?: Subset<T, catalog_items$external_catalog_itemsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$external_catalog_itemsPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -61269,6 +61410,30 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: Order_itemsScalarFieldEnum | Order_itemsScalarFieldEnum[]
+  }
+
+  /**
+   * catalog_items.external_catalog_items
+   */
+  export type catalog_items$external_catalog_itemsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the external_catalog_items
+     */
+    select?: external_catalog_itemsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the external_catalog_items
+     */
+    omit?: external_catalog_itemsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: external_catalog_itemsInclude<ExtArgs> | null
+    where?: external_catalog_itemsWhereInput
+    orderBy?: external_catalog_itemsOrderByWithRelationInput | external_catalog_itemsOrderByWithRelationInput[]
+    cursor?: external_catalog_itemsWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: External_catalog_itemsScalarFieldEnum | External_catalog_itemsScalarFieldEnum[]
   }
 
   /**
@@ -64884,6 +65049,1204 @@ export namespace Prisma {
      * Choose, which related nodes to fetch as well
      */
     include?: product_item_detailsInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model external_catalog_items
+   */
+
+  export type AggregateExternal_catalog_items = {
+    _count: External_catalog_itemsCountAggregateOutputType | null
+    _min: External_catalog_itemsMinAggregateOutputType | null
+    _max: External_catalog_itemsMaxAggregateOutputType | null
+  }
+
+  export type External_catalog_itemsMinAggregateOutputType = {
+    external_catalog_item_id: string | null
+    business_id: string | null
+    item_id: string | null
+    provider: string | null
+    external_catalog_id: string | null
+    external_product_id: string | null
+    retailer_id: string | null
+    sync_status: string | null
+    last_synced_at: Date | null
+    remote_hash: string | null
+    local_hash: string | null
+    created_at: Date | null
+    updated_at: Date | null
+  }
+
+  export type External_catalog_itemsMaxAggregateOutputType = {
+    external_catalog_item_id: string | null
+    business_id: string | null
+    item_id: string | null
+    provider: string | null
+    external_catalog_id: string | null
+    external_product_id: string | null
+    retailer_id: string | null
+    sync_status: string | null
+    last_synced_at: Date | null
+    remote_hash: string | null
+    local_hash: string | null
+    created_at: Date | null
+    updated_at: Date | null
+  }
+
+  export type External_catalog_itemsCountAggregateOutputType = {
+    external_catalog_item_id: number
+    business_id: number
+    item_id: number
+    provider: number
+    external_catalog_id: number
+    external_product_id: number
+    retailer_id: number
+    sync_status: number
+    last_synced_at: number
+    remote_hash: number
+    local_hash: number
+    raw_payload: number
+    created_at: number
+    updated_at: number
+    _all: number
+  }
+
+
+  export type External_catalog_itemsMinAggregateInputType = {
+    external_catalog_item_id?: true
+    business_id?: true
+    item_id?: true
+    provider?: true
+    external_catalog_id?: true
+    external_product_id?: true
+    retailer_id?: true
+    sync_status?: true
+    last_synced_at?: true
+    remote_hash?: true
+    local_hash?: true
+    created_at?: true
+    updated_at?: true
+  }
+
+  export type External_catalog_itemsMaxAggregateInputType = {
+    external_catalog_item_id?: true
+    business_id?: true
+    item_id?: true
+    provider?: true
+    external_catalog_id?: true
+    external_product_id?: true
+    retailer_id?: true
+    sync_status?: true
+    last_synced_at?: true
+    remote_hash?: true
+    local_hash?: true
+    created_at?: true
+    updated_at?: true
+  }
+
+  export type External_catalog_itemsCountAggregateInputType = {
+    external_catalog_item_id?: true
+    business_id?: true
+    item_id?: true
+    provider?: true
+    external_catalog_id?: true
+    external_product_id?: true
+    retailer_id?: true
+    sync_status?: true
+    last_synced_at?: true
+    remote_hash?: true
+    local_hash?: true
+    raw_payload?: true
+    created_at?: true
+    updated_at?: true
+    _all?: true
+  }
+
+  export type External_catalog_itemsAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which external_catalog_items to aggregate.
+     */
+    where?: external_catalog_itemsWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of external_catalog_items to fetch.
+     */
+    orderBy?: external_catalog_itemsOrderByWithRelationInput | external_catalog_itemsOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: external_catalog_itemsWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` external_catalog_items from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` external_catalog_items.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned external_catalog_items
+    **/
+    _count?: true | External_catalog_itemsCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: External_catalog_itemsMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: External_catalog_itemsMaxAggregateInputType
+  }
+
+  export type GetExternal_catalog_itemsAggregateType<T extends External_catalog_itemsAggregateArgs> = {
+        [P in keyof T & keyof AggregateExternal_catalog_items]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateExternal_catalog_items[P]>
+      : GetScalarType<T[P], AggregateExternal_catalog_items[P]>
+  }
+
+
+
+
+  export type external_catalog_itemsGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: external_catalog_itemsWhereInput
+    orderBy?: external_catalog_itemsOrderByWithAggregationInput | external_catalog_itemsOrderByWithAggregationInput[]
+    by: External_catalog_itemsScalarFieldEnum[] | External_catalog_itemsScalarFieldEnum
+    having?: external_catalog_itemsScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: External_catalog_itemsCountAggregateInputType | true
+    _min?: External_catalog_itemsMinAggregateInputType
+    _max?: External_catalog_itemsMaxAggregateInputType
+  }
+
+  export type External_catalog_itemsGroupByOutputType = {
+    external_catalog_item_id: string
+    business_id: string
+    item_id: string | null
+    provider: string
+    external_catalog_id: string | null
+    external_product_id: string
+    retailer_id: string | null
+    sync_status: string
+    last_synced_at: Date | null
+    remote_hash: string | null
+    local_hash: string | null
+    raw_payload: JsonValue | null
+    created_at: Date
+    updated_at: Date
+    _count: External_catalog_itemsCountAggregateOutputType | null
+    _min: External_catalog_itemsMinAggregateOutputType | null
+    _max: External_catalog_itemsMaxAggregateOutputType | null
+  }
+
+  type GetExternal_catalog_itemsGroupByPayload<T extends external_catalog_itemsGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<External_catalog_itemsGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof External_catalog_itemsGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], External_catalog_itemsGroupByOutputType[P]>
+            : GetScalarType<T[P], External_catalog_itemsGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type external_catalog_itemsSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    external_catalog_item_id?: boolean
+    business_id?: boolean
+    item_id?: boolean
+    provider?: boolean
+    external_catalog_id?: boolean
+    external_product_id?: boolean
+    retailer_id?: boolean
+    sync_status?: boolean
+    last_synced_at?: boolean
+    remote_hash?: boolean
+    local_hash?: boolean
+    raw_payload?: boolean
+    created_at?: boolean
+    updated_at?: boolean
+    business?: boolean | businessesDefaultArgs<ExtArgs>
+    item?: boolean | external_catalog_items$itemArgs<ExtArgs>
+  }, ExtArgs["result"]["external_catalog_items"]>
+
+  export type external_catalog_itemsSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    external_catalog_item_id?: boolean
+    business_id?: boolean
+    item_id?: boolean
+    provider?: boolean
+    external_catalog_id?: boolean
+    external_product_id?: boolean
+    retailer_id?: boolean
+    sync_status?: boolean
+    last_synced_at?: boolean
+    remote_hash?: boolean
+    local_hash?: boolean
+    raw_payload?: boolean
+    created_at?: boolean
+    updated_at?: boolean
+    business?: boolean | businessesDefaultArgs<ExtArgs>
+    item?: boolean | external_catalog_items$itemArgs<ExtArgs>
+  }, ExtArgs["result"]["external_catalog_items"]>
+
+  export type external_catalog_itemsSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    external_catalog_item_id?: boolean
+    business_id?: boolean
+    item_id?: boolean
+    provider?: boolean
+    external_catalog_id?: boolean
+    external_product_id?: boolean
+    retailer_id?: boolean
+    sync_status?: boolean
+    last_synced_at?: boolean
+    remote_hash?: boolean
+    local_hash?: boolean
+    raw_payload?: boolean
+    created_at?: boolean
+    updated_at?: boolean
+    business?: boolean | businessesDefaultArgs<ExtArgs>
+    item?: boolean | external_catalog_items$itemArgs<ExtArgs>
+  }, ExtArgs["result"]["external_catalog_items"]>
+
+  export type external_catalog_itemsSelectScalar = {
+    external_catalog_item_id?: boolean
+    business_id?: boolean
+    item_id?: boolean
+    provider?: boolean
+    external_catalog_id?: boolean
+    external_product_id?: boolean
+    retailer_id?: boolean
+    sync_status?: boolean
+    last_synced_at?: boolean
+    remote_hash?: boolean
+    local_hash?: boolean
+    raw_payload?: boolean
+    created_at?: boolean
+    updated_at?: boolean
+  }
+
+  export type external_catalog_itemsOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"external_catalog_item_id" | "business_id" | "item_id" | "provider" | "external_catalog_id" | "external_product_id" | "retailer_id" | "sync_status" | "last_synced_at" | "remote_hash" | "local_hash" | "raw_payload" | "created_at" | "updated_at", ExtArgs["result"]["external_catalog_items"]>
+  export type external_catalog_itemsInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    business?: boolean | businessesDefaultArgs<ExtArgs>
+    item?: boolean | external_catalog_items$itemArgs<ExtArgs>
+  }
+  export type external_catalog_itemsIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    business?: boolean | businessesDefaultArgs<ExtArgs>
+    item?: boolean | external_catalog_items$itemArgs<ExtArgs>
+  }
+  export type external_catalog_itemsIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    business?: boolean | businessesDefaultArgs<ExtArgs>
+    item?: boolean | external_catalog_items$itemArgs<ExtArgs>
+  }
+
+  export type $external_catalog_itemsPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "external_catalog_items"
+    objects: {
+      business: Prisma.$businessesPayload<ExtArgs>
+      item: Prisma.$catalog_itemsPayload<ExtArgs> | null
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      external_catalog_item_id: string
+      business_id: string
+      item_id: string | null
+      provider: string
+      external_catalog_id: string | null
+      external_product_id: string
+      retailer_id: string | null
+      sync_status: string
+      last_synced_at: Date | null
+      remote_hash: string | null
+      local_hash: string | null
+      raw_payload: Prisma.JsonValue | null
+      created_at: Date
+      updated_at: Date
+    }, ExtArgs["result"]["external_catalog_items"]>
+    composites: {}
+  }
+
+  type external_catalog_itemsGetPayload<S extends boolean | null | undefined | external_catalog_itemsDefaultArgs> = $Result.GetResult<Prisma.$external_catalog_itemsPayload, S>
+
+  type external_catalog_itemsCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<external_catalog_itemsFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: External_catalog_itemsCountAggregateInputType | true
+    }
+
+  export interface external_catalog_itemsDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['external_catalog_items'], meta: { name: 'external_catalog_items' } }
+    /**
+     * Find zero or one External_catalog_items that matches the filter.
+     * @param {external_catalog_itemsFindUniqueArgs} args - Arguments to find a External_catalog_items
+     * @example
+     * // Get one External_catalog_items
+     * const external_catalog_items = await prisma.external_catalog_items.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends external_catalog_itemsFindUniqueArgs>(args: SelectSubset<T, external_catalog_itemsFindUniqueArgs<ExtArgs>>): Prisma__external_catalog_itemsClient<$Result.GetResult<Prisma.$external_catalog_itemsPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one External_catalog_items that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {external_catalog_itemsFindUniqueOrThrowArgs} args - Arguments to find a External_catalog_items
+     * @example
+     * // Get one External_catalog_items
+     * const external_catalog_items = await prisma.external_catalog_items.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends external_catalog_itemsFindUniqueOrThrowArgs>(args: SelectSubset<T, external_catalog_itemsFindUniqueOrThrowArgs<ExtArgs>>): Prisma__external_catalog_itemsClient<$Result.GetResult<Prisma.$external_catalog_itemsPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first External_catalog_items that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {external_catalog_itemsFindFirstArgs} args - Arguments to find a External_catalog_items
+     * @example
+     * // Get one External_catalog_items
+     * const external_catalog_items = await prisma.external_catalog_items.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends external_catalog_itemsFindFirstArgs>(args?: SelectSubset<T, external_catalog_itemsFindFirstArgs<ExtArgs>>): Prisma__external_catalog_itemsClient<$Result.GetResult<Prisma.$external_catalog_itemsPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first External_catalog_items that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {external_catalog_itemsFindFirstOrThrowArgs} args - Arguments to find a External_catalog_items
+     * @example
+     * // Get one External_catalog_items
+     * const external_catalog_items = await prisma.external_catalog_items.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends external_catalog_itemsFindFirstOrThrowArgs>(args?: SelectSubset<T, external_catalog_itemsFindFirstOrThrowArgs<ExtArgs>>): Prisma__external_catalog_itemsClient<$Result.GetResult<Prisma.$external_catalog_itemsPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more External_catalog_items that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {external_catalog_itemsFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all External_catalog_items
+     * const external_catalog_items = await prisma.external_catalog_items.findMany()
+     * 
+     * // Get first 10 External_catalog_items
+     * const external_catalog_items = await prisma.external_catalog_items.findMany({ take: 10 })
+     * 
+     * // Only select the `external_catalog_item_id`
+     * const external_catalog_itemsWithExternal_catalog_item_idOnly = await prisma.external_catalog_items.findMany({ select: { external_catalog_item_id: true } })
+     * 
+     */
+    findMany<T extends external_catalog_itemsFindManyArgs>(args?: SelectSubset<T, external_catalog_itemsFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$external_catalog_itemsPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a External_catalog_items.
+     * @param {external_catalog_itemsCreateArgs} args - Arguments to create a External_catalog_items.
+     * @example
+     * // Create one External_catalog_items
+     * const External_catalog_items = await prisma.external_catalog_items.create({
+     *   data: {
+     *     // ... data to create a External_catalog_items
+     *   }
+     * })
+     * 
+     */
+    create<T extends external_catalog_itemsCreateArgs>(args: SelectSubset<T, external_catalog_itemsCreateArgs<ExtArgs>>): Prisma__external_catalog_itemsClient<$Result.GetResult<Prisma.$external_catalog_itemsPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many External_catalog_items.
+     * @param {external_catalog_itemsCreateManyArgs} args - Arguments to create many External_catalog_items.
+     * @example
+     * // Create many External_catalog_items
+     * const external_catalog_items = await prisma.external_catalog_items.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends external_catalog_itemsCreateManyArgs>(args?: SelectSubset<T, external_catalog_itemsCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many External_catalog_items and returns the data saved in the database.
+     * @param {external_catalog_itemsCreateManyAndReturnArgs} args - Arguments to create many External_catalog_items.
+     * @example
+     * // Create many External_catalog_items
+     * const external_catalog_items = await prisma.external_catalog_items.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many External_catalog_items and only return the `external_catalog_item_id`
+     * const external_catalog_itemsWithExternal_catalog_item_idOnly = await prisma.external_catalog_items.createManyAndReturn({
+     *   select: { external_catalog_item_id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends external_catalog_itemsCreateManyAndReturnArgs>(args?: SelectSubset<T, external_catalog_itemsCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$external_catalog_itemsPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a External_catalog_items.
+     * @param {external_catalog_itemsDeleteArgs} args - Arguments to delete one External_catalog_items.
+     * @example
+     * // Delete one External_catalog_items
+     * const External_catalog_items = await prisma.external_catalog_items.delete({
+     *   where: {
+     *     // ... filter to delete one External_catalog_items
+     *   }
+     * })
+     * 
+     */
+    delete<T extends external_catalog_itemsDeleteArgs>(args: SelectSubset<T, external_catalog_itemsDeleteArgs<ExtArgs>>): Prisma__external_catalog_itemsClient<$Result.GetResult<Prisma.$external_catalog_itemsPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one External_catalog_items.
+     * @param {external_catalog_itemsUpdateArgs} args - Arguments to update one External_catalog_items.
+     * @example
+     * // Update one External_catalog_items
+     * const external_catalog_items = await prisma.external_catalog_items.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends external_catalog_itemsUpdateArgs>(args: SelectSubset<T, external_catalog_itemsUpdateArgs<ExtArgs>>): Prisma__external_catalog_itemsClient<$Result.GetResult<Prisma.$external_catalog_itemsPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more External_catalog_items.
+     * @param {external_catalog_itemsDeleteManyArgs} args - Arguments to filter External_catalog_items to delete.
+     * @example
+     * // Delete a few External_catalog_items
+     * const { count } = await prisma.external_catalog_items.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends external_catalog_itemsDeleteManyArgs>(args?: SelectSubset<T, external_catalog_itemsDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more External_catalog_items.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {external_catalog_itemsUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many External_catalog_items
+     * const external_catalog_items = await prisma.external_catalog_items.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends external_catalog_itemsUpdateManyArgs>(args: SelectSubset<T, external_catalog_itemsUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more External_catalog_items and returns the data updated in the database.
+     * @param {external_catalog_itemsUpdateManyAndReturnArgs} args - Arguments to update many External_catalog_items.
+     * @example
+     * // Update many External_catalog_items
+     * const external_catalog_items = await prisma.external_catalog_items.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more External_catalog_items and only return the `external_catalog_item_id`
+     * const external_catalog_itemsWithExternal_catalog_item_idOnly = await prisma.external_catalog_items.updateManyAndReturn({
+     *   select: { external_catalog_item_id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends external_catalog_itemsUpdateManyAndReturnArgs>(args: SelectSubset<T, external_catalog_itemsUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$external_catalog_itemsPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one External_catalog_items.
+     * @param {external_catalog_itemsUpsertArgs} args - Arguments to update or create a External_catalog_items.
+     * @example
+     * // Update or create a External_catalog_items
+     * const external_catalog_items = await prisma.external_catalog_items.upsert({
+     *   create: {
+     *     // ... data to create a External_catalog_items
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the External_catalog_items we want to update
+     *   }
+     * })
+     */
+    upsert<T extends external_catalog_itemsUpsertArgs>(args: SelectSubset<T, external_catalog_itemsUpsertArgs<ExtArgs>>): Prisma__external_catalog_itemsClient<$Result.GetResult<Prisma.$external_catalog_itemsPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of External_catalog_items.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {external_catalog_itemsCountArgs} args - Arguments to filter External_catalog_items to count.
+     * @example
+     * // Count the number of External_catalog_items
+     * const count = await prisma.external_catalog_items.count({
+     *   where: {
+     *     // ... the filter for the External_catalog_items we want to count
+     *   }
+     * })
+    **/
+    count<T extends external_catalog_itemsCountArgs>(
+      args?: Subset<T, external_catalog_itemsCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], External_catalog_itemsCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a External_catalog_items.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {External_catalog_itemsAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends External_catalog_itemsAggregateArgs>(args: Subset<T, External_catalog_itemsAggregateArgs>): Prisma.PrismaPromise<GetExternal_catalog_itemsAggregateType<T>>
+
+    /**
+     * Group by External_catalog_items.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {external_catalog_itemsGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends external_catalog_itemsGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: external_catalog_itemsGroupByArgs['orderBy'] }
+        : { orderBy?: external_catalog_itemsGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, external_catalog_itemsGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetExternal_catalog_itemsGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the external_catalog_items model
+   */
+  readonly fields: external_catalog_itemsFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for external_catalog_items.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__external_catalog_itemsClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    business<T extends businessesDefaultArgs<ExtArgs> = {}>(args?: Subset<T, businessesDefaultArgs<ExtArgs>>): Prisma__businessesClient<$Result.GetResult<Prisma.$businessesPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    item<T extends external_catalog_items$itemArgs<ExtArgs> = {}>(args?: Subset<T, external_catalog_items$itemArgs<ExtArgs>>): Prisma__catalog_itemsClient<$Result.GetResult<Prisma.$catalog_itemsPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the external_catalog_items model
+   */
+  interface external_catalog_itemsFieldRefs {
+    readonly external_catalog_item_id: FieldRef<"external_catalog_items", 'String'>
+    readonly business_id: FieldRef<"external_catalog_items", 'String'>
+    readonly item_id: FieldRef<"external_catalog_items", 'String'>
+    readonly provider: FieldRef<"external_catalog_items", 'String'>
+    readonly external_catalog_id: FieldRef<"external_catalog_items", 'String'>
+    readonly external_product_id: FieldRef<"external_catalog_items", 'String'>
+    readonly retailer_id: FieldRef<"external_catalog_items", 'String'>
+    readonly sync_status: FieldRef<"external_catalog_items", 'String'>
+    readonly last_synced_at: FieldRef<"external_catalog_items", 'DateTime'>
+    readonly remote_hash: FieldRef<"external_catalog_items", 'String'>
+    readonly local_hash: FieldRef<"external_catalog_items", 'String'>
+    readonly raw_payload: FieldRef<"external_catalog_items", 'Json'>
+    readonly created_at: FieldRef<"external_catalog_items", 'DateTime'>
+    readonly updated_at: FieldRef<"external_catalog_items", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * external_catalog_items findUnique
+   */
+  export type external_catalog_itemsFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the external_catalog_items
+     */
+    select?: external_catalog_itemsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the external_catalog_items
+     */
+    omit?: external_catalog_itemsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: external_catalog_itemsInclude<ExtArgs> | null
+    /**
+     * Filter, which external_catalog_items to fetch.
+     */
+    where: external_catalog_itemsWhereUniqueInput
+  }
+
+  /**
+   * external_catalog_items findUniqueOrThrow
+   */
+  export type external_catalog_itemsFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the external_catalog_items
+     */
+    select?: external_catalog_itemsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the external_catalog_items
+     */
+    omit?: external_catalog_itemsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: external_catalog_itemsInclude<ExtArgs> | null
+    /**
+     * Filter, which external_catalog_items to fetch.
+     */
+    where: external_catalog_itemsWhereUniqueInput
+  }
+
+  /**
+   * external_catalog_items findFirst
+   */
+  export type external_catalog_itemsFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the external_catalog_items
+     */
+    select?: external_catalog_itemsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the external_catalog_items
+     */
+    omit?: external_catalog_itemsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: external_catalog_itemsInclude<ExtArgs> | null
+    /**
+     * Filter, which external_catalog_items to fetch.
+     */
+    where?: external_catalog_itemsWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of external_catalog_items to fetch.
+     */
+    orderBy?: external_catalog_itemsOrderByWithRelationInput | external_catalog_itemsOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for external_catalog_items.
+     */
+    cursor?: external_catalog_itemsWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` external_catalog_items from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` external_catalog_items.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of external_catalog_items.
+     */
+    distinct?: External_catalog_itemsScalarFieldEnum | External_catalog_itemsScalarFieldEnum[]
+  }
+
+  /**
+   * external_catalog_items findFirstOrThrow
+   */
+  export type external_catalog_itemsFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the external_catalog_items
+     */
+    select?: external_catalog_itemsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the external_catalog_items
+     */
+    omit?: external_catalog_itemsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: external_catalog_itemsInclude<ExtArgs> | null
+    /**
+     * Filter, which external_catalog_items to fetch.
+     */
+    where?: external_catalog_itemsWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of external_catalog_items to fetch.
+     */
+    orderBy?: external_catalog_itemsOrderByWithRelationInput | external_catalog_itemsOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for external_catalog_items.
+     */
+    cursor?: external_catalog_itemsWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` external_catalog_items from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` external_catalog_items.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of external_catalog_items.
+     */
+    distinct?: External_catalog_itemsScalarFieldEnum | External_catalog_itemsScalarFieldEnum[]
+  }
+
+  /**
+   * external_catalog_items findMany
+   */
+  export type external_catalog_itemsFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the external_catalog_items
+     */
+    select?: external_catalog_itemsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the external_catalog_items
+     */
+    omit?: external_catalog_itemsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: external_catalog_itemsInclude<ExtArgs> | null
+    /**
+     * Filter, which external_catalog_items to fetch.
+     */
+    where?: external_catalog_itemsWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of external_catalog_items to fetch.
+     */
+    orderBy?: external_catalog_itemsOrderByWithRelationInput | external_catalog_itemsOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing external_catalog_items.
+     */
+    cursor?: external_catalog_itemsWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` external_catalog_items from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` external_catalog_items.
+     */
+    skip?: number
+    distinct?: External_catalog_itemsScalarFieldEnum | External_catalog_itemsScalarFieldEnum[]
+  }
+
+  /**
+   * external_catalog_items create
+   */
+  export type external_catalog_itemsCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the external_catalog_items
+     */
+    select?: external_catalog_itemsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the external_catalog_items
+     */
+    omit?: external_catalog_itemsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: external_catalog_itemsInclude<ExtArgs> | null
+    /**
+     * The data needed to create a external_catalog_items.
+     */
+    data: XOR<external_catalog_itemsCreateInput, external_catalog_itemsUncheckedCreateInput>
+  }
+
+  /**
+   * external_catalog_items createMany
+   */
+  export type external_catalog_itemsCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many external_catalog_items.
+     */
+    data: external_catalog_itemsCreateManyInput | external_catalog_itemsCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * external_catalog_items createManyAndReturn
+   */
+  export type external_catalog_itemsCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the external_catalog_items
+     */
+    select?: external_catalog_itemsSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the external_catalog_items
+     */
+    omit?: external_catalog_itemsOmit<ExtArgs> | null
+    /**
+     * The data used to create many external_catalog_items.
+     */
+    data: external_catalog_itemsCreateManyInput | external_catalog_itemsCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: external_catalog_itemsIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * external_catalog_items update
+   */
+  export type external_catalog_itemsUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the external_catalog_items
+     */
+    select?: external_catalog_itemsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the external_catalog_items
+     */
+    omit?: external_catalog_itemsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: external_catalog_itemsInclude<ExtArgs> | null
+    /**
+     * The data needed to update a external_catalog_items.
+     */
+    data: XOR<external_catalog_itemsUpdateInput, external_catalog_itemsUncheckedUpdateInput>
+    /**
+     * Choose, which external_catalog_items to update.
+     */
+    where: external_catalog_itemsWhereUniqueInput
+  }
+
+  /**
+   * external_catalog_items updateMany
+   */
+  export type external_catalog_itemsUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update external_catalog_items.
+     */
+    data: XOR<external_catalog_itemsUpdateManyMutationInput, external_catalog_itemsUncheckedUpdateManyInput>
+    /**
+     * Filter which external_catalog_items to update
+     */
+    where?: external_catalog_itemsWhereInput
+    /**
+     * Limit how many external_catalog_items to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * external_catalog_items updateManyAndReturn
+   */
+  export type external_catalog_itemsUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the external_catalog_items
+     */
+    select?: external_catalog_itemsSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the external_catalog_items
+     */
+    omit?: external_catalog_itemsOmit<ExtArgs> | null
+    /**
+     * The data used to update external_catalog_items.
+     */
+    data: XOR<external_catalog_itemsUpdateManyMutationInput, external_catalog_itemsUncheckedUpdateManyInput>
+    /**
+     * Filter which external_catalog_items to update
+     */
+    where?: external_catalog_itemsWhereInput
+    /**
+     * Limit how many external_catalog_items to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: external_catalog_itemsIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * external_catalog_items upsert
+   */
+  export type external_catalog_itemsUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the external_catalog_items
+     */
+    select?: external_catalog_itemsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the external_catalog_items
+     */
+    omit?: external_catalog_itemsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: external_catalog_itemsInclude<ExtArgs> | null
+    /**
+     * The filter to search for the external_catalog_items to update in case it exists.
+     */
+    where: external_catalog_itemsWhereUniqueInput
+    /**
+     * In case the external_catalog_items found by the `where` argument doesn't exist, create a new external_catalog_items with this data.
+     */
+    create: XOR<external_catalog_itemsCreateInput, external_catalog_itemsUncheckedCreateInput>
+    /**
+     * In case the external_catalog_items was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<external_catalog_itemsUpdateInput, external_catalog_itemsUncheckedUpdateInput>
+  }
+
+  /**
+   * external_catalog_items delete
+   */
+  export type external_catalog_itemsDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the external_catalog_items
+     */
+    select?: external_catalog_itemsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the external_catalog_items
+     */
+    omit?: external_catalog_itemsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: external_catalog_itemsInclude<ExtArgs> | null
+    /**
+     * Filter which external_catalog_items to delete.
+     */
+    where: external_catalog_itemsWhereUniqueInput
+  }
+
+  /**
+   * external_catalog_items deleteMany
+   */
+  export type external_catalog_itemsDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which external_catalog_items to delete
+     */
+    where?: external_catalog_itemsWhereInput
+    /**
+     * Limit how many external_catalog_items to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * external_catalog_items.item
+   */
+  export type external_catalog_items$itemArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the catalog_items
+     */
+    select?: catalog_itemsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the catalog_items
+     */
+    omit?: catalog_itemsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: catalog_itemsInclude<ExtArgs> | null
+    where?: catalog_itemsWhereInput
+  }
+
+  /**
+   * external_catalog_items without action
+   */
+  export type external_catalog_itemsDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the external_catalog_items
+     */
+    select?: external_catalog_itemsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the external_catalog_items
+     */
+    omit?: external_catalog_itemsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: external_catalog_itemsInclude<ExtArgs> | null
   }
 
 
@@ -92102,6 +93465,7 @@ export namespace Prisma {
     auto_reply_enabled: number
     booking_methods: number
     booking_link: number
+    whatsapp_onboarding: number
     low_balance_alert: number
     default_country_code: number
     updated_at: number
@@ -92159,6 +93523,7 @@ export namespace Prisma {
     auto_reply_enabled?: true
     booking_methods?: true
     booking_link?: true
+    whatsapp_onboarding?: true
     low_balance_alert?: true
     default_country_code?: true
     updated_at?: true
@@ -92263,6 +93628,7 @@ export namespace Prisma {
     auto_reply_enabled: boolean
     booking_methods: JsonValue
     booking_link: JsonValue
+    whatsapp_onboarding: JsonValue
     low_balance_alert: Decimal
     default_country_code: string
     updated_at: Date
@@ -92299,6 +93665,7 @@ export namespace Prisma {
     auto_reply_enabled?: boolean
     booking_methods?: boolean
     booking_link?: boolean
+    whatsapp_onboarding?: boolean
     low_balance_alert?: boolean
     default_country_code?: boolean
     updated_at?: boolean
@@ -92317,6 +93684,7 @@ export namespace Prisma {
     auto_reply_enabled?: boolean
     booking_methods?: boolean
     booking_link?: boolean
+    whatsapp_onboarding?: boolean
     low_balance_alert?: boolean
     default_country_code?: boolean
     updated_at?: boolean
@@ -92335,6 +93703,7 @@ export namespace Prisma {
     auto_reply_enabled?: boolean
     booking_methods?: boolean
     booking_link?: boolean
+    whatsapp_onboarding?: boolean
     low_balance_alert?: boolean
     default_country_code?: boolean
     updated_at?: boolean
@@ -92353,12 +93722,13 @@ export namespace Prisma {
     auto_reply_enabled?: boolean
     booking_methods?: boolean
     booking_link?: boolean
+    whatsapp_onboarding?: boolean
     low_balance_alert?: boolean
     default_country_code?: boolean
     updated_at?: boolean
   }
 
-  export type business_settingsOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"business_id" | "timezone" | "language" | "currency" | "business_hours" | "onboarding_step" | "onboarding_done" | "ai_agent_enabled" | "auto_reply_enabled" | "booking_methods" | "booking_link" | "low_balance_alert" | "default_country_code" | "updated_at", ExtArgs["result"]["business_settings"]>
+  export type business_settingsOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"business_id" | "timezone" | "language" | "currency" | "business_hours" | "onboarding_step" | "onboarding_done" | "ai_agent_enabled" | "auto_reply_enabled" | "booking_methods" | "booking_link" | "whatsapp_onboarding" | "low_balance_alert" | "default_country_code" | "updated_at", ExtArgs["result"]["business_settings"]>
   export type business_settingsInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     businesses?: boolean | businessesDefaultArgs<ExtArgs>
   }
@@ -92386,6 +93756,7 @@ export namespace Prisma {
       auto_reply_enabled: boolean
       booking_methods: Prisma.JsonValue
       booking_link: Prisma.JsonValue
+      whatsapp_onboarding: Prisma.JsonValue
       low_balance_alert: Prisma.Decimal
       /**
        * E.164-style dial code without the "+" (e.g. "91" for India, "1" for US).
@@ -92830,6 +94201,7 @@ export namespace Prisma {
     readonly auto_reply_enabled: FieldRef<"business_settings", 'Boolean'>
     readonly booking_methods: FieldRef<"business_settings", 'Json'>
     readonly booking_link: FieldRef<"business_settings", 'Json'>
+    readonly whatsapp_onboarding: FieldRef<"business_settings", 'Json'>
     readonly low_balance_alert: FieldRef<"business_settings", 'Decimal'>
     readonly default_country_code: FieldRef<"business_settings", 'String'>
     readonly updated_at: FieldRef<"business_settings", 'DateTime'>
@@ -97612,6 +98984,26 @@ export namespace Prisma {
   export type Product_item_detailsScalarFieldEnum = (typeof Product_item_detailsScalarFieldEnum)[keyof typeof Product_item_detailsScalarFieldEnum]
 
 
+  export const External_catalog_itemsScalarFieldEnum: {
+    external_catalog_item_id: 'external_catalog_item_id',
+    business_id: 'business_id',
+    item_id: 'item_id',
+    provider: 'provider',
+    external_catalog_id: 'external_catalog_id',
+    external_product_id: 'external_product_id',
+    retailer_id: 'retailer_id',
+    sync_status: 'sync_status',
+    last_synced_at: 'last_synced_at',
+    remote_hash: 'remote_hash',
+    local_hash: 'local_hash',
+    raw_payload: 'raw_payload',
+    created_at: 'created_at',
+    updated_at: 'updated_at'
+  };
+
+  export type External_catalog_itemsScalarFieldEnum = (typeof External_catalog_itemsScalarFieldEnum)[keyof typeof External_catalog_itemsScalarFieldEnum]
+
+
   export const Product_inquiriesScalarFieldEnum: {
     inquiry_id: 'inquiry_id',
     business_id: 'business_id',
@@ -98029,6 +99421,7 @@ export namespace Prisma {
     auto_reply_enabled: 'auto_reply_enabled',
     booking_methods: 'booking_methods',
     booking_link: 'booking_link',
+    whatsapp_onboarding: 'whatsapp_onboarding',
     low_balance_alert: 'low_balance_alert',
     default_country_code: 'default_country_code',
     updated_at: 'updated_at'
@@ -98287,6 +99680,7 @@ export namespace Prisma {
     tenants?: XOR<TenantsScalarRelationFilter, tenantsWhereInput>
     carts?: CartsListRelationFilter
     catalog_items?: Catalog_itemsListRelationFilter
+    external_catalog_items?: External_catalog_itemsListRelationFilter
     product_item_details?: Product_item_detailsListRelationFilter
     hospitality_item_details?: Hospitality_item_detailsListRelationFilter
     vehicle_item_details?: Vehicle_item_detailsListRelationFilter
@@ -98337,6 +99731,7 @@ export namespace Prisma {
     tenants?: tenantsOrderByWithRelationInput
     carts?: cartsOrderByRelationAggregateInput
     catalog_items?: catalog_itemsOrderByRelationAggregateInput
+    external_catalog_items?: external_catalog_itemsOrderByRelationAggregateInput
     product_item_details?: product_item_detailsOrderByRelationAggregateInput
     hospitality_item_details?: hospitality_item_detailsOrderByRelationAggregateInput
     vehicle_item_details?: vehicle_item_detailsOrderByRelationAggregateInput
@@ -98390,6 +99785,7 @@ export namespace Prisma {
     tenants?: XOR<TenantsScalarRelationFilter, tenantsWhereInput>
     carts?: CartsListRelationFilter
     catalog_items?: Catalog_itemsListRelationFilter
+    external_catalog_items?: External_catalog_itemsListRelationFilter
     product_item_details?: Product_item_detailsListRelationFilter
     hospitality_item_details?: Hospitality_item_detailsListRelationFilter
     vehicle_item_details?: Vehicle_item_detailsListRelationFilter
@@ -102795,6 +104191,7 @@ export namespace Prisma {
     availability?: Item_availabilityListRelationFilter
     variants?: Item_variantsListRelationFilter
     order_items?: Order_itemsListRelationFilter
+    external_catalog_items?: External_catalog_itemsListRelationFilter
   }
 
   export type catalog_itemsOrderByWithRelationInput = {
@@ -102830,6 +104227,7 @@ export namespace Prisma {
     availability?: item_availabilityOrderByRelationAggregateInput
     variants?: item_variantsOrderByRelationAggregateInput
     order_items?: order_itemsOrderByRelationAggregateInput
+    external_catalog_items?: external_catalog_itemsOrderByRelationAggregateInput
   }
 
   export type catalog_itemsWhereUniqueInput = Prisma.AtLeast<{
@@ -102868,6 +104266,7 @@ export namespace Prisma {
     availability?: Item_availabilityListRelationFilter
     variants?: Item_variantsListRelationFilter
     order_items?: Order_itemsListRelationFilter
+    external_catalog_items?: External_catalog_itemsListRelationFilter
   }, "item_id">
 
   export type catalog_itemsOrderByWithAggregationInput = {
@@ -103189,6 +104588,110 @@ export namespace Prisma {
     metadata?: JsonNullableWithAggregatesFilter<"product_item_details">
     created_at?: DateTimeWithAggregatesFilter<"product_item_details"> | Date | string
     updated_at?: DateTimeWithAggregatesFilter<"product_item_details"> | Date | string
+  }
+
+  export type external_catalog_itemsWhereInput = {
+    AND?: external_catalog_itemsWhereInput | external_catalog_itemsWhereInput[]
+    OR?: external_catalog_itemsWhereInput[]
+    NOT?: external_catalog_itemsWhereInput | external_catalog_itemsWhereInput[]
+    external_catalog_item_id?: UuidFilter<"external_catalog_items"> | string
+    business_id?: UuidFilter<"external_catalog_items"> | string
+    item_id?: UuidNullableFilter<"external_catalog_items"> | string | null
+    provider?: StringFilter<"external_catalog_items"> | string
+    external_catalog_id?: StringNullableFilter<"external_catalog_items"> | string | null
+    external_product_id?: StringFilter<"external_catalog_items"> | string
+    retailer_id?: StringNullableFilter<"external_catalog_items"> | string | null
+    sync_status?: StringFilter<"external_catalog_items"> | string
+    last_synced_at?: DateTimeNullableFilter<"external_catalog_items"> | Date | string | null
+    remote_hash?: StringNullableFilter<"external_catalog_items"> | string | null
+    local_hash?: StringNullableFilter<"external_catalog_items"> | string | null
+    raw_payload?: JsonNullableFilter<"external_catalog_items">
+    created_at?: DateTimeFilter<"external_catalog_items"> | Date | string
+    updated_at?: DateTimeFilter<"external_catalog_items"> | Date | string
+    business?: XOR<BusinessesScalarRelationFilter, businessesWhereInput>
+    item?: XOR<Catalog_itemsNullableScalarRelationFilter, catalog_itemsWhereInput> | null
+  }
+
+  export type external_catalog_itemsOrderByWithRelationInput = {
+    external_catalog_item_id?: SortOrder
+    business_id?: SortOrder
+    item_id?: SortOrderInput | SortOrder
+    provider?: SortOrder
+    external_catalog_id?: SortOrderInput | SortOrder
+    external_product_id?: SortOrder
+    retailer_id?: SortOrderInput | SortOrder
+    sync_status?: SortOrder
+    last_synced_at?: SortOrderInput | SortOrder
+    remote_hash?: SortOrderInput | SortOrder
+    local_hash?: SortOrderInput | SortOrder
+    raw_payload?: SortOrderInput | SortOrder
+    created_at?: SortOrder
+    updated_at?: SortOrder
+    business?: businessesOrderByWithRelationInput
+    item?: catalog_itemsOrderByWithRelationInput
+  }
+
+  export type external_catalog_itemsWhereUniqueInput = Prisma.AtLeast<{
+    external_catalog_item_id?: string
+    business_id_provider_external_product_id?: external_catalog_itemsBusiness_idProviderExternal_product_idCompoundUniqueInput
+    AND?: external_catalog_itemsWhereInput | external_catalog_itemsWhereInput[]
+    OR?: external_catalog_itemsWhereInput[]
+    NOT?: external_catalog_itemsWhereInput | external_catalog_itemsWhereInput[]
+    business_id?: UuidFilter<"external_catalog_items"> | string
+    item_id?: UuidNullableFilter<"external_catalog_items"> | string | null
+    provider?: StringFilter<"external_catalog_items"> | string
+    external_catalog_id?: StringNullableFilter<"external_catalog_items"> | string | null
+    external_product_id?: StringFilter<"external_catalog_items"> | string
+    retailer_id?: StringNullableFilter<"external_catalog_items"> | string | null
+    sync_status?: StringFilter<"external_catalog_items"> | string
+    last_synced_at?: DateTimeNullableFilter<"external_catalog_items"> | Date | string | null
+    remote_hash?: StringNullableFilter<"external_catalog_items"> | string | null
+    local_hash?: StringNullableFilter<"external_catalog_items"> | string | null
+    raw_payload?: JsonNullableFilter<"external_catalog_items">
+    created_at?: DateTimeFilter<"external_catalog_items"> | Date | string
+    updated_at?: DateTimeFilter<"external_catalog_items"> | Date | string
+    business?: XOR<BusinessesScalarRelationFilter, businessesWhereInput>
+    item?: XOR<Catalog_itemsNullableScalarRelationFilter, catalog_itemsWhereInput> | null
+  }, "external_catalog_item_id" | "business_id_provider_external_product_id">
+
+  export type external_catalog_itemsOrderByWithAggregationInput = {
+    external_catalog_item_id?: SortOrder
+    business_id?: SortOrder
+    item_id?: SortOrderInput | SortOrder
+    provider?: SortOrder
+    external_catalog_id?: SortOrderInput | SortOrder
+    external_product_id?: SortOrder
+    retailer_id?: SortOrderInput | SortOrder
+    sync_status?: SortOrder
+    last_synced_at?: SortOrderInput | SortOrder
+    remote_hash?: SortOrderInput | SortOrder
+    local_hash?: SortOrderInput | SortOrder
+    raw_payload?: SortOrderInput | SortOrder
+    created_at?: SortOrder
+    updated_at?: SortOrder
+    _count?: external_catalog_itemsCountOrderByAggregateInput
+    _max?: external_catalog_itemsMaxOrderByAggregateInput
+    _min?: external_catalog_itemsMinOrderByAggregateInput
+  }
+
+  export type external_catalog_itemsScalarWhereWithAggregatesInput = {
+    AND?: external_catalog_itemsScalarWhereWithAggregatesInput | external_catalog_itemsScalarWhereWithAggregatesInput[]
+    OR?: external_catalog_itemsScalarWhereWithAggregatesInput[]
+    NOT?: external_catalog_itemsScalarWhereWithAggregatesInput | external_catalog_itemsScalarWhereWithAggregatesInput[]
+    external_catalog_item_id?: UuidWithAggregatesFilter<"external_catalog_items"> | string
+    business_id?: UuidWithAggregatesFilter<"external_catalog_items"> | string
+    item_id?: UuidNullableWithAggregatesFilter<"external_catalog_items"> | string | null
+    provider?: StringWithAggregatesFilter<"external_catalog_items"> | string
+    external_catalog_id?: StringNullableWithAggregatesFilter<"external_catalog_items"> | string | null
+    external_product_id?: StringWithAggregatesFilter<"external_catalog_items"> | string
+    retailer_id?: StringNullableWithAggregatesFilter<"external_catalog_items"> | string | null
+    sync_status?: StringWithAggregatesFilter<"external_catalog_items"> | string
+    last_synced_at?: DateTimeNullableWithAggregatesFilter<"external_catalog_items"> | Date | string | null
+    remote_hash?: StringNullableWithAggregatesFilter<"external_catalog_items"> | string | null
+    local_hash?: StringNullableWithAggregatesFilter<"external_catalog_items"> | string | null
+    raw_payload?: JsonNullableWithAggregatesFilter<"external_catalog_items">
+    created_at?: DateTimeWithAggregatesFilter<"external_catalog_items"> | Date | string
+    updated_at?: DateTimeWithAggregatesFilter<"external_catalog_items"> | Date | string
   }
 
   export type product_inquiriesWhereInput = {
@@ -105336,6 +106839,7 @@ export namespace Prisma {
     auto_reply_enabled?: BoolFilter<"business_settings"> | boolean
     booking_methods?: JsonFilter<"business_settings">
     booking_link?: JsonFilter<"business_settings">
+    whatsapp_onboarding?: JsonFilter<"business_settings">
     low_balance_alert?: DecimalFilter<"business_settings"> | Decimal | DecimalJsLike | number | string
     default_country_code?: StringFilter<"business_settings"> | string
     updated_at?: DateTimeFilter<"business_settings"> | Date | string
@@ -105354,6 +106858,7 @@ export namespace Prisma {
     auto_reply_enabled?: SortOrder
     booking_methods?: SortOrder
     booking_link?: SortOrder
+    whatsapp_onboarding?: SortOrder
     low_balance_alert?: SortOrder
     default_country_code?: SortOrder
     updated_at?: SortOrder
@@ -105375,6 +106880,7 @@ export namespace Prisma {
     auto_reply_enabled?: BoolFilter<"business_settings"> | boolean
     booking_methods?: JsonFilter<"business_settings">
     booking_link?: JsonFilter<"business_settings">
+    whatsapp_onboarding?: JsonFilter<"business_settings">
     low_balance_alert?: DecimalFilter<"business_settings"> | Decimal | DecimalJsLike | number | string
     default_country_code?: StringFilter<"business_settings"> | string
     updated_at?: DateTimeFilter<"business_settings"> | Date | string
@@ -105393,6 +106899,7 @@ export namespace Prisma {
     auto_reply_enabled?: SortOrder
     booking_methods?: SortOrder
     booking_link?: SortOrder
+    whatsapp_onboarding?: SortOrder
     low_balance_alert?: SortOrder
     default_country_code?: SortOrder
     updated_at?: SortOrder
@@ -105418,6 +106925,7 @@ export namespace Prisma {
     auto_reply_enabled?: BoolWithAggregatesFilter<"business_settings"> | boolean
     booking_methods?: JsonWithAggregatesFilter<"business_settings">
     booking_link?: JsonWithAggregatesFilter<"business_settings">
+    whatsapp_onboarding?: JsonWithAggregatesFilter<"business_settings">
     low_balance_alert?: DecimalWithAggregatesFilter<"business_settings"> | Decimal | DecimalJsLike | number | string
     default_country_code?: StringWithAggregatesFilter<"business_settings"> | string
     updated_at?: DateTimeWithAggregatesFilter<"business_settings"> | Date | string
@@ -105696,6 +107204,7 @@ export namespace Prisma {
     tenants: tenantsCreateNestedOneWithoutBusinessesInput
     carts?: cartsCreateNestedManyWithoutBusinessesInput
     catalog_items?: catalog_itemsCreateNestedManyWithoutBusinessesInput
+    external_catalog_items?: external_catalog_itemsCreateNestedManyWithoutBusinessInput
     product_item_details?: product_item_detailsCreateNestedManyWithoutBusinessInput
     hospitality_item_details?: hospitality_item_detailsCreateNestedManyWithoutBusinessInput
     vehicle_item_details?: vehicle_item_detailsCreateNestedManyWithoutBusinessInput
@@ -105745,6 +107254,7 @@ export namespace Prisma {
     business_workflows?: business_workflowsUncheckedCreateNestedManyWithoutBusinessesInput
     carts?: cartsUncheckedCreateNestedManyWithoutBusinessesInput
     catalog_items?: catalog_itemsUncheckedCreateNestedManyWithoutBusinessesInput
+    external_catalog_items?: external_catalog_itemsUncheckedCreateNestedManyWithoutBusinessInput
     product_item_details?: product_item_detailsUncheckedCreateNestedManyWithoutBusinessInput
     hospitality_item_details?: hospitality_item_detailsUncheckedCreateNestedManyWithoutBusinessInput
     vehicle_item_details?: vehicle_item_detailsUncheckedCreateNestedManyWithoutBusinessInput
@@ -105794,6 +107304,7 @@ export namespace Prisma {
     tenants?: tenantsUpdateOneRequiredWithoutBusinessesNestedInput
     carts?: cartsUpdateManyWithoutBusinessesNestedInput
     catalog_items?: catalog_itemsUpdateManyWithoutBusinessesNestedInput
+    external_catalog_items?: external_catalog_itemsUpdateManyWithoutBusinessNestedInput
     product_item_details?: product_item_detailsUpdateManyWithoutBusinessNestedInput
     hospitality_item_details?: hospitality_item_detailsUpdateManyWithoutBusinessNestedInput
     vehicle_item_details?: vehicle_item_detailsUpdateManyWithoutBusinessNestedInput
@@ -105843,6 +107354,7 @@ export namespace Prisma {
     business_workflows?: business_workflowsUncheckedUpdateManyWithoutBusinessesNestedInput
     carts?: cartsUncheckedUpdateManyWithoutBusinessesNestedInput
     catalog_items?: catalog_itemsUncheckedUpdateManyWithoutBusinessesNestedInput
+    external_catalog_items?: external_catalog_itemsUncheckedUpdateManyWithoutBusinessNestedInput
     product_item_details?: product_item_detailsUncheckedUpdateManyWithoutBusinessNestedInput
     hospitality_item_details?: hospitality_item_detailsUncheckedUpdateManyWithoutBusinessNestedInput
     vehicle_item_details?: vehicle_item_detailsUncheckedUpdateManyWithoutBusinessNestedInput
@@ -110901,6 +112413,7 @@ export namespace Prisma {
     availability?: item_availabilityCreateNestedManyWithoutItemInput
     variants?: item_variantsCreateNestedManyWithoutItemInput
     order_items?: order_itemsCreateNestedManyWithoutCatalog_itemInput
+    external_catalog_items?: external_catalog_itemsCreateNestedManyWithoutItemInput
   }
 
   export type catalog_itemsUncheckedCreateInput = {
@@ -110935,6 +112448,7 @@ export namespace Prisma {
     availability?: item_availabilityUncheckedCreateNestedManyWithoutItemInput
     variants?: item_variantsUncheckedCreateNestedManyWithoutItemInput
     order_items?: order_itemsUncheckedCreateNestedManyWithoutCatalog_itemInput
+    external_catalog_items?: external_catalog_itemsUncheckedCreateNestedManyWithoutItemInput
   }
 
   export type catalog_itemsUpdateInput = {
@@ -110969,6 +112483,7 @@ export namespace Prisma {
     availability?: item_availabilityUpdateManyWithoutItemNestedInput
     variants?: item_variantsUpdateManyWithoutItemNestedInput
     order_items?: order_itemsUpdateManyWithoutCatalog_itemNestedInput
+    external_catalog_items?: external_catalog_itemsUpdateManyWithoutItemNestedInput
   }
 
   export type catalog_itemsUncheckedUpdateInput = {
@@ -111003,6 +112518,7 @@ export namespace Prisma {
     availability?: item_availabilityUncheckedUpdateManyWithoutItemNestedInput
     variants?: item_variantsUncheckedUpdateManyWithoutItemNestedInput
     order_items?: order_itemsUncheckedUpdateManyWithoutCatalog_itemNestedInput
+    external_catalog_items?: external_catalog_itemsUncheckedUpdateManyWithoutItemNestedInput
   }
 
   export type catalog_itemsCreateManyInput = {
@@ -111361,6 +112877,123 @@ export namespace Prisma {
     dimensions?: NullableJsonNullValueInput | InputJsonValue
     warranty?: NullableStringFieldUpdateOperationsInput | string | null
     metadata?: NullableJsonNullValueInput | InputJsonValue
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type external_catalog_itemsCreateInput = {
+    external_catalog_item_id?: string
+    provider: string
+    external_catalog_id?: string | null
+    external_product_id: string
+    retailer_id?: string | null
+    sync_status?: string
+    last_synced_at?: Date | string | null
+    remote_hash?: string | null
+    local_hash?: string | null
+    raw_payload?: NullableJsonNullValueInput | InputJsonValue
+    created_at?: Date | string
+    updated_at?: Date | string
+    business: businessesCreateNestedOneWithoutExternal_catalog_itemsInput
+    item?: catalog_itemsCreateNestedOneWithoutExternal_catalog_itemsInput
+  }
+
+  export type external_catalog_itemsUncheckedCreateInput = {
+    external_catalog_item_id?: string
+    business_id: string
+    item_id?: string | null
+    provider: string
+    external_catalog_id?: string | null
+    external_product_id: string
+    retailer_id?: string | null
+    sync_status?: string
+    last_synced_at?: Date | string | null
+    remote_hash?: string | null
+    local_hash?: string | null
+    raw_payload?: NullableJsonNullValueInput | InputJsonValue
+    created_at?: Date | string
+    updated_at?: Date | string
+  }
+
+  export type external_catalog_itemsUpdateInput = {
+    external_catalog_item_id?: StringFieldUpdateOperationsInput | string
+    provider?: StringFieldUpdateOperationsInput | string
+    external_catalog_id?: NullableStringFieldUpdateOperationsInput | string | null
+    external_product_id?: StringFieldUpdateOperationsInput | string
+    retailer_id?: NullableStringFieldUpdateOperationsInput | string | null
+    sync_status?: StringFieldUpdateOperationsInput | string
+    last_synced_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    remote_hash?: NullableStringFieldUpdateOperationsInput | string | null
+    local_hash?: NullableStringFieldUpdateOperationsInput | string | null
+    raw_payload?: NullableJsonNullValueInput | InputJsonValue
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    business?: businessesUpdateOneRequiredWithoutExternal_catalog_itemsNestedInput
+    item?: catalog_itemsUpdateOneWithoutExternal_catalog_itemsNestedInput
+  }
+
+  export type external_catalog_itemsUncheckedUpdateInput = {
+    external_catalog_item_id?: StringFieldUpdateOperationsInput | string
+    business_id?: StringFieldUpdateOperationsInput | string
+    item_id?: NullableStringFieldUpdateOperationsInput | string | null
+    provider?: StringFieldUpdateOperationsInput | string
+    external_catalog_id?: NullableStringFieldUpdateOperationsInput | string | null
+    external_product_id?: StringFieldUpdateOperationsInput | string
+    retailer_id?: NullableStringFieldUpdateOperationsInput | string | null
+    sync_status?: StringFieldUpdateOperationsInput | string
+    last_synced_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    remote_hash?: NullableStringFieldUpdateOperationsInput | string | null
+    local_hash?: NullableStringFieldUpdateOperationsInput | string | null
+    raw_payload?: NullableJsonNullValueInput | InputJsonValue
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type external_catalog_itemsCreateManyInput = {
+    external_catalog_item_id?: string
+    business_id: string
+    item_id?: string | null
+    provider: string
+    external_catalog_id?: string | null
+    external_product_id: string
+    retailer_id?: string | null
+    sync_status?: string
+    last_synced_at?: Date | string | null
+    remote_hash?: string | null
+    local_hash?: string | null
+    raw_payload?: NullableJsonNullValueInput | InputJsonValue
+    created_at?: Date | string
+    updated_at?: Date | string
+  }
+
+  export type external_catalog_itemsUpdateManyMutationInput = {
+    external_catalog_item_id?: StringFieldUpdateOperationsInput | string
+    provider?: StringFieldUpdateOperationsInput | string
+    external_catalog_id?: NullableStringFieldUpdateOperationsInput | string | null
+    external_product_id?: StringFieldUpdateOperationsInput | string
+    retailer_id?: NullableStringFieldUpdateOperationsInput | string | null
+    sync_status?: StringFieldUpdateOperationsInput | string
+    last_synced_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    remote_hash?: NullableStringFieldUpdateOperationsInput | string | null
+    local_hash?: NullableStringFieldUpdateOperationsInput | string | null
+    raw_payload?: NullableJsonNullValueInput | InputJsonValue
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type external_catalog_itemsUncheckedUpdateManyInput = {
+    external_catalog_item_id?: StringFieldUpdateOperationsInput | string
+    business_id?: StringFieldUpdateOperationsInput | string
+    item_id?: NullableStringFieldUpdateOperationsInput | string | null
+    provider?: StringFieldUpdateOperationsInput | string
+    external_catalog_id?: NullableStringFieldUpdateOperationsInput | string | null
+    external_product_id?: StringFieldUpdateOperationsInput | string
+    retailer_id?: NullableStringFieldUpdateOperationsInput | string | null
+    sync_status?: StringFieldUpdateOperationsInput | string
+    last_synced_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    remote_hash?: NullableStringFieldUpdateOperationsInput | string | null
+    local_hash?: NullableStringFieldUpdateOperationsInput | string | null
+    raw_payload?: NullableJsonNullValueInput | InputJsonValue
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -113723,6 +115356,7 @@ export namespace Prisma {
     auto_reply_enabled?: boolean
     booking_methods?: JsonNullValueInput | InputJsonValue
     booking_link?: JsonNullValueInput | InputJsonValue
+    whatsapp_onboarding?: JsonNullValueInput | InputJsonValue
     low_balance_alert?: Decimal | DecimalJsLike | number | string
     default_country_code?: string
     updated_at?: Date | string
@@ -113741,6 +115375,7 @@ export namespace Prisma {
     auto_reply_enabled?: boolean
     booking_methods?: JsonNullValueInput | InputJsonValue
     booking_link?: JsonNullValueInput | InputJsonValue
+    whatsapp_onboarding?: JsonNullValueInput | InputJsonValue
     low_balance_alert?: Decimal | DecimalJsLike | number | string
     default_country_code?: string
     updated_at?: Date | string
@@ -113757,6 +115392,7 @@ export namespace Prisma {
     auto_reply_enabled?: BoolFieldUpdateOperationsInput | boolean
     booking_methods?: JsonNullValueInput | InputJsonValue
     booking_link?: JsonNullValueInput | InputJsonValue
+    whatsapp_onboarding?: JsonNullValueInput | InputJsonValue
     low_balance_alert?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     default_country_code?: StringFieldUpdateOperationsInput | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -113775,6 +115411,7 @@ export namespace Prisma {
     auto_reply_enabled?: BoolFieldUpdateOperationsInput | boolean
     booking_methods?: JsonNullValueInput | InputJsonValue
     booking_link?: JsonNullValueInput | InputJsonValue
+    whatsapp_onboarding?: JsonNullValueInput | InputJsonValue
     low_balance_alert?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     default_country_code?: StringFieldUpdateOperationsInput | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -113792,6 +115429,7 @@ export namespace Prisma {
     auto_reply_enabled?: boolean
     booking_methods?: JsonNullValueInput | InputJsonValue
     booking_link?: JsonNullValueInput | InputJsonValue
+    whatsapp_onboarding?: JsonNullValueInput | InputJsonValue
     low_balance_alert?: Decimal | DecimalJsLike | number | string
     default_country_code?: string
     updated_at?: Date | string
@@ -113808,6 +115446,7 @@ export namespace Prisma {
     auto_reply_enabled?: BoolFieldUpdateOperationsInput | boolean
     booking_methods?: JsonNullValueInput | InputJsonValue
     booking_link?: JsonNullValueInput | InputJsonValue
+    whatsapp_onboarding?: JsonNullValueInput | InputJsonValue
     low_balance_alert?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     default_country_code?: StringFieldUpdateOperationsInput | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -113825,6 +115464,7 @@ export namespace Prisma {
     auto_reply_enabled?: BoolFieldUpdateOperationsInput | boolean
     booking_methods?: JsonNullValueInput | InputJsonValue
     booking_link?: JsonNullValueInput | InputJsonValue
+    whatsapp_onboarding?: JsonNullValueInput | InputJsonValue
     low_balance_alert?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     default_country_code?: StringFieldUpdateOperationsInput | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -114199,6 +115839,12 @@ export namespace Prisma {
     none?: catalog_itemsWhereInput
   }
 
+  export type External_catalog_itemsListRelationFilter = {
+    every?: external_catalog_itemsWhereInput
+    some?: external_catalog_itemsWhereInput
+    none?: external_catalog_itemsWhereInput
+  }
+
   export type Product_item_detailsListRelationFilter = {
     every?: product_item_detailsWhereInput
     some?: product_item_detailsWhereInput
@@ -114364,6 +116010,10 @@ export namespace Prisma {
   }
 
   export type catalog_itemsOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type external_catalog_itemsOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -117839,6 +119489,61 @@ export namespace Prisma {
     isNot?: catalog_itemsWhereInput | null
   }
 
+  export type external_catalog_itemsBusiness_idProviderExternal_product_idCompoundUniqueInput = {
+    business_id: string
+    provider: string
+    external_product_id: string
+  }
+
+  export type external_catalog_itemsCountOrderByAggregateInput = {
+    external_catalog_item_id?: SortOrder
+    business_id?: SortOrder
+    item_id?: SortOrder
+    provider?: SortOrder
+    external_catalog_id?: SortOrder
+    external_product_id?: SortOrder
+    retailer_id?: SortOrder
+    sync_status?: SortOrder
+    last_synced_at?: SortOrder
+    remote_hash?: SortOrder
+    local_hash?: SortOrder
+    raw_payload?: SortOrder
+    created_at?: SortOrder
+    updated_at?: SortOrder
+  }
+
+  export type external_catalog_itemsMaxOrderByAggregateInput = {
+    external_catalog_item_id?: SortOrder
+    business_id?: SortOrder
+    item_id?: SortOrder
+    provider?: SortOrder
+    external_catalog_id?: SortOrder
+    external_product_id?: SortOrder
+    retailer_id?: SortOrder
+    sync_status?: SortOrder
+    last_synced_at?: SortOrder
+    remote_hash?: SortOrder
+    local_hash?: SortOrder
+    created_at?: SortOrder
+    updated_at?: SortOrder
+  }
+
+  export type external_catalog_itemsMinOrderByAggregateInput = {
+    external_catalog_item_id?: SortOrder
+    business_id?: SortOrder
+    item_id?: SortOrder
+    provider?: SortOrder
+    external_catalog_id?: SortOrder
+    external_product_id?: SortOrder
+    retailer_id?: SortOrder
+    sync_status?: SortOrder
+    last_synced_at?: SortOrder
+    remote_hash?: SortOrder
+    local_hash?: SortOrder
+    created_at?: SortOrder
+    updated_at?: SortOrder
+  }
+
   export type product_inquiriesCountOrderByAggregateInput = {
     inquiry_id?: SortOrder
     business_id?: SortOrder
@@ -119149,6 +120854,7 @@ export namespace Prisma {
     auto_reply_enabled?: SortOrder
     booking_methods?: SortOrder
     booking_link?: SortOrder
+    whatsapp_onboarding?: SortOrder
     low_balance_alert?: SortOrder
     default_country_code?: SortOrder
     updated_at?: SortOrder
@@ -119353,6 +121059,13 @@ export namespace Prisma {
     connect?: catalog_itemsWhereUniqueInput | catalog_itemsWhereUniqueInput[]
   }
 
+  export type external_catalog_itemsCreateNestedManyWithoutBusinessInput = {
+    create?: XOR<external_catalog_itemsCreateWithoutBusinessInput, external_catalog_itemsUncheckedCreateWithoutBusinessInput> | external_catalog_itemsCreateWithoutBusinessInput[] | external_catalog_itemsUncheckedCreateWithoutBusinessInput[]
+    connectOrCreate?: external_catalog_itemsCreateOrConnectWithoutBusinessInput | external_catalog_itemsCreateOrConnectWithoutBusinessInput[]
+    createMany?: external_catalog_itemsCreateManyBusinessInputEnvelope
+    connect?: external_catalog_itemsWhereUniqueInput | external_catalog_itemsWhereUniqueInput[]
+  }
+
   export type product_item_detailsCreateNestedManyWithoutBusinessInput = {
     create?: XOR<product_item_detailsCreateWithoutBusinessInput, product_item_detailsUncheckedCreateWithoutBusinessInput> | product_item_detailsCreateWithoutBusinessInput[] | product_item_detailsUncheckedCreateWithoutBusinessInput[]
     connectOrCreate?: product_item_detailsCreateOrConnectWithoutBusinessInput | product_item_detailsCreateOrConnectWithoutBusinessInput[]
@@ -119551,6 +121264,13 @@ export namespace Prisma {
     connectOrCreate?: catalog_itemsCreateOrConnectWithoutBusinessesInput | catalog_itemsCreateOrConnectWithoutBusinessesInput[]
     createMany?: catalog_itemsCreateManyBusinessesInputEnvelope
     connect?: catalog_itemsWhereUniqueInput | catalog_itemsWhereUniqueInput[]
+  }
+
+  export type external_catalog_itemsUncheckedCreateNestedManyWithoutBusinessInput = {
+    create?: XOR<external_catalog_itemsCreateWithoutBusinessInput, external_catalog_itemsUncheckedCreateWithoutBusinessInput> | external_catalog_itemsCreateWithoutBusinessInput[] | external_catalog_itemsUncheckedCreateWithoutBusinessInput[]
+    connectOrCreate?: external_catalog_itemsCreateOrConnectWithoutBusinessInput | external_catalog_itemsCreateOrConnectWithoutBusinessInput[]
+    createMany?: external_catalog_itemsCreateManyBusinessInputEnvelope
+    connect?: external_catalog_itemsWhereUniqueInput | external_catalog_itemsWhereUniqueInput[]
   }
 
   export type product_item_detailsUncheckedCreateNestedManyWithoutBusinessInput = {
@@ -119803,6 +121523,20 @@ export namespace Prisma {
     update?: catalog_itemsUpdateWithWhereUniqueWithoutBusinessesInput | catalog_itemsUpdateWithWhereUniqueWithoutBusinessesInput[]
     updateMany?: catalog_itemsUpdateManyWithWhereWithoutBusinessesInput | catalog_itemsUpdateManyWithWhereWithoutBusinessesInput[]
     deleteMany?: catalog_itemsScalarWhereInput | catalog_itemsScalarWhereInput[]
+  }
+
+  export type external_catalog_itemsUpdateManyWithoutBusinessNestedInput = {
+    create?: XOR<external_catalog_itemsCreateWithoutBusinessInput, external_catalog_itemsUncheckedCreateWithoutBusinessInput> | external_catalog_itemsCreateWithoutBusinessInput[] | external_catalog_itemsUncheckedCreateWithoutBusinessInput[]
+    connectOrCreate?: external_catalog_itemsCreateOrConnectWithoutBusinessInput | external_catalog_itemsCreateOrConnectWithoutBusinessInput[]
+    upsert?: external_catalog_itemsUpsertWithWhereUniqueWithoutBusinessInput | external_catalog_itemsUpsertWithWhereUniqueWithoutBusinessInput[]
+    createMany?: external_catalog_itemsCreateManyBusinessInputEnvelope
+    set?: external_catalog_itemsWhereUniqueInput | external_catalog_itemsWhereUniqueInput[]
+    disconnect?: external_catalog_itemsWhereUniqueInput | external_catalog_itemsWhereUniqueInput[]
+    delete?: external_catalog_itemsWhereUniqueInput | external_catalog_itemsWhereUniqueInput[]
+    connect?: external_catalog_itemsWhereUniqueInput | external_catalog_itemsWhereUniqueInput[]
+    update?: external_catalog_itemsUpdateWithWhereUniqueWithoutBusinessInput | external_catalog_itemsUpdateWithWhereUniqueWithoutBusinessInput[]
+    updateMany?: external_catalog_itemsUpdateManyWithWhereWithoutBusinessInput | external_catalog_itemsUpdateManyWithWhereWithoutBusinessInput[]
+    deleteMany?: external_catalog_itemsScalarWhereInput | external_catalog_itemsScalarWhereInput[]
   }
 
   export type product_item_detailsUpdateManyWithoutBusinessNestedInput = {
@@ -120197,6 +121931,20 @@ export namespace Prisma {
     update?: catalog_itemsUpdateWithWhereUniqueWithoutBusinessesInput | catalog_itemsUpdateWithWhereUniqueWithoutBusinessesInput[]
     updateMany?: catalog_itemsUpdateManyWithWhereWithoutBusinessesInput | catalog_itemsUpdateManyWithWhereWithoutBusinessesInput[]
     deleteMany?: catalog_itemsScalarWhereInput | catalog_itemsScalarWhereInput[]
+  }
+
+  export type external_catalog_itemsUncheckedUpdateManyWithoutBusinessNestedInput = {
+    create?: XOR<external_catalog_itemsCreateWithoutBusinessInput, external_catalog_itemsUncheckedCreateWithoutBusinessInput> | external_catalog_itemsCreateWithoutBusinessInput[] | external_catalog_itemsUncheckedCreateWithoutBusinessInput[]
+    connectOrCreate?: external_catalog_itemsCreateOrConnectWithoutBusinessInput | external_catalog_itemsCreateOrConnectWithoutBusinessInput[]
+    upsert?: external_catalog_itemsUpsertWithWhereUniqueWithoutBusinessInput | external_catalog_itemsUpsertWithWhereUniqueWithoutBusinessInput[]
+    createMany?: external_catalog_itemsCreateManyBusinessInputEnvelope
+    set?: external_catalog_itemsWhereUniqueInput | external_catalog_itemsWhereUniqueInput[]
+    disconnect?: external_catalog_itemsWhereUniqueInput | external_catalog_itemsWhereUniqueInput[]
+    delete?: external_catalog_itemsWhereUniqueInput | external_catalog_itemsWhereUniqueInput[]
+    connect?: external_catalog_itemsWhereUniqueInput | external_catalog_itemsWhereUniqueInput[]
+    update?: external_catalog_itemsUpdateWithWhereUniqueWithoutBusinessInput | external_catalog_itemsUpdateWithWhereUniqueWithoutBusinessInput[]
+    updateMany?: external_catalog_itemsUpdateManyWithWhereWithoutBusinessInput | external_catalog_itemsUpdateManyWithWhereWithoutBusinessInput[]
+    deleteMany?: external_catalog_itemsScalarWhereInput | external_catalog_itemsScalarWhereInput[]
   }
 
   export type product_item_detailsUncheckedUpdateManyWithoutBusinessNestedInput = {
@@ -124077,6 +125825,13 @@ export namespace Prisma {
     connect?: order_itemsWhereUniqueInput | order_itemsWhereUniqueInput[]
   }
 
+  export type external_catalog_itemsCreateNestedManyWithoutItemInput = {
+    create?: XOR<external_catalog_itemsCreateWithoutItemInput, external_catalog_itemsUncheckedCreateWithoutItemInput> | external_catalog_itemsCreateWithoutItemInput[] | external_catalog_itemsUncheckedCreateWithoutItemInput[]
+    connectOrCreate?: external_catalog_itemsCreateOrConnectWithoutItemInput | external_catalog_itemsCreateOrConnectWithoutItemInput[]
+    createMany?: external_catalog_itemsCreateManyItemInputEnvelope
+    connect?: external_catalog_itemsWhereUniqueInput | external_catalog_itemsWhereUniqueInput[]
+  }
+
   export type cart_itemsUncheckedCreateNestedManyWithoutCatalog_itemInput = {
     create?: XOR<cart_itemsCreateWithoutCatalog_itemInput, cart_itemsUncheckedCreateWithoutCatalog_itemInput> | cart_itemsCreateWithoutCatalog_itemInput[] | cart_itemsUncheckedCreateWithoutCatalog_itemInput[]
     connectOrCreate?: cart_itemsCreateOrConnectWithoutCatalog_itemInput | cart_itemsCreateOrConnectWithoutCatalog_itemInput[]
@@ -124156,6 +125911,13 @@ export namespace Prisma {
     connectOrCreate?: order_itemsCreateOrConnectWithoutCatalog_itemInput | order_itemsCreateOrConnectWithoutCatalog_itemInput[]
     createMany?: order_itemsCreateManyCatalog_itemInputEnvelope
     connect?: order_itemsWhereUniqueInput | order_itemsWhereUniqueInput[]
+  }
+
+  export type external_catalog_itemsUncheckedCreateNestedManyWithoutItemInput = {
+    create?: XOR<external_catalog_itemsCreateWithoutItemInput, external_catalog_itemsUncheckedCreateWithoutItemInput> | external_catalog_itemsCreateWithoutItemInput[] | external_catalog_itemsUncheckedCreateWithoutItemInput[]
+    connectOrCreate?: external_catalog_itemsCreateOrConnectWithoutItemInput | external_catalog_itemsCreateOrConnectWithoutItemInput[]
+    createMany?: external_catalog_itemsCreateManyItemInputEnvelope
+    connect?: external_catalog_itemsWhereUniqueInput | external_catalog_itemsWhereUniqueInput[]
   }
 
   export type catalog_itemsUpdateai_tagsInput = {
@@ -124327,6 +126089,20 @@ export namespace Prisma {
     deleteMany?: order_itemsScalarWhereInput | order_itemsScalarWhereInput[]
   }
 
+  export type external_catalog_itemsUpdateManyWithoutItemNestedInput = {
+    create?: XOR<external_catalog_itemsCreateWithoutItemInput, external_catalog_itemsUncheckedCreateWithoutItemInput> | external_catalog_itemsCreateWithoutItemInput[] | external_catalog_itemsUncheckedCreateWithoutItemInput[]
+    connectOrCreate?: external_catalog_itemsCreateOrConnectWithoutItemInput | external_catalog_itemsCreateOrConnectWithoutItemInput[]
+    upsert?: external_catalog_itemsUpsertWithWhereUniqueWithoutItemInput | external_catalog_itemsUpsertWithWhereUniqueWithoutItemInput[]
+    createMany?: external_catalog_itemsCreateManyItemInputEnvelope
+    set?: external_catalog_itemsWhereUniqueInput | external_catalog_itemsWhereUniqueInput[]
+    disconnect?: external_catalog_itemsWhereUniqueInput | external_catalog_itemsWhereUniqueInput[]
+    delete?: external_catalog_itemsWhereUniqueInput | external_catalog_itemsWhereUniqueInput[]
+    connect?: external_catalog_itemsWhereUniqueInput | external_catalog_itemsWhereUniqueInput[]
+    update?: external_catalog_itemsUpdateWithWhereUniqueWithoutItemInput | external_catalog_itemsUpdateWithWhereUniqueWithoutItemInput[]
+    updateMany?: external_catalog_itemsUpdateManyWithWhereWithoutItemInput | external_catalog_itemsUpdateManyWithWhereWithoutItemInput[]
+    deleteMany?: external_catalog_itemsScalarWhereInput | external_catalog_itemsScalarWhereInput[]
+  }
+
   export type cart_itemsUncheckedUpdateManyWithoutCatalog_itemNestedInput = {
     create?: XOR<cart_itemsCreateWithoutCatalog_itemInput, cart_itemsUncheckedCreateWithoutCatalog_itemInput> | cart_itemsCreateWithoutCatalog_itemInput[] | cart_itemsUncheckedCreateWithoutCatalog_itemInput[]
     connectOrCreate?: cart_itemsCreateOrConnectWithoutCatalog_itemInput | cart_itemsCreateOrConnectWithoutCatalog_itemInput[]
@@ -124481,6 +126257,20 @@ export namespace Prisma {
     update?: order_itemsUpdateWithWhereUniqueWithoutCatalog_itemInput | order_itemsUpdateWithWhereUniqueWithoutCatalog_itemInput[]
     updateMany?: order_itemsUpdateManyWithWhereWithoutCatalog_itemInput | order_itemsUpdateManyWithWhereWithoutCatalog_itemInput[]
     deleteMany?: order_itemsScalarWhereInput | order_itemsScalarWhereInput[]
+  }
+
+  export type external_catalog_itemsUncheckedUpdateManyWithoutItemNestedInput = {
+    create?: XOR<external_catalog_itemsCreateWithoutItemInput, external_catalog_itemsUncheckedCreateWithoutItemInput> | external_catalog_itemsCreateWithoutItemInput[] | external_catalog_itemsUncheckedCreateWithoutItemInput[]
+    connectOrCreate?: external_catalog_itemsCreateOrConnectWithoutItemInput | external_catalog_itemsCreateOrConnectWithoutItemInput[]
+    upsert?: external_catalog_itemsUpsertWithWhereUniqueWithoutItemInput | external_catalog_itemsUpsertWithWhereUniqueWithoutItemInput[]
+    createMany?: external_catalog_itemsCreateManyItemInputEnvelope
+    set?: external_catalog_itemsWhereUniqueInput | external_catalog_itemsWhereUniqueInput[]
+    disconnect?: external_catalog_itemsWhereUniqueInput | external_catalog_itemsWhereUniqueInput[]
+    delete?: external_catalog_itemsWhereUniqueInput | external_catalog_itemsWhereUniqueInput[]
+    connect?: external_catalog_itemsWhereUniqueInput | external_catalog_itemsWhereUniqueInput[]
+    update?: external_catalog_itemsUpdateWithWhereUniqueWithoutItemInput | external_catalog_itemsUpdateWithWhereUniqueWithoutItemInput[]
+    updateMany?: external_catalog_itemsUpdateManyWithWhereWithoutItemInput | external_catalog_itemsUpdateManyWithWhereWithoutItemInput[]
+    deleteMany?: external_catalog_itemsScalarWhereInput | external_catalog_itemsScalarWhereInput[]
   }
 
   export type cart_itemsCreateNestedManyWithoutItem_variantInput = {
@@ -124663,6 +126453,36 @@ export namespace Prisma {
     upsert?: catalog_itemsUpsertWithoutProduct_detailInput
     connect?: catalog_itemsWhereUniqueInput
     update?: XOR<XOR<catalog_itemsUpdateToOneWithWhereWithoutProduct_detailInput, catalog_itemsUpdateWithoutProduct_detailInput>, catalog_itemsUncheckedUpdateWithoutProduct_detailInput>
+  }
+
+  export type businessesCreateNestedOneWithoutExternal_catalog_itemsInput = {
+    create?: XOR<businessesCreateWithoutExternal_catalog_itemsInput, businessesUncheckedCreateWithoutExternal_catalog_itemsInput>
+    connectOrCreate?: businessesCreateOrConnectWithoutExternal_catalog_itemsInput
+    connect?: businessesWhereUniqueInput
+  }
+
+  export type catalog_itemsCreateNestedOneWithoutExternal_catalog_itemsInput = {
+    create?: XOR<catalog_itemsCreateWithoutExternal_catalog_itemsInput, catalog_itemsUncheckedCreateWithoutExternal_catalog_itemsInput>
+    connectOrCreate?: catalog_itemsCreateOrConnectWithoutExternal_catalog_itemsInput
+    connect?: catalog_itemsWhereUniqueInput
+  }
+
+  export type businessesUpdateOneRequiredWithoutExternal_catalog_itemsNestedInput = {
+    create?: XOR<businessesCreateWithoutExternal_catalog_itemsInput, businessesUncheckedCreateWithoutExternal_catalog_itemsInput>
+    connectOrCreate?: businessesCreateOrConnectWithoutExternal_catalog_itemsInput
+    upsert?: businessesUpsertWithoutExternal_catalog_itemsInput
+    connect?: businessesWhereUniqueInput
+    update?: XOR<XOR<businessesUpdateToOneWithWhereWithoutExternal_catalog_itemsInput, businessesUpdateWithoutExternal_catalog_itemsInput>, businessesUncheckedUpdateWithoutExternal_catalog_itemsInput>
+  }
+
+  export type catalog_itemsUpdateOneWithoutExternal_catalog_itemsNestedInput = {
+    create?: XOR<catalog_itemsCreateWithoutExternal_catalog_itemsInput, catalog_itemsUncheckedCreateWithoutExternal_catalog_itemsInput>
+    connectOrCreate?: catalog_itemsCreateOrConnectWithoutExternal_catalog_itemsInput
+    upsert?: catalog_itemsUpsertWithoutExternal_catalog_itemsInput
+    disconnect?: catalog_itemsWhereInput | boolean
+    delete?: catalog_itemsWhereInput | boolean
+    connect?: catalog_itemsWhereUniqueInput
+    update?: XOR<XOR<catalog_itemsUpdateToOneWithWhereWithoutExternal_catalog_itemsInput, catalog_itemsUpdateWithoutExternal_catalog_itemsInput>, catalog_itemsUncheckedUpdateWithoutExternal_catalog_itemsInput>
   }
 
   export type businessesCreateNestedOneWithoutProduct_inquiriesInput = {
@@ -126242,6 +128062,7 @@ export namespace Prisma {
     availability?: item_availabilityCreateNestedManyWithoutItemInput
     variants?: item_variantsCreateNestedManyWithoutItemInput
     order_items?: order_itemsCreateNestedManyWithoutCatalog_itemInput
+    external_catalog_items?: external_catalog_itemsCreateNestedManyWithoutItemInput
   }
 
   export type catalog_itemsUncheckedCreateWithoutBusinessesInput = {
@@ -126275,6 +128096,7 @@ export namespace Prisma {
     availability?: item_availabilityUncheckedCreateNestedManyWithoutItemInput
     variants?: item_variantsUncheckedCreateNestedManyWithoutItemInput
     order_items?: order_itemsUncheckedCreateNestedManyWithoutCatalog_itemInput
+    external_catalog_items?: external_catalog_itemsUncheckedCreateNestedManyWithoutItemInput
   }
 
   export type catalog_itemsCreateOrConnectWithoutBusinessesInput = {
@@ -126284,6 +128106,48 @@ export namespace Prisma {
 
   export type catalog_itemsCreateManyBusinessesInputEnvelope = {
     data: catalog_itemsCreateManyBusinessesInput | catalog_itemsCreateManyBusinessesInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type external_catalog_itemsCreateWithoutBusinessInput = {
+    external_catalog_item_id?: string
+    provider: string
+    external_catalog_id?: string | null
+    external_product_id: string
+    retailer_id?: string | null
+    sync_status?: string
+    last_synced_at?: Date | string | null
+    remote_hash?: string | null
+    local_hash?: string | null
+    raw_payload?: NullableJsonNullValueInput | InputJsonValue
+    created_at?: Date | string
+    updated_at?: Date | string
+    item?: catalog_itemsCreateNestedOneWithoutExternal_catalog_itemsInput
+  }
+
+  export type external_catalog_itemsUncheckedCreateWithoutBusinessInput = {
+    external_catalog_item_id?: string
+    item_id?: string | null
+    provider: string
+    external_catalog_id?: string | null
+    external_product_id: string
+    retailer_id?: string | null
+    sync_status?: string
+    last_synced_at?: Date | string | null
+    remote_hash?: string | null
+    local_hash?: string | null
+    raw_payload?: NullableJsonNullValueInput | InputJsonValue
+    created_at?: Date | string
+    updated_at?: Date | string
+  }
+
+  export type external_catalog_itemsCreateOrConnectWithoutBusinessInput = {
+    where: external_catalog_itemsWhereUniqueInput
+    create: XOR<external_catalog_itemsCreateWithoutBusinessInput, external_catalog_itemsUncheckedCreateWithoutBusinessInput>
+  }
+
+  export type external_catalog_itemsCreateManyBusinessInputEnvelope = {
+    data: external_catalog_itemsCreateManyBusinessInput | external_catalog_itemsCreateManyBusinessInput[]
     skipDuplicates?: boolean
   }
 
@@ -127482,6 +129346,7 @@ export namespace Prisma {
     auto_reply_enabled?: boolean
     booking_methods?: JsonNullValueInput | InputJsonValue
     booking_link?: JsonNullValueInput | InputJsonValue
+    whatsapp_onboarding?: JsonNullValueInput | InputJsonValue
     low_balance_alert?: Decimal | DecimalJsLike | number | string
     default_country_code?: string
     updated_at?: Date | string
@@ -127498,6 +129363,7 @@ export namespace Prisma {
     auto_reply_enabled?: boolean
     booking_methods?: JsonNullValueInput | InputJsonValue
     booking_link?: JsonNullValueInput | InputJsonValue
+    whatsapp_onboarding?: JsonNullValueInput | InputJsonValue
     low_balance_alert?: Decimal | DecimalJsLike | number | string
     default_country_code?: string
     updated_at?: Date | string
@@ -127736,6 +129602,42 @@ export namespace Prisma {
     deleted_at?: DateTimeNullableFilter<"catalog_items"> | Date | string | null
     created_at?: DateTimeFilter<"catalog_items"> | Date | string
     updated_at?: DateTimeFilter<"catalog_items"> | Date | string
+  }
+
+  export type external_catalog_itemsUpsertWithWhereUniqueWithoutBusinessInput = {
+    where: external_catalog_itemsWhereUniqueInput
+    update: XOR<external_catalog_itemsUpdateWithoutBusinessInput, external_catalog_itemsUncheckedUpdateWithoutBusinessInput>
+    create: XOR<external_catalog_itemsCreateWithoutBusinessInput, external_catalog_itemsUncheckedCreateWithoutBusinessInput>
+  }
+
+  export type external_catalog_itemsUpdateWithWhereUniqueWithoutBusinessInput = {
+    where: external_catalog_itemsWhereUniqueInput
+    data: XOR<external_catalog_itemsUpdateWithoutBusinessInput, external_catalog_itemsUncheckedUpdateWithoutBusinessInput>
+  }
+
+  export type external_catalog_itemsUpdateManyWithWhereWithoutBusinessInput = {
+    where: external_catalog_itemsScalarWhereInput
+    data: XOR<external_catalog_itemsUpdateManyMutationInput, external_catalog_itemsUncheckedUpdateManyWithoutBusinessInput>
+  }
+
+  export type external_catalog_itemsScalarWhereInput = {
+    AND?: external_catalog_itemsScalarWhereInput | external_catalog_itemsScalarWhereInput[]
+    OR?: external_catalog_itemsScalarWhereInput[]
+    NOT?: external_catalog_itemsScalarWhereInput | external_catalog_itemsScalarWhereInput[]
+    external_catalog_item_id?: UuidFilter<"external_catalog_items"> | string
+    business_id?: UuidFilter<"external_catalog_items"> | string
+    item_id?: UuidNullableFilter<"external_catalog_items"> | string | null
+    provider?: StringFilter<"external_catalog_items"> | string
+    external_catalog_id?: StringNullableFilter<"external_catalog_items"> | string | null
+    external_product_id?: StringFilter<"external_catalog_items"> | string
+    retailer_id?: StringNullableFilter<"external_catalog_items"> | string | null
+    sync_status?: StringFilter<"external_catalog_items"> | string
+    last_synced_at?: DateTimeNullableFilter<"external_catalog_items"> | Date | string | null
+    remote_hash?: StringNullableFilter<"external_catalog_items"> | string | null
+    local_hash?: StringNullableFilter<"external_catalog_items"> | string | null
+    raw_payload?: JsonNullableFilter<"external_catalog_items">
+    created_at?: DateTimeFilter<"external_catalog_items"> | Date | string
+    updated_at?: DateTimeFilter<"external_catalog_items"> | Date | string
   }
 
   export type product_item_detailsUpsertWithWhereUniqueWithoutBusinessInput = {
@@ -128682,6 +130584,7 @@ export namespace Prisma {
     auto_reply_enabled?: BoolFieldUpdateOperationsInput | boolean
     booking_methods?: JsonNullValueInput | InputJsonValue
     booking_link?: JsonNullValueInput | InputJsonValue
+    whatsapp_onboarding?: JsonNullValueInput | InputJsonValue
     low_balance_alert?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     default_country_code?: StringFieldUpdateOperationsInput | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -128698,6 +130601,7 @@ export namespace Prisma {
     auto_reply_enabled?: BoolFieldUpdateOperationsInput | boolean
     booking_methods?: JsonNullValueInput | InputJsonValue
     booking_link?: JsonNullValueInput | InputJsonValue
+    whatsapp_onboarding?: JsonNullValueInput | InputJsonValue
     low_balance_alert?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     default_country_code?: StringFieldUpdateOperationsInput | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -128757,6 +130661,7 @@ export namespace Prisma {
     tenants: tenantsCreateNestedOneWithoutBusinessesInput
     carts?: cartsCreateNestedManyWithoutBusinessesInput
     catalog_items?: catalog_itemsCreateNestedManyWithoutBusinessesInput
+    external_catalog_items?: external_catalog_itemsCreateNestedManyWithoutBusinessInput
     product_item_details?: product_item_detailsCreateNestedManyWithoutBusinessInput
     hospitality_item_details?: hospitality_item_detailsCreateNestedManyWithoutBusinessInput
     vehicle_item_details?: vehicle_item_detailsCreateNestedManyWithoutBusinessInput
@@ -128805,6 +130710,7 @@ export namespace Prisma {
     business_workflows?: business_workflowsUncheckedCreateNestedManyWithoutBusinessesInput
     carts?: cartsUncheckedCreateNestedManyWithoutBusinessesInput
     catalog_items?: catalog_itemsUncheckedCreateNestedManyWithoutBusinessesInput
+    external_catalog_items?: external_catalog_itemsUncheckedCreateNestedManyWithoutBusinessInput
     product_item_details?: product_item_detailsUncheckedCreateNestedManyWithoutBusinessInput
     hospitality_item_details?: hospitality_item_detailsUncheckedCreateNestedManyWithoutBusinessInput
     vehicle_item_details?: vehicle_item_detailsUncheckedCreateNestedManyWithoutBusinessInput
@@ -128869,6 +130775,7 @@ export namespace Prisma {
     tenants?: tenantsUpdateOneRequiredWithoutBusinessesNestedInput
     carts?: cartsUpdateManyWithoutBusinessesNestedInput
     catalog_items?: catalog_itemsUpdateManyWithoutBusinessesNestedInput
+    external_catalog_items?: external_catalog_itemsUpdateManyWithoutBusinessNestedInput
     product_item_details?: product_item_detailsUpdateManyWithoutBusinessNestedInput
     hospitality_item_details?: hospitality_item_detailsUpdateManyWithoutBusinessNestedInput
     vehicle_item_details?: vehicle_item_detailsUpdateManyWithoutBusinessNestedInput
@@ -128917,6 +130824,7 @@ export namespace Prisma {
     business_workflows?: business_workflowsUncheckedUpdateManyWithoutBusinessesNestedInput
     carts?: cartsUncheckedUpdateManyWithoutBusinessesNestedInput
     catalog_items?: catalog_itemsUncheckedUpdateManyWithoutBusinessesNestedInput
+    external_catalog_items?: external_catalog_itemsUncheckedUpdateManyWithoutBusinessNestedInput
     product_item_details?: product_item_detailsUncheckedUpdateManyWithoutBusinessNestedInput
     hospitality_item_details?: hospitality_item_detailsUncheckedUpdateManyWithoutBusinessNestedInput
     vehicle_item_details?: vehicle_item_detailsUncheckedUpdateManyWithoutBusinessNestedInput
@@ -129417,6 +131325,7 @@ export namespace Prisma {
     tenants: tenantsCreateNestedOneWithoutBusinessesInput
     carts?: cartsCreateNestedManyWithoutBusinessesInput
     catalog_items?: catalog_itemsCreateNestedManyWithoutBusinessesInput
+    external_catalog_items?: external_catalog_itemsCreateNestedManyWithoutBusinessInput
     product_item_details?: product_item_detailsCreateNestedManyWithoutBusinessInput
     hospitality_item_details?: hospitality_item_detailsCreateNestedManyWithoutBusinessInput
     vehicle_item_details?: vehicle_item_detailsCreateNestedManyWithoutBusinessInput
@@ -129465,6 +131374,7 @@ export namespace Prisma {
     business_workflows?: business_workflowsUncheckedCreateNestedManyWithoutBusinessesInput
     carts?: cartsUncheckedCreateNestedManyWithoutBusinessesInput
     catalog_items?: catalog_itemsUncheckedCreateNestedManyWithoutBusinessesInput
+    external_catalog_items?: external_catalog_itemsUncheckedCreateNestedManyWithoutBusinessInput
     product_item_details?: product_item_detailsUncheckedCreateNestedManyWithoutBusinessInput
     hospitality_item_details?: hospitality_item_detailsUncheckedCreateNestedManyWithoutBusinessInput
     vehicle_item_details?: vehicle_item_detailsUncheckedCreateNestedManyWithoutBusinessInput
@@ -129565,6 +131475,7 @@ export namespace Prisma {
     tenants?: tenantsUpdateOneRequiredWithoutBusinessesNestedInput
     carts?: cartsUpdateManyWithoutBusinessesNestedInput
     catalog_items?: catalog_itemsUpdateManyWithoutBusinessesNestedInput
+    external_catalog_items?: external_catalog_itemsUpdateManyWithoutBusinessNestedInput
     product_item_details?: product_item_detailsUpdateManyWithoutBusinessNestedInput
     hospitality_item_details?: hospitality_item_detailsUpdateManyWithoutBusinessNestedInput
     vehicle_item_details?: vehicle_item_detailsUpdateManyWithoutBusinessNestedInput
@@ -129613,6 +131524,7 @@ export namespace Prisma {
     business_workflows?: business_workflowsUncheckedUpdateManyWithoutBusinessesNestedInput
     carts?: cartsUncheckedUpdateManyWithoutBusinessesNestedInput
     catalog_items?: catalog_itemsUncheckedUpdateManyWithoutBusinessesNestedInput
+    external_catalog_items?: external_catalog_itemsUncheckedUpdateManyWithoutBusinessNestedInput
     product_item_details?: product_item_detailsUncheckedUpdateManyWithoutBusinessNestedInput
     hospitality_item_details?: hospitality_item_detailsUncheckedUpdateManyWithoutBusinessNestedInput
     vehicle_item_details?: vehicle_item_detailsUncheckedUpdateManyWithoutBusinessNestedInput
@@ -129690,6 +131602,7 @@ export namespace Prisma {
     business_workflows?: business_workflowsCreateNestedManyWithoutBusinessesInput
     carts?: cartsCreateNestedManyWithoutBusinessesInput
     catalog_items?: catalog_itemsCreateNestedManyWithoutBusinessesInput
+    external_catalog_items?: external_catalog_itemsCreateNestedManyWithoutBusinessInput
     product_item_details?: product_item_detailsCreateNestedManyWithoutBusinessInput
     hospitality_item_details?: hospitality_item_detailsCreateNestedManyWithoutBusinessInput
     vehicle_item_details?: vehicle_item_detailsCreateNestedManyWithoutBusinessInput
@@ -129738,6 +131651,7 @@ export namespace Prisma {
     business_workflows?: business_workflowsUncheckedCreateNestedManyWithoutBusinessesInput
     carts?: cartsUncheckedCreateNestedManyWithoutBusinessesInput
     catalog_items?: catalog_itemsUncheckedCreateNestedManyWithoutBusinessesInput
+    external_catalog_items?: external_catalog_itemsUncheckedCreateNestedManyWithoutBusinessInput
     product_item_details?: product_item_detailsUncheckedCreateNestedManyWithoutBusinessInput
     hospitality_item_details?: hospitality_item_detailsUncheckedCreateNestedManyWithoutBusinessInput
     vehicle_item_details?: vehicle_item_detailsUncheckedCreateNestedManyWithoutBusinessInput
@@ -130826,6 +132740,7 @@ export namespace Prisma {
     tenants: tenantsCreateNestedOneWithoutBusinessesInput
     carts?: cartsCreateNestedManyWithoutBusinessesInput
     catalog_items?: catalog_itemsCreateNestedManyWithoutBusinessesInput
+    external_catalog_items?: external_catalog_itemsCreateNestedManyWithoutBusinessInput
     product_item_details?: product_item_detailsCreateNestedManyWithoutBusinessInput
     hospitality_item_details?: hospitality_item_detailsCreateNestedManyWithoutBusinessInput
     vehicle_item_details?: vehicle_item_detailsCreateNestedManyWithoutBusinessInput
@@ -130874,6 +132789,7 @@ export namespace Prisma {
     business_workflows?: business_workflowsUncheckedCreateNestedManyWithoutBusinessesInput
     carts?: cartsUncheckedCreateNestedManyWithoutBusinessesInput
     catalog_items?: catalog_itemsUncheckedCreateNestedManyWithoutBusinessesInput
+    external_catalog_items?: external_catalog_itemsUncheckedCreateNestedManyWithoutBusinessInput
     product_item_details?: product_item_detailsUncheckedCreateNestedManyWithoutBusinessInput
     hospitality_item_details?: hospitality_item_detailsUncheckedCreateNestedManyWithoutBusinessInput
     vehicle_item_details?: vehicle_item_detailsUncheckedCreateNestedManyWithoutBusinessInput
@@ -131058,6 +132974,7 @@ export namespace Prisma {
     tenants?: tenantsUpdateOneRequiredWithoutBusinessesNestedInput
     carts?: cartsUpdateManyWithoutBusinessesNestedInput
     catalog_items?: catalog_itemsUpdateManyWithoutBusinessesNestedInput
+    external_catalog_items?: external_catalog_itemsUpdateManyWithoutBusinessNestedInput
     product_item_details?: product_item_detailsUpdateManyWithoutBusinessNestedInput
     hospitality_item_details?: hospitality_item_detailsUpdateManyWithoutBusinessNestedInput
     vehicle_item_details?: vehicle_item_detailsUpdateManyWithoutBusinessNestedInput
@@ -131106,6 +133023,7 @@ export namespace Prisma {
     business_workflows?: business_workflowsUncheckedUpdateManyWithoutBusinessesNestedInput
     carts?: cartsUncheckedUpdateManyWithoutBusinessesNestedInput
     catalog_items?: catalog_itemsUncheckedUpdateManyWithoutBusinessesNestedInput
+    external_catalog_items?: external_catalog_itemsUncheckedUpdateManyWithoutBusinessNestedInput
     product_item_details?: product_item_detailsUncheckedUpdateManyWithoutBusinessNestedInput
     hospitality_item_details?: hospitality_item_detailsUncheckedUpdateManyWithoutBusinessNestedInput
     vehicle_item_details?: vehicle_item_detailsUncheckedUpdateManyWithoutBusinessNestedInput
@@ -131678,6 +133596,7 @@ export namespace Prisma {
     tenants: tenantsCreateNestedOneWithoutBusinessesInput
     carts?: cartsCreateNestedManyWithoutBusinessesInput
     catalog_items?: catalog_itemsCreateNestedManyWithoutBusinessesInput
+    external_catalog_items?: external_catalog_itemsCreateNestedManyWithoutBusinessInput
     product_item_details?: product_item_detailsCreateNestedManyWithoutBusinessInput
     hospitality_item_details?: hospitality_item_detailsCreateNestedManyWithoutBusinessInput
     vehicle_item_details?: vehicle_item_detailsCreateNestedManyWithoutBusinessInput
@@ -131726,6 +133645,7 @@ export namespace Prisma {
     business_workflows?: business_workflowsUncheckedCreateNestedManyWithoutBusinessesInput
     carts?: cartsUncheckedCreateNestedManyWithoutBusinessesInput
     catalog_items?: catalog_itemsUncheckedCreateNestedManyWithoutBusinessesInput
+    external_catalog_items?: external_catalog_itemsUncheckedCreateNestedManyWithoutBusinessInput
     product_item_details?: product_item_detailsUncheckedCreateNestedManyWithoutBusinessInput
     hospitality_item_details?: hospitality_item_detailsUncheckedCreateNestedManyWithoutBusinessInput
     vehicle_item_details?: vehicle_item_detailsUncheckedCreateNestedManyWithoutBusinessInput
@@ -132349,6 +134269,7 @@ export namespace Prisma {
     tenants?: tenantsUpdateOneRequiredWithoutBusinessesNestedInput
     carts?: cartsUpdateManyWithoutBusinessesNestedInput
     catalog_items?: catalog_itemsUpdateManyWithoutBusinessesNestedInput
+    external_catalog_items?: external_catalog_itemsUpdateManyWithoutBusinessNestedInput
     product_item_details?: product_item_detailsUpdateManyWithoutBusinessNestedInput
     hospitality_item_details?: hospitality_item_detailsUpdateManyWithoutBusinessNestedInput
     vehicle_item_details?: vehicle_item_detailsUpdateManyWithoutBusinessNestedInput
@@ -132397,6 +134318,7 @@ export namespace Prisma {
     business_workflows?: business_workflowsUncheckedUpdateManyWithoutBusinessesNestedInput
     carts?: cartsUncheckedUpdateManyWithoutBusinessesNestedInput
     catalog_items?: catalog_itemsUncheckedUpdateManyWithoutBusinessesNestedInput
+    external_catalog_items?: external_catalog_itemsUncheckedUpdateManyWithoutBusinessNestedInput
     product_item_details?: product_item_detailsUncheckedUpdateManyWithoutBusinessNestedInput
     hospitality_item_details?: hospitality_item_detailsUncheckedUpdateManyWithoutBusinessNestedInput
     vehicle_item_details?: vehicle_item_detailsUncheckedUpdateManyWithoutBusinessNestedInput
@@ -132653,6 +134575,7 @@ export namespace Prisma {
     tenants: tenantsCreateNestedOneWithoutBusinessesInput
     carts?: cartsCreateNestedManyWithoutBusinessesInput
     catalog_items?: catalog_itemsCreateNestedManyWithoutBusinessesInput
+    external_catalog_items?: external_catalog_itemsCreateNestedManyWithoutBusinessInput
     product_item_details?: product_item_detailsCreateNestedManyWithoutBusinessInput
     hospitality_item_details?: hospitality_item_detailsCreateNestedManyWithoutBusinessInput
     vehicle_item_details?: vehicle_item_detailsCreateNestedManyWithoutBusinessInput
@@ -132701,6 +134624,7 @@ export namespace Prisma {
     business_workflows?: business_workflowsUncheckedCreateNestedManyWithoutBusinessesInput
     carts?: cartsUncheckedCreateNestedManyWithoutBusinessesInput
     catalog_items?: catalog_itemsUncheckedCreateNestedManyWithoutBusinessesInput
+    external_catalog_items?: external_catalog_itemsUncheckedCreateNestedManyWithoutBusinessInput
     product_item_details?: product_item_detailsUncheckedCreateNestedManyWithoutBusinessInput
     hospitality_item_details?: hospitality_item_detailsUncheckedCreateNestedManyWithoutBusinessInput
     vehicle_item_details?: vehicle_item_detailsUncheckedCreateNestedManyWithoutBusinessInput
@@ -132897,6 +134821,7 @@ export namespace Prisma {
     tenants?: tenantsUpdateOneRequiredWithoutBusinessesNestedInput
     carts?: cartsUpdateManyWithoutBusinessesNestedInput
     catalog_items?: catalog_itemsUpdateManyWithoutBusinessesNestedInput
+    external_catalog_items?: external_catalog_itemsUpdateManyWithoutBusinessNestedInput
     product_item_details?: product_item_detailsUpdateManyWithoutBusinessNestedInput
     hospitality_item_details?: hospitality_item_detailsUpdateManyWithoutBusinessNestedInput
     vehicle_item_details?: vehicle_item_detailsUpdateManyWithoutBusinessNestedInput
@@ -132945,6 +134870,7 @@ export namespace Prisma {
     business_workflows?: business_workflowsUncheckedUpdateManyWithoutBusinessesNestedInput
     carts?: cartsUncheckedUpdateManyWithoutBusinessesNestedInput
     catalog_items?: catalog_itemsUncheckedUpdateManyWithoutBusinessesNestedInput
+    external_catalog_items?: external_catalog_itemsUncheckedUpdateManyWithoutBusinessNestedInput
     product_item_details?: product_item_detailsUncheckedUpdateManyWithoutBusinessNestedInput
     hospitality_item_details?: hospitality_item_detailsUncheckedUpdateManyWithoutBusinessNestedInput
     vehicle_item_details?: vehicle_item_detailsUncheckedUpdateManyWithoutBusinessNestedInput
@@ -135036,6 +136962,7 @@ export namespace Prisma {
     businesses: businessesCreateNestedOneWithoutCatalog_itemsInput
     availability?: item_availabilityCreateNestedManyWithoutItemInput
     variants?: item_variantsCreateNestedManyWithoutItemInput
+    external_catalog_items?: external_catalog_itemsCreateNestedManyWithoutItemInput
   }
 
   export type catalog_itemsUncheckedCreateWithoutOrder_itemsInput = {
@@ -135069,6 +136996,7 @@ export namespace Prisma {
     hospitality_inquiries?: hospitality_inquiriesUncheckedCreateNestedManyWithoutPreferred_itemInput
     availability?: item_availabilityUncheckedCreateNestedManyWithoutItemInput
     variants?: item_variantsUncheckedCreateNestedManyWithoutItemInput
+    external_catalog_items?: external_catalog_itemsUncheckedCreateNestedManyWithoutItemInput
   }
 
   export type catalog_itemsCreateOrConnectWithoutOrder_itemsInput = {
@@ -135246,6 +137174,7 @@ export namespace Prisma {
     businesses?: businessesUpdateOneRequiredWithoutCatalog_itemsNestedInput
     availability?: item_availabilityUpdateManyWithoutItemNestedInput
     variants?: item_variantsUpdateManyWithoutItemNestedInput
+    external_catalog_items?: external_catalog_itemsUpdateManyWithoutItemNestedInput
   }
 
   export type catalog_itemsUncheckedUpdateWithoutOrder_itemsInput = {
@@ -135279,6 +137208,7 @@ export namespace Prisma {
     hospitality_inquiries?: hospitality_inquiriesUncheckedUpdateManyWithoutPreferred_itemNestedInput
     availability?: item_availabilityUncheckedUpdateManyWithoutItemNestedInput
     variants?: item_variantsUncheckedUpdateManyWithoutItemNestedInput
+    external_catalog_items?: external_catalog_itemsUncheckedUpdateManyWithoutItemNestedInput
   }
 
   export type ordersUpsertWithoutOrder_itemsInput = {
@@ -135452,6 +137382,7 @@ export namespace Prisma {
     availability?: item_availabilityCreateNestedManyWithoutItemInput
     variants?: item_variantsCreateNestedManyWithoutItemInput
     order_items?: order_itemsCreateNestedManyWithoutCatalog_itemInput
+    external_catalog_items?: external_catalog_itemsCreateNestedManyWithoutItemInput
   }
 
   export type catalog_itemsUncheckedCreateWithoutCart_reservationsInput = {
@@ -135485,6 +137416,7 @@ export namespace Prisma {
     availability?: item_availabilityUncheckedCreateNestedManyWithoutItemInput
     variants?: item_variantsUncheckedCreateNestedManyWithoutItemInput
     order_items?: order_itemsUncheckedCreateNestedManyWithoutCatalog_itemInput
+    external_catalog_items?: external_catalog_itemsUncheckedCreateNestedManyWithoutItemInput
   }
 
   export type catalog_itemsCreateOrConnectWithoutCart_reservationsInput = {
@@ -135625,6 +137557,7 @@ export namespace Prisma {
     availability?: item_availabilityUpdateManyWithoutItemNestedInput
     variants?: item_variantsUpdateManyWithoutItemNestedInput
     order_items?: order_itemsUpdateManyWithoutCatalog_itemNestedInput
+    external_catalog_items?: external_catalog_itemsUpdateManyWithoutItemNestedInput
   }
 
   export type catalog_itemsUncheckedUpdateWithoutCart_reservationsInput = {
@@ -135658,6 +137591,7 @@ export namespace Prisma {
     availability?: item_availabilityUncheckedUpdateManyWithoutItemNestedInput
     variants?: item_variantsUncheckedUpdateManyWithoutItemNestedInput
     order_items?: order_itemsUncheckedUpdateManyWithoutCatalog_itemNestedInput
+    external_catalog_items?: external_catalog_itemsUncheckedUpdateManyWithoutItemNestedInput
   }
 
   export type leadsUpsertWithoutCart_reservationsInput = {
@@ -136047,6 +137981,7 @@ export namespace Prisma {
     tenants: tenantsCreateNestedOneWithoutBusinessesInput
     carts?: cartsCreateNestedManyWithoutBusinessesInput
     catalog_items?: catalog_itemsCreateNestedManyWithoutBusinessesInput
+    external_catalog_items?: external_catalog_itemsCreateNestedManyWithoutBusinessInput
     product_item_details?: product_item_detailsCreateNestedManyWithoutBusinessInput
     hospitality_item_details?: hospitality_item_detailsCreateNestedManyWithoutBusinessInput
     vehicle_item_details?: vehicle_item_detailsCreateNestedManyWithoutBusinessInput
@@ -136095,6 +138030,7 @@ export namespace Prisma {
     business_workflows?: business_workflowsUncheckedCreateNestedManyWithoutBusinessesInput
     carts?: cartsUncheckedCreateNestedManyWithoutBusinessesInput
     catalog_items?: catalog_itemsUncheckedCreateNestedManyWithoutBusinessesInput
+    external_catalog_items?: external_catalog_itemsUncheckedCreateNestedManyWithoutBusinessInput
     product_item_details?: product_item_detailsUncheckedCreateNestedManyWithoutBusinessInput
     hospitality_item_details?: hospitality_item_detailsUncheckedCreateNestedManyWithoutBusinessInput
     vehicle_item_details?: vehicle_item_detailsUncheckedCreateNestedManyWithoutBusinessInput
@@ -136281,6 +138217,7 @@ export namespace Prisma {
     tenants?: tenantsUpdateOneRequiredWithoutBusinessesNestedInput
     carts?: cartsUpdateManyWithoutBusinessesNestedInput
     catalog_items?: catalog_itemsUpdateManyWithoutBusinessesNestedInput
+    external_catalog_items?: external_catalog_itemsUpdateManyWithoutBusinessNestedInput
     product_item_details?: product_item_detailsUpdateManyWithoutBusinessNestedInput
     hospitality_item_details?: hospitality_item_detailsUpdateManyWithoutBusinessNestedInput
     vehicle_item_details?: vehicle_item_detailsUpdateManyWithoutBusinessNestedInput
@@ -136329,6 +138266,7 @@ export namespace Prisma {
     business_workflows?: business_workflowsUncheckedUpdateManyWithoutBusinessesNestedInput
     carts?: cartsUncheckedUpdateManyWithoutBusinessesNestedInput
     catalog_items?: catalog_itemsUncheckedUpdateManyWithoutBusinessesNestedInput
+    external_catalog_items?: external_catalog_itemsUncheckedUpdateManyWithoutBusinessNestedInput
     product_item_details?: product_item_detailsUncheckedUpdateManyWithoutBusinessNestedInput
     hospitality_item_details?: hospitality_item_detailsUncheckedUpdateManyWithoutBusinessNestedInput
     vehicle_item_details?: vehicle_item_detailsUncheckedUpdateManyWithoutBusinessNestedInput
@@ -136466,6 +138404,7 @@ export namespace Prisma {
     tenants: tenantsCreateNestedOneWithoutBusinessesInput
     carts?: cartsCreateNestedManyWithoutBusinessesInput
     catalog_items?: catalog_itemsCreateNestedManyWithoutBusinessesInput
+    external_catalog_items?: external_catalog_itemsCreateNestedManyWithoutBusinessInput
     product_item_details?: product_item_detailsCreateNestedManyWithoutBusinessInput
     hospitality_item_details?: hospitality_item_detailsCreateNestedManyWithoutBusinessInput
     vehicle_item_details?: vehicle_item_detailsCreateNestedManyWithoutBusinessInput
@@ -136514,6 +138453,7 @@ export namespace Prisma {
     business_workflows?: business_workflowsUncheckedCreateNestedManyWithoutBusinessesInput
     carts?: cartsUncheckedCreateNestedManyWithoutBusinessesInput
     catalog_items?: catalog_itemsUncheckedCreateNestedManyWithoutBusinessesInput
+    external_catalog_items?: external_catalog_itemsUncheckedCreateNestedManyWithoutBusinessInput
     product_item_details?: product_item_detailsUncheckedCreateNestedManyWithoutBusinessInput
     hospitality_item_details?: hospitality_item_detailsUncheckedCreateNestedManyWithoutBusinessInput
     vehicle_item_details?: vehicle_item_detailsUncheckedCreateNestedManyWithoutBusinessInput
@@ -136768,6 +138708,7 @@ export namespace Prisma {
     tenants?: tenantsUpdateOneRequiredWithoutBusinessesNestedInput
     carts?: cartsUpdateManyWithoutBusinessesNestedInput
     catalog_items?: catalog_itemsUpdateManyWithoutBusinessesNestedInput
+    external_catalog_items?: external_catalog_itemsUpdateManyWithoutBusinessNestedInput
     product_item_details?: product_item_detailsUpdateManyWithoutBusinessNestedInput
     hospitality_item_details?: hospitality_item_detailsUpdateManyWithoutBusinessNestedInput
     vehicle_item_details?: vehicle_item_detailsUpdateManyWithoutBusinessNestedInput
@@ -136816,6 +138757,7 @@ export namespace Prisma {
     business_workflows?: business_workflowsUncheckedUpdateManyWithoutBusinessesNestedInput
     carts?: cartsUncheckedUpdateManyWithoutBusinessesNestedInput
     catalog_items?: catalog_itemsUncheckedUpdateManyWithoutBusinessesNestedInput
+    external_catalog_items?: external_catalog_itemsUncheckedUpdateManyWithoutBusinessNestedInput
     product_item_details?: product_item_detailsUncheckedUpdateManyWithoutBusinessNestedInput
     hospitality_item_details?: hospitality_item_detailsUncheckedUpdateManyWithoutBusinessNestedInput
     vehicle_item_details?: vehicle_item_detailsUncheckedUpdateManyWithoutBusinessNestedInput
@@ -137043,6 +138985,7 @@ export namespace Prisma {
     tenants: tenantsCreateNestedOneWithoutBusinessesInput
     carts?: cartsCreateNestedManyWithoutBusinessesInput
     catalog_items?: catalog_itemsCreateNestedManyWithoutBusinessesInput
+    external_catalog_items?: external_catalog_itemsCreateNestedManyWithoutBusinessInput
     product_item_details?: product_item_detailsCreateNestedManyWithoutBusinessInput
     hospitality_item_details?: hospitality_item_detailsCreateNestedManyWithoutBusinessInput
     vehicle_item_details?: vehicle_item_detailsCreateNestedManyWithoutBusinessInput
@@ -137091,6 +139034,7 @@ export namespace Prisma {
     business_workflows?: business_workflowsUncheckedCreateNestedManyWithoutBusinessesInput
     carts?: cartsUncheckedCreateNestedManyWithoutBusinessesInput
     catalog_items?: catalog_itemsUncheckedCreateNestedManyWithoutBusinessesInput
+    external_catalog_items?: external_catalog_itemsUncheckedCreateNestedManyWithoutBusinessInput
     product_item_details?: product_item_detailsUncheckedCreateNestedManyWithoutBusinessInput
     hospitality_item_details?: hospitality_item_detailsUncheckedCreateNestedManyWithoutBusinessInput
     vehicle_item_details?: vehicle_item_detailsUncheckedCreateNestedManyWithoutBusinessInput
@@ -137208,6 +139152,7 @@ export namespace Prisma {
     tenants?: tenantsUpdateOneRequiredWithoutBusinessesNestedInput
     carts?: cartsUpdateManyWithoutBusinessesNestedInput
     catalog_items?: catalog_itemsUpdateManyWithoutBusinessesNestedInput
+    external_catalog_items?: external_catalog_itemsUpdateManyWithoutBusinessNestedInput
     product_item_details?: product_item_detailsUpdateManyWithoutBusinessNestedInput
     hospitality_item_details?: hospitality_item_detailsUpdateManyWithoutBusinessNestedInput
     vehicle_item_details?: vehicle_item_detailsUpdateManyWithoutBusinessNestedInput
@@ -137256,6 +139201,7 @@ export namespace Prisma {
     business_workflows?: business_workflowsUncheckedUpdateManyWithoutBusinessesNestedInput
     carts?: cartsUncheckedUpdateManyWithoutBusinessesNestedInput
     catalog_items?: catalog_itemsUncheckedUpdateManyWithoutBusinessesNestedInput
+    external_catalog_items?: external_catalog_itemsUncheckedUpdateManyWithoutBusinessNestedInput
     product_item_details?: product_item_detailsUncheckedUpdateManyWithoutBusinessNestedInput
     hospitality_item_details?: hospitality_item_detailsUncheckedUpdateManyWithoutBusinessNestedInput
     vehicle_item_details?: vehicle_item_detailsUncheckedUpdateManyWithoutBusinessNestedInput
@@ -137401,6 +139347,7 @@ export namespace Prisma {
     tenants: tenantsCreateNestedOneWithoutBusinessesInput
     carts?: cartsCreateNestedManyWithoutBusinessesInput
     catalog_items?: catalog_itemsCreateNestedManyWithoutBusinessesInput
+    external_catalog_items?: external_catalog_itemsCreateNestedManyWithoutBusinessInput
     product_item_details?: product_item_detailsCreateNestedManyWithoutBusinessInput
     hospitality_item_details?: hospitality_item_detailsCreateNestedManyWithoutBusinessInput
     vehicle_item_details?: vehicle_item_detailsCreateNestedManyWithoutBusinessInput
@@ -137449,6 +139396,7 @@ export namespace Prisma {
     business_workflows?: business_workflowsUncheckedCreateNestedManyWithoutBusinessesInput
     carts?: cartsUncheckedCreateNestedManyWithoutBusinessesInput
     catalog_items?: catalog_itemsUncheckedCreateNestedManyWithoutBusinessesInput
+    external_catalog_items?: external_catalog_itemsUncheckedCreateNestedManyWithoutBusinessInput
     product_item_details?: product_item_detailsUncheckedCreateNestedManyWithoutBusinessInput
     hospitality_item_details?: hospitality_item_detailsUncheckedCreateNestedManyWithoutBusinessInput
     vehicle_item_details?: vehicle_item_detailsUncheckedCreateNestedManyWithoutBusinessInput
@@ -137691,6 +139639,7 @@ export namespace Prisma {
     tenants?: tenantsUpdateOneRequiredWithoutBusinessesNestedInput
     carts?: cartsUpdateManyWithoutBusinessesNestedInput
     catalog_items?: catalog_itemsUpdateManyWithoutBusinessesNestedInput
+    external_catalog_items?: external_catalog_itemsUpdateManyWithoutBusinessNestedInput
     product_item_details?: product_item_detailsUpdateManyWithoutBusinessNestedInput
     hospitality_item_details?: hospitality_item_detailsUpdateManyWithoutBusinessNestedInput
     vehicle_item_details?: vehicle_item_detailsUpdateManyWithoutBusinessNestedInput
@@ -137739,6 +139688,7 @@ export namespace Prisma {
     business_workflows?: business_workflowsUncheckedUpdateManyWithoutBusinessesNestedInput
     carts?: cartsUncheckedUpdateManyWithoutBusinessesNestedInput
     catalog_items?: catalog_itemsUncheckedUpdateManyWithoutBusinessesNestedInput
+    external_catalog_items?: external_catalog_itemsUncheckedUpdateManyWithoutBusinessNestedInput
     product_item_details?: product_item_detailsUncheckedUpdateManyWithoutBusinessNestedInput
     hospitality_item_details?: hospitality_item_detailsUncheckedUpdateManyWithoutBusinessNestedInput
     vehicle_item_details?: vehicle_item_detailsUncheckedUpdateManyWithoutBusinessNestedInput
@@ -137943,6 +139893,7 @@ export namespace Prisma {
     tenants: tenantsCreateNestedOneWithoutBusinessesInput
     carts?: cartsCreateNestedManyWithoutBusinessesInput
     catalog_items?: catalog_itemsCreateNestedManyWithoutBusinessesInput
+    external_catalog_items?: external_catalog_itemsCreateNestedManyWithoutBusinessInput
     product_item_details?: product_item_detailsCreateNestedManyWithoutBusinessInput
     hospitality_item_details?: hospitality_item_detailsCreateNestedManyWithoutBusinessInput
     vehicle_item_details?: vehicle_item_detailsCreateNestedManyWithoutBusinessInput
@@ -137991,6 +139942,7 @@ export namespace Prisma {
     business_workflows?: business_workflowsUncheckedCreateNestedManyWithoutBusinessesInput
     carts?: cartsUncheckedCreateNestedManyWithoutBusinessesInput
     catalog_items?: catalog_itemsUncheckedCreateNestedManyWithoutBusinessesInput
+    external_catalog_items?: external_catalog_itemsUncheckedCreateNestedManyWithoutBusinessInput
     product_item_details?: product_item_detailsUncheckedCreateNestedManyWithoutBusinessInput
     hospitality_item_details?: hospitality_item_detailsUncheckedCreateNestedManyWithoutBusinessInput
     vehicle_item_details?: vehicle_item_detailsUncheckedCreateNestedManyWithoutBusinessInput
@@ -138055,6 +140007,7 @@ export namespace Prisma {
     tenants?: tenantsUpdateOneRequiredWithoutBusinessesNestedInput
     carts?: cartsUpdateManyWithoutBusinessesNestedInput
     catalog_items?: catalog_itemsUpdateManyWithoutBusinessesNestedInput
+    external_catalog_items?: external_catalog_itemsUpdateManyWithoutBusinessNestedInput
     product_item_details?: product_item_detailsUpdateManyWithoutBusinessNestedInput
     hospitality_item_details?: hospitality_item_detailsUpdateManyWithoutBusinessNestedInput
     vehicle_item_details?: vehicle_item_detailsUpdateManyWithoutBusinessNestedInput
@@ -138103,6 +140056,7 @@ export namespace Prisma {
     business_workflows?: business_workflowsUncheckedUpdateManyWithoutBusinessesNestedInput
     carts?: cartsUncheckedUpdateManyWithoutBusinessesNestedInput
     catalog_items?: catalog_itemsUncheckedUpdateManyWithoutBusinessesNestedInput
+    external_catalog_items?: external_catalog_itemsUncheckedUpdateManyWithoutBusinessNestedInput
     product_item_details?: product_item_detailsUncheckedUpdateManyWithoutBusinessNestedInput
     hospitality_item_details?: hospitality_item_detailsUncheckedUpdateManyWithoutBusinessNestedInput
     vehicle_item_details?: vehicle_item_detailsUncheckedUpdateManyWithoutBusinessNestedInput
@@ -138818,6 +140772,7 @@ export namespace Prisma {
     tenants: tenantsCreateNestedOneWithoutBusinessesInput
     carts?: cartsCreateNestedManyWithoutBusinessesInput
     catalog_items?: catalog_itemsCreateNestedManyWithoutBusinessesInput
+    external_catalog_items?: external_catalog_itemsCreateNestedManyWithoutBusinessInput
     product_item_details?: product_item_detailsCreateNestedManyWithoutBusinessInput
     hospitality_item_details?: hospitality_item_detailsCreateNestedManyWithoutBusinessInput
     vehicle_item_details?: vehicle_item_detailsCreateNestedManyWithoutBusinessInput
@@ -138866,6 +140821,7 @@ export namespace Prisma {
     business_employees?: business_employeesUncheckedCreateNestedManyWithoutBusinessesInput
     carts?: cartsUncheckedCreateNestedManyWithoutBusinessesInput
     catalog_items?: catalog_itemsUncheckedCreateNestedManyWithoutBusinessesInput
+    external_catalog_items?: external_catalog_itemsUncheckedCreateNestedManyWithoutBusinessInput
     product_item_details?: product_item_detailsUncheckedCreateNestedManyWithoutBusinessInput
     hospitality_item_details?: hospitality_item_detailsUncheckedCreateNestedManyWithoutBusinessInput
     vehicle_item_details?: vehicle_item_detailsUncheckedCreateNestedManyWithoutBusinessInput
@@ -139024,6 +140980,7 @@ export namespace Prisma {
     tenants?: tenantsUpdateOneRequiredWithoutBusinessesNestedInput
     carts?: cartsUpdateManyWithoutBusinessesNestedInput
     catalog_items?: catalog_itemsUpdateManyWithoutBusinessesNestedInput
+    external_catalog_items?: external_catalog_itemsUpdateManyWithoutBusinessNestedInput
     product_item_details?: product_item_detailsUpdateManyWithoutBusinessNestedInput
     hospitality_item_details?: hospitality_item_detailsUpdateManyWithoutBusinessNestedInput
     vehicle_item_details?: vehicle_item_detailsUpdateManyWithoutBusinessNestedInput
@@ -139072,6 +141029,7 @@ export namespace Prisma {
     business_employees?: business_employeesUncheckedUpdateManyWithoutBusinessesNestedInput
     carts?: cartsUncheckedUpdateManyWithoutBusinessesNestedInput
     catalog_items?: catalog_itemsUncheckedUpdateManyWithoutBusinessesNestedInput
+    external_catalog_items?: external_catalog_itemsUncheckedUpdateManyWithoutBusinessNestedInput
     product_item_details?: product_item_detailsUncheckedUpdateManyWithoutBusinessNestedInput
     hospitality_item_details?: hospitality_item_detailsUncheckedUpdateManyWithoutBusinessNestedInput
     vehicle_item_details?: vehicle_item_detailsUncheckedUpdateManyWithoutBusinessNestedInput
@@ -139227,6 +141185,7 @@ export namespace Prisma {
     tenants: tenantsCreateNestedOneWithoutBusinessesInput
     carts?: cartsCreateNestedManyWithoutBusinessesInput
     catalog_items?: catalog_itemsCreateNestedManyWithoutBusinessesInput
+    external_catalog_items?: external_catalog_itemsCreateNestedManyWithoutBusinessInput
     product_item_details?: product_item_detailsCreateNestedManyWithoutBusinessInput
     hospitality_item_details?: hospitality_item_detailsCreateNestedManyWithoutBusinessInput
     vehicle_item_details?: vehicle_item_detailsCreateNestedManyWithoutBusinessInput
@@ -139275,6 +141234,7 @@ export namespace Prisma {
     business_workflows?: business_workflowsUncheckedCreateNestedManyWithoutBusinessesInput
     carts?: cartsUncheckedCreateNestedManyWithoutBusinessesInput
     catalog_items?: catalog_itemsUncheckedCreateNestedManyWithoutBusinessesInput
+    external_catalog_items?: external_catalog_itemsUncheckedCreateNestedManyWithoutBusinessInput
     product_item_details?: product_item_detailsUncheckedCreateNestedManyWithoutBusinessInput
     hospitality_item_details?: hospitality_item_detailsUncheckedCreateNestedManyWithoutBusinessInput
     vehicle_item_details?: vehicle_item_detailsUncheckedCreateNestedManyWithoutBusinessInput
@@ -139618,6 +141578,7 @@ export namespace Prisma {
     tenants?: tenantsUpdateOneRequiredWithoutBusinessesNestedInput
     carts?: cartsUpdateManyWithoutBusinessesNestedInput
     catalog_items?: catalog_itemsUpdateManyWithoutBusinessesNestedInput
+    external_catalog_items?: external_catalog_itemsUpdateManyWithoutBusinessNestedInput
     product_item_details?: product_item_detailsUpdateManyWithoutBusinessNestedInput
     hospitality_item_details?: hospitality_item_detailsUpdateManyWithoutBusinessNestedInput
     vehicle_item_details?: vehicle_item_detailsUpdateManyWithoutBusinessNestedInput
@@ -139666,6 +141627,7 @@ export namespace Prisma {
     business_workflows?: business_workflowsUncheckedUpdateManyWithoutBusinessesNestedInput
     carts?: cartsUncheckedUpdateManyWithoutBusinessesNestedInput
     catalog_items?: catalog_itemsUncheckedUpdateManyWithoutBusinessesNestedInput
+    external_catalog_items?: external_catalog_itemsUncheckedUpdateManyWithoutBusinessNestedInput
     product_item_details?: product_item_detailsUncheckedUpdateManyWithoutBusinessNestedInput
     hospitality_item_details?: hospitality_item_detailsUncheckedUpdateManyWithoutBusinessNestedInput
     vehicle_item_details?: vehicle_item_detailsUncheckedUpdateManyWithoutBusinessNestedInput
@@ -140000,6 +141962,7 @@ export namespace Prisma {
     tenants: tenantsCreateNestedOneWithoutBusinessesInput
     carts?: cartsCreateNestedManyWithoutBusinessesInput
     catalog_items?: catalog_itemsCreateNestedManyWithoutBusinessesInput
+    external_catalog_items?: external_catalog_itemsCreateNestedManyWithoutBusinessInput
     product_item_details?: product_item_detailsCreateNestedManyWithoutBusinessInput
     hospitality_item_details?: hospitality_item_detailsCreateNestedManyWithoutBusinessInput
     vehicle_item_details?: vehicle_item_detailsCreateNestedManyWithoutBusinessInput
@@ -140048,6 +142011,7 @@ export namespace Prisma {
     business_workflows?: business_workflowsUncheckedCreateNestedManyWithoutBusinessesInput
     carts?: cartsUncheckedCreateNestedManyWithoutBusinessesInput
     catalog_items?: catalog_itemsUncheckedCreateNestedManyWithoutBusinessesInput
+    external_catalog_items?: external_catalog_itemsUncheckedCreateNestedManyWithoutBusinessInput
     product_item_details?: product_item_detailsUncheckedCreateNestedManyWithoutBusinessInput
     hospitality_item_details?: hospitality_item_detailsUncheckedCreateNestedManyWithoutBusinessInput
     vehicle_item_details?: vehicle_item_detailsUncheckedCreateNestedManyWithoutBusinessInput
@@ -140263,6 +142227,7 @@ export namespace Prisma {
     tenants?: tenantsUpdateOneRequiredWithoutBusinessesNestedInput
     carts?: cartsUpdateManyWithoutBusinessesNestedInput
     catalog_items?: catalog_itemsUpdateManyWithoutBusinessesNestedInput
+    external_catalog_items?: external_catalog_itemsUpdateManyWithoutBusinessNestedInput
     product_item_details?: product_item_detailsUpdateManyWithoutBusinessNestedInput
     hospitality_item_details?: hospitality_item_detailsUpdateManyWithoutBusinessNestedInput
     vehicle_item_details?: vehicle_item_detailsUpdateManyWithoutBusinessNestedInput
@@ -140311,6 +142276,7 @@ export namespace Prisma {
     business_workflows?: business_workflowsUncheckedUpdateManyWithoutBusinessesNestedInput
     carts?: cartsUncheckedUpdateManyWithoutBusinessesNestedInput
     catalog_items?: catalog_itemsUncheckedUpdateManyWithoutBusinessesNestedInput
+    external_catalog_items?: external_catalog_itemsUncheckedUpdateManyWithoutBusinessNestedInput
     product_item_details?: product_item_detailsUncheckedUpdateManyWithoutBusinessNestedInput
     hospitality_item_details?: hospitality_item_detailsUncheckedUpdateManyWithoutBusinessNestedInput
     vehicle_item_details?: vehicle_item_detailsUncheckedUpdateManyWithoutBusinessNestedInput
@@ -140465,6 +142431,7 @@ export namespace Prisma {
     tenants: tenantsCreateNestedOneWithoutBusinessesInput
     carts?: cartsCreateNestedManyWithoutBusinessesInput
     catalog_items?: catalog_itemsCreateNestedManyWithoutBusinessesInput
+    external_catalog_items?: external_catalog_itemsCreateNestedManyWithoutBusinessInput
     product_item_details?: product_item_detailsCreateNestedManyWithoutBusinessInput
     hospitality_item_details?: hospitality_item_detailsCreateNestedManyWithoutBusinessInput
     vehicle_item_details?: vehicle_item_detailsCreateNestedManyWithoutBusinessInput
@@ -140513,6 +142480,7 @@ export namespace Prisma {
     business_workflows?: business_workflowsUncheckedCreateNestedManyWithoutBusinessesInput
     carts?: cartsUncheckedCreateNestedManyWithoutBusinessesInput
     catalog_items?: catalog_itemsUncheckedCreateNestedManyWithoutBusinessesInput
+    external_catalog_items?: external_catalog_itemsUncheckedCreateNestedManyWithoutBusinessInput
     product_item_details?: product_item_detailsUncheckedCreateNestedManyWithoutBusinessInput
     hospitality_item_details?: hospitality_item_detailsUncheckedCreateNestedManyWithoutBusinessInput
     vehicle_item_details?: vehicle_item_detailsUncheckedCreateNestedManyWithoutBusinessInput
@@ -140722,6 +142690,7 @@ export namespace Prisma {
     tenants?: tenantsUpdateOneRequiredWithoutBusinessesNestedInput
     carts?: cartsUpdateManyWithoutBusinessesNestedInput
     catalog_items?: catalog_itemsUpdateManyWithoutBusinessesNestedInput
+    external_catalog_items?: external_catalog_itemsUpdateManyWithoutBusinessNestedInput
     product_item_details?: product_item_detailsUpdateManyWithoutBusinessNestedInput
     hospitality_item_details?: hospitality_item_detailsUpdateManyWithoutBusinessNestedInput
     vehicle_item_details?: vehicle_item_detailsUpdateManyWithoutBusinessNestedInput
@@ -140770,6 +142739,7 @@ export namespace Prisma {
     business_workflows?: business_workflowsUncheckedUpdateManyWithoutBusinessesNestedInput
     carts?: cartsUncheckedUpdateManyWithoutBusinessesNestedInput
     catalog_items?: catalog_itemsUncheckedUpdateManyWithoutBusinessesNestedInput
+    external_catalog_items?: external_catalog_itemsUncheckedUpdateManyWithoutBusinessNestedInput
     product_item_details?: product_item_detailsUncheckedUpdateManyWithoutBusinessNestedInput
     hospitality_item_details?: hospitality_item_detailsUncheckedUpdateManyWithoutBusinessNestedInput
     vehicle_item_details?: vehicle_item_detailsUncheckedUpdateManyWithoutBusinessNestedInput
@@ -141023,6 +142993,7 @@ export namespace Prisma {
     availability?: item_availabilityCreateNestedManyWithoutItemInput
     variants?: item_variantsCreateNestedManyWithoutItemInput
     order_items?: order_itemsCreateNestedManyWithoutCatalog_itemInput
+    external_catalog_items?: external_catalog_itemsCreateNestedManyWithoutItemInput
   }
 
   export type catalog_itemsUncheckedCreateWithoutCart_itemsInput = {
@@ -141056,6 +143027,7 @@ export namespace Prisma {
     availability?: item_availabilityUncheckedCreateNestedManyWithoutItemInput
     variants?: item_variantsUncheckedCreateNestedManyWithoutItemInput
     order_items?: order_itemsUncheckedCreateNestedManyWithoutCatalog_itemInput
+    external_catalog_items?: external_catalog_itemsUncheckedCreateNestedManyWithoutItemInput
   }
 
   export type catalog_itemsCreateOrConnectWithoutCart_itemsInput = {
@@ -141181,6 +143153,7 @@ export namespace Prisma {
     availability?: item_availabilityUpdateManyWithoutItemNestedInput
     variants?: item_variantsUpdateManyWithoutItemNestedInput
     order_items?: order_itemsUpdateManyWithoutCatalog_itemNestedInput
+    external_catalog_items?: external_catalog_itemsUpdateManyWithoutItemNestedInput
   }
 
   export type catalog_itemsUncheckedUpdateWithoutCart_itemsInput = {
@@ -141214,6 +143187,7 @@ export namespace Prisma {
     availability?: item_availabilityUncheckedUpdateManyWithoutItemNestedInput
     variants?: item_variantsUncheckedUpdateManyWithoutItemNestedInput
     order_items?: order_itemsUncheckedUpdateManyWithoutCatalog_itemNestedInput
+    external_catalog_items?: external_catalog_itemsUncheckedUpdateManyWithoutItemNestedInput
   }
 
   export type item_variantsUpsertWithoutCart_itemsInput = {
@@ -141318,6 +143292,7 @@ export namespace Prisma {
     business_workflows?: business_workflowsCreateNestedManyWithoutBusinessesInput
     tenants: tenantsCreateNestedOneWithoutBusinessesInput
     catalog_items?: catalog_itemsCreateNestedManyWithoutBusinessesInput
+    external_catalog_items?: external_catalog_itemsCreateNestedManyWithoutBusinessInput
     product_item_details?: product_item_detailsCreateNestedManyWithoutBusinessInput
     hospitality_item_details?: hospitality_item_detailsCreateNestedManyWithoutBusinessInput
     vehicle_item_details?: vehicle_item_detailsCreateNestedManyWithoutBusinessInput
@@ -141366,6 +143341,7 @@ export namespace Prisma {
     business_employees?: business_employeesUncheckedCreateNestedManyWithoutBusinessesInput
     business_workflows?: business_workflowsUncheckedCreateNestedManyWithoutBusinessesInput
     catalog_items?: catalog_itemsUncheckedCreateNestedManyWithoutBusinessesInput
+    external_catalog_items?: external_catalog_itemsUncheckedCreateNestedManyWithoutBusinessInput
     product_item_details?: product_item_detailsUncheckedCreateNestedManyWithoutBusinessInput
     hospitality_item_details?: hospitality_item_detailsUncheckedCreateNestedManyWithoutBusinessInput
     vehicle_item_details?: vehicle_item_detailsUncheckedCreateNestedManyWithoutBusinessInput
@@ -141663,6 +143639,7 @@ export namespace Prisma {
     business_workflows?: business_workflowsUpdateManyWithoutBusinessesNestedInput
     tenants?: tenantsUpdateOneRequiredWithoutBusinessesNestedInput
     catalog_items?: catalog_itemsUpdateManyWithoutBusinessesNestedInput
+    external_catalog_items?: external_catalog_itemsUpdateManyWithoutBusinessNestedInput
     product_item_details?: product_item_detailsUpdateManyWithoutBusinessNestedInput
     hospitality_item_details?: hospitality_item_detailsUpdateManyWithoutBusinessNestedInput
     vehicle_item_details?: vehicle_item_detailsUpdateManyWithoutBusinessNestedInput
@@ -141711,6 +143688,7 @@ export namespace Prisma {
     business_employees?: business_employeesUncheckedUpdateManyWithoutBusinessesNestedInput
     business_workflows?: business_workflowsUncheckedUpdateManyWithoutBusinessesNestedInput
     catalog_items?: catalog_itemsUncheckedUpdateManyWithoutBusinessesNestedInput
+    external_catalog_items?: external_catalog_itemsUncheckedUpdateManyWithoutBusinessNestedInput
     product_item_details?: product_item_detailsUncheckedUpdateManyWithoutBusinessNestedInput
     hospitality_item_details?: hospitality_item_detailsUncheckedUpdateManyWithoutBusinessNestedInput
     vehicle_item_details?: vehicle_item_detailsUncheckedUpdateManyWithoutBusinessNestedInput
@@ -142479,6 +144457,7 @@ export namespace Prisma {
     business_workflows?: business_workflowsCreateNestedManyWithoutBusinessesInput
     tenants: tenantsCreateNestedOneWithoutBusinessesInput
     carts?: cartsCreateNestedManyWithoutBusinessesInput
+    external_catalog_items?: external_catalog_itemsCreateNestedManyWithoutBusinessInput
     product_item_details?: product_item_detailsCreateNestedManyWithoutBusinessInput
     hospitality_item_details?: hospitality_item_detailsCreateNestedManyWithoutBusinessInput
     vehicle_item_details?: vehicle_item_detailsCreateNestedManyWithoutBusinessInput
@@ -142527,6 +144506,7 @@ export namespace Prisma {
     business_employees?: business_employeesUncheckedCreateNestedManyWithoutBusinessesInput
     business_workflows?: business_workflowsUncheckedCreateNestedManyWithoutBusinessesInput
     carts?: cartsUncheckedCreateNestedManyWithoutBusinessesInput
+    external_catalog_items?: external_catalog_itemsUncheckedCreateNestedManyWithoutBusinessInput
     product_item_details?: product_item_detailsUncheckedCreateNestedManyWithoutBusinessInput
     hospitality_item_details?: hospitality_item_detailsUncheckedCreateNestedManyWithoutBusinessInput
     vehicle_item_details?: vehicle_item_detailsUncheckedCreateNestedManyWithoutBusinessInput
@@ -142674,6 +144654,48 @@ export namespace Prisma {
 
   export type order_itemsCreateManyCatalog_itemInputEnvelope = {
     data: order_itemsCreateManyCatalog_itemInput | order_itemsCreateManyCatalog_itemInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type external_catalog_itemsCreateWithoutItemInput = {
+    external_catalog_item_id?: string
+    provider: string
+    external_catalog_id?: string | null
+    external_product_id: string
+    retailer_id?: string | null
+    sync_status?: string
+    last_synced_at?: Date | string | null
+    remote_hash?: string | null
+    local_hash?: string | null
+    raw_payload?: NullableJsonNullValueInput | InputJsonValue
+    created_at?: Date | string
+    updated_at?: Date | string
+    business: businessesCreateNestedOneWithoutExternal_catalog_itemsInput
+  }
+
+  export type external_catalog_itemsUncheckedCreateWithoutItemInput = {
+    external_catalog_item_id?: string
+    business_id: string
+    provider: string
+    external_catalog_id?: string | null
+    external_product_id: string
+    retailer_id?: string | null
+    sync_status?: string
+    last_synced_at?: Date | string | null
+    remote_hash?: string | null
+    local_hash?: string | null
+    raw_payload?: NullableJsonNullValueInput | InputJsonValue
+    created_at?: Date | string
+    updated_at?: Date | string
+  }
+
+  export type external_catalog_itemsCreateOrConnectWithoutItemInput = {
+    where: external_catalog_itemsWhereUniqueInput
+    create: XOR<external_catalog_itemsCreateWithoutItemInput, external_catalog_itemsUncheckedCreateWithoutItemInput>
+  }
+
+  export type external_catalog_itemsCreateManyItemInputEnvelope = {
+    data: external_catalog_itemsCreateManyItemInput | external_catalog_itemsCreateManyItemInput[]
     skipDuplicates?: boolean
   }
 
@@ -142967,6 +144989,7 @@ export namespace Prisma {
     business_workflows?: business_workflowsUpdateManyWithoutBusinessesNestedInput
     tenants?: tenantsUpdateOneRequiredWithoutBusinessesNestedInput
     carts?: cartsUpdateManyWithoutBusinessesNestedInput
+    external_catalog_items?: external_catalog_itemsUpdateManyWithoutBusinessNestedInput
     product_item_details?: product_item_detailsUpdateManyWithoutBusinessNestedInput
     hospitality_item_details?: hospitality_item_detailsUpdateManyWithoutBusinessNestedInput
     vehicle_item_details?: vehicle_item_detailsUpdateManyWithoutBusinessNestedInput
@@ -143015,6 +145038,7 @@ export namespace Prisma {
     business_employees?: business_employeesUncheckedUpdateManyWithoutBusinessesNestedInput
     business_workflows?: business_workflowsUncheckedUpdateManyWithoutBusinessesNestedInput
     carts?: cartsUncheckedUpdateManyWithoutBusinessesNestedInput
+    external_catalog_items?: external_catalog_itemsUncheckedUpdateManyWithoutBusinessNestedInput
     product_item_details?: product_item_detailsUncheckedUpdateManyWithoutBusinessNestedInput
     hospitality_item_details?: hospitality_item_detailsUncheckedUpdateManyWithoutBusinessNestedInput
     vehicle_item_details?: vehicle_item_detailsUncheckedUpdateManyWithoutBusinessNestedInput
@@ -143123,6 +145147,22 @@ export namespace Prisma {
     data: XOR<order_itemsUpdateManyMutationInput, order_itemsUncheckedUpdateManyWithoutCatalog_itemInput>
   }
 
+  export type external_catalog_itemsUpsertWithWhereUniqueWithoutItemInput = {
+    where: external_catalog_itemsWhereUniqueInput
+    update: XOR<external_catalog_itemsUpdateWithoutItemInput, external_catalog_itemsUncheckedUpdateWithoutItemInput>
+    create: XOR<external_catalog_itemsCreateWithoutItemInput, external_catalog_itemsUncheckedCreateWithoutItemInput>
+  }
+
+  export type external_catalog_itemsUpdateWithWhereUniqueWithoutItemInput = {
+    where: external_catalog_itemsWhereUniqueInput
+    data: XOR<external_catalog_itemsUpdateWithoutItemInput, external_catalog_itemsUncheckedUpdateWithoutItemInput>
+  }
+
+  export type external_catalog_itemsUpdateManyWithWhereWithoutItemInput = {
+    where: external_catalog_itemsScalarWhereInput
+    data: XOR<external_catalog_itemsUpdateManyMutationInput, external_catalog_itemsUncheckedUpdateManyWithoutItemInput>
+  }
+
   export type cart_itemsCreateWithoutItem_variantInput = {
     cart_item_id?: string
     product_name: string
@@ -143192,6 +145232,7 @@ export namespace Prisma {
     businesses: businessesCreateNestedOneWithoutCatalog_itemsInput
     availability?: item_availabilityCreateNestedManyWithoutItemInput
     order_items?: order_itemsCreateNestedManyWithoutCatalog_itemInput
+    external_catalog_items?: external_catalog_itemsCreateNestedManyWithoutItemInput
   }
 
   export type catalog_itemsUncheckedCreateWithoutVariantsInput = {
@@ -143225,6 +145266,7 @@ export namespace Prisma {
     hospitality_inquiries?: hospitality_inquiriesUncheckedCreateNestedManyWithoutPreferred_itemInput
     availability?: item_availabilityUncheckedCreateNestedManyWithoutItemInput
     order_items?: order_itemsUncheckedCreateNestedManyWithoutCatalog_itemInput
+    external_catalog_items?: external_catalog_itemsUncheckedCreateNestedManyWithoutItemInput
   }
 
   export type catalog_itemsCreateOrConnectWithoutVariantsInput = {
@@ -143374,6 +145416,7 @@ export namespace Prisma {
     businesses?: businessesUpdateOneRequiredWithoutCatalog_itemsNestedInput
     availability?: item_availabilityUpdateManyWithoutItemNestedInput
     order_items?: order_itemsUpdateManyWithoutCatalog_itemNestedInput
+    external_catalog_items?: external_catalog_itemsUpdateManyWithoutItemNestedInput
   }
 
   export type catalog_itemsUncheckedUpdateWithoutVariantsInput = {
@@ -143407,6 +145450,7 @@ export namespace Prisma {
     hospitality_inquiries?: hospitality_inquiriesUncheckedUpdateManyWithoutPreferred_itemNestedInput
     availability?: item_availabilityUncheckedUpdateManyWithoutItemNestedInput
     order_items?: order_itemsUncheckedUpdateManyWithoutCatalog_itemNestedInput
+    external_catalog_items?: external_catalog_itemsUncheckedUpdateManyWithoutItemNestedInput
   }
 
   export type order_itemsUpsertWithWhereUniqueWithoutItem_variantInput = {
@@ -143472,6 +145516,7 @@ export namespace Prisma {
     businesses: businessesCreateNestedOneWithoutCatalog_itemsInput
     variants?: item_variantsCreateNestedManyWithoutItemInput
     order_items?: order_itemsCreateNestedManyWithoutCatalog_itemInput
+    external_catalog_items?: external_catalog_itemsCreateNestedManyWithoutItemInput
   }
 
   export type catalog_itemsUncheckedCreateWithoutAvailabilityInput = {
@@ -143505,6 +145550,7 @@ export namespace Prisma {
     hospitality_inquiries?: hospitality_inquiriesUncheckedCreateNestedManyWithoutPreferred_itemInput
     variants?: item_variantsUncheckedCreateNestedManyWithoutItemInput
     order_items?: order_itemsUncheckedCreateNestedManyWithoutCatalog_itemInput
+    external_catalog_items?: external_catalog_itemsUncheckedCreateNestedManyWithoutItemInput
   }
 
   export type catalog_itemsCreateOrConnectWithoutAvailabilityInput = {
@@ -143554,6 +145600,7 @@ export namespace Prisma {
     businesses?: businessesUpdateOneRequiredWithoutCatalog_itemsNestedInput
     variants?: item_variantsUpdateManyWithoutItemNestedInput
     order_items?: order_itemsUpdateManyWithoutCatalog_itemNestedInput
+    external_catalog_items?: external_catalog_itemsUpdateManyWithoutItemNestedInput
   }
 
   export type catalog_itemsUncheckedUpdateWithoutAvailabilityInput = {
@@ -143587,6 +145634,7 @@ export namespace Prisma {
     hospitality_inquiries?: hospitality_inquiriesUncheckedUpdateManyWithoutPreferred_itemNestedInput
     variants?: item_variantsUncheckedUpdateManyWithoutItemNestedInput
     order_items?: order_itemsUncheckedUpdateManyWithoutCatalog_itemNestedInput
+    external_catalog_items?: external_catalog_itemsUncheckedUpdateManyWithoutItemNestedInput
   }
 
   export type businessesCreateWithoutProduct_item_detailsInput = {
@@ -143611,6 +145659,7 @@ export namespace Prisma {
     tenants: tenantsCreateNestedOneWithoutBusinessesInput
     carts?: cartsCreateNestedManyWithoutBusinessesInput
     catalog_items?: catalog_itemsCreateNestedManyWithoutBusinessesInput
+    external_catalog_items?: external_catalog_itemsCreateNestedManyWithoutBusinessInput
     hospitality_item_details?: hospitality_item_detailsCreateNestedManyWithoutBusinessInput
     vehicle_item_details?: vehicle_item_detailsCreateNestedManyWithoutBusinessInput
     product_orders?: product_ordersCreateNestedManyWithoutBusinessInput
@@ -143659,6 +145708,7 @@ export namespace Prisma {
     business_workflows?: business_workflowsUncheckedCreateNestedManyWithoutBusinessesInput
     carts?: cartsUncheckedCreateNestedManyWithoutBusinessesInput
     catalog_items?: catalog_itemsUncheckedCreateNestedManyWithoutBusinessesInput
+    external_catalog_items?: external_catalog_itemsUncheckedCreateNestedManyWithoutBusinessInput
     hospitality_item_details?: hospitality_item_detailsUncheckedCreateNestedManyWithoutBusinessInput
     vehicle_item_details?: vehicle_item_detailsUncheckedCreateNestedManyWithoutBusinessInput
     product_orders?: product_ordersUncheckedCreateNestedManyWithoutBusinessInput
@@ -143721,6 +145771,7 @@ export namespace Prisma {
     availability?: item_availabilityCreateNestedManyWithoutItemInput
     variants?: item_variantsCreateNestedManyWithoutItemInput
     order_items?: order_itemsCreateNestedManyWithoutCatalog_itemInput
+    external_catalog_items?: external_catalog_itemsCreateNestedManyWithoutItemInput
   }
 
   export type catalog_itemsUncheckedCreateWithoutProduct_detailInput = {
@@ -143754,6 +145805,7 @@ export namespace Prisma {
     availability?: item_availabilityUncheckedCreateNestedManyWithoutItemInput
     variants?: item_variantsUncheckedCreateNestedManyWithoutItemInput
     order_items?: order_itemsUncheckedCreateNestedManyWithoutCatalog_itemInput
+    external_catalog_items?: external_catalog_itemsUncheckedCreateNestedManyWithoutItemInput
   }
 
   export type catalog_itemsCreateOrConnectWithoutProduct_detailInput = {
@@ -143794,6 +145846,7 @@ export namespace Prisma {
     tenants?: tenantsUpdateOneRequiredWithoutBusinessesNestedInput
     carts?: cartsUpdateManyWithoutBusinessesNestedInput
     catalog_items?: catalog_itemsUpdateManyWithoutBusinessesNestedInput
+    external_catalog_items?: external_catalog_itemsUpdateManyWithoutBusinessNestedInput
     hospitality_item_details?: hospitality_item_detailsUpdateManyWithoutBusinessNestedInput
     vehicle_item_details?: vehicle_item_detailsUpdateManyWithoutBusinessNestedInput
     product_orders?: product_ordersUpdateManyWithoutBusinessNestedInput
@@ -143842,6 +145895,7 @@ export namespace Prisma {
     business_workflows?: business_workflowsUncheckedUpdateManyWithoutBusinessesNestedInput
     carts?: cartsUncheckedUpdateManyWithoutBusinessesNestedInput
     catalog_items?: catalog_itemsUncheckedUpdateManyWithoutBusinessesNestedInput
+    external_catalog_items?: external_catalog_itemsUncheckedUpdateManyWithoutBusinessNestedInput
     hospitality_item_details?: hospitality_item_detailsUncheckedUpdateManyWithoutBusinessNestedInput
     vehicle_item_details?: vehicle_item_detailsUncheckedUpdateManyWithoutBusinessNestedInput
     product_orders?: product_ordersUncheckedUpdateManyWithoutBusinessNestedInput
@@ -143910,6 +145964,7 @@ export namespace Prisma {
     availability?: item_availabilityUpdateManyWithoutItemNestedInput
     variants?: item_variantsUpdateManyWithoutItemNestedInput
     order_items?: order_itemsUpdateManyWithoutCatalog_itemNestedInput
+    external_catalog_items?: external_catalog_itemsUpdateManyWithoutItemNestedInput
   }
 
   export type catalog_itemsUncheckedUpdateWithoutProduct_detailInput = {
@@ -143943,6 +145998,371 @@ export namespace Prisma {
     availability?: item_availabilityUncheckedUpdateManyWithoutItemNestedInput
     variants?: item_variantsUncheckedUpdateManyWithoutItemNestedInput
     order_items?: order_itemsUncheckedUpdateManyWithoutCatalog_itemNestedInput
+    external_catalog_items?: external_catalog_itemsUncheckedUpdateManyWithoutItemNestedInput
+  }
+
+  export type businessesCreateWithoutExternal_catalog_itemsInput = {
+    business_id?: string
+    business_name: string
+    business_type?: string | null
+    whatsapp_number?: string | null
+    created_at?: Date | string
+    updated_at?: Date | string
+    email?: string | null
+    phone?: string | null
+    website?: string | null
+    public_booking_slug?: string | null
+    city?: string | null
+    address?: string | null
+    country?: string | null
+    gst_number?: string | null
+    pan_number?: string | null
+    deleted_at?: Date | string | null
+    business_employees?: business_employeesCreateNestedManyWithoutBusinessesInput
+    business_workflows?: business_workflowsCreateNestedManyWithoutBusinessesInput
+    tenants: tenantsCreateNestedOneWithoutBusinessesInput
+    carts?: cartsCreateNestedManyWithoutBusinessesInput
+    catalog_items?: catalog_itemsCreateNestedManyWithoutBusinessesInput
+    product_item_details?: product_item_detailsCreateNestedManyWithoutBusinessInput
+    hospitality_item_details?: hospitality_item_detailsCreateNestedManyWithoutBusinessInput
+    vehicle_item_details?: vehicle_item_detailsCreateNestedManyWithoutBusinessInput
+    product_orders?: product_ordersCreateNestedManyWithoutBusinessInput
+    product_inquiries?: product_inquiriesCreateNestedManyWithoutBusinessInput
+    hospitality_bookings?: hospitality_bookingsCreateNestedManyWithoutBusinessInput
+    hospitality_inquiries?: hospitality_inquiriesCreateNestedManyWithoutBusinessInput
+    leads?: leadsCreateNestedManyWithoutBusinessesInput
+    pipelines?: pipelinesCreateNestedManyWithoutBusinessesInput
+    notification_messages?: notification_messagesCreateNestedManyWithoutBusinessesInput
+    notification_preferences?: notification_preferencesCreateNestedManyWithoutBusinessesInput
+    notification_templates?: notification_templatesCreateNestedManyWithoutBusinessesInput
+    payment_reconciliation?: payment_reconciliationCreateNestedManyWithoutBusinessesInput
+    payments?: paymentsCreateNestedManyWithoutBusinessesInput
+    social_accounts?: social_accountsCreateNestedManyWithoutBusinessesInput
+    users?: usersCreateNestedManyWithoutBusinessesInput
+    workflow_executions?: workflow_executionsCreateNestedManyWithoutBusinessesInput
+    workflow_execution_steps?: workflow_execution_stepsCreateNestedManyWithoutBusinessInput
+    workflow_idempotency_keys?: workflow_idempotency_keysCreateNestedManyWithoutBusinessInput
+    billing_subscription?: billing_subscriptionsCreateNestedOneWithoutBusinessesInput
+    wallet?: walletsCreateNestedOneWithoutBusinessesInput
+    billing_payments_list?: billing_paymentsCreateNestedManyWithoutBusinessesInput
+    billing_invoices_list?: billing_invoicesCreateNestedManyWithoutBusinessesInput
+    settings?: business_settingsCreateNestedOneWithoutBusinessesInput
+    audit_logs?: audit_logsCreateNestedManyWithoutBusinessesInput
+  }
+
+  export type businessesUncheckedCreateWithoutExternal_catalog_itemsInput = {
+    business_id?: string
+    tenant_id: string
+    business_name: string
+    business_type?: string | null
+    whatsapp_number?: string | null
+    created_at?: Date | string
+    updated_at?: Date | string
+    email?: string | null
+    phone?: string | null
+    website?: string | null
+    public_booking_slug?: string | null
+    city?: string | null
+    address?: string | null
+    country?: string | null
+    gst_number?: string | null
+    pan_number?: string | null
+    deleted_at?: Date | string | null
+    business_employees?: business_employeesUncheckedCreateNestedManyWithoutBusinessesInput
+    business_workflows?: business_workflowsUncheckedCreateNestedManyWithoutBusinessesInput
+    carts?: cartsUncheckedCreateNestedManyWithoutBusinessesInput
+    catalog_items?: catalog_itemsUncheckedCreateNestedManyWithoutBusinessesInput
+    product_item_details?: product_item_detailsUncheckedCreateNestedManyWithoutBusinessInput
+    hospitality_item_details?: hospitality_item_detailsUncheckedCreateNestedManyWithoutBusinessInput
+    vehicle_item_details?: vehicle_item_detailsUncheckedCreateNestedManyWithoutBusinessInput
+    product_orders?: product_ordersUncheckedCreateNestedManyWithoutBusinessInput
+    product_inquiries?: product_inquiriesUncheckedCreateNestedManyWithoutBusinessInput
+    hospitality_bookings?: hospitality_bookingsUncheckedCreateNestedManyWithoutBusinessInput
+    hospitality_inquiries?: hospitality_inquiriesUncheckedCreateNestedManyWithoutBusinessInput
+    leads?: leadsUncheckedCreateNestedManyWithoutBusinessesInput
+    pipelines?: pipelinesUncheckedCreateNestedManyWithoutBusinessesInput
+    notification_messages?: notification_messagesUncheckedCreateNestedManyWithoutBusinessesInput
+    notification_preferences?: notification_preferencesUncheckedCreateNestedManyWithoutBusinessesInput
+    notification_templates?: notification_templatesUncheckedCreateNestedManyWithoutBusinessesInput
+    payment_reconciliation?: payment_reconciliationUncheckedCreateNestedManyWithoutBusinessesInput
+    payments?: paymentsUncheckedCreateNestedManyWithoutBusinessesInput
+    social_accounts?: social_accountsUncheckedCreateNestedManyWithoutBusinessesInput
+    users?: usersUncheckedCreateNestedManyWithoutBusinessesInput
+    workflow_executions?: workflow_executionsUncheckedCreateNestedManyWithoutBusinessesInput
+    workflow_execution_steps?: workflow_execution_stepsUncheckedCreateNestedManyWithoutBusinessInput
+    workflow_idempotency_keys?: workflow_idempotency_keysUncheckedCreateNestedManyWithoutBusinessInput
+    billing_subscription?: billing_subscriptionsUncheckedCreateNestedOneWithoutBusinessesInput
+    wallet?: walletsUncheckedCreateNestedOneWithoutBusinessesInput
+    billing_payments_list?: billing_paymentsUncheckedCreateNestedManyWithoutBusinessesInput
+    billing_invoices_list?: billing_invoicesUncheckedCreateNestedManyWithoutBusinessesInput
+    settings?: business_settingsUncheckedCreateNestedOneWithoutBusinessesInput
+    audit_logs?: audit_logsUncheckedCreateNestedManyWithoutBusinessesInput
+  }
+
+  export type businessesCreateOrConnectWithoutExternal_catalog_itemsInput = {
+    where: businessesWhereUniqueInput
+    create: XOR<businessesCreateWithoutExternal_catalog_itemsInput, businessesUncheckedCreateWithoutExternal_catalog_itemsInput>
+  }
+
+  export type catalog_itemsCreateWithoutExternal_catalog_itemsInput = {
+    item_id?: string
+    tenant_id: string
+    item_type: string
+    name: string
+    description?: string | null
+    category?: string | null
+    base_price: Decimal | DecimalJsLike | number | string
+    compare_price?: Decimal | DecimalJsLike | number | string | null
+    currency?: string
+    stock_quantity?: number | null
+    primary_image_url?: string | null
+    image_urls?: NullableJsonNullValueInput | InputJsonValue
+    attributes?: NullableJsonNullValueInput | InputJsonValue
+    ai_tags?: catalog_itemsCreateai_tagsInput | string[]
+    is_active?: boolean
+    deleted_at?: Date | string | null
+    created_at?: Date | string
+    updated_at?: Date | string
+    cart_items?: cart_itemsCreateNestedManyWithoutCatalog_itemInput
+    cart_reservations?: cart_reservationsCreateNestedManyWithoutCatalog_itemInput
+    product_detail?: product_item_detailsCreateNestedOneWithoutItemInput
+    hospitality_detail?: hospitality_item_detailsCreateNestedOneWithoutItemInput
+    vehicle_detail?: vehicle_item_detailsCreateNestedOneWithoutItemInput
+    product_order_items?: product_order_itemsCreateNestedManyWithoutItemInput
+    hospitality_booking_items?: hospitality_booking_itemsCreateNestedManyWithoutItemInput
+    product_inquiries?: product_inquiriesCreateNestedManyWithoutItemInput
+    hospitality_inquiries?: hospitality_inquiriesCreateNestedManyWithoutPreferred_itemInput
+    businesses: businessesCreateNestedOneWithoutCatalog_itemsInput
+    availability?: item_availabilityCreateNestedManyWithoutItemInput
+    variants?: item_variantsCreateNestedManyWithoutItemInput
+    order_items?: order_itemsCreateNestedManyWithoutCatalog_itemInput
+  }
+
+  export type catalog_itemsUncheckedCreateWithoutExternal_catalog_itemsInput = {
+    item_id?: string
+    business_id: string
+    tenant_id: string
+    item_type: string
+    name: string
+    description?: string | null
+    category?: string | null
+    base_price: Decimal | DecimalJsLike | number | string
+    compare_price?: Decimal | DecimalJsLike | number | string | null
+    currency?: string
+    stock_quantity?: number | null
+    primary_image_url?: string | null
+    image_urls?: NullableJsonNullValueInput | InputJsonValue
+    attributes?: NullableJsonNullValueInput | InputJsonValue
+    ai_tags?: catalog_itemsCreateai_tagsInput | string[]
+    is_active?: boolean
+    deleted_at?: Date | string | null
+    created_at?: Date | string
+    updated_at?: Date | string
+    cart_items?: cart_itemsUncheckedCreateNestedManyWithoutCatalog_itemInput
+    cart_reservations?: cart_reservationsUncheckedCreateNestedManyWithoutCatalog_itemInput
+    product_detail?: product_item_detailsUncheckedCreateNestedOneWithoutItemInput
+    hospitality_detail?: hospitality_item_detailsUncheckedCreateNestedOneWithoutItemInput
+    vehicle_detail?: vehicle_item_detailsUncheckedCreateNestedOneWithoutItemInput
+    product_order_items?: product_order_itemsUncheckedCreateNestedManyWithoutItemInput
+    hospitality_booking_items?: hospitality_booking_itemsUncheckedCreateNestedManyWithoutItemInput
+    product_inquiries?: product_inquiriesUncheckedCreateNestedManyWithoutItemInput
+    hospitality_inquiries?: hospitality_inquiriesUncheckedCreateNestedManyWithoutPreferred_itemInput
+    availability?: item_availabilityUncheckedCreateNestedManyWithoutItemInput
+    variants?: item_variantsUncheckedCreateNestedManyWithoutItemInput
+    order_items?: order_itemsUncheckedCreateNestedManyWithoutCatalog_itemInput
+  }
+
+  export type catalog_itemsCreateOrConnectWithoutExternal_catalog_itemsInput = {
+    where: catalog_itemsWhereUniqueInput
+    create: XOR<catalog_itemsCreateWithoutExternal_catalog_itemsInput, catalog_itemsUncheckedCreateWithoutExternal_catalog_itemsInput>
+  }
+
+  export type businessesUpsertWithoutExternal_catalog_itemsInput = {
+    update: XOR<businessesUpdateWithoutExternal_catalog_itemsInput, businessesUncheckedUpdateWithoutExternal_catalog_itemsInput>
+    create: XOR<businessesCreateWithoutExternal_catalog_itemsInput, businessesUncheckedCreateWithoutExternal_catalog_itemsInput>
+    where?: businessesWhereInput
+  }
+
+  export type businessesUpdateToOneWithWhereWithoutExternal_catalog_itemsInput = {
+    where?: businessesWhereInput
+    data: XOR<businessesUpdateWithoutExternal_catalog_itemsInput, businessesUncheckedUpdateWithoutExternal_catalog_itemsInput>
+  }
+
+  export type businessesUpdateWithoutExternal_catalog_itemsInput = {
+    business_id?: StringFieldUpdateOperationsInput | string
+    business_name?: StringFieldUpdateOperationsInput | string
+    business_type?: NullableStringFieldUpdateOperationsInput | string | null
+    whatsapp_number?: NullableStringFieldUpdateOperationsInput | string | null
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    website?: NullableStringFieldUpdateOperationsInput | string | null
+    public_booking_slug?: NullableStringFieldUpdateOperationsInput | string | null
+    city?: NullableStringFieldUpdateOperationsInput | string | null
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    country?: NullableStringFieldUpdateOperationsInput | string | null
+    gst_number?: NullableStringFieldUpdateOperationsInput | string | null
+    pan_number?: NullableStringFieldUpdateOperationsInput | string | null
+    deleted_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    business_employees?: business_employeesUpdateManyWithoutBusinessesNestedInput
+    business_workflows?: business_workflowsUpdateManyWithoutBusinessesNestedInput
+    tenants?: tenantsUpdateOneRequiredWithoutBusinessesNestedInput
+    carts?: cartsUpdateManyWithoutBusinessesNestedInput
+    catalog_items?: catalog_itemsUpdateManyWithoutBusinessesNestedInput
+    product_item_details?: product_item_detailsUpdateManyWithoutBusinessNestedInput
+    hospitality_item_details?: hospitality_item_detailsUpdateManyWithoutBusinessNestedInput
+    vehicle_item_details?: vehicle_item_detailsUpdateManyWithoutBusinessNestedInput
+    product_orders?: product_ordersUpdateManyWithoutBusinessNestedInput
+    product_inquiries?: product_inquiriesUpdateManyWithoutBusinessNestedInput
+    hospitality_bookings?: hospitality_bookingsUpdateManyWithoutBusinessNestedInput
+    hospitality_inquiries?: hospitality_inquiriesUpdateManyWithoutBusinessNestedInput
+    leads?: leadsUpdateManyWithoutBusinessesNestedInput
+    pipelines?: pipelinesUpdateManyWithoutBusinessesNestedInput
+    notification_messages?: notification_messagesUpdateManyWithoutBusinessesNestedInput
+    notification_preferences?: notification_preferencesUpdateManyWithoutBusinessesNestedInput
+    notification_templates?: notification_templatesUpdateManyWithoutBusinessesNestedInput
+    payment_reconciliation?: payment_reconciliationUpdateManyWithoutBusinessesNestedInput
+    payments?: paymentsUpdateManyWithoutBusinessesNestedInput
+    social_accounts?: social_accountsUpdateManyWithoutBusinessesNestedInput
+    users?: usersUpdateManyWithoutBusinessesNestedInput
+    workflow_executions?: workflow_executionsUpdateManyWithoutBusinessesNestedInput
+    workflow_execution_steps?: workflow_execution_stepsUpdateManyWithoutBusinessNestedInput
+    workflow_idempotency_keys?: workflow_idempotency_keysUpdateManyWithoutBusinessNestedInput
+    billing_subscription?: billing_subscriptionsUpdateOneWithoutBusinessesNestedInput
+    wallet?: walletsUpdateOneWithoutBusinessesNestedInput
+    billing_payments_list?: billing_paymentsUpdateManyWithoutBusinessesNestedInput
+    billing_invoices_list?: billing_invoicesUpdateManyWithoutBusinessesNestedInput
+    settings?: business_settingsUpdateOneWithoutBusinessesNestedInput
+    audit_logs?: audit_logsUpdateManyWithoutBusinessesNestedInput
+  }
+
+  export type businessesUncheckedUpdateWithoutExternal_catalog_itemsInput = {
+    business_id?: StringFieldUpdateOperationsInput | string
+    tenant_id?: StringFieldUpdateOperationsInput | string
+    business_name?: StringFieldUpdateOperationsInput | string
+    business_type?: NullableStringFieldUpdateOperationsInput | string | null
+    whatsapp_number?: NullableStringFieldUpdateOperationsInput | string | null
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    website?: NullableStringFieldUpdateOperationsInput | string | null
+    public_booking_slug?: NullableStringFieldUpdateOperationsInput | string | null
+    city?: NullableStringFieldUpdateOperationsInput | string | null
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    country?: NullableStringFieldUpdateOperationsInput | string | null
+    gst_number?: NullableStringFieldUpdateOperationsInput | string | null
+    pan_number?: NullableStringFieldUpdateOperationsInput | string | null
+    deleted_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    business_employees?: business_employeesUncheckedUpdateManyWithoutBusinessesNestedInput
+    business_workflows?: business_workflowsUncheckedUpdateManyWithoutBusinessesNestedInput
+    carts?: cartsUncheckedUpdateManyWithoutBusinessesNestedInput
+    catalog_items?: catalog_itemsUncheckedUpdateManyWithoutBusinessesNestedInput
+    product_item_details?: product_item_detailsUncheckedUpdateManyWithoutBusinessNestedInput
+    hospitality_item_details?: hospitality_item_detailsUncheckedUpdateManyWithoutBusinessNestedInput
+    vehicle_item_details?: vehicle_item_detailsUncheckedUpdateManyWithoutBusinessNestedInput
+    product_orders?: product_ordersUncheckedUpdateManyWithoutBusinessNestedInput
+    product_inquiries?: product_inquiriesUncheckedUpdateManyWithoutBusinessNestedInput
+    hospitality_bookings?: hospitality_bookingsUncheckedUpdateManyWithoutBusinessNestedInput
+    hospitality_inquiries?: hospitality_inquiriesUncheckedUpdateManyWithoutBusinessNestedInput
+    leads?: leadsUncheckedUpdateManyWithoutBusinessesNestedInput
+    pipelines?: pipelinesUncheckedUpdateManyWithoutBusinessesNestedInput
+    notification_messages?: notification_messagesUncheckedUpdateManyWithoutBusinessesNestedInput
+    notification_preferences?: notification_preferencesUncheckedUpdateManyWithoutBusinessesNestedInput
+    notification_templates?: notification_templatesUncheckedUpdateManyWithoutBusinessesNestedInput
+    payment_reconciliation?: payment_reconciliationUncheckedUpdateManyWithoutBusinessesNestedInput
+    payments?: paymentsUncheckedUpdateManyWithoutBusinessesNestedInput
+    social_accounts?: social_accountsUncheckedUpdateManyWithoutBusinessesNestedInput
+    users?: usersUncheckedUpdateManyWithoutBusinessesNestedInput
+    workflow_executions?: workflow_executionsUncheckedUpdateManyWithoutBusinessesNestedInput
+    workflow_execution_steps?: workflow_execution_stepsUncheckedUpdateManyWithoutBusinessNestedInput
+    workflow_idempotency_keys?: workflow_idempotency_keysUncheckedUpdateManyWithoutBusinessNestedInput
+    billing_subscription?: billing_subscriptionsUncheckedUpdateOneWithoutBusinessesNestedInput
+    wallet?: walletsUncheckedUpdateOneWithoutBusinessesNestedInput
+    billing_payments_list?: billing_paymentsUncheckedUpdateManyWithoutBusinessesNestedInput
+    billing_invoices_list?: billing_invoicesUncheckedUpdateManyWithoutBusinessesNestedInput
+    settings?: business_settingsUncheckedUpdateOneWithoutBusinessesNestedInput
+    audit_logs?: audit_logsUncheckedUpdateManyWithoutBusinessesNestedInput
+  }
+
+  export type catalog_itemsUpsertWithoutExternal_catalog_itemsInput = {
+    update: XOR<catalog_itemsUpdateWithoutExternal_catalog_itemsInput, catalog_itemsUncheckedUpdateWithoutExternal_catalog_itemsInput>
+    create: XOR<catalog_itemsCreateWithoutExternal_catalog_itemsInput, catalog_itemsUncheckedCreateWithoutExternal_catalog_itemsInput>
+    where?: catalog_itemsWhereInput
+  }
+
+  export type catalog_itemsUpdateToOneWithWhereWithoutExternal_catalog_itemsInput = {
+    where?: catalog_itemsWhereInput
+    data: XOR<catalog_itemsUpdateWithoutExternal_catalog_itemsInput, catalog_itemsUncheckedUpdateWithoutExternal_catalog_itemsInput>
+  }
+
+  export type catalog_itemsUpdateWithoutExternal_catalog_itemsInput = {
+    item_id?: StringFieldUpdateOperationsInput | string
+    tenant_id?: StringFieldUpdateOperationsInput | string
+    item_type?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    category?: NullableStringFieldUpdateOperationsInput | string | null
+    base_price?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    compare_price?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    currency?: StringFieldUpdateOperationsInput | string
+    stock_quantity?: NullableIntFieldUpdateOperationsInput | number | null
+    primary_image_url?: NullableStringFieldUpdateOperationsInput | string | null
+    image_urls?: NullableJsonNullValueInput | InputJsonValue
+    attributes?: NullableJsonNullValueInput | InputJsonValue
+    ai_tags?: catalog_itemsUpdateai_tagsInput | string[]
+    is_active?: BoolFieldUpdateOperationsInput | boolean
+    deleted_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    cart_items?: cart_itemsUpdateManyWithoutCatalog_itemNestedInput
+    cart_reservations?: cart_reservationsUpdateManyWithoutCatalog_itemNestedInput
+    product_detail?: product_item_detailsUpdateOneWithoutItemNestedInput
+    hospitality_detail?: hospitality_item_detailsUpdateOneWithoutItemNestedInput
+    vehicle_detail?: vehicle_item_detailsUpdateOneWithoutItemNestedInput
+    product_order_items?: product_order_itemsUpdateManyWithoutItemNestedInput
+    hospitality_booking_items?: hospitality_booking_itemsUpdateManyWithoutItemNestedInput
+    product_inquiries?: product_inquiriesUpdateManyWithoutItemNestedInput
+    hospitality_inquiries?: hospitality_inquiriesUpdateManyWithoutPreferred_itemNestedInput
+    businesses?: businessesUpdateOneRequiredWithoutCatalog_itemsNestedInput
+    availability?: item_availabilityUpdateManyWithoutItemNestedInput
+    variants?: item_variantsUpdateManyWithoutItemNestedInput
+    order_items?: order_itemsUpdateManyWithoutCatalog_itemNestedInput
+  }
+
+  export type catalog_itemsUncheckedUpdateWithoutExternal_catalog_itemsInput = {
+    item_id?: StringFieldUpdateOperationsInput | string
+    business_id?: StringFieldUpdateOperationsInput | string
+    tenant_id?: StringFieldUpdateOperationsInput | string
+    item_type?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    category?: NullableStringFieldUpdateOperationsInput | string | null
+    base_price?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    compare_price?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    currency?: StringFieldUpdateOperationsInput | string
+    stock_quantity?: NullableIntFieldUpdateOperationsInput | number | null
+    primary_image_url?: NullableStringFieldUpdateOperationsInput | string | null
+    image_urls?: NullableJsonNullValueInput | InputJsonValue
+    attributes?: NullableJsonNullValueInput | InputJsonValue
+    ai_tags?: catalog_itemsUpdateai_tagsInput | string[]
+    is_active?: BoolFieldUpdateOperationsInput | boolean
+    deleted_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    cart_items?: cart_itemsUncheckedUpdateManyWithoutCatalog_itemNestedInput
+    cart_reservations?: cart_reservationsUncheckedUpdateManyWithoutCatalog_itemNestedInput
+    product_detail?: product_item_detailsUncheckedUpdateOneWithoutItemNestedInput
+    hospitality_detail?: hospitality_item_detailsUncheckedUpdateOneWithoutItemNestedInput
+    vehicle_detail?: vehicle_item_detailsUncheckedUpdateOneWithoutItemNestedInput
+    product_order_items?: product_order_itemsUncheckedUpdateManyWithoutItemNestedInput
+    hospitality_booking_items?: hospitality_booking_itemsUncheckedUpdateManyWithoutItemNestedInput
+    product_inquiries?: product_inquiriesUncheckedUpdateManyWithoutItemNestedInput
+    hospitality_inquiries?: hospitality_inquiriesUncheckedUpdateManyWithoutPreferred_itemNestedInput
+    availability?: item_availabilityUncheckedUpdateManyWithoutItemNestedInput
+    variants?: item_variantsUncheckedUpdateManyWithoutItemNestedInput
+    order_items?: order_itemsUncheckedUpdateManyWithoutCatalog_itemNestedInput
   }
 
   export type businessesCreateWithoutProduct_inquiriesInput = {
@@ -143967,6 +146387,7 @@ export namespace Prisma {
     tenants: tenantsCreateNestedOneWithoutBusinessesInput
     carts?: cartsCreateNestedManyWithoutBusinessesInput
     catalog_items?: catalog_itemsCreateNestedManyWithoutBusinessesInput
+    external_catalog_items?: external_catalog_itemsCreateNestedManyWithoutBusinessInput
     product_item_details?: product_item_detailsCreateNestedManyWithoutBusinessInput
     hospitality_item_details?: hospitality_item_detailsCreateNestedManyWithoutBusinessInput
     vehicle_item_details?: vehicle_item_detailsCreateNestedManyWithoutBusinessInput
@@ -144015,6 +146436,7 @@ export namespace Prisma {
     business_workflows?: business_workflowsUncheckedCreateNestedManyWithoutBusinessesInput
     carts?: cartsUncheckedCreateNestedManyWithoutBusinessesInput
     catalog_items?: catalog_itemsUncheckedCreateNestedManyWithoutBusinessesInput
+    external_catalog_items?: external_catalog_itemsUncheckedCreateNestedManyWithoutBusinessInput
     product_item_details?: product_item_detailsUncheckedCreateNestedManyWithoutBusinessInput
     hospitality_item_details?: hospitality_item_detailsUncheckedCreateNestedManyWithoutBusinessInput
     vehicle_item_details?: vehicle_item_detailsUncheckedCreateNestedManyWithoutBusinessInput
@@ -144223,6 +146645,7 @@ export namespace Prisma {
     availability?: item_availabilityCreateNestedManyWithoutItemInput
     variants?: item_variantsCreateNestedManyWithoutItemInput
     order_items?: order_itemsCreateNestedManyWithoutCatalog_itemInput
+    external_catalog_items?: external_catalog_itemsCreateNestedManyWithoutItemInput
   }
 
   export type catalog_itemsUncheckedCreateWithoutProduct_inquiriesInput = {
@@ -144256,6 +146679,7 @@ export namespace Prisma {
     availability?: item_availabilityUncheckedCreateNestedManyWithoutItemInput
     variants?: item_variantsUncheckedCreateNestedManyWithoutItemInput
     order_items?: order_itemsUncheckedCreateNestedManyWithoutCatalog_itemInput
+    external_catalog_items?: external_catalog_itemsUncheckedCreateNestedManyWithoutItemInput
   }
 
   export type catalog_itemsCreateOrConnectWithoutProduct_inquiriesInput = {
@@ -144296,6 +146720,7 @@ export namespace Prisma {
     tenants?: tenantsUpdateOneRequiredWithoutBusinessesNestedInput
     carts?: cartsUpdateManyWithoutBusinessesNestedInput
     catalog_items?: catalog_itemsUpdateManyWithoutBusinessesNestedInput
+    external_catalog_items?: external_catalog_itemsUpdateManyWithoutBusinessNestedInput
     product_item_details?: product_item_detailsUpdateManyWithoutBusinessNestedInput
     hospitality_item_details?: hospitality_item_detailsUpdateManyWithoutBusinessNestedInput
     vehicle_item_details?: vehicle_item_detailsUpdateManyWithoutBusinessNestedInput
@@ -144344,6 +146769,7 @@ export namespace Prisma {
     business_workflows?: business_workflowsUncheckedUpdateManyWithoutBusinessesNestedInput
     carts?: cartsUncheckedUpdateManyWithoutBusinessesNestedInput
     catalog_items?: catalog_itemsUncheckedUpdateManyWithoutBusinessesNestedInput
+    external_catalog_items?: external_catalog_itemsUncheckedUpdateManyWithoutBusinessNestedInput
     product_item_details?: product_item_detailsUncheckedUpdateManyWithoutBusinessNestedInput
     hospitality_item_details?: hospitality_item_detailsUncheckedUpdateManyWithoutBusinessNestedInput
     vehicle_item_details?: vehicle_item_detailsUncheckedUpdateManyWithoutBusinessNestedInput
@@ -144570,6 +146996,7 @@ export namespace Prisma {
     availability?: item_availabilityUpdateManyWithoutItemNestedInput
     variants?: item_variantsUpdateManyWithoutItemNestedInput
     order_items?: order_itemsUpdateManyWithoutCatalog_itemNestedInput
+    external_catalog_items?: external_catalog_itemsUpdateManyWithoutItemNestedInput
   }
 
   export type catalog_itemsUncheckedUpdateWithoutProduct_inquiriesInput = {
@@ -144603,6 +147030,7 @@ export namespace Prisma {
     availability?: item_availabilityUncheckedUpdateManyWithoutItemNestedInput
     variants?: item_variantsUncheckedUpdateManyWithoutItemNestedInput
     order_items?: order_itemsUncheckedUpdateManyWithoutCatalog_itemNestedInput
+    external_catalog_items?: external_catalog_itemsUncheckedUpdateManyWithoutItemNestedInput
   }
 
   export type businessesCreateWithoutProduct_ordersInput = {
@@ -144627,6 +147055,7 @@ export namespace Prisma {
     tenants: tenantsCreateNestedOneWithoutBusinessesInput
     carts?: cartsCreateNestedManyWithoutBusinessesInput
     catalog_items?: catalog_itemsCreateNestedManyWithoutBusinessesInput
+    external_catalog_items?: external_catalog_itemsCreateNestedManyWithoutBusinessInput
     product_item_details?: product_item_detailsCreateNestedManyWithoutBusinessInput
     hospitality_item_details?: hospitality_item_detailsCreateNestedManyWithoutBusinessInput
     vehicle_item_details?: vehicle_item_detailsCreateNestedManyWithoutBusinessInput
@@ -144675,6 +147104,7 @@ export namespace Prisma {
     business_workflows?: business_workflowsUncheckedCreateNestedManyWithoutBusinessesInput
     carts?: cartsUncheckedCreateNestedManyWithoutBusinessesInput
     catalog_items?: catalog_itemsUncheckedCreateNestedManyWithoutBusinessesInput
+    external_catalog_items?: external_catalog_itemsUncheckedCreateNestedManyWithoutBusinessInput
     product_item_details?: product_item_detailsUncheckedCreateNestedManyWithoutBusinessInput
     hospitality_item_details?: hospitality_item_detailsUncheckedCreateNestedManyWithoutBusinessInput
     vehicle_item_details?: vehicle_item_detailsUncheckedCreateNestedManyWithoutBusinessInput
@@ -145103,6 +147533,7 @@ export namespace Prisma {
     tenants?: tenantsUpdateOneRequiredWithoutBusinessesNestedInput
     carts?: cartsUpdateManyWithoutBusinessesNestedInput
     catalog_items?: catalog_itemsUpdateManyWithoutBusinessesNestedInput
+    external_catalog_items?: external_catalog_itemsUpdateManyWithoutBusinessNestedInput
     product_item_details?: product_item_detailsUpdateManyWithoutBusinessNestedInput
     hospitality_item_details?: hospitality_item_detailsUpdateManyWithoutBusinessNestedInput
     vehicle_item_details?: vehicle_item_detailsUpdateManyWithoutBusinessNestedInput
@@ -145151,6 +147582,7 @@ export namespace Prisma {
     business_workflows?: business_workflowsUncheckedUpdateManyWithoutBusinessesNestedInput
     carts?: cartsUncheckedUpdateManyWithoutBusinessesNestedInput
     catalog_items?: catalog_itemsUncheckedUpdateManyWithoutBusinessesNestedInput
+    external_catalog_items?: external_catalog_itemsUncheckedUpdateManyWithoutBusinessNestedInput
     product_item_details?: product_item_detailsUncheckedUpdateManyWithoutBusinessNestedInput
     hospitality_item_details?: hospitality_item_detailsUncheckedUpdateManyWithoutBusinessNestedInput
     vehicle_item_details?: vehicle_item_detailsUncheckedUpdateManyWithoutBusinessNestedInput
@@ -145634,6 +148066,7 @@ export namespace Prisma {
     availability?: item_availabilityCreateNestedManyWithoutItemInput
     variants?: item_variantsCreateNestedManyWithoutItemInput
     order_items?: order_itemsCreateNestedManyWithoutCatalog_itemInput
+    external_catalog_items?: external_catalog_itemsCreateNestedManyWithoutItemInput
   }
 
   export type catalog_itemsUncheckedCreateWithoutProduct_order_itemsInput = {
@@ -145667,6 +148100,7 @@ export namespace Prisma {
     availability?: item_availabilityUncheckedCreateNestedManyWithoutItemInput
     variants?: item_variantsUncheckedCreateNestedManyWithoutItemInput
     order_items?: order_itemsUncheckedCreateNestedManyWithoutCatalog_itemInput
+    external_catalog_items?: external_catalog_itemsUncheckedCreateNestedManyWithoutItemInput
   }
 
   export type catalog_itemsCreateOrConnectWithoutProduct_order_itemsInput = {
@@ -145824,6 +148258,7 @@ export namespace Prisma {
     availability?: item_availabilityUpdateManyWithoutItemNestedInput
     variants?: item_variantsUpdateManyWithoutItemNestedInput
     order_items?: order_itemsUpdateManyWithoutCatalog_itemNestedInput
+    external_catalog_items?: external_catalog_itemsUpdateManyWithoutItemNestedInput
   }
 
   export type catalog_itemsUncheckedUpdateWithoutProduct_order_itemsInput = {
@@ -145857,6 +148292,7 @@ export namespace Prisma {
     availability?: item_availabilityUncheckedUpdateManyWithoutItemNestedInput
     variants?: item_variantsUncheckedUpdateManyWithoutItemNestedInput
     order_items?: order_itemsUncheckedUpdateManyWithoutCatalog_itemNestedInput
+    external_catalog_items?: external_catalog_itemsUncheckedUpdateManyWithoutItemNestedInput
   }
 
   export type item_variantsUpsertWithoutProduct_order_itemsInput = {
@@ -146060,6 +148496,7 @@ export namespace Prisma {
     tenants: tenantsCreateNestedOneWithoutBusinessesInput
     carts?: cartsCreateNestedManyWithoutBusinessesInput
     catalog_items?: catalog_itemsCreateNestedManyWithoutBusinessesInput
+    external_catalog_items?: external_catalog_itemsCreateNestedManyWithoutBusinessInput
     product_item_details?: product_item_detailsCreateNestedManyWithoutBusinessInput
     vehicle_item_details?: vehicle_item_detailsCreateNestedManyWithoutBusinessInput
     product_orders?: product_ordersCreateNestedManyWithoutBusinessInput
@@ -146108,6 +148545,7 @@ export namespace Prisma {
     business_workflows?: business_workflowsUncheckedCreateNestedManyWithoutBusinessesInput
     carts?: cartsUncheckedCreateNestedManyWithoutBusinessesInput
     catalog_items?: catalog_itemsUncheckedCreateNestedManyWithoutBusinessesInput
+    external_catalog_items?: external_catalog_itemsUncheckedCreateNestedManyWithoutBusinessInput
     product_item_details?: product_item_detailsUncheckedCreateNestedManyWithoutBusinessInput
     vehicle_item_details?: vehicle_item_detailsUncheckedCreateNestedManyWithoutBusinessInput
     product_orders?: product_ordersUncheckedCreateNestedManyWithoutBusinessInput
@@ -146170,6 +148608,7 @@ export namespace Prisma {
     availability?: item_availabilityCreateNestedManyWithoutItemInput
     variants?: item_variantsCreateNestedManyWithoutItemInput
     order_items?: order_itemsCreateNestedManyWithoutCatalog_itemInput
+    external_catalog_items?: external_catalog_itemsCreateNestedManyWithoutItemInput
   }
 
   export type catalog_itemsUncheckedCreateWithoutHospitality_detailInput = {
@@ -146203,6 +148642,7 @@ export namespace Prisma {
     availability?: item_availabilityUncheckedCreateNestedManyWithoutItemInput
     variants?: item_variantsUncheckedCreateNestedManyWithoutItemInput
     order_items?: order_itemsUncheckedCreateNestedManyWithoutCatalog_itemInput
+    external_catalog_items?: external_catalog_itemsUncheckedCreateNestedManyWithoutItemInput
   }
 
   export type catalog_itemsCreateOrConnectWithoutHospitality_detailInput = {
@@ -146243,6 +148683,7 @@ export namespace Prisma {
     tenants?: tenantsUpdateOneRequiredWithoutBusinessesNestedInput
     carts?: cartsUpdateManyWithoutBusinessesNestedInput
     catalog_items?: catalog_itemsUpdateManyWithoutBusinessesNestedInput
+    external_catalog_items?: external_catalog_itemsUpdateManyWithoutBusinessNestedInput
     product_item_details?: product_item_detailsUpdateManyWithoutBusinessNestedInput
     vehicle_item_details?: vehicle_item_detailsUpdateManyWithoutBusinessNestedInput
     product_orders?: product_ordersUpdateManyWithoutBusinessNestedInput
@@ -146291,6 +148732,7 @@ export namespace Prisma {
     business_workflows?: business_workflowsUncheckedUpdateManyWithoutBusinessesNestedInput
     carts?: cartsUncheckedUpdateManyWithoutBusinessesNestedInput
     catalog_items?: catalog_itemsUncheckedUpdateManyWithoutBusinessesNestedInput
+    external_catalog_items?: external_catalog_itemsUncheckedUpdateManyWithoutBusinessNestedInput
     product_item_details?: product_item_detailsUncheckedUpdateManyWithoutBusinessNestedInput
     vehicle_item_details?: vehicle_item_detailsUncheckedUpdateManyWithoutBusinessNestedInput
     product_orders?: product_ordersUncheckedUpdateManyWithoutBusinessNestedInput
@@ -146359,6 +148801,7 @@ export namespace Prisma {
     availability?: item_availabilityUpdateManyWithoutItemNestedInput
     variants?: item_variantsUpdateManyWithoutItemNestedInput
     order_items?: order_itemsUpdateManyWithoutCatalog_itemNestedInput
+    external_catalog_items?: external_catalog_itemsUpdateManyWithoutItemNestedInput
   }
 
   export type catalog_itemsUncheckedUpdateWithoutHospitality_detailInput = {
@@ -146392,6 +148835,7 @@ export namespace Prisma {
     availability?: item_availabilityUncheckedUpdateManyWithoutItemNestedInput
     variants?: item_variantsUncheckedUpdateManyWithoutItemNestedInput
     order_items?: order_itemsUncheckedUpdateManyWithoutCatalog_itemNestedInput
+    external_catalog_items?: external_catalog_itemsUncheckedUpdateManyWithoutItemNestedInput
   }
 
   export type businessesCreateWithoutVehicle_item_detailsInput = {
@@ -146416,6 +148860,7 @@ export namespace Prisma {
     tenants: tenantsCreateNestedOneWithoutBusinessesInput
     carts?: cartsCreateNestedManyWithoutBusinessesInput
     catalog_items?: catalog_itemsCreateNestedManyWithoutBusinessesInput
+    external_catalog_items?: external_catalog_itemsCreateNestedManyWithoutBusinessInput
     product_item_details?: product_item_detailsCreateNestedManyWithoutBusinessInput
     hospitality_item_details?: hospitality_item_detailsCreateNestedManyWithoutBusinessInput
     product_orders?: product_ordersCreateNestedManyWithoutBusinessInput
@@ -146464,6 +148909,7 @@ export namespace Prisma {
     business_workflows?: business_workflowsUncheckedCreateNestedManyWithoutBusinessesInput
     carts?: cartsUncheckedCreateNestedManyWithoutBusinessesInput
     catalog_items?: catalog_itemsUncheckedCreateNestedManyWithoutBusinessesInput
+    external_catalog_items?: external_catalog_itemsUncheckedCreateNestedManyWithoutBusinessInput
     product_item_details?: product_item_detailsUncheckedCreateNestedManyWithoutBusinessInput
     hospitality_item_details?: hospitality_item_detailsUncheckedCreateNestedManyWithoutBusinessInput
     product_orders?: product_ordersUncheckedCreateNestedManyWithoutBusinessInput
@@ -146526,6 +148972,7 @@ export namespace Prisma {
     availability?: item_availabilityCreateNestedManyWithoutItemInput
     variants?: item_variantsCreateNestedManyWithoutItemInput
     order_items?: order_itemsCreateNestedManyWithoutCatalog_itemInput
+    external_catalog_items?: external_catalog_itemsCreateNestedManyWithoutItemInput
   }
 
   export type catalog_itemsUncheckedCreateWithoutVehicle_detailInput = {
@@ -146559,6 +149006,7 @@ export namespace Prisma {
     availability?: item_availabilityUncheckedCreateNestedManyWithoutItemInput
     variants?: item_variantsUncheckedCreateNestedManyWithoutItemInput
     order_items?: order_itemsUncheckedCreateNestedManyWithoutCatalog_itemInput
+    external_catalog_items?: external_catalog_itemsUncheckedCreateNestedManyWithoutItemInput
   }
 
   export type catalog_itemsCreateOrConnectWithoutVehicle_detailInput = {
@@ -146599,6 +149047,7 @@ export namespace Prisma {
     tenants?: tenantsUpdateOneRequiredWithoutBusinessesNestedInput
     carts?: cartsUpdateManyWithoutBusinessesNestedInput
     catalog_items?: catalog_itemsUpdateManyWithoutBusinessesNestedInput
+    external_catalog_items?: external_catalog_itemsUpdateManyWithoutBusinessNestedInput
     product_item_details?: product_item_detailsUpdateManyWithoutBusinessNestedInput
     hospitality_item_details?: hospitality_item_detailsUpdateManyWithoutBusinessNestedInput
     product_orders?: product_ordersUpdateManyWithoutBusinessNestedInput
@@ -146647,6 +149096,7 @@ export namespace Prisma {
     business_workflows?: business_workflowsUncheckedUpdateManyWithoutBusinessesNestedInput
     carts?: cartsUncheckedUpdateManyWithoutBusinessesNestedInput
     catalog_items?: catalog_itemsUncheckedUpdateManyWithoutBusinessesNestedInput
+    external_catalog_items?: external_catalog_itemsUncheckedUpdateManyWithoutBusinessNestedInput
     product_item_details?: product_item_detailsUncheckedUpdateManyWithoutBusinessNestedInput
     hospitality_item_details?: hospitality_item_detailsUncheckedUpdateManyWithoutBusinessNestedInput
     product_orders?: product_ordersUncheckedUpdateManyWithoutBusinessNestedInput
@@ -146715,6 +149165,7 @@ export namespace Prisma {
     availability?: item_availabilityUpdateManyWithoutItemNestedInput
     variants?: item_variantsUpdateManyWithoutItemNestedInput
     order_items?: order_itemsUpdateManyWithoutCatalog_itemNestedInput
+    external_catalog_items?: external_catalog_itemsUpdateManyWithoutItemNestedInput
   }
 
   export type catalog_itemsUncheckedUpdateWithoutVehicle_detailInput = {
@@ -146748,6 +149199,7 @@ export namespace Prisma {
     availability?: item_availabilityUncheckedUpdateManyWithoutItemNestedInput
     variants?: item_variantsUncheckedUpdateManyWithoutItemNestedInput
     order_items?: order_itemsUncheckedUpdateManyWithoutCatalog_itemNestedInput
+    external_catalog_items?: external_catalog_itemsUncheckedUpdateManyWithoutItemNestedInput
   }
 
   export type businessesCreateWithoutHospitality_inquiriesInput = {
@@ -146772,6 +149224,7 @@ export namespace Prisma {
     tenants: tenantsCreateNestedOneWithoutBusinessesInput
     carts?: cartsCreateNestedManyWithoutBusinessesInput
     catalog_items?: catalog_itemsCreateNestedManyWithoutBusinessesInput
+    external_catalog_items?: external_catalog_itemsCreateNestedManyWithoutBusinessInput
     product_item_details?: product_item_detailsCreateNestedManyWithoutBusinessInput
     hospitality_item_details?: hospitality_item_detailsCreateNestedManyWithoutBusinessInput
     vehicle_item_details?: vehicle_item_detailsCreateNestedManyWithoutBusinessInput
@@ -146820,6 +149273,7 @@ export namespace Prisma {
     business_workflows?: business_workflowsUncheckedCreateNestedManyWithoutBusinessesInput
     carts?: cartsUncheckedCreateNestedManyWithoutBusinessesInput
     catalog_items?: catalog_itemsUncheckedCreateNestedManyWithoutBusinessesInput
+    external_catalog_items?: external_catalog_itemsUncheckedCreateNestedManyWithoutBusinessInput
     product_item_details?: product_item_detailsUncheckedCreateNestedManyWithoutBusinessInput
     hospitality_item_details?: hospitality_item_detailsUncheckedCreateNestedManyWithoutBusinessInput
     vehicle_item_details?: vehicle_item_detailsUncheckedCreateNestedManyWithoutBusinessInput
@@ -147028,6 +149482,7 @@ export namespace Prisma {
     availability?: item_availabilityCreateNestedManyWithoutItemInput
     variants?: item_variantsCreateNestedManyWithoutItemInput
     order_items?: order_itemsCreateNestedManyWithoutCatalog_itemInput
+    external_catalog_items?: external_catalog_itemsCreateNestedManyWithoutItemInput
   }
 
   export type catalog_itemsUncheckedCreateWithoutHospitality_inquiriesInput = {
@@ -147061,6 +149516,7 @@ export namespace Prisma {
     availability?: item_availabilityUncheckedCreateNestedManyWithoutItemInput
     variants?: item_variantsUncheckedCreateNestedManyWithoutItemInput
     order_items?: order_itemsUncheckedCreateNestedManyWithoutCatalog_itemInput
+    external_catalog_items?: external_catalog_itemsUncheckedCreateNestedManyWithoutItemInput
   }
 
   export type catalog_itemsCreateOrConnectWithoutHospitality_inquiriesInput = {
@@ -147101,6 +149557,7 @@ export namespace Prisma {
     tenants?: tenantsUpdateOneRequiredWithoutBusinessesNestedInput
     carts?: cartsUpdateManyWithoutBusinessesNestedInput
     catalog_items?: catalog_itemsUpdateManyWithoutBusinessesNestedInput
+    external_catalog_items?: external_catalog_itemsUpdateManyWithoutBusinessNestedInput
     product_item_details?: product_item_detailsUpdateManyWithoutBusinessNestedInput
     hospitality_item_details?: hospitality_item_detailsUpdateManyWithoutBusinessNestedInput
     vehicle_item_details?: vehicle_item_detailsUpdateManyWithoutBusinessNestedInput
@@ -147149,6 +149606,7 @@ export namespace Prisma {
     business_workflows?: business_workflowsUncheckedUpdateManyWithoutBusinessesNestedInput
     carts?: cartsUncheckedUpdateManyWithoutBusinessesNestedInput
     catalog_items?: catalog_itemsUncheckedUpdateManyWithoutBusinessesNestedInput
+    external_catalog_items?: external_catalog_itemsUncheckedUpdateManyWithoutBusinessNestedInput
     product_item_details?: product_item_detailsUncheckedUpdateManyWithoutBusinessNestedInput
     hospitality_item_details?: hospitality_item_detailsUncheckedUpdateManyWithoutBusinessNestedInput
     vehicle_item_details?: vehicle_item_detailsUncheckedUpdateManyWithoutBusinessNestedInput
@@ -147375,6 +149833,7 @@ export namespace Prisma {
     availability?: item_availabilityUpdateManyWithoutItemNestedInput
     variants?: item_variantsUpdateManyWithoutItemNestedInput
     order_items?: order_itemsUpdateManyWithoutCatalog_itemNestedInput
+    external_catalog_items?: external_catalog_itemsUpdateManyWithoutItemNestedInput
   }
 
   export type catalog_itemsUncheckedUpdateWithoutHospitality_inquiriesInput = {
@@ -147408,6 +149867,7 @@ export namespace Prisma {
     availability?: item_availabilityUncheckedUpdateManyWithoutItemNestedInput
     variants?: item_variantsUncheckedUpdateManyWithoutItemNestedInput
     order_items?: order_itemsUncheckedUpdateManyWithoutCatalog_itemNestedInput
+    external_catalog_items?: external_catalog_itemsUncheckedUpdateManyWithoutItemNestedInput
   }
 
   export type businessesCreateWithoutHospitality_bookingsInput = {
@@ -147432,6 +149892,7 @@ export namespace Prisma {
     tenants: tenantsCreateNestedOneWithoutBusinessesInput
     carts?: cartsCreateNestedManyWithoutBusinessesInput
     catalog_items?: catalog_itemsCreateNestedManyWithoutBusinessesInput
+    external_catalog_items?: external_catalog_itemsCreateNestedManyWithoutBusinessInput
     product_item_details?: product_item_detailsCreateNestedManyWithoutBusinessInput
     hospitality_item_details?: hospitality_item_detailsCreateNestedManyWithoutBusinessInput
     vehicle_item_details?: vehicle_item_detailsCreateNestedManyWithoutBusinessInput
@@ -147480,6 +149941,7 @@ export namespace Prisma {
     business_workflows?: business_workflowsUncheckedCreateNestedManyWithoutBusinessesInput
     carts?: cartsUncheckedCreateNestedManyWithoutBusinessesInput
     catalog_items?: catalog_itemsUncheckedCreateNestedManyWithoutBusinessesInput
+    external_catalog_items?: external_catalog_itemsUncheckedCreateNestedManyWithoutBusinessInput
     product_item_details?: product_item_detailsUncheckedCreateNestedManyWithoutBusinessInput
     hospitality_item_details?: hospitality_item_detailsUncheckedCreateNestedManyWithoutBusinessInput
     vehicle_item_details?: vehicle_item_detailsUncheckedCreateNestedManyWithoutBusinessInput
@@ -147934,6 +150396,7 @@ export namespace Prisma {
     tenants?: tenantsUpdateOneRequiredWithoutBusinessesNestedInput
     carts?: cartsUpdateManyWithoutBusinessesNestedInput
     catalog_items?: catalog_itemsUpdateManyWithoutBusinessesNestedInput
+    external_catalog_items?: external_catalog_itemsUpdateManyWithoutBusinessNestedInput
     product_item_details?: product_item_detailsUpdateManyWithoutBusinessNestedInput
     hospitality_item_details?: hospitality_item_detailsUpdateManyWithoutBusinessNestedInput
     vehicle_item_details?: vehicle_item_detailsUpdateManyWithoutBusinessNestedInput
@@ -147982,6 +150445,7 @@ export namespace Prisma {
     business_workflows?: business_workflowsUncheckedUpdateManyWithoutBusinessesNestedInput
     carts?: cartsUncheckedUpdateManyWithoutBusinessesNestedInput
     catalog_items?: catalog_itemsUncheckedUpdateManyWithoutBusinessesNestedInput
+    external_catalog_items?: external_catalog_itemsUncheckedUpdateManyWithoutBusinessNestedInput
     product_item_details?: product_item_detailsUncheckedUpdateManyWithoutBusinessNestedInput
     hospitality_item_details?: hospitality_item_detailsUncheckedUpdateManyWithoutBusinessNestedInput
     vehicle_item_details?: vehicle_item_detailsUncheckedUpdateManyWithoutBusinessNestedInput
@@ -148490,6 +150954,7 @@ export namespace Prisma {
     availability?: item_availabilityCreateNestedManyWithoutItemInput
     variants?: item_variantsCreateNestedManyWithoutItemInput
     order_items?: order_itemsCreateNestedManyWithoutCatalog_itemInput
+    external_catalog_items?: external_catalog_itemsCreateNestedManyWithoutItemInput
   }
 
   export type catalog_itemsUncheckedCreateWithoutHospitality_booking_itemsInput = {
@@ -148523,6 +150988,7 @@ export namespace Prisma {
     availability?: item_availabilityUncheckedCreateNestedManyWithoutItemInput
     variants?: item_variantsUncheckedCreateNestedManyWithoutItemInput
     order_items?: order_itemsUncheckedCreateNestedManyWithoutCatalog_itemInput
+    external_catalog_items?: external_catalog_itemsUncheckedCreateNestedManyWithoutItemInput
   }
 
   export type catalog_itemsCreateOrConnectWithoutHospitality_booking_itemsInput = {
@@ -148637,6 +151103,7 @@ export namespace Prisma {
     availability?: item_availabilityUpdateManyWithoutItemNestedInput
     variants?: item_variantsUpdateManyWithoutItemNestedInput
     order_items?: order_itemsUpdateManyWithoutCatalog_itemNestedInput
+    external_catalog_items?: external_catalog_itemsUpdateManyWithoutItemNestedInput
   }
 
   export type catalog_itemsUncheckedUpdateWithoutHospitality_booking_itemsInput = {
@@ -148670,6 +151137,7 @@ export namespace Prisma {
     availability?: item_availabilityUncheckedUpdateManyWithoutItemNestedInput
     variants?: item_variantsUncheckedUpdateManyWithoutItemNestedInput
     order_items?: order_itemsUncheckedUpdateManyWithoutCatalog_itemNestedInput
+    external_catalog_items?: external_catalog_itemsUncheckedUpdateManyWithoutItemNestedInput
   }
 
   export type hospitality_bookingsCreateWithoutGuests_listInput = {
@@ -149028,6 +151496,7 @@ export namespace Prisma {
     tenants: tenantsCreateNestedOneWithoutBusinessesInput
     carts?: cartsCreateNestedManyWithoutBusinessesInput
     catalog_items?: catalog_itemsCreateNestedManyWithoutBusinessesInput
+    external_catalog_items?: external_catalog_itemsCreateNestedManyWithoutBusinessInput
     product_item_details?: product_item_detailsCreateNestedManyWithoutBusinessInput
     hospitality_item_details?: hospitality_item_detailsCreateNestedManyWithoutBusinessInput
     vehicle_item_details?: vehicle_item_detailsCreateNestedManyWithoutBusinessInput
@@ -149076,6 +151545,7 @@ export namespace Prisma {
     business_workflows?: business_workflowsUncheckedCreateNestedManyWithoutBusinessesInput
     carts?: cartsUncheckedCreateNestedManyWithoutBusinessesInput
     catalog_items?: catalog_itemsUncheckedCreateNestedManyWithoutBusinessesInput
+    external_catalog_items?: external_catalog_itemsUncheckedCreateNestedManyWithoutBusinessInput
     product_item_details?: product_item_detailsUncheckedCreateNestedManyWithoutBusinessInput
     hospitality_item_details?: hospitality_item_detailsUncheckedCreateNestedManyWithoutBusinessInput
     vehicle_item_details?: vehicle_item_detailsUncheckedCreateNestedManyWithoutBusinessInput
@@ -149213,6 +151683,7 @@ export namespace Prisma {
     tenants?: tenantsUpdateOneRequiredWithoutBusinessesNestedInput
     carts?: cartsUpdateManyWithoutBusinessesNestedInput
     catalog_items?: catalog_itemsUpdateManyWithoutBusinessesNestedInput
+    external_catalog_items?: external_catalog_itemsUpdateManyWithoutBusinessNestedInput
     product_item_details?: product_item_detailsUpdateManyWithoutBusinessNestedInput
     hospitality_item_details?: hospitality_item_detailsUpdateManyWithoutBusinessNestedInput
     vehicle_item_details?: vehicle_item_detailsUpdateManyWithoutBusinessNestedInput
@@ -149261,6 +151732,7 @@ export namespace Prisma {
     business_workflows?: business_workflowsUncheckedUpdateManyWithoutBusinessesNestedInput
     carts?: cartsUncheckedUpdateManyWithoutBusinessesNestedInput
     catalog_items?: catalog_itemsUncheckedUpdateManyWithoutBusinessesNestedInput
+    external_catalog_items?: external_catalog_itemsUncheckedUpdateManyWithoutBusinessNestedInput
     product_item_details?: product_item_detailsUncheckedUpdateManyWithoutBusinessNestedInput
     hospitality_item_details?: hospitality_item_detailsUncheckedUpdateManyWithoutBusinessNestedInput
     vehicle_item_details?: vehicle_item_detailsUncheckedUpdateManyWithoutBusinessNestedInput
@@ -149366,6 +151838,7 @@ export namespace Prisma {
     tenants: tenantsCreateNestedOneWithoutBusinessesInput
     carts?: cartsCreateNestedManyWithoutBusinessesInput
     catalog_items?: catalog_itemsCreateNestedManyWithoutBusinessesInput
+    external_catalog_items?: external_catalog_itemsCreateNestedManyWithoutBusinessInput
     product_item_details?: product_item_detailsCreateNestedManyWithoutBusinessInput
     hospitality_item_details?: hospitality_item_detailsCreateNestedManyWithoutBusinessInput
     vehicle_item_details?: vehicle_item_detailsCreateNestedManyWithoutBusinessInput
@@ -149414,6 +151887,7 @@ export namespace Prisma {
     business_workflows?: business_workflowsUncheckedCreateNestedManyWithoutBusinessesInput
     carts?: cartsUncheckedCreateNestedManyWithoutBusinessesInput
     catalog_items?: catalog_itemsUncheckedCreateNestedManyWithoutBusinessesInput
+    external_catalog_items?: external_catalog_itemsUncheckedCreateNestedManyWithoutBusinessInput
     product_item_details?: product_item_detailsUncheckedCreateNestedManyWithoutBusinessInput
     hospitality_item_details?: hospitality_item_detailsUncheckedCreateNestedManyWithoutBusinessInput
     vehicle_item_details?: vehicle_item_detailsUncheckedCreateNestedManyWithoutBusinessInput
@@ -149518,6 +151992,7 @@ export namespace Prisma {
     tenants?: tenantsUpdateOneRequiredWithoutBusinessesNestedInput
     carts?: cartsUpdateManyWithoutBusinessesNestedInput
     catalog_items?: catalog_itemsUpdateManyWithoutBusinessesNestedInput
+    external_catalog_items?: external_catalog_itemsUpdateManyWithoutBusinessNestedInput
     product_item_details?: product_item_detailsUpdateManyWithoutBusinessNestedInput
     hospitality_item_details?: hospitality_item_detailsUpdateManyWithoutBusinessNestedInput
     vehicle_item_details?: vehicle_item_detailsUpdateManyWithoutBusinessNestedInput
@@ -149566,6 +152041,7 @@ export namespace Prisma {
     business_workflows?: business_workflowsUncheckedUpdateManyWithoutBusinessesNestedInput
     carts?: cartsUncheckedUpdateManyWithoutBusinessesNestedInput
     catalog_items?: catalog_itemsUncheckedUpdateManyWithoutBusinessesNestedInput
+    external_catalog_items?: external_catalog_itemsUncheckedUpdateManyWithoutBusinessNestedInput
     product_item_details?: product_item_detailsUncheckedUpdateManyWithoutBusinessNestedInput
     hospitality_item_details?: hospitality_item_detailsUncheckedUpdateManyWithoutBusinessNestedInput
     vehicle_item_details?: vehicle_item_detailsUncheckedUpdateManyWithoutBusinessNestedInput
@@ -149701,6 +152177,7 @@ export namespace Prisma {
     tenants: tenantsCreateNestedOneWithoutBusinessesInput
     carts?: cartsCreateNestedManyWithoutBusinessesInput
     catalog_items?: catalog_itemsCreateNestedManyWithoutBusinessesInput
+    external_catalog_items?: external_catalog_itemsCreateNestedManyWithoutBusinessInput
     product_item_details?: product_item_detailsCreateNestedManyWithoutBusinessInput
     hospitality_item_details?: hospitality_item_detailsCreateNestedManyWithoutBusinessInput
     vehicle_item_details?: vehicle_item_detailsCreateNestedManyWithoutBusinessInput
@@ -149749,6 +152226,7 @@ export namespace Prisma {
     business_workflows?: business_workflowsUncheckedCreateNestedManyWithoutBusinessesInput
     carts?: cartsUncheckedCreateNestedManyWithoutBusinessesInput
     catalog_items?: catalog_itemsUncheckedCreateNestedManyWithoutBusinessesInput
+    external_catalog_items?: external_catalog_itemsUncheckedCreateNestedManyWithoutBusinessInput
     product_item_details?: product_item_detailsUncheckedCreateNestedManyWithoutBusinessInput
     hospitality_item_details?: hospitality_item_detailsUncheckedCreateNestedManyWithoutBusinessInput
     vehicle_item_details?: vehicle_item_detailsUncheckedCreateNestedManyWithoutBusinessInput
@@ -149813,6 +152291,7 @@ export namespace Prisma {
     tenants?: tenantsUpdateOneRequiredWithoutBusinessesNestedInput
     carts?: cartsUpdateManyWithoutBusinessesNestedInput
     catalog_items?: catalog_itemsUpdateManyWithoutBusinessesNestedInput
+    external_catalog_items?: external_catalog_itemsUpdateManyWithoutBusinessNestedInput
     product_item_details?: product_item_detailsUpdateManyWithoutBusinessNestedInput
     hospitality_item_details?: hospitality_item_detailsUpdateManyWithoutBusinessNestedInput
     vehicle_item_details?: vehicle_item_detailsUpdateManyWithoutBusinessNestedInput
@@ -149861,6 +152340,7 @@ export namespace Prisma {
     business_workflows?: business_workflowsUncheckedUpdateManyWithoutBusinessesNestedInput
     carts?: cartsUncheckedUpdateManyWithoutBusinessesNestedInput
     catalog_items?: catalog_itemsUncheckedUpdateManyWithoutBusinessesNestedInput
+    external_catalog_items?: external_catalog_itemsUncheckedUpdateManyWithoutBusinessNestedInput
     product_item_details?: product_item_detailsUncheckedUpdateManyWithoutBusinessNestedInput
     hospitality_item_details?: hospitality_item_detailsUncheckedUpdateManyWithoutBusinessNestedInput
     vehicle_item_details?: vehicle_item_detailsUncheckedUpdateManyWithoutBusinessNestedInput
@@ -149909,6 +152389,7 @@ export namespace Prisma {
     tenants: tenantsCreateNestedOneWithoutBusinessesInput
     carts?: cartsCreateNestedManyWithoutBusinessesInput
     catalog_items?: catalog_itemsCreateNestedManyWithoutBusinessesInput
+    external_catalog_items?: external_catalog_itemsCreateNestedManyWithoutBusinessInput
     product_item_details?: product_item_detailsCreateNestedManyWithoutBusinessInput
     hospitality_item_details?: hospitality_item_detailsCreateNestedManyWithoutBusinessInput
     vehicle_item_details?: vehicle_item_detailsCreateNestedManyWithoutBusinessInput
@@ -149957,6 +152438,7 @@ export namespace Prisma {
     business_workflows?: business_workflowsUncheckedCreateNestedManyWithoutBusinessesInput
     carts?: cartsUncheckedCreateNestedManyWithoutBusinessesInput
     catalog_items?: catalog_itemsUncheckedCreateNestedManyWithoutBusinessesInput
+    external_catalog_items?: external_catalog_itemsUncheckedCreateNestedManyWithoutBusinessInput
     product_item_details?: product_item_detailsUncheckedCreateNestedManyWithoutBusinessInput
     hospitality_item_details?: hospitality_item_detailsUncheckedCreateNestedManyWithoutBusinessInput
     vehicle_item_details?: vehicle_item_detailsUncheckedCreateNestedManyWithoutBusinessInput
@@ -150064,6 +152546,7 @@ export namespace Prisma {
     tenants?: tenantsUpdateOneRequiredWithoutBusinessesNestedInput
     carts?: cartsUpdateManyWithoutBusinessesNestedInput
     catalog_items?: catalog_itemsUpdateManyWithoutBusinessesNestedInput
+    external_catalog_items?: external_catalog_itemsUpdateManyWithoutBusinessNestedInput
     product_item_details?: product_item_detailsUpdateManyWithoutBusinessNestedInput
     hospitality_item_details?: hospitality_item_detailsUpdateManyWithoutBusinessNestedInput
     vehicle_item_details?: vehicle_item_detailsUpdateManyWithoutBusinessNestedInput
@@ -150112,6 +152595,7 @@ export namespace Prisma {
     business_workflows?: business_workflowsUncheckedUpdateManyWithoutBusinessesNestedInput
     carts?: cartsUncheckedUpdateManyWithoutBusinessesNestedInput
     catalog_items?: catalog_itemsUncheckedUpdateManyWithoutBusinessesNestedInput
+    external_catalog_items?: external_catalog_itemsUncheckedUpdateManyWithoutBusinessNestedInput
     product_item_details?: product_item_detailsUncheckedUpdateManyWithoutBusinessNestedInput
     hospitality_item_details?: hospitality_item_detailsUncheckedUpdateManyWithoutBusinessNestedInput
     vehicle_item_details?: vehicle_item_detailsUncheckedUpdateManyWithoutBusinessNestedInput
@@ -150209,6 +152693,7 @@ export namespace Prisma {
     tenants: tenantsCreateNestedOneWithoutBusinessesInput
     carts?: cartsCreateNestedManyWithoutBusinessesInput
     catalog_items?: catalog_itemsCreateNestedManyWithoutBusinessesInput
+    external_catalog_items?: external_catalog_itemsCreateNestedManyWithoutBusinessInput
     product_item_details?: product_item_detailsCreateNestedManyWithoutBusinessInput
     hospitality_item_details?: hospitality_item_detailsCreateNestedManyWithoutBusinessInput
     vehicle_item_details?: vehicle_item_detailsCreateNestedManyWithoutBusinessInput
@@ -150257,6 +152742,7 @@ export namespace Prisma {
     business_workflows?: business_workflowsUncheckedCreateNestedManyWithoutBusinessesInput
     carts?: cartsUncheckedCreateNestedManyWithoutBusinessesInput
     catalog_items?: catalog_itemsUncheckedCreateNestedManyWithoutBusinessesInput
+    external_catalog_items?: external_catalog_itemsUncheckedCreateNestedManyWithoutBusinessInput
     product_item_details?: product_item_detailsUncheckedCreateNestedManyWithoutBusinessInput
     hospitality_item_details?: hospitality_item_detailsUncheckedCreateNestedManyWithoutBusinessInput
     vehicle_item_details?: vehicle_item_detailsUncheckedCreateNestedManyWithoutBusinessInput
@@ -150321,6 +152807,7 @@ export namespace Prisma {
     tenants?: tenantsUpdateOneRequiredWithoutBusinessesNestedInput
     carts?: cartsUpdateManyWithoutBusinessesNestedInput
     catalog_items?: catalog_itemsUpdateManyWithoutBusinessesNestedInput
+    external_catalog_items?: external_catalog_itemsUpdateManyWithoutBusinessNestedInput
     product_item_details?: product_item_detailsUpdateManyWithoutBusinessNestedInput
     hospitality_item_details?: hospitality_item_detailsUpdateManyWithoutBusinessNestedInput
     vehicle_item_details?: vehicle_item_detailsUpdateManyWithoutBusinessNestedInput
@@ -150369,6 +152856,7 @@ export namespace Prisma {
     business_workflows?: business_workflowsUncheckedUpdateManyWithoutBusinessesNestedInput
     carts?: cartsUncheckedUpdateManyWithoutBusinessesNestedInput
     catalog_items?: catalog_itemsUncheckedUpdateManyWithoutBusinessesNestedInput
+    external_catalog_items?: external_catalog_itemsUncheckedUpdateManyWithoutBusinessNestedInput
     product_item_details?: product_item_detailsUncheckedUpdateManyWithoutBusinessNestedInput
     hospitality_item_details?: hospitality_item_detailsUncheckedUpdateManyWithoutBusinessNestedInput
     vehicle_item_details?: vehicle_item_detailsUncheckedUpdateManyWithoutBusinessNestedInput
@@ -150417,6 +152905,7 @@ export namespace Prisma {
     tenants: tenantsCreateNestedOneWithoutBusinessesInput
     carts?: cartsCreateNestedManyWithoutBusinessesInput
     catalog_items?: catalog_itemsCreateNestedManyWithoutBusinessesInput
+    external_catalog_items?: external_catalog_itemsCreateNestedManyWithoutBusinessInput
     product_item_details?: product_item_detailsCreateNestedManyWithoutBusinessInput
     hospitality_item_details?: hospitality_item_detailsCreateNestedManyWithoutBusinessInput
     vehicle_item_details?: vehicle_item_detailsCreateNestedManyWithoutBusinessInput
@@ -150465,6 +152954,7 @@ export namespace Prisma {
     business_workflows?: business_workflowsUncheckedCreateNestedManyWithoutBusinessesInput
     carts?: cartsUncheckedCreateNestedManyWithoutBusinessesInput
     catalog_items?: catalog_itemsUncheckedCreateNestedManyWithoutBusinessesInput
+    external_catalog_items?: external_catalog_itemsUncheckedCreateNestedManyWithoutBusinessInput
     product_item_details?: product_item_detailsUncheckedCreateNestedManyWithoutBusinessInput
     hospitality_item_details?: hospitality_item_detailsUncheckedCreateNestedManyWithoutBusinessInput
     vehicle_item_details?: vehicle_item_detailsUncheckedCreateNestedManyWithoutBusinessInput
@@ -150594,6 +153084,7 @@ export namespace Prisma {
     tenants?: tenantsUpdateOneRequiredWithoutBusinessesNestedInput
     carts?: cartsUpdateManyWithoutBusinessesNestedInput
     catalog_items?: catalog_itemsUpdateManyWithoutBusinessesNestedInput
+    external_catalog_items?: external_catalog_itemsUpdateManyWithoutBusinessNestedInput
     product_item_details?: product_item_detailsUpdateManyWithoutBusinessNestedInput
     hospitality_item_details?: hospitality_item_detailsUpdateManyWithoutBusinessNestedInput
     vehicle_item_details?: vehicle_item_detailsUpdateManyWithoutBusinessNestedInput
@@ -150642,6 +153133,7 @@ export namespace Prisma {
     business_workflows?: business_workflowsUncheckedUpdateManyWithoutBusinessesNestedInput
     carts?: cartsUncheckedUpdateManyWithoutBusinessesNestedInput
     catalog_items?: catalog_itemsUncheckedUpdateManyWithoutBusinessesNestedInput
+    external_catalog_items?: external_catalog_itemsUncheckedUpdateManyWithoutBusinessNestedInput
     product_item_details?: product_item_detailsUncheckedUpdateManyWithoutBusinessNestedInput
     hospitality_item_details?: hospitality_item_detailsUncheckedUpdateManyWithoutBusinessNestedInput
     vehicle_item_details?: vehicle_item_detailsUncheckedUpdateManyWithoutBusinessNestedInput
@@ -151164,6 +153656,22 @@ export namespace Prisma {
     ai_tags?: catalog_itemsCreateai_tagsInput | string[]
     is_active?: boolean
     deleted_at?: Date | string | null
+    created_at?: Date | string
+    updated_at?: Date | string
+  }
+
+  export type external_catalog_itemsCreateManyBusinessInput = {
+    external_catalog_item_id?: string
+    item_id?: string | null
+    provider: string
+    external_catalog_id?: string | null
+    external_product_id: string
+    retailer_id?: string | null
+    sync_status?: string
+    last_synced_at?: Date | string | null
+    remote_hash?: string | null
+    local_hash?: string | null
+    raw_payload?: NullableJsonNullValueInput | InputJsonValue
     created_at?: Date | string
     updated_at?: Date | string
   }
@@ -151734,6 +154242,7 @@ export namespace Prisma {
     availability?: item_availabilityUpdateManyWithoutItemNestedInput
     variants?: item_variantsUpdateManyWithoutItemNestedInput
     order_items?: order_itemsUpdateManyWithoutCatalog_itemNestedInput
+    external_catalog_items?: external_catalog_itemsUpdateManyWithoutItemNestedInput
   }
 
   export type catalog_itemsUncheckedUpdateWithoutBusinessesInput = {
@@ -151767,6 +154276,7 @@ export namespace Prisma {
     availability?: item_availabilityUncheckedUpdateManyWithoutItemNestedInput
     variants?: item_variantsUncheckedUpdateManyWithoutItemNestedInput
     order_items?: order_itemsUncheckedUpdateManyWithoutCatalog_itemNestedInput
+    external_catalog_items?: external_catalog_itemsUncheckedUpdateManyWithoutItemNestedInput
   }
 
   export type catalog_itemsUncheckedUpdateManyWithoutBusinessesInput = {
@@ -151786,6 +154296,54 @@ export namespace Prisma {
     ai_tags?: catalog_itemsUpdateai_tagsInput | string[]
     is_active?: BoolFieldUpdateOperationsInput | boolean
     deleted_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type external_catalog_itemsUpdateWithoutBusinessInput = {
+    external_catalog_item_id?: StringFieldUpdateOperationsInput | string
+    provider?: StringFieldUpdateOperationsInput | string
+    external_catalog_id?: NullableStringFieldUpdateOperationsInput | string | null
+    external_product_id?: StringFieldUpdateOperationsInput | string
+    retailer_id?: NullableStringFieldUpdateOperationsInput | string | null
+    sync_status?: StringFieldUpdateOperationsInput | string
+    last_synced_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    remote_hash?: NullableStringFieldUpdateOperationsInput | string | null
+    local_hash?: NullableStringFieldUpdateOperationsInput | string | null
+    raw_payload?: NullableJsonNullValueInput | InputJsonValue
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    item?: catalog_itemsUpdateOneWithoutExternal_catalog_itemsNestedInput
+  }
+
+  export type external_catalog_itemsUncheckedUpdateWithoutBusinessInput = {
+    external_catalog_item_id?: StringFieldUpdateOperationsInput | string
+    item_id?: NullableStringFieldUpdateOperationsInput | string | null
+    provider?: StringFieldUpdateOperationsInput | string
+    external_catalog_id?: NullableStringFieldUpdateOperationsInput | string | null
+    external_product_id?: StringFieldUpdateOperationsInput | string
+    retailer_id?: NullableStringFieldUpdateOperationsInput | string | null
+    sync_status?: StringFieldUpdateOperationsInput | string
+    last_synced_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    remote_hash?: NullableStringFieldUpdateOperationsInput | string | null
+    local_hash?: NullableStringFieldUpdateOperationsInput | string | null
+    raw_payload?: NullableJsonNullValueInput | InputJsonValue
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type external_catalog_itemsUncheckedUpdateManyWithoutBusinessInput = {
+    external_catalog_item_id?: StringFieldUpdateOperationsInput | string
+    item_id?: NullableStringFieldUpdateOperationsInput | string | null
+    provider?: StringFieldUpdateOperationsInput | string
+    external_catalog_id?: NullableStringFieldUpdateOperationsInput | string | null
+    external_product_id?: StringFieldUpdateOperationsInput | string
+    retailer_id?: NullableStringFieldUpdateOperationsInput | string | null
+    sync_status?: StringFieldUpdateOperationsInput | string
+    last_synced_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    remote_hash?: NullableStringFieldUpdateOperationsInput | string | null
+    local_hash?: NullableStringFieldUpdateOperationsInput | string | null
+    raw_payload?: NullableJsonNullValueInput | InputJsonValue
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -153711,6 +156269,7 @@ export namespace Prisma {
     business_workflows?: business_workflowsUpdateManyWithoutBusinessesNestedInput
     carts?: cartsUpdateManyWithoutBusinessesNestedInput
     catalog_items?: catalog_itemsUpdateManyWithoutBusinessesNestedInput
+    external_catalog_items?: external_catalog_itemsUpdateManyWithoutBusinessNestedInput
     product_item_details?: product_item_detailsUpdateManyWithoutBusinessNestedInput
     hospitality_item_details?: hospitality_item_detailsUpdateManyWithoutBusinessNestedInput
     vehicle_item_details?: vehicle_item_detailsUpdateManyWithoutBusinessNestedInput
@@ -153759,6 +156318,7 @@ export namespace Prisma {
     business_workflows?: business_workflowsUncheckedUpdateManyWithoutBusinessesNestedInput
     carts?: cartsUncheckedUpdateManyWithoutBusinessesNestedInput
     catalog_items?: catalog_itemsUncheckedUpdateManyWithoutBusinessesNestedInput
+    external_catalog_items?: external_catalog_itemsUncheckedUpdateManyWithoutBusinessNestedInput
     product_item_details?: product_item_detailsUncheckedUpdateManyWithoutBusinessNestedInput
     hospitality_item_details?: hospitality_item_detailsUncheckedUpdateManyWithoutBusinessNestedInput
     vehicle_item_details?: vehicle_item_detailsUncheckedUpdateManyWithoutBusinessNestedInput
@@ -158048,6 +160608,22 @@ export namespace Prisma {
     updated_at?: Date | string
   }
 
+  export type external_catalog_itemsCreateManyItemInput = {
+    external_catalog_item_id?: string
+    business_id: string
+    provider: string
+    external_catalog_id?: string | null
+    external_product_id: string
+    retailer_id?: string | null
+    sync_status?: string
+    last_synced_at?: Date | string | null
+    remote_hash?: string | null
+    local_hash?: string | null
+    raw_payload?: NullableJsonNullValueInput | InputJsonValue
+    created_at?: Date | string
+    updated_at?: Date | string
+  }
+
   export type cart_itemsUpdateWithoutCatalog_itemInput = {
     cart_item_id?: StringFieldUpdateOperationsInput | string
     product_name?: StringFieldUpdateOperationsInput | string
@@ -158425,6 +161001,54 @@ export namespace Prisma {
     discount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     total_price?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     snapshot?: NullableJsonNullValueInput | InputJsonValue
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type external_catalog_itemsUpdateWithoutItemInput = {
+    external_catalog_item_id?: StringFieldUpdateOperationsInput | string
+    provider?: StringFieldUpdateOperationsInput | string
+    external_catalog_id?: NullableStringFieldUpdateOperationsInput | string | null
+    external_product_id?: StringFieldUpdateOperationsInput | string
+    retailer_id?: NullableStringFieldUpdateOperationsInput | string | null
+    sync_status?: StringFieldUpdateOperationsInput | string
+    last_synced_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    remote_hash?: NullableStringFieldUpdateOperationsInput | string | null
+    local_hash?: NullableStringFieldUpdateOperationsInput | string | null
+    raw_payload?: NullableJsonNullValueInput | InputJsonValue
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    business?: businessesUpdateOneRequiredWithoutExternal_catalog_itemsNestedInput
+  }
+
+  export type external_catalog_itemsUncheckedUpdateWithoutItemInput = {
+    external_catalog_item_id?: StringFieldUpdateOperationsInput | string
+    business_id?: StringFieldUpdateOperationsInput | string
+    provider?: StringFieldUpdateOperationsInput | string
+    external_catalog_id?: NullableStringFieldUpdateOperationsInput | string | null
+    external_product_id?: StringFieldUpdateOperationsInput | string
+    retailer_id?: NullableStringFieldUpdateOperationsInput | string | null
+    sync_status?: StringFieldUpdateOperationsInput | string
+    last_synced_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    remote_hash?: NullableStringFieldUpdateOperationsInput | string | null
+    local_hash?: NullableStringFieldUpdateOperationsInput | string | null
+    raw_payload?: NullableJsonNullValueInput | InputJsonValue
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type external_catalog_itemsUncheckedUpdateManyWithoutItemInput = {
+    external_catalog_item_id?: StringFieldUpdateOperationsInput | string
+    business_id?: StringFieldUpdateOperationsInput | string
+    provider?: StringFieldUpdateOperationsInput | string
+    external_catalog_id?: NullableStringFieldUpdateOperationsInput | string | null
+    external_product_id?: StringFieldUpdateOperationsInput | string
+    retailer_id?: NullableStringFieldUpdateOperationsInput | string | null
+    sync_status?: StringFieldUpdateOperationsInput | string
+    last_synced_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    remote_hash?: NullableStringFieldUpdateOperationsInput | string | null
+    local_hash?: NullableStringFieldUpdateOperationsInput | string | null
+    raw_payload?: NullableJsonNullValueInput | InputJsonValue
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
   }

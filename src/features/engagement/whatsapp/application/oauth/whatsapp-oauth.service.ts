@@ -149,6 +149,8 @@ export class WhatsAppOAuthService {
       });
     }
 
+    await this.attachFirstCatalogIfAvailable(account.account_id, resolvedWabaId);
+
     // Subscribe this platform to webhooks (optional for Gupshup, but good for our backend)
     // await this.subscribeToWebhooks(resolvedWabaId);
 
@@ -175,6 +177,27 @@ export class WhatsAppOAuthService {
       phoneNumber: phoneNumber.display_phone_number,
       verifiedName: phoneNumber.verified_name || phoneNumber.display_phone_number,
     };
+  }
+
+  private async attachFirstCatalogIfAvailable(accountId: string, wabaId: string): Promise<void> {
+    if (!wabaId) return;
+
+    try {
+      const catalogs = await this.apiClient.getWabaProductCatalogs(wabaId, 10);
+      const catalog = catalogs.find((entry) => entry?.id);
+      if (!catalog?.id) return;
+
+      await this.prisma.social_accounts.update({
+        where: { account_id: accountId },
+        data: {
+          whatsapp_catalog_id: catalog.id,
+          updated_at: new Date(),
+        },
+      });
+      this.logger.log(`Linked WhatsApp catalog ${catalog.id} to account ${accountId}`);
+    } catch (error) {
+      this.logger.warn(`Unable to discover WhatsApp catalog for WABA ${wabaId}: ${error?.message ?? error}`);
+    }
   }
 
   /**

@@ -32,6 +32,7 @@ model businesses {
   tenants                   tenants                     @relation(fields: [tenant_id], references: [tenant_id], onDelete: Restrict)
   carts                     carts[]
   catalog_items             catalog_items[]
+  external_catalog_items    external_catalog_items[]
   product_item_details      product_item_details[]
   hospitality_item_details  hospitality_item_details[]
   vehicle_item_details      vehicle_item_details[]
@@ -1159,6 +1160,7 @@ model catalog_items {
   availability              item_availability[]
   variants                  item_variants[]
   order_items               order_items[]
+  external_catalog_items    external_catalog_items[]
 
   @@index([business_id, item_type, is_active])
   @@index([business_id, created_at(sort: Desc)])
@@ -1227,6 +1229,30 @@ model product_item_details {
 
   @@index([business_id])
   @@index([sku])
+}
+
+model external_catalog_items {
+  external_catalog_item_id String         @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  business_id              String         @db.Uuid
+  item_id                  String?        @db.Uuid
+  provider                 String         @db.VarChar(50)
+  external_catalog_id      String?        @db.VarChar(255)
+  external_product_id      String         @db.VarChar(255)
+  retailer_id              String?        @db.VarChar(255)
+  sync_status              String         @default("imported") @db.VarChar(30)
+  last_synced_at           DateTime?      @db.Timestamptz(6)
+  remote_hash              String?        @db.VarChar(64)
+  local_hash               String?        @db.VarChar(64)
+  raw_payload              Json?
+  created_at               DateTime       @default(now()) @db.Timestamptz(6)
+  updated_at               DateTime       @default(now()) @db.Timestamptz(6)
+  business                 businesses     @relation(fields: [business_id], references: [business_id], onDelete: Cascade)
+  item                     catalog_items? @relation(fields: [item_id], references: [item_id])
+
+  @@unique([business_id, provider, external_product_id])
+  @@index([business_id, provider, sync_status])
+  @@index([business_id, item_id])
+  @@index([external_catalog_id])
 }
 
 model product_inquiries {
@@ -1701,6 +1727,7 @@ model business_settings {
   auto_reply_enabled Boolean    @default(true)
   booking_methods    Json       @default("{\"availability_response\":{\"mode\":\"interactive\"},\"ai_chat\":{\"enabled\":true,\"collect_guest_details\":true,\"require_confirmation\":true},\"interactive\":{\"enabled\":true,\"send_entry_buttons\":true,\"send_room_or_service_list\":true},\"catalog\":{\"enabled\":false,\"send_product_messages\":false},\"templates\":{\"enabled\":false,\"confirmation_template_name\":\"\",\"reminder_template_name\":\"\",\"language\":\"en\"},\"human_handoff\":{\"enabled\":true,\"on_unavailable\":true,\"on_low_confidence\":true,\"on_payment_issue\":true}}")
   booking_link       Json       @default("{\"enabled\":false,\"experience_type\":\"generic\",\"payment_mode\":\"manual\",\"advance_type\":\"fixed\",\"advance_amount\":0,\"theme\":{\"primary_color\":\"#0066FF\",\"show_logo\":true,\"show_banner\":true},\"policies\":{\"cancellation\":\"\",\"refund\":\"\",\"terms\":\"\"},\"contact\":{\"phone\":\"\",\"whatsapp\":\"\",\"address\":\"\"},\"required_fields\":{\"name\":true,\"phone\":true,\"email\":false,\"address\":false,\"notes\":false}}")
+  whatsapp_onboarding Json      @default("{\"current_usage\":\"not_sure\",\"safety_acknowledged\":false}")
   low_balance_alert  Decimal    @default(100) @db.Decimal(10, 2)
   /// E.164-style dial code without the "+" (e.g. "91" for India, "1" for US).
   /// Used to canonicalise leads.phone so the same human entering "9539192684"

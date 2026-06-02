@@ -552,6 +552,15 @@ export class LeadQueryService {
   }
 
   async getAiManagerToday(businessId: string) {
+    const business = await this.prisma.businesses.findUnique({
+      where: { business_id: businessId },
+      select: { business_type: true },
+    });
+
+    if (business?.business_type === 'products' || business?.business_type === 'retail') {
+      return this.getProductAiManagerToday(businessId);
+    }
+
     const [reminders, worklist, needsAttention, conversations] = await Promise.all([
       this.getResortReminderReadiness(businessId, 14),
       this.getResortWorklist(businessId, 14),
@@ -717,6 +726,228 @@ export class LeadQueryService {
           high: suggestions.filter((s) => s.priority === 'high').length,
           needs_approval: suggestions.filter((s) => s.status === 'needs_approval').length,
           blocked: suggestions.filter((s) => s.status === 'blocked').length,
+        },
+      },
+    };
+  }
+
+  private async getProductAiManagerToday(businessId: string) {
+    const since = new Date(Date.now() - 24 * 60 * 60 * 1000);
+    const lowStockWhere = {
+      business_id: businessId,
+      item_type: 'physical_product',
+      is_active: true,
+      deleted_at: null,
+      stock_quantity: { lte: 5 },
+    };
+
+    const [
+      productInquiries,
+      pendingOrders,
+      paymentPendingOrders,
+      lowStockProducts,
+      activeCarts,
+      needsAttention,
+      conversations,
+      todaysOrders,
+    ] = await Promise.all([
+      this.prisma.product_inquiries.findMany({
+        where: { business_id: businessId, status: { in: ['open', 'cart_added'] } },
+        include: { item: { select: { name: true, stock_quantity: true } }, lead: true },
+        orderBy: { created_at: 'desc' },
+        take: 10,
+      }),
+      this.prisma.product_orders.findMany({
+        where: { business_id: businessId, status: { in: ['pending', 'confirmed', 'processing'] } },
+        include: { items: true, customer: true, lead: true },
+        orderBy: { created_at: 'desc' },
+        take: 10,
+      }),
+      this.prisma.product_orders.findMany({
+        where: { business_id: businessId, payment_status: { in: ['pending', 'failed'] } },
+        include: { items: true, customer: true, lead: true },
+        orderBy: { created_at: 'desc' },
+        take: 10,
+      }),
+      this.prisma.catalog_items.findMany({
+        where: lowStockWhere,
+        orderBy: [{ stock_quantity: 'asc' }, { updated_at: 'desc' }],
+        take: 10,
+      }),
+      this.prisma.carts.findMany({
+        where: { business_id: businessId, status: { in: ['active', 'pending'] } },
+        include: { cart_items: true, leads: true, customers: true },
+        orderBy: { updated_at: 'desc' },
+        take: 10,
+      }),
+      this.getNeedsAttention(businessId, 10),
+      this.getOpenConversations(businessId, 20),
+      this.prisma.product_orders.count({
+        where: { business_id: businessId, created_at: { gte: since } },
+      }),
+    ]);
+
+    const waitingConversations = conversations.filter((conversation: any) =>
+      conversation.needs_attention ||
+      (conversation.unreadCount ?? 0) > 0 ||
+      conversation.status === 'waiting',
+    );
+
+    const outOfStockProducts = lowStockProducts.filter((item) => Number(item.stock_quantity ?? 0) <= 0);
+    const suggestions: any[] = [];
+
+    if (waitingConversations.length > 0) {
+      suggestions.push({
+        type: 'reply_waiting',
+        priority: 'high',
+        title: `Reply to ${waitingConversations.length} waiting customer${waitingConversations.length === 1 ? '' : 's'}`,
+        reason: 'Product buyers often decide quickly. Reply first to protect sales from WhatsApp enquiries.',
+        safety: 'Owner can review before replying',
+        status: 'needs_action',
+        action_label: 'Open inbox',
+        action_href: '/crm/inbox',
+        count: waitingConversations.length,
+        data: waitingConversations.slice(0, 5),
+      });
+    }
+
+    if (productInquiries.length > 0) {
+      suggestions.push({
+        type: 'product_inquiry',
+        priority: 'high',
+        title: `Handle ${productInquiries.length} product enquiry${productInquiries.length === 1 ? '' : 'ies'}`,
+        reason: 'These customers asked about products or added items to cart but have not completed the order.',
+        safety: 'No automatic offer is sent',
+        status: 'needs_action',
+        action_label: 'Open product leads',
+        action_href: '/crm/leads',
+        count: productInquiries.length,
+        data: productInquiries.slice(0, 5),
+      });
+    }
+
+    if (paymentPendingOrders.length > 0) {
+      suggestions.push({
+        type: 'payment_pending',
+        priority: 'high',
+        title: `Collect payment for ${paymentPendingOrders.length} order${paymentPendingOrders.length === 1 ? '' : 's'}`,
+        reason: 'These orders are not paid yet. Send payment help or confirm whether the customer still wants the items.',
+        safety: 'Payment status checked',
+        status: 'needs_action',
+        action_label: 'Open orders',
+        action_href: '/orders',
+        count: paymentPendingOrders.length,
+        data: paymentPendingOrders.slice(0, 5),
+      });
+    }
+
+    if (pendingOrders.length > 0) {
+      suggestions.push({
+        type: 'pack_orders',
+        priority: 'medium',
+        title: `Prepare ${pendingOrders.length} order${pendingOrders.length === 1 ? '' : 's'}`,
+        reason: 'These orders need packing, delivery update, or customer confirmation.',
+        safety: 'Operational check only',
+        status: 'recommended',
+        action_label: 'View orders',
+        action_href: '/orders',
+        count: pendingOrders.length,
+        data: pendingOrders.slice(0, 5),
+      });
+    }
+
+    if (outOfStockProducts.length > 0) {
+      suggestions.push({
+        type: 'out_of_stock',
+        priority: 'medium',
+        title: `${outOfStockProducts.length} product${outOfStockProducts.length === 1 ? '' : 's'} out of stock`,
+        reason: 'Hide, restock, or offer an alternative before AI suggests these products again.',
+        safety: 'Prevents wrong product promises',
+        status: 'blocked',
+        action_label: 'Update inventory',
+        action_href: '/inventory/products',
+        count: outOfStockProducts.length,
+        data: outOfStockProducts.slice(0, 5),
+      });
+    } else if (lowStockProducts.length > 0) {
+      suggestions.push({
+        type: 'low_stock',
+        priority: 'low',
+        title: `Restock ${lowStockProducts.length} low-stock product${lowStockProducts.length === 1 ? '' : 's'}`,
+        reason: 'These products are close to selling out. Review stock before promoting them.',
+        safety: 'AI does not change stock',
+        status: 'recommended',
+        action_label: 'Update stock',
+        action_href: '/inventory/products',
+        count: lowStockProducts.length,
+        data: lowStockProducts.slice(0, 5),
+      });
+    }
+
+    if (activeCarts.length > 0) {
+      suggestions.push({
+        type: 'abandoned_cart',
+        priority: 'medium',
+        title: `Follow up ${activeCarts.length} active cart${activeCarts.length === 1 ? '' : 's'}`,
+        reason: 'Customers selected products but may need payment, delivery, or stock confirmation.',
+        safety: 'Owner-approved follow-up',
+        status: 'needs_approval',
+        action_label: 'Open follow-ups',
+        action_href: '/crm/leads',
+        count: activeCarts.length,
+        data: activeCarts.slice(0, 5),
+      });
+    }
+
+    if (needsAttention.length > 0) {
+      suggestions.push({
+        type: 'follow_up',
+        priority: 'medium',
+        title: `Follow up ${needsAttention.length} warm lead${needsAttention.length === 1 ? '' : 's'}`,
+        reason: 'These customers may still buy if the owner replies or confirms product details.',
+        safety: 'No campaign is sent automatically',
+        status: 'needs_action',
+        action_label: 'Open leads',
+        action_href: '/crm/leads',
+        count: needsAttention.length,
+        data: needsAttention.slice(0, 5),
+      });
+    }
+
+    if (suggestions.length === 0) {
+      suggestions.push({
+        type: 'all_clear',
+        priority: 'low',
+        title: 'No urgent store action right now',
+        reason: 'No waiting customers, unpaid orders, active carts, or stock problems were found.',
+        safety: 'Checked today',
+        status: 'ok',
+        action_label: 'Open dashboard',
+        action_href: '/dashboard',
+        count: 0,
+        data: [],
+      });
+    }
+
+    const priorityOrder: Record<string, number> = { high: 1, medium: 2, low: 3 };
+
+    return {
+      data: {
+        title: 'AI Store Manager',
+        subtitle: 'What to do today to convert product enquiries into orders.',
+        checked_at: new Date().toISOString(),
+        suggestions: suggestions.sort((a, b) => (priorityOrder[a.priority] ?? 9) - (priorityOrder[b.priority] ?? 9)),
+        counts: {
+          total: suggestions.length,
+          high: suggestions.filter((s) => s.priority === 'high').length,
+          needs_approval: suggestions.filter((s) => s.status === 'needs_approval').length,
+          blocked: suggestions.filter((s) => s.status === 'blocked').length,
+          waiting_customers: waitingConversations.length,
+          product_inquiries: productInquiries.length,
+          payment_pending: paymentPendingOrders.length,
+          orders_today: todaysOrders,
+          low_stock: lowStockProducts.length,
+          active_carts: activeCarts.length,
         },
       },
     };
