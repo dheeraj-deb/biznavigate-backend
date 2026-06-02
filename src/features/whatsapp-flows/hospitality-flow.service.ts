@@ -253,6 +253,7 @@ export class HospitalityFlowService {
       data.search ??
       data.item_name,
     );
+    const effectivePropertySearch = await this.normalizePropertySearch(businessId, propertySearch);
 
     if (!check_in || !check_out) {
       return {
@@ -292,13 +293,13 @@ export class HospitalityFlowService {
           is_active: true,
           deleted_at: null,
           item_type: 'accommodation',
-          ...(propertySearch
+          ...(effectivePropertySearch
             ? {
                 OR: [
-                  { name: { contains: propertySearch, mode: 'insensitive' } },
-                  { description: { contains: propertySearch, mode: 'insensitive' } },
-                  { category: { contains: propertySearch, mode: 'insensitive' } },
-                  { ai_tags: { has: propertySearch.toLowerCase() } },
+                  { name: { contains: effectivePropertySearch, mode: 'insensitive' } },
+                  { description: { contains: effectivePropertySearch, mode: 'insensitive' } },
+                  { category: { contains: effectivePropertySearch, mode: 'insensitive' } },
+                  { ai_tags: { has: effectivePropertySearch.toLowerCase() } },
                 ],
               }
             : {}),
@@ -361,9 +362,9 @@ export class HospitalityFlowService {
       return {
         screen: 'SELECT_DATES',
         data: {
-          error_message: propertySearch
-            ? `No available rooms found for "${propertySearch}" on the selected dates.`
-            : 'No rooms available for the selected dates.',
+          error_message: effectivePropertySearch
+            ? `No available rooms found for "${effectivePropertySearch ?? propertySearch}" from ${check_in} to ${check_out}.`
+            : `No rooms available from ${check_in} to ${check_out}.`,
           has_error: true,
         },
       };
@@ -397,6 +398,28 @@ export class HospitalityFlowService {
 
   private nonEmptyString(value: unknown): string | null {
     return typeof value === 'string' && value.trim().length > 0 ? value.trim() : null;
+  }
+
+  private async normalizePropertySearch(businessId: string | undefined, propertySearch: string | null) {
+    if (!businessId || !propertySearch) return propertySearch;
+
+    const business = await this.prisma.businesses.findUnique({
+      where: { business_id: businessId },
+      select: { business_name: true, public_booking_slug: true },
+    }).catch(() => null);
+
+    const normalizedSearch = this.normalizeSearchText(propertySearch);
+    const businessNames = [
+      business?.business_name,
+      business?.public_booking_slug,
+    ].filter((value): value is string => typeof value === 'string' && value.trim().length > 0);
+
+    const isBusinessName = businessNames.some((name) => this.normalizeSearchText(name) === normalizedSearch);
+    return isBusinessName ? null : propertySearch;
+  }
+
+  private normalizeSearchText(value: string) {
+    return value.toLowerCase().replace(/[^a-z0-9]/g, '');
   }
 
   private fetchImageAsBase64(url: string, maxBytes = Infinity): Promise<string> {

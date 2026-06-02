@@ -8,7 +8,7 @@ import { appendSignal } from '../types/agent-signal';
 
 export function makeCheckAvailabilityTool(catalogService: CatalogService) {
   return tool(
-    async ({ checkIn, checkOut, propertyName }) => {
+    async ({ checkIn, checkOut, propertyName, guests }) => {
       const { businessId } = getRunContext();
       const resolvedCheckIn = resolveDate(checkIn);
       const resolvedCheckOut = resolveDate(checkOut);
@@ -46,6 +46,7 @@ export function makeCheckAvailabilityTool(catalogService: CatalogService) {
         checkIn: resolvedCheckIn,
         checkOut: resolvedCheckOut,
         propertyName,
+        guests,
       });
     },
     {
@@ -55,6 +56,7 @@ export function makeCheckAvailabilityTool(catalogService: CatalogService) {
         checkIn: z.string().describe('Check-in date in YYYY-MM-DD format'),
         checkOut: z.string().describe('Check-out date in YYYY-MM-DD format'),
         propertyName: z.string().optional().describe('Specific resort/property/room name mentioned by the customer, if any'),
+        guests: z.coerce.number().int().positive().optional().describe('Number of guests mentioned by the customer, if any'),
       }),
     },
   );

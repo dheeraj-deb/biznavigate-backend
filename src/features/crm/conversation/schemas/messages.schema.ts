@@ -26,6 +26,10 @@ export class Messages {
     @Prop({ type: Object }) entities_extracted: Record<string, any>;
     @Prop({ type: Object }) metadata: Record<string, any>;
     @Prop({ default: Date.now }) timestamp: Date;
+    created_at?: Date;
+    updated_at?: Date;
 }
 
 export const MessagesSchema = SchemaFactory.createForClass(Messages);
+MessagesSchema.index({ business_id: 1, conversation_id: 1, timestamp: 1 });
+MessagesSchema.index({ conversation_id: 1, timestamp: 1 });

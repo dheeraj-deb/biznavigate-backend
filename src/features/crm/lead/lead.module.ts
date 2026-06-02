@@ -1,6 +1,7 @@
 import { forwardRef, Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
 import { LeadController } from './controllers/lead.controller';
+import { AiManagerController } from './controllers/ai-manager.controller';
 import { PipelineController } from './controllers/pipeline.controller';
 import { LeadCommandService } from './application/services/lead-command.service';
 import { LeadQueryService } from './application/services/lead-query.service';
@@ -25,7 +26,7 @@ import { WhatsAppModule } from '../../engagement/whatsapp/whatsapp.module';
       { name: Message.name, schema: MessageSchema },
     ]),
   ],
-  controllers: [LeadController, PipelineController],
+  controllers: [LeadController, AiManagerController, PipelineController],
   providers: [
     LeadCommandService,
     LeadQueryService,

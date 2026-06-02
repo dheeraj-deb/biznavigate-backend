@@ -27,6 +27,8 @@ export class Conversation {
     @Prop() human_takeover_at?: Date;
     @Prop() human_takeover_reason?: string;
     @Prop() is_resolved?: boolean;
+    @Prop({ default: 0 }) message_count?: number;
+    @Prop({ default: null }) last_message_at?: Date | null;
     /**
      * Last time we received an inbound message from the customer on this
      * conversation. Drives the WhatsApp 24-hour-window gate — automations can
@@ -37,4 +39,9 @@ export class Conversation {
 }
 
 export const ConversationSchema = SchemaFactory.createForClass(Conversation);
+ConversationSchema.index({ conversation_id: 1 }, { unique: true });
+ConversationSchema.index({ business_id: 1, tenant_id: 1, updated_at: -1 });
+ConversationSchema.index({ business_id: 1, status: 1, updated_at: -1 });
+ConversationSchema.index({ business_id: 1, channel: 1, updated_at: -1 });
+ConversationSchema.index({ business_id: 1, last_message_at: -1 });
 ConversationSchema.index({ business_id: 1, platform_id: 1, last_inbound_at: -1 });
