@@ -1,4 +1,4 @@
-import { IsBoolean, IsArray, IsUUID, IsOptional } from 'class-validator';
+import { IsBoolean, IsArray, IsUUID, IsOptional, IsInt, Min, Max } from 'class-validator';
 
 export class ToggleProductInCatalogDto {
   @IsUUID()
@@ -22,4 +22,12 @@ export class SyncCatalogDto {
   @IsArray()
   @IsUUID(undefined, { each: true })
   productIds?: string[];
+}
+
+export class ImportWhatsAppCatalogDto {
+  @IsOptional()
+  @IsInt()
+  @Min(1)
+  @Max(500)
+  limit?: number;
 }
