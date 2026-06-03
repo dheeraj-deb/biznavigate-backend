@@ -265,7 +265,6 @@ model leads {
   tenants                  tenants                @relation(fields: [tenant_id], references: [tenant_id])
   orders                   orders[]
   workflow_executions      workflow_executions[]
-  cart_reservations        cart_reservations[]
 
   @@index([business_id, status], map: "idx_leads_business_status")
   @@index([tenant_id], map: "idx_leads_tenant_id")
@@ -560,7 +559,6 @@ model products {
   businesses              businesses           @relation(fields: [business_id], references: [business_id])
   product_categories      product_categories?  @relation(fields: [category_id], references: [category_id])
   stock_reservations      stock_reservations[]
-  cart_reservations       cart_reservations[]
 
   @@index([business_id, is_active], map: "idx_products_business_active")
   @@index([tenant_id], map: "idx_products_tenant_id")
@@ -659,13 +657,13 @@ model customers {
   phone                    String                     @db.VarChar(20)
   email                    String?                    @db.VarChar(255)
   whatsapp_number          String?                    @db.VarChar(20)
-  platform_user_id         String?                    @db.VarChar(255)
   total_orders             Int                        @default(0)
   total_spent              Decimal                    @default(0) @db.Decimal(10, 2)
   last_order_date          DateTime?                  @db.Timestamptz(6)
   engagement_score         Int                        @default(10)
   created_at               DateTime                   @default(now()) @db.Timestamptz(6)
   updated_at               DateTime                   @default(now()) @db.Timestamptz(6)
+  platform_user_id         String?                    @db.VarChar(255)
   carts                    carts[]
   notification_messages    notification_messages[]    @relation("notification_messages_customer")
   notification_preferences notification_preferences[] @relation("notification_prefs_customer")
@@ -796,17 +794,357 @@ model cart_reservations {
   variant_id     String?  @db.Uuid
   quantity       Int
   expires_at     DateTime @db.Timestamptz(6)
-  status         String   @default("active") @db.VarChar(20) // active, released, converted
+  status         String   @default("active") @db.VarChar(20)
   created_at     DateTime @default(now()) @db.Timestamptz(6)
   updated_at     DateTime @default(now()) @db.Timestamptz(6)
 
-  leads    leads    @relation(fields: [lead_id], references: [lead_id], onDelete: Cascade)
-  products products @relation(fields: [product_id], references: [product_id])
-
   @@index([lead_id], map: "idx_cart_reservations_lead_id")
   @@index([product_id], map: "idx_cart_reservations_product_id")
-  @@index([expires_at], map: "idx_cart_reservations_expires_at")
   @@index([status], map: "idx_cart_reservations_status")
+}
+
+/// Product seller store settings - keeps product-selling setup separate from hospitality setup
+model seller_store_settings {
+  seller_store_settings_id String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  business_id              String   @unique @db.Uuid
+  tenant_id                String   @db.Uuid
+  store_type               String   @default("product_seller") @db.VarChar(50)
+  onboarding_status        String   @default("not_started") @db.VarChar(30)
+  default_currency         String   @default("INR") @db.VarChar(10)
+  low_stock_threshold      Int      @default(5)
+  stock_hold_minutes       Int      @default(15)
+  payment_modes            String[] @default(["cash", "upi", "cod"])
+  delivery_modes           String[] @default(["pickup", "local_delivery"])
+  delivery_areas           Json?
+  credit_defaults          Json?
+  ai_guardrails            Json?
+  setup_checklist          Json?
+  created_at               DateTime @default(now()) @db.Timestamptz(6)
+  updated_at               DateTime @default(now()) @db.Timestamptz(6)
+
+  @@index([tenant_id], map: "idx_seller_store_settings_tenant_id")
+}
+
+/// Owner approval queue for AI and staff actions that need seller confirmation
+model seller_owner_approvals {
+  approval_id      String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  business_id      String    @db.Uuid
+  tenant_id        String    @db.Uuid
+  entity_type      String    @db.VarChar(50)
+  entity_id        String?   @db.VarChar(100)
+  title            String    @db.VarChar(255)
+  description      String?
+  requested_action String?   @db.VarChar(100)
+  priority         String    @default("normal") @db.VarChar(20)
+  risk_level       String    @default("low") @db.VarChar(20)
+  status           String    @default("pending") @db.VarChar(20)
+  source           String    @default("ai") @db.VarChar(30)
+  ai_employee_key  String?   @db.VarChar(80)
+  customer_phone   String?   @db.VarChar(20)
+  metadata         Json?
+  reviewed_by      String?   @db.Uuid
+  reviewed_at      DateTime? @db.Timestamptz(6)
+  created_at       DateTime  @default(now()) @db.Timestamptz(6)
+  updated_at       DateTime  @default(now()) @db.Timestamptz(6)
+
+  @@index([business_id, status], map: "idx_seller_owner_approvals_business_status")
+  @@index([business_id, created_at(sort: Desc)], map: "idx_seller_owner_approvals_business_created")
+  @@index([tenant_id], map: "idx_seller_owner_approvals_tenant_id")
+}
+
+/// Product seller stock holds created by AI, owner, or counter staff
+model seller_stock_reservations {
+  seller_reservation_id String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  business_id           String    @db.Uuid
+  tenant_id             String    @db.Uuid
+  product_id            String    @db.Uuid
+  variant_id            String?   @db.Uuid
+  lead_id               String?   @db.Uuid
+  customer_id           String?   @db.Uuid
+  customer_phone        String?   @db.VarChar(20)
+  quantity              Int
+  reason                String?   @db.VarChar(255)
+  source                String    @default("manual") @db.VarChar(30)
+  status                String    @default("active") @db.VarChar(20)
+  expires_at            DateTime  @db.Timestamptz(6)
+  released_at           DateTime? @db.Timestamptz(6)
+  converted_order_id    String?   @db.Uuid
+  created_by            String?   @db.Uuid
+  metadata              Json?
+  created_at            DateTime  @default(now()) @db.Timestamptz(6)
+  updated_at            DateTime  @default(now()) @db.Timestamptz(6)
+
+  @@index([business_id, status, expires_at], map: "idx_seller_stock_res_business_status_expiry")
+  @@index([product_id, status], map: "idx_seller_stock_res_product_status")
+  @@index([tenant_id], map: "idx_seller_stock_res_tenant_id")
+}
+
+/// Product seller payment attempts for retry-safe order payment handling
+model seller_order_payment_attempts {
+  attempt_id          String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  business_id         String    @db.Uuid
+  tenant_id           String    @db.Uuid
+  order_id            String    @db.Uuid
+  reservation_id      String?   @db.Uuid
+  payment_provider    String    @default("manual") @db.VarChar(50)
+  payment_method      String    @default("upi") @db.VarChar(50)
+  amount              Decimal   @db.Decimal(10, 2)
+  currency            String    @default("INR") @db.VarChar(10)
+  status              String    @default("pending") @db.VarChar(30)
+  idempotency_key     String    @unique @db.VarChar(160)
+  provider_order_id   String?   @db.VarChar(255)
+  provider_payment_id String?   @db.VarChar(255)
+  payment_reference   String?   @db.VarChar(255)
+  expires_at          DateTime? @db.Timestamptz(6)
+  paid_at             DateTime? @db.Timestamptz(6)
+  failed_at           DateTime? @db.Timestamptz(6)
+  cancelled_at        DateTime? @db.Timestamptz(6)
+  source              String    @default("payment_desk") @db.VarChar(50)
+  created_by          String?   @db.Uuid
+  metadata            Json?
+  created_at          DateTime  @default(now()) @db.Timestamptz(6)
+  updated_at          DateTime  @default(now()) @db.Timestamptz(6)
+
+  @@index([business_id, status, created_at(sort: Desc)], map: "idx_seller_payment_attempts_business_status")
+  @@index([order_id, status], map: "idx_seller_payment_attempts_order_status")
+  @@index([provider_payment_id], map: "idx_seller_payment_attempts_provider_payment")
+  @@index([tenant_id], map: "idx_seller_payment_attempts_tenant")
+}
+
+/// Product seller order state events for audit and idempotency visibility
+model seller_order_state_events {
+  event_id            String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  business_id         String   @db.Uuid
+  tenant_id           String   @db.Uuid
+  order_id            String   @db.Uuid
+  event_type          String   @db.VarChar(80)
+  from_status         String?  @db.VarChar(30)
+  to_status           String?  @db.VarChar(30)
+  from_payment_status String?  @db.VarChar(30)
+  to_payment_status   String?  @db.VarChar(30)
+  actor_type          String   @default("system") @db.VarChar(40)
+  actor_id            String?  @db.Uuid
+  source              String?  @db.VarChar(50)
+  idempotency_key     String?  @unique @db.VarChar(160)
+  metadata            Json?
+  created_at          DateTime @default(now()) @db.Timestamptz(6)
+
+  @@index([business_id, created_at(sort: Desc)], map: "idx_seller_order_events_business_created")
+  @@index([order_id, created_at(sort: Desc)], map: "idx_seller_order_events_order_created")
+  @@index([tenant_id], map: "idx_seller_order_events_tenant")
+}
+
+/// Product seller bulk import jobs for CSV/Excel stock onboarding
+model seller_product_import_jobs {
+  import_job_id String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  business_id   String    @db.Uuid
+  tenant_id     String    @db.Uuid
+  source        String    @default("csv") @db.VarChar(40)
+  status        String    @default("processing") @db.VarChar(30)
+  total_rows    Int       @default(0)
+  created_count Int       @default(0)
+  updated_count Int       @default(0)
+  skipped_count Int       @default(0)
+  failed_count  Int       @default(0)
+  errors        Json?
+  summary       Json?
+  created_by    String?   @db.Uuid
+  started_at    DateTime  @default(now()) @db.Timestamptz(6)
+  finished_at   DateTime? @db.Timestamptz(6)
+  created_at    DateTime  @default(now()) @db.Timestamptz(6)
+  updated_at    DateTime  @default(now()) @db.Timestamptz(6)
+
+  @@index([business_id, created_at(sort: Desc)], map: "idx_seller_import_jobs_business_created")
+  @@index([status], map: "idx_seller_import_jobs_status")
+  @@index([tenant_id], map: "idx_seller_import_jobs_tenant")
+}
+
+/// Product seller stock adjustment audit for manual and import changes
+model seller_stock_adjustments {
+  adjustment_id    String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  business_id      String   @db.Uuid
+  tenant_id        String   @db.Uuid
+  product_id       String   @db.Uuid
+  variant_id       String?  @db.Uuid
+  import_job_id    String?  @db.Uuid
+  adjustment_type  String   @db.VarChar(20)
+  quantity_change  Int
+  quantity_before  Int
+  quantity_after   Int
+  reserved_before  Int      @default(0)
+  available_after  Int      @default(0)
+  reason           String   @db.VarChar(80)
+  source           String   @default("manual") @db.VarChar(40)
+  reference        String?  @db.VarChar(255)
+  note             String?
+  created_by       String?  @db.Uuid
+  metadata         Json?
+  created_at       DateTime @default(now()) @db.Timestamptz(6)
+
+  @@index([business_id, created_at(sort: Desc)], map: "idx_seller_stock_adjustments_business_created")
+  @@index([product_id, created_at(sort: Desc)], map: "idx_seller_stock_adjustments_product_created")
+  @@index([import_job_id], map: "idx_seller_stock_adjustments_import_job")
+  @@index([tenant_id], map: "idx_seller_stock_adjustments_tenant")
+}
+
+/// Returns, exchanges and refund requests for product sellers
+model seller_return_cases {
+  return_case_id    String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  business_id       String    @db.Uuid
+  tenant_id         String    @db.Uuid
+  order_id          String?   @db.Uuid
+  customer_id       String?   @db.Uuid
+  customer_phone    String?   @db.VarChar(20)
+  product_id        String?   @db.Uuid
+  status            String    @default("open") @db.VarChar(30)
+  reason            String?   @db.VarChar(255)
+  resolution         String?   @db.VarChar(50)
+  refund_amount     Decimal?  @db.Decimal(10, 2)
+  exchange_product_id String? @db.Uuid
+  source            String    @default("manual") @db.VarChar(30)
+  owner_approval_id String?   @db.Uuid
+  metadata          Json?
+  created_at        DateTime  @default(now()) @db.Timestamptz(6)
+  updated_at        DateTime  @default(now()) @db.Timestamptz(6)
+  closed_at         DateTime? @db.Timestamptz(6)
+
+  @@index([business_id, status], map: "idx_seller_return_cases_business_status")
+  @@index([order_id], map: "idx_seller_return_cases_order_id")
+  @@index([tenant_id], map: "idx_seller_return_cases_tenant_id")
+}
+
+/// Local delivery desk for pickup, local delivery and COD follow-up
+model seller_deliveries {
+  delivery_id      String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  business_id      String    @db.Uuid
+  tenant_id        String    @db.Uuid
+  order_id         String?   @db.Uuid
+  customer_id      String?   @db.Uuid
+  customer_phone   String?   @db.VarChar(20)
+  delivery_mode    String    @default("local_delivery") @db.VarChar(40)
+  address          String?
+  area             String?   @db.VarChar(100)
+  assigned_to      String?   @db.Uuid
+  status           String    @default("pending") @db.VarChar(30)
+  collect_payment  Boolean   @default(false)
+  payment_amount   Decimal?  @db.Decimal(10, 2)
+  due_at           DateTime? @db.Timestamptz(6)
+  completed_at     DateTime? @db.Timestamptz(6)
+  notes            String?
+  metadata         Json?
+  created_at       DateTime  @default(now()) @db.Timestamptz(6)
+  updated_at       DateTime  @default(now()) @db.Timestamptz(6)
+
+  @@index([business_id, status], map: "idx_seller_deliveries_business_status")
+  @@index([order_id], map: "idx_seller_deliveries_order_id")
+  @@index([tenant_id], map: "idx_seller_deliveries_tenant_id")
+}
+
+/// Seller-approved credit customers (khaata)
+model seller_customer_credit_accounts {
+  credit_account_id String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  business_id       String    @db.Uuid
+  tenant_id         String    @db.Uuid
+  customer_id       String?   @db.Uuid
+  phone             String    @db.VarChar(20)
+  customer_name     String?   @db.VarChar(255)
+  status            String    @default("pending") @db.VarChar(20)
+  credit_limit      Decimal   @default(0) @db.Decimal(10, 2)
+  current_balance   Decimal   @default(0) @db.Decimal(10, 2)
+  due_days          Int       @default(30)
+  approved_by       String?   @db.Uuid
+  approved_at       DateTime? @db.Timestamptz(6)
+  notes             String?
+  created_at        DateTime  @default(now()) @db.Timestamptz(6)
+  updated_at        DateTime  @default(now()) @db.Timestamptz(6)
+
+  @@unique([business_id, phone], map: "unique_seller_credit_phone_per_business")
+  @@index([business_id, status], map: "idx_seller_credit_accounts_business_status")
+  @@index([tenant_id], map: "idx_seller_credit_accounts_tenant_id")
+}
+
+/// Credit ledger for customer khaata
+model seller_customer_credit_transactions {
+  credit_transaction_id String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  business_id           String    @db.Uuid
+  tenant_id             String    @db.Uuid
+  credit_account_id     String    @db.Uuid
+  order_id              String?   @db.Uuid
+  transaction_type      String    @db.VarChar(30)
+  amount                Decimal   @db.Decimal(10, 2)
+  due_date              DateTime? @db.Timestamptz(6)
+  paid_at               DateTime? @db.Timestamptz(6)
+  notes                 String?
+  created_by            String?   @db.Uuid
+  created_at            DateTime  @default(now()) @db.Timestamptz(6)
+
+  @@index([credit_account_id, created_at(sort: Desc)], map: "idx_seller_credit_tx_account_created")
+  @@index([business_id, transaction_type], map: "idx_seller_credit_tx_business_type")
+  @@index([tenant_id], map: "idx_seller_credit_tx_tenant_id")
+}
+
+/// AI audit trail for product seller employees and guardrails
+model seller_ai_audit_logs {
+  audit_id         String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  business_id      String   @db.Uuid
+  tenant_id        String   @db.Uuid
+  ai_employee_key  String   @db.VarChar(80)
+  action           String   @db.VarChar(100)
+  entity_type      String?  @db.VarChar(50)
+  entity_id        String?  @db.VarChar(100)
+  customer_phone   String?  @db.VarChar(20)
+  risk_level       String   @default("low") @db.VarChar(20)
+  confidence       Decimal? @db.Decimal(3, 2)
+  decision         String?  @db.VarChar(50)
+  input_summary    String?
+  output_summary   String?
+  guardrail_result Json?
+  metadata         Json?
+  created_at       DateTime @default(now()) @db.Timestamptz(6)
+
+  @@index([business_id, created_at(sort: Desc)], map: "idx_seller_ai_audit_business_created")
+  @@index([business_id, ai_employee_key], map: "idx_seller_ai_audit_business_employee")
+  @@index([tenant_id], map: "idx_seller_ai_audit_tenant_id")
+}
+
+/// Product profit snapshots for profit coach and dead-stock recovery
+model seller_product_profit_snapshots {
+  profit_snapshot_id String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  business_id        String    @db.Uuid
+  tenant_id          String    @db.Uuid
+  product_id         String    @db.Uuid
+  cost_price         Decimal?  @db.Decimal(10, 2)
+  selling_price      Decimal?  @db.Decimal(10, 2)
+  margin_percent     Decimal?  @db.Decimal(5, 2)
+  last_sale_at       DateTime? @db.Timestamptz(6)
+  dead_stock_score   Int       @default(0)
+  metadata           Json?
+  created_at         DateTime  @default(now()) @db.Timestamptz(6)
+  updated_at         DateTime  @default(now()) @db.Timestamptz(6)
+
+  @@unique([business_id, product_id], map: "unique_seller_profit_product_per_business")
+  @@index([business_id, dead_stock_score], map: "idx_seller_profit_business_dead_stock")
+  @@index([tenant_id], map: "idx_seller_profit_tenant_id")
+}
+
+/// Demand signals collected from WhatsApp, counter sales, campaigns and stock-outs
+model seller_demand_signals {
+  demand_signal_id String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  business_id      String   @db.Uuid
+  tenant_id        String   @db.Uuid
+  product_id       String?  @db.Uuid
+  category         String?  @db.VarChar(100)
+  customer_phone   String?  @db.VarChar(20)
+  signal_type      String   @db.VarChar(40)
+  channel          String   @default("whatsapp") @db.VarChar(30)
+  quantity         Int      @default(1)
+  metadata         Json?
+  created_at       DateTime @default(now()) @db.Timestamptz(6)
+
+  @@index([business_id, created_at(sort: Desc)], map: "idx_seller_demand_business_created")
+  @@index([business_id, category], map: "idx_seller_demand_business_category")
+  @@index([product_id], map: "idx_seller_demand_product_id")
+  @@index([tenant_id], map: "idx_seller_demand_tenant_id")
 }
 
 /// Campaigns - marketing campaigns
@@ -1622,16 +1960,16 @@ model carts {
   business_id  String       @db.Uuid
   tenant_id    String       @db.Uuid
   lead_id      String?      @db.Uuid
-  customer_id  String?      @db.Uuid
   status       String?      @default("active") @db.VarChar(20)
   total_amount Decimal?     @default(0) @db.Decimal(10, 2)
   total_items  Int?         @default(0)
   expires_at   DateTime?    @db.Timestamptz(6)
   created_at   DateTime?    @default(now()) @db.Timestamptz(6)
   updated_at   DateTime?    @default(now()) @db.Timestamptz(6)
+  customer_id  String?      @db.Uuid
   cart_items   cart_items[]
   businesses   businesses   @relation(fields: [business_id], references: [business_id], onDelete: Cascade, onUpdate: NoAction)
-  customers    customers?   @relation(fields: [customer_id], references: [customer_id], onDelete: SetNull, onUpdate: NoAction)
+  customers    customers?   @relation(fields: [customer_id], references: [customer_id], onUpdate: NoAction)
   leads        leads?       @relation(fields: [lead_id], references: [lead_id], onDelete: Cascade, onUpdate: NoAction)
   tenants      tenants      @relation(fields: [tenant_id], references: [tenant_id], onDelete: Cascade, onUpdate: NoAction)
 

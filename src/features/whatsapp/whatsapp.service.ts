@@ -10,6 +10,7 @@ import { SendWhatsAppMessageDto, SendMessageType, InteractiveSendType } from './
 import * as crypto from 'crypto';
 import { WhatsAppCatalogOrderService } from './services/whatsapp-catalog-order.service';
 import { ConversationService } from '../conversation/conversation.service';
+import { AiRouterService } from '../ai-router/ai-router.service';
 
 interface PendingContext {
   messageId: string;
@@ -36,6 +37,7 @@ export class WhatsAppService {
     private readonly configService: ConfigService,
     private readonly catalogOrderService: WhatsAppCatalogOrderService,
     private readonly conversationService: ConversationService,
+    private readonly aiRouter: AiRouterService,
   ) { }
 
 
@@ -254,6 +256,11 @@ export class WhatsAppService {
           messageText = `[Unsupported message type: ${message.type}]`;
       }
 
+      const entryContext = this.buildCustomerEntryContext(message, messageText);
+      if (entryContext) {
+        lead = await this.attachEntryContextToLead(lead, entryContext);
+      }
+
       let conversation = await this.conversationService.findActiveConversation(lead.lead_id, 'whatsapp');
 
       if (!conversation) {
@@ -312,22 +319,22 @@ export class WhatsAppService {
         () => this.apiClient.markAsRead(phoneNumberId, accessToken, messageId),
       );
 
-      // Map business_type to AI service expected values
-      const businessTypeMap: Record<string, string> = {
-        'Retail': 'retail',
-        'Beauty': 'service',
-        'Restaurant': 'service',
-        'Service': 'service',
-        'D2C': 'd2c',
-        'Education': 'education',
-      };
-
-      const mappedBusinessType = account.businesses.business_type
-        ? businessTypeMap[account.businesses.business_type] || 'service'
-        : 'service';
+      const aiRoute = this.aiRouter.routeForBusiness(account.businesses.business_type);
 
       // Get conversation history for context continuity from MongoDB
       const conversationHistory = await this.getConversationHistory(conversation.conversation_id, 10);
+      const productSellerContext = this.aiRouter.isProductSellerRoute(aiRoute)
+        ? await this.getProductSellerContext(account.business_id)
+        : null;
+
+      if (productSellerContext && messageText) {
+        await this.recordProductSellerDemand(
+          account.business_id,
+          account.businesses.tenant_id,
+          from,
+          messageText,
+        );
+      }
 
       // Check if message is interactive (button/list reply)
       if (messageType === 'interactive' && (message as any).buttonId) {
@@ -368,12 +375,16 @@ export class WhatsAppService {
             phoneNumberId,
             from,
             business_name: account.businesses.business_name,
+            entry_context: entryContext,
+            ...aiRoute.context_flags,
+            product_seller: productSellerContext,
             lead_info: {
               lead_id: lead.lead_id,
               first_name: lead.first_name,
               last_name: lead.last_name,
               status: lead.status,
               lead_score: lead.lead_score,
+              entry_context: entryContext,
             },
             interactive_selection: buttonId,
             message_type: messageType,
@@ -387,7 +398,7 @@ export class WhatsAppService {
           lead_id: lead.lead_id,
           business_id: account.business_id,
           text: messageText,
-          business_type: mappedBusinessType,
+          business_type: aiRoute.request_business_type,
           conversation_history: conversationHistory,
           context: {
             message_id: leadMessageId,
@@ -397,12 +408,16 @@ export class WhatsAppService {
             phoneNumberId,
             from,
             business_name: account.businesses.business_name,
+            entry_context: entryContext,
+            ...aiRoute.context_flags,
+            product_seller: productSellerContext,
             lead_info: {
               lead_id: lead.lead_id,
               first_name: lead.first_name,
               last_name: lead.last_name,
               status: lead.status,
               lead_score: lead.lead_score,
+              entry_context: entryContext,
             },
             interactive_selection: (message as any).buttonId,
             message_type: messageType,
@@ -569,6 +584,300 @@ export class WhatsAppService {
     } catch (error) {
       this.logger.error('Failed to get conversation history:', error);
       return [];
+    }
+  }
+
+  private async getProductSellerContext(businessId: string): Promise<any> {
+    try {
+      const db = this.prisma as any;
+      const [settings, products] = await Promise.all([
+        db.seller_store_settings.findUnique({ where: { business_id: businessId } }),
+        this.prisma.products.findMany({
+          where: {
+            business_id: businessId,
+            product_type: 'physical',
+            is_active: true,
+          },
+          orderBy: [{ in_stock: 'desc' }, { updated_at: 'desc' }],
+          take: 12,
+          select: {
+            product_id: true,
+            name: true,
+            category: true,
+            price: true,
+            stock_quantity: true,
+            reserved_stock: true,
+            in_stock: true,
+          },
+        }),
+      ]);
+
+      return {
+        mode: 'product_seller',
+        stock_hold_minutes: settings?.stock_hold_minutes ?? 15,
+        low_stock_threshold: settings?.low_stock_threshold ?? 5,
+        payment_modes: settings?.payment_modes ?? ['cash', 'upi', 'cod'],
+        delivery_modes: settings?.delivery_modes ?? ['pickup', 'local_delivery'],
+        guardrails: settings?.ai_guardrails ?? {
+          block_negative_stock: true,
+          block_unapproved_credit: true,
+        },
+        products: products.map((product) => ({
+          product_id: product.product_id,
+          name: product.name,
+          category: product.category,
+          price: Number(product.price || 0),
+          available_stock: Math.max(0, Number(product.stock_quantity || 0) - Number(product.reserved_stock || 0)),
+          in_stock: product.in_stock,
+        })),
+      };
+    } catch (error) {
+      this.logger.warn(`Product seller context unavailable: ${error.message}`);
+      return null;
+    }
+  }
+
+  private buildCustomerEntryContext(message: any, messageText: string): any | null {
+    const referral = message?.referral || message?.context?.referral;
+    const referredProduct = message?.context?.referred_product || message?.referred_product;
+    const textUrl = this.extractFirstUrl(messageText);
+    const urlContext = textUrl ? this.parseEntryUrl(textUrl) : null;
+    const inferredEntrySource = this.inferEntrySourceFromText(messageText);
+
+    if (!referral && !referredProduct && !urlContext && !inferredEntrySource) {
+      return null;
+    }
+
+    const entryContext: any = {
+      source_channel: referral ? 'meta_ad' : inferredEntrySource || urlContext?.source_channel || 'unknown',
+      captured_at: new Date().toISOString(),
+      first_customer_text: String(messageText || '').slice(0, 300),
+    };
+
+    if (referral) {
+      Object.assign(entryContext, {
+        source_channel: 'meta_ad',
+        source_type: referral.source_type,
+        source_id: referral.source_id,
+        source_url: referral.source_url,
+        headline: referral.headline,
+        body: referral.body,
+        media_type: referral.media_type,
+        image_url: referral.image_url,
+        video_url: referral.video_url,
+        thumbnail_url: referral.thumbnail_url,
+        ctwa_clid: referral.ctwa_clid,
+      });
+    }
+
+    if (referredProduct) {
+      Object.assign(entryContext, {
+        source_channel: entryContext.source_channel === 'unknown' ? 'whatsapp_catalog' : entryContext.source_channel,
+        catalog_id: referredProduct.catalog_id,
+        product_retailer_id: referredProduct.product_retailer_id,
+      });
+    }
+
+    if (urlContext) {
+      Object.assign(entryContext, {
+        ...urlContext,
+        source_channel: entryContext.source_channel === 'unknown'
+          ? urlContext.source_channel
+          : entryContext.source_channel,
+      });
+    }
+
+    const productHint =
+      this.cleanEntryHint(referredProduct?.product_retailer_id) ||
+      this.cleanEntryHint(urlContext?.product_hint) ||
+      this.cleanEntryHint(referral?.headline) ||
+      this.cleanEntryHint(this.extractProductHintFromEntryText(messageText)) ||
+      this.cleanEntryHint(referral?.body) ||
+      this.cleanEntryHint(urlContext?.path_hint);
+
+    if (productHint) entryContext.product_hint = productHint;
+    if (urlContext?.category_hint) entryContext.category_hint = urlContext.category_hint;
+    if (urlContext?.sku_hint) entryContext.sku_hint = urlContext.sku_hint;
+
+    return this.removeEmptyValues(entryContext);
+  }
+
+  private async attachEntryContextToLead(lead: any, entryContext: any): Promise<any> {
+    const customFields = this.asObject(lead.custom_fields);
+    const extractedEntities = this.asObject(lead.extracted_entities);
+    const previousHistory = Array.isArray(customFields.entry_context_history)
+      ? customFields.entry_context_history
+      : [];
+
+    const data: any = {
+      custom_fields: {
+        ...customFields,
+        last_entry_context: entryContext,
+        entry_context_history: [entryContext, ...previousHistory].slice(0, 5),
+      },
+      extracted_entities: this.removeEmptyValues({
+        ...extractedEntities,
+        entry_context: entryContext,
+        product_name: extractedEntities.product_name || entryContext.product_hint,
+        item_name: extractedEntities.item_name || entryContext.product_hint,
+        category: extractedEntities.category || entryContext.category_hint,
+      }),
+      referral_source: entryContext.source_channel || lead.referral_source,
+      source_reference_id:
+        entryContext.source_id ||
+        entryContext.ctwa_clid ||
+        entryContext.product_retailer_id ||
+        lead.source_reference_id,
+      utm_source: entryContext.utm_source || lead.utm_source,
+      utm_medium: entryContext.utm_medium || lead.utm_medium,
+      utm_campaign: entryContext.utm_campaign || lead.utm_campaign,
+      updated_at: new Date(),
+    };
+
+    if (entryContext.source_type === 'post' && entryContext.source_id) {
+      data.post_id = entryContext.source_id;
+    }
+
+    try {
+      return await this.prisma.leads.update({
+        where: { lead_id: lead.lead_id },
+        data,
+      });
+    } catch (error) {
+      this.logger.warn(`Lead entry context update skipped: ${error.message}`);
+      return lead;
+    }
+  }
+
+  private parseEntryUrl(rawUrl: string): any | null {
+    try {
+      const url = new URL(rawUrl);
+      const params = url.searchParams;
+      const sourceChannel =
+        params.get('utm_source') ||
+        this.inferEntrySourceFromHost(url.hostname) ||
+        'website';
+
+      const productHint =
+        params.get('product') ||
+        params.get('product_name') ||
+        params.get('item') ||
+        params.get('q') ||
+        this.humanizePathSegment(url.pathname);
+
+      return this.removeEmptyValues({
+        source_channel: sourceChannel,
+        source_url: rawUrl,
+        landing_host: url.hostname,
+        landing_path: url.pathname,
+        utm_source: params.get('utm_source'),
+        utm_medium: params.get('utm_medium'),
+        utm_campaign: params.get('utm_campaign'),
+        product_id: params.get('product_id') || params.get('pid'),
+        product_hint: this.cleanEntryHint(productHint),
+        sku_hint: params.get('sku'),
+        category_hint: params.get('category'),
+        path_hint: this.humanizePathSegment(url.pathname),
+      });
+    } catch {
+      return null;
+    }
+  }
+
+  private extractFirstUrl(text: string): string | null {
+    const match = String(text || '').match(/https?:\/\/[^\s]+/i);
+    return match?.[0]?.replace(/[),.]+$/, '') || null;
+  }
+
+  private inferEntrySourceFromHost(host: string): string | null {
+    const normalized = String(host || '').toLowerCase();
+    if (normalized.includes('instagram')) return 'instagram';
+    if (normalized.includes('facebook') || normalized.includes('fb.')) return 'facebook';
+    if (normalized.includes('youtube') || normalized.includes('youtu.be')) return 'youtube';
+    if (normalized.includes('wa.me') || normalized.includes('whatsapp')) return 'whatsapp_link';
+    return null;
+  }
+
+  private inferEntrySourceFromText(text: string): string | null {
+    const value = String(text || '').toLowerCase();
+    if (!value) return null;
+    if (/\b(instagram|insta|reel|story)\b/.test(value)) return 'instagram';
+    if (/\b(facebook|fb|ad|advertisement|sponsored)\b/.test(value)) return 'facebook';
+    if (/\b(website|site|landing page|online)\b/.test(value)) return 'website';
+    if (/\b(youtube|video)\b/.test(value)) return 'youtube';
+    return null;
+  }
+
+  private extractProductHintFromEntryText(text: string): string | null {
+    const value = String(text || '').trim();
+    const patterns = [
+      /\b(?:interested in|enquiring about|asking about|details for|price for|saw|seen|ad for)\s+(.{3,80})/i,
+      /\b(?:from|on)\s+(?:instagram|facebook|website|ad|reel|post|story)\s+(?:for|about)?\s*(.{3,80})/i,
+    ];
+
+    for (const pattern of patterns) {
+      const match = value.match(pattern);
+      const hint = this.cleanEntryHint(match?.[1]);
+      if (hint) return hint;
+    }
+
+    return null;
+  }
+
+  private humanizePathSegment(pathname: string): string | null {
+    const parts = String(pathname || '')
+      .split('/')
+      .map((part) => part.trim())
+      .filter(Boolean);
+    const last = parts[parts.length - 1];
+    if (!last || /^[a-f0-9-]{16,}$/i.test(last)) return null;
+    return this.cleanEntryHint(last.replace(/[-_]+/g, ' '));
+  }
+
+  private cleanEntryHint(value?: string | null): string | null {
+    const cleaned = String(value || '')
+      .replace(/https?:\/\/\S+/gi, ' ')
+      .replace(/[^\w\s.-]/g, ' ')
+      .replace(/\s+/g, ' ')
+      .trim();
+
+    if (!cleaned || cleaned.length < 3) return null;
+    return cleaned.slice(0, 120);
+  }
+
+  private removeEmptyValues(value: Record<string, any>): Record<string, any> {
+    return Object.fromEntries(
+      Object.entries(value).filter(([, item]) => item !== undefined && item !== null && item !== ''),
+    );
+  }
+
+  private asObject(value: any): Record<string, any> {
+    return value && typeof value === 'object' && !Array.isArray(value) ? value : {};
+  }
+
+  private async recordProductSellerDemand(
+    businessId: string,
+    tenantId: string,
+    phone: string,
+    messageText: string,
+  ): Promise<void> {
+    try {
+      const db = this.prisma as any;
+      await db.seller_demand_signals.create({
+        data: {
+          business_id: businessId,
+          tenant_id: tenantId,
+          customer_phone: phone,
+          signal_type: 'whatsapp_message',
+          channel: 'whatsapp',
+          quantity: 1,
+          metadata: {
+            text: messageText.slice(0, 500),
+          },
+        },
+      });
+    } catch (error) {
+      this.logger.warn(`Product demand signal skipped: ${error.message}`);
     }
   }
 

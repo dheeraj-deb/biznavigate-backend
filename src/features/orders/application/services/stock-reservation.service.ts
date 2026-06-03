@@ -448,6 +448,149 @@ export class StockReservationService {
   }
 
   /**
+   * Release expired product-seller holds created from Store Desk or WhatsApp AI.
+   * These holds use reserved_stock, so expiry only removes the reservation.
+   */
+  async cleanupExpiredSellerHolds(): Promise<{ count: number; restoredProductIds: string[] }> {
+    const db = this.prisma as any;
+    const expired = await db.seller_stock_reservations.findMany({
+      where: {
+        status: 'active',
+        expires_at: { lt: new Date() },
+      },
+      take: 500,
+    });
+
+    const restoredProductIds = new Set<string>();
+
+    for (const reservation of expired) {
+      try {
+        await this.prisma.$transaction(async (tx: any) => {
+          if (reservation.variant_id) {
+            await tx.$executeRaw(
+              Prisma.sql`
+                UPDATE product_variants
+                SET reserved_stock = GREATEST(COALESCE(reserved_stock, 0) - ${reservation.quantity}::integer, 0),
+                    version = COALESCE(version, 0) + 1,
+                    updated_at = NOW()
+                WHERE variant_id = ${reservation.variant_id}::uuid
+              `,
+            );
+          } else {
+            await tx.$executeRaw(
+              Prisma.sql`
+                UPDATE products
+                SET reserved_stock = GREATEST(COALESCE(reserved_stock, 0) - ${reservation.quantity}::integer, 0),
+                    version = COALESCE(version, 0) + 1,
+                    updated_at = NOW()
+                WHERE product_id = ${reservation.product_id}::uuid
+              `,
+            );
+          }
+
+          await tx.seller_stock_reservations.update({
+            where: { seller_reservation_id: reservation.seller_reservation_id },
+            data: {
+              status: 'expired',
+              released_at: new Date(),
+              updated_at: new Date(),
+            },
+          });
+
+          if (reservation.converted_order_id) {
+            const order = await tx.orders.findFirst({
+              where: {
+                order_id: reservation.converted_order_id,
+                business_id: reservation.business_id,
+                order_type: 'product',
+                payment_status: 'pending',
+                status: { notIn: ['paid', 'cancelled', 'expired'] },
+              },
+            });
+
+            if (order) {
+              await tx.orders.update({
+                where: { order_id: order.order_id },
+                data: {
+                  status: 'expired',
+                  payment_status: 'failed',
+                  cancelled_at: new Date(),
+                  admin_notes: 'Payment time expired',
+                  updated_at: new Date(),
+                },
+              });
+
+              await tx.seller_deliveries.updateMany({
+                where: { business_id: reservation.business_id, order_id: order.order_id },
+                data: { status: 'cancelled', updated_at: new Date() },
+              });
+
+              await tx.$executeRaw(
+                Prisma.sql`
+                  UPDATE seller_order_payment_attempts
+                  SET status = 'expired',
+                      failed_at = NOW(),
+                      metadata = COALESCE(metadata, '{}'::jsonb) || ${JSON.stringify({ reason: 'Payment time expired' })}::jsonb,
+                      updated_at = NOW()
+                  WHERE business_id = ${reservation.business_id}::uuid
+                    AND order_id = ${order.order_id}::uuid
+                    AND status IN ('created', 'pending', 'authorized')
+                `,
+              );
+
+              await tx.$executeRaw(
+                Prisma.sql`
+                  INSERT INTO seller_order_state_events (
+                    business_id,
+                    tenant_id,
+                    order_id,
+                    event_type,
+                    from_status,
+                    to_status,
+                    from_payment_status,
+                    to_payment_status,
+                    actor_type,
+                    source,
+                    idempotency_key,
+                    metadata
+                  )
+                  VALUES (
+                    ${reservation.business_id}::uuid,
+                    ${reservation.tenant_id}::uuid,
+                    ${order.order_id}::uuid,
+                    'payment_order_expired',
+                    ${order.status || null},
+                    'expired',
+                    ${order.payment_status || null},
+                    'failed',
+                    'system',
+                    'reservation_cleanup',
+                    ${`seller:${reservation.business_id}:order:${order.order_id}:expired`},
+                    ${JSON.stringify({ reservation_id: reservation.seller_reservation_id })}::jsonb
+                  )
+                  ON CONFLICT (idempotency_key) DO NOTHING
+                `,
+              );
+            }
+          }
+        });
+
+        restoredProductIds.add(reservation.product_id);
+      } catch (error) {
+        this.logger.error(
+          `Failed to cleanup seller hold ${reservation.seller_reservation_id}: ${error.message}`,
+        );
+      }
+    }
+
+    if (expired.length > 0) {
+      this.logger.log(`Cleaned up ${expired.length} expired seller stock hold(s)`);
+    }
+
+    return { count: expired.length, restoredProductIds: [...restoredProductIds] };
+  }
+
+  /**
    * Sleep utility for retry backoff
    */
   private sleep(ms: number): Promise<void> {

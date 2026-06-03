@@ -16,6 +16,7 @@ import { KafkaModule } from '../kafka/kafka.module';
 import { CartModule } from '../cart/cart.module';
 import { ConversationModule } from '../conversation/conversation.module';
 import { WhatsAppTemplatesModule } from '../whatsapp-templates/whatsapp-templates.module';
+import { AiRouterModule } from '../ai-router/ai-router.module';
 
 @Module({
   imports: [
@@ -25,6 +26,7 @@ import { WhatsAppTemplatesModule } from '../whatsapp-templates/whatsapp-template
     CartModule,
     ConversationModule,
     WhatsAppTemplatesModule,
+    AiRouterModule,
   ],
   controllers: [
     WhatsAppController,

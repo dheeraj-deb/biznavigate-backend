@@ -7,7 +7,7 @@
     "start:dev": "nest start --watch",
     "start:prod": "node dist/main",
     "build": "nest build && npm run postbuild",
-    "postbuild": "mkdir -p dist/generated/prisma/client && cp -r generated/prisma/* dist/generated/prisma/ && cp -r generated/prisma/* dist/generated/prisma/client/",
+    "postbuild": "node -e \"const fs=require('fs'),path=require('path');function cpr(s,d){fs.mkdirSync(d,{recursive:true});for(const f of fs.readdirSync(s)){const sp=path.join(s,f),dp=path.join(d,f);fs.statSync(sp).isDirectory()?cpr(sp,dp):fs.copyFileSync(sp,dp)}}cpr('generated/prisma','dist/generated/prisma');cpr('generated/prisma','dist/generated/prisma/client');\"",
     "test": "jest",
     "test:watch": "jest --watch",
     "test:cov": "jest --coverage",

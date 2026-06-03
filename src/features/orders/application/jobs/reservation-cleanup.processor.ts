@@ -27,16 +27,22 @@ export class ReservationCleanupProcessor extends WorkerHost {
     this.logger.log('Starting expired reservation cleanup job');
 
     try {
-      const [cleanedCount, { count: cartHoldsReleased, restoredProductIds }] = await Promise.all([
+      const [
+        cleanedCount,
+        { count: cartHoldsReleased, restoredProductIds },
+        { count: sellerHoldsReleased, restoredProductIds: sellerRestoredProductIds },
+      ] = await Promise.all([
         this.stockReservationService.cleanupExpiredReservations(),
         this.stockReservationService.cleanupExpiredCartHolds(),
+        this.stockReservationService.cleanupExpiredSellerHolds(),
       ]);
 
       // Push availability updates to WhatsApp catalog for all products whose stock was restored.
       // Run in parallel, fire-and-forget per product so one failure doesn't block the rest.
-      if (restoredProductIds.length > 0) {
+      const allRestoredProductIds = [...new Set([...restoredProductIds, ...sellerRestoredProductIds])];
+      if (allRestoredProductIds.length > 0) {
         await Promise.allSettled(
-          restoredProductIds.map((productId) =>
+          allRestoredProductIds.map((productId) =>
             this.whatsappCatalogService
               .syncProductAvailabilityToCatalog(productId)
               .catch((err) => this.logger.warn(`Catalog sync failed for ${productId}: ${err.message}`)),
@@ -45,13 +51,14 @@ export class ReservationCleanupProcessor extends WorkerHost {
       }
 
       this.logger.log(
-        `Cleanup job completed. Order reservations: ${cleanedCount}, cart holds: ${cartHoldsReleased}`,
+        `Cleanup job completed. Order reservations: ${cleanedCount}, cart holds: ${cartHoldsReleased}, seller holds: ${sellerHoldsReleased}`,
       );
 
       return {
         success: true,
         cleanedCount,
         cartHoldsReleased,
+        sellerHoldsReleased,
         timestamp: new Date(),
       };
     } catch (error) {

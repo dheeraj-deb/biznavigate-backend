@@ -110,6 +110,21 @@ export class KafkaProducerService {
   }
 
   /**
+   * Publish an AI result created by an in-process worker.
+   */
+  async publishAiProcessingResult(payload: any) {
+    const event = {
+      event_id: uuidv4(),
+      event_type: 'ai.process.result',
+      timestamp: new Date().toISOString(),
+      payload,
+    };
+
+    await this.publishEvent('ai.process.result', event, payload.lead_id);
+    this.logger.log(`Published ai.process.result for lead: ${payload.lead_id}`);
+  }
+
+  /**
    * Publish interactive selection directly to workflow (bypass AI)
    */
   async publishInteractiveSelection(payload: any) {

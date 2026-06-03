@@ -20,6 +20,7 @@ import { WarehouseController } from './application/controllers/warehouse.control
 
 // Services
 import { InventoryService } from './application/services/inventory.service';
+import { InventoryTransactionService } from './application/services/inventory-transaction.service';
 import { WarehouseService } from './application/services/warehouse.service';
 
 // Repository
@@ -30,9 +31,10 @@ import { InventoryRepositoryPrisma } from './infrastructure/inventory.repository
   controllers: [InventoryController, WarehouseController],
   providers: [
     InventoryService,
+    InventoryTransactionService,
     WarehouseService,
     InventoryRepositoryPrisma,
   ],
-  exports: [InventoryService, WarehouseService, InventoryRepositoryPrisma],
+  exports: [InventoryService, InventoryTransactionService, WarehouseService, InventoryRepositoryPrisma],
 })
 export class InventoryModule {}

@@ -3,6 +3,7 @@ import {
   Get,
   Post,
   Put,
+  Patch,
   Delete,
   Body,
   Param,
@@ -11,6 +12,8 @@ import {
   HttpStatus,
   UseGuards,
   Logger,
+  Req,
+  ForbiddenException,
 } from '@nestjs/common';
 import { ProductService } from '../services/product.service';
 import { CreateProductDto } from '../dto/create-product.dto';
@@ -18,6 +21,7 @@ import { UpdateProductDto } from '../dto/update-product.dto';
 import { ProductQueryDto } from '../dto/product-query.dto';
 import { BulkUploadProductDto } from '../dto/bulk-upload-product.dto';
 import { JwtAuthGuard } from '../../../../common/guards/jwt-auth.guard';
+import { PrismaService } from '../../../../prisma/prisma.service';
 
 /**
  * Product Controller
@@ -29,7 +33,10 @@ import { JwtAuthGuard } from '../../../../common/guards/jwt-auth.guard';
 export class ProductController {
   private readonly logger = new Logger(ProductController.name);
 
-  constructor(private readonly productService: ProductService) {}
+  constructor(
+    private readonly productService: ProductService,
+    private readonly prisma: PrismaService,
+  ) {}
 
   /**
    * Create a new product
@@ -37,7 +44,9 @@ export class ProductController {
    */
   @Post()
   @HttpCode(HttpStatus.CREATED)
-  async create(@Body() createProductDto: CreateProductDto) {
+  async create(@Req() req: any, @Body() createProductDto: CreateProductDto) {
+    createProductDto.business_id = req.user.business_id;
+    createProductDto.tenant_id = req.user.tenant_id;
     this.logger.log(`Creating product: ${createProductDto.name}`);
 
     const product = await this.productService.create(createProductDto);
@@ -55,7 +64,8 @@ export class ProductController {
    */
   @Get()
   @HttpCode(HttpStatus.OK)
-  async findAll(@Query() query: ProductQueryDto) {
+  async findAll(@Req() req: any, @Query() query: ProductQueryDto) {
+    query.business_id = req.user.business_id;
     this.logger.log(
       `Fetching products with filters: ${JSON.stringify(query)}`,
     );
@@ -81,10 +91,11 @@ export class ProductController {
    */
   @Get(':id')
   @HttpCode(HttpStatus.OK)
-  async findById(@Param('id') id: string) {
+  async findById(@Req() req: any, @Param('id') id: string) {
     this.logger.log(`Fetching product: ${id}`);
 
     const product = await this.productService.findById(id);
+    this.assertBusinessOwner(product, req.user.business_id);
 
     return {
       success: true,
@@ -98,12 +109,18 @@ export class ProductController {
    * PUT /products/:id
    */
   @Put(':id')
+  @Patch(':id')
   @HttpCode(HttpStatus.OK)
   async update(
+    @Req() req: any,
     @Param('id') id: string,
     @Body() updateProductDto: UpdateProductDto,
   ) {
     this.logger.log(`Updating product: ${id}`);
+    const existing = await this.productService.findById(id);
+    this.assertBusinessOwner(existing, req.user.business_id);
+    updateProductDto.business_id = req.user.business_id;
+    updateProductDto.tenant_id = req.user.tenant_id;
 
     const product = await this.productService.update(id, updateProductDto);
 
@@ -120,8 +137,10 @@ export class ProductController {
    */
   @Delete(':id')
   @HttpCode(HttpStatus.OK)
-  async delete(@Param('id') id: string) {
+  async delete(@Req() req: any, @Param('id') id: string) {
     this.logger.log(`Deleting product: ${id}`);
+    const existing = await this.productService.findById(id);
+    this.assertBusinessOwner(existing, req.user.business_id);
 
     await this.productService.delete(id);
 
@@ -137,7 +156,12 @@ export class ProductController {
    */
   @Post('bulk')
   @HttpCode(HttpStatus.CREATED)
-  async bulkCreate(@Body() bulkUploadDto: BulkUploadProductDto) {
+  async bulkCreate(@Req() req: any, @Body() bulkUploadDto: BulkUploadProductDto) {
+    bulkUploadDto.products = bulkUploadDto.products.map((product) => ({
+      ...product,
+      business_id: req.user.business_id,
+      tenant_id: req.user.tenant_id,
+    }));
     this.logger.log(
       `Bulk uploading ${bulkUploadDto.products.length} products`,
     );
@@ -163,10 +187,13 @@ export class ProductController {
   @Get(':id/stock/check')
   @HttpCode(HttpStatus.OK)
   async checkStockAvailability(
+    @Req() req: any,
     @Param('id') id: string,
     @Query('quantity') quantity: number,
   ) {
     this.logger.log(`Checking stock for product ${id}: quantity ${quantity}`);
+    const existing = await this.productService.findById(id);
+    this.assertBusinessOwner(existing, req.user.business_id);
 
     const available = await this.productService.checkStockAvailability(
       id,
@@ -191,6 +218,7 @@ export class ProductController {
   @Post(':id/stock/update')
   @HttpCode(HttpStatus.OK)
   async updateStock(
+    @Req() req: any,
     @Param('id') id: string,
     @Body() body: { quantity: number; operation: 'increment' | 'decrement' },
   ) {
@@ -198,6 +226,8 @@ export class ProductController {
       `Updating stock for product ${id}: ${body.operation} ${body.quantity}`,
     );
 
+    const existing = await this.productService.findById(id);
+    this.assertBusinessOwner(existing, req.user.business_id);
     await this.productService.updateStock(id, body.quantity, body.operation);
 
     return {
@@ -218,10 +248,13 @@ export class ProductController {
   @Post(':id/stock/reserve')
   @HttpCode(HttpStatus.OK)
   async reserveStock(
+    @Req() req: any,
     @Param('id') id: string,
     @Body() body: { quantity: number },
   ) {
     this.logger.log(`Reserving stock for product ${id}: ${body.quantity}`);
+    const existing = await this.productService.findById(id);
+    this.assertBusinessOwner(existing, req.user.business_id);
 
     await this.productService.reserveStock(id, body.quantity);
 
@@ -242,10 +275,13 @@ export class ProductController {
   @Post(':id/stock/release')
   @HttpCode(HttpStatus.OK)
   async releaseStock(
+    @Req() req: any,
     @Param('id') id: string,
     @Body() body: { quantity: number },
   ) {
     this.logger.log(`Releasing stock for product ${id}: ${body.quantity}`);
+    const existing = await this.productService.findById(id);
+    this.assertBusinessOwner(existing, req.user.business_id);
 
     await this.productService.releaseStock(id, body.quantity);
 
@@ -266,10 +302,13 @@ export class ProductController {
   @Post(':id/variants')
   @HttpCode(HttpStatus.CREATED)
   async createVariant(
+    @Req() req: any,
     @Param('id') productId: string,
     @Body() variantData: any,
   ) {
     this.logger.log(`Creating variant for product ${productId}`);
+    const existing = await this.productService.findById(productId);
+    this.assertBusinessOwner(existing, req.user.business_id);
 
     const variant = await this.productService.createVariant(
       productId,
@@ -289,8 +328,10 @@ export class ProductController {
    */
   @Get(':id/variants')
   @HttpCode(HttpStatus.OK)
-  async getVariants(@Param('id') productId: string) {
+  async getVariants(@Req() req: any, @Param('id') productId: string) {
     this.logger.log(`Fetching variants for product ${productId}`);
+    const existing = await this.productService.findById(productId);
+    this.assertBusinessOwner(existing, req.user.business_id);
 
     const variants = await this.productService.getVariantsByProductId(
       productId,
@@ -310,10 +351,12 @@ export class ProductController {
   @Put('variants/:variantId')
   @HttpCode(HttpStatus.OK)
   async updateVariant(
+    @Req() req: any,
     @Param('variantId') variantId: string,
     @Body() variantData: any,
   ) {
     this.logger.log(`Updating variant ${variantId}`);
+    await this.assertVariantBusinessOwner(variantId, req.user.business_id);
 
     const variant = await this.productService.updateVariant(
       variantId,
@@ -333,8 +376,9 @@ export class ProductController {
    */
   @Delete('variants/:variantId')
   @HttpCode(HttpStatus.OK)
-  async deleteVariant(@Param('variantId') variantId: string) {
+  async deleteVariant(@Req() req: any, @Param('variantId') variantId: string) {
     this.logger.log(`Deleting variant ${variantId}`);
+    await this.assertVariantBusinessOwner(variantId, req.user.business_id);
 
     await this.productService.deleteVariant(variantId);
 
@@ -342,5 +386,22 @@ export class ProductController {
       success: true,
       message: 'Variant deleted successfully',
     };
+  }
+
+  private assertBusinessOwner(product: any, businessId: string) {
+    if (product.business_id !== businessId) {
+      throw new ForbiddenException('Product does not belong to authenticated business');
+    }
+  }
+
+  private async assertVariantBusinessOwner(variantId: string, businessId: string) {
+    const variant = await this.prisma.product_variants.findUnique({
+      where: { variant_id: variantId },
+      include: { product: true },
+    });
+
+    if (!variant || variant.product.business_id !== businessId) {
+      throw new ForbiddenException('Variant does not belong to authenticated business');
+    }
   }
 }

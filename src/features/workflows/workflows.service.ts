@@ -718,6 +718,20 @@ export class WorkflowsService implements OnModuleInit {
     const channel = 'whatsapp';
 
     const { phoneNumberId } = incomingParams.context;
+    const isProductSellerMessage = Boolean((incomingParams.context as any)?.product_seller);
+    const isProductSellerAiResult = Boolean((incomingParams.context as any)?.product_seller_ai);
+
+    if (isProductSellerMessage && !isProductSellerAiResult) {
+      this.logger.warn(
+        `Ignoring generic AI result for product seller lead ${incomingParams.lead_id}; seller AI owns this route.`,
+      );
+      return;
+    }
+
+    if (isProductSellerAiResult) {
+      await this.sendProductSellerAiReply(incomingParams);
+      return;
+    }
 
     const hasWaitingWorkflow = await this.workflowExecutionModel.findOne({
       channel,
@@ -796,6 +810,30 @@ export class WorkflowsService implements OnModuleInit {
     });
 
     await ragNode.execute(nodeContext);
+  }
+
+  private async sendProductSellerAiReply(incomingParams: WorkflowProcessingContext): Promise<void> {
+    const response = incomingParams.suggested_response;
+    const { phoneNumberId, from } = incomingParams.context;
+
+    if (!response || !phoneNumberId || !from) {
+      this.logger.warn(
+        `Product seller AI result missing WhatsApp reply context for lead ${incomingParams.lead_id}`,
+      );
+      return;
+    }
+
+    await this.whatsappService.sendMessage(
+      phoneNumberId,
+      from,
+      {
+        messaging_product: 'whatsapp',
+        to: from,
+        type: 'text' as any,
+        text: { body: response },
+      } as any,
+      'product_seller_ai',
+    );
   }
 
 }

@@ -35,6 +35,7 @@ import { NotificationsModule } from "./features/notifications/notifications.modu
 import { InventoryModule } from "./features/inventory/inventory.module";
 import { AnalyticsModule } from "./features/analytics/analytics.module";
 import { CampaignsModule } from "./features/campaigns/campaigns.module";
+import { SellerOsModule } from "./features/seller-os/seller-os.module";
 import { TemplatesModule } from "./features/notification-templates/templates.module";
 import { MessagesModule } from "./features/messages/messages.module";
 import { ServeStaticModule } from "@nestjs/serve-static";
@@ -104,6 +105,7 @@ import { ConfigModule, ConfigService } from "@nestjs/config";
     InventoryModule,
     AnalyticsModule,
     CampaignsModule,
+    SellerOsModule,
     TemplatesModule,
     MessagesModule,
     // KafkaModule, // Kafka integration for AI services
