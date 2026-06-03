@@ -6,6 +6,11 @@ import { makeGetBookingTool } from './get-booking.tool';
 import { makeGetPaymentTool } from './get-payment.tool';
 import { makeFaqTool } from './faq.tool';
 import { handoffTool } from './handoff.tool';
+import {
+  makeCreateProductOrderTool,
+  makeReserveProductStockTool,
+  makeSearchProductsTool,
+} from './product-selling.tool';
 import { CatalogService } from '../../../commerce/catalog/catalog.service';
 import { PrismaService } from '../../../../prisma/prisma.service';
 import { RagService } from '../../rag/rag.service';
@@ -37,7 +42,14 @@ export function buildToolsForVertical(vertical: string, deps: ToolDeps) {
 
     case 'retail':
     case 'ecommerce':
-      return [makeBrowseCatalogTool(deps.catalogService), ...shared];
+    case 'products':
+      return [
+        makeSearchProductsTool(deps.prisma),
+        makeReserveProductStockTool(deps.prisma),
+        makeCreateProductOrderTool(deps.prisma),
+        makeBrowseCatalogTool(deps.catalogService),
+        ...shared,
+      ];
 
     case 'services':
     case 'healthcare':
@@ -48,6 +60,9 @@ export function buildToolsForVertical(vertical: string, deps: ToolDeps) {
     default:
       return [
         makeCheckAvailabilityTool(deps.catalogService),
+        makeSearchProductsTool(deps.prisma),
+        makeReserveProductStockTool(deps.prisma),
+        makeCreateProductOrderTool(deps.prisma),
         makeBrowseCatalogTool(deps.catalogService),
         makeCheckSlotsTool(deps.catalogService),
         ...shared,

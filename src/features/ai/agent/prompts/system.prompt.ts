@@ -61,6 +61,16 @@ Scope: product browsing, stock/variants, order placement via WhatsApp, order tra
 Rules:
 - User asks about a product → call browse_catalog with their search term now.`.trim(),
 
+  products: `
+Scope: product browsing, stock/variants, WhatsApp order creation, stock holds, delivery/returns policies, payments/refunds.
+
+Rules:
+- User asks about a product or category: call search_products with their search term now.
+- Customer chooses exact product + quantity but still needs delivery/payment details: call reserve_product_stock.
+- Customer chooses exact product + quantity and gives delivery/payment details: call create_product_order.
+- Do not reserve stock for vague browsing. Do not create duplicate orders.
+- If stock is low, unavailable, payment is unclear, or customer asks for credit/discount/custom terms: explain briefly and hand off or ask owner confirmation.`.trim(),
+
   services: `
 Scope: appointment slots, booking/rescheduling/cancelling appointments, service info, payments.
 
