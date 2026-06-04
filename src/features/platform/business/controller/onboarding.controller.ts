@@ -10,6 +10,8 @@ import {
   IsOptional,
   IsString,
   IsArray,
+  IsBoolean,
+  IsIn,
   ValidateNested,
 } from "class-validator";
 
@@ -36,6 +38,14 @@ class CompleteOnboardingDto extends UpdateBusinessDto {
   @ValidateNested({ each: true })
   @Type(() => OnboardingEmployeeDto)
   employees?: OnboardingEmployeeDto[];
+
+  @IsOptional()
+  @IsIn(["business_app", "personal_whatsapp", "new_number", "not_sure"])
+  whatsapp_current_usage?: string;
+
+  @IsOptional()
+  @IsBoolean()
+  whatsapp_safety_acknowledged?: boolean;
 }
 
 @UseGuards(JwtAuthGuard)
@@ -51,7 +61,12 @@ export class OnboardingController {
   @Post("complete")
   async complete(@Request() req, @Body() dto: CompleteOnboardingDto) {
     const { business_id, user_id } = req.user;
-    const { employees, ...businessData } = dto;
+    const {
+      employees,
+      whatsapp_current_usage,
+      whatsapp_safety_acknowledged,
+      ...businessData
+    } = dto;
     const automationDefaults =
       businessData.business_type !== undefined
         ? buildBusinessAutomationDefaults(businessData.business_type)
@@ -74,6 +89,26 @@ export class OnboardingController {
     await this.prisma.users.update({
       where: { user_id },
       data: { profile_completed: true },
+    });
+
+    await this.prisma.business_settings.upsert({
+      where: { business_id },
+      update: {
+        whatsapp_onboarding: {
+          current_usage: whatsapp_current_usage ?? "not_sure",
+          safety_acknowledged: Boolean(whatsapp_safety_acknowledged),
+          updated_at: new Date().toISOString(),
+        },
+        updated_at: new Date(),
+      },
+      create: {
+        business_id,
+        whatsapp_onboarding: {
+          current_usage: whatsapp_current_usage ?? "not_sure",
+          safety_acknowledged: Boolean(whatsapp_safety_acknowledged),
+          updated_at: new Date().toISOString(),
+        },
+      },
     });
 
     let business_blueprints: any = null;

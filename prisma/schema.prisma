@@ -36,6 +36,7 @@ model businesses {
   tenants                   tenants                     @relation(fields: [tenant_id], references: [tenant_id], onDelete: Restrict)
   carts                     carts[]
   catalog_items             catalog_items[]
+  external_catalog_items    external_catalog_items[]
   product_item_details      product_item_details[]
   hospitality_item_details  hospitality_item_details[]
   vehicle_item_details      vehicle_item_details[]
@@ -1199,6 +1200,7 @@ model catalog_items {
   availability              item_availability[]
   variants                  item_variants[]
   order_items               order_items[]
+  external_catalog_items    external_catalog_items[]
 
   @@index([business_id, item_type, is_active])
   @@index([business_id, created_at(sort: Desc)])
@@ -1267,6 +1269,30 @@ model product_item_details {
 
   @@index([business_id])
   @@index([sku])
+}
+
+model external_catalog_items {
+  external_catalog_item_id String         @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  business_id              String         @db.Uuid
+  item_id                  String?        @db.Uuid
+  provider                 String         @db.VarChar(50)
+  external_catalog_id      String?        @db.VarChar(255)
+  external_product_id      String         @db.VarChar(255)
+  retailer_id              String?        @db.VarChar(255)
+  sync_status              String         @default("imported") @db.VarChar(30)
+  last_synced_at           DateTime?      @db.Timestamptz(6)
+  remote_hash              String?        @db.VarChar(64)
+  local_hash               String?        @db.VarChar(64)
+  raw_payload              Json?
+  created_at               DateTime       @default(now()) @db.Timestamptz(6)
+  updated_at               DateTime       @default(now()) @db.Timestamptz(6)
+  business                 businesses     @relation(fields: [business_id], references: [business_id], onDelete: Cascade)
+  item                     catalog_items? @relation(fields: [item_id], references: [item_id])
+
+  @@unique([business_id, provider, external_product_id])
+  @@index([business_id, provider, sync_status])
+  @@index([business_id, item_id])
+  @@index([external_catalog_id])
 }
 
 model product_inquiries {
@@ -1375,6 +1401,229 @@ model product_order_status_events {
 }
 
 // ─── INDUSTRY EXTENSIONS: HOSPITALITY ────────────────────────────────────────
+
+// SELLER OPS: PRODUCT SELLER EXTENSIONS
+
+model seller_owner_approvals {
+  approval_id    String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  business_id    String    @db.Uuid
+  tenant_id      String?   @db.Uuid
+  title          String    @db.VarChar(255)
+  simple_summary String?
+  action_type    String    @db.VarChar(60)
+  risk_level     String    @default("medium") @db.VarChar(20)
+  status         String    @default("pending") @db.VarChar(20)
+  source         String    @default("ai") @db.VarChar(30)
+  entity_type    String?   @db.VarChar(60)
+  entity_id      String?   @db.VarChar(100)
+  requested_by   String?   @db.Uuid
+  decided_by     String?   @db.Uuid
+  payload        Json?
+  guardrails     Json?
+  due_at         DateTime? @db.Timestamptz(6)
+  decided_at     DateTime? @db.Timestamptz(6)
+  expires_at     DateTime? @db.Timestamptz(6)
+  created_at     DateTime  @default(now()) @db.Timestamptz(6)
+  updated_at     DateTime  @default(now()) @db.Timestamptz(6)
+
+  @@index([business_id, status, created_at(sort: Desc)], map: "idx_seller_owner_approvals_queue")
+  @@index([business_id, action_type, status], map: "idx_seller_owner_approvals_action")
+  @@index([entity_type, entity_id], map: "idx_seller_owner_approvals_entity")
+}
+
+model seller_store_settings {
+  seller_store_settings_id String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  business_id              String   @unique @db.Uuid
+  tenant_id                String?  @db.Uuid
+  store_type               String   @default("local_retail") @db.VarChar(50)
+  onboarding_status        String   @default("draft") @db.VarChar(30)
+  default_currency         String   @default("INR") @db.VarChar(10)
+  low_stock_threshold      Int      @default(5)
+  stock_hold_minutes       Int      @default(15)
+  payment_modes            String[] @default(["cash", "upi", "cod"])
+  delivery_modes           String[] @default(["pickup", "local_delivery"])
+  delivery_areas           Json?
+  credit_defaults          Json?
+  ai_guardrails            Json?
+  setup_checklist          Json?
+  created_at               DateTime @default(now()) @db.Timestamptz(6)
+  updated_at               DateTime @default(now()) @db.Timestamptz(6)
+
+  @@index([business_id, onboarding_status], map: "idx_seller_store_settings_status")
+}
+
+model seller_stock_reservations {
+  reservation_id String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  business_id    String    @db.Uuid
+  tenant_id      String?   @db.Uuid
+  customer_id    String?   @db.Uuid
+  lead_id        String?   @db.Uuid
+  item_id        String    @db.Uuid
+  variant_id     String?   @db.Uuid
+  quantity       Int
+  status         String    @default("active") @db.VarChar(20)
+  reason         String?   @db.VarChar(255)
+  source         String    @default("manual") @db.VarChar(30)
+  expires_at     DateTime  @db.Timestamptz(6)
+  released_at    DateTime? @db.Timestamptz(6)
+  converted_at   DateTime? @db.Timestamptz(6)
+  created_by     String?   @db.Uuid
+  metadata       Json?
+  created_at     DateTime  @default(now()) @db.Timestamptz(6)
+  updated_at     DateTime  @default(now()) @db.Timestamptz(6)
+
+  @@index([business_id, status, expires_at], map: "idx_seller_stock_reservations_active")
+  @@index([business_id, item_id, status], map: "idx_seller_stock_reservations_item")
+  @@index([customer_id], map: "idx_seller_stock_reservations_customer")
+}
+
+model seller_return_cases {
+  return_id        String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  business_id      String    @db.Uuid
+  tenant_id        String?   @db.Uuid
+  order_id         String?   @db.Uuid
+  product_order_id String?   @db.Uuid
+  customer_id      String?   @db.Uuid
+  return_type      String    @default("return") @db.VarChar(30)
+  status           String    @default("requested") @db.VarChar(30)
+  reason           String?
+  requested_amount Decimal?  @db.Decimal(10, 2)
+  approved_amount  Decimal?  @db.Decimal(10, 2)
+  items            Json?
+  resolution       Json?
+  handled_by       String?   @db.Uuid
+  created_at       DateTime  @default(now()) @db.Timestamptz(6)
+  updated_at       DateTime  @default(now()) @db.Timestamptz(6)
+  closed_at        DateTime? @db.Timestamptz(6)
+
+  @@index([business_id, status, created_at(sort: Desc)], map: "idx_seller_return_cases_queue")
+  @@index([order_id], map: "idx_seller_return_cases_order")
+  @@index([customer_id], map: "idx_seller_return_cases_customer")
+}
+
+model seller_deliveries {
+  delivery_id      String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  business_id      String    @db.Uuid
+  tenant_id        String?   @db.Uuid
+  order_id         String?   @db.Uuid
+  product_order_id String?   @db.Uuid
+  customer_id      String?   @db.Uuid
+  status           String    @default("waiting") @db.VarChar(30)
+  delivery_mode    String    @default("local") @db.VarChar(30)
+  delivery_person  String?   @db.VarChar(120)
+  phone            String?   @db.VarChar(20)
+  address          String?
+  pincode          String?   @db.VarChar(20)
+  scheduled_at     DateTime? @db.Timestamptz(6)
+  picked_at        DateTime? @db.Timestamptz(6)
+  delivered_at     DateTime? @db.Timestamptz(6)
+  notes            String?
+  metadata         Json?
+  created_at       DateTime  @default(now()) @db.Timestamptz(6)
+  updated_at       DateTime  @default(now()) @db.Timestamptz(6)
+
+  @@index([business_id, status, scheduled_at], map: "idx_seller_deliveries_desk")
+  @@index([order_id], map: "idx_seller_deliveries_order")
+  @@index([customer_id], map: "idx_seller_deliveries_customer")
+}
+
+model seller_customer_credit_accounts {
+  credit_account_id String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  business_id       String    @db.Uuid
+  tenant_id         String?   @db.Uuid
+  customer_id       String?   @db.Uuid
+  customer_name     String?   @db.VarChar(255)
+  phone             String    @db.VarChar(20)
+  status            String    @default("pending") @db.VarChar(20)
+  credit_limit      Decimal   @default(0) @db.Decimal(10, 2)
+  current_balance   Decimal   @default(0) @db.Decimal(10, 2)
+  due_days          Int       @default(30)
+  approved_by       String?   @db.Uuid
+  approved_at       DateTime? @db.Timestamptz(6)
+  notes             String?
+  metadata          Json?
+  created_at        DateTime  @default(now()) @db.Timestamptz(6)
+  updated_at        DateTime  @default(now()) @db.Timestamptz(6)
+
+  @@unique([business_id, phone], map: "uq_seller_credit_phone")
+  @@index([business_id, status, current_balance], map: "idx_seller_credit_accounts_status")
+  @@index([customer_id], map: "idx_seller_credit_accounts_customer")
+}
+
+model seller_customer_credit_transactions {
+  credit_transaction_id String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  credit_account_id     String   @db.Uuid
+  business_id           String   @db.Uuid
+  order_id              String?  @db.Uuid
+  transaction_type      String   @db.VarChar(30)
+  amount                Decimal  @db.Decimal(10, 2)
+  balance_after         Decimal  @db.Decimal(10, 2)
+  note                  String?
+  created_by            String?  @db.Uuid
+  metadata              Json?
+  created_at            DateTime @default(now()) @db.Timestamptz(6)
+
+  @@index([business_id, created_at(sort: Desc)], map: "idx_seller_credit_transactions_business")
+  @@index([credit_account_id, created_at(sort: Desc)], map: "idx_seller_credit_transactions_account")
+  @@index([order_id], map: "idx_seller_credit_transactions_order")
+}
+
+model seller_ai_audit_logs {
+  ai_audit_id    String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  business_id    String   @db.Uuid
+  tenant_id      String?  @db.Uuid
+  ai_employee    String   @db.VarChar(80)
+  action         String   @db.VarChar(120)
+  decision       String   @db.VarChar(40)
+  confidence     Decimal? @db.Decimal(5, 2)
+  risk_level     String   @default("low") @db.VarChar(20)
+  entity_type    String?  @db.VarChar(60)
+  entity_id      String?  @db.VarChar(100)
+  input_summary  String?
+  output_summary String?
+  guardrails     Json?
+  owner_visible  Boolean  @default(true)
+  created_at     DateTime @default(now()) @db.Timestamptz(6)
+
+  @@index([business_id, created_at(sort: Desc)], map: "idx_seller_ai_audit_business")
+  @@index([business_id, ai_employee, created_at(sort: Desc)], map: "idx_seller_ai_audit_employee")
+  @@index([entity_type, entity_id], map: "idx_seller_ai_audit_entity")
+}
+
+model seller_product_profit_snapshots {
+  profit_snapshot_id String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  business_id        String   @db.Uuid
+  item_id            String   @db.Uuid
+  variant_id         String?  @db.Uuid
+  cost_price         Decimal? @db.Decimal(10, 2)
+  selling_price      Decimal  @db.Decimal(10, 2)
+  gross_margin       Decimal? @db.Decimal(10, 2)
+  margin_percentage  Decimal? @db.Decimal(5, 2)
+  source             String   @default("ai") @db.VarChar(30)
+  recommendation     String?
+  created_at         DateTime @default(now()) @db.Timestamptz(6)
+
+  @@index([business_id, item_id, created_at(sort: Desc)], map: "idx_seller_profit_item")
+  @@index([business_id, margin_percentage], map: "idx_seller_profit_margin")
+}
+
+model seller_demand_signals {
+  demand_signal_id String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  business_id      String   @db.Uuid
+  item_id          String?  @db.Uuid
+  category         String?  @db.VarChar(100)
+  signal_type      String   @db.VarChar(40)
+  signal_count     Int      @default(1)
+  period_start     DateTime @db.Timestamptz(6)
+  period_end       DateTime @db.Timestamptz(6)
+  source           String   @default("ai") @db.VarChar(30)
+  metadata         Json?
+  created_at       DateTime @default(now()) @db.Timestamptz(6)
+
+  @@index([business_id, signal_type, period_start], map: "idx_seller_demand_signal_type")
+  @@index([business_id, category, period_start], map: "idx_seller_demand_category")
+  @@index([item_id], map: "idx_seller_demand_item")
+}
 
 model hospitality_item_details {
   item_id             String        @id @db.Uuid
@@ -1741,6 +1990,7 @@ model business_settings {
   auto_reply_enabled Boolean    @default(true)
   booking_methods    Json       @default("{\"availability_response\":{\"mode\":\"interactive\"},\"ai_chat\":{\"enabled\":true,\"collect_guest_details\":true,\"require_confirmation\":true},\"interactive\":{\"enabled\":true,\"send_entry_buttons\":true,\"send_room_or_service_list\":true},\"catalog\":{\"enabled\":false,\"send_product_messages\":false},\"templates\":{\"enabled\":false,\"confirmation_template_name\":\"\",\"reminder_template_name\":\"\",\"language\":\"en\"},\"human_handoff\":{\"enabled\":true,\"on_unavailable\":true,\"on_low_confidence\":true,\"on_payment_issue\":true}}")
   booking_link       Json       @default("{\"enabled\":false,\"experience_type\":\"generic\",\"payment_mode\":\"manual\",\"advance_type\":\"fixed\",\"advance_amount\":0,\"theme\":{\"primary_color\":\"#0066FF\",\"show_logo\":true,\"show_banner\":true},\"policies\":{\"cancellation\":\"\",\"refund\":\"\",\"terms\":\"\"},\"contact\":{\"phone\":\"\",\"whatsapp\":\"\",\"address\":\"\"},\"required_fields\":{\"name\":true,\"phone\":true,\"email\":false,\"address\":false,\"notes\":false}}")
+  whatsapp_onboarding Json      @default("{\"current_usage\":\"not_sure\",\"safety_acknowledged\":false}")
   low_balance_alert  Decimal    @default(100) @db.Decimal(10, 2)
   /// E.164-style dial code without the "+" (e.g. "91" for India, "1" for US).
   /// Used to canonicalise leads.phone so the same human entering "9539192684"

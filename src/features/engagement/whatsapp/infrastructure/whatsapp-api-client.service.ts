@@ -442,6 +442,27 @@ export class WhatsAppApiClientService {
   }
 
   /**
+   * Get product catalogs linked to a WhatsApp Business Account.
+   * Some WABAs do not have a catalog, and some tokens do not have commerce access.
+   * Treat failures as non-blocking during onboarding.
+   */
+  async getWabaProductCatalogs(wabaId: string, limit = 25): Promise<any[]> {
+    try {
+      const response = await this.apiClient.get(`/${wabaId}/product_catalogs`, {
+        params: {
+          fields: 'id,name,vertical,product_count',
+          limit,
+        },
+      });
+
+      return response.data.data || [];
+    } catch (error) {
+      this.logger.warn(`Failed to get product catalogs for WABA ${wabaId}: ${error?.message ?? error}`);
+      return [];
+    }
+  }
+
+  /**
    * Get products from catalog
    */
   async getCatalogProducts(

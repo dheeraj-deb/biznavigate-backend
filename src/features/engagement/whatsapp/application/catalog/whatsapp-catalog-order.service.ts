@@ -124,10 +124,22 @@ export class WhatsAppCatalogOrderService {
         const itemPrice = item.item_price || 0;
         const currency = item.currency || 'INR';
 
+        const catalogMapping = await this.prisma.external_catalog_items.findFirst({
+          where: {
+            business_id: account.business_id,
+            provider: 'whatsapp',
+            OR: [
+              { retailer_id: productRetailerId },
+              { external_product_id: productRetailerId },
+            ],
+          },
+          select: { item_id: true },
+        });
+
         const product = await this.prisma.catalog_items.findFirst({
           where: {
             business_id: account.business_id,
-            item_id: productRetailerId,
+            item_id: catalogMapping?.item_id ?? productRetailerId,
             is_active: true,
             deleted_at: null,
           },

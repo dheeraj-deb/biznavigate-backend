@@ -13,4 +13,9 @@ export class AiManagerController {
   getToday(@Req() req: any) {
     return this.leadQueries.getAiManagerToday(req.user.business_id);
   }
+
+  @Get('employees')
+  getEmployees(@Req() req: any) {
+    return this.leadQueries.getAiManagerToday(req.user.business_id);
+  }
 }

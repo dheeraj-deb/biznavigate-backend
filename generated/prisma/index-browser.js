@@ -884,6 +884,23 @@ exports.Prisma.Product_item_detailsScalarFieldEnum = {
   updated_at: 'updated_at'
 };
 
+exports.Prisma.External_catalog_itemsScalarFieldEnum = {
+  external_catalog_item_id: 'external_catalog_item_id',
+  business_id: 'business_id',
+  item_id: 'item_id',
+  provider: 'provider',
+  external_catalog_id: 'external_catalog_id',
+  external_product_id: 'external_product_id',
+  retailer_id: 'retailer_id',
+  sync_status: 'sync_status',
+  last_synced_at: 'last_synced_at',
+  remote_hash: 'remote_hash',
+  local_hash: 'local_hash',
+  raw_payload: 'raw_payload',
+  created_at: 'created_at',
+  updated_at: 'updated_at'
+};
+
 exports.Prisma.Product_inquiriesScalarFieldEnum = {
   inquiry_id: 'inquiry_id',
   business_id: 'business_id',
@@ -1232,6 +1249,7 @@ exports.Prisma.Business_settingsScalarFieldEnum = {
   auto_reply_enabled: 'auto_reply_enabled',
   booking_methods: 'booking_methods',
   booking_link: 'booking_link',
+  whatsapp_onboarding: 'whatsapp_onboarding',
   low_balance_alert: 'low_balance_alert',
   default_country_code: 'default_country_code',
   updated_at: 'updated_at'
@@ -1353,6 +1371,7 @@ exports.Prisma.ModelName = {
   item_variants: 'item_variants',
   item_availability: 'item_availability',
   product_item_details: 'product_item_details',
+  external_catalog_items: 'external_catalog_items',
   product_inquiries: 'product_inquiries',
   product_orders: 'product_orders',
   product_order_items: 'product_order_items',

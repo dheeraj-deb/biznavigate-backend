@@ -552,6 +552,15 @@ export class LeadQueryService {
   }
 
   async getAiManagerToday(businessId: string) {
+    const business = await this.prisma.businesses.findUnique({
+      where: { business_id: businessId },
+      select: { business_type: true },
+    });
+
+    if (business?.business_type === 'products' || business?.business_type === 'retail') {
+      return this.getProductAiManagerToday(businessId);
+    }
+
     const [reminders, worklist, needsAttention, conversations] = await Promise.all([
       this.getResortReminderReadiness(businessId, 14),
       this.getResortWorklist(businessId, 14),
@@ -717,6 +726,401 @@ export class LeadQueryService {
           high: suggestions.filter((s) => s.priority === 'high').length,
           needs_approval: suggestions.filter((s) => s.status === 'needs_approval').length,
           blocked: suggestions.filter((s) => s.status === 'blocked').length,
+        },
+      },
+    };
+  }
+
+  private async getProductAiManagerToday(businessId: string) {
+    const since = new Date(Date.now() - 24 * 60 * 60 * 1000);
+    const lowStockWhere = {
+      business_id: businessId,
+      item_type: 'physical_product',
+      is_active: true,
+      deleted_at: null,
+      stock_quantity: { lte: 5 },
+    };
+
+    const weekSince = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000);
+
+    const [
+      productInquiries,
+      pendingOrders,
+      paymentPendingOrders,
+      lowStockProducts,
+      activeCarts,
+      needsAttention,
+      conversations,
+      todaysOrders,
+      todaysRevenue,
+      completedOrdersToday,
+      totalProducts,
+      whatsappCatalogItems,
+      recentCampaigns,
+      campaignRecipientsSent,
+      campaignRecipientsFailed,
+    ] = await Promise.all([
+      this.prisma.product_inquiries.findMany({
+        where: { business_id: businessId, status: { in: ['open', 'cart_added'] } },
+        include: { item: { select: { name: true, stock_quantity: true } }, lead: true },
+        orderBy: { created_at: 'desc' },
+        take: 10,
+      }),
+      this.prisma.product_orders.findMany({
+        where: { business_id: businessId, status: { in: ['pending', 'confirmed', 'processing'] } },
+        include: { items: true, customer: true, lead: true },
+        orderBy: { created_at: 'desc' },
+        take: 10,
+      }),
+      this.prisma.product_orders.findMany({
+        where: { business_id: businessId, payment_status: { in: ['pending', 'failed'] } },
+        include: { items: true, customer: true, lead: true },
+        orderBy: { created_at: 'desc' },
+        take: 10,
+      }),
+      this.prisma.catalog_items.findMany({
+        where: lowStockWhere,
+        orderBy: [{ stock_quantity: 'asc' }, { updated_at: 'desc' }],
+        take: 10,
+      }),
+      this.prisma.carts.findMany({
+        where: { business_id: businessId, status: { in: ['active', 'pending'] } },
+        include: { cart_items: true, leads: true, customers: true },
+        orderBy: { updated_at: 'desc' },
+        take: 10,
+      }),
+      this.getNeedsAttention(businessId, 10),
+      this.getOpenConversations(businessId, 20),
+      this.prisma.product_orders.count({
+        where: { business_id: businessId, created_at: { gte: since } },
+      }),
+      this.prisma.product_orders.aggregate({
+        where: {
+          business_id: businessId,
+          created_at: { gte: since },
+          payment_status: { in: ['paid', 'captured', 'success', 'completed', 'PAID', 'CAPTURED', 'SUCCESS', 'COMPLETED'] },
+        },
+        _sum: { total_amount: true },
+      }),
+      this.prisma.product_orders.count({
+        where: {
+          business_id: businessId,
+          created_at: { gte: since },
+          status: { in: ['completed', 'delivered', 'shipped', 'COMPLETED', 'DELIVERED', 'SHIPPED'] },
+        },
+      }),
+      this.prisma.catalog_items.count({
+        where: { business_id: businessId, item_type: 'physical_product', is_active: true, deleted_at: null },
+      }),
+      this.prisma.external_catalog_items.count({
+        where: { business_id: businessId, provider: 'whatsapp', sync_status: { in: ['synced', 'imported', 'matched'] } },
+      }),
+      this.prisma.campaigns.findMany({
+        where: { business_id: businessId, created_at: { gte: weekSince } },
+        orderBy: { created_at: 'desc' },
+        take: 5,
+      }),
+      this.prisma.campaign_recipients.count({
+        where: { business_id: businessId, status: { in: ['SENT', 'DELIVERED', 'READ'] } },
+      }),
+      this.prisma.campaign_recipients.count({
+        where: { business_id: businessId, status: 'FAILED' },
+      }),
+    ]);
+
+    const waitingConversations = conversations.filter((conversation: any) =>
+      conversation.needs_attention ||
+      (conversation.unreadCount ?? 0) > 0 ||
+      conversation.status === 'waiting',
+    );
+
+    const outOfStockProducts = lowStockProducts.filter((item) => Number(item.stock_quantity ?? 0) <= 0);
+    const suggestions: any[] = [];
+
+    if (waitingConversations.length > 0) {
+      suggestions.push({
+        type: 'reply_waiting',
+        priority: 'high',
+        title: `Reply to ${waitingConversations.length} waiting customer${waitingConversations.length === 1 ? '' : 's'}`,
+        reason: 'Product buyers often decide quickly. Reply first to protect sales from WhatsApp enquiries.',
+        safety: 'Owner can review before replying',
+        status: 'needs_action',
+        action_label: 'Open inbox',
+        action_href: '/crm/inbox',
+        count: waitingConversations.length,
+        data: waitingConversations.slice(0, 5),
+      });
+    }
+
+    if (productInquiries.length > 0) {
+      suggestions.push({
+        type: 'product_inquiry',
+        priority: 'high',
+        title: `Handle ${productInquiries.length} product enquiry${productInquiries.length === 1 ? '' : 'ies'}`,
+        reason: 'These customers asked about products or added items to cart but have not completed the order.',
+        safety: 'No automatic offer is sent',
+        status: 'needs_action',
+        action_label: 'Open product leads',
+        action_href: '/crm/leads',
+        count: productInquiries.length,
+        data: productInquiries.slice(0, 5),
+      });
+    }
+
+    if (paymentPendingOrders.length > 0) {
+      suggestions.push({
+        type: 'payment_pending',
+        priority: 'high',
+        title: `Collect payment for ${paymentPendingOrders.length} order${paymentPendingOrders.length === 1 ? '' : 's'}`,
+        reason: 'These orders are not paid yet. Send payment help or confirm whether the customer still wants the items.',
+        safety: 'Payment status checked',
+        status: 'needs_action',
+        action_label: 'Open orders',
+        action_href: '/orders',
+        count: paymentPendingOrders.length,
+        data: paymentPendingOrders.slice(0, 5),
+      });
+    }
+
+    if (pendingOrders.length > 0) {
+      suggestions.push({
+        type: 'pack_orders',
+        priority: 'medium',
+        title: `Prepare ${pendingOrders.length} order${pendingOrders.length === 1 ? '' : 's'}`,
+        reason: 'These orders need packing, delivery update, or customer confirmation.',
+        safety: 'Operational check only',
+        status: 'recommended',
+        action_label: 'View orders',
+        action_href: '/orders',
+        count: pendingOrders.length,
+        data: pendingOrders.slice(0, 5),
+      });
+    }
+
+    if (outOfStockProducts.length > 0) {
+      suggestions.push({
+        type: 'out_of_stock',
+        priority: 'medium',
+        title: `${outOfStockProducts.length} product${outOfStockProducts.length === 1 ? '' : 's'} out of stock`,
+        reason: 'Hide, restock, or offer an alternative before AI suggests these products again.',
+        safety: 'Prevents wrong product promises',
+        status: 'blocked',
+        action_label: 'Update inventory',
+        action_href: '/inventory/products',
+        count: outOfStockProducts.length,
+        data: outOfStockProducts.slice(0, 5),
+      });
+    } else if (lowStockProducts.length > 0) {
+      suggestions.push({
+        type: 'low_stock',
+        priority: 'low',
+        title: `Restock ${lowStockProducts.length} low-stock product${lowStockProducts.length === 1 ? '' : 's'}`,
+        reason: 'These products are close to selling out. Review stock before promoting them.',
+        safety: 'AI does not change stock',
+        status: 'recommended',
+        action_label: 'Update stock',
+        action_href: '/inventory/products',
+        count: lowStockProducts.length,
+        data: lowStockProducts.slice(0, 5),
+      });
+    }
+
+    if (activeCarts.length > 0) {
+      suggestions.push({
+        type: 'abandoned_cart',
+        priority: 'medium',
+        title: `Follow up ${activeCarts.length} active cart${activeCarts.length === 1 ? '' : 's'}`,
+        reason: 'Customers selected products but may need payment, delivery, or stock confirmation.',
+        safety: 'Owner-approved follow-up',
+        status: 'needs_approval',
+        action_label: 'Open follow-ups',
+        action_href: '/crm/leads',
+        count: activeCarts.length,
+        data: activeCarts.slice(0, 5),
+      });
+    }
+
+    if (needsAttention.length > 0) {
+      suggestions.push({
+        type: 'follow_up',
+        priority: 'medium',
+        title: `Follow up ${needsAttention.length} warm lead${needsAttention.length === 1 ? '' : 's'}`,
+        reason: 'These customers may still buy if the owner replies or confirms product details.',
+        safety: 'No campaign is sent automatically',
+        status: 'needs_action',
+        action_label: 'Open leads',
+        action_href: '/crm/leads',
+        count: needsAttention.length,
+        data: needsAttention.slice(0, 5),
+      });
+    }
+
+    if (suggestions.length === 0) {
+      suggestions.push({
+        type: 'all_clear',
+        priority: 'low',
+        title: 'No urgent store action right now',
+        reason: 'No waiting customers, unpaid orders, active carts, or stock problems were found.',
+        safety: 'Checked today',
+        status: 'ok',
+        action_label: 'Open dashboard',
+        action_href: '/dashboard',
+        count: 0,
+        data: [],
+      });
+    }
+
+    const priorityOrder: Record<string, number> = { high: 1, medium: 2, low: 3 };
+    const sortedSuggestions = suggestions.sort((a, b) => (priorityOrder[a.priority] ?? 9) - (priorityOrder[b.priority] ?? 9));
+    const paidRevenueToday = Number(todaysRevenue._sum.total_amount ?? 0);
+    const activeCampaigns = recentCampaigns.filter((campaign) =>
+      ['scheduled', 'running', 'sent', 'completed'].includes(String(campaign.status ?? '').toLowerCase()),
+    );
+    const employeeStatus = (hasBlocker: boolean, hasWork: boolean) => {
+      if (hasBlocker) return 'needs_attention';
+      if (hasWork) return 'working';
+      return 'watching';
+    };
+    const employees = [
+      {
+        key: 'sales',
+        name: 'AI Sales Employee',
+        role: 'WhatsApp product enquiries and lead conversion',
+        status: employeeStatus(waitingConversations.length > 0 || productInquiries.length > 0, needsAttention.length > 0),
+        summary: waitingConversations.length > 0
+          ? `${waitingConversations.length} buyer chat${waitingConversations.length === 1 ? '' : 's'} need fast reply.`
+          : productInquiries.length > 0
+            ? `${productInquiries.length} product enquiry${productInquiries.length === 1 ? '' : 'ies'} ready for follow-up.`
+            : 'Watching WhatsApp for product questions and buyer intent.',
+        safety: 'Does not promise stock or discounts without owner approval.',
+        metrics: [
+          { label: 'Waiting buyers', value: waitingConversations.length, tone: waitingConversations.length > 0 ? 'danger' : 'good' },
+          { label: 'Open enquiries', value: productInquiries.length, tone: productInquiries.length > 0 ? 'warning' : 'neutral' },
+          { label: 'Warm leads', value: needsAttention.length, tone: needsAttention.length > 0 ? 'warning' : 'neutral' },
+        ],
+        completed_work: [
+          { title: 'Checked WhatsApp inbox', detail: `${conversations.length} open conversation${conversations.length === 1 ? '' : 's'} scanned.`, href: '/crm/inbox' },
+          { title: 'Matched enquiries to catalog', detail: `${productInquiries.length} enquiry record${productInquiries.length === 1 ? '' : 's'} found.`, href: '/crm/leads' },
+        ],
+        next_actions: sortedSuggestions
+          .filter((item) => ['reply_waiting', 'product_inquiry', 'follow_up'].includes(item.type))
+          .slice(0, 3),
+      },
+      {
+        key: 'orders',
+        name: 'AI Order Desk',
+        role: 'Payment, packing, and delivery follow-up',
+        status: employeeStatus(paymentPendingOrders.length > 0, pendingOrders.length > 0),
+        summary: paymentPendingOrders.length > 0
+          ? `${paymentPendingOrders.length} order${paymentPendingOrders.length === 1 ? '' : 's'} still need payment.`
+          : pendingOrders.length > 0
+            ? `${pendingOrders.length} order${pendingOrders.length === 1 ? '' : 's'} need packing or delivery update.`
+            : 'No urgent unpaid or pending order work right now.',
+        safety: 'Uses product_orders as the operational source for seller orders.',
+        metrics: [
+          { label: 'Orders today', value: todaysOrders, tone: todaysOrders > 0 ? 'good' : 'neutral' },
+          { label: 'Unpaid', value: paymentPendingOrders.length, tone: paymentPendingOrders.length > 0 ? 'danger' : 'good' },
+          { label: 'In process', value: pendingOrders.length, tone: pendingOrders.length > 0 ? 'warning' : 'neutral' },
+        ],
+        completed_work: [
+          { title: 'Checked payment queue', detail: `${paymentPendingOrders.length} unpaid order${paymentPendingOrders.length === 1 ? '' : 's'} found.`, href: '/orders' },
+          { title: 'Reviewed dispatch queue', detail: `${pendingOrders.length} active order${pendingOrders.length === 1 ? '' : 's'} found.`, href: '/orders' },
+        ],
+        next_actions: sortedSuggestions
+          .filter((item) => ['payment_pending', 'pack_orders'].includes(item.type))
+          .slice(0, 3),
+      },
+      {
+        key: 'inventory',
+        name: 'AI Inventory Employee',
+        role: 'Stock health, catalog accuracy, and oversell prevention',
+        status: employeeStatus(outOfStockProducts.length > 0, lowStockProducts.length > 0),
+        summary: outOfStockProducts.length > 0
+          ? `${outOfStockProducts.length} product${outOfStockProducts.length === 1 ? '' : 's'} are out of stock and should not be promoted.`
+          : lowStockProducts.length > 0
+            ? `${lowStockProducts.length} product${lowStockProducts.length === 1 ? '' : 's'} are close to stockout.`
+            : 'Stock looks stable for active products.',
+        safety: 'Flags stock risk before the chatbot recommends or campaigns promote products.',
+        metrics: [
+          { label: 'Active products', value: totalProducts, tone: totalProducts > 0 ? 'good' : 'warning' },
+          { label: 'WhatsApp catalog', value: whatsappCatalogItems, tone: whatsappCatalogItems > 0 ? 'good' : 'neutral' },
+          { label: 'Stock issues', value: lowStockProducts.length, tone: lowStockProducts.length > 0 ? 'danger' : 'good' },
+        ],
+        completed_work: [
+          { title: 'Scanned product stock', detail: `${totalProducts} active product${totalProducts === 1 ? '' : 's'} checked.`, href: '/inventory/products' },
+          { title: 'Checked WhatsApp catalog sync', detail: `${whatsappCatalogItems} catalog item${whatsappCatalogItems === 1 ? '' : 's'} connected.`, href: '/settings/integrations' },
+        ],
+        next_actions: sortedSuggestions
+          .filter((item) => ['out_of_stock', 'low_stock'].includes(item.type))
+          .slice(0, 3),
+      },
+      {
+        key: 'marketing',
+        name: 'AI Marketing Employee',
+        role: 'Campaign readiness, remarketing, and buyer follow-up',
+        status: employeeStatus(campaignRecipientsFailed > 0, activeCarts.length > 0 || activeCampaigns.length > 0),
+        summary: activeCarts.length > 0
+          ? `${activeCarts.length} active cart${activeCarts.length === 1 ? '' : 's'} can become owner-approved follow-ups.`
+          : activeCampaigns.length > 0
+            ? `${activeCampaigns.length} recent campaign${activeCampaigns.length === 1 ? '' : 's'} found this week.`
+            : 'Ready to suggest campaigns once products and buyer segments are active.',
+        safety: 'Campaigns require approved templates and owner control.',
+        metrics: [
+          { label: 'Active carts', value: activeCarts.length, tone: activeCarts.length > 0 ? 'warning' : 'neutral' },
+          { label: 'Campaigns 7d', value: recentCampaigns.length, tone: recentCampaigns.length > 0 ? 'good' : 'neutral' },
+          { label: 'Recipient failures', value: campaignRecipientsFailed, tone: campaignRecipientsFailed > 0 ? 'danger' : 'good' },
+        ],
+        completed_work: [
+          { title: 'Checked campaign history', detail: `${recentCampaigns.length} campaign${recentCampaigns.length === 1 ? '' : 's'} found in the last 7 days.`, href: '/crm/campaigns' },
+          { title: 'Checked delivery health', detail: `${campaignRecipientsSent} recipient send event${campaignRecipientsSent === 1 ? '' : 's'} recorded.`, href: '/campaigns/live' },
+        ],
+        next_actions: sortedSuggestions
+          .filter((item) => ['abandoned_cart'].includes(item.type))
+          .slice(0, 3),
+      },
+      {
+        key: 'growth',
+        name: 'AI Growth Analyst',
+        role: 'Daily sales summary and next-best business action',
+        status: employeeStatus(false, todaysOrders > 0 || paidRevenueToday > 0),
+        summary: todaysOrders > 0
+          ? `${todaysOrders} order${todaysOrders === 1 ? '' : 's'} today with Rs ${paidRevenueToday.toLocaleString('en-IN')} paid revenue tracked.`
+          : 'Waiting for the first order signal today.',
+        safety: 'Summaries are based on seller order and payment records.',
+        metrics: [
+          { label: 'Paid today', value: paidRevenueToday, tone: paidRevenueToday > 0 ? 'good' : 'neutral', format: 'money' },
+          { label: 'Orders today', value: todaysOrders, tone: todaysOrders > 0 ? 'good' : 'neutral' },
+          { label: 'Completed queue', value: completedOrdersToday, tone: completedOrdersToday > 0 ? 'good' : 'neutral' },
+        ],
+        completed_work: [
+          { title: 'Prepared today summary', detail: `${todaysOrders} order${todaysOrders === 1 ? '' : 's'} and Rs ${paidRevenueToday.toLocaleString('en-IN')} paid revenue.`, href: '/orders' },
+          { title: 'Checked growth blockers', detail: `${sortedSuggestions.filter((item) => item.priority === 'high').length} high-priority issue${sortedSuggestions.filter((item) => item.priority === 'high').length === 1 ? '' : 's'} found.`, href: '/dashboard' },
+        ],
+        next_actions: sortedSuggestions.slice(0, 2),
+      },
+    ];
+
+    return {
+      data: {
+        title: 'AI Store Manager',
+        subtitle: 'What to do today to convert product enquiries into orders.',
+        checked_at: new Date().toISOString(),
+        suggestions: sortedSuggestions,
+        employees,
+        work_feed: employees
+          .flatMap((employee) => employee.next_actions.map((action) => ({ ...action, employee_key: employee.key, employee_name: employee.name })))
+          .slice(0, 8),
+        counts: {
+          total: suggestions.length,
+          high: suggestions.filter((s) => s.priority === 'high').length,
+          needs_approval: suggestions.filter((s) => s.status === 'needs_approval').length,
+          blocked: suggestions.filter((s) => s.status === 'blocked').length,
+          waiting_customers: waitingConversations.length,
+          product_inquiries: productInquiries.length,
+          payment_pending: paymentPendingOrders.length,
+          orders_today: todaysOrders,
+          low_stock: lowStockProducts.length,
+          active_carts: activeCarts.length,
         },
       },
     };

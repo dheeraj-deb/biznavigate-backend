@@ -29,6 +29,8 @@ import { PlatformModule } from "./features/platform/platform.module";
 import { AiModule } from "./features/ai/ai.module";
 import { InsightsModule } from "./features/insights/insights.module";
 import { PublicBookingModule } from "./features/public-booking/public-booking.module";
+import { SellerOsModule } from "./features/seller-os/seller-os.module";
+import { ProductsModule } from "./features/products/products.module";
 import { HealthController } from "./health.controller";
 
 @Module({
@@ -93,10 +95,12 @@ import { HealthController } from "./health.controller";
       ? [EngagementModule.withChannels()]
       : [EngagementModule]),
     CommerceModule,
+    ProductsModule,
     ...(process.env.MONGODB_URI
       ? [HospitalityIndustryModule.withPricing()]
       : [HospitalityIndustryModule]),
     InsightsModule,
+    SellerOsModule,
     PublicBookingModule,
     ...(process.env.MONGODB_URI
       ? [AiModule.withRag()]
