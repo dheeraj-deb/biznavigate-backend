@@ -13,6 +13,7 @@ import { WhatsAppOAuthService } from './application/oauth/whatsapp-oauth.service
 import { WhatsAppCatalogService } from './application/catalog/whatsapp-catalog.service';
 import { WhatsAppCatalogOrderService } from './application/catalog/whatsapp-catalog-order.service';
 import { WhatsAppAccountService } from './application/account/whatsapp-account.service';
+import { AgentReplyDispatcherService } from './application/agent-reply-dispatcher.service';
 import { AutomationRouter } from './application/inbound/automation-router.service';
 import { ContactResolutionService } from './application/inbound/contact-resolution.service';
 import { ConversationCommandService } from './application/inbound/conversation-command.service';
@@ -67,6 +68,7 @@ import { Campaign, CampaignSchema } from '../campaign/schemas/campaign.schema';
   ],
   providers: [
     WhatsAppService,
+    AgentReplyDispatcherService,
     MessageDebounceProcessor,
     WhatsAppOAuthService,
     WhatsAppCatalogService,
