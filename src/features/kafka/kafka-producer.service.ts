@@ -102,9 +102,6 @@ export class KafkaProducerService {
       },
     };
 
-    console.log("requestAiProcessing event");
-    console.dir(event, { depth: null });
-
     await this.publishEvent('ai.process.request', event, payload.lead_id);
     this.logger.log(`Published ai.process.request for lead: ${payload.lead_id}`);
   }
@@ -175,7 +172,7 @@ export class KafkaProducerService {
 
       const producer = this.kafkaService.getProducer();
       
-      const kafkaevt = await producer.send({
+      await producer.send({
         topic,
         messages: [
           {
@@ -188,8 +185,6 @@ export class KafkaProducerService {
           },
         ],
       });
-
-      console.log("kafkaEvt", kafkaevt)
 
     } catch (error) {
       this.logger.error(`Failed to publish event to ${topic}:`, error);
