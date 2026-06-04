@@ -1476,10 +1476,13 @@ export class WorkflowsService implements OnModuleInit {
   }
 
   private async getActiveWorkflowForBusiness(businessId: string, intentName: string): Promise<{ workflowId: string; definition: WorkflowParameters } | null> {
-    const link = await this.businessWorkflowModel.findOne({ business_id: businessId, is_active: true }).lean();
-    if (!link) return null;
+    const links = await this.businessWorkflowModel.find({ business_id: businessId, is_active: true }).lean();
+    if (!links.length) return null;
 
-    const def = await this.workflowDefinitionModel.findOne({ workflow_id: link.workflow_id }).lean();
+    const defs = await this.workflowDefinitionModel
+      .find({ workflow_id: { $in: links.map((link) => link.workflow_id) }, is_active: true })
+      .lean();
+    const def = defs.find((candidate) => this.matchesInboundWhatsAppTrigger(candidate.workflow_definition, intentName));
     if (!def?.workflow_definition) return null;
 
     const raw = def.workflow_definition as any;
@@ -1497,6 +1500,19 @@ export class WorkflowsService implements OnModuleInit {
       workflowId: def.workflow_id,
       definition: raw as WorkflowParameters,
     };
+  }
+
+  private matchesInboundWhatsAppTrigger(definition: any, intentName: string): boolean {
+    const trigger = (definition?.nodes ?? []).find((node: any) =>
+      typeof node?.type === 'string' && node.type.startsWith('trigger.'),
+    );
+    if (!trigger) return false;
+    if (trigger.type === 'trigger.whatsapp') return true;
+    if (trigger.type !== 'trigger.whatsapp.intent') return false;
+
+    const configuredIntent = String(trigger.params?.intent ?? '').trim().toLowerCase();
+    const incomingIntent = String(intentName ?? '').trim().toLowerCase();
+    return !!configuredIntent && configuredIntent === incomingIntent;
   }
 
 
