@@ -27,10 +27,21 @@ export class ReservationCleanupProcessor extends WorkerHost {
     this.logger.log('Starting expired reservation cleanup job');
 
     try {
-      const [cleanedCount, { count: cartHoldsReleased, restoredProductIds }] = await Promise.all([
+      const [
+        cleanedCount,
+        cartResult,
+        sellerResult,
+      ] = await Promise.all([
         this.stockReservationService.cleanupExpiredReservations(),
         this.stockReservationService.cleanupExpiredCartHolds(),
+        this.stockReservationService.cleanupExpiredSellerHolds(),
       ]);
+      const cartHoldsReleased = cartResult.count;
+      const sellerHoldsReleased = sellerResult.count;
+      const restoredProductIds = [...new Set([
+        ...cartResult.restoredProductIds,
+        ...sellerResult.restoredProductIds,
+      ])];
 
       // Push availability updates to WhatsApp catalog for all products whose stock was restored.
       // Run in parallel, fire-and-forget per product so one failure doesn't block the rest.
@@ -45,13 +56,14 @@ export class ReservationCleanupProcessor extends WorkerHost {
       }
 
       this.logger.log(
-        `Cleanup job completed. Order reservations: ${cleanedCount}, cart holds: ${cartHoldsReleased}`,
+        `Cleanup job completed. Order reservations: ${cleanedCount}, cart holds: ${cartHoldsReleased}, seller holds: ${sellerHoldsReleased}`,
       );
 
       return {
         success: true,
         cleanedCount,
         cartHoldsReleased,
+        sellerHoldsReleased,
         timestamp: new Date(),
       };
     } catch (error) {

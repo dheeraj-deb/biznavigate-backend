@@ -8,32 +8,92 @@ export class StockReservationService {
   constructor(private readonly prisma: PrismaService) {}
 
   async cleanupExpiredReservations(): Promise<number> {
-    const now = new Date();
-    const result = await this.prisma.cart_reservations.updateMany({
-      where: { status: 'active', expires_at: { lt: now } },
-      data: { status: 'released' },
-    });
-    return result.count;
+    // Order stock is deducted at order creation and is released by cancel flows.
+    // Cart/seller holds are cleaned by the dedicated methods below.
+    return 0;
   }
 
   async cleanupExpiredCartHolds(): Promise<{ count: number; restoredProductIds: string[] }> {
     const now = new Date();
-    const expired = await this.prisma.cart_reservations.findMany({
-      where: { status: 'active', expires_at: { lt: now } },
-      select: { item_id: true },
+    return this.prisma.$transaction(async (tx) => {
+      const expired = await tx.cart_reservations.findMany({
+        where: { status: 'active', expires_at: { lt: now } },
+        select: { reservation_id: true, item_id: true, variant_id: true, quantity: true },
+        take: 500,
+      });
+
+      if (!expired.length) return { count: 0, restoredProductIds: [] };
+
+      const reservationIds = expired.map((hold) => hold.reservation_id);
+      const updated = await tx.cart_reservations.updateMany({
+        where: { reservation_id: { in: reservationIds }, status: 'active' },
+        data: { status: 'released', updated_at: new Date() },
+      });
+
+      for (const hold of expired) {
+        if (hold.variant_id) {
+          await tx.item_variants.updateMany({
+            where: { variant_id: hold.variant_id, item_id: hold.item_id },
+            data: { stock_quantity: { increment: hold.quantity }, updated_at: new Date() },
+          });
+        } else {
+          await tx.catalog_items.updateMany({
+            where: { item_id: hold.item_id, stock_quantity: { not: null } },
+            data: { stock_quantity: { increment: hold.quantity }, updated_at: new Date() },
+          });
+        }
+      }
+
+      const restoredProductIds = [...new Set(expired.map((r) => r.item_id))];
+      this.logger.log(`Released ${updated.count} expired cart holds and restored stock`);
+
+      return { count: updated.count, restoredProductIds };
     });
+  }
 
-    if (!expired.length) return { count: 0, restoredProductIds: [] };
+  async cleanupExpiredSellerHolds(): Promise<{ count: number; restoredProductIds: string[] }> {
+    const now = new Date();
+    return this.prisma.$transaction(async (tx) => {
+      const expired = await tx.$queryRawUnsafe<any[]>(
+        `SELECT reservation_id, item_id, variant_id, quantity
+         FROM seller_stock_reservations
+         WHERE status = 'active' AND expires_at < $1
+         ORDER BY expires_at ASC
+         LIMIT 500
+         FOR UPDATE`,
+        now,
+      ).catch((error) => {
+        if (String(error?.message ?? '').includes('seller_stock_reservations')) return [];
+        throw error;
+      });
 
-    await this.prisma.cart_reservations.updateMany({
-      where: { status: 'active', expires_at: { lt: now } },
-      data: { status: 'released' },
+      if (!expired.length) return { count: 0, restoredProductIds: [] };
+
+      for (const hold of expired) {
+        if (hold.variant_id) {
+          await tx.item_variants.updateMany({
+            where: { variant_id: hold.variant_id, item_id: hold.item_id },
+            data: { stock_quantity: { increment: Number(hold.quantity) }, updated_at: new Date() },
+          });
+        } else {
+          await tx.catalog_items.updateMany({
+            where: { item_id: hold.item_id, stock_quantity: { not: null } },
+            data: { stock_quantity: { increment: Number(hold.quantity) }, updated_at: new Date() },
+          });
+        }
+      }
+
+      await tx.$queryRawUnsafe(
+        `UPDATE seller_stock_reservations
+         SET status = 'released', released_at = now(), updated_at = now(), metadata = COALESCE(metadata, '{}'::jsonb) || '{"released_by":"expiry_job"}'::jsonb
+         WHERE reservation_id = ANY($1::uuid[]) AND status = 'active'`,
+        expired.map((hold) => hold.reservation_id),
+      );
+
+      const restoredProductIds = [...new Set(expired.map((hold) => hold.item_id))];
+      this.logger.log(`Released ${expired.length} expired seller holds and restored stock`);
+      return { count: expired.length, restoredProductIds };
     });
-
-    const restoredProductIds = [...new Set(expired.map((r) => r.item_id))];
-    this.logger.log(`Released ${expired.length} expired cart holds`);
-
-    return { count: expired.length, restoredProductIds };
   }
 
   async releaseExpiredReservations(): Promise<void> {
