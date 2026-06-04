@@ -12,7 +12,25 @@ export type WorkflowEventName =
   | 'workflow.event.lead.status_changed'
   | 'workflow.event.booking.created'
   | 'workflow.event.booking.cancelled'
+  | 'workflow.event.booking.link_sent'
+  | 'workflow.event.booking.followup_due'
+  | 'workflow.event.booking.checkin_reminder_due'
+  | 'workflow.event.booking.review_request_due'
+  | 'workflow.event.room.available'
+  | 'workflow.event.order.placed'
+  | 'workflow.event.order.status_changed'
   | 'workflow.event.payment.captured'
+  | 'workflow.event.payment.received'
+  | 'workflow.event.payment.waiting'
+  | 'workflow.event.inventory.price_changed'
+  | 'workflow.event.inventory.item_added'
+  | 'workflow.event.inventory.restocked'
+  | 'workflow.event.stock.held'
+  | 'workflow.event.slot.opened'
+  | 'workflow.event.credit.due'
+  | 'workflow.event.dead_stock.offer'
+  | 'workflow.event.vehicle.details_shared'
+  | 'workflow.event.vehicle.visit_slots_available'
   | 'workflow.event.lead.inactive';
 
 export interface BaseEventPayload {
@@ -48,6 +66,11 @@ export interface PaymentCapturedPayload extends BaseEventPayload {
   amount: number;
 }
 
+export interface ExternalWorkflowEventPayload extends BaseEventPayload {
+  event_name: string;
+  payload: Record<string, any>;
+}
+
 export interface LeadInactivePayload extends BaseEventPayload {
   lead_id: string;
   days_inactive: number;
@@ -58,4 +81,5 @@ export type WorkflowEventPayload =
   | BookingCreatedPayload
   | BookingCancelledPayload
   | PaymentCapturedPayload
+  | ExternalWorkflowEventPayload
   | LeadInactivePayload;

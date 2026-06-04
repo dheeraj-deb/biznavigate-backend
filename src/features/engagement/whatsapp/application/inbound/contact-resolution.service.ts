@@ -25,7 +25,15 @@ export class ContactResolutionService {
   }): Promise<ResolvedWhatsAppContact | null> {
     const account = await this.prisma.social_accounts.findFirst({
       where: { platform: 'whatsapp', page_id: params.phone_number_id, is_active: true },
-      include: { businesses: true },
+      include: {
+        businesses: {
+          select: {
+            tenant_id: true,
+            business_name: true,
+            business_type: true,
+          },
+        },
+      },
     });
 
     if (!account) {

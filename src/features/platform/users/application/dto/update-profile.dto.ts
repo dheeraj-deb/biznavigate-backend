@@ -8,6 +8,7 @@ export enum BusinessType {
   EDUCATION = 'education',
   HEALTHCARE = 'healthcare',
   REAL_ESTATE = 'real_estate',
+  USED_CARS = 'used_cars',
   HOSPITALITY = 'hospitality',
   PROFESSIONAL_SERVICES = 'professional_services',
   CRM_AUTOMATION = 'crm_automation',

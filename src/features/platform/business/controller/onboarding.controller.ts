@@ -2,7 +2,8 @@ import { Body, Controller, Logger, Post, Request, UseGuards } from "@nestjs/comm
 import { JwtAuthGuard } from "../../../../common/guards/jwt-auth.guard";
 import { PrismaService } from "src/prisma/prisma.service";
 import { UpdateBusinessDto } from "../application/dto/update-business.dto";
-import { StarterTemplatesService } from "../../starter-templates/starter-templates.service";
+import { buildBusinessAutomationDefaults } from "../domain/business-classification";
+import { BusinessBlueprintSeedService } from "../application/business-blueprint-seed.service";
 import { Type } from "class-transformer";
 import {
   IsEmail,
@@ -44,18 +45,23 @@ export class OnboardingController {
 
   constructor(
     private readonly prisma: PrismaService,
-    private readonly starterTemplates: StarterTemplatesService
+    private readonly businessBlueprints: BusinessBlueprintSeedService
   ) {}
 
   @Post("complete")
   async complete(@Request() req, @Body() dto: CompleteOnboardingDto) {
     const { business_id, user_id } = req.user;
     const { employees, ...businessData } = dto;
+    const automationDefaults =
+      businessData.business_type !== undefined
+        ? buildBusinessAutomationDefaults(businessData.business_type)
+        : {};
 
     const business = await this.prisma.businesses.update({
       where: { business_id },
       data: {
         ...businessData,
+        ...automationDefaults,
         ...(employees?.length && {
           business_employees: {
             create: employees,
@@ -70,16 +76,18 @@ export class OnboardingController {
       data: { profile_completed: true },
     });
 
-    let starter_templates: any = null;
+    let business_blueprints: any = null;
+    let blueprintSeeded = business.blueprint_seeded;
+    let blueprintSeededAt = business.blueprint_seeded_at;
     try {
-      starter_templates = await this.starterTemplates.applyRecommendedTemplates(business_id, {
-        phase: "onboarding",
-      });
+      business_blueprints = await this.businessBlueprints.seedForBusiness(business_id);
+      blueprintSeeded = business_blueprints.status === "seeded";
+      blueprintSeededAt = business_blueprints.blueprint_seeded_at ?? null;
     } catch (error: any) {
-      this.logger.warn(`Starter template install skipped: ${error?.message ?? error}`);
-      starter_templates = {
+      this.logger.warn(`Business blueprint seed skipped: ${error?.message ?? error}`);
+      business_blueprints = {
         status: "skipped",
-        reason: error?.message ?? "starter_template_install_failed",
+        reason: error?.message ?? "business_blueprint_seed_failed",
       };
     }
 
@@ -93,6 +101,10 @@ export class OnboardingController {
           tenant_id: businessFields.tenant_id,
           business_name: businessFields.business_name,
           business_type: businessFields.business_type,
+          business_group: businessFields.business_group,
+          communication_mode: businessFields.communication_mode,
+          blueprint_seeded: blueprintSeeded,
+          blueprint_seeded_at: blueprintSeededAt,
           email: businessFields.email,
           phone: businessFields.phone,
           city: businessFields.city,
@@ -106,7 +118,7 @@ export class OnboardingController {
           role: e.role ?? null,
           temp_password: e.temp_password ?? null,
         })),
-        starter_templates,
+        business_blueprints,
       },
     };
   }

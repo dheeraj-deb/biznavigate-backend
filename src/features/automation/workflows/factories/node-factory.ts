@@ -19,6 +19,12 @@ import { RagChatNode } from "../nodes/actions/rag-chat-node";
 import { SendPaymentRequestNode } from "../nodes/actions/send-payment-req-node";
 import { SendFlowNode } from "../nodes/actions/send-flow-node";
 import { SendTemplateNode } from "../nodes/actions/send-template-node";
+import { ChangeLeadStatusNode } from "../nodes/actions/change-lead-status-node";
+import { MoveLeadStageNode } from "../nodes/actions/move-lead-stage-node";
+import { CallAiActionNode } from "../nodes/actions/call-ai-action-node";
+import { LeadCommandService } from "../../../crm/lead/application/services/lead-command.service";
+import { AiActionRouterService } from "../../ai-actions/ai-action-router.service";
+import { AI_ACTION_NAMES } from "../../ai-actions/dto/ai-action.dto";
 
 export type NodeConstructor<T extends BaseNode = BaseNode> =
     new (config: NodeConfig, ...deps: any[]) => T;
@@ -189,6 +195,56 @@ export class NodeFactory {
             ],
         },
         {
+            type: 'trigger.event.booking_link_sent',
+            category: 'trigger',
+            label: 'When a booking link is sent',
+            description: 'Run after a booking link is sent but booking is not completed.',
+            icon: '🔗',
+            waitForInput: false,
+            output_variable: null,
+            params: [...COMMON_TRIGGER_PARAMS],
+        },
+        {
+            type: 'trigger.event.room_available',
+            category: 'trigger',
+            label: 'When a room becomes available',
+            description: 'Run when a room opens for previously unavailable dates.',
+            icon: '🛏️',
+            waitForInput: false,
+            output_variable: null,
+            params: [...COMMON_TRIGGER_PARAMS],
+        },
+        {
+            type: 'trigger.event.booking_followup_due',
+            category: 'trigger',
+            label: 'When booking follow-up is due',
+            description: 'Run one reminder for an enquiry before a booking link is sent.',
+            icon: '⏳',
+            waitForInput: false,
+            output_variable: null,
+            params: [...COMMON_TRIGGER_PARAMS],
+        },
+        {
+            type: 'trigger.event.booking_checkin_reminder_due',
+            category: 'trigger',
+            label: 'When check-in reminder is due',
+            description: 'Run one day before check-in for booked stays.',
+            icon: '📅',
+            waitForInput: false,
+            output_variable: null,
+            params: [...COMMON_TRIGGER_PARAMS],
+        },
+        {
+            type: 'trigger.event.booking_review_request_due',
+            category: 'trigger',
+            label: 'When review request is due',
+            description: 'Run after checkout to request a review.',
+            icon: '⭐',
+            waitForInput: false,
+            output_variable: null,
+            params: [...COMMON_TRIGGER_PARAMS],
+        },
+        {
             type: 'trigger.event.payment_captured',
             category: 'trigger',
             label: 'When a payment is captured',
@@ -199,6 +255,150 @@ export class NodeFactory {
             params: [
                 ...COMMON_TRIGGER_PARAMS,
             ],
+        },
+        {
+            type: 'trigger.event.payment_received',
+            category: 'trigger',
+            label: 'When a payment is received',
+            description: 'Run when an external payment received event is posted.',
+            icon: '💰',
+            waitForInput: false,
+            output_variable: null,
+            params: [
+                ...COMMON_TRIGGER_PARAMS,
+            ],
+        },
+        {
+            type: 'trigger.event.payment_waiting',
+            category: 'trigger',
+            label: 'When payment is waiting',
+            description: 'Run when an order/payment link is ready but payment is not completed.',
+            icon: '💳',
+            waitForInput: false,
+            output_variable: null,
+            params: [...COMMON_TRIGGER_PARAMS],
+        },
+        {
+            type: 'trigger.event.order_placed',
+            category: 'trigger',
+            label: 'When an order is placed',
+            description: 'Run when an external order placed event is posted.',
+            icon: '📦',
+            waitForInput: false,
+            output_variable: null,
+            params: [
+                ...COMMON_TRIGGER_PARAMS,
+            ],
+        },
+        {
+            type: 'trigger.event.order_status_changed',
+            category: 'trigger',
+            label: 'When order status changes',
+            description: 'Run when an external order status changed event is posted.',
+            icon: '🔁',
+            waitForInput: false,
+            output_variable: null,
+            params: [
+                ...COMMON_TRIGGER_PARAMS,
+            ],
+        },
+        {
+            type: 'trigger.event.inventory_price_changed',
+            category: 'trigger',
+            label: 'When inventory price changes',
+            description: 'Run when an external inventory price changed event is posted.',
+            icon: '🏷️',
+            waitForInput: false,
+            output_variable: null,
+            params: [
+                ...COMMON_TRIGGER_PARAMS,
+            ],
+        },
+        {
+            type: 'trigger.event.inventory_item_added',
+            category: 'trigger',
+            label: 'When inventory item is added',
+            description: 'Run when an external inventory item added event is posted.',
+            icon: '➕',
+            waitForInput: false,
+            output_variable: null,
+            params: [
+                ...COMMON_TRIGGER_PARAMS,
+            ],
+        },
+        {
+            type: 'trigger.event.inventory_restocked',
+            category: 'trigger',
+            label: 'When inventory is restocked',
+            description: 'Run when an external inventory restocked event is posted.',
+            icon: '📦',
+            waitForInput: false,
+            output_variable: null,
+            params: [
+                ...COMMON_TRIGGER_PARAMS,
+            ],
+        },
+        {
+            type: 'trigger.event.stock_held',
+            category: 'trigger',
+            label: 'When stock is held',
+            description: 'Run after stock is reserved for a customer before release.',
+            icon: '📌',
+            waitForInput: false,
+            output_variable: null,
+            params: [...COMMON_TRIGGER_PARAMS],
+        },
+        {
+            type: 'trigger.event.slot_opened',
+            category: 'trigger',
+            label: 'When a slot opens',
+            description: 'Run when an external slot opened event is posted.',
+            icon: '📅',
+            waitForInput: false,
+            output_variable: null,
+            params: [
+                ...COMMON_TRIGGER_PARAMS,
+            ],
+        },
+        {
+            type: 'trigger.event.credit_due',
+            category: 'trigger',
+            label: 'When credit payment is due',
+            description: 'Run for credit customers with an upcoming or overdue balance.',
+            icon: '🧾',
+            waitForInput: false,
+            output_variable: null,
+            params: [...COMMON_TRIGGER_PARAMS],
+        },
+        {
+            type: 'trigger.event.dead_stock_offer',
+            category: 'trigger',
+            label: 'When dead-stock offer is created',
+            description: 'Run a seller-selected offer campaign for relevant buyers.',
+            icon: '🏷️',
+            waitForInput: false,
+            output_variable: null,
+            params: [...COMMON_TRIGGER_PARAMS],
+        },
+        {
+            type: 'trigger.event.vehicle_details_shared',
+            category: 'trigger',
+            label: 'When vehicle details are shared',
+            description: 'Run after a used-car lead receives details and stock has been checked.',
+            icon: '🚗',
+            waitForInput: false,
+            output_variable: null,
+            params: [...COMMON_TRIGGER_PARAMS],
+        },
+        {
+            type: 'trigger.event.vehicle_visit_slots_available',
+            category: 'trigger',
+            label: 'When vehicle visit slots are available',
+            description: 'Run when showroom visit slots are ready to offer for a used car.',
+            icon: '📅',
+            waitForInput: false,
+            output_variable: null,
+            params: [...COMMON_TRIGGER_PARAMS],
         },
         {
             type: 'trigger.event.lead_inactive',
@@ -417,6 +617,57 @@ export class NodeFactory {
                 { key: 'model', type: 'string' },
             ],
         },
+
+        // ── Business Operations ───────────────────────────────────────────
+        {
+            type: 'action.change_lead_status',
+            category: 'action',
+            label: 'Change Lead Status',
+            description: 'Updates the lead status and emits the normal lead status changed workflow event.',
+            icon: '🔁',
+            waitForInput: false,
+            output_variable: 'lead_status_result',
+            params: [
+                { key: 'status', type: 'string' },
+                { key: 'actor', type: 'select', constraints: { enum: ['system', 'ai', 'human'] } },
+                { key: 'lost_reason', type: 'string' },
+                { key: 'quoted_amount', type: 'string' },
+                { key: 'converted_value', type: 'string' },
+            ],
+        },
+        {
+            type: 'action.move_lead_stage',
+            category: 'action',
+            label: 'Move Lead Stage',
+            description: 'Moves the lead to a pipeline stage by stage ID, or forward-advances by stage slug.',
+            icon: '➡️',
+            waitForInput: false,
+            output_variable: 'lead_stage_result',
+            params: [
+                { key: 'stage_id', type: 'string' },
+                { key: 'stage_slug', type: 'string' },
+                { key: 'actor', type: 'select', constraints: { enum: ['system', 'ai', 'human'] } },
+            ],
+        },
+        {
+            type: 'action.call_ai_action',
+            category: 'action',
+            label: 'Call AI Action',
+            description: 'Runs an approved business action such as creating a booking, inquiry, order, or handoff.',
+            icon: '⚙️',
+            waitForInput: false,
+            output_variable: 'ai_action_result',
+            params: [
+                { key: 'action', type: 'select', constraints: { enum: [...AI_ACTION_NAMES] } },
+                {
+                    key: 'params', type: 'array', items: [
+                        { key: 'key', type: 'string' },
+                        { key: 'value', type: 'string' },
+                    ]
+                },
+                { key: 'idempotency_key', type: 'string' },
+            ],
+        },
     ];
 
     getNodeDefinitions(): NodeDefinition[] {
@@ -427,6 +678,8 @@ export class NodeFactory {
         private readonly whatsappService: WhatsAppService,
         private readonly catalogService: WhatsAppCatalogService,
         private readonly cartService: CartService,
+        private readonly leadCommands: LeadCommandService,
+        private readonly aiActions: AiActionRouterService,
     ) {
         this.registerNodeTypes();
     }
@@ -439,7 +692,25 @@ export class NodeFactory {
         this.register('trigger.event.lead_status_changed', EventTriggerNode);
         this.register('trigger.event.booking_created', EventTriggerNode);
         this.register('trigger.event.booking_cancelled', EventTriggerNode);
+        this.register('trigger.event.booking_link_sent', EventTriggerNode);
+        this.register('trigger.event.booking_followup_due', EventTriggerNode);
+        this.register('trigger.event.booking_checkin_reminder_due', EventTriggerNode);
+        this.register('trigger.event.booking_review_request_due', EventTriggerNode);
+        this.register('trigger.event.room_available', EventTriggerNode);
         this.register('trigger.event.payment_captured', EventTriggerNode);
+        this.register('trigger.event.payment_received', EventTriggerNode);
+        this.register('trigger.event.payment_waiting', EventTriggerNode);
+        this.register('trigger.event.order_placed', EventTriggerNode);
+        this.register('trigger.event.order_status_changed', EventTriggerNode);
+        this.register('trigger.event.inventory_price_changed', EventTriggerNode);
+        this.register('trigger.event.inventory_item_added', EventTriggerNode);
+        this.register('trigger.event.inventory_restocked', EventTriggerNode);
+        this.register('trigger.event.stock_held', EventTriggerNode);
+        this.register('trigger.event.slot_opened', EventTriggerNode);
+        this.register('trigger.event.credit_due', EventTriggerNode);
+        this.register('trigger.event.dead_stock_offer', EventTriggerNode);
+        this.register('trigger.event.vehicle_details_shared', EventTriggerNode);
+        this.register('trigger.event.vehicle_visit_slots_available', EventTriggerNode);
         this.register('trigger.event.lead_inactive', EventTriggerNode);
 
         //Actions
@@ -466,6 +737,11 @@ export class NodeFactory {
 
         // Templates
         this.register('action.send_template', SendTemplateNode);
+
+        // Business operations
+        this.register('action.change_lead_status', ChangeLeadStatusNode);
+        this.register('action.move_lead_stage', MoveLeadStageNode);
+        this.register('action.call_ai_action', CallAiActionNode);
     }
 
     private register(type: string, constructor: NodeConstructor): void {
@@ -492,6 +768,12 @@ export class NodeFactory {
         }
         if (nodeType.includes('cart')) {
             return [this.whatsappService, this.cartService];
+        }
+        if (nodeType === 'action.change_lead_status' || nodeType === 'action.move_lead_stage') {
+            return [this.leadCommands];
+        }
+        if (nodeType === 'action.call_ai_action') {
+            return [this.aiActions];
         }
         return [];
     }

@@ -150,8 +150,10 @@ export class AuthService {
       where: { email },
       include: {
         businesses: {
-          include: {
-            tenants: true,
+          select: {
+            business_id: true,
+            tenant_id: true,
+            business_type: true,
           },
         },
         roles: true,
@@ -263,14 +265,16 @@ export class AuthService {
 
       // Find user
       const user = await this.prisma.users.findUnique({
-        where: { user_id: payload.user_id },
-        include: {
-          businesses: {
-            include: {
-              tenants: true,
-            },
+      where: { user_id: payload.user_id },
+      include: {
+        businesses: {
+          select: {
+            business_id: true,
+            tenant_id: true,
+            business_type: true,
           },
-          roles: true,
+        },
+        roles: true,
         },
       });
 

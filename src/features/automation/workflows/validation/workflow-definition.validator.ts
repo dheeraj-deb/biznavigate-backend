@@ -88,6 +88,7 @@ export class WorkflowDefinitionValidator {
       if (def.category === 'trigger') triggerCount++;
 
       this.validateParams(node.params ?? {}, def.params, `${path}.params`, errors);
+      this.validateActionSpecific(node, `${path}.params`, errors);
 
       // Trigger-type-specific required-field checks. The NODE_DEFINITIONS schema
       // can't express the nested shape of schedule/event params (it only knows
@@ -250,6 +251,30 @@ export class WorkflowDefinitionValidator {
       // booking_created / booking_cancelled / payment_captured / lead_status_changed:
       // no required nested params. Optional filters (from_status/to_status) are validated
       // implicitly because the runtime ignores unknown values.
+    }
+  }
+
+  private validateActionSpecific(node: any, path: string, errors: WorkflowValidationError[]): void {
+    const params = node?.params ?? {};
+    switch (node?.type) {
+      case 'action.change_lead_status':
+        if (!params.status || typeof params.status !== 'string' || !params.status.trim()) {
+          errors.push({ path: `${path}.status`, message: 'Change Lead Status needs a status' });
+        }
+        break;
+      case 'action.move_lead_stage':
+        if (
+          (!params.stage_id || typeof params.stage_id !== 'string' || !params.stage_id.trim()) &&
+          (!params.stage_slug || typeof params.stage_slug !== 'string' || !params.stage_slug.trim())
+        ) {
+          errors.push({ path: `${path}.stage_id`, message: 'Move Lead Stage needs stage_id or stage_slug' });
+        }
+        break;
+      case 'action.call_ai_action':
+        if (!params.action || typeof params.action !== 'string') {
+          errors.push({ path: `${path}.action`, message: 'Call AI Action needs an action' });
+        }
+        break;
     }
   }
 

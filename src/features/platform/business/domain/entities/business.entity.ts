@@ -13,6 +13,10 @@ export class Business {
   tenant_id: string;
   business_name: string;
   business_type?: string;
+  business_group?: string;
+  communication_mode?: string;
+  blueprint_seeded?: boolean;
+  blueprint_seeded_at?: Date;
   email?: string;
   phone?: string;
   website?: string;

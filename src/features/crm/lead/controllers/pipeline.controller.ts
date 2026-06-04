@@ -42,8 +42,8 @@ export class PipelineController {
     @Req() req: any,
     @Body() body: {
       name: string;
-      industry?: 'hospitality' | 'commerce' | 'generic' | 'real_estate' | 'service';
-      fromTemplate?: 'hospitality' | 'commerce' | 'generic' | 'real_estate' | 'service';
+      industry?: 'hospitality' | 'commerce' | 'generic' | 'real_estate' | 'service' | 'automotive';
+      fromTemplate?: 'hospitality' | 'commerce' | 'generic' | 'real_estate' | 'service' | 'automotive';
     },
   ) {
     return this.pipelines.createPipeline({

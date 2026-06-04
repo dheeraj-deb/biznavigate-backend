@@ -53,7 +53,13 @@ export class WhatsAppCatalogOrderService {
           is_active: true,
         },
         include: {
-          businesses: true,
+          businesses: {
+            select: {
+              tenant_id: true,
+              business_name: true,
+              business_type: true,
+            },
+          },
         },
       });
 
