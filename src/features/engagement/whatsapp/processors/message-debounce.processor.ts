@@ -3,9 +3,11 @@ import { CACHE_MANAGER } from '@nestjs/cache-manager';
 import { Inject, Logger } from '@nestjs/common';
 import { Job } from 'bullmq';
 import { Cache } from 'cache-manager';
-import { KafkaProducerService } from 'src/features/kafka/kafka-producer.service';
+import { AgentContext, AgentService } from 'src/features/ai/agent/agent.service';
+import { decodeFlow, decodeHandoff } from 'src/features/ai/agent/types/handoff';
 import { CustomerLanguage, detectCustomerLanguage } from 'src/features/ai/agent/utils/language-detector';
 import { getRedis } from 'src/utils/redis';
+import { WhatsAppService } from '../application/whatsapp.service';
 
 @Processor('message-debounce')
 export class MessageDebounceProcessor extends WorkerHost {
@@ -14,7 +16,8 @@ export class MessageDebounceProcessor extends WorkerHost {
   private readonly maxLanguageMemoryEntries = 10_000;
 
   constructor(
-    private readonly kafkaProducer: KafkaProducerService,
+    private readonly agentService: AgentService,
+    private readonly whatsappService: WhatsAppService,
     @Inject(CACHE_MANAGER) private readonly cache: Cache,
   ) {
     super();
@@ -41,14 +44,79 @@ export class MessageDebounceProcessor extends WorkerHost {
     await this.rememberConversationLanguage(conversationId, languageDetection.language);
 
     this.logger.log(`Debounce fired for conv ${conversationId}: ${payloads.length} msg(s)`);
-    this.logger.log(`Routing conv ${conversationId} to workflow blueprint mode`);
 
-    await this.kafkaProducer.publishTextMessage({ ...lastPayload, user_input: combinedText });
+    const phoneNumberId = lastPayload.context?.contact?.phoneNumberId;
+    const customerPhone = lastPayload.context?.contact?.from;
+    const agentCtx: AgentContext = {
+      businessId: lastPayload.business_id,
+      businessType: lastPayload.context?.business?.type,
+      leadId: lastPayload.lead_id,
+      phone: customerPhone,
+      conversationId: lastPayload.context?.conversation_id ?? conversationId,
+    };
+
+    if (!phoneNumberId || !customerPhone || !agentCtx.businessId) {
+      this.logger.warn(`Missing WhatsApp routing context for conversation ${conversationId}`);
+      return;
+    }
+
+    this.logger.log(`Routing conv ${conversationId} to AI agent conversation mode`);
+    const reply = await this.agentService.processMessage(combinedText, agentCtx);
+    if (!reply) return;
+
+    await this.dispatchAgentReply(reply, agentCtx, lastPayload, phoneNumberId, customerPhone, conversationId);
   }
 
-  // Kept as a no-op for callers compiled against the old AI pre-generation hook.
+  // Kept as a no-op for callers compiled against the old pre-generation hook.
   startSpeculativeGeneration(conversationId: string): void {
-    this.logger.debug(`Speculative AI generation skipped for workflow blueprint mode: ${conversationId}`);
+    this.logger.debug(`Speculative AI generation skipped: ${conversationId}`);
+  }
+
+  private async dispatchAgentReply(
+    reply: string,
+    ctx: AgentContext,
+    lastPayload: any,
+    phoneNumberId: string,
+    customerPhone: string,
+    conversationId: string,
+  ): Promise<void> {
+    const replyCtx = {
+      conversationId: lastPayload.context?.conversation_id ?? conversationId,
+      leadId: lastPayload.lead_id,
+      tenantId: lastPayload.tenant_id,
+    };
+
+    const handoff = decodeHandoff(reply);
+    if (handoff) {
+      await this.whatsappService.sendAgentReply(
+        ctx.businessId,
+        phoneNumberId,
+        customerPhone,
+        "You're being connected to our team. Someone will help you shortly.",
+        replyCtx,
+      );
+      return;
+    }
+
+    const flow = decodeFlow(reply);
+    if (flow) {
+      await this.whatsappService.sendAgentReply(
+        ctx.businessId,
+        phoneNumberId,
+        customerPhone,
+        'I am checking that for you. Our team will help complete the next step.',
+        replyCtx,
+      );
+      return;
+    }
+
+    await this.whatsappService.sendAgentReply(
+      ctx.businessId,
+      phoneNumberId,
+      customerPhone,
+      reply,
+      replyCtx,
+    );
   }
 
   private async getPreviousConversationLanguage(conversationId: string): Promise<CustomerLanguage | undefined> {
@@ -80,6 +148,6 @@ export class MessageDebounceProcessor extends WorkerHost {
   }
 
   private languageCacheKey(conversationId: string): string {
-    return `workflow:conversation_language:${conversationId}`;
+    return `agent:conversation_language:${conversationId}`;
   }
 }
