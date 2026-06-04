@@ -7,8 +7,6 @@ import { WhatsAppTemplate, WhatsAppTemplateDocument } from '../schemas/template.
 import { WhatsAppApiClientService } from '../../whatsapp/infrastructure/whatsapp-api-client.service';
 import { PrismaService } from '../../../../prisma/prisma.service';
 import { TemplateStatus } from '../enums/template.enum';
-import { GupshupOnboardingService } from '../../gupshup/gupshup-onboarding.service';
-import axios from 'axios';
 
 @Processor('whatsapp-template-sync', {
     lockDuration: 120000,
@@ -22,7 +20,6 @@ export class TemplateSyncProcessor extends WorkerHost {
         private readonly templateModel: Model<WhatsAppTemplateDocument>,
         private readonly metaApi: WhatsAppApiClientService,
         private readonly prisma: PrismaService,
-        private readonly gupshupOnboarding: GupshupOnboardingService,
     ) {
         super();
     }
@@ -50,12 +47,10 @@ export class TemplateSyncProcessor extends WorkerHost {
                 let rejectedReason: string | undefined;
 
                 if (account.gupshup_app_id) {
-                    const result = await this.getGupshupTemplateStatus(
-                        account.gupshup_app_id,
-                        template.metaTemplateId,
+                    this.logger.debug(
+                        `Skipping direct Gupshup status lookup for template ${template._id}; use sync-from-meta/webhooks for Gupshup-managed templates`,
                     );
-                    mappedStatus = result.status;
-                    rejectedReason = result.rejectedReason;
+                    continue;
                 } else {
                     const result = await this.metaApi.getTemplateStatus(template.metaTemplateId);
                     mappedStatus = this.mapStatus(result.status);
@@ -87,22 +82,6 @@ export class TemplateSyncProcessor extends WorkerHost {
         }
 
         return { synced: pendingTemplates.length };
-    }
-
-    private async getGupshupTemplateStatus(
-        appId: string,
-        templateId: string,
-    ): Promise<{ status: TemplateStatus; rejectedReason?: string }> {
-        const token = await this.gupshupOnboarding.getPartnerAppToken(appId);
-        const { data } = await axios.get(
-            `https://partner.gupshup.io/partner/app/${appId}/templates/${templateId}`,
-            { headers: { Authorization: token } },
-        );
-        const t = data?.template ?? data;
-        return {
-            status: this.mapStatus(t?.status ?? 'PENDING'),
-            rejectedReason: t?.rejectedReason ?? t?.reason ?? undefined,
-        };
     }
 
     private mapStatus(raw: string): TemplateStatus {
