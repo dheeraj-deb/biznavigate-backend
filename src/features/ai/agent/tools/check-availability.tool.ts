@@ -3,13 +3,12 @@ import { z } from 'zod';
 import { CatalogService } from '../../../commerce/catalog/catalog.service';
 import { resolveDate, isValidDate } from '../utils/date-resolver';
 import { getRunContext } from '../context/agent-run-context';
-import { encodeFlow } from '../types/handoff';
 import { appendSignal } from '../types/agent-signal';
 
 export function makeCheckAvailabilityTool(catalogService: CatalogService) {
   return tool(
     async ({ checkIn, checkOut, propertyName, guests }) => {
-      const { businessId } = getRunContext();
+      const { businessId, businessProfile, lead } = getRunContext();
       const resolvedCheckIn = resolveDate(checkIn);
       const resolvedCheckOut = resolveDate(checkOut);
 
@@ -39,15 +38,26 @@ export function makeCheckAvailabilityTool(catalogService: CatalogService) {
         );
       }
 
-      // Signal the debounce processor to trigger the hospitality flow
-      return encodeFlow({
-        businessId,
-        flowType: 'availability',
-        checkIn: resolvedCheckIn,
-        checkOut: resolvedCheckOut,
-        propertyName,
-        guests,
+      const lines = results.slice(0, 5).map((item: any, index: number) => {
+        const price = item.effective_price ?? item.base_price;
+        const priceText = price ? ` - ₹${Number(price).toLocaleString('en-IN')}` : '';
+        return `${index + 1}. ${item.name}${priceText}`;
       });
+
+      const link = businessProfile.booking_link.enabled && businessProfile.booking_link.url
+        ? thisBookingUrl(businessProfile.booking_link.url, {
+            checkIn: resolvedCheckIn,
+            checkOut: resolvedCheckOut,
+            guests: guests ? String(guests) : '1',
+            leadId: lead?.lead_id,
+          })
+        : '';
+
+      return [
+        `Available rooms from ${resolvedCheckIn} to ${resolvedCheckOut}:`,
+        lines.join('\n'),
+        link ? `Please complete your booking here: ${link}` : 'Reply with the room number or name to continue.',
+      ].join('\n');
     },
     {
       name: 'check_availability',
@@ -60,4 +70,12 @@ export function makeCheckAvailabilityTool(catalogService: CatalogService) {
       }),
     },
   );
+}
+
+function thisBookingUrl(baseUrl: string, params: Record<string, string | undefined>): string {
+  const url = new URL(baseUrl);
+  for (const [key, value] of Object.entries(params)) {
+    if (value) url.searchParams.set(key, value);
+  }
+  return url.toString();
 }

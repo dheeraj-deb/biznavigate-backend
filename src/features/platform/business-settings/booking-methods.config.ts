@@ -1,6 +1,6 @@
 export interface BookingMethodsConfig {
   availability_response: {
-    mode: 'interactive' | 'flow' | 'text' | 'website_link';
+    mode: 'interactive' | 'text' | 'website_link';
   };
   ai_chat: {
     enabled: boolean;
@@ -71,7 +71,7 @@ function asString(value: unknown, fallback: string): string {
 }
 
 function asAvailabilityMode(value: unknown): BookingMethodsConfig['availability_response']['mode'] {
-  return value === 'flow' || value === 'text' || value === 'interactive' || value === 'website_link'
+  return value === 'text' || value === 'interactive' || value === 'website_link'
     ? value
     : 'interactive';
 }

@@ -28,13 +28,13 @@ export function makeResponderNode(modelConfig: AgentModelConfig, _tools: Structu
   });
 
   return async (state: AgentStateType): Promise<Partial<AgentStateType>> => {
-    // Pass FLOW:/HANDOFF: signals through unchanged — debounce processor handles them
+    // Pass HANDOFF signals through unchanged — the dispatcher handles them.
     const last = state.messages.at(-1);
     if (
       last instanceof AIMessage &&
-      (String(last.content).startsWith('FLOW:') || String(last.content).startsWith('HANDOFF:'))
+      String(last.content).startsWith('HANDOFF:')
     ) {
-      logger.log(`${String(last.content).startsWith('FLOW:') ? 'FLOW' : 'HANDOFF'} passthrough — skipping LLM call`);
+      logger.log('HANDOFF passthrough — skipping LLM call');
       return {};
     }
 

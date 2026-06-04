@@ -17,7 +17,6 @@ import { CollectFilterNode } from "../nodes/actions/collect-filter-node";
 import { RAGSearchNode } from "../nodes/actions/rag-search-node";
 import { RagChatNode } from "../nodes/actions/rag-chat-node";
 import { SendPaymentRequestNode } from "../nodes/actions/send-payment-req-node";
-import { SendFlowNode } from "../nodes/actions/send-flow-node";
 import { SendTemplateNode } from "../nodes/actions/send-template-node";
 import { ChangeLeadStatusNode } from "../nodes/actions/change-lead-status-node";
 import { MoveLeadStageNode } from "../nodes/actions/move-lead-stage-node";
@@ -559,26 +558,6 @@ export class NodeFactory {
             ],
         },
 
-        // ── Flows ──────────────────────────────────────────────────────────
-        {
-            type: 'action.send_flow',
-            category: 'action',
-            label: 'Send Flow',
-            description: 'Sends a WhatsApp Flow form and waits for the user to complete it.',
-            icon: '📋',
-            waitForInput: true,
-            output_variable: 'flow_response',
-            params: [
-                { key: 'flow_id', type: 'string' },
-                { key: 'body', type: 'string' },
-                { key: 'cta', type: 'string' },
-                { key: 'header', type: 'string' },
-                { key: 'footer', type: 'string' },
-                { key: 'screen', type: 'string' },
-                { key: 'flow_token', type: 'string' },
-            ],
-        },
-
         // ── RAG ────────────────────────────────────────────────────────────
         {
             type: 'action.rag_search',
@@ -728,9 +707,6 @@ export class NodeFactory {
         // Payments
         this.register('action.send_payment_request', SendPaymentRequestNode);
 
-        // Flows
-        this.register('action.send_flow', SendFlowNode);
-
         // Templates
         this.register('action.send_template', SendTemplateNode);
 
@@ -756,7 +732,7 @@ export class NodeFactory {
     }
 
     private getDependencies(nodeType: string): any[] {
-        if (nodeType.startsWith('trigger.whatsapp') || nodeType.includes('send_message') || nodeType === 'action.wait_for_text' || nodeType === 'action.collect_filter' || nodeType === 'action.rag_search' || nodeType === 'action.rag_chat' || nodeType === 'action.send_payment_request' || nodeType === 'action.send_flow' || nodeType === 'action.send_template') {
+        if (nodeType.startsWith('trigger.whatsapp') || nodeType.includes('send_message') || nodeType === 'action.wait_for_text' || nodeType === 'action.collect_filter' || nodeType === 'action.rag_search' || nodeType === 'action.rag_chat' || nodeType === 'action.send_payment_request' || nodeType === 'action.send_template') {
             return [this.whatsappService];
         }
         if (nodeType === 'action.send_catalog') {

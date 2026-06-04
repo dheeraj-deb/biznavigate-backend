@@ -38,29 +38,6 @@ const SYSTEM_KEYS: string[] = [
 // Known dot-notation sub-fields for nodes that produce structured outputs.
 // These expand what the agent can reference in template variable mappings.
 const KNOWN_SUBFIELDS: Record<string, string[]> = {
-  'action.send_flow': [
-    'flow_response',
-    // Booking (service_bookings enrichment)
-    'flow_response.booking_id',
-    'flow_response.booking_reference',
-    'flow_response.service_name',
-    'flow_response.service_type',
-    'flow_response.check_in_date',
-    'flow_response.check_out_date',
-    'flow_response.nights',
-    'flow_response.total_price',
-    'flow_response.booking_status',
-    'flow_response.payment_status',
-    'flow_response.num_guests',
-    'flow_response.customer_name',
-    'flow_response.customer_phone',
-    // Order (orders enrichment)
-    'flow_response.order_id',
-    'flow_response.order_number',
-    'flow_response.order_status',
-    'flow_response.total_amount',
-    'flow_response.items_count',
-  ],
   'action.collect_filter': [
     'filter_metadata',
     'filter_metadata.filterKey',
@@ -125,7 +102,7 @@ const TOOLS: OpenAI.ChatCompletionTool[] = [
       description:
         'Writes the variable mapping for an action.send_template node. ' +
         'variables[0] maps to {{1}}, variables[1] to {{2}}, etc. ' +
-        'Use context paths like "contactName" or "flow_response.booking_id". ' +
+        'Use context paths like "contactName", "lead.name", or "metadata.payload.booking_link". ' +
         'Use "$Text" prefix for hard-coded literal values. ' +
         'Set header_variable to empty string if the template has no text header variable.',
       parameters: {
@@ -503,7 +480,6 @@ After a node executes, its output becomes available in context for all downstrea
 - action.send_message_withmenu → menu_selection
 - action.send_message_with_btns → button_selection
 - action.wait_for_text → user_input (overwrites the system user_input)
-- action.send_flow → flow_response (DB-enriched object; for service bookings: flow_response.booking_reference, flow_response.service_name, flow_response.service_type, flow_response.check_in_date, flow_response.check_out_date, flow_response.nights, flow_response.total_price, flow_response.num_guests, flow_response.customer_name, flow_response.customer_phone, flow_response.booking_status, flow_response.payment_status; for orders: flow_response.order_number, flow_response.order_status, flow_response.total_amount, flow_response.items_count)
 - action.send_catalog → catalog_selection
 - action.send_payment_request → payment_reference_id
 - action.rag_search → rag_results
@@ -511,7 +487,7 @@ After a node executes, its output becomes available in context for all downstrea
 
 ## Variable Path Rules
 
-1. Dot-notation resolves into context: "flow_response.booking_id" → context.flow_response.booking_id
+1. Dot-notation resolves into context: "metadata.payload.booking_link" → context.metadata.payload.booking_link
 2. Use "$" prefix for literal strings: "$Confirmed" → the text "Confirmed" (not a context lookup)
 3. variables[] is position-ordered: variables[0] → {{1}}, variables[1] → {{2}}, etc.
 4. If a template has no body variables, set variables to []
@@ -522,7 +498,7 @@ After a node executes, its output becomes available in context for all downstrea
 For each action.send_template node:
 
 1. Call get_template_details(template_name, language)
-   - **variableDescriptions[N-1]** is the most reliable source — use it first if present (e.g., "Guest name" → contact.name or flow_response.customer_name)
+   - **variableDescriptions[N-1]** is the most reliable source — use it first if present (e.g., "Guest name" → contact.name)
    - Read bodyExamples[N-1] for the sample value Meta approved (helpful when description is absent)
    - Read the surrounding body text to understand what each {{N}} represents
    - Check if header has a {{1}} variable
@@ -531,17 +507,13 @@ For each action.send_template node:
    - See exactly which context paths are available at that node's position in the graph
 
 3. Infer the best mapping — priority order: variableDescriptions → bodyExamples → body text:
-   - If bodyExamples[0] looks like a person's name → use "contact.name" or "flow_response.customer_name"
-   - If the body says "Booking ID" or "Booking Ref" → use "flow_response.booking_reference"
-   - If the body says "Order #" or "Order ID" → use "flow_response.order_number"
-   - Check-in / check-out dates → "flow_response.check_in_date" / "flow_response.check_out_date"
-   - Nights or duration → "flow_response.nights"
-   - Room type / service type → "flow_response.service_name" or "flow_response.service_type"
-   - Amount / total / price → "flow_response.total_price" (booking) or "flow_response.total_amount" (order)
-   - Number of guests → "flow_response.num_guests"
+   - If bodyExamples[0] looks like a person's name → use "contact.name" or "lead.name"
+   - If the body says "Booking Link" or contains a URL → use "metadata.payload.booking_link" when available
+   - Check-in / check-out dates → use "metadata.payload.check_in" / "metadata.payload.check_out" when available
+   - Stay dates/date range → use "metadata.payload.dates" when available
+   - Number of guests → use "metadata.payload.guests" when available
    - If the body says "business {{1}}" or "at {{1}}" near a business name → use "business.name"
    - If the body references a city or location → use "business.city"
-   - If the template follows a send_flow node, prefer flow_response.* sub-fields over generic context
    - If no good match exists → use "$" + the bodyExample value as a literal fallback
 
 4. Call set_node_variable_mapping(node_id, variables, header_variable)

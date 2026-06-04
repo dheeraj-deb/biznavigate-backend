@@ -31,10 +31,10 @@ import { KafkaModule } from '../../kafka/kafka.module';
 import { CartModule } from '../../commerce/cart/cart.module';
 import { ConversationModule } from '../../crm/conversation/conversation.module';
 import { WhatsAppTemplatesModule } from '../whatsapp-templates/whatsapp-templates.module';
-import { WhatsAppFlowsModule } from '../../whatsapp-flows/whatsapp-flows.module';
 import { GatewayModule } from '../../crm/inbox/gateway/gateway.module';
 import { HumanHandoffGatewayModule } from '../../crm/human-handoff/human-handoff-gateway.module';
 import { AgentModule } from '../../ai/agent/agent.module';
+import { ConversationRoutingModule } from '../../ai/conversation-routing/conversation-routing.module';
 import { WorkflowsModule } from '../../automation/workflows/workflows.module';
 import { LeadModule } from '../../crm/lead/lead.module';
 import { BookingsModule } from '../../industries/hospitality/bookings/bookings.module';
@@ -50,10 +50,10 @@ import { Campaign, CampaignSchema } from '../campaign/schemas/campaign.schema';
     CartModule,
     ConversationModule,
     WhatsAppTemplatesModule,
-    WhatsAppFlowsModule,
     GatewayModule,
     HumanHandoffGatewayModule,
     AgentModule,
+    forwardRef(() => ConversationRoutingModule),
     BusinessSettingsModule,
     forwardRef(() => LeadModule),
     BookingsModule,

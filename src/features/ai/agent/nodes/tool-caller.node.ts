@@ -53,13 +53,12 @@ export function makeToolCallerNode(modelConfig: AgentModelConfig, tools: Structu
         }),
       );
 
-      // If any tool returned a FLOW: or HANDOFF: signal, short-circuit to END via responder
+      // If any tool returned a HANDOFF signal, short-circuit to END via responder.
       const signalResult = toolResults.find(
-        (tr) => String(tr.content).startsWith('FLOW:') || String(tr.content).startsWith('HANDOFF:'),
+        (tr) => String(tr.content).startsWith('HANDOFF:'),
       );
       if (signalResult) {
-        const signal = String(signalResult.content).startsWith('FLOW:') ? 'FLOW' : 'HANDOFF';
-        logger.log(`${signal} signal detected — short-circuiting`);
+        logger.log('HANDOFF signal detected — short-circuiting');
         return { messages: [...toolResults, new AIMessage(String(signalResult.content))] };
       }
 

@@ -22,8 +22,7 @@ import { WorkflowExecution, WorkflowExecutionDocument } from './schema/workflow-
 
 // Action node types that produce a free-form WhatsApp message. Sends from these
 // require an open 24-hour customer-service window. Templates (action.send_template)
-// and approved interactive flows (action.send_flow) are intentionally excluded
-// because they're allowed outside the window.
+// are intentionally excluded because they're allowed outside the window.
 const FREE_FORM_WHATSAPP_SEND_TYPES = new Set([
   'action.send_message',
   'action.send_message_withmenu',
@@ -143,15 +142,6 @@ export class WorkflowsService implements OnModuleInit {
       ],
       'action.send_catalog': [
         { path: 'catalog_selection', label: 'Selected Product ID', example: 'prod_abc' },
-      ],
-      'action.send_flow': [
-        { path: 'flow_response', label: 'Flow Response (raw)', example: '{}' },
-        { path: 'flow_response.booking_id', label: 'Booking ID', example: 'BK-001' },
-        { path: 'flow_response.guest_name', label: 'Guest Name', example: 'Dheeraj' },
-        { path: 'flow_response.label_checkin', label: 'Check-in Label', example: 'Check-in: 2026-03-18' },
-        { path: 'flow_response.label_checkout', label: 'Check-out Label', example: 'Check-out: 2026-03-20' },
-        { path: 'flow_response.label_nights', label: 'Nights Label', example: 'Nights: 2' },
-        { path: 'flow_response.label_total', label: 'Total Label', example: 'Total: ₹5000' },
       ],
       'action.send_payment_request': [
         { path: 'payment_reference_id', label: 'Payment Reference ID', example: 'pay_xyz' },
@@ -1267,18 +1257,6 @@ export class WorkflowsService implements OnModuleInit {
       actualInput = newInput;
     }
 
-    // Enrich flow response with DB data when resuming from a send_flow node
-    const waitingNode = workflowDef?.nodes?.find((n: any) => n.id === currentNodeId);
-    if (waitingNode?.type === 'action.send_flow' && typeof actualInput === 'string') {
-      try {
-        const parsed = JSON.parse(actualInput);
-        actualInput = await this.enrichFlowResponse(parsed);
-        this.logger.log(`Flow response enriched for node ${currentNodeId}`);
-      } catch {
-        // not valid JSON or enrichment failed — leave as-is
-      }
-    }
-
     const conversation_id = newInput.context?.conversation_id;
 
     // User replied — cancel any pending drop timer
@@ -1506,17 +1484,6 @@ export class WorkflowsService implements OnModuleInit {
     return !!configuredIntent && configuredIntent === incomingIntent;
   }
 
-
-  /**
-   * Find the first `action.send_flow` node in the active workflow for a business.
-   * Used by the agent to locate the correct node to start from.
-   */
-  async findSendFlowNodeId(businessId: string): Promise<string | null> {
-    const workflow = await this.getActiveWorkflowForBusiness(businessId, '');
-    const node = workflow?.definition.nodes.find((n: any) => n.type === 'action.send_flow');
-    return node?.id ?? null;
-  }
-
   /**
    * Start workflow execution at a specific node — used by the agent after confirming availability.
    * Creates a fresh execution record at `nodeId` and immediately runs from that node.
@@ -1706,60 +1673,6 @@ export class WorkflowsService implements OnModuleInit {
       });
       throw error;
     }
-  }
-
-  /**
-   * Enrich a WhatsApp Flow response with full DB data based on known IDs.
-   * Supports: booking_id (order_id) and order_id (orders).
-   */
-  private async enrichFlowResponse(data: Record<string, any>): Promise<Record<string, any>> {
-    // --- Accommodation booking (now stored as order) ---
-    if (data.booking_id) {
-      const order = await this.prisma.orders.findFirst({
-        where: { order_id: data.booking_id },
-        include: { order_items: true },
-      });
-      if (order) {
-        const item = (order.order_items?.[0]?.snapshot as any) ?? {};
-        return {
-          booking_id: order.order_id,
-          check_in_date: item.check_in ?? null,
-          check_out_date: item.check_out ?? null,
-          nights: item.nights ?? null,
-          total_price: Number(order.total_amount),
-          booking_status: order.delivery_status,
-          payment_status: order.payment_status,
-          customer_name: item.guest_name ?? null,
-          customer_phone: item.phone ?? null,
-          num_guests: item.num_guests ?? 1,
-        };
-      }
-    }
-
-    // --- E-commerce order ---
-    if (data.order_id) {
-      const order = await this.prisma.orders.findUnique({
-        where: { order_id: data.order_id },
-        include: { order_items: true },
-      });
-      if (order) {
-        return {
-          order_id: order.order_id,
-          order_number: order.order_number,
-          order_status: order.status,
-          total_amount: Number(order.total_amount),
-          payment_status: order.payment_status,
-          items_count: order.order_items?.length ?? 0,
-          order_items: order.order_items?.map(i => ({
-            name: i.product_name,
-            quantity: i.quantity,
-            price: Number(i.total_price),
-          })),
-        };
-      }
-    }
-
-    return data;
   }
 
 }

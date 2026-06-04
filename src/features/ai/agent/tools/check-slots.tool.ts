@@ -3,7 +3,6 @@ import { z } from 'zod';
 import { CatalogService } from '../../../commerce/catalog/catalog.service';
 import { resolveDate, isValidDate } from '../utils/date-resolver';
 import { getRunContext } from '../context/agent-run-context';
-import { encodeFlow } from '../types/handoff';
 import { appendSignal } from '../types/agent-signal';
 
 // Used by services, education, activity verticals — slot-based availability check
@@ -44,13 +43,11 @@ export function makeCheckSlotsTool(catalogService: CatalogService) {
         return [item.name, price, duration].filter(Boolean).join(' — ');
       });
 
-      return encodeFlow({
-        businessId,
-        flowType: 'appointment',
-        date: resolvedDate,
-        serviceName,
-        slots: lines,
-      });
+      return [
+        `Available slots for ${resolvedDate}:`,
+        lines.join('\n'),
+        'Reply with the option you prefer to continue.',
+      ].join('\n');
     },
     {
       name: 'check_slots',
