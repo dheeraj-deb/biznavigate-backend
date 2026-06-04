@@ -27,6 +27,7 @@ export class AutomationRouter {
       lead_id: params.lead.lead_id,
       business_id: params.account.business_id,
       tenant_id: params.account.businesses.tenant_id,
+      waba_id: params.account.gupshup_app_id ?? params.account.instagram_business_account_id ?? params.phone_number_id,
       user_input: params.message.user_input,
       context: {
         message_id: params.lead_message_id,
@@ -43,6 +44,10 @@ export class AutomationRouter {
           name: params.lead.name,
           status: params.lead.status,
           phone: params.lead.phone,
+        },
+        business: {
+          id: params.account.business_id,
+          type: params.account.businesses?.business_type,
         },
       },
     };

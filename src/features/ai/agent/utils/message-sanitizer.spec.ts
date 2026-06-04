@@ -19,7 +19,7 @@ describe('sanitizeMessagesForModel', () => {
     const messages = [
       new HumanMessage('booking id 258f049a-0a8c-45f5-b27c-3a9369b01f76'),
       {
-        content: 'FLOW:{}',
+        content: 'stale tool result',
         role: 'tool',
         tool_call_id: 'stale_call',
         getType: () => 'tool',
@@ -42,7 +42,7 @@ describe('sanitizeMessagesForModel', () => {
         getType: () => 'ai',
       } as any,
       {
-        content: 'FLOW:{}',
+        content: 'Available rooms',
         role: 'tool',
         tool_call_id: 'call_1',
         getType: () => 'tool',
@@ -69,7 +69,7 @@ describe('sanitizeMessagesForModel', () => {
           },
         ],
       }),
-      new ToolMessage({ content: 'FLOW:{}', tool_call_id: 'call_1' }),
+      new ToolMessage({ content: 'Available rooms', tool_call_id: 'call_1' }),
     ];
 
     const sanitized = sanitizeMessagesForModel(messages);

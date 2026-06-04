@@ -69,21 +69,6 @@ describe('WhatsAppMessageNormalizer', () => {
     expect(result.user_input).toBe('room_deluxe');
   });
 
-  it('normalizes flow replies', () => {
-    const result = service.normalize({
-      id: 'wamid-5',
-      from: '919999999999',
-      type: 'interactive',
-      interactive: {
-        type: 'nfm_reply',
-        nfm_reply: { response_json: '{"screen":"SUCCESS"}' },
-      },
-    });
-
-    expect(result.message_text).toBe('Flow completed');
-    expect(result.user_input).toBe('{"screen":"SUCCESS"}');
-  });
-
   it('marks catalog order payloads', () => {
     const result = service.normalize({
       id: 'wamid-6',

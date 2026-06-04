@@ -180,6 +180,25 @@ model tenants {
   hospitality_inquiries     hospitality_inquiries[]
   notification_messages     notification_messages[]     @relation("notification_messages_tenant")
   notification_templates    notification_templates[]    @relation("notification_templates_tenant")
+  tenant_conversation_configs tenant_conversation_configs[]
+}
+
+model tenant_conversation_configs {
+  config_id     String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  tenant_id     String   @db.Uuid
+  waba_id       String   @db.VarChar(255)
+  mode          String   @default("text") @db.VarChar(30)
+  flow          String   @default("support") @db.VarChar(30)
+  capabilities  Json     @default("{}")
+  rules         Json     @default("{}")
+  is_active     Boolean  @default(true)
+  created_at    DateTime @default(now()) @db.Timestamptz(6)
+  updated_at    DateTime @default(now()) @db.Timestamptz(6)
+  tenant        tenants  @relation(fields: [tenant_id], references: [tenant_id], onDelete: Cascade)
+
+  @@unique([tenant_id, waba_id], map: "tenant_conversation_configs_tenant_waba_key")
+  @@index([tenant_id], map: "idx_tenant_conversation_configs_tenant")
+  @@index([waba_id], map: "idx_tenant_conversation_configs_waba")
 }
 
 model users {

@@ -1,12 +1,10 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { AgentContext } from 'src/features/ai/agent/agent.service';
-import { decodeFlow, decodeHandoff, FlowPayload, HandoffPayload } from 'src/features/ai/agent/types/handoff';
+import { decodeHandoff, HandoffPayload } from 'src/features/ai/agent/types/handoff';
 import { ConversationService } from 'src/features/crm/conversation/conversation.service';
 import { HumanHandoffGateway } from 'src/features/crm/human-handoff/human-handoff.gateway';
 import { InboxGateway } from 'src/features/crm/inbox/gateway/inbox.gateway';
-import { HospitalityFlowService } from 'src/features/whatsapp-flows/hospitality-flow.service';
-import { WhatsAppFlowsService } from 'src/features/whatsapp-flows/whatsapp-flows.service';
 import { WhatsAppService } from './whatsapp.service';
 
 export interface AgentReplyDispatchInput {
@@ -33,8 +31,6 @@ export class AgentReplyDispatcherService {
     private readonly conversationService: ConversationService,
     private readonly inboxGateway: InboxGateway,
     private readonly humanHandoffGateway: HumanHandoffGateway,
-    private readonly hospitalityFlowService: HospitalityFlowService,
-    private readonly whatsappFlowsService: WhatsAppFlowsService,
     private readonly eventEmitter: EventEmitter2,
   ) {}
 
@@ -47,12 +43,6 @@ export class AgentReplyDispatcherService {
       return;
     }
 
-    const flow = decodeFlow(input.reply);
-    if (flow) {
-      await this.handleFlow(flow, input, replyCtx);
-      return;
-    }
-
     await this.whatsappService.sendAgentReply(
       input.ctx.businessId,
       input.phoneNumberId,
@@ -60,6 +50,7 @@ export class AgentReplyDispatcherService {
       input.reply,
       replyCtx,
     );
+    this.emitBookingLinkSentIfPresent(input, replyCtx);
 
     this.eventEmitter.emit('conversation.agent.replied', {
       business_id: input.ctx.businessId,
@@ -150,134 +141,6 @@ export class AgentReplyDispatcherService {
     );
   }
 
-  private async handleFlow(
-    flow: FlowPayload,
-    input: AgentReplyDispatchInput,
-    replyCtx: ReplyContext,
-  ): Promise<void> {
-    this.eventEmitter.emit('conversation.flow.requested', {
-      business_id: input.ctx.businessId,
-      tenant_id: replyCtx.tenantId,
-      lead_id: replyCtx.leadId,
-      conversation_id: replyCtx.conversationId,
-      channel: 'whatsapp',
-      flow_type: flow.flowType,
-      payload: flow,
-      emitted_at: new Date().toISOString(),
-    });
-
-    if (flow.flowType !== 'availability') {
-      await this.whatsappService.sendAgentReply(
-        input.ctx.businessId,
-        input.phoneNumberId,
-        input.customerPhone,
-        "You're being connected to our team. Someone will help you shortly.",
-        replyCtx,
-      );
-      return;
-    }
-
-    const businessId = this.stringValue(flow.businessId) || input.ctx.businessId;
-    const checkIn = this.stringValue(flow.checkIn) || this.stringValue(flow.check_in);
-    const checkOut = this.stringValue(flow.checkOut) || this.stringValue(flow.check_out);
-    const propertyName = this.stringValue(flow.propertyName) || this.stringValue(flow.property_name);
-
-    if (!checkIn || !checkOut) {
-      await this.whatsappService.sendAgentReply(
-        businessId,
-        input.phoneNumberId,
-        input.customerPhone,
-        'Please share your check-in and check-out dates so I can check availability.',
-        replyCtx,
-      );
-      return;
-    }
-
-    const flowId = await this.whatsappFlowsService.findHospitalityFlowId(businessId).catch((error) => {
-      this.logger.warn(`Could not find hospitality WhatsApp flow for business ${businessId}: ${error?.message ?? error}`);
-      return null;
-    });
-
-    if (flowId) {
-      await this.whatsappService.sendFlowMessage(
-        input.phoneNumberId,
-        input.customerPhone,
-        `I found your stay dates: ${checkIn} to ${checkOut}. Tap below to view available rooms.`,
-        'View rooms',
-        flowId,
-        'Check availability',
-        undefined,
-        undefined,
-        JSON.stringify({ check_in: checkIn, check_out: checkOut, property_name: propertyName }),
-        undefined,
-        {
-          business_id: businessId,
-          check_in: checkIn,
-          check_out: checkOut,
-          property_name: propertyName,
-        },
-      );
-
-      this.emitAvailabilityChecked(input, replyCtx, businessId, checkIn, checkOut, propertyName, 'whatsapp_flow');
-      return;
-    }
-
-    const availability = await this.hospitalityFlowService.checkAvailability(
-      { check_in: checkIn, check_out: checkOut, property_name: propertyName },
-      '',
-      businessId,
-    );
-    await this.whatsappService.sendAgentReply(
-      businessId,
-      input.phoneNumberId,
-      input.customerPhone,
-      this.availabilityText(availability, checkIn, checkOut),
-      replyCtx,
-    );
-
-    this.emitAvailabilityChecked(input, replyCtx, businessId, checkIn, checkOut, propertyName, 'text_fallback', availability);
-  }
-
-  private emitAvailabilityChecked(
-    input: AgentReplyDispatchInput,
-    replyCtx: ReplyContext,
-    businessId: string,
-    checkIn: string,
-    checkOut: string,
-    propertyName: string | undefined,
-    deliveryMode: 'whatsapp_flow' | 'text_fallback',
-    result?: any,
-  ) {
-    this.eventEmitter.emit('conversation.availability.checked', {
-      business_id: businessId,
-      tenant_id: replyCtx.tenantId,
-      lead_id: replyCtx.leadId,
-      conversation_id: replyCtx.conversationId,
-      channel: 'whatsapp',
-      check_in: checkIn,
-      check_out: checkOut,
-      property_name: propertyName,
-      delivery_mode: deliveryMode,
-      available_count: Array.isArray(result?.data?.available_services) ? result.data.available_services.length : undefined,
-      customer_phone: input.customerPhone,
-      emitted_at: new Date().toISOString(),
-    });
-  }
-
-  private availabilityText(result: any, checkIn: string, checkOut: string): string {
-    const services = Array.isArray(result?.data?.available_services) ? result.data.available_services : [];
-    if (!services.length) {
-      return result?.data?.error_message || `No rooms are available from ${checkIn} to ${checkOut}.`;
-    }
-
-    const lines = services.slice(0, 5).map((service: any, index: number) => {
-      const title = service?.['main-content']?.title || service?.title || service?.name || `Option ${index + 1}`;
-      const price = service?.['main-content']?.metadata ? ` - ${service['main-content'].metadata}` : '';
-      return `${index + 1}. ${title}${price}`;
-    });
-    return `Available rooms from ${checkIn} to ${checkOut}:\n${lines.join('\n')}\n\nReply with the room name or number to continue.`;
-  }
-
   private replyContext(input: AgentReplyDispatchInput): ReplyContext {
     return {
       conversationId: input.lastPayload.context?.conversation_id ?? input.conversationId,
@@ -286,7 +149,37 @@ export class AgentReplyDispatcherService {
     };
   }
 
-  private stringValue(value: unknown): string | undefined {
-    return typeof value === 'string' && value.trim().length > 0 ? value.trim() : undefined;
+  private emitBookingLinkSentIfPresent(input: AgentReplyDispatchInput, replyCtx: ReplyContext): void {
+    const bookingLink = this.extractBookingLink(input.reply);
+    if (!bookingLink) return;
+
+    const url = new URL(bookingLink);
+    const checkIn = url.searchParams.get('checkIn') || undefined;
+    const checkOut = url.searchParams.get('checkOut') || undefined;
+    this.eventEmitter.emit('workflow.event.booking.link_sent', {
+      business_id: input.ctx.businessId,
+      tenant_id: replyCtx.tenantId,
+      lead_id: replyCtx.leadId,
+      event_name: 'booking.link_sent',
+      payload: {
+        booking_link: bookingLink,
+        dates: checkIn && checkOut ? `${checkIn} to ${checkOut}` : undefined,
+        check_in: checkIn,
+        check_out: checkOut,
+        guests: url.searchParams.get('guests') || undefined,
+        customer_phone: input.customerPhone,
+      },
+      emitted_at: new Date().toISOString(),
+    });
+  }
+
+  private extractBookingLink(text: string): string | null {
+    const match = text.match(/https?:\/\/\S+\/book\/[^\s]+/);
+    if (!match) return null;
+    try {
+      return new URL(match[0]).toString();
+    } catch {
+      return null;
+    }
   }
 }

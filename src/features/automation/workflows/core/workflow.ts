@@ -277,20 +277,7 @@ export class Workflow {
 
         // Add the user input to the context (NOW after filter handling)
         if (currentNode?.outputVariable) {
-            if (currentNode.type === 'action.send_flow') {
-                if (typeof userInput === 'object' && userInput !== null) {
-                    // Pre-parsed + enriched by resumeWorkflow
-                    this.nodeContext[currentNode.outputVariable] = userInput;
-                } else {
-                    try {
-                        this.nodeContext[currentNode.outputVariable] = JSON.parse(userInput);
-                    } catch {
-                        this.nodeContext[currentNode.outputVariable] = userInput;
-                    }
-                }
-            } else {
-                this.nodeContext[currentNode.outputVariable] = userInput;
-            }
+            this.nodeContext[currentNode.outputVariable] = userInput;
         }
 
         console.log("node context =>")

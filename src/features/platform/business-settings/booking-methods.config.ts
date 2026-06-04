@@ -1,6 +1,6 @@
 export interface BookingMethodsConfig {
   availability_response: {
-    mode: 'interactive' | 'flow' | 'text' | 'website_link';
+    mode: 'interactive' | 'text' | 'website_link';
   };
   ai_chat: {
     enabled: boolean;
@@ -71,7 +71,7 @@ function asString(value: unknown, fallback: string): string {
 }
 
 function asAvailabilityMode(value: unknown): BookingMethodsConfig['availability_response']['mode'] {
-  return value === 'flow' || value === 'text' || value === 'interactive' || value === 'website_link'
+  return value === 'text' || value === 'interactive' || value === 'website_link'
     ? value
     : 'interactive';
 }
@@ -141,7 +141,9 @@ export function summarizeBookingMethodsForAgent(config: BookingMethodsConfig): s
   else disabled.push('human handoff fallback');
 
   return [
-    `Availability results should be sent as ${config.availability_response.mode}.`,
+    config.availability_response.mode === 'website_link'
+      ? 'Availability and booking next steps should be sent as the public booking link when available.'
+      : `Availability results should be sent as ${config.availability_response.mode}.`,
     `Enabled booking methods: ${enabled.join(', ') || 'none'}.`,
     `Disabled booking methods: ${disabled.join(', ') || 'none'}.`,
     config.ai_chat.require_confirmation

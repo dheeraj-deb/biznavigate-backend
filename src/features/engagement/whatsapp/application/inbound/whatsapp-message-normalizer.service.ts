@@ -44,9 +44,6 @@ export class WhatsAppMessageNormalizer {
         } else if (message.interactive?.type === 'list_reply') {
           messageText = message.interactive.list_reply?.title || '';
           buttonId = message.interactive.list_reply?.id ?? null;
-        } else if (message.interactive?.type === 'nfm_reply') {
-          messageText = 'Flow completed';
-          buttonId = message.interactive.nfm_reply?.response_json ?? null;
         }
         break;
       case 'order':

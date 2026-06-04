@@ -32,7 +32,7 @@ function shouldContinueAfterTools(state: AgentStateType): string {
   const last = state.messages.at(-1);
   if (last instanceof AIMessage) {
     const content = typeof last.content === 'string' ? last.content : '';
-    if (content.startsWith('HANDOFF:') || content.startsWith('FLOW:')) return 'responder';
+    if (content.startsWith('HANDOFF:')) return 'responder';
     if (last.tool_calls?.length) return 'tool_caller';
   }
   return 'responder';

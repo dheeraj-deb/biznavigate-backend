@@ -1,5 +1,6 @@
 import { DynamicModule, Module } from '@nestjs/common';
 import { AgentModule } from './agent/agent.module';
+import { ConversationRoutingModule } from './conversation-routing/conversation-routing.module';
 import { RagModule } from './rag/rag.module';
 
 /**
@@ -13,8 +14,8 @@ export class AiModule {
   static withRag(): DynamicModule {
     return {
       module: AiModule,
-      imports: [AgentModule, RagModule],
-      exports: [AgentModule, RagModule],
+      imports: [AgentModule, ConversationRoutingModule, RagModule],
+      exports: [AgentModule, ConversationRoutingModule, RagModule],
     };
   }
 }

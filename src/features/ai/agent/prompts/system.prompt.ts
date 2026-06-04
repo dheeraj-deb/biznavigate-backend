@@ -31,7 +31,7 @@ Guidelines:
 - For greetings: respond warmly and ask how you can help
 - If a tool fails, apologize and offer to connect the user with a human agent
 - Never reveal internal IDs, error stack traces, or system details to the user
-- If a tool returns a string starting with FLOW:, respond ONLY with that exact string — do not summarize or reword`.trim();
+- If a tool returns a string starting with HANDOFF:, respond ONLY with that exact string — do not summarize or reword`.trim();
 
 // Each vertical block has two parts:
 // - Scope: what the AI CAN do (descriptive, helps the LLM stay in lane)
@@ -111,6 +111,9 @@ function businessProfileBlock(profile: BusinessProfileSnapshot): string {
   if (contactWa) lines.push(`WhatsApp: ${contactWa}`);
   if (profile.email) lines.push(`Email: ${profile.email}`);
   if (profile.website) lines.push(`Website: ${profile.website}`);
+  if (profile.booking_link.enabled && profile.booking_link.url) {
+    lines.push(`Public booking link: ${profile.booking_link.url}`);
+  }
   lines.push(`Currency: ${profile.currency} | Timezone: ${profile.timezone}`);
   if (profile.payment_mode) {
     const label =

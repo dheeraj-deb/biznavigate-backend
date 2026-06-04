@@ -3,10 +3,9 @@ import { CACHE_MANAGER } from '@nestjs/cache-manager';
 import { Inject, Logger } from '@nestjs/common';
 import { Job } from 'bullmq';
 import { Cache } from 'cache-manager';
-import { AgentContext, AgentService } from 'src/features/ai/agent/agent.service';
+import { ConversationOrchestratorService } from 'src/features/ai/conversation-routing/services/conversation-orchestrator.service';
 import { CustomerLanguage, detectCustomerLanguage } from 'src/features/ai/agent/utils/language-detector';
 import { getRedis } from 'src/utils/redis';
-import { AgentReplyDispatcherService } from '../application/agent-reply-dispatcher.service';
 
 @Processor('message-debounce')
 export class MessageDebounceProcessor extends WorkerHost {
@@ -15,8 +14,7 @@ export class MessageDebounceProcessor extends WorkerHost {
   private readonly maxLanguageMemoryEntries = 10_000;
 
   constructor(
-    private readonly agentService: AgentService,
-    private readonly replyDispatcher: AgentReplyDispatcherService,
+    private readonly conversationOrchestrator: ConversationOrchestratorService,
     @Inject(CACHE_MANAGER) private readonly cache: Cache,
   ) {
     super();
@@ -46,30 +44,33 @@ export class MessageDebounceProcessor extends WorkerHost {
 
     const phoneNumberId = lastPayload.context?.contact?.phoneNumberId;
     const customerPhone = lastPayload.context?.contact?.from;
-    const agentCtx: AgentContext = {
-      businessId: lastPayload.business_id,
-      businessType: lastPayload.context?.business?.type,
-      leadId: lastPayload.lead_id,
-      phone: customerPhone,
-      conversationId: lastPayload.context?.conversation_id ?? conversationId,
-    };
+    const tenantId = lastPayload.tenant_id;
+    const wabaId = lastPayload.waba_id ?? phoneNumberId;
+    const activeConversationId = lastPayload.context?.conversation_id ?? conversationId;
 
-    if (!phoneNumberId || !customerPhone || !agentCtx.businessId) {
+    if (!phoneNumberId || !customerPhone || !lastPayload.business_id || !tenantId || !wabaId) {
       this.logger.warn(`Missing WhatsApp routing context for conversation ${conversationId}`);
       return;
     }
 
-    this.logger.log(`Routing conv ${conversationId} to AI agent conversation mode`);
-    const reply = await this.agentService.processMessage(combinedText, agentCtx);
-    if (!reply) return;
-
-    await this.replyDispatcher.dispatch({
-      reply,
-      ctx: agentCtx,
-      lastPayload,
+    this.logger.log(`Routing conv ${conversationId} to AI conversation orchestrator`);
+    await this.conversationOrchestrator.handleIncoming({
+      tenantId,
+      wabaId,
       phoneNumberId,
       customerPhone,
-      conversationId,
+      userMessage: combinedText,
+      session: {
+        conversationId: activeConversationId,
+        contactPhone: customerPhone,
+        contactName: lastPayload.context?.contact?.name,
+        leadId: lastPayload.lead_id,
+        metadata: { businessId: lastPayload.business_id },
+      },
+      history: payloads.map((payload) => ({
+        role: 'user' as const,
+        text: payload.user_input,
+      })),
     });
   }
 

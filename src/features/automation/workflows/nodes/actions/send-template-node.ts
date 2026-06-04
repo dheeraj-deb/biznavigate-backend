@@ -10,7 +10,7 @@ interface SendTemplateParams {
   language: string;
   /**
    * Ordered list of context variable paths mapped to {{1}}, {{2}}, {{3}} ...
-   * Supports dot-notation: "contactName", "flow_response.booking_id"
+   * Supports dot-notation: "contactName", "metadata.payload.booking_link"
    * Also supports literal strings prefixed with "$": "$Fixed Text"
    */
   variables: string[];
