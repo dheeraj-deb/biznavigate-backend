@@ -10,6 +10,7 @@ import { PrismaService } from '../../../prisma/prisma.service';
 import { RagService } from '../rag/rag.service';
 import { agentRunContextStorage } from './context/agent-run-context';
 import { AgentContextBuilder } from './context/agent-context-builder.service';
+import { PendingAgentActionService } from './services/pending-agent-action.service';
 import { GenerationHandle } from './types/generation-handle';
 import { decodeHandoff } from './types/handoff';
 import { AgentSignal } from './types/agent-signal';
@@ -47,6 +48,7 @@ export class AgentService implements OnModuleInit {
     private readonly eventEmitter: EventEmitter2,
     @Inject(CACHE_MANAGER) private readonly cache: Cache,
     private readonly contextBuilder: AgentContextBuilder,
+    private readonly pendingActions: PendingAgentActionService,
     @Optional() private readonly ragService: RagService | null,
   ) {}
 
@@ -56,6 +58,7 @@ export class AgentService implements OnModuleInit {
       modelConfig: this.agentModelConfig,
       catalogService: this.catalogService,
       prisma: this.prisma,
+      pendingActions: this.pendingActions,
       ragService: this.ragService ?? null,
     });
     this.logger.log(`Agent graph initialized with primary=${this.agentModelConfig.primaryModel} fast=${this.agentModelConfig.fastModel}`);
