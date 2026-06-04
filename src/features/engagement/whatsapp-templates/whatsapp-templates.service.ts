@@ -545,12 +545,34 @@ export class WhatsAppTemplatesService {
             throw new NotFoundException('No active WhatsApp account found for this business');
         }
 
-        const { status, rejectedReason } = await this.metaApi.getTemplateStatus(
-            template.metaTemplateId,
-        );
+        if (account.gupshup_app_id) {
+            await this.syncFromMeta(businessId);
+            const refreshed = await this.templateModel.findById(templateId).lean();
+            return {
+                status: refreshed?.status ?? template.status,
+                rejectionReason: refreshed?.rejectionReason,
+                message: 'Template status refreshed from Meta template list',
+            };
+        }
+
+        let status: string;
+        let rejectedReason: string | undefined;
+        try {
+            const result = await this.metaApi.getTemplateStatus(template.metaTemplateId);
+            status = result.status;
+            rejectedReason = result.rejectedReason;
+        } catch (error) {
+            const detail = JSON.stringify(error?.response?.data ?? error?.message);
+            await this.templateModel.findByIdAndUpdate(templateId, {
+                rejectionReason: `Provider status lookup failed: ${detail}`,
+            });
+            return {
+                status: template.status,
+                rejectionReason: `Provider status lookup failed: ${detail}`,
+            };
+        }
 
         const mappedStatus = this.mapMetaStatus(status);
-
         await this.templateModel.findByIdAndUpdate(templateId, {
             status: mappedStatus,
             ...(rejectedReason && { rejectionReason: rejectedReason }),
