@@ -1,0 +1,373 @@
+import {
+  Controller,
+  Get,
+  Post,
+  Delete,
+  Body,
+  Param,
+  Query,
+  BadRequestException,
+  Logger,
+  HttpCode,
+  HttpStatus,
+  Req,
+  Res,
+  UseGuards,
+} from '@nestjs/common';
+import { Response } from 'express';
+import { WhatsAppService } from './whatsapp.service';
+import { WebhookValidatorService } from '../infrastructure/webhook-validator.service';
+import { WhatsAppWebhookDto, WebhookVerificationDto } from '../dto/webhook-event.dto';
+import { SendWhatsAppMessageDto } from '../dto/whatsapp-message.dto';
+import { ConnectWhatsAppAccountDto } from '../dto/whatsapp-auth.dto';
+import { WhatsAppSignatureGuard } from '../guards/whatsapp-signature.guard';
+import { GupshupOnboardingService } from '../../gupshup/gupshup-onboarding.service';
+import { JwtAuthGuard } from '../../../../common/guards/jwt-auth.guard';
+import { WhatsAppAccountService } from './account/whatsapp-account.service';
+
+@Controller('whatsapp')
+export class WhatsAppController {
+  private readonly logger = new Logger(WhatsAppController.name);
+
+  constructor(
+    private readonly whatsappService: WhatsAppService,
+    private readonly whatsappAccountService: WhatsAppAccountService,
+    private readonly webhookValidator: WebhookValidatorService,
+    private readonly gupshupOnboarding: GupshupOnboardingService,
+  ) { }
+
+  // ==================== Account Management ====================
+
+  @Post('accounts/connect')
+  @UseGuards(JwtAuthGuard)
+  async connectAccount(@Body() dto: ConnectWhatsAppAccountDto, @Req() req: any) {
+    this.logger.log(`Connecting WhatsApp account for business ${req.user.business_id}`);
+
+    return this.whatsappAccountService.connectWhatsAppAccount(
+      dto.whatsappBusinessAccountId,
+      dto.phoneNumberId,
+      req.user.business_id,
+    );
+  }
+
+  @Get('accounts')
+  @UseGuards(JwtAuthGuard)
+  async getAccounts(@Req() req: any) {
+    return this.whatsappAccountService.getWhatsAppAccounts(req.user.business_id);
+  }
+
+  @Post('accounts/:accountId/refresh-verification')
+  @UseGuards(JwtAuthGuard)
+  async refreshVerification(@Param('accountId') accountId: string, @Req() req: any) {
+    return this.whatsappAccountService.refreshAccountVerification(accountId, req.user.business_id);
+  }
+
+  @Delete('accounts/:accountId')
+  @UseGuards(JwtAuthGuard)
+  async disconnectAccount(
+    @Param('accountId') accountId: string,
+    @Req() req: any,
+  ) {
+    return this.whatsappAccountService.disconnectAccount(accountId, req.user.business_id);
+  }
+
+  // ==================== Webhooks ====================
+
+  @Get('webhook/debug')
+  debugWebhookConfig() {
+    return {
+      hasVerifyToken: !!process.env.FACEBOOK_WEBHOOK_VERIFY_TOKEN,
+      verifyTokenLength: process.env.FACEBOOK_WEBHOOK_VERIFY_TOKEN?.length || 0,
+      hasAppId: !!process.env.FACEBOOK_APP_ID,
+      hasAppSecret: !!process.env.FACEBOOK_APP_SECRET,
+    };
+  }
+
+  @Get('webhook')
+  @HttpCode(HttpStatus.OK)
+  async verifyWebhook(@Query() query: WebhookVerificationDto, @Res() res: Response) {
+    this.logger.log('🔔 Webhook verification request received');
+    this.logger.log(`Query params: ${JSON.stringify(query)}`);
+
+    const challenge = this.webhookValidator.verifyChallenge(
+      query['hub.mode'],
+      query['hub.verify_token'],
+      query['hub.challenge'],
+    );
+
+    if (!challenge) {
+      throw new BadRequestException('Webhook verification failed');
+    }
+
+    this.logger.log('✅ Webhook verified successfully');
+    res.status(200).send(challenge);
+  }
+
+  @Post('webhook')
+  @HttpCode(HttpStatus.OK)
+  @UseGuards(WhatsAppSignatureGuard)
+  async handleWebhook(
+    @Res() res: Response,
+    @Body() body: WhatsAppWebhookDto,
+  ) {
+    const summary = this.summarizeWebhookBody(body);
+    this.logger.log(`[MetaWebhook] Received ${summary}`);
+    setImmediate(() => this.whatsappService.processWebhook(body));
+    res.status(200).json({ success: 200 });
+  }
+
+  @Post('messages/send')
+  @UseGuards(JwtAuthGuard)
+  async sendMessage(
+    @Body() dto: { phoneNumberId: string; to: string; message: SendWhatsAppMessageDto },
+  ) {
+    return this.whatsappService.sendMessage(
+      dto.phoneNumberId,
+      dto.to,
+      dto.message,
+    );
+  }
+
+  @Post('messages/button')
+  @UseGuards(JwtAuthGuard)
+  async sendButtonMessage(
+    @Body() dto: {
+      phoneNumberId: string;
+      to: string;
+      bodyText: string;
+      buttons: { id: string; title: string }[];
+      headerText?: string;
+      footerText?: string;
+    },
+  ) {
+    return this.whatsappService.sendButtonMessage(
+      dto.phoneNumberId,
+      dto.to,
+      dto.bodyText,
+      dto.buttons,
+      dto.headerText,
+      dto.footerText,
+    );
+  }
+
+  @Post('messages/list')
+  @UseGuards(JwtAuthGuard)
+  async sendListMessage(
+    @Body() dto: {
+      phoneNumberId: string;
+      to: string;
+      bodyText: string;
+      buttonText: string;
+      sections: { title: string; rows: { id: string; title: string; description?: string }[] }[];
+      headerText?: string;
+      footerText?: string;
+    },
+  ) {
+    return this.whatsappService.sendListMessage(
+      dto.phoneNumberId,
+      dto.to,
+      dto.bodyText,
+      dto.buttonText,
+      dto.sections,
+      dto.headerText,
+      dto.footerText,
+    );
+  }
+
+  @Post('booking/messages/entry-buttons')
+  @UseGuards(JwtAuthGuard)
+  async sendBookingEntryButtons(
+    @Body() dto: {
+      phoneNumberId: string;
+      to: string;
+      bodyText?: string;
+    },
+  ) {
+    return this.whatsappService.sendBookingEntryButtons(dto.phoneNumberId, dto.to, dto.bodyText);
+  }
+
+  @Post('booking/messages/product')
+  @UseGuards(JwtAuthGuard)
+  async sendBookingProductMessage(
+    @Body() dto: {
+      phoneNumberId: string;
+      to: string;
+      catalogId: string;
+      productRetailerId: string;
+      bodyText?: string;
+      footerText?: string;
+    },
+  ) {
+    return this.whatsappService.sendSingleProductMessage(
+      dto.phoneNumberId,
+      dto.to,
+      dto.catalogId,
+      dto.productRetailerId,
+      dto.bodyText,
+      dto.footerText,
+    );
+  }
+
+  @Post('booking/messages/product-list')
+  @UseGuards(JwtAuthGuard)
+  async sendBookingProductListMessage(
+    @Body() dto: {
+      phoneNumberId: string;
+      to: string;
+      catalogId: string;
+      bodyText?: string;
+      headerText?: string;
+      footerText?: string;
+      sections: { title: string; product_items: { product_retailer_id: string }[] }[];
+    },
+  ) {
+    return this.whatsappService.sendProductListMessage(
+      dto.phoneNumberId,
+      dto.to,
+      dto.catalogId,
+      dto.sections,
+      dto.bodyText,
+      dto.headerText,
+      dto.footerText,
+    );
+  }
+
+  @Post('booking/messages/template')
+  @UseGuards(JwtAuthGuard)
+  async sendBookingTemplateMessage(
+    @Body() dto: {
+      phoneNumberId: string;
+      to: string;
+      templateName: string;
+      languageCode?: string;
+      bodyParameters?: string[];
+    },
+  ) {
+    return this.whatsappService.sendBookingTemplateMessage(
+      dto.phoneNumberId,
+      dto.to,
+      dto.templateName,
+      dto.languageCode,
+      dto.bodyParameters ?? [],
+    );
+  }
+
+  // ==================== Gupshup Webhooks ====================
+
+  /**
+   * Receives inbound messages from Gupshup (regular WhatsApp messages).
+   * Gupshup posts to this URL when a customer sends a message.
+   * Normalizes Gupshup format to Meta-compatible format and routes to the message pipeline.
+   * Route: POST /whatsapp/gupshup/webhook
+   */
+  @Post('gupshup/webhook')
+  @HttpCode(HttpStatus.OK)
+  async handleGupshupWebhook(@Body() body: any) {
+    this.logger.log(`[GupshupWebhook] Received: ${JSON.stringify(body)}`);
+
+    if (body?.type === 'message-event' && body?.payload) {
+      setImmediate(() =>
+        this.whatsappService
+          .handleGupshupMessageEvent(body)
+          .catch((err) => this.logger.error('[GupshupWebhook] Error handling message event:', err?.message)),
+      );
+      return { received: true };
+    }
+
+    // Gupshup sends webhooks in Meta's exact format with gs_app_id at root.
+    // Route each message through the standard Meta handler, using gs_app_id
+    // to resolve the account instead of the phone_number_id.
+    const gupshupAppId: string | undefined = body?.gs_app_id;
+    const entries: any[] = body?.entry ?? [];
+
+    for (const entry of entries) {
+      for (const change of entry?.changes ?? []) {
+        if (change?.field !== 'messages') continue;
+        const value = change?.value;
+        const messages: any[] = value?.messages ?? [];
+        const contacts: any[] = value?.contacts ?? [];
+        const statuses: any[] = value?.statuses ?? [];
+
+        for (const message of messages) {
+          setImmediate(async () => {
+            try {
+              if (gupshupAppId) {
+                await this.whatsappService.handleGupshupInboundMessage(gupshupAppId, message, contacts);
+              } else {
+                // Fallback: use metadata phone_number_id as normal
+                await this.whatsappService.handleMessageWebhook(message, value?.metadata, contacts);
+              }
+            } catch (err) {
+              this.logger.error('[GupshupWebhook] Error handling inbound message:', err?.message);
+            }
+          });
+        }
+
+        for (const status of statuses) {
+          setImmediate(async () => {
+            try {
+              await this.whatsappService.handleStatusWebhook(status, {
+                ...value?.metadata,
+                gupshup_app_id: gupshupAppId,
+              });
+            } catch (err) {
+              this.logger.error('[GupshupWebhook] Error handling status:', err?.message);
+            }
+          });
+        }
+      }
+    }
+
+    return { received: true };
+  }
+
+  private summarizeWebhookBody(body: any): string {
+    const entries: any[] = Array.isArray(body?.entry) ? body.entry : [];
+    const parts: string[] = [];
+
+    for (const entry of entries) {
+      for (const change of entry?.changes ?? []) {
+        const value = change?.value ?? {};
+        const messages = Array.isArray(value.messages) ? value.messages.length : 0;
+        const statuses = Array.isArray(value.statuses) ? value.statuses.length : 0;
+        parts.push(
+          `field=${change?.field ?? 'unknown'} phoneNumberId=${value.metadata?.phone_number_id ?? 'unknown'} messages=${messages} statuses=${statuses}`,
+        );
+      }
+    }
+
+    return parts.length ? parts.join('; ') : `object=${body?.object ?? 'unknown'} entries=${entries.length}`;
+  }
+
+  /**
+   * Receives Gupshup's "docker-status-event" live-event webhook.
+   * Route: POST /whatsapp/gupshup/live-event
+   * No auth guard — Gupshup calls this without a JWT.
+   */
+  @Post('gupshup/live-event')
+  @HttpCode(HttpStatus.OK)
+  async handleGupshupLiveEvent(@Body() body: any) {
+    this.logger.log(`[GupshupLiveEvent] Received: ${JSON.stringify(body)}`);
+
+    const type = body?.type;
+    const innerType = body?.payload?.type;
+    const innerStatus = body?.payload?.payload?.status;
+
+    if (type !== 'onboarding-event' || innerType !== 'docker-status-event' || innerStatus !== 'live') {
+      this.logger.log(`[GupshupLiveEvent] Ignoring non-live event: type=${type} innerType=${innerType} innerStatus=${innerStatus}`);
+      return { received: true };
+    }
+
+    const waId: string | undefined = body?.payload?.payload?.waId;
+    const appId: string | undefined = body?.appId;
+    const phone: string | undefined = body?.phone;
+
+    setImmediate(() =>
+      this.gupshupOnboarding
+        .handleLiveEvent({ appId, phone, waId })
+        .catch((err) => this.logger.error('[GupshupLiveEvent] Handler error:', err?.message)),
+    );
+
+    return { received: true };
+  }
+}

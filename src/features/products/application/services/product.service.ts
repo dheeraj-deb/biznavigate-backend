@@ -1,10 +1,4 @@
-import {
-  Injectable,
-  Logger,
-  NotFoundException,
-  BadRequestException,
-  ConflictException,
-} from '@nestjs/common';
+import { BadRequestException, ConflictException, Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { ProductRepositoryPrisma } from '../../infrastructure/product.repository.prisma';
 import { Product, ProductVariant } from '../../domain/entities/product.entity';
 import { CreateProductDto } from '../dto/create-product.dto';
@@ -13,11 +7,6 @@ import { ProductQueryDto } from '../dto/product-query.dto';
 import { BulkUploadProductDto } from '../dto/bulk-upload-product.dto';
 import { PrismaService } from '../../../../prisma/prisma.service';
 
-/**
- * Product Service
- * Handles all business logic for product management
- * Production-grade service designed for scalability and reliability
- */
 @Injectable()
 export class ProductService {
   private readonly logger = new Logger(ProductService.name);
@@ -27,492 +16,381 @@ export class ProductService {
     private readonly prisma: PrismaService,
   ) {}
 
-  /**
-   * Create a new product
-   * Validates business exists and SKU uniqueness
-   */
-  async create(createProductDto: CreateProductDto): Promise<Product> {
-    try {
-      // Validate business exists
-      await this.validateBusinessExists(createProductDto.business_id);
-
-      // Validate SKU uniqueness within business if provided
-      if (createProductDto.sku) {
-        await this.validateSkuUniqueness(
-          createProductDto.business_id,
-          createProductDto.sku,
-        );
-      }
-
-      // Validate compare_price is greater than price if both provided
-      if (
-        createProductDto.compare_price !== undefined &&
-        createProductDto.price !== undefined &&
-        createProductDto.compare_price <= createProductDto.price
-      ) {
-        throw new BadRequestException(
-          'Compare price must be greater than selling price',
-        );
-      }
-
-      // Create product
-      const product = await this.productRepository.create(createProductDto);
-
-      // Create variants if provided
-      if (
-        createProductDto.has_variants &&
-        createProductDto.variants &&
-        createProductDto.variants.length > 0
-      ) {
-        for (const variantDto of createProductDto.variants) {
-          await this.productRepository.createVariant({
-            ...variantDto,
-            product_id: product.product_id,
-          });
-        }
-      }
-
-      this.logger.log(
-        `Product created successfully: ${product.product_id} for business ${createProductDto.business_id}`,
-      );
-
-      return product;
-    } catch (error) {
-      this.logger.error(
-        `Failed to create product: ${error.message}`,
-        error.stack,
-      );
-      throw error;
-    }
-  }
-
-  /**
-   * Find product by ID with variants
-   */
-  async findById(productId: string): Promise<Product & { variants?: ProductVariant[] }> {
-    try {
-      const product = await this.productRepository.findById(productId);
-
-      if (!product) {
-        throw new NotFoundException(`Product not found: ${productId}`);
-      }
-
-      // Fetch variants if product has variants
-      let variants: ProductVariant[] = [];
-      if (product.has_variants) {
-        variants = await this.productRepository.findVariantsByProductId(productId);
-      }
-
-      return {
-        ...product,
-        variants: variants.length > 0 ? variants : undefined,
-      };
-    } catch (error) {
-      this.logger.error(
-        `Failed to find product: ${error.message}`,
-        error.stack,
-      );
-      throw error;
-    }
-  }
-
-  /**
-   * Find all products with filtering, pagination, and sorting
-   */
-  async findAll(
-    query: ProductQueryDto,
-  ): Promise<{ data: Product[]; total: number; page: number; limit: number }> {
-    try {
-      // Validate business exists if business_id filter provided
-      if (query.business_id) {
-        await this.validateBusinessExists(query.business_id);
-      }
-
-      const result = await this.productRepository.findAll(query);
-
-      this.logger.log(
-        `Retrieved ${result.data.length} products (page ${result.page}/${Math.ceil(result.total / result.limit)})`,
-      );
-
-      return result;
-    } catch (error) {
-      this.logger.error(
-        `Failed to find products: ${error.message}`,
-        error.stack,
-      );
-      throw error;
-    }
-  }
-
-  /**
-   * Update product
-   */
-  async update(
-    productId: string,
-    updateProductDto: UpdateProductDto,
-  ): Promise<Product> {
-    try {
-      // Check if product exists
-      const existingProduct = await this.productRepository.findById(productId);
-      if (!existingProduct) {
-        throw new NotFoundException(`Product not found: ${productId}`);
-      }
-
-      // Validate SKU uniqueness if SKU is being updated
-      if (
-        updateProductDto.sku &&
-        updateProductDto.sku !== existingProduct.sku
-      ) {
-        await this.validateSkuUniqueness(
-          existingProduct.business_id,
-          updateProductDto.sku,
-          productId,
-        );
-      }
-
-      // Validate compare_price is greater than price if both provided
-      const newPrice = updateProductDto.price ?? existingProduct.price;
-      const newComparePrice =
-        updateProductDto.compare_price ?? existingProduct.compare_price;
-
-      if (
-        newComparePrice !== undefined &&
-        newComparePrice !== null &&
-        newPrice !== undefined &&
-        newPrice !== null &&
-        newComparePrice <= newPrice
-      ) {
-        throw new BadRequestException(
-          'Compare price must be greater than selling price',
-        );
-      }
-
-      const updated = await this.productRepository.update(
-        productId,
-        updateProductDto,
-      );
-
-      this.logger.log(`Product updated successfully: ${productId}`);
-
-      return updated;
-    } catch (error) {
-      this.logger.error(
-        `Failed to update product: ${error.message}`,
-        error.stack,
-      );
-      throw error;
-    }
-  }
-
-  /**
-   * Delete product (soft delete)
-   */
-  async delete(productId: string): Promise<void> {
-    try {
-      // Check if product exists
-      const existingProduct = await this.productRepository.findById(productId);
-      if (!existingProduct) {
-        throw new NotFoundException(`Product not found: ${productId}`);
-      }
-
-      await this.productRepository.delete(productId);
-
-      this.logger.log(`Product soft deleted successfully: ${productId}`);
-    } catch (error) {
-      this.logger.error(
-        `Failed to delete product: ${error.message}`,
-        error.stack,
-      );
-      throw error;
-    }
-  }
-
-  /**
-   * Bulk create products
-   * Uses transaction for data integrity
-   */
-  async bulkCreate(
-    bulkUploadDto: BulkUploadProductDto,
-  ): Promise<{
-    success: number;
-    failed: number;
-    errors: Array<{ index: number; sku?: string; error: string }>;
-  }> {
-    const results = {
-      success: 0,
-      failed: 0,
-      errors: [] as Array<{ index: number; sku?: string; error: string }>,
-    };
-
-    this.logger.log(
-      `Starting bulk upload of ${bulkUploadDto.products.length} products`,
-    );
-
-    for (let i = 0; i < bulkUploadDto.products.length; i++) {
-      const productDto = bulkUploadDto.products[i];
-
-      try {
-        // Validate business exists
-        await this.validateBusinessExists(productDto.business_id);
-
-        // Validate SKU uniqueness if provided
-        if (productDto.sku) {
-          await this.validateSkuUniqueness(
-            productDto.business_id,
-            productDto.sku,
-          );
-        }
-
-        // Create product
-        await this.productRepository.create(productDto);
-        results.success++;
-      } catch (error) {
-        results.failed++;
-        results.errors.push({
-          index: i,
-          sku: productDto.sku,
-          error: error.message,
-        });
-
-        this.logger.warn(
-          `Failed to create product at index ${i} (SKU: ${productDto.sku}): ${error.message}`,
-        );
-      }
+  async create(dto: CreateProductDto): Promise<Product> {
+    if (!dto.business_id || !dto.tenant_id) {
+      throw new BadRequestException('business_id and tenant_id are required');
     }
 
-    this.logger.log(
-      `Bulk upload completed: ${results.success} succeeded, ${results.failed} failed`,
-    );
-
-    return results;
-  }
-
-  /**
-   * Check stock availability
-   */
-  async checkStockAvailability(
-    productId: string,
-    quantity: number,
-  ): Promise<boolean> {
-    try {
-      const available = await this.productRepository.checkStockAvailability(
-        productId,
-        quantity,
-      );
-
-      this.logger.log(
-        `Stock check for product ${productId} (qty: ${quantity}): ${available ? 'available' : 'unavailable'}`,
-      );
-
-      return available;
-    } catch (error) {
-      this.logger.error(
-        `Failed to check stock availability: ${error.message}`,
-        error.stack,
-      );
-      return false;
-    }
-  }
-
-  /**
-   * Update stock (increment or decrement)
-   * Used for inventory adjustments and order processing
-   */
-  async updateStock(
-    productId: string,
-    quantity: number,
-    operation: 'increment' | 'decrement',
-  ): Promise<void> {
-    try {
-      // Check if product exists
-      const product = await this.productRepository.findById(productId);
-      if (!product) {
-        throw new NotFoundException(`Product not found: ${productId}`);
-      }
-
-      // If decrementing, check stock availability
-      if (operation === 'decrement' && product.track_inventory) {
-        const available = await this.productRepository.checkStockAvailability(
-          productId,
-          quantity,
-        );
-
-        if (!available) {
-          throw new BadRequestException(
-            `Insufficient stock for product ${productId}. Requested: ${quantity}, Available: ${product.stock_quantity || 0}`,
-          );
-        }
-      }
-
-      await this.productRepository.updateStock(productId, quantity, operation);
-
-      this.logger.log(
-        `Stock ${operation}ed for product ${productId}: ${quantity} units`,
-      );
-    } catch (error) {
-      this.logger.error(
-        `Failed to update stock: ${error.message}`,
-        error.stack,
-      );
-      throw error;
-    }
-  }
-
-  /**
-   * Reserve stock for order (decrement)
-   */
-  async reserveStock(productId: string, quantity: number): Promise<void> {
-    return this.updateStock(productId, quantity, 'decrement');
-  }
-
-  /**
-   * Release stock (increment) - for order cancellations
-   */
-  async releaseStock(productId: string, quantity: number): Promise<void> {
-    return this.updateStock(productId, quantity, 'increment');
-  }
-
-  /**
-   * Create product variant
-   */
-  async createVariant(
-    productId: string,
-    variantData: Partial<ProductVariant>,
-  ): Promise<ProductVariant> {
-    try {
-      // Check if product exists
-      const product = await this.productRepository.findById(productId);
-      if (!product) {
-        throw new NotFoundException(`Product not found: ${productId}`);
-      }
-
-      // Ensure product has variants enabled
-      if (!product.has_variants) {
-        throw new BadRequestException(
-          `Product ${productId} does not support variants. Enable has_variants first.`,
-        );
-      }
-
-      const variant = await this.productRepository.createVariant({
-        ...variantData,
-        product_id: productId,
+    const item = await this.prisma.$transaction(async (tx) => {
+      const created = await tx.catalog_items.create({
+        data: {
+          business_id: dto.business_id!,
+          tenant_id: dto.tenant_id!,
+          item_type: this.toItemType(dto.product_type),
+          name: dto.name,
+          description: dto.description,
+          category: dto.category,
+          base_price: dto.price,
+          compare_price: dto.compare_price,
+          currency: dto.currency ?? 'INR',
+          stock_quantity: dto.track_inventory === false ? null : (dto.stock_quantity ?? 0),
+          primary_image_url: dto.primary_image_url,
+          image_urls: dto.image_urls,
+          attributes: {
+            low_stock_threshold: dto.low_stock_threshold ?? 5,
+            track_inventory: dto.track_inventory ?? true,
+            dimensions: dto.dimensions,
+            weight: dto.weight,
+          },
+          ai_tags: this.buildAiTags(dto),
+          is_active: dto.is_active ?? true,
+        },
       });
 
-      this.logger.log(
-        `Variant created: ${variant.variant_id} for product ${productId}`,
-      );
+      await tx.product_item_details.create({
+        data: {
+          item_id: created.item_id,
+          business_id: dto.business_id!,
+          brand: dto.brand,
+          sku: dto.sku,
+          condition: dto.condition,
+          weight: dto.weight,
+          dimensions: dto.dimensions ? { value: dto.dimensions } : undefined,
+          metadata: {
+            low_stock_threshold: dto.low_stock_threshold ?? 5,
+            track_inventory: dto.track_inventory ?? true,
+          },
+        },
+      });
 
-      return variant;
-    } catch (error) {
-      this.logger.error(
-        `Failed to create variant: ${error.message}`,
-        error.stack,
-      );
-      throw error;
-    }
-  }
-
-  /**
-   * Get all variants for a product
-   */
-  async getVariantsByProductId(productId: string): Promise<ProductVariant[]> {
-    try {
-      // Check if product exists
-      const product = await this.productRepository.findById(productId);
-      if (!product) {
-        throw new NotFoundException(`Product not found: ${productId}`);
+      if (dto.variants?.length) {
+        await tx.item_variants.createMany({
+          data: dto.variants.map((variant) => ({
+            item_id: created.item_id,
+            business_id: dto.business_id!,
+            name: variant.name,
+            sku: variant.sku,
+            price: variant.price,
+            stock_quantity: variant.quantity ?? 0,
+            options: variant.variant_options,
+            is_active: true,
+          })),
+        });
       }
 
-      const variants =
-        await this.productRepository.findVariantsByProductId(productId);
-
-      this.logger.log(`Retrieved ${variants.length} variants for product ${productId}`);
-
-      return variants;
-    } catch (error) {
-      this.logger.error(
-        `Failed to get variants: ${error.message}`,
-        error.stack,
-      );
-      throw error;
-    }
-  }
-
-  /**
-   * Update product variant
-   */
-  async updateVariant(
-    variantId: string,
-    variantData: Partial<ProductVariant>,
-  ): Promise<ProductVariant> {
-    try {
-      const updated = await this.productRepository.updateVariant(
-        variantId,
-        variantData,
-      );
-
-      this.logger.log(`Variant updated: ${variantId}`);
-
-      return updated;
-    } catch (error) {
-      this.logger.error(
-        `Failed to update variant: ${error.message}`,
-        error.stack,
-      );
-      throw error;
-    }
-  }
-
-  /**
-   * Delete product variant
-   */
-  async deleteVariant(variantId: string): Promise<void> {
-    try {
-      await this.productRepository.deleteVariant(variantId);
-
-      this.logger.log(`Variant deleted: ${variantId}`);
-    } catch (error) {
-      this.logger.error(
-        `Failed to delete variant: ${error.message}`,
-        error.stack,
-      );
-      throw error;
-    }
-  }
-
-  /**
-   * Validate business exists
-   */
-  private async validateBusinessExists(businessId: string): Promise<void> {
-    const business = await this.prisma.businesses.findUnique({
-      where: { business_id: businessId },
+      return tx.catalog_items.findUnique({
+        where: { item_id: created.item_id },
+        include: {
+          product_detail: true,
+          variants: { where: { is_active: true }, orderBy: { created_at: 'asc' } },
+        },
+      });
     });
 
-    if (!business) {
-      throw new NotFoundException(`Business not found: ${businessId}`);
-    }
+    this.logger.log(`Product created in catalog: ${item?.item_id} - ${dto.name}`);
+    return this.toProduct(item);
   }
 
-  /**
-   * Validate SKU uniqueness within a business
-   */
-  private async validateSkuUniqueness(
-    businessId: string,
-    sku: string,
-    excludeProductId?: string,
-  ): Promise<void> {
-    const existingProduct = await this.prisma.products.findFirst({
-      where: {
-        business_id: businessId,
-        sku,
-        product_id: excludeProductId ? { not: excludeProductId } : undefined,
+  async findById(productId: string): Promise<Product & { variants?: ProductVariant[] }> {
+    const item = await this.prisma.catalog_items.findFirst({
+      where: { item_id: productId, item_type: 'physical_product', deleted_at: null },
+      include: {
+        product_detail: true,
+        variants: { where: { is_active: true }, orderBy: { created_at: 'asc' } },
       },
     });
+    if (!item) throw new NotFoundException('Product not found');
+    return this.toProduct(item);
+  }
 
-    if (existingProduct) {
-      throw new ConflictException(
-        `Product with SKU "${sku}" already exists in this business`,
-      );
+  async findAll(query: ProductQueryDto): Promise<{ data: Product[]; total: number; page: number; limit: number }> {
+    const page = Number(query.page ?? 1);
+    const limit = Number(query.limit ?? 20);
+    const skip = (page - 1) * limit;
+    const where: any = {
+      business_id: query.business_id,
+      item_type: 'physical_product',
+      deleted_at: null,
+    };
+    if (query.is_active !== undefined) where.is_active = query.is_active;
+    if (query.category) where.category = query.category;
+    if (query.search) {
+      where.OR = [
+        { name: { contains: query.search, mode: 'insensitive' } },
+        { description: { contains: query.search, mode: 'insensitive' } },
+        { category: { contains: query.search, mode: 'insensitive' } },
+        { ai_tags: { has: query.search.toLowerCase() } },
+      ];
     }
+
+    const [items, total] = await Promise.all([
+      this.prisma.catalog_items.findMany({
+        where,
+        skip,
+        take: limit,
+        include: {
+          product_detail: true,
+          variants: { where: { is_active: true }, orderBy: { created_at: 'asc' } },
+          external_catalog_items: {
+            where: { provider: 'whatsapp' },
+            take: 1,
+            orderBy: { created_at: 'desc' },
+          },
+        },
+        orderBy: { created_at: 'desc' },
+      }),
+      this.prisma.catalog_items.count({ where }),
+    ]);
+
+    return { data: items.map((item) => this.toProduct(item)), total, page, limit };
+  }
+
+  async update(productId: string, dto: UpdateProductDto): Promise<Product> {
+    await this.findById(productId);
+    const item = await this.prisma.$transaction(async (tx) => {
+      await tx.catalog_items.update({
+        where: { item_id: productId },
+        data: {
+          name: dto.name,
+          description: dto.description,
+          category: dto.category,
+          base_price: dto.price,
+          compare_price: dto.compare_price,
+          currency: dto.currency,
+          stock_quantity: dto.track_inventory === false ? null : dto.stock_quantity,
+          primary_image_url: dto.primary_image_url,
+          image_urls: dto.image_urls,
+          is_active: dto.is_active,
+          attributes: {
+            low_stock_threshold: dto.low_stock_threshold,
+            track_inventory: dto.track_inventory,
+            dimensions: dto.dimensions,
+            weight: dto.weight,
+          },
+          ...(dto.name || dto.description || dto.category || dto.sku || dto.brand
+            ? { ai_tags: this.buildAiTags({ ...dto, name: dto.name ?? '' } as CreateProductDto) }
+            : {}),
+          updated_at: new Date(),
+        },
+      });
+
+      await tx.product_item_details.upsert({
+        where: { item_id: productId },
+        create: {
+          item_id: productId,
+          business_id: (await tx.catalog_items.findUnique({ where: { item_id: productId }, select: { business_id: true } }))!.business_id,
+          brand: dto.brand,
+          sku: dto.sku,
+          condition: dto.condition,
+          weight: dto.weight,
+          dimensions: dto.dimensions ? { value: dto.dimensions } : undefined,
+          metadata: {
+            low_stock_threshold: dto.low_stock_threshold,
+            track_inventory: dto.track_inventory,
+          },
+        },
+        update: {
+          brand: dto.brand,
+          sku: dto.sku,
+          condition: dto.condition,
+          weight: dto.weight,
+          dimensions: dto.dimensions ? { value: dto.dimensions } : undefined,
+          metadata: {
+            low_stock_threshold: dto.low_stock_threshold,
+            track_inventory: dto.track_inventory,
+          },
+          updated_at: new Date(),
+        },
+      });
+
+      return tx.catalog_items.findUnique({
+        where: { item_id: productId },
+        include: {
+          product_detail: true,
+          variants: { where: { is_active: true }, orderBy: { created_at: 'asc' } },
+        },
+      });
+    });
+
+    return this.toProduct(item);
+  }
+
+  async delete(productId: string): Promise<void> {
+    await this.findById(productId);
+    await this.prisma.catalog_items.update({
+      where: { item_id: productId },
+      data: { is_active: false, deleted_at: new Date(), updated_at: new Date() },
+    });
+  }
+
+  async bulkCreate(dto: BulkUploadProductDto): Promise<{ created: number; failed: number; errors: any[] }> {
+    let created = 0;
+    const errors: any[] = [];
+    for (const [index, product] of dto.products.entries()) {
+      try {
+        await this.create(product);
+        created += 1;
+      } catch (error: any) {
+        errors.push({ index, name: product.name, error: error.message });
+      }
+    }
+    return { created, failed: errors.length, errors };
+  }
+
+  async checkStockAvailability(productId: string, quantity: number): Promise<{ available: boolean; currentStock: number }> {
+    const item = await this.prisma.catalog_items.findFirst({
+      where: { item_id: productId, item_type: 'physical_product', deleted_at: null },
+      select: { stock_quantity: true },
+    });
+    if (!item) throw new NotFoundException('Product not found');
+    const currentStock = item.stock_quantity ?? 0;
+    return { available: currentStock >= quantity, currentStock };
+  }
+
+  async updateStock(productId: string, quantity: number, operation: 'increment' | 'decrement'): Promise<void> {
+    if (quantity <= 0) throw new BadRequestException('Quantity must be greater than zero');
+    if (operation === 'decrement') {
+      const updated = await this.prisma.catalog_items.updateMany({
+        where: { item_id: productId, stock_quantity: { not: null, gte: quantity } },
+        data: { stock_quantity: { decrement: quantity }, updated_at: new Date() },
+      });
+      if (updated.count === 0) throw new ConflictException('Insufficient stock');
+      return;
+    }
+    await this.prisma.catalog_items.updateMany({
+      where: { item_id: productId, stock_quantity: { not: null } },
+      data: { stock_quantity: { increment: quantity }, updated_at: new Date() },
+    });
+  }
+
+  async reserveStock(productId: string, quantity: number): Promise<void> {
+    await this.updateStock(productId, quantity, 'decrement');
+  }
+
+  async releaseStock(productId: string, quantity: number): Promise<void> {
+    await this.updateStock(productId, quantity, 'increment');
+  }
+
+  async createVariant(productId: string, dto: any): Promise<ProductVariant> {
+    const product = await this.findById(productId);
+    const variant = await this.prisma.item_variants.create({
+      data: {
+        item_id: product.product_id,
+        business_id: product.business_id,
+        name: dto.name,
+        sku: dto.sku,
+        price: dto.price,
+        stock_quantity: dto.quantity ?? dto.stock_quantity ?? 0,
+        options: dto.variant_options ?? dto.options,
+      },
+    });
+    return this.toVariant(variant);
+  }
+
+  async getVariantsByProductId(productId: string): Promise<ProductVariant[]> {
+    await this.findById(productId);
+    const variants = await this.prisma.item_variants.findMany({
+      where: { item_id: productId, is_active: true },
+      orderBy: { created_at: 'asc' },
+    });
+    return variants.map((variant) => this.toVariant(variant));
+  }
+
+  async updateVariant(variantId: string, dto: any): Promise<ProductVariant> {
+    const variant = await this.prisma.item_variants.update({
+      where: { variant_id: variantId },
+      data: {
+        name: dto.name,
+        sku: dto.sku,
+        price: dto.price,
+        stock_quantity: dto.quantity ?? dto.stock_quantity,
+        options: dto.variant_options ?? dto.options,
+        is_active: dto.is_active,
+        updated_at: new Date(),
+      },
+    });
+    return this.toVariant(variant);
+  }
+
+  async deleteVariant(variantId: string): Promise<void> {
+    await this.prisma.item_variants.update({
+      where: { variant_id: variantId },
+      data: { is_active: false, updated_at: new Date() },
+    });
+  }
+
+  private toItemType(productType?: string) {
+    return productType === 'physical' || !productType ? 'physical_product' : productType;
+  }
+
+  private toProduct(item: any): Product & { variants?: ProductVariant[] } {
+    const detail = item?.product_detail ?? {};
+    const attrs = item?.attributes ?? {};
+    const external = item?.external_catalog_items?.[0];
+    return {
+      product_id: item.item_id,
+      id: item.item_id,
+      business_id: item.business_id,
+      tenant_id: item.tenant_id,
+      product_type: 'physical',
+      item_type: item.item_type,
+      name: item.name,
+      description: item.description ?? undefined,
+      category: item.category ?? undefined,
+      price: Number(item.base_price ?? 0),
+      base_price: Number(item.base_price ?? 0),
+      compare_price: item.compare_price != null ? Number(item.compare_price) : undefined,
+      currency: item.currency,
+      stock_quantity: item.stock_quantity ?? 0,
+      low_stock_threshold: Number(detail?.metadata?.low_stock_threshold ?? attrs?.low_stock_threshold ?? 5),
+      image_urls: item.image_urls,
+      primary_image_url: item.primary_image_url ?? undefined,
+      is_active: item.is_active,
+      created_at: item.created_at,
+      updated_at: item.updated_at,
+      sku: detail?.sku ?? undefined,
+      brand: detail?.brand ?? undefined,
+      condition: detail?.condition ?? undefined,
+      weight: detail?.weight != null ? Number(detail.weight) : undefined,
+      dimensions: detail?.dimensions?.value ?? attrs?.dimensions,
+      track_inventory: item.stock_quantity !== null,
+      in_stock: (item.stock_quantity ?? 0) > 0,
+      ai_generated_tags: item.ai_tags,
+      has_variants: Boolean(item.variants?.length),
+      variants: item.variants?.map((variant: any) => this.toVariant(variant)) ?? [],
+      in_whatsapp_catalog: Boolean(external),
+      whatsapp_sync_status: external?.sync_status,
+      whatsapp_sync_error: external?.raw_payload?.error,
+    } as Product & { variants?: ProductVariant[] };
+  }
+
+  private toVariant(variant: any): ProductVariant {
+    return {
+      variant_id: variant.variant_id,
+      product_id: variant.item_id,
+      name: variant.name,
+      sku: variant.sku ?? undefined,
+      price: Number(variant.price ?? 0),
+      quantity: variant.stock_quantity ?? 0,
+      in_stock: (variant.stock_quantity ?? 0) > 0,
+      variant_options: variant.options,
+      created_at: variant.created_at,
+      updated_at: variant.updated_at,
+    };
+  }
+
+  private buildAiTags(dto: Partial<CreateProductDto>) {
+    return [
+      dto.name,
+      dto.description,
+      dto.category,
+      dto.brand,
+      dto.sku,
+      dto.condition,
+    ]
+      .filter(Boolean)
+      .flatMap((value) => String(value).toLowerCase().split(/[,\s]+/))
+      .filter((value, index, values) => value.length > 1 && values.indexOf(value) === index)
+      .slice(0, 20);
   }
 }

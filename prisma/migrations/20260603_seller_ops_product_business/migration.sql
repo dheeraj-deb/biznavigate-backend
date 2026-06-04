@@ -1,218 +1,226 @@
 CREATE EXTENSION IF NOT EXISTS pgcrypto;
 
-CREATE TABLE IF NOT EXISTS seller_store_settings (
-  seller_store_settings_id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  business_id UUID NOT NULL UNIQUE REFERENCES businesses(business_id) ON DELETE CASCADE,
-  tenant_id UUID NOT NULL,
-  store_type VARCHAR(50) NOT NULL DEFAULT 'product_seller',
-  onboarding_status VARCHAR(30) NOT NULL DEFAULT 'not_started',
-  default_currency VARCHAR(10) NOT NULL DEFAULT 'INR',
-  low_stock_threshold INTEGER NOT NULL DEFAULT 5,
-  stock_hold_minutes INTEGER NOT NULL DEFAULT 15,
-  payment_modes TEXT[] NOT NULL DEFAULT ARRAY['cash', 'upi', 'cod']::TEXT[],
-  delivery_modes TEXT[] NOT NULL DEFAULT ARRAY['pickup', 'local_delivery']::TEXT[],
-  delivery_areas JSONB,
-  credit_defaults JSONB,
-  ai_guardrails JSONB,
-  setup_checklist JSONB,
-  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
-  updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+CREATE TABLE IF NOT EXISTS seller_owner_approvals (
+  approval_id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  business_id uuid NOT NULL REFERENCES businesses(business_id) ON DELETE CASCADE,
+  tenant_id uuid NULL,
+  title varchar(255) NOT NULL,
+  simple_summary text NULL,
+  action_type varchar(60) NOT NULL,
+  risk_level varchar(20) NOT NULL DEFAULT 'medium',
+  status varchar(20) NOT NULL DEFAULT 'pending',
+  source varchar(30) NOT NULL DEFAULT 'ai',
+  entity_type varchar(60) NULL,
+  entity_id varchar(100) NULL,
+  requested_by uuid NULL REFERENCES users(user_id) ON DELETE SET NULL,
+  decided_by uuid NULL REFERENCES users(user_id) ON DELETE SET NULL,
+  payload jsonb NULL,
+  guardrails jsonb NULL,
+  due_at timestamptz NULL,
+  decided_at timestamptz NULL,
+  expires_at timestamptz NULL,
+  created_at timestamptz NOT NULL DEFAULT now(),
+  updated_at timestamptz NOT NULL DEFAULT now()
 );
 
-CREATE TABLE IF NOT EXISTS seller_owner_approvals (
-  approval_id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  business_id UUID NOT NULL REFERENCES businesses(business_id) ON DELETE CASCADE,
-  tenant_id UUID NOT NULL,
-  entity_type VARCHAR(50) NOT NULL,
-  entity_id VARCHAR(100),
-  title VARCHAR(255) NOT NULL,
-  description TEXT,
-  requested_action VARCHAR(100),
-  priority VARCHAR(20) NOT NULL DEFAULT 'normal',
-  risk_level VARCHAR(20) NOT NULL DEFAULT 'low',
-  status VARCHAR(20) NOT NULL DEFAULT 'pending',
-  source VARCHAR(30) NOT NULL DEFAULT 'ai',
-  ai_employee_key VARCHAR(80),
-  customer_phone VARCHAR(20),
-  metadata JSONB,
-  reviewed_by UUID,
-  reviewed_at TIMESTAMPTZ,
-  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
-  updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
-);
+CREATE INDEX IF NOT EXISTS idx_seller_owner_approvals_queue
+  ON seller_owner_approvals (business_id, status, created_at DESC);
+CREATE INDEX IF NOT EXISTS idx_seller_owner_approvals_action
+  ON seller_owner_approvals (business_id, action_type, status);
+CREATE INDEX IF NOT EXISTS idx_seller_owner_approvals_entity
+  ON seller_owner_approvals (entity_type, entity_id);
 
 CREATE TABLE IF NOT EXISTS seller_stock_reservations (
-  seller_reservation_id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  business_id UUID NOT NULL REFERENCES businesses(business_id) ON DELETE CASCADE,
-  tenant_id UUID NOT NULL,
-  product_id UUID NOT NULL REFERENCES products(product_id) ON DELETE CASCADE,
-  variant_id UUID REFERENCES product_variants(variant_id) ON DELETE SET NULL,
-  lead_id UUID REFERENCES leads(lead_id) ON DELETE SET NULL,
-  customer_id UUID REFERENCES customers(customer_id) ON DELETE SET NULL,
-  customer_phone VARCHAR(20),
-  quantity INTEGER NOT NULL CHECK (quantity > 0),
-  reason VARCHAR(255),
-  source VARCHAR(30) NOT NULL DEFAULT 'manual',
-  status VARCHAR(20) NOT NULL DEFAULT 'active',
-  expires_at TIMESTAMPTZ NOT NULL,
-  released_at TIMESTAMPTZ,
-  converted_order_id UUID REFERENCES orders(order_id) ON DELETE SET NULL,
-  created_by UUID,
-  metadata JSONB,
-  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
-  updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+  reservation_id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  business_id uuid NOT NULL REFERENCES businesses(business_id) ON DELETE CASCADE,
+  tenant_id uuid NULL,
+  customer_id uuid NULL REFERENCES customers(customer_id) ON DELETE SET NULL,
+  lead_id uuid NULL REFERENCES leads(lead_id) ON DELETE SET NULL,
+  item_id uuid NOT NULL REFERENCES catalog_items(item_id) ON DELETE CASCADE,
+  variant_id uuid NULL REFERENCES item_variants(variant_id) ON DELETE SET NULL,
+  quantity integer NOT NULL CHECK (quantity > 0),
+  status varchar(20) NOT NULL DEFAULT 'active',
+  reason varchar(255) NULL,
+  source varchar(30) NOT NULL DEFAULT 'manual',
+  expires_at timestamptz NOT NULL,
+  released_at timestamptz NULL,
+  converted_at timestamptz NULL,
+  created_by uuid NULL REFERENCES users(user_id) ON DELETE SET NULL,
+  metadata jsonb NULL,
+  created_at timestamptz NOT NULL DEFAULT now(),
+  updated_at timestamptz NOT NULL DEFAULT now()
 );
+
+CREATE INDEX IF NOT EXISTS idx_seller_stock_reservations_active
+  ON seller_stock_reservations (business_id, status, expires_at);
+CREATE INDEX IF NOT EXISTS idx_seller_stock_reservations_item
+  ON seller_stock_reservations (business_id, item_id, status);
+CREATE INDEX IF NOT EXISTS idx_seller_stock_reservations_customer
+  ON seller_stock_reservations (customer_id);
 
 CREATE TABLE IF NOT EXISTS seller_return_cases (
-  return_case_id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  business_id UUID NOT NULL REFERENCES businesses(business_id) ON DELETE CASCADE,
-  tenant_id UUID NOT NULL,
-  order_id UUID REFERENCES orders(order_id) ON DELETE SET NULL,
-  customer_id UUID REFERENCES customers(customer_id) ON DELETE SET NULL,
-  customer_phone VARCHAR(20),
-  product_id UUID REFERENCES products(product_id) ON DELETE SET NULL,
-  status VARCHAR(30) NOT NULL DEFAULT 'open',
-  reason VARCHAR(255),
-  resolution VARCHAR(50),
-  refund_amount NUMERIC(10, 2),
-  exchange_product_id UUID REFERENCES products(product_id) ON DELETE SET NULL,
-  source VARCHAR(30) NOT NULL DEFAULT 'manual',
-  owner_approval_id UUID REFERENCES seller_owner_approvals(approval_id) ON DELETE SET NULL,
-  metadata JSONB,
-  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
-  updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
-  closed_at TIMESTAMPTZ
+  return_id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  business_id uuid NOT NULL REFERENCES businesses(business_id) ON DELETE CASCADE,
+  tenant_id uuid NULL,
+  order_id uuid NULL REFERENCES orders(order_id) ON DELETE SET NULL,
+  product_order_id uuid NULL REFERENCES product_orders(product_order_id) ON DELETE SET NULL,
+  customer_id uuid NULL REFERENCES customers(customer_id) ON DELETE SET NULL,
+  return_type varchar(30) NOT NULL DEFAULT 'return',
+  status varchar(30) NOT NULL DEFAULT 'requested',
+  reason text NULL,
+  requested_amount numeric(10, 2) NULL,
+  approved_amount numeric(10, 2) NULL,
+  items jsonb NULL,
+  resolution jsonb NULL,
+  handled_by uuid NULL REFERENCES users(user_id) ON DELETE SET NULL,
+  created_at timestamptz NOT NULL DEFAULT now(),
+  updated_at timestamptz NOT NULL DEFAULT now(),
+  closed_at timestamptz NULL
 );
+
+CREATE INDEX IF NOT EXISTS idx_seller_return_cases_queue
+  ON seller_return_cases (business_id, status, created_at DESC);
+CREATE INDEX IF NOT EXISTS idx_seller_return_cases_order
+  ON seller_return_cases (order_id);
+CREATE INDEX IF NOT EXISTS idx_seller_return_cases_customer
+  ON seller_return_cases (customer_id);
 
 CREATE TABLE IF NOT EXISTS seller_deliveries (
-  delivery_id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  business_id UUID NOT NULL REFERENCES businesses(business_id) ON DELETE CASCADE,
-  tenant_id UUID NOT NULL,
-  order_id UUID REFERENCES orders(order_id) ON DELETE SET NULL,
-  customer_id UUID REFERENCES customers(customer_id) ON DELETE SET NULL,
-  customer_phone VARCHAR(20),
-  delivery_mode VARCHAR(40) NOT NULL DEFAULT 'local_delivery',
-  address TEXT,
-  area VARCHAR(100),
-  assigned_to UUID,
-  status VARCHAR(30) NOT NULL DEFAULT 'pending',
-  collect_payment BOOLEAN NOT NULL DEFAULT FALSE,
-  payment_amount NUMERIC(10, 2),
-  due_at TIMESTAMPTZ,
-  completed_at TIMESTAMPTZ,
-  notes TEXT,
-  metadata JSONB,
-  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
-  updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+  delivery_id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  business_id uuid NOT NULL REFERENCES businesses(business_id) ON DELETE CASCADE,
+  tenant_id uuid NULL,
+  order_id uuid NULL REFERENCES orders(order_id) ON DELETE SET NULL,
+  product_order_id uuid NULL REFERENCES product_orders(product_order_id) ON DELETE SET NULL,
+  customer_id uuid NULL REFERENCES customers(customer_id) ON DELETE SET NULL,
+  status varchar(30) NOT NULL DEFAULT 'waiting',
+  delivery_mode varchar(30) NOT NULL DEFAULT 'local',
+  delivery_person varchar(120) NULL,
+  phone varchar(20) NULL,
+  address text NULL,
+  pincode varchar(20) NULL,
+  scheduled_at timestamptz NULL,
+  picked_at timestamptz NULL,
+  delivered_at timestamptz NULL,
+  notes text NULL,
+  metadata jsonb NULL,
+  created_at timestamptz NOT NULL DEFAULT now(),
+  updated_at timestamptz NOT NULL DEFAULT now()
 );
+
+CREATE INDEX IF NOT EXISTS idx_seller_deliveries_desk
+  ON seller_deliveries (business_id, status, scheduled_at);
+CREATE INDEX IF NOT EXISTS idx_seller_deliveries_order
+  ON seller_deliveries (order_id);
+CREATE INDEX IF NOT EXISTS idx_seller_deliveries_customer
+  ON seller_deliveries (customer_id);
 
 CREATE TABLE IF NOT EXISTS seller_customer_credit_accounts (
-  credit_account_id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  business_id UUID NOT NULL REFERENCES businesses(business_id) ON DELETE CASCADE,
-  tenant_id UUID NOT NULL,
-  customer_id UUID REFERENCES customers(customer_id) ON DELETE SET NULL,
-  phone VARCHAR(20) NOT NULL,
-  customer_name VARCHAR(255),
-  status VARCHAR(20) NOT NULL DEFAULT 'pending',
-  credit_limit NUMERIC(10, 2) NOT NULL DEFAULT 0,
-  current_balance NUMERIC(10, 2) NOT NULL DEFAULT 0,
-  due_days INTEGER NOT NULL DEFAULT 30,
-  approved_by UUID,
-  approved_at TIMESTAMPTZ,
-  notes TEXT,
-  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
-  updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
-  CONSTRAINT unique_seller_credit_phone_per_business UNIQUE (business_id, phone)
+  credit_account_id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  business_id uuid NOT NULL REFERENCES businesses(business_id) ON DELETE CASCADE,
+  tenant_id uuid NULL,
+  customer_id uuid NULL REFERENCES customers(customer_id) ON DELETE SET NULL,
+  customer_name varchar(255) NULL,
+  phone varchar(20) NOT NULL,
+  status varchar(20) NOT NULL DEFAULT 'pending',
+  credit_limit numeric(10, 2) NOT NULL DEFAULT 0,
+  current_balance numeric(10, 2) NOT NULL DEFAULT 0,
+  due_days integer NOT NULL DEFAULT 30,
+  approved_by uuid NULL REFERENCES users(user_id) ON DELETE SET NULL,
+  approved_at timestamptz NULL,
+  notes text NULL,
+  metadata jsonb NULL,
+  created_at timestamptz NOT NULL DEFAULT now(),
+  updated_at timestamptz NOT NULL DEFAULT now(),
+  CONSTRAINT uq_seller_credit_phone UNIQUE (business_id, phone)
 );
+
+CREATE INDEX IF NOT EXISTS idx_seller_credit_accounts_status
+  ON seller_customer_credit_accounts (business_id, status, current_balance);
+CREATE INDEX IF NOT EXISTS idx_seller_credit_accounts_customer
+  ON seller_customer_credit_accounts (customer_id);
 
 CREATE TABLE IF NOT EXISTS seller_customer_credit_transactions (
-  credit_transaction_id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  business_id UUID NOT NULL REFERENCES businesses(business_id) ON DELETE CASCADE,
-  tenant_id UUID NOT NULL,
-  credit_account_id UUID NOT NULL REFERENCES seller_customer_credit_accounts(credit_account_id) ON DELETE CASCADE,
-  order_id UUID REFERENCES orders(order_id) ON DELETE SET NULL,
-  transaction_type VARCHAR(30) NOT NULL,
-  amount NUMERIC(10, 2) NOT NULL,
-  due_date TIMESTAMPTZ,
-  paid_at TIMESTAMPTZ,
-  notes TEXT,
-  created_by UUID,
-  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+  credit_transaction_id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  credit_account_id uuid NOT NULL REFERENCES seller_customer_credit_accounts(credit_account_id) ON DELETE CASCADE,
+  business_id uuid NOT NULL REFERENCES businesses(business_id) ON DELETE CASCADE,
+  order_id uuid NULL REFERENCES orders(order_id) ON DELETE SET NULL,
+  transaction_type varchar(30) NOT NULL,
+  amount numeric(10, 2) NOT NULL,
+  balance_after numeric(10, 2) NOT NULL,
+  note text NULL,
+  created_by uuid NULL REFERENCES users(user_id) ON DELETE SET NULL,
+  metadata jsonb NULL,
+  created_at timestamptz NOT NULL DEFAULT now()
 );
+
+CREATE INDEX IF NOT EXISTS idx_seller_credit_transactions_business
+  ON seller_customer_credit_transactions (business_id, created_at DESC);
+CREATE INDEX IF NOT EXISTS idx_seller_credit_transactions_account
+  ON seller_customer_credit_transactions (credit_account_id, created_at DESC);
+CREATE INDEX IF NOT EXISTS idx_seller_credit_transactions_order
+  ON seller_customer_credit_transactions (order_id);
 
 CREATE TABLE IF NOT EXISTS seller_ai_audit_logs (
-  audit_id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  business_id UUID NOT NULL REFERENCES businesses(business_id) ON DELETE CASCADE,
-  tenant_id UUID NOT NULL,
-  ai_employee_key VARCHAR(80) NOT NULL,
-  action VARCHAR(100) NOT NULL,
-  entity_type VARCHAR(50),
-  entity_id VARCHAR(100),
-  customer_phone VARCHAR(20),
-  risk_level VARCHAR(20) NOT NULL DEFAULT 'low',
-  confidence NUMERIC(3, 2),
-  decision VARCHAR(50),
-  input_summary TEXT,
-  output_summary TEXT,
-  guardrail_result JSONB,
-  metadata JSONB,
-  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+  ai_audit_id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  business_id uuid NOT NULL REFERENCES businesses(business_id) ON DELETE CASCADE,
+  tenant_id uuid NULL,
+  ai_employee varchar(80) NOT NULL,
+  action varchar(120) NOT NULL,
+  decision varchar(40) NOT NULL,
+  confidence numeric(5, 2) NULL,
+  risk_level varchar(20) NOT NULL DEFAULT 'low',
+  entity_type varchar(60) NULL,
+  entity_id varchar(100) NULL,
+  input_summary text NULL,
+  output_summary text NULL,
+  guardrails jsonb NULL,
+  owner_visible boolean NOT NULL DEFAULT true,
+  created_at timestamptz NOT NULL DEFAULT now()
 );
+
+CREATE INDEX IF NOT EXISTS idx_seller_ai_audit_business
+  ON seller_ai_audit_logs (business_id, created_at DESC);
+CREATE INDEX IF NOT EXISTS idx_seller_ai_audit_employee
+  ON seller_ai_audit_logs (business_id, ai_employee, created_at DESC);
+CREATE INDEX IF NOT EXISTS idx_seller_ai_audit_entity
+  ON seller_ai_audit_logs (entity_type, entity_id);
 
 CREATE TABLE IF NOT EXISTS seller_product_profit_snapshots (
-  profit_snapshot_id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  business_id UUID NOT NULL REFERENCES businesses(business_id) ON DELETE CASCADE,
-  tenant_id UUID NOT NULL,
-  product_id UUID NOT NULL REFERENCES products(product_id) ON DELETE CASCADE,
-  cost_price NUMERIC(10, 2),
-  selling_price NUMERIC(10, 2),
-  margin_percent NUMERIC(5, 2),
-  last_sale_at TIMESTAMPTZ,
-  dead_stock_score INTEGER NOT NULL DEFAULT 0,
-  metadata JSONB,
-  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
-  updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
-  CONSTRAINT unique_seller_profit_product_per_business UNIQUE (business_id, product_id)
+  profit_snapshot_id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  business_id uuid NOT NULL REFERENCES businesses(business_id) ON DELETE CASCADE,
+  item_id uuid NOT NULL REFERENCES catalog_items(item_id) ON DELETE CASCADE,
+  variant_id uuid NULL REFERENCES item_variants(variant_id) ON DELETE SET NULL,
+  cost_price numeric(10, 2) NULL,
+  selling_price numeric(10, 2) NOT NULL,
+  gross_margin numeric(10, 2) NULL,
+  margin_percentage numeric(5, 2) NULL,
+  source varchar(30) NOT NULL DEFAULT 'ai',
+  recommendation text NULL,
+  created_at timestamptz NOT NULL DEFAULT now()
 );
+
+CREATE INDEX IF NOT EXISTS idx_seller_profit_item
+  ON seller_product_profit_snapshots (business_id, item_id, created_at DESC);
+CREATE INDEX IF NOT EXISTS idx_seller_profit_margin
+  ON seller_product_profit_snapshots (business_id, margin_percentage);
 
 CREATE TABLE IF NOT EXISTS seller_demand_signals (
-  demand_signal_id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  business_id UUID NOT NULL REFERENCES businesses(business_id) ON DELETE CASCADE,
-  tenant_id UUID NOT NULL,
-  product_id UUID REFERENCES products(product_id) ON DELETE SET NULL,
-  category VARCHAR(100),
-  customer_phone VARCHAR(20),
-  signal_type VARCHAR(40) NOT NULL,
-  channel VARCHAR(30) NOT NULL DEFAULT 'whatsapp',
-  quantity INTEGER NOT NULL DEFAULT 1,
-  metadata JSONB,
-  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+  demand_signal_id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  business_id uuid NOT NULL REFERENCES businesses(business_id) ON DELETE CASCADE,
+  item_id uuid NULL REFERENCES catalog_items(item_id) ON DELETE SET NULL,
+  category varchar(100) NULL,
+  signal_type varchar(40) NOT NULL,
+  signal_count integer NOT NULL DEFAULT 1,
+  period_start timestamptz NOT NULL,
+  period_end timestamptz NOT NULL,
+  source varchar(30) NOT NULL DEFAULT 'ai',
+  metadata jsonb NULL,
+  created_at timestamptz NOT NULL DEFAULT now()
 );
 
-CREATE INDEX IF NOT EXISTS idx_seller_store_settings_tenant_id ON seller_store_settings(tenant_id);
-CREATE INDEX IF NOT EXISTS idx_seller_owner_approvals_business_status ON seller_owner_approvals(business_id, status);
-CREATE INDEX IF NOT EXISTS idx_seller_owner_approvals_business_created ON seller_owner_approvals(business_id, created_at DESC);
-CREATE INDEX IF NOT EXISTS idx_seller_owner_approvals_tenant_id ON seller_owner_approvals(tenant_id);
-CREATE INDEX IF NOT EXISTS idx_seller_stock_res_business_status_expiry ON seller_stock_reservations(business_id, status, expires_at);
-CREATE INDEX IF NOT EXISTS idx_seller_stock_res_product_status ON seller_stock_reservations(product_id, status);
-CREATE INDEX IF NOT EXISTS idx_seller_stock_res_tenant_id ON seller_stock_reservations(tenant_id);
-CREATE INDEX IF NOT EXISTS idx_seller_return_cases_business_status ON seller_return_cases(business_id, status);
-CREATE INDEX IF NOT EXISTS idx_seller_return_cases_order_id ON seller_return_cases(order_id);
-CREATE INDEX IF NOT EXISTS idx_seller_return_cases_tenant_id ON seller_return_cases(tenant_id);
-CREATE INDEX IF NOT EXISTS idx_seller_deliveries_business_status ON seller_deliveries(business_id, status);
-CREATE INDEX IF NOT EXISTS idx_seller_deliveries_order_id ON seller_deliveries(order_id);
-CREATE INDEX IF NOT EXISTS idx_seller_deliveries_tenant_id ON seller_deliveries(tenant_id);
-CREATE INDEX IF NOT EXISTS idx_seller_credit_accounts_business_status ON seller_customer_credit_accounts(business_id, status);
-CREATE INDEX IF NOT EXISTS idx_seller_credit_accounts_tenant_id ON seller_customer_credit_accounts(tenant_id);
-CREATE INDEX IF NOT EXISTS idx_seller_credit_tx_account_created ON seller_customer_credit_transactions(credit_account_id, created_at DESC);
-CREATE INDEX IF NOT EXISTS idx_seller_credit_tx_business_type ON seller_customer_credit_transactions(business_id, transaction_type);
-CREATE INDEX IF NOT EXISTS idx_seller_credit_tx_tenant_id ON seller_customer_credit_transactions(tenant_id);
-CREATE INDEX IF NOT EXISTS idx_seller_ai_audit_business_created ON seller_ai_audit_logs(business_id, created_at DESC);
-CREATE INDEX IF NOT EXISTS idx_seller_ai_audit_business_employee ON seller_ai_audit_logs(business_id, ai_employee_key);
-CREATE INDEX IF NOT EXISTS idx_seller_ai_audit_tenant_id ON seller_ai_audit_logs(tenant_id);
-CREATE INDEX IF NOT EXISTS idx_seller_profit_business_dead_stock ON seller_product_profit_snapshots(business_id, dead_stock_score);
-CREATE INDEX IF NOT EXISTS idx_seller_profit_tenant_id ON seller_product_profit_snapshots(tenant_id);
-CREATE INDEX IF NOT EXISTS idx_seller_demand_business_created ON seller_demand_signals(business_id, created_at DESC);
-CREATE INDEX IF NOT EXISTS idx_seller_demand_business_category ON seller_demand_signals(business_id, category);
-CREATE INDEX IF NOT EXISTS idx_seller_demand_product_id ON seller_demand_signals(product_id);
-CREATE INDEX IF NOT EXISTS idx_seller_demand_tenant_id ON seller_demand_signals(tenant_id);
+CREATE INDEX IF NOT EXISTS idx_seller_demand_signal_type
+  ON seller_demand_signals (business_id, signal_type, period_start);
+CREATE INDEX IF NOT EXISTS idx_seller_demand_category
+  ON seller_demand_signals (business_id, category, period_start);
+CREATE INDEX IF NOT EXISTS idx_seller_demand_item
+  ON seller_demand_signals (item_id);

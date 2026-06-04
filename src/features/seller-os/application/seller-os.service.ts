@@ -1,3332 +1,1806 @@
-// @ts-nocheck
 import {
   BadRequestException,
   ConflictException,
-  ForbiddenException,
   Injectable,
-  Logger,
   NotFoundException,
 } from '@nestjs/common';
-import { Prisma } from '../../../../generated/prisma';
-import { InventoryTransactionService } from '../../inventory/application/services/inventory-transaction.service';
+import { randomUUID } from 'node:crypto';
 import { PrismaService } from '../../../prisma/prisma.service';
-import { SellerOrderPaymentSafetyService } from './seller-order-payment-safety.service';
+import { StockReservationService } from '../../commerce/orders/application/services/stock-reservation.service';
 import {
-  AgentCreateOrderDto,
-  AgentProductSearchDto,
   AiGuardrailCheckDto,
-  CollectCreditPaymentDto,
-  CancelSellerPaymentOrderDto,
   CompleteSellerSetupDto,
   CreateCreditCustomerDto,
   CreateDeliveryDto,
   CreateManualSaleDto,
-  CreatePaymentRequestFromHoldDto,
+  CreateOwnerApprovalDto,
   CreateReturnCaseDto,
   CreateStockReservationDto,
-  MarkSellerOrderPaidDto,
   SellerProductBulkImportDto,
+  SellerProductImportRowDto,
   SellerProductsStockQueryDto,
+  SellerSaleItemDto,
+  SellerSetupProductDto,
   SellerStockAdjustmentDto,
-  SellerLeadListQueryDto,
-  UpdateSellerLeadStatusDto,
+  UpdateCreditCustomerDto,
+  UpdateSellerStatusDto,
 } from './dto/seller-os.dto';
 
-const SELLER_BUSINESS_TYPES = new Set(['products', 'retail', 'ecommerce', 'product_seller']);
+type AuthUser = {
+  business_id: string;
+  tenant_id?: string;
+  user_id?: string;
+};
+
+type SaleLine = {
+  item_id: string;
+  variant_id?: string | null;
+  product_name: string;
+  variant_name?: string | null;
+  sku?: string | null;
+  quantity: number;
+  unit_price: number;
+  discount: number;
+  total_price: number;
+  snapshot: Record<string, any>;
+};
 
 @Injectable()
 export class SellerOsService {
-  private readonly logger = new Logger(SellerOsService.name);
-
   constructor(
     private readonly prisma: PrismaService,
-    private readonly inventoryTransactions: InventoryTransactionService,
-    private readonly orderPaymentSafety: SellerOrderPaymentSafetyService,
+    private readonly stockReservationService: StockReservationService,
   ) {}
 
-  async getSetup(user: any) {
-    const ctx = await this.getSellerContext(user);
-    const settings = await this.getSettings(ctx);
-    const features = this.buildSellerFeatures(settings);
-    const [productCount, recentProducts] = await Promise.all([
-      this.db.products.count({
-        where: { business_id: ctx.businessId, tenant_id: ctx.tenantId, product_type: 'physical' },
+  async getOverview(user: AuthUser) {
+    const businessId = user.business_id;
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    const [
+      openInquiries,
+      pendingOrders,
+      todayOrders,
+      activeProducts,
+      lowStockProducts,
+      cartHolds,
+      approvals,
+      reservations,
+      returnsQueue,
+      deliveriesQueue,
+      creditSummaryRows,
+      auditRows,
+      demandRows,
+      deadStockRows,
+    ] = await Promise.all([
+      this.prisma.product_inquiries.count({
+        where: { business_id: businessId, status: 'open' },
       }),
-      this.db.products.findMany({
-        where: { business_id: ctx.businessId, tenant_id: ctx.tenantId, product_type: 'physical' },
-        orderBy: { created_at: 'desc' },
-        take: 5,
+      this.prisma.product_orders.count({
+        where: {
+          business_id: businessId,
+          status: { in: ['pending', 'paid', 'processing'] },
+        },
       }),
+      this.prisma.product_orders.count({
+        where: { business_id: businessId, created_at: { gte: today } },
+      }),
+      this.prisma.catalog_items.count({
+        where: {
+          business_id: businessId,
+          item_type: 'physical_product',
+          is_active: true,
+          deleted_at: null,
+        },
+      }),
+      this.prisma.catalog_items.findMany({
+        where: {
+          business_id: businessId,
+          item_type: 'physical_product',
+          is_active: true,
+          deleted_at: null,
+          stock_quantity: { lte: 5 },
+        },
+        orderBy: { stock_quantity: 'asc' },
+        take: 6,
+        select: {
+          item_id: true,
+          name: true,
+          category: true,
+          stock_quantity: true,
+          base_price: true,
+        },
+      }),
+      this.prisma.cart_reservations.count({
+        where: {
+          status: 'active',
+          catalog_item: { business_id: businessId },
+        },
+      }),
+      this.optionalQuery<any>(
+        `SELECT approval_id, title, simple_summary, action_type, risk_level, status, payload, created_at
+         FROM seller_owner_approvals
+         WHERE business_id = $1 AND status = 'pending'
+         ORDER BY created_at DESC
+         LIMIT 8`,
+        [businessId],
+      ),
+      this.optionalQuery<any>(
+        `SELECT reservation_id, item_id, variant_id, quantity, status, reason, expires_at, created_at
+         FROM seller_stock_reservations
+         WHERE business_id = $1 AND status = 'active'
+         ORDER BY expires_at ASC
+         LIMIT 8`,
+        [businessId],
+      ),
+      this.optionalQuery<any>(
+        `SELECT return_id, return_type, status, reason, requested_amount, created_at
+         FROM seller_return_cases
+         WHERE business_id = $1 AND status IN ('requested', 'checking', 'approved')
+         ORDER BY created_at DESC
+         LIMIT 8`,
+        [businessId],
+      ),
+      this.optionalQuery<any>(
+        `SELECT delivery_id, status, delivery_mode, delivery_person, phone, pincode, scheduled_at, created_at
+         FROM seller_deliveries
+         WHERE business_id = $1 AND status IN ('waiting', 'assigned', 'out_for_delivery')
+         ORDER BY COALESCE(scheduled_at, created_at) ASC
+         LIMIT 8`,
+        [businessId],
+      ),
+      this.optionalQuery<any>(
+        `SELECT
+           COUNT(*) FILTER (WHERE status = 'approved')::int AS approved_customers,
+           COUNT(*) FILTER (WHERE status = 'pending')::int AS pending_customers,
+           COALESCE(SUM(current_balance) FILTER (WHERE status = 'approved'), 0) AS total_credit_due
+         FROM seller_customer_credit_accounts
+         WHERE business_id = $1`,
+        [businessId],
+      ),
+      this.optionalQuery<any>(
+        `SELECT ai_audit_id, ai_employee, action, decision, risk_level, output_summary, created_at
+         FROM seller_ai_audit_logs
+         WHERE business_id = $1 AND owner_visible = TRUE
+         ORDER BY created_at DESC
+         LIMIT 8`,
+        [businessId],
+      ),
+      this.query<any>(
+        `SELECT COALESCE(ci.category, 'Unsorted') AS category, COUNT(*)::int AS inquiry_count
+         FROM product_inquiries pi
+         LEFT JOIN catalog_items ci ON ci.item_id = pi.item_id
+         WHERE pi.business_id = $1
+           AND pi.created_at >= now() - interval '30 days'
+         GROUP BY COALESCE(ci.category, 'Unsorted')
+         ORDER BY inquiry_count DESC
+         LIMIT 6`,
+        [businessId],
+      ),
+      this.query<any>(
+        `SELECT ci.item_id, ci.name, ci.category, ci.stock_quantity, ci.base_price, ci.created_at
+         FROM catalog_items ci
+         LEFT JOIN product_order_items poi ON poi.item_id = ci.item_id
+         LEFT JOIN product_orders po
+           ON po.product_order_id = poi.product_order_id
+          AND po.created_at >= now() - interval '60 days'
+         WHERE ci.business_id = $1
+           AND ci.item_type = 'physical_product'
+           AND ci.is_active = TRUE
+           AND ci.deleted_at IS NULL
+           AND COALESCE(ci.stock_quantity, 0) > 0
+         GROUP BY ci.item_id, ci.name, ci.category, ci.stock_quantity, ci.base_price, ci.created_at
+         HAVING COUNT(po.product_order_id) = 0
+         ORDER BY ci.created_at ASC
+         LIMIT 6`,
+        [businessId],
+      ),
     ]);
 
+    const creditSummary = creditSummaryRows[0] ?? {
+      approved_customers: 0,
+      pending_customers: 0,
+      total_credit_due: 0,
+    };
+
+    const ownerQueue = [
+      ...approvals.map((approval) => ({
+        id: approval.approval_id,
+        type: approval.action_type,
+        title: approval.title,
+        text: approval.simple_summary ?? approval.title,
+        risk: approval.risk_level,
+        source: 'approval',
+      })),
+      ...(pendingOrders > 0
+        ? [{
+            id: 'pending-orders',
+            type: 'orders',
+            title: 'Confirm product orders',
+            text: `${pendingOrders} orders are waiting for packing, payment, or delivery.`,
+            risk: 'medium',
+            source: 'system',
+          }]
+        : []),
+      ...(openInquiries > 0
+        ? [{
+            id: 'open-inquiries',
+            type: 'leads',
+            title: 'Reply to product enquiries',
+            text: `${openInquiries} WhatsApp enquiries are still open.`,
+            risk: 'low',
+            source: 'ai_sales_employee',
+          }]
+        : []),
+      ...(lowStockProducts.length > 0
+        ? [{
+            id: 'low-stock',
+            type: 'stock',
+            title: 'Restock low items',
+            text: `${lowStockProducts.length} products are close to empty.`,
+            risk: 'high',
+            source: 'ai_inventory_employee',
+          }]
+        : []),
+    ].slice(0, 10);
+
+    const totalCreditDue = this.toNumber(creditSummary.total_credit_due);
+
     return {
-      business: {
-        business_id: ctx.business.business_id,
-        business_name: ctx.business.business_name,
-        business_type: ctx.business.business_type,
+      business_type: 'product_seller',
+      title: 'Store Desk',
+      summary: {
+        owner_queue: ownerQueue.length,
+        today_orders: todayOrders,
+        open_enquiries: openInquiries,
+        active_products: activeProducts,
+        low_stock: lowStockProducts.length,
+        stock_holds: reservations.length + cartHolds,
+        returns_waiting: returnsQueue.length,
+        deliveries_waiting: deliveriesQueue.length,
+        credit_due: totalCreditDue,
       },
-      settings,
-      seller_mode: settings?.store_type || 'product_seller',
-      features,
-      product_count: productCount,
-      recent_products: recentProducts.map((product: any) => this.publicProduct(product)),
-      setup_needed: !settings || settings.onboarding_status !== 'completed' || productCount === 0,
+      primary_actions: [
+        { key: 'approval_queue', label: 'Approve work', count: approvals.length },
+        { key: 'counter_sale', label: 'Counter sale', count: todayOrders },
+        { key: 'stock_hold', label: 'Hold stock', count: reservations.length + cartHolds },
+        { key: 'credit_customers', label: 'Credit customers', count: Number(creditSummary.approved_customers ?? 0) },
+      ],
+      owner_queue: ownerQueue,
+      ai_employees: [
+        {
+          key: 'sales',
+          name: 'AI Sales Employee',
+          simple_job: 'Replies on WhatsApp, shows products, and brings ready buyers.',
+          today: `${openInquiries} open enquiries`,
+          next: openInquiries > 0 ? 'Follow up hot buyers' : 'Watch new WhatsApp messages',
+        },
+        {
+          key: 'inventory',
+          name: 'AI Inventory Employee',
+          simple_job: 'Prevents overselling and warns before stock runs out.',
+          today: `${lowStockProducts.length} low stock items`,
+          next: lowStockProducts.length > 0 ? 'Ask owner to restock' : 'Keep checking stock',
+        },
+        {
+          key: 'credit',
+          name: 'AI Credit Desk',
+          simple_job: 'Allows credit only for seller-approved customers.',
+          today: `${Number(creditSummary.pending_customers ?? 0)} credit requests`,
+          next: totalCreditDue > 0 ? 'Remind due customers' : 'Keep credit list clean',
+        },
+        {
+          key: 'delivery',
+          name: 'AI Delivery Desk',
+          simple_job: 'Keeps local deliveries visible until completed.',
+          today: `${deliveriesQueue.length} delivery jobs`,
+          next: deliveriesQueue.length > 0 ? 'Mark delivery progress' : 'Wait for packed orders',
+        },
+        {
+          key: 'profit',
+          name: 'AI Profit Coach',
+          simple_job: 'Finds slow stock, weak margin, and demand chances.',
+          today: `${deadStockRows.length} old stock alerts`,
+          next: deadStockRows.length > 0 ? 'Suggest offer or bundle' : 'Watch product movement',
+        },
+        {
+          key: 'guard',
+          name: 'AI Mistake Prevention',
+          simple_job: 'Stops risky actions before the AI or staff make them.',
+          today: `${auditRows.length} checks recorded`,
+          next: approvals.length > 0 ? 'Wait for owner approval' : 'Approve safe actions automatically',
+        },
+      ],
+      workspaces: {
+        approvals,
+        stock_reservations: reservations,
+        returns: returnsQueue,
+        deliveries: deliveriesQueue,
+        credit: {
+          approved_customers: Number(creditSummary.approved_customers ?? 0),
+          pending_customers: Number(creditSummary.pending_customers ?? 0),
+          total_credit_due: totalCreditDue,
+        },
+      },
+      stock: {
+        low_stock: lowStockProducts.map((item) => ({
+          ...item,
+          base_price: this.toNumber(item.base_price),
+        })),
+        active_cart_holds: cartHolds,
+      },
+      demand_heatmap: demandRows,
+      dead_stock: deadStockRows.map((item) => ({
+        ...item,
+        base_price: this.toNumber(item.base_price),
+      })),
+      ai_audit_log: auditRows,
+      feature_map: [
+        'Owner approvals',
+        'Counter sale',
+        'Stock holds',
+        'AI inventory checks',
+        'Returns and refunds',
+        'Local delivery',
+        'AI audit log',
+        'Profit coach',
+        'Dead stock recovery',
+        'Demand heatmap',
+        'Credit customers',
+        'AI mistake prevention',
+      ],
     };
   }
 
-  async completeSetup(user: any, dto: CompleteSellerSetupDto) {
-    const ctx = await this.getSellerContext(user);
+  async getSetup(user: AuthUser) {
+    const businessId = user.business_id;
+    const [settingsRows, productCount, connectedCatalog, sampleProducts] = await Promise.all([
+      this.optionalQuery<any>(
+        `SELECT *
+         FROM seller_store_settings
+         WHERE business_id = $1
+         LIMIT 1`,
+        [businessId],
+      ),
+      this.prisma.catalog_items.count({
+        where: {
+          business_id: businessId,
+          item_type: 'physical_product',
+          deleted_at: null,
+        },
+      }),
+      this.prisma.external_catalog_items.count({
+        where: { business_id: businessId, provider: 'whatsapp' },
+      }),
+      this.prisma.catalog_items.findMany({
+        where: {
+          business_id: businessId,
+          item_type: 'physical_product',
+          deleted_at: null,
+        },
+        orderBy: { created_at: 'desc' },
+        take: 5,
+        select: {
+          item_id: true,
+          name: true,
+          category: true,
+          base_price: true,
+          stock_quantity: true,
+          primary_image_url: true,
+        },
+      }),
+    ]);
 
-    const storeType = dto.store_type || 'online_seller';
-    const creditEnabled = dto.enable_credit ?? storeType === 'wholesale_seller';
+    const settings = settingsRows[0] ?? null;
+    const checklist = {
+      seller_rules: Boolean(settings),
+      products_added: productCount > 0,
+      whatsapp_catalog_linked: connectedCatalog > 0,
+      stock_ready: productCount > 0 && sampleProducts.some((item) => (item.stock_quantity ?? 0) > 0),
+      ai_ready: Boolean(settings?.ai_guardrails),
+    };
+
+    return {
+      status: settings?.onboarding_status ?? (productCount > 0 ? 'in_progress' : 'not_started'),
+      settings,
+      counts: {
+        products: productCount,
+        whatsapp_catalog_items: connectedCatalog,
+      },
+      checklist,
+      products: sampleProducts.map((item) => ({
+        ...item,
+        base_price: this.toNumber(item.base_price),
+      })),
+    };
+  }
+
+  async completeSetup(user: AuthUser, dto: CompleteSellerSetupDto) {
+    const businessId = user.business_id;
+    const tenantId = this.requireTenant(user);
+    const stockHoldMinutes = dto.stock_hold_minutes ?? 15;
+    const lowStockThreshold = dto.low_stock_threshold ?? 5;
     const paymentModes = this.cleanStringList(dto.payment_modes, ['cash', 'upi', 'cod']);
-    const effectivePaymentModes = creditEnabled
-      ? [...new Set([...paymentModes, 'credit'])]
-      : paymentModes.filter((mode) => mode !== 'credit');
     const deliveryModes = this.cleanStringList(dto.delivery_modes, ['pickup', 'local_delivery']);
     const deliveryAreas = this.cleanStringList(dto.delivery_areas, []);
-    const holdMinutes = dto.stock_hold_minutes ?? 15;
-    const lowStockThreshold = dto.low_stock_threshold ?? 5;
-    const highValueApprovalAmount = dto.high_value_approval_amount ?? 10000;
+    const aiGuardrails = {
+      high_value_approval_amount: dto.high_value_approval_amount ?? 10000,
+      require_owner_approval_for_credit: dto.require_owner_approval_for_credit ?? true,
+      prevent_oversell: true,
+      block_unapproved_credit: true,
+      require_stock_before_payment: true,
+    };
+    const creditDefaults = {
+      default_credit_limit: dto.default_credit_limit ?? 0,
+      require_owner_approval: dto.require_owner_approval_for_credit ?? true,
+      due_days: 30,
+    };
 
-    const result = await this.prisma.$transaction(async (tx) => {
-      const settings = await tx.seller_store_settings.upsert({
-        where: { business_id: ctx.businessId },
-        create: {
-          business_id: ctx.businessId,
-          tenant_id: ctx.tenantId,
-          store_type: storeType,
-          onboarding_status: 'completed',
-          low_stock_threshold: lowStockThreshold,
-          stock_hold_minutes: holdMinutes,
-          payment_modes: effectivePaymentModes,
-          delivery_modes: deliveryModes,
-          delivery_areas: { areas: deliveryAreas },
-          credit_defaults: {
-            enabled: creditEnabled,
-            default_limit: dto.default_credit_limit ?? 0,
-            due_days: dto.default_credit_due_days ?? 30,
-            require_owner_approval: dto.require_owner_approval_for_credit ?? true,
+    try {
+      return await this.prisma.$transaction(async (tx) => {
+        const createdProducts: any[] = [];
+        for (const product of dto.products ?? []) {
+          const saved = await this.upsertSetupProduct(
+            tx,
+            businessId,
+            tenantId,
+            product,
+            lowStockThreshold,
+          );
+          createdProducts.push(saved);
+        }
+
+        const productCount = await tx.catalog_items.count({
+          where: {
+            business_id: businessId,
+            item_type: 'physical_product',
+            deleted_at: null,
           },
-          ai_guardrails: {
-            high_value_approval_amount: highValueApprovalAmount,
-            credit_enabled: creditEnabled,
-            require_owner_approval_for_credit: dto.require_owner_approval_for_credit ?? true,
-            block_unapproved_credit: true,
-            block_negative_stock: true,
+        });
+
+        const setupChecklist = {
+          seller_rules: true,
+          products_added: productCount > 0,
+          whatsapp_catalog_linked: false,
+          store_desk_ready: true,
+          ai_ready: true,
+        };
+
+        const settingsRows = await tx.$queryRawUnsafe<any[]>(
+          `INSERT INTO seller_store_settings
+             (business_id, tenant_id, store_type, onboarding_status, default_currency,
+              low_stock_threshold, stock_hold_minutes, payment_modes, delivery_modes,
+              delivery_areas, credit_defaults, ai_guardrails, setup_checklist)
+           VALUES ($1, $2, $3, 'completed', 'INR', $4, $5, $6::text[], $7::text[], $8::jsonb, $9::jsonb, $10::jsonb, $11::jsonb)
+           ON CONFLICT (business_id) DO UPDATE SET
+             tenant_id = EXCLUDED.tenant_id,
+             store_type = EXCLUDED.store_type,
+             onboarding_status = 'completed',
+             low_stock_threshold = EXCLUDED.low_stock_threshold,
+             stock_hold_minutes = EXCLUDED.stock_hold_minutes,
+             payment_modes = EXCLUDED.payment_modes,
+             delivery_modes = EXCLUDED.delivery_modes,
+             delivery_areas = EXCLUDED.delivery_areas,
+             credit_defaults = EXCLUDED.credit_defaults,
+             ai_guardrails = EXCLUDED.ai_guardrails,
+             setup_checklist = EXCLUDED.setup_checklist,
+             updated_at = now()
+           RETURNING *`,
+          businessId,
+          tenantId,
+          dto.store_type ?? 'local_retail',
+          lowStockThreshold,
+          stockHoldMinutes,
+          paymentModes,
+          deliveryModes,
+          JSON.stringify({ areas: deliveryAreas }),
+          JSON.stringify(creditDefaults),
+          JSON.stringify(aiGuardrails),
+          JSON.stringify(setupChecklist),
+        );
+
+        const businessSettings = await tx.business_settings.findUnique({
+          where: { business_id: businessId },
+          select: { booking_methods: true, booking_link: true },
+        });
+        const bookingMethods = (businessSettings?.booking_methods as any) ?? {};
+        await tx.business_settings.upsert({
+          where: { business_id: businessId },
+          update: {
+            booking_methods: {
+              ...bookingMethods,
+              catalog: {
+                ...(bookingMethods.catalog ?? {}),
+                enabled: true,
+                send_product_messages: true,
+              },
+              ai_chat: {
+                ...(bookingMethods.ai_chat ?? {}),
+                enabled: true,
+                collect_guest_details: false,
+                require_confirmation: true,
+              },
+              product_selling: {
+                enabled: true,
+                stock_hold_minutes: stockHoldMinutes,
+                payment_modes: paymentModes,
+                delivery_modes: deliveryModes,
+                ai_guardrails: aiGuardrails,
+              },
+            },
+            updated_at: new Date(),
           },
-          setup_checklist: {
-            store_rules: true,
-            starter_products: (dto.products?.length ?? 0) > 0,
-            whatsapp_connected: true,
+          create: {
+            business_id: businessId,
+            booking_methods: {
+              catalog: { enabled: true, send_product_messages: true },
+              ai_chat: { enabled: true, collect_guest_details: false, require_confirmation: true },
+              product_selling: {
+                enabled: true,
+                stock_hold_minutes: stockHoldMinutes,
+                payment_modes: paymentModes,
+                delivery_modes: deliveryModes,
+                ai_guardrails: aiGuardrails,
+              },
+            },
+          },
+        });
+
+        await tx.audit_logs.create({
+          data: {
+            business_id: businessId,
+            user_id: user.user_id,
+            action: 'seller_setup_completed',
+            entity_type: 'seller_store_settings',
+            entity_id: settingsRows[0]?.seller_store_settings_id,
+            new_values: {
+              product_count: productCount,
+              seeded_products: createdProducts.length,
+              stock_hold_minutes: stockHoldMinutes,
+              payment_modes: paymentModes,
+            },
+          },
+        });
+
+        await this.insertAiAudit(tx, businessId, tenantId, {
+          ai_employee: 'AI Store Setup',
+          action: 'product_seller_setup',
+          decision: 'completed',
+          risk_level: 'low',
+          entity_type: 'seller_store_settings',
+          entity_id: settingsRows[0]?.seller_store_settings_id,
+          input_summary: 'Owner completed product seller setup',
+          output_summary: 'Store rules, products, stock and AI guardrails are ready',
+          guardrails: aiGuardrails,
+        });
+
+        return {
+          settings: settingsRows[0],
+          products_created_or_updated: createdProducts.length,
+          product_count: productCount,
+          checklist: setupChecklist,
+          next: productCount > 0 ? '/seller-os' : '/inventory/products',
+        };
+      });
+    } catch (error) {
+      return this.handleSellerOpsMutationError(error);
+    }
+  }
+
+  async createManualSale(user: AuthUser, dto: CreateManualSaleDto) {
+    if (!dto.items?.length) {
+      throw new BadRequestException('Add at least one product to create a sale');
+    }
+
+    const businessId = user.business_id;
+    const tenantId = this.requireTenant(user);
+    const paymentMethod = (dto.payment_method ?? 'cash').toLowerCase();
+    const isCredit = paymentMethod === 'credit';
+    const isPaidNow = ['cash', 'upi', 'card', 'other'].includes(paymentMethod);
+    const paymentStatus = isCredit ? 'credit_due' : isPaidNow ? 'paid' : 'pending';
+    const orderStatus = isPaidNow ? 'paid' : 'pending';
+
+    return this.prisma.$transaction(async (tx) => {
+      const customer = await this.findOrCreateCustomer(
+        tx,
+        businessId,
+        tenantId,
+        dto.customer_phone,
+        dto.customer_name,
+      );
+      const lines = await this.buildSaleLines(tx, businessId, dto.items);
+      const totals = this.calculateTotals(lines);
+
+      let creditAccount: any = null;
+      if (isCredit) {
+        creditAccount = await this.getApprovedCreditAccountForUpdate(
+          tx,
+          businessId,
+          customer.phone,
+          totals.total_amount,
+        );
+      }
+
+      const orderNumber = this.makeOrderNumber('CTR');
+      const order = await tx.orders.create({
+        data: {
+          business_id: businessId,
+          tenant_id: tenantId,
+          customer_id: customer.customer_id,
+          order_number: orderNumber,
+          order_type: 'product',
+          status: orderStatus,
+          subtotal: totals.subtotal,
+          discount_amount: totals.discount_amount,
+          tax_amount: 0,
+          shipping_fee: 0,
+          total_amount: totals.total_amount,
+          payment_status: paymentStatus,
+          payment_method: paymentMethod,
+          payment_reference: dto.payment_reference,
+          paid_at: isPaidNow ? new Date() : null,
+          shipping_address: dto.shipping_address,
+          shipping_phone: customer.phone,
+          shipping_pincode: dto.shipping_pincode,
+          notes: dto.notes,
+          source: 'counter',
+        },
+      });
+
+      const productOrder = await tx.product_orders.create({
+        data: {
+          business_id: businessId,
+          tenant_id: tenantId,
+          legacy_order_id: order.order_id,
+          customer_id: customer.customer_id,
+          order_number: orderNumber,
+          status: orderStatus,
+          payment_status: paymentStatus,
+          subtotal: totals.subtotal,
+          discount_amount: totals.discount_amount,
+          tax_amount: 0,
+          shipping_fee: 0,
+          total_amount: totals.total_amount,
+          source: 'counter',
+          shipping_address: dto.shipping_address,
+          shipping_phone: customer.phone,
+          shipping_pincode: dto.shipping_pincode,
+          notes: dto.notes,
+          paid_at: isPaidNow ? new Date() : null,
+          metadata: {
+            counter_sale: true,
+            payment_method: paymentMethod,
+            created_by: user.user_id,
           },
         },
-        update: {
-          store_type: storeType,
-          onboarding_status: 'completed',
-          low_stock_threshold: lowStockThreshold,
-          stock_hold_minutes: holdMinutes,
-          payment_modes: effectivePaymentModes,
-          delivery_modes: deliveryModes,
-          delivery_areas: { areas: deliveryAreas },
-          credit_defaults: {
-            enabled: creditEnabled,
-            default_limit: dto.default_credit_limit ?? 0,
-            due_days: dto.default_credit_due_days ?? 30,
-            require_owner_approval: dto.require_owner_approval_for_credit ?? true,
+      });
+
+      for (const line of lines) {
+        await this.stockReservationService.reserveStock(
+          order.order_id,
+          line.item_id,
+          line.variant_id,
+          line.quantity,
+          tx,
+        );
+
+        await tx.order_items.create({
+          data: {
+            order_id: order.order_id,
+            item_id: line.item_id,
+            variant_id: line.variant_id,
+            product_name: line.product_name,
+            variant_name: line.variant_name,
+            sku: line.sku,
+            quantity: line.quantity,
+            unit_price: line.unit_price,
+            discount: line.discount,
+            total_price: line.total_price,
+            snapshot: line.snapshot,
           },
-          ai_guardrails: {
-            high_value_approval_amount: highValueApprovalAmount,
-            credit_enabled: creditEnabled,
-            require_owner_approval_for_credit: dto.require_owner_approval_for_credit ?? true,
-            block_unapproved_credit: true,
-            block_negative_stock: true,
+        });
+
+        await tx.product_order_items.create({
+          data: {
+            product_order_id: productOrder.product_order_id,
+            item_id: line.item_id,
+            variant_id: line.variant_id,
+            product_name: line.product_name,
+            variant_name: line.variant_name,
+            sku: line.sku,
+            quantity: line.quantity,
+            unit_price: line.unit_price,
+            discount: line.discount,
+            total_price: line.total_price,
+            snapshot: line.snapshot,
           },
-          setup_checklist: {
-            store_rules: true,
-            starter_products: (dto.products?.length ?? 0) > 0,
-            whatsapp_connected: true,
-          },
+        });
+      }
+
+      await tx.product_order_status_events.create({
+        data: {
+          product_order_id: productOrder.product_order_id,
+          business_id: businessId,
+          from_status: null,
+          to_status: orderStatus,
+          actor: 'owner',
+          actor_id: user.user_id,
+          data: { legacy_order_id: order.order_id, source: 'counter' },
+        },
+      });
+
+      await tx.customers.update({
+        where: { customer_id: customer.customer_id },
+        data: {
+          total_orders: { increment: 1 },
+          total_spent: { increment: totals.total_amount },
+          last_order_date: new Date(),
           updated_at: new Date(),
         },
       });
 
-      const products = [];
-      for (const product of dto.products ?? []) {
-        products.push(await this.upsertSetupProduct(tx, ctx, product));
+      if (creditAccount) {
+        const nextBalance = this.toNumber(creditAccount.current_balance) + totals.total_amount;
+        await tx.$queryRawUnsafe(
+          `UPDATE seller_customer_credit_accounts
+           SET current_balance = $3, updated_at = now()
+           WHERE business_id = $1 AND credit_account_id = $2`,
+          businessId,
+          creditAccount.credit_account_id,
+          nextBalance,
+        );
+        await tx.$queryRawUnsafe(
+          `INSERT INTO seller_customer_credit_transactions
+             (credit_account_id, business_id, order_id, transaction_type, amount, balance_after, note, created_by, metadata)
+           VALUES ($1, $2, $3, 'sale_credit', $4, $5, $6, $7, $8::jsonb)`,
+          creditAccount.credit_account_id,
+          businessId,
+          order.order_id,
+          totals.total_amount,
+          nextBalance,
+          'Counter sale on credit',
+          user.user_id ?? null,
+          JSON.stringify({ product_order_id: productOrder.product_order_id }),
+        );
       }
 
-      await tx.seller_ai_audit_logs.create({
+      if (dto.delivery_required) {
+        await this.insertDelivery(tx, businessId, tenantId, {
+          order_id: order.order_id,
+          product_order_id: productOrder.product_order_id,
+          customer_id: customer.customer_id,
+          delivery_mode: 'local',
+          phone: customer.phone,
+          address: dto.shipping_address,
+          pincode: dto.shipping_pincode,
+          notes: dto.notes,
+        });
+      }
+
+      await tx.audit_logs.create({
         data: {
-          business_id: ctx.businessId,
-          tenant_id: ctx.tenantId,
-          ai_employee_key: 'setup_assistant',
-          action: 'seller_setup_completed',
-          risk_level: 'low',
-          decision: 'completed',
-          input_summary: `Configured product seller setup with ${products.length} starter products`,
-          metadata: { payment_modes: paymentModes, delivery_modes: deliveryModes },
+          business_id: businessId,
+          user_id: user.user_id,
+          action: 'counter_sale_created',
+          entity_type: 'order',
+          entity_id: order.order_id,
+          new_values: {
+            product_order_id: productOrder.product_order_id,
+            total_amount: totals.total_amount,
+            payment_status: paymentStatus,
+          },
         },
       });
 
-      return { settings, products };
+      await this.insertAiAudit(tx, businessId, tenantId, {
+        ai_employee: 'AI Mistake Prevention',
+        action: 'counter_sale_guardrail',
+        decision: 'allowed',
+        risk_level: isCredit ? 'medium' : 'low',
+        entity_type: 'order',
+        entity_id: order.order_id,
+        input_summary: 'Owner created a counter sale',
+        output_summary: isCredit
+          ? 'Credit sale allowed for an approved customer'
+          : 'Stock and sale checks passed',
+        guardrails: {
+          payment_method: paymentMethod,
+          stock_checked: true,
+          credit_checked: isCredit,
+        },
+      });
+
+      return {
+        order_id: order.order_id,
+        product_order_id: productOrder.product_order_id,
+        order_number: orderNumber,
+        customer,
+        payment_status: paymentStatus,
+        total_amount: totals.total_amount,
+        items: lines,
+      };
+    });
+  }
+
+  async createStockReservation(user: AuthUser, dto: CreateStockReservationDto) {
+    const businessId = user.business_id;
+    const tenantId = user.tenant_id;
+    const reservationId = randomUUID();
+    const holdMinutes = dto.hold_minutes ?? 60;
+    const expiresAt = new Date(Date.now() + holdMinutes * 60 * 1000);
+
+    try {
+      return await this.prisma.$transaction(async (tx) => {
+        let customerId = dto.customer_id ?? null;
+        if (!customerId && dto.customer_phone) {
+          const customer = await this.findOrCreateCustomer(
+            tx,
+            businessId,
+            tenantId,
+            dto.customer_phone,
+            dto.customer_name,
+          );
+          customerId = customer.customer_id;
+        }
+
+        await this.buildSaleLines(tx, businessId, [{
+          item_id: dto.item_id,
+          variant_id: dto.variant_id,
+          quantity: dto.quantity,
+        }]);
+
+        await this.stockReservationService.reserveStock(
+          reservationId,
+          dto.item_id,
+          dto.variant_id,
+          dto.quantity,
+          tx,
+        );
+
+        const rows = await tx.$queryRawUnsafe<any[]>(
+          `INSERT INTO seller_stock_reservations
+             (reservation_id, business_id, tenant_id, customer_id, item_id, variant_id, quantity, reason, source, expires_at, created_by, metadata)
+           VALUES ($1, $2, $3, $4, $5, $6, $7, $8, 'manual', $9, $10, $11::jsonb)
+           RETURNING *`,
+          reservationId,
+          businessId,
+          tenantId ?? null,
+          customerId,
+          dto.item_id,
+          dto.variant_id ?? null,
+          dto.quantity,
+          dto.reason ?? null,
+          expiresAt,
+          user.user_id ?? null,
+          JSON.stringify({ hold_minutes: holdMinutes }),
+        );
+
+        await this.insertAiAudit(tx, businessId, tenantId, {
+          ai_employee: 'AI Inventory Employee',
+          action: 'manual_stock_hold',
+          decision: 'reserved',
+          risk_level: 'low',
+          entity_type: 'seller_stock_reservation',
+          entity_id: reservationId,
+          input_summary: 'Owner held stock for a local customer',
+          output_summary: 'Stock was reserved and cannot be double sold',
+          guardrails: { quantity: dto.quantity, expires_at: expiresAt },
+        });
+
+        return rows[0];
+      });
+    } catch (error) {
+      return this.handleSellerOpsMutationError(error);
+    }
+  }
+
+  async releaseStockReservation(user: AuthUser, reservationId: string) {
+    const businessId = user.business_id;
+
+    try {
+      return await this.prisma.$transaction(async (tx) => {
+        const rows = await tx.$queryRawUnsafe<any[]>(
+          `SELECT *
+           FROM seller_stock_reservations
+           WHERE business_id = $1 AND reservation_id = $2
+           FOR UPDATE`,
+          businessId,
+          reservationId,
+        );
+        const reservation = rows[0];
+        if (!reservation) throw new NotFoundException('Stock hold not found');
+        if (reservation.status !== 'active') {
+          throw new ConflictException('This stock hold is already closed');
+        }
+
+        if (reservation.variant_id) {
+          await tx.item_variants.updateMany({
+            where: {
+              variant_id: reservation.variant_id,
+              item_id: reservation.item_id,
+            },
+            data: {
+              stock_quantity: { increment: reservation.quantity },
+              updated_at: new Date(),
+            },
+          });
+        } else {
+          await tx.catalog_items.updateMany({
+            where: {
+              business_id: businessId,
+              item_id: reservation.item_id,
+              stock_quantity: { not: null },
+            },
+            data: {
+              stock_quantity: { increment: reservation.quantity },
+              updated_at: new Date(),
+            },
+          });
+        }
+
+        const updated = await tx.$queryRawUnsafe<any[]>(
+          `UPDATE seller_stock_reservations
+           SET status = 'released', released_at = now(), updated_at = now()
+           WHERE business_id = $1 AND reservation_id = $2
+           RETURNING *`,
+          businessId,
+          reservationId,
+        );
+
+        await this.insertAiAudit(tx, businessId, user.tenant_id, {
+          ai_employee: 'AI Inventory Employee',
+          action: 'release_stock_hold',
+          decision: 'released',
+          risk_level: 'low',
+          entity_type: 'seller_stock_reservation',
+          entity_id: reservationId,
+          input_summary: 'Owner released a stock hold',
+          output_summary: 'Reserved stock was added back',
+          guardrails: { quantity: reservation.quantity },
+        });
+
+        return updated[0];
+      });
+    } catch (error) {
+      return this.handleSellerOpsMutationError(error);
+    }
+  }
+
+  async listCreditCustomers(user: AuthUser) {
+    return this.optionalQuery<any>(
+      `SELECT credit_account_id, customer_id, customer_name, phone, status, credit_limit,
+              current_balance, due_days, approved_at, notes, created_at, updated_at
+       FROM seller_customer_credit_accounts
+       WHERE business_id = $1
+       ORDER BY
+         CASE WHEN status = 'pending' THEN 0 WHEN status = 'approved' THEN 1 ELSE 2 END,
+         current_balance DESC,
+         updated_at DESC
+       LIMIT 100`,
+      [user.business_id],
+    );
+  }
+
+  async upsertCreditCustomer(user: AuthUser, dto: CreateCreditCustomerDto) {
+    const businessId = user.business_id;
+    const tenantId = this.requireTenant(user);
+    const phone = this.normalizePhone(dto.phone);
+    const status = dto.status ?? 'approved';
+
+    try {
+      return await this.prisma.$transaction(async (tx) => {
+        const customer = await this.findOrCreateCustomer(
+          tx,
+          businessId,
+          tenantId,
+          phone,
+          dto.customer_name,
+        );
+
+        const rows = await tx.$queryRawUnsafe<any[]>(
+          `INSERT INTO seller_customer_credit_accounts
+             (business_id, tenant_id, customer_id, customer_name, phone, status, credit_limit, due_days, approved_by, approved_at, notes)
+           VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, CASE WHEN $6 = 'approved' THEN now() ELSE NULL END, $10)
+           ON CONFLICT (business_id, phone) DO UPDATE SET
+             customer_id = EXCLUDED.customer_id,
+             customer_name = EXCLUDED.customer_name,
+             status = EXCLUDED.status,
+             credit_limit = EXCLUDED.credit_limit,
+             due_days = EXCLUDED.due_days,
+             approved_by = CASE WHEN EXCLUDED.status = 'approved' THEN EXCLUDED.approved_by ELSE seller_customer_credit_accounts.approved_by END,
+             approved_at = CASE WHEN EXCLUDED.status = 'approved' THEN COALESCE(seller_customer_credit_accounts.approved_at, now()) ELSE seller_customer_credit_accounts.approved_at END,
+             notes = EXCLUDED.notes,
+             updated_at = now()
+           RETURNING *`,
+          businessId,
+          tenantId ?? null,
+          customer.customer_id,
+          dto.customer_name ?? customer.name ?? null,
+          phone,
+          status,
+          dto.credit_limit,
+          dto.due_days ?? 30,
+          user.user_id ?? null,
+          dto.notes ?? null,
+        );
+
+        await this.insertAiAudit(tx, businessId, tenantId, {
+          ai_employee: 'AI Credit Desk',
+          action: 'credit_customer_saved',
+          decision: status,
+          risk_level: status === 'approved' ? 'medium' : 'low',
+          entity_type: 'seller_customer_credit_account',
+          entity_id: rows[0]?.credit_account_id,
+          input_summary: 'Owner updated a credit customer',
+          output_summary: `${phone} is ${status} for credit sales`,
+          guardrails: { credit_limit: dto.credit_limit, due_days: dto.due_days ?? 30 },
+        });
+
+        return rows[0];
+      });
+    } catch (error) {
+      return this.handleSellerOpsMutationError(error);
+    }
+  }
+
+  async updateCreditCustomer(user: AuthUser, creditAccountId: string, dto: UpdateCreditCustomerDto) {
+    const businessId = user.business_id;
+    const existing = await this.requiredQuery<any>(
+      `SELECT *
+       FROM seller_customer_credit_accounts
+       WHERE business_id = $1 AND credit_account_id = $2`,
+      [businessId, creditAccountId],
+    );
+    if (!existing[0]) throw new NotFoundException('Credit customer not found');
+
+    const current = existing[0];
+    const nextStatus = dto.status ?? current.status;
+    const rows = await this.requiredQuery<any>(
+      `UPDATE seller_customer_credit_accounts
+       SET status = $3,
+           credit_limit = $4,
+           due_days = $5,
+           notes = $6,
+           approved_by = CASE WHEN $3 = 'approved' AND approved_by IS NULL THEN $7 ELSE approved_by END,
+           approved_at = CASE WHEN $3 = 'approved' AND approved_at IS NULL THEN now() ELSE approved_at END,
+           updated_at = now()
+       WHERE business_id = $1 AND credit_account_id = $2
+       RETURNING *`,
+      [
+        businessId,
+        creditAccountId,
+        nextStatus,
+        dto.credit_limit ?? this.toNumber(current.credit_limit),
+        dto.due_days ?? Number(current.due_days ?? 30),
+        dto.notes ?? current.notes ?? null,
+        user.user_id ?? null,
+      ],
+    );
+    return rows[0];
+  }
+
+  async createReturnCase(user: AuthUser, dto: CreateReturnCaseDto) {
+    try {
+      const rows = await this.requiredQuery<any>(
+        `INSERT INTO seller_return_cases
+           (business_id, tenant_id, order_id, product_order_id, customer_id, return_type, reason, requested_amount, items)
+         VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9::jsonb)
+         RETURNING *`,
+        [
+          user.business_id,
+          user.tenant_id ?? null,
+          dto.order_id ?? null,
+          dto.product_order_id ?? null,
+          dto.customer_id ?? null,
+          dto.return_type ?? 'return',
+          dto.reason ?? null,
+          dto.requested_amount ?? null,
+          JSON.stringify(dto.items ?? []),
+        ],
+      );
+      return rows[0];
+    } catch (error) {
+      return this.handleSellerOpsMutationError(error);
+    }
+  }
+
+  async updateReturnStatus(user: AuthUser, returnId: string, dto: UpdateSellerStatusDto) {
+    const closedStatuses = ['completed', 'refunded', 'exchanged', 'rejected'];
+    const rows = await this.requiredQuery<any>(
+      `UPDATE seller_return_cases
+       SET status = $3,
+           resolution = $4::jsonb,
+           closed_at = CASE WHEN $5 THEN now() ELSE closed_at END,
+           updated_at = now()
+       WHERE business_id = $1 AND return_id = $2
+       RETURNING *`,
+      [
+        user.business_id,
+        returnId,
+        dto.status,
+        JSON.stringify({ note: dto.note ?? null, updated_by: user.user_id ?? null }),
+        closedStatuses.includes(dto.status),
+      ],
+    );
+    if (!rows[0]) throw new NotFoundException('Return case not found');
+    return rows[0];
+  }
+
+  async createDelivery(user: AuthUser, dto: CreateDeliveryDto) {
+    return this.insertDelivery(this.prisma, user.business_id, user.tenant_id, dto);
+  }
+
+  async updateDeliveryStatus(user: AuthUser, deliveryId: string, dto: UpdateSellerStatusDto) {
+    const rows = await this.requiredQuery<any>(
+      `UPDATE seller_deliveries
+       SET status = $3,
+           picked_at = CASE WHEN $3 = 'out_for_delivery' AND picked_at IS NULL THEN now() ELSE picked_at END,
+           delivered_at = CASE WHEN $3 = 'delivered' THEN now() ELSE delivered_at END,
+           notes = COALESCE($4, notes),
+           updated_at = now()
+       WHERE business_id = $1 AND delivery_id = $2
+       RETURNING *`,
+      [user.business_id, deliveryId, dto.status, dto.note ?? null],
+    );
+    if (!rows[0]) throw new NotFoundException('Delivery job not found');
+    return rows[0];
+  }
+
+  async createApproval(user: AuthUser, dto: CreateOwnerApprovalDto) {
+    return this.createApprovalRecord(this.prisma, user, dto, true);
+  }
+
+  async decideApproval(user: AuthUser, approvalId: string, status: 'approved' | 'rejected') {
+    const rows = await this.requiredQuery<any>(
+      `UPDATE seller_owner_approvals
+       SET status = $3, decided_by = $4, decided_at = now(), updated_at = now()
+       WHERE business_id = $1 AND approval_id = $2 AND status = 'pending'
+       RETURNING *`,
+      [user.business_id, approvalId, status, user.user_id ?? null],
+    );
+    if (!rows[0]) throw new NotFoundException('Pending approval not found');
+    return rows[0];
+  }
+
+  async checkAiGuardrails(user: AuthUser, dto: AiGuardrailCheckDto) {
+    const warnings: string[] = [];
+    let riskLevel: 'low' | 'medium' | 'high' = 'low';
+    let decision: 'allow' | 'review' | 'block' = 'allow';
+
+    if (dto.item_id && dto.quantity) {
+      const item = await this.prisma.catalog_items.findFirst({
+        where: {
+          business_id: user.business_id,
+          item_id: dto.item_id,
+          deleted_at: null,
+        },
+        include: {
+          variants: dto.variant_id
+            ? { where: { variant_id: dto.variant_id } }
+            : undefined,
+        },
+      });
+
+      if (!item) {
+        warnings.push('Product was not found in this seller account');
+        decision = 'block';
+        riskLevel = 'high';
+      } else {
+        const stock = dto.variant_id
+          ? item.variants?.[0]?.stock_quantity ?? 0
+          : item.stock_quantity ?? 0;
+        if (stock < dto.quantity) {
+          warnings.push(`Only ${stock} in stock, but ${dto.quantity} requested`);
+          decision = 'block';
+          riskLevel = 'high';
+        } else if (stock - dto.quantity <= 2) {
+          warnings.push('This sale will leave very low stock');
+          decision = 'review';
+          riskLevel = 'medium';
+        }
+      }
+    }
+
+    if ((dto.payment_method ?? '').toLowerCase() === 'credit') {
+      const phone = dto.customer_phone ? this.normalizePhone(dto.customer_phone) : '';
+      const accountRows = phone
+        ? await this.optionalQuery<any>(
+            `SELECT status, credit_limit, current_balance
+             FROM seller_customer_credit_accounts
+             WHERE business_id = $1 AND phone = $2`,
+            [user.business_id, phone],
+          )
+        : [];
+      const account = accountRows[0];
+      if (!account || account.status !== 'approved') {
+        warnings.push('Credit sale needs an owner-approved customer');
+        decision = 'block';
+        riskLevel = 'high';
+      } else if (dto.amount && this.toNumber(account.current_balance) + dto.amount > this.toNumber(account.credit_limit)) {
+        warnings.push('Credit limit will be crossed');
+        decision = 'block';
+        riskLevel = 'high';
+      }
+    }
+
+    if ((dto.amount ?? 0) >= 10000 && decision === 'allow') {
+      warnings.push('High value action should be checked by owner');
+      decision = 'review';
+      riskLevel = 'medium';
+    }
+
+    const requiresOwnerApproval = decision === 'review' || riskLevel === 'high';
+    let approval: any = null;
+    if (requiresOwnerApproval) {
+      approval = await this.createApprovalRecord(
+        this.prisma,
+        user,
+        {
+          title: 'Check before continuing',
+          simple_summary: warnings[0] ?? 'AI wants owner confirmation before this action',
+          action_type: dto.action,
+          risk_level: riskLevel,
+          entity_type: dto.item_id ? 'catalog_item' : undefined,
+          entity_id: dto.item_id,
+          payload: dto as Record<string, any>,
+        },
+        false,
+      );
+    }
+
+    await this.insertAiAudit(this.prisma, user.business_id, user.tenant_id, {
+      ai_employee: 'AI Mistake Prevention',
+      action: dto.action,
+      decision,
+      risk_level: riskLevel,
+      entity_type: dto.item_id ? 'catalog_item' : undefined,
+      entity_id: dto.item_id,
+      input_summary: 'Guardrail check requested',
+      output_summary: warnings.length ? warnings.join('; ') : 'No risk found',
+      guardrails: {
+        warnings,
+        requires_owner_approval: requiresOwnerApproval,
+        approval_id: approval?.approval_id,
+      },
     });
 
     return {
-      setup: result.settings,
-      products: result.products.map((product: any) => this.publicProduct(product)),
+      safe: decision === 'allow',
+      decision,
+      risk_level: riskLevel,
+      requires_owner_approval: requiresOwnerApproval,
+      warnings,
+      approval,
+      next_step:
+        decision === 'allow'
+          ? 'Go ahead'
+          : requiresOwnerApproval
+            ? 'Ask owner to approve'
+            : 'Stop this action',
     };
   }
 
-  async getOverview(user: any) {
-    const ctx = await this.getSellerContext(user);
-    const settings = await this.getSettings(ctx);
-    const features = this.buildSellerFeatures(settings);
-    const lowStockThreshold = settings?.low_stock_threshold ?? 5;
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
-    const demandSince = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000);
-
-    const [
-      ownerQueue,
-      todayOrders,
-      openEnquiries,
-      activeProducts,
-      lowStock,
-      stockHolds,
-      pendingPayments,
-      codCollections,
-      returnsWaiting,
-      deliveriesWaiting,
-      creditAgg,
-      approvals,
-      reservations,
-      returns,
-      deliveries,
-      creditApproved,
-      creditPending,
-      demandSignals,
-      deadStock,
-      aiAudit,
-    ] = await Promise.all([
-      this.db.seller_owner_approvals.count({ where: { business_id: ctx.businessId, status: 'pending' } }),
-      this.db.orders.count({ where: { business_id: ctx.businessId, created_at: { gte: today } } }),
-      this.db.leads.count({
-        where: { business_id: ctx.businessId, is_converted: false, status: { notIn: ['lost', 'invalid'] } },
-      }),
-      this.db.products.count({
-        where: { business_id: ctx.businessId, product_type: 'physical', is_active: true },
-      }),
-      this.db.products.findMany({
-        where: {
-          business_id: ctx.businessId,
-          product_type: 'physical',
-          is_active: true,
-          track_inventory: true,
-          stock_quantity: { lte: lowStockThreshold },
-        },
-        orderBy: { stock_quantity: 'asc' },
-        take: 8,
-      }),
-      this.db.seller_stock_reservations.count({
-        where: { business_id: ctx.businessId, status: 'active', expires_at: { gt: new Date() } },
-      }),
-      this.db.orders.count({
-        where: {
-          business_id: ctx.businessId,
-          order_type: 'product',
-          payment_status: 'pending',
-          payment_method: { notIn: ['credit', 'cod'] },
-          status: { notIn: ['cancelled', 'refunded', 'failed'] },
-        },
-      }),
-      this.db.orders.count({
-        where: {
-          business_id: ctx.businessId,
-          order_type: 'product',
-          payment_status: 'pending',
-          payment_method: 'cod',
-          status: { notIn: ['cancelled', 'refunded', 'failed'] },
-        },
-      }),
-      this.db.seller_return_cases.count({ where: { business_id: ctx.businessId, status: { in: ['open', 'review'] } } }),
-      this.db.seller_deliveries.count({ where: { business_id: ctx.businessId, status: { in: ['pending', 'assigned', 'out_for_delivery'] } } }),
-      this.db.seller_customer_credit_accounts.aggregate({
-        where: { business_id: ctx.businessId, status: 'approved' },
-        _sum: { current_balance: true },
-      }),
-      this.db.seller_owner_approvals.findMany({
-        where: { business_id: ctx.businessId, status: 'pending' },
-        orderBy: [{ priority: 'desc' }, { created_at: 'desc' }],
-        take: 8,
-      }),
-      this.db.seller_stock_reservations.findMany({
-        where: { business_id: ctx.businessId, status: 'active' },
-        orderBy: { expires_at: 'asc' },
-        take: 8,
-      }),
-      this.db.seller_return_cases.findMany({
-        where: { business_id: ctx.businessId, status: { in: ['open', 'review'] } },
-        orderBy: { created_at: 'desc' },
-        take: 8,
-      }),
-      this.db.seller_deliveries.findMany({
-        where: { business_id: ctx.businessId, status: { in: ['pending', 'assigned', 'out_for_delivery'] } },
-        orderBy: { created_at: 'desc' },
-        take: 8,
-      }),
-      this.db.seller_customer_credit_accounts.count({ where: { business_id: ctx.businessId, status: 'approved' } }),
-      this.db.seller_customer_credit_accounts.count({ where: { business_id: ctx.businessId, status: 'pending' } }),
-      this.db.seller_demand_signals.findMany({
-        where: { business_id: ctx.businessId, created_at: { gte: demandSince } },
-        orderBy: { created_at: 'desc' },
-        take: 500,
-      }),
-      this.findDeadStock(ctx.businessId),
-      this.db.seller_ai_audit_logs.findMany({
-        where: { business_id: ctx.businessId },
-        orderBy: { created_at: 'desc' },
-        take: 8,
-      }),
-    ]);
-
-    const demandHeatmap = this.buildDemandHeatmap(demandSignals);
-    const onlineIntelligence = await this.buildOnlineSellerIntelligence(ctx, demandSignals, lowStock, deadStock, lowStockThreshold);
-    const creditDue = Number(creditAgg._sum.current_balance || 0);
-
-    return {
-      business_type: ctx.business.business_type,
-      seller_mode: settings?.store_type || 'product_seller',
-      features,
-      title: 'Store Desk',
-      summary: {
-        owner_queue: ownerQueue,
-        today_orders: todayOrders,
-        open_enquiries: openEnquiries,
-        active_products: activeProducts,
-        low_stock: lowStock.length,
-        stock_holds: stockHolds,
-        pending_payments: pendingPayments,
-        cod_collections: codCollections,
-        returns_waiting: returnsWaiting,
-        deliveries_waiting: deliveriesWaiting,
-        credit_due: features.credit_sales ? creditDue : 0,
-      },
-      primary_actions: [
-        { key: 'approval_queue', label: 'Needs owner decision', count: ownerQueue },
-        { key: 'manual_sale', label: 'Counter sale', count: todayOrders },
-        { key: 'stock_holds', label: 'Stock holds', count: stockHolds },
-        { key: 'payment_desk', label: 'Payment waiting', count: pendingPayments },
-        { key: 'delivery_desk', label: 'Delivery desk', count: deliveriesWaiting },
-        ...(features.credit_sales ? [{ key: 'credit', label: 'Credit', count: creditApproved }] : []),
-      ],
-      owner_queue: approvals.map((item: any) => ({
-        id: item.approval_id,
-        type: item.entity_type,
-        title: item.title,
-        text: item.description,
-        risk: item.risk_level,
-        source: item.source,
-      })),
-      ai_employees: this.buildAiEmployees({
-        todayOrders,
-        ownerQueue,
-        stockHolds,
-        returnsWaiting,
-        deliveriesWaiting,
-        lowStock: lowStock.length,
-        creditDue,
-        creditEnabled: features.credit_sales,
-        demandHeatmap,
-      }),
-      workspaces: {
-        approvals,
-        stock_reservations: reservations,
-        returns,
-        deliveries,
-        credit: {
-          enabled: features.credit_sales,
-          approved_customers: creditApproved,
-          pending_customers: creditPending,
-          total_credit_due: features.credit_sales ? creditDue : 0,
-        },
-      },
-      stock: {
-        low_stock: lowStock.map((product: any) => this.publicProduct(product)),
-        active_cart_holds: stockHolds,
-      },
-      online_intelligence: onlineIntelligence,
-      demand_heatmap: demandHeatmap,
-      dead_stock: deadStock,
-      ai_audit_log: aiAudit,
-      feature_map: [
-        'owner_approval_queue',
-        'manual_counter_sale',
-        'stock_reservation',
-        'ai_inventory_employee',
-        'returns_exchange_refund',
-        'local_delivery_desk',
-        'ai_guardrails_audit',
-        'profit_coach',
-        'dead_stock_recovery',
-        'demand_heatmap',
-        'online_demand_intelligence',
-        ...(features.credit_sales ? ['credit_sales'] : []),
-        'ai_mistake_prevention',
-      ],
-    };
-  }
-
-  async getProductsStock(user: any, query: SellerProductsStockQueryDto = {}) {
-    const ctx = await this.getSellerContext(user);
-    const settings = await this.getSettings(ctx);
-    const lowStockThreshold = settings?.low_stock_threshold ?? 5;
-    const page = Math.max(Number(query.page || 1), 1);
-    const limit = Math.min(Math.max(Number(query.limit || 50), 1), 500);
+  async getProductsStock(user: AuthUser, query: SellerProductsStockQueryDto) {
+    const businessId = user.business_id;
+    const page = Math.max(1, Number(query.page ?? 1));
+    const limit = Math.min(Math.max(1, Number(query.limit ?? 50)), 100);
     const skip = (page - 1) * limit;
-    const search = String(query.search || '').trim();
+    const search = String(query.search ?? '').trim();
+    const status = query.status ?? 'all';
+    const settingsRows = await this.optionalQuery<any>(
+      `SELECT low_stock_threshold
+       FROM seller_store_settings
+       WHERE business_id = $1
+       LIMIT 1`,
+      [businessId],
+    );
+    const lowStockThreshold = Number(settingsRows[0]?.low_stock_threshold ?? 5);
 
     const where: any = {
-      business_id: ctx.businessId,
-      tenant_id: ctx.tenantId,
-      product_type: 'physical',
+      business_id: businessId,
+      item_type: 'physical_product',
+      deleted_at: null,
     };
 
-    if (query.category) where.category = query.category;
-    if (query.status === 'active') where.is_active = true;
-    if (query.status === 'inactive') where.is_active = false;
-    if (query.status === 'out_of_stock') {
-      where.track_inventory = true;
-      where.stock_quantity = { lte: 0 };
-    }
-    if (query.status === 'low_stock') {
-      where.track_inventory = true;
+    if (status === 'active') where.is_active = true;
+    if (status === 'inactive') where.is_active = false;
+    if (status === 'low_stock') {
+      where.is_active = true;
       where.stock_quantity = { gt: 0, lte: lowStockThreshold };
     }
-    if (search) {
-      where.OR = [
-        { name: { contains: search, mode: 'insensitive' } },
-        { sku: { contains: search, mode: 'insensitive' } },
-        { category: { contains: search, mode: 'insensitive' } },
-        { description: { contains: search, mode: 'insensitive' } },
-      ];
+    if (status === 'out_of_stock') {
+      where.is_active = true;
+      where.OR = [{ stock_quantity: null }, { stock_quantity: { lte: 0 } }];
     }
 
-    const [products, total, summary, categories, recentAdjustments] = await Promise.all([
-      this.db.products.findMany({
+    if (search) {
+      const searchFilters = [
+        { name: { contains: search, mode: 'insensitive' } },
+        { category: { contains: search, mode: 'insensitive' } },
+        { description: { contains: search, mode: 'insensitive' } },
+        { product_detail: { is: { sku: { contains: search, mode: 'insensitive' } } } },
+      ];
+      where.OR = where.OR ? [{ AND: [{ OR: where.OR }, { OR: searchFilters }] }] : searchFilters;
+    }
+
+    const [total, items, summaryRows, heldTotalRows] = await Promise.all([
+      this.prisma.catalog_items.count({ where }),
+      this.prisma.catalog_items.findMany({
         where,
-        include: { product_variants: true },
-        orderBy: [{ updated_at: 'desc' }, { created_at: 'desc' }],
+        include: { product_detail: true, variants: true },
+        orderBy: [{ updated_at: 'desc' }],
         skip,
         take: limit,
       }),
-      this.db.products.count({ where }),
-      this.getProductStockSummary(ctx, lowStockThreshold),
-      this.db.products.findMany({
-        where: { business_id: ctx.businessId, tenant_id: ctx.tenantId, product_type: 'physical', category: { not: null } },
-        distinct: ['category'],
-        select: { category: true },
-        orderBy: { category: 'asc' },
-        take: 200,
-      }),
-      this.fetchStockAdjustments(ctx, { limit: 8 }),
+      this.optionalQuery<any>(
+        `SELECT
+           COUNT(*)::int AS total_products,
+           COUNT(*) FILTER (
+             WHERE is_active = true AND COALESCE(stock_quantity, 0) > 0 AND COALESCE(stock_quantity, 0) <= $2
+           )::int AS low_stock,
+           COUNT(*) FILTER (
+             WHERE is_active = true AND COALESCE(stock_quantity, 0) <= 0
+           )::int AS out_of_stock
+         FROM catalog_items
+         WHERE business_id = $1 AND item_type = 'physical_product' AND deleted_at IS NULL`,
+        [businessId, lowStockThreshold],
+      ),
+      this.optionalQuery<any>(
+        `SELECT COALESCE(SUM(quantity), 0)::int AS held_stock
+         FROM (
+           SELECT quantity
+           FROM seller_stock_reservations
+           WHERE business_id = $1 AND status = 'active'
+           UNION ALL
+           SELECT cr.quantity
+           FROM cart_reservations cr
+           JOIN catalog_items ci ON ci.item_id = cr.item_id
+           WHERE ci.business_id = $1 AND cr.status = 'active'
+         ) holds`,
+        [businessId],
+      ),
     ]);
 
-    const productIds = products.map((product: any) => product.product_id);
-    const profitSnapshots = productIds.length
-      ? await this.db.seller_product_profit_snapshots.findMany({
-          where: { business_id: ctx.businessId, product_id: { in: productIds } },
-        })
+    const itemIds = items.map((item) => item.item_id);
+    const holdRows = itemIds.length
+      ? await this.optionalQuery<any>(
+          `SELECT item_id, SUM(quantity)::int AS held_quantity
+           FROM (
+             SELECT item_id, quantity
+             FROM seller_stock_reservations
+             WHERE business_id = $1 AND status = 'active' AND item_id = ANY($2::uuid[])
+             UNION ALL
+             SELECT cr.item_id, cr.quantity
+             FROM cart_reservations cr
+             JOIN catalog_items ci ON ci.item_id = cr.item_id
+             WHERE ci.business_id = $1 AND cr.status = 'active' AND cr.item_id = ANY($2::uuid[])
+           ) holds
+           GROUP BY item_id`,
+          [businessId, itemIds],
+        )
       : [];
-    const profitMap = new Map(profitSnapshots.map((item: any) => [item.product_id, item]));
+    const heldByItem = new Map<string, number>(
+      holdRows.map((row) => [row.item_id, Number(row.held_quantity ?? 0)]),
+    );
+    const summary = summaryRows[0] ?? {
+      total_products: 0,
+      low_stock: 0,
+      out_of_stock: 0,
+    };
 
     return {
-      summary,
-      products: products.map((product: any) => this.publicStockProduct(product, profitMap.get(product.product_id), lowStockThreshold)),
+      products: items.map((item: any) =>
+        this.publicStockProduct(item, heldByItem.get(item.item_id) ?? 0, lowStockThreshold),
+      ),
+      summary: {
+        total_products: Number(summary.total_products ?? 0),
+        low_stock: Number(summary.low_stock ?? 0),
+        out_of_stock: Number(summary.out_of_stock ?? 0),
+        held_stock: Number(heldTotalRows[0]?.held_stock ?? 0),
+      },
       pagination: {
         page,
         limit,
         total,
         total_pages: Math.ceil(total / limit),
       },
-      categories: categories.map((item: any) => item.category).filter(Boolean),
-      recent_adjustments: recentAdjustments.adjustments,
+      low_stock_threshold: lowStockThreshold,
     };
   }
 
-  async importProductsStock(user: any, dto: SellerProductBulkImportDto) {
-    const ctx = await this.getSellerContext(user);
-    const rows = Array.isArray(dto.products) ? dto.products : [];
+  async importProductsStock(user: AuthUser, dto: SellerProductBulkImportDto) {
+    const businessId = user.business_id;
+    const tenantId = this.requireTenant(user);
+    const rows = dto.rows ?? [];
+
     if (!rows.length) throw new BadRequestException('Add at least one product row');
-    if (rows.length > 5000) throw new BadRequestException('Import maximum is 5000 rows at a time');
-
-    const prepared = rows.map((row, index) => this.prepareImportProductRow(row, index));
-    const validationErrors = this.validateImportRows(prepared);
-    const job = await this.createImportJob(ctx, dto.source || 'csv', rows.length, validationErrors);
-
-    if (validationErrors.length) {
-      await this.finishImportJob(ctx, job.import_job_id, {
-        status: 'failed',
-        total_rows: rows.length,
-        failed_count: validationErrors.length,
-        errors: validationErrors.slice(0, 200),
-        summary: { reason: 'validation_failed' },
-      });
-      return {
-        import_job_id: job.import_job_id,
-        status: 'failed',
-        total_rows: rows.length,
-        created_count: 0,
-        updated_count: 0,
-        failed_count: validationErrors.length,
-        errors: validationErrors.slice(0, 200),
-      };
+    if (rows.length > 5000) {
+      throw new BadRequestException('Import at most 5000 products in one job');
     }
 
-    const result = {
-      import_job_id: job.import_job_id,
-      status: 'completed',
-      total_rows: rows.length,
-      created_count: 0,
-      updated_count: 0,
-      failed_count: 0,
-      skipped_count: 0,
-      errors: [] as any[],
-    };
+    const jobRows = await this.requiredQuery<any>(
+      `INSERT INTO seller_product_import_jobs
+         (business_id, tenant_id, source, status, total_rows, created_by)
+       VALUES ($1, $2, $3, 'processing', $4, $5)
+       RETURNING *`,
+      [businessId, tenantId, dto.source ?? 'dashboard', rows.length, user.user_id ?? null],
+    );
+    const job = jobRows[0];
+    let createdCount = 0;
+    let updatedCount = 0;
+    let skippedCount = 0;
+    const errors: Array<{ row: number; message: string }> = [];
 
-    for (const row of prepared) {
+    for (const [index, row] of rows.entries()) {
       try {
-        const outcome = await this.prisma.$transaction(async (tx) => this.upsertImportedProduct(tx, ctx, row, job.import_job_id));
-        if (outcome === 'created') result.created_count += 1;
-        else if (outcome === 'updated') result.updated_count += 1;
-        else result.skipped_count += 1;
+        const result = await this.prisma.$transaction((tx) =>
+          this.upsertImportedCatalogItem(tx, businessId, tenantId, row, job.import_job_id),
+        );
+        if (result.action === 'created') createdCount += 1;
+        else if (result.action === 'updated') updatedCount += 1;
+        else skippedCount += 1;
       } catch (error) {
-        result.failed_count += 1;
-        result.errors.push({
-          row: row.row_number,
-          sku: row.sku,
-          name: row.name,
-          message: this.simpleImportError(error),
+        errors.push({
+          row: index + 1,
+          message: error?.message ?? 'Could not import this row',
         });
       }
     }
 
-    result.status = result.failed_count > 0 ? (result.created_count || result.updated_count ? 'partial' : 'failed') : 'completed';
-    await this.finishImportJob(ctx, job.import_job_id, {
-      status: result.status,
-      total_rows: result.total_rows,
-      created_count: result.created_count,
-      updated_count: result.updated_count,
-      skipped_count: result.skipped_count,
-      failed_count: result.failed_count,
-      errors: result.errors.slice(0, 200),
-      summary: {
-        source: dto.source || 'csv',
-        created_count: result.created_count,
-        updated_count: result.updated_count,
-      },
-    });
-
-    await this.recordAudit(ctx, {
-      ai_employee_key: 'inventory_ai',
-      action: 'products_bulk_imported',
-      entity_type: 'product_import',
-      entity_id: job.import_job_id,
-      decision: result.status,
-      input_summary: `Imported ${rows.length} product row(s)`,
-      output_summary: `${result.created_count} created, ${result.updated_count} updated, ${result.failed_count} failed`,
-      metadata: result,
-    });
-
-    return result;
-  }
-
-  async adjustProductStock(user: any, dto: SellerStockAdjustmentDto) {
-    const ctx = await this.getSellerContext(user);
-    const adjustment = await this.prisma.$transaction(async (tx) => {
-      const product = await this.findProductForBusiness(tx, ctx, dto.product_id);
-      if (dto.variant_id && !product.product_variants?.some((variant: any) => variant.variant_id === dto.variant_id)) {
-        throw new NotFoundException('Product variant not found for this business');
-      }
-      return this.applySellerStockAdjustment(tx, ctx, {
-        product_id: dto.product_id,
-        variant_id: dto.variant_id,
-        adjustment_type: dto.adjustment_type,
-        quantity: dto.quantity,
-        reason: dto.reason,
-        source: 'manual',
-        reference: dto.reference,
-        note: dto.note,
-      });
-    });
-
-    await this.recordAudit(ctx, {
-      ai_employee_key: 'inventory_ai',
-      action: 'stock_adjusted',
-      entity_type: 'product',
-      entity_id: dto.product_id,
-      decision: 'adjusted',
-      input_summary: `${dto.adjustment_type} ${dto.quantity} unit(s)`,
-      output_summary: `Stock changed from ${adjustment.quantity_before} to ${adjustment.quantity_after}`,
-      metadata: adjustment,
-    });
-
-    return adjustment;
-  }
-
-  async getStockAdjustments(user: any, query: SellerProductsStockQueryDto = {}) {
-    const ctx = await this.getSellerContext(user);
-    return this.fetchStockAdjustments(ctx, {
-      search: query.search,
-      page: query.page,
-      limit: query.limit,
-    });
-  }
-
-  async getSellerLeads(user: any, query: SellerLeadListQueryDto = {}) {
-    const ctx = await this.getSellerContext(user);
-    const stage = query.stage || 'all';
-    const search = String(query.search || '').trim();
-    const limit = Math.min(Math.max(Number(query.limit || 80), 1), 150);
-    const since = new Date(Date.now() - 90 * 24 * 60 * 60 * 1000);
-
-    const where: any = {
-      business_id: ctx.businessId,
-      tenant_id: ctx.tenantId,
-      deleted_at: null,
-      is_active: true,
-    };
-
-    if (search) {
-      where.OR = [
-        { first_name: { contains: search, mode: 'insensitive' } },
-        { last_name: { contains: search, mode: 'insensitive' } },
-        { phone: { contains: search.replace(/\s/g, '') } },
-        { email: { contains: search, mode: 'insensitive' } },
-      ];
-    }
-
-    const leads = await this.db.leads.findMany({
-      where,
-      orderBy: [{ last_activity_at: 'desc' }, { updated_at: 'desc' }, { created_at: 'desc' }],
-      take: limit,
-    });
-
-    const leadIds = leads.map((lead: any) => lead.lead_id).filter(Boolean);
-    const phones = [
-      ...new Set(
-        leads
-          .map((lead: any) => this.cleanPhone(lead.phone))
-          .filter(Boolean),
-      ),
-    ];
-    const byLeadOrPhone = [
-      ...(leadIds.length ? [{ lead_id: { in: leadIds } }] : []),
-      ...(phones.length ? [{ shipping_phone: { in: phones } }] : []),
-    ];
-    const byLeadEntityOrPhone = [
-      ...(leadIds.length ? [{ entity_id: { in: leadIds } }] : []),
-      ...(phones.length ? [{ customer_phone: { in: phones } }] : []),
-    ];
-
-    const [orders, holds, approvals, demandSignals, audits] = await Promise.all([
-      byLeadOrPhone.length
-        ? this.db.orders.findMany({
-            where: {
-              business_id: ctx.businessId,
-              tenant_id: ctx.tenantId,
-              order_type: 'product',
-              OR: byLeadOrPhone,
-            },
-            include: { order_items: true, customers: true },
-            orderBy: { created_at: 'desc' },
-            take: 300,
-          })
-        : [],
-      byLeadOrPhone.length
-        ? this.db.seller_stock_reservations.findMany({
-            where: {
-              business_id: ctx.businessId,
-              tenant_id: ctx.tenantId,
-              OR: [
-                ...(leadIds.length ? [{ lead_id: { in: leadIds } }] : []),
-                ...(phones.length ? [{ customer_phone: { in: phones } }] : []),
-              ],
-            },
-            orderBy: { created_at: 'desc' },
-            take: 300,
-          })
-        : [],
-      byLeadEntityOrPhone.length
-        ? this.db.seller_owner_approvals.findMany({
-            where: {
-              business_id: ctx.businessId,
-              tenant_id: ctx.tenantId,
-              OR: byLeadEntityOrPhone,
-            },
-            orderBy: { created_at: 'desc' },
-            take: 200,
-          })
-        : [],
-      phones.length
-        ? this.db.seller_demand_signals.findMany({
-            where: {
-              business_id: ctx.businessId,
-              tenant_id: ctx.tenantId,
-              customer_phone: { in: phones },
-              created_at: { gte: since },
-            },
-            orderBy: { created_at: 'desc' },
-            take: 500,
-          })
-        : [],
-      byLeadEntityOrPhone.length
-        ? this.db.seller_ai_audit_logs.findMany({
-            where: {
-              business_id: ctx.businessId,
-              tenant_id: ctx.tenantId,
-              OR: byLeadEntityOrPhone,
-            },
-            orderBy: { created_at: 'desc' },
-            take: 250,
-          })
-        : [],
-    ]);
-
-    const productIds = [
-      ...new Set(
-        [
-          ...orders.flatMap((order: any) => (order.order_items || []).map((item: any) => item.product_id)),
-          ...holds.map((hold: any) => hold.product_id),
-          ...demandSignals.map((signal: any) => signal.product_id),
-        ].filter(Boolean),
-      ),
-    ];
-    const products = productIds.length
-      ? await this.db.products.findMany({
-          where: { business_id: ctx.businessId, product_id: { in: productIds } },
-          select: {
-            product_id: true,
-            name: true,
-            category: true,
-            price: true,
-            stock_quantity: true,
-            reserved_stock: true,
-          },
-        })
-      : [];
-    const productMap = new Map(products.map((product: any) => [product.product_id, product]));
-
-    const ordersByLead = this.groupByValue(orders, 'lead_id');
-    const ordersByPhone = this.groupByPhone(orders, (order: any) => order.shipping_phone || order.customers?.phone);
-    const holdsByLead = this.groupByValue(holds, 'lead_id');
-    const holdsByPhone = this.groupByPhone(holds, (hold: any) => hold.customer_phone);
-    const approvalsByEntity = this.groupByValue(approvals, 'entity_id');
-    const approvalsByPhone = this.groupByPhone(approvals, (approval: any) => approval.customer_phone);
-    const signalsByPhone = this.groupByPhone(demandSignals, (signal: any) => signal.customer_phone);
-    const auditsByEntity = this.groupByValue(audits, 'entity_id');
-    const auditsByPhone = this.groupByPhone(audits, (audit: any) => audit.customer_phone);
-
-    const cards = leads.map((lead: any) => {
-      const phone = this.cleanPhone(lead.phone);
-      const leadOrders = this.dedupeById(
-        [
-          ...(ordersByLead.get(lead.lead_id) || []),
-          ...(phone ? ordersByPhone.get(phone) || [] : []),
-        ],
-        'order_id',
-      );
-      const leadHolds = this.dedupeById(
-        [
-          ...(holdsByLead.get(lead.lead_id) || []),
-          ...(phone ? holdsByPhone.get(phone) || [] : []),
-        ],
-        'seller_reservation_id',
-      );
-      const leadApprovals = this.dedupeById(
-        [
-          ...(approvalsByEntity.get(lead.lead_id) || []),
-          ...(phone ? approvalsByPhone.get(phone) || [] : []),
-        ],
-        'approval_id',
-      );
-      const leadSignals = phone ? signalsByPhone.get(phone) || [] : [];
-      const leadAudits = this.dedupeById(
-        [
-          ...(auditsByEntity.get(lead.lead_id) || []),
-          ...(phone ? auditsByPhone.get(phone) || [] : []),
-        ],
-        'audit_id',
-      );
-
-      return this.publicSellerLead(lead, {
-        orders: leadOrders,
-        holds: leadHolds,
-        approvals: leadApprovals,
-        demandSignals: leadSignals,
-        audits: leadAudits,
-        productMap,
-      });
-    });
-
-    const counts = this.buildSellerLeadCounts(cards);
-    const visible = stage === 'all' ? cards : cards.filter((lead: any) => lead.stage === stage);
+    const status = errors.length === rows.length ? 'failed' : errors.length ? 'completed_with_errors' : 'completed';
+    const finishedRows = await this.requiredQuery<any>(
+      `UPDATE seller_product_import_jobs
+       SET status = $2,
+           created_count = $3,
+           updated_count = $4,
+           skipped_count = $5,
+           failed_count = $6,
+           errors = $7::jsonb,
+           summary = $8::jsonb,
+           finished_at = now(),
+           updated_at = now()
+       WHERE import_job_id = $1
+       RETURNING *`,
+      [
+        job.import_job_id,
+        status,
+        createdCount,
+        updatedCount,
+        skippedCount,
+        errors.length,
+        JSON.stringify(errors.slice(0, 100)),
+        JSON.stringify({
+          total_rows: rows.length,
+          created_count: createdCount,
+          updated_count: updatedCount,
+          skipped_count: skippedCount,
+          failed_count: errors.length,
+        }),
+      ],
+    );
 
     return {
+      import_job: finishedRows[0],
       summary: {
-        total: cards.length,
-        open: cards.filter((lead: any) => !['won', 'lost'].includes(lead.stage)).length,
-        needs_owner: counts.needs_owner,
-        stock_held: counts.stock_held,
-        payment_waiting: counts.payment_waiting,
-        won: counts.won,
+        total_rows: rows.length,
+        created_count: createdCount,
+        updated_count: updatedCount,
+        skipped_count: skippedCount,
+        failed_count: errors.length,
       },
-      stages: this.sellerLeadStages(counts),
-      leads: visible,
-      returned_count: visible.length,
-      generated_at: new Date().toISOString(),
+      errors: errors.slice(0, 100),
     };
   }
 
-  async updateSellerLeadStatus(user: any, leadId: string, dto: UpdateSellerLeadStatusDto) {
-    const ctx = await this.getSellerContext(user);
-    const existing = await this.db.leads.findFirst({
-      where: {
-        lead_id: leadId,
-        business_id: ctx.businessId,
-        tenant_id: ctx.tenantId,
-        deleted_at: null,
-      },
-    });
-    if (!existing) throw new NotFoundException('Customer enquiry not found');
-
-    const result = await this.prisma.$transaction(async (tx) => {
-      await this.updateLeadProgress(tx, ctx, leadId, {
-        status: dto.status,
-        converted: dto.status === 'won',
-        lost: dto.status === 'lost',
-        next_followup_at: dto.next_followup_at,
-        activity_type: 'seller_lead_status_changed',
-        description: dto.note || dto.reason || `Seller changed enquiry status to ${dto.status}`,
-        actor_type: 'agent',
-        metadata: { status: dto.status, reason: dto.reason },
-      });
-
-      return tx.leads.findUnique({ where: { lead_id: leadId } });
-    });
-
-    return result;
-  }
-
-  async createManualSale(user: any, dto: CreateManualSaleDto) {
-    const ctx = await this.getSellerContext(user);
-    return this.createSale(ctx, dto, 'manual_counter', false);
-  }
-
-  async createAgentOrder(user: any, dto: AgentCreateOrderDto) {
-    const ctx = await this.getSellerContext(user);
-    return this.createSale(ctx, dto, 'whatsapp_ai', true, dto.lead_id);
-  }
-
-  async searchProductsForAgent(user: any, dto: AgentProductSearchDto) {
-    const ctx = await this.getSellerContext(user);
-    const limit = Math.min(dto.limit ?? 8, 20);
-    const where: any = {
-      business_id: ctx.businessId,
-      tenant_id: ctx.tenantId,
-      product_type: 'physical',
-      is_active: true,
-    };
-
-    if (dto.category) where.category = { equals: dto.category, mode: 'insensitive' };
-    if (dto.query) {
-      where.OR = [
-        { name: { contains: dto.query, mode: 'insensitive' } },
-        { description: { contains: dto.query, mode: 'insensitive' } },
-        { category: { contains: dto.query, mode: 'insensitive' } },
-        { sku: { contains: dto.query, mode: 'insensitive' } },
-      ];
+  async adjustProductStock(user: AuthUser, dto: SellerStockAdjustmentDto) {
+    const businessId = user.business_id;
+    const tenantId = this.requireTenant(user);
+    const itemId = dto.item_id ?? dto.product_id;
+    if (!itemId) throw new BadRequestException('Product is required');
+    if (dto.adjustment_type !== 'set' && dto.quantity <= 0) {
+      throw new BadRequestException('Quantity must be greater than zero');
     }
-
-    const products = await this.db.products.findMany({
-      where,
-      include: { product_variants: true },
-      orderBy: [{ in_stock: 'desc' }, { updated_at: 'desc' }],
-      take: limit,
-    });
-
-    await this.recordDemandSignal(ctx, {
-      signal_type: 'product_search',
-      category: dto.category,
-      quantity: 1,
-      metadata: { query: dto.query },
-    });
-
-    return {
-      products: products.map((product: any) => ({
-        product_id: product.product_id,
-        name: product.name,
-        category: product.category,
-        price: Number(product.price || 0),
-        currency: product.currency || 'INR',
-        in_stock: Boolean(product.in_stock),
-        available_stock: Math.max(0, Number(product.stock_quantity || 0) - Number(product.reserved_stock || 0)),
-        description: product.description,
-        variants: (product.product_variants || []).map((variant: any) => ({
-          variant_id: variant.variant_id,
-          name: variant.name,
-          price: Number(variant.price || 0),
-          available_stock: Math.max(0, Number(variant.quantity || 0) - Number(variant.reserved_stock || 0)),
-          in_stock: Boolean(variant.in_stock),
-        })),
-      })),
-    };
-  }
-
-  async createStockReservation(user: any, dto: CreateStockReservationDto, source = 'manual') {
-    const ctx = await this.getSellerContext(user);
-    const settings = await this.getSettings(ctx);
-    const holdMinutes = dto.hold_minutes ?? settings?.stock_hold_minutes ?? 15;
-    const expiresAt = new Date(Date.now() + holdMinutes * 60 * 1000);
-
-    const reservation = await this.prisma.$transaction(async (tx) => {
-      const product = await this.findProductForBusiness(tx, ctx, dto.product_id);
-      if (product.track_inventory) {
-        await this.incrementReservedStock(tx, product, dto.variant_id, dto.quantity);
-      }
-
-      const created = await tx.seller_stock_reservations.create({
-        data: {
-          business_id: ctx.businessId,
-          tenant_id: ctx.tenantId,
-          product_id: dto.product_id,
-          variant_id: dto.variant_id,
-          lead_id: dto.lead_id,
-          customer_phone: this.cleanPhone(dto.customer_phone),
-          quantity: dto.quantity,
-          reason: dto.reason || 'Customer asked to hold product',
-          source,
-          status: 'active',
-          expires_at: expiresAt,
-          created_by: ctx.userId,
-          metadata: { customer_name: dto.customer_name, hold_minutes: holdMinutes },
-        },
-      });
-
-      await tx.seller_ai_audit_logs.create({
-        data: {
-          business_id: ctx.businessId,
-          tenant_id: ctx.tenantId,
-          ai_employee_key: source === 'whatsapp_ai' ? 'sales_ai' : 'store_desk',
-          action: 'stock_reserved',
-          entity_type: 'product',
-          entity_id: dto.product_id,
-          customer_phone: this.cleanPhone(dto.customer_phone),
-          risk_level: 'low',
-          decision: 'reserved',
-          input_summary: `Held ${dto.quantity} unit(s) of ${product.name}`,
-          metadata: { reservation_id: created.seller_reservation_id },
-        },
-      });
-
-      await this.updateLeadProgress(tx, ctx, dto.lead_id, {
-        status: 'qualified',
-        lead_quality: 'hot',
-        activity_type: 'stock_reserved',
-        description: `Stock held for ${product.name}`,
-        actor_type: source === 'whatsapp_ai' ? 'ai' : 'agent',
-        channel: source === 'whatsapp_ai' ? 'whatsapp' : 'manual',
-        metadata: {
-          product_id: dto.product_id,
-          reservation_id: created.seller_reservation_id,
-          quantity: dto.quantity,
-        },
-      });
-
-      return created;
-    });
-
-    await this.recordDemandSignal(ctx, {
-      signal_type: 'stock_reserved',
-      product_id: dto.product_id,
-      customer_phone: dto.customer_phone,
-      quantity: dto.quantity,
-      channel: source === 'whatsapp_ai' ? 'whatsapp' : 'manual',
-    });
-
-    return reservation;
-  }
-
-  async releaseStockReservation(user: any, reservationId: string) {
-    const ctx = await this.getSellerContext(user);
 
     return this.prisma.$transaction(async (tx) => {
-      const reservation = await tx.seller_stock_reservations.findFirst({
-        where: {
-          seller_reservation_id: reservationId,
-          business_id: ctx.businessId,
-          status: 'active',
-        },
-      });
-
-      if (!reservation) throw new NotFoundException('Active stock hold not found');
-
-      const product = await this.findProductForBusiness(tx, ctx, reservation.product_id);
-      if (product.track_inventory) {
-        await this.decrementReservedStock(tx, reservation.product_id, reservation.variant_id, reservation.quantity);
-      }
-
-      return tx.seller_stock_reservations.update({
-        where: { seller_reservation_id: reservationId },
-        data: {
-          status: 'released',
-          released_at: new Date(),
-          updated_at: new Date(),
-        },
-      });
-    });
-  }
-
-  async createCreditCustomer(user: any, dto: CreateCreditCustomerDto) {
-    const ctx = await this.getSellerContext(user);
-    const features = this.buildSellerFeatures(await this.getSettings(ctx));
-    if (!features.credit_sales) {
-      throw new BadRequestException('Credit is not enabled for this seller type');
-    }
-    const phone = this.requirePhone(dto.phone);
-    const openingBalance = Number(dto.opening_balance || 0);
-    const status = dto.status ?? 'approved';
-
-    const account = await this.prisma.$transaction(async (tx) => {
-      const customer = await this.findOrCreateCustomer(tx, ctx, phone, dto.customer_name);
-      const existing = await tx.seller_customer_credit_accounts.findFirst({
-        where: { business_id: ctx.businessId, phone },
-      });
-
-      const data = {
-        business_id: ctx.businessId,
-        tenant_id: ctx.tenantId,
-        customer_id: customer.customer_id,
-        phone,
-        customer_name: dto.customer_name || customer.name,
-        status,
-        credit_limit: dto.credit_limit,
-        due_days: dto.due_days ?? 30,
-        approved_by: status === 'approved' ? ctx.userId : undefined,
-        approved_at: status === 'approved' ? new Date() : undefined,
-        notes: dto.notes,
-        updated_at: new Date(),
-      };
-
-      const account = existing
-        ? await tx.seller_customer_credit_accounts.update({
-            where: { credit_account_id: existing.credit_account_id },
-            data,
-          })
-        : await tx.seller_customer_credit_accounts.create({
-            data: {
-              ...data,
-              current_balance: openingBalance,
-            },
-          });
-
-      if (!existing && openingBalance > 0) {
-        await tx.seller_customer_credit_transactions.create({
-          data: {
-            business_id: ctx.businessId,
-            tenant_id: ctx.tenantId,
-            credit_account_id: account.credit_account_id,
-            transaction_type: 'opening_balance',
-            amount: openingBalance,
-            due_date: new Date(Date.now() + Number(account.due_days || 30) * 24 * 60 * 60 * 1000),
-            notes: 'Old balance added while creating credit customer',
-            created_by: ctx.userId,
-          },
-        });
-      }
-
-      if (existing && dto.opening_balance !== undefined) {
-        const oldBalance = Number(existing.current_balance || 0);
-        const diff = openingBalance - oldBalance;
-        if (diff !== 0) {
-          await tx.seller_customer_credit_accounts.update({
-            where: { credit_account_id: account.credit_account_id },
-            data: {
-              current_balance: openingBalance,
-              updated_at: new Date(),
-            },
-          });
-          await tx.seller_customer_credit_transactions.create({
-            data: {
-              business_id: ctx.businessId,
-              tenant_id: ctx.tenantId,
-              credit_account_id: account.credit_account_id,
-              transaction_type: 'balance_adjustment',
-              amount: diff,
-              notes: `Credit balance adjusted from ${oldBalance} to ${openingBalance}`,
-              created_by: ctx.userId,
-            },
-          });
-        }
-      }
-
-      return tx.seller_customer_credit_accounts.findUnique({
-        where: { credit_account_id: account.credit_account_id },
-      });
-    });
-
-    await this.recordAudit(ctx, {
-      ai_employee_key: 'credit_guard',
-      action: 'credit_customer_saved',
-      entity_type: 'credit_account',
-      entity_id: account.credit_account_id,
-      customer_phone: phone,
-      decision: account.status,
-      input_summary: `Credit limit ${dto.credit_limit} saved for ${phone}`,
-      metadata: { opening_balance: openingBalance },
-    });
-
-    return this.publicCreditAccount(account);
-  }
-
-  async listCreditCustomers(user: any) {
-    const ctx = await this.getSellerContext(user);
-    const features = this.buildSellerFeatures(await this.getSettings(ctx));
-    if (!features.credit_sales) return [];
-    const accounts = await this.db.seller_customer_credit_accounts.findMany({
-      where: { business_id: ctx.businessId },
-      orderBy: [{ status: 'asc' }, { updated_at: 'desc' }],
-      take: 200,
-    });
-    const ids = accounts.map((account: any) => account.credit_account_id);
-    const transactions = ids.length
-      ? await this.db.seller_customer_credit_transactions.findMany({
-          where: { credit_account_id: { in: ids } },
-          orderBy: { created_at: 'desc' },
-          take: 500,
-        })
-      : [];
-
-    const byAccount = new Map<string, any[]>();
-    for (const transaction of transactions) {
-      const list = byAccount.get(transaction.credit_account_id) || [];
-      if (list.length < 5) list.push(this.publicCreditTransaction(transaction));
-      byAccount.set(transaction.credit_account_id, list);
-    }
-
-    return accounts.map((account: any) => ({
-      ...this.publicCreditAccount(account),
-      recent_transactions: byAccount.get(account.credit_account_id) || [],
-    }));
-  }
-
-  async checkCreditCustomer(user: any, phone: string) {
-    const ctx = await this.getSellerContext(user);
-    const features = this.buildSellerFeatures(await this.getSettings(ctx));
-    if (!features.credit_sales) {
-      return {
-        status: 'disabled',
-        can_use_credit: false,
-        needs_owner_approval: false,
-        label: 'Credit off',
-        message: 'Credit is not enabled for this seller type.',
-        available_credit: 0,
-      };
-    }
-    const cleanedPhone = this.requirePhone(phone);
-    const account = await this.db.seller_customer_credit_accounts.findFirst({
-      where: { business_id: ctx.businessId, phone: cleanedPhone },
-    });
-    return this.buildCreditDecision(account);
-  }
-
-  async collectCreditPayment(user: any, accountId: string, dto: CollectCreditPaymentDto) {
-    const ctx = await this.getSellerContext(user);
-    const features = this.buildSellerFeatures(await this.getSettings(ctx));
-    if (!features.credit_sales) {
-      throw new BadRequestException('Credit is not enabled for this seller type');
-    }
-    const amount = Number(dto.amount || 0);
-    if (amount <= 0) throw new BadRequestException('Payment amount must be greater than zero');
-
-    const result = await this.prisma.$transaction(async (tx) => {
-      const account = await tx.seller_customer_credit_accounts.findFirst({
-        where: { credit_account_id: accountId, business_id: ctx.businessId },
-      });
-      if (!account) throw new NotFoundException('Credit customer not found');
-
-      const currentBalance = Number(account.current_balance || 0);
-      if (amount > currentBalance) {
-        throw new BadRequestException('Payment is more than the current due amount');
-      }
-
-      const updated = await tx.seller_customer_credit_accounts.update({
-        where: { credit_account_id: account.credit_account_id },
-        data: {
-          current_balance: { decrement: amount },
-          updated_at: new Date(),
-        },
-      });
-
-      const transaction = await tx.seller_customer_credit_transactions.create({
-        data: {
-          business_id: ctx.businessId,
-          tenant_id: ctx.tenantId,
-          credit_account_id: account.credit_account_id,
-          transaction_type: 'payment',
-          amount,
-          paid_at: new Date(),
-          notes: dto.notes || `Payment collected by ${dto.payment_method || 'cash'}`,
-          created_by: ctx.userId,
-        },
-      });
-
-      return { account: updated, transaction };
-    });
-
-    await this.recordAudit(ctx, {
-      ai_employee_key: 'credit_guard',
-      action: 'credit_payment_collected',
-      entity_type: 'credit_account',
-      entity_id: result.account.credit_account_id,
-      customer_phone: result.account.phone,
-      decision: 'collected',
-      input_summary: `Collected ${amount} from ${result.account.phone}`,
-      metadata: { payment_method: dto.payment_method || 'cash' },
-    });
-
-    return {
-      account: this.publicCreditAccount(result.account),
-      transaction: this.publicCreditTransaction(result.transaction),
-    };
-  }
-
-  async getPaymentDesk(user: any) {
-    const ctx = await this.getSellerContext(user);
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
-
-    const pendingPaymentWhere = {
-      business_id: ctx.businessId,
-      order_type: 'product',
-      payment_status: 'pending',
-      payment_method: { notIn: ['credit', 'cod'] },
-      status: { notIn: ['cancelled', 'refunded', 'failed'] },
-    };
-
-    const codWhere = {
-      business_id: ctx.businessId,
-      order_type: 'product',
-      payment_status: 'pending',
-      payment_method: 'cod',
-      status: { notIn: ['cancelled', 'refunded', 'failed'] },
-    };
-
-    const [pendingOrders, codOrders, activeHolds, paidToday, pendingCount, codCount] = await Promise.all([
-      this.db.orders.findMany({
-        where: pendingPaymentWhere,
-        include: { order_items: true, customers: true },
-        orderBy: [{ payment_expires_at: 'asc' }, { created_at: 'desc' }],
-        take: 30,
-      }),
-      this.db.orders.findMany({
-        where: codWhere,
-        include: { order_items: true, customers: true },
-        orderBy: { created_at: 'desc' },
-        take: 20,
-      }),
-      this.db.seller_stock_reservations.findMany({
-        where: {
-          business_id: ctx.businessId,
-          status: 'active',
-          expires_at: { gt: new Date() },
-        },
-        orderBy: { expires_at: 'asc' },
-        take: 30,
-      }),
-      this.db.orders.count({
-        where: {
-          business_id: ctx.businessId,
-          order_type: 'product',
-          payment_status: 'paid',
-          paid_at: { gte: today },
-        },
-      }),
-      this.db.orders.count({ where: pendingPaymentWhere }),
-      this.db.orders.count({ where: codWhere }),
-    ]);
-
-    const productIds = [...new Set(activeHolds.map((hold: any) => hold.product_id).filter(Boolean))];
-    const products = productIds.length
-      ? await this.db.products.findMany({
-          where: { business_id: ctx.businessId, product_id: { in: productIds } },
-          select: { product_id: true, name: true, category: true, price: true, stock_quantity: true, reserved_stock: true },
-        })
-      : [];
-    const productMap = new Map(products.map((product: any) => [product.product_id, product]));
-
-    return {
-      summary: {
-        pending_payments: pendingCount,
-        cod_collections: codCount,
-        active_holds: activeHolds.length,
-        paid_today: paidToday,
-      },
-      pending_orders: pendingOrders.map((order: any) => this.publicPaymentDeskOrder(order)),
-      cod_orders: codOrders.map((order: any) => this.publicPaymentDeskOrder(order)),
-      active_holds: activeHolds.map((hold: any) => this.publicPaymentHold(hold, productMap.get(hold.product_id))),
-    };
-  }
-
-  async createPaymentRequestFromHold(user: any, reservationId: string, dto: CreatePaymentRequestFromHoldDto) {
-    const ctx = await this.getSellerContext(user);
-    const paymentMethod = dto.payment_method || 'upi';
-
-    const result = await this.prisma.$transaction(async (tx) => {
-      const reservation = await tx.seller_stock_reservations.findFirst({
-        where: {
-          seller_reservation_id: reservationId,
-          business_id: ctx.businessId,
-          status: 'active',
-          expires_at: { gt: new Date() },
-        },
-      });
-      if (!reservation) throw new NotFoundException('Active stock hold not found');
-      if (reservation.converted_order_id) {
-        const existingOrder = await tx.orders.findUnique({
-          where: { order_id: reservation.converted_order_id },
-          include: { order_items: true, customers: true },
-        });
-        if (existingOrder) {
-          await this.orderPaymentSafety.createPaymentAttempt(tx, ctx, {
-            order: existingOrder,
-            reservation,
-            paymentMethod,
-            paymentReference: dto.payment_reference,
-            source: 'payment_desk',
-            idempotencyKey: dto.idempotency_key,
-            createdBy: ctx.userId,
-            metadata: { reused: true, reservation_id: reservation.seller_reservation_id },
-          });
-          return { order: existingOrder, reservation, reused: true };
-        }
-      }
-
-      const product = await tx.products.findFirst({
-        where: { product_id: reservation.product_id, business_id: ctx.businessId, tenant_id: ctx.tenantId },
-        include: { product_variants: true },
-      });
-      if (!product) throw new NotFoundException('Product not found for this hold');
-
-      const variant = reservation.variant_id
-        ? product.product_variants?.find((candidate: any) => candidate.variant_id === reservation.variant_id)
-        : null;
-      const customerPhone = this.requirePhone(reservation.customer_phone);
-      const customer = await this.findOrCreateCustomer(
-        tx,
-        ctx,
-        customerPhone,
-        reservation.metadata?.customer_name,
-      );
-
-      const unitPrice = Number(variant?.price ?? product.price ?? 0);
-      const totalAmount = unitPrice * Number(reservation.quantity || 1);
-      const createdOrder = await tx.orders.create({
-        data: {
-          business_id: ctx.businessId,
-          tenant_id: ctx.tenantId,
-          lead_id: reservation.lead_id,
-          customer_id: customer.customer_id,
-          order_number: this.generateOrderNumber(),
-          order_type: 'product',
-          items: [{
-            product_id: product.product_id,
-            name: variant?.name ? `${product.name} - ${variant.name}` : product.name,
-            quantity: reservation.quantity,
-            total: totalAmount,
-          }],
-          subtotal: totalAmount,
-          total_amount: totalAmount,
-          payment_status: 'pending',
-          payment_method: paymentMethod,
-          payment_reference: dto.payment_reference,
-          payment_expires_at: reservation.expires_at,
-          status: 'pending',
-          source: 'payment_desk',
-          shipping_address: dto.delivery_address,
-          shipping_phone: customerPhone,
-          notes: dto.notes || `Payment request created from stock hold ${reservation.seller_reservation_id}`,
-        },
-      });
-
-      await tx.order_items.create({
-        data: {
-          order_id: createdOrder.order_id,
-          product_id: product.product_id,
-          variant_id: variant?.variant_id,
-          product_name: product.name,
-          variant_name: variant?.name,
-          sku: variant?.sku || product.sku,
-          quantity: reservation.quantity,
-          unit_price: unitPrice,
-          discount: 0,
-          total_price: totalAmount,
-          snapshot: {
-            product_name: product.name,
-            category: product.category,
-            price: unitPrice,
-            source: 'payment_desk',
-          },
-        },
-      });
-
-      await tx.seller_stock_reservations.update({
-        where: { seller_reservation_id: reservation.seller_reservation_id },
-        data: {
-          converted_order_id: createdOrder.order_id,
-          metadata: {
-            ...(reservation.metadata || {}),
-            payment_request_created_at: new Date().toISOString(),
-            payment_method: paymentMethod,
-          },
-          updated_at: new Date(),
-        },
-      });
-
-      await this.orderPaymentSafety.createPaymentAttempt(tx, ctx, {
-        order: createdOrder,
-        reservation,
-        paymentMethod,
-        paymentReference: dto.payment_reference,
-        source: 'payment_desk',
-        idempotencyKey: dto.idempotency_key,
-        createdBy: ctx.userId,
-        metadata: {
-          reservation_id: reservation.seller_reservation_id,
-          customer_phone: customerPhone,
-          product_id: product.product_id,
-        },
-      });
-
-      if (dto.delivery_required || dto.delivery_address || paymentMethod === 'cod') {
-        await tx.seller_deliveries.create({
-          data: {
-            business_id: ctx.businessId,
-            tenant_id: ctx.tenantId,
-            order_id: createdOrder.order_id,
-            customer_id: customer.customer_id,
-            customer_phone: customerPhone,
-            delivery_mode: dto.delivery_required ? 'local_delivery' : 'pickup',
-            address: dto.delivery_address,
-            area: dto.delivery_area,
-            collect_payment: paymentMethod === 'cod',
-            payment_amount: paymentMethod === 'cod' ? totalAmount : undefined,
-            status: 'pending',
-            notes: dto.notes,
-          },
-        });
-      }
-
-      await tx.seller_ai_audit_logs.create({
-        data: {
-          business_id: ctx.businessId,
-          tenant_id: ctx.tenantId,
-          ai_employee_key: 'payment_desk',
-          action: 'payment_request_created',
-          entity_type: 'order',
-          entity_id: createdOrder.order_id,
-          customer_phone: customerPhone,
-          risk_level: 'low',
-          decision: 'pending_payment',
-          input_summary: `Payment request ${createdOrder.order_number} created from stock hold`,
-          metadata: { payment_method: paymentMethod, reservation_id: reservation.seller_reservation_id },
-        },
-      });
-
-      await this.updateLeadProgress(tx, ctx, reservation.lead_id, {
-        status: 'qualified',
-        lead_quality: 'hot',
-        activity_type: 'payment_request_created',
-        description: `Payment request created for ${createdOrder.order_number}`,
-        actor_type: 'agent',
-        channel: 'payment_desk',
-        metadata: {
-          order_id: createdOrder.order_id,
-          order_number: createdOrder.order_number,
-          reservation_id: reservation.seller_reservation_id,
-          payment_method: paymentMethod,
-          amount: totalAmount,
-        },
-      });
-
-      const order = await tx.orders.findUnique({
-        where: { order_id: createdOrder.order_id },
-        include: { order_items: true, customers: true },
-      });
-      return { order, reservation, reused: false };
-    });
-
-    return {
-      order: this.publicPaymentDeskOrder(result.order),
-      payment_message: this.buildPaymentMessage(result.order, result.reservation),
-      reused: result.reused,
-    };
-  }
-
-  async markSellerOrderPaid(user: any, orderId: string, dto: MarkSellerOrderPaidDto) {
-    const ctx = await this.getSellerContext(user);
-
-    const updated = await this.prisma.$transaction(async (tx) => {
-      const order = await tx.orders.findFirst({
-        where: { order_id: orderId, business_id: ctx.businessId, order_type: 'product' },
-        include: { order_items: true, customers: true },
-      });
-      if (!order) throw new NotFoundException('Order not found');
-      const result = await this.orderPaymentSafety.markOrderPaid(tx, ctx, order, {
-        paymentMethod: dto.payment_method,
-        paymentReference: dto.payment_reference,
-        notes: dto.notes,
-        actorType: 'owner',
-        actorId: ctx.userId,
-        source: 'payment_desk',
-        idempotencyKey: dto.idempotency_key,
-      });
-
-      const paid = result.order;
-
-      await tx.seller_ai_audit_logs.create({
-        data: {
-          business_id: ctx.businessId,
-          tenant_id: ctx.tenantId,
-          ai_employee_key: 'payment_desk',
-          action: 'payment_marked_paid',
-          entity_type: 'order',
-          entity_id: order.order_id,
-          customer_phone: order.shipping_phone,
-          risk_level: 'low',
-          decision: 'paid',
-          input_summary: result.alreadyPaid
-            ? `Payment was already paid for ${order.order_number}`
-            : `Payment marked paid for ${order.order_number}`,
-          metadata: { payment_method: dto.payment_method || order.payment_method, payment_reference: dto.payment_reference },
-        },
-      });
-
-      if (!result.alreadyPaid) {
-        await this.updateLeadProgress(tx, ctx, order.lead_id, {
-          status: 'won',
-          converted: true,
-          conversion_value: Number(order.total_amount || 0),
-          activity_type: 'payment_marked_paid',
-          description: `Payment marked paid for ${order.order_number}`,
-          actor_type: 'agent',
-          channel: 'payment_desk',
-          metadata: {
-            order_id: order.order_id,
-            order_number: order.order_number,
-            payment_method: dto.payment_method || order.payment_method,
-          },
-        });
-      }
-
-      return paid;
-    });
-
-    return this.publicPaymentDeskOrder(updated);
-  }
-
-  async cancelSellerPaymentOrder(user: any, orderId: string, dto: CancelSellerPaymentOrderDto) {
-    const ctx = await this.getSellerContext(user);
-
-    const cancelled = await this.prisma.$transaction(async (tx) => {
-      const order = await tx.orders.findFirst({
-        where: { order_id: orderId, business_id: ctx.businessId, order_type: 'product' },
-        include: { order_items: true, customers: true },
-      });
-      if (!order) throw new NotFoundException('Order not found');
-      const result = await this.orderPaymentSafety.cancelPendingOrder(tx, ctx, order, {
-        reason: dto.reason || 'Payment order cancelled',
-        actorType: 'owner',
-        actorId: ctx.userId,
-        source: 'payment_desk',
-        status: 'cancelled',
-        idempotencyKey: dto.idempotency_key,
-      });
-
-      await tx.seller_ai_audit_logs.create({
-        data: {
-          business_id: ctx.businessId,
-          tenant_id: ctx.tenantId,
-          ai_employee_key: 'payment_desk',
-          action: 'payment_order_cancelled',
-          entity_type: 'order',
-          entity_id: order.order_id,
-          customer_phone: order.shipping_phone,
-          risk_level: 'low',
-          decision: 'cancelled',
-          input_summary: result.alreadyClosed
-            ? `Payment order already closed ${order.order_number}`
-            : dto.reason || `Cancelled payment order ${order.order_number}`,
-        },
-      });
-
-      return result.order;
-    });
-
-    return this.publicPaymentDeskOrder(cancelled);
-  }
-
-  async createReturnCase(user: any, dto: CreateReturnCaseDto) {
-    const ctx = await this.getSellerContext(user);
-    const riskLevel = dto.refund_amount && dto.refund_amount > 0 ? 'medium' : 'low';
-
-    const result = await this.prisma.$transaction(async (tx) => {
-      let approval = null;
-      if (dto.refund_amount && dto.refund_amount > 0) {
-        approval = await tx.seller_owner_approvals.create({
-          data: {
-            business_id: ctx.businessId,
-            tenant_id: ctx.tenantId,
-            entity_type: 'return_case',
-            title: 'Refund approval needed',
-            description: `Refund request for ${dto.refund_amount}`,
-            requested_action: 'approve_refund',
-            priority: 'normal',
-            risk_level: riskLevel,
-            status: 'pending',
-            source: 'manual',
-            customer_phone: this.cleanPhone(dto.customer_phone),
-            metadata: dto,
-          },
-        });
-      }
-
-      const returnCase = await tx.seller_return_cases.create({
-        data: {
-          business_id: ctx.businessId,
-          tenant_id: ctx.tenantId,
-          order_id: dto.order_id,
-          product_id: dto.product_id,
-          customer_phone: this.cleanPhone(dto.customer_phone),
-          reason: dto.reason,
-          resolution: dto.resolution,
-          refund_amount: dto.refund_amount,
-          owner_approval_id: approval?.approval_id,
-          source: 'manual',
-        },
-      });
-
-      return { return_case: returnCase, approval };
-    });
-
-    return result;
-  }
-
-  async createDelivery(user: any, dto: CreateDeliveryDto) {
-    const ctx = await this.getSellerContext(user);
-    return this.db.seller_deliveries.create({
-      data: {
-        business_id: ctx.businessId,
-        tenant_id: ctx.tenantId,
-        order_id: dto.order_id,
-        customer_id: dto.customer_id,
-        customer_phone: this.cleanPhone(dto.customer_phone),
-        delivery_mode: dto.delivery_mode ?? 'local_delivery',
-        address: dto.address,
-        area: dto.area,
-        collect_payment: dto.collect_payment ?? false,
-        payment_amount: dto.payment_amount,
-        notes: dto.notes,
-      },
-    });
-  }
-
-  async updateApprovalStatus(user: any, approvalId: string, status: 'approved' | 'rejected', notes?: string) {
-    const ctx = await this.getSellerContext(user);
-    const approval = await this.db.seller_owner_approvals.findFirst({
-      where: { approval_id: approvalId, business_id: ctx.businessId },
-    });
-
-    if (!approval) throw new NotFoundException('Approval request not found');
-
-    const updated = await this.db.seller_owner_approvals.update({
-      where: { approval_id: approvalId },
-      data: {
-        status,
-        reviewed_by: ctx.userId,
-        reviewed_at: new Date(),
-        updated_at: new Date(),
-        metadata: { ...(approval.metadata || {}), review_notes: notes },
-      },
-    });
-
-    await this.recordAudit(ctx, {
-      ai_employee_key: approval.ai_employee_key || 'owner_approval',
-      action: `approval_${status}`,
-      entity_type: approval.entity_type,
-      entity_id: approval.entity_id,
-      decision: status,
-      risk_level: approval.risk_level,
-      input_summary: approval.title,
-    });
-
-    return updated;
-  }
-
-  async aiGuardrailCheck(user: any, dto: AiGuardrailCheckDto) {
-    const ctx = await this.getSellerContext(user);
-    const settings = await this.getSettings(ctx);
-    const features = this.buildSellerFeatures(settings);
-    const highValueLimit = Number(settings?.ai_guardrails?.high_value_approval_amount ?? 10000);
-    const amount = Number(dto.metadata?.amount ?? 0);
-    const action = dto.action.toLowerCase();
-
-    if (action.includes('credit') && !features.credit_sales) {
-      const audit = await this.recordAudit(ctx, {
-        ai_employee_key: dto.ai_employee_key,
-        action: dto.action,
-        customer_phone: dto.customer_phone,
-        risk_level: 'low',
-        decision: 'disabled',
-        input_summary: dto.input_summary,
-        output_summary: 'Credit is not enabled for this seller type.',
-        guardrail_result: { credit_enabled: false },
-        metadata: dto.metadata,
-      });
-
-      return {
-        allowed: false,
-        needs_owner_approval: false,
-        risk_level: 'low',
-        audit,
-        approval: null,
-      };
-    }
-
-    const needsOwner =
-      amount >= highValueLimit ||
-      action.includes('refund') ||
-      action.includes('discount') ||
-      action.includes('credit') ||
-      action.includes('delete');
-
-    const riskLevel = needsOwner ? (amount >= highValueLimit ? 'high' : 'medium') : 'low';
-    const decision = needsOwner ? 'needs_owner_approval' : 'allowed';
-
-    const audit = await this.recordAudit(ctx, {
-      ai_employee_key: dto.ai_employee_key,
-      action: dto.action,
-      customer_phone: dto.customer_phone,
-      risk_level: riskLevel,
-      decision,
-      input_summary: dto.input_summary,
-      output_summary: dto.output_summary,
-      guardrail_result: { needs_owner_approval: needsOwner, high_value_limit: highValueLimit },
-      metadata: dto.metadata,
-    });
-
-    let approval = null;
-    if (needsOwner) {
-      approval = await this.db.seller_owner_approvals.create({
-        data: {
-          business_id: ctx.businessId,
-          tenant_id: ctx.tenantId,
-          entity_type: 'ai_action',
-          entity_id: audit.audit_id,
-          title: 'AI action needs approval',
-          description: dto.output_summary || dto.input_summary || dto.action,
-          requested_action: dto.action,
-          priority: riskLevel === 'high' ? 'high' : 'normal',
-          risk_level: riskLevel,
-          status: 'pending',
-          source: 'ai',
-          ai_employee_key: dto.ai_employee_key,
-          customer_phone: this.cleanPhone(dto.customer_phone),
-          metadata: dto.metadata,
-        },
-      });
-    }
-
-    return { allowed: !needsOwner, needs_owner_approval: needsOwner, risk_level: riskLevel, audit, approval };
-  }
-
-  async cleanupExpiredSellerHolds() {
-    const expired = await this.db.seller_stock_reservations.findMany({
-      where: { status: 'active', expires_at: { lt: new Date() } },
-      take: 500,
-    });
-
-    const restoredProductIds = new Set<string>();
-    for (const reservation of expired) {
-      try {
-        await this.prisma.$transaction(async (tx) => {
-          await this.decrementReservedStock(tx, reservation.product_id, reservation.variant_id, reservation.quantity);
-          await tx.seller_stock_reservations.update({
-            where: { seller_reservation_id: reservation.seller_reservation_id },
-            data: { status: 'expired', released_at: new Date(), updated_at: new Date() },
-          });
-        });
-        restoredProductIds.add(reservation.product_id);
-      } catch (error) {
-        this.logger.warn(`Could not expire seller hold ${reservation.seller_reservation_id}: ${error.message}`);
-      }
-    }
-
-    return { count: expired.length, restoredProductIds: [...restoredProductIds] };
-  }
-
-  private async createSale(ctx: any, dto: CreateManualSaleDto, source: string, useReservations: boolean, leadId?: string) {
-    if (!dto.items?.length) throw new BadRequestException('At least one product is required');
-    const customerPhone = this.requirePhone(dto.customer_phone);
-    const paymentMethod = dto.payment_method ?? 'cash';
-    const features = this.buildSellerFeatures(await this.getSettings(ctx));
-    if (paymentMethod === 'credit' && !features.credit_sales) {
-      throw new BadRequestException('Credit is not enabled for this seller type');
-    }
-
-    const order = await this.prisma.$transaction(async (tx) => {
-      const customer = await this.findOrCreateCustomer(tx, ctx, customerPhone, dto.customer_name);
-      const orderItems = [];
-      let subtotal = 0;
-
-      for (const item of dto.items) {
-        const product = await this.findProductForBusiness(tx, ctx, item.product_id);
-        const variant = item.variant_id
-          ? product.product_variants?.find((candidate: any) => candidate.variant_id === item.variant_id)
-          : null;
-
-        if (item.variant_id && !variant) {
-          throw new NotFoundException('Product variant not found for this business');
-        }
-
-        const unitPrice = Number(variant?.price ?? product.price ?? 0);
-        const discount = Number(item.discount || 0);
-        const totalPrice = unitPrice * item.quantity - discount;
-        if (totalPrice < 0) throw new BadRequestException('Discount cannot exceed item total');
-
-        if (product.track_inventory) {
-          const converted = useReservations
-            ? await this.tryConvertActiveHold(tx, ctx, item, customerPhone, leadId)
-            : false;
-
-          if (!converted) {
-            await this.decrementStockForSale(tx, product, item.variant_id, item.quantity);
-          }
-        }
-
-        orderItems.push({
-          product,
-          variant,
-          quantity: item.quantity,
-          unitPrice,
-          discount,
-          totalPrice,
-        });
-        subtotal += totalPrice;
-      }
-
-      const totalAmount = subtotal;
-      const isPaid = !['credit', 'cod'].includes(paymentMethod);
-      const createdOrder = await tx.orders.create({
-        data: {
-          business_id: ctx.businessId,
-          tenant_id: ctx.tenantId,
-          lead_id: leadId,
-          customer_id: customer.customer_id,
-          order_number: this.generateOrderNumber(),
-          order_type: 'product',
-          items: orderItems.map((item) => ({
-            product_id: item.product.product_id,
-            name: item.product.name,
-            quantity: item.quantity,
-            total: item.totalPrice,
-          })),
-          subtotal,
-          total_amount: totalAmount,
-          payment_status: isPaid ? 'paid' : 'pending',
-          payment_method: paymentMethod,
-          paid_at: isPaid ? new Date() : undefined,
-          status: isPaid ? 'paid' : 'pending',
-          source,
-          shipping_address: dto.delivery_address,
-          shipping_phone: customerPhone,
-          notes: dto.notes,
-        },
-      });
-
-      for (const item of orderItems) {
-        await tx.order_items.create({
-          data: {
-            order_id: createdOrder.order_id,
-            product_id: item.product.product_id,
-            variant_id: item.variant?.variant_id,
-            product_name: item.product.name,
-            variant_name: item.variant?.name,
-            sku: item.variant?.sku || item.product.sku,
-            quantity: item.quantity,
-            unit_price: item.unitPrice,
-            discount: item.discount,
-            total_price: item.totalPrice,
-            snapshot: {
-              product_name: item.product.name,
-              category: item.product.category,
-              price: item.unitPrice,
-              source,
-            },
-          },
-        });
-      }
-
-      if (!isPaid && paymentMethod !== 'credit') {
-        await this.orderPaymentSafety.createPaymentAttempt(tx, ctx, {
-          order: createdOrder,
-          paymentMethod,
-          source,
-          createdBy: ctx.userId,
-          metadata: {
-            created_from: source,
-            customer_phone: customerPhone,
-            item_count: orderItems.length,
-          },
-        });
-      }
-
-      if (paymentMethod === 'credit') {
-        await this.applyCreditSale(tx, ctx, customer, createdOrder, totalAmount);
-      }
-
-      if (dto.delivery_required || dto.delivery_address || paymentMethod === 'cod') {
-        await tx.seller_deliveries.create({
-          data: {
-            business_id: ctx.businessId,
-            tenant_id: ctx.tenantId,
-            order_id: createdOrder.order_id,
-            customer_id: customer.customer_id,
-            customer_phone: customerPhone,
-            delivery_mode: dto.delivery_required ? 'local_delivery' : 'pickup',
-            address: dto.delivery_address,
-            area: dto.delivery_area,
-            collect_payment: paymentMethod === 'cod',
-            payment_amount: paymentMethod === 'cod' ? totalAmount : undefined,
-            status: 'pending',
-            notes: dto.notes,
-          },
-        });
-      }
-
-      await tx.customers.update({
-        where: { customer_id: customer.customer_id },
-        data: {
-          total_orders: { increment: 1 },
-          total_spent: { increment: totalAmount },
-          last_order_date: new Date(),
-          updated_at: new Date(),
-        },
-      });
-
-      await tx.seller_ai_audit_logs.create({
-        data: {
-          business_id: ctx.businessId,
-          tenant_id: ctx.tenantId,
-          ai_employee_key: source === 'whatsapp_ai' ? 'sales_ai' : 'store_desk',
-          action: 'product_order_created',
-          entity_type: 'order',
-          entity_id: createdOrder.order_id,
-          customer_phone: customerPhone,
-          risk_level: totalAmount > 10000 ? 'medium' : 'low',
-          decision: 'created',
-          input_summary: `${source} sale for ${orderItems.length} item(s)`,
-          output_summary: `Order ${createdOrder.order_number} created`,
-          metadata: { payment_method: paymentMethod, total_amount: totalAmount },
-        },
-      });
-
-      await this.updateLeadProgress(tx, ctx, leadId, {
-        status: isPaid ? 'won' : 'qualified',
-        converted: isPaid,
-        conversion_value: isPaid ? totalAmount : undefined,
-        lead_quality: 'hot',
-        activity_type: 'product_order_created',
-        description: `Product order ${createdOrder.order_number} created`,
-        actor_type: source === 'whatsapp_ai' ? 'ai' : 'agent',
-        channel: source === 'whatsapp_ai' ? 'whatsapp' : 'manual',
-        metadata: {
-          order_id: createdOrder.order_id,
-          order_number: createdOrder.order_number,
-          payment_method: paymentMethod,
-          total_amount: totalAmount,
-        },
-      });
-
-      if (totalAmount > 10000) {
-        await tx.seller_owner_approvals.create({
-          data: {
-            business_id: ctx.businessId,
-            tenant_id: ctx.tenantId,
-            entity_type: 'order',
-            entity_id: createdOrder.order_id,
-            title: 'High value order created',
-            description: `Order ${createdOrder.order_number} total ${totalAmount}`,
-            requested_action: 'review_order',
-            priority: totalAmount > 10000 ? 'high' : 'normal',
-            risk_level: totalAmount > 10000 ? 'medium' : 'low',
-            status: 'pending',
-            source,
-            ai_employee_key: source === 'whatsapp_ai' ? 'sales_ai' : undefined,
-            customer_phone: customerPhone,
-            metadata: { order_number: createdOrder.order_number, payment_method: paymentMethod },
-          },
-        });
-      }
-
-      return tx.orders.findUnique({
-        where: { order_id: createdOrder.order_id },
-        include: { order_items: true, customers: true },
-      });
-    });
-
-    for (const item of dto.items) {
-      await this.recordDemandSignal(ctx, {
-        signal_type: 'sale',
-        product_id: item.product_id,
-        customer_phone: customerPhone,
-        quantity: item.quantity,
-        channel: source === 'whatsapp_ai' ? 'whatsapp' : 'manual',
-      });
-    }
-
-    return order;
-  }
-
-  private async upsertSetupProduct(tx: any, ctx: any, dto: any) {
-    const sku = dto.sku?.trim() || undefined;
-    const existing = dto.product_id
-      ? await tx.products.findFirst({
-          where: { product_id: dto.product_id, business_id: ctx.businessId, tenant_id: ctx.tenantId },
-        })
-      : sku
-        ? await tx.products.findFirst({ where: { business_id: ctx.businessId, sku } })
-        : null;
-
-    const data = {
-      business_id: ctx.businessId,
-      tenant_id: ctx.tenantId,
-      product_type: 'physical',
-      name: dto.name.trim(),
-      slug: this.slugify(dto.name),
-      description: dto.description,
-      category: dto.category,
-      price: dto.price,
-      stock_quantity: dto.stock_quantity,
-      sku,
-      currency: 'INR',
-      track_inventory: true,
-      in_stock: dto.stock_quantity > 0,
-      is_active: true,
-      updated_at: new Date(),
-    };
-
-    const product = existing
-      ? await tx.products.update({ where: { product_id: existing.product_id }, data })
-      : await tx.products.create({ data });
-
-    if (dto.cost_price !== undefined) {
-      const margin =
-        dto.price > 0 && dto.cost_price >= 0
-          ? ((dto.price - dto.cost_price) / dto.price) * 100
-          : null;
-
-      const existingSnapshot = await tx.seller_product_profit_snapshots.findFirst({
-        where: { business_id: ctx.businessId, product_id: product.product_id },
-      });
-
-      if (existingSnapshot) {
-        await tx.seller_product_profit_snapshots.update({
-          where: { profit_snapshot_id: existingSnapshot.profit_snapshot_id },
-          data: {
-            cost_price: dto.cost_price,
-            selling_price: dto.price,
-            margin_percent: margin,
-            updated_at: new Date(),
-          },
+      const current = dto.variant_id
+        ? await this.lockVariantStock(tx, businessId, itemId, dto.variant_id)
+        : await this.lockCatalogItemStock(tx, businessId, itemId);
+      const previousQuantity = Number(current.stock_quantity ?? 0);
+      const nextQuantity = this.nextStockQuantity(previousQuantity, dto.adjustment_type, dto.quantity);
+
+      if (dto.variant_id) {
+        await tx.item_variants.update({
+          where: { variant_id: dto.variant_id },
+          data: { stock_quantity: nextQuantity, updated_at: new Date() },
         });
       } else {
-        await tx.seller_product_profit_snapshots.create({
-          data: {
-            business_id: ctx.businessId,
-            tenant_id: ctx.tenantId,
-            product_id: product.product_id,
-            cost_price: dto.cost_price,
-            selling_price: dto.price,
-            margin_percent: margin,
-          },
-        });
-      }
-    }
-
-    return product;
-  }
-
-  private async getProductStockSummary(ctx: any, lowStockThreshold: number) {
-    const [total, active, lowStock, outOfStock, held, inventoryValue] = await Promise.all([
-      this.db.products.count({ where: { business_id: ctx.businessId, tenant_id: ctx.tenantId, product_type: 'physical' } }),
-      this.db.products.count({ where: { business_id: ctx.businessId, tenant_id: ctx.tenantId, product_type: 'physical', is_active: true } }),
-      this.db.products.count({
-        where: {
-          business_id: ctx.businessId,
-          tenant_id: ctx.tenantId,
-          product_type: 'physical',
-          is_active: true,
-          track_inventory: true,
-          stock_quantity: { gt: 0, lte: lowStockThreshold },
-        },
-      }),
-      this.db.products.count({
-        where: {
-          business_id: ctx.businessId,
-          tenant_id: ctx.tenantId,
-          product_type: 'physical',
-          is_active: true,
-          track_inventory: true,
-          stock_quantity: { lte: 0 },
-        },
-      }),
-      this.db.seller_stock_reservations.count({
-        where: { business_id: ctx.businessId, status: 'active', expires_at: { gt: new Date() } },
-      }),
-      this.db.products.aggregate({
-        where: { business_id: ctx.businessId, tenant_id: ctx.tenantId, product_type: 'physical', is_active: true },
-        _sum: { stock_quantity: true },
-      }),
-    ]);
-
-    return {
-      total_products: total,
-      active_products: active,
-      low_stock: lowStock,
-      out_of_stock: outOfStock,
-      active_holds: held,
-      total_stock_units: Number(inventoryValue._sum.stock_quantity || 0),
-    };
-  }
-
-  private prepareImportProductRow(row: any, index: number) {
-    const name = String(row.name || '').trim();
-    const sku = String(row.sku || '').trim() || undefined;
-    const stockQuantity = this.toNonNegativeInt(row.stock_quantity ?? row.stock ?? row.quantity ?? 0);
-    const price = this.toMoney(row.price ?? row.selling_price ?? row.rate);
-    const costPrice = row.cost_price === undefined || row.cost_price === null || row.cost_price === ''
-      ? undefined
-      : this.toMoney(row.cost_price);
-
-    return {
-      row_number: index + 1,
-      product_id: row.product_id,
-      name,
-      description: String(row.description || '').trim() || undefined,
-      category: String(row.category || '').trim() || undefined,
-      price,
-      cost_price: costPrice,
-      stock_quantity: stockQuantity,
-      sku,
-      image_url: String(row.image_url || row.primary_image_url || '').trim() || undefined,
-      is_active: row.is_active === undefined ? true : Boolean(row.is_active),
-    };
-  }
-
-  private validateImportRows(rows: any[]) {
-    const errors: any[] = [];
-    const seenSkus = new Set<string>();
-
-    for (const row of rows) {
-      if (!row.name) errors.push({ row: row.row_number, field: 'name', message: 'Product name is required' });
-      if (!Number.isFinite(row.price) || row.price < 0) errors.push({ row: row.row_number, field: 'price', message: 'Price must be 0 or more' });
-      if (!Number.isInteger(row.stock_quantity) || row.stock_quantity < 0) {
-        errors.push({ row: row.row_number, field: 'stock_quantity', message: 'Stock must be 0 or more' });
-      }
-      if (row.cost_price !== undefined && (!Number.isFinite(row.cost_price) || row.cost_price < 0)) {
-        errors.push({ row: row.row_number, field: 'cost_price', message: 'Cost price must be 0 or more' });
-      }
-      if (row.sku) {
-        const key = row.sku.toLowerCase();
-        if (seenSkus.has(key)) errors.push({ row: row.row_number, field: 'sku', message: `Duplicate SKU in file: ${row.sku}` });
-        seenSkus.add(key);
-      }
-    }
-
-    return errors;
-  }
-
-  private async createImportJob(ctx: any, source: string, totalRows: number, validationErrors: any[]) {
-    const rows = await this.prisma.$queryRaw<any[]>(
-      Prisma.sql`
-        INSERT INTO seller_product_import_jobs (
-          business_id,
-          tenant_id,
-          source,
-          status,
-          total_rows,
-          failed_count,
-          errors,
-          created_by
-        )
-        VALUES (
-          ${ctx.businessId}::uuid,
-          ${ctx.tenantId}::uuid,
-          ${source},
-          ${validationErrors.length ? 'validating' : 'processing'},
-          ${totalRows}::integer,
-          ${validationErrors.length}::integer,
-          ${JSON.stringify(validationErrors.slice(0, 200))}::jsonb,
-          ${ctx.userId ? Prisma.sql`${ctx.userId}::uuid` : Prisma.sql`NULL`}
-        )
-        RETURNING *
-      `,
-    );
-    return rows[0];
-  }
-
-  private async finishImportJob(ctx: any, importJobId: string, result: any) {
-    const errors = JSON.stringify(result.errors || []);
-    const summary = JSON.stringify(result.summary || {});
-    await this.prisma.$executeRaw(
-      Prisma.sql`
-        UPDATE seller_product_import_jobs
-        SET status = ${result.status},
-            total_rows = ${Number(result.total_rows || 0)}::integer,
-            created_count = ${Number(result.created_count || 0)}::integer,
-            updated_count = ${Number(result.updated_count || 0)}::integer,
-            skipped_count = ${Number(result.skipped_count || 0)}::integer,
-            failed_count = ${Number(result.failed_count || 0)}::integer,
-            errors = ${errors}::jsonb,
-            summary = ${summary}::jsonb,
-            finished_at = NOW(),
-            updated_at = NOW()
-        WHERE import_job_id = ${importJobId}::uuid
-          AND business_id = ${ctx.businessId}::uuid
-      `,
-    );
-  }
-
-  private async upsertImportedProduct(tx: any, ctx: any, row: any, importJobId: string) {
-    const existing = row.product_id
-      ? await tx.products.findFirst({
-          where: { product_id: row.product_id, business_id: ctx.businessId, tenant_id: ctx.tenantId },
-        })
-      : row.sku
-        ? await tx.products.findFirst({
-            where: { business_id: ctx.businessId, tenant_id: ctx.tenantId, sku: row.sku, product_type: 'physical' },
-          })
-        : null;
-
-    if (existing) {
-      const locked = await this.lockSellerProductStock(tx, existing.product_id);
-      const reserved = Number(locked.reserved_stock || 0);
-      if (row.stock_quantity < reserved) {
-        throw new ConflictException(`Stock cannot be less than held quantity ${reserved}`);
-      }
-
-      const updated = await tx.products.update({
-        where: { product_id: existing.product_id },
-        data: {
-          name: row.name,
-          slug: this.slugify(row.name),
-          description: row.description,
-          category: row.category,
-          price: row.price,
-          sku: row.sku || existing.sku,
-          stock_quantity: row.stock_quantity,
-          primary_image_url: row.image_url || existing.primary_image_url,
-          image_urls: row.image_url ? [row.image_url] : existing.image_urls,
-          track_inventory: true,
-          in_stock: row.stock_quantity > 0,
-          is_active: row.is_active,
-          version: { increment: 1 },
-          updated_at: new Date(),
-        },
-      });
-
-      if (Number(locked.stock_quantity || 0) !== row.stock_quantity) {
-        await this.insertSellerStockAdjustment(tx, ctx, {
-          product_id: existing.product_id,
-          import_job_id: importJobId,
-          adjustment_type: 'set',
-          quantity_before: Number(locked.stock_quantity || 0),
-          quantity_after: row.stock_quantity,
-          reserved_before: reserved,
-          reason: 'bulk_import',
-          source: 'import',
-          reference: row.sku,
-          metadata: { row_number: row.row_number },
+        await tx.catalog_items.update({
+          where: { item_id: itemId },
+          data: { stock_quantity: nextQuantity, updated_at: new Date() },
         });
       }
 
-      await this.upsertProfitSnapshot(tx, ctx, updated, row.cost_price);
-      return 'updated';
-    }
-
-    const created = await tx.products.create({
-      data: {
-        business_id: ctx.businessId,
-        tenant_id: ctx.tenantId,
-        product_type: 'physical',
-        name: row.name,
-        slug: this.slugify(row.name),
-        description: row.description,
-        category: row.category,
-        price: row.price,
-        sku: row.sku,
-        stock_quantity: row.stock_quantity,
-        primary_image_url: row.image_url,
-        image_urls: row.image_url ? [row.image_url] : undefined,
-        currency: 'INR',
-        track_inventory: true,
-        in_stock: row.stock_quantity > 0,
-        is_active: row.is_active,
-      },
-    });
-
-    if (row.stock_quantity > 0) {
-      await this.insertSellerStockAdjustment(tx, ctx, {
-        product_id: created.product_id,
-        import_job_id: importJobId,
-        adjustment_type: 'set',
-        quantity_before: 0,
-        quantity_after: row.stock_quantity,
-        reserved_before: 0,
-        reason: 'bulk_import',
-        source: 'import',
-        reference: row.sku,
-        metadata: { row_number: row.row_number },
+      const adjustment = await this.insertStockAdjustment(tx, {
+        businessId,
+        tenantId,
+        itemId,
+        variantId: dto.variant_id ?? null,
+        adjustmentType: dto.adjustment_type,
+        quantityChange: nextQuantity - previousQuantity,
+        quantityBefore: previousQuantity,
+        quantityAfter: nextQuantity,
+        reason: this.cleanStockReason(dto.reason),
+        source: 'manual',
+        note: dto.note,
+        createdBy: user.user_id,
       });
-    }
 
-    await this.upsertProfitSnapshot(tx, ctx, created, row.cost_price);
-    return 'created';
-  }
-
-  private async upsertProfitSnapshot(tx: any, ctx: any, product: any, costPrice?: number) {
-    if (costPrice === undefined) return;
-    const sellingPrice = Number(product.price || 0);
-    const margin = sellingPrice > 0 && costPrice >= 0
-      ? ((sellingPrice - costPrice) / sellingPrice) * 100
-      : null;
-
-    const existingSnapshot = await tx.seller_product_profit_snapshots.findFirst({
-      where: { business_id: ctx.businessId, product_id: product.product_id },
-    });
-
-    if (existingSnapshot) {
-      await tx.seller_product_profit_snapshots.update({
-        where: { profit_snapshot_id: existingSnapshot.profit_snapshot_id },
-        data: {
-          cost_price: costPrice,
-          selling_price: sellingPrice,
-          margin_percent: margin,
-          updated_at: new Date(),
+      await this.insertAiAudit(tx, businessId, tenantId, {
+        ai_employee: 'AI Inventory Employee',
+        action: 'manual_stock_adjustment',
+        decision: 'recorded',
+        risk_level: 'low',
+        entity_type: 'catalog_item',
+        entity_id: itemId,
+        input_summary: `Owner changed stock for ${current.name}`,
+        output_summary: `Stock changed from ${previousQuantity} to ${nextQuantity}`,
+        guardrails: {
+          adjustment_type: dto.adjustment_type,
+          quantity: dto.quantity,
         },
       });
-      return;
-    }
 
-    await tx.seller_product_profit_snapshots.create({
-      data: {
-        business_id: ctx.businessId,
-        tenant_id: ctx.tenantId,
-        product_id: product.product_id,
-        cost_price: costPrice,
-        selling_price: sellingPrice,
-        margin_percent: margin,
-      },
+      return {
+        product_id: itemId,
+        item_id: itemId,
+        variant_id: dto.variant_id ?? null,
+        previous_stock: previousQuantity,
+        new_stock: nextQuantity,
+        adjustment,
+      };
     });
   }
 
-  private async applySellerStockAdjustment(tx: any, ctx: any, data: any) {
-    const quantity = Number(data.quantity || 0);
-    if (data.adjustment_type !== 'set' && quantity <= 0) {
-      throw new BadRequestException('Quantity must be more than 0');
-    }
-
-    const locked = data.variant_id
-      ? await this.lockSellerVariantStock(tx, data.product_id, data.variant_id)
-      : await this.lockSellerProductStock(tx, data.product_id);
-    const before = Number((data.variant_id ? locked.quantity : locked.stock_quantity) || 0);
-    const reserved = Number(locked.reserved_stock || 0);
-    const after =
-      data.adjustment_type === 'add'
-        ? before + quantity
-        : data.adjustment_type === 'reduce'
-          ? before - quantity
-          : quantity;
-
-    if (after < reserved) {
-      throw new ConflictException(`Stock cannot go below held quantity ${reserved}`);
-    }
-    if (after < 0) throw new ConflictException('Stock cannot be negative');
-
-    if (data.variant_id) {
-      await tx.product_variants.update({
-        where: { variant_id: data.variant_id },
-        data: {
-          quantity: after,
-          in_stock: after > 0,
-          version: { increment: 1 },
-          updated_at: new Date(),
-        },
-      });
-    } else {
-      await tx.products.update({
-        where: { product_id: data.product_id },
-        data: {
-          stock_quantity: after,
-          in_stock: after > 0,
-          version: { increment: 1 },
-          updated_at: new Date(),
-        },
-      });
-    }
-
-    return this.insertSellerStockAdjustment(tx, ctx, {
-      ...data,
-      quantity_before: before,
-      quantity_after: after,
-      reserved_before: reserved,
-    });
-  }
-
-  private async insertSellerStockAdjustment(tx: any, ctx: any, data: any) {
-    const change = Number(data.quantity_after || 0) - Number(data.quantity_before || 0);
-    const availableAfter = Math.max(0, Number(data.quantity_after || 0) - Number(data.reserved_before || 0));
-    const metadata = JSON.stringify(data.metadata || {});
-    const rows = await tx.$queryRaw<any[]>(
-      Prisma.sql`
-        INSERT INTO seller_stock_adjustments (
-          business_id,
-          tenant_id,
-          product_id,
-          variant_id,
-          import_job_id,
-          adjustment_type,
-          quantity_change,
-          quantity_before,
-          quantity_after,
-          reserved_before,
-          available_after,
-          reason,
-          source,
-          reference,
-          note,
-          created_by,
-          metadata
-        )
-        VALUES (
-          ${ctx.businessId}::uuid,
-          ${ctx.tenantId}::uuid,
-          ${data.product_id}::uuid,
-          ${data.variant_id ? Prisma.sql`${data.variant_id}::uuid` : Prisma.sql`NULL`},
-          ${data.import_job_id ? Prisma.sql`${data.import_job_id}::uuid` : Prisma.sql`NULL`},
-          ${data.adjustment_type},
-          ${change}::integer,
-          ${Number(data.quantity_before || 0)}::integer,
-          ${Number(data.quantity_after || 0)}::integer,
-          ${Number(data.reserved_before || 0)}::integer,
-          ${availableAfter}::integer,
-          ${this.cleanStockReason(data.reason)},
-          ${data.source || 'manual'},
-          ${data.reference || null},
-          ${data.note || null},
-          ${ctx.userId ? Prisma.sql`${ctx.userId}::uuid` : Prisma.sql`NULL`},
-          ${metadata}::jsonb
-        )
-        RETURNING *
-      `,
-    );
-    return rows[0];
-  }
-
-  private async fetchStockAdjustments(ctx: any, query: any = {}) {
-    const page = Math.max(Number(query.page || 1), 1);
-    const limit = Math.min(Math.max(Number(query.limit || 20), 1), 100);
+  async getStockAdjustments(user: AuthUser, query: SellerProductsStockQueryDto) {
+    const businessId = user.business_id;
+    const page = Math.max(1, Number(query.page ?? 1));
+    const limit = Math.min(Math.max(1, Number(query.limit ?? 50)), 100);
     const offset = (page - 1) * limit;
-    const search = String(query.search || '').trim();
+    const search = String(query.search ?? '').trim();
+    const params: any[] = [businessId];
+    let searchSql = '';
 
-    const rows = await this.prisma.$queryRaw<any[]>(
-      Prisma.sql`
-        SELECT
-          a.*,
-          p.name AS product_name,
-          p.sku AS product_sku,
-          pv.name AS variant_name
-        FROM seller_stock_adjustments a
-        JOIN products p ON p.product_id = a.product_id
-        LEFT JOIN product_variants pv ON pv.variant_id = a.variant_id
-        WHERE a.business_id = ${ctx.businessId}::uuid
-          AND a.tenant_id = ${ctx.tenantId}::uuid
-          AND (
-            ${search} = ''
-            OR p.name ILIKE ${`%${search}%`}
-            OR p.sku ILIKE ${`%${search}%`}
-            OR a.reason ILIKE ${`%${search}%`}
-          )
-        ORDER BY a.created_at DESC
-        LIMIT ${limit} OFFSET ${offset}
-      `,
-    );
+    if (search) {
+      params.push(`%${search}%`);
+      searchSql = `AND (ci.name ILIKE $${params.length} OR pd.sku ILIKE $${params.length})`;
+    }
 
-    const countRows = await this.prisma.$queryRaw<any[]>(
-      Prisma.sql`
-        SELECT COUNT(*)::integer AS count
-        FROM seller_stock_adjustments a
-        JOIN products p ON p.product_id = a.product_id
-        WHERE a.business_id = ${ctx.businessId}::uuid
-          AND a.tenant_id = ${ctx.tenantId}::uuid
-          AND (
-            ${search} = ''
-            OR p.name ILIKE ${`%${search}%`}
-            OR p.sku ILIKE ${`%${search}%`}
-            OR a.reason ILIKE ${`%${search}%`}
-          )
-      `,
+    params.push(limit, offset);
+    const rows = await this.optionalQuery<any>(
+      `SELECT a.*, ci.name AS product_name, pd.sku
+       FROM seller_stock_adjustments a
+       JOIN catalog_items ci ON ci.item_id = a.item_id
+       LEFT JOIN product_item_details pd ON pd.item_id = ci.item_id
+       WHERE a.business_id = $1
+       ${searchSql}
+       ORDER BY a.created_at DESC
+       LIMIT $${params.length - 1} OFFSET $${params.length}`,
+      params,
     );
 
     return {
-      adjustments: rows.map((row: any) => ({
+      adjustments: rows.map((row) => ({
         ...row,
-        quantity_change: Number(row.quantity_change || 0),
-        quantity_before: Number(row.quantity_before || 0),
-        quantity_after: Number(row.quantity_after || 0),
-        reserved_before: Number(row.reserved_before || 0),
-        available_after: Number(row.available_after || 0),
+        product_id: row.item_id,
+        quantity_change: Number(row.quantity_change ?? 0),
+        quantity_before: Number(row.quantity_before ?? 0),
+        quantity_after: Number(row.quantity_after ?? 0),
       })),
       pagination: {
         page,
         limit,
-        total: Number(countRows[0]?.count || 0),
+        has_more: rows.length === limit,
       },
     };
   }
 
-  private async lockSellerProductStock(tx: any, productId: string) {
-    const rows = await tx.$queryRaw<any[]>(
-      Prisma.sql`
-        SELECT product_id, stock_quantity, COALESCE(reserved_stock, 0) AS reserved_stock
-        FROM products
-        WHERE product_id = ${productId}::uuid
-        FOR UPDATE
-      `,
-    );
-    const row = rows[0];
-    if (!row) throw new NotFoundException('Product not found');
-    return row;
-  }
+  private async upsertImportedCatalogItem(
+    tx: any,
+    businessId: string,
+    tenantId: string,
+    row: SellerProductImportRowDto,
+    importJobId: string,
+  ) {
+    const itemId = row.item_id ?? row.product_id;
+    const sku = row.sku?.trim() || null;
+    const name = row.name?.trim();
+    const stockProvided = row.stock_quantity !== undefined && row.stock_quantity !== null;
+    const nextStock = stockProvided ? Math.max(0, Number(row.stock_quantity)) : undefined;
+    const priceProvided = row.price !== undefined && row.price !== null;
+    const nextPrice = priceProvided ? Math.max(0, Number(row.price)) : undefined;
 
-  private async lockSellerVariantStock(tx: any, productId: string, variantId: string) {
-    const rows = await tx.$queryRaw<any[]>(
-      Prisma.sql`
-        SELECT pv.variant_id, pv.quantity, COALESCE(pv.reserved_stock, 0) AS reserved_stock
-        FROM product_variants pv
-        JOIN products p ON p.product_id = pv.product_id
-        WHERE pv.variant_id = ${variantId}::uuid
-          AND p.product_id = ${productId}::uuid
-        FOR UPDATE
-      `,
-    );
-    const row = rows[0];
-    if (!row) throw new NotFoundException('Product variant not found');
-    return row;
-  }
+    let existing = await this.findImportTarget(tx, businessId, itemId, sku, name);
 
-  private async findProductForBusiness(tx: any, ctx: any, productId: string) {
-    return this.inventoryTransactions.findProductForBusiness(tx, ctx, productId);
-  }
+    if (!existing && !name) {
+      throw new BadRequestException('Product name is required for new rows');
+    }
 
-  private async incrementReservedStock(tx: any, product: any, variantId: string | undefined, quantity: number) {
-    return this.inventoryTransactions.reserveProductStock(tx, product, variantId, quantity);
-  }
+    if (existing) {
+      const locked = await this.lockCatalogItemStock(tx, businessId, existing.item_id);
+      const beforeStock = Number(locked.stock_quantity ?? 0);
+      const updateData: any = {
+        updated_at: new Date(),
+      };
 
-  private async decrementReservedStock(tx: any, productId: string, variantId: string | undefined, quantity: number) {
-    return this.inventoryTransactions.releaseReservedProductStock(tx, productId, variantId, quantity);
-  }
+      if (name) updateData.name = name;
+      if (row.description !== undefined) updateData.description = row.description;
+      if (row.category !== undefined) updateData.category = row.category;
+      if (nextPrice !== undefined) updateData.base_price = nextPrice;
+      if (nextStock !== undefined) updateData.stock_quantity = nextStock;
+      if (row.image_url) updateData.primary_image_url = row.image_url;
+      if (row.is_active !== undefined) updateData.is_active = row.is_active;
+      updateData.ai_tags = this.buildImportTags(row, existing.name);
 
-  private async decrementStockForSale(tx: any, product: any, variantId: string | undefined, quantity: number) {
-    return this.inventoryTransactions.sellProductStock(tx, product, variantId, quantity);
-  }
+      await tx.catalog_items.update({
+        where: { item_id: existing.item_id },
+        data: updateData,
+      });
 
-  private async tryConvertActiveHold(tx: any, ctx: any, item: any, customerPhone: string, leadId?: string) {
-    return this.inventoryTransactions.convertActiveHoldForSale(tx, ctx, item, customerPhone, leadId);
-  }
+      await this.upsertProductImportDetails(tx, businessId, existing.item_id, sku, row);
 
-  private async applyCreditSale(tx: any, ctx: any, customer: any, order: any, totalAmount: number) {
-    const account = await tx.seller_customer_credit_accounts.findFirst({
-      where: { business_id: ctx.businessId, phone: customer.phone },
+      if (nextStock !== undefined && nextStock !== beforeStock) {
+        await this.insertStockAdjustment(tx, {
+          businessId,
+          tenantId,
+          itemId: existing.item_id,
+          variantId: null,
+          importJobId,
+          adjustmentType: 'set',
+          quantityChange: nextStock - beforeStock,
+          quantityBefore: beforeStock,
+          quantityAfter: nextStock,
+          reason: 'bulk_import',
+          source: 'import',
+          note: 'Stock set from product import',
+          createdBy: null,
+        });
+      }
+
+      return { action: 'updated', item_id: existing.item_id };
+    }
+
+    const created = await tx.catalog_items.create({
+      data: {
+        business_id: businessId,
+        tenant_id: tenantId,
+        item_type: 'physical_product',
+        name,
+        description: row.description,
+        category: row.category,
+        base_price: nextPrice ?? 0,
+        currency: 'INR',
+        stock_quantity: nextStock ?? 0,
+        primary_image_url: row.image_url,
+        attributes: {
+          source: 'bulk_import',
+          cost_price: row.cost_price ?? null,
+        },
+        ai_tags: this.buildImportTags(row, name),
+        is_active: row.is_active ?? true,
+      },
     });
 
-    if (!account || account.status !== 'approved') {
-      throw new BadRequestException('Customer is not approved for credit sales');
+    await this.upsertProductImportDetails(tx, businessId, created.item_id, sku, row);
+    await this.insertStockAdjustment(tx, {
+      businessId,
+      tenantId,
+      itemId: created.item_id,
+      variantId: null,
+      importJobId,
+      adjustmentType: 'set',
+      quantityChange: Number(created.stock_quantity ?? 0),
+      quantityBefore: 0,
+      quantityAfter: Number(created.stock_quantity ?? 0),
+      reason: 'bulk_import',
+      source: 'import',
+      note: 'Initial stock from product import',
+      createdBy: null,
+    });
+
+    return { action: 'created', item_id: created.item_id };
+  }
+
+  private async findImportTarget(
+    tx: any,
+    businessId: string,
+    itemId?: string,
+    sku?: string | null,
+    name?: string,
+  ) {
+    const baseWhere = {
+      business_id: businessId,
+      item_type: 'physical_product',
+      deleted_at: null,
+    };
+
+    if (itemId) {
+      return tx.catalog_items.findFirst({
+        where: { ...baseWhere, item_id: itemId },
+        include: { product_detail: true },
+      });
     }
 
-    const newBalance = Number(account.current_balance || 0) + totalAmount;
-    if (newBalance > Number(account.credit_limit || 0)) {
-      throw new ConflictException('Credit limit exceeded for this customer');
+    if (sku) {
+      const bySku = await tx.catalog_items.findFirst({
+        where: { ...baseWhere, product_detail: { is: { sku } } },
+        include: { product_detail: true },
+      });
+      if (bySku) return bySku;
     }
 
-    const dueDate = new Date(Date.now() + Number(account.due_days || 30) * 24 * 60 * 60 * 1000);
-    await tx.seller_customer_credit_accounts.update({
-      where: { credit_account_id: account.credit_account_id },
-      data: {
-        current_balance: { increment: totalAmount },
+    if (name) {
+      return tx.catalog_items.findFirst({
+        where: { ...baseWhere, name: { equals: name, mode: 'insensitive' } },
+        include: { product_detail: true },
+      });
+    }
+
+    return null;
+  }
+
+  private async upsertProductImportDetails(
+    tx: any,
+    businessId: string,
+    itemId: string,
+    sku: string | null,
+    row: SellerProductImportRowDto,
+  ) {
+    if (!sku && row.cost_price === undefined) return;
+
+    const metadata = {
+      source: 'bulk_import',
+      cost_price: row.cost_price ?? null,
+    };
+
+    await tx.product_item_details.upsert({
+      where: { item_id: itemId },
+      create: {
+        item_id: itemId,
+        business_id: businessId,
+        sku,
+        metadata,
+      },
+      update: {
+        sku,
+        metadata,
         updated_at: new Date(),
       },
     });
 
-    await tx.seller_customer_credit_transactions.create({
-      data: {
-        business_id: ctx.businessId,
-        tenant_id: ctx.tenantId,
-        credit_account_id: account.credit_account_id,
-        order_id: order.order_id,
-        transaction_type: 'credit_sale',
-        amount: totalAmount,
-        due_date: dueDate,
-        notes: `Credit sale for order ${order.order_number}`,
-        created_by: ctx.userId,
-      },
-    });
-  }
-
-  private async convertLinkedHoldToSale(tx: any, hold: any) {
-    return this.inventoryTransactions.convertLinkedHoldToSale(tx, hold);
-  }
-
-  private async releaseLinkedHold(tx: any, hold: any, status = 'released') {
-    return this.inventoryTransactions.releaseLinkedHold(tx, hold, status);
-  }
-
-  private async restoreStockForUnpaidOrder(tx: any, order: any) {
-    return this.inventoryTransactions.restoreStockForUnpaidOrder(tx, order);
-  }
-
-  private async findOrCreateCustomer(tx: any, ctx: any, phone: string, customerName?: string) {
-    const existing = await tx.customers.findFirst({ where: { business_id: ctx.businessId, phone } });
-    if (existing) {
-      if (customerName && !existing.name) {
-        return tx.customers.update({
-          where: { customer_id: existing.customer_id },
-          data: { name: customerName, updated_at: new Date() },
-        });
-      }
-      return existing;
+    if (row.cost_price !== undefined || row.price !== undefined) {
+      const sellingPrice = Number(row.price ?? 0);
+      const costPrice = row.cost_price !== undefined ? Number(row.cost_price) : null;
+      await tx.$queryRawUnsafe(
+        `INSERT INTO seller_product_profit_snapshots
+           (business_id, item_id, cost_price, selling_price, gross_margin, margin_percentage, source, recommendation)
+         VALUES ($1, $2, $3, $4, $5, $6, 'bulk_import', $7)`,
+        businessId,
+        itemId,
+        costPrice,
+        sellingPrice,
+        costPrice === null ? null : sellingPrice - costPrice,
+        costPrice === null || sellingPrice <= 0 ? null : ((sellingPrice - costPrice) / sellingPrice) * 100,
+        'Cost and selling price captured from product import',
+      ).catch(() => undefined);
     }
-
-    return tx.customers.create({
-      data: {
-        business_id: ctx.businessId,
-        tenant_id: ctx.tenantId,
-        phone,
-        whatsapp_number: phone,
-        name: customerName,
-      },
-    });
   }
 
-  private async getSellerContext(user: any) {
-    const businessId = user?.business_id;
-    const tenantId = user?.tenant_id;
-    const userId = user?.user_id;
-    if (!businessId || !tenantId) throw new ForbiddenException('Missing business context');
-
-    const business = await this.db.businesses.findFirst({
-      where: { business_id: businessId, tenant_id: tenantId },
-    });
-    if (!business) throw new ForbiddenException('Business not found for authenticated user');
-
-    const type = String(business.business_type || '').toLowerCase();
-    if (!SELLER_BUSINESS_TYPES.has(type)) {
-      throw new BadRequestException('Store Desk is only for product seller businesses');
-    }
-
-    return { businessId, tenantId, userId, business };
-  }
-
-  private async getSettings(ctx: any) {
-    return this.db.seller_store_settings.findUnique({
-      where: { business_id: ctx.businessId },
-    });
-  }
-
-  private async recordAudit(ctx: any, data: any) {
-    return this.db.seller_ai_audit_logs.create({
-      data: {
-        business_id: ctx.businessId,
-        tenant_id: ctx.tenantId,
-        ai_employee_key: data.ai_employee_key,
-        action: data.action,
-        entity_type: data.entity_type,
-        entity_id: data.entity_id,
-        customer_phone: this.cleanPhone(data.customer_phone),
-        risk_level: data.risk_level || 'low',
-        confidence: data.confidence,
-        decision: data.decision,
-        input_summary: data.input_summary,
-        output_summary: data.output_summary,
-        guardrail_result: data.guardrail_result,
-        metadata: data.metadata,
-      },
-    });
-  }
-
-  private async recordDemandSignal(ctx: any, data: any) {
-    return this.db.seller_demand_signals.create({
-      data: {
-        business_id: ctx.businessId,
-        tenant_id: ctx.tenantId,
-        product_id: data.product_id,
-        category: data.category,
-        customer_phone: this.cleanPhone(data.customer_phone),
-        signal_type: data.signal_type,
-        channel: data.channel || 'whatsapp',
-        quantity: data.quantity || 1,
-        metadata: data.metadata,
-      },
-    }).catch((error: any) => this.logger.warn(`Demand signal skipped: ${error.message}`));
-  }
-
-  private async updateLeadProgress(tx: any, ctx: any, leadId: string | undefined, options: any) {
-    if (!leadId) return null;
-    const now = new Date();
-    const data: any = {
-      last_activity_at: now,
-      updated_at: now,
-    };
-
-    if (options.status) data.status = options.status;
-    if (options.lead_quality) data.lead_quality = options.lead_quality;
-    if (options.next_followup_at) data.next_followup_at = new Date(options.next_followup_at);
-    if (options.converted) {
-      data.is_converted = true;
-      data.converted_at = now;
-      data.status = options.status || 'won';
-      if (options.conversion_value !== undefined) data.conversion_value = options.conversion_value;
-    }
-    if (options.lost) {
-      data.lost_at = now;
-      data.lost_reason = options.reason || options.description;
-    }
-
-    const updated = await tx.leads.updateMany({
-      where: {
-        lead_id: leadId,
-        business_id: ctx.businessId,
-        tenant_id: ctx.tenantId,
-      },
-      data,
-    });
-    if (!updated.count) return null;
-
-    await tx.lead_activities.create({
-      data: {
-        lead_id: leadId,
-        business_id: ctx.businessId,
-        tenant_id: ctx.tenantId,
-        activity_type: options.activity_type || 'seller_lead_progress',
-        activity_description: options.description,
-        actor_type: options.actor_type || 'system',
-        actor_id: ctx.userId,
-        channel: options.channel,
-        metadata: options.metadata,
-      },
-    });
-
-    return updated;
-  }
-
-  private publicSellerLead(lead: any, related: any) {
-    const orders = related.orders || [];
-    const holds = related.holds || [];
-    const approvals = related.approvals || [];
-    const audits = related.audits || [];
-    const demandSignals = related.demandSignals || [];
-    const activeHold = holds.find((hold: any) => hold.status === 'active' && new Date(hold.expires_at).getTime() > Date.now());
-    const pendingPayment = orders.find((order: any) =>
-      order.payment_status === 'pending' &&
-      order.payment_method !== 'credit' &&
-      !['cancelled', 'failed', 'refunded'].includes(String(order.status || '').toLowerCase()),
-    );
-    const wonOrder = orders.find((order: any) =>
-      order.payment_status === 'paid' ||
-      order.payment_method === 'credit' ||
-      ['paid', 'completed', 'delivered'].includes(String(order.status || '').toLowerCase()),
-    );
-    const pendingApprovals = approvals.filter((approval: any) => approval.status === 'pending');
-    const stage = this.deriveSellerLeadStage(lead, {
-      activeHold,
-      pendingPayment,
-      wonOrder,
-      pendingApprovals,
-      audits,
-      demandSignals,
-    });
-    const productInterests = this.buildSellerLeadProductInterests(lead, related);
-    const latestAudit = audits[0];
-    const latestOrder = orders[0];
-    const value = Number(pendingPayment?.total_amount ?? wonOrder?.total_amount ?? latestOrder?.total_amount ?? 0);
-    const name = [lead.first_name, lead.last_name].filter(Boolean).join(' ').trim();
-
-    return {
-      lead_id: lead.lead_id,
-      customer_name: name || lead.custom_fields?.customer_name || lead.phone || 'Customer',
-      phone: this.cleanPhone(lead.phone),
-      source: lead.source || 'whatsapp',
-      status: lead.status,
-      stage,
-      stage_label: this.sellerLeadStageLabel(stage),
-      priority: this.sellerLeadPriority(stage),
-      lead_quality: lead.lead_quality,
-      lead_score: lead.lead_score || 0,
-      conversation_id: lead.extracted_entities?.conversation_id || lead.custom_fields?.conversation_id,
-      interested_products: productInterests,
-      value,
-      order_count: orders.length,
-      stock_hold_count: holds.filter((hold: any) => hold.status === 'active').length,
-      owner_approval_count: pendingApprovals.length,
-      active_hold: activeHold
-        ? {
-            reservation_id: activeHold.seller_reservation_id,
-            product_id: activeHold.product_id,
-            product_name: related.productMap.get(activeHold.product_id)?.name || 'Product',
-            quantity: activeHold.quantity,
-            expires_at: activeHold.expires_at,
-          }
-        : null,
-      pending_payment: pendingPayment
-        ? {
-            order_id: pendingPayment.order_id,
-            order_number: pendingPayment.order_number,
-            amount: Number(pendingPayment.total_amount || 0),
-            payment_method: pendingPayment.payment_method,
-            expires_at: pendingPayment.payment_expires_at,
-          }
-        : null,
-      latest_order: latestOrder
-        ? {
-            order_id: latestOrder.order_id,
-            order_number: latestOrder.order_number,
-            amount: Number(latestOrder.total_amount || 0),
-            payment_status: latestOrder.payment_status,
-            status: latestOrder.status,
-            created_at: latestOrder.created_at,
-          }
-        : null,
-      last_ai_action: latestAudit
-        ? {
-            employee: latestAudit.ai_employee_key,
-            action: latestAudit.action,
-            decision: latestAudit.decision,
-            text: latestAudit.output_summary || latestAudit.input_summary,
-            created_at: latestAudit.created_at,
-          }
-        : null,
-      next_action: this.sellerLeadNextAction(stage, { activeHold, pendingPayment, pendingApprovals }),
-      updated_at: this.latestIsoDate([
-        lead.last_activity_at,
-        lead.updated_at,
-        latestOrder?.created_at,
-        activeHold?.created_at,
-        latestAudit?.created_at,
-        demandSignals[0]?.created_at,
-      ]),
-      created_at: lead.created_at,
-    };
-  }
-
-  private deriveSellerLeadStage(lead: any, related: any) {
-    const rawStatus = String(lead.status || '').toLowerCase();
-    if (['lost', 'cancelled', 'canceled', 'invalid'].includes(rawStatus)) return 'lost';
-    if (lead.is_converted || related.wonOrder) return 'won';
-    if (related.pendingApprovals?.length) return 'needs_owner';
-    if (related.pendingPayment) return 'payment_waiting';
-    if (related.activeHold) return 'stock_held';
-    if (
-      ['contacted', 'active', 'qualified', 'quoted', 'interested'].includes(rawStatus) ||
-      related.audits?.length ||
-      related.demandSignals?.length
-    ) {
-      return 'ai_chatting';
-    }
-    return 'new';
-  }
-
-  private sellerLeadStageLabel(stage: string) {
-    const labels: Record<string, string> = {
-      new: 'New enquiry',
-      ai_chatting: 'AI chatting',
-      stock_held: 'Stock held',
-      payment_waiting: 'Payment waiting',
-      needs_owner: 'Needs owner',
-      won: 'Won',
-      lost: 'Closed',
-    };
-    return labels[stage] || 'Customer enquiry';
-  }
-
-  private sellerLeadPriority(stage: string) {
-    if (stage === 'needs_owner' || stage === 'payment_waiting') return 'high';
-    if (stage === 'stock_held' || stage === 'new') return 'medium';
-    return 'normal';
-  }
-
-  private sellerLeadNextAction(stage: string, related: any) {
-    if (stage === 'needs_owner') return 'Owner decision needed';
-    if (stage === 'payment_waiting') return 'Collect payment';
-    if (stage === 'stock_held') return 'Send payment request';
-    if (stage === 'won') return 'Prepare order or delivery';
-    if (stage === 'lost') return 'Closed';
-    if (stage === 'ai_chatting') return 'AI will continue follow-up';
-    return 'Reply and qualify';
-  }
-
-  private buildSellerLeadProductInterests(lead: any, related: any) {
-    const interests: any[] = [];
-    const add = (input: any) => {
-      if (!input) return;
-      const productId = input.product_id || input.id;
-      const name = input.name || input.product_name || input.item_name || input.title;
-      if (!productId && !name) return;
-      const key = productId || String(name).toLowerCase();
-      if (interests.some((item) => item.key === key)) return;
-      interests.push({
-        key,
-        product_id: productId,
-        name: name || related.productMap.get(productId)?.name || 'Product',
-        category: input.category || related.productMap.get(productId)?.category,
-        quantity: input.quantity,
-      });
-    };
-
-    const leadProducts = lead.interested_products;
-    if (Array.isArray(leadProducts)) leadProducts.forEach(add);
-    if (leadProducts && !Array.isArray(leadProducts)) add(leadProducts);
-    add({ name: lead.extracted_entities?.product_name || lead.extracted_entities?.item_name });
-
-    for (const order of related.orders || []) {
-      for (const item of order.order_items || []) add(item);
-    }
-    for (const hold of related.holds || []) {
-      add({
-        product_id: hold.product_id,
-        name: related.productMap.get(hold.product_id)?.name,
-        category: related.productMap.get(hold.product_id)?.category,
-        quantity: hold.quantity,
-      });
-    }
-    for (const signal of related.demandSignals || []) {
-      add({
-        product_id: signal.product_id,
-        name: related.productMap.get(signal.product_id)?.name || signal.metadata?.product_name,
-        category: signal.category || related.productMap.get(signal.product_id)?.category,
-        quantity: signal.quantity,
-      });
-    }
-
-    return interests.slice(0, 4).map(({ key, ...item }) => item);
-  }
-
-  private buildSellerLeadCounts(cards: any[]) {
-    const counts: Record<string, number> = {
-      all: cards.length,
-      new: 0,
-      ai_chatting: 0,
-      stock_held: 0,
-      payment_waiting: 0,
-      needs_owner: 0,
-      won: 0,
-      lost: 0,
-    };
-    for (const card of cards) {
-      counts[card.stage] = (counts[card.stage] || 0) + 1;
-    }
-    return counts;
-  }
-
-  private sellerLeadStages(counts: Record<string, number>) {
-    return [
-      { key: 'all', label: 'All', count: counts.all || 0 },
-      { key: 'new', label: 'New', count: counts.new || 0 },
-      { key: 'ai_chatting', label: 'AI chatting', count: counts.ai_chatting || 0 },
-      { key: 'stock_held', label: 'Stock held', count: counts.stock_held || 0 },
-      { key: 'payment_waiting', label: 'Payment', count: counts.payment_waiting || 0 },
-      { key: 'needs_owner', label: 'Needs owner', count: counts.needs_owner || 0 },
-      { key: 'won', label: 'Won', count: counts.won || 0 },
-      { key: 'lost', label: 'Closed', count: counts.lost || 0 },
-    ];
-  }
-
-  private groupByValue(items: any[], key: string) {
-    const grouped = new Map<string, any[]>();
-    for (const item of items || []) {
-      const value = item?.[key];
-      if (!value) continue;
-      const id = String(value);
-      grouped.set(id, [...(grouped.get(id) || []), item]);
-    }
-    return grouped;
-  }
-
-  private groupByPhone(items: any[], getter: (item: any) => string | undefined) {
-    const grouped = new Map<string, any[]>();
-    for (const item of items || []) {
-      const phone = this.cleanPhone(getter(item));
-      if (!phone) continue;
-      grouped.set(phone, [...(grouped.get(phone) || []), item]);
-    }
-    return grouped;
-  }
-
-  private dedupeById(items: any[], key: string) {
-    const seen = new Set<string>();
-    return (items || []).filter((item) => {
-      const id = item?.[key];
-      if (!id) return true;
-      if (seen.has(String(id))) return false;
-      seen.add(String(id));
-      return true;
-    });
-  }
-
-  private latestIsoDate(values: any[]) {
-    const latest = values
-      .filter(Boolean)
-      .map((value) => new Date(value))
-      .filter((date) => !Number.isNaN(date.getTime()))
-      .sort((a, b) => b.getTime() - a.getTime())[0];
-    return latest?.toISOString();
-  }
-
-  private async findDeadStock(businessId: string) {
-    const rows = await this.prisma.$queryRaw<any[]>(
-      Prisma.sql`
-        SELECT p.product_id, p.name, p.category, p.stock_quantity, p.price, p.updated_at
-        FROM products p
-        LEFT JOIN order_items oi ON oi.product_id = p.product_id
-        WHERE p.business_id = ${businessId}::uuid
-          AND p.product_type = 'physical'
-          AND p.is_active = true
-          AND COALESCE(p.stock_quantity, 0) > 0
-          AND oi.order_item_id IS NULL
-        ORDER BY p.updated_at ASC
-        LIMIT 8
-      `,
-    );
-
-    return rows.map((row) => ({
-      product_id: row.product_id,
-      name: row.name,
-      category: row.category,
-      stock_quantity: row.stock_quantity,
-      price: Number(row.price || 0),
-      suggestion: 'Create a small offer or ask Marketing AI to recover dead stock',
-    }));
-  }
-
-  private buildDemandHeatmap(signals: any[]) {
-    const map = new Map<string, number>();
-    for (const signal of signals) {
-      const key = signal.category || 'Uncategorized';
-      map.set(key, (map.get(key) || 0) + Number(signal.quantity || 1));
-    }
-    return [...map.entries()]
-      .sort((a, b) => b[1] - a[1])
-      .slice(0, 8)
-      .map(([category, inquiry_count]) => ({ category, inquiry_count }));
-  }
-
-  private async buildOnlineSellerIntelligence(
-    ctx: any,
-    signals: any[],
-    lowStock: any[],
-    deadStock: any[],
-    lowStockThreshold: number,
-  ) {
-    const productIds = [
-      ...new Set(
-        [
-          ...signals.map((signal: any) => signal.product_id),
-          ...lowStock.map((product: any) => product.product_id),
-          ...deadStock.map((product: any) => product.product_id),
-        ].filter(Boolean),
-      ),
-    ];
-
-    const products = productIds.length
-      ? await this.db.products.findMany({
-          where: { business_id: ctx.businessId, product_id: { in: productIds } },
-          select: {
-            product_id: true,
-            name: true,
-            category: true,
-            price: true,
-            stock_quantity: true,
-            reserved_stock: true,
-            in_stock: true,
-            updated_at: true,
-          },
-        })
-      : [];
-
-    const productMap = new Map(products.map((product: any) => [product.product_id, product]));
-    const demandMap = new Map<string, any>();
-
-    for (const signal of signals) {
-      if (!signal.product_id) continue;
-      const product = productMap.get(signal.product_id);
-      const key = signal.product_id;
-      const quantity = Number(signal.quantity || 1);
-      const current = demandMap.get(key) || {
-        product_id: key,
-        name: product?.name || signal.metadata?.product_name || 'Product',
-        category: product?.category || signal.category || 'Uncategorized',
-        price: Number(product?.price || 0),
-        stock_quantity: Number(product?.stock_quantity || 0),
-        reserved_stock: Number(product?.reserved_stock || 0),
-        available_stock: Math.max(
-          0,
-          Number(product?.stock_quantity || 0) - Number(product?.reserved_stock || 0),
-        ),
-        asked_count: 0,
-        sold_count: 0,
-        hold_count: 0,
-        out_of_stock_requests: 0,
-        demand_score: 0,
-        channels: {},
-        last_signal_at: signal.created_at,
-      };
-
-      current.asked_count += quantity;
-      current.channels[signal.channel || 'whatsapp'] = (current.channels[signal.channel || 'whatsapp'] || 0) + quantity;
-      current.last_signal_at = signal.created_at || current.last_signal_at;
-
-      switch (signal.signal_type) {
-        case 'sale':
-          current.sold_count += quantity;
-          current.demand_score += quantity * 5;
-          break;
-        case 'stock_reserved':
-          current.hold_count += quantity;
-          current.demand_score += quantity * 3;
-          break;
-        case 'out_of_stock':
-          current.out_of_stock_requests += quantity;
-          current.demand_score += quantity * 4;
-          break;
-        case 'product_search':
-          current.demand_score += quantity * 2;
-          break;
-        default:
-          current.demand_score += quantity;
-      }
-
-      demandMap.set(key, current);
-    }
-
-    const demandedItems = [...demandMap.values()]
-      .map((item) => ({
-        ...item,
-        recommendation: this.buildDemandItemRecommendation(item, lowStockThreshold),
-      }))
-      .sort((a, b) => b.demand_score - a.demand_score)
-      .slice(0, 8);
-
-    const outOfStockDemand = demandedItems
-      .filter((item) => item.out_of_stock_requests > 0 || (item.available_stock <= 0 && item.asked_count > 0))
-      .slice(0, 6);
-
-    const fastMovingLowStock = demandedItems
-      .filter((item) => item.available_stock > 0 && item.available_stock <= lowStockThreshold && item.demand_score >= 3)
-      .slice(0, 6);
-
-    return {
-      period_days: 30,
-      most_demanded_items: demandedItems,
-      out_of_stock_demand: outOfStockDemand,
-      fast_moving_low_stock: fastMovingLowStock,
-      ai_recommendations: this.buildOnlineSellerRecommendations({
-        demandedItems,
-        outOfStockDemand,
-        fastMovingLowStock,
-        deadStock,
-      }),
-    };
-  }
-
-  private buildDemandItemRecommendation(item: any, lowStockThreshold: number) {
-    if (item.out_of_stock_requests > 0 || item.available_stock <= 0) {
-      return 'Restock or hide from chatbot until stock is back';
-    }
-    if (item.available_stock <= lowStockThreshold && item.demand_score >= 3) {
-      return 'Restock before the next campaign';
-    }
-    if (item.sold_count > 0 || item.hold_count > 0) {
-      return 'Keep visible in WhatsApp catalog';
-    }
-    return 'Watch demand and promote if enquiries continue';
-  }
-
-  private buildOnlineSellerRecommendations(input: any) {
-    const recommendations = [];
-    const topDemand = input.demandedItems[0];
-    const topStockOut = input.outOfStockDemand[0];
-    const topLowStock = input.fastMovingLowStock[0];
-    const topDeadStock = input.deadStock[0];
-
-    if (topStockOut) {
-      recommendations.push({
-        key: 'restock_out_of_stock',
-        priority: 'high',
-        title: `Restock ${topStockOut.name}`,
-        text: `${topStockOut.out_of_stock_requests || topStockOut.asked_count} customer request(s) came when stock was unavailable.`,
-        action: 'Restock or hide from chatbot',
-      });
-    }
-
-    if (topLowStock) {
-      recommendations.push({
-        key: 'fast_moving_low_stock',
-        priority: 'high',
-        title: `${topLowStock.name} is moving fast`,
-        text: `Only ${topLowStock.available_stock} available with strong demand.`,
-        action: 'Restock before promoting',
-      });
-    }
-
-    if (topDemand && !topStockOut && !topLowStock) {
-      recommendations.push({
-        key: 'promote_top_demand',
-        priority: 'normal',
-        title: `Promote ${topDemand.name}`,
-        text: `${topDemand.asked_count} demand signal(s) in the last 30 days.`,
-        action: 'Use in WhatsApp or Instagram campaign',
-      });
-    }
-
-    if (topDeadStock) {
-      recommendations.push({
-        key: 'recover_dead_stock',
-        priority: 'normal',
-        title: `Recover old stock: ${topDeadStock.name}`,
-        text: `Stock ${topDeadStock.stock_quantity ?? 0} is not moving.`,
-        action: 'Create a small offer',
-      });
-    }
-
-    if (!recommendations.length) {
-      recommendations.push({
-        key: 'collect_more_demand',
-        priority: 'low',
-        title: 'Keep collecting demand',
-        text: 'AI will show stronger suggestions once more enquiries and sales come in.',
-        action: 'Keep products visible',
-      });
-    }
-
-    return recommendations.slice(0, 5);
-  }
-
-  private buildAiEmployees(input: any) {
-    const employees = [
-      {
-        key: 'sales_ai',
-        name: 'Sales AI',
-        simple_job: 'Replies to WhatsApp enquiries, shows products, reserves stock and creates orders.',
-        today: `${input.todayOrders} order(s), ${input.stockHolds} active hold(s)`,
-        next: input.ownerQueue > 0 ? 'Waiting for owner decisions' : 'Follow up hot enquiries',
-      },
-      {
-        key: 'marketing_ai',
-        name: 'Marketing AI',
-        simple_job: 'Finds products to promote and prepares campaign ideas.',
-        today: input.demandHeatmap[0]?.category ? `Demand rising in ${input.demandHeatmap[0].category}` : 'Watching demand',
-        next: 'Suggest campaign from demand heatmap',
-      },
-      {
-        key: 'inventory_ai',
-        name: 'Inventory AI',
-        simple_job: 'Watches low stock, holds and possible double-selling risks.',
-        today: `${input.lowStock} low-stock product(s)`,
-        next: input.lowStock > 0 ? 'Ask owner to restock fast movers' : 'Keep stock clean',
-      },
-      {
-        key: 'delivery_ai',
-        name: 'Delivery Desk AI',
-        simple_job: 'Tracks local deliveries, pickup and COD collection.',
-        today: `${input.deliveriesWaiting} delivery task(s) waiting`,
-        next: 'Prepare customer delivery updates',
-      },
-      {
-        key: 'profit_coach',
-        name: 'Profit Coach',
-        simple_job: 'Looks for low-margin, slow-moving and dead stock products.',
-        today: input.creditEnabled ? `Credit due ${input.creditDue}` : 'Watching margins',
-        next: 'Recommend recovery offers',
-      },
-      {
-        key: 'ai_guard',
-        name: 'AI Guard',
-        simple_job: input.creditEnabled
-          ? 'Blocks risky discounts, refunds, credit and unclear promises until owner approval.'
-          : 'Blocks risky discounts, refunds and unclear promises until owner approval.',
-        today: `${input.ownerQueue} approval(s) queued`,
-        next: 'Keep audit log clean',
-      },
-    ];
-
-    if (input.creditEnabled) {
-      employees.splice(4, 0, {
-        key: 'credit_guard',
-        name: 'Credit Guard',
-        simple_job: 'Checks which buyers can use credit and tracks money due.',
-        today: `Credit due ${input.creditDue}`,
-        next: 'Watch due customers and owner approvals',
-      });
-    }
-
-    return employees;
-  }
-
-  private publicProduct(product: any) {
-    return {
-      product_id: product.product_id,
-      name: product.name,
-      category: product.category,
-      price: Number(product.price || 0),
-      stock_quantity: product.stock_quantity,
-      reserved_stock: product.reserved_stock || 0,
-      in_stock: product.in_stock,
-      sku: product.sku,
-      currency: product.currency || 'INR',
-    };
-  }
-
-  private publicStockProduct(product: any, profitSnapshot: any, lowStockThreshold = 5) {
-    const stockQuantity = Number(product.stock_quantity || 0);
-    const reservedStock = Number(product.reserved_stock || 0);
-    const availableStock = Math.max(0, stockQuantity - reservedStock);
-    const variants = (product.product_variants || []).map((variant: any) => {
-      const quantity = Number(variant.quantity || 0);
-      const reserved = Number(variant.reserved_stock || 0);
-      return {
-        variant_id: variant.variant_id,
-        name: variant.name,
-        sku: variant.sku,
-        price: Number(variant.price || 0),
-        quantity,
-        reserved_stock: reserved,
-        available_stock: Math.max(0, quantity - reserved),
-        in_stock: quantity - reserved > 0,
-      };
-    });
-
-    const stockStatus =
-      !product.track_inventory
+  private publicStockProduct(item: any, heldQuantity: number, lowStockThreshold: number) {
+    const availableStock = item.stock_quantity === null ? null : Number(item.stock_quantity ?? 0);
+    const totalStock = availableStock === null ? null : availableStock + heldQuantity;
+    const status = !item.is_active
+      ? 'inactive'
+      : availableStock === null
         ? 'not_tracked'
         : availableStock <= 0
           ? 'out_of_stock'
@@ -3335,294 +1809,548 @@ export class SellerOsService {
             : 'in_stock';
 
     return {
-      product_id: product.product_id,
-      id: product.product_id,
-      name: product.name,
-      description: product.description,
-      category: product.category,
-      sku: product.sku,
-      price: Number(product.price || 0),
-      compare_price: product.compare_price === null || product.compare_price === undefined ? undefined : Number(product.compare_price || 0),
-      cost_price: profitSnapshot?.cost_price === null || profitSnapshot?.cost_price === undefined
-        ? undefined
-        : Number(profitSnapshot.cost_price || 0),
-      margin_percent: profitSnapshot?.margin_percent === null || profitSnapshot?.margin_percent === undefined
-        ? undefined
-        : Number(profitSnapshot.margin_percent || 0),
-      currency: product.currency || 'INR',
-      track_inventory: product.track_inventory,
-      stock_quantity: stockQuantity,
-      reserved_stock: reservedStock,
+      product_id: item.item_id,
+      item_id: item.item_id,
+      name: item.name,
+      category: item.category,
+      description: item.description,
+      sku: item.product_detail?.sku ?? item.variants?.find((variant) => variant.sku)?.sku ?? null,
+      price: this.toNumber(item.base_price),
+      cost_price: this.toNumber(item.product_detail?.metadata?.cost_price ?? item.attributes?.cost_price),
+      stock_quantity: totalStock,
       available_stock: availableStock,
-      low_stock_threshold: lowStockThreshold,
-      stock_status: stockStatus,
-      in_stock: availableStock > 0,
-      is_active: product.is_active,
-      primary_image_url: product.primary_image_url,
-      image_urls: product.image_urls,
-      variants,
-      updated_at: product.updated_at,
-      created_at: product.created_at,
+      reserved_stock: heldQuantity,
+      stock_status: status,
+      image_url: item.primary_image_url,
+      is_active: item.is_active,
+      updated_at: item.updated_at,
     };
   }
 
-  private publicPaymentDeskOrder(order: any) {
-    if (!order) return null;
-    const expiresAt = order.payment_expires_at ? new Date(order.payment_expires_at) : null;
-    const expiresInMinutes = expiresAt
-      ? Math.max(0, Math.ceil((expiresAt.getTime() - Date.now()) / 60000))
-      : null;
-
-    return {
-      order_id: order.order_id,
-      order_number: order.order_number,
-      customer_id: order.customer_id,
-      customer_name: order.customers?.name,
-      customer_phone: order.customers?.phone || order.shipping_phone,
-      total_amount: Number(order.total_amount || 0),
-      subtotal: Number(order.subtotal || 0),
-      payment_status: order.payment_status,
-      payment_method: order.payment_method,
-      payment_reference: order.payment_reference,
-      payment_expires_at: order.payment_expires_at,
-      payment_expires_in_minutes: expiresInMinutes,
-      paid_at: order.paid_at,
-      status: order.status,
-      source: order.source,
-      shipping_address: order.shipping_address,
-      shipping_phone: order.shipping_phone,
-      created_at: order.created_at,
-      items: (order.order_items || []).map((item: any) => ({
-        order_item_id: item.order_item_id,
-        product_id: item.product_id,
-        variant_id: item.variant_id,
-        product_name: item.variant_name ? `${item.product_name} - ${item.variant_name}` : item.product_name,
-        quantity: item.quantity,
-        unit_price: Number(item.unit_price || 0),
-        total_price: Number(item.total_price || 0),
-      })),
-    };
+  private async lockCatalogItemStock(tx: any, businessId: string, itemId: string) {
+    const rows = (await tx.$queryRawUnsafe(
+      `SELECT item_id, name, stock_quantity
+       FROM catalog_items
+       WHERE business_id = $1 AND item_id = $2 AND item_type = 'physical_product' AND deleted_at IS NULL
+       FOR UPDATE`,
+      businessId,
+      itemId,
+    )) as any[];
+    const item = rows[0];
+    if (!item) throw new NotFoundException('Product not found');
+    return item;
   }
 
-  private publicPaymentHold(hold: any, product: any) {
-    const price = Number(product?.price || 0);
-    const total = price * Number(hold.quantity || 1);
-    const expiresAt = hold.expires_at ? new Date(hold.expires_at) : null;
-    return {
-      reservation_id: hold.seller_reservation_id,
-      product_id: hold.product_id,
-      variant_id: hold.variant_id,
-      product_name: product?.name || 'Product',
-      category: product?.category,
-      quantity: hold.quantity,
-      customer_phone: hold.customer_phone,
-      payment_order_id: hold.converted_order_id,
-      estimated_amount: total,
-      status: hold.status,
-      expires_at: hold.expires_at,
-      expires_in_minutes: expiresAt ? Math.max(0, Math.ceil((expiresAt.getTime() - Date.now()) / 60000)) : null,
-      source: hold.source,
-    };
+  private async lockVariantStock(tx: any, businessId: string, itemId: string, variantId: string) {
+    const rows = (await tx.$queryRawUnsafe(
+      `SELECT v.variant_id, v.item_id, v.stock_quantity, CONCAT(ci.name, ' - ', v.name) AS name
+       FROM item_variants v
+       JOIN catalog_items ci ON ci.item_id = v.item_id
+       WHERE ci.business_id = $1 AND v.item_id = $2 AND v.variant_id = $3 AND ci.deleted_at IS NULL
+       FOR UPDATE`,
+      businessId,
+      itemId,
+      variantId,
+    )) as any[];
+    const variant = rows[0];
+    if (!variant) throw new NotFoundException('Product variant not found');
+    return variant;
   }
 
-  private buildPaymentMessage(order: any, reservation: any) {
-    const amount = Number(order?.total_amount || 0);
-    const method = String(order?.payment_method || 'upi').toUpperCase();
-    const until = reservation?.expires_at ? new Date(reservation.expires_at).toLocaleString('en-IN') : 'the hold time';
-
-    if (order?.payment_method === 'cod') {
-      return `Order ${order.order_number} is ready for COD. Amount Rs ${amount}. Stock is held until ${until}.`;
+  private nextStockQuantity(previous: number, adjustmentType: string, quantity: number) {
+    if (adjustmentType === 'add') return previous + quantity;
+    if (adjustmentType === 'reduce') {
+      if (previous < quantity) throw new ConflictException('Stock cannot go below zero');
+      return previous - quantity;
     }
-
-    return `Order ${order?.order_number} is ready. Amount Rs ${amount}. Please pay by ${method} and share the reference before ${until}.`;
+    return quantity;
   }
 
-  private buildSellerFeatures(settings: any) {
-    if (!settings) {
-      return {
-        store_type: 'not_configured',
-        online_sales: true,
-        whatsapp_sales: true,
-        website_sales: true,
-        manual_counter_sale: true,
-        wholesale_sales: false,
-        credit_sales: false,
-        credit: false,
-      };
-    }
-
-    const storeType = settings?.store_type || 'product_seller';
-    const explicitCredit =
-      settings?.credit_defaults?.enabled ?? settings?.ai_guardrails?.credit_enabled;
-    const creditSales =
-      explicitCredit !== undefined
-        ? Boolean(explicitCredit)
-        : storeType !== 'online_seller';
-
-    return {
-      store_type: storeType,
-      online_sales: true,
-      whatsapp_sales: true,
-      website_sales: storeType === 'online_seller',
-      manual_counter_sale: storeType !== 'online_seller',
-      wholesale_sales: storeType === 'wholesale_seller',
-      credit_sales: creditSales,
-      credit: creditSales,
-    };
+  private async insertStockAdjustment(tx: any, data: {
+    businessId: string;
+    tenantId: string;
+    itemId: string;
+    variantId?: string | null;
+    importJobId?: string | null;
+    adjustmentType: string;
+    quantityChange: number;
+    quantityBefore: number;
+    quantityAfter: number;
+    reason: string;
+    source: string;
+    note?: string | null;
+    createdBy?: string | null;
+  }) {
+    const rows = (await tx.$queryRawUnsafe(
+      `INSERT INTO seller_stock_adjustments
+         (business_id, tenant_id, item_id, variant_id, import_job_id, adjustment_type,
+          quantity_change, quantity_before, quantity_after, reason, source, note, created_by, metadata)
+       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, '{}'::jsonb)
+       RETURNING *`,
+      data.businessId,
+      data.tenantId,
+      data.itemId,
+      data.variantId ?? null,
+      data.importJobId ?? null,
+      data.adjustmentType,
+      data.quantityChange,
+      data.quantityBefore,
+      data.quantityAfter,
+      data.reason,
+      data.source,
+      data.note ?? null,
+      data.createdBy ?? null,
+    )) as any[];
+    return rows[0];
   }
 
-  private publicCreditAccount(account: any) {
-    if (!account) return null;
-    const creditLimit = Number(account.credit_limit || 0);
-    const currentBalance = Number(account.current_balance || 0);
-    const availableCredit = Math.max(0, creditLimit - currentBalance);
-    const decision = this.buildCreditDecision(account);
-
-    return {
-      credit_account_id: account.credit_account_id,
-      customer_id: account.customer_id,
-      phone: account.phone,
-      customer_name: account.customer_name,
-      status: account.status,
-      credit_limit: creditLimit,
-      current_balance: currentBalance,
-      available_credit: availableCredit,
-      due_days: account.due_days,
-      notes: account.notes,
-      can_use_credit: decision.can_use_credit,
-      credit_label: decision.label,
-      credit_message: decision.message,
-      created_at: account.created_at,
-      updated_at: account.updated_at,
-    };
+  private buildImportTags(row: SellerProductImportRowDto, fallbackName?: string) {
+    return [
+      row.name ?? fallbackName,
+      row.description,
+      row.category,
+      row.sku,
+    ]
+      .filter(Boolean)
+      .flatMap((value) => String(value).toLowerCase().split(/[,\s]+/))
+      .filter((value, index, values) => value.length > 1 && values.indexOf(value) === index)
+      .slice(0, 20);
   }
 
-  private publicCreditTransaction(transaction: any) {
-    return {
-      credit_transaction_id: transaction.credit_transaction_id,
-      credit_account_id: transaction.credit_account_id,
-      order_id: transaction.order_id,
-      transaction_type: transaction.transaction_type,
-      amount: Number(transaction.amount || 0),
-      due_date: transaction.due_date,
-      paid_at: transaction.paid_at,
-      notes: transaction.notes,
-      created_at: transaction.created_at,
-    };
-  }
-
-  private buildCreditDecision(account: any, amount = 0) {
-    if (!account) {
-      return {
-        status: 'unknown',
-        can_use_credit: false,
-        needs_owner_approval: true,
-        label: 'Ask owner',
-        message: 'This customer is not added for credit yet.',
-        available_credit: 0,
-      };
-    }
-
-    const creditLimit = Number(account.credit_limit || 0);
-    const currentBalance = Number(account.current_balance || 0);
-    const availableCredit = Math.max(0, creditLimit - currentBalance);
-
-    if (account.status !== 'approved') {
-      return {
-        status: account.status,
-        can_use_credit: false,
-        needs_owner_approval: account.status !== 'blocked',
-        label: account.status === 'blocked' ? 'Credit blocked' : 'Ask owner',
-        message:
-          account.status === 'blocked'
-            ? 'Credit is blocked for this customer.'
-            : 'Owner approval is needed before giving credit.',
-        available_credit: availableCredit,
-      };
-    }
-
-    if (amount > 0 && amount > availableCredit) {
-      return {
-        status: 'over_limit',
-        can_use_credit: false,
-        needs_owner_approval: true,
-        label: 'Limit reached',
-        message: `This customer can use ${availableCredit} more credit.`,
-        available_credit: availableCredit,
-      };
-    }
-
-    return {
-      status: 'approved',
-      can_use_credit: true,
-      needs_owner_approval: false,
-      label: 'Credit allowed',
-      message: `Credit allowed. Available credit ${availableCredit}.`,
-      available_credit: availableCredit,
-    };
-  }
-
-  private cleanStringList(value: string[] | undefined, fallback: string[]) {
-    const cleaned = (value || [])
-      .map((item) => String(item || '').trim())
-      .filter(Boolean);
-    return cleaned.length > 0 ? [...new Set(cleaned)] : fallback;
-  }
-
-  private cleanPhone(phone?: string) {
-    return phone ? phone.replace(/[^\d+]/g, '') : undefined;
-  }
-
-  private requirePhone(phone?: string) {
-    const cleaned = this.cleanPhone(phone);
-    if (!cleaned) throw new BadRequestException('Customer phone is required');
-    return cleaned;
-  }
-
-  private toMoney(value: any) {
-    const parsed = Number(String(value ?? 0).replace(/[^\d.-]/g, ''));
-    return Number.isFinite(parsed) ? Math.max(0, parsed) : 0;
-  }
-
-  private toNonNegativeInt(value: any) {
-    const parsed = Math.floor(Number(String(value ?? 0).replace(/[^\d.-]/g, '')));
-    return Number.isFinite(parsed) ? Math.max(0, parsed) : 0;
-  }
-
-  private cleanStockReason(value: any) {
-    const cleaned = String(value || 'manual_correction')
-      .trim()
-      .toLowerCase()
-      .replace(/[^a-z0-9_ -]/g, '')
-      .replace(/\s+/g, '_')
-      .slice(0, 80);
-    return cleaned || 'manual_correction';
-  }
-
-  private simpleImportError(error: any) {
-    const message = String(error?.message || error || 'Could not save row');
-    if (message.includes('Stock cannot be less than held quantity')) return message;
-    if (message.includes('Unique constraint') || message.includes('duplicate key')) return 'SKU already exists';
-    if (message.includes('Product not found')) return 'Product not found for this seller';
-    return message.replace(/\n/g, ' ').slice(0, 180);
-  }
-
-  private slugify(value: string) {
-    return value
-      .toLowerCase()
-      .trim()
+  private cleanStockReason(reason?: string | null) {
+    const cleaned = String(reason || 'manual_correction')
       .replace(/[^\w\s-]/g, '')
-      .replace(/[\s_-]+/g, '-')
-      .replace(/^-+|-+$/g, '');
+      .trim()
+      .replace(/\s+/g, '_')
+      .toLowerCase();
+    return cleaned.slice(0, 80) || 'manual_correction';
   }
 
-  private generateOrderNumber() {
-    const stamp = Date.now().toString(36).toUpperCase();
-    const random = Math.random().toString(36).slice(2, 6).toUpperCase();
-    return `SO-${stamp}-${random}`;
+  private async buildSaleLines(db: any, businessId: string, items: SellerSaleItemDto[]): Promise<SaleLine[]> {
+    const itemIds = [...new Set(items.map((item) => item.item_id))];
+    const catalogItems: any[] = await db.catalog_items.findMany({
+      where: {
+        business_id: businessId,
+        item_id: { in: itemIds },
+        item_type: 'physical_product',
+        deleted_at: null,
+      },
+      include: { variants: true },
+    });
+    const catalogById = new Map<string, any>(catalogItems.map((item) => [item.item_id, item]));
+
+    return items.map((item) => {
+      const catalogItem = catalogById.get(item.item_id);
+      if (!catalogItem) {
+        throw new NotFoundException(`Product not found: ${item.item_id}`);
+      }
+      if (!catalogItem.is_active) {
+        throw new BadRequestException(`${catalogItem.name} is inactive`);
+      }
+
+      const variant = item.variant_id
+        ? catalogItem.variants.find((candidate) => candidate.variant_id === item.variant_id)
+        : null;
+      if (item.variant_id && !variant) {
+        throw new NotFoundException(`Variant not found: ${item.variant_id}`);
+      }
+      if (variant && !variant.is_active) {
+        throw new BadRequestException(`${catalogItem.name} - ${variant.name} is inactive`);
+      }
+
+      const unitPrice = this.toNumber(variant?.price ?? catalogItem.base_price);
+      const discount = Number(item.discount ?? 0);
+      const totalPrice = Math.max(unitPrice * item.quantity - discount, 0);
+
+      return {
+        item_id: item.item_id,
+        variant_id: item.variant_id ?? null,
+        product_name: catalogItem.name,
+        variant_name: variant?.name ?? null,
+        sku: variant?.sku ?? null,
+        quantity: item.quantity,
+        unit_price: unitPrice,
+        discount,
+        total_price: totalPrice,
+        snapshot: {
+          item_name: catalogItem.name,
+          item_type: catalogItem.item_type,
+          category: catalogItem.category,
+          variant_name: variant?.name,
+          variant_options: variant?.options,
+          price: unitPrice,
+          source: 'seller_os',
+        },
+      };
+    });
   }
 
-  private get db(): any {
-    return this.prisma as any;
+  private async upsertSetupProduct(
+    db: any,
+    businessId: string,
+    tenantId: string,
+    product: SellerSetupProductDto,
+    lowStockThreshold: number,
+  ) {
+    const normalizedSku = product.sku?.trim() || null;
+    const existing = normalizedSku
+      ? await db.catalog_items.findFirst({
+          where: {
+            business_id: businessId,
+            item_type: 'physical_product',
+            deleted_at: null,
+            product_detail: { is: { sku: normalizedSku } },
+          },
+          include: { product_detail: true },
+        })
+      : await db.catalog_items.findFirst({
+          where: {
+            business_id: businessId,
+            item_type: 'physical_product',
+            deleted_at: null,
+            name: { equals: product.name.trim(), mode: 'insensitive' },
+          },
+          include: { product_detail: true },
+        });
+
+    const attributes = {
+      source: 'seller_setup',
+      low_stock_threshold: lowStockThreshold,
+      cost_price: product.cost_price ?? null,
+    };
+
+    if (existing) {
+      await db.catalog_items.update({
+        where: { item_id: existing.item_id },
+        data: {
+          name: product.name.trim(),
+          description: product.description ?? existing.description,
+          category: product.category ?? existing.category,
+          base_price: product.price,
+          stock_quantity: product.stock_quantity,
+          attributes,
+          ai_tags: this.buildProductTags(product),
+          is_active: true,
+          updated_at: new Date(),
+        },
+      });
+      await db.product_item_details.upsert({
+        where: { item_id: existing.item_id },
+        create: {
+          item_id: existing.item_id,
+          business_id: businessId,
+          sku: normalizedSku,
+          metadata: attributes,
+        },
+        update: {
+          sku: normalizedSku,
+          metadata: attributes,
+          updated_at: new Date(),
+        },
+      });
+      return { item_id: existing.item_id, name: product.name, action: 'updated' };
+    }
+
+    const created = await db.catalog_items.create({
+      data: {
+        business_id: businessId,
+        tenant_id: tenantId,
+        item_type: 'physical_product',
+        name: product.name.trim(),
+        description: product.description,
+        category: product.category,
+        base_price: product.price,
+        currency: 'INR',
+        stock_quantity: product.stock_quantity,
+        attributes,
+        ai_tags: this.buildProductTags(product),
+        is_active: true,
+      },
+    });
+
+    await db.product_item_details.create({
+      data: {
+        item_id: created.item_id,
+        business_id: businessId,
+        sku: normalizedSku,
+        metadata: attributes,
+      },
+    });
+
+    if (product.cost_price !== undefined) {
+      await db.$queryRawUnsafe(
+        `INSERT INTO seller_product_profit_snapshots
+           (business_id, item_id, cost_price, selling_price, gross_margin, margin_percentage, source, recommendation)
+         VALUES ($1, $2, $3, $4, $5, $6, 'seller_setup', $7)`,
+        businessId,
+        created.item_id,
+        product.cost_price,
+        product.price,
+        product.price - product.cost_price,
+        product.price > 0 ? ((product.price - product.cost_price) / product.price) * 100 : null,
+        'Initial cost and price captured during seller setup',
+      ).catch(() => undefined);
+    }
+
+    return { item_id: created.item_id, name: product.name, action: 'created' };
+  }
+
+  private buildProductTags(product: SellerSetupProductDto) {
+    return [
+      product.name,
+      product.description,
+      product.category,
+      product.sku,
+    ]
+      .filter(Boolean)
+      .flatMap((value) => String(value).toLowerCase().split(/[,\s]+/))
+      .filter((value, index, values) => value.length > 1 && values.indexOf(value) === index)
+      .slice(0, 20);
+  }
+
+  private calculateTotals(lines: SaleLine[]) {
+    const subtotal = lines.reduce((sum, line) => sum + line.unit_price * line.quantity, 0);
+    const discountAmount = lines.reduce((sum, line) => sum + line.discount, 0);
+    const totalAmount = lines.reduce((sum, line) => sum + line.total_price, 0);
+    return {
+      subtotal,
+      discount_amount: discountAmount,
+      total_amount: totalAmount,
+    };
+  }
+
+  private async findOrCreateCustomer(
+    db: any,
+    businessId: string,
+    tenantId: string | undefined,
+    phone: string,
+    name?: string,
+  ) {
+    const normalizedPhone = this.normalizePhone(phone);
+    const existing = await db.customers.findFirst({
+      where: {
+        business_id: businessId,
+        phone: normalizedPhone,
+        deleted_at: null,
+      },
+    });
+    if (existing) {
+      if (name && !existing.name) {
+        return db.customers.update({
+          where: { customer_id: existing.customer_id },
+          data: { name, updated_at: new Date() },
+        });
+      }
+      return existing;
+    }
+
+    if (!tenantId) {
+      throw new BadRequestException('Authenticated user is missing tenant_id');
+    }
+
+    return db.customers.create({
+      data: {
+        business_id: businessId,
+        tenant_id: tenantId,
+        phone: normalizedPhone,
+        whatsapp_number: normalizedPhone,
+        name,
+        engagement_score: 10,
+      },
+    });
+  }
+
+  private async getApprovedCreditAccountForUpdate(
+    db: any,
+    businessId: string,
+    phone: string,
+    saleAmount: number,
+  ) {
+    try {
+      const rows = await db.$queryRawUnsafe(
+        `SELECT *
+         FROM seller_customer_credit_accounts
+         WHERE business_id = $1 AND phone = $2
+         FOR UPDATE`,
+        businessId,
+        this.normalizePhone(phone),
+      );
+      const account = (rows as any[])[0];
+      if (!account || account.status !== 'approved') {
+        throw new BadRequestException('Credit sale is allowed only for owner-approved customers');
+      }
+      const nextBalance = this.toNumber(account.current_balance) + saleAmount;
+      if (nextBalance > this.toNumber(account.credit_limit)) {
+        throw new ConflictException('Credit limit will be crossed for this customer');
+      }
+      return account;
+    } catch (error) {
+      return this.handleSellerOpsMutationError(error);
+    }
+  }
+
+  private async insertDelivery(db: any, businessId: string, tenantId: string | undefined, dto: CreateDeliveryDto) {
+    try {
+      const rows = await db.$queryRawUnsafe(
+        `INSERT INTO seller_deliveries
+           (business_id, tenant_id, order_id, product_order_id, customer_id, delivery_mode,
+            delivery_person, phone, address, pincode, notes)
+         VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)
+         RETURNING *`,
+        businessId,
+        tenantId ?? null,
+        dto.order_id ?? null,
+        dto.product_order_id ?? null,
+        dto.customer_id ?? null,
+        dto.delivery_mode ?? 'local',
+        dto.delivery_person ?? null,
+        dto.phone ?? null,
+        dto.address ?? null,
+        dto.pincode ?? null,
+        dto.notes ?? null,
+      );
+      return (rows as any[])[0];
+    } catch (error) {
+      return this.handleSellerOpsMutationError(error);
+    }
+  }
+
+  private async createApprovalRecord(
+    db: any,
+    user: AuthUser,
+    dto: CreateOwnerApprovalDto,
+    required: boolean,
+  ) {
+    try {
+      const rows = await db.$queryRawUnsafe(
+        `INSERT INTO seller_owner_approvals
+           (business_id, tenant_id, title, simple_summary, action_type, risk_level, source,
+            entity_type, entity_id, requested_by, payload)
+         VALUES ($1, $2, $3, $4, $5, $6, 'ai', $7, $8, $9, $10::jsonb)
+         RETURNING *`,
+        user.business_id,
+        user.tenant_id ?? null,
+        dto.title,
+        dto.simple_summary ?? null,
+        dto.action_type,
+        dto.risk_level ?? 'medium',
+        dto.entity_type ?? null,
+        dto.entity_id ?? null,
+        user.user_id ?? null,
+        JSON.stringify(dto.payload ?? {}),
+      );
+      return (rows as any[])[0];
+    } catch (error) {
+      if (!required && this.isMissingSellerOpsTable(error)) return null;
+      return this.handleSellerOpsMutationError(error);
+    }
+  }
+
+  private async insertAiAudit(
+    db: any,
+    businessId: string,
+    tenantId: string | undefined,
+    data: {
+      ai_employee: string;
+      action: string;
+      decision: string;
+      risk_level: string;
+      entity_type?: string;
+      entity_id?: string;
+      input_summary?: string;
+      output_summary?: string;
+      guardrails?: Record<string, any>;
+    },
+  ) {
+    try {
+      await db.$queryRawUnsafe(
+        `INSERT INTO seller_ai_audit_logs
+           (business_id, tenant_id, ai_employee, action, decision, risk_level,
+            entity_type, entity_id, input_summary, output_summary, guardrails)
+         VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11::jsonb)`,
+        businessId,
+        tenantId ?? null,
+        data.ai_employee,
+        data.action,
+        data.decision,
+        data.risk_level,
+        data.entity_type ?? null,
+        data.entity_id ?? null,
+        data.input_summary ?? null,
+        data.output_summary ?? null,
+        JSON.stringify(data.guardrails ?? {}),
+      );
+    } catch (error) {
+      if (!this.isMissingSellerOpsTable(error)) throw error;
+    }
+  }
+
+  private async optionalQuery<T>(sql: string, params: any[] = []): Promise<T[]> {
+    try {
+      return await this.query<T>(sql, params);
+    } catch (error) {
+      if (this.isMissingSellerOpsTable(error)) return [];
+      throw error;
+    }
+  }
+
+  private async requiredQuery<T>(sql: string, params: any[] = []): Promise<T[]> {
+    try {
+      return await this.query<T>(sql, params);
+    } catch (error) {
+      return this.handleSellerOpsMutationError(error);
+    }
+  }
+
+  private async query<T>(sql: string, params: any[] = []): Promise<T[]> {
+    return this.prisma.$queryRawUnsafe<T[]>(sql, ...params);
+  }
+
+  private handleSellerOpsMutationError(error: any): never {
+    if (this.isMissingSellerOpsTable(error)) {
+      throw new BadRequestException(
+        'Seller Store Desk tables are not available yet. Apply prisma/migrations/20260603_seller_ops_product_business/migration.sql',
+      );
+    }
+    throw error;
+  }
+
+  private isMissingSellerOpsTable(error: any): boolean {
+    const text = [
+      error?.code,
+      error?.message,
+      error?.meta?.message,
+      error?.cause?.message,
+    ].filter(Boolean).join(' ');
+    return text.includes('42P01') || text.includes('does not exist');
+  }
+
+  private makeOrderNumber(prefix: string) {
+    const datePart = new Date().toISOString().slice(0, 10).replace(/-/g, '');
+    const randomPart = Math.random().toString(36).slice(2, 7).toUpperCase();
+    return `${prefix}-${datePart}-${randomPart}`;
+  }
+
+  private normalizePhone(phone: string) {
+    return phone.trim().replace(/[^\d+]/g, '');
+  }
+
+  private cleanStringList(input: string[] | undefined, fallback: string[]) {
+    const list = (input?.length ? input : fallback)
+      .map((value) => String(value).trim())
+      .filter(Boolean);
+    return [...new Set(list)];
+  }
+
+  private requireTenant(user: AuthUser) {
+    if (!user.tenant_id) {
+      throw new BadRequestException('Authenticated user is missing tenant_id');
+    }
+    return user.tenant_id;
+  }
+
+  private toNumber(value: any) {
+    if (value === null || value === undefined) return 0;
+    return Number(value);
   }
 }

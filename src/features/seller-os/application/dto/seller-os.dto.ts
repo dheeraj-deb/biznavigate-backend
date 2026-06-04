@@ -1,3 +1,4 @@
+import { Type } from 'class-transformer';
 import {
   IsArray,
   IsBoolean,
@@ -5,239 +6,27 @@ import {
   IsInt,
   IsNumber,
   IsOptional,
-  IsPositive,
   IsString,
   IsUUID,
-  Max,
   Min,
   ValidateNested,
 } from 'class-validator';
-import { Type } from 'class-transformer';
 
-export class SellerSetupProductDto {
-  @IsOptional()
+export class SellerSaleItemDto {
   @IsUUID()
-  product_id?: string;
+  item_id: string;
 
-  @IsString()
-  name: string;
-
-  @IsOptional()
-  @IsString()
-  description?: string;
-
-  @IsOptional()
-  @IsString()
-  category?: string;
-
-  @IsNumber()
-  @Min(0)
-  price: number;
-
-  @IsOptional()
-  @IsNumber()
-  @Min(0)
-  cost_price?: number;
-
-  @IsInt()
-  @Min(0)
-  stock_quantity: number;
-
-  @IsOptional()
-  @IsString()
-  sku?: string;
-}
-
-export class SellerProductsStockQueryDto {
-  @IsOptional()
-  @IsString()
-  search?: string;
-
-  @IsOptional()
-  @IsString()
-  category?: string;
-
-  @IsOptional()
-  @IsIn(['all', 'active', 'inactive', 'low_stock', 'out_of_stock'])
-  status?: string;
-
-  @IsOptional()
-  @IsInt()
-  @Type(() => Number)
-  @Min(1)
-  page?: number;
-
-  @IsOptional()
-  @IsInt()
-  @Type(() => Number)
-  @Min(1)
-  @Max(500)
-  limit?: number;
-}
-
-export class SellerProductImportRowDto {
-  @IsOptional()
   @IsUUID()
-  product_id?: string;
-
-  @IsString()
-  name: string;
-
   @IsOptional()
-  @IsString()
-  description?: string;
-
-  @IsOptional()
-  @IsString()
-  category?: string;
-
-  @IsNumber()
-  @Type(() => Number)
-  @Min(0)
-  price: number;
-
-  @IsOptional()
-  @IsNumber()
-  @Type(() => Number)
-  @Min(0)
-  cost_price?: number;
-
-  @IsOptional()
-  @IsInt()
-  @Type(() => Number)
-  @Min(0)
-  stock_quantity?: number;
-
-  @IsOptional()
-  @IsString()
-  sku?: string;
-
-  @IsOptional()
-  @IsString()
-  image_url?: string;
-
-  @IsOptional()
-  @IsBoolean()
-  is_active?: boolean;
-}
-
-export class SellerProductBulkImportDto {
-  @IsArray()
-  @ValidateNested({ each: true })
-  @Type(() => SellerProductImportRowDto)
-  products: SellerProductImportRowDto[];
-
-  @IsOptional()
-  @IsIn(['csv', 'excel', 'manual'])
-  source?: string;
-}
-
-export class SellerStockAdjustmentDto {
-  @IsUUID()
-  product_id: string;
-
-  @IsOptional()
-  @IsUUID()
-  variant_id?: string;
-
-  @IsIn(['add', 'reduce', 'set'])
-  adjustment_type: 'add' | 'reduce' | 'set';
-
-  @IsInt()
-  @Type(() => Number)
-  @Min(0)
-  quantity: number;
-
-  @IsString()
-  reason: string;
-
-  @IsOptional()
-  @IsString()
-  reference?: string;
-
-  @IsOptional()
-  @IsString()
-  note?: string;
-}
-
-export class CompleteSellerSetupDto {
-  @IsOptional()
-  @IsIn(['online_seller', 'retail_seller', 'wholesale_seller', 'product_seller'])
-  store_type?: string;
-
-  @IsOptional()
-  @IsBoolean()
-  enable_credit?: boolean;
-
-  @IsOptional()
-  @IsInt()
-  @Min(1)
-  @Max(240)
-  stock_hold_minutes?: number;
-
-  @IsOptional()
-  @IsInt()
-  @Min(0)
-  @Max(10000)
-  low_stock_threshold?: number;
-
-  @IsOptional()
-  @IsArray()
-  @IsString({ each: true })
-  payment_modes?: string[];
-
-  @IsOptional()
-  @IsArray()
-  @IsString({ each: true })
-  delivery_modes?: string[];
-
-  @IsOptional()
-  @IsArray()
-  @IsString({ each: true })
-  delivery_areas?: string[];
-
-  @IsOptional()
-  @IsNumber()
-  @Min(0)
-  default_credit_limit?: number;
-
-  @IsOptional()
-  @IsInt()
-  @Min(1)
-  @Max(365)
-  default_credit_due_days?: number;
-
-  @IsOptional()
-  @IsNumber()
-  @Min(0)
-  high_value_approval_amount?: number;
-
-  @IsOptional()
-  @IsBoolean()
-  require_owner_approval_for_credit?: boolean;
-
-  @IsOptional()
-  @IsArray()
-  @ValidateNested({ each: true })
-  @Type(() => SellerSetupProductDto)
-  products?: SellerSetupProductDto[];
-}
-
-export class ManualSaleItemDto {
-  @IsUUID()
-  product_id: string;
-
-  @IsOptional()
-  @IsUUID()
   variant_id?: string;
 
   @IsInt()
-  @IsPositive()
+  @Min(1)
   quantity: number;
 
-  @IsOptional()
   @IsNumber()
   @Min(0)
+  @IsOptional()
   discount?: number;
 }
 
@@ -245,68 +34,72 @@ export class CreateManualSaleDto {
   @IsString()
   customer_phone: string;
 
-  @IsOptional()
   @IsString()
+  @IsOptional()
   customer_name?: string;
 
-  @IsOptional()
-  @IsString()
-  delivery_address?: string;
+  @IsArray()
+  @ValidateNested({ each: true })
+  @Type(() => SellerSaleItemDto)
+  items: SellerSaleItemDto[];
 
-  @IsOptional()
   @IsString()
-  delivery_area?: string;
-
   @IsOptional()
   @IsIn(['cash', 'upi', 'card', 'cod', 'credit', 'other'])
   payment_method?: string;
 
-  @IsOptional()
-  @IsBoolean()
-  delivery_required?: boolean;
-
-  @IsOptional()
   @IsString()
+  @IsOptional()
+  payment_reference?: string;
+
+  @IsString()
+  @IsOptional()
   notes?: string;
 
-  @IsArray()
-  @ValidateNested({ each: true })
-  @Type(() => ManualSaleItemDto)
-  items: ManualSaleItemDto[];
+  @IsString()
+  @IsOptional()
+  shipping_address?: string;
+
+  @IsString()
+  @IsOptional()
+  shipping_pincode?: string;
+
+  @IsBoolean()
+  @IsOptional()
+  delivery_required?: boolean;
 }
 
 export class CreateStockReservationDto {
-  @IsUUID()
-  product_id: string;
-
-  @IsOptional()
-  @IsUUID()
-  variant_id?: string;
-
-  @IsOptional()
-  @IsUUID()
-  lead_id?: string;
-
-  @IsOptional()
   @IsString()
+  @IsOptional()
   customer_phone?: string;
 
-  @IsOptional()
   @IsString()
+  @IsOptional()
   customer_name?: string;
 
-  @IsInt()
-  @IsPositive()
-  quantity: number;
-
+  @IsUUID()
   @IsOptional()
+  customer_id?: string;
+
+  @IsUUID()
+  item_id: string;
+
+  @IsUUID()
+  @IsOptional()
+  variant_id?: string;
+
   @IsInt()
   @Min(1)
-  @Max(240)
+  quantity: number;
+
+  @IsInt()
+  @Min(5)
+  @IsOptional()
   hold_minutes?: number;
 
-  @IsOptional()
   @IsString()
+  @IsOptional()
   reason?: string;
 }
 
@@ -314,247 +107,382 @@ export class CreateCreditCustomerDto {
   @IsString()
   phone: string;
 
-  @IsOptional()
   @IsString()
+  @IsOptional()
   customer_name?: string;
 
   @IsNumber()
   @Min(0)
   credit_limit: number;
 
-  @IsOptional()
-  @IsNumber()
-  @Min(0)
-  opening_balance?: number;
-
-  @IsOptional()
   @IsInt()
   @Min(1)
-  @Max(365)
+  @IsOptional()
   due_days?: number;
 
+  @IsString()
   @IsOptional()
-  @IsIn(['approved', 'pending', 'paused', 'blocked'])
+  @IsIn(['pending', 'approved', 'paused', 'blocked'])
   status?: string;
 
-  @IsOptional()
   @IsString()
+  @IsOptional()
   notes?: string;
 }
 
-export class CollectCreditPaymentDto {
+export class UpdateCreditCustomerDto {
   @IsNumber()
+  @Min(0)
+  @IsOptional()
+  credit_limit?: number;
+
+  @IsInt()
   @Min(1)
-  amount: number;
-
   @IsOptional()
-  @IsIn(['cash', 'upi', 'card', 'bank', 'other'])
-  payment_method?: string;
+  due_days?: number;
 
-  @IsOptional()
   @IsString()
+  @IsOptional()
+  @IsIn(['pending', 'approved', 'paused', 'blocked'])
+  status?: string;
+
+  @IsString()
+  @IsOptional()
   notes?: string;
-}
-
-export class CreatePaymentRequestFromHoldDto {
-  @IsOptional()
-  @IsIn(['upi', 'cod', 'cash', 'card', 'other'])
-  payment_method?: string;
-
-  @IsOptional()
-  @IsString()
-  idempotency_key?: string;
-
-  @IsOptional()
-  @IsString()
-  payment_reference?: string;
-
-  @IsOptional()
-  @IsString()
-  delivery_address?: string;
-
-  @IsOptional()
-  @IsString()
-  delivery_area?: string;
-
-  @IsOptional()
-  @IsBoolean()
-  delivery_required?: boolean;
-
-  @IsOptional()
-  @IsString()
-  notes?: string;
-}
-
-export class MarkSellerOrderPaidDto {
-  @IsOptional()
-  @IsIn(['upi', 'cod', 'cash', 'card', 'other'])
-  payment_method?: string;
-
-  @IsOptional()
-  @IsString()
-  idempotency_key?: string;
-
-  @IsOptional()
-  @IsString()
-  payment_reference?: string;
-
-  @IsOptional()
-  @IsString()
-  notes?: string;
-}
-
-export class CancelSellerPaymentOrderDto {
-  @IsOptional()
-  @IsString()
-  idempotency_key?: string;
-
-  @IsOptional()
-  @IsString()
-  reason?: string;
 }
 
 export class CreateReturnCaseDto {
-  @IsOptional()
   @IsUUID()
+  @IsOptional()
   order_id?: string;
 
-  @IsOptional()
   @IsUUID()
-  product_id?: string;
-
   @IsOptional()
-  @IsString()
-  customer_phone?: string;
+  product_order_id?: string;
 
+  @IsUUID()
   @IsOptional()
+  customer_id?: string;
+
   @IsString()
+  @IsOptional()
+  @IsIn(['return', 'exchange', 'refund'])
+  return_type?: string;
+
+  @IsString()
+  @IsOptional()
   reason?: string;
 
-  @IsOptional()
-  @IsIn(['refund', 'exchange', 'repair', 'reject'])
-  resolution?: string;
-
-  @IsOptional()
   @IsNumber()
   @Min(0)
-  refund_amount?: number;
+  @IsOptional()
+  requested_amount?: number;
+
+  @IsArray()
+  @IsOptional()
+  items?: Array<Record<string, any>>;
 }
 
 export class CreateDeliveryDto {
-  @IsOptional()
   @IsUUID()
+  @IsOptional()
   order_id?: string;
 
-  @IsOptional()
   @IsUUID()
+  @IsOptional()
+  product_order_id?: string;
+
+  @IsUUID()
+  @IsOptional()
   customer_id?: string;
 
-  @IsOptional()
   @IsString()
-  customer_phone?: string;
-
   @IsOptional()
-  @IsIn(['pickup', 'local_delivery', 'courier'])
   delivery_mode?: string;
 
-  @IsOptional()
   @IsString()
+  @IsOptional()
+  delivery_person?: string;
+
+  @IsString()
+  @IsOptional()
+  phone?: string;
+
+  @IsString()
+  @IsOptional()
   address?: string;
 
-  @IsOptional()
   @IsString()
-  area?: string;
-
   @IsOptional()
-  @IsBoolean()
-  collect_payment?: boolean;
+  pincode?: string;
 
-  @IsOptional()
-  @IsNumber()
-  @Min(0)
-  payment_amount?: number;
-
-  @IsOptional()
   @IsString()
+  @IsOptional()
   notes?: string;
+}
+
+export class UpdateSellerStatusDto {
+  @IsString()
+  status: string;
+
+  @IsString()
+  @IsOptional()
+  note?: string;
 }
 
 export class AiGuardrailCheckDto {
   @IsString()
-  ai_employee_key: string;
-
-  @IsString()
   action: string;
 
+  @IsUUID()
   @IsOptional()
+  item_id?: string;
+
+  @IsUUID()
+  @IsOptional()
+  variant_id?: string;
+
+  @IsInt()
+  @Min(1)
+  @IsOptional()
+  quantity?: number;
+
   @IsString()
+  @IsOptional()
   customer_phone?: string;
 
-  @IsOptional()
   @IsString()
-  input_summary?: string;
-
   @IsOptional()
-  @IsString()
-  output_summary?: string;
+  payment_method?: string;
 
+  @IsNumber()
+  @Min(0)
   @IsOptional()
-  metadata?: Record<string, unknown>;
+  amount?: number;
 }
 
-export class AgentProductSearchDto {
-  @IsOptional()
+export class CreateOwnerApprovalDto {
   @IsString()
-  query?: string;
+  title: string;
+
+  @IsString()
+  @IsOptional()
+  simple_summary?: string;
+
+  @IsString()
+  action_type: string;
+
+  @IsString()
+  @IsOptional()
+  @IsIn(['low', 'medium', 'high'])
+  risk_level?: string;
+
+  @IsString()
+  @IsOptional()
+  entity_type?: string;
+
+  @IsString()
+  @IsOptional()
+  entity_id?: string;
 
   @IsOptional()
+  payload?: Record<string, any>;
+}
+
+export class SellerSetupProductDto {
   @IsString()
+  name: string;
+
+  @IsNumber()
+  @Min(0)
+  price: number;
+
+  @IsInt()
+  @Min(0)
+  stock_quantity: number;
+
+  @IsString()
+  @IsOptional()
   category?: string;
 
+  @IsString()
   @IsOptional()
+  sku?: string;
+
+  @IsNumber()
+  @Min(0)
+  @IsOptional()
+  cost_price?: number;
+
+  @IsString()
+  @IsOptional()
+  description?: string;
+}
+
+export class CompleteSellerSetupDto {
+  @IsString()
+  @IsOptional()
+  store_type?: string;
+
   @IsInt()
   @Min(1)
-  @Max(20)
-  limit?: number;
+  @IsOptional()
+  low_stock_threshold?: number;
+
+  @IsInt()
+  @Min(5)
+  @IsOptional()
+  stock_hold_minutes?: number;
+
+  @IsArray()
+  @IsString({ each: true })
+  @IsOptional()
+  payment_modes?: string[];
+
+  @IsArray()
+  @IsString({ each: true })
+  @IsOptional()
+  delivery_modes?: string[];
+
+  @IsArray()
+  @IsString({ each: true })
+  @IsOptional()
+  delivery_areas?: string[];
+
+  @IsNumber()
+  @Min(0)
+  @IsOptional()
+  default_credit_limit?: number;
+
+  @IsBoolean()
+  @IsOptional()
+  require_owner_approval_for_credit?: boolean;
+
+  @IsNumber()
+  @Min(0)
+  @IsOptional()
+  high_value_approval_amount?: number;
+
+  @IsArray()
+  @ValidateNested({ each: true })
+  @Type(() => SellerSetupProductDto)
+  @IsOptional()
+  products?: SellerSetupProductDto[];
 }
 
-export class AgentCreateOrderDto extends CreateManualSaleDto {
-  @IsOptional()
-  @IsUUID()
-  lead_id?: string;
-}
-
-export class SellerLeadListQueryDto {
-  @IsOptional()
-  @IsIn(['all', 'new', 'ai_chatting', 'stock_held', 'payment_waiting', 'needs_owner', 'won', 'lost'])
-  stage?: string;
-
-  @IsOptional()
+export class SellerProductsStockQueryDto {
   @IsString()
+  @IsOptional()
   search?: string;
 
+  @IsString()
   @IsOptional()
+  @IsIn(['all', 'active', 'inactive', 'low_stock', 'out_of_stock'])
+  status?: string;
+
+  @Type(() => Number)
   @IsInt()
   @Min(1)
-  @Max(150)
+  @IsOptional()
+  page?: number;
+
   @Type(() => Number)
+  @IsInt()
+  @Min(1)
+  @IsOptional()
   limit?: number;
 }
 
-export class UpdateSellerLeadStatusDto {
-  @IsIn(['new', 'contacted', 'qualified', 'won', 'lost'])
-  status: string;
-
+export class SellerProductImportRowDto {
+  @IsUUID()
   @IsOptional()
-  @IsString()
-  note?: string;
+  product_id?: string;
 
+  @IsUUID()
   @IsOptional()
+  item_id?: string;
+
   @IsString()
+  @IsOptional()
+  sku?: string;
+
+  @IsString()
+  @IsOptional()
+  name?: string;
+
+  @IsString()
+  @IsOptional()
+  category?: string;
+
+  @IsString()
+  @IsOptional()
+  description?: string;
+
+  @Type(() => Number)
+  @IsNumber()
+  @Min(0)
+  @IsOptional()
+  price?: number;
+
+  @Type(() => Number)
+  @IsInt()
+  @Min(0)
+  @IsOptional()
+  stock_quantity?: number;
+
+  @Type(() => Number)
+  @IsNumber()
+  @Min(0)
+  @IsOptional()
+  cost_price?: number;
+
+  @IsString()
+  @IsOptional()
+  image_url?: string;
+
+  @IsBoolean()
+  @IsOptional()
+  is_active?: boolean;
+}
+
+export class SellerProductBulkImportDto {
+  @IsArray()
+  @ValidateNested({ each: true })
+  @Type(() => SellerProductImportRowDto)
+  rows: SellerProductImportRowDto[];
+
+  @IsString()
+  @IsOptional()
+  source?: string;
+}
+
+export class SellerStockAdjustmentDto {
+  @IsUUID()
+  @IsOptional()
+  product_id?: string;
+
+  @IsUUID()
+  @IsOptional()
+  item_id?: string;
+
+  @IsUUID()
+  @IsOptional()
+  variant_id?: string;
+
+  @IsString()
+  @IsIn(['add', 'reduce', 'set'])
+  adjustment_type: string;
+
+  @Type(() => Number)
+  @IsInt()
+  @Min(0)
+  quantity: number;
+
+  @IsString()
+  @IsOptional()
   reason?: string;
 
-  @IsOptional()
   @IsString()
-  next_followup_at?: string;
+  @IsOptional()
+  note?: string;
 }

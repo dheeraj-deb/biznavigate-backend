@@ -1,0 +1,459 @@
+import { BadRequestException, Injectable, Logger, NotImplementedException } from '@nestjs/common';
+import { PrismaService } from '../../../../../prisma/prisma.service';
+import { WhatsAppApiClientService } from '../../infrastructure/whatsapp-api-client.service';
+import * as crypto from 'crypto';
+
+type ImportedProduct = {
+  id: string;
+  retailer_id?: string;
+  name?: string;
+  description?: string;
+  price?: string | number;
+  currency?: string;
+  availability?: string;
+  image_url?: string;
+};
+
+@Injectable()
+export class WhatsAppCatalogService {
+  private readonly logger = new Logger(WhatsAppCatalogService.name);
+
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly whatsappApiClient: WhatsAppApiClientService,
+  ) {}
+
+  async toggleProductInCatalog(productId: string, businessId: string, inCatalog: boolean) {
+    await this.ensureProductOwned(productId, businessId);
+    await this.prisma.external_catalog_items.upsert({
+      where: {
+        business_id_provider_external_product_id: {
+          business_id: businessId,
+          provider: 'whatsapp',
+          external_product_id: productId,
+        },
+      },
+      update: {
+        item_id: productId,
+        sync_status: inCatalog ? 'pending' : 'local_only',
+        updated_at: new Date(),
+      },
+      create: {
+        business_id: businessId,
+        item_id: productId,
+        provider: 'whatsapp',
+        external_product_id: productId,
+        retailer_id: productId,
+        sync_status: inCatalog ? 'pending' : 'local_only',
+      },
+    });
+
+    return {
+      success: true,
+      productId,
+      inCatalog,
+      message: inCatalog
+        ? 'Product marked for WhatsApp catalog sync'
+        : 'Product removed from WhatsApp catalog queue',
+    };
+  }
+
+  async bulkUpdateCatalog(businessId: string, productIds: string[]) {
+    const results = [];
+    for (const productId of productIds) {
+      results.push(await this.toggleProductInCatalog(productId, businessId, true));
+    }
+    return { success: true, updated: results.length, results };
+  }
+
+  async getCatalogProducts(businessId: string, filters?: Record<string, any>) {
+    const statusByItem = await this.getStatusMap(businessId);
+    const items = await this.prisma.catalog_items.findMany({
+      where: {
+        business_id: businessId,
+        is_active: true,
+        deleted_at: null,
+        ...(filters?.item_type ? { item_type: filters.item_type } : {}),
+      },
+      select: {
+        item_id: true,
+        name: true,
+        description: true,
+        base_price: true,
+        currency: true,
+        stock_quantity: true,
+        primary_image_url: true,
+        item_type: true,
+      },
+      orderBy: { created_at: 'desc' },
+      take: 200,
+    });
+
+    return items.map((item) => {
+      const sync = statusByItem.get(item.item_id);
+      return {
+        ...item,
+        in_whatsapp_catalog: !!sync && sync.sync_status !== 'local_only',
+        whatsapp_sync_status: sync?.sync_status ?? 'not_synced',
+        whatsapp_catalog_id: sync?.external_catalog_id ?? null,
+        whatsapp_retailer_id: sync?.retailer_id ?? null,
+        whatsapp_synced_at: sync?.last_synced_at ?? null,
+      };
+    });
+  }
+
+  async previewImport(businessId: string, limit = 100) {
+    const account = await this.getWhatsAppAccount(businessId);
+    const catalogId = account.whatsapp_catalog_id;
+    if (!catalogId) {
+      return {
+        hasCatalog: false,
+        catalogId: null,
+        count: 0,
+        products: [],
+        message: 'No WhatsApp catalog id is connected for this business yet.',
+      };
+    }
+
+    const products = await this.whatsappApiClient.getCatalogProducts(catalogId, limit);
+    return {
+      hasCatalog: true,
+      catalogId,
+      count: products.length,
+      products: products.slice(0, 20).map((product) => this.toPreview(product)),
+    };
+  }
+
+  async importFromWhatsApp(businessId: string, tenantId: string, limit = 100) {
+    const account = await this.getWhatsAppAccount(businessId);
+    const catalogId = account.whatsapp_catalog_id;
+    if (!catalogId) {
+      throw new BadRequestException('No WhatsApp catalog id is connected for this business yet.');
+    }
+
+    const products: ImportedProduct[] = await this.whatsappApiClient.getCatalogProducts(catalogId, limit);
+    let created = 0;
+    let linked = 0;
+    let skipped = 0;
+    const imported: any[] = [];
+
+    for (const product of products) {
+      if (!product?.id || !product?.name) {
+        skipped += 1;
+        continue;
+      }
+
+      const remoteHash = this.hash(product);
+      const existingMap = await this.prisma.external_catalog_items.findUnique({
+        where: {
+          business_id_provider_external_product_id: {
+            business_id: businessId,
+            provider: 'whatsapp',
+            external_product_id: product.id,
+          },
+        },
+      });
+
+      if (existingMap?.item_id) {
+        linked += 1;
+        await this.prisma.external_catalog_items.update({
+          where: { external_catalog_item_id: existingMap.external_catalog_item_id },
+          data: {
+            external_catalog_id: catalogId,
+            retailer_id: product.retailer_id,
+            sync_status: 'synced',
+            remote_hash: remoteHash,
+            raw_payload: product as any,
+            last_synced_at: new Date(),
+            updated_at: new Date(),
+          },
+        });
+        continue;
+      }
+
+      const matched = await this.findLocalMatch(businessId, product);
+      if (matched) {
+        linked += 1;
+        await this.upsertMapping({
+          businessId,
+          itemId: matched.item_id,
+          catalogId,
+          product,
+          syncStatus: 'linked',
+          remoteHash,
+        });
+        imported.push({ item_id: matched.item_id, name: matched.name, action: 'linked' });
+        continue;
+      }
+
+      const price = this.parseMetaPrice(product.price);
+      const item = await this.prisma.$transaction(async (tx) => {
+        const createdItem = await tx.catalog_items.create({
+          data: {
+            business_id: businessId,
+            tenant_id: tenantId,
+            item_type: 'physical_product',
+            name: product.name!.trim(),
+            description: product.description ?? null,
+            category: 'Imported from WhatsApp',
+            base_price: price,
+            currency: product.currency || 'INR',
+            stock_quantity: this.resolveInitialStock(product.availability),
+            primary_image_url: product.image_url ?? null,
+            image_urls: product.image_url ? [product.image_url] : undefined,
+            attributes: {
+              source: 'whatsapp_catalog',
+              availability: product.availability,
+              retailer_id: product.retailer_id,
+            },
+            ai_tags: this.buildAiTags(product),
+          },
+        });
+
+        await tx.product_item_details.create({
+          data: {
+            item_id: createdItem.item_id,
+            business_id: businessId,
+            sku: product.retailer_id ?? null,
+            metadata: {
+              source: 'whatsapp_catalog',
+              external_product_id: product.id,
+            },
+          },
+        });
+
+        await tx.external_catalog_items.create({
+          data: {
+            business_id: businessId,
+            item_id: createdItem.item_id,
+            provider: 'whatsapp',
+            external_catalog_id: catalogId,
+            external_product_id: product.id,
+            retailer_id: product.retailer_id,
+            sync_status: 'synced',
+            last_synced_at: new Date(),
+            remote_hash: remoteHash,
+            local_hash: this.hash(createdItem),
+            raw_payload: product as any,
+          },
+        });
+
+        return createdItem;
+      });
+
+      created += 1;
+      imported.push({ item_id: item.item_id, name: item.name, action: 'created' });
+    }
+
+    return {
+      success: true,
+      catalogId,
+      fetched: products.length,
+      created,
+      linked,
+      skipped,
+      imported,
+    };
+  }
+
+  async syncToWhatsApp(businessId: string) {
+    await this.getWhatsAppAccount(businessId);
+    throw new NotImplementedException(
+      'Sending products back to WhatsApp requires Meta catalog write permissions. Import and local sync tracking are ready.',
+    );
+  }
+
+  async removeFromWhatsAppCatalog(productId: string, businessId: string) {
+    await this.ensureProductOwned(productId, businessId);
+    await this.prisma.external_catalog_items.updateMany({
+      where: { business_id: businessId, item_id: productId, provider: 'whatsapp' },
+      data: { sync_status: 'local_only', updated_at: new Date() },
+    });
+    return { success: true, productId };
+  }
+
+  async syncProductAvailabilityToCatalog(productId: string): Promise<void> {
+    const item = await this.prisma.catalog_items.findUnique({ where: { item_id: productId } });
+    if (!item) return;
+
+    await this.prisma.external_catalog_items.updateMany({
+      where: { business_id: item.business_id, item_id: productId, provider: 'whatsapp' },
+      data: { sync_status: 'pending', local_hash: this.hash(item), updated_at: new Date() },
+    });
+  }
+
+  async getCatalogId(businessId: string): Promise<string> {
+    const account = await this.getWhatsAppAccount(businessId);
+    if (!account.whatsapp_catalog_id) {
+      throw new BadRequestException('No WhatsApp catalog id is connected for this business yet.');
+    }
+    return account.whatsapp_catalog_id;
+  }
+
+  async getSyncStatus(businessId: string) {
+    const rows = await this.prisma.external_catalog_items.groupBy({
+      by: ['sync_status'],
+      where: { business_id: businessId, provider: 'whatsapp' },
+      _count: { _all: true },
+    });
+    const latest = await this.prisma.external_catalog_items.findFirst({
+      where: { business_id: businessId, provider: 'whatsapp', last_synced_at: { not: null } },
+      orderBy: { last_synced_at: 'desc' },
+      select: { last_synced_at: true },
+    });
+
+    const stats = rows.reduce<Record<string, number>>((acc, row) => {
+      acc[row.sync_status] = row._count._all;
+      return acc;
+    }, {});
+
+    return {
+      stats,
+      totalProducts: Object.values(stats).reduce((sum, count) => sum + count, 0),
+      synced: stats.synced ?? 0,
+      pending: stats.pending ?? 0,
+      failed: stats.failed ?? 0,
+      lastSync: latest?.last_synced_at ?? null,
+      lastSyncAt: latest?.last_synced_at ?? null,
+    };
+  }
+
+  private async getWhatsAppAccount(businessId: string) {
+    const account = await this.prisma.social_accounts.findFirst({
+      where: { business_id: businessId, platform: 'whatsapp', is_active: true },
+      orderBy: { updated_at: 'desc' },
+    });
+
+    if (!account) {
+      throw new BadRequestException('Connect WhatsApp before importing catalog products.');
+    }
+    return account;
+  }
+
+  private async ensureProductOwned(productId: string, businessId: string) {
+    const product = await this.prisma.catalog_items.findFirst({
+      where: { item_id: productId, business_id: businessId, deleted_at: null },
+      select: { item_id: true },
+    });
+    if (!product) {
+      throw new BadRequestException('Product not found for this business.');
+    }
+  }
+
+  private async getStatusMap(businessId: string) {
+    const rows = await this.prisma.external_catalog_items.findMany({
+      where: { business_id: businessId, provider: 'whatsapp' },
+      select: {
+        item_id: true,
+        sync_status: true,
+        external_catalog_id: true,
+        retailer_id: true,
+        last_synced_at: true,
+      },
+    });
+    return new Map(rows.filter((row) => row.item_id).map((row) => [row.item_id!, row]));
+  }
+
+  private async findLocalMatch(businessId: string, product: ImportedProduct) {
+    if (product.retailer_id) {
+      const bySku = await this.prisma.catalog_items.findFirst({
+        where: {
+          business_id: businessId,
+          item_type: 'physical_product',
+          deleted_at: null,
+          product_detail: { is: { sku: product.retailer_id } },
+        },
+      });
+      if (bySku) return bySku;
+    }
+
+    return this.prisma.catalog_items.findFirst({
+      where: {
+        business_id: businessId,
+        item_type: 'physical_product',
+        deleted_at: null,
+        name: { equals: product.name ?? '', mode: 'insensitive' },
+      },
+    });
+  }
+
+  private async upsertMapping(params: {
+    businessId: string;
+    itemId: string;
+    catalogId: string;
+    product: ImportedProduct;
+    syncStatus: string;
+    remoteHash: string;
+  }) {
+    await this.prisma.external_catalog_items.upsert({
+      where: {
+        business_id_provider_external_product_id: {
+          business_id: params.businessId,
+          provider: 'whatsapp',
+          external_product_id: params.product.id,
+        },
+      },
+      update: {
+        item_id: params.itemId,
+        external_catalog_id: params.catalogId,
+        retailer_id: params.product.retailer_id,
+        sync_status: params.syncStatus,
+        remote_hash: params.remoteHash,
+        raw_payload: params.product as any,
+        last_synced_at: new Date(),
+        updated_at: new Date(),
+      },
+      create: {
+        business_id: params.businessId,
+        item_id: params.itemId,
+        provider: 'whatsapp',
+        external_catalog_id: params.catalogId,
+        external_product_id: params.product.id,
+        retailer_id: params.product.retailer_id,
+        sync_status: params.syncStatus,
+        remote_hash: params.remoteHash,
+        raw_payload: params.product as any,
+        last_synced_at: new Date(),
+      },
+    });
+  }
+
+  private toPreview(product: ImportedProduct) {
+    return {
+      external_product_id: product.id,
+      retailer_id: product.retailer_id,
+      name: product.name,
+      description: product.description,
+      price: product.price,
+      currency: product.currency,
+      availability: product.availability,
+      image_url: product.image_url,
+    };
+  }
+
+  private parseMetaPrice(value: string | number | undefined): number {
+    if (typeof value === 'number') return Math.max(value, 0);
+    if (!value) return 0;
+    const parsed = Number(String(value).replace(/[^\d.]/g, ''));
+    return Number.isFinite(parsed) ? parsed : 0;
+  }
+
+  private resolveInitialStock(availability?: string): number {
+    if (!availability) return 1;
+    return ['out of stock', 'out_of_stock', 'unavailable'].includes(availability.toLowerCase()) ? 0 : 1;
+  }
+
+  private buildAiTags(product: ImportedProduct): string[] {
+    return [product.name, product.description, product.retailer_id]
+      .filter(Boolean)
+      .join(' ')
+      .toLowerCase()
+      .split(/[^a-z0-9]+/)
+      .filter((tag, index, arr) => tag.length > 2 && arr.indexOf(tag) === index)
+      .slice(0, 20);
+  }
+
+  private hash(value: any): string {
+    return crypto.createHash('sha256').update(JSON.stringify(value ?? {})).digest('hex');
+  }
+}

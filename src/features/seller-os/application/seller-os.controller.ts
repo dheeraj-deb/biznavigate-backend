@@ -1,34 +1,19 @@
-import {
-  Body,
-  Controller,
-  Get,
-  Param,
-  Patch,
-  Post,
-  Query,
-  Req,
-  UseGuards,
-} from '@nestjs/common';
+import { Body, Controller, Get, Param, Patch, Post, Query, Req, UseGuards } from '@nestjs/common';
 import { JwtAuthGuard } from '../../../common/guards/jwt-auth.guard';
 import {
-  AgentCreateOrderDto,
-  AgentProductSearchDto,
   AiGuardrailCheckDto,
-  CancelSellerPaymentOrderDto,
-  CollectCreditPaymentDto,
   CompleteSellerSetupDto,
   CreateCreditCustomerDto,
   CreateDeliveryDto,
   CreateManualSaleDto,
-  CreatePaymentRequestFromHoldDto,
+  CreateOwnerApprovalDto,
   CreateReturnCaseDto,
   CreateStockReservationDto,
-  MarkSellerOrderPaidDto,
   SellerProductBulkImportDto,
   SellerProductsStockQueryDto,
   SellerStockAdjustmentDto,
-  SellerLeadListQueryDto,
-  UpdateSellerLeadStatusDto,
+  UpdateCreditCustomerDto,
+  UpdateSellerStatusDto,
 } from './dto/seller-os.dto';
 import { SellerOsService } from './seller-os.service';
 
@@ -36,6 +21,11 @@ import { SellerOsService } from './seller-os.service';
 @UseGuards(JwtAuthGuard)
 export class SellerOsController {
   constructor(private readonly sellerOsService: SellerOsService) {}
+
+  @Get('overview')
+  getOverview(@Req() req: any) {
+    return this.sellerOsService.getOverview(req.user);
+  }
 
   @Get('setup')
   getSetup(@Req() req: any) {
@@ -45,11 +35,6 @@ export class SellerOsController {
   @Post('setup/complete')
   completeSetup(@Req() req: any, @Body() dto: CompleteSellerSetupDto) {
     return this.sellerOsService.completeSetup(req.user, dto);
-  }
-
-  @Get('overview')
-  getOverview(@Req() req: any) {
-    return this.sellerOsService.getOverview(req.user);
   }
 
   @Get('products-stock')
@@ -72,20 +57,6 @@ export class SellerOsController {
     return this.sellerOsService.getStockAdjustments(req.user, query);
   }
 
-  @Get('leads')
-  getSellerLeads(@Req() req: any, @Query() query: SellerLeadListQueryDto) {
-    return this.sellerOsService.getSellerLeads(req.user, query);
-  }
-
-  @Patch('leads/:id/status')
-  updateSellerLeadStatus(
-    @Req() req: any,
-    @Param('id') id: string,
-    @Body() dto: UpdateSellerLeadStatusDto,
-  ) {
-    return this.sellerOsService.updateSellerLeadStatus(req.user, id, dto);
-  }
-
   @Post('manual-sales')
   createManualSale(@Req() req: any, @Body() dto: CreateManualSaleDto) {
     return this.sellerOsService.createManualSale(req.user, dto);
@@ -96,9 +67,9 @@ export class SellerOsController {
     return this.sellerOsService.createStockReservation(req.user, dto);
   }
 
-  @Patch('stock-reservations/:id/release')
-  releaseStockReservation(@Req() req: any, @Param('id') id: string) {
-    return this.sellerOsService.releaseStockReservation(req.user, id);
+  @Patch('stock-reservations/:reservationId/release')
+  releaseStockReservation(@Req() req: any, @Param('reservationId') reservationId: string) {
+    return this.sellerOsService.releaseStockReservation(req.user, reservationId);
   }
 
   @Get('credit-customers')
@@ -106,55 +77,18 @@ export class SellerOsController {
     return this.sellerOsService.listCreditCustomers(req.user);
   }
 
-  @Get('credit-customers/check')
-  checkCreditCustomer(@Req() req: any, @Query('phone') phone: string) {
-    return this.sellerOsService.checkCreditCustomer(req.user, phone);
-  }
-
   @Post('credit-customers')
-  createCreditCustomer(@Req() req: any, @Body() dto: CreateCreditCustomerDto) {
-    return this.sellerOsService.createCreditCustomer(req.user, dto);
+  upsertCreditCustomer(@Req() req: any, @Body() dto: CreateCreditCustomerDto) {
+    return this.sellerOsService.upsertCreditCustomer(req.user, dto);
   }
 
-  @Post('credit-customers/:id/payments')
-  collectCreditPayment(
+  @Patch('credit-customers/:creditAccountId')
+  updateCreditCustomer(
     @Req() req: any,
-    @Param('id') id: string,
-    @Body() dto: CollectCreditPaymentDto,
+    @Param('creditAccountId') creditAccountId: string,
+    @Body() dto: UpdateCreditCustomerDto,
   ) {
-    return this.sellerOsService.collectCreditPayment(req.user, id, dto);
-  }
-
-  @Get('payment-desk')
-  getPaymentDesk(@Req() req: any) {
-    return this.sellerOsService.getPaymentDesk(req.user);
-  }
-
-  @Post('payment-desk/holds/:id/payment-request')
-  createPaymentRequestFromHold(
-    @Req() req: any,
-    @Param('id') id: string,
-    @Body() dto: CreatePaymentRequestFromHoldDto,
-  ) {
-    return this.sellerOsService.createPaymentRequestFromHold(req.user, id, dto);
-  }
-
-  @Patch('payment-desk/orders/:id/paid')
-  markSellerOrderPaid(
-    @Req() req: any,
-    @Param('id') id: string,
-    @Body() dto: MarkSellerOrderPaidDto,
-  ) {
-    return this.sellerOsService.markSellerOrderPaid(req.user, id, dto);
-  }
-
-  @Patch('payment-desk/orders/:id/cancel')
-  cancelSellerPaymentOrder(
-    @Req() req: any,
-    @Param('id') id: string,
-    @Body() dto: CancelSellerPaymentOrderDto,
-  ) {
-    return this.sellerOsService.cancelSellerPaymentOrder(req.user, id, dto);
+    return this.sellerOsService.updateCreditCustomer(req.user, creditAccountId, dto);
   }
 
   @Post('returns')
@@ -162,37 +96,46 @@ export class SellerOsController {
     return this.sellerOsService.createReturnCase(req.user, dto);
   }
 
+  @Patch('returns/:returnId/status')
+  updateReturnStatus(
+    @Req() req: any,
+    @Param('returnId') returnId: string,
+    @Body() dto: UpdateSellerStatusDto,
+  ) {
+    return this.sellerOsService.updateReturnStatus(req.user, returnId, dto);
+  }
+
   @Post('deliveries')
   createDelivery(@Req() req: any, @Body() dto: CreateDeliveryDto) {
     return this.sellerOsService.createDelivery(req.user, dto);
   }
 
-  @Patch('approvals/:id/status')
-  updateApprovalStatus(
+  @Patch('deliveries/:deliveryId/status')
+  updateDeliveryStatus(
     @Req() req: any,
-    @Param('id') id: string,
-    @Body() body: { status: 'approved' | 'rejected'; notes?: string },
+    @Param('deliveryId') deliveryId: string,
+    @Body() dto: UpdateSellerStatusDto,
   ) {
-    return this.sellerOsService.updateApprovalStatus(req.user, id, body.status, body.notes);
+    return this.sellerOsService.updateDeliveryStatus(req.user, deliveryId, dto);
+  }
+
+  @Post('approvals')
+  createApproval(@Req() req: any, @Body() dto: CreateOwnerApprovalDto) {
+    return this.sellerOsService.createApproval(req.user, dto);
+  }
+
+  @Patch('approvals/:approvalId/approve')
+  approve(@Req() req: any, @Param('approvalId') approvalId: string) {
+    return this.sellerOsService.decideApproval(req.user, approvalId, 'approved');
+  }
+
+  @Patch('approvals/:approvalId/reject')
+  reject(@Req() req: any, @Param('approvalId') approvalId: string) {
+    return this.sellerOsService.decideApproval(req.user, approvalId, 'rejected');
   }
 
   @Post('ai/check')
-  aiGuardrailCheck(@Req() req: any, @Body() dto: AiGuardrailCheckDto) {
-    return this.sellerOsService.aiGuardrailCheck(req.user, dto);
-  }
-
-  @Get('agent/products/search')
-  searchProductsForAgent(@Req() req: any, @Query() query: AgentProductSearchDto) {
-    return this.sellerOsService.searchProductsForAgent(req.user, query);
-  }
-
-  @Post('agent/stock-reservations')
-  reserveForAgent(@Req() req: any, @Body() dto: CreateStockReservationDto) {
-    return this.sellerOsService.createStockReservation(req.user, dto, 'whatsapp_ai');
-  }
-
-  @Post('agent/orders')
-  createAgentOrder(@Req() req: any, @Body() dto: AgentCreateOrderDto) {
-    return this.sellerOsService.createAgentOrder(req.user, dto);
+  checkAiGuardrails(@Req() req: any, @Body() dto: AiGuardrailCheckDto) {
+    return this.sellerOsService.checkAiGuardrails(req.user, dto);
   }
 }

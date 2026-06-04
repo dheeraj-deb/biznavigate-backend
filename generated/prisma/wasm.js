@@ -5,13 +5,28 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 
 const {
+  PrismaClientKnownRequestError,
+  PrismaClientUnknownRequestError,
+  PrismaClientRustPanicError,
+  PrismaClientInitializationError,
+  PrismaClientValidationError,
+  getPrismaClient,
+  sqltag,
+  empty,
+  join,
+  raw,
+  skip,
   Decimal,
+  Debug,
   objectEnumValues,
   makeStrictEnum,
+  Extensions,
+  warnOnce,
+  defineDmmfProperty,
   Public,
   getRuntime,
-  skip
-} = require('./runtime/index-browser.js')
+  createParam,
+} = require('./runtime/wasm.js')
 
 
 const Prisma = {}
@@ -28,71 +43,27 @@ Prisma.prismaVersion = {
   engine: "3cff47a7f5d65c3ea74883f1d736e41d68ce91ed"
 }
 
-Prisma.PrismaClientKnownRequestError = () => {
-  const runtimeName = getRuntime().prettyName;
-  throw new Error(`PrismaClientKnownRequestError is unable to run in this browser environment, or has been bundled for the browser (running in ${runtimeName}).
-In case this error is unexpected for you, please report it in https://pris.ly/prisma-prisma-bug-report`,
-)};
-Prisma.PrismaClientUnknownRequestError = () => {
-  const runtimeName = getRuntime().prettyName;
-  throw new Error(`PrismaClientUnknownRequestError is unable to run in this browser environment, or has been bundled for the browser (running in ${runtimeName}).
-In case this error is unexpected for you, please report it in https://pris.ly/prisma-prisma-bug-report`,
-)}
-Prisma.PrismaClientRustPanicError = () => {
-  const runtimeName = getRuntime().prettyName;
-  throw new Error(`PrismaClientRustPanicError is unable to run in this browser environment, or has been bundled for the browser (running in ${runtimeName}).
-In case this error is unexpected for you, please report it in https://pris.ly/prisma-prisma-bug-report`,
-)}
-Prisma.PrismaClientInitializationError = () => {
-  const runtimeName = getRuntime().prettyName;
-  throw new Error(`PrismaClientInitializationError is unable to run in this browser environment, or has been bundled for the browser (running in ${runtimeName}).
-In case this error is unexpected for you, please report it in https://pris.ly/prisma-prisma-bug-report`,
-)}
-Prisma.PrismaClientValidationError = () => {
-  const runtimeName = getRuntime().prettyName;
-  throw new Error(`PrismaClientValidationError is unable to run in this browser environment, or has been bundled for the browser (running in ${runtimeName}).
-In case this error is unexpected for you, please report it in https://pris.ly/prisma-prisma-bug-report`,
-)}
+Prisma.PrismaClientKnownRequestError = PrismaClientKnownRequestError;
+Prisma.PrismaClientUnknownRequestError = PrismaClientUnknownRequestError
+Prisma.PrismaClientRustPanicError = PrismaClientRustPanicError
+Prisma.PrismaClientInitializationError = PrismaClientInitializationError
+Prisma.PrismaClientValidationError = PrismaClientValidationError
 Prisma.Decimal = Decimal
 
 /**
  * Re-export of sql-template-tag
  */
-Prisma.sql = () => {
-  const runtimeName = getRuntime().prettyName;
-  throw new Error(`sqltag is unable to run in this browser environment, or has been bundled for the browser (running in ${runtimeName}).
-In case this error is unexpected for you, please report it in https://pris.ly/prisma-prisma-bug-report`,
-)}
-Prisma.empty = () => {
-  const runtimeName = getRuntime().prettyName;
-  throw new Error(`empty is unable to run in this browser environment, or has been bundled for the browser (running in ${runtimeName}).
-In case this error is unexpected for you, please report it in https://pris.ly/prisma-prisma-bug-report`,
-)}
-Prisma.join = () => {
-  const runtimeName = getRuntime().prettyName;
-  throw new Error(`join is unable to run in this browser environment, or has been bundled for the browser (running in ${runtimeName}).
-In case this error is unexpected for you, please report it in https://pris.ly/prisma-prisma-bug-report`,
-)}
-Prisma.raw = () => {
-  const runtimeName = getRuntime().prettyName;
-  throw new Error(`raw is unable to run in this browser environment, or has been bundled for the browser (running in ${runtimeName}).
-In case this error is unexpected for you, please report it in https://pris.ly/prisma-prisma-bug-report`,
-)}
+Prisma.sql = sqltag
+Prisma.empty = empty
+Prisma.join = join
+Prisma.raw = raw
 Prisma.validator = Public.validator
 
 /**
 * Extensions
 */
-Prisma.getExtensionContext = () => {
-  const runtimeName = getRuntime().prettyName;
-  throw new Error(`Extensions.getExtensionContext is unable to run in this browser environment, or has been bundled for the browser (running in ${runtimeName}).
-In case this error is unexpected for you, please report it in https://pris.ly/prisma-prisma-bug-report`,
-)}
-Prisma.defineExtension = () => {
-  const runtimeName = getRuntime().prettyName;
-  throw new Error(`Extensions.defineExtension is unable to run in this browser environment, or has been bundled for the browser (running in ${runtimeName}).
-In case this error is unexpected for you, please report it in https://pris.ly/prisma-prisma-bug-report`,
-)}
+Prisma.getExtensionContext = Extensions.getExtensionContext
+Prisma.defineExtension = Extensions.defineExtension
 
 /**
  * Shorthand utilities for JSON filtering
@@ -109,10 +80,11 @@ Prisma.NullTypes = {
 
 
 
+
+
 /**
  * Enums
  */
-
 exports.Prisma.TransactionIsolationLevel = makeStrictEnum({
   ReadUncommitted: 'ReadUncommitted',
   ReadCommitted: 'ReadCommitted',
@@ -125,13 +97,33 @@ exports.Prisma.BusinessesScalarFieldEnum = {
   tenant_id: 'tenant_id',
   business_name: 'business_name',
   business_type: 'business_type',
-  subscription_plan_id: 'subscription_plan_id',
+  business_group: 'business_group',
+  communication_mode: 'communication_mode',
+  blueprint_seeded: 'blueprint_seeded',
+  blueprint_seeded_at: 'blueprint_seeded_at',
   whatsapp_number: 'whatsapp_number',
-  brand_colors: 'brand_colors',
-  logo_url: 'logo_url',
-  working_hours: 'working_hours',
   created_at: 'created_at',
-  updated_at: 'updated_at'
+  updated_at: 'updated_at',
+  email: 'email',
+  phone: 'phone',
+  website: 'website',
+  public_booking_slug: 'public_booking_slug',
+  city: 'city',
+  address: 'address',
+  country: 'country',
+  gst_number: 'gst_number',
+  pan_number: 'pan_number',
+  deleted_at: 'deleted_at'
+};
+
+exports.Prisma.Business_employeesScalarFieldEnum = {
+  employee_id: 'employee_id',
+  business_id: 'business_id',
+  name: 'name',
+  email: 'email',
+  phone: 'phone',
+  role: 'role',
+  created_at: 'created_at'
 };
 
 exports.Prisma.IntentsScalarFieldEnum = {
@@ -181,15 +173,12 @@ exports.Prisma.Social_accountsScalarFieldEnum = {
   updated_at: 'updated_at',
   username: 'username',
   instagram_catalog_id: 'instagram_catalog_id',
-  whatsapp_catalog_id: 'whatsapp_catalog_id'
-};
-
-exports.Prisma.Subscription_plansScalarFieldEnum = {
-  subscription_plan_id: 'subscription_plan_id',
-  plan_name: 'plan_name',
-  price: 'price',
-  duration_in_days: 'duration_in_days',
-  created_at: 'created_at'
+  whatsapp_catalog_id: 'whatsapp_catalog_id',
+  gupshup_app_id: 'gupshup_app_id',
+  gupshup_app_status: 'gupshup_app_status',
+  meta_account_review_status: 'meta_account_review_status',
+  meta_verification_checked_at: 'meta_verification_checked_at',
+  meta_verified_name: 'meta_verified_name'
 };
 
 exports.Prisma.TenantsScalarFieldEnum = {
@@ -215,6 +204,7 @@ exports.Prisma.UsersScalarFieldEnum = {
   phone_number: 'phone_number',
   is_active: 'is_active',
   profile_completed: 'profile_completed',
+  deleted_at: 'deleted_at',
   created_at: 'created_at',
   updated_at: 'updated_at',
   role_id: 'role_id',
@@ -235,314 +225,81 @@ exports.Prisma.LeadsScalarFieldEnum = {
   lead_id: 'lead_id',
   business_id: 'business_id',
   tenant_id: 'tenant_id',
-  source: 'source',
-  source_reference_id: 'source_reference_id',
-  platform_user_id: 'platform_user_id',
-  post_id: 'post_id',
-  page_id: 'page_id',
-  first_name: 'first_name',
-  last_name: 'last_name',
+  name: 'name',
   phone: 'phone',
   email: 'email',
-  alternate_phone: 'alternate_phone',
-  city: 'city',
-  state: 'state',
-  country: 'country',
-  pincode: 'pincode',
+  channel: 'channel',
+  source: 'source',
+  platform_id: 'platform_id',
   status: 'status',
-  intent_type: 'intent_type',
-  lead_quality: 'lead_quality',
-  lead_score: 'lead_score',
-  assigned_agent_id: 'assigned_agent_id',
-  assigned_at: 'assigned_at',
-  assigned_by: 'assigned_by',
-  first_contact_at: 'first_contact_at',
-  last_contact_at: 'last_contact_at',
-  last_activity_at: 'last_activity_at',
-  next_followup_at: 'next_followup_at',
-  followup_count: 'followup_count',
-  is_converted: 'is_converted',
-  converted_at: 'converted_at',
-  conversion_value: 'conversion_value',
-  interested_products: 'interested_products',
-  interested_courses: 'interested_courses',
-  tags: 'tags',
-  custom_fields: 'custom_fields',
-  extracted_entities: 'extracted_entities',
-  sentiment_score: 'sentiment_score',
-  preferred_contact_method: 'preferred_contact_method',
-  preferred_contact_time: 'preferred_contact_time',
-  language_preference: 'language_preference',
-  utm_source: 'utm_source',
-  utm_medium: 'utm_medium',
-  utm_campaign: 'utm_campaign',
-  referral_source: 'referral_source',
+  stage_id: 'stage_id',
+  pipeline_id: 'pipeline_id',
   lost_reason: 'lost_reason',
-  lost_at: 'lost_at',
-  invalid_reason: 'invalid_reason',
-  is_active: 'is_active',
-  is_duplicate: 'is_duplicate',
-  duplicate_of_lead_id: 'duplicate_of_lead_id',
-  created_at: 'created_at',
-  updated_at: 'updated_at',
-  created_by: 'created_by',
-  updated_by: 'updated_by',
+  context: 'context',
+  lead_type: 'lead_type',
+  qualification_score: 'qualification_score',
+  exit_intent_sent_at: 'exit_intent_sent_at',
+  exit_captured_at: 'exit_captured_at',
+  exit_reason: 'exit_reason',
+  quoted_amount: 'quoted_amount',
+  quoted_at: 'quoted_at',
+  converted_value: 'converted_value',
+  converted_at: 'converted_at',
+  tags: 'tags',
+  assigned_to: 'assigned_to',
+  followup_at: 'followup_at',
   deleted_at: 'deleted_at',
-  deleted_by: 'deleted_by',
-  onboarding_completed: 'onboarding_completed',
-  delivery_address: 'delivery_address'
+  created_at: 'created_at',
+  updated_at: 'updated_at'
 };
 
-exports.Prisma.Lead_activitiesScalarFieldEnum = {
-  activity_id: 'activity_id',
+exports.Prisma.PipelinesScalarFieldEnum = {
+  pipeline_id: 'pipeline_id',
+  business_id: 'business_id',
+  name: 'name',
+  industry: 'industry',
+  is_default: 'is_default',
+  is_archived: 'is_archived',
+  created_at: 'created_at',
+  updated_at: 'updated_at'
+};
+
+exports.Prisma.Pipeline_stagesScalarFieldEnum = {
+  stage_id: 'stage_id',
+  pipeline_id: 'pipeline_id',
+  business_id: 'business_id',
+  name: 'name',
+  slug: 'slug',
+  position: 'position',
+  is_won: 'is_won',
+  is_lost: 'is_lost',
+  color: 'color',
+  created_at: 'created_at'
+};
+
+exports.Prisma.Lead_eventsScalarFieldEnum = {
+  event_id: 'event_id',
   lead_id: 'lead_id',
   business_id: 'business_id',
-  tenant_id: 'tenant_id',
-  activity_type: 'activity_type',
-  activity_description: 'activity_description',
-  actor_type: 'actor_type',
+  type: 'type',
+  actor: 'actor',
   actor_id: 'actor_id',
-  actor_name: 'actor_name',
-  channel: 'channel',
-  message_content: 'message_content',
-  metadata: 'metadata',
-  activity_timestamp: 'activity_timestamp',
+  data: 'data',
   created_at: 'created_at'
-};
-
-exports.Prisma.Lead_conversationsScalarFieldEnum = {
-  conversation_id: 'conversation_id',
-  lead_id: 'lead_id',
-  business_id: 'business_id',
-  tenant_id: 'tenant_id',
-  channel: 'channel',
-  platform_conversation_id: 'platform_conversation_id',
-  customer_identifier: 'customer_identifier',
-  agent_id: 'agent_id',
-  status: 'status',
-  is_ai_handled: 'is_ai_handled',
-  ai_takeover_at: 'ai_takeover_at',
-  human_takeover_at: 'human_takeover_at',
-  human_takeover_reason: 'human_takeover_reason',
-  message_count: 'message_count',
-  ai_message_count: 'ai_message_count',
-  agent_message_count: 'agent_message_count',
-  customer_message_count: 'customer_message_count',
-  first_response_time_seconds: 'first_response_time_seconds',
-  avg_response_time_seconds: 'avg_response_time_seconds',
-  is_resolved: 'is_resolved',
-  resolved_at: 'resolved_at',
-  resolution_time_seconds: 'resolution_time_seconds',
-  started_at: 'started_at',
-  last_message_at: 'last_message_at',
-  closed_at: 'closed_at',
-  created_at: 'created_at',
-  updated_at: 'updated_at'
-};
-
-exports.Prisma.Lead_messagesScalarFieldEnum = {
-  message_id: 'message_id',
-  conversation_id: 'conversation_id',
-  lead_id: 'lead_id',
-  business_id: 'business_id',
-  tenant_id: 'tenant_id',
-  sender_type: 'sender_type',
-  sender_id: 'sender_id',
-  sender_name: 'sender_name',
-  message_text: 'message_text',
-  message_type: 'message_type',
-  media_url: 'media_url',
-  media_type: 'media_type',
-  platform_message_id: 'platform_message_id',
-  delivery_status: 'delivery_status',
-  delivered_at: 'delivered_at',
-  read_at: 'read_at',
-  failed_reason: 'failed_reason',
-  intent_detected: 'intent_detected',
-  entities_extracted: 'entities_extracted',
-  ai_confidence: 'ai_confidence',
-  sentiment: 'sentiment',
-  requires_human_response: 'requires_human_response',
-  reply_to_message_id: 'reply_to_message_id',
-  is_automated: 'is_automated',
-  template_used: 'template_used',
-  metadata: 'metadata',
-  timestamp: 'timestamp',
-  created_at: 'created_at'
-};
-
-exports.Prisma.TagsScalarFieldEnum = {
-  tag_id: 'tag_id',
-  business_id: 'business_id',
-  tenant_id: 'tenant_id',
-  tag_name: 'tag_name',
-  tag_category: 'tag_category',
-  tag_color: 'tag_color',
-  is_system: 'is_system',
-  created_at: 'created_at'
-};
-
-exports.Prisma.Lead_tag_assignmentsScalarFieldEnum = {
-  assignment_id: 'assignment_id',
-  lead_id: 'lead_id',
-  tag_id: 'tag_id',
-  assigned_by: 'assigned_by',
-  assigned_at: 'assigned_at'
-};
-
-exports.Prisma.Lead_notesScalarFieldEnum = {
-  note_id: 'note_id',
-  lead_id: 'lead_id',
-  business_id: 'business_id',
-  tenant_id: 'tenant_id',
-  note_text: 'note_text',
-  note_type: 'note_type',
-  is_pinned: 'is_pinned',
-  visibility: 'visibility',
-  created_by: 'created_by',
-  created_at: 'created_at',
-  updated_at: 'updated_at'
-};
-
-exports.Prisma.Lead_status_historyScalarFieldEnum = {
-  history_id: 'history_id',
-  lead_id: 'lead_id',
-  business_id: 'business_id',
-  tenant_id: 'tenant_id',
-  from_status: 'from_status',
-  to_status: 'to_status',
-  changed_by: 'changed_by',
-  changed_by_type: 'changed_by_type',
-  reason: 'reason',
-  duration_in_previous_status: 'duration_in_previous_status',
-  changed_at: 'changed_at'
 };
 
 exports.Prisma.Lead_followupsScalarFieldEnum = {
   followup_id: 'followup_id',
   lead_id: 'lead_id',
   business_id: 'business_id',
-  tenant_id: 'tenant_id',
-  followup_type: 'followup_type',
-  followup_description: 'followup_description',
+  note: 'note',
   scheduled_at: 'scheduled_at',
-  scheduled_by: 'scheduled_by',
   assigned_to: 'assigned_to',
-  status: 'status',
-  completed_at: 'completed_at',
-  completed_by: 'completed_by',
-  completion_notes: 'completion_notes',
-  reminder_sent: 'reminder_sent',
-  reminder_sent_at: 'reminder_sent_at',
-  created_at: 'created_at',
-  updated_at: 'updated_at'
-};
-
-exports.Prisma.Lead_duplicatesScalarFieldEnum = {
-  duplicate_id: 'duplicate_id',
-  business_id: 'business_id',
-  tenant_id: 'tenant_id',
-  lead_id_1: 'lead_id_1',
-  lead_id_2: 'lead_id_2',
-  similarity_score: 'similarity_score',
-  match_type: 'match_type',
-  matched_fields: 'matched_fields',
-  is_confirmed_duplicate: 'is_confirmed_duplicate',
-  merged_into_lead_id: 'merged_into_lead_id',
-  detected_at: 'detected_at',
-  reviewed_at: 'reviewed_at',
-  reviewed_by: 'reviewed_by'
-};
-
-exports.Prisma.ProductsScalarFieldEnum = {
-  product_id: 'product_id',
-  business_id: 'business_id',
-  tenant_id: 'tenant_id',
-  product_type: 'product_type',
-  name: 'name',
-  description: 'description',
-  category: 'category',
-  price: 'price',
-  stock_quantity: 'stock_quantity',
-  image_urls: 'image_urls',
-  is_active: 'is_active',
-  created_at: 'created_at',
-  updated_at: 'updated_at',
-  ai_enhanced_description: 'ai_enhanced_description',
-  ai_generated_tags: 'ai_generated_tags',
-  compare_price: 'compare_price',
-  currency: 'currency',
-  has_variants: 'has_variants',
-  in_stock: 'in_stock',
-  primary_image_url: 'primary_image_url',
-  reserved_stock: 'reserved_stock',
-  sku: 'sku',
-  slug: 'slug',
-  track_inventory: 'track_inventory',
-  version: 'version',
-  category_id: 'category_id',
-  in_whatsapp_catalog: 'in_whatsapp_catalog',
-  whatsapp_catalog_id: 'whatsapp_catalog_id',
-  whatsapp_sync_status: 'whatsapp_sync_status',
-  whatsapp_sync_error: 'whatsapp_sync_error',
-  whatsapp_synced_at: 'whatsapp_synced_at',
-  in_instagram_catalog: 'in_instagram_catalog',
-  instagram_catalog_id: 'instagram_catalog_id',
-  instagram_sync_status: 'instagram_sync_status',
-  instagram_sync_error: 'instagram_sync_error',
-  instagram_synced_at: 'instagram_synced_at',
-  instagram_retailer_id: 'instagram_retailer_id'
-};
-
-exports.Prisma.Product_variantsScalarFieldEnum = {
-  variant_id: 'variant_id',
-  product_id: 'product_id',
-  name: 'name',
-  sku: 'sku',
-  price: 'price',
-  quantity: 'quantity',
-  reserved_stock: 'reserved_stock',
-  version: 'version',
-  in_stock: 'in_stock',
-  variant_options: 'variant_options',
-  created_at: 'created_at',
-  updated_at: 'updated_at'
-};
-
-exports.Prisma.Product_imagesScalarFieldEnum = {
-  image_id: 'image_id',
-  product_id: 'product_id',
-  business_id: 'business_id',
-  file_name: 'file_name',
-  file_path: 'file_path',
-  file_size: 'file_size',
-  mime_type: 'mime_type',
-  storage_type: 'storage_type',
-  width: 'width',
-  height: 'height',
-  alt_text: 'alt_text',
-  display_order: 'display_order',
-  is_primary: 'is_primary',
-  created_at: 'created_at',
-  updated_at: 'updated_at'
-};
-
-exports.Prisma.Course_batchesScalarFieldEnum = {
-  batch_id: 'batch_id',
-  course_id: 'course_id',
-  business_id: 'business_id',
-  tenant_id: 'tenant_id',
-  batch_name: 'batch_name',
-  start_date: 'start_date',
-  end_date: 'end_date',
-  schedule: 'schedule',
-  total_slots: 'total_slots',
-  available_slots: 'available_slots',
-  instructor_id: 'instructor_id',
-  location: 'location',
-  is_active: 'is_active',
-  created_at: 'created_at',
-  updated_at: 'updated_at'
+  done: 'done',
+  done_at: 'done_at',
+  done_note: 'done_note',
+  created_by: 'created_by',
+  created_at: 'created_at'
 };
 
 exports.Prisma.CustomersScalarFieldEnum = {
@@ -553,13 +310,14 @@ exports.Prisma.CustomersScalarFieldEnum = {
   phone: 'phone',
   email: 'email',
   whatsapp_number: 'whatsapp_number',
-  platform_user_id: 'platform_user_id',
   total_orders: 'total_orders',
   total_spent: 'total_spent',
   last_order_date: 'last_order_date',
   engagement_score: 'engagement_score',
+  deleted_at: 'deleted_at',
   created_at: 'created_at',
-  updated_at: 'updated_at'
+  updated_at: 'updated_at',
+  platform_user_id: 'platform_user_id'
 };
 
 exports.Prisma.OrdersScalarFieldEnum = {
@@ -568,14 +326,12 @@ exports.Prisma.OrdersScalarFieldEnum = {
   tenant_id: 'tenant_id',
   lead_id: 'lead_id',
   order_type: 'order_type',
-  items: 'items',
   total_amount: 'total_amount',
   payment_status: 'payment_status',
   payment_id: 'payment_id',
   paid_at: 'paid_at',
   delivery_status: 'delivery_status',
   service_status: 'service_status',
-  batch_id: 'batch_id',
   created_at: 'created_at',
   updated_at: 'updated_at',
   delivered_at: 'delivered_at',
@@ -607,7 +363,7 @@ exports.Prisma.OrdersScalarFieldEnum = {
 exports.Prisma.Order_itemsScalarFieldEnum = {
   order_item_id: 'order_item_id',
   order_id: 'order_id',
-  product_id: 'product_id',
+  item_id: 'item_id',
   variant_id: 'variant_id',
   product_name: 'product_name',
   variant_name: 'variant_name',
@@ -621,23 +377,10 @@ exports.Prisma.Order_itemsScalarFieldEnum = {
   updated_at: 'updated_at'
 };
 
-exports.Prisma.Stock_reservationsScalarFieldEnum = {
-  reservation_id: 'reservation_id',
-  order_id: 'order_id',
-  product_id: 'product_id',
-  variant_id: 'variant_id',
-  quantity: 'quantity',
-  reserved_at: 'reserved_at',
-  expires_at: 'expires_at',
-  status: 'status',
-  created_at: 'created_at',
-  updated_at: 'updated_at'
-};
-
 exports.Prisma.Cart_reservationsScalarFieldEnum = {
   reservation_id: 'reservation_id',
   lead_id: 'lead_id',
-  product_id: 'product_id',
+  item_id: 'item_id',
   variant_id: 'variant_id',
   quantity: 'quantity',
   expires_at: 'expires_at',
@@ -657,6 +400,10 @@ exports.Prisma.CampaignsScalarFieldEnum = {
   channel: 'channel',
   content_template: 'content_template',
   sent_at: 'sent_at',
+  approved_at: 'approved_at',
+  approved_by: 'approved_by',
+  auto_approve_at: 'auto_approve_at',
+  deduplication_key: 'deduplication_key',
   target_segment: 'target_segment',
   tenant_id: 'tenant_id',
   audience_filter: 'audience_filter',
@@ -679,215 +426,22 @@ exports.Prisma.CampaignsScalarFieldEnum = {
 };
 
 exports.Prisma.Campaign_recipientsScalarFieldEnum = {
-  recipient_id: 'recipient_id',
+  id: 'id',
   campaign_id: 'campaign_id',
-  lead_id: 'lead_id',
+  business_id: 'business_id',
+  phone_number: 'phone_number',
+  contact_id: 'contact_id',
+  resolved_variables: 'resolved_variables',
+  status: 'status',
+  whatsapp_message_id: 'whatsapp_message_id',
   sent_at: 'sent_at',
   delivered_at: 'delivered_at',
-  clicked_at: 'clicked_at',
-  converted_at: 'converted_at',
-  status: 'status',
+  read_at: 'read_at',
+  failed_at: 'failed_at',
+  error_code: 'error_code',
   error_message: 'error_message',
-  updated_at: 'updated_at',
-  whatsapp_message_id: 'whatsapp_message_id'
-};
-
-exports.Prisma.Lead_scoring_rulesScalarFieldEnum = {
-  rule_id: 'rule_id',
-  business_id: 'business_id',
-  tenant_id: 'tenant_id',
-  rule_name: 'rule_name',
-  rule_type: 'rule_type',
-  condition: 'condition',
-  score_impact: 'score_impact',
-  is_active: 'is_active',
-  priority: 'priority',
-  created_at: 'created_at',
-  updated_at: 'updated_at'
-};
-
-exports.Prisma.Lead_score_historyScalarFieldEnum = {
-  score_history_id: 'score_history_id',
-  lead_id: 'lead_id',
-  business_id: 'business_id',
-  tenant_id: 'tenant_id',
-  previous_score: 'previous_score',
-  new_score: 'new_score',
-  score_change: 'score_change',
-  rule_id: 'rule_id',
-  reason: 'reason',
-  calculated_at: 'calculated_at'
-};
-
-exports.Prisma.TasksScalarFieldEnum = {
-  task_id: 'task_id',
-  lead_id: 'lead_id',
-  business_id: 'business_id',
-  tenant_id: 'tenant_id',
-  task_type: 'task_type',
-  title: 'title',
-  description: 'description',
-  status: 'status',
-  priority: 'priority',
-  assigned_to_type: 'assigned_to_type',
-  assigned_to_id: 'assigned_to_id',
-  due_date: 'due_date',
-  metadata: 'metadata',
-  created_at: 'created_at',
-  updated_at: 'updated_at'
-};
-
-exports.Prisma.WarehousesScalarFieldEnum = {
-  warehouse_id: 'warehouse_id',
-  business_id: 'business_id',
-  tenant_id: 'tenant_id',
-  warehouse_name: 'warehouse_name',
-  warehouse_code: 'warehouse_code',
-  warehouse_type: 'warehouse_type',
-  address_line1: 'address_line1',
-  address_line2: 'address_line2',
-  city: 'city',
-  state: 'state',
-  postal_code: 'postal_code',
-  country: 'country',
-  contact_person: 'contact_person',
-  contact_email: 'contact_email',
-  contact_phone: 'contact_phone',
-  total_capacity: 'total_capacity',
-  used_capacity: 'used_capacity',
-  is_default: 'is_default',
-  is_active: 'is_active',
-  priority: 'priority',
-  operating_hours: 'operating_hours',
-  metadata: 'metadata',
-  created_at: 'created_at',
-  updated_at: 'updated_at'
-};
-
-exports.Prisma.Inventory_levelsScalarFieldEnum = {
-  inventory_level_id: 'inventory_level_id',
-  business_id: 'business_id',
-  tenant_id: 'tenant_id',
-  warehouse_id: 'warehouse_id',
-  variant_id: 'variant_id',
-  available_quantity: 'available_quantity',
-  reserved_quantity: 'reserved_quantity',
-  damaged_quantity: 'damaged_quantity',
-  in_transit_quantity: 'in_transit_quantity',
-  reorder_point: 'reorder_point',
-  reorder_quantity: 'reorder_quantity',
-  max_stock_level: 'max_stock_level',
-  average_cost: 'average_cost',
-  total_value: 'total_value',
-  bin_location: 'bin_location',
-  aisle: 'aisle',
-  shelf: 'shelf',
-  last_counted_at: 'last_counted_at',
-  last_restock_at: 'last_restock_at',
-  is_low_stock: 'is_low_stock',
-  is_out_of_stock: 'is_out_of_stock',
-  metadata: 'metadata',
-  created_at: 'created_at',
-  updated_at: 'updated_at'
-};
-
-exports.Prisma.Stock_movementsScalarFieldEnum = {
-  movement_id: 'movement_id',
-  business_id: 'business_id',
-  tenant_id: 'tenant_id',
-  warehouse_id: 'warehouse_id',
-  variant_id: 'variant_id',
-  inventory_level_id: 'inventory_level_id',
-  movement_type: 'movement_type',
-  movement_date: 'movement_date',
-  reference_type: 'reference_type',
-  reference_id: 'reference_id',
-  quantity_change: 'quantity_change',
-  quantity_before: 'quantity_before',
-  quantity_after: 'quantity_after',
-  unit_cost: 'unit_cost',
-  total_cost: 'total_cost',
-  from_warehouse_id: 'from_warehouse_id',
-  to_warehouse_id: 'to_warehouse_id',
-  reason: 'reason',
-  notes: 'notes',
-  created_by: 'created_by',
-  approved_by: 'approved_by',
-  metadata: 'metadata',
-  created_at: 'created_at'
-};
-
-exports.Prisma.Stock_transfersScalarFieldEnum = {
-  transfer_id: 'transfer_id',
-  business_id: 'business_id',
-  tenant_id: 'tenant_id',
-  transfer_number: 'transfer_number',
-  from_warehouse_id: 'from_warehouse_id',
-  to_warehouse_id: 'to_warehouse_id',
-  status: 'status',
-  items: 'items',
-  requested_date: 'requested_date',
-  shipped_date: 'shipped_date',
-  received_date: 'received_date',
-  expected_delivery_date: 'expected_delivery_date',
-  tracking_number: 'tracking_number',
-  carrier: 'carrier',
-  requested_by: 'requested_by',
-  approved_by: 'approved_by',
-  shipped_by: 'shipped_by',
-  received_by: 'received_by',
-  notes: 'notes',
-  rejection_reason: 'rejection_reason',
-  metadata: 'metadata',
-  created_at: 'created_at',
-  updated_at: 'updated_at'
-};
-
-exports.Prisma.Stock_alertsScalarFieldEnum = {
-  alert_id: 'alert_id',
-  business_id: 'business_id',
-  tenant_id: 'tenant_id',
-  warehouse_id: 'warehouse_id',
-  variant_id: 'variant_id',
-  inventory_level_id: 'inventory_level_id',
-  alert_type: 'alert_type',
-  severity: 'severity',
-  current_quantity: 'current_quantity',
-  reorder_point: 'reorder_point',
-  recommended_order_quantity: 'recommended_order_quantity',
-  status: 'status',
-  acknowledged_at: 'acknowledged_at',
-  acknowledged_by: 'acknowledged_by',
-  resolved_at: 'resolved_at',
-  resolved_by: 'resolved_by',
-  resolution_notes: 'resolution_notes',
-  notification_sent: 'notification_sent',
-  notification_sent_at: 'notification_sent_at',
-  metadata: 'metadata',
-  created_at: 'created_at',
-  updated_at: 'updated_at'
-};
-
-exports.Prisma.Stock_countsScalarFieldEnum = {
-  count_id: 'count_id',
-  business_id: 'business_id',
-  tenant_id: 'tenant_id',
-  warehouse_id: 'warehouse_id',
-  count_number: 'count_number',
-  count_type: 'count_type',
-  status: 'status',
-  scheduled_date: 'scheduled_date',
-  start_date: 'start_date',
-  end_date: 'end_date',
-  items: 'items',
-  total_items_counted: 'total_items_counted',
-  total_variances: 'total_variances',
-  total_value_variance: 'total_value_variance',
-  created_by: 'created_by',
-  counted_by: 'counted_by',
-  approved_by: 'approved_by',
-  notes: 'notes',
-  metadata: 'metadata',
+  retry_count: 'retry_count',
+  next_retry_at: 'next_retry_at',
   created_at: 'created_at',
   updated_at: 'updated_at'
 };
@@ -1016,41 +570,6 @@ exports.Prisma.Payment_reconciliationScalarFieldEnum = {
   updated_at: 'updated_at'
 };
 
-exports.Prisma.ConversationsScalarFieldEnum = {
-  conversation_id: 'conversation_id',
-  business_id: 'business_id',
-  tenant_id: 'tenant_id',
-  contact_name: 'contact_name',
-  contact_phone: 'contact_phone',
-  contact_email: 'contact_email',
-  contact_avatar: 'contact_avatar',
-  platform: 'platform',
-  platform_contact_id: 'platform_contact_id',
-  status: 'status',
-  priority: 'priority',
-  last_message: 'last_message',
-  last_message_at: 'last_message_at',
-  unread_count: 'unread_count',
-  is_starred: 'is_starred',
-  tags: 'tags',
-  assigned_to: 'assigned_to',
-  created_at: 'created_at',
-  updated_at: 'updated_at'
-};
-
-exports.Prisma.MessagesScalarFieldEnum = {
-  message_id: 'message_id',
-  conversation_id: 'conversation_id',
-  content: 'content',
-  direction: 'direction',
-  status: 'status',
-  attachments: 'attachments',
-  platform_message_id: 'platform_message_id',
-  sent_by: 'sent_by',
-  is_ai_generated: 'is_ai_generated',
-  created_at: 'created_at'
-};
-
 exports.Prisma.Notification_eventsScalarFieldEnum = {
   event_id: 'event_id',
   notification_id: 'notification_id',
@@ -1093,52 +612,6 @@ exports.Prisma.Instagram_mediaScalarFieldEnum = {
   updated_at: 'updated_at'
 };
 
-exports.Prisma.Product_categoriesScalarFieldEnum = {
-  category_id: 'category_id',
-  business_id: 'business_id',
-  tenant_id: 'tenant_id',
-  name: 'name',
-  slug: 'slug',
-  description: 'description',
-  parent_category_id: 'parent_category_id',
-  level: 'level',
-  path: 'path',
-  icon_url: 'icon_url',
-  image_url: 'image_url',
-  display_order: 'display_order',
-  meta_title: 'meta_title',
-  meta_description: 'meta_description',
-  is_active: 'is_active',
-  product_count: 'product_count',
-  created_at: 'created_at',
-  updated_at: 'updated_at',
-  created_by: 'created_by'
-};
-
-exports.Prisma.Product_reviewsScalarFieldEnum = {
-  review_id: 'review_id',
-  business_id: 'business_id',
-  tenant_id: 'tenant_id',
-  product_id: 'product_id',
-  customer_id: 'customer_id',
-  order_id: 'order_id',
-  rating: 'rating',
-  title: 'title',
-  comment: 'comment',
-  photo_urls: 'photo_urls',
-  video_url: 'video_url',
-  is_verified: 'is_verified',
-  is_featured: 'is_featured',
-  is_published: 'is_published',
-  helpful_count: 'helpful_count',
-  reported_count: 'reported_count',
-  response_text: 'response_text',
-  response_date: 'response_date',
-  responded_by: 'responded_by',
-  created_at: 'created_at',
-  updated_at: 'updated_at'
-};
-
 exports.Prisma.Workflow_definitionsScalarFieldEnum = {
   workflow_id: 'workflow_id',
   workflow_key: 'workflow_key',
@@ -1168,6 +641,7 @@ exports.Prisma.Workflow_executionsScalarFieldEnum = {
   execution_id: 'execution_id',
   workflow_id: 'workflow_id',
   business_id: 'business_id',
+  tenant_id: 'tenant_id',
   lead_id: 'lead_id',
   status: 'status',
   started_at: 'started_at',
@@ -1180,13 +654,54 @@ exports.Prisma.Workflow_executionsScalarFieldEnum = {
   context: 'context',
   intent: 'intent',
   message_id: 'message_id',
-  chat_id: 'chat_id'
+  chat_id: 'chat_id',
+  conversation_id: 'conversation_id',
+  system_context: 'system_context'
+};
+
+exports.Prisma.Workflow_execution_stepsScalarFieldEnum = {
+  step_id: 'step_id',
+  execution_id: 'execution_id',
+  workflow_id: 'workflow_id',
+  business_id: 'business_id',
+  tenant_id: 'tenant_id',
+  node_id: 'node_id',
+  node_type: 'node_type',
+  node_name: 'node_name',
+  status: 'status',
+  input: 'input',
+  output: 'output',
+  error_message: 'error_message',
+  error_stack: 'error_stack',
+  started_at: 'started_at',
+  completed_at: 'completed_at',
+  duration_ms: 'duration_ms',
+  created_at: 'created_at'
+};
+
+exports.Prisma.Workflow_idempotency_keysScalarFieldEnum = {
+  key_id: 'key_id',
+  idempotency_key: 'idempotency_key',
+  business_id: 'business_id',
+  tenant_id: 'tenant_id',
+  workflow_id: 'workflow_id',
+  execution_id: 'execution_id',
+  lead_id: 'lead_id',
+  conversation_id: 'conversation_id',
+  message_id: 'message_id',
+  node_id: 'node_id',
+  purpose: 'purpose',
+  status: 'status',
+  response: 'response',
+  locked_until: 'locked_until',
+  created_at: 'created_at',
+  updated_at: 'updated_at'
 };
 
 exports.Prisma.Cart_itemsScalarFieldEnum = {
   cart_item_id: 'cart_item_id',
   cart_id: 'cart_id',
-  product_id: 'product_id',
+  item_id: 'item_id',
   variant_id: 'variant_id',
   product_name: 'product_name',
   variant_name: 'variant_name',
@@ -1203,13 +718,785 @@ exports.Prisma.CartsScalarFieldEnum = {
   business_id: 'business_id',
   tenant_id: 'tenant_id',
   lead_id: 'lead_id',
-  customer_id: 'customer_id',
   status: 'status',
   total_amount: 'total_amount',
   total_items: 'total_items',
   expires_at: 'expires_at',
   created_at: 'created_at',
+  updated_at: 'updated_at',
+  customer_id: 'customer_id'
+};
+
+exports.Prisma.Whatsapp_optoutsScalarFieldEnum = {
+  id: 'id',
+  business_id: 'business_id',
+  phone_number: 'phone_number',
+  opted_out_at: 'opted_out_at',
+  reason: 'reason'
+};
+
+exports.Prisma.Campaign_analyticsScalarFieldEnum = {
+  id: 'id',
+  campaign_id: 'campaign_id',
+  business_id: 'business_id',
+  total: 'total',
+  pending: 'pending',
+  sent: 'sent',
+  delivered: 'delivered',
+  read: 'read',
+  failed: 'failed',
+  skipped: 'skipped',
+  delivery_rate: 'delivery_rate',
+  read_rate: 'read_rate',
+  estimated_cost: 'estimated_cost',
+  last_synced_at: 'last_synced_at',
   updated_at: 'updated_at'
+};
+
+exports.Prisma.Hotel_pricing_recommendationsScalarFieldEnum = {
+  id: 'id',
+  business_id: 'business_id',
+  hotel_id: 'hotel_id',
+  org_id: 'org_id',
+  room_type: 'room_type',
+  checkin_date: 'checkin_date',
+  suggested_price: 'suggested_price',
+  demand_score: 'demand_score',
+  confidence: 'confidence',
+  competitor_avg_price: 'competitor_avg_price',
+  current_price: 'current_price',
+  price_range_low: 'price_range_low',
+  price_range_high: 'price_range_high',
+  claude_narrative: 'claude_narrative',
+  xotelo_snapshot: 'xotelo_snapshot',
+  seven_day_forecast: 'seven_day_forecast',
+  created_at: 'created_at'
+};
+
+exports.Prisma.Hotel_booking_outcomesScalarFieldEnum = {
+  id: 'id',
+  business_id: 'business_id',
+  recommendation_id: 'recommendation_id',
+  hotel_id: 'hotel_id',
+  org_id: 'org_id',
+  actual_price_used: 'actual_price_used',
+  rooms_booked: 'rooms_booked',
+  total_rooms: 'total_rooms',
+  actual_occupancy: 'actual_occupancy',
+  revenue: 'revenue',
+  checkin_date: 'checkin_date',
+  recorded_at: 'recorded_at'
+};
+
+exports.Prisma.Hotel_pricing_notificationsScalarFieldEnum = {
+  id: 'id',
+  business_id: 'business_id',
+  org_id: 'org_id',
+  hotel_id: 'hotel_id',
+  type: 'type',
+  title: 'title',
+  body: 'body',
+  metadata: 'metadata',
+  read_at: 'read_at',
+  created_at: 'created_at'
+};
+
+exports.Prisma.Catalog_itemsScalarFieldEnum = {
+  item_id: 'item_id',
+  business_id: 'business_id',
+  tenant_id: 'tenant_id',
+  item_type: 'item_type',
+  name: 'name',
+  description: 'description',
+  category: 'category',
+  base_price: 'base_price',
+  compare_price: 'compare_price',
+  currency: 'currency',
+  stock_quantity: 'stock_quantity',
+  primary_image_url: 'primary_image_url',
+  image_urls: 'image_urls',
+  attributes: 'attributes',
+  ai_tags: 'ai_tags',
+  is_active: 'is_active',
+  deleted_at: 'deleted_at',
+  created_at: 'created_at',
+  updated_at: 'updated_at'
+};
+
+exports.Prisma.Item_variantsScalarFieldEnum = {
+  variant_id: 'variant_id',
+  item_id: 'item_id',
+  business_id: 'business_id',
+  name: 'name',
+  sku: 'sku',
+  price: 'price',
+  stock_quantity: 'stock_quantity',
+  options: 'options',
+  is_active: 'is_active',
+  created_at: 'created_at',
+  updated_at: 'updated_at'
+};
+
+exports.Prisma.Item_availabilityScalarFieldEnum = {
+  avail_id: 'avail_id',
+  item_id: 'item_id',
+  business_id: 'business_id',
+  date: 'date',
+  total_slots: 'total_slots',
+  booked_slots: 'booked_slots',
+  price_override: 'price_override',
+  is_blocked: 'is_blocked',
+  created_at: 'created_at',
+  updated_at: 'updated_at'
+};
+
+exports.Prisma.Product_item_detailsScalarFieldEnum = {
+  item_id: 'item_id',
+  business_id: 'business_id',
+  brand: 'brand',
+  sku: 'sku',
+  condition: 'condition',
+  weight: 'weight',
+  dimensions: 'dimensions',
+  warranty: 'warranty',
+  metadata: 'metadata',
+  created_at: 'created_at',
+  updated_at: 'updated_at'
+};
+
+exports.Prisma.External_catalog_itemsScalarFieldEnum = {
+  external_catalog_item_id: 'external_catalog_item_id',
+  business_id: 'business_id',
+  item_id: 'item_id',
+  provider: 'provider',
+  external_catalog_id: 'external_catalog_id',
+  external_product_id: 'external_product_id',
+  retailer_id: 'retailer_id',
+  sync_status: 'sync_status',
+  last_synced_at: 'last_synced_at',
+  remote_hash: 'remote_hash',
+  local_hash: 'local_hash',
+  raw_payload: 'raw_payload',
+  created_at: 'created_at',
+  updated_at: 'updated_at'
+};
+
+exports.Prisma.Product_inquiriesScalarFieldEnum = {
+  inquiry_id: 'inquiry_id',
+  business_id: 'business_id',
+  tenant_id: 'tenant_id',
+  lead_id: 'lead_id',
+  item_id: 'item_id',
+  variant_id: 'variant_id',
+  quantity: 'quantity',
+  delivery_pincode: 'delivery_pincode',
+  budget: 'budget',
+  status: 'status',
+  metadata: 'metadata',
+  created_at: 'created_at',
+  updated_at: 'updated_at'
+};
+
+exports.Prisma.Product_ordersScalarFieldEnum = {
+  product_order_id: 'product_order_id',
+  business_id: 'business_id',
+  tenant_id: 'tenant_id',
+  legacy_order_id: 'legacy_order_id',
+  customer_id: 'customer_id',
+  lead_id: 'lead_id',
+  order_number: 'order_number',
+  status: 'status',
+  payment_status: 'payment_status',
+  subtotal: 'subtotal',
+  discount_amount: 'discount_amount',
+  tax_amount: 'tax_amount',
+  shipping_fee: 'shipping_fee',
+  total_amount: 'total_amount',
+  source: 'source',
+  shipping_address: 'shipping_address',
+  shipping_city: 'shipping_city',
+  shipping_state: 'shipping_state',
+  shipping_pincode: 'shipping_pincode',
+  shipping_phone: 'shipping_phone',
+  notes: 'notes',
+  metadata: 'metadata',
+  paid_at: 'paid_at',
+  cancelled_at: 'cancelled_at',
+  created_at: 'created_at',
+  updated_at: 'updated_at'
+};
+
+exports.Prisma.Product_order_itemsScalarFieldEnum = {
+  product_order_item_id: 'product_order_item_id',
+  product_order_id: 'product_order_id',
+  item_id: 'item_id',
+  variant_id: 'variant_id',
+  product_name: 'product_name',
+  variant_name: 'variant_name',
+  sku: 'sku',
+  quantity: 'quantity',
+  unit_price: 'unit_price',
+  discount: 'discount',
+  total_price: 'total_price',
+  snapshot: 'snapshot',
+  created_at: 'created_at',
+  updated_at: 'updated_at'
+};
+
+exports.Prisma.Product_order_status_eventsScalarFieldEnum = {
+  event_id: 'event_id',
+  product_order_id: 'product_order_id',
+  business_id: 'business_id',
+  from_status: 'from_status',
+  to_status: 'to_status',
+  actor: 'actor',
+  actor_id: 'actor_id',
+  data: 'data',
+  created_at: 'created_at'
+};
+
+exports.Prisma.Seller_owner_approvalsScalarFieldEnum = {
+  approval_id: 'approval_id',
+  business_id: 'business_id',
+  tenant_id: 'tenant_id',
+  title: 'title',
+  simple_summary: 'simple_summary',
+  action_type: 'action_type',
+  risk_level: 'risk_level',
+  status: 'status',
+  source: 'source',
+  entity_type: 'entity_type',
+  entity_id: 'entity_id',
+  requested_by: 'requested_by',
+  decided_by: 'decided_by',
+  payload: 'payload',
+  guardrails: 'guardrails',
+  due_at: 'due_at',
+  decided_at: 'decided_at',
+  expires_at: 'expires_at',
+  created_at: 'created_at',
+  updated_at: 'updated_at'
+};
+
+exports.Prisma.Seller_store_settingsScalarFieldEnum = {
+  seller_store_settings_id: 'seller_store_settings_id',
+  business_id: 'business_id',
+  tenant_id: 'tenant_id',
+  store_type: 'store_type',
+  onboarding_status: 'onboarding_status',
+  default_currency: 'default_currency',
+  low_stock_threshold: 'low_stock_threshold',
+  stock_hold_minutes: 'stock_hold_minutes',
+  payment_modes: 'payment_modes',
+  delivery_modes: 'delivery_modes',
+  delivery_areas: 'delivery_areas',
+  credit_defaults: 'credit_defaults',
+  ai_guardrails: 'ai_guardrails',
+  setup_checklist: 'setup_checklist',
+  created_at: 'created_at',
+  updated_at: 'updated_at'
+};
+
+exports.Prisma.Seller_stock_reservationsScalarFieldEnum = {
+  reservation_id: 'reservation_id',
+  business_id: 'business_id',
+  tenant_id: 'tenant_id',
+  customer_id: 'customer_id',
+  lead_id: 'lead_id',
+  item_id: 'item_id',
+  variant_id: 'variant_id',
+  quantity: 'quantity',
+  status: 'status',
+  reason: 'reason',
+  source: 'source',
+  expires_at: 'expires_at',
+  released_at: 'released_at',
+  converted_at: 'converted_at',
+  created_by: 'created_by',
+  metadata: 'metadata',
+  created_at: 'created_at',
+  updated_at: 'updated_at'
+};
+
+exports.Prisma.Seller_return_casesScalarFieldEnum = {
+  return_id: 'return_id',
+  business_id: 'business_id',
+  tenant_id: 'tenant_id',
+  order_id: 'order_id',
+  product_order_id: 'product_order_id',
+  customer_id: 'customer_id',
+  return_type: 'return_type',
+  status: 'status',
+  reason: 'reason',
+  requested_amount: 'requested_amount',
+  approved_amount: 'approved_amount',
+  items: 'items',
+  resolution: 'resolution',
+  handled_by: 'handled_by',
+  created_at: 'created_at',
+  updated_at: 'updated_at',
+  closed_at: 'closed_at'
+};
+
+exports.Prisma.Seller_deliveriesScalarFieldEnum = {
+  delivery_id: 'delivery_id',
+  business_id: 'business_id',
+  tenant_id: 'tenant_id',
+  order_id: 'order_id',
+  product_order_id: 'product_order_id',
+  customer_id: 'customer_id',
+  status: 'status',
+  delivery_mode: 'delivery_mode',
+  delivery_person: 'delivery_person',
+  phone: 'phone',
+  address: 'address',
+  pincode: 'pincode',
+  scheduled_at: 'scheduled_at',
+  picked_at: 'picked_at',
+  delivered_at: 'delivered_at',
+  notes: 'notes',
+  metadata: 'metadata',
+  created_at: 'created_at',
+  updated_at: 'updated_at'
+};
+
+exports.Prisma.Seller_customer_credit_accountsScalarFieldEnum = {
+  credit_account_id: 'credit_account_id',
+  business_id: 'business_id',
+  tenant_id: 'tenant_id',
+  customer_id: 'customer_id',
+  customer_name: 'customer_name',
+  phone: 'phone',
+  status: 'status',
+  credit_limit: 'credit_limit',
+  current_balance: 'current_balance',
+  due_days: 'due_days',
+  approved_by: 'approved_by',
+  approved_at: 'approved_at',
+  notes: 'notes',
+  metadata: 'metadata',
+  created_at: 'created_at',
+  updated_at: 'updated_at'
+};
+
+exports.Prisma.Seller_customer_credit_transactionsScalarFieldEnum = {
+  credit_transaction_id: 'credit_transaction_id',
+  credit_account_id: 'credit_account_id',
+  business_id: 'business_id',
+  order_id: 'order_id',
+  transaction_type: 'transaction_type',
+  amount: 'amount',
+  balance_after: 'balance_after',
+  note: 'note',
+  created_by: 'created_by',
+  metadata: 'metadata',
+  created_at: 'created_at'
+};
+
+exports.Prisma.Seller_ai_audit_logsScalarFieldEnum = {
+  ai_audit_id: 'ai_audit_id',
+  business_id: 'business_id',
+  tenant_id: 'tenant_id',
+  ai_employee: 'ai_employee',
+  action: 'action',
+  decision: 'decision',
+  confidence: 'confidence',
+  risk_level: 'risk_level',
+  entity_type: 'entity_type',
+  entity_id: 'entity_id',
+  input_summary: 'input_summary',
+  output_summary: 'output_summary',
+  guardrails: 'guardrails',
+  owner_visible: 'owner_visible',
+  created_at: 'created_at'
+};
+
+exports.Prisma.Seller_product_profit_snapshotsScalarFieldEnum = {
+  profit_snapshot_id: 'profit_snapshot_id',
+  business_id: 'business_id',
+  item_id: 'item_id',
+  variant_id: 'variant_id',
+  cost_price: 'cost_price',
+  selling_price: 'selling_price',
+  gross_margin: 'gross_margin',
+  margin_percentage: 'margin_percentage',
+  source: 'source',
+  recommendation: 'recommendation',
+  created_at: 'created_at'
+};
+
+exports.Prisma.Seller_demand_signalsScalarFieldEnum = {
+  demand_signal_id: 'demand_signal_id',
+  business_id: 'business_id',
+  item_id: 'item_id',
+  category: 'category',
+  signal_type: 'signal_type',
+  signal_count: 'signal_count',
+  period_start: 'period_start',
+  period_end: 'period_end',
+  source: 'source',
+  metadata: 'metadata',
+  created_at: 'created_at'
+};
+
+exports.Prisma.Seller_product_import_jobsScalarFieldEnum = {
+  import_job_id: 'import_job_id',
+  business_id: 'business_id',
+  tenant_id: 'tenant_id',
+  source: 'source',
+  status: 'status',
+  total_rows: 'total_rows',
+  created_count: 'created_count',
+  updated_count: 'updated_count',
+  skipped_count: 'skipped_count',
+  failed_count: 'failed_count',
+  errors: 'errors',
+  summary: 'summary',
+  created_by: 'created_by',
+  started_at: 'started_at',
+  finished_at: 'finished_at',
+  created_at: 'created_at',
+  updated_at: 'updated_at'
+};
+
+exports.Prisma.Seller_stock_adjustmentsScalarFieldEnum = {
+  adjustment_id: 'adjustment_id',
+  business_id: 'business_id',
+  tenant_id: 'tenant_id',
+  item_id: 'item_id',
+  variant_id: 'variant_id',
+  import_job_id: 'import_job_id',
+  adjustment_type: 'adjustment_type',
+  quantity_change: 'quantity_change',
+  quantity_before: 'quantity_before',
+  quantity_after: 'quantity_after',
+  reason: 'reason',
+  source: 'source',
+  reference: 'reference',
+  note: 'note',
+  created_by: 'created_by',
+  metadata: 'metadata',
+  created_at: 'created_at'
+};
+
+exports.Prisma.Hospitality_item_detailsScalarFieldEnum = {
+  item_id: 'item_id',
+  business_id: 'business_id',
+  service_type: 'service_type',
+  capacity: 'capacity',
+  total_units: 'total_units',
+  max_adults: 'max_adults',
+  bed_type: 'bed_type',
+  check_in_time: 'check_in_time',
+  check_out_time: 'check_out_time',
+  amenities: 'amenities',
+  cancellation_policy: 'cancellation_policy',
+  tax_percentage: 'tax_percentage',
+  extra_guest_charge: 'extra_guest_charge',
+  metadata: 'metadata',
+  created_at: 'created_at',
+  updated_at: 'updated_at'
+};
+
+exports.Prisma.Vehicle_item_detailsScalarFieldEnum = {
+  item_id: 'item_id',
+  business_id: 'business_id',
+  make: 'make',
+  model_name: 'model_name',
+  year: 'year',
+  fuel_type: 'fuel_type',
+  transmission: 'transmission',
+  color: 'color',
+  km_driven: 'km_driven',
+  condition: 'condition',
+  metadata: 'metadata',
+  created_at: 'created_at',
+  updated_at: 'updated_at'
+};
+
+exports.Prisma.Hospitality_inquiriesScalarFieldEnum = {
+  inquiry_id: 'inquiry_id',
+  business_id: 'business_id',
+  tenant_id: 'tenant_id',
+  lead_id: 'lead_id',
+  preferred_item_id: 'preferred_item_id',
+  check_in: 'check_in',
+  check_out: 'check_out',
+  guests: 'guests',
+  budget: 'budget',
+  status: 'status',
+  metadata: 'metadata',
+  created_at: 'created_at',
+  updated_at: 'updated_at'
+};
+
+exports.Prisma.Hospitality_bookingsScalarFieldEnum = {
+  hospitality_booking_id: 'hospitality_booking_id',
+  business_id: 'business_id',
+  tenant_id: 'tenant_id',
+  legacy_order_id: 'legacy_order_id',
+  customer_id: 'customer_id',
+  lead_id: 'lead_id',
+  booking_number: 'booking_number',
+  status: 'status',
+  payment_status: 'payment_status',
+  check_in: 'check_in',
+  check_out: 'check_out',
+  guests: 'guests',
+  subtotal: 'subtotal',
+  tax_amount: 'tax_amount',
+  discount_amount: 'discount_amount',
+  total_amount: 'total_amount',
+  source: 'source',
+  notes: 'notes',
+  metadata: 'metadata',
+  cancelled_at: 'cancelled_at',
+  created_at: 'created_at',
+  updated_at: 'updated_at'
+};
+
+exports.Prisma.Hospitality_booking_itemsScalarFieldEnum = {
+  booking_item_id: 'booking_item_id',
+  hospitality_booking_id: 'hospitality_booking_id',
+  item_id: 'item_id',
+  item_name: 'item_name',
+  quantity: 'quantity',
+  nights: 'nights',
+  unit_price: 'unit_price',
+  total_price: 'total_price',
+  snapshot: 'snapshot',
+  created_at: 'created_at',
+  updated_at: 'updated_at'
+};
+
+exports.Prisma.Hospitality_booking_guestsScalarFieldEnum = {
+  guest_id: 'guest_id',
+  hospitality_booking_id: 'hospitality_booking_id',
+  name: 'name',
+  phone: 'phone',
+  age: 'age',
+  address: 'address',
+  pin_code: 'pin_code',
+  metadata: 'metadata',
+  created_at: 'created_at'
+};
+
+exports.Prisma.Hospitality_booking_status_eventsScalarFieldEnum = {
+  event_id: 'event_id',
+  hospitality_booking_id: 'hospitality_booking_id',
+  business_id: 'business_id',
+  from_status: 'from_status',
+  to_status: 'to_status',
+  actor: 'actor',
+  actor_id: 'actor_id',
+  data: 'data',
+  created_at: 'created_at'
+};
+
+exports.Prisma.Checkpoint_blobsScalarFieldEnum = {
+  thread_id: 'thread_id',
+  checkpoint_ns: 'checkpoint_ns',
+  channel: 'channel',
+  version: 'version',
+  type: 'type',
+  blob: 'blob',
+  business_id: 'business_id',
+  expires_at: 'expires_at'
+};
+
+exports.Prisma.Checkpoint_migrationsScalarFieldEnum = {
+  v: 'v'
+};
+
+exports.Prisma.Checkpoint_writesScalarFieldEnum = {
+  thread_id: 'thread_id',
+  checkpoint_ns: 'checkpoint_ns',
+  checkpoint_id: 'checkpoint_id',
+  task_id: 'task_id',
+  idx: 'idx',
+  channel: 'channel',
+  type: 'type',
+  blob: 'blob',
+  business_id: 'business_id',
+  expires_at: 'expires_at'
+};
+
+exports.Prisma.CheckpointsScalarFieldEnum = {
+  thread_id: 'thread_id',
+  checkpoint_ns: 'checkpoint_ns',
+  checkpoint_id: 'checkpoint_id',
+  parent_checkpoint_id: 'parent_checkpoint_id',
+  type: 'type',
+  checkpoint: 'checkpoint',
+  metadata: 'metadata',
+  business_id: 'business_id',
+  expires_at: 'expires_at'
+};
+
+exports.Prisma.Billing_plansScalarFieldEnum = {
+  plan_id: 'plan_id',
+  razorpay_plan_id: 'razorpay_plan_id',
+  name: 'name',
+  business_type: 'business_type',
+  tier: 'tier',
+  amount: 'amount',
+  interval: 'interval',
+  interval_count: 'interval_count',
+  initial_credits: 'initial_credits',
+  features: 'features',
+  is_active: 'is_active',
+  created_at: 'created_at'
+};
+
+exports.Prisma.Billing_subscriptionsScalarFieldEnum = {
+  subscription_id: 'subscription_id',
+  business_id: 'business_id',
+  plan_id: 'plan_id',
+  razorpay_subscription_id: 'razorpay_subscription_id',
+  status: 'status',
+  current_period_start: 'current_period_start',
+  current_period_end: 'current_period_end',
+  trial_end: 'trial_end',
+  pause_start: 'pause_start',
+  pause_end: 'pause_end',
+  cancel_at_period_end: 'cancel_at_period_end',
+  cancelled_at: 'cancelled_at',
+  past_due_since: 'past_due_since',
+  metadata: 'metadata',
+  created_at: 'created_at',
+  updated_at: 'updated_at'
+};
+
+exports.Prisma.WalletsScalarFieldEnum = {
+  wallet_id: 'wallet_id',
+  business_id: 'business_id',
+  balance: 'balance',
+  currency: 'currency',
+  created_at: 'created_at',
+  updated_at: 'updated_at'
+};
+
+exports.Prisma.Wallet_transactionsScalarFieldEnum = {
+  txn_id: 'txn_id',
+  wallet_id: 'wallet_id',
+  type: 'type',
+  amount: 'amount',
+  balance_before: 'balance_before',
+  balance_after: 'balance_after',
+  description: 'description',
+  reference_id: 'reference_id',
+  reference_type: 'reference_type',
+  action_type: 'action_type',
+  status: 'status',
+  metadata: 'metadata',
+  created_at: 'created_at'
+};
+
+exports.Prisma.Billing_paymentsScalarFieldEnum = {
+  payment_id: 'payment_id',
+  business_id: 'business_id',
+  razorpay_payment_id: 'razorpay_payment_id',
+  razorpay_order_id: 'razorpay_order_id',
+  amount: 'amount',
+  type: 'type',
+  status: 'status',
+  idempotency_key: 'idempotency_key',
+  metadata: 'metadata',
+  created_at: 'created_at'
+};
+
+exports.Prisma.Billing_invoicesScalarFieldEnum = {
+  invoice_id: 'invoice_id',
+  business_id: 'business_id',
+  subscription_id: 'subscription_id',
+  razorpay_invoice_id: 'razorpay_invoice_id',
+  subtotal: 'subtotal',
+  tax_amount: 'tax_amount',
+  total_amount: 'total_amount',
+  status: 'status',
+  pdf_url: 'pdf_url',
+  due_date: 'due_date',
+  paid_at: 'paid_at',
+  created_at: 'created_at'
+};
+
+exports.Prisma.Billing_webhook_eventsScalarFieldEnum = {
+  event_id: 'event_id',
+  provider: 'provider',
+  event_type: 'event_type',
+  razorpay_event_id: 'razorpay_event_id',
+  payload: 'payload',
+  status: 'status',
+  attempts: 'attempts',
+  error: 'error',
+  processed_at: 'processed_at',
+  created_at: 'created_at'
+};
+
+exports.Prisma.Credit_pricingScalarFieldEnum = {
+  action_type: 'action_type',
+  cost: 'cost',
+  description: 'description',
+  is_active: 'is_active',
+  updated_at: 'updated_at'
+};
+
+exports.Prisma.Business_settingsScalarFieldEnum = {
+  business_id: 'business_id',
+  timezone: 'timezone',
+  language: 'language',
+  currency: 'currency',
+  business_hours: 'business_hours',
+  onboarding_step: 'onboarding_step',
+  onboarding_done: 'onboarding_done',
+  ai_agent_enabled: 'ai_agent_enabled',
+  auto_reply_enabled: 'auto_reply_enabled',
+  booking_methods: 'booking_methods',
+  booking_link: 'booking_link',
+  whatsapp_onboarding: 'whatsapp_onboarding',
+  low_balance_alert: 'low_balance_alert',
+  default_country_code: 'default_country_code',
+  updated_at: 'updated_at'
+};
+
+exports.Prisma.Audit_logsScalarFieldEnum = {
+  log_id: 'log_id',
+  business_id: 'business_id',
+  user_id: 'user_id',
+  action: 'action',
+  entity_type: 'entity_type',
+  entity_id: 'entity_id',
+  old_values: 'old_values',
+  new_values: 'new_values',
+  ip_address: 'ip_address',
+  user_agent: 'user_agent',
+  created_at: 'created_at'
+};
+
+exports.Prisma.Lead_item_interestsScalarFieldEnum = {
+  interest_id: 'interest_id',
+  lead_id: 'lead_id',
+  business_id: 'business_id',
+  item_id: 'item_id',
+  item_type: 'item_type',
+  item_name: 'item_name',
+  interest_level: 'interest_level',
+  last_price_seen: 'last_price_seen',
+  is_alert_active: 'is_alert_active',
+  created_at: 'created_at',
+  updated_at: 'updated_at'
+};
+
+exports.Prisma.Lead_preference_watchesScalarFieldEnum = {
+  watch_id: 'watch_id',
+  lead_id: 'lead_id',
+  business_id: 'business_id',
+  watch_type: 'watch_type',
+  criteria: 'criteria',
+  is_active: 'is_active',
+  notified_at: 'notified_at',
+  expires_at: 'expires_at',
+  created_at: 'created_at'
 };
 
 exports.Prisma.SortOrder = {
@@ -1231,104 +1518,183 @@ exports.Prisma.QueryMode = {
   insensitive: 'insensitive'
 };
 
+exports.Prisma.NullsOrder = {
+  first: 'first',
+  last: 'last'
+};
+
 exports.Prisma.JsonNullValueFilter = {
   DbNull: Prisma.DbNull,
   JsonNull: Prisma.JsonNull,
   AnyNull: Prisma.AnyNull
 };
 
-exports.Prisma.NullsOrder = {
-  first: 'first',
-  last: 'last'
-};
-
 
 exports.Prisma.ModelName = {
   businesses: 'businesses',
+  business_employees: 'business_employees',
   intents: 'intents',
   notifications: 'notifications',
   role_intents: 'role_intents',
   roles: 'roles',
   social_accounts: 'social_accounts',
-  subscription_plans: 'subscription_plans',
   tenants: 'tenants',
   users: 'users',
   leads: 'leads',
-  lead_activities: 'lead_activities',
-  lead_conversations: 'lead_conversations',
-  lead_messages: 'lead_messages',
-  tags: 'tags',
-  lead_tag_assignments: 'lead_tag_assignments',
-  lead_notes: 'lead_notes',
-  lead_status_history: 'lead_status_history',
+  pipelines: 'pipelines',
+  pipeline_stages: 'pipeline_stages',
+  lead_events: 'lead_events',
   lead_followups: 'lead_followups',
-  lead_duplicates: 'lead_duplicates',
-  products: 'products',
-  product_variants: 'product_variants',
-  product_images: 'product_images',
-  course_batches: 'course_batches',
   customers: 'customers',
   orders: 'orders',
   order_items: 'order_items',
-  stock_reservations: 'stock_reservations',
   cart_reservations: 'cart_reservations',
   campaigns: 'campaigns',
   campaign_recipients: 'campaign_recipients',
-  lead_scoring_rules: 'lead_scoring_rules',
-  lead_score_history: 'lead_score_history',
-  tasks: 'tasks',
-  warehouses: 'warehouses',
-  inventory_levels: 'inventory_levels',
-  stock_movements: 'stock_movements',
-  stock_transfers: 'stock_transfers',
-  stock_alerts: 'stock_alerts',
-  stock_counts: 'stock_counts',
   notification_templates: 'notification_templates',
   notification_messages: 'notification_messages',
   notification_preferences: 'notification_preferences',
   payments: 'payments',
   payment_reconciliation: 'payment_reconciliation',
-  conversations: 'conversations',
-  messages: 'messages',
   notification_events: 'notification_events',
   payment_webhooks: 'payment_webhooks',
   instagram_media: 'instagram_media',
-  product_categories: 'product_categories',
-  product_reviews: 'product_reviews',
   workflow_definitions: 'workflow_definitions',
   business_workflows: 'business_workflows',
   workflow_executions: 'workflow_executions',
+  workflow_execution_steps: 'workflow_execution_steps',
+  workflow_idempotency_keys: 'workflow_idempotency_keys',
   cart_items: 'cart_items',
-  carts: 'carts'
+  carts: 'carts',
+  whatsapp_optouts: 'whatsapp_optouts',
+  campaign_analytics: 'campaign_analytics',
+  hotel_pricing_recommendations: 'hotel_pricing_recommendations',
+  hotel_booking_outcomes: 'hotel_booking_outcomes',
+  hotel_pricing_notifications: 'hotel_pricing_notifications',
+  catalog_items: 'catalog_items',
+  item_variants: 'item_variants',
+  item_availability: 'item_availability',
+  product_item_details: 'product_item_details',
+  external_catalog_items: 'external_catalog_items',
+  product_inquiries: 'product_inquiries',
+  product_orders: 'product_orders',
+  product_order_items: 'product_order_items',
+  product_order_status_events: 'product_order_status_events',
+  seller_owner_approvals: 'seller_owner_approvals',
+  seller_store_settings: 'seller_store_settings',
+  seller_stock_reservations: 'seller_stock_reservations',
+  seller_return_cases: 'seller_return_cases',
+  seller_deliveries: 'seller_deliveries',
+  seller_customer_credit_accounts: 'seller_customer_credit_accounts',
+  seller_customer_credit_transactions: 'seller_customer_credit_transactions',
+  seller_ai_audit_logs: 'seller_ai_audit_logs',
+  seller_product_profit_snapshots: 'seller_product_profit_snapshots',
+  seller_demand_signals: 'seller_demand_signals',
+  seller_product_import_jobs: 'seller_product_import_jobs',
+  seller_stock_adjustments: 'seller_stock_adjustments',
+  hospitality_item_details: 'hospitality_item_details',
+  vehicle_item_details: 'vehicle_item_details',
+  hospitality_inquiries: 'hospitality_inquiries',
+  hospitality_bookings: 'hospitality_bookings',
+  hospitality_booking_items: 'hospitality_booking_items',
+  hospitality_booking_guests: 'hospitality_booking_guests',
+  hospitality_booking_status_events: 'hospitality_booking_status_events',
+  checkpoint_blobs: 'checkpoint_blobs',
+  checkpoint_migrations: 'checkpoint_migrations',
+  checkpoint_writes: 'checkpoint_writes',
+  checkpoints: 'checkpoints',
+  billing_plans: 'billing_plans',
+  billing_subscriptions: 'billing_subscriptions',
+  wallets: 'wallets',
+  wallet_transactions: 'wallet_transactions',
+  billing_payments: 'billing_payments',
+  billing_invoices: 'billing_invoices',
+  billing_webhook_events: 'billing_webhook_events',
+  credit_pricing: 'credit_pricing',
+  business_settings: 'business_settings',
+  audit_logs: 'audit_logs',
+  lead_item_interests: 'lead_item_interests',
+  lead_preference_watches: 'lead_preference_watches'
 };
-
 /**
- * This is a stub Prisma Client that will error at runtime if called.
+ * Create the Client
  */
-class PrismaClient {
-  constructor() {
-    return new Proxy(this, {
-      get(target, prop) {
-        let message
-        const runtime = getRuntime()
-        if (runtime.isEdge) {
-          message = `PrismaClient is not configured to run in ${runtime.prettyName}. In order to run Prisma Client on edge runtime, either:
-- Use Prisma Accelerate: https://pris.ly/d/accelerate
-- Use Driver Adapters: https://pris.ly/d/driver-adapters
-`;
-        } else {
-          message = 'PrismaClient is unable to run in this browser environment, or has been bundled for the browser (running in `' + runtime.prettyName + '`).'
-        }
-
-        message += `
-If this is unexpected, please open an issue: https://pris.ly/prisma-prisma-bug-report`
-
-        throw new Error(message)
+const config = {
+  "generator": {
+    "name": "client",
+    "provider": {
+      "fromEnvVar": null,
+      "value": "prisma-client-js"
+    },
+    "output": {
+      "value": "C:\\Users\\MY PC\\OneDrive\\Documents\\biznavigate-backend\\generated\\prisma",
+      "fromEnvVar": null
+    },
+    "config": {
+      "engineType": "library"
+    },
+    "binaryTargets": [
+      {
+        "fromEnvVar": null,
+        "value": "windows",
+        "native": true
       }
-    })
+    ],
+    "previewFeatures": [
+      "driverAdapters"
+    ],
+    "sourceFilePath": "C:\\Users\\MY PC\\OneDrive\\Documents\\biznavigate-backend\\prisma\\schema.prisma",
+    "isCustomOutput": true
+  },
+  "relativeEnvPaths": {
+    "rootEnvPath": null,
+    "schemaEnvPath": "../../.env"
+  },
+  "relativePath": "../../prisma",
+  "clientVersion": "6.7.0",
+  "engineVersion": "3cff47a7f5d65c3ea74883f1d736e41d68ce91ed",
+  "datasourceNames": [
+    "db"
+  ],
+  "activeProvider": "postgresql",
+  "postinstall": false,
+  "inlineDatasources": {
+    "db": {
+      "url": {
+        "fromEnvVar": "DATABASE_URL",
+        "value": null
+      }
+    }
+  },
+  "inlineSchema": "generator client {\n  provider        = \"prisma-client-js\"\n  output          = \"../generated/prisma\"\n  previewFeatures = [\"driverAdapters\"]\n}\n\ndatasource db {\n  provider = \"postgresql\"\n  url      = env(\"DATABASE_URL\")\n}\n\nmodel businesses {\n  business_id               String                      @id @default(dbgenerated(\"gen_random_uuid()\")) @db.Uuid\n  tenant_id                 String                      @db.Uuid\n  business_name             String                      @db.VarChar(255)\n  business_type             String?                     @db.VarChar(50)\n  business_group            String?                     @db.VarChar(5)\n  communication_mode        String                      @default(\"WORKFLOW\") @db.VarChar(20)\n  blueprint_seeded          Boolean                     @default(false)\n  blueprint_seeded_at       DateTime?                   @db.Timestamptz(6)\n  whatsapp_number           String?                     @db.VarChar(20)\n  created_at                DateTime                    @default(now()) @db.Timestamptz(6)\n  updated_at                DateTime                    @default(now()) @db.Timestamptz(6)\n  email                     String?                     @db.VarChar(255)\n  phone                     String?                     @db.VarChar(20)\n  website                   String?                     @db.VarChar(255)\n  public_booking_slug       String?                     @unique @db.VarChar(120)\n  city                      String?                     @db.VarChar(100)\n  address                   String?                     @db.VarChar(500)\n  country                   String?                     @db.VarChar(100)\n  gst_number                String?                     @db.VarChar(50)\n  pan_number                String?                     @db.VarChar(20)\n  deleted_at                DateTime?                   @db.Timestamptz(6)\n  business_employees        business_employees[]\n  business_workflows        business_workflows[]\n  tenants                   tenants                     @relation(fields: [tenant_id], references: [tenant_id], onDelete: Restrict)\n  carts                     carts[]\n  catalog_items             catalog_items[]\n  external_catalog_items    external_catalog_items[]\n  product_item_details      product_item_details[]\n  hospitality_item_details  hospitality_item_details[]\n  vehicle_item_details      vehicle_item_details[]\n  product_orders            product_orders[]\n  product_inquiries         product_inquiries[]\n  hospitality_bookings      hospitality_bookings[]\n  hospitality_inquiries     hospitality_inquiries[]\n  leads                     leads[]\n  pipelines                 pipelines[]\n  notification_messages     notification_messages[]     @relation(\"notification_messages_business\")\n  notification_preferences  notification_preferences[]  @relation(\"notification_prefs_business\")\n  notification_templates    notification_templates[]    @relation(\"notification_templates_business\")\n  payment_reconciliation    payment_reconciliation[]\n  payments                  payments[]\n  social_accounts           social_accounts[]\n  users                     users[]\n  workflow_executions       workflow_executions[]\n  workflow_execution_steps  workflow_execution_steps[]\n  workflow_idempotency_keys workflow_idempotency_keys[]\n  billing_subscription      billing_subscriptions?      @relation(\"business_billing_subscription\")\n  wallet                    wallets?                    @relation(\"business_wallet\")\n  billing_payments_list     billing_payments[]          @relation(\"business_billing_payments\")\n  billing_invoices_list     billing_invoices[]          @relation(\"business_billing_invoices\")\n  settings                  business_settings?          @relation(\"business_settings\")\n  audit_logs                audit_logs[]\n\n  @@index([tenant_id], map: \"idx_businesses_tenant_id\")\n  @@index([business_type], map: \"idx_businesses_business_type\")\n  @@index([business_group], map: \"idx_businesses_business_group\")\n  @@index([communication_mode], map: \"idx_businesses_communication_mode\")\n  @@index([public_booking_slug], map: \"idx_businesses_public_booking_slug\")\n  @@index([deleted_at], map: \"idx_businesses_deleted_at\")\n}\n\nmodel business_employees {\n  employee_id String     @id @default(dbgenerated(\"gen_random_uuid()\")) @db.Uuid\n  business_id String     @db.Uuid\n  name        String     @db.VarChar(255)\n  email       String?    @db.VarChar(255)\n  phone       String?    @db.VarChar(20)\n  role        String?    @db.VarChar(100)\n  created_at  DateTime   @default(now()) @db.Timestamptz(6)\n  businesses  businesses @relation(fields: [business_id], references: [business_id], onDelete: Cascade)\n\n  @@index([business_id], map: \"idx_business_employees_business_id\")\n}\n\nmodel intents {\n  intent_id     String          @id @default(dbgenerated(\"gen_random_uuid()\")) @db.Uuid\n  intent_name   String          @db.VarChar(100)\n  created_at    DateTime?       @default(now()) @db.Timestamptz(6)\n  notifications notifications[]\n  role_intents  role_intents[]\n}\n\nmodel notifications {\n  notification_id String    @id @default(dbgenerated(\"gen_random_uuid()\")) @db.Uuid\n  user_id         String    @db.Uuid\n  intent_id       String    @db.Uuid\n  message         String\n  read_status     Boolean   @default(false)\n  created_at      DateTime? @default(now()) @db.Timestamptz(6)\n  intents         intents   @relation(fields: [intent_id], references: [intent_id])\n  users           users     @relation(fields: [user_id], references: [user_id])\n}\n\nmodel role_intents {\n  intent_id  String    @db.Uuid\n  created_at DateTime? @default(now()) @db.Timestamptz(6)\n  role_id    String    @db.Uuid\n  intents    intents   @relation(fields: [intent_id], references: [intent_id])\n\n  @@id([role_id, intent_id])\n}\n\nmodel roles {\n  role_name   String   @unique\n  permissions Json?\n  created_at  DateTime @default(now())\n  role_id     String   @id @default(dbgenerated(\"gen_random_uuid()\")) @db.Uuid\n  users       users[]\n}\n\n/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.\n/// platform options: instagram, facebook, twitter, linkedin, etc.\nmodel social_accounts {\n  account_id                    String            @id @default(dbgenerated(\"gen_random_uuid()\")) @db.Uuid\n  business_id                   String            @db.Uuid\n  platform                      String            @db.VarChar(50)\n  platform_user_id              String            @db.VarChar(255)\n  page_id                       String?           @db.VarChar(255)\n  access_token                  String?\n  permissions                   Json?\n  token_expiry                  DateTime?         @db.Timestamptz(6)\n  is_active                     Boolean?          @default(true)\n  created_at                    DateTime          @default(now()) @db.Timestamptz(6)\n  follower_count                Int?\n  following_count               Int?\n  instagram_business_account_id String?           @db.VarChar(255)\n  media_count                   Int?\n  profile_picture               String?\n  updated_at                    DateTime?         @default(now()) @db.Timestamptz(6)\n  username                      String?           @db.VarChar(255)\n  instagram_catalog_id          String?           @db.VarChar(255)\n  whatsapp_catalog_id           String?           @db.VarChar(255)\n  /// Gupshup app UUID assigned by the /partner/tpp/app API (Step 1 of TPP onboarding)\n  gupshup_app_id                String?           @db.VarChar(255)\n  /// TPP onboarding state: \"pending\" | \"live\" | \"error\"\n  gupshup_app_status            String?           @db.VarChar(50)\n  meta_account_review_status    String?           @db.VarChar(50)\n  meta_verification_checked_at  DateTime?         @db.Timestamptz(6)\n  meta_verified_name            String?           @db.VarChar(255)\n  instagram_media               instagram_media[]\n  businesses                    businesses        @relation(fields: [business_id], references: [business_id], onDelete: Cascade, onUpdate: NoAction)\n\n  @@index([business_id], map: \"idx_social_accounts_business_id\")\n  @@index([platform_user_id], map: \"idx_social_accounts_platform_user\")\n  @@index([gupshup_app_id], map: \"idx_social_accounts_gupshup_app_id\")\n}\n\nmodel tenants {\n  tenant_id                 String                      @id @default(dbgenerated(\"gen_random_uuid()\")) @db.Uuid\n  tenant_name               String                      @db.VarChar(255)\n  email                     String                      @unique\n  phone_number              String?                     @db.VarChar(20)\n  created_at                DateTime                    @default(now()) @db.Timestamptz(6)\n  updated_at                DateTime                    @default(now()) @db.Timestamptz(6)\n  address                   String?                     @db.VarChar(255)\n  gst_number                String?                     @db.VarChar(20)\n  pan_number                String?                     @db.VarChar(20)\n  registration_no           String?                     @db.VarChar(50)\n  business_workflows        business_workflows[]\n  businesses                businesses[]\n  carts                     carts[]\n  leads                     leads[]\n  workflow_executions       workflow_executions[]\n  workflow_execution_steps  workflow_execution_steps[]\n  workflow_idempotency_keys workflow_idempotency_keys[]\n  product_orders            product_orders[]\n  product_inquiries         product_inquiries[]\n  hospitality_bookings      hospitality_bookings[]\n  hospitality_inquiries     hospitality_inquiries[]\n  notification_messages     notification_messages[]     @relation(\"notification_messages_tenant\")\n  notification_templates    notification_templates[]    @relation(\"notification_templates_tenant\")\n}\n\nmodel users {\n  user_id                    String           @id @default(dbgenerated(\"gen_random_uuid()\")) @db.Uuid\n  business_id                String           @db.Uuid\n  email                      String           @unique @db.VarChar(255)\n  name                       String           @db.VarChar(255)\n  password                   String?          @db.VarChar(255)\n  refresh_token              String?\n  phone_number               String           @db.VarChar(20)\n  is_active                  Boolean?         @default(true)\n  profile_completed          Boolean?         @default(false)\n  deleted_at                 DateTime?        @db.Timestamptz(6)\n  created_at                 DateTime         @default(now()) @db.Timestamptz(6)\n  updated_at                 DateTime         @default(now()) @db.Timestamptz(6)\n  role_id                    String           @db.Uuid\n  account_locked_until       DateTime?        @db.Timestamptz(6)\n  email_verification_expires DateTime?        @db.Timestamptz(6)\n  email_verification_token   String?          @db.VarChar(255)\n  email_verified             Boolean?         @default(false)\n  failed_login_attempts      Int?             @default(0)\n  last_login_at              DateTime?        @db.Timestamptz(6)\n  last_password_change       DateTime?        @db.Timestamptz(6)\n  password_reset_expires     DateTime?        @db.Timestamptz(6)\n  password_reset_token       String?          @db.VarChar(255)\n  two_factor_enabled         Boolean?         @default(false)\n  two_factor_secret          String?          @db.VarChar(255)\n  lead_followups             lead_followups[] @relation(\"followup_assignee\")\n  leads_assigned             leads[]          @relation(\"lead_agent\")\n  notifications              notifications[]\n  businesses                 businesses       @relation(fields: [business_id], references: [business_id], onDelete: Cascade)\n  roles                      roles            @relation(fields: [role_id], references: [role_id])\n  audit_logs                 audit_logs[]\n\n  @@index([business_id], map: \"idx_users_business_id\")\n  @@index([role_id], map: \"idx_users_role_id\")\n  @@index([deleted_at], map: \"idx_users_deleted_at\")\n}\n\n/// Lead table — slim, fast, owner-dashboard oriented\n/// channel: \"whatsapp\" | \"website\"\n/// source:  \"direct\" | \"instagram\" (attribution — Instagram redirects to WhatsApp, not a separate channel)\n/// status:  \"new\" | \"active\" | \"quoted\" | \"booked\" | \"won\" | \"lost\"\nmodel leads {\n  lead_id               String                    @id @default(dbgenerated(\"gen_random_uuid()\")) @db.Uuid\n  business_id           String                    @db.Uuid\n  tenant_id             String                    @db.Uuid\n  name                  String?                   @db.VarChar(200)\n  phone                 String?                   @db.VarChar(20)\n  email                 String?                   @db.VarChar(255)\n  channel               String                    @db.VarChar(20)\n  source                String                    @default(\"direct\") @db.VarChar(20)\n  platform_id           String?                   @db.VarChar(255)\n  status                String                    @default(\"new\") @db.VarChar(20)\n  stage_id              String?                   @db.Uuid\n  pipeline_id           String?                   @db.Uuid\n  lost_reason           String?                   @db.VarChar(50)\n  /// AI-extracted business-type context\n  /// Resort:     { type:\"resort\",     check_in, check_out, nights, guests, room_pref, budget }\n  /// Camp:       { type:\"camp\",       event, date, date_is_fixed, group_size, package, food_pref }\n  /// Product:    { type:\"product\",    items:[{id,name,variant,qty,price}], pincode, budget }\n  /// Automotive: { type:\"automotive\", budget_max, make, model, fuel_type, year_min, items_viewed[], last_quoted_price }\n  /// Property:   { type:\"property\",   budget_max, property_type, bedrooms, locality, items_viewed[] }\n  /// Tour:       { type:\"tour\",       activity, date, guests, duration, budget, wants_activity_updates }\n  /// Education:  { type:\"education\",  course_name, fee_budget, preferred_timing, preferred_days[], batch_id }\n  context               Json?\n  /// Lead classification within business group (window_shopper, price_checker, price_alert_subscriber, etc.)\n  lead_type             String?                   @db.VarChar(30)\n  /// 0–100 score derived from engagement signals\n  qualification_score   Int                       @default(0)\n  exit_intent_sent_at   DateTime?                 @db.Timestamptz(6)\n  exit_captured_at      DateTime?                 @db.Timestamptz(6)\n  /// price_too_high | need_more_time | not_interested | changed_dates | not_anymore\n  exit_reason           String?                   @db.VarChar(30)\n  quoted_amount         Decimal?                  @db.Decimal(10, 2)\n  quoted_at             DateTime?                 @db.Timestamptz(6)\n  converted_value       Decimal?                  @db.Decimal(10, 2)\n  converted_at          DateTime?                 @db.Timestamptz(6)\n  /// PostgreSQL array — GIN indexed, no join table needed\n  tags                  String[]                  @default([])\n  assigned_to           String?                   @db.Uuid\n  followup_at           DateTime?                 @db.Timestamptz(6)\n  deleted_at            DateTime?                 @db.Timestamptz(6)\n  created_at            DateTime                  @default(now()) @db.Timestamptz(6)\n  updated_at            DateTime                  @default(now()) @db.Timestamptz(6)\n  cart_reservations     cart_reservations[]\n  carts                 carts[]\n  events                lead_events[]\n  followups             lead_followups[]\n  product_inquiries     product_inquiries[]\n  hospitality_inquiries hospitality_inquiries[]\n  product_orders        product_orders[]\n  hospitality_bookings  hospitality_bookings[]\n  item_interests        lead_item_interests[]\n  preference_watches    lead_preference_watches[]\n  assigned_user         users?                    @relation(\"lead_agent\", fields: [assigned_to], references: [user_id])\n  businesses            businesses                @relation(fields: [business_id], references: [business_id])\n  tenants               tenants                   @relation(fields: [tenant_id], references: [tenant_id])\n  pipeline              pipelines?                @relation(fields: [pipeline_id], references: [pipeline_id])\n  stage                 pipeline_stages?          @relation(fields: [stage_id], references: [stage_id])\n  orders                orders[]\n  workflow_executions   workflow_executions[]\n\n  @@unique([business_id, platform_id], map: \"uq_leads_business_platform\")\n  @@index([business_id, status], map: \"idx_leads_business_status\")\n  @@index([business_id, stage_id], map: \"idx_leads_business_stage\")\n  @@index([business_id, lead_type], map: \"idx_leads_business_lead_type\")\n  @@index([business_id, qualification_score(sort: Desc)], map: \"idx_leads_business_qual_score\")\n  @@index([business_id, channel, source], map: \"idx_leads_business_channel_source\")\n  @@index([business_id, created_at(sort: Desc)], map: \"idx_leads_business_created\")\n  @@index([business_id, quoted_at], map: \"idx_leads_business_quoted_at\")\n  @@index([business_id, assigned_to, followup_at], map: \"idx_leads_business_assignee_followup\")\n  @@index([phone], map: \"idx_leads_phone\")\n  @@index([tenant_id], map: \"idx_leads_tenant_id\")\n}\n\n/// Per-business sales pipeline. A business can have multiple (e.g. \"Bookings\", \"Events\").\n/// One is_default per business is enforced at the application layer.\nmodel pipelines {\n  pipeline_id String            @id @default(dbgenerated(\"gen_random_uuid()\")) @db.Uuid\n  business_id String            @db.Uuid\n  name        String            @db.VarChar(80)\n  industry    String?           @db.VarChar(30)\n  is_default  Boolean           @default(false)\n  is_archived Boolean           @default(false)\n  created_at  DateTime          @default(now()) @db.Timestamptz(6)\n  updated_at  DateTime          @default(now()) @db.Timestamptz(6)\n  businesses  businesses        @relation(fields: [business_id], references: [business_id])\n  stages      pipeline_stages[]\n  leads       leads[]\n\n  @@index([business_id, is_archived], map: \"idx_pipelines_business_archived\")\n}\n\n/// Ordered stages within a pipeline. `slug` mirrors leads.status for backwards\n/// compatibility with existing dashboards (new | contacted | qualified | quoted | won | lost | ...).\nmodel pipeline_stages {\n  stage_id    String    @id @default(dbgenerated(\"gen_random_uuid()\")) @db.Uuid\n  pipeline_id String    @db.Uuid\n  business_id String    @db.Uuid\n  name        String    @db.VarChar(80)\n  slug        String    @db.VarChar(30)\n  position    Int\n  is_won      Boolean   @default(false)\n  is_lost     Boolean   @default(false)\n  color       String?   @db.VarChar(20)\n  created_at  DateTime  @default(now()) @db.Timestamptz(6)\n  pipeline    pipelines @relation(fields: [pipeline_id], references: [pipeline_id], onDelete: Cascade)\n  leads       leads[]\n\n  @@unique([pipeline_id, slug], map: \"uq_pipeline_stage_slug\")\n  @@unique([pipeline_id, position], map: \"uq_pipeline_stage_position\")\n  @@index([business_id], map: \"idx_pipeline_stages_business\")\n}\n\n/// Append-only business event log — never updated, only inserted\n/// Replaces: lead_activities + lead_status_history + lead_notes + lead_score_history\n/// type: \"status_changed\" | \"quoted\" | \"booked\" | \"won\" | \"lost\" | \"note\" | \"assigned\" | \"followup_set\" | \"demand_miss\" | \"handoff\"\n/// actor: \"ai\" | \"human\" | \"system\"\nmodel lead_events {\n  event_id    String   @id @default(dbgenerated(\"gen_random_uuid()\")) @db.Uuid\n  lead_id     String   @db.Uuid\n  business_id String   @db.Uuid\n  type        String   @db.VarChar(30)\n  actor       String   @db.VarChar(10)\n  actor_id    String?  @db.Uuid\n  /// Type-specific payload:\n  /// status_changed: { from, to }\n  /// quoted:         { amount, service, service_id }\n  /// note:           { text }\n  /// lost:           { reason, note }\n  /// demand_miss:    { service_id, service_name, date, guests }\n  /// assigned:       { to_user_id, to_user_name }\n  data        Json?\n  created_at  DateTime @default(now()) @db.Timestamptz(6)\n  leads       leads    @relation(fields: [lead_id], references: [lead_id], onDelete: Cascade)\n\n  @@index([lead_id, created_at(sort: Desc)], map: \"idx_lead_events_lead_created\")\n  @@index([business_id, type], map: \"idx_lead_events_business_type\")\n  @@index([business_id, created_at(sort: Desc)], map: \"idx_lead_events_business_created\")\n}\n\n/// Staff follow-up task list — replaces lead_followups + tasks\nmodel lead_followups {\n  followup_id  String    @id @default(dbgenerated(\"gen_random_uuid()\")) @db.Uuid\n  lead_id      String    @db.Uuid\n  business_id  String    @db.Uuid\n  note         String?\n  scheduled_at DateTime  @db.Timestamptz(6)\n  assigned_to  String    @db.Uuid\n  done         Boolean   @default(false)\n  done_at      DateTime? @db.Timestamptz(6)\n  done_note    String?\n  created_by   String?   @db.Uuid\n  created_at   DateTime  @default(now()) @db.Timestamptz(6)\n  assignee     users     @relation(\"followup_assignee\", fields: [assigned_to], references: [user_id])\n  lead         leads     @relation(fields: [lead_id], references: [lead_id], onDelete: Cascade)\n\n  @@index([lead_id], map: \"idx_lead_followups_lead_id\")\n  @@index([assigned_to, done, scheduled_at], map: \"idx_lead_followups_assignee_done_scheduled\")\n  @@index([business_id, done, scheduled_at], map: \"idx_lead_followups_business_done_scheduled\")\n}\n\n/// Customers - end customers who purchase products/services\nmodel customers {\n  customer_id              String                     @id @default(dbgenerated(\"gen_random_uuid()\")) @db.Uuid\n  business_id              String                     @db.Uuid\n  tenant_id                String                     @db.Uuid\n  name                     String?                    @db.VarChar(255)\n  phone                    String                     @db.VarChar(20)\n  email                    String?                    @db.VarChar(255)\n  whatsapp_number          String?                    @db.VarChar(20)\n  total_orders             Int                        @default(0)\n  total_spent              Decimal                    @default(0) @db.Decimal(10, 2)\n  last_order_date          DateTime?                  @db.Timestamptz(6)\n  engagement_score         Int                        @default(10)\n  deleted_at               DateTime?                  @db.Timestamptz(6)\n  created_at               DateTime                   @default(now()) @db.Timestamptz(6)\n  updated_at               DateTime                   @default(now()) @db.Timestamptz(6)\n  platform_user_id         String?                    @db.VarChar(255)\n  carts                    carts[]\n  notification_messages    notification_messages[]    @relation(\"notification_messages_customer\")\n  notification_preferences notification_preferences[] @relation(\"notification_prefs_customer\")\n  orders                   orders[]\n  payments                 payments[]\n  product_orders           product_orders[]\n  hospitality_bookings     hospitality_bookings[]\n\n  @@unique([business_id, phone], map: \"unique_customer_phone_per_business\")\n  @@unique([business_id, email], map: \"unique_customer_email_per_business\")\n  @@index([business_id], map: \"idx_customers_business_id\")\n  @@index([tenant_id], map: \"idx_customers_tenant_id\")\n  @@index([phone], map: \"idx_customers_phone\")\n  @@index([email], map: \"idx_customers_email\")\n  @@index([engagement_score], map: \"idx_customers_engagement\")\n  @@index([total_spent], map: \"idx_customers_total_spent\")\n  @@index([last_order_date], map: \"idx_customers_last_order\")\n  @@index([deleted_at], map: \"idx_customers_deleted_at\")\n}\n\n/// Orders - purchases and enrollments (Enhanced for E-commerce)\nmodel orders {\n  order_id            String                @id @default(dbgenerated(\"gen_random_uuid()\")) @db.Uuid\n  business_id         String                @db.Uuid\n  tenant_id           String                @db.Uuid\n  lead_id             String?               @db.Uuid\n  order_type          String                @db.VarChar(50)\n  total_amount        Decimal               @db.Decimal(10, 2)\n  payment_status      String                @default(\"pending\") @db.VarChar(20)\n  payment_id          String?               @db.VarChar(255)\n  paid_at             DateTime?             @db.Timestamptz(6)\n  delivery_status     String?               @db.VarChar(20)\n  service_status      String?               @db.VarChar(20)\n  created_at          DateTime              @default(now()) @db.Timestamptz(6)\n  updated_at          DateTime              @default(now()) @db.Timestamptz(6)\n  delivered_at        DateTime?             @db.Timestamptz(6)\n  admin_notes         String?\n  cancelled_at        DateTime?             @db.Timestamptz(6)\n  customer_id         String?               @db.Uuid\n  discount_amount     Decimal?              @default(0) @db.Decimal(10, 2)\n  notes               String?\n  order_number        String?               @db.VarChar(50)\n  payment_expires_at  DateTime?             @db.Timestamptz(6)\n  payment_method      String?               @db.VarChar(50)\n  payment_reference   String?               @db.VarChar(255)\n  shipped_at          DateTime?             @db.Timestamptz(6)\n  shipping_address    String?\n  shipping_city       String?               @db.VarChar(100)\n  shipping_fee        Decimal?              @default(0) @db.Decimal(10, 2)\n  shipping_phone      String?               @db.VarChar(20)\n  shipping_pincode    String?               @db.VarChar(20)\n  shipping_state      String?               @db.VarChar(100)\n  source              String?               @default(\"whatsapp\") @db.VarChar(50)\n  status              String?               @default(\"pending\") @db.VarChar(20)\n  subtotal            Decimal?              @default(0) @db.Decimal(10, 2)\n  tax_amount          Decimal?              @default(0) @db.Decimal(10, 2)\n  tracking_number     String?               @db.VarChar(100)\n  billing_address     String?\n  cancellation_reason String?\n  order_items         order_items[]\n  product_order       product_orders?\n  hospitality_booking hospitality_bookings?\n  customers           customers?            @relation(fields: [customer_id], references: [customer_id])\n  leads               leads?                @relation(fields: [lead_id], references: [lead_id])\n  payments            payments[]\n\n  @@index([business_id, created_at(sort: Desc)], map: \"idx_orders_business_created\")\n  @@index([business_id, status], map: \"idx_orders_business_status\")\n  @@index([business_id, payment_status], map: \"idx_orders_business_payment_status\")\n  @@index([lead_id], map: \"idx_orders_lead_id\")\n  @@index([customer_id], map: \"idx_orders_customer_id\")\n  @@index([tenant_id], map: \"idx_orders_tenant_id\")\n  @@index([order_number], map: \"idx_orders_order_number\")\n  @@index([status], map: \"idx_orders_status\")\n  @@index([source], map: \"idx_orders_source\")\n  @@index([created_at(sort: Desc)], map: \"idx_orders_created_at\")\n}\n\n/// Order Items - Individual catalog items in an order\nmodel order_items {\n  order_item_id String         @id @default(dbgenerated(\"gen_random_uuid()\")) @db.Uuid\n  order_id      String         @db.Uuid\n  item_id       String         @db.Uuid\n  variant_id    String?        @db.Uuid\n  product_name  String         @db.VarChar(255)\n  variant_name  String?        @db.VarChar(255)\n  sku           String?        @db.VarChar(100)\n  quantity      Int            @default(1)\n  unit_price    Decimal        @db.Decimal(10, 2)\n  discount      Decimal        @default(0) @db.Decimal(10, 2)\n  total_price   Decimal        @db.Decimal(10, 2)\n  snapshot      Json?\n  created_at    DateTime       @default(now()) @db.Timestamptz(6)\n  updated_at    DateTime       @default(now()) @db.Timestamptz(6)\n  catalog_item  catalog_items  @relation(fields: [item_id], references: [item_id])\n  orders        orders         @relation(fields: [order_id], references: [order_id], onDelete: Cascade)\n  item_variant  item_variants? @relation(fields: [variant_id], references: [variant_id])\n\n  @@index([order_id], map: \"idx_order_items_order_id\")\n  @@index([item_id], map: \"idx_order_items_item_id\")\n}\n\n/// Cart-level stock holds — created when a lead adds to cart, before an order exists\nmodel cart_reservations {\n  reservation_id String        @id @default(dbgenerated(\"gen_random_uuid()\")) @db.Uuid\n  lead_id        String        @db.Uuid\n  item_id        String        @db.Uuid\n  variant_id     String?       @db.Uuid\n  quantity       Int\n  expires_at     DateTime      @db.Timestamptz(6)\n  status         String        @default(\"active\") @db.VarChar(20)\n  created_at     DateTime      @default(now()) @db.Timestamptz(6)\n  updated_at     DateTime      @default(now()) @db.Timestamptz(6)\n  catalog_item   catalog_items @relation(fields: [item_id], references: [item_id])\n  leads          leads         @relation(fields: [lead_id], references: [lead_id], onDelete: Cascade)\n\n  @@index([lead_id], map: \"idx_cart_reservations_lead_id\")\n  @@index([item_id], map: \"idx_cart_reservations_item_id\")\n  @@index([status], map: \"idx_cart_reservations_status\")\n  @@index([expires_at], map: \"idx_cart_reservations_expires_at\")\n}\n\n/// Campaigns - notification/scheduling campaigns stored in PostgreSQL.\n/// NOTE: The primary campaign system (create, launch, dispatch) lives in MongoDB (CampaignService uses Mongoose).\n/// This table is used by notification_templates for scheduling. campaign_recipients and campaign_analytics\n/// reference MongoDB campaign ObjectIDs (24-char hex), not the UUID campaign_id here.\nmodel campaigns {\n  campaign_id                String                  @id @default(dbgenerated(\"gen_random_uuid()\")) @db.Uuid\n  business_id                String                  @db.Uuid\n  scheduled_at               DateTime?               @db.Timestamptz(6)\n  status                     String                  @default(\"draft\") @db.VarChar(20)\n  created_at                 DateTime                @default(now()) @db.Timestamptz(6)\n  campaign_name              String                  @db.VarChar(255)\n  campaign_type              String?                 @db.VarChar(50)\n  channel                    String                  @db.VarChar(30)\n  content_template           String?\n  sent_at                    DateTime?               @db.Timestamptz(6)\n  approved_at                DateTime?               @db.Timestamptz(6)\n  approved_by                String?                 @db.VarChar(100)\n  auto_approve_at            DateTime?               @db.Timestamptz(6)\n  deduplication_key          String?                 @unique @db.VarChar(255)\n  target_segment             Json?\n  tenant_id                  String                  @db.Uuid\n  audience_filter            Json?                   @default(\"{}\")\n  audience_type              String?                 @default(\"all\") @db.VarChar(50)\n  clicked_count              Int?                    @default(0)\n  completed_at               DateTime?               @db.Timestamptz(6)\n  converted_count            Int?                    @default(0)\n  delivered_count            Int?                    @default(0)\n  failed_count               Int?                    @default(0)\n  media_type                 String?                 @db.VarChar(50)\n  media_url                  String?                 @db.VarChar(1000)\n  product_id                 String?                 @db.Uuid\n  sent_count                 Int?                    @default(0)\n  template_id                String?                 @db.Uuid\n  template_parameters        Json?                   @default(\"[]\")\n  total_recipients           Int?                    @default(0)\n  updated_at                 DateTime?               @default(now()) @db.Timestamptz(6)\n  whatsapp_template_language String?                 @default(\"en\") @db.VarChar(10)\n  whatsapp_template_name     String?                 @db.VarChar(100)\n  notification_templates     notification_templates? @relation(fields: [template_id], references: [template_id], onDelete: NoAction, onUpdate: NoAction)\n\n  @@index([business_id, status], map: \"idx_campaigns_business_status\")\n  @@index([tenant_id], map: \"idx_campaigns_tenant_id\")\n  @@index([auto_approve_at], map: \"idx_campaigns_auto_approve_at\")\n  @@index([scheduled_at], map: \"idx_campaigns_scheduled_at\")\n  @@index([created_at(sort: Desc)], map: \"idx_campaigns_created_at\")\n  @@index([audience_type], map: \"idx_campaigns_audience_type\")\n  @@index([template_id], map: \"idx_campaigns_template_id\")\n}\n\n/// Campaign recipients - tracks WhatsApp campaign delivery and engagement.\n/// campaign_id stores the MongoDB ObjectID (24-char hex) from the MongoDB campaigns collection,\n/// NOT the UUID from the PostgreSQL campaigns table. No FK is intentional (cross-DB reference).\nmodel campaign_recipients {\n  id                  BigInt    @id @default(autoincrement())\n  campaign_id         String    @db.VarChar(24)\n  business_id         String    @db.VarChar(36)\n  phone_number        String    @db.VarChar(30)\n  contact_id          String?   @db.VarChar(36)\n  resolved_variables  Json      @default(\"{}\")\n  status              String    @default(\"PENDING\") @db.VarChar(20)\n  whatsapp_message_id String?   @db.VarChar(100)\n  sent_at             DateTime? @db.Timestamptz(6)\n  delivered_at        DateTime? @db.Timestamptz(6)\n  read_at             DateTime? @db.Timestamptz(6)\n  failed_at           DateTime? @db.Timestamptz(6)\n  error_code          String?   @db.VarChar(50)\n  error_message       String?\n  retry_count         Int       @default(0)\n  next_retry_at       DateTime? @db.Timestamptz(6)\n  created_at          DateTime  @default(now()) @db.Timestamptz(6)\n  updated_at          DateTime  @default(now()) @db.Timestamptz(6)\n\n  @@index([campaign_id], map: \"idx_campaign_recipients_campaign\")\n  @@index([business_id], map: \"idx_campaign_recipients_business\")\n  @@index([campaign_id, status], map: \"idx_campaign_recipients_status\")\n  @@index([whatsapp_message_id], map: \"idx_campaign_recipients_wa_msg_id\")\n  @@index([campaign_id, business_id], map: \"idx_campaign_recipients_campaign_business\")\n}\n\n/// Notification Templates - Reusable message templates\nmodel notification_templates {\n  template_id           String                  @id @default(dbgenerated(\"gen_random_uuid()\")) @db.Uuid\n  business_id           String?                 @db.Uuid\n  tenant_id             String?                 @db.Uuid\n  template_key          String                  @db.VarChar(100)\n  template_name         String                  @db.VarChar(255)\n  description           String?\n  email_subject         String?                 @db.VarChar(500)\n  email_body            String?\n  email_html            String?\n  sms_body              String?                 @db.VarChar(1600)\n  whatsapp_body         String?\n  push_title            String?                 @db.VarChar(255)\n  push_body             String?\n  variables             Json                    @default(\"[]\")\n  enabled_channels      Json                    @default(\"[\\\"email\\\", \\\"sms\\\", \\\"whatsapp\\\", \\\"push\\\"]\")\n  is_active             Boolean                 @default(true)\n  is_system             Boolean                 @default(false)\n  created_at            DateTime                @default(now()) @db.Timestamptz(6)\n  updated_at            DateTime                @default(now()) @db.Timestamptz(6)\n  created_by            String?                 @db.Uuid\n  campaigns             campaigns[]\n  notification_messages notification_messages[]\n  businesses            businesses?             @relation(\"notification_templates_business\", fields: [business_id], references: [business_id], onDelete: Cascade)\n  tenants               tenants?                @relation(\"notification_templates_tenant\", fields: [tenant_id], references: [tenant_id], onDelete: Cascade)\n\n  @@unique([business_id, template_key], map: \"unique_template_key_per_business\")\n  @@index([business_id], map: \"idx_notification_templates_business_id\")\n  @@index([tenant_id], map: \"idx_notification_templates_tenant_id\")\n  @@index([template_key], map: \"idx_notification_templates_template_key\")\n  @@index([is_active], map: \"idx_notification_templates_active\")\n}\n\n/// Notification Messages - All notification records\nmodel notification_messages {\n  notification_id        String                  @id @default(dbgenerated(\"gen_random_uuid()\")) @db.Uuid\n  business_id            String                  @db.Uuid\n  tenant_id              String                  @db.Uuid\n  customer_id            String?                 @db.Uuid\n  user_id                String?                 @db.Uuid\n  recipient_email        String?                 @db.VarChar(255)\n  recipient_phone        String?                 @db.VarChar(20)\n  recipient_name         String?                 @db.VarChar(255)\n  template_id            String?                 @db.Uuid\n  template_key           String?                 @db.VarChar(100)\n  channel                String                  @db.VarChar(50)\n  subject                String?                 @db.VarChar(500)\n  body                   String?\n  html_body              String?\n  context_data           Json                    @default(\"{}\")\n  related_entity_type    String?                 @db.VarChar(100)\n  related_entity_id      String?                 @db.Uuid\n  status                 String                  @default(\"pending\") @db.VarChar(50)\n  priority               Int                     @default(5)\n  provider               String?                 @db.VarChar(50)\n  provider_message_id    String?                 @db.VarChar(500)\n  provider_response      Json?\n  scheduled_at           DateTime?               @db.Timestamptz(6)\n  queued_at              DateTime?               @db.Timestamptz(6)\n  sent_at                DateTime?               @db.Timestamptz(6)\n  delivered_at           DateTime?               @db.Timestamptz(6)\n  failed_at              DateTime?               @db.Timestamptz(6)\n  retry_count            Int                     @default(0)\n  max_retries            Int                     @default(3)\n  last_retry_at          DateTime?               @db.Timestamptz(6)\n  error_message          String?\n  error_code             String?                 @db.VarChar(100)\n  created_at             DateTime                @default(now()) @db.Timestamptz(6)\n  updated_at             DateTime                @default(now()) @db.Timestamptz(6)\n  notification_events    notification_events[]\n  businesses             businesses              @relation(\"notification_messages_business\", fields: [business_id], references: [business_id], onDelete: Cascade)\n  customers              customers?              @relation(\"notification_messages_customer\", fields: [customer_id], references: [customer_id])\n  notification_templates notification_templates? @relation(fields: [template_id], references: [template_id])\n  tenants                tenants                 @relation(\"notification_messages_tenant\", fields: [tenant_id], references: [tenant_id], onDelete: Cascade)\n\n  @@index([business_id], map: \"idx_notification_messages_business_id\")\n  @@index([tenant_id], map: \"idx_notification_messages_tenant_id\")\n  @@index([customer_id], map: \"idx_notification_messages_customer_id\")\n  @@index([status], map: \"idx_notification_messages_status\")\n  @@index([channel], map: \"idx_notification_messages_channel\")\n  @@index([template_id], map: \"idx_notification_messages_template_id\")\n  @@index([related_entity_type, related_entity_id], map: \"idx_notification_messages_related_entity\")\n  @@index([scheduled_at], map: \"idx_notification_messages_scheduled_at\")\n  @@index([created_at], map: \"idx_notification_messages_created_at\")\n}\n\n/// Notification Preferences - User/Customer notification settings\nmodel notification_preferences {\n  preference_id       String      @id @default(dbgenerated(\"gen_random_uuid()\")) @db.Uuid\n  customer_id         String?     @db.Uuid\n  user_id             String?     @db.Uuid\n  business_id         String?     @db.Uuid\n  email_enabled       Boolean     @default(true)\n  sms_enabled         Boolean     @default(true)\n  whatsapp_enabled    Boolean     @default(true)\n  push_enabled        Boolean     @default(true)\n  preferences         Json        @default(\"{\\\"newsletters\\\": false, \\\"promotional\\\": false, \\\"order_updates\\\": true, \\\"account_updates\\\": true, \\\"payment_updates\\\": true}\")\n  quiet_hours         Json        @default(\"{\\\"end\\\": \\\"08:00\\\", \\\"start\\\": \\\"22:00\\\", \\\"enabled\\\": false}\")\n  channel_preferences Json        @default(\"{}\")\n  created_at          DateTime    @default(now()) @db.Timestamptz(6)\n  updated_at          DateTime    @default(now()) @db.Timestamptz(6)\n  businesses          businesses? @relation(\"notification_prefs_business\", fields: [business_id], references: [business_id], onDelete: Cascade)\n  customers           customers?  @relation(\"notification_prefs_customer\", fields: [customer_id], references: [customer_id], onDelete: Cascade)\n\n  @@unique([customer_id, business_id], map: \"unique_customer_business_pref\")\n  @@unique([user_id, business_id], map: \"unique_user_business_pref\")\n  @@index([customer_id], map: \"idx_notification_prefs_customer_id\")\n  @@index([user_id], map: \"idx_notification_prefs_user_id\")\n  @@index([business_id], map: \"idx_notification_prefs_business_id\")\n}\n\n/// Payments - Payment transactions with Razorpay\nmodel payments {\n  payment_id           String             @id @default(dbgenerated(\"gen_random_uuid()\")) @db.Uuid\n  business_id          String             @db.Uuid\n  tenant_id            String             @db.Uuid\n  order_id             String             @db.Uuid\n  customer_id          String             @db.Uuid\n  razorpay_order_id    String             @unique @db.VarChar(255)\n  razorpay_payment_id  String?            @unique @db.VarChar(255)\n  razorpay_signature   String?            @db.VarChar(500)\n  amount               Decimal            @db.Decimal(10, 2)\n  currency             String             @default(\"INR\") @db.VarChar(3)\n  status               String             @default(\"created\") @db.VarChar(50)\n  method               String?            @db.VarChar(50)\n  receipt              String?            @db.VarChar(255)\n  description          String?\n  notes                Json?\n  webhook_received_at  DateTime?          @db.Timestamptz(6)\n  webhook_processed_at DateTime?          @db.Timestamptz(6)\n  webhook_attempts     Int                @default(0)\n  refund_amount        Decimal            @default(0) @db.Decimal(10, 2)\n  refunded_at          DateTime?          @db.Timestamptz(6)\n  refund_reason        String?\n  authorized_at        DateTime?          @db.Timestamptz(6)\n  captured_at          DateTime?          @db.Timestamptz(6)\n  failed_at            DateTime?          @db.Timestamptz(6)\n  failure_reason       String?\n  created_at           DateTime           @default(now()) @db.Timestamptz(6)\n  updated_at           DateTime           @default(now()) @db.Timestamptz(6)\n  payment_webhooks     payment_webhooks[]\n  businesses           businesses         @relation(fields: [business_id], references: [business_id])\n  customers            customers          @relation(fields: [customer_id], references: [customer_id])\n  orders               orders             @relation(fields: [order_id], references: [order_id], onDelete: Cascade)\n\n  @@index([order_id], map: \"idx_payments_order_id\")\n  @@index([business_id], map: \"idx_payments_business_id\")\n  @@index([customer_id], map: \"idx_payments_customer_id\")\n  @@index([razorpay_order_id], map: \"idx_payments_razorpay_order_id\")\n  @@index([razorpay_payment_id], map: \"idx_payments_razorpay_payment_id\")\n  @@index([status], map: \"idx_payments_status\")\n  @@index([created_at], map: \"idx_payments_created_at\")\n}\n\n/// Payment Reconciliation - Daily settlement matching\nmodel payment_reconciliation {\n  reconciliation_id      String     @id @default(dbgenerated(\"gen_random_uuid()\")) @db.Uuid\n  business_id            String     @db.Uuid\n  settlement_date        DateTime   @db.Date\n  start_date             DateTime   @db.Timestamptz(6)\n  end_date               DateTime   @db.Timestamptz(6)\n  total_payments         Int        @default(0)\n  total_amount           Decimal    @default(0) @db.Decimal(10, 2)\n  total_fees             Decimal    @default(0) @db.Decimal(10, 2)\n  net_amount             Decimal    @default(0) @db.Decimal(10, 2)\n  status                 String     @default(\"pending\") @db.VarChar(50)\n  razorpay_settlement_id String?    @db.VarChar(255)\n  discrepancy_count      Int        @default(0)\n  discrepancy_details    Json?\n  created_at             DateTime   @default(now()) @db.Timestamptz(6)\n  updated_at             DateTime   @default(now()) @db.Timestamptz(6)\n  businesses             businesses @relation(fields: [business_id], references: [business_id])\n\n  @@unique([business_id, settlement_date], map: \"uniq_reconciliation_business_date\")\n  @@index([business_id], map: \"idx_reconciliation_business_id\")\n  @@index([settlement_date], map: \"idx_reconciliation_settlement_date\")\n  @@index([status], map: \"idx_reconciliation_status\")\n}\n\nmodel notification_events {\n  event_id              String                @id @default(dbgenerated(\"gen_random_uuid()\")) @db.Uuid\n  notification_id       String                @db.Uuid\n  event_type            String                @db.VarChar(50)\n  event_data            Json?\n  provider_event_id     String?               @db.VarChar(255)\n  provider_timestamp    DateTime?             @db.Timestamptz(6)\n  occurred_at           DateTime              @default(now()) @db.Timestamptz(6)\n  notification_messages notification_messages @relation(fields: [notification_id], references: [notification_id], onDelete: Cascade)\n\n  @@index([event_type], map: \"idx_notification_events_event_type\")\n  @@index([notification_id], map: \"idx_notification_events_notification_id\")\n  @@index([occurred_at], map: \"idx_notification_events_occurred_at\")\n}\n\nmodel payment_webhooks {\n  webhook_id        String    @id @default(dbgenerated(\"gen_random_uuid()\")) @db.Uuid\n  payment_id        String?   @db.Uuid\n  event_type        String    @db.VarChar(100)\n  razorpay_event_id String    @unique @db.VarChar(255)\n  payload           Json\n  signature         String?   @db.VarChar(500)\n  status            String    @default(\"pending\") @db.VarChar(50)\n  processed_at      DateTime? @db.Timestamptz(6)\n  error_message     String?\n  retry_count       Int       @default(0)\n  received_at       DateTime  @default(now()) @db.Timestamptz(6)\n  created_at        DateTime  @default(now()) @db.Timestamptz(6)\n  payments          payments? @relation(fields: [payment_id], references: [payment_id])\n\n  @@index([event_type], map: \"idx_webhooks_event_type\")\n  @@index([payment_id], map: \"idx_webhooks_payment_id\")\n  @@index([razorpay_event_id], map: \"idx_webhooks_razorpay_event_id\")\n  @@index([received_at], map: \"idx_webhooks_received_at\")\n  @@index([status], map: \"idx_webhooks_status\")\n}\n\n/// Instagram Media - Instagram posts and media\nmodel instagram_media {\n  id              String          @id @default(dbgenerated(\"gen_random_uuid()\")) @db.Uuid\n  media_id        String          @unique @db.VarChar(255)\n  account_id      String          @db.Uuid\n  media_type      String          @db.VarChar(50)\n  media_url       String?\n  thumbnail_url   String?\n  caption         String?\n  permalink       String?\n  timestamp       DateTime        @db.Timestamptz(6)\n  like_count      Int?            @default(0)\n  comment_count   Int?            @default(0)\n  owner_username  String?         @db.VarChar(255)\n  created_at      DateTime        @default(now()) @db.Timestamptz(6)\n  updated_at      DateTime        @default(now()) @db.Timestamptz(6)\n  social_accounts social_accounts @relation(fields: [account_id], references: [account_id], onDelete: Cascade)\n\n  @@index([account_id], map: \"idx_instagram_media_account_id\")\n  @@index([media_id], map: \"idx_instagram_media_media_id\")\n  @@index([timestamp], map: \"idx_instagram_media_timestamp\")\n}\n\n/// Product Categories - hierarchical product categorization\nmodel workflow_definitions {\n  workflow_id               String                      @id @default(dbgenerated(\"gen_random_uuid()\")) @db.Uuid\n  workflow_key              String                      @db.VarChar(100)\n  workflow_name             String                      @db.VarChar(100)\n  version                   String                      @default(\"1.0.0\") @db.VarChar(20)\n  business_type             String                      @db.VarChar(50)\n  intent_name               String                      @db.VarChar(100)\n  workflow_definition       Json\n  description               String?\n  is_active                 Boolean                     @default(true)\n  created_at                DateTime                    @default(now()) @db.Timestamptz(6)\n  updated_at                DateTime                    @default(now()) @db.Timestamptz(6)\n  business_workflows        business_workflows[]\n  workflow_executions       workflow_executions[]\n  workflow_execution_steps  workflow_execution_steps[]\n  workflow_idempotency_keys workflow_idempotency_keys[]\n\n  // unique_business_type_intent was dropped: the runtime now supports many\n  // workflows per (business_type, intent_name) and the constraint was blocking\n  // legitimate inserts when more than one schedule/event workflow lived in the\n  // same business. See migration drop_workflow_definitions_unique_business_type_intent.\n  @@index([business_type], map: \"idx_workflow_definitions_business_type\")\n  @@index([intent_name], map: \"idx_workflow_definitions_intent\")\n  @@index([is_active], map: \"idx_workflow_definitions_active\")\n}\n\n/// Business Workflows - Workflows assigned to each business\nmodel business_workflows {\n  id                   String               @id @default(dbgenerated(\"gen_random_uuid()\")) @db.Uuid\n  business_id          String               @db.Uuid\n  tenant_id            String               @db.Uuid\n  intent_name          String               @db.VarChar(100)\n  workflow_id          String               @db.Uuid\n  is_active            Boolean              @default(true)\n  created_at           DateTime             @default(now()) @db.Timestamptz(6)\n  updated_at           DateTime             @default(now()) @db.Timestamptz(6)\n  businesses           businesses           @relation(fields: [business_id], references: [business_id], onDelete: Cascade)\n  tenants              tenants              @relation(fields: [tenant_id], references: [tenant_id])\n  workflow_definitions workflow_definitions @relation(fields: [workflow_id], references: [workflow_id])\n\n  @@unique([business_id, intent_name], map: \"unique_business_intent\")\n  @@index([business_id], map: \"idx_business_workflows_business_id\")\n  @@index([intent_name], map: \"idx_business_workflows_intent\")\n  @@index([workflow_id], map: \"idx_business_workflows_workflow_id\")\n}\n\nmodel workflow_executions {\n  execution_id         String                      @id @default(dbgenerated(\"gen_random_uuid()\")) @db.Uuid\n  workflow_id          String                      @db.Uuid\n  business_id          String                      @db.Uuid\n  tenant_id            String?                     @db.Uuid\n  lead_id              String                      @db.Uuid\n  status               String                      @db.VarChar(50)\n  started_at           DateTime                    @default(now()) @db.Timestamptz(6)\n  completed_at         DateTime?                   @db.Timestamptz(6)\n  created_at           DateTime                    @default(now()) @db.Timestamptz(6)\n  updated_at           DateTime                    @default(now()) @db.Timestamptz(6)\n  current_node_id      String?                     @db.VarChar(100)\n  waiting_for_input    Boolean                     @default(false)\n  channel              String?                     @db.VarChar(50)\n  context              Json?\n  intent               String?                     @db.VarChar(100)\n  message_id           String?                     @db.VarChar(255)\n  chat_id              String?                     @db.VarChar(255)\n  conversation_id      String?                     @db.Uuid\n  system_context       Json?\n  businesses           businesses                  @relation(fields: [business_id], references: [business_id])\n  tenants              tenants?                    @relation(fields: [tenant_id], references: [tenant_id])\n  leads                leads                       @relation(fields: [lead_id], references: [lead_id])\n  workflow_definitions workflow_definitions        @relation(fields: [workflow_id], references: [workflow_id])\n  steps                workflow_execution_steps[]\n  idempotency_keys     workflow_idempotency_keys[]\n\n  @@index([business_id], map: \"idx_workflow_executions_business_id\")\n  @@index([business_id, status], map: \"idx_workflow_executions_business_status\")\n  @@index([business_id, chat_id, waiting_for_input], map: \"idx_workflow_executions_business_chat_waiting\")\n  @@index([conversation_id], map: \"idx_workflow_executions_conversation_id\")\n  @@index([lead_id], map: \"idx_workflow_executions_lead_id\")\n  @@index([started_at(sort: Desc)], map: \"idx_workflow_executions_started_at\")\n  @@index([status], map: \"idx_workflow_executions_status\")\n  @@index([tenant_id], map: \"idx_workflow_executions_tenant_id\")\n  @@index([workflow_id], map: \"idx_workflow_executions_workflow_id\")\n}\n\nmodel workflow_execution_steps {\n  step_id             String               @id @default(dbgenerated(\"gen_random_uuid()\")) @db.Uuid\n  execution_id        String               @db.Uuid\n  workflow_id         String               @db.Uuid\n  business_id         String               @db.Uuid\n  tenant_id           String?              @db.Uuid\n  node_id             String               @db.VarChar(100)\n  node_type           String?              @db.VarChar(100)\n  node_name           String?              @db.VarChar(255)\n  status              String               @db.VarChar(30)\n  input               Json?\n  output              Json?\n  error_message       String?\n  error_stack         String?\n  started_at          DateTime             @default(now()) @db.Timestamptz(6)\n  completed_at        DateTime?            @db.Timestamptz(6)\n  duration_ms         Int?\n  created_at          DateTime             @default(now()) @db.Timestamptz(6)\n  execution           workflow_executions  @relation(fields: [execution_id], references: [execution_id], onDelete: Cascade)\n  business            businesses           @relation(fields: [business_id], references: [business_id], onDelete: Cascade)\n  tenant              tenants?             @relation(fields: [tenant_id], references: [tenant_id])\n  workflow_definition workflow_definitions @relation(fields: [workflow_id], references: [workflow_id])\n\n  @@index([execution_id, started_at(sort: Desc)], map: \"idx_workflow_steps_execution_started\")\n  @@index([business_id, started_at(sort: Desc)], map: \"idx_workflow_steps_business_started\")\n  @@index([business_id, node_id], map: \"idx_workflow_steps_business_node\")\n  @@index([tenant_id], map: \"idx_workflow_steps_tenant_id\")\n  @@index([workflow_id], map: \"idx_workflow_steps_workflow_id\")\n}\n\nmodel workflow_idempotency_keys {\n  key_id              String                @id @default(dbgenerated(\"gen_random_uuid()\")) @db.Uuid\n  idempotency_key     String                @unique @db.VarChar(255)\n  business_id         String                @db.Uuid\n  tenant_id           String?               @db.Uuid\n  workflow_id         String?               @db.Uuid\n  execution_id        String?               @db.Uuid\n  lead_id             String?               @db.Uuid\n  conversation_id     String?               @db.Uuid\n  message_id          String?               @db.VarChar(255)\n  node_id             String?               @db.VarChar(100)\n  purpose             String                @db.VarChar(100)\n  status              String                @default(\"started\") @db.VarChar(30)\n  response            Json?\n  locked_until        DateTime?             @db.Timestamptz(6)\n  created_at          DateTime              @default(now()) @db.Timestamptz(6)\n  updated_at          DateTime              @default(now()) @db.Timestamptz(6)\n  business            businesses            @relation(fields: [business_id], references: [business_id], onDelete: Cascade)\n  tenant              tenants?              @relation(fields: [tenant_id], references: [tenant_id])\n  workflow_definition workflow_definitions? @relation(fields: [workflow_id], references: [workflow_id])\n  execution           workflow_executions?  @relation(fields: [execution_id], references: [execution_id], onDelete: SetNull)\n\n  @@index([business_id, purpose, created_at(sort: Desc)], map: \"idx_workflow_idem_business_purpose\")\n  @@index([business_id, message_id], map: \"idx_workflow_idem_business_message\")\n  @@index([execution_id], map: \"idx_workflow_idem_execution_id\")\n  @@index([lead_id], map: \"idx_workflow_idem_lead_id\")\n  @@index([tenant_id], map: \"idx_workflow_idem_tenant_id\")\n}\n\n/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.\n/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments\nmodel cart_items {\n  cart_item_id String         @id @default(dbgenerated(\"gen_random_uuid()\")) @db.Uuid\n  cart_id      String         @db.Uuid\n  item_id      String         @db.Uuid\n  variant_id   String?        @db.Uuid\n  product_name String         @db.VarChar(255)\n  variant_name String?        @db.VarChar(255)\n  quantity     Int?           @default(1)\n  unit_price   Decimal        @db.Decimal(10, 2)\n  total_price  Decimal        @db.Decimal(10, 2)\n  snapshot     Json?          @db.Json\n  created_at   DateTime       @default(now()) @db.Timestamptz(6)\n  updated_at   DateTime       @default(now()) @db.Timestamptz(6)\n  carts        carts          @relation(fields: [cart_id], references: [cart_id], onDelete: Cascade, onUpdate: NoAction)\n  catalog_item catalog_items  @relation(fields: [item_id], references: [item_id], onDelete: Cascade, onUpdate: NoAction)\n  item_variant item_variants? @relation(fields: [variant_id], references: [variant_id], onUpdate: NoAction)\n\n  @@unique([cart_id, item_id, variant_id])\n  @@index([cart_id], map: \"idx_cart_items_cart_id\")\n  @@index([item_id], map: \"idx_cart_items_item_id\")\n}\n\n/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.\n/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments\nmodel carts {\n  cart_id      String       @id @default(dbgenerated(\"gen_random_uuid()\")) @db.Uuid\n  business_id  String       @db.Uuid\n  tenant_id    String       @db.Uuid\n  lead_id      String?      @db.Uuid\n  status       String?      @default(\"active\") @db.VarChar(20)\n  total_amount Decimal?     @default(0) @db.Decimal(10, 2)\n  total_items  Int?         @default(0)\n  expires_at   DateTime?    @db.Timestamptz(6)\n  created_at   DateTime     @default(now()) @db.Timestamptz(6)\n  updated_at   DateTime     @default(now()) @db.Timestamptz(6)\n  customer_id  String?      @db.Uuid\n  cart_items   cart_items[]\n  businesses   businesses   @relation(fields: [business_id], references: [business_id], onDelete: Cascade, onUpdate: NoAction)\n  customers    customers?   @relation(fields: [customer_id], references: [customer_id], onUpdate: NoAction)\n  leads        leads?       @relation(fields: [lead_id], references: [lead_id], onDelete: Cascade, onUpdate: NoAction)\n  tenants      tenants      @relation(fields: [tenant_id], references: [tenant_id], onDelete: Cascade, onUpdate: NoAction)\n\n  @@index([business_id], map: \"idx_carts_business_id\")\n  @@index([created_at], map: \"idx_carts_created_at\")\n  @@index([customer_id], map: \"idx_carts_customer_id\")\n  @@index([lead_id], map: \"idx_carts_lead_id\")\n  @@index([status], map: \"idx_carts_status\")\n}\n\nmodel whatsapp_optouts {\n  id           BigInt   @id @default(autoincrement())\n  business_id  String   @db.VarChar(24)\n  phone_number String   @db.VarChar(20)\n  opted_out_at DateTime @default(now()) @db.Timestamptz(6)\n  reason       String?  @db.VarChar(100)\n\n  @@unique([business_id, phone_number])\n  @@index([business_id, phone_number], map: \"idx_optouts_lookup\")\n}\n\nmodel campaign_analytics {\n  id             BigInt   @id @default(autoincrement())\n  campaign_id    String   @unique @db.VarChar(36)\n  business_id    String   @db.VarChar(36)\n  total          Int      @default(0)\n  pending        Int      @default(0)\n  sent           Int      @default(0)\n  delivered      Int      @default(0)\n  read           Int      @default(0)\n  failed         Int      @default(0)\n  skipped        Int      @default(0)\n  delivery_rate  Decimal  @default(0) @db.Decimal(5, 2)\n  read_rate      Decimal  @default(0) @db.Decimal(5, 2)\n  estimated_cost Decimal  @default(0) @db.Decimal(10, 4)\n  last_synced_at DateTime @default(now()) @db.Timestamptz(6)\n  updated_at     DateTime @default(now()) @db.Timestamptz(6)\n\n  @@index([business_id], map: \"idx_analytics_business\")\n}\n\nmodel hotel_pricing_recommendations {\n  id                   String                   @id @default(dbgenerated(\"gen_random_uuid()\")) @db.Uuid\n  business_id          String?                  @db.Uuid\n  hotel_id             String                   @db.VarChar(50)\n  org_id               String                   @db.VarChar(255)\n  room_type            String                   @db.VarChar(100)\n  checkin_date         DateTime                 @db.Date\n  suggested_price      Int\n  demand_score         Float\n  confidence           Float\n  competitor_avg_price Int\n  current_price        Int\n  price_range_low      Int\n  price_range_high     Int\n  claude_narrative     String?\n  xotelo_snapshot      Json?\n  seven_day_forecast   Json?\n  created_at           DateTime                 @default(now()) @db.Timestamptz(6)\n  booking_outcomes     hotel_booking_outcomes[]\n\n  @@index([hotel_id, checkin_date])\n  @@index([org_id])\n  @@index([business_id])\n}\n\nmodel hotel_booking_outcomes {\n  id                String                        @id @default(dbgenerated(\"gen_random_uuid()\")) @db.Uuid\n  business_id       String?                       @db.Uuid\n  recommendation_id String                        @db.Uuid\n  hotel_id          String                        @db.VarChar(50)\n  org_id            String                        @db.VarChar(255)\n  actual_price_used Int\n  rooms_booked      Int\n  total_rooms       Int\n  actual_occupancy  Float\n  revenue           Int\n  checkin_date      DateTime                      @db.Date\n  recorded_at       DateTime                      @default(now()) @db.Timestamptz(6)\n  recommendation    hotel_pricing_recommendations @relation(fields: [recommendation_id], references: [id])\n\n  @@index([hotel_id])\n  @@index([recommendation_id])\n}\n\nmodel hotel_pricing_notifications {\n  id          String    @id @default(dbgenerated(\"gen_random_uuid()\")) @db.Uuid\n  business_id String?   @db.Uuid\n  org_id      String    @db.VarChar(255)\n  hotel_id    String    @db.VarChar(50)\n  type        String    @db.VarChar(50)\n  title       String    @db.VarChar(255)\n  body        String\n  metadata    Json?\n  read_at     DateTime?\n  created_at  DateTime  @default(now()) @db.Timestamptz(6)\n\n  @@index([org_id, created_at(sort: Desc)])\n  @@index([hotel_id])\n  @@index([business_id])\n}\n\n/// catalog_items - single table for all sellable items across all business types\n/// item_type: \"physical_product\" | \"accommodation\" | \"activity\" | \"service\" | \"vehicle\"\nmodel catalog_items {\n  item_id                   String                      @id @default(dbgenerated(\"gen_random_uuid()\")) @db.Uuid\n  business_id               String                      @db.Uuid\n  tenant_id                 String                      @db.Uuid\n  /// \"physical_product\" | \"accommodation\" | \"activity\" | \"service\"\n  item_type                 String                      @db.VarChar(30)\n  name                      String                      @db.VarChar(255)\n  description               String?\n  category                  String?                     @db.VarChar(100)\n  base_price                Decimal                     @db.Decimal(10, 2)\n  compare_price             Decimal?                    @db.Decimal(10, 2)\n  currency                  String                      @default(\"INR\") @db.VarChar(10)\n  /// stock count — used for physical_product only (null for accommodation/activity/service)\n  stock_quantity            Int?\n  primary_image_url         String?                     @db.VarChar(500)\n  image_urls                Json?\n  /// Type-specific fields stored as JSONB — GIN indexed after migration\n  /// accommodation: { capacity, total_units, check_in_time, check_out_time, bed_type, has_ac, has_wifi, has_pool, meal_plan, extra_guest_charge }\n  /// activity:      { total_slots, group_size_min, group_size_max, duration_hours, duration_days, difficulty, includes, excludes, location, start_times }\n  /// service:       { duration_minutes, concurrent_slots, requires_appointment }\n  /// physical_product: { brand, condition, weight, dimensions }\n  attributes                Json?\n  /// AI-generated tags for chatbot fuzzy search — GIN indexed after migration\n  ai_tags                   String[]                    @default([])\n  is_active                 Boolean                     @default(true)\n  deleted_at                DateTime?                   @db.Timestamptz(6)\n  created_at                DateTime                    @default(now()) @db.Timestamptz(6)\n  updated_at                DateTime                    @default(now()) @db.Timestamptz(6)\n  cart_items                cart_items[]\n  cart_reservations         cart_reservations[]\n  product_detail            product_item_details?\n  hospitality_detail        hospitality_item_details?\n  vehicle_detail            vehicle_item_details?\n  product_order_items       product_order_items[]\n  hospitality_booking_items hospitality_booking_items[]\n  product_inquiries         product_inquiries[]\n  hospitality_inquiries     hospitality_inquiries[]\n  businesses                businesses                  @relation(fields: [business_id], references: [business_id], onDelete: Cascade)\n  availability              item_availability[]\n  variants                  item_variants[]\n  order_items               order_items[]\n  external_catalog_items    external_catalog_items[]\n\n  @@index([business_id, item_type, is_active])\n  @@index([business_id, created_at(sort: Desc)])\n  @@index([business_id, category, is_active])\n}\n\n/// item_variants - size/color/SKU variants for physical_product items only\nmodel item_variants {\n  variant_id          String                @id @default(dbgenerated(\"gen_random_uuid()\")) @db.Uuid\n  item_id             String                @db.Uuid\n  business_id         String                @db.Uuid\n  name                String                @db.VarChar(100)\n  sku                 String?               @db.VarChar(100)\n  price               Decimal               @db.Decimal(10, 2)\n  stock_quantity      Int                   @default(0)\n  /// e.g. { \"color\": \"Red\", \"size\": \"M\" } — GIN indexed via attributes on parent\n  options             Json?\n  is_active           Boolean               @default(true)\n  created_at          DateTime              @default(now()) @db.Timestamptz(6)\n  updated_at          DateTime              @default(now()) @db.Timestamptz(6)\n  cart_items          cart_items[]\n  item                catalog_items         @relation(fields: [item_id], references: [item_id], onDelete: Cascade)\n  order_items         order_items[]\n  product_order_items product_order_items[]\n\n  @@index([item_id])\n  @@index([business_id])\n}\n\n/// item_availability - date-based slot availability for accommodation, activity, service items\nmodel item_availability {\n  avail_id       String        @id @default(dbgenerated(\"gen_random_uuid()\")) @db.Uuid\n  item_id        String        @db.Uuid\n  business_id    String        @db.Uuid\n  date           DateTime      @db.Date\n  total_slots    Int\n  booked_slots   Int           @default(0)\n  /// date-specific price override (e.g. weekend surge) — null means use base_price\n  price_override Decimal?      @db.Decimal(10, 2)\n  is_blocked     Boolean       @default(false)\n  created_at     DateTime      @default(now()) @db.Timestamptz(6)\n  updated_at     DateTime      @default(now()) @db.Timestamptz(6)\n  item           catalog_items @relation(fields: [item_id], references: [item_id], onDelete: Cascade)\n\n  @@unique([item_id, date])\n  @@index([item_id, date])\n  @@index([business_id, date])\n}\n\n// ─── INDUSTRY EXTENSIONS: PRODUCTS ───────────────────────────────────────────\n\nmodel product_item_details {\n  item_id     String        @id @db.Uuid\n  business_id String        @db.Uuid\n  brand       String?       @db.VarChar(150)\n  sku         String?       @db.VarChar(100)\n  condition   String?       @db.VarChar(50)\n  weight      Decimal?      @db.Decimal(10, 3)\n  dimensions  Json?\n  warranty    String?       @db.VarChar(255)\n  metadata    Json?\n  created_at  DateTime      @default(now()) @db.Timestamptz(6)\n  updated_at  DateTime      @default(now()) @db.Timestamptz(6)\n  business    businesses    @relation(fields: [business_id], references: [business_id], onDelete: Cascade)\n  item        catalog_items @relation(fields: [item_id], references: [item_id], onDelete: Cascade)\n\n  @@index([business_id])\n  @@index([sku])\n}\n\nmodel external_catalog_items {\n  external_catalog_item_id String         @id @default(dbgenerated(\"gen_random_uuid()\")) @db.Uuid\n  business_id              String         @db.Uuid\n  item_id                  String?        @db.Uuid\n  provider                 String         @db.VarChar(50)\n  external_catalog_id      String?        @db.VarChar(255)\n  external_product_id      String         @db.VarChar(255)\n  retailer_id              String?        @db.VarChar(255)\n  sync_status              String         @default(\"imported\") @db.VarChar(30)\n  last_synced_at           DateTime?      @db.Timestamptz(6)\n  remote_hash              String?        @db.VarChar(64)\n  local_hash               String?        @db.VarChar(64)\n  raw_payload              Json?\n  created_at               DateTime       @default(now()) @db.Timestamptz(6)\n  updated_at               DateTime       @default(now()) @db.Timestamptz(6)\n  business                 businesses     @relation(fields: [business_id], references: [business_id], onDelete: Cascade)\n  item                     catalog_items? @relation(fields: [item_id], references: [item_id])\n\n  @@unique([business_id, provider, external_product_id])\n  @@index([business_id, provider, sync_status])\n  @@index([business_id, item_id])\n  @@index([external_catalog_id])\n}\n\nmodel product_inquiries {\n  inquiry_id       String         @id @default(dbgenerated(\"gen_random_uuid()\")) @db.Uuid\n  business_id      String         @db.Uuid\n  tenant_id        String         @db.Uuid\n  lead_id          String         @db.Uuid\n  item_id          String?        @db.Uuid\n  variant_id       String?        @db.Uuid\n  quantity         Int?\n  delivery_pincode String?        @db.VarChar(20)\n  budget           Decimal?       @db.Decimal(10, 2)\n  status           String         @default(\"open\") @db.VarChar(30)\n  metadata         Json?\n  created_at       DateTime       @default(now()) @db.Timestamptz(6)\n  updated_at       DateTime       @default(now()) @db.Timestamptz(6)\n  business         businesses     @relation(fields: [business_id], references: [business_id], onDelete: Cascade)\n  tenant           tenants        @relation(fields: [tenant_id], references: [tenant_id], onDelete: Cascade)\n  lead             leads          @relation(fields: [lead_id], references: [lead_id], onDelete: Cascade)\n  item             catalog_items? @relation(fields: [item_id], references: [item_id])\n\n  @@index([business_id, status])\n  @@index([lead_id, created_at(sort: Desc)])\n  @@index([item_id])\n}\n\nmodel product_orders {\n  product_order_id String                        @id @default(dbgenerated(\"gen_random_uuid()\")) @db.Uuid\n  business_id      String                        @db.Uuid\n  tenant_id        String                        @db.Uuid\n  legacy_order_id  String?                       @unique @db.Uuid\n  customer_id      String?                       @db.Uuid\n  lead_id          String?                       @db.Uuid\n  order_number     String?                       @db.VarChar(50)\n  status           String                        @default(\"pending\") @db.VarChar(30)\n  payment_status   String                        @default(\"pending\") @db.VarChar(30)\n  subtotal         Decimal                       @default(0) @db.Decimal(10, 2)\n  discount_amount  Decimal                       @default(0) @db.Decimal(10, 2)\n  tax_amount       Decimal                       @default(0) @db.Decimal(10, 2)\n  shipping_fee     Decimal                       @default(0) @db.Decimal(10, 2)\n  total_amount     Decimal                       @db.Decimal(10, 2)\n  source           String?                       @default(\"whatsapp\") @db.VarChar(50)\n  shipping_address String?\n  shipping_city    String?                       @db.VarChar(100)\n  shipping_state   String?                       @db.VarChar(100)\n  shipping_pincode String?                       @db.VarChar(20)\n  shipping_phone   String?                       @db.VarChar(20)\n  notes            String?\n  metadata         Json?\n  paid_at          DateTime?                     @db.Timestamptz(6)\n  cancelled_at     DateTime?                     @db.Timestamptz(6)\n  created_at       DateTime                      @default(now()) @db.Timestamptz(6)\n  updated_at       DateTime                      @default(now()) @db.Timestamptz(6)\n  business         businesses                    @relation(fields: [business_id], references: [business_id], onDelete: Cascade)\n  tenant           tenants                       @relation(fields: [tenant_id], references: [tenant_id], onDelete: Cascade)\n  customer         customers?                    @relation(fields: [customer_id], references: [customer_id])\n  lead             leads?                        @relation(fields: [lead_id], references: [lead_id])\n  legacy_order     orders?                       @relation(fields: [legacy_order_id], references: [order_id])\n  items            product_order_items[]\n  events           product_order_status_events[]\n\n  @@index([business_id, created_at(sort: Desc)])\n  @@index([business_id, status])\n  @@index([business_id, payment_status])\n  @@index([customer_id])\n  @@index([lead_id])\n}\n\nmodel product_order_items {\n  product_order_item_id String         @id @default(dbgenerated(\"gen_random_uuid()\")) @db.Uuid\n  product_order_id      String         @db.Uuid\n  item_id               String         @db.Uuid\n  variant_id            String?        @db.Uuid\n  product_name          String         @db.VarChar(255)\n  variant_name          String?        @db.VarChar(255)\n  sku                   String?        @db.VarChar(100)\n  quantity              Int            @default(1)\n  unit_price            Decimal        @db.Decimal(10, 2)\n  discount              Decimal        @default(0) @db.Decimal(10, 2)\n  total_price           Decimal        @db.Decimal(10, 2)\n  snapshot              Json?\n  created_at            DateTime       @default(now()) @db.Timestamptz(6)\n  updated_at            DateTime       @default(now()) @db.Timestamptz(6)\n  product_order         product_orders @relation(fields: [product_order_id], references: [product_order_id], onDelete: Cascade)\n  item                  catalog_items  @relation(fields: [item_id], references: [item_id])\n  variant               item_variants? @relation(fields: [variant_id], references: [variant_id])\n\n  @@index([product_order_id])\n  @@index([item_id])\n}\n\nmodel product_order_status_events {\n  event_id         String         @id @default(dbgenerated(\"gen_random_uuid()\")) @db.Uuid\n  product_order_id String         @db.Uuid\n  business_id      String         @db.Uuid\n  from_status      String?        @db.VarChar(30)\n  to_status        String         @db.VarChar(30)\n  actor            String         @default(\"system\") @db.VarChar(20)\n  actor_id         String?        @db.Uuid\n  data             Json?\n  created_at       DateTime       @default(now()) @db.Timestamptz(6)\n  product_order    product_orders @relation(fields: [product_order_id], references: [product_order_id], onDelete: Cascade)\n\n  @@index([product_order_id, created_at(sort: Desc)])\n  @@index([business_id, created_at(sort: Desc)])\n}\n\n// ─── INDUSTRY EXTENSIONS: HOSPITALITY ────────────────────────────────────────\n\n// SELLER OPS: PRODUCT SELLER EXTENSIONS\n\nmodel seller_owner_approvals {\n  approval_id    String    @id @default(dbgenerated(\"gen_random_uuid()\")) @db.Uuid\n  business_id    String    @db.Uuid\n  tenant_id      String?   @db.Uuid\n  title          String    @db.VarChar(255)\n  simple_summary String?\n  action_type    String    @db.VarChar(60)\n  risk_level     String    @default(\"medium\") @db.VarChar(20)\n  status         String    @default(\"pending\") @db.VarChar(20)\n  source         String    @default(\"ai\") @db.VarChar(30)\n  entity_type    String?   @db.VarChar(60)\n  entity_id      String?   @db.VarChar(100)\n  requested_by   String?   @db.Uuid\n  decided_by     String?   @db.Uuid\n  payload        Json?\n  guardrails     Json?\n  due_at         DateTime? @db.Timestamptz(6)\n  decided_at     DateTime? @db.Timestamptz(6)\n  expires_at     DateTime? @db.Timestamptz(6)\n  created_at     DateTime  @default(now()) @db.Timestamptz(6)\n  updated_at     DateTime  @default(now()) @db.Timestamptz(6)\n\n  @@index([business_id, status, created_at(sort: Desc)], map: \"idx_seller_owner_approvals_queue\")\n  @@index([business_id, action_type, status], map: \"idx_seller_owner_approvals_action\")\n  @@index([entity_type, entity_id], map: \"idx_seller_owner_approvals_entity\")\n}\n\nmodel seller_store_settings {\n  seller_store_settings_id String   @id @default(dbgenerated(\"gen_random_uuid()\")) @db.Uuid\n  business_id              String   @unique @db.Uuid\n  tenant_id                String?  @db.Uuid\n  store_type               String   @default(\"local_retail\") @db.VarChar(50)\n  onboarding_status        String   @default(\"draft\") @db.VarChar(30)\n  default_currency         String   @default(\"INR\") @db.VarChar(10)\n  low_stock_threshold      Int      @default(5)\n  stock_hold_minutes       Int      @default(15)\n  payment_modes            String[] @default([\"cash\", \"upi\", \"cod\"])\n  delivery_modes           String[] @default([\"pickup\", \"local_delivery\"])\n  delivery_areas           Json?\n  credit_defaults          Json?\n  ai_guardrails            Json?\n  setup_checklist          Json?\n  created_at               DateTime @default(now()) @db.Timestamptz(6)\n  updated_at               DateTime @default(now()) @db.Timestamptz(6)\n\n  @@index([business_id, onboarding_status], map: \"idx_seller_store_settings_status\")\n}\n\nmodel seller_stock_reservations {\n  reservation_id String    @id @default(dbgenerated(\"gen_random_uuid()\")) @db.Uuid\n  business_id    String    @db.Uuid\n  tenant_id      String?   @db.Uuid\n  customer_id    String?   @db.Uuid\n  lead_id        String?   @db.Uuid\n  item_id        String    @db.Uuid\n  variant_id     String?   @db.Uuid\n  quantity       Int\n  status         String    @default(\"active\") @db.VarChar(20)\n  reason         String?   @db.VarChar(255)\n  source         String    @default(\"manual\") @db.VarChar(30)\n  expires_at     DateTime  @db.Timestamptz(6)\n  released_at    DateTime? @db.Timestamptz(6)\n  converted_at   DateTime? @db.Timestamptz(6)\n  created_by     String?   @db.Uuid\n  metadata       Json?\n  created_at     DateTime  @default(now()) @db.Timestamptz(6)\n  updated_at     DateTime  @default(now()) @db.Timestamptz(6)\n\n  @@index([business_id, status, expires_at], map: \"idx_seller_stock_reservations_active\")\n  @@index([business_id, item_id, status], map: \"idx_seller_stock_reservations_item\")\n  @@index([customer_id], map: \"idx_seller_stock_reservations_customer\")\n}\n\nmodel seller_return_cases {\n  return_id        String    @id @default(dbgenerated(\"gen_random_uuid()\")) @db.Uuid\n  business_id      String    @db.Uuid\n  tenant_id        String?   @db.Uuid\n  order_id         String?   @db.Uuid\n  product_order_id String?   @db.Uuid\n  customer_id      String?   @db.Uuid\n  return_type      String    @default(\"return\") @db.VarChar(30)\n  status           String    @default(\"requested\") @db.VarChar(30)\n  reason           String?\n  requested_amount Decimal?  @db.Decimal(10, 2)\n  approved_amount  Decimal?  @db.Decimal(10, 2)\n  items            Json?\n  resolution       Json?\n  handled_by       String?   @db.Uuid\n  created_at       DateTime  @default(now()) @db.Timestamptz(6)\n  updated_at       DateTime  @default(now()) @db.Timestamptz(6)\n  closed_at        DateTime? @db.Timestamptz(6)\n\n  @@index([business_id, status, created_at(sort: Desc)], map: \"idx_seller_return_cases_queue\")\n  @@index([order_id], map: \"idx_seller_return_cases_order\")\n  @@index([customer_id], map: \"idx_seller_return_cases_customer\")\n}\n\nmodel seller_deliveries {\n  delivery_id      String    @id @default(dbgenerated(\"gen_random_uuid()\")) @db.Uuid\n  business_id      String    @db.Uuid\n  tenant_id        String?   @db.Uuid\n  order_id         String?   @db.Uuid\n  product_order_id String?   @db.Uuid\n  customer_id      String?   @db.Uuid\n  status           String    @default(\"waiting\") @db.VarChar(30)\n  delivery_mode    String    @default(\"local\") @db.VarChar(30)\n  delivery_person  String?   @db.VarChar(120)\n  phone            String?   @db.VarChar(20)\n  address          String?\n  pincode          String?   @db.VarChar(20)\n  scheduled_at     DateTime? @db.Timestamptz(6)\n  picked_at        DateTime? @db.Timestamptz(6)\n  delivered_at     DateTime? @db.Timestamptz(6)\n  notes            String?\n  metadata         Json?\n  created_at       DateTime  @default(now()) @db.Timestamptz(6)\n  updated_at       DateTime  @default(now()) @db.Timestamptz(6)\n\n  @@index([business_id, status, scheduled_at], map: \"idx_seller_deliveries_desk\")\n  @@index([order_id], map: \"idx_seller_deliveries_order\")\n  @@index([customer_id], map: \"idx_seller_deliveries_customer\")\n}\n\nmodel seller_customer_credit_accounts {\n  credit_account_id String    @id @default(dbgenerated(\"gen_random_uuid()\")) @db.Uuid\n  business_id       String    @db.Uuid\n  tenant_id         String?   @db.Uuid\n  customer_id       String?   @db.Uuid\n  customer_name     String?   @db.VarChar(255)\n  phone             String    @db.VarChar(20)\n  status            String    @default(\"pending\") @db.VarChar(20)\n  credit_limit      Decimal   @default(0) @db.Decimal(10, 2)\n  current_balance   Decimal   @default(0) @db.Decimal(10, 2)\n  due_days          Int       @default(30)\n  approved_by       String?   @db.Uuid\n  approved_at       DateTime? @db.Timestamptz(6)\n  notes             String?\n  metadata          Json?\n  created_at        DateTime  @default(now()) @db.Timestamptz(6)\n  updated_at        DateTime  @default(now()) @db.Timestamptz(6)\n\n  @@unique([business_id, phone], map: \"uq_seller_credit_phone\")\n  @@index([business_id, status, current_balance], map: \"idx_seller_credit_accounts_status\")\n  @@index([customer_id], map: \"idx_seller_credit_accounts_customer\")\n}\n\nmodel seller_customer_credit_transactions {\n  credit_transaction_id String   @id @default(dbgenerated(\"gen_random_uuid()\")) @db.Uuid\n  credit_account_id     String   @db.Uuid\n  business_id           String   @db.Uuid\n  order_id              String?  @db.Uuid\n  transaction_type      String   @db.VarChar(30)\n  amount                Decimal  @db.Decimal(10, 2)\n  balance_after         Decimal  @db.Decimal(10, 2)\n  note                  String?\n  created_by            String?  @db.Uuid\n  metadata              Json?\n  created_at            DateTime @default(now()) @db.Timestamptz(6)\n\n  @@index([business_id, created_at(sort: Desc)], map: \"idx_seller_credit_transactions_business\")\n  @@index([credit_account_id, created_at(sort: Desc)], map: \"idx_seller_credit_transactions_account\")\n  @@index([order_id], map: \"idx_seller_credit_transactions_order\")\n}\n\nmodel seller_ai_audit_logs {\n  ai_audit_id    String   @id @default(dbgenerated(\"gen_random_uuid()\")) @db.Uuid\n  business_id    String   @db.Uuid\n  tenant_id      String?  @db.Uuid\n  ai_employee    String   @db.VarChar(80)\n  action         String   @db.VarChar(120)\n  decision       String   @db.VarChar(40)\n  confidence     Decimal? @db.Decimal(5, 2)\n  risk_level     String   @default(\"low\") @db.VarChar(20)\n  entity_type    String?  @db.VarChar(60)\n  entity_id      String?  @db.VarChar(100)\n  input_summary  String?\n  output_summary String?\n  guardrails     Json?\n  owner_visible  Boolean  @default(true)\n  created_at     DateTime @default(now()) @db.Timestamptz(6)\n\n  @@index([business_id, created_at(sort: Desc)], map: \"idx_seller_ai_audit_business\")\n  @@index([business_id, ai_employee, created_at(sort: Desc)], map: \"idx_seller_ai_audit_employee\")\n  @@index([entity_type, entity_id], map: \"idx_seller_ai_audit_entity\")\n}\n\nmodel seller_product_profit_snapshots {\n  profit_snapshot_id String   @id @default(dbgenerated(\"gen_random_uuid()\")) @db.Uuid\n  business_id        String   @db.Uuid\n  item_id            String   @db.Uuid\n  variant_id         String?  @db.Uuid\n  cost_price         Decimal? @db.Decimal(10, 2)\n  selling_price      Decimal  @db.Decimal(10, 2)\n  gross_margin       Decimal? @db.Decimal(10, 2)\n  margin_percentage  Decimal? @db.Decimal(5, 2)\n  source             String   @default(\"ai\") @db.VarChar(30)\n  recommendation     String?\n  created_at         DateTime @default(now()) @db.Timestamptz(6)\n\n  @@index([business_id, item_id, created_at(sort: Desc)], map: \"idx_seller_profit_item\")\n  @@index([business_id, margin_percentage], map: \"idx_seller_profit_margin\")\n}\n\nmodel seller_demand_signals {\n  demand_signal_id String   @id @default(dbgenerated(\"gen_random_uuid()\")) @db.Uuid\n  business_id      String   @db.Uuid\n  item_id          String?  @db.Uuid\n  category         String?  @db.VarChar(100)\n  signal_type      String   @db.VarChar(40)\n  signal_count     Int      @default(1)\n  period_start     DateTime @db.Timestamptz(6)\n  period_end       DateTime @db.Timestamptz(6)\n  source           String   @default(\"ai\") @db.VarChar(30)\n  metadata         Json?\n  created_at       DateTime @default(now()) @db.Timestamptz(6)\n\n  @@index([business_id, signal_type, period_start], map: \"idx_seller_demand_signal_type\")\n  @@index([business_id, category, period_start], map: \"idx_seller_demand_category\")\n  @@index([item_id], map: \"idx_seller_demand_item\")\n}\n\nmodel seller_product_import_jobs {\n  import_job_id String    @id @default(dbgenerated(\"gen_random_uuid()\")) @db.Uuid\n  business_id   String    @db.Uuid\n  tenant_id     String    @db.Uuid\n  source        String    @default(\"csv\") @db.VarChar(40)\n  status        String    @default(\"processing\") @db.VarChar(30)\n  total_rows    Int       @default(0)\n  created_count Int       @default(0)\n  updated_count Int       @default(0)\n  skipped_count Int       @default(0)\n  failed_count  Int       @default(0)\n  errors        Json?\n  summary       Json?\n  created_by    String?   @db.Uuid\n  started_at    DateTime  @default(now()) @db.Timestamptz(6)\n  finished_at   DateTime? @db.Timestamptz(6)\n  created_at    DateTime  @default(now()) @db.Timestamptz(6)\n  updated_at    DateTime  @default(now()) @db.Timestamptz(6)\n\n  @@index([business_id, created_at(sort: Desc)], map: \"idx_seller_import_jobs_business_created\")\n  @@index([status], map: \"idx_seller_import_jobs_status\")\n  @@index([tenant_id], map: \"idx_seller_import_jobs_tenant\")\n}\n\nmodel seller_stock_adjustments {\n  adjustment_id   String   @id @default(dbgenerated(\"gen_random_uuid()\")) @db.Uuid\n  business_id     String   @db.Uuid\n  tenant_id       String   @db.Uuid\n  item_id         String   @db.Uuid\n  variant_id      String?  @db.Uuid\n  import_job_id   String?  @db.Uuid\n  adjustment_type String   @db.VarChar(20)\n  quantity_change Int\n  quantity_before Int\n  quantity_after  Int\n  reason          String   @db.VarChar(80)\n  source          String   @default(\"manual\") @db.VarChar(40)\n  reference       String?  @db.VarChar(255)\n  note            String?\n  created_by      String?  @db.Uuid\n  metadata        Json?\n  created_at      DateTime @default(now()) @db.Timestamptz(6)\n\n  @@index([business_id, created_at(sort: Desc)], map: \"idx_seller_stock_adjustments_business_created\")\n  @@index([item_id, created_at(sort: Desc)], map: \"idx_seller_stock_adjustments_item_created\")\n  @@index([variant_id, created_at(sort: Desc)], map: \"idx_seller_stock_adjustments_variant_created\")\n  @@index([import_job_id], map: \"idx_seller_stock_adjustments_import_job\")\n  @@index([tenant_id], map: \"idx_seller_stock_adjustments_tenant\")\n}\n\nmodel hospitality_item_details {\n  item_id             String        @id @db.Uuid\n  business_id         String        @db.Uuid\n  service_type        String?       @db.VarChar(50)\n  capacity            Int?\n  total_units         Int?\n  max_adults          Int?\n  bed_type            String?       @db.VarChar(100)\n  check_in_time       String?       @db.VarChar(20)\n  check_out_time      String?       @db.VarChar(20)\n  amenities           Json?\n  cancellation_policy String?\n  tax_percentage      Decimal?      @db.Decimal(5, 2)\n  extra_guest_charge  Decimal?      @db.Decimal(10, 2)\n  metadata            Json?\n  created_at          DateTime      @default(now()) @db.Timestamptz(6)\n  updated_at          DateTime      @default(now()) @db.Timestamptz(6)\n  business            businesses    @relation(fields: [business_id], references: [business_id], onDelete: Cascade)\n  item                catalog_items @relation(fields: [item_id], references: [item_id], onDelete: Cascade)\n\n  @@index([business_id])\n  @@index([service_type])\n}\n\n// ─── INDUSTRY EXTENSIONS: AUTOMOTIVE ─────────────────────────────────────────\n\nmodel vehicle_item_details {\n  item_id      String        @id @db.Uuid\n  business_id  String        @db.Uuid\n  make         String        @db.VarChar(80)\n  model_name   String        @db.VarChar(80)\n  year         Int\n  fuel_type    String?       @db.VarChar(30)\n  transmission String?       @db.VarChar(30)\n  color        String?       @db.VarChar(50)\n  km_driven    Int?\n  /// new | used | certified_pre_owned\n  condition    String        @default(\"used\") @db.VarChar(30)\n  metadata     Json?\n  created_at   DateTime      @default(now()) @db.Timestamptz(6)\n  updated_at   DateTime      @default(now()) @db.Timestamptz(6)\n  business     businesses    @relation(fields: [business_id], references: [business_id], onDelete: Cascade)\n  item         catalog_items @relation(fields: [item_id], references: [item_id], onDelete: Cascade)\n\n  @@index([business_id])\n  @@index([make, model_name])\n  @@index([year])\n}\n\nmodel hospitality_inquiries {\n  inquiry_id        String         @id @default(dbgenerated(\"gen_random_uuid()\")) @db.Uuid\n  business_id       String         @db.Uuid\n  tenant_id         String         @db.Uuid\n  lead_id           String         @db.Uuid\n  preferred_item_id String?        @db.Uuid\n  check_in          DateTime?      @db.Date\n  check_out         DateTime?      @db.Date\n  guests            Int?\n  budget            Decimal?       @db.Decimal(10, 2)\n  status            String         @default(\"open\") @db.VarChar(30)\n  metadata          Json?\n  created_at        DateTime       @default(now()) @db.Timestamptz(6)\n  updated_at        DateTime       @default(now()) @db.Timestamptz(6)\n  business          businesses     @relation(fields: [business_id], references: [business_id], onDelete: Cascade)\n  tenant            tenants        @relation(fields: [tenant_id], references: [tenant_id], onDelete: Cascade)\n  lead              leads          @relation(fields: [lead_id], references: [lead_id], onDelete: Cascade)\n  preferred_item    catalog_items? @relation(fields: [preferred_item_id], references: [item_id])\n\n  @@index([business_id, status])\n  @@index([lead_id, created_at(sort: Desc)])\n  @@index([preferred_item_id])\n  @@index([business_id, check_in, check_out])\n}\n\nmodel hospitality_bookings {\n  hospitality_booking_id String                              @id @default(dbgenerated(\"gen_random_uuid()\")) @db.Uuid\n  business_id            String                              @db.Uuid\n  tenant_id              String                              @db.Uuid\n  legacy_order_id        String?                             @unique @db.Uuid\n  customer_id            String?                             @db.Uuid\n  lead_id                String?                             @db.Uuid\n  booking_number         String?                             @db.VarChar(50)\n  status                 String                              @default(\"confirmed\") @db.VarChar(30)\n  payment_status         String                              @default(\"pending\") @db.VarChar(30)\n  check_in               DateTime                            @db.Date\n  check_out              DateTime                            @db.Date\n  guests                 Int                                 @default(1)\n  subtotal               Decimal                             @default(0) @db.Decimal(10, 2)\n  tax_amount             Decimal                             @default(0) @db.Decimal(10, 2)\n  discount_amount        Decimal                             @default(0) @db.Decimal(10, 2)\n  total_amount           Decimal                             @db.Decimal(10, 2)\n  source                 String?                             @default(\"whatsapp\") @db.VarChar(50)\n  notes                  String?\n  metadata               Json?\n  cancelled_at           DateTime?                           @db.Timestamptz(6)\n  created_at             DateTime                            @default(now()) @db.Timestamptz(6)\n  updated_at             DateTime                            @default(now()) @db.Timestamptz(6)\n  business               businesses                          @relation(fields: [business_id], references: [business_id], onDelete: Cascade)\n  tenant                 tenants                             @relation(fields: [tenant_id], references: [tenant_id], onDelete: Cascade)\n  customer               customers?                          @relation(fields: [customer_id], references: [customer_id])\n  lead                   leads?                              @relation(fields: [lead_id], references: [lead_id])\n  legacy_order           orders?                             @relation(fields: [legacy_order_id], references: [order_id])\n  rooms                  hospitality_booking_items[]\n  guests_list            hospitality_booking_guests[]\n  events                 hospitality_booking_status_events[]\n\n  @@index([business_id, created_at(sort: Desc)])\n  @@index([business_id, status])\n  @@index([business_id, check_in, check_out])\n  @@index([customer_id])\n  @@index([lead_id])\n}\n\nmodel hospitality_booking_items {\n  booking_item_id        String               @id @default(dbgenerated(\"gen_random_uuid()\")) @db.Uuid\n  hospitality_booking_id String               @db.Uuid\n  item_id                String               @db.Uuid\n  item_name              String               @db.VarChar(255)\n  quantity               Int                  @default(1)\n  nights                 Int                  @default(1)\n  unit_price             Decimal              @db.Decimal(10, 2)\n  total_price            Decimal              @db.Decimal(10, 2)\n  snapshot               Json?\n  created_at             DateTime             @default(now()) @db.Timestamptz(6)\n  updated_at             DateTime             @default(now()) @db.Timestamptz(6)\n  booking                hospitality_bookings @relation(fields: [hospitality_booking_id], references: [hospitality_booking_id], onDelete: Cascade)\n  item                   catalog_items        @relation(fields: [item_id], references: [item_id])\n\n  @@index([hospitality_booking_id])\n  @@index([item_id])\n}\n\nmodel hospitality_booking_guests {\n  guest_id               String               @id @default(dbgenerated(\"gen_random_uuid()\")) @db.Uuid\n  hospitality_booking_id String               @db.Uuid\n  name                   String?              @db.VarChar(255)\n  phone                  String?              @db.VarChar(20)\n  age                    Int?\n  address                String?\n  pin_code               String?              @db.VarChar(20)\n  metadata               Json?\n  created_at             DateTime             @default(now()) @db.Timestamptz(6)\n  booking                hospitality_bookings @relation(fields: [hospitality_booking_id], references: [hospitality_booking_id], onDelete: Cascade)\n\n  @@index([hospitality_booking_id])\n}\n\nmodel hospitality_booking_status_events {\n  event_id               String               @id @default(dbgenerated(\"gen_random_uuid()\")) @db.Uuid\n  hospitality_booking_id String               @db.Uuid\n  business_id            String               @db.Uuid\n  from_status            String?              @db.VarChar(30)\n  to_status              String               @db.VarChar(30)\n  actor                  String               @default(\"system\") @db.VarChar(20)\n  actor_id               String?              @db.Uuid\n  data                   Json?\n  created_at             DateTime             @default(now()) @db.Timestamptz(6)\n  booking                hospitality_bookings @relation(fields: [hospitality_booking_id], references: [hospitality_booking_id], onDelete: Cascade)\n\n  @@index([hospitality_booking_id, created_at(sort: Desc)])\n  @@index([business_id, created_at(sort: Desc)])\n}\n\nmodel checkpoint_blobs {\n  thread_id     String\n  checkpoint_ns String    @default(\"\")\n  channel       String\n  version       String\n  type          String\n  blob          Bytes?\n  business_id   String?   @db.Uuid\n  expires_at    DateTime? @db.Timestamptz(6)\n\n  @@id([thread_id, checkpoint_ns, channel, version])\n  @@index([business_id])\n  @@index([expires_at])\n}\n\nmodel checkpoint_migrations {\n  v Int @id\n}\n\nmodel checkpoint_writes {\n  thread_id     String\n  checkpoint_ns String    @default(\"\")\n  checkpoint_id String\n  task_id       String\n  idx           Int\n  channel       String\n  type          String?\n  blob          Bytes\n  business_id   String?   @db.Uuid\n  expires_at    DateTime? @db.Timestamptz(6)\n\n  @@id([thread_id, checkpoint_ns, checkpoint_id, task_id, idx])\n  @@index([business_id])\n  @@index([expires_at])\n}\n\nmodel checkpoints {\n  thread_id            String\n  checkpoint_ns        String    @default(\"\")\n  checkpoint_id        String\n  parent_checkpoint_id String?\n  type                 String?\n  checkpoint           Json\n  metadata             Json      @default(\"{}\")\n  business_id          String?   @db.Uuid\n  expires_at           DateTime? @db.Timestamptz(6)\n\n  @@id([thread_id, checkpoint_ns, checkpoint_id])\n  @@index([business_id])\n  @@index([expires_at])\n}\n\n// ─── BILLING SYSTEM ───────────────────────────────────────────────────────────\n\nmodel billing_plans {\n  plan_id               String                  @id @db.VarChar(50)\n  razorpay_plan_id      String?                 @unique @db.VarChar(100)\n  name                  String                  @db.VarChar(100)\n  business_type         String                  @db.VarChar(30)\n  tier                  String                  @db.VarChar(20)\n  amount                Int\n  interval              String                  @db.VarChar(20)\n  interval_count        Int                     @default(1)\n  initial_credits       Decimal                 @default(0) @db.Decimal(12, 2)\n  features              Json\n  is_active             Boolean                 @default(true)\n  created_at            DateTime                @default(now()) @db.Timestamptz(6)\n  billing_subscriptions billing_subscriptions[]\n\n  @@index([business_type, interval, is_active])\n}\n\nmodel billing_subscriptions {\n  subscription_id          String             @id @default(dbgenerated(\"gen_random_uuid()\")) @db.Uuid\n  business_id              String             @unique @db.Uuid\n  plan_id                  String             @db.VarChar(50)\n  razorpay_subscription_id String?            @unique @db.VarChar(100)\n  status                   String             @db.VarChar(30)\n  current_period_start     DateTime?          @db.Timestamptz(6)\n  current_period_end       DateTime?          @db.Timestamptz(6)\n  trial_end                DateTime?          @db.Timestamptz(6)\n  pause_start              DateTime?          @db.Timestamptz(6)\n  pause_end                DateTime?          @db.Timestamptz(6)\n  cancel_at_period_end     Boolean            @default(false)\n  cancelled_at             DateTime?          @db.Timestamptz(6)\n  past_due_since           DateTime?          @db.Timestamptz(6)\n  metadata                 Json?\n  created_at               DateTime           @default(now()) @db.Timestamptz(6)\n  updated_at               DateTime           @default(now()) @db.Timestamptz(6)\n  businesses               businesses         @relation(\"business_billing_subscription\", fields: [business_id], references: [business_id])\n  plan                     billing_plans      @relation(fields: [plan_id], references: [plan_id])\n  billing_invoices         billing_invoices[]\n\n  @@index([status])\n  @@index([razorpay_subscription_id])\n  @@index([plan_id])\n  @@index([current_period_end])\n}\n\nmodel wallets {\n  wallet_id    String                @id @default(dbgenerated(\"gen_random_uuid()\")) @db.Uuid\n  business_id  String                @unique @db.Uuid\n  balance      Decimal               @default(0) @db.Decimal(12, 2)\n  currency     String                @default(\"INR\") @db.VarChar(10)\n  created_at   DateTime              @default(now()) @db.Timestamptz(6)\n  updated_at   DateTime              @default(now()) @db.Timestamptz(6)\n  businesses   businesses            @relation(\"business_wallet\", fields: [business_id], references: [business_id])\n  transactions wallet_transactions[]\n}\n\nmodel wallet_transactions {\n  txn_id         String   @id @default(dbgenerated(\"gen_random_uuid()\")) @db.Uuid\n  wallet_id      String   @db.Uuid\n  type           String   @db.VarChar(10)\n  amount         Decimal  @db.Decimal(12, 2)\n  balance_before Decimal  @db.Decimal(12, 2)\n  balance_after  Decimal  @db.Decimal(12, 2)\n  description    String   @db.VarChar(255)\n  reference_id   String?  @db.VarChar(100)\n  reference_type String?  @db.VarChar(50)\n  action_type    String?  @db.VarChar(50)\n  status         String   @default(\"completed\") @db.VarChar(20)\n  metadata       Json?\n  created_at     DateTime @default(now()) @db.Timestamptz(6)\n  wallet         wallets  @relation(fields: [wallet_id], references: [wallet_id])\n\n  @@index([wallet_id, created_at(sort: Desc)])\n  @@index([reference_id])\n}\n\nmodel billing_payments {\n  payment_id          String     @id @default(dbgenerated(\"gen_random_uuid()\")) @db.Uuid\n  business_id         String     @db.Uuid\n  razorpay_payment_id String     @unique @db.VarChar(100)\n  razorpay_order_id   String?    @db.VarChar(100)\n  amount              Int\n  type                String     @db.VarChar(30)\n  status              String     @db.VarChar(20)\n  idempotency_key     String     @unique @db.VarChar(100)\n  metadata            Json?\n  created_at          DateTime   @default(now()) @db.Timestamptz(6)\n  businesses          businesses @relation(\"business_billing_payments\", fields: [business_id], references: [business_id])\n\n  @@index([business_id, created_at(sort: Desc)])\n}\n\nmodel billing_invoices {\n  invoice_id          String                 @id @default(dbgenerated(\"gen_random_uuid()\")) @db.Uuid\n  business_id         String                 @db.Uuid\n  subscription_id     String?                @db.Uuid\n  razorpay_invoice_id String?                @db.VarChar(100)\n  subtotal            Int\n  tax_amount          Int\n  total_amount        Int\n  status              String                 @db.VarChar(20)\n  pdf_url             String?                @db.VarChar(500)\n  due_date            DateTime?              @db.Date\n  paid_at             DateTime?              @db.Timestamptz(6)\n  created_at          DateTime               @default(now()) @db.Timestamptz(6)\n  businesses          businesses             @relation(\"business_billing_invoices\", fields: [business_id], references: [business_id])\n  subscription        billing_subscriptions? @relation(fields: [subscription_id], references: [subscription_id])\n\n  @@index([business_id, created_at(sort: Desc)])\n}\n\nmodel billing_webhook_events {\n  event_id          String    @id @default(dbgenerated(\"gen_random_uuid()\")) @db.Uuid\n  provider          String    @db.VarChar(30)\n  event_type        String    @db.VarChar(100)\n  razorpay_event_id String?   @unique @db.VarChar(150)\n  payload           Json\n  status            String    @default(\"pending\") @db.VarChar(20)\n  attempts          Int       @default(0)\n  error             String?\n  processed_at      DateTime? @db.Timestamptz(6)\n  created_at        DateTime  @default(now()) @db.Timestamptz(6)\n\n  @@index([status, created_at])\n}\n\nmodel credit_pricing {\n  action_type String   @id @db.VarChar(50)\n  cost        Decimal  @db.Decimal(8, 4)\n  description String   @db.VarChar(255)\n  is_active   Boolean  @default(true)\n  updated_at  DateTime @default(now()) @db.Timestamptz(6)\n}\n\n// ─── BUSINESS SETTINGS ────────────────────────────────────────────────────────\n\nmodel business_settings {\n  business_id          String     @id @db.Uuid\n  timezone             String     @default(\"Asia/Kolkata\") @db.VarChar(50)\n  language             String     @default(\"en\") @db.VarChar(10)\n  currency             String     @default(\"INR\") @db.VarChar(10)\n  business_hours       Json?\n  onboarding_step      Int        @default(0)\n  onboarding_done      Boolean    @default(false)\n  ai_agent_enabled     Boolean    @default(true)\n  auto_reply_enabled   Boolean    @default(true)\n  booking_methods      Json       @default(\"{\\\"availability_response\\\":{\\\"mode\\\":\\\"interactive\\\"},\\\"ai_chat\\\":{\\\"enabled\\\":true,\\\"collect_guest_details\\\":true,\\\"require_confirmation\\\":true},\\\"interactive\\\":{\\\"enabled\\\":true,\\\"send_entry_buttons\\\":true,\\\"send_room_or_service_list\\\":true},\\\"catalog\\\":{\\\"enabled\\\":false,\\\"send_product_messages\\\":false},\\\"templates\\\":{\\\"enabled\\\":false,\\\"confirmation_template_name\\\":\\\"\\\",\\\"reminder_template_name\\\":\\\"\\\",\\\"language\\\":\\\"en\\\"},\\\"human_handoff\\\":{\\\"enabled\\\":true,\\\"on_unavailable\\\":true,\\\"on_low_confidence\\\":true,\\\"on_payment_issue\\\":true}}\")\n  booking_link         Json       @default(\"{\\\"enabled\\\":false,\\\"experience_type\\\":\\\"generic\\\",\\\"payment_mode\\\":\\\"manual\\\",\\\"advance_type\\\":\\\"fixed\\\",\\\"advance_amount\\\":0,\\\"theme\\\":{\\\"primary_color\\\":\\\"#0066FF\\\",\\\"show_logo\\\":true,\\\"show_banner\\\":true},\\\"policies\\\":{\\\"cancellation\\\":\\\"\\\",\\\"refund\\\":\\\"\\\",\\\"terms\\\":\\\"\\\"},\\\"contact\\\":{\\\"phone\\\":\\\"\\\",\\\"whatsapp\\\":\\\"\\\",\\\"address\\\":\\\"\\\"},\\\"required_fields\\\":{\\\"name\\\":true,\\\"phone\\\":true,\\\"email\\\":false,\\\"address\\\":false,\\\"notes\\\":false}}\")\n  whatsapp_onboarding  Json       @default(\"{\\\"current_usage\\\":\\\"not_sure\\\",\\\"safety_acknowledged\\\":false}\")\n  low_balance_alert    Decimal    @default(100) @db.Decimal(10, 2)\n  /// E.164-style dial code without the \"+\" (e.g. \"91\" for India, \"1\" for US).\n  /// Used to canonicalise leads.phone so the same human entering \"9539192684\"\n  /// on the booking form and messaging \"919539192684\" on WhatsApp resolves to\n  /// one lead row.\n  default_country_code String     @default(\"91\") @db.VarChar(5)\n  updated_at           DateTime   @default(now()) @db.Timestamptz(6)\n  businesses           businesses @relation(\"business_settings\", fields: [business_id], references: [business_id], onDelete: Cascade)\n}\n\n// ─── AUDIT LOG ────────────────────────────────────────────────────────────────\n\nmodel audit_logs {\n  log_id      String     @id @default(dbgenerated(\"gen_random_uuid()\")) @db.Uuid\n  business_id String     @db.Uuid\n  user_id     String?    @db.Uuid\n  action      String     @db.VarChar(100)\n  entity_type String     @db.VarChar(100)\n  entity_id   String?    @db.VarChar(100)\n  old_values  Json?\n  new_values  Json?\n  ip_address  String?    @db.VarChar(45)\n  user_agent  String?\n  created_at  DateTime   @default(now()) @db.Timestamptz(6)\n  businesses  businesses @relation(fields: [business_id], references: [business_id], onDelete: Cascade)\n  users       users?     @relation(fields: [user_id], references: [user_id])\n\n  @@index([business_id, created_at(sort: Desc)], map: \"idx_audit_logs_business_created\")\n  @@index([entity_type, entity_id], map: \"idx_audit_logs_entity\")\n  @@index([user_id], map: \"idx_audit_logs_user_id\")\n}\n\n/// Tracks which inventory items / catalog items a lead has shown interest in.\n/// Used to trigger price-drop and availability alerts (confirmation-first rule).\nmodel lead_item_interests {\n  interest_id     String   @id @default(dbgenerated(\"gen_random_uuid()\")) @db.Uuid\n  lead_id         String   @db.Uuid\n  business_id     String   @db.Uuid\n  /// UUID of the item (vehicle_inventory.vehicle_id, catalog_items.item_id, etc.) — nullable for free-text items\n  item_id         String?  @db.Uuid\n  /// vehicle | catalog_item | property | course | activity\n  item_type       String   @db.VarChar(30)\n  item_name       String   @db.VarChar(255)\n  /// viewed | price_checked | visit_requested\n  interest_level  String   @default(\"viewed\") @db.VarChar(20)\n  last_price_seen Decimal? @db.Decimal(12, 2)\n  /// true when lead tapped \"notify me\" — only these leads get campaigns\n  is_alert_active Boolean  @default(false)\n  created_at      DateTime @default(now()) @db.Timestamptz(6)\n  updated_at      DateTime @default(now()) @db.Timestamptz(6)\n  leads           leads    @relation(fields: [lead_id], references: [lead_id], onDelete: Cascade)\n\n  @@unique([lead_id, item_id], map: \"uq_lead_item_interest\")\n  @@index([lead_id], map: \"idx_lead_item_interests_lead\")\n  @@index([business_id, is_alert_active], map: \"idx_lead_item_interests_business_alert\")\n}\n\n/// Stores what a lead is watching for when no match exists yet.\n/// AI creates this automatically after a failed search if lead opts in.\nmodel lead_preference_watches {\n  watch_id    String    @id @default(dbgenerated(\"gen_random_uuid()\")) @db.Uuid\n  lead_id     String    @db.Uuid\n  business_id String    @db.Uuid\n  /// price_range | item_match | date_available | stock_available | batch_available\n  watch_type  String    @db.VarChar(30)\n  /// JSONB: budget_max, make, model, date_from, date_to, variant, course_id, etc.\n  criteria    Json\n  is_active   Boolean   @default(true)\n  /// Set when campaign is sent — prevents duplicate alerts for same event\n  notified_at DateTime? @db.Timestamptz(6)\n  /// Auto-expire after 90 days with no match\n  expires_at  DateTime? @db.Timestamptz(6)\n  created_at  DateTime  @default(now()) @db.Timestamptz(6)\n  leads       leads     @relation(fields: [lead_id], references: [lead_id], onDelete: Cascade)\n\n  @@index([business_id, watch_type, is_active], map: \"idx_pref_watches_business_type_active\")\n  @@index([lead_id], map: \"idx_pref_watches_lead\")\n  @@index([expires_at], map: \"idx_pref_watches_expires\")\n}\n",
+  "inlineSchemaHash": "6aa0409780f7d29d37db64bd59762b88d1325d6b220bafecdaa27cb62acb8b29",
+  "copyEngine": true
+}
+config.dirname = '/'
+
+config.runtimeDataModel = JSON.parse("{\"models\":{\"businesses\":{\"fields\":[{\"name\":\"business_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"tenant_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"business_name\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"business_type\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"business_group\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"communication_mode\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"blueprint_seeded\",\"kind\":\"scalar\",\"type\":\"Boolean\"},{\"name\":\"blueprint_seeded_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"whatsapp_number\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"created_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updated_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"email\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"phone\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"website\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"public_booking_slug\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"city\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"address\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"country\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"gst_number\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"pan_number\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"deleted_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"business_employees\",\"kind\":\"object\",\"type\":\"business_employees\",\"relationName\":\"business_employeesTobusinesses\"},{\"name\":\"business_workflows\",\"kind\":\"object\",\"type\":\"business_workflows\",\"relationName\":\"business_workflowsTobusinesses\"},{\"name\":\"tenants\",\"kind\":\"object\",\"type\":\"tenants\",\"relationName\":\"businessesTotenants\"},{\"name\":\"carts\",\"kind\":\"object\",\"type\":\"carts\",\"relationName\":\"businessesTocarts\"},{\"name\":\"catalog_items\",\"kind\":\"object\",\"type\":\"catalog_items\",\"relationName\":\"businessesTocatalog_items\"},{\"name\":\"external_catalog_items\",\"kind\":\"object\",\"type\":\"external_catalog_items\",\"relationName\":\"businessesToexternal_catalog_items\"},{\"name\":\"product_item_details\",\"kind\":\"object\",\"type\":\"product_item_details\",\"relationName\":\"businessesToproduct_item_details\"},{\"name\":\"hospitality_item_details\",\"kind\":\"object\",\"type\":\"hospitality_item_details\",\"relationName\":\"businessesTohospitality_item_details\"},{\"name\":\"vehicle_item_details\",\"kind\":\"object\",\"type\":\"vehicle_item_details\",\"relationName\":\"businessesTovehicle_item_details\"},{\"name\":\"product_orders\",\"kind\":\"object\",\"type\":\"product_orders\",\"relationName\":\"businessesToproduct_orders\"},{\"name\":\"product_inquiries\",\"kind\":\"object\",\"type\":\"product_inquiries\",\"relationName\":\"businessesToproduct_inquiries\"},{\"name\":\"hospitality_bookings\",\"kind\":\"object\",\"type\":\"hospitality_bookings\",\"relationName\":\"businessesTohospitality_bookings\"},{\"name\":\"hospitality_inquiries\",\"kind\":\"object\",\"type\":\"hospitality_inquiries\",\"relationName\":\"businessesTohospitality_inquiries\"},{\"name\":\"leads\",\"kind\":\"object\",\"type\":\"leads\",\"relationName\":\"businessesToleads\"},{\"name\":\"pipelines\",\"kind\":\"object\",\"type\":\"pipelines\",\"relationName\":\"businessesTopipelines\"},{\"name\":\"notification_messages\",\"kind\":\"object\",\"type\":\"notification_messages\",\"relationName\":\"notification_messages_business\"},{\"name\":\"notification_preferences\",\"kind\":\"object\",\"type\":\"notification_preferences\",\"relationName\":\"notification_prefs_business\"},{\"name\":\"notification_templates\",\"kind\":\"object\",\"type\":\"notification_templates\",\"relationName\":\"notification_templates_business\"},{\"name\":\"payment_reconciliation\",\"kind\":\"object\",\"type\":\"payment_reconciliation\",\"relationName\":\"businessesTopayment_reconciliation\"},{\"name\":\"payments\",\"kind\":\"object\",\"type\":\"payments\",\"relationName\":\"businessesTopayments\"},{\"name\":\"social_accounts\",\"kind\":\"object\",\"type\":\"social_accounts\",\"relationName\":\"businessesTosocial_accounts\"},{\"name\":\"users\",\"kind\":\"object\",\"type\":\"users\",\"relationName\":\"businessesTousers\"},{\"name\":\"workflow_executions\",\"kind\":\"object\",\"type\":\"workflow_executions\",\"relationName\":\"businessesToworkflow_executions\"},{\"name\":\"workflow_execution_steps\",\"kind\":\"object\",\"type\":\"workflow_execution_steps\",\"relationName\":\"businessesToworkflow_execution_steps\"},{\"name\":\"workflow_idempotency_keys\",\"kind\":\"object\",\"type\":\"workflow_idempotency_keys\",\"relationName\":\"businessesToworkflow_idempotency_keys\"},{\"name\":\"billing_subscription\",\"kind\":\"object\",\"type\":\"billing_subscriptions\",\"relationName\":\"business_billing_subscription\"},{\"name\":\"wallet\",\"kind\":\"object\",\"type\":\"wallets\",\"relationName\":\"business_wallet\"},{\"name\":\"billing_payments_list\",\"kind\":\"object\",\"type\":\"billing_payments\",\"relationName\":\"business_billing_payments\"},{\"name\":\"billing_invoices_list\",\"kind\":\"object\",\"type\":\"billing_invoices\",\"relationName\":\"business_billing_invoices\"},{\"name\":\"settings\",\"kind\":\"object\",\"type\":\"business_settings\",\"relationName\":\"business_settings\"},{\"name\":\"audit_logs\",\"kind\":\"object\",\"type\":\"audit_logs\",\"relationName\":\"audit_logsTobusinesses\"}],\"dbName\":null},\"business_employees\":{\"fields\":[{\"name\":\"employee_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"business_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"name\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"email\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"phone\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"role\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"created_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"businesses\",\"kind\":\"object\",\"type\":\"businesses\",\"relationName\":\"business_employeesTobusinesses\"}],\"dbName\":null},\"intents\":{\"fields\":[{\"name\":\"intent_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"intent_name\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"created_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"notifications\",\"kind\":\"object\",\"type\":\"notifications\",\"relationName\":\"intentsTonotifications\"},{\"name\":\"role_intents\",\"kind\":\"object\",\"type\":\"role_intents\",\"relationName\":\"intentsTorole_intents\"}],\"dbName\":null},\"notifications\":{\"fields\":[{\"name\":\"notification_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"user_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"intent_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"message\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"read_status\",\"kind\":\"scalar\",\"type\":\"Boolean\"},{\"name\":\"created_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"intents\",\"kind\":\"object\",\"type\":\"intents\",\"relationName\":\"intentsTonotifications\"},{\"name\":\"users\",\"kind\":\"object\",\"type\":\"users\",\"relationName\":\"notificationsTousers\"}],\"dbName\":null},\"role_intents\":{\"fields\":[{\"name\":\"intent_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"created_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"role_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"intents\",\"kind\":\"object\",\"type\":\"intents\",\"relationName\":\"intentsTorole_intents\"}],\"dbName\":null},\"roles\":{\"fields\":[{\"name\":\"role_name\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"permissions\",\"kind\":\"scalar\",\"type\":\"Json\"},{\"name\":\"created_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"role_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"users\",\"kind\":\"object\",\"type\":\"users\",\"relationName\":\"rolesTousers\"}],\"dbName\":null},\"social_accounts\":{\"fields\":[{\"name\":\"account_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"business_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"platform\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"platform_user_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"page_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"access_token\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"permissions\",\"kind\":\"scalar\",\"type\":\"Json\"},{\"name\":\"token_expiry\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"is_active\",\"kind\":\"scalar\",\"type\":\"Boolean\"},{\"name\":\"created_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"follower_count\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"following_count\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"instagram_business_account_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"media_count\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"profile_picture\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"updated_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"username\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"instagram_catalog_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"whatsapp_catalog_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"gupshup_app_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"gupshup_app_status\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"meta_account_review_status\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"meta_verification_checked_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"meta_verified_name\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"instagram_media\",\"kind\":\"object\",\"type\":\"instagram_media\",\"relationName\":\"instagram_mediaTosocial_accounts\"},{\"name\":\"businesses\",\"kind\":\"object\",\"type\":\"businesses\",\"relationName\":\"businessesTosocial_accounts\"}],\"dbName\":null},\"tenants\":{\"fields\":[{\"name\":\"tenant_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"tenant_name\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"email\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"phone_number\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"created_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updated_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"address\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"gst_number\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"pan_number\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"registration_no\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"business_workflows\",\"kind\":\"object\",\"type\":\"business_workflows\",\"relationName\":\"business_workflowsTotenants\"},{\"name\":\"businesses\",\"kind\":\"object\",\"type\":\"businesses\",\"relationName\":\"businessesTotenants\"},{\"name\":\"carts\",\"kind\":\"object\",\"type\":\"carts\",\"relationName\":\"cartsTotenants\"},{\"name\":\"leads\",\"kind\":\"object\",\"type\":\"leads\",\"relationName\":\"leadsTotenants\"},{\"name\":\"workflow_executions\",\"kind\":\"object\",\"type\":\"workflow_executions\",\"relationName\":\"tenantsToworkflow_executions\"},{\"name\":\"workflow_execution_steps\",\"kind\":\"object\",\"type\":\"workflow_execution_steps\",\"relationName\":\"tenantsToworkflow_execution_steps\"},{\"name\":\"workflow_idempotency_keys\",\"kind\":\"object\",\"type\":\"workflow_idempotency_keys\",\"relationName\":\"tenantsToworkflow_idempotency_keys\"},{\"name\":\"product_orders\",\"kind\":\"object\",\"type\":\"product_orders\",\"relationName\":\"product_ordersTotenants\"},{\"name\":\"product_inquiries\",\"kind\":\"object\",\"type\":\"product_inquiries\",\"relationName\":\"product_inquiriesTotenants\"},{\"name\":\"hospitality_bookings\",\"kind\":\"object\",\"type\":\"hospitality_bookings\",\"relationName\":\"hospitality_bookingsTotenants\"},{\"name\":\"hospitality_inquiries\",\"kind\":\"object\",\"type\":\"hospitality_inquiries\",\"relationName\":\"hospitality_inquiriesTotenants\"},{\"name\":\"notification_messages\",\"kind\":\"object\",\"type\":\"notification_messages\",\"relationName\":\"notification_messages_tenant\"},{\"name\":\"notification_templates\",\"kind\":\"object\",\"type\":\"notification_templates\",\"relationName\":\"notification_templates_tenant\"}],\"dbName\":null},\"users\":{\"fields\":[{\"name\":\"user_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"business_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"email\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"name\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"password\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"refresh_token\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"phone_number\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"is_active\",\"kind\":\"scalar\",\"type\":\"Boolean\"},{\"name\":\"profile_completed\",\"kind\":\"scalar\",\"type\":\"Boolean\"},{\"name\":\"deleted_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"created_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updated_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"role_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"account_locked_until\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"email_verification_expires\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"email_verification_token\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"email_verified\",\"kind\":\"scalar\",\"type\":\"Boolean\"},{\"name\":\"failed_login_attempts\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"last_login_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"last_password_change\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"password_reset_expires\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"password_reset_token\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"two_factor_enabled\",\"kind\":\"scalar\",\"type\":\"Boolean\"},{\"name\":\"two_factor_secret\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"lead_followups\",\"kind\":\"object\",\"type\":\"lead_followups\",\"relationName\":\"followup_assignee\"},{\"name\":\"leads_assigned\",\"kind\":\"object\",\"type\":\"leads\",\"relationName\":\"lead_agent\"},{\"name\":\"notifications\",\"kind\":\"object\",\"type\":\"notifications\",\"relationName\":\"notificationsTousers\"},{\"name\":\"businesses\",\"kind\":\"object\",\"type\":\"businesses\",\"relationName\":\"businessesTousers\"},{\"name\":\"roles\",\"kind\":\"object\",\"type\":\"roles\",\"relationName\":\"rolesTousers\"},{\"name\":\"audit_logs\",\"kind\":\"object\",\"type\":\"audit_logs\",\"relationName\":\"audit_logsTousers\"}],\"dbName\":null},\"leads\":{\"fields\":[{\"name\":\"lead_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"business_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"tenant_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"name\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"phone\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"email\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"channel\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"source\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"platform_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"status\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"stage_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"pipeline_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"lost_reason\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"context\",\"kind\":\"scalar\",\"type\":\"Json\"},{\"name\":\"lead_type\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"qualification_score\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"exit_intent_sent_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"exit_captured_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"exit_reason\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"quoted_amount\",\"kind\":\"scalar\",\"type\":\"Decimal\"},{\"name\":\"quoted_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"converted_value\",\"kind\":\"scalar\",\"type\":\"Decimal\"},{\"name\":\"converted_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"tags\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"assigned_to\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"followup_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"deleted_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"created_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updated_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"cart_reservations\",\"kind\":\"object\",\"type\":\"cart_reservations\",\"relationName\":\"cart_reservationsToleads\"},{\"name\":\"carts\",\"kind\":\"object\",\"type\":\"carts\",\"relationName\":\"cartsToleads\"},{\"name\":\"events\",\"kind\":\"object\",\"type\":\"lead_events\",\"relationName\":\"lead_eventsToleads\"},{\"name\":\"followups\",\"kind\":\"object\",\"type\":\"lead_followups\",\"relationName\":\"lead_followupsToleads\"},{\"name\":\"product_inquiries\",\"kind\":\"object\",\"type\":\"product_inquiries\",\"relationName\":\"leadsToproduct_inquiries\"},{\"name\":\"hospitality_inquiries\",\"kind\":\"object\",\"type\":\"hospitality_inquiries\",\"relationName\":\"hospitality_inquiriesToleads\"},{\"name\":\"product_orders\",\"kind\":\"object\",\"type\":\"product_orders\",\"relationName\":\"leadsToproduct_orders\"},{\"name\":\"hospitality_bookings\",\"kind\":\"object\",\"type\":\"hospitality_bookings\",\"relationName\":\"hospitality_bookingsToleads\"},{\"name\":\"item_interests\",\"kind\":\"object\",\"type\":\"lead_item_interests\",\"relationName\":\"lead_item_interestsToleads\"},{\"name\":\"preference_watches\",\"kind\":\"object\",\"type\":\"lead_preference_watches\",\"relationName\":\"lead_preference_watchesToleads\"},{\"name\":\"assigned_user\",\"kind\":\"object\",\"type\":\"users\",\"relationName\":\"lead_agent\"},{\"name\":\"businesses\",\"kind\":\"object\",\"type\":\"businesses\",\"relationName\":\"businessesToleads\"},{\"name\":\"tenants\",\"kind\":\"object\",\"type\":\"tenants\",\"relationName\":\"leadsTotenants\"},{\"name\":\"pipeline\",\"kind\":\"object\",\"type\":\"pipelines\",\"relationName\":\"leadsTopipelines\"},{\"name\":\"stage\",\"kind\":\"object\",\"type\":\"pipeline_stages\",\"relationName\":\"leadsTopipeline_stages\"},{\"name\":\"orders\",\"kind\":\"object\",\"type\":\"orders\",\"relationName\":\"leadsToorders\"},{\"name\":\"workflow_executions\",\"kind\":\"object\",\"type\":\"workflow_executions\",\"relationName\":\"leadsToworkflow_executions\"}],\"dbName\":null},\"pipelines\":{\"fields\":[{\"name\":\"pipeline_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"business_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"name\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"industry\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"is_default\",\"kind\":\"scalar\",\"type\":\"Boolean\"},{\"name\":\"is_archived\",\"kind\":\"scalar\",\"type\":\"Boolean\"},{\"name\":\"created_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updated_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"businesses\",\"kind\":\"object\",\"type\":\"businesses\",\"relationName\":\"businessesTopipelines\"},{\"name\":\"stages\",\"kind\":\"object\",\"type\":\"pipeline_stages\",\"relationName\":\"pipeline_stagesTopipelines\"},{\"name\":\"leads\",\"kind\":\"object\",\"type\":\"leads\",\"relationName\":\"leadsTopipelines\"}],\"dbName\":null},\"pipeline_stages\":{\"fields\":[{\"name\":\"stage_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"pipeline_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"business_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"name\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"slug\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"position\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"is_won\",\"kind\":\"scalar\",\"type\":\"Boolean\"},{\"name\":\"is_lost\",\"kind\":\"scalar\",\"type\":\"Boolean\"},{\"name\":\"color\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"created_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"pipeline\",\"kind\":\"object\",\"type\":\"pipelines\",\"relationName\":\"pipeline_stagesTopipelines\"},{\"name\":\"leads\",\"kind\":\"object\",\"type\":\"leads\",\"relationName\":\"leadsTopipeline_stages\"}],\"dbName\":null},\"lead_events\":{\"fields\":[{\"name\":\"event_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"lead_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"business_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"type\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"actor\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"actor_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"data\",\"kind\":\"scalar\",\"type\":\"Json\"},{\"name\":\"created_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"leads\",\"kind\":\"object\",\"type\":\"leads\",\"relationName\":\"lead_eventsToleads\"}],\"dbName\":null},\"lead_followups\":{\"fields\":[{\"name\":\"followup_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"lead_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"business_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"note\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"scheduled_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"assigned_to\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"done\",\"kind\":\"scalar\",\"type\":\"Boolean\"},{\"name\":\"done_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"done_note\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"created_by\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"created_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"assignee\",\"kind\":\"object\",\"type\":\"users\",\"relationName\":\"followup_assignee\"},{\"name\":\"lead\",\"kind\":\"object\",\"type\":\"leads\",\"relationName\":\"lead_followupsToleads\"}],\"dbName\":null},\"customers\":{\"fields\":[{\"name\":\"customer_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"business_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"tenant_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"name\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"phone\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"email\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"whatsapp_number\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"total_orders\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"total_spent\",\"kind\":\"scalar\",\"type\":\"Decimal\"},{\"name\":\"last_order_date\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"engagement_score\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"deleted_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"created_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updated_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"platform_user_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"carts\",\"kind\":\"object\",\"type\":\"carts\",\"relationName\":\"cartsTocustomers\"},{\"name\":\"notification_messages\",\"kind\":\"object\",\"type\":\"notification_messages\",\"relationName\":\"notification_messages_customer\"},{\"name\":\"notification_preferences\",\"kind\":\"object\",\"type\":\"notification_preferences\",\"relationName\":\"notification_prefs_customer\"},{\"name\":\"orders\",\"kind\":\"object\",\"type\":\"orders\",\"relationName\":\"customersToorders\"},{\"name\":\"payments\",\"kind\":\"object\",\"type\":\"payments\",\"relationName\":\"customersTopayments\"},{\"name\":\"product_orders\",\"kind\":\"object\",\"type\":\"product_orders\",\"relationName\":\"customersToproduct_orders\"},{\"name\":\"hospitality_bookings\",\"kind\":\"object\",\"type\":\"hospitality_bookings\",\"relationName\":\"customersTohospitality_bookings\"}],\"dbName\":null},\"orders\":{\"fields\":[{\"name\":\"order_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"business_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"tenant_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"lead_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"order_type\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"total_amount\",\"kind\":\"scalar\",\"type\":\"Decimal\"},{\"name\":\"payment_status\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"payment_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"paid_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"delivery_status\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"service_status\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"created_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updated_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"delivered_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"admin_notes\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"cancelled_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"customer_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"discount_amount\",\"kind\":\"scalar\",\"type\":\"Decimal\"},{\"name\":\"notes\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"order_number\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"payment_expires_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"payment_method\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"payment_reference\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"shipped_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"shipping_address\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"shipping_city\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"shipping_fee\",\"kind\":\"scalar\",\"type\":\"Decimal\"},{\"name\":\"shipping_phone\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"shipping_pincode\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"shipping_state\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"source\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"status\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"subtotal\",\"kind\":\"scalar\",\"type\":\"Decimal\"},{\"name\":\"tax_amount\",\"kind\":\"scalar\",\"type\":\"Decimal\"},{\"name\":\"tracking_number\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"billing_address\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"cancellation_reason\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"order_items\",\"kind\":\"object\",\"type\":\"order_items\",\"relationName\":\"order_itemsToorders\"},{\"name\":\"product_order\",\"kind\":\"object\",\"type\":\"product_orders\",\"relationName\":\"ordersToproduct_orders\"},{\"name\":\"hospitality_booking\",\"kind\":\"object\",\"type\":\"hospitality_bookings\",\"relationName\":\"hospitality_bookingsToorders\"},{\"name\":\"customers\",\"kind\":\"object\",\"type\":\"customers\",\"relationName\":\"customersToorders\"},{\"name\":\"leads\",\"kind\":\"object\",\"type\":\"leads\",\"relationName\":\"leadsToorders\"},{\"name\":\"payments\",\"kind\":\"object\",\"type\":\"payments\",\"relationName\":\"ordersTopayments\"}],\"dbName\":null},\"order_items\":{\"fields\":[{\"name\":\"order_item_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"order_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"item_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"variant_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"product_name\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"variant_name\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"sku\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"quantity\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"unit_price\",\"kind\":\"scalar\",\"type\":\"Decimal\"},{\"name\":\"discount\",\"kind\":\"scalar\",\"type\":\"Decimal\"},{\"name\":\"total_price\",\"kind\":\"scalar\",\"type\":\"Decimal\"},{\"name\":\"snapshot\",\"kind\":\"scalar\",\"type\":\"Json\"},{\"name\":\"created_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updated_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"catalog_item\",\"kind\":\"object\",\"type\":\"catalog_items\",\"relationName\":\"catalog_itemsToorder_items\"},{\"name\":\"orders\",\"kind\":\"object\",\"type\":\"orders\",\"relationName\":\"order_itemsToorders\"},{\"name\":\"item_variant\",\"kind\":\"object\",\"type\":\"item_variants\",\"relationName\":\"item_variantsToorder_items\"}],\"dbName\":null},\"cart_reservations\":{\"fields\":[{\"name\":\"reservation_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"lead_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"item_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"variant_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"quantity\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"expires_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"status\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"created_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updated_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"catalog_item\",\"kind\":\"object\",\"type\":\"catalog_items\",\"relationName\":\"cart_reservationsTocatalog_items\"},{\"name\":\"leads\",\"kind\":\"object\",\"type\":\"leads\",\"relationName\":\"cart_reservationsToleads\"}],\"dbName\":null},\"campaigns\":{\"fields\":[{\"name\":\"campaign_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"business_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"scheduled_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"status\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"created_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"campaign_name\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"campaign_type\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"channel\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"content_template\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"sent_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"approved_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"approved_by\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"auto_approve_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"deduplication_key\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"target_segment\",\"kind\":\"scalar\",\"type\":\"Json\"},{\"name\":\"tenant_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"audience_filter\",\"kind\":\"scalar\",\"type\":\"Json\"},{\"name\":\"audience_type\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"clicked_count\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"completed_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"converted_count\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"delivered_count\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"failed_count\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"media_type\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"media_url\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"product_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"sent_count\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"template_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"template_parameters\",\"kind\":\"scalar\",\"type\":\"Json\"},{\"name\":\"total_recipients\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"updated_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"whatsapp_template_language\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"whatsapp_template_name\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"notification_templates\",\"kind\":\"object\",\"type\":\"notification_templates\",\"relationName\":\"campaignsTonotification_templates\"}],\"dbName\":null},\"campaign_recipients\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"BigInt\"},{\"name\":\"campaign_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"business_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"phone_number\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"contact_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"resolved_variables\",\"kind\":\"scalar\",\"type\":\"Json\"},{\"name\":\"status\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"whatsapp_message_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"sent_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"delivered_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"read_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"failed_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"error_code\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"error_message\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"retry_count\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"next_retry_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"created_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updated_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"}],\"dbName\":null},\"notification_templates\":{\"fields\":[{\"name\":\"template_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"business_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"tenant_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"template_key\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"template_name\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"description\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"email_subject\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"email_body\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"email_html\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"sms_body\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"whatsapp_body\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"push_title\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"push_body\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"variables\",\"kind\":\"scalar\",\"type\":\"Json\"},{\"name\":\"enabled_channels\",\"kind\":\"scalar\",\"type\":\"Json\"},{\"name\":\"is_active\",\"kind\":\"scalar\",\"type\":\"Boolean\"},{\"name\":\"is_system\",\"kind\":\"scalar\",\"type\":\"Boolean\"},{\"name\":\"created_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updated_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"created_by\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"campaigns\",\"kind\":\"object\",\"type\":\"campaigns\",\"relationName\":\"campaignsTonotification_templates\"},{\"name\":\"notification_messages\",\"kind\":\"object\",\"type\":\"notification_messages\",\"relationName\":\"notification_messagesTonotification_templates\"},{\"name\":\"businesses\",\"kind\":\"object\",\"type\":\"businesses\",\"relationName\":\"notification_templates_business\"},{\"name\":\"tenants\",\"kind\":\"object\",\"type\":\"tenants\",\"relationName\":\"notification_templates_tenant\"}],\"dbName\":null},\"notification_messages\":{\"fields\":[{\"name\":\"notification_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"business_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"tenant_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"customer_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"user_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"recipient_email\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"recipient_phone\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"recipient_name\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"template_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"template_key\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"channel\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"subject\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"body\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"html_body\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"context_data\",\"kind\":\"scalar\",\"type\":\"Json\"},{\"name\":\"related_entity_type\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"related_entity_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"status\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"priority\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"provider\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"provider_message_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"provider_response\",\"kind\":\"scalar\",\"type\":\"Json\"},{\"name\":\"scheduled_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"queued_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"sent_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"delivered_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"failed_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"retry_count\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"max_retries\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"last_retry_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"error_message\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"error_code\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"created_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updated_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"notification_events\",\"kind\":\"object\",\"type\":\"notification_events\",\"relationName\":\"notification_eventsTonotification_messages\"},{\"name\":\"businesses\",\"kind\":\"object\",\"type\":\"businesses\",\"relationName\":\"notification_messages_business\"},{\"name\":\"customers\",\"kind\":\"object\",\"type\":\"customers\",\"relationName\":\"notification_messages_customer\"},{\"name\":\"notification_templates\",\"kind\":\"object\",\"type\":\"notification_templates\",\"relationName\":\"notification_messagesTonotification_templates\"},{\"name\":\"tenants\",\"kind\":\"object\",\"type\":\"tenants\",\"relationName\":\"notification_messages_tenant\"}],\"dbName\":null},\"notification_preferences\":{\"fields\":[{\"name\":\"preference_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"customer_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"user_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"business_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"email_enabled\",\"kind\":\"scalar\",\"type\":\"Boolean\"},{\"name\":\"sms_enabled\",\"kind\":\"scalar\",\"type\":\"Boolean\"},{\"name\":\"whatsapp_enabled\",\"kind\":\"scalar\",\"type\":\"Boolean\"},{\"name\":\"push_enabled\",\"kind\":\"scalar\",\"type\":\"Boolean\"},{\"name\":\"preferences\",\"kind\":\"scalar\",\"type\":\"Json\"},{\"name\":\"quiet_hours\",\"kind\":\"scalar\",\"type\":\"Json\"},{\"name\":\"channel_preferences\",\"kind\":\"scalar\",\"type\":\"Json\"},{\"name\":\"created_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updated_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"businesses\",\"kind\":\"object\",\"type\":\"businesses\",\"relationName\":\"notification_prefs_business\"},{\"name\":\"customers\",\"kind\":\"object\",\"type\":\"customers\",\"relationName\":\"notification_prefs_customer\"}],\"dbName\":null},\"payments\":{\"fields\":[{\"name\":\"payment_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"business_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"tenant_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"order_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"customer_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"razorpay_order_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"razorpay_payment_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"razorpay_signature\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"amount\",\"kind\":\"scalar\",\"type\":\"Decimal\"},{\"name\":\"currency\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"status\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"method\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"receipt\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"description\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"notes\",\"kind\":\"scalar\",\"type\":\"Json\"},{\"name\":\"webhook_received_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"webhook_processed_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"webhook_attempts\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"refund_amount\",\"kind\":\"scalar\",\"type\":\"Decimal\"},{\"name\":\"refunded_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"refund_reason\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"authorized_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"captured_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"failed_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"failure_reason\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"created_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updated_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"payment_webhooks\",\"kind\":\"object\",\"type\":\"payment_webhooks\",\"relationName\":\"payment_webhooksTopayments\"},{\"name\":\"businesses\",\"kind\":\"object\",\"type\":\"businesses\",\"relationName\":\"businessesTopayments\"},{\"name\":\"customers\",\"kind\":\"object\",\"type\":\"customers\",\"relationName\":\"customersTopayments\"},{\"name\":\"orders\",\"kind\":\"object\",\"type\":\"orders\",\"relationName\":\"ordersTopayments\"}],\"dbName\":null},\"payment_reconciliation\":{\"fields\":[{\"name\":\"reconciliation_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"business_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"settlement_date\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"start_date\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"end_date\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"total_payments\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"total_amount\",\"kind\":\"scalar\",\"type\":\"Decimal\"},{\"name\":\"total_fees\",\"kind\":\"scalar\",\"type\":\"Decimal\"},{\"name\":\"net_amount\",\"kind\":\"scalar\",\"type\":\"Decimal\"},{\"name\":\"status\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"razorpay_settlement_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"discrepancy_count\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"discrepancy_details\",\"kind\":\"scalar\",\"type\":\"Json\"},{\"name\":\"created_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updated_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"businesses\",\"kind\":\"object\",\"type\":\"businesses\",\"relationName\":\"businessesTopayment_reconciliation\"}],\"dbName\":null},\"notification_events\":{\"fields\":[{\"name\":\"event_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"notification_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"event_type\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"event_data\",\"kind\":\"scalar\",\"type\":\"Json\"},{\"name\":\"provider_event_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"provider_timestamp\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"occurred_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"notification_messages\",\"kind\":\"object\",\"type\":\"notification_messages\",\"relationName\":\"notification_eventsTonotification_messages\"}],\"dbName\":null},\"payment_webhooks\":{\"fields\":[{\"name\":\"webhook_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"payment_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"event_type\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"razorpay_event_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"payload\",\"kind\":\"scalar\",\"type\":\"Json\"},{\"name\":\"signature\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"status\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"processed_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"error_message\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"retry_count\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"received_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"created_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"payments\",\"kind\":\"object\",\"type\":\"payments\",\"relationName\":\"payment_webhooksTopayments\"}],\"dbName\":null},\"instagram_media\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"media_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"account_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"media_type\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"media_url\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"thumbnail_url\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"caption\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"permalink\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"timestamp\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"like_count\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"comment_count\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"owner_username\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"created_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updated_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"social_accounts\",\"kind\":\"object\",\"type\":\"social_accounts\",\"relationName\":\"instagram_mediaTosocial_accounts\"}],\"dbName\":null},\"workflow_definitions\":{\"fields\":[{\"name\":\"workflow_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"workflow_key\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"workflow_name\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"version\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"business_type\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"intent_name\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"workflow_definition\",\"kind\":\"scalar\",\"type\":\"Json\"},{\"name\":\"description\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"is_active\",\"kind\":\"scalar\",\"type\":\"Boolean\"},{\"name\":\"created_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updated_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"business_workflows\",\"kind\":\"object\",\"type\":\"business_workflows\",\"relationName\":\"business_workflowsToworkflow_definitions\"},{\"name\":\"workflow_executions\",\"kind\":\"object\",\"type\":\"workflow_executions\",\"relationName\":\"workflow_definitionsToworkflow_executions\"},{\"name\":\"workflow_execution_steps\",\"kind\":\"object\",\"type\":\"workflow_execution_steps\",\"relationName\":\"workflow_definitionsToworkflow_execution_steps\"},{\"name\":\"workflow_idempotency_keys\",\"kind\":\"object\",\"type\":\"workflow_idempotency_keys\",\"relationName\":\"workflow_definitionsToworkflow_idempotency_keys\"}],\"dbName\":null},\"business_workflows\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"business_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"tenant_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"intent_name\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"workflow_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"is_active\",\"kind\":\"scalar\",\"type\":\"Boolean\"},{\"name\":\"created_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updated_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"businesses\",\"kind\":\"object\",\"type\":\"businesses\",\"relationName\":\"business_workflowsTobusinesses\"},{\"name\":\"tenants\",\"kind\":\"object\",\"type\":\"tenants\",\"relationName\":\"business_workflowsTotenants\"},{\"name\":\"workflow_definitions\",\"kind\":\"object\",\"type\":\"workflow_definitions\",\"relationName\":\"business_workflowsToworkflow_definitions\"}],\"dbName\":null},\"workflow_executions\":{\"fields\":[{\"name\":\"execution_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"workflow_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"business_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"tenant_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"lead_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"status\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"started_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"completed_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"created_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updated_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"current_node_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"waiting_for_input\",\"kind\":\"scalar\",\"type\":\"Boolean\"},{\"name\":\"channel\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"context\",\"kind\":\"scalar\",\"type\":\"Json\"},{\"name\":\"intent\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"message_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"chat_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"conversation_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"system_context\",\"kind\":\"scalar\",\"type\":\"Json\"},{\"name\":\"businesses\",\"kind\":\"object\",\"type\":\"businesses\",\"relationName\":\"businessesToworkflow_executions\"},{\"name\":\"tenants\",\"kind\":\"object\",\"type\":\"tenants\",\"relationName\":\"tenantsToworkflow_executions\"},{\"name\":\"leads\",\"kind\":\"object\",\"type\":\"leads\",\"relationName\":\"leadsToworkflow_executions\"},{\"name\":\"workflow_definitions\",\"kind\":\"object\",\"type\":\"workflow_definitions\",\"relationName\":\"workflow_definitionsToworkflow_executions\"},{\"name\":\"steps\",\"kind\":\"object\",\"type\":\"workflow_execution_steps\",\"relationName\":\"workflow_execution_stepsToworkflow_executions\"},{\"name\":\"idempotency_keys\",\"kind\":\"object\",\"type\":\"workflow_idempotency_keys\",\"relationName\":\"workflow_executionsToworkflow_idempotency_keys\"}],\"dbName\":null},\"workflow_execution_steps\":{\"fields\":[{\"name\":\"step_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"execution_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"workflow_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"business_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"tenant_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"node_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"node_type\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"node_name\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"status\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"input\",\"kind\":\"scalar\",\"type\":\"Json\"},{\"name\":\"output\",\"kind\":\"scalar\",\"type\":\"Json\"},{\"name\":\"error_message\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"error_stack\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"started_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"completed_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"duration_ms\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"created_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"execution\",\"kind\":\"object\",\"type\":\"workflow_executions\",\"relationName\":\"workflow_execution_stepsToworkflow_executions\"},{\"name\":\"business\",\"kind\":\"object\",\"type\":\"businesses\",\"relationName\":\"businessesToworkflow_execution_steps\"},{\"name\":\"tenant\",\"kind\":\"object\",\"type\":\"tenants\",\"relationName\":\"tenantsToworkflow_execution_steps\"},{\"name\":\"workflow_definition\",\"kind\":\"object\",\"type\":\"workflow_definitions\",\"relationName\":\"workflow_definitionsToworkflow_execution_steps\"}],\"dbName\":null},\"workflow_idempotency_keys\":{\"fields\":[{\"name\":\"key_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"idempotency_key\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"business_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"tenant_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"workflow_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"execution_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"lead_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"conversation_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"message_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"node_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"purpose\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"status\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"response\",\"kind\":\"scalar\",\"type\":\"Json\"},{\"name\":\"locked_until\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"created_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updated_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"business\",\"kind\":\"object\",\"type\":\"businesses\",\"relationName\":\"businessesToworkflow_idempotency_keys\"},{\"name\":\"tenant\",\"kind\":\"object\",\"type\":\"tenants\",\"relationName\":\"tenantsToworkflow_idempotency_keys\"},{\"name\":\"workflow_definition\",\"kind\":\"object\",\"type\":\"workflow_definitions\",\"relationName\":\"workflow_definitionsToworkflow_idempotency_keys\"},{\"name\":\"execution\",\"kind\":\"object\",\"type\":\"workflow_executions\",\"relationName\":\"workflow_executionsToworkflow_idempotency_keys\"}],\"dbName\":null},\"cart_items\":{\"fields\":[{\"name\":\"cart_item_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"cart_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"item_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"variant_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"product_name\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"variant_name\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"quantity\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"unit_price\",\"kind\":\"scalar\",\"type\":\"Decimal\"},{\"name\":\"total_price\",\"kind\":\"scalar\",\"type\":\"Decimal\"},{\"name\":\"snapshot\",\"kind\":\"scalar\",\"type\":\"Json\"},{\"name\":\"created_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updated_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"carts\",\"kind\":\"object\",\"type\":\"carts\",\"relationName\":\"cart_itemsTocarts\"},{\"name\":\"catalog_item\",\"kind\":\"object\",\"type\":\"catalog_items\",\"relationName\":\"cart_itemsTocatalog_items\"},{\"name\":\"item_variant\",\"kind\":\"object\",\"type\":\"item_variants\",\"relationName\":\"cart_itemsToitem_variants\"}],\"dbName\":null},\"carts\":{\"fields\":[{\"name\":\"cart_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"business_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"tenant_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"lead_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"status\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"total_amount\",\"kind\":\"scalar\",\"type\":\"Decimal\"},{\"name\":\"total_items\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"expires_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"created_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updated_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"customer_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"cart_items\",\"kind\":\"object\",\"type\":\"cart_items\",\"relationName\":\"cart_itemsTocarts\"},{\"name\":\"businesses\",\"kind\":\"object\",\"type\":\"businesses\",\"relationName\":\"businessesTocarts\"},{\"name\":\"customers\",\"kind\":\"object\",\"type\":\"customers\",\"relationName\":\"cartsTocustomers\"},{\"name\":\"leads\",\"kind\":\"object\",\"type\":\"leads\",\"relationName\":\"cartsToleads\"},{\"name\":\"tenants\",\"kind\":\"object\",\"type\":\"tenants\",\"relationName\":\"cartsTotenants\"}],\"dbName\":null},\"whatsapp_optouts\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"BigInt\"},{\"name\":\"business_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"phone_number\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"opted_out_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"reason\",\"kind\":\"scalar\",\"type\":\"String\"}],\"dbName\":null},\"campaign_analytics\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"BigInt\"},{\"name\":\"campaign_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"business_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"total\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"pending\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"sent\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"delivered\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"read\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"failed\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"skipped\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"delivery_rate\",\"kind\":\"scalar\",\"type\":\"Decimal\"},{\"name\":\"read_rate\",\"kind\":\"scalar\",\"type\":\"Decimal\"},{\"name\":\"estimated_cost\",\"kind\":\"scalar\",\"type\":\"Decimal\"},{\"name\":\"last_synced_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updated_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"}],\"dbName\":null},\"hotel_pricing_recommendations\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"business_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"hotel_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"org_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"room_type\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"checkin_date\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"suggested_price\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"demand_score\",\"kind\":\"scalar\",\"type\":\"Float\"},{\"name\":\"confidence\",\"kind\":\"scalar\",\"type\":\"Float\"},{\"name\":\"competitor_avg_price\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"current_price\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"price_range_low\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"price_range_high\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"claude_narrative\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"xotelo_snapshot\",\"kind\":\"scalar\",\"type\":\"Json\"},{\"name\":\"seven_day_forecast\",\"kind\":\"scalar\",\"type\":\"Json\"},{\"name\":\"created_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"booking_outcomes\",\"kind\":\"object\",\"type\":\"hotel_booking_outcomes\",\"relationName\":\"hotel_booking_outcomesTohotel_pricing_recommendations\"}],\"dbName\":null},\"hotel_booking_outcomes\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"business_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"recommendation_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"hotel_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"org_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"actual_price_used\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"rooms_booked\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"total_rooms\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"actual_occupancy\",\"kind\":\"scalar\",\"type\":\"Float\"},{\"name\":\"revenue\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"checkin_date\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"recorded_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"recommendation\",\"kind\":\"object\",\"type\":\"hotel_pricing_recommendations\",\"relationName\":\"hotel_booking_outcomesTohotel_pricing_recommendations\"}],\"dbName\":null},\"hotel_pricing_notifications\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"business_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"org_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"hotel_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"type\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"title\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"body\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"metadata\",\"kind\":\"scalar\",\"type\":\"Json\"},{\"name\":\"read_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"created_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"}],\"dbName\":null},\"catalog_items\":{\"fields\":[{\"name\":\"item_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"business_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"tenant_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"item_type\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"name\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"description\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"category\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"base_price\",\"kind\":\"scalar\",\"type\":\"Decimal\"},{\"name\":\"compare_price\",\"kind\":\"scalar\",\"type\":\"Decimal\"},{\"name\":\"currency\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"stock_quantity\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"primary_image_url\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"image_urls\",\"kind\":\"scalar\",\"type\":\"Json\"},{\"name\":\"attributes\",\"kind\":\"scalar\",\"type\":\"Json\"},{\"name\":\"ai_tags\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"is_active\",\"kind\":\"scalar\",\"type\":\"Boolean\"},{\"name\":\"deleted_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"created_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updated_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"cart_items\",\"kind\":\"object\",\"type\":\"cart_items\",\"relationName\":\"cart_itemsTocatalog_items\"},{\"name\":\"cart_reservations\",\"kind\":\"object\",\"type\":\"cart_reservations\",\"relationName\":\"cart_reservationsTocatalog_items\"},{\"name\":\"product_detail\",\"kind\":\"object\",\"type\":\"product_item_details\",\"relationName\":\"catalog_itemsToproduct_item_details\"},{\"name\":\"hospitality_detail\",\"kind\":\"object\",\"type\":\"hospitality_item_details\",\"relationName\":\"catalog_itemsTohospitality_item_details\"},{\"name\":\"vehicle_detail\",\"kind\":\"object\",\"type\":\"vehicle_item_details\",\"relationName\":\"catalog_itemsTovehicle_item_details\"},{\"name\":\"product_order_items\",\"kind\":\"object\",\"type\":\"product_order_items\",\"relationName\":\"catalog_itemsToproduct_order_items\"},{\"name\":\"hospitality_booking_items\",\"kind\":\"object\",\"type\":\"hospitality_booking_items\",\"relationName\":\"catalog_itemsTohospitality_booking_items\"},{\"name\":\"product_inquiries\",\"kind\":\"object\",\"type\":\"product_inquiries\",\"relationName\":\"catalog_itemsToproduct_inquiries\"},{\"name\":\"hospitality_inquiries\",\"kind\":\"object\",\"type\":\"hospitality_inquiries\",\"relationName\":\"catalog_itemsTohospitality_inquiries\"},{\"name\":\"businesses\",\"kind\":\"object\",\"type\":\"businesses\",\"relationName\":\"businessesTocatalog_items\"},{\"name\":\"availability\",\"kind\":\"object\",\"type\":\"item_availability\",\"relationName\":\"catalog_itemsToitem_availability\"},{\"name\":\"variants\",\"kind\":\"object\",\"type\":\"item_variants\",\"relationName\":\"catalog_itemsToitem_variants\"},{\"name\":\"order_items\",\"kind\":\"object\",\"type\":\"order_items\",\"relationName\":\"catalog_itemsToorder_items\"},{\"name\":\"external_catalog_items\",\"kind\":\"object\",\"type\":\"external_catalog_items\",\"relationName\":\"catalog_itemsToexternal_catalog_items\"}],\"dbName\":null},\"item_variants\":{\"fields\":[{\"name\":\"variant_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"item_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"business_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"name\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"sku\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"price\",\"kind\":\"scalar\",\"type\":\"Decimal\"},{\"name\":\"stock_quantity\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"options\",\"kind\":\"scalar\",\"type\":\"Json\"},{\"name\":\"is_active\",\"kind\":\"scalar\",\"type\":\"Boolean\"},{\"name\":\"created_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updated_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"cart_items\",\"kind\":\"object\",\"type\":\"cart_items\",\"relationName\":\"cart_itemsToitem_variants\"},{\"name\":\"item\",\"kind\":\"object\",\"type\":\"catalog_items\",\"relationName\":\"catalog_itemsToitem_variants\"},{\"name\":\"order_items\",\"kind\":\"object\",\"type\":\"order_items\",\"relationName\":\"item_variantsToorder_items\"},{\"name\":\"product_order_items\",\"kind\":\"object\",\"type\":\"product_order_items\",\"relationName\":\"item_variantsToproduct_order_items\"}],\"dbName\":null},\"item_availability\":{\"fields\":[{\"name\":\"avail_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"item_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"business_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"date\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"total_slots\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"booked_slots\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"price_override\",\"kind\":\"scalar\",\"type\":\"Decimal\"},{\"name\":\"is_blocked\",\"kind\":\"scalar\",\"type\":\"Boolean\"},{\"name\":\"created_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updated_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"item\",\"kind\":\"object\",\"type\":\"catalog_items\",\"relationName\":\"catalog_itemsToitem_availability\"}],\"dbName\":null},\"product_item_details\":{\"fields\":[{\"name\":\"item_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"business_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"brand\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"sku\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"condition\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"weight\",\"kind\":\"scalar\",\"type\":\"Decimal\"},{\"name\":\"dimensions\",\"kind\":\"scalar\",\"type\":\"Json\"},{\"name\":\"warranty\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"metadata\",\"kind\":\"scalar\",\"type\":\"Json\"},{\"name\":\"created_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updated_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"business\",\"kind\":\"object\",\"type\":\"businesses\",\"relationName\":\"businessesToproduct_item_details\"},{\"name\":\"item\",\"kind\":\"object\",\"type\":\"catalog_items\",\"relationName\":\"catalog_itemsToproduct_item_details\"}],\"dbName\":null},\"external_catalog_items\":{\"fields\":[{\"name\":\"external_catalog_item_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"business_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"item_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"provider\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"external_catalog_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"external_product_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"retailer_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"sync_status\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"last_synced_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"remote_hash\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"local_hash\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"raw_payload\",\"kind\":\"scalar\",\"type\":\"Json\"},{\"name\":\"created_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updated_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"business\",\"kind\":\"object\",\"type\":\"businesses\",\"relationName\":\"businessesToexternal_catalog_items\"},{\"name\":\"item\",\"kind\":\"object\",\"type\":\"catalog_items\",\"relationName\":\"catalog_itemsToexternal_catalog_items\"}],\"dbName\":null},\"product_inquiries\":{\"fields\":[{\"name\":\"inquiry_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"business_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"tenant_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"lead_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"item_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"variant_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"quantity\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"delivery_pincode\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"budget\",\"kind\":\"scalar\",\"type\":\"Decimal\"},{\"name\":\"status\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"metadata\",\"kind\":\"scalar\",\"type\":\"Json\"},{\"name\":\"created_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updated_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"business\",\"kind\":\"object\",\"type\":\"businesses\",\"relationName\":\"businessesToproduct_inquiries\"},{\"name\":\"tenant\",\"kind\":\"object\",\"type\":\"tenants\",\"relationName\":\"product_inquiriesTotenants\"},{\"name\":\"lead\",\"kind\":\"object\",\"type\":\"leads\",\"relationName\":\"leadsToproduct_inquiries\"},{\"name\":\"item\",\"kind\":\"object\",\"type\":\"catalog_items\",\"relationName\":\"catalog_itemsToproduct_inquiries\"}],\"dbName\":null},\"product_orders\":{\"fields\":[{\"name\":\"product_order_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"business_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"tenant_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"legacy_order_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"customer_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"lead_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"order_number\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"status\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"payment_status\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"subtotal\",\"kind\":\"scalar\",\"type\":\"Decimal\"},{\"name\":\"discount_amount\",\"kind\":\"scalar\",\"type\":\"Decimal\"},{\"name\":\"tax_amount\",\"kind\":\"scalar\",\"type\":\"Decimal\"},{\"name\":\"shipping_fee\",\"kind\":\"scalar\",\"type\":\"Decimal\"},{\"name\":\"total_amount\",\"kind\":\"scalar\",\"type\":\"Decimal\"},{\"name\":\"source\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"shipping_address\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"shipping_city\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"shipping_state\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"shipping_pincode\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"shipping_phone\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"notes\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"metadata\",\"kind\":\"scalar\",\"type\":\"Json\"},{\"name\":\"paid_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"cancelled_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"created_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updated_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"business\",\"kind\":\"object\",\"type\":\"businesses\",\"relationName\":\"businessesToproduct_orders\"},{\"name\":\"tenant\",\"kind\":\"object\",\"type\":\"tenants\",\"relationName\":\"product_ordersTotenants\"},{\"name\":\"customer\",\"kind\":\"object\",\"type\":\"customers\",\"relationName\":\"customersToproduct_orders\"},{\"name\":\"lead\",\"kind\":\"object\",\"type\":\"leads\",\"relationName\":\"leadsToproduct_orders\"},{\"name\":\"legacy_order\",\"kind\":\"object\",\"type\":\"orders\",\"relationName\":\"ordersToproduct_orders\"},{\"name\":\"items\",\"kind\":\"object\",\"type\":\"product_order_items\",\"relationName\":\"product_order_itemsToproduct_orders\"},{\"name\":\"events\",\"kind\":\"object\",\"type\":\"product_order_status_events\",\"relationName\":\"product_order_status_eventsToproduct_orders\"}],\"dbName\":null},\"product_order_items\":{\"fields\":[{\"name\":\"product_order_item_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"product_order_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"item_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"variant_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"product_name\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"variant_name\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"sku\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"quantity\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"unit_price\",\"kind\":\"scalar\",\"type\":\"Decimal\"},{\"name\":\"discount\",\"kind\":\"scalar\",\"type\":\"Decimal\"},{\"name\":\"total_price\",\"kind\":\"scalar\",\"type\":\"Decimal\"},{\"name\":\"snapshot\",\"kind\":\"scalar\",\"type\":\"Json\"},{\"name\":\"created_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updated_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"product_order\",\"kind\":\"object\",\"type\":\"product_orders\",\"relationName\":\"product_order_itemsToproduct_orders\"},{\"name\":\"item\",\"kind\":\"object\",\"type\":\"catalog_items\",\"relationName\":\"catalog_itemsToproduct_order_items\"},{\"name\":\"variant\",\"kind\":\"object\",\"type\":\"item_variants\",\"relationName\":\"item_variantsToproduct_order_items\"}],\"dbName\":null},\"product_order_status_events\":{\"fields\":[{\"name\":\"event_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"product_order_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"business_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"from_status\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"to_status\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"actor\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"actor_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"data\",\"kind\":\"scalar\",\"type\":\"Json\"},{\"name\":\"created_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"product_order\",\"kind\":\"object\",\"type\":\"product_orders\",\"relationName\":\"product_order_status_eventsToproduct_orders\"}],\"dbName\":null},\"seller_owner_approvals\":{\"fields\":[{\"name\":\"approval_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"business_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"tenant_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"title\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"simple_summary\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"action_type\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"risk_level\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"status\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"source\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"entity_type\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"entity_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"requested_by\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"decided_by\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"payload\",\"kind\":\"scalar\",\"type\":\"Json\"},{\"name\":\"guardrails\",\"kind\":\"scalar\",\"type\":\"Json\"},{\"name\":\"due_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"decided_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"expires_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"created_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updated_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"}],\"dbName\":null},\"seller_store_settings\":{\"fields\":[{\"name\":\"seller_store_settings_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"business_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"tenant_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"store_type\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"onboarding_status\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"default_currency\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"low_stock_threshold\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"stock_hold_minutes\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"payment_modes\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"delivery_modes\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"delivery_areas\",\"kind\":\"scalar\",\"type\":\"Json\"},{\"name\":\"credit_defaults\",\"kind\":\"scalar\",\"type\":\"Json\"},{\"name\":\"ai_guardrails\",\"kind\":\"scalar\",\"type\":\"Json\"},{\"name\":\"setup_checklist\",\"kind\":\"scalar\",\"type\":\"Json\"},{\"name\":\"created_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updated_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"}],\"dbName\":null},\"seller_stock_reservations\":{\"fields\":[{\"name\":\"reservation_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"business_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"tenant_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"customer_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"lead_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"item_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"variant_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"quantity\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"status\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"reason\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"source\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"expires_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"released_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"converted_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"created_by\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"metadata\",\"kind\":\"scalar\",\"type\":\"Json\"},{\"name\":\"created_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updated_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"}],\"dbName\":null},\"seller_return_cases\":{\"fields\":[{\"name\":\"return_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"business_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"tenant_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"order_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"product_order_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"customer_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"return_type\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"status\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"reason\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"requested_amount\",\"kind\":\"scalar\",\"type\":\"Decimal\"},{\"name\":\"approved_amount\",\"kind\":\"scalar\",\"type\":\"Decimal\"},{\"name\":\"items\",\"kind\":\"scalar\",\"type\":\"Json\"},{\"name\":\"resolution\",\"kind\":\"scalar\",\"type\":\"Json\"},{\"name\":\"handled_by\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"created_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updated_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"closed_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"}],\"dbName\":null},\"seller_deliveries\":{\"fields\":[{\"name\":\"delivery_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"business_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"tenant_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"order_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"product_order_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"customer_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"status\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"delivery_mode\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"delivery_person\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"phone\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"address\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"pincode\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"scheduled_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"picked_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"delivered_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"notes\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"metadata\",\"kind\":\"scalar\",\"type\":\"Json\"},{\"name\":\"created_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updated_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"}],\"dbName\":null},\"seller_customer_credit_accounts\":{\"fields\":[{\"name\":\"credit_account_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"business_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"tenant_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"customer_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"customer_name\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"phone\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"status\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"credit_limit\",\"kind\":\"scalar\",\"type\":\"Decimal\"},{\"name\":\"current_balance\",\"kind\":\"scalar\",\"type\":\"Decimal\"},{\"name\":\"due_days\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"approved_by\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"approved_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"notes\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"metadata\",\"kind\":\"scalar\",\"type\":\"Json\"},{\"name\":\"created_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updated_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"}],\"dbName\":null},\"seller_customer_credit_transactions\":{\"fields\":[{\"name\":\"credit_transaction_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"credit_account_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"business_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"order_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"transaction_type\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"amount\",\"kind\":\"scalar\",\"type\":\"Decimal\"},{\"name\":\"balance_after\",\"kind\":\"scalar\",\"type\":\"Decimal\"},{\"name\":\"note\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"created_by\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"metadata\",\"kind\":\"scalar\",\"type\":\"Json\"},{\"name\":\"created_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"}],\"dbName\":null},\"seller_ai_audit_logs\":{\"fields\":[{\"name\":\"ai_audit_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"business_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"tenant_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"ai_employee\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"action\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"decision\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"confidence\",\"kind\":\"scalar\",\"type\":\"Decimal\"},{\"name\":\"risk_level\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"entity_type\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"entity_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"input_summary\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"output_summary\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"guardrails\",\"kind\":\"scalar\",\"type\":\"Json\"},{\"name\":\"owner_visible\",\"kind\":\"scalar\",\"type\":\"Boolean\"},{\"name\":\"created_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"}],\"dbName\":null},\"seller_product_profit_snapshots\":{\"fields\":[{\"name\":\"profit_snapshot_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"business_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"item_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"variant_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"cost_price\",\"kind\":\"scalar\",\"type\":\"Decimal\"},{\"name\":\"selling_price\",\"kind\":\"scalar\",\"type\":\"Decimal\"},{\"name\":\"gross_margin\",\"kind\":\"scalar\",\"type\":\"Decimal\"},{\"name\":\"margin_percentage\",\"kind\":\"scalar\",\"type\":\"Decimal\"},{\"name\":\"source\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"recommendation\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"created_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"}],\"dbName\":null},\"seller_demand_signals\":{\"fields\":[{\"name\":\"demand_signal_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"business_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"item_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"category\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"signal_type\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"signal_count\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"period_start\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"period_end\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"source\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"metadata\",\"kind\":\"scalar\",\"type\":\"Json\"},{\"name\":\"created_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"}],\"dbName\":null},\"seller_product_import_jobs\":{\"fields\":[{\"name\":\"import_job_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"business_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"tenant_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"source\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"status\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"total_rows\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"created_count\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"updated_count\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"skipped_count\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"failed_count\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"errors\",\"kind\":\"scalar\",\"type\":\"Json\"},{\"name\":\"summary\",\"kind\":\"scalar\",\"type\":\"Json\"},{\"name\":\"created_by\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"started_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"finished_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"created_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updated_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"}],\"dbName\":null},\"seller_stock_adjustments\":{\"fields\":[{\"name\":\"adjustment_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"business_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"tenant_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"item_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"variant_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"import_job_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"adjustment_type\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"quantity_change\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"quantity_before\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"quantity_after\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"reason\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"source\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"reference\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"note\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"created_by\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"metadata\",\"kind\":\"scalar\",\"type\":\"Json\"},{\"name\":\"created_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"}],\"dbName\":null},\"hospitality_item_details\":{\"fields\":[{\"name\":\"item_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"business_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"service_type\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"capacity\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"total_units\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"max_adults\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"bed_type\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"check_in_time\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"check_out_time\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"amenities\",\"kind\":\"scalar\",\"type\":\"Json\"},{\"name\":\"cancellation_policy\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"tax_percentage\",\"kind\":\"scalar\",\"type\":\"Decimal\"},{\"name\":\"extra_guest_charge\",\"kind\":\"scalar\",\"type\":\"Decimal\"},{\"name\":\"metadata\",\"kind\":\"scalar\",\"type\":\"Json\"},{\"name\":\"created_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updated_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"business\",\"kind\":\"object\",\"type\":\"businesses\",\"relationName\":\"businessesTohospitality_item_details\"},{\"name\":\"item\",\"kind\":\"object\",\"type\":\"catalog_items\",\"relationName\":\"catalog_itemsTohospitality_item_details\"}],\"dbName\":null},\"vehicle_item_details\":{\"fields\":[{\"name\":\"item_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"business_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"make\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"model_name\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"year\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"fuel_type\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"transmission\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"color\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"km_driven\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"condition\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"metadata\",\"kind\":\"scalar\",\"type\":\"Json\"},{\"name\":\"created_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updated_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"business\",\"kind\":\"object\",\"type\":\"businesses\",\"relationName\":\"businessesTovehicle_item_details\"},{\"name\":\"item\",\"kind\":\"object\",\"type\":\"catalog_items\",\"relationName\":\"catalog_itemsTovehicle_item_details\"}],\"dbName\":null},\"hospitality_inquiries\":{\"fields\":[{\"name\":\"inquiry_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"business_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"tenant_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"lead_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"preferred_item_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"check_in\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"check_out\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"guests\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"budget\",\"kind\":\"scalar\",\"type\":\"Decimal\"},{\"name\":\"status\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"metadata\",\"kind\":\"scalar\",\"type\":\"Json\"},{\"name\":\"created_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updated_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"business\",\"kind\":\"object\",\"type\":\"businesses\",\"relationName\":\"businessesTohospitality_inquiries\"},{\"name\":\"tenant\",\"kind\":\"object\",\"type\":\"tenants\",\"relationName\":\"hospitality_inquiriesTotenants\"},{\"name\":\"lead\",\"kind\":\"object\",\"type\":\"leads\",\"relationName\":\"hospitality_inquiriesToleads\"},{\"name\":\"preferred_item\",\"kind\":\"object\",\"type\":\"catalog_items\",\"relationName\":\"catalog_itemsTohospitality_inquiries\"}],\"dbName\":null},\"hospitality_bookings\":{\"fields\":[{\"name\":\"hospitality_booking_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"business_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"tenant_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"legacy_order_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"customer_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"lead_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"booking_number\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"status\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"payment_status\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"check_in\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"check_out\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"guests\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"subtotal\",\"kind\":\"scalar\",\"type\":\"Decimal\"},{\"name\":\"tax_amount\",\"kind\":\"scalar\",\"type\":\"Decimal\"},{\"name\":\"discount_amount\",\"kind\":\"scalar\",\"type\":\"Decimal\"},{\"name\":\"total_amount\",\"kind\":\"scalar\",\"type\":\"Decimal\"},{\"name\":\"source\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"notes\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"metadata\",\"kind\":\"scalar\",\"type\":\"Json\"},{\"name\":\"cancelled_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"created_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updated_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"business\",\"kind\":\"object\",\"type\":\"businesses\",\"relationName\":\"businessesTohospitality_bookings\"},{\"name\":\"tenant\",\"kind\":\"object\",\"type\":\"tenants\",\"relationName\":\"hospitality_bookingsTotenants\"},{\"name\":\"customer\",\"kind\":\"object\",\"type\":\"customers\",\"relationName\":\"customersTohospitality_bookings\"},{\"name\":\"lead\",\"kind\":\"object\",\"type\":\"leads\",\"relationName\":\"hospitality_bookingsToleads\"},{\"name\":\"legacy_order\",\"kind\":\"object\",\"type\":\"orders\",\"relationName\":\"hospitality_bookingsToorders\"},{\"name\":\"rooms\",\"kind\":\"object\",\"type\":\"hospitality_booking_items\",\"relationName\":\"hospitality_booking_itemsTohospitality_bookings\"},{\"name\":\"guests_list\",\"kind\":\"object\",\"type\":\"hospitality_booking_guests\",\"relationName\":\"hospitality_booking_guestsTohospitality_bookings\"},{\"name\":\"events\",\"kind\":\"object\",\"type\":\"hospitality_booking_status_events\",\"relationName\":\"hospitality_booking_status_eventsTohospitality_bookings\"}],\"dbName\":null},\"hospitality_booking_items\":{\"fields\":[{\"name\":\"booking_item_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"hospitality_booking_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"item_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"item_name\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"quantity\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"nights\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"unit_price\",\"kind\":\"scalar\",\"type\":\"Decimal\"},{\"name\":\"total_price\",\"kind\":\"scalar\",\"type\":\"Decimal\"},{\"name\":\"snapshot\",\"kind\":\"scalar\",\"type\":\"Json\"},{\"name\":\"created_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updated_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"booking\",\"kind\":\"object\",\"type\":\"hospitality_bookings\",\"relationName\":\"hospitality_booking_itemsTohospitality_bookings\"},{\"name\":\"item\",\"kind\":\"object\",\"type\":\"catalog_items\",\"relationName\":\"catalog_itemsTohospitality_booking_items\"}],\"dbName\":null},\"hospitality_booking_guests\":{\"fields\":[{\"name\":\"guest_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"hospitality_booking_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"name\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"phone\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"age\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"address\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"pin_code\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"metadata\",\"kind\":\"scalar\",\"type\":\"Json\"},{\"name\":\"created_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"booking\",\"kind\":\"object\",\"type\":\"hospitality_bookings\",\"relationName\":\"hospitality_booking_guestsTohospitality_bookings\"}],\"dbName\":null},\"hospitality_booking_status_events\":{\"fields\":[{\"name\":\"event_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"hospitality_booking_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"business_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"from_status\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"to_status\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"actor\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"actor_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"data\",\"kind\":\"scalar\",\"type\":\"Json\"},{\"name\":\"created_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"booking\",\"kind\":\"object\",\"type\":\"hospitality_bookings\",\"relationName\":\"hospitality_booking_status_eventsTohospitality_bookings\"}],\"dbName\":null},\"checkpoint_blobs\":{\"fields\":[{\"name\":\"thread_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"checkpoint_ns\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"channel\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"version\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"type\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"blob\",\"kind\":\"scalar\",\"type\":\"Bytes\"},{\"name\":\"business_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"expires_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"}],\"dbName\":null},\"checkpoint_migrations\":{\"fields\":[{\"name\":\"v\",\"kind\":\"scalar\",\"type\":\"Int\"}],\"dbName\":null},\"checkpoint_writes\":{\"fields\":[{\"name\":\"thread_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"checkpoint_ns\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"checkpoint_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"task_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"idx\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"channel\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"type\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"blob\",\"kind\":\"scalar\",\"type\":\"Bytes\"},{\"name\":\"business_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"expires_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"}],\"dbName\":null},\"checkpoints\":{\"fields\":[{\"name\":\"thread_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"checkpoint_ns\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"checkpoint_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"parent_checkpoint_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"type\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"checkpoint\",\"kind\":\"scalar\",\"type\":\"Json\"},{\"name\":\"metadata\",\"kind\":\"scalar\",\"type\":\"Json\"},{\"name\":\"business_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"expires_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"}],\"dbName\":null},\"billing_plans\":{\"fields\":[{\"name\":\"plan_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"razorpay_plan_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"name\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"business_type\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"tier\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"amount\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"interval\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"interval_count\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"initial_credits\",\"kind\":\"scalar\",\"type\":\"Decimal\"},{\"name\":\"features\",\"kind\":\"scalar\",\"type\":\"Json\"},{\"name\":\"is_active\",\"kind\":\"scalar\",\"type\":\"Boolean\"},{\"name\":\"created_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"billing_subscriptions\",\"kind\":\"object\",\"type\":\"billing_subscriptions\",\"relationName\":\"billing_plansTobilling_subscriptions\"}],\"dbName\":null},\"billing_subscriptions\":{\"fields\":[{\"name\":\"subscription_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"business_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"plan_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"razorpay_subscription_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"status\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"current_period_start\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"current_period_end\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"trial_end\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"pause_start\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"pause_end\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"cancel_at_period_end\",\"kind\":\"scalar\",\"type\":\"Boolean\"},{\"name\":\"cancelled_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"past_due_since\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"metadata\",\"kind\":\"scalar\",\"type\":\"Json\"},{\"name\":\"created_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updated_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"businesses\",\"kind\":\"object\",\"type\":\"businesses\",\"relationName\":\"business_billing_subscription\"},{\"name\":\"plan\",\"kind\":\"object\",\"type\":\"billing_plans\",\"relationName\":\"billing_plansTobilling_subscriptions\"},{\"name\":\"billing_invoices\",\"kind\":\"object\",\"type\":\"billing_invoices\",\"relationName\":\"billing_invoicesTobilling_subscriptions\"}],\"dbName\":null},\"wallets\":{\"fields\":[{\"name\":\"wallet_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"business_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"balance\",\"kind\":\"scalar\",\"type\":\"Decimal\"},{\"name\":\"currency\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"created_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updated_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"businesses\",\"kind\":\"object\",\"type\":\"businesses\",\"relationName\":\"business_wallet\"},{\"name\":\"transactions\",\"kind\":\"object\",\"type\":\"wallet_transactions\",\"relationName\":\"wallet_transactionsTowallets\"}],\"dbName\":null},\"wallet_transactions\":{\"fields\":[{\"name\":\"txn_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"wallet_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"type\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"amount\",\"kind\":\"scalar\",\"type\":\"Decimal\"},{\"name\":\"balance_before\",\"kind\":\"scalar\",\"type\":\"Decimal\"},{\"name\":\"balance_after\",\"kind\":\"scalar\",\"type\":\"Decimal\"},{\"name\":\"description\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"reference_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"reference_type\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"action_type\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"status\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"metadata\",\"kind\":\"scalar\",\"type\":\"Json\"},{\"name\":\"created_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"wallet\",\"kind\":\"object\",\"type\":\"wallets\",\"relationName\":\"wallet_transactionsTowallets\"}],\"dbName\":null},\"billing_payments\":{\"fields\":[{\"name\":\"payment_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"business_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"razorpay_payment_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"razorpay_order_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"amount\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"type\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"status\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"idempotency_key\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"metadata\",\"kind\":\"scalar\",\"type\":\"Json\"},{\"name\":\"created_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"businesses\",\"kind\":\"object\",\"type\":\"businesses\",\"relationName\":\"business_billing_payments\"}],\"dbName\":null},\"billing_invoices\":{\"fields\":[{\"name\":\"invoice_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"business_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"subscription_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"razorpay_invoice_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"subtotal\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"tax_amount\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"total_amount\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"status\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"pdf_url\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"due_date\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"paid_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"created_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"businesses\",\"kind\":\"object\",\"type\":\"businesses\",\"relationName\":\"business_billing_invoices\"},{\"name\":\"subscription\",\"kind\":\"object\",\"type\":\"billing_subscriptions\",\"relationName\":\"billing_invoicesTobilling_subscriptions\"}],\"dbName\":null},\"billing_webhook_events\":{\"fields\":[{\"name\":\"event_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"provider\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"event_type\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"razorpay_event_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"payload\",\"kind\":\"scalar\",\"type\":\"Json\"},{\"name\":\"status\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"attempts\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"error\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"processed_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"created_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"}],\"dbName\":null},\"credit_pricing\":{\"fields\":[{\"name\":\"action_type\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"cost\",\"kind\":\"scalar\",\"type\":\"Decimal\"},{\"name\":\"description\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"is_active\",\"kind\":\"scalar\",\"type\":\"Boolean\"},{\"name\":\"updated_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"}],\"dbName\":null},\"business_settings\":{\"fields\":[{\"name\":\"business_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"timezone\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"language\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"currency\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"business_hours\",\"kind\":\"scalar\",\"type\":\"Json\"},{\"name\":\"onboarding_step\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"onboarding_done\",\"kind\":\"scalar\",\"type\":\"Boolean\"},{\"name\":\"ai_agent_enabled\",\"kind\":\"scalar\",\"type\":\"Boolean\"},{\"name\":\"auto_reply_enabled\",\"kind\":\"scalar\",\"type\":\"Boolean\"},{\"name\":\"booking_methods\",\"kind\":\"scalar\",\"type\":\"Json\"},{\"name\":\"booking_link\",\"kind\":\"scalar\",\"type\":\"Json\"},{\"name\":\"whatsapp_onboarding\",\"kind\":\"scalar\",\"type\":\"Json\"},{\"name\":\"low_balance_alert\",\"kind\":\"scalar\",\"type\":\"Decimal\"},{\"name\":\"default_country_code\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"updated_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"businesses\",\"kind\":\"object\",\"type\":\"businesses\",\"relationName\":\"business_settings\"}],\"dbName\":null},\"audit_logs\":{\"fields\":[{\"name\":\"log_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"business_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"user_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"action\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"entity_type\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"entity_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"old_values\",\"kind\":\"scalar\",\"type\":\"Json\"},{\"name\":\"new_values\",\"kind\":\"scalar\",\"type\":\"Json\"},{\"name\":\"ip_address\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"user_agent\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"created_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"businesses\",\"kind\":\"object\",\"type\":\"businesses\",\"relationName\":\"audit_logsTobusinesses\"},{\"name\":\"users\",\"kind\":\"object\",\"type\":\"users\",\"relationName\":\"audit_logsTousers\"}],\"dbName\":null},\"lead_item_interests\":{\"fields\":[{\"name\":\"interest_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"lead_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"business_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"item_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"item_type\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"item_name\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"interest_level\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"last_price_seen\",\"kind\":\"scalar\",\"type\":\"Decimal\"},{\"name\":\"is_alert_active\",\"kind\":\"scalar\",\"type\":\"Boolean\"},{\"name\":\"created_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updated_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"leads\",\"kind\":\"object\",\"type\":\"leads\",\"relationName\":\"lead_item_interestsToleads\"}],\"dbName\":null},\"lead_preference_watches\":{\"fields\":[{\"name\":\"watch_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"lead_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"business_id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"watch_type\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"criteria\",\"kind\":\"scalar\",\"type\":\"Json\"},{\"name\":\"is_active\",\"kind\":\"scalar\",\"type\":\"Boolean\"},{\"name\":\"notified_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"expires_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"created_at\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"leads\",\"kind\":\"object\",\"type\":\"leads\",\"relationName\":\"lead_preference_watchesToleads\"}],\"dbName\":null}},\"enums\":{},\"types\":{}}")
+defineDmmfProperty(exports.Prisma, config.runtimeDataModel)
+config.engineWasm = {
+  getRuntime: async () => require('./query_engine_bg.js'),
+  getQueryEngineWasmModule: async () => {
+    const loader = (await import('#wasm-engine-loader')).default
+    const engine = (await loader).default
+    return engine
   }
 }
+config.compilerWasm = undefined
 
+config.injectableEdgeEnv = () => ({
+  parsed: {
+    DATABASE_URL: typeof globalThis !== 'undefined' && globalThis['DATABASE_URL'] || typeof process !== 'undefined' && process.env && process.env.DATABASE_URL || undefined
+  }
+})
+
+if (typeof globalThis !== 'undefined' && globalThis['DEBUG'] || typeof process !== 'undefined' && process.env && process.env.DEBUG || undefined) {
+  Debug.enable(typeof globalThis !== 'undefined' && globalThis['DEBUG'] || typeof process !== 'undefined' && process.env && process.env.DEBUG || undefined)
+}
+
+const PrismaClient = getPrismaClient(config)
 exports.PrismaClient = PrismaClient
-
 Object.assign(exports, Prisma)
+

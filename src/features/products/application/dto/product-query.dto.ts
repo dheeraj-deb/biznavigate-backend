@@ -10,10 +10,6 @@ import {
 } from 'class-validator';
 import { Type } from 'class-transformer';
 
-/**
- * DTO for querying/filtering products
- * Supports pagination, filtering, and sorting
- */
 export class ProductQueryDto {
   @IsOptional()
   @IsUUID()
@@ -21,7 +17,7 @@ export class ProductQueryDto {
 
   @IsOptional()
   @IsString()
-  search?: string; // Search in name, description, SKU
+  search?: string; // Search in name, description, SKU, brand
 
   @IsOptional()
   @IsString()
@@ -40,6 +36,11 @@ export class ProductQueryDto {
   @IsBoolean()
   @Type(() => Boolean)
   in_stock?: boolean;
+
+  @IsOptional()
+  @IsBoolean()
+  @Type(() => Boolean)
+  low_stock?: boolean; // true = stock_quantity <= low_stock_threshold
 
   @IsOptional()
   @IsNumber()
@@ -64,15 +65,13 @@ export class ProductQueryDto {
   @IsNumber()
   @Type(() => Number)
   @Min(1)
-  @Max(500) // Increased from 100 to support larger data exports
+  @Max(500)
   limit?: number = 20;
 
-  // Cursor-based pagination for very large datasets (optional)
   @IsOptional()
   @IsString()
-  cursor?: string; // Product ID to start from
+  cursor?: string;
 
-  // Include total count (can be disabled for performance on very large datasets)
   @IsOptional()
   @IsBoolean()
   @Type(() => Boolean)

@@ -110,18 +110,18 @@ export class KafkaProducerService {
   }
 
   /**
-   * Publish an AI result created by an in-process worker.
+   * Publish a plain text message directly to workflow (no AI processing)
    */
-  async publishAiProcessingResult(payload: any) {
+  async publishTextMessage(payload: any) {
     const event = {
       event_id: uuidv4(),
-      event_type: 'ai.process.result',
+      event_type: 'workflow.text.message',
       timestamp: new Date().toISOString(),
       payload,
     };
 
-    await this.publishEvent('ai.process.result', event, payload.lead_id);
-    this.logger.log(`Published ai.process.result for lead: ${payload.lead_id}`);
+    await this.publishEvent('workflow-event', event, payload.lead_id);
+    this.logger.log(`Published workflow.text.message for lead: ${payload.lead_id}`);
   }
 
   /**
@@ -166,6 +166,13 @@ export class KafkaProducerService {
    */
   private async publishEvent(topic: string, event: any, key?: string) {
     try {
+      if (!this.kafkaService.isConnected()) {
+        this.logger.warn(
+          `Skipped publishing ${event.event_type} to ${topic} because Kafka is not connected`,
+        );
+        return;
+      }
+
       const producer = this.kafkaService.getProducer();
       
       const kafkaevt = await producer.send({
@@ -195,6 +202,11 @@ export class KafkaProducerService {
    */
   async publishBatch(topic: string, events: any[]) {
     try {
+      if (!this.kafkaService.isConnected()) {
+        this.logger.warn(`Skipped publishing batch to ${topic} because Kafka is not connected`);
+        return;
+      }
+
       const producer = this.kafkaService.getProducer();
       
       const messages = events.map((event) => ({

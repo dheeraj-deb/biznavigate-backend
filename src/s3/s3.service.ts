@@ -16,15 +16,21 @@ export class S3Service {
   private readonly bucketName: string;
   private readonly region: string;
 
+  private readonly publicUrl: string;
+
   constructor(private readonly configService: ConfigService) {
-    this.region = this.configService.get<string>('AWS_REGION') || 'us-east-1';
-    this.bucketName = this.configService.get<string>('AWS_S3_BUCKET_NAME');
+    this.region = 'auto';
+    this.bucketName = this.configService.get<string>('R2_BUCKET_NAME');
+    this.publicUrl = this.configService.get<string>('R2_PUBLIC_URL');
+
+    const accountId = this.configService.get<string>('R2_ACCOUNT_ID');
 
     this.s3Client = new S3Client({
-      region: this.region,
+      region: 'auto',
+      endpoint: `https://${accountId}.r2.cloudflarestorage.com`,
       credentials: {
-        accessKeyId: this.configService.get<string>('AWS_ACCESS_KEY_ID'),
-        secretAccessKey: this.configService.get<string>('AWS_SECRET_ACCESS_KEY'),
+        accessKeyId: this.configService.get<string>('R2_ACCESS_KEY_ID'),
+        secretAccessKey: this.configService.get<string>('R2_SECRET_ACCESS_KEY'),
       },
     });
   }
@@ -52,7 +58,7 @@ export class S3Service {
       await this.s3Client.send(command);
 
       // Construct public URL
-      const url = `https://${this.bucketName}.s3.${this.region}.amazonaws.com/${fileName}`;
+      const url = `${this.publicUrl}/${fileName}`;
 
       this.logger.log(`File uploaded successfully: ${fileName}`);
 
@@ -165,7 +171,7 @@ export class S3Service {
       await this.s3Client.send(command);
 
       // Construct public URL
-      const url = `https://${this.bucketName}.s3.${this.region}.amazonaws.com/${fileName}`;
+      const url = `${this.publicUrl}/${fileName}`;
 
       this.logger.log(`Base64 image uploaded successfully: ${fileName}`);
 

@@ -4,18 +4,15 @@ import { KafkaController } from './kafka.controller';
 import { KafkaService } from './kafka.service';
 import { KafkaProducerService } from './kafka-producer.service';
 import { KafkaConsumerService } from './kafka-consumer.service';
-import { ConversationModule } from '../conversation/conversation.module';
-import { SellerOsModule } from '../seller-os/seller-os.module';
-import { ProductSellerAiWorkerService } from '../ai-worker/product-seller-ai-worker.service';
+import { ConversationModule } from '../crm/conversation/conversation.module';
 
 @Module({
-  imports: [ConfigModule, ConversationModule, SellerOsModule],
+  imports: [ConfigModule, ConversationModule],
   controllers: [KafkaController],
   providers: [
     KafkaService,
     KafkaProducerService,
     KafkaConsumerService,
-    ProductSellerAiWorkerService,
   ],
   exports: [
     KafkaService,

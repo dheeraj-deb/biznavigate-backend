@@ -1,0 +1,677 @@
+import { Injectable, Logger } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
+import axios, { AxiosInstance, AxiosError } from 'axios';
+import { SendWhatsAppMessageDto, MarkAsReadDto } from '../dto/whatsapp-message.dto';
+
+@Injectable()
+export class WhatsAppApiClientService {
+  private readonly logger = new Logger(WhatsAppApiClientService.name);
+  private readonly apiClient: AxiosInstance;
+  private readonly apiVersion: string;
+  private readonly baseUrl: string;
+  private readonly permanentToken: string;
+
+  constructor(private readonly configService: ConfigService) {
+    this.apiVersion = this.configService.get<string>('whatsapp.apiVersion', 'v21.0');
+    this.baseUrl = `https://graph.facebook.com/${this.apiVersion}`;
+    this.permanentToken = this.configService.get<string>('whatsapp.permanentToken', '');
+
+    this.apiClient = axios.create({
+      baseURL: this.baseUrl,
+      timeout: 30000,
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${this.permanentToken}`,
+      },
+    });
+
+    // Request interceptor for logging
+    this.apiClient.interceptors.request.use(
+      (config) => {
+        this.logger.debug(`Request: ${config.method?.toUpperCase()} ${config.url}`);
+        return config;
+      },
+      (error) => {
+        this.logger.error('Request error:', error);
+        return Promise.reject(error);
+      }
+    );
+
+    // Response interceptor for error handling
+    this.apiClient.interceptors.response.use(
+      (response) => {
+        return response;
+      },
+      (error: AxiosError) => {
+        this.handleApiError(error);
+        return Promise.reject(error);
+      }
+    );
+  }
+
+  /**
+   * Send a message via Meta Graph API (for Meta-managed WABAs)
+   */
+  async sendMessage(
+    phoneNumberId: string,
+    message: SendWhatsAppMessageDto
+  ): Promise<any> {
+    try {
+      const response = await this.apiClient.post(
+        `/${phoneNumberId}/messages`,
+        message,
+      );
+      this.logger.log(`Message sent successfully: ${response.data.messages?.[0]?.id}`);
+      return response.data;
+    } catch (error) {
+      this.logger.error('Failed to send message:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Send a text message via Gupshup partner API (for Gupshup-managed WABAs)
+   */
+  async sendGupshupMessage(
+    appToken: string,
+    appId: string,
+    sourcePhone: string,
+    to: string,
+    message: SendWhatsAppMessageDto,
+  ): Promise<any> {
+    const baseUrl = 'https://partner.gupshup.io';
+
+    // v3 passthrough API — mirrors Meta's WhatsApp Cloud API format exactly
+    let body: any = {
+      messaging_product: 'whatsapp',
+      recipient_type: 'individual',
+      to,
+    };
+
+    if (message.type === 'text' && message.text) {
+      body.type = 'text';
+      body.text = { body: message.text.body };
+    } else if (message.type === 'template' && message.template) {
+      body.type = 'template';
+      body.template = message.template;
+    } else if (message.type === 'interactive' && message.interactive) {
+      body.type = 'interactive';
+      body.interactive = message.interactive;
+    } else if (message.type === 'image' && message.image) {
+      body.type = 'image';
+      body.image = message.image;
+    } else if (message.type === 'document' && message.document) {
+      body.type = 'document';
+      body.document = message.document;
+    } else if (message.type === 'video' && message.video) {
+      body.type = 'video';
+      body.video = message.video;
+    } else {
+      body.type = 'text';
+      body.text = { body: '[Unsupported message type]' };
+    }
+
+    this.logger.log(`[Gupshup v3] POST ${baseUrl}/partner/app/${appId}/v3/message | to=${to} type=${body.type}`);
+    if (body.type === 'template') {
+      const components = Array.isArray(body.template?.components) ? body.template.components : [];
+      const bodyParams = components.find((c: any) => c.type === 'body')?.parameters?.length ?? 0;
+      this.logger.log(
+        `[Gupshup v3] Template submit | appId=${appId} to=${to} name=${body.template?.name} language=${body.template?.language?.code} bodyParams=${bodyParams}`,
+      );
+    }
+
+    try {
+      const { data } = await axios.post(
+        `${baseUrl}/partner/app/${appId}/v3/message`,
+        body,
+        { headers: { Authorization: appToken, 'Content-Type': 'application/json', accept: 'application/json' } },
+      );
+      this.logger.log(`Gupshup message accepted/submitted to ${to}: ${JSON.stringify(data)}`);
+      // v3 response mirrors Meta format: { messages: [{ id: '...' }] }
+      return data;
+    } catch (error) {
+      this.logger.error(`Failed to send Gupshup message to ${to}: HTTP ${error?.response?.status} — ${JSON.stringify(error?.response?.data ?? error.message)}`);
+      throw error;
+    }
+  }
+
+  /**
+   * Mark message as read
+   */
+  async markAsRead(
+    phoneNumberId: string,
+    messageId: string
+  ): Promise<any> {
+    try {
+      const payload: MarkAsReadDto = {
+        messaging_product: 'whatsapp',
+        status: 'read',
+        message_id: messageId,
+        typing_indicator: {
+          type: "text"
+        }
+      };
+
+      const response = await this.apiClient.post(
+        `/${phoneNumberId}/messages`,
+        payload,
+      );
+
+      this.logger.debug(`Message ${messageId} marked as read`);
+      return response.data;
+    } catch (error) {
+      this.logger.error('Failed to mark message as read:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Send typing indicator via Gupshup v1 event API.
+   * Call this after marking a message as read, before sending the agent reply.
+   */
+  async sendGupshupTypingIndicator(appToken: string, appId: string, messageId: string): Promise<void> {
+    try {
+      await axios.post(
+        `https://partner.gupshup.io/partner/app/${appId}/v1/event`,
+        {
+          type: 'message-event',
+          message: {
+            messaging_product: 'whatsapp',
+            status: 'read',
+            message_id: messageId,
+            typing_indicator: { type: 'text' },
+          },
+        },
+        { headers: { Authorization: appToken, 'Content-Type': 'application/json' } },
+      );
+      this.logger.debug(`Typing indicator sent for message ${messageId}`);
+    } catch (error) {
+      // Non-fatal — typing indicator failure should not block message sending
+      this.logger.warn(`Failed to send typing indicator: ${error?.response?.data?.message ?? error.message}`);
+    }
+  }
+
+  /**
+   * Upload media
+   */
+  async uploadMedia(
+    phoneNumberId: string,
+    file: Buffer,
+    mimeType: string
+  ): Promise<string> {
+    try {
+      const formData = new FormData();
+      const blob = new Blob([new Uint8Array(file)], { type: mimeType });
+      formData.append('file', blob);
+      formData.append('messaging_product', 'whatsapp');
+      formData.append('type', mimeType);
+
+      const response = await this.apiClient.post(
+        `/${phoneNumberId}/media`,
+        formData,
+        { headers: { 'Content-Type': 'multipart/form-data' } },
+      );
+
+      const mediaId = response.data.id;
+      this.logger.log(`Media uploaded successfully: ${mediaId}`);
+      return mediaId;
+    } catch (error) {
+      this.logger.error('Failed to upload media:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Get media URL
+   */
+  async getMediaUrl(
+    mediaId: string,
+  ): Promise<string> {
+    try {
+      const response = await this.apiClient.get(`/${mediaId}`);
+
+      return response.data.url;
+    } catch (error) {
+      this.logger.error('Failed to get media URL:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Download media
+   */
+  async downloadMedia(
+    mediaUrl: string,
+  ): Promise<Buffer> {
+    try {
+      const response = await axios.get(mediaUrl, {
+        headers: {
+          Authorization: `Bearer ${this.permanentToken}`,
+        },
+        responseType: 'arraybuffer',
+      });
+
+      return Buffer.from(response.data);
+    } catch (error) {
+      this.logger.error('Failed to download media:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Get message templates
+   */
+  async getTemplates(
+    whatsappBusinessAccountId: string,
+  ): Promise<any[]> {
+    try {
+      const response = await this.apiClient.get(
+        `/${whatsappBusinessAccountId}/message_templates`,
+      );
+
+      return response.data.data || [];
+    } catch (error) {
+      this.logger.error('Failed to get templates:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Create message template
+   */
+  async createTemplate(
+    whatsappBusinessAccountId: string,
+    template: any
+  ): Promise<any> {
+
+    console.log("template==>", template);
+
+    try {
+      const response = await this.apiClient.post(
+        `/${whatsappBusinessAccountId}/message_templates`,
+        template,
+      );
+
+      console.log("submission res", response)
+
+      this.logger.log(`Template created: ${template.name}`);
+      return response.data;
+    } catch (error) {
+      this.logger.error('Failed to create template:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Delete message template
+   */
+  async deleteTemplate(
+    whatsappBusinessAccountId: string,
+    templateName: string
+  ): Promise<any> {
+    try {
+      const response = await this.apiClient.delete(
+        `/${whatsappBusinessAccountId}/message_templates`,
+        {
+          params: {
+            name: templateName,
+          },
+        }
+      );
+
+      this.logger.log(`Template deleted: ${templateName}`);
+      return response.data;
+    } catch (error) {
+      this.logger.error('Failed to delete template:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Get phone number details
+   */
+  async getPhoneNumberDetails(
+    phoneNumberId: string,
+  ): Promise<any> {
+    try {
+      const response = await this.apiClient.get(`/${phoneNumberId}`, {
+        params: {
+          fields: 'verified_name,display_phone_number,quality_rating,id',
+        },
+      });
+
+      return response.data;
+    } catch (error) {
+      this.logger.error('Failed to get phone number details:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Get WhatsApp Business Account details
+   */
+  async getBusinessAccountDetails(
+    whatsappBusinessAccountId: string,
+  ): Promise<any> {
+    try {
+      const response = await this.apiClient.get(
+        `/${whatsappBusinessAccountId}`,
+        {
+          params: {
+            fields: 'id,name,timezone_id,message_template_namespace,account_review_status,business_verification_status',
+          },
+        }
+      );
+
+      return response.data;
+    } catch (error) {
+      this.logger.error('Failed to get business account details:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Create or update product in WhatsApp Catalog
+   */
+  async syncCatalogProduct(
+    catalogId: string,
+    productData: {
+      retailer_id: string;
+      name: string;
+      description?: string;
+      price: number;
+      currency: string;
+      availability: 'in stock' | 'out of stock';
+      image_url?: string;
+      url?: string;
+    },
+    existingProductId?: string
+  ): Promise<{ id: string }> {
+    try {
+      const endpoint = existingProductId
+        ? `/${existingProductId}`
+        : `/${catalogId}/products`;
+
+      const response = await this.apiClient.post(endpoint, productData);
+
+      const productId = response.data.id || existingProductId;
+      this.logger.log(`Product ${existingProductId ? 'updated' : 'created'} in catalog: ${productId}`);
+
+      return { id: productId };
+    } catch (error) {
+      this.logger.error('Failed to sync product to catalog:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Delete product from WhatsApp Catalog
+   */
+  async deleteCatalogProduct(
+    productId: string,
+  ): Promise<{ success: boolean }> {
+    try {
+      await this.apiClient.delete(`/${productId}`);
+
+      this.logger.log(`Product deleted from catalog: ${productId}`);
+      return { success: true };
+    } catch (error) {
+      this.logger.error('Failed to delete product from catalog:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Get catalog details
+   */
+  async getCatalog(
+    catalogId: string,
+  ): Promise<any> {
+    try {
+      const response = await this.apiClient.get(`/${catalogId}`, {
+        params: {
+          fields: 'id,name,vertical,product_count',
+        },
+      });
+
+      return response.data;
+    } catch (error) {
+      this.logger.error('Failed to get catalog:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Get product catalogs linked to a WhatsApp Business Account.
+   * Some WABAs do not have a catalog, and some tokens do not have commerce access.
+   * Treat failures as non-blocking during onboarding.
+   */
+  async getWabaProductCatalogs(wabaId: string, limit = 25): Promise<any[]> {
+    try {
+      const response = await this.apiClient.get(`/${wabaId}/product_catalogs`, {
+        params: {
+          fields: 'id,name,vertical,product_count',
+          limit,
+        },
+      });
+
+      return response.data.data || [];
+    } catch (error) {
+      this.logger.warn(`Failed to get product catalogs for WABA ${wabaId}: ${error?.message ?? error}`);
+      return [];
+    }
+  }
+
+  /**
+   * Get products from catalog
+   */
+  async getCatalogProducts(
+    catalogId: string,
+    limit = 100
+  ): Promise<any[]> {
+    try {
+      const response = await this.apiClient.get(`/${catalogId}/products`, {
+        params: {
+          fields: 'id,retailer_id,name,description,price,currency,availability,image_url',
+          limit,
+        },
+      });
+
+      return response.data.data || [];
+    } catch (error) {
+      this.logger.error('Failed to get catalog products:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Get message template status
+   */
+  async getTemplateStatus(
+    metaTemplateId: string,
+  ): Promise<{ status: string; rejectedReason?: string }> {
+    try {
+      const response = await this.apiClient.get(`/${metaTemplateId}`, {
+        params: { fields: 'status,quality_score,rejected_reason' },
+      });
+
+      return {
+        status: response.data.status,
+        rejectedReason: response.data.rejected_reason,
+      };
+    } catch (error) {
+      this.logger.error('Failed to get template status:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Subscribe the app to receive webhook events for a WhatsApp Business Account.
+   * Must be called once when a new WABA is connected.
+   * POST /{waba-id}/subscribed_apps
+   */
+  async subscribeToWebhooks(wabaId: string): Promise<void> {
+    const response = await this.apiClient.post(
+      `/${wabaId}/subscribed_apps`,
+      {},
+    );
+    this.logger.log(`Subscribed WABA ${wabaId} to webhooks: ${JSON.stringify(response.data)}`);
+  }
+
+  // ─── Flows API ────────────────────────────────────────────────────────────
+
+  async createFlow(wabaId: string, name: string, categories: string[]): Promise<{ id: string }> {
+    const response = await this.apiClient.post(
+      `/${wabaId}/flows`,
+      { name, categories },
+    );
+    return response.data;
+  }
+
+  async uploadFlowAsset(flowId: string, flowJson: object, endpointUri?: string): Promise<any> {
+    const formData = new FormData();
+    const jsonBlob = new Blob([JSON.stringify(flowJson)], { type: 'application/json' });
+    formData.append('file', jsonBlob, 'flow.json');
+    formData.append('name', 'flow.json');
+    formData.append('asset_type', 'FLOW_JSON');
+
+    if (endpointUri) {
+      formData.append('endpoint_uri', endpointUri);
+    }
+
+    const response = await this.apiClient.post(
+      `/${flowId}/assets`,
+      formData,
+      { headers: { 'Content-Type': 'multipart/form-data' } },
+    );
+    return response.data;
+  }
+
+  async updateFlow(flowId: string, fields: { endpoint_uri?: string; name?: string }): Promise<any> {
+    const body = new URLSearchParams();
+    Object.entries(fields).forEach(([k, v]) => { if (v !== undefined) body.append(k, v); });
+
+    const response = await this.apiClient.post(
+      `/${flowId}`,
+      body.toString(),
+      { headers: { 'Content-Type': 'application/x-www-form-urlencoded' } },
+    );
+    return response.data;
+  }
+
+  async publishFlow(flowId: string): Promise<any> {
+    const response = await this.apiClient.post(`/${flowId}/publish`, {});
+    return response.data;
+  }
+
+  async deprecateFlow(flowId: string): Promise<any> {
+    const response = await this.apiClient.post(`/${flowId}/deprecate`, {});
+    return response.data;
+  }
+
+  async deleteFlow(flowId: string): Promise<any> {
+    const response = await this.apiClient.delete(`/${flowId}`);
+    return response.data;
+  }
+
+  async listFlows(wabaId: string): Promise<any[]> {
+    const response = await this.apiClient.get(
+      `/${wabaId}/flows`,
+      { params: { fields: 'id,name,status,categories,validation_errors,endpoint_uri' } },
+    );
+    return response.data.data || [];
+  }
+
+  async uploadBusinessPublicKey(phoneNumberId: string, publicKey: string): Promise<any> {
+    const body = new URLSearchParams();
+    body.append('business_public_key', publicKey);
+
+    const response = await this.apiClient.post(
+      `/${phoneNumberId}/whatsapp_business_encryption`,
+      body.toString(),
+      { headers: { 'Content-Type': 'application/x-www-form-urlencoded' } },
+    );
+    return response.data;
+  }
+
+  async getBusinessPublicKey(phoneNumberId: string): Promise<any> {
+    const response = await this.apiClient.get(`/${phoneNumberId}/whatsapp_business_encryption`);
+    return response.data;
+  }
+
+  async getFlow(flowId: string): Promise<any> {
+    const response = await this.apiClient.get(
+      `/${flowId}`,
+      {
+        params: { fields: 'id,name,status,categories,validation_errors,endpoint_uri,json_version,data_api_version' },
+      },
+    );
+    return response.data;
+  }
+
+  // ─── Phone Number Registration ───────────────────────────────────────────
+
+  async registerPhoneNumber(phoneNumberId: string, pin: string): Promise<void> {
+    await this.apiClient.post(`/${phoneNumberId}/register`, {
+      messaging_product: 'whatsapp',
+      pin,
+    });
+  }
+
+  // ──────────────────────────────────────────────────────────────────────────
+
+  /**
+   * Handle API errors
+   */
+  private handleApiError(error: AxiosError): void {
+    if (error.response) {
+      const status = error.response.status;
+      const data: any = error.response.data;
+
+      this.logger.error(`WhatsApp API Error (${status}):`, {
+        error: data.error,
+        message: data.error?.message,
+        code: data.error?.code,
+        errorSubcode: data.error?.error_subcode,
+        fbtraceId: data.error?.fbtrace_id,
+      });
+
+      const metaCode = data.error?.code;
+      const metaMessage = data.error?.message;
+
+      // Handle specific error codes
+      switch (status) {
+        case 400:
+          if (metaCode === 10) {
+            this.logger.error(
+              `Permission denied by Meta - token/app cannot send for this WhatsApp Business Account: ${metaMessage}`,
+            );
+          } else {
+            this.logger.warn('Bad Request - Check message format');
+          }
+          break;
+        case 401:
+          this.logger.error('Unauthorized - Invalid access token');
+          break;
+        case 403:
+          this.logger.error('Forbidden - Insufficient permissions');
+          break;
+        case 404:
+          this.logger.error('Not Found - Resource does not exist');
+          break;
+        case 429:
+          this.logger.warn('Rate Limit Exceeded - Backing off');
+          break;
+        case 500:
+        case 502:
+        case 503:
+          this.logger.error('WhatsApp API Server Error - Retry later');
+          break;
+      }
+    } else if (error.request) {
+      this.logger.error('No response received from WhatsApp API:', error.message);
+    } else {
+      this.logger.error('Error setting up request:', error.message);
+    }
+  }
+}

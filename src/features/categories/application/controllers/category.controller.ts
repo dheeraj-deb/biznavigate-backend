@@ -7,6 +7,7 @@ import {
   Body,
   Param,
   Query,
+  Req,
   HttpCode,
   HttpStatus,
   UseGuards,
@@ -52,34 +53,18 @@ export class CategoryController {
    */
   @Get()
   @HttpCode(HttpStatus.OK)
-  async findAll(@Query('business_id') businessId: string) {
-    this.logger.log(`Fetching categories for business: ${businessId}`);
-
+  async findAll(@Req() req: any) {
+    const businessId: string = req.user.business_id;
     const categories = await this.categoryService.findAll(businessId);
-
-    return {
-      success: true,
-      message: 'Categories retrieved successfully',
-      data: categories,
-    };
+    return { success: true, message: 'Categories retrieved successfully', data: categories };
   }
 
-  /**
-   * Get category tree (hierarchical)
-   * GET /categories/tree?business_id=xxx
-   */
   @Get('tree')
   @HttpCode(HttpStatus.OK)
-  async getTree(@Query('business_id') businessId: string) {
-    this.logger.log(`Building category tree for business: ${businessId}`);
-
+  async getTree(@Req() req: any) {
+    const businessId: string = req.user.business_id;
     const tree = await this.categoryService.getTree(businessId);
-
-    return {
-      success: true,
-      message: 'Category tree retrieved successfully',
-      data: tree,
-    };
+    return { success: true, message: 'Category tree retrieved successfully', data: tree };
   }
 
   /**
@@ -106,19 +91,9 @@ export class CategoryController {
    */
   @Get('slug/:slug')
   @HttpCode(HttpStatus.OK)
-  async findBySlug(
-    @Param('slug') slug: string,
-    @Query('business_id') businessId: string,
-  ) {
-    this.logger.log(`Fetching category by slug: ${slug}`);
-
-    const category = await this.categoryService.findBySlug(slug, businessId);
-
-    return {
-      success: true,
-      message: 'Category retrieved successfully',
-      data: category,
-    };
+  async findBySlug(@Param('slug') slug: string, @Req() req: any) {
+    const category = await this.categoryService.findBySlug(slug, req.user.business_id);
+    return { success: true, message: 'Category retrieved successfully', data: category };
   }
 
   /**

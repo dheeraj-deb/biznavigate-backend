@@ -49,19 +49,6 @@ async function main() {
       business_name: 'Demo Store',
       business_type: 'retail',
       whatsapp_number: '+919876543210',
-      brand_colors: {
-        primary: '#f97316',
-        secondary: '#1e293b',
-      },
-      working_hours: {
-        monday: { open: '09:00', close: '18:00', closed: false },
-        tuesday: { open: '09:00', close: '18:00', closed: false },
-        wednesday: { open: '09:00', close: '18:00', closed: false },
-        thursday: { open: '09:00', close: '18:00', closed: false },
-        friday: { open: '09:00', close: '18:00', closed: false },
-        saturday: { open: '10:00', close: '16:00', closed: false },
-        sunday: { open: '00:00', close: '00:00', closed: true },
-      },
     },
   })
   console.log(`Business created: ${business.business_id}`)

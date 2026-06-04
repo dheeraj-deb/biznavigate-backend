@@ -12,36 +12,26 @@ import { CacheModule } from "@nestjs/cache-manager";
 // import { RedisOptions } from "./config/redis.config";
 import * as redisStore from "cache-manager-ioredis";
 import { BullMQModule } from "./config/bullmq.module";
-import { TenantsModule } from "./features/tenants/tenants.module";
-import { BusinessesModule } from "./features/business/business.module";
-import { SubscriptionsModule } from "./features/subscriptions/subscription.module";
-import { RolesModule } from "./features/roles/role.module";
-import { UsersModule } from "./features/users/user.module";
-import { LeadModule } from "./features/lead/lead.module";
-import { AuthModule } from "./features/auth/auth.module";
 import { KafkaModule } from "./features/kafka/kafka.module";
-import { WhatsAppModule } from "./features/whatsapp/whatsapp.module";
-import { InstagramModule } from "./features/instagram/instagram.module";
-import { ChatWidgetModule } from "./features/chat-widget/chat-widget.module";
-import { WorkflowsModule } from "./features/workflows/workflows.module";
-import { ProductsModule } from "./features/products/products.module";
-import { CategoriesModule } from "./features/categories/categories.module";
 // import { UploadsModule } from "./features/uploads/uploads.module";
-import { CustomersModule } from "./features/customers/customers.module";
-import { OrdersModule } from "./features/orders/orders.module";
-import { PaymentsModule } from "./features/payments/payments.module";
-import { ReviewsModule } from "./features/reviews/reviews.module";
-import { NotificationsModule } from "./features/notifications/notifications.module";
-import { InventoryModule } from "./features/inventory/inventory.module";
-import { AnalyticsModule } from "./features/analytics/analytics.module";
-import { CampaignsModule } from "./features/campaigns/campaigns.module";
-import { SellerOsModule } from "./features/seller-os/seller-os.module";
-import { TemplatesModule } from "./features/notification-templates/templates.module";
-import { MessagesModule } from "./features/messages/messages.module";
 import { ServeStaticModule } from "@nestjs/serve-static";
 import { join } from "path";
 import { MongooseModule } from "@nestjs/mongoose";
 import { ConfigModule, ConfigService } from "@nestjs/config";
+import { EventEmitterModule } from "@nestjs/event-emitter";
+import { ScheduleModule } from "@nestjs/schedule";
+import { CommerceModule } from "./features/commerce/commerce.module";
+import { HospitalityIndustryModule } from "./features/industries/hospitality/hospitality-industry.module";
+import { CrmModule } from "./features/crm/crm.module";
+import { EngagementModule } from "./features/engagement/engagement.module";
+import { AutomationModule } from "./features/automation/automation.module";
+import { PlatformModule } from "./features/platform/platform.module";
+import { AiModule } from "./features/ai/ai.module";
+import { InsightsModule } from "./features/insights/insights.module";
+import { PublicBookingModule } from "./features/public-booking/public-booking.module";
+import { SellerOsModule } from "./features/seller-os/seller-os.module";
+import { ProductsModule } from "./features/products/products.module";
+import { HealthController } from "./health.controller";
 
 @Module({
   imports: [
@@ -64,58 +54,65 @@ import { ConfigModule, ConfigService } from "@nestjs/config";
         limit: 1000, // 1000 requests per 15 minutes
       },
     ]),
-    MongooseModule.forRootAsync({
-      imports: [ConfigModule],
-      useFactory: async (config: ConfigService) => ({
-        uri: config.get<string>('MONGODB_URI'),
-        maxPoolSize: 10,
-        serverSelectionTimeoutMS: 5000
-      }),
-      inject: [ConfigService]
-    }),
+    ...(process.env.MONGODB_URI
+      ? [MongooseModule.forRootAsync({
+          imports: [ConfigModule],
+          useFactory: async (config: ConfigService) => ({
+            uri: config.get<string>('MONGODB_URI'),
+            maxPoolSize: 10,
+            serverSelectionTimeoutMS: 5000,
+          }),
+          inject: [ConfigService],
+        })]
+      : []),
     // Static file serving for uploaded images
     ServeStaticModule.forRoot({
       rootPath: join(__dirname, '..', '..', 'public'),
       serveRoot: '/',
     }),
-    CacheModule.register({
-      store: redisStore,
-      host: "localhost", // update with your Redis host
-      port: 6379,
-      ttl: 60 * 60 * 24, // Cache expiry in seconds (24 hours)
+    CacheModule.registerAsync({
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      isGlobal: true,
+      useFactory: (config: ConfigService) => ({
+        store: redisStore,
+        host: config.get<string>("REDIS_HOST", "localhost"),
+        port: config.get<number>("REDIS_PORT", 6379),
+        ttl: 60 * 60 * 24,
+      }),
     }),
+    EventEmitterModule.forRoot(),
+    ScheduleModule.forRoot(),
     LoggerModule,
     PrismaModule,
     BullMQModule,
-    AuthModule,
-    TenantsModule,
-    BusinessesModule,
-    SubscriptionsModule,
-    RolesModule,
-    UsersModule,
-    LeadModule,
-    ProductsModule,
-    CategoriesModule,
+    PlatformModule,
     // UploadsModule,
-    CustomersModule,
-    OrdersModule,
-    PaymentsModule,
-    ReviewsModule,
-    NotificationsModule,
-    InventoryModule,
-    AnalyticsModule,
-    CampaignsModule,
+    ...(process.env.MONGODB_URI
+      ? [CrmModule.withRealtime()]
+      : [CrmModule]),
+    ...(process.env.MONGODB_URI
+      ? [EngagementModule.withChannels()]
+      : [EngagementModule]),
+    CommerceModule,
+    ProductsModule,
+    ...(process.env.MONGODB_URI
+      ? [HospitalityIndustryModule.withPricing()]
+      : [HospitalityIndustryModule]),
+    InsightsModule,
     SellerOsModule,
-    TemplatesModule,
-    MessagesModule,
-    // KafkaModule, // Kafka integration for AI services
-    // WhatsAppModule//
-    KafkaModule, // Kafka integration for AI services
-    WhatsAppModule,
-    InstagramModule, // Instagram Graph API integration
-    ChatWidgetModule, // Chat widget for website integration
-    WorkflowsModule, // Workflow orchestration and automation
+    PublicBookingModule,
+    ...(process.env.MONGODB_URI
+      ? [AiModule.withRag()]
+      : [AiModule]),
+    ...(process.env.MONGODB_URI
+      ? [AutomationModule.withWorkflows()]
+      : [AutomationModule]),
+    ...(process.env.MONGODB_URI
+      ? [KafkaModule]
+      : []),
   ],
+  controllers: [HealthController],
   providers: [
     {
       provide: APP_FILTER,

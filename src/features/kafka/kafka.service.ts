@@ -13,8 +13,14 @@ export class KafkaService implements OnModuleInit, OnModuleDestroy {
   private producer: Producer;
   private consumer: Consumer;
   private admin: Admin;
+  private connected = false;
+  private readonly enabled: boolean;
+  private readonly required: boolean;
 
   constructor(private readonly configService: ConfigService) {
+    this.enabled = this.configService.get<string>('KAFKA_ENABLED', 'true') !== 'false';
+    this.required = this.configService.get<string>('KAFKA_REQUIRED', 'false') === 'true';
+
     const brokers = this.configService
       .get<string>('KAFKA_BROKERS', 'localhost:9093')
       .split(',');
@@ -52,26 +58,44 @@ export class KafkaService implements OnModuleInit, OnModuleDestroy {
   }
 
   async onModuleInit() {
+    if (!this.enabled) {
+      this.logger.warn('Kafka is disabled via KAFKA_ENABLED=false');
+      return;
+    }
+
     try {
       await this.producer.connect();
       await this.consumer.connect();
       await this.admin.connect();
+      this.connected = true;
       
       this.logger.log('Kafka connected successfully');
       
       // Create topics if they don't exist
       await this.createTopics();
     } catch (error) {
-      this.logger.error('Failed to connect to Kafka', error);
-      throw error;
+      this.connected = false;
+      this.logger.error(
+        'Failed to connect to Kafka. Continuing without Kafka; set KAFKA_REQUIRED=true to fail fast.',
+        error,
+      );
+
+      if (this.required) {
+        throw error;
+      }
     }
   }
 
   async onModuleDestroy() {
+    if (!this.connected) {
+      return;
+    }
+
     try {
       await this.producer.disconnect();
       await this.consumer.disconnect();
       await this.admin.disconnect();
+      this.connected = false;
       this.logger.log('Kafka disconnected');
     } catch (error) {
       this.logger.error('Error disconnecting from Kafka', error);
@@ -167,9 +191,24 @@ export class KafkaService implements OnModuleInit, OnModuleDestroy {
   }
 
   /**
+   * Whether Kafka was enabled and successfully connected.
+   */
+  isConnected(): boolean {
+    return this.connected;
+  }
+
+  isEnabled(): boolean {
+    return this.enabled;
+  }
+
+  /**
    * Check Kafka health
    */
   async checkHealth(): Promise<boolean> {
+    if (!this.connected) {
+      return false;
+    }
+
     try {
       await this.admin.listTopics();
       return true;

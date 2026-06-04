@@ -35,6 +35,11 @@ export class KafkaConsumerService {
    * Start consuming messages
    */
   async consume() {
+    if (!this.kafkaService.isConnected()) {
+      this.logger.warn("Kafka consumer not started because Kafka is not connected");
+      return;
+    }
+
     const consumer = this.kafkaService.getConsumer();
 
     // Subscribe to topics
@@ -87,8 +92,11 @@ export class KafkaConsumerService {
       case "ai.process.result":
         await this.handleAiProcessResult(event);
         break;
+      case "workflow.text.message":
+        await this.handleWorkflowMessage(event);
+        break;
       case "workflow.interactive.selection":
-        await this.handleInteractiveSelection(event);
+        await this.handleWorkflowMessage(event);
         break;
       case "workflow.catalog.order.completed":
         await this.handleCatalogOrderCompleted(event);
@@ -113,16 +121,12 @@ export class KafkaConsumerService {
       `Processing AI result for lead ${lead_id}: ${intent?.intent} (${intent?.confidence})`
     );
 
-    console.dir(payload, { depth: null });
-
     // Emit event that can be handled by WhatsApp or other services
     // Store the result so it can be retrieved
     await this.storeAiResult(payload);
 
     // Call ALL registered handlers (global handlers + per-lead handlers)
     const allHandlers = Array.from(this.messageHandlers.entries());
-
-    console.log("allHandlers", allHandlers);
 
     for (const [handlerKey, handler] of allHandlers) {
       if (handler && typeof handler.handleAiResponse === 'function') {
@@ -133,7 +137,6 @@ export class KafkaConsumerService {
           const isMatchingLeadHandler = handlerKey === lead_id;
 
           if (isGlobalHandler || isMatchingLeadHandler) {
-            console.log('handlerKey', handlerKey, handler);
             await handler.handleAiResponse(payload);
           }
         } catch (error) {
@@ -144,25 +147,24 @@ export class KafkaConsumerService {
   }
 
   /**
-   * Handle interactive selection (bypassed AI processing)
+   * Handle workflow-routed WhatsApp text/interactive messages.
    */
-  private async handleInteractiveSelection(event: any) {
+  private async handleWorkflowMessage(event: any) {
     const { payload } = event;
     const { lead_id, user_input } = payload;
+    const eventType = event.event_type === 'workflow.interactive.selection'
+      ? 'interactive selection'
+      : 'text message';
 
     this.logger.log(
-      `Processing interactive selection for lead ${lead_id}: ${user_input}`
+      `Processing workflow ${eventType} for lead ${lead_id}: ${user_input}`
     );
-
-    console.dir(payload, { depth: null });
 
     // Store the selection as an activity
     await this.storeInteractiveSelection(payload);
 
     // Call ALL registered handlers (same as AI results, to workflow orchestration)
     const allHandlers = Array.from(this.messageHandlers.entries());
-
-    console.log("allHandlers (interactive)", allHandlers);
 
     for (const [handlerKey, handler] of allHandlers) {
       if (handler && typeof handler.handleAiResponse === 'function') {
@@ -171,7 +173,6 @@ export class KafkaConsumerService {
           const isMatchingLeadHandler = handlerKey === lead_id;
 
           if (isGlobalHandler || isMatchingLeadHandler) {
-            console.log('Interactive selection - handlerKey', handlerKey, handler);
             await handler.handleAiResponse(payload);
           }
         } catch (error) {
@@ -192,15 +193,11 @@ export class KafkaConsumerService {
       `Processing catalog order completed for lead ${lead_id}, execution ${execution_id}`
     );
 
-    console.dir(payload, { depth: null });
-
     // Store catalog order activity
     await this.storeCatalogOrderActivity(payload);
 
     // Call ALL registered handlers to resume workflow
     const allHandlers = Array.from(this.messageHandlers.entries());
-
-    console.log("allHandlers (catalog order)", allHandlers);
 
     for (const [handlerKey, handler] of allHandlers) {
       if (handler && typeof handler.handleAiResponse === 'function') {
@@ -209,7 +206,6 @@ export class KafkaConsumerService {
           const isMatchingLeadHandler = handlerKey === lead_id;
 
           if (isGlobalHandler || isMatchingLeadHandler) {
-            console.log('Catalog order - handlerKey', handlerKey, handler);
             await handler.handleAiResponse(payload);
           }
         } catch (error) {
@@ -224,34 +220,17 @@ export class KafkaConsumerService {
    */
   private async storeCatalogOrderActivity(payload: any) {
     try {
-      let tenantId = payload.tenant_id;
-      if (!tenantId) {
-        const lead = await this.prisma.leads.findUnique({
-          where: { lead_id: payload.lead_id },
-          select: { tenant_id: true },
-        });
-        tenantId = lead?.tenant_id;
-      }
-
-      if (!tenantId) {
-        this.logger.warn(`No tenant_id found for lead ${payload.lead_id}, skipping catalog order activity storage`);
-        return;
-      }
-
-      await this.prisma.lead_activities.create({
+      await this.prisma.lead_events.create({
         data: {
           lead_id: payload.lead_id,
           business_id: payload.business_id,
-          tenant_id: tenantId,
-          activity_type: "catalog_order",
-          activity_description: `Added items to cart from catalog`,
-          actor_type: "lead",
-          channel: payload.context?.channel || "whatsapp",
-          metadata: {
+          type: 'catalog_order',
+          actor: 'system',
+          data: {
             execution_id: payload.execution_id,
             cart_info: payload.cart_info,
+            channel: payload.context?.channel || 'whatsapp',
           } as any,
-          activity_timestamp: new Date(),
         },
       });
     } catch (error) {
@@ -264,36 +243,19 @@ export class KafkaConsumerService {
    */
   private async storeInteractiveSelection(payload: any) {
     try {
-      let tenantId = payload.tenant_id;
-      if (!tenantId) {
-        const lead = await this.prisma.leads.findUnique({
-          where: { lead_id: payload.lead_id },
-          select: { tenant_id: true },
-        });
-        tenantId = lead?.tenant_id;
-      }
-
-      if (!tenantId) {
-        this.logger.warn(`No tenant_id found for lead ${payload.lead_id}, skipping interactive selection storage`);
-        return;
-      }
-
-      await this.prisma.lead_activities.create({
+      await this.prisma.lead_events.create({
         data: {
           lead_id: payload.lead_id,
           business_id: payload.business_id,
-          tenant_id: tenantId,
-          activity_type: "interactive_selection",
-          activity_description: `User selected: ${payload.user_input}`,
-          actor_type: "lead",
-          channel: payload.context?.channel || "whatsapp",
-          metadata: {
+          type: 'interactive_selection',
+          actor: 'system',
+          data: {
             processing_id: payload.processing_id,
             selection_id: payload.user_input,
             selection_text: payload.structured_data?.entities?.selection_text?.[0],
             intent: payload.intent,
+            channel: payload.context?.channel || 'whatsapp',
           } as any,
-          activity_timestamp: new Date(),
         },
       });
     } catch (error) {
@@ -306,40 +268,19 @@ export class KafkaConsumerService {
    */
   private async storeAiResult(payload: any) {
     try {
-      // Fetch tenant_id from the lead if not provided
-      let tenantId = payload.tenant_id;
-      if (!tenantId) {
-        const lead = await this.prisma.leads.findUnique({
-          where: { lead_id: payload.lead_id },
-          select: { tenant_id: true },
-        });
-        tenantId = lead?.tenant_id;
-      }
-
-      if (!tenantId) {
-        this.logger.warn(`No tenant_id found for lead ${payload.lead_id}, skipping AI result storage`);
-        return;
-      }
-
-      // Store in database or cache for later retrieval
-      await this.prisma.lead_activities.create({
+      await this.prisma.lead_events.create({
         data: {
           lead_id: payload.lead_id,
           business_id: payload.business_id,
-          tenant_id: tenantId,
-          activity_type: "ai_result_received",
-          activity_description: `AI processing completed: ${payload.intent?.intent}`,
-          actor_type: "system",
-          channel: "ai",
-          metadata: {
+          type: 'ai_result',
+          actor: 'ai',
+          data: {
             processing_id: payload.processing_id,
             intent: payload.intent,
             entities: payload.entities,
             suggested_actions: payload.suggested_actions,
-            suggested_response: payload.suggested_response,
             processing_time_ms: payload.processing_time_ms,
           } as any,
-          activity_timestamp: new Date(),
         },
       });
     } catch (error) {
@@ -359,36 +300,13 @@ export class KafkaConsumerService {
     );
 
     try {
-      // Fetch tenant_id from the lead if not provided
-      let tenantId = payload.tenant_id;
-      if (!tenantId) {
-        const lead = await this.prisma.leads.findUnique({
-          where: { lead_id },
-          select: { tenant_id: true },
-        });
-        tenantId = lead?.tenant_id;
-      }
-
-      if (!tenantId) {
-        this.logger.warn(`No tenant_id found for lead ${lead_id}, skipping AI error log`);
-        return;
-      }
-
-      // Log the error in lead activities
-      await this.prisma.lead_activities.create({
+      await this.prisma.lead_events.create({
         data: {
           lead_id,
           business_id: payload.business_id,
-          tenant_id: tenantId,
-          activity_type: "ai_error",
-          activity_description: `AI processing failed: ${error_message}`,
-          actor_type: "system",
-          channel: "ai",
-          metadata: {
-            error_type,
-            error_message,
-          } as any,
-          activity_timestamp: new Date(),
+          type: 'ai_error',
+          actor: 'system',
+          data: { error_type, error_message } as any,
         },
       });
     } catch (error) {
@@ -432,6 +350,10 @@ export class KafkaConsumerService {
    * Disconnect consumer
    */
   async disconnect() {
+    if (!this.kafkaService.isConnected()) {
+      return;
+    }
+
     const consumer = this.kafkaService.getConsumer();
     await consumer.disconnect();
     this.logger.log("Kafka consumer disconnected");

@@ -28,40 +28,28 @@ export class SalesAnalyticsService {
     const previousStartDate = new Date(startDate.getTime() - periodDuration);
     const previousEndDate = new Date(startDate.getTime());
 
-    // Current period metrics
-    const [currentOrders, previousOrders, dailyStats, statusBreakdown] = await Promise.all([
-      // Current period orders
-      this.prisma.orders.findMany({
-        where: {
-          business_id: businessId,
-          created_at: { gte: startDate, lte: endDate },
-          status: { not: 'cancelled' },
-        },
-        select: {
-          total_amount: true,
-          status: true,
-          created_at: true,
-          order_items: {
-            select: {
-              quantity: true,
-            },
-          },
-        },
-      }),
+    const baseWhere = { business_id: businessId, status: { not: 'cancelled' } } as const;
 
-      // Previous period orders for growth calculation
-      this.prisma.orders.findMany({
-        where: {
-          business_id: businessId,
-          created_at: { gte: previousStartDate, lt: previousEndDate },
-          status: { not: 'cancelled' },
-        },
-        select: {
-          total_amount: true,
-        },
+    const [currentStats, previousStats, itemsResult, dailyStats, statusBreakdown] = await Promise.all([
+      this.prisma.orders.aggregate({
+        where: { ...baseWhere, created_at: { gte: startDate, lte: endDate } },
+        _sum: { total_amount: true },
+        _count: { _all: true },
       }),
-
-      // Daily revenue breakdown
+      this.prisma.orders.aggregate({
+        where: { ...baseWhere, created_at: { gte: previousStartDate, lt: previousEndDate } },
+        _sum: { total_amount: true },
+        _count: { _all: true },
+      }),
+      this.prisma.$queryRaw<[{ total: bigint }]>`
+        SELECT COALESCE(SUM(oi.quantity), 0)::BIGINT as total
+        FROM order_items oi
+        JOIN orders o ON oi.order_id = o.order_id
+        WHERE o.business_id = ${businessId}::uuid
+          AND o.created_at >= ${startDate}::timestamp
+          AND o.created_at <= ${endDate}::timestamp
+          AND o.status != 'cancelled'
+      `,
       this.prisma.$queryRaw<Array<{ date: Date; revenue: number; orders: number }>>`
         SELECT
           DATE(created_at) as date,
@@ -75,30 +63,20 @@ export class SalesAnalyticsService {
         GROUP BY DATE(created_at)
         ORDER BY date ASC
       `,
-
-      // Orders by status
       this.prisma.orders.groupBy({
         by: ['status'],
-        where: {
-          business_id: businessId,
-          created_at: { gte: startDate, lte: endDate },
-        },
+        where: { business_id: businessId, created_at: { gte: startDate, lte: endDate } },
         _count: true,
       }),
     ]);
 
-    // Calculate current period metrics
-    const totalRevenue = currentOrders.reduce((sum, order) => sum + Number(order.total_amount), 0);
-    const totalOrders = currentOrders.length;
-    const totalItemsSold = currentOrders.reduce(
-      (sum, order) => sum + order.order_items.reduce((itemSum, item) => itemSum + item.quantity, 0),
-      0,
-    );
+    const totalRevenue = Number(currentStats._sum.total_amount ?? 0);
+    const totalOrders = currentStats._count._all;
+    const totalItemsSold = Number(itemsResult[0]?.total ?? 0);
     const averageOrderValue = totalOrders > 0 ? totalRevenue / totalOrders : 0;
 
-    // Calculate previous period metrics
-    const previousRevenue = previousOrders.reduce((sum, order) => sum + Number(order.total_amount), 0);
-    const previousOrderCount = previousOrders.length;
+    const previousRevenue = Number(previousStats._sum.total_amount ?? 0);
+    const previousOrderCount = previousStats._count._all;
 
     // Calculate growth percentages
     const revenueGrowth =
@@ -110,7 +88,7 @@ export class SalesAnalyticsService {
 
     // Format daily revenue
     const dailyRevenue = dailyStats.map((stat) => ({
-      date: stat.date.toISOString().split('T')[0],
+      date: String(stat.date).split('T')[0],
       revenue: Number(stat.revenue),
       orders: stat.orders,
     }));
@@ -147,34 +125,34 @@ export class SalesAnalyticsService {
 
     const topProducts = await this.prisma.$queryRaw<
       Array<{
-        product_id: string;
-        product_name: string;
+        item_id: string;
+        name: string;
         quantity_sold: bigint;
         revenue: number;
         order_count: bigint;
       }>
     >`
       SELECT
-        p.product_id,
-        p.product_name,
+        p.item_id,
+        p.name,
         SUM(oi.quantity)::BIGINT as quantity_sold,
-        SUM(oi.price * oi.quantity)::DECIMAL as revenue,
+        SUM(oi.unit_price * oi.quantity)::DECIMAL as revenue,
         COUNT(DISTINCT o.order_id)::BIGINT as order_count
       FROM order_items oi
       JOIN orders o ON oi.order_id = o.order_id
-      JOIN products p ON oi.product_id = p.product_id
+      JOIN catalog_items p ON oi.item_id = p.item_id
       WHERE o.business_id = ${businessId}::uuid
         AND o.created_at >= ${startDate}::timestamp
         AND o.created_at <= ${endDate}::timestamp
         AND o.status != 'cancelled'
-      GROUP BY p.product_id, p.product_name
+      GROUP BY p.item_id, p.name
       ORDER BY quantity_sold DESC
       LIMIT ${limit}
     `;
 
     return topProducts.map((product) => ({
-      productId: product.product_id,
-      productName: product.product_name,
+      productId: product.item_id,
+      productName: product.name,
       quantitySold: Number(product.quantity_sold),
       revenue: Number(product.revenue),
       orderCount: Number(product.order_count),
