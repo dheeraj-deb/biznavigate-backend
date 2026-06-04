@@ -93,10 +93,10 @@ export class KafkaConsumerService {
         await this.handleAiProcessResult(event);
         break;
       case "workflow.text.message":
-        await this.handleInteractiveSelection(event); // same routing as interactive
+        await this.handleWorkflowMessage(event);
         break;
       case "workflow.interactive.selection":
-        await this.handleInteractiveSelection(event);
+        await this.handleWorkflowMessage(event);
         break;
       case "workflow.catalog.order.completed":
         await this.handleCatalogOrderCompleted(event);
@@ -121,16 +121,12 @@ export class KafkaConsumerService {
       `Processing AI result for lead ${lead_id}: ${intent?.intent} (${intent?.confidence})`
     );
 
-    console.dir(payload, { depth: null });
-
     // Emit event that can be handled by WhatsApp or other services
     // Store the result so it can be retrieved
     await this.storeAiResult(payload);
 
     // Call ALL registered handlers (global handlers + per-lead handlers)
     const allHandlers = Array.from(this.messageHandlers.entries());
-
-    console.log("allHandlers", allHandlers);
 
     for (const [handlerKey, handler] of allHandlers) {
       if (handler && typeof handler.handleAiResponse === 'function') {
@@ -141,7 +137,6 @@ export class KafkaConsumerService {
           const isMatchingLeadHandler = handlerKey === lead_id;
 
           if (isGlobalHandler || isMatchingLeadHandler) {
-            console.log('handlerKey', handlerKey, handler);
             await handler.handleAiResponse(payload);
           }
         } catch (error) {
@@ -152,25 +147,24 @@ export class KafkaConsumerService {
   }
 
   /**
-   * Handle interactive selection (bypassed AI processing)
+   * Handle workflow-routed WhatsApp text/interactive messages.
    */
-  private async handleInteractiveSelection(event: any) {
+  private async handleWorkflowMessage(event: any) {
     const { payload } = event;
     const { lead_id, user_input } = payload;
+    const eventType = event.event_type === 'workflow.interactive.selection'
+      ? 'interactive selection'
+      : 'text message';
 
     this.logger.log(
-      `Processing interactive selection for lead ${lead_id}: ${user_input}`
+      `Processing workflow ${eventType} for lead ${lead_id}: ${user_input}`
     );
-
-    console.dir(payload, { depth: null });
 
     // Store the selection as an activity
     await this.storeInteractiveSelection(payload);
 
     // Call ALL registered handlers (same as AI results, to workflow orchestration)
     const allHandlers = Array.from(this.messageHandlers.entries());
-
-    console.log("allHandlers (interactive)", allHandlers);
 
     for (const [handlerKey, handler] of allHandlers) {
       if (handler && typeof handler.handleAiResponse === 'function') {
@@ -179,7 +173,6 @@ export class KafkaConsumerService {
           const isMatchingLeadHandler = handlerKey === lead_id;
 
           if (isGlobalHandler || isMatchingLeadHandler) {
-            console.log('Interactive selection - handlerKey', handlerKey, handler);
             await handler.handleAiResponse(payload);
           }
         } catch (error) {
@@ -200,15 +193,11 @@ export class KafkaConsumerService {
       `Processing catalog order completed for lead ${lead_id}, execution ${execution_id}`
     );
 
-    console.dir(payload, { depth: null });
-
     // Store catalog order activity
     await this.storeCatalogOrderActivity(payload);
 
     // Call ALL registered handlers to resume workflow
     const allHandlers = Array.from(this.messageHandlers.entries());
-
-    console.log("allHandlers (catalog order)", allHandlers);
 
     for (const [handlerKey, handler] of allHandlers) {
       if (handler && typeof handler.handleAiResponse === 'function') {
@@ -217,7 +206,6 @@ export class KafkaConsumerService {
           const isMatchingLeadHandler = handlerKey === lead_id;
 
           if (isGlobalHandler || isMatchingLeadHandler) {
-            console.log('Catalog order - handlerKey', handlerKey, handler);
             await handler.handleAiResponse(payload);
           }
         } catch (error) {

@@ -958,8 +958,6 @@ export class WorkflowsService implements OnModuleInit {
       return;
     }
 
-    console.log("activeWrokflow", activeWorkflow)
-
     // Fetch authoritative business + lead data from DB to build system context
     const [business, lead] = await Promise.all([
       this.prisma.businesses.findUnique({
@@ -1163,9 +1161,6 @@ export class WorkflowsService implements OnModuleInit {
     }
     this.logger.log(`Created workflow execution: ${execution_id}`);
 
-    console.log("workflow input")
-    console.dir(workflowInput)
-
     const workflow = new Workflow(this.nodeFactory);
     workflow.init(activeWorkflow.definition);
     if (durableExecutionReady) {
@@ -1236,8 +1231,6 @@ export class WorkflowsService implements OnModuleInit {
       }
     };
 
-    console.dir(workflowInput)
-
     await workflow.execute(workflowInput);
 
     return workflow.getExecutionState();
@@ -1260,8 +1253,6 @@ export class WorkflowsService implements OnModuleInit {
         tenant_id: newInput.tenant_id,
       });
     }
-
-    console.log("new input", newInput);
 
     // Determine the actual user input based on message type
     let actualInput: any;
@@ -1664,8 +1655,6 @@ export class WorkflowsService implements OnModuleInit {
   async handleIncomingMessage(incomingParams: WorkflowProcessingContext) {
     const channel = 'whatsapp';
 
-    console.log("incomingParams", incomingParams)
-
     const phoneNumberId = incomingParams.context.contact?.phoneNumberId;
     const idempotency = await this.reserveIncomingMessage(incomingParams);
     if (!idempotency.reserved) {
@@ -1682,7 +1671,7 @@ export class WorkflowsService implements OnModuleInit {
       }).lean();
 
       if (hasWaitingWorkflow) {
-        console.log('Resuming existing workflow execution for chat_id:', phoneNumberId);
+        this.logger.log(`Resuming workflow execution ${hasWaitingWorkflow.execution_id} for chat_id: ${phoneNumberId}`);
         await this.resumeWorkflow(
           hasWaitingWorkflow.execution_id,
           hasWaitingWorkflow.workflow_id,
