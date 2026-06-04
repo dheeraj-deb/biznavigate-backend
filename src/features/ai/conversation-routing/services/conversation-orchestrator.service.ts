@@ -1,4 +1,5 @@
 import { Injectable, Logger } from '@nestjs/common';
+import { EventEmitter2 } from '@nestjs/event-emitter';
 import { WhatsAppService } from 'src/features/engagement/whatsapp/application/whatsapp.service';
 import { ConfigResolverService } from './config-resolver.service';
 import { ContextAssemblerService } from './context-assembler.service';
@@ -21,6 +22,7 @@ export class ConversationOrchestratorService {
     private readonly mapper: ComponentMapperService,
     private readonly transitions: FlowTransitionService,
     private readonly whatsappService: WhatsAppService,
+    private readonly eventEmitter: EventEmitter2,
   ) {}
 
   async handleIncoming(input: ConversationOrchestratorInput): Promise<void> {
@@ -95,5 +97,41 @@ export class ConversationOrchestratorService {
       text,
       ctx,
     );
+    this.emitBookingLinkSentIfPresent(input, text);
+  }
+
+  private emitBookingLinkSentIfPresent(input: ConversationOrchestratorInput, text: string): void {
+    const bookingLink = this.extractBookingLink(text);
+    const businessId = input.session.metadata?.businessId;
+    if (!bookingLink || typeof businessId !== 'string') return;
+
+    const url = new URL(bookingLink);
+    const checkIn = url.searchParams.get('checkIn') || undefined;
+    const checkOut = url.searchParams.get('checkOut') || undefined;
+    this.eventEmitter.emit('workflow.event.booking.link_sent', {
+      business_id: businessId,
+      tenant_id: input.tenantId,
+      lead_id: input.session.leadId,
+      event_name: 'booking.link_sent',
+      payload: {
+        booking_link: bookingLink,
+        dates: checkIn && checkOut ? `${checkIn} to ${checkOut}` : undefined,
+        check_in: checkIn,
+        check_out: checkOut,
+        guests: url.searchParams.get('guests') || undefined,
+        customer_phone: input.customerPhone,
+      },
+      emitted_at: new Date().toISOString(),
+    });
+  }
+
+  private extractBookingLink(text: string): string | null {
+    const match = text.match(/https?:\/\/\S+\/book\/[^\s]+/);
+    if (!match) return null;
+    try {
+      return new URL(match[0]).toString();
+    } catch {
+      return null;
+    }
   }
 }

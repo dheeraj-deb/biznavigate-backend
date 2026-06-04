@@ -4,11 +4,12 @@ import { CatalogService } from '../../../commerce/catalog/catalog.service';
 import { resolveDate, isValidDate } from '../utils/date-resolver';
 import { getRunContext } from '../context/agent-run-context';
 import { appendSignal } from '../types/agent-signal';
+import { encodeHandoff } from '../types/handoff';
 
 export function makeCheckAvailabilityTool(catalogService: CatalogService) {
   return tool(
     async ({ checkIn, checkOut, propertyName, guests }) => {
-      const { businessId, businessProfile, lead } = getRunContext();
+      const { businessId, businessProfile, lead, phone } = getRunContext();
       const resolvedCheckIn = resolveDate(checkIn);
       const resolvedCheckOut = resolveDate(checkOut);
 
@@ -53,10 +54,24 @@ export function makeCheckAvailabilityTool(catalogService: CatalogService) {
           })
         : '';
 
+      if (!link) {
+        return encodeHandoff({
+          phone,
+          intent: 'booking_link_not_configured',
+          reason: 'Availability found but public booking link is unavailable',
+          escalateTo: 'human',
+          context: {
+            check_in: resolvedCheckIn,
+            check_out: resolvedCheckOut,
+            available_rooms: lines,
+          },
+        });
+      }
+
       return [
         `Available rooms from ${resolvedCheckIn} to ${resolvedCheckOut}:`,
         lines.join('\n'),
-        link ? `Please complete your booking here: ${link}` : 'Reply with the room number or name to continue.',
+        `Please complete your booking here: ${link}`,
       ].join('\n');
     },
     {

@@ -3,6 +3,7 @@ import { Inject, Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { Cache } from 'cache-manager';
 import { PrismaService } from '../../../../prisma/prisma.service';
+import { normalizeBookingMethodsConfig } from '../../../platform/business-settings/booking-methods.config';
 
 export interface BusinessProfileSnapshot {
   business_id: string;
@@ -136,8 +137,9 @@ export class AgentContextBuilder {
     });
 
     const bookingLink = (settings?.booking_link as any) ?? {};
+    const bookingMethods = normalizeBookingMethodsConfig((settings as any)?.booking_methods);
     const slug = String(bookingLink.slug || business?.public_booking_slug || '').trim();
-    const linkEnabled = Boolean(bookingLink.enabled && slug);
+    const linkEnabled = Boolean(slug && (bookingLink.enabled || bookingMethods.availability_response.mode === 'website_link'));
     const profile: BusinessProfileSnapshot = {
       business_id: businessId,
       business_name: business?.business_name ?? 'this business',
