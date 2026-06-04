@@ -4,10 +4,9 @@ import { Inject, Logger } from '@nestjs/common';
 import { Job } from 'bullmq';
 import { Cache } from 'cache-manager';
 import { AgentContext, AgentService } from 'src/features/ai/agent/agent.service';
-import { decodeFlow, decodeHandoff } from 'src/features/ai/agent/types/handoff';
 import { CustomerLanguage, detectCustomerLanguage } from 'src/features/ai/agent/utils/language-detector';
 import { getRedis } from 'src/utils/redis';
-import { WhatsAppService } from '../application/whatsapp.service';
+import { AgentReplyDispatcherService } from '../application/agent-reply-dispatcher.service';
 
 @Processor('message-debounce')
 export class MessageDebounceProcessor extends WorkerHost {
@@ -17,7 +16,7 @@ export class MessageDebounceProcessor extends WorkerHost {
 
   constructor(
     private readonly agentService: AgentService,
-    private readonly whatsappService: WhatsAppService,
+    private readonly replyDispatcher: AgentReplyDispatcherService,
     @Inject(CACHE_MANAGER) private readonly cache: Cache,
   ) {
     super();
@@ -64,59 +63,19 @@ export class MessageDebounceProcessor extends WorkerHost {
     const reply = await this.agentService.processMessage(combinedText, agentCtx);
     if (!reply) return;
 
-    await this.dispatchAgentReply(reply, agentCtx, lastPayload, phoneNumberId, customerPhone, conversationId);
+    await this.replyDispatcher.dispatch({
+      reply,
+      ctx: agentCtx,
+      lastPayload,
+      phoneNumberId,
+      customerPhone,
+      conversationId,
+    });
   }
 
   // Kept as a no-op for callers compiled against the old pre-generation hook.
   startSpeculativeGeneration(conversationId: string): void {
     this.logger.debug(`Speculative AI generation skipped: ${conversationId}`);
-  }
-
-  private async dispatchAgentReply(
-    reply: string,
-    ctx: AgentContext,
-    lastPayload: any,
-    phoneNumberId: string,
-    customerPhone: string,
-    conversationId: string,
-  ): Promise<void> {
-    const replyCtx = {
-      conversationId: lastPayload.context?.conversation_id ?? conversationId,
-      leadId: lastPayload.lead_id,
-      tenantId: lastPayload.tenant_id,
-    };
-
-    const handoff = decodeHandoff(reply);
-    if (handoff) {
-      await this.whatsappService.sendAgentReply(
-        ctx.businessId,
-        phoneNumberId,
-        customerPhone,
-        "You're being connected to our team. Someone will help you shortly.",
-        replyCtx,
-      );
-      return;
-    }
-
-    const flow = decodeFlow(reply);
-    if (flow) {
-      await this.whatsappService.sendAgentReply(
-        ctx.businessId,
-        phoneNumberId,
-        customerPhone,
-        'I am checking that for you. Our team will help complete the next step.',
-        replyCtx,
-      );
-      return;
-    }
-
-    await this.whatsappService.sendAgentReply(
-      ctx.businessId,
-      phoneNumberId,
-      customerPhone,
-      reply,
-      replyCtx,
-    );
   }
 
   private async getPreviousConversationLanguage(conversationId: string): Promise<CustomerLanguage | undefined> {
