@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Patch, Post, Req, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Param, Patch, Post, Query, Req, UseGuards } from '@nestjs/common';
 import { JwtAuthGuard } from '../../../common/guards/jwt-auth.guard';
 import {
   AiGuardrailCheckDto,
@@ -9,6 +9,9 @@ import {
   CreateOwnerApprovalDto,
   CreateReturnCaseDto,
   CreateStockReservationDto,
+  SellerProductBulkImportDto,
+  SellerProductsStockQueryDto,
+  SellerStockAdjustmentDto,
   UpdateCreditCustomerDto,
   UpdateSellerStatusDto,
 } from './dto/seller-os.dto';
@@ -32,6 +35,26 @@ export class SellerOsController {
   @Post('setup/complete')
   completeSetup(@Req() req: any, @Body() dto: CompleteSellerSetupDto) {
     return this.sellerOsService.completeSetup(req.user, dto);
+  }
+
+  @Get('products-stock')
+  getProductsStock(@Req() req: any, @Query() query: SellerProductsStockQueryDto) {
+    return this.sellerOsService.getProductsStock(req.user, query);
+  }
+
+  @Post('products-stock/import')
+  importProductsStock(@Req() req: any, @Body() dto: SellerProductBulkImportDto) {
+    return this.sellerOsService.importProductsStock(req.user, dto);
+  }
+
+  @Post('products-stock/adjustments')
+  adjustProductStock(@Req() req: any, @Body() dto: SellerStockAdjustmentDto) {
+    return this.sellerOsService.adjustProductStock(req.user, dto);
+  }
+
+  @Get('products-stock/adjustments')
+  getStockAdjustments(@Req() req: any, @Query() query: SellerProductsStockQueryDto) {
+    return this.sellerOsService.getStockAdjustments(req.user, query);
   }
 
   @Post('manual-sales')

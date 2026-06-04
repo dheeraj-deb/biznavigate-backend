@@ -1596,6 +1596,56 @@ model seller_demand_signals {
   @@index([item_id], map: "idx_seller_demand_item")
 }
 
+model seller_product_import_jobs {
+  import_job_id String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  business_id   String    @db.Uuid
+  tenant_id     String    @db.Uuid
+  source        String    @default("csv") @db.VarChar(40)
+  status        String    @default("processing") @db.VarChar(30)
+  total_rows    Int       @default(0)
+  created_count Int       @default(0)
+  updated_count Int       @default(0)
+  skipped_count Int       @default(0)
+  failed_count  Int       @default(0)
+  errors        Json?
+  summary       Json?
+  created_by    String?   @db.Uuid
+  started_at    DateTime  @default(now()) @db.Timestamptz(6)
+  finished_at   DateTime? @db.Timestamptz(6)
+  created_at    DateTime  @default(now()) @db.Timestamptz(6)
+  updated_at    DateTime  @default(now()) @db.Timestamptz(6)
+
+  @@index([business_id, created_at(sort: Desc)], map: "idx_seller_import_jobs_business_created")
+  @@index([status], map: "idx_seller_import_jobs_status")
+  @@index([tenant_id], map: "idx_seller_import_jobs_tenant")
+}
+
+model seller_stock_adjustments {
+  adjustment_id  String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  business_id    String   @db.Uuid
+  tenant_id      String   @db.Uuid
+  item_id        String   @db.Uuid
+  variant_id     String?  @db.Uuid
+  import_job_id  String?  @db.Uuid
+  adjustment_type String  @db.VarChar(20)
+  quantity_change Int
+  quantity_before Int
+  quantity_after  Int
+  reason          String  @db.VarChar(80)
+  source          String  @default("manual") @db.VarChar(40)
+  reference       String? @db.VarChar(255)
+  note            String?
+  created_by      String? @db.Uuid
+  metadata        Json?
+  created_at      DateTime @default(now()) @db.Timestamptz(6)
+
+  @@index([business_id, created_at(sort: Desc)], map: "idx_seller_stock_adjustments_business_created")
+  @@index([item_id, created_at(sort: Desc)], map: "idx_seller_stock_adjustments_item_created")
+  @@index([variant_id, created_at(sort: Desc)], map: "idx_seller_stock_adjustments_variant_created")
+  @@index([import_job_id], map: "idx_seller_stock_adjustments_import_job")
+  @@index([tenant_id], map: "idx_seller_stock_adjustments_tenant")
+}
+
 model hospitality_item_details {
   item_id             String        @id @db.Uuid
   business_id         String        @db.Uuid

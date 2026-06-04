@@ -369,3 +369,120 @@ export class CompleteSellerSetupDto {
   @IsOptional()
   products?: SellerSetupProductDto[];
 }
+
+export class SellerProductsStockQueryDto {
+  @IsString()
+  @IsOptional()
+  search?: string;
+
+  @IsString()
+  @IsOptional()
+  @IsIn(['all', 'active', 'inactive', 'low_stock', 'out_of_stock'])
+  status?: string;
+
+  @Type(() => Number)
+  @IsInt()
+  @Min(1)
+  @IsOptional()
+  page?: number;
+
+  @Type(() => Number)
+  @IsInt()
+  @Min(1)
+  @IsOptional()
+  limit?: number;
+}
+
+export class SellerProductImportRowDto {
+  @IsUUID()
+  @IsOptional()
+  product_id?: string;
+
+  @IsUUID()
+  @IsOptional()
+  item_id?: string;
+
+  @IsString()
+  @IsOptional()
+  sku?: string;
+
+  @IsString()
+  @IsOptional()
+  name?: string;
+
+  @IsString()
+  @IsOptional()
+  category?: string;
+
+  @IsString()
+  @IsOptional()
+  description?: string;
+
+  @Type(() => Number)
+  @IsNumber()
+  @Min(0)
+  @IsOptional()
+  price?: number;
+
+  @Type(() => Number)
+  @IsInt()
+  @Min(0)
+  @IsOptional()
+  stock_quantity?: number;
+
+  @Type(() => Number)
+  @IsNumber()
+  @Min(0)
+  @IsOptional()
+  cost_price?: number;
+
+  @IsString()
+  @IsOptional()
+  image_url?: string;
+
+  @IsBoolean()
+  @IsOptional()
+  is_active?: boolean;
+}
+
+export class SellerProductBulkImportDto {
+  @IsArray()
+  @ValidateNested({ each: true })
+  @Type(() => SellerProductImportRowDto)
+  rows: SellerProductImportRowDto[];
+
+  @IsString()
+  @IsOptional()
+  source?: string;
+}
+
+export class SellerStockAdjustmentDto {
+  @IsUUID()
+  @IsOptional()
+  product_id?: string;
+
+  @IsUUID()
+  @IsOptional()
+  item_id?: string;
+
+  @IsUUID()
+  @IsOptional()
+  variant_id?: string;
+
+  @IsString()
+  @IsIn(['add', 'reduce', 'set'])
+  adjustment_type: string;
+
+  @Type(() => Number)
+  @IsInt()
+  @Min(0)
+  quantity: number;
+
+  @IsString()
+  @IsOptional()
+  reason?: string;
+
+  @IsString()
+  @IsOptional()
+  note?: string;
+}

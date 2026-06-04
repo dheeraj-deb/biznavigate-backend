@@ -125,6 +125,10 @@ exports.Prisma.BusinessesScalarFieldEnum = {
   tenant_id: 'tenant_id',
   business_name: 'business_name',
   business_type: 'business_type',
+  business_group: 'business_group',
+  communication_mode: 'communication_mode',
+  blueprint_seeded: 'blueprint_seeded',
+  blueprint_seeded_at: 'blueprint_seeded_at',
   whatsapp_number: 'whatsapp_number',
   created_at: 'created_at',
   updated_at: 'updated_at',
@@ -424,6 +428,10 @@ exports.Prisma.CampaignsScalarFieldEnum = {
   channel: 'channel',
   content_template: 'content_template',
   sent_at: 'sent_at',
+  approved_at: 'approved_at',
+  approved_by: 'approved_by',
+  auto_approve_at: 'auto_approve_at',
+  deduplication_key: 'deduplication_key',
   target_segment: 'target_segment',
   tenant_id: 'tenant_id',
   audience_filter: 'audience_filter',
@@ -975,6 +983,230 @@ exports.Prisma.Product_order_status_eventsScalarFieldEnum = {
   created_at: 'created_at'
 };
 
+exports.Prisma.Seller_owner_approvalsScalarFieldEnum = {
+  approval_id: 'approval_id',
+  business_id: 'business_id',
+  tenant_id: 'tenant_id',
+  title: 'title',
+  simple_summary: 'simple_summary',
+  action_type: 'action_type',
+  risk_level: 'risk_level',
+  status: 'status',
+  source: 'source',
+  entity_type: 'entity_type',
+  entity_id: 'entity_id',
+  requested_by: 'requested_by',
+  decided_by: 'decided_by',
+  payload: 'payload',
+  guardrails: 'guardrails',
+  due_at: 'due_at',
+  decided_at: 'decided_at',
+  expires_at: 'expires_at',
+  created_at: 'created_at',
+  updated_at: 'updated_at'
+};
+
+exports.Prisma.Seller_store_settingsScalarFieldEnum = {
+  seller_store_settings_id: 'seller_store_settings_id',
+  business_id: 'business_id',
+  tenant_id: 'tenant_id',
+  store_type: 'store_type',
+  onboarding_status: 'onboarding_status',
+  default_currency: 'default_currency',
+  low_stock_threshold: 'low_stock_threshold',
+  stock_hold_minutes: 'stock_hold_minutes',
+  payment_modes: 'payment_modes',
+  delivery_modes: 'delivery_modes',
+  delivery_areas: 'delivery_areas',
+  credit_defaults: 'credit_defaults',
+  ai_guardrails: 'ai_guardrails',
+  setup_checklist: 'setup_checklist',
+  created_at: 'created_at',
+  updated_at: 'updated_at'
+};
+
+exports.Prisma.Seller_stock_reservationsScalarFieldEnum = {
+  reservation_id: 'reservation_id',
+  business_id: 'business_id',
+  tenant_id: 'tenant_id',
+  customer_id: 'customer_id',
+  lead_id: 'lead_id',
+  item_id: 'item_id',
+  variant_id: 'variant_id',
+  quantity: 'quantity',
+  status: 'status',
+  reason: 'reason',
+  source: 'source',
+  expires_at: 'expires_at',
+  released_at: 'released_at',
+  converted_at: 'converted_at',
+  created_by: 'created_by',
+  metadata: 'metadata',
+  created_at: 'created_at',
+  updated_at: 'updated_at'
+};
+
+exports.Prisma.Seller_return_casesScalarFieldEnum = {
+  return_id: 'return_id',
+  business_id: 'business_id',
+  tenant_id: 'tenant_id',
+  order_id: 'order_id',
+  product_order_id: 'product_order_id',
+  customer_id: 'customer_id',
+  return_type: 'return_type',
+  status: 'status',
+  reason: 'reason',
+  requested_amount: 'requested_amount',
+  approved_amount: 'approved_amount',
+  items: 'items',
+  resolution: 'resolution',
+  handled_by: 'handled_by',
+  created_at: 'created_at',
+  updated_at: 'updated_at',
+  closed_at: 'closed_at'
+};
+
+exports.Prisma.Seller_deliveriesScalarFieldEnum = {
+  delivery_id: 'delivery_id',
+  business_id: 'business_id',
+  tenant_id: 'tenant_id',
+  order_id: 'order_id',
+  product_order_id: 'product_order_id',
+  customer_id: 'customer_id',
+  status: 'status',
+  delivery_mode: 'delivery_mode',
+  delivery_person: 'delivery_person',
+  phone: 'phone',
+  address: 'address',
+  pincode: 'pincode',
+  scheduled_at: 'scheduled_at',
+  picked_at: 'picked_at',
+  delivered_at: 'delivered_at',
+  notes: 'notes',
+  metadata: 'metadata',
+  created_at: 'created_at',
+  updated_at: 'updated_at'
+};
+
+exports.Prisma.Seller_customer_credit_accountsScalarFieldEnum = {
+  credit_account_id: 'credit_account_id',
+  business_id: 'business_id',
+  tenant_id: 'tenant_id',
+  customer_id: 'customer_id',
+  customer_name: 'customer_name',
+  phone: 'phone',
+  status: 'status',
+  credit_limit: 'credit_limit',
+  current_balance: 'current_balance',
+  due_days: 'due_days',
+  approved_by: 'approved_by',
+  approved_at: 'approved_at',
+  notes: 'notes',
+  metadata: 'metadata',
+  created_at: 'created_at',
+  updated_at: 'updated_at'
+};
+
+exports.Prisma.Seller_customer_credit_transactionsScalarFieldEnum = {
+  credit_transaction_id: 'credit_transaction_id',
+  credit_account_id: 'credit_account_id',
+  business_id: 'business_id',
+  order_id: 'order_id',
+  transaction_type: 'transaction_type',
+  amount: 'amount',
+  balance_after: 'balance_after',
+  note: 'note',
+  created_by: 'created_by',
+  metadata: 'metadata',
+  created_at: 'created_at'
+};
+
+exports.Prisma.Seller_ai_audit_logsScalarFieldEnum = {
+  ai_audit_id: 'ai_audit_id',
+  business_id: 'business_id',
+  tenant_id: 'tenant_id',
+  ai_employee: 'ai_employee',
+  action: 'action',
+  decision: 'decision',
+  confidence: 'confidence',
+  risk_level: 'risk_level',
+  entity_type: 'entity_type',
+  entity_id: 'entity_id',
+  input_summary: 'input_summary',
+  output_summary: 'output_summary',
+  guardrails: 'guardrails',
+  owner_visible: 'owner_visible',
+  created_at: 'created_at'
+};
+
+exports.Prisma.Seller_product_profit_snapshotsScalarFieldEnum = {
+  profit_snapshot_id: 'profit_snapshot_id',
+  business_id: 'business_id',
+  item_id: 'item_id',
+  variant_id: 'variant_id',
+  cost_price: 'cost_price',
+  selling_price: 'selling_price',
+  gross_margin: 'gross_margin',
+  margin_percentage: 'margin_percentage',
+  source: 'source',
+  recommendation: 'recommendation',
+  created_at: 'created_at'
+};
+
+exports.Prisma.Seller_demand_signalsScalarFieldEnum = {
+  demand_signal_id: 'demand_signal_id',
+  business_id: 'business_id',
+  item_id: 'item_id',
+  category: 'category',
+  signal_type: 'signal_type',
+  signal_count: 'signal_count',
+  period_start: 'period_start',
+  period_end: 'period_end',
+  source: 'source',
+  metadata: 'metadata',
+  created_at: 'created_at'
+};
+
+exports.Prisma.Seller_product_import_jobsScalarFieldEnum = {
+  import_job_id: 'import_job_id',
+  business_id: 'business_id',
+  tenant_id: 'tenant_id',
+  source: 'source',
+  status: 'status',
+  total_rows: 'total_rows',
+  created_count: 'created_count',
+  updated_count: 'updated_count',
+  skipped_count: 'skipped_count',
+  failed_count: 'failed_count',
+  errors: 'errors',
+  summary: 'summary',
+  created_by: 'created_by',
+  started_at: 'started_at',
+  finished_at: 'finished_at',
+  created_at: 'created_at',
+  updated_at: 'updated_at'
+};
+
+exports.Prisma.Seller_stock_adjustmentsScalarFieldEnum = {
+  adjustment_id: 'adjustment_id',
+  business_id: 'business_id',
+  tenant_id: 'tenant_id',
+  item_id: 'item_id',
+  variant_id: 'variant_id',
+  import_job_id: 'import_job_id',
+  adjustment_type: 'adjustment_type',
+  quantity_change: 'quantity_change',
+  quantity_before: 'quantity_before',
+  quantity_after: 'quantity_after',
+  reason: 'reason',
+  source: 'source',
+  reference: 'reference',
+  note: 'note',
+  created_by: 'created_by',
+  metadata: 'metadata',
+  created_at: 'created_at'
+};
+
 exports.Prisma.Hospitality_item_detailsScalarFieldEnum = {
   item_id: 'item_id',
   business_id: 'business_id',
@@ -1376,6 +1608,18 @@ exports.Prisma.ModelName = {
   product_orders: 'product_orders',
   product_order_items: 'product_order_items',
   product_order_status_events: 'product_order_status_events',
+  seller_owner_approvals: 'seller_owner_approvals',
+  seller_store_settings: 'seller_store_settings',
+  seller_stock_reservations: 'seller_stock_reservations',
+  seller_return_cases: 'seller_return_cases',
+  seller_deliveries: 'seller_deliveries',
+  seller_customer_credit_accounts: 'seller_customer_credit_accounts',
+  seller_customer_credit_transactions: 'seller_customer_credit_transactions',
+  seller_ai_audit_logs: 'seller_ai_audit_logs',
+  seller_product_profit_snapshots: 'seller_product_profit_snapshots',
+  seller_demand_signals: 'seller_demand_signals',
+  seller_product_import_jobs: 'seller_product_import_jobs',
+  seller_stock_adjustments: 'seller_stock_adjustments',
   hospitality_item_details: 'hospitality_item_details',
   vehicle_item_details: 'vehicle_item_details',
   hospitality_inquiries: 'hospitality_inquiries',

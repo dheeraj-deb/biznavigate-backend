@@ -16,8 +16,12 @@ import {
   CreateOwnerApprovalDto,
   CreateReturnCaseDto,
   CreateStockReservationDto,
+  SellerProductBulkImportDto,
+  SellerProductImportRowDto,
+  SellerProductsStockQueryDto,
   SellerSaleItemDto,
   SellerSetupProductDto,
+  SellerStockAdjustmentDto,
   UpdateCreditCustomerDto,
   UpdateSellerStatusDto,
 } from './dto/seller-os.dto';
@@ -1274,6 +1278,652 @@ export class SellerOsService {
             ? 'Ask owner to approve'
             : 'Stop this action',
     };
+  }
+
+  async getProductsStock(user: AuthUser, query: SellerProductsStockQueryDto) {
+    const businessId = user.business_id;
+    const page = Math.max(1, Number(query.page ?? 1));
+    const limit = Math.min(Math.max(1, Number(query.limit ?? 50)), 100);
+    const skip = (page - 1) * limit;
+    const search = String(query.search ?? '').trim();
+    const status = query.status ?? 'all';
+    const settingsRows = await this.optionalQuery<any>(
+      `SELECT low_stock_threshold
+       FROM seller_store_settings
+       WHERE business_id = $1
+       LIMIT 1`,
+      [businessId],
+    );
+    const lowStockThreshold = Number(settingsRows[0]?.low_stock_threshold ?? 5);
+
+    const where: any = {
+      business_id: businessId,
+      item_type: 'physical_product',
+      deleted_at: null,
+    };
+
+    if (status === 'active') where.is_active = true;
+    if (status === 'inactive') where.is_active = false;
+    if (status === 'low_stock') {
+      where.is_active = true;
+      where.stock_quantity = { gt: 0, lte: lowStockThreshold };
+    }
+    if (status === 'out_of_stock') {
+      where.is_active = true;
+      where.OR = [{ stock_quantity: null }, { stock_quantity: { lte: 0 } }];
+    }
+
+    if (search) {
+      const searchFilters = [
+        { name: { contains: search, mode: 'insensitive' } },
+        { category: { contains: search, mode: 'insensitive' } },
+        { description: { contains: search, mode: 'insensitive' } },
+        { product_detail: { is: { sku: { contains: search, mode: 'insensitive' } } } },
+      ];
+      where.OR = where.OR ? [{ AND: [{ OR: where.OR }, { OR: searchFilters }] }] : searchFilters;
+    }
+
+    const [total, items, summaryRows, heldTotalRows] = await Promise.all([
+      this.prisma.catalog_items.count({ where }),
+      this.prisma.catalog_items.findMany({
+        where,
+        include: { product_detail: true, variants: true },
+        orderBy: [{ updated_at: 'desc' }],
+        skip,
+        take: limit,
+      }),
+      this.optionalQuery<any>(
+        `SELECT
+           COUNT(*)::int AS total_products,
+           COUNT(*) FILTER (
+             WHERE is_active = true AND COALESCE(stock_quantity, 0) > 0 AND COALESCE(stock_quantity, 0) <= $2
+           )::int AS low_stock,
+           COUNT(*) FILTER (
+             WHERE is_active = true AND COALESCE(stock_quantity, 0) <= 0
+           )::int AS out_of_stock
+         FROM catalog_items
+         WHERE business_id = $1 AND item_type = 'physical_product' AND deleted_at IS NULL`,
+        [businessId, lowStockThreshold],
+      ),
+      this.optionalQuery<any>(
+        `SELECT COALESCE(SUM(quantity), 0)::int AS held_stock
+         FROM (
+           SELECT quantity
+           FROM seller_stock_reservations
+           WHERE business_id = $1 AND status = 'active'
+           UNION ALL
+           SELECT cr.quantity
+           FROM cart_reservations cr
+           JOIN catalog_items ci ON ci.item_id = cr.item_id
+           WHERE ci.business_id = $1 AND cr.status = 'active'
+         ) holds`,
+        [businessId],
+      ),
+    ]);
+
+    const itemIds = items.map((item) => item.item_id);
+    const holdRows = itemIds.length
+      ? await this.optionalQuery<any>(
+          `SELECT item_id, SUM(quantity)::int AS held_quantity
+           FROM (
+             SELECT item_id, quantity
+             FROM seller_stock_reservations
+             WHERE business_id = $1 AND status = 'active' AND item_id = ANY($2::uuid[])
+             UNION ALL
+             SELECT cr.item_id, cr.quantity
+             FROM cart_reservations cr
+             JOIN catalog_items ci ON ci.item_id = cr.item_id
+             WHERE ci.business_id = $1 AND cr.status = 'active' AND cr.item_id = ANY($2::uuid[])
+           ) holds
+           GROUP BY item_id`,
+          [businessId, itemIds],
+        )
+      : [];
+    const heldByItem = new Map<string, number>(
+      holdRows.map((row) => [row.item_id, Number(row.held_quantity ?? 0)]),
+    );
+    const summary = summaryRows[0] ?? {
+      total_products: 0,
+      low_stock: 0,
+      out_of_stock: 0,
+    };
+
+    return {
+      products: items.map((item: any) =>
+        this.publicStockProduct(item, heldByItem.get(item.item_id) ?? 0, lowStockThreshold),
+      ),
+      summary: {
+        total_products: Number(summary.total_products ?? 0),
+        low_stock: Number(summary.low_stock ?? 0),
+        out_of_stock: Number(summary.out_of_stock ?? 0),
+        held_stock: Number(heldTotalRows[0]?.held_stock ?? 0),
+      },
+      pagination: {
+        page,
+        limit,
+        total,
+        total_pages: Math.ceil(total / limit),
+      },
+      low_stock_threshold: lowStockThreshold,
+    };
+  }
+
+  async importProductsStock(user: AuthUser, dto: SellerProductBulkImportDto) {
+    const businessId = user.business_id;
+    const tenantId = this.requireTenant(user);
+    const rows = dto.rows ?? [];
+
+    if (!rows.length) throw new BadRequestException('Add at least one product row');
+    if (rows.length > 5000) {
+      throw new BadRequestException('Import at most 5000 products in one job');
+    }
+
+    const jobRows = await this.requiredQuery<any>(
+      `INSERT INTO seller_product_import_jobs
+         (business_id, tenant_id, source, status, total_rows, created_by)
+       VALUES ($1, $2, $3, 'processing', $4, $5)
+       RETURNING *`,
+      [businessId, tenantId, dto.source ?? 'dashboard', rows.length, user.user_id ?? null],
+    );
+    const job = jobRows[0];
+    let createdCount = 0;
+    let updatedCount = 0;
+    let skippedCount = 0;
+    const errors: Array<{ row: number; message: string }> = [];
+
+    for (const [index, row] of rows.entries()) {
+      try {
+        const result = await this.prisma.$transaction((tx) =>
+          this.upsertImportedCatalogItem(tx, businessId, tenantId, row, job.import_job_id),
+        );
+        if (result.action === 'created') createdCount += 1;
+        else if (result.action === 'updated') updatedCount += 1;
+        else skippedCount += 1;
+      } catch (error) {
+        errors.push({
+          row: index + 1,
+          message: error?.message ?? 'Could not import this row',
+        });
+      }
+    }
+
+    const status = errors.length === rows.length ? 'failed' : errors.length ? 'completed_with_errors' : 'completed';
+    const finishedRows = await this.requiredQuery<any>(
+      `UPDATE seller_product_import_jobs
+       SET status = $2,
+           created_count = $3,
+           updated_count = $4,
+           skipped_count = $5,
+           failed_count = $6,
+           errors = $7::jsonb,
+           summary = $8::jsonb,
+           finished_at = now(),
+           updated_at = now()
+       WHERE import_job_id = $1
+       RETURNING *`,
+      [
+        job.import_job_id,
+        status,
+        createdCount,
+        updatedCount,
+        skippedCount,
+        errors.length,
+        JSON.stringify(errors.slice(0, 100)),
+        JSON.stringify({
+          total_rows: rows.length,
+          created_count: createdCount,
+          updated_count: updatedCount,
+          skipped_count: skippedCount,
+          failed_count: errors.length,
+        }),
+      ],
+    );
+
+    return {
+      import_job: finishedRows[0],
+      summary: {
+        total_rows: rows.length,
+        created_count: createdCount,
+        updated_count: updatedCount,
+        skipped_count: skippedCount,
+        failed_count: errors.length,
+      },
+      errors: errors.slice(0, 100),
+    };
+  }
+
+  async adjustProductStock(user: AuthUser, dto: SellerStockAdjustmentDto) {
+    const businessId = user.business_id;
+    const tenantId = this.requireTenant(user);
+    const itemId = dto.item_id ?? dto.product_id;
+    if (!itemId) throw new BadRequestException('Product is required');
+    if (dto.adjustment_type !== 'set' && dto.quantity <= 0) {
+      throw new BadRequestException('Quantity must be greater than zero');
+    }
+
+    return this.prisma.$transaction(async (tx) => {
+      const current = dto.variant_id
+        ? await this.lockVariantStock(tx, businessId, itemId, dto.variant_id)
+        : await this.lockCatalogItemStock(tx, businessId, itemId);
+      const previousQuantity = Number(current.stock_quantity ?? 0);
+      const nextQuantity = this.nextStockQuantity(previousQuantity, dto.adjustment_type, dto.quantity);
+
+      if (dto.variant_id) {
+        await tx.item_variants.update({
+          where: { variant_id: dto.variant_id },
+          data: { stock_quantity: nextQuantity, updated_at: new Date() },
+        });
+      } else {
+        await tx.catalog_items.update({
+          where: { item_id: itemId },
+          data: { stock_quantity: nextQuantity, updated_at: new Date() },
+        });
+      }
+
+      const adjustment = await this.insertStockAdjustment(tx, {
+        businessId,
+        tenantId,
+        itemId,
+        variantId: dto.variant_id ?? null,
+        adjustmentType: dto.adjustment_type,
+        quantityChange: nextQuantity - previousQuantity,
+        quantityBefore: previousQuantity,
+        quantityAfter: nextQuantity,
+        reason: this.cleanStockReason(dto.reason),
+        source: 'manual',
+        note: dto.note,
+        createdBy: user.user_id,
+      });
+
+      await this.insertAiAudit(tx, businessId, tenantId, {
+        ai_employee: 'AI Inventory Employee',
+        action: 'manual_stock_adjustment',
+        decision: 'recorded',
+        risk_level: 'low',
+        entity_type: 'catalog_item',
+        entity_id: itemId,
+        input_summary: `Owner changed stock for ${current.name}`,
+        output_summary: `Stock changed from ${previousQuantity} to ${nextQuantity}`,
+        guardrails: {
+          adjustment_type: dto.adjustment_type,
+          quantity: dto.quantity,
+        },
+      });
+
+      return {
+        product_id: itemId,
+        item_id: itemId,
+        variant_id: dto.variant_id ?? null,
+        previous_stock: previousQuantity,
+        new_stock: nextQuantity,
+        adjustment,
+      };
+    });
+  }
+
+  async getStockAdjustments(user: AuthUser, query: SellerProductsStockQueryDto) {
+    const businessId = user.business_id;
+    const page = Math.max(1, Number(query.page ?? 1));
+    const limit = Math.min(Math.max(1, Number(query.limit ?? 50)), 100);
+    const offset = (page - 1) * limit;
+    const search = String(query.search ?? '').trim();
+    const params: any[] = [businessId];
+    let searchSql = '';
+
+    if (search) {
+      params.push(`%${search}%`);
+      searchSql = `AND (ci.name ILIKE $${params.length} OR pd.sku ILIKE $${params.length})`;
+    }
+
+    params.push(limit, offset);
+    const rows = await this.optionalQuery<any>(
+      `SELECT a.*, ci.name AS product_name, pd.sku
+       FROM seller_stock_adjustments a
+       JOIN catalog_items ci ON ci.item_id = a.item_id
+       LEFT JOIN product_item_details pd ON pd.item_id = ci.item_id
+       WHERE a.business_id = $1
+       ${searchSql}
+       ORDER BY a.created_at DESC
+       LIMIT $${params.length - 1} OFFSET $${params.length}`,
+      params,
+    );
+
+    return {
+      adjustments: rows.map((row) => ({
+        ...row,
+        product_id: row.item_id,
+        quantity_change: Number(row.quantity_change ?? 0),
+        quantity_before: Number(row.quantity_before ?? 0),
+        quantity_after: Number(row.quantity_after ?? 0),
+      })),
+      pagination: {
+        page,
+        limit,
+        has_more: rows.length === limit,
+      },
+    };
+  }
+
+  private async upsertImportedCatalogItem(
+    tx: any,
+    businessId: string,
+    tenantId: string,
+    row: SellerProductImportRowDto,
+    importJobId: string,
+  ) {
+    const itemId = row.item_id ?? row.product_id;
+    const sku = row.sku?.trim() || null;
+    const name = row.name?.trim();
+    const stockProvided = row.stock_quantity !== undefined && row.stock_quantity !== null;
+    const nextStock = stockProvided ? Math.max(0, Number(row.stock_quantity)) : undefined;
+    const priceProvided = row.price !== undefined && row.price !== null;
+    const nextPrice = priceProvided ? Math.max(0, Number(row.price)) : undefined;
+
+    let existing = await this.findImportTarget(tx, businessId, itemId, sku, name);
+
+    if (!existing && !name) {
+      throw new BadRequestException('Product name is required for new rows');
+    }
+
+    if (existing) {
+      const locked = await this.lockCatalogItemStock(tx, businessId, existing.item_id);
+      const beforeStock = Number(locked.stock_quantity ?? 0);
+      const updateData: any = {
+        updated_at: new Date(),
+      };
+
+      if (name) updateData.name = name;
+      if (row.description !== undefined) updateData.description = row.description;
+      if (row.category !== undefined) updateData.category = row.category;
+      if (nextPrice !== undefined) updateData.base_price = nextPrice;
+      if (nextStock !== undefined) updateData.stock_quantity = nextStock;
+      if (row.image_url) updateData.primary_image_url = row.image_url;
+      if (row.is_active !== undefined) updateData.is_active = row.is_active;
+      updateData.ai_tags = this.buildImportTags(row, existing.name);
+
+      await tx.catalog_items.update({
+        where: { item_id: existing.item_id },
+        data: updateData,
+      });
+
+      await this.upsertProductImportDetails(tx, businessId, existing.item_id, sku, row);
+
+      if (nextStock !== undefined && nextStock !== beforeStock) {
+        await this.insertStockAdjustment(tx, {
+          businessId,
+          tenantId,
+          itemId: existing.item_id,
+          variantId: null,
+          importJobId,
+          adjustmentType: 'set',
+          quantityChange: nextStock - beforeStock,
+          quantityBefore: beforeStock,
+          quantityAfter: nextStock,
+          reason: 'bulk_import',
+          source: 'import',
+          note: 'Stock set from product import',
+          createdBy: null,
+        });
+      }
+
+      return { action: 'updated', item_id: existing.item_id };
+    }
+
+    const created = await tx.catalog_items.create({
+      data: {
+        business_id: businessId,
+        tenant_id: tenantId,
+        item_type: 'physical_product',
+        name,
+        description: row.description,
+        category: row.category,
+        base_price: nextPrice ?? 0,
+        currency: 'INR',
+        stock_quantity: nextStock ?? 0,
+        primary_image_url: row.image_url,
+        attributes: {
+          source: 'bulk_import',
+          cost_price: row.cost_price ?? null,
+        },
+        ai_tags: this.buildImportTags(row, name),
+        is_active: row.is_active ?? true,
+      },
+    });
+
+    await this.upsertProductImportDetails(tx, businessId, created.item_id, sku, row);
+    await this.insertStockAdjustment(tx, {
+      businessId,
+      tenantId,
+      itemId: created.item_id,
+      variantId: null,
+      importJobId,
+      adjustmentType: 'set',
+      quantityChange: Number(created.stock_quantity ?? 0),
+      quantityBefore: 0,
+      quantityAfter: Number(created.stock_quantity ?? 0),
+      reason: 'bulk_import',
+      source: 'import',
+      note: 'Initial stock from product import',
+      createdBy: null,
+    });
+
+    return { action: 'created', item_id: created.item_id };
+  }
+
+  private async findImportTarget(
+    tx: any,
+    businessId: string,
+    itemId?: string,
+    sku?: string | null,
+    name?: string,
+  ) {
+    const baseWhere = {
+      business_id: businessId,
+      item_type: 'physical_product',
+      deleted_at: null,
+    };
+
+    if (itemId) {
+      return tx.catalog_items.findFirst({
+        where: { ...baseWhere, item_id: itemId },
+        include: { product_detail: true },
+      });
+    }
+
+    if (sku) {
+      const bySku = await tx.catalog_items.findFirst({
+        where: { ...baseWhere, product_detail: { is: { sku } } },
+        include: { product_detail: true },
+      });
+      if (bySku) return bySku;
+    }
+
+    if (name) {
+      return tx.catalog_items.findFirst({
+        where: { ...baseWhere, name: { equals: name, mode: 'insensitive' } },
+        include: { product_detail: true },
+      });
+    }
+
+    return null;
+  }
+
+  private async upsertProductImportDetails(
+    tx: any,
+    businessId: string,
+    itemId: string,
+    sku: string | null,
+    row: SellerProductImportRowDto,
+  ) {
+    if (!sku && row.cost_price === undefined) return;
+
+    const metadata = {
+      source: 'bulk_import',
+      cost_price: row.cost_price ?? null,
+    };
+
+    await tx.product_item_details.upsert({
+      where: { item_id: itemId },
+      create: {
+        item_id: itemId,
+        business_id: businessId,
+        sku,
+        metadata,
+      },
+      update: {
+        sku,
+        metadata,
+        updated_at: new Date(),
+      },
+    });
+
+    if (row.cost_price !== undefined || row.price !== undefined) {
+      const sellingPrice = Number(row.price ?? 0);
+      const costPrice = row.cost_price !== undefined ? Number(row.cost_price) : null;
+      await tx.$queryRawUnsafe(
+        `INSERT INTO seller_product_profit_snapshots
+           (business_id, item_id, cost_price, selling_price, gross_margin, margin_percentage, source, recommendation)
+         VALUES ($1, $2, $3, $4, $5, $6, 'bulk_import', $7)`,
+        businessId,
+        itemId,
+        costPrice,
+        sellingPrice,
+        costPrice === null ? null : sellingPrice - costPrice,
+        costPrice === null || sellingPrice <= 0 ? null : ((sellingPrice - costPrice) / sellingPrice) * 100,
+        'Cost and selling price captured from product import',
+      ).catch(() => undefined);
+    }
+  }
+
+  private publicStockProduct(item: any, heldQuantity: number, lowStockThreshold: number) {
+    const availableStock = item.stock_quantity === null ? null : Number(item.stock_quantity ?? 0);
+    const totalStock = availableStock === null ? null : availableStock + heldQuantity;
+    const status = !item.is_active
+      ? 'inactive'
+      : availableStock === null
+        ? 'not_tracked'
+        : availableStock <= 0
+          ? 'out_of_stock'
+          : availableStock <= lowStockThreshold
+            ? 'low_stock'
+            : 'in_stock';
+
+    return {
+      product_id: item.item_id,
+      item_id: item.item_id,
+      name: item.name,
+      category: item.category,
+      description: item.description,
+      sku: item.product_detail?.sku ?? item.variants?.find((variant) => variant.sku)?.sku ?? null,
+      price: this.toNumber(item.base_price),
+      cost_price: this.toNumber(item.product_detail?.metadata?.cost_price ?? item.attributes?.cost_price),
+      stock_quantity: totalStock,
+      available_stock: availableStock,
+      reserved_stock: heldQuantity,
+      stock_status: status,
+      image_url: item.primary_image_url,
+      is_active: item.is_active,
+      updated_at: item.updated_at,
+    };
+  }
+
+  private async lockCatalogItemStock(tx: any, businessId: string, itemId: string) {
+    const rows = (await tx.$queryRawUnsafe(
+      `SELECT item_id, name, stock_quantity
+       FROM catalog_items
+       WHERE business_id = $1 AND item_id = $2 AND item_type = 'physical_product' AND deleted_at IS NULL
+       FOR UPDATE`,
+      businessId,
+      itemId,
+    )) as any[];
+    const item = rows[0];
+    if (!item) throw new NotFoundException('Product not found');
+    return item;
+  }
+
+  private async lockVariantStock(tx: any, businessId: string, itemId: string, variantId: string) {
+    const rows = (await tx.$queryRawUnsafe(
+      `SELECT v.variant_id, v.item_id, v.stock_quantity, CONCAT(ci.name, ' - ', v.name) AS name
+       FROM item_variants v
+       JOIN catalog_items ci ON ci.item_id = v.item_id
+       WHERE ci.business_id = $1 AND v.item_id = $2 AND v.variant_id = $3 AND ci.deleted_at IS NULL
+       FOR UPDATE`,
+      businessId,
+      itemId,
+      variantId,
+    )) as any[];
+    const variant = rows[0];
+    if (!variant) throw new NotFoundException('Product variant not found');
+    return variant;
+  }
+
+  private nextStockQuantity(previous: number, adjustmentType: string, quantity: number) {
+    if (adjustmentType === 'add') return previous + quantity;
+    if (adjustmentType === 'reduce') {
+      if (previous < quantity) throw new ConflictException('Stock cannot go below zero');
+      return previous - quantity;
+    }
+    return quantity;
+  }
+
+  private async insertStockAdjustment(tx: any, data: {
+    businessId: string;
+    tenantId: string;
+    itemId: string;
+    variantId?: string | null;
+    importJobId?: string | null;
+    adjustmentType: string;
+    quantityChange: number;
+    quantityBefore: number;
+    quantityAfter: number;
+    reason: string;
+    source: string;
+    note?: string | null;
+    createdBy?: string | null;
+  }) {
+    const rows = (await tx.$queryRawUnsafe(
+      `INSERT INTO seller_stock_adjustments
+         (business_id, tenant_id, item_id, variant_id, import_job_id, adjustment_type,
+          quantity_change, quantity_before, quantity_after, reason, source, note, created_by, metadata)
+       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, '{}'::jsonb)
+       RETURNING *`,
+      data.businessId,
+      data.tenantId,
+      data.itemId,
+      data.variantId ?? null,
+      data.importJobId ?? null,
+      data.adjustmentType,
+      data.quantityChange,
+      data.quantityBefore,
+      data.quantityAfter,
+      data.reason,
+      data.source,
+      data.note ?? null,
+      data.createdBy ?? null,
+    )) as any[];
+    return rows[0];
+  }
+
+  private buildImportTags(row: SellerProductImportRowDto, fallbackName?: string) {
+    return [
+      row.name ?? fallbackName,
+      row.description,
+      row.category,
+      row.sku,
+    ]
+      .filter(Boolean)
+      .flatMap((value) => String(value).toLowerCase().split(/[,\s]+/))
+      .filter((value, index, values) => value.length > 1 && values.indexOf(value) === index)
+      .slice(0, 20);
+  }
+
+  private cleanStockReason(reason?: string | null) {
+    const cleaned = String(reason || 'manual_correction')
+      .replace(/[^\w\s-]/g, '')
+      .trim()
+      .replace(/\s+/g, '_')
+      .toLowerCase();
+    return cleaned.slice(0, 80) || 'manual_correction';
   }
 
   private async buildSaleLines(db: any, businessId: string, items: SellerSaleItemDto[]): Promise<SaleLine[]> {
