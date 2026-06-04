@@ -31,9 +31,11 @@ export class TemplateSyncProcessor extends WorkerHost {
             status: { $in: [TemplateStatus.PENDING] },
             metaTemplateId: { $exists: true, $ne: null },
             isDeleted: false,
-        }).select('_id metaTemplateId businessId').lean();
+        }).select('_id metaTemplateId providerTemplateName name language businessId').lean();
 
         this.logger.log(`Found ${pendingTemplates.length} PENDING templates to sync`);
+
+        const gupshupTemplateListByBusiness = new Map<string, Promise<any[]>>();
 
         for (const template of pendingTemplates) {
             try {
@@ -47,10 +49,29 @@ export class TemplateSyncProcessor extends WorkerHost {
                 let rejectedReason: string | undefined;
 
                 if (account.gupshup_app_id) {
-                    this.logger.debug(
-                        `Skipping direct Gupshup status lookup for template ${template._id}; use sync-from-meta/webhooks for Gupshup-managed templates`,
-                    );
-                    continue;
+                    const businessId = String(template.businessId);
+                    if (!gupshupTemplateListByBusiness.has(businessId)) {
+                        gupshupTemplateListByBusiness.set(
+                            businessId,
+                            this.metaApi.getTemplates(account.instagram_business_account_id),
+                        );
+                    }
+
+                    const providerTemplates = await gupshupTemplateListByBusiness.get(businessId)!;
+                    const providerTemplate = this.findProviderTemplate(providerTemplates, template, account.gupshup_app_id);
+                    if (!providerTemplate) {
+                        this.logger.debug(`No provider template match yet for Gupshup template ${template._id}`);
+                        continue;
+                    }
+
+                    mappedStatus = this.mapStatus(providerTemplate.status);
+                    rejectedReason = providerTemplate.rejected_reason;
+
+                    await this.templateModel.findByIdAndUpdate(template._id, {
+                        metaTemplateId: String(providerTemplate.id),
+                        providerTemplateName: String(providerTemplate.name),
+                        ...(rejectedReason && { rejectionReason: rejectedReason }),
+                    });
                 } else {
                     const result = await this.metaApi.getTemplateStatus(template.metaTemplateId);
                     mappedStatus = this.mapStatus(result.status);
@@ -93,5 +114,37 @@ export class TemplateSyncProcessor extends WorkerHost {
             ACTIVE: TemplateStatus.PENDING, // Gupshup uses ACTIVE for in-review
         };
         return map[raw] ?? TemplateStatus.PENDING;
+    }
+
+    private findProviderTemplate(providerTemplates: any[], template: any, gupshupAppId?: string | null): any | null {
+        const localMetaId = String(template.metaTemplateId ?? '');
+        const localProviderName = String(template.providerTemplateName ?? '');
+        const localName = String(template.name ?? '');
+        const localLanguage = String(template.language ?? '');
+
+        return providerTemplates.find((providerTemplate) => {
+            const providerId = String(providerTemplate.id ?? '');
+            const providerName = String(providerTemplate.name ?? '');
+            const providerLanguage = String(providerTemplate.language ?? '');
+            const canonicalName = this.resolveCanonicalBlueprintName(providerName, gupshupAppId);
+
+            const languageMatches = !localLanguage || !providerLanguage || localLanguage === providerLanguage;
+            if (!languageMatches) return false;
+
+            return (
+                (localMetaId && localMetaId === providerId) ||
+                (localMetaId && localMetaId === providerName) ||
+                (localProviderName && localProviderName === providerName) ||
+                (localName && localName === providerName) ||
+                (canonicalName && localName === canonicalName)
+            );
+        }) ?? null;
+    }
+
+    private resolveCanonicalBlueprintName(providerName: string, gupshupAppId?: string | null): string | null {
+        if (!gupshupAppId || !providerName) return null;
+        const appSuffix = `_${gupshupAppId.replace(/-/g, '').slice(-8)}`;
+        if (!providerName.endsWith(appSuffix)) return null;
+        return providerName.slice(0, -appSuffix.length);
     }
 }

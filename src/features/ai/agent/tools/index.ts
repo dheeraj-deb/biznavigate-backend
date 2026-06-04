@@ -14,17 +14,19 @@ import {
 import { CatalogService } from '../../../commerce/catalog/catalog.service';
 import { PrismaService } from '../../../../prisma/prisma.service';
 import { RagService } from '../../rag/rag.service';
+import { PendingAgentActionService } from '../services/pending-agent-action.service';
 
 export interface ToolDeps {
   catalogService: CatalogService;
   prisma: PrismaService;
   ragService: RagService | null;
+  pendingActions: PendingAgentActionService;
 }
 
 // Shared tools available to every specialist agent
 function sharedTools(deps: ToolDeps) {
   return [
-    makeCancelBookingTool(deps.prisma),
+    makeCancelBookingTool(deps.pendingActions),
     makeGetBookingTool(deps.prisma),
     makeGetPaymentTool(deps.prisma),
     ...(deps.ragService ? [makeFaqTool(deps.ragService)] : []),

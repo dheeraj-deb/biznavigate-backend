@@ -11,8 +11,25 @@ import {
   IsUUID,
   ValidateNested,
   IsObject,
+  ValidateIf,
 } from 'class-validator';
-import { Type } from 'class-transformer';
+import { Transform, Type } from 'class-transformer';
+
+function toNumberValue(value: unknown): number | undefined {
+  if (value === undefined || value === null || value === '') return undefined;
+  if (typeof value === 'number') return value;
+  if (typeof value === 'string') {
+    const normalized = value.trim().replace(/[,\s]/g, '').replace(/[^\d.-]/g, '');
+    if (!normalized || normalized === '-' || normalized === '.') return undefined;
+    return Number(normalized);
+  }
+  return Number(value);
+}
+
+function toRequiredNumber(value: unknown): number {
+  const parsed = toNumberValue(value);
+  return parsed === undefined ? Number.NaN : parsed;
+}
 
 export class CreateProductVariantDto {
   @IsString()
@@ -27,10 +44,12 @@ export class CreateProductVariantDto {
 
   @IsNumber()
   @Min(0)
+  @Transform(({ value }) => toRequiredNumber(value))
   price: number;
 
   @IsNumber()
   @Min(0)
+  @Transform(({ value }) => toRequiredNumber(value))
   quantity: number;
 
   @IsOptional()
@@ -61,9 +80,17 @@ export class CreateProductDto {
   @IsString()
   description?: string;
 
+  @ValidateIf((dto) => dto.price !== undefined || dto.base_price === undefined)
   @IsNumber()
   @Min(0)
+  @Transform(({ value }) => toRequiredNumber(value))
   price: number;
+
+  @IsOptional()
+  @IsNumber()
+  @Min(0)
+  @Transform(({ value }) => toNumberValue(value))
+  base_price?: number;
 
   @IsOptional()
   @IsString()
@@ -87,7 +114,7 @@ export class CreateProductDto {
   @IsOptional()
   @IsNumber()
   @Min(0)
-  @Type(() => Number)
+  @Transform(({ value }) => toNumberValue(value))
   weight?: number;
 
   @IsOptional()
@@ -103,16 +130,19 @@ export class CreateProductDto {
   @IsOptional()
   @IsNumber()
   @Min(0)
+  @Transform(({ value }) => toNumberValue(value))
   stock_quantity?: number;
 
   @IsOptional()
   @IsNumber()
   @Min(0)
+  @Transform(({ value }) => toNumberValue(value))
   low_stock_threshold?: number;
 
   @IsOptional()
   @IsNumber()
   @Min(0)
+  @Transform(({ value }) => toNumberValue(value))
   compare_price?: number;
 
   @IsOptional()

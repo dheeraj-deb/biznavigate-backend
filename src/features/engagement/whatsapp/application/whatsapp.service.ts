@@ -18,6 +18,7 @@ import { WhatsAppProviderSendService } from './outbound/whatsapp-provider-send.s
 import { WhatsAppStatusCommandService } from './outbound/whatsapp-status-command.service';
 import { WhatsAppMessageNormalizer } from './inbound/whatsapp-message-normalizer.service';
 import { LeadCommandService } from '../../../crm/lead/application/services/lead-command.service';
+import { PendingAgentActionService } from '../../../ai/agent/services/pending-agent-action.service';
 
 
 
@@ -42,6 +43,7 @@ export class WhatsAppService {
     private readonly conversationCommandService: ConversationCommandService,
     private readonly automationRouter: AutomationRouter,
     private readonly leadCommands: LeadCommandService,
+    private readonly pendingActions: PendingAgentActionService,
   ) { }
 
   /**
@@ -147,6 +149,16 @@ export class WhatsAppService {
         );
       }
 
+      const handledDeterministically = await this.handleDeterministicInbound({
+        account: resolved.account,
+        lead: resolved.lead,
+        conversation: persisted.conversation,
+        contact_name: resolved.contact_name,
+        phone_number_id: phoneNumberId,
+        message: normalizedMessage,
+      });
+      if (handledDeterministically) return;
+
       await this.automationRouter.routeInboundMessage({
         account: resolved.account,
         lead: resolved.lead,
@@ -159,6 +171,94 @@ export class WhatsAppService {
     } catch (error) {
       this.logger.error('Error processing WhatsApp message webhook:', error);
     }
+  }
+
+  private async handleDeterministicInbound(params: {
+    account: any;
+    lead: any;
+    conversation: any;
+    contact_name: string;
+    phone_number_id: string;
+    message: ReturnType<WhatsAppMessageNormalizer['normalize']>;
+  }): Promise<boolean> {
+    const input = String(params.message.user_input ?? '').trim();
+    const normalized = input.toLowerCase();
+    const replyCtx = {
+      conversationId: params.conversation.conversation_id,
+      leadId: params.lead.lead_id,
+      tenantId: params.account.businesses?.tenant_id ?? params.lead.tenant_id,
+    };
+
+    const pending = await this.pendingActions.getPending(params.conversation.conversation_id);
+    if (pending) {
+      const decision = this.pendingActions.parseDecision(input);
+      if (!decision) {
+        await this.sendButtonMessage(
+          params.phone_number_id,
+          params.message.from,
+          `Please confirm: ${pending.displayText}?`,
+          [
+            { id: 'confirm_cancel', title: 'Confirm' },
+            { id: 'keep_booking', title: 'Keep' },
+          ],
+          undefined,
+          undefined,
+        );
+        return true;
+      }
+
+      const result = await this.pendingActions.resolvePending(params.conversation.conversation_id, decision);
+      await this.sendAgentReply(
+        params.account.business_id,
+        params.phone_number_id,
+        params.message.from,
+        result.message,
+        replyCtx,
+      );
+      return true;
+    }
+
+    if (normalized === 'help') {
+      await this.sendAgentReply(
+        params.account.business_id,
+        params.phone_number_id,
+        params.message.from,
+        'I can help with bookings, orders, payments, or connecting you to the team. What do you need help with?',
+        replyCtx,
+      );
+      return true;
+    }
+
+    if (normalized === 'cancel') {
+      await this.sendAgentReply(
+        params.account.business_id,
+        params.phone_number_id,
+        params.message.from,
+        'What would you like to cancel? Please share the booking or order ID.',
+        replyCtx,
+      );
+      return true;
+    }
+
+    if (normalized === 'stop') {
+      await this.conversationService.updateConversation(params.conversation.conversation_id, {
+        is_ai: false,
+        is_ai_handled: false,
+        status: 'handed_off',
+        human_takeover_at: new Date(),
+        human_takeover_reason: 'Customer sent STOP',
+      });
+      await this.sendAgentReply(
+        params.account.business_id,
+        params.phone_number_id,
+        params.message.from,
+        'Okay, automated replies are paused. Our team will help you from here.',
+        replyCtx,
+      );
+      return true;
+    }
+
+    return false;
   }
 
 
