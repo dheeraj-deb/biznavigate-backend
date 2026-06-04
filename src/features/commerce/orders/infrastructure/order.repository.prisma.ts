@@ -213,7 +213,7 @@ export class OrderRepositoryPrisma {
     try {
       const order = await this.prisma.orders.findUnique({
         where: { order_id: orderId },
-        include: { order_items: true },
+        include: { order_items: true, customers: true },
       });
       return order ? this.toDomainOrder(order) : null;
     } catch (error) {
@@ -374,9 +374,18 @@ export class OrderRepositoryPrisma {
           status: 'paid',
           updated_at: new Date(),
         },
-        include: { order_items: true },
+        include: { order_items: true, customers: true },
       });
-      await this.syncProductOrderPayment(orderId, paymentMethod, paymentReference);
+      const productOrder = await this.syncProductOrderPayment(orderId, paymentMethod, paymentReference);
+      await this.recordDashboardPayment(updated, paymentMethod, paymentReference);
+      await this.closeProductPaymentApprovals(
+        updated.business_id,
+        updated.order_id,
+        productOrder?.product_order_id,
+        updated.order_number,
+        paymentMethod,
+        paymentReference,
+      );
 
       this.logger.log(`Payment confirmed for order: ${orderId} via ${paymentMethod}`);
       return this.toDomainOrder(updated);
@@ -495,7 +504,7 @@ export class OrderRepositoryPrisma {
   }
 
   private toDomainOrder(prismaOrder: any): Order {
-    return {
+    const order: any = {
       order_id: prismaOrder.order_id,
       business_id: prismaOrder.business_id,
       tenant_id: prismaOrder.tenant_id,
@@ -528,6 +537,20 @@ export class OrderRepositoryPrisma {
       cancelled_at: prismaOrder.cancelled_at,
       items: prismaOrder.order_items?.map((item: any) => this.toDomainOrderItem(item)),
     };
+
+    if (prismaOrder.customers) {
+      order.customer = {
+        customer_id: prismaOrder.customers.customer_id,
+        name: prismaOrder.customers.name,
+        firstName: prismaOrder.customers.name,
+        lastName: '',
+        phone: prismaOrder.customers.phone ?? prismaOrder.customers.whatsapp_number,
+        whatsapp_number: prismaOrder.customers.whatsapp_number,
+        email: prismaOrder.customers.email,
+      };
+    }
+
+    return order;
   }
 
   private async syncProductOrderStatus(
@@ -567,12 +590,12 @@ export class OrderRepositoryPrisma {
     legacyOrderId: string,
     paymentMethod: string,
     paymentReference?: string,
-  ): Promise<void> {
+  ): Promise<{ product_order_id: string; business_id: string } | null> {
     const productOrder = await this.prisma.product_orders.findUnique({
       where: { legacy_order_id: legacyOrderId },
-      select: { product_order_id: true, metadata: true },
+      select: { product_order_id: true, business_id: true, metadata: true },
     });
-    if (!productOrder) return;
+    if (!productOrder) return null;
 
     await this.prisma.product_orders.update({
       where: { product_order_id: productOrder.product_order_id },
@@ -588,6 +611,110 @@ export class OrderRepositoryPrisma {
         updated_at: new Date(),
       },
     });
+    return {
+      product_order_id: productOrder.product_order_id,
+      business_id: productOrder.business_id,
+    };
+  }
+
+  private async recordDashboardPayment(
+    order: any,
+    paymentMethod: string,
+    paymentReference?: string,
+  ): Promise<void> {
+    if (!order.customer_id || !order.tenant_id) return;
+
+    const existing = await this.prisma.payments.findFirst({
+      where: { order_id: order.order_id },
+      orderBy: { created_at: 'desc' },
+    });
+    const now = new Date();
+    const notes = {
+      source: 'dashboard_order_desk',
+      manual_confirmation: true,
+      payment_reference: paymentReference ?? null,
+      order_number: order.order_number ?? null,
+    };
+
+    if (existing) {
+      await this.prisma.payments.update({
+        where: { payment_id: existing.payment_id },
+        data: {
+          amount: order.total_amount,
+          status: 'captured',
+          method: paymentMethod,
+          captured_at: now,
+          notes,
+          updated_at: now,
+        },
+      });
+      return;
+    }
+
+    await this.prisma.payments.create({
+      data: {
+        business_id: order.business_id,
+        tenant_id: order.tenant_id,
+        order_id: order.order_id,
+        customer_id: order.customer_id,
+        razorpay_order_id: `manual_${order.order_id}`,
+        amount: order.total_amount,
+        currency: 'INR',
+        status: 'captured',
+        method: paymentMethod,
+        receipt: order.order_number,
+        description: 'Payment confirmed from order dashboard',
+        notes,
+        captured_at: now,
+      },
+    });
+  }
+
+  private async closeProductPaymentApprovals(
+    businessId: string,
+    legacyOrderId?: string | null,
+    productOrderId?: string | null,
+    orderNumber?: string | null,
+    paymentMethod?: string | null,
+    paymentReference?: string | null,
+  ): Promise<void> {
+    try {
+      await this.prisma.$queryRawUnsafe(
+        `UPDATE seller_owner_approvals
+         SET status = 'approved',
+             decided_at = now(),
+             updated_at = now(),
+             payload = COALESCE(payload, '{}'::jsonb) || $5::jsonb
+         WHERE business_id = $1
+           AND status = 'pending'
+           AND action_type IN ('payment_followup', 'payment_review', 'owner_payment_approval')
+           AND (
+             (entity_type = 'product_order' AND entity_id = $3)
+             OR (entity_type = 'order' AND entity_id = $2)
+             OR payload->>'product_order_id' = $3
+             OR payload->>'legacy_order_id' = $2
+             OR payload->>'order_id' = $2
+             OR payload->>'order_number' = $4
+           )`,
+        businessId,
+        legacyOrderId ?? '',
+        productOrderId ?? '',
+        orderNumber ?? '',
+        JSON.stringify({
+          resolved_by: 'dashboard_payment_confirmation',
+          legacy_order_id: legacyOrderId ?? null,
+          product_order_id: productOrderId ?? null,
+          order_number: orderNumber ?? null,
+          payment_method: paymentMethod ?? null,
+          payment_reference: paymentReference ?? null,
+        }),
+      );
+    } catch (error: any) {
+      const message = String(error?.message ?? error?.meta?.message ?? '');
+      if (!message.includes('seller_owner_approvals') && !message.includes('does not exist')) {
+        throw error;
+      }
+    }
   }
 
   private toDomainOrderItem(prismaItem: any): OrderItem {

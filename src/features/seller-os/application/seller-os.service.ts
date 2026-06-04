@@ -9,6 +9,7 @@ import { PrismaService } from '../../../prisma/prisma.service';
 import { StockReservationService } from '../../commerce/orders/application/services/stock-reservation.service';
 import {
   AiGuardrailCheckDto,
+  CancelSellerPaymentOrderDto,
   CompleteSellerSetupDto,
   CreateCreditCustomerDto,
   CreateDeliveryDto,
@@ -16,6 +17,8 @@ import {
   CreateOwnerApprovalDto,
   CreateReturnCaseDto,
   CreateStockReservationDto,
+  MarkSellerOrderPaidDto,
+  SellerPaymentRequestFromHoldDto,
   SellerProductBulkImportDto,
   SellerProductImportRowDto,
   SellerProductsStockQueryDto,
@@ -79,7 +82,8 @@ export class SellerOsService {
       this.prisma.product_orders.count({
         where: {
           business_id: businessId,
-          status: { in: ['pending', 'paid', 'processing'] },
+          payment_status: { in: ['pending', 'payment_pending', 'unpaid', 'credit_due'] },
+          status: { notIn: ['cancelled', 'failed', 'refunded'] },
         },
       }),
       this.prisma.product_orders.count({
@@ -964,6 +968,533 @@ export class SellerOsService {
     } catch (error) {
       return this.handleSellerOpsMutationError(error);
     }
+  }
+
+  async getPaymentDesk(user: AuthUser) {
+    const businessId = user.business_id;
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    const [pendingRows, holdRows, paidToday] = await Promise.all([
+      this.query<any>(
+        `SELECT
+           po.product_order_id,
+           po.legacy_order_id,
+           COALESCE(po.legacy_order_id, po.product_order_id) AS order_id,
+           COALESCE(po.order_number, o.order_number) AS order_number,
+           c.name AS customer_name,
+           COALESCE(c.phone, c.whatsapp_number, po.shipping_phone, o.shipping_phone) AS customer_phone,
+           po.total_amount,
+           po.payment_status,
+           COALESCE(po.metadata->>'payment_method', o.payment_method, 'upi') AS payment_method,
+           o.payment_reference,
+           o.payment_expires_at,
+           po.paid_at,
+           po.status,
+           po.source,
+           COALESCE(po.shipping_address, o.shipping_address) AS shipping_address,
+           po.created_at,
+           CASE
+             WHEN o.payment_expires_at IS NULL THEN NULL
+             ELSE GREATEST(0, FLOOR(EXTRACT(EPOCH FROM (o.payment_expires_at - now())) / 60))::int
+           END AS payment_expires_in_minutes
+         FROM product_orders po
+         LEFT JOIN orders o ON o.order_id = po.legacy_order_id
+         LEFT JOIN customers c ON c.customer_id = po.customer_id
+         WHERE po.business_id = $1
+           AND po.payment_status IN ('pending', 'payment_pending', 'unpaid')
+           AND po.status NOT IN ('cancelled', 'failed', 'refunded')
+         ORDER BY po.created_at DESC
+         LIMIT 75`,
+        [businessId],
+      ),
+      this.requiredQuery<any>(
+        `SELECT
+           sr.reservation_id,
+           sr.item_id,
+           sr.variant_id,
+           sr.quantity,
+           sr.status,
+           sr.expires_at,
+           sr.metadata,
+           ci.name AS product_name,
+           ci.category,
+           ci.base_price,
+           c.phone AS customer_phone,
+           GREATEST(0, FLOOR(EXTRACT(EPOCH FROM (sr.expires_at - now())) / 60))::int AS expires_in_minutes
+         FROM seller_stock_reservations sr
+         JOIN catalog_items ci ON ci.item_id = sr.item_id
+         LEFT JOIN customers c ON c.customer_id = sr.customer_id
+         WHERE sr.business_id = $1
+           AND sr.status = 'active'
+           AND sr.expires_at > now()
+         ORDER BY sr.expires_at ASC
+         LIMIT 50`,
+        [businessId],
+      ),
+      this.prisma.product_orders.count({
+        where: {
+          business_id: businessId,
+          payment_status: 'paid',
+          paid_at: { gte: today },
+        },
+      }),
+    ]);
+
+    const itemsByOrder = await this.getPaymentDeskItems(
+      pendingRows.map((row) => row.product_order_id),
+    );
+    const pendingOrders = pendingRows.map((row) => this.formatPaymentDeskOrder(row, itemsByOrder));
+    const codOrders = pendingOrders.filter((order) => ['cod', 'cash'].includes(String(order.payment_method ?? '').toLowerCase()));
+    const activeHolds = holdRows.map((hold) => ({
+      reservation_id: hold.reservation_id,
+      product_id: hold.item_id,
+      product_name: hold.product_name,
+      category: hold.category,
+      quantity: Number(hold.quantity ?? 0),
+      customer_phone: hold.customer_phone,
+      payment_order_id: hold.metadata?.payment_order_id ?? hold.metadata?.legacy_order_id ?? undefined,
+      estimated_amount: this.toNumber(hold.base_price) * Number(hold.quantity ?? 0),
+      status: hold.status,
+      expires_at: hold.expires_at,
+      expires_in_minutes: hold.expires_in_minutes,
+    }));
+
+    return {
+      summary: {
+        pending_payments: pendingOrders.length,
+        cod_collections: codOrders.length,
+        active_holds: activeHolds.length,
+        paid_today: paidToday,
+      },
+      pending_orders: pendingOrders,
+      cod_orders: codOrders,
+      active_holds: activeHolds,
+    };
+  }
+
+  async createPaymentRequestFromHold(
+    user: AuthUser,
+    reservationId: string,
+    dto: SellerPaymentRequestFromHoldDto,
+  ) {
+    const businessId = user.business_id;
+    const tenantId = this.requireTenant(user);
+    const paymentMethod = this.normalizeSellerPaymentMethod(dto.payment_method ?? 'upi');
+
+    try {
+      return await this.prisma.$transaction(async (tx) => {
+        const rows = await tx.$queryRawUnsafe<any[]>(
+          `SELECT *
+           FROM seller_stock_reservations
+           WHERE business_id = $1 AND reservation_id = $2
+           FOR UPDATE`,
+          businessId,
+          reservationId,
+        );
+        const reservation = rows[0];
+        if (!reservation) throw new NotFoundException('Stock hold not found');
+        if (reservation.status !== 'active') {
+          throw new ConflictException('This stock hold is already closed');
+        }
+        if (new Date(reservation.expires_at).getTime() <= Date.now()) {
+          throw new ConflictException('This stock hold has expired. Release it and create a new hold.');
+        }
+
+        const customer = reservation.customer_id
+          ? await tx.customers.findFirst({
+              where: { business_id: businessId, customer_id: reservation.customer_id, deleted_at: null },
+            })
+          : null;
+
+        const lines = await this.buildSaleLines(tx, businessId, [{
+          item_id: reservation.item_id,
+          variant_id: reservation.variant_id,
+          quantity: Number(reservation.quantity ?? 1),
+        }]);
+        const totals = this.calculateTotals(lines);
+        const orderNumber = this.makeOrderNumber('PAY');
+        const expiresAt = new Date(Date.now() + 15 * 60 * 1000);
+
+        const order = await tx.orders.create({
+          data: {
+            business_id: businessId,
+            tenant_id: tenantId,
+            customer_id: customer?.customer_id ?? null,
+            order_number: orderNumber,
+            order_type: 'product',
+            status: 'pending',
+            subtotal: totals.subtotal,
+            discount_amount: totals.discount_amount,
+            tax_amount: 0,
+            shipping_fee: 0,
+            total_amount: totals.total_amount,
+            payment_status: 'pending',
+            payment_method: paymentMethod,
+            payment_expires_at: expiresAt,
+            shipping_address: dto.delivery_address,
+            shipping_phone: customer?.phone ?? customer?.whatsapp_number ?? null,
+            notes: dto.notes,
+            source: 'seller_payment_desk',
+          },
+        });
+
+        const productOrder = await tx.product_orders.create({
+          data: {
+            business_id: businessId,
+            tenant_id: tenantId,
+            legacy_order_id: order.order_id,
+            customer_id: customer?.customer_id ?? null,
+            order_number: orderNumber,
+            status: 'pending',
+            payment_status: 'pending',
+            subtotal: totals.subtotal,
+            discount_amount: totals.discount_amount,
+            tax_amount: 0,
+            shipping_fee: 0,
+            total_amount: totals.total_amount,
+            source: 'seller_payment_desk',
+            shipping_address: dto.delivery_address,
+            shipping_phone: customer?.phone ?? customer?.whatsapp_number ?? null,
+            notes: dto.notes,
+            metadata: {
+              payment_method: paymentMethod,
+              converted_reservation_id: reservationId,
+              delivery_area: dto.delivery_area ?? null,
+            },
+          },
+        });
+
+        for (const line of lines) {
+          await tx.order_items.create({
+            data: {
+              order_id: order.order_id,
+              item_id: line.item_id,
+              variant_id: line.variant_id,
+              product_name: line.product_name,
+              variant_name: line.variant_name,
+              sku: line.sku,
+              quantity: line.quantity,
+              unit_price: line.unit_price,
+              discount: line.discount,
+              total_price: line.total_price,
+              snapshot: {
+                ...line.snapshot,
+                converted_reservation_id: reservationId,
+              },
+            },
+          });
+
+          await tx.product_order_items.create({
+            data: {
+              product_order_id: productOrder.product_order_id,
+              item_id: line.item_id,
+              variant_id: line.variant_id,
+              product_name: line.product_name,
+              variant_name: line.variant_name,
+              sku: line.sku,
+              quantity: line.quantity,
+              unit_price: line.unit_price,
+              discount: line.discount,
+              total_price: line.total_price,
+              snapshot: {
+                ...line.snapshot,
+                converted_reservation_id: reservationId,
+              },
+            },
+          });
+        }
+
+        await tx.product_order_status_events.create({
+          data: {
+            product_order_id: productOrder.product_order_id,
+            business_id: businessId,
+            from_status: null,
+            to_status: 'pending',
+            actor: 'owner',
+            actor_id: user.user_id,
+            data: { legacy_order_id: order.order_id, converted_reservation_id: reservationId },
+          },
+        });
+
+        await tx.$queryRawUnsafe(
+          `UPDATE seller_stock_reservations
+           SET status = 'converted',
+               converted_at = now(),
+               updated_at = now(),
+               metadata = COALESCE(metadata, '{}'::jsonb) || $3::jsonb
+           WHERE business_id = $1 AND reservation_id = $2`,
+          businessId,
+          reservationId,
+          JSON.stringify({
+            payment_order_id: order.order_id,
+            product_order_id: productOrder.product_order_id,
+            payment_method: paymentMethod,
+          }),
+        );
+
+        if (dto.delivery_required) {
+          await this.insertDelivery(tx, businessId, tenantId, {
+            order_id: order.order_id,
+            product_order_id: productOrder.product_order_id,
+            customer_id: customer?.customer_id,
+            delivery_mode: 'local',
+            phone: customer?.phone ?? customer?.whatsapp_number,
+            address: dto.delivery_address,
+            pincode: dto.delivery_area,
+            notes: dto.notes,
+          });
+        }
+
+        await this.insertAiAudit(tx, businessId, tenantId, {
+          ai_employee: 'AI Inventory Employee',
+          action: 'stock_hold_payment_request',
+          decision: 'converted_to_order',
+          risk_level: 'low',
+          entity_type: 'product_order',
+          entity_id: productOrder.product_order_id,
+          input_summary: 'Owner converted held stock into a payment order',
+          output_summary: 'Held stock stayed reserved; no second stock deduction was made',
+          guardrails: { reservation_id: reservationId, payment_method: paymentMethod },
+        });
+
+        return {
+          order_id: order.order_id,
+          product_order_id: productOrder.product_order_id,
+          order_number: orderNumber,
+          customer_name: customer?.name,
+          customer_phone: customer?.phone ?? customer?.whatsapp_number,
+          total_amount: totals.total_amount,
+          payment_status: 'pending',
+          payment_method: paymentMethod,
+          payment_expires_at: expiresAt,
+          status: 'pending',
+          source: 'seller_payment_desk',
+          shipping_address: dto.delivery_address,
+          items: lines,
+        };
+      });
+    } catch (error) {
+      return this.handleSellerOpsMutationError(error);
+    }
+  }
+
+  async markPaymentDeskOrderPaid(
+    user: AuthUser,
+    orderId: string,
+    dto: MarkSellerOrderPaidDto,
+  ) {
+    const businessId = user.business_id;
+    const paymentMethod = this.normalizeSellerPaymentMethod(dto.payment_method ?? 'upi');
+
+    return this.prisma.$transaction(async (tx) => {
+      const productOrder = await this.findPaymentDeskProductOrder(tx, businessId, orderId);
+      if (!productOrder) throw new NotFoundException('Payment order not found');
+      if (productOrder.payment_status === 'paid') {
+        throw new ConflictException('Order is already marked as paid');
+      }
+
+      const now = new Date();
+      let legacyOrder: any = null;
+      if (productOrder.legacy_order_id) {
+        legacyOrder = await tx.orders.update({
+          where: { order_id: productOrder.legacy_order_id },
+          data: {
+            payment_status: 'paid',
+            payment_method: paymentMethod,
+            payment_reference: dto.payment_reference,
+            paid_at: now,
+            status: 'paid',
+            updated_at: now,
+          },
+        });
+      }
+
+      await tx.product_orders.update({
+        where: { product_order_id: productOrder.product_order_id },
+        data: {
+          payment_status: 'paid',
+          status: 'paid',
+          paid_at: now,
+          metadata: {
+            ...((productOrder.metadata as Record<string, any>) ?? {}),
+            payment_method: paymentMethod,
+            payment_reference: dto.payment_reference ?? null,
+            paid_from: 'seller_payment_desk',
+          },
+          updated_at: now,
+        },
+      });
+
+      await tx.product_order_status_events.create({
+        data: {
+          product_order_id: productOrder.product_order_id,
+          business_id: productOrder.business_id,
+          from_status: productOrder.status,
+          to_status: 'paid',
+          actor: 'owner',
+          actor_id: user.user_id,
+          data: {
+            legacy_order_id: productOrder.legacy_order_id,
+            payment_method: paymentMethod,
+            payment_reference: dto.payment_reference ?? null,
+            notes: dto.notes ?? null,
+          },
+        },
+      });
+
+      if (legacyOrder) {
+        await this.recordDashboardPayment(tx, legacyOrder, paymentMethod, dto.payment_reference, 'seller_payment_desk');
+      }
+      await this.closePaymentFollowupApprovals(
+        tx,
+        businessId,
+        productOrder.legacy_order_id,
+        productOrder.product_order_id,
+        productOrder.order_number,
+        paymentMethod,
+        dto.payment_reference,
+        user.user_id,
+      );
+
+      await this.insertAiAudit(tx, businessId, user.tenant_id, {
+        ai_employee: 'AI Sales Employee',
+        action: 'payment_confirmed',
+        decision: 'paid',
+        risk_level: 'low',
+        entity_type: 'product_order',
+        entity_id: productOrder.product_order_id,
+        input_summary: 'Owner confirmed a product order payment',
+        output_summary: 'Payment desk, order status, and owner approval queue were updated',
+        guardrails: { payment_method: paymentMethod, payment_reference: dto.payment_reference ?? null },
+      });
+
+      return {
+        order_id: productOrder.legacy_order_id ?? productOrder.product_order_id,
+        product_order_id: productOrder.product_order_id,
+        order_number: productOrder.order_number,
+        customer_name: productOrder.customer?.name,
+        customer_phone: productOrder.customer?.phone ?? productOrder.shipping_phone,
+        total_amount: this.toNumber(productOrder.total_amount),
+        payment_status: 'paid',
+        payment_method: paymentMethod,
+        payment_reference: dto.payment_reference,
+        paid_at: now,
+        status: 'paid',
+        source: productOrder.source,
+        shipping_address: productOrder.shipping_address,
+        items: productOrder.items.map((item) => ({
+          order_item_id: item.product_order_item_id,
+          product_id: item.item_id,
+          product_name: item.product_name,
+          quantity: item.quantity,
+          unit_price: this.toNumber(item.unit_price),
+          total_price: this.toNumber(item.total_price),
+        })),
+      };
+    });
+  }
+
+  async cancelPaymentDeskOrder(
+    user: AuthUser,
+    orderId: string,
+    dto: CancelSellerPaymentOrderDto,
+  ) {
+    const businessId = user.business_id;
+
+    return this.prisma.$transaction(async (tx) => {
+      const productOrder = await this.findPaymentDeskProductOrder(tx, businessId, orderId);
+      if (!productOrder) throw new NotFoundException('Payment order not found');
+      if (productOrder.status === 'cancelled') throw new ConflictException('Order is already cancelled');
+      if (productOrder.payment_status === 'paid') {
+        throw new BadRequestException('Paid orders need a return or refund flow, not cancellation');
+      }
+
+      const now = new Date();
+      if (productOrder.legacy_order_id) {
+        await this.stockReservationService.releaseReservation(productOrder.legacy_order_id, tx);
+        await tx.orders.update({
+          where: { order_id: productOrder.legacy_order_id },
+          data: {
+            status: 'cancelled',
+            cancelled_at: now,
+            admin_notes: dto.reason ?? 'Cancelled from Payment Desk',
+            updated_at: now,
+          },
+        });
+      }
+
+      await tx.product_orders.update({
+        where: { product_order_id: productOrder.product_order_id },
+        data: {
+          status: 'cancelled',
+          cancelled_at: now,
+          updated_at: now,
+        },
+      });
+
+      await tx.product_order_status_events.create({
+        data: {
+          product_order_id: productOrder.product_order_id,
+          business_id: productOrder.business_id,
+          from_status: productOrder.status,
+          to_status: 'cancelled',
+          actor: 'owner',
+          actor_id: user.user_id,
+          data: {
+            legacy_order_id: productOrder.legacy_order_id,
+            reason: dto.reason ?? null,
+          },
+        },
+      });
+
+      await tx.$queryRawUnsafe(
+        `UPDATE seller_stock_reservations
+         SET status = 'released',
+             released_at = now(),
+             updated_at = now(),
+             metadata = COALESCE(metadata, '{}'::jsonb) || $3::jsonb
+         WHERE business_id = $1
+           AND status = 'converted'
+           AND metadata->>'product_order_id' = $2`,
+        businessId,
+        productOrder.product_order_id,
+        JSON.stringify({ released_by: 'payment_desk_cancel', reason: dto.reason ?? null }),
+      ).catch(() => undefined);
+
+      await this.closePaymentFollowupApprovals(
+        tx,
+        businessId,
+        productOrder.legacy_order_id,
+        productOrder.product_order_id,
+        productOrder.order_number,
+        'cancelled',
+        dto.reason,
+        user.user_id,
+        'rejected',
+      );
+
+      return {
+        order_id: productOrder.legacy_order_id ?? productOrder.product_order_id,
+        product_order_id: productOrder.product_order_id,
+        order_number: productOrder.order_number,
+        customer_name: productOrder.customer?.name,
+        customer_phone: productOrder.customer?.phone ?? productOrder.shipping_phone,
+        total_amount: this.toNumber(productOrder.total_amount),
+        payment_status: productOrder.payment_status,
+        status: 'cancelled',
+        source: productOrder.source,
+        shipping_address: productOrder.shipping_address,
+        items: productOrder.items.map((item) => ({
+          order_item_id: item.product_order_item_id,
+          product_id: item.item_id,
+          product_name: item.product_name,
+          quantity: item.quantity,
+          unit_price: this.toNumber(item.unit_price),
+          total_price: this.toNumber(item.total_price),
+        })),
+      };
+    });
   }
 
   async listCreditCustomers(user: AuthUser) {
@@ -2279,6 +2810,186 @@ export class SellerOsService {
         data.input_summary ?? null,
         data.output_summary ?? null,
         JSON.stringify(data.guardrails ?? {}),
+      );
+    } catch (error) {
+      if (!this.isMissingSellerOpsTable(error)) throw error;
+    }
+  }
+
+  private async getPaymentDeskItems(productOrderIds: string[]) {
+    if (!productOrderIds.length) return new Map<string, any[]>();
+
+    const items = await this.prisma.product_order_items.findMany({
+      where: { product_order_id: { in: productOrderIds } },
+      orderBy: { created_at: 'asc' },
+    });
+
+    const byOrder = new Map<string, any[]>();
+    for (const item of items) {
+      const orderItems = byOrder.get(item.product_order_id) ?? [];
+      orderItems.push({
+        order_item_id: item.product_order_item_id,
+        product_id: item.item_id,
+        product_name: item.product_name,
+        quantity: item.quantity,
+        unit_price: this.toNumber(item.unit_price),
+        total_price: this.toNumber(item.total_price),
+      });
+      byOrder.set(item.product_order_id, orderItems);
+    }
+    return byOrder;
+  }
+
+  private formatPaymentDeskOrder(row: any, itemsByOrder: Map<string, any[]>) {
+    return {
+      order_id: row.order_id,
+      product_order_id: row.product_order_id,
+      order_number: row.order_number,
+      customer_name: row.customer_name,
+      customer_phone: row.customer_phone,
+      total_amount: this.toNumber(row.total_amount),
+      payment_status: row.payment_status,
+      payment_method: row.payment_method,
+      payment_reference: row.payment_reference,
+      payment_expires_at: row.payment_expires_at,
+      payment_expires_in_minutes: row.payment_expires_in_minutes,
+      paid_at: row.paid_at,
+      status: row.status,
+      source: row.source,
+      shipping_address: row.shipping_address,
+      created_at: row.created_at,
+      items: itemsByOrder.get(row.product_order_id) ?? [],
+    };
+  }
+
+  private normalizeSellerPaymentMethod(method?: string | null) {
+    const value = String(method ?? 'upi').trim().toLowerCase();
+    if (['upi', 'cod', 'cash', 'card', 'other'].includes(value)) return value;
+    return 'other';
+  }
+
+  private async findPaymentDeskProductOrder(db: any, businessId: string, orderId: string) {
+    return db.product_orders.findFirst({
+      where: {
+        business_id: businessId,
+        OR: [
+          { product_order_id: orderId },
+          { legacy_order_id: orderId },
+        ],
+      },
+      include: {
+        items: true,
+        customer: {
+          select: {
+            customer_id: true,
+            name: true,
+            phone: true,
+            whatsapp_number: true,
+            email: true,
+          },
+        },
+      },
+    });
+  }
+
+  private async recordDashboardPayment(
+    db: any,
+    order: any,
+    paymentMethod: string,
+    paymentReference?: string,
+    source = 'dashboard',
+  ) {
+    if (!order?.customer_id || !order?.tenant_id) return null;
+
+    const existing = await db.payments.findFirst({
+      where: { order_id: order.order_id },
+      orderBy: { created_at: 'desc' },
+    });
+    const now = new Date();
+    const notes = {
+      source,
+      manual_confirmation: true,
+      payment_reference: paymentReference ?? null,
+      order_number: order.order_number ?? null,
+    };
+
+    if (existing) {
+      return db.payments.update({
+        where: { payment_id: existing.payment_id },
+        data: {
+          amount: order.total_amount,
+          status: 'captured',
+          method: paymentMethod,
+          captured_at: now,
+          notes,
+          updated_at: now,
+        },
+      });
+    }
+
+    return db.payments.create({
+      data: {
+        business_id: order.business_id,
+        tenant_id: order.tenant_id,
+        order_id: order.order_id,
+        customer_id: order.customer_id,
+        razorpay_order_id: `manual_${order.order_id}`,
+        amount: order.total_amount,
+        currency: 'INR',
+        status: 'captured',
+        method: paymentMethod,
+        receipt: order.order_number,
+        description: 'Payment confirmed from seller dashboard',
+        notes,
+        captured_at: now,
+      },
+    });
+  }
+
+  private async closePaymentFollowupApprovals(
+    db: any,
+    businessId: string,
+    legacyOrderId?: string | null,
+    productOrderId?: string | null,
+    orderNumber?: string | null,
+    paymentMethod?: string | null,
+    paymentReference?: string | null,
+    decidedBy?: string | null,
+    nextStatus: 'approved' | 'rejected' = 'approved',
+  ) {
+    try {
+      await db.$queryRawUnsafe(
+        `UPDATE seller_owner_approvals
+         SET status = $5,
+             decided_by = $6,
+             decided_at = now(),
+             updated_at = now(),
+             payload = COALESCE(payload, '{}'::jsonb) || $7::jsonb
+         WHERE business_id = $1
+           AND status = 'pending'
+           AND action_type IN ('payment_followup', 'payment_review', 'owner_payment_approval')
+           AND (
+             (entity_type = 'product_order' AND entity_id = $3)
+             OR (entity_type = 'order' AND entity_id = $2)
+             OR payload->>'product_order_id' = $3
+             OR payload->>'legacy_order_id' = $2
+             OR payload->>'order_id' = $2
+             OR payload->>'order_number' = $4
+           )`,
+        businessId,
+        legacyOrderId ?? '',
+        productOrderId ?? '',
+        orderNumber ?? '',
+        nextStatus,
+        decidedBy ?? null,
+        JSON.stringify({
+          resolved_by: nextStatus === 'approved' ? 'payment_confirmation' : 'payment_cancelled',
+          legacy_order_id: legacyOrderId ?? null,
+          product_order_id: productOrderId ?? null,
+          order_number: orderNumber ?? null,
+          payment_method: paymentMethod ?? null,
+          payment_reference: paymentReference ?? null,
+        }),
       );
     } catch (error) {
       if (!this.isMissingSellerOpsTable(error)) throw error;
