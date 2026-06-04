@@ -103,6 +103,50 @@ export class CreateStockReservationDto {
   reason?: string;
 }
 
+export class SellerPaymentRequestFromHoldDto {
+  @IsString()
+  @IsOptional()
+  @IsIn(['upi', 'cod', 'cash', 'card', 'other'])
+  payment_method?: string;
+
+  @IsString()
+  @IsOptional()
+  delivery_address?: string;
+
+  @IsString()
+  @IsOptional()
+  delivery_area?: string;
+
+  @IsBoolean()
+  @IsOptional()
+  delivery_required?: boolean;
+
+  @IsString()
+  @IsOptional()
+  notes?: string;
+}
+
+export class MarkSellerOrderPaidDto {
+  @IsString()
+  @IsOptional()
+  @IsIn(['upi', 'cod', 'cash', 'card', 'other'])
+  payment_method?: string;
+
+  @IsString()
+  @IsOptional()
+  payment_reference?: string;
+
+  @IsString()
+  @IsOptional()
+  notes?: string;
+}
+
+export class CancelSellerPaymentOrderDto {
+  @IsString()
+  @IsOptional()
+  reason?: string;
+}
+
 export class CreateCreditCustomerDto {
   @IsString()
   phone: string;

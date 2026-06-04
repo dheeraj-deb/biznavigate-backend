@@ -2,6 +2,7 @@ import { Body, Controller, Get, Param, Patch, Post, Query, Req, UseGuards } from
 import { JwtAuthGuard } from '../../../common/guards/jwt-auth.guard';
 import {
   AiGuardrailCheckDto,
+  CancelSellerPaymentOrderDto,
   CompleteSellerSetupDto,
   CreateCreditCustomerDto,
   CreateDeliveryDto,
@@ -9,6 +10,8 @@ import {
   CreateOwnerApprovalDto,
   CreateReturnCaseDto,
   CreateStockReservationDto,
+  MarkSellerOrderPaidDto,
+  SellerPaymentRequestFromHoldDto,
   SellerProductBulkImportDto,
   SellerProductsStockQueryDto,
   SellerStockAdjustmentDto,
@@ -70,6 +73,38 @@ export class SellerOsController {
   @Patch('stock-reservations/:reservationId/release')
   releaseStockReservation(@Req() req: any, @Param('reservationId') reservationId: string) {
     return this.sellerOsService.releaseStockReservation(req.user, reservationId);
+  }
+
+  @Get('payment-desk')
+  getPaymentDesk(@Req() req: any) {
+    return this.sellerOsService.getPaymentDesk(req.user);
+  }
+
+  @Post('payment-desk/holds/:reservationId/payment-request')
+  createPaymentRequestFromHold(
+    @Req() req: any,
+    @Param('reservationId') reservationId: string,
+    @Body() dto: SellerPaymentRequestFromHoldDto,
+  ) {
+    return this.sellerOsService.createPaymentRequestFromHold(req.user, reservationId, dto);
+  }
+
+  @Patch('payment-desk/orders/:orderId/paid')
+  markPaymentDeskOrderPaid(
+    @Req() req: any,
+    @Param('orderId') orderId: string,
+    @Body() dto: MarkSellerOrderPaidDto,
+  ) {
+    return this.sellerOsService.markPaymentDeskOrderPaid(req.user, orderId, dto);
+  }
+
+  @Patch('payment-desk/orders/:orderId/cancel')
+  cancelPaymentDeskOrder(
+    @Req() req: any,
+    @Param('orderId') orderId: string,
+    @Body() dto: CancelSellerPaymentOrderDto,
+  ) {
+    return this.sellerOsService.cancelPaymentDeskOrder(req.user, orderId, dto);
   }
 
   @Get('credit-customers')
