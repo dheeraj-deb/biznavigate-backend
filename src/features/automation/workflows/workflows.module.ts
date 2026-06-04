@@ -8,6 +8,8 @@ import { WhatsAppModule } from '../../engagement/whatsapp/whatsapp.module';
 import { InstagramModule } from '../../engagement/instagram/instagram.module';
 import { CartModule } from '../../commerce/cart/cart.module';
 import { ConversationModule } from '../../crm/conversation/conversation.module';
+import { LeadModule } from '../../crm/lead/lead.module';
+import { AiActionsModule } from '../ai-actions/ai-actions.module';
 import { CircuitBreakerService } from '../../engagement/whatsapp/infrastructure/circuit-breaker.service';
 import { Workflow } from './core/workflow';
 import { NodeFactory } from './factories/node-factory';
@@ -25,6 +27,7 @@ import { WorkflowScheduleProcessor } from './schedule/workflow-schedule.processo
 import { WorkflowEventBusService } from './events/workflow-event-bus.service';
 import { InactiveLeadScannerService } from './events/inactive-lead-scanner.service';
 import { InactiveScannerProcessor } from './events/inactive-scanner.processor';
+import { ExternalWorkflowEventsController } from './events/external-workflow-events.controller';
 import {
   WorkflowInactiveFire,
   WorkflowInactiveFireSchema,
@@ -35,6 +38,8 @@ import {
     KafkaModule,
     PrismaModule,
     forwardRef(() => WhatsAppModule),
+    forwardRef(() => LeadModule),
+    forwardRef(() => AiActionsModule),
     InstagramModule,
     CartModule,
     ConversationModule,
@@ -51,6 +56,7 @@ import {
   ],
   controllers: [
     WorkflowsController,
+    ExternalWorkflowEventsController,
   ],
   providers: [
     WorkflowsService,

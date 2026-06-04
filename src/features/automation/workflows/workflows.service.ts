@@ -159,6 +159,20 @@ export class WorkflowsService implements OnModuleInit {
       'action.rag_search': [
         { path: 'rag_results', label: 'RAG Search Results', example: '[{...}]' },
       ],
+      'action.change_lead_status': [
+        { path: 'lead_status_result.status', label: 'Updated Lead Status', example: 'booked' },
+        { path: 'lead_status_result.stage_id', label: 'Updated Stage ID', example: 'uuid...' },
+      ],
+      'action.move_lead_stage': [
+        { path: 'lead_stage_result.moved', label: 'Lead Stage Moved', example: 'true' },
+        { path: 'lead_stage_result.stage_slug', label: 'Target Stage Slug', example: 'booked' },
+      ],
+      'action.call_ai_action': [
+        { path: 'ai_action_result.action', label: 'AI Action Name', example: 'create_hospitality_booking' },
+        { path: 'ai_action_result.status', label: 'AI Action Status', example: 'completed' },
+        { path: 'ai_action_result.result.booking_id', label: 'Created Booking ID', example: 'uuid...' },
+        { path: 'ai_action_result.result.status', label: 'Action Result Status', example: 'open' },
+      ],
     };
 
     const nodeVariables =

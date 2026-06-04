@@ -4,12 +4,14 @@ import { CreateBusinessDto } from "./dto/create-business.dto";
 import { UpdateBusinessDto } from "./dto/update-business.dto";
 import { Business } from "../domain/entities/business.entity";
 import { BusinessesRepository } from "../infrastructure/business.repository.interface";
+import { BusinessBlueprintSeedService } from "./business-blueprint-seed.service";
 
 @Injectable()
 export class BusinessesService {
   constructor(
     @Inject("BusinessesRepository")
-    private readonly businessesRepo: BusinessesRepository
+    private readonly businessesRepo: BusinessesRepository,
+    private readonly businessBlueprints: BusinessBlueprintSeedService,
   ) {}
 
   async create(dto: CreateBusinessDto): Promise<Business> {
@@ -64,6 +66,15 @@ export class BusinessesService {
   async delete(id: string): Promise<void> {
     try {
       await this.businessesRepo.delete(id);
+    } catch (error) {
+      if (error instanceof HttpException) throw error;
+      throw new BadRequestException(error.message);
+    }
+  }
+
+  async seedBlueprints(id: string) {
+    try {
+      return await this.businessBlueprints.seedForBusiness(id);
     } catch (error) {
       if (error instanceof HttpException) throw error;
       throw new BadRequestException(error.message);

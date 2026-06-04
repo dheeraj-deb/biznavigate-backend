@@ -7,6 +7,13 @@ import { UpdateUserDto } from "../dto/update-user.dto";
 export class UsersRepository {
   constructor(private readonly prisma: PrismaService) {}
 
+  private readonly businessSummary = {
+    business_id: true,
+    tenant_id: true,
+    business_name: true,
+    business_type: true,
+  };
+
   // ✅ Create a user
   async createUser(data: CreateUserDto) {
     return await this.prisma.users.create({
@@ -19,7 +26,7 @@ export class UsersRepository {
         roles: { connect: { role_id: data.role_id } },
         is_active: data.is_active ?? true,
       },
-      include: { businesses: true },
+      include: { businesses: { select: this.businessSummary } },
     });
   }
 
@@ -38,7 +45,7 @@ export class UsersRepository {
     return await this.prisma.users.update({
       where: { user_id },
       data: updateData,
-      include: { businesses: true },
+      include: { businesses: { select: this.businessSummary } },
     });
   }
 
@@ -47,7 +54,7 @@ export class UsersRepository {
     return await this.prisma.users.update({
       where: { user_id },
       data: { role_id }, // <-- use scalar field
-      include: { businesses: true },
+      include: { businesses: { select: this.businessSummary } },
     });
   }
 
@@ -55,7 +62,7 @@ export class UsersRepository {
   async getUserById(user_id: string) {
     return await this.prisma.users.findFirst({
       where: { user_id, deleted_at: null },
-      include: { businesses: true },
+      include: { businesses: { select: this.businessSummary } },
     });
   }
 
@@ -65,7 +72,7 @@ export class UsersRepository {
     const [items, total] = await Promise.all([
       this.prisma.users.findMany({
         where,
-        include: { businesses: true },
+        include: { businesses: { select: this.businessSummary } },
         skip,
         take: limit,
         orderBy: { created_at: 'desc' },
@@ -83,7 +90,7 @@ export class UsersRepository {
         deleted_at: null,
         ...(business_id && { business_id }),
       },
-      include: { businesses: true },
+      include: { businesses: { select: this.businessSummary } },
     });
   }
 

@@ -11,6 +11,10 @@ export class UpdateBusinessDto {
   business_type?: string;
 
   @IsOptional()
+  @IsIn(["AI", "WORKFLOW"])
+  communication_mode?: string;
+
+  @IsOptional()
   @IsEmail()
   email?: string;
 

@@ -1,4 +1,5 @@
 import { Injectable, Logger } from '@nestjs/common';
+import { Cron, CronExpression } from '@nestjs/schedule';
 import { OnEvent } from '@nestjs/event-emitter';
 import { PrismaService } from '../../../../../prisma/prisma.service';
 import { LeadPreferenceWatchService } from './lead-preference-watch.service';
@@ -6,6 +7,8 @@ import { LeadPreferenceWatchService } from './lead-preference-watch.service';
 @Injectable()
 export class SmartCampaignTriggerService {
   private readonly logger = new Logger(SmartCampaignTriggerService.name);
+  private smartCampaignColumnsReady: boolean | null = null;
+  private smartCampaignColumnsWarned = false;
 
   constructor(
     private readonly prisma: PrismaService,
@@ -190,15 +193,20 @@ export class SmartCampaignTriggerService {
   }
 
   /** Staff approves a draft — status → approved, BullMQ picks it up. */
-  async approveDraft(campaignId: string, businessId: string) {
+  async approveDraft(campaignId: string, businessId: string, approvedBy = 'staff') {
     const draft = await this.prisma.campaigns.findFirst({
       where: { campaign_id: campaignId, business_id: businessId, status: 'pending_approval' },
     });
     if (!draft) return null;
 
+    const hasApprovalColumns = await this.hasSmartCampaignQueueColumns();
     return this.prisma.campaigns.update({
       where: { campaign_id: campaignId },
-      data: { status: 'approved', updated_at: new Date() },
+      data: {
+        status: 'approved',
+        ...(hasApprovalColumns ? { approved_at: new Date(), approved_by: approvedBy } : {}),
+        updated_at: new Date(),
+      },
     });
   }
 
@@ -217,6 +225,20 @@ export class SmartCampaignTriggerService {
     triggerMeta: Record<string, any>,
   ) {
     const tenantId = await this.resolveTenantId(businessId);
+    const hasQueueColumns = await this.hasSmartCampaignQueueColumns();
+    const deduplicationKey = this.buildDeduplicationKey(businessId, triggerMeta);
+    if (hasQueueColumns) {
+      const existing = await this.prisma.campaigns.findUnique({
+        where: { deduplication_key: deduplicationKey },
+        select: { campaign_id: true },
+      });
+      if (existing) {
+        this.logger.debug(`Smart campaign draft skipped by dedupe key ${deduplicationKey}`);
+        return existing;
+      }
+    }
+
+    const autoApproveAt = new Date(Date.now() + this.getAutoApproveHours() * 60 * 60 * 1000);
 
     const draft = await this.prisma.campaigns.create({
       data: {
@@ -229,6 +251,10 @@ export class SmartCampaignTriggerService {
         audience_type: 'leads',
         audience_filter: { lead_ids: leadIds, trigger_meta: triggerMeta } as any,
         total_recipients: leadIds.length,
+        ...(hasQueueColumns ? {
+          auto_approve_at: autoApproveAt,
+          deduplication_key: deduplicationKey,
+        } : {}),
       },
     });
 
@@ -247,6 +273,81 @@ export class SmartCampaignTriggerService {
       `Smart campaign draft created: ${draft.campaign_id} for ${leadIds.length} leads — ${campaignName}`,
     );
     return draft;
+  }
+
+  @Cron(CronExpression.EVERY_5_MINUTES)
+  async autoApprovePendingDrafts() {
+    if (!(await this.hasSmartCampaignQueueColumns())) return 0;
+
+    const due = await this.prisma.campaigns.findMany({
+      where: {
+        campaign_type: 'smart_trigger',
+        status: 'pending_approval',
+        auto_approve_at: { lte: new Date() },
+      },
+      select: { campaign_id: true, business_id: true },
+      take: 100,
+    });
+    if (!due.length) return 0;
+
+    let approved = 0;
+    for (const draft of due) {
+      const result = await this.approveDraft(draft.campaign_id, draft.business_id, 'auto');
+      if (result) approved++;
+    }
+
+    this.logger.log(`Auto-approved ${approved} smart campaign draft(s)`);
+    return approved;
+  }
+
+  private buildDeduplicationKey(businessId: string, triggerMeta: Record<string, any>) {
+    const trigger = String(triggerMeta.trigger ?? 'unknown');
+    const item = String(
+      triggerMeta.item_id ??
+      triggerMeta.course_id ??
+      triggerMeta.batch_id ??
+      triggerMeta.activity_name ??
+      'none',
+    );
+    const eventDate = String(
+      triggerMeta.triggered_at ??
+      triggerMeta.available_from ??
+      triggerMeta.new_price ??
+      new Date().toISOString().slice(0, 10),
+    );
+    return `${businessId}:${trigger}:${item}:${eventDate}`;
+  }
+
+  private getAutoApproveHours() {
+    const configured = Number(process.env.SMART_CAMPAIGN_AUTO_APPROVE_HOURS ?? 24);
+    return Number.isFinite(configured) && configured > 0 ? configured : 24;
+  }
+
+  private async hasSmartCampaignQueueColumns() {
+    if (this.smartCampaignColumnsReady !== null) return this.smartCampaignColumnsReady;
+
+    const rows = await this.prisma.$queryRaw<Array<{ column_name: string }>>`
+      SELECT column_name
+      FROM information_schema.columns
+      WHERE table_schema = current_schema()
+        AND table_name = 'campaigns'
+        AND column_name IN ('approved_at', 'approved_by', 'auto_approve_at', 'deduplication_key')
+    `;
+    const found = new Set(rows.map((row) => row.column_name));
+    this.smartCampaignColumnsReady =
+      found.has('approved_at') &&
+      found.has('approved_by') &&
+      found.has('auto_approve_at') &&
+      found.has('deduplication_key');
+
+    if (!this.smartCampaignColumnsReady && !this.smartCampaignColumnsWarned) {
+      this.smartCampaignColumnsWarned = true;
+      this.logger.warn(
+        'Smart campaign auto-approval is disabled until migration 20260603_business_automation_metadata is applied.',
+      );
+    }
+
+    return this.smartCampaignColumnsReady;
   }
 
   private async resolveTenantId(businessId: string): Promise<string> {

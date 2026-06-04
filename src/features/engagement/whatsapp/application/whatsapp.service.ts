@@ -282,7 +282,6 @@ export class WhatsAppService {
     try {
       const account = await this.prisma.social_accounts.findFirst({
         where: { page_id: phoneNumberId, platform: 'whatsapp', is_active: true },
-        include: { businesses: true },
       });
 
       if (!account) {

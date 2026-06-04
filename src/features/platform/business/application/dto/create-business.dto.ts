@@ -15,6 +15,7 @@ export const BUSINESS_TYPES = [
   'events',
   'products',
   'retail',
+  'used_cars',
   'healthcare',
   'real_estate',
   'professional_services',

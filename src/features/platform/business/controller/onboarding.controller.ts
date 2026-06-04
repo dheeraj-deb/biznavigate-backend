@@ -1,7 +1,9 @@
-import { Body, Controller, Post, Request, UseGuards } from "@nestjs/common";
+import { Body, Controller, Logger, Post, Request, UseGuards } from "@nestjs/common";
 import { JwtAuthGuard } from "../../../../common/guards/jwt-auth.guard";
 import { PrismaService } from "src/prisma/prisma.service";
 import { UpdateBusinessDto } from "../application/dto/update-business.dto";
+import { buildBusinessAutomationDefaults } from "../domain/business-classification";
+import { BusinessBlueprintSeedService } from "../application/business-blueprint-seed.service";
 import { Type } from "class-transformer";
 import {
   IsEmail,
@@ -49,7 +51,12 @@ class CompleteOnboardingDto extends UpdateBusinessDto {
 @UseGuards(JwtAuthGuard)
 @Controller("onboarding")
 export class OnboardingController {
-  constructor(private readonly prisma: PrismaService) {}
+  private readonly logger = new Logger(OnboardingController.name);
+
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly businessBlueprints: BusinessBlueprintSeedService
+  ) {}
 
   @Post("complete")
   async complete(@Request() req, @Body() dto: CompleteOnboardingDto) {
@@ -60,11 +67,16 @@ export class OnboardingController {
       whatsapp_safety_acknowledged,
       ...businessData
     } = dto;
+    const automationDefaults =
+      businessData.business_type !== undefined
+        ? buildBusinessAutomationDefaults(businessData.business_type)
+        : {};
 
     const business = await this.prisma.businesses.update({
       where: { business_id },
       data: {
         ...businessData,
+        ...automationDefaults,
         ...(employees?.length && {
           business_employees: {
             create: employees,
@@ -99,6 +111,21 @@ export class OnboardingController {
       },
     });
 
+    let business_blueprints: any = null;
+    let blueprintSeeded = business.blueprint_seeded;
+    let blueprintSeededAt = business.blueprint_seeded_at;
+    try {
+      business_blueprints = await this.businessBlueprints.seedForBusiness(business_id);
+      blueprintSeeded = business_blueprints.status === "seeded";
+      blueprintSeededAt = business_blueprints.blueprint_seeded_at ?? null;
+    } catch (error: any) {
+      this.logger.warn(`Business blueprint seed skipped: ${error?.message ?? error}`);
+      business_blueprints = {
+        status: "skipped",
+        reason: error?.message ?? "business_blueprint_seed_failed",
+      };
+    }
+
     const { business_employees, ...businessFields } = business;
 
     return {
@@ -109,6 +136,10 @@ export class OnboardingController {
           tenant_id: businessFields.tenant_id,
           business_name: businessFields.business_name,
           business_type: businessFields.business_type,
+          business_group: businessFields.business_group,
+          communication_mode: businessFields.communication_mode,
+          blueprint_seeded: blueprintSeeded,
+          blueprint_seeded_at: blueprintSeededAt,
           email: businessFields.email,
           phone: businessFields.phone,
           city: businessFields.city,
@@ -122,6 +153,7 @@ export class OnboardingController {
           role: e.role ?? null,
           temp_password: e.temp_password ?? null,
         })),
+        business_blueprints,
       },
     };
   }

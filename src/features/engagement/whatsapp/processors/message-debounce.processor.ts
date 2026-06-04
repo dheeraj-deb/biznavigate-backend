@@ -120,6 +120,13 @@ export class MessageDebounceProcessor extends WorkerHost {
     const customerPhone = lastPayload.context?.contact?.from;
 
     try {
+      const communicationMode = await this.resolveCommunicationMode(lastPayload.business_id);
+      if (communicationMode === 'WORKFLOW') {
+        this.logger.log(`Routing conv ${conversationId} to workflow mode`);
+        await this.kafkaProducer.publishTextMessage({ ...lastPayload, user_input: combinedText });
+        return;
+      }
+
       if (await this.handleNativeBookingDraftMessage(combinedText, lastPayload, agentCtx, phoneNumberId, customerPhone, conversationId, customerLanguage)) {
         return;
       }
@@ -150,6 +157,14 @@ export class MessageDebounceProcessor extends WorkerHost {
       this.logger.error(`Agent failed for conv ${conversationId}, falling back to workflow: ${err.message}`);
       await this.kafkaProducer.publishTextMessage({ ...lastPayload, user_input: combinedText });
     }
+  }
+
+  private async resolveCommunicationMode(businessId: string): Promise<'AI' | 'WORKFLOW'> {
+    const business = await this.prisma.businesses.findUnique({
+      where: { business_id: businessId },
+      select: { communication_mode: true },
+    });
+    return business?.communication_mode === 'WORKFLOW' ? 'WORKFLOW' : 'AI';
   }
 
   // Called externally (from whatsapp.service) when a new message arrives —

@@ -35,6 +35,11 @@ export class BusinessesController {
     return this.service.findById(req.user.business_id);
   }
 
+  @Post("settings/blueprints/seed")
+  seedCurrentBusinessBlueprints(@Req() req) {
+    return this.service.seedBlueprints(req.user.business_id);
+  }
+
   @Get("tenant/:tenant_id")
   findByTenant(@Param("tenant_id") tenant_id: string) {
     return this.service.findByTenant(tenant_id);
@@ -43,6 +48,11 @@ export class BusinessesController {
   @Get(":id")
   findById(@Param("id") id: string) {
     return this.service.findById(id);
+  }
+
+  @Post(":id/blueprints/seed")
+  seedBlueprints(@Param("id") id: string) {
+    return this.service.seedBlueprints(id);
   }
 
   @Patch(":id")

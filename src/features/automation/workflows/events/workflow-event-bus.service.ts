@@ -9,6 +9,7 @@ import { WorkflowsService } from '../workflows.service';
 import {
   BookingCancelledPayload,
   BookingCreatedPayload,
+  ExternalWorkflowEventPayload,
   LeadInactivePayload,
   LeadStatusChangedPayload,
   PaymentCapturedPayload,
@@ -61,9 +62,99 @@ export class WorkflowEventBusService {
     await this.dispatch('trigger.event.booking_cancelled', payload);
   }
 
+  @OnEvent('workflow.event.booking.link_sent')
+  async onBookingLinkSent(payload: ExternalWorkflowEventPayload) {
+    await this.dispatch('trigger.event.booking_link_sent', payload);
+  }
+
+  @OnEvent('workflow.event.booking.followup_due')
+  async onBookingFollowupDue(payload: ExternalWorkflowEventPayload) {
+    await this.dispatch('trigger.event.booking_followup_due', payload);
+  }
+
+  @OnEvent('workflow.event.booking.checkin_reminder_due')
+  async onBookingCheckinReminderDue(payload: ExternalWorkflowEventPayload) {
+    await this.dispatch('trigger.event.booking_checkin_reminder_due', payload);
+  }
+
+  @OnEvent('workflow.event.booking.review_request_due')
+  async onBookingReviewRequestDue(payload: ExternalWorkflowEventPayload) {
+    await this.dispatch('trigger.event.booking_review_request_due', payload);
+  }
+
+  @OnEvent('workflow.event.room.available')
+  async onRoomAvailable(payload: ExternalWorkflowEventPayload) {
+    await this.dispatch('trigger.event.room_available', payload);
+  }
+
   @OnEvent('workflow.event.payment.captured')
   async onPaymentCaptured(payload: PaymentCapturedPayload) {
     await this.dispatch('trigger.event.payment_captured', payload);
+  }
+
+  @OnEvent('workflow.event.payment.received')
+  async onPaymentReceived(payload: ExternalWorkflowEventPayload) {
+    await this.dispatch('trigger.event.payment_received', payload);
+  }
+
+  @OnEvent('workflow.event.payment.waiting')
+  async onPaymentWaiting(payload: ExternalWorkflowEventPayload) {
+    await this.dispatch('trigger.event.payment_waiting', payload);
+  }
+
+  @OnEvent('workflow.event.order.placed')
+  async onOrderPlaced(payload: ExternalWorkflowEventPayload) {
+    await this.dispatch('trigger.event.order_placed', payload);
+  }
+
+  @OnEvent('workflow.event.order.status_changed')
+  async onOrderStatusChanged(payload: ExternalWorkflowEventPayload) {
+    await this.dispatch('trigger.event.order_status_changed', payload);
+  }
+
+  @OnEvent('workflow.event.inventory.price_changed')
+  async onInventoryPriceChanged(payload: ExternalWorkflowEventPayload) {
+    await this.dispatch('trigger.event.inventory_price_changed', payload);
+  }
+
+  @OnEvent('workflow.event.inventory.item_added')
+  async onInventoryItemAdded(payload: ExternalWorkflowEventPayload) {
+    await this.dispatch('trigger.event.inventory_item_added', payload);
+  }
+
+  @OnEvent('workflow.event.inventory.restocked')
+  async onInventoryRestocked(payload: ExternalWorkflowEventPayload) {
+    await this.dispatch('trigger.event.inventory_restocked', payload);
+  }
+
+  @OnEvent('workflow.event.stock.held')
+  async onStockHeld(payload: ExternalWorkflowEventPayload) {
+    await this.dispatch('trigger.event.stock_held', payload);
+  }
+
+  @OnEvent('workflow.event.slot.opened')
+  async onSlotOpened(payload: ExternalWorkflowEventPayload) {
+    await this.dispatch('trigger.event.slot_opened', payload);
+  }
+
+  @OnEvent('workflow.event.credit.due')
+  async onCreditDue(payload: ExternalWorkflowEventPayload) {
+    await this.dispatch('trigger.event.credit_due', payload);
+  }
+
+  @OnEvent('workflow.event.dead_stock.offer')
+  async onDeadStockOffer(payload: ExternalWorkflowEventPayload) {
+    await this.dispatch('trigger.event.dead_stock_offer', payload);
+  }
+
+  @OnEvent('workflow.event.vehicle.details_shared')
+  async onVehicleDetailsShared(payload: ExternalWorkflowEventPayload) {
+    await this.dispatch('trigger.event.vehicle_details_shared', payload);
+  }
+
+  @OnEvent('workflow.event.vehicle.visit_slots_available')
+  async onVehicleVisitSlotsAvailable(payload: ExternalWorkflowEventPayload) {
+    await this.dispatch('trigger.event.vehicle_visit_slots_available', payload);
   }
 
   @OnEvent('workflow.event.lead.inactive')

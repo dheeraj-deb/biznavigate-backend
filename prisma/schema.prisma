@@ -14,6 +14,10 @@ model businesses {
   tenant_id                 String                      @db.Uuid
   business_name             String                      @db.VarChar(255)
   business_type             String?                     @db.VarChar(50)
+  business_group            String?                     @db.VarChar(5)
+  communication_mode        String                      @default("AI") @db.VarChar(20)
+  blueprint_seeded          Boolean                     @default(false)
+  blueprint_seeded_at       DateTime?                   @db.Timestamptz(6)
   whatsapp_number           String?                     @db.VarChar(20)
   created_at                DateTime                    @default(now()) @db.Timestamptz(6)
   updated_at                DateTime                    @default(now()) @db.Timestamptz(6)
@@ -60,6 +64,8 @@ model businesses {
   audit_logs                audit_logs[]
   @@index([tenant_id], map: "idx_businesses_tenant_id")
   @@index([business_type], map: "idx_businesses_business_type")
+  @@index([business_group], map: "idx_businesses_business_group")
+  @@index([communication_mode], map: "idx_businesses_communication_mode")
   @@index([public_booking_slug], map: "idx_businesses_public_booking_slug")
   @@index([deleted_at], map: "idx_businesses_deleted_at")
 }
@@ -531,6 +537,10 @@ model campaigns {
   channel                    String                  @db.VarChar(30)
   content_template           String?
   sent_at                    DateTime?               @db.Timestamptz(6)
+  approved_at                DateTime?               @db.Timestamptz(6)
+  approved_by                String?                 @db.VarChar(100)
+  auto_approve_at            DateTime?               @db.Timestamptz(6)
+  deduplication_key          String?                 @unique @db.VarChar(255)
   target_segment             Json?
   tenant_id                  String                  @db.Uuid
   audience_filter            Json?                   @default("{}")
@@ -554,6 +564,7 @@ model campaigns {
 
   @@index([business_id, status], map: "idx_campaigns_business_status")
   @@index([tenant_id], map: "idx_campaigns_tenant_id")
+  @@index([auto_approve_at], map: "idx_campaigns_auto_approve_at")
   @@index([scheduled_at], map: "idx_campaigns_scheduled_at")
   @@index([created_at(sort: Desc)], map: "idx_campaigns_created_at")
   @@index([audience_type], map: "idx_campaigns_audience_type")
@@ -622,6 +633,35 @@ model notification_templates {
   @@index([tenant_id], map: "idx_notification_templates_tenant_id")
   @@index([template_key], map: "idx_notification_templates_template_key")
   @@index([is_active], map: "idx_notification_templates_active")
+}
+
+/// Platform-owned starter/seed templates copied into each business during onboarding.
+model platform_starter_templates {
+  template_id   String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  key           String   @unique @db.VarChar(120)
+  name          String   @db.VarChar(255)
+  business_type String?  @db.VarChar(50)
+  kind          String   @db.VarChar(50)
+  version       String   @default("1.0.0") @db.VarChar(20)
+  description   String?
+  payload       Json
+  is_active     Boolean  @default(true)
+  created_at    DateTime @default(now()) @db.Timestamptz(6)
+  updated_at    DateTime @default(now()) @db.Timestamptz(6)
+
+  @@index([business_type, kind, is_active], map: "idx_platform_starter_templates_lookup")
+}
+
+/// Idempotency/audit table for starter templates installed into a business.
+model business_starter_template_installs {
+  id            String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  business_id   String   @db.Uuid
+  template_key  String   @db.VarChar(120)
+  template_kind String   @db.VarChar(50)
+  installed_at  DateTime @default(now()) @db.Timestamptz(6)
+
+  @@unique([business_id, template_key])
+  @@index([business_id, installed_at(sort: Desc)], map: "idx_business_starter_template_installs_business")
 }
 
 /// Notification Messages - All notification records
@@ -2030,4 +2070,3 @@ model lead_preference_watches {
   @@index([lead_id], map: "idx_pref_watches_lead")
   @@index([expires_at], map: "idx_pref_watches_expires")
 }
-

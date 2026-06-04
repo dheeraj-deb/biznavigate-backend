@@ -332,7 +332,7 @@ export class LeadController {
     @Req() req: any,
     @Param('campaignId') campaignId: string,
   ) {
-    return this.campaignTrigger.approveDraft(campaignId, req.user.business_id);
+    return this.campaignTrigger.approveDraft(campaignId, req.user.business_id, req.user.user_id);
   }
 
   @Post('campaigns/:campaignId/reject')

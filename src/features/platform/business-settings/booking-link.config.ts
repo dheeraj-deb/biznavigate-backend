@@ -156,6 +156,7 @@ export function inferExperienceType(businessType?: string | null): BookingLinkEx
       return 'education';
     case 'products':
     case 'retail':
+    case 'used_cars':
       return 'products';
     case 'professional_services':
       return 'services';

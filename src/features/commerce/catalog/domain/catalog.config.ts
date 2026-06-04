@@ -9,7 +9,7 @@ type CatalogConfig = { item_types: string[]; labels: Record<string, string> };
 // pipeline.service.ts pickIndustry() so both systems are always consistent.
 const CATALOG_RULES: Array<{ keywords: string[]; config: CatalogConfig }> = [
   {
-    keywords: ['automotive', 'used car', 'used_car', 'new car', 'new_car', 'vehicle', 'dealer'],
+    keywords: ['automotive', 'used car', 'used_car', 'used_cars', 'new car', 'new_car', 'vehicle', 'dealer'],
     config: {
       item_types: ['vehicle'],
       labels: { vehicle: 'Vehicles' },

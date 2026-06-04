@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { forwardRef, Module } from '@nestjs/common';
 import { PrismaModule } from '../../../prisma/prisma.module';
 import { AuditLogModule } from '../../platform/audit-log/audit-log.module';
 import { BookingsModule } from '../../industries/hospitality/bookings/bookings.module';
@@ -13,7 +13,7 @@ import { CreateProductOrderHandler } from './handlers/create-product-order.handl
 import { HandoffToHumanHandler } from './handlers/handoff-to-human.handler';
 
 @Module({
-  imports: [PrismaModule, AuditLogModule, BookingsModule, CartModule, LeadModule],
+  imports: [PrismaModule, AuditLogModule, BookingsModule, CartModule, forwardRef(() => LeadModule)],
   providers: [
     AiActionRouterService,
     CheckRoomAvailabilityHandler,
