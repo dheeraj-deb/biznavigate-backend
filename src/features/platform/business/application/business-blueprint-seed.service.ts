@@ -2,9 +2,30 @@ import { Injectable, Logger } from '@nestjs/common';
 import mongoose from 'mongoose';
 import { PrismaService } from '../../../../prisma/prisma.service';
 import { resolveBusinessGroupFromType } from '../domain/business-classification';
+import { SYSTEM_WHATSAPP_TEMPLATE_BLUEPRINTS } from '../../../engagement/whatsapp-templates/system-whatsapp-template-blueprints';
 
 type BlueprintGroup = 'A' | 'B' | 'C' | 'D';
 type WorkflowBlueprint = { key: string; name: string; description: string; nodes: any[]; connections: any };
+
+function connect(source: string, target: string) {
+  return { [source]: { main: [{ node: target }] } };
+}
+
+function templateName(key: string): string {
+  return SYSTEM_WHATSAPP_TEMPLATE_BLUEPRINTS.find((template) => template.key === key)?.name ?? key;
+}
+
+function sendTemplate(id: string, key: string, variables: string[]) {
+  return {
+    id,
+    type: 'action.send_template',
+    params: {
+      template_name: templateName(key),
+      language: 'en',
+      variables,
+    },
+  };
+}
 
 const GROUP_PIPELINES: Record<BlueprintGroup, { name: string; industry: string; stages: Array<any> }> = {
   A: {
@@ -64,15 +85,9 @@ const USED_CAR_WORKFLOWS: WorkflowBlueprint[] = [
     description: 'Follow-up after car details are shared and stock is confirmed, when the buyer goes silent.',
     nodes: [
       { id: 'details_shared', type: 'trigger.event.vehicle_details_shared', params: { event: 'vehicle.details_shared' } },
-      {
-        id: 'send_interest_check',
-        type: 'action.send_message',
-        params: {
-          message: 'Hi ${lead.name}, just checking if you are still interested in ${metadata.payload.car}. We can keep a visit slot for you today or tomorrow.',
-        },
-      },
+      sendTemplate('send_interest_check', 'used_car_details_followup', ['lead.name', 'metadata.payload.car']),
     ],
-    connections: { details_shared: [{ node: 'send_interest_check' }] },
+    connections: connect('details_shared', 'send_interest_check'),
   },
   {
     key: 'used_car_visit_appointment',
@@ -80,20 +95,9 @@ const USED_CAR_WORKFLOWS: WorkflowBlueprint[] = [
     description: 'Ask the buyer to choose a showroom visit slot for a specific used car.',
     nodes: [
       { id: 'slots_available', type: 'trigger.event.vehicle_visit_slots_available', params: { event: 'vehicle.visit_slots_available' } },
-      {
-        id: 'send_visit_slots',
-        type: 'action.send_message_with_btns',
-        params: {
-          message: 'Would you like to book a showroom visit for ${metadata.payload.car}? Available slots: ${metadata.payload.slot_1}, ${metadata.payload.slot_2}.',
-          buttons: [
-            { id: 'visit_slot_1', title: 'Slot 1' },
-            { id: 'visit_slot_2', title: 'Slot 2' },
-            { id: 'visit_not_now', title: 'Not now' },
-          ],
-        },
-      },
+      sendTemplate('send_visit_slots', 'used_car_visit_slots', ['lead.name', 'metadata.payload.car', 'metadata.payload.slot_1', 'metadata.payload.slot_2']),
     ],
-    connections: { slots_available: [{ node: 'send_visit_slots' }] },
+    connections: connect('slots_available', 'send_visit_slots'),
   },
 ];
 
@@ -105,20 +109,9 @@ const GROUP_WORKFLOWS: Record<BlueprintGroup, WorkflowBlueprint[]> = {
       description: 'Fires when a high-ticket lead reaches quoted status and can be used for 24-72h silent follow-up.',
       nodes: [
         { id: 'lead_quoted', type: 'trigger.event.lead_status_changed', params: { event: 'lead.status_changed', to_status: ['quoted'] } },
-        {
-          id: 'send_exit',
-          type: 'action.send_message_with_btns',
-          params: {
-            message: 'Hi {{lead.name}}! Still interested?',
-            buttons: [
-              { id: 'exit_yes_interested', title: 'Yes, interested' },
-              { id: 'exit_price_high', title: 'Price too high' },
-              { id: 'exit_not_interested', title: 'Not interested' },
-            ],
-          },
-        },
+        sendTemplate('send_exit', 'group_a_exit_interest_check', ['lead.name']),
       ],
-      connections: { lead_quoted: [{ node: 'send_exit' }] },
+      connections: connect('lead_quoted', 'send_exit'),
     },
   ],
   B: [
@@ -128,9 +121,9 @@ const GROUP_WORKFLOWS: Record<BlueprintGroup, WorkflowBlueprint[]> = {
       description: 'Runs when booking.created is emitted.',
       nodes: [
         { id: 'booking_created', type: 'trigger.event.booking_created', params: { event: 'booking.created' } },
-        { id: 'send_confirmation', type: 'action.send_message', params: { message: 'Your booking is confirmed. We will share details shortly.' } },
+        sendTemplate('send_confirmation', 'booking_confirmation', ['lead.name', 'metadata.payload.booking_reference']),
       ],
-      connections: { booking_created: [{ node: 'send_confirmation' }] },
+      connections: connect('booking_created', 'send_confirmation'),
     },
     {
       key: 'resort_booking_link_followup',
@@ -138,15 +131,9 @@ const GROUP_WORKFLOWS: Record<BlueprintGroup, WorkflowBlueprint[]> = {
       description: 'Reminder after a booking link is sent but the stay is not booked. Event should be emitted only after availability is checked.',
       nodes: [
         { id: 'booking_link_sent', type: 'trigger.event.booking_link_sent', params: { event: 'booking.link_sent' } },
-        {
-          id: 'send_booking_link_reminder',
-          type: 'action.send_message',
-          params: {
-            message: 'Hi ${lead.name}, your room is still available for ${metadata.payload.dates}. To avoid losing it, please confirm here: ${metadata.payload.booking_link}',
-          },
-        },
+        sendTemplate('send_booking_link_reminder', 'booking_link_followup', ['lead.name', 'metadata.payload.dates', 'metadata.payload.booking_link']),
       ],
-      connections: { booking_link_sent: [{ node: 'send_booking_link_reminder' }] },
+      connections: connect('booking_link_sent', 'send_booking_link_reminder'),
     },
     {
       key: 'resort_room_available_alert',
@@ -154,15 +141,9 @@ const GROUP_WORKFLOWS: Record<BlueprintGroup, WorkflowBlueprint[]> = {
       description: 'Sent only when a room opens for dates the customer previously asked for.',
       nodes: [
         { id: 'room_available', type: 'trigger.event.room_available', params: { event: 'room.available' } },
-        {
-          id: 'send_room_available',
-          type: 'action.send_message',
-          params: {
-            message: 'Hi ${lead.name}, a room is now available for ${metadata.payload.dates}. If you still need it, you can book here: ${metadata.payload.booking_link}',
-          },
-        },
+        sendTemplate('send_room_available', 'room_available_alert', ['lead.name', 'metadata.payload.dates', 'metadata.payload.booking_link']),
       ],
-      connections: { room_available: [{ node: 'send_room_available' }] },
+      connections: connect('room_available', 'send_room_available'),
     },
     {
       key: 'resort_enquiry_followup',
@@ -170,15 +151,9 @@ const GROUP_WORKFLOWS: Record<BlueprintGroup, WorkflowBlueprint[]> = {
       description: 'One reminder for customers who enquired but were not sent a booking link.',
       nodes: [
         { id: 'booking_followup_due', type: 'trigger.event.booking_followup_due', params: { event: 'booking.followup_due' } },
-        {
-          id: 'send_followup',
-          type: 'action.send_message',
-          params: {
-            message: 'Hi ${lead.name}, just checking if you still need stay. We can help confirm it now if needed.',
-          },
-        },
+        sendTemplate('send_followup', 'booking_enquiry_followup', ['lead.name']),
       ],
-      connections: { booking_followup_due: [{ node: 'send_followup' }] },
+      connections: connect('booking_followup_due', 'send_followup'),
     },
     {
       key: 'resort_checkin_reminder',
@@ -186,15 +161,9 @@ const GROUP_WORKFLOWS: Record<BlueprintGroup, WorkflowBlueprint[]> = {
       description: 'Service reminder one day before check-in for booked guests.',
       nodes: [
         { id: 'checkin_due', type: 'trigger.event.booking_checkin_reminder_due', params: { event: 'booking.checkin_reminder_due' } },
-        {
-          id: 'send_checkin',
-          type: 'action.send_message',
-          params: {
-            message: 'Hi ${lead.name}, reminder for your stay on ${metadata.payload.check_in}. We are ready to welcome you.',
-          },
-        },
+        sendTemplate('send_checkin', 'checkin_reminder', ['lead.name', 'metadata.payload.check_in']),
       ],
-      connections: { checkin_due: [{ node: 'send_checkin' }] },
+      connections: connect('checkin_due', 'send_checkin'),
     },
     {
       key: 'resort_review_request',
@@ -202,15 +171,9 @@ const GROUP_WORKFLOWS: Record<BlueprintGroup, WorkflowBlueprint[]> = {
       description: 'Review request after checkout for completed stays.',
       nodes: [
         { id: 'review_due', type: 'trigger.event.booking_review_request_due', params: { event: 'booking.review_request_due' } },
-        {
-          id: 'send_review_request',
-          type: 'action.send_message',
-          params: {
-            message: 'Hi ${lead.name}, thank you for staying with us. Please share your review here: ${metadata.payload.review_link}',
-          },
-        },
+        sendTemplate('send_review_request', 'review_request', ['lead.name', 'metadata.payload.review_link']),
       ],
-      connections: { review_due: [{ node: 'send_review_request' }] },
+      connections: connect('review_due', 'send_review_request'),
     },
     {
       key: 'group_b_exit_intent',
@@ -218,20 +181,9 @@ const GROUP_WORKFLOWS: Record<BlueprintGroup, WorkflowBlueprint[]> = {
       description: 'Fires when a booking lead reaches quoted status for date/price follow-up.',
       nodes: [
         { id: 'quote_shared', type: 'trigger.event.lead_status_changed', params: { event: 'lead.status_changed', to_status: ['quoted'] } },
-        {
-          id: 'send_exit',
-          type: 'action.send_message_with_btns',
-          params: {
-            message: 'Still planning your dates?',
-            buttons: [
-              { id: 'exit_book_now', title: 'Yes, book' },
-              { id: 'exit_changed_dates', title: 'Different dates' },
-              { id: 'exit_not_anymore', title: 'Not anymore' },
-            ],
-          },
-        },
+        sendTemplate('send_exit', 'booking_enquiry_followup', ['lead.name']),
       ],
-      connections: { quote_shared: [{ node: 'send_exit' }] },
+      connections: connect('quote_shared', 'send_exit'),
     },
   ],
   C: [
@@ -241,9 +193,9 @@ const GROUP_WORKFLOWS: Record<BlueprintGroup, WorkflowBlueprint[]> = {
       description: 'Runs when order.placed is emitted.',
       nodes: [
         { id: 'order_placed', type: 'trigger.event.order_placed', params: { event: 'order.placed' } },
-        { id: 'send_confirmation', type: 'action.send_message', params: { message: 'Your order is confirmed. We will update you on delivery.' } },
+        sendTemplate('send_confirmation', 'order_confirmation', ['lead.name', 'metadata.payload.order_number']),
       ],
-      connections: { order_placed: [{ node: 'send_confirmation' }] },
+      connections: connect('order_placed', 'send_confirmation'),
     },
     {
       key: 'seller_stock_held',
@@ -251,15 +203,9 @@ const GROUP_WORKFLOWS: Record<BlueprintGroup, WorkflowBlueprint[]> = {
       description: 'Sent after stock is held for a customer before releasing it.',
       nodes: [
         { id: 'stock_held', type: 'trigger.event.stock_held', params: { event: 'stock.held' } },
-        {
-          id: 'send_stock_held',
-          type: 'action.send_message',
-          params: {
-            message: 'Hi ${lead.name}, we have kept ${metadata.payload.product} for you. It will be released in ${metadata.payload.minutes} minutes. Pay/confirm here: ${metadata.payload.payment_link}',
-          },
-        },
+        sendTemplate('send_stock_held', 'stock_held_reminder', ['lead.name', 'metadata.payload.product', 'metadata.payload.minutes', 'metadata.payload.payment_link']),
       ],
-      connections: { stock_held: [{ node: 'send_stock_held' }] },
+      connections: connect('stock_held', 'send_stock_held'),
     },
     {
       key: 'seller_payment_waiting',
@@ -267,15 +213,9 @@ const GROUP_WORKFLOWS: Record<BlueprintGroup, WorkflowBlueprint[]> = {
       description: 'Sent when the order is ready but payment is not completed.',
       nodes: [
         { id: 'payment_waiting', type: 'trigger.event.payment_waiting', params: { event: 'payment.waiting' } },
-        {
-          id: 'send_payment_waiting',
-          type: 'action.send_message',
-          params: {
-            message: 'Hi ${lead.name}, your order for ${metadata.payload.product} is ready. Please complete payment here: ${metadata.payload.payment_link}',
-          },
-        },
+        sendTemplate('send_payment_waiting', 'payment_waiting', ['lead.name', 'metadata.payload.product', 'metadata.payload.payment_link']),
       ],
-      connections: { payment_waiting: [{ node: 'send_payment_waiting' }] },
+      connections: connect('payment_waiting', 'send_payment_waiting'),
     },
     {
       key: 'seller_restock_alert',
@@ -283,15 +223,9 @@ const GROUP_WORKFLOWS: Record<BlueprintGroup, WorkflowBlueprint[]> = {
       description: 'Sent only when a product the customer asked for is restocked.',
       nodes: [
         { id: 'restocked', type: 'trigger.event.inventory_restocked', params: { event: 'inventory.restocked' } },
-        {
-          id: 'send_restocked',
-          type: 'action.send_message',
-          params: {
-            message: 'Hi ${lead.name}, ${metadata.payload.product} is back in stock now. Reply YES if you want us to keep one for you.',
-          },
-        },
+        sendTemplate('send_restocked', 'restock_alert', ['lead.name', 'metadata.payload.product']),
       ],
-      connections: { restocked: [{ node: 'send_restocked' }] },
+      connections: connect('restocked', 'send_restocked'),
     },
     {
       key: 'seller_credit_due',
@@ -299,15 +233,9 @@ const GROUP_WORKFLOWS: Record<BlueprintGroup, WorkflowBlueprint[]> = {
       description: 'Reminder for credit customers with an amount due.',
       nodes: [
         { id: 'credit_due', type: 'trigger.event.credit_due', params: { event: 'credit.due' } },
-        {
-          id: 'send_credit_due',
-          type: 'action.send_message',
-          params: {
-            message: 'Hi ${lead.name}, your credit due is ${metadata.payload.amount}. Please pay by ${metadata.payload.date}. Reply if you need the bill details.',
-          },
-        },
+        sendTemplate('send_credit_due', 'credit_due', ['lead.name', 'metadata.payload.amount', 'metadata.payload.date']),
       ],
-      connections: { credit_due: [{ node: 'send_credit_due' }] },
+      connections: connect('credit_due', 'send_credit_due'),
     },
     {
       key: 'seller_dead_stock_offer',
@@ -315,15 +243,9 @@ const GROUP_WORKFLOWS: Record<BlueprintGroup, WorkflowBlueprint[]> = {
       description: 'Seller-selected offer campaign for relevant buyers.',
       nodes: [
         { id: 'dead_stock_offer', type: 'trigger.event.dead_stock_offer', params: { event: 'dead_stock.offer' } },
-        {
-          id: 'send_dead_stock_offer',
-          type: 'action.send_message',
-          params: {
-            message: 'Hi ${lead.name}, we have a limited offer on ${metadata.payload.product_category}. Price now ${metadata.payload.offer_price}. Reply YES to order.',
-          },
-        },
+        sendTemplate('send_dead_stock_offer', 'dead_stock_offer', ['lead.name', 'metadata.payload.product_category', 'metadata.payload.offer_price']),
       ],
-      connections: { dead_stock_offer: [{ node: 'send_dead_stock_offer' }] },
+      connections: connect('dead_stock_offer', 'send_dead_stock_offer'),
     },
   ],
   D: [],

@@ -36,10 +36,16 @@ export class SendTemplateNode extends ActionNode<SendTemplateParams> {
     if (!params.language || typeof params.language !== 'string') {
       throw new Error(`SendTemplateNode ${this.id}: 'language' is required`);
     }
+    const variables = Array.isArray(params.variables)
+      ? params.variables
+          .map((variable: any) => typeof variable === 'string' ? variable : variable?.path)
+          .filter((variable: any): variable is string => typeof variable === 'string' && variable.length > 0)
+      : [];
+
     return {
       template_name: params.template_name,
       language: params.language,
-      variables: Array.isArray(params.variables) ? params.variables : [],
+      variables,
       header_variable: params.header_variable ?? '',
     };
   }

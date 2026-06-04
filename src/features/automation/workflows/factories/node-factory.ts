@@ -555,11 +555,7 @@ export class NodeFactory {
                 { key: 'template_name', type: 'string' },
                 { key: 'language', type: 'string' },
                 { key: 'header_variable', type: 'string' },
-                {
-                    key: 'variables', type: 'array', items: [
-                        { key: 'path', type: 'string' },
-                    ]
-                },
+                { key: 'variables', type: 'array' },
             ],
         },
 

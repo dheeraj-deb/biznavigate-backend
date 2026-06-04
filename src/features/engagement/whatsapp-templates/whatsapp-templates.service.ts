@@ -10,6 +10,11 @@ import { PrismaService } from "../../../prisma/prisma.service";
 import { QueryTemplateDto } from "./dto/query-template.dto";
 import { GupshupOnboardingService } from "../gupshup/gupshup-onboarding.service";
 import axios from 'axios';
+import {
+    getSystemWhatsAppTemplatesForBusiness,
+    TemplateBlueprintGroup,
+} from './system-whatsapp-template-blueprints';
+import { resolveBusinessGroupFromType } from '../../platform/business/domain/business-classification';
 
 @Injectable()
 export class WhatsAppTemplatesService {
@@ -103,7 +108,7 @@ export class WhatsAppTemplatesService {
             ? await this.gupshupOnboarding.getPartnerAppToken(gupshupAppId).catch(() => null)
             : null;
 
-        let metaResult: { id: string; status: string };
+        let metaResult: { id: string; status: string; providerTemplateName?: string };
         try {
             if (gupshupToken && gupshupAppId) {
                 // Build example by replacing {{N}} placeholders with sample values
@@ -116,9 +121,7 @@ export class WhatsAppTemplatesService {
 
                 // Gupshup elementName: lowercase, alphanumeric + underscores only
                 // Must be globally unique — append last 8 chars of appId as suffix
-                const baseName = template.name.toLowerCase().replace(/[^a-z0-9_]/g, '_').replace(/^_+|_+$/g, '');
-                const appSuffix = gupshupAppId.replace(/-/g, '').slice(-8);
-                const elementName = `${baseName}_${appSuffix}`;
+                const elementName = this.gupshupProviderTemplateName(template.name, gupshupAppId);
 
                 const hasVariables = /\{\{\d+\}\}/.test(bodyText);
 
@@ -163,7 +166,11 @@ export class WhatsAppTemplatesService {
                 );
                 this.logger.log(`[Template] Gupshup response: ${JSON.stringify(data)}`);
                 const gTemplate = data?.template ?? data;
-                metaResult = { id: gTemplate?.id ?? elementName, status: gTemplate?.status ?? 'PENDING' };
+                metaResult = {
+                    id: gTemplate?.id ?? elementName,
+                    status: gTemplate?.status ?? 'PENDING',
+                    providerTemplateName: elementName,
+                };
             } else {
                 metaResult = await this.metaApi.createTemplate(
                     whatsappBusinessAccountId,
@@ -198,6 +205,7 @@ export class WhatsAppTemplatesService {
         await this.templateModel.findByIdAndUpdate(templateId, {
             status: newStatus,
             metaTemplateId: id,
+            ...(metaResult.providerTemplateName && { providerTemplateName: metaResult.providerTemplateName }),
             $push: {
                 submissionHistory: { submittedAt: new Date(), status: newStatus },
             },
@@ -262,6 +270,113 @@ export class WhatsAppTemplatesService {
         return template;
     }
 
+    async applySystemBlueprintTemplates(businessId: string) {
+        const business = await this.prisma.businesses.findUnique({
+            where: { business_id: businessId },
+            select: {
+                business_id: true,
+                business_type: true,
+                business_group: true,
+            },
+        });
+        if (!business) throw new NotFoundException('Business not found');
+
+        const account = await this.prisma.social_accounts.findFirst({
+            where: { business_id: businessId, platform: 'whatsapp', is_active: true },
+            select: { account_id: true },
+        });
+        if (!account) {
+            return { status: 'skipped', reason: 'whatsapp_not_connected', created: 0, submitted: 0, skipped: 0, failed: 0, templates: [] };
+        }
+
+        const group = (business.business_group ?? resolveBusinessGroupFromType(business.business_type)) as TemplateBlueprintGroup | null;
+        if (!group) {
+            return { status: 'skipped', reason: 'unsupported_business_type', created: 0, submitted: 0, skipped: 0, failed: 0, templates: [] };
+        }
+
+        const blueprints = getSystemWhatsAppTemplatesForBusiness(group, business.business_type);
+        const result = {
+            status: 'synced',
+            group,
+            created: 0,
+            submitted: 0,
+            skipped: 0,
+            failed: 0,
+            templates: [] as Array<{
+                key: string;
+                name: string;
+                category: TemplateCategory;
+                status: string;
+                action: 'created' | 'submitted' | 'skipped' | 'failed';
+                error?: string;
+            }>,
+        };
+
+        for (const blueprint of blueprints) {
+            try {
+                let template = await this.templateModel.findOne({
+                    businessId,
+                    name: blueprint.name,
+                    language: blueprint.language,
+                    isDeleted: false,
+                });
+
+                let created = false;
+                if (!template) {
+                    const checksum = this.generateChecksum(blueprint);
+                    template = await this.templateModel.create({
+                        businessId,
+                        name: blueprint.name,
+                        category: blueprint.category,
+                        language: blueprint.language,
+                        components: blueprint.components,
+                        checksum,
+                        status: TemplateStatus.DRAFT,
+                        source: 'SYSTEM_BLUEPRINT',
+                        systemTemplateKey: blueprint.key,
+                        policyUse: blueprint.policyUse,
+                    } as any);
+                    created = true;
+                    result.created++;
+                }
+
+                if ([TemplateStatus.DRAFT, TemplateStatus.REJECTED].includes(template.status)) {
+                    const submitted = await this.submit(businessId, String(template._id));
+                    result.submitted++;
+                    result.templates.push({
+                        key: blueprint.key,
+                        name: blueprint.name,
+                        category: blueprint.category,
+                        status: submitted.status,
+                        action: created ? 'created' : 'submitted',
+                    });
+                } else {
+                    result.skipped++;
+                    result.templates.push({
+                        key: blueprint.key,
+                        name: blueprint.name,
+                        category: blueprint.category,
+                        status: template.status,
+                        action: 'skipped',
+                    });
+                }
+            } catch (error) {
+                result.failed++;
+                result.templates.push({
+                    key: blueprint.key,
+                    name: blueprint.name,
+                    category: blueprint.category,
+                    status: TemplateStatus.REJECTED,
+                    action: 'failed',
+                    error: error?.message ?? 'Template sync failed',
+                });
+                this.logger.warn(`[SystemTemplate] Failed to apply ${blueprint.name} for business ${businessId}: ${error?.message ?? error}`);
+            }
+        }
+
+        return result;
+    }
+
     async update(businessId: string, templateId: string, dto: Partial<CreateTemplateDto>) {
         const template = await this.findOneOrFail(businessId, templateId);
 
@@ -322,6 +437,7 @@ export class WhatsAppTemplatesService {
         if (!account) throw new NotFoundException('No active WhatsApp account found');
 
         const wabaId = account.instagram_business_account_id;
+        const gupshupAppId = account.gupshup_app_id;
 
         const metaTemplates = await this.metaApi.getTemplates(wabaId);
 
@@ -334,20 +450,28 @@ export class WhatsAppTemplatesService {
             const language = mt.language ?? 'en';
             const category = (mt.category as TemplateCategory) ?? TemplateCategory.MARKETING;
 
-            // Match by metaTemplateId first, then name+language (covers Gupshup-submitted templates)
+            const providerName = String(mt.name ?? '');
+            const canonicalBlueprintName = this.resolveCanonicalBlueprintName(providerName, gupshupAppId);
+
+            // Match by provider id/name first, then our canonical blueprint name.
+            // Gupshup appends an app-specific suffix to elementName, but workflows
+            // should continue referencing the stable unsuffixed system name.
             const existing = await this.templateModel.findOne({
                 businessId,
                 isDeleted: false,
                 $or: [
                     { metaTemplateId: String(mt.id) },
-                    { name: mt.name, language },
+                    { providerTemplateName: providerName, language },
+                    { name: providerName, language },
+                    ...(canonicalBlueprintName ? [{ name: canonicalBlueprintName, language }] : []),
                 ],
             });
 
             if (existing) {
                 await this.templateModel.findByIdAndUpdate(existing._id, {
                     status,
-                    metaTemplateId: String(mt.id), // update in case it was a Gupshup ID before
+                    metaTemplateId: String(mt.id),
+                    providerTemplateName: providerName,
                     ...(mt.rejected_reason && { rejectionReason: mt.rejected_reason }),
                 });
                 updated++;
@@ -361,6 +485,7 @@ export class WhatsAppTemplatesService {
                     components,
                     status,
                     metaTemplateId: String(mt.id),
+                    providerTemplateName: providerName,
                     checksum,
                     ...(mt.rejected_reason && { rejectionReason: mt.rejected_reason }),
                 });
@@ -557,6 +682,19 @@ export class WhatsAppTemplatesService {
             //   DISABLED: TemplateStatus.DISABLED,
         };
         return map[metaStatus] ?? TemplateStatus.PENDING;
+    }
+
+    private gupshupProviderTemplateName(name: string, gupshupAppId: string): string {
+        const baseName = name.toLowerCase().replace(/[^a-z0-9_]/g, '_').replace(/^_+|_+$/g, '');
+        const appSuffix = gupshupAppId.replace(/-/g, '').slice(-8);
+        return `${baseName}_${appSuffix}`;
+    }
+
+    private resolveCanonicalBlueprintName(providerName: string, gupshupAppId?: string | null): string | null {
+        if (!gupshupAppId || !providerName) return null;
+        const appSuffix = `_${gupshupAppId.replace(/-/g, '').slice(-8)}`;
+        if (!providerName.endsWith(appSuffix)) return null;
+        return providerName.slice(0, -appSuffix.length);
     }
 
 }

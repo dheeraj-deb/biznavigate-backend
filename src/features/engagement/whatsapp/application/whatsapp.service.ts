@@ -7,6 +7,7 @@ import { WhatsAppCatalogOrderService } from './catalog/whatsapp-catalog-order.se
 import { ConversationService } from '../../../crm/conversation/conversation.service';
 import { WhatsAppWebhookDto } from '../dto/webhook-event.dto';
 import { WhatsAppTemplatesService } from '../../whatsapp-templates/whatsapp-templates.service';
+import { TemplateStatus } from '../../whatsapp-templates/enums/template.enum';
 import { GupshupOnboardingService } from '../../gupshup/gupshup-onboarding.service';
 import { AutomationRouter } from './inbound/automation-router.service';
 import { ContactResolutionService } from './inbound/contact-resolution.service';
@@ -663,6 +664,9 @@ export class WhatsAppService {
     if (message.template) {
       try {
         const tmpl = await this.whatsappTemplatesService.findByName(businessId, message.template.name);
+        if (tmpl.status !== TemplateStatus.APPROVED) {
+          throw new Error(`WhatsApp template "${message.template.name}" is ${tmpl.status}; wait for Meta approval before sending`);
+        }
 
         // Substitute {{N}} in body with parameters from the DTO's body component
         const bodyComponent = message.template.components?.find(c => c.type === 'body');
@@ -705,9 +709,8 @@ export class WhatsAppService {
         };
 
         return { text: renderedBody, metadata };
-      } catch {
-        // Template not found in local DB — fall back gracefully
-        return { text: `Template: ${message.template.name}` };
+      } catch (error) {
+        throw error;
       }
     }
 

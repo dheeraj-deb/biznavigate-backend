@@ -6,7 +6,6 @@ import { BillingModule } from './billing/billing.module';
 import { BusinessesModule } from './business/business.module';
 import { BusinessSettingsModule } from './business-settings/business-settings.module';
 import { RolesModule } from './roles/role.module';
-import { StarterTemplatesModule } from './starter-templates/starter-templates.module';
 import { TenantsModule } from './tenants/tenants.module';
 import { UsersModule } from './users/user.module';
 
@@ -26,7 +25,6 @@ import { UsersModule } from './users/user.module';
     BillingModule,
     AuditLogModule,
     BusinessSettingsModule,
-    StarterTemplatesModule,
     S3Module,
   ],
   exports: [
@@ -38,7 +36,6 @@ import { UsersModule } from './users/user.module';
     BillingModule,
     AuditLogModule,
     BusinessSettingsModule,
-    StarterTemplatesModule,
     S3Module,
   ],
 })

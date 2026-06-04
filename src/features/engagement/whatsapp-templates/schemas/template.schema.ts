@@ -97,6 +97,9 @@ export class WhatsAppTemplate {
     metaTemplateId?: string;
 
     @Prop()
+    providerTemplateName?: string;
+
+    @Prop()
     rejectionReason?: string;
 
     @Prop({ type: [{ submittedAt: Date, status: String, reason: String }], default: [] })
@@ -110,6 +113,15 @@ export class WhatsAppTemplate {
 
     @Prop()
     checksum?: string;
+
+    @Prop()
+    source?: string;
+
+    @Prop()
+    systemTemplateKey?: string;
+
+    @Prop()
+    policyUse?: string;
 }
 
 export type WhatsAppTemplateDocument = WhatsAppTemplate & Document;

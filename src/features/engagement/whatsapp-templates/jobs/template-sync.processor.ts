@@ -79,10 +79,9 @@ export class TemplateSyncProcessor extends WorkerHost {
                 const httpStatus = err?.response?.status;
                 if (httpStatus === 404 || httpStatus === 400) {
                     await this.templateModel.findByIdAndUpdate(template._id, {
-                        status: TemplateStatus.REJECTED,
-                        rejectionReason: `Provider sync failed (${httpStatus}): ${errDetail}`,
+                        rejectionReason: `Provider status lookup failed (${httpStatus}): ${errDetail}`,
                     }).catch(() => {});
-                    this.logger.warn(`Template ${template._id} marked REJECTED after sync failure (${httpStatus})`);
+                    this.logger.warn(`Template ${template._id} left PENDING after provider status lookup failure (${httpStatus})`);
                 }
             }
         }

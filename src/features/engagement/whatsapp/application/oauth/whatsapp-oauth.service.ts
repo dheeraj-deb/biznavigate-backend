@@ -4,6 +4,7 @@ import { PrismaService } from '../../../../../prisma/prisma.service';
 import { WhatsAppApiClientService } from '../../infrastructure/whatsapp-api-client.service';
 import * as crypto from 'crypto';
 import { GupshupOnboardingService } from 'src/features/engagement/gupshup/gupshup-onboarding.service';
+import { WhatsAppTemplatesService } from '../../../whatsapp-templates/whatsapp-templates.service';
 
 interface StateData {
   businessId: string;
@@ -32,6 +33,7 @@ export class WhatsAppOAuthService {
     private readonly prisma: PrismaService,
     private readonly apiClient: WhatsAppApiClientService,
     private readonly gupshupOnboardingService: GupshupOnboardingService,
+    private readonly whatsappTemplatesService: WhatsAppTemplatesService,
   ) { }
 
   /**
@@ -150,6 +152,7 @@ export class WhatsAppOAuthService {
     }
 
     await this.attachFirstCatalogIfAvailable(account.account_id, resolvedWabaId);
+    await this.applyBlueprintTemplatesNonBlocking(businessId);
 
     // Subscribe this platform to webhooks (optional for Gupshup, but good for our backend)
     // await this.subscribeToWebhooks(resolvedWabaId);
@@ -177,6 +180,15 @@ export class WhatsAppOAuthService {
       phoneNumber: phoneNumber.display_phone_number,
       verifiedName: phoneNumber.verified_name || phoneNumber.display_phone_number,
     };
+  }
+
+  private async applyBlueprintTemplatesNonBlocking(businessId: string): Promise<void> {
+    try {
+      const result = await this.whatsappTemplatesService.applySystemBlueprintTemplates(businessId);
+      this.logger.log(`Blueprint WhatsApp templates applied for business ${businessId}: ${JSON.stringify(result)}`);
+    } catch (error) {
+      this.logger.warn(`Blueprint WhatsApp template apply failed for business ${businessId}: ${error?.message ?? error}`);
+    }
   }
 
   private async attachFirstCatalogIfAvailable(accountId: string, wabaId: string): Promise<void> {
