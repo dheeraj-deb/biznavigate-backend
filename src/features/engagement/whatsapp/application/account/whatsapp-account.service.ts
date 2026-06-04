@@ -2,6 +2,7 @@ import { Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../../../../../prisma/prisma.service';
 import { CircuitBreakerService } from '../../infrastructure/circuit-breaker.service';
 import { WhatsAppApiClientService } from '../../infrastructure/whatsapp-api-client.service';
+import { WhatsAppTemplatesService } from '../../../whatsapp-templates/whatsapp-templates.service';
 
 @Injectable()
 export class WhatsAppAccountService {
@@ -12,6 +13,7 @@ export class WhatsAppAccountService {
     private readonly prisma: PrismaService,
     private readonly apiClient: WhatsAppApiClientService,
     private readonly circuitBreaker: CircuitBreakerService,
+    private readonly whatsappTemplatesService: WhatsAppTemplatesService,
   ) {}
 
   async connectWhatsAppAccount(
@@ -47,6 +49,7 @@ export class WhatsAppAccountService {
       });
 
       await this.apiClient.subscribeToWebhooks(whatsappBusinessAccountId);
+      await this.applyBlueprintTemplatesNonBlocking(businessId);
 
       this.logger.log(`WhatsApp account ${phoneDetails.display_phone_number} connected for business ${businessId}`);
 
@@ -216,5 +219,14 @@ export class WhatsAppAccountService {
       where: { account_id: accountId },
       select: { meta_account_review_status: true, meta_verification_checked_at: true },
     });
+  }
+
+  private async applyBlueprintTemplatesNonBlocking(businessId: string): Promise<void> {
+    try {
+      const result = await this.whatsappTemplatesService.applySystemBlueprintTemplates(businessId);
+      this.logger.log(`Blueprint WhatsApp templates applied for business ${businessId}: ${JSON.stringify(result)}`);
+    } catch (error) {
+      this.logger.warn(`Blueprint WhatsApp template apply failed for business ${businessId}: ${error?.message ?? error}`);
+    }
   }
 }

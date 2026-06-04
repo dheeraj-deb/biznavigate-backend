@@ -19,6 +19,13 @@ export class WhatsAppTemplatesController {
         return this.service.syncFromMeta(req.user.business_id);
     }
 
+    // POST /whatsapp/templates/apply-system-blueprints — create/submit default templates for this business type
+    @Post('apply-system-blueprints')
+    @HttpCode(HttpStatus.OK)
+    applySystemBlueprints(@Req() req) {
+        return this.service.applySystemBlueprintTemplates(req.user.business_id);
+    }
+
     @Post()
     create(@Req() req, @Body() dto: CreateTemplateDto) {
         const businessId = req.user.business_id; // from JWT
