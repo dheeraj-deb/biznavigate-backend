@@ -15,7 +15,7 @@ model businesses {
   business_name             String                      @db.VarChar(255)
   business_type             String?                     @db.VarChar(50)
   business_group            String?                     @db.VarChar(5)
-  communication_mode        String                      @default("AI") @db.VarChar(20)
+  communication_mode        String                      @default("WORKFLOW") @db.VarChar(20)
   blueprint_seeded          Boolean                     @default(false)
   blueprint_seeded_at       DateTime?                   @db.Timestamptz(6)
   whatsapp_number           String?                     @db.VarChar(20)
@@ -633,35 +633,6 @@ model notification_templates {
   @@index([tenant_id], map: "idx_notification_templates_tenant_id")
   @@index([template_key], map: "idx_notification_templates_template_key")
   @@index([is_active], map: "idx_notification_templates_active")
-}
-
-/// Platform-owned starter/seed templates copied into each business during onboarding.
-model platform_starter_templates {
-  template_id   String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  key           String   @unique @db.VarChar(120)
-  name          String   @db.VarChar(255)
-  business_type String?  @db.VarChar(50)
-  kind          String   @db.VarChar(50)
-  version       String   @default("1.0.0") @db.VarChar(20)
-  description   String?
-  payload       Json
-  is_active     Boolean  @default(true)
-  created_at    DateTime @default(now()) @db.Timestamptz(6)
-  updated_at    DateTime @default(now()) @db.Timestamptz(6)
-
-  @@index([business_type, kind, is_active], map: "idx_platform_starter_templates_lookup")
-}
-
-/// Idempotency/audit table for starter templates installed into a business.
-model business_starter_template_installs {
-  id            String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  business_id   String   @db.Uuid
-  template_key  String   @db.VarChar(120)
-  template_kind String   @db.VarChar(50)
-  installed_at  DateTime @default(now()) @db.Timestamptz(6)
-
-  @@unique([business_id, template_key])
-  @@index([business_id, installed_at(sort: Desc)], map: "idx_business_starter_template_installs_business")
 }
 
 /// Notification Messages - All notification records

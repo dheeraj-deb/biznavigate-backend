@@ -6,6 +6,10 @@ import { resolveBusinessGroupFromType } from '../domain/business-classification'
 type BlueprintGroup = 'A' | 'B' | 'C' | 'D';
 type WorkflowBlueprint = { key: string; name: string; description: string; nodes: any[]; connections: any };
 
+function connect(source: string, target: string) {
+  return { [source]: { main: [{ node: target }] } };
+}
+
 const GROUP_PIPELINES: Record<BlueprintGroup, { name: string; industry: string; stages: Array<any> }> = {
   A: {
     name: 'High Ticket Sales',
@@ -72,7 +76,7 @@ const USED_CAR_WORKFLOWS: WorkflowBlueprint[] = [
         },
       },
     ],
-    connections: { details_shared: [{ node: 'send_interest_check' }] },
+    connections: connect('details_shared', 'send_interest_check'),
   },
   {
     key: 'used_car_visit_appointment',
@@ -93,7 +97,7 @@ const USED_CAR_WORKFLOWS: WorkflowBlueprint[] = [
         },
       },
     ],
-    connections: { slots_available: [{ node: 'send_visit_slots' }] },
+    connections: connect('slots_available', 'send_visit_slots'),
   },
 ];
 
@@ -118,7 +122,7 @@ const GROUP_WORKFLOWS: Record<BlueprintGroup, WorkflowBlueprint[]> = {
           },
         },
       ],
-      connections: { lead_quoted: [{ node: 'send_exit' }] },
+      connections: connect('lead_quoted', 'send_exit'),
     },
   ],
   B: [
@@ -130,7 +134,7 @@ const GROUP_WORKFLOWS: Record<BlueprintGroup, WorkflowBlueprint[]> = {
         { id: 'booking_created', type: 'trigger.event.booking_created', params: { event: 'booking.created' } },
         { id: 'send_confirmation', type: 'action.send_message', params: { message: 'Your booking is confirmed. We will share details shortly.' } },
       ],
-      connections: { booking_created: [{ node: 'send_confirmation' }] },
+      connections: connect('booking_created', 'send_confirmation'),
     },
     {
       key: 'resort_booking_link_followup',
@@ -146,7 +150,7 @@ const GROUP_WORKFLOWS: Record<BlueprintGroup, WorkflowBlueprint[]> = {
           },
         },
       ],
-      connections: { booking_link_sent: [{ node: 'send_booking_link_reminder' }] },
+      connections: connect('booking_link_sent', 'send_booking_link_reminder'),
     },
     {
       key: 'resort_room_available_alert',
@@ -162,7 +166,7 @@ const GROUP_WORKFLOWS: Record<BlueprintGroup, WorkflowBlueprint[]> = {
           },
         },
       ],
-      connections: { room_available: [{ node: 'send_room_available' }] },
+      connections: connect('room_available', 'send_room_available'),
     },
     {
       key: 'resort_enquiry_followup',
@@ -178,7 +182,7 @@ const GROUP_WORKFLOWS: Record<BlueprintGroup, WorkflowBlueprint[]> = {
           },
         },
       ],
-      connections: { booking_followup_due: [{ node: 'send_followup' }] },
+      connections: connect('booking_followup_due', 'send_followup'),
     },
     {
       key: 'resort_checkin_reminder',
@@ -194,7 +198,7 @@ const GROUP_WORKFLOWS: Record<BlueprintGroup, WorkflowBlueprint[]> = {
           },
         },
       ],
-      connections: { checkin_due: [{ node: 'send_checkin' }] },
+      connections: connect('checkin_due', 'send_checkin'),
     },
     {
       key: 'resort_review_request',
@@ -210,7 +214,7 @@ const GROUP_WORKFLOWS: Record<BlueprintGroup, WorkflowBlueprint[]> = {
           },
         },
       ],
-      connections: { review_due: [{ node: 'send_review_request' }] },
+      connections: connect('review_due', 'send_review_request'),
     },
     {
       key: 'group_b_exit_intent',
@@ -231,7 +235,7 @@ const GROUP_WORKFLOWS: Record<BlueprintGroup, WorkflowBlueprint[]> = {
           },
         },
       ],
-      connections: { quote_shared: [{ node: 'send_exit' }] },
+      connections: connect('quote_shared', 'send_exit'),
     },
   ],
   C: [
@@ -243,7 +247,7 @@ const GROUP_WORKFLOWS: Record<BlueprintGroup, WorkflowBlueprint[]> = {
         { id: 'order_placed', type: 'trigger.event.order_placed', params: { event: 'order.placed' } },
         { id: 'send_confirmation', type: 'action.send_message', params: { message: 'Your order is confirmed. We will update you on delivery.' } },
       ],
-      connections: { order_placed: [{ node: 'send_confirmation' }] },
+      connections: connect('order_placed', 'send_confirmation'),
     },
     {
       key: 'seller_stock_held',
@@ -259,7 +263,7 @@ const GROUP_WORKFLOWS: Record<BlueprintGroup, WorkflowBlueprint[]> = {
           },
         },
       ],
-      connections: { stock_held: [{ node: 'send_stock_held' }] },
+      connections: connect('stock_held', 'send_stock_held'),
     },
     {
       key: 'seller_payment_waiting',
@@ -275,7 +279,7 @@ const GROUP_WORKFLOWS: Record<BlueprintGroup, WorkflowBlueprint[]> = {
           },
         },
       ],
-      connections: { payment_waiting: [{ node: 'send_payment_waiting' }] },
+      connections: connect('payment_waiting', 'send_payment_waiting'),
     },
     {
       key: 'seller_restock_alert',
@@ -291,7 +295,7 @@ const GROUP_WORKFLOWS: Record<BlueprintGroup, WorkflowBlueprint[]> = {
           },
         },
       ],
-      connections: { restocked: [{ node: 'send_restocked' }] },
+      connections: connect('restocked', 'send_restocked'),
     },
     {
       key: 'seller_credit_due',
@@ -307,7 +311,7 @@ const GROUP_WORKFLOWS: Record<BlueprintGroup, WorkflowBlueprint[]> = {
           },
         },
       ],
-      connections: { credit_due: [{ node: 'send_credit_due' }] },
+      connections: connect('credit_due', 'send_credit_due'),
     },
     {
       key: 'seller_dead_stock_offer',
@@ -323,7 +327,7 @@ const GROUP_WORKFLOWS: Record<BlueprintGroup, WorkflowBlueprint[]> = {
           },
         },
       ],
-      connections: { dead_stock_offer: [{ node: 'send_dead_stock_offer' }] },
+      connections: connect('dead_stock_offer', 'send_dead_stock_offer'),
     },
   ],
   D: [],

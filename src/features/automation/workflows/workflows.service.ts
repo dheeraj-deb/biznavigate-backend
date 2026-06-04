@@ -268,6 +268,10 @@ export class WorkflowsService implements OnModuleInit {
     }
 
     if (workflow_id) {
+      if (is_active) {
+        await this.deactivateConflictingActiveWorkflows(business_id, workflow_id, analyzedNodes);
+      }
+
       const workflowDef = await this.workflowDefinitionModel.findOneAndUpdate(
         { workflow_id },
         {
@@ -295,6 +299,10 @@ export class WorkflowsService implements OnModuleInit {
     const existingLink = await this.businessWorkflowModel.findOne({ business_id });
 
     if (existingLink) {
+      if (is_active) {
+        await this.deactivateConflictingActiveWorkflows(business_id, existingLink.workflow_id, analyzedNodes);
+      }
+
       const workflowDef = await this.workflowDefinitionModel.findOneAndUpdate(
         { workflow_id: existingLink.workflow_id },
         {
@@ -316,6 +324,10 @@ export class WorkflowsService implements OnModuleInit {
     }
 
     const new_workflow_id = crypto.randomUUID();
+    if (is_active) {
+      await this.deactivateConflictingActiveWorkflows(business_id, new_workflow_id, analyzedNodes);
+    }
+
     const workflowDef = await this.workflowDefinitionModel.create({
       workflow_id: new_workflow_id,
       workflow_name,
@@ -362,12 +374,12 @@ export class WorkflowsService implements OnModuleInit {
 
   async updateWorkflow(dto: UpdateWorkflowDto) {
     const { workflow_id, workflow_name, nodes, connections, description, is_active } = dto;
+    let candidateNodes = nodes;
+    let candidateConnections = connections;
 
     // If activating, validate against the definition that will be active after
     // this write (caller-supplied if present, otherwise the stored definition).
     if (is_active) {
-      let candidateNodes = nodes;
-      let candidateConnections = connections;
       if (!candidateNodes || !candidateConnections) {
         const existing = await this.workflowDefinitionModel.findOne({ workflow_id }).lean();
         candidateNodes = candidateNodes ?? (existing?.workflow_definition?.nodes as any[]);
@@ -379,6 +391,11 @@ export class WorkflowsService implements OnModuleInit {
           connections: candidateConnections,
         });
       }
+    }
+
+    const link = await this.businessWorkflowModel.findOne({ workflow_id }).lean();
+    if (is_active && link?.business_id) {
+      await this.deactivateConflictingActiveWorkflows(link.business_id, workflow_id, nodes ?? candidateNodes ?? []);
     }
 
     const updated = await this.workflowDefinitionModel.findOneAndUpdate(
@@ -396,7 +413,6 @@ export class WorkflowsService implements OnModuleInit {
 
     // Keep BullMQ in sync with the new state. Look up the business via the
     // business_workflows link since UpdateWorkflowDto doesn't carry business_id.
-    const link = await this.businessWorkflowModel.findOne({ workflow_id }).lean();
     if (link?.business_id) {
       const effectiveNodes = nodes ?? (updated?.workflow_definition?.nodes as any[]) ?? [];
       const effectiveActive = is_active ?? !!updated?.is_active;
@@ -422,14 +438,87 @@ export class WorkflowsService implements OnModuleInit {
       });
     }
 
+    const link = await this.businessWorkflowModel.findOne({ workflow_id }).lean();
+    if (is_active && link?.business_id) {
+      await this.deactivateConflictingActiveWorkflows(
+        link.business_id,
+        workflow_id,
+        (def.workflow_definition?.nodes as any[]) ?? [],
+      );
+    }
+
     await this.workflowDefinitionModel.updateOne({ workflow_id }, { $set: { is_active } });
     await this.businessWorkflowModel.updateOne({ workflow_id }, { $set: { is_active } });
 
-    const link = await this.businessWorkflowModel.findOne({ workflow_id }).lean();
     if (link?.business_id) {
       await this.syncSchedule(workflow_id, link.business_id, (def.workflow_definition?.nodes as any[]) ?? [], is_active);
     }
     return { workflow_id, is_active };
+  }
+
+  private async deactivateConflictingActiveWorkflows(
+    businessId: string,
+    workflowId: string,
+    nodes: any[],
+  ): Promise<void> {
+    const signature = this.triggerSignature(nodes);
+    if (!signature) return;
+
+    const activeLinks = await this.businessWorkflowModel
+      .find({ business_id: businessId, is_active: true, workflow_id: { $ne: workflowId } })
+      .lean();
+    if (!activeLinks.length) return;
+
+    const workflowIds = activeLinks.map((link) => link.workflow_id);
+    const defs = await this.workflowDefinitionModel
+      .find({ workflow_id: { $in: workflowIds }, is_active: true })
+      .lean();
+    const conflictingIds = defs
+      .filter((def) => this.triggerSignature((def.workflow_definition?.nodes as any[]) ?? []) === signature)
+      .map((def) => def.workflow_id);
+
+    if (!conflictingIds.length) return;
+
+    await this.workflowDefinitionModel.updateMany(
+      { workflow_id: { $in: conflictingIds } },
+      { $set: { is_active: false, updated_at: new Date() } },
+    );
+    await this.businessWorkflowModel.updateMany(
+      { business_id: businessId, workflow_id: { $in: conflictingIds } },
+      { $set: { is_active: false, updated_at: new Date() } },
+    );
+    await Promise.all(conflictingIds.map((id) => this.syncSchedule(id, businessId, [], false)));
+  }
+
+  private triggerSignature(nodes: any[]): string | null {
+    const trigger = (nodes ?? []).find((node) => typeof node?.type === 'string' && node.type.startsWith('trigger.'));
+    if (!trigger) return null;
+    const params = trigger.params ?? {};
+    if (trigger.type === 'trigger.whatsapp.intent') {
+      return `${trigger.type}:${String(params.intent ?? '').trim().toLowerCase()}`;
+    }
+    if (trigger.type === 'trigger.event.lead_status_changed') {
+      return `${trigger.type}:${this.stableString({
+        event: params.event ?? 'lead.status_changed',
+        to_status: params.to_status ?? [],
+        from_status: params.from_status ?? [],
+      })}`;
+    }
+    if (trigger.type.startsWith('trigger.event.')) {
+      return `${trigger.type}:${params.event ?? trigger.type}`;
+    }
+    if (trigger.type === 'trigger.schedule') {
+      return `${trigger.type}:${this.stableString(params.schedule ?? params)}`;
+    }
+    return `${trigger.type}:${this.stableString(params)}`;
+  }
+
+  private stableString(value: any): string {
+    if (Array.isArray(value)) return `[${value.map((item) => this.stableString(item)).join(',')}]`;
+    if (value && typeof value === 'object') {
+      return `{${Object.keys(value).sort().map((key) => `${key}:${this.stableString(value[key])}`).join(',')}}`;
+    }
+    return String(value ?? '');
   }
 
   /**
@@ -597,6 +686,10 @@ export class WorkflowsService implements OnModuleInit {
     businessType: string | null | undefined,
     intentName: string | null | undefined,
   ): Promise<boolean> {
+    if (!this.isUuid(workflowId)) {
+      return false;
+    }
+
     try {
       const workflowName = definition.name || 'Workflow';
       const intent = intentName || 'default';
@@ -629,6 +722,10 @@ export class WorkflowsService implements OnModuleInit {
       this.logger.warn(`Could not mirror workflow definition ${workflowId} into Postgres: ${error.message}`);
       return false;
     }
+  }
+
+  private isUuid(value: string): boolean {
+    return /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(value);
   }
 
   private async createDurableExecution(params: {

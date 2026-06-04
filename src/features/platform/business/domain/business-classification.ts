@@ -2,7 +2,7 @@ import { BUSINESS_TYPES } from '../application/dto/create-business.dto';
 
 export type BusinessType = (typeof BUSINESS_TYPES)[number];
 export type BusinessGroup = 'A' | 'B' | 'C' | 'D';
-export type CommunicationMode = 'AI' | 'WORKFLOW';
+export type CommunicationMode = 'WORKFLOW';
 
 export const BUSINESS_TYPE_TO_GROUP: Record<BusinessType, BusinessGroup> = {
   real_estate: 'A',
@@ -29,5 +29,8 @@ export function resolveBusinessGroupFromType(
 
 export function buildBusinessAutomationDefaults(businessType?: string | null) {
   const businessGroup = resolveBusinessGroupFromType(businessType);
-  return businessGroup ? { business_group: businessGroup } : {};
+  return {
+    ...(businessGroup ? { business_group: businessGroup } : {}),
+    communication_mode: 'WORKFLOW' as const,
+  };
 }

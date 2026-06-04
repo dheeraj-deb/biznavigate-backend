@@ -112,7 +112,7 @@ export class WorkflowDefinitionValidator {
         });
         continue;
       }
-      const main = (conn as any)?.main;
+      const main = this.connectionEdges(conn);
       if (!Array.isArray(main)) continue;
       for (let i = 0; i < main.length; i++) {
         const edge = main[i];
@@ -295,7 +295,7 @@ export class WorkflowDefinitionValidator {
     const stack: string[] = [trigger.id];
     while (stack.length) {
       const current = stack.pop()!;
-      const main = connections?.[current]?.main ?? [];
+      const main = this.connectionEdges(connections?.[current]);
       for (const edge of main) {
         if (edge?.node && !visited.has(edge.node)) {
           visited.add(edge.node);
@@ -304,5 +304,11 @@ export class WorkflowDefinitionValidator {
       }
     }
     return visited;
+  }
+
+  private connectionEdges(conn: any): any[] {
+    if (Array.isArray(conn)) return conn;
+    if (Array.isArray(conn?.main)) return conn.main;
+    return [];
   }
 }
