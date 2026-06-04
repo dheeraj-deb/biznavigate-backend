@@ -172,6 +172,18 @@ export class KafkaService implements OnModuleInit, OnModuleDestroy {
   }
 
   /**
+   * Create an isolated consumer for background workers that must not share
+   * offsets with the main backend event consumer.
+   */
+  createConsumer(groupId: string): Consumer {
+    return this.kafka.consumer({
+      groupId,
+      sessionTimeout: 30000,
+      heartbeatInterval: 3000,
+    });
+  }
+
+  /**
    * Get Kafka admin instance
    */
   getAdmin(): Admin {

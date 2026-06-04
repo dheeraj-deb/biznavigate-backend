@@ -276,6 +276,66 @@ export type product_order_items = $Result.DefaultSelection<Prisma.$product_order
  */
 export type product_order_status_events = $Result.DefaultSelection<Prisma.$product_order_status_eventsPayload>
 /**
+ * Model seller_owner_approvals
+ * 
+ */
+export type seller_owner_approvals = $Result.DefaultSelection<Prisma.$seller_owner_approvalsPayload>
+/**
+ * Model seller_store_settings
+ * 
+ */
+export type seller_store_settings = $Result.DefaultSelection<Prisma.$seller_store_settingsPayload>
+/**
+ * Model seller_stock_reservations
+ * 
+ */
+export type seller_stock_reservations = $Result.DefaultSelection<Prisma.$seller_stock_reservationsPayload>
+/**
+ * Model seller_return_cases
+ * 
+ */
+export type seller_return_cases = $Result.DefaultSelection<Prisma.$seller_return_casesPayload>
+/**
+ * Model seller_deliveries
+ * 
+ */
+export type seller_deliveries = $Result.DefaultSelection<Prisma.$seller_deliveriesPayload>
+/**
+ * Model seller_customer_credit_accounts
+ * 
+ */
+export type seller_customer_credit_accounts = $Result.DefaultSelection<Prisma.$seller_customer_credit_accountsPayload>
+/**
+ * Model seller_customer_credit_transactions
+ * 
+ */
+export type seller_customer_credit_transactions = $Result.DefaultSelection<Prisma.$seller_customer_credit_transactionsPayload>
+/**
+ * Model seller_ai_audit_logs
+ * 
+ */
+export type seller_ai_audit_logs = $Result.DefaultSelection<Prisma.$seller_ai_audit_logsPayload>
+/**
+ * Model seller_product_profit_snapshots
+ * 
+ */
+export type seller_product_profit_snapshots = $Result.DefaultSelection<Prisma.$seller_product_profit_snapshotsPayload>
+/**
+ * Model seller_demand_signals
+ * 
+ */
+export type seller_demand_signals = $Result.DefaultSelection<Prisma.$seller_demand_signalsPayload>
+/**
+ * Model seller_product_import_jobs
+ * 
+ */
+export type seller_product_import_jobs = $Result.DefaultSelection<Prisma.$seller_product_import_jobsPayload>
+/**
+ * Model seller_stock_adjustments
+ * 
+ */
+export type seller_stock_adjustments = $Result.DefaultSelection<Prisma.$seller_stock_adjustmentsPayload>
+/**
  * Model hospitality_item_details
  * 
  */
@@ -1009,6 +1069,126 @@ export class PrismaClient<
   get product_order_status_events(): Prisma.product_order_status_eventsDelegate<ExtArgs, ClientOptions>;
 
   /**
+   * `prisma.seller_owner_approvals`: Exposes CRUD operations for the **seller_owner_approvals** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more Seller_owner_approvals
+    * const seller_owner_approvals = await prisma.seller_owner_approvals.findMany()
+    * ```
+    */
+  get seller_owner_approvals(): Prisma.seller_owner_approvalsDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.seller_store_settings`: Exposes CRUD operations for the **seller_store_settings** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more Seller_store_settings
+    * const seller_store_settings = await prisma.seller_store_settings.findMany()
+    * ```
+    */
+  get seller_store_settings(): Prisma.seller_store_settingsDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.seller_stock_reservations`: Exposes CRUD operations for the **seller_stock_reservations** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more Seller_stock_reservations
+    * const seller_stock_reservations = await prisma.seller_stock_reservations.findMany()
+    * ```
+    */
+  get seller_stock_reservations(): Prisma.seller_stock_reservationsDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.seller_return_cases`: Exposes CRUD operations for the **seller_return_cases** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more Seller_return_cases
+    * const seller_return_cases = await prisma.seller_return_cases.findMany()
+    * ```
+    */
+  get seller_return_cases(): Prisma.seller_return_casesDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.seller_deliveries`: Exposes CRUD operations for the **seller_deliveries** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more Seller_deliveries
+    * const seller_deliveries = await prisma.seller_deliveries.findMany()
+    * ```
+    */
+  get seller_deliveries(): Prisma.seller_deliveriesDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.seller_customer_credit_accounts`: Exposes CRUD operations for the **seller_customer_credit_accounts** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more Seller_customer_credit_accounts
+    * const seller_customer_credit_accounts = await prisma.seller_customer_credit_accounts.findMany()
+    * ```
+    */
+  get seller_customer_credit_accounts(): Prisma.seller_customer_credit_accountsDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.seller_customer_credit_transactions`: Exposes CRUD operations for the **seller_customer_credit_transactions** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more Seller_customer_credit_transactions
+    * const seller_customer_credit_transactions = await prisma.seller_customer_credit_transactions.findMany()
+    * ```
+    */
+  get seller_customer_credit_transactions(): Prisma.seller_customer_credit_transactionsDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.seller_ai_audit_logs`: Exposes CRUD operations for the **seller_ai_audit_logs** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more Seller_ai_audit_logs
+    * const seller_ai_audit_logs = await prisma.seller_ai_audit_logs.findMany()
+    * ```
+    */
+  get seller_ai_audit_logs(): Prisma.seller_ai_audit_logsDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.seller_product_profit_snapshots`: Exposes CRUD operations for the **seller_product_profit_snapshots** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more Seller_product_profit_snapshots
+    * const seller_product_profit_snapshots = await prisma.seller_product_profit_snapshots.findMany()
+    * ```
+    */
+  get seller_product_profit_snapshots(): Prisma.seller_product_profit_snapshotsDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.seller_demand_signals`: Exposes CRUD operations for the **seller_demand_signals** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more Seller_demand_signals
+    * const seller_demand_signals = await prisma.seller_demand_signals.findMany()
+    * ```
+    */
+  get seller_demand_signals(): Prisma.seller_demand_signalsDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.seller_product_import_jobs`: Exposes CRUD operations for the **seller_product_import_jobs** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more Seller_product_import_jobs
+    * const seller_product_import_jobs = await prisma.seller_product_import_jobs.findMany()
+    * ```
+    */
+  get seller_product_import_jobs(): Prisma.seller_product_import_jobsDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.seller_stock_adjustments`: Exposes CRUD operations for the **seller_stock_adjustments** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more Seller_stock_adjustments
+    * const seller_stock_adjustments = await prisma.seller_stock_adjustments.findMany()
+    * ```
+    */
+  get seller_stock_adjustments(): Prisma.seller_stock_adjustmentsDelegate<ExtArgs, ClientOptions>;
+
+  /**
    * `prisma.hospitality_item_details`: Exposes CRUD operations for the **hospitality_item_details** model.
     * Example usage:
     * ```ts
@@ -1726,6 +1906,18 @@ export namespace Prisma {
     product_orders: 'product_orders',
     product_order_items: 'product_order_items',
     product_order_status_events: 'product_order_status_events',
+    seller_owner_approvals: 'seller_owner_approvals',
+    seller_store_settings: 'seller_store_settings',
+    seller_stock_reservations: 'seller_stock_reservations',
+    seller_return_cases: 'seller_return_cases',
+    seller_deliveries: 'seller_deliveries',
+    seller_customer_credit_accounts: 'seller_customer_credit_accounts',
+    seller_customer_credit_transactions: 'seller_customer_credit_transactions',
+    seller_ai_audit_logs: 'seller_ai_audit_logs',
+    seller_product_profit_snapshots: 'seller_product_profit_snapshots',
+    seller_demand_signals: 'seller_demand_signals',
+    seller_product_import_jobs: 'seller_product_import_jobs',
+    seller_stock_adjustments: 'seller_stock_adjustments',
     hospitality_item_details: 'hospitality_item_details',
     vehicle_item_details: 'vehicle_item_details',
     hospitality_inquiries: 'hospitality_inquiries',
@@ -1767,7 +1959,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "businesses" | "business_employees" | "intents" | "notifications" | "role_intents" | "roles" | "social_accounts" | "tenants" | "users" | "leads" | "pipelines" | "pipeline_stages" | "lead_events" | "lead_followups" | "customers" | "orders" | "order_items" | "cart_reservations" | "campaigns" | "campaign_recipients" | "notification_templates" | "notification_messages" | "notification_preferences" | "payments" | "payment_reconciliation" | "notification_events" | "payment_webhooks" | "instagram_media" | "workflow_definitions" | "business_workflows" | "workflow_executions" | "workflow_execution_steps" | "workflow_idempotency_keys" | "cart_items" | "carts" | "whatsapp_optouts" | "campaign_analytics" | "hotel_pricing_recommendations" | "hotel_booking_outcomes" | "hotel_pricing_notifications" | "catalog_items" | "item_variants" | "item_availability" | "product_item_details" | "external_catalog_items" | "product_inquiries" | "product_orders" | "product_order_items" | "product_order_status_events" | "hospitality_item_details" | "vehicle_item_details" | "hospitality_inquiries" | "hospitality_bookings" | "hospitality_booking_items" | "hospitality_booking_guests" | "hospitality_booking_status_events" | "checkpoint_blobs" | "checkpoint_migrations" | "checkpoint_writes" | "checkpoints" | "billing_plans" | "billing_subscriptions" | "wallets" | "wallet_transactions" | "billing_payments" | "billing_invoices" | "billing_webhook_events" | "credit_pricing" | "business_settings" | "audit_logs" | "lead_item_interests" | "lead_preference_watches"
+      modelProps: "businesses" | "business_employees" | "intents" | "notifications" | "role_intents" | "roles" | "social_accounts" | "tenants" | "users" | "leads" | "pipelines" | "pipeline_stages" | "lead_events" | "lead_followups" | "customers" | "orders" | "order_items" | "cart_reservations" | "campaigns" | "campaign_recipients" | "notification_templates" | "notification_messages" | "notification_preferences" | "payments" | "payment_reconciliation" | "notification_events" | "payment_webhooks" | "instagram_media" | "workflow_definitions" | "business_workflows" | "workflow_executions" | "workflow_execution_steps" | "workflow_idempotency_keys" | "cart_items" | "carts" | "whatsapp_optouts" | "campaign_analytics" | "hotel_pricing_recommendations" | "hotel_booking_outcomes" | "hotel_pricing_notifications" | "catalog_items" | "item_variants" | "item_availability" | "product_item_details" | "external_catalog_items" | "product_inquiries" | "product_orders" | "product_order_items" | "product_order_status_events" | "seller_owner_approvals" | "seller_store_settings" | "seller_stock_reservations" | "seller_return_cases" | "seller_deliveries" | "seller_customer_credit_accounts" | "seller_customer_credit_transactions" | "seller_ai_audit_logs" | "seller_product_profit_snapshots" | "seller_demand_signals" | "seller_product_import_jobs" | "seller_stock_adjustments" | "hospitality_item_details" | "vehicle_item_details" | "hospitality_inquiries" | "hospitality_bookings" | "hospitality_booking_items" | "hospitality_booking_guests" | "hospitality_booking_status_events" | "checkpoint_blobs" | "checkpoint_migrations" | "checkpoint_writes" | "checkpoints" | "billing_plans" | "billing_subscriptions" | "wallets" | "wallet_transactions" | "billing_payments" | "billing_invoices" | "billing_webhook_events" | "credit_pricing" | "business_settings" | "audit_logs" | "lead_item_interests" | "lead_preference_watches"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -5397,6 +5589,894 @@ export namespace Prisma {
           }
         }
       }
+      seller_owner_approvals: {
+        payload: Prisma.$seller_owner_approvalsPayload<ExtArgs>
+        fields: Prisma.seller_owner_approvalsFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.seller_owner_approvalsFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$seller_owner_approvalsPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.seller_owner_approvalsFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$seller_owner_approvalsPayload>
+          }
+          findFirst: {
+            args: Prisma.seller_owner_approvalsFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$seller_owner_approvalsPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.seller_owner_approvalsFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$seller_owner_approvalsPayload>
+          }
+          findMany: {
+            args: Prisma.seller_owner_approvalsFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$seller_owner_approvalsPayload>[]
+          }
+          create: {
+            args: Prisma.seller_owner_approvalsCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$seller_owner_approvalsPayload>
+          }
+          createMany: {
+            args: Prisma.seller_owner_approvalsCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.seller_owner_approvalsCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$seller_owner_approvalsPayload>[]
+          }
+          delete: {
+            args: Prisma.seller_owner_approvalsDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$seller_owner_approvalsPayload>
+          }
+          update: {
+            args: Prisma.seller_owner_approvalsUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$seller_owner_approvalsPayload>
+          }
+          deleteMany: {
+            args: Prisma.seller_owner_approvalsDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.seller_owner_approvalsUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.seller_owner_approvalsUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$seller_owner_approvalsPayload>[]
+          }
+          upsert: {
+            args: Prisma.seller_owner_approvalsUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$seller_owner_approvalsPayload>
+          }
+          aggregate: {
+            args: Prisma.Seller_owner_approvalsAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateSeller_owner_approvals>
+          }
+          groupBy: {
+            args: Prisma.seller_owner_approvalsGroupByArgs<ExtArgs>
+            result: $Utils.Optional<Seller_owner_approvalsGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.seller_owner_approvalsCountArgs<ExtArgs>
+            result: $Utils.Optional<Seller_owner_approvalsCountAggregateOutputType> | number
+          }
+        }
+      }
+      seller_store_settings: {
+        payload: Prisma.$seller_store_settingsPayload<ExtArgs>
+        fields: Prisma.seller_store_settingsFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.seller_store_settingsFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$seller_store_settingsPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.seller_store_settingsFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$seller_store_settingsPayload>
+          }
+          findFirst: {
+            args: Prisma.seller_store_settingsFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$seller_store_settingsPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.seller_store_settingsFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$seller_store_settingsPayload>
+          }
+          findMany: {
+            args: Prisma.seller_store_settingsFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$seller_store_settingsPayload>[]
+          }
+          create: {
+            args: Prisma.seller_store_settingsCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$seller_store_settingsPayload>
+          }
+          createMany: {
+            args: Prisma.seller_store_settingsCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.seller_store_settingsCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$seller_store_settingsPayload>[]
+          }
+          delete: {
+            args: Prisma.seller_store_settingsDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$seller_store_settingsPayload>
+          }
+          update: {
+            args: Prisma.seller_store_settingsUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$seller_store_settingsPayload>
+          }
+          deleteMany: {
+            args: Prisma.seller_store_settingsDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.seller_store_settingsUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.seller_store_settingsUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$seller_store_settingsPayload>[]
+          }
+          upsert: {
+            args: Prisma.seller_store_settingsUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$seller_store_settingsPayload>
+          }
+          aggregate: {
+            args: Prisma.Seller_store_settingsAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateSeller_store_settings>
+          }
+          groupBy: {
+            args: Prisma.seller_store_settingsGroupByArgs<ExtArgs>
+            result: $Utils.Optional<Seller_store_settingsGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.seller_store_settingsCountArgs<ExtArgs>
+            result: $Utils.Optional<Seller_store_settingsCountAggregateOutputType> | number
+          }
+        }
+      }
+      seller_stock_reservations: {
+        payload: Prisma.$seller_stock_reservationsPayload<ExtArgs>
+        fields: Prisma.seller_stock_reservationsFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.seller_stock_reservationsFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$seller_stock_reservationsPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.seller_stock_reservationsFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$seller_stock_reservationsPayload>
+          }
+          findFirst: {
+            args: Prisma.seller_stock_reservationsFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$seller_stock_reservationsPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.seller_stock_reservationsFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$seller_stock_reservationsPayload>
+          }
+          findMany: {
+            args: Prisma.seller_stock_reservationsFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$seller_stock_reservationsPayload>[]
+          }
+          create: {
+            args: Prisma.seller_stock_reservationsCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$seller_stock_reservationsPayload>
+          }
+          createMany: {
+            args: Prisma.seller_stock_reservationsCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.seller_stock_reservationsCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$seller_stock_reservationsPayload>[]
+          }
+          delete: {
+            args: Prisma.seller_stock_reservationsDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$seller_stock_reservationsPayload>
+          }
+          update: {
+            args: Prisma.seller_stock_reservationsUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$seller_stock_reservationsPayload>
+          }
+          deleteMany: {
+            args: Prisma.seller_stock_reservationsDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.seller_stock_reservationsUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.seller_stock_reservationsUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$seller_stock_reservationsPayload>[]
+          }
+          upsert: {
+            args: Prisma.seller_stock_reservationsUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$seller_stock_reservationsPayload>
+          }
+          aggregate: {
+            args: Prisma.Seller_stock_reservationsAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateSeller_stock_reservations>
+          }
+          groupBy: {
+            args: Prisma.seller_stock_reservationsGroupByArgs<ExtArgs>
+            result: $Utils.Optional<Seller_stock_reservationsGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.seller_stock_reservationsCountArgs<ExtArgs>
+            result: $Utils.Optional<Seller_stock_reservationsCountAggregateOutputType> | number
+          }
+        }
+      }
+      seller_return_cases: {
+        payload: Prisma.$seller_return_casesPayload<ExtArgs>
+        fields: Prisma.seller_return_casesFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.seller_return_casesFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$seller_return_casesPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.seller_return_casesFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$seller_return_casesPayload>
+          }
+          findFirst: {
+            args: Prisma.seller_return_casesFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$seller_return_casesPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.seller_return_casesFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$seller_return_casesPayload>
+          }
+          findMany: {
+            args: Prisma.seller_return_casesFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$seller_return_casesPayload>[]
+          }
+          create: {
+            args: Prisma.seller_return_casesCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$seller_return_casesPayload>
+          }
+          createMany: {
+            args: Prisma.seller_return_casesCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.seller_return_casesCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$seller_return_casesPayload>[]
+          }
+          delete: {
+            args: Prisma.seller_return_casesDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$seller_return_casesPayload>
+          }
+          update: {
+            args: Prisma.seller_return_casesUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$seller_return_casesPayload>
+          }
+          deleteMany: {
+            args: Prisma.seller_return_casesDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.seller_return_casesUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.seller_return_casesUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$seller_return_casesPayload>[]
+          }
+          upsert: {
+            args: Prisma.seller_return_casesUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$seller_return_casesPayload>
+          }
+          aggregate: {
+            args: Prisma.Seller_return_casesAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateSeller_return_cases>
+          }
+          groupBy: {
+            args: Prisma.seller_return_casesGroupByArgs<ExtArgs>
+            result: $Utils.Optional<Seller_return_casesGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.seller_return_casesCountArgs<ExtArgs>
+            result: $Utils.Optional<Seller_return_casesCountAggregateOutputType> | number
+          }
+        }
+      }
+      seller_deliveries: {
+        payload: Prisma.$seller_deliveriesPayload<ExtArgs>
+        fields: Prisma.seller_deliveriesFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.seller_deliveriesFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$seller_deliveriesPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.seller_deliveriesFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$seller_deliveriesPayload>
+          }
+          findFirst: {
+            args: Prisma.seller_deliveriesFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$seller_deliveriesPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.seller_deliveriesFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$seller_deliveriesPayload>
+          }
+          findMany: {
+            args: Prisma.seller_deliveriesFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$seller_deliveriesPayload>[]
+          }
+          create: {
+            args: Prisma.seller_deliveriesCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$seller_deliveriesPayload>
+          }
+          createMany: {
+            args: Prisma.seller_deliveriesCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.seller_deliveriesCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$seller_deliveriesPayload>[]
+          }
+          delete: {
+            args: Prisma.seller_deliveriesDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$seller_deliveriesPayload>
+          }
+          update: {
+            args: Prisma.seller_deliveriesUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$seller_deliveriesPayload>
+          }
+          deleteMany: {
+            args: Prisma.seller_deliveriesDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.seller_deliveriesUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.seller_deliveriesUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$seller_deliveriesPayload>[]
+          }
+          upsert: {
+            args: Prisma.seller_deliveriesUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$seller_deliveriesPayload>
+          }
+          aggregate: {
+            args: Prisma.Seller_deliveriesAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateSeller_deliveries>
+          }
+          groupBy: {
+            args: Prisma.seller_deliveriesGroupByArgs<ExtArgs>
+            result: $Utils.Optional<Seller_deliveriesGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.seller_deliveriesCountArgs<ExtArgs>
+            result: $Utils.Optional<Seller_deliveriesCountAggregateOutputType> | number
+          }
+        }
+      }
+      seller_customer_credit_accounts: {
+        payload: Prisma.$seller_customer_credit_accountsPayload<ExtArgs>
+        fields: Prisma.seller_customer_credit_accountsFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.seller_customer_credit_accountsFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$seller_customer_credit_accountsPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.seller_customer_credit_accountsFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$seller_customer_credit_accountsPayload>
+          }
+          findFirst: {
+            args: Prisma.seller_customer_credit_accountsFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$seller_customer_credit_accountsPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.seller_customer_credit_accountsFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$seller_customer_credit_accountsPayload>
+          }
+          findMany: {
+            args: Prisma.seller_customer_credit_accountsFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$seller_customer_credit_accountsPayload>[]
+          }
+          create: {
+            args: Prisma.seller_customer_credit_accountsCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$seller_customer_credit_accountsPayload>
+          }
+          createMany: {
+            args: Prisma.seller_customer_credit_accountsCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.seller_customer_credit_accountsCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$seller_customer_credit_accountsPayload>[]
+          }
+          delete: {
+            args: Prisma.seller_customer_credit_accountsDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$seller_customer_credit_accountsPayload>
+          }
+          update: {
+            args: Prisma.seller_customer_credit_accountsUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$seller_customer_credit_accountsPayload>
+          }
+          deleteMany: {
+            args: Prisma.seller_customer_credit_accountsDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.seller_customer_credit_accountsUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.seller_customer_credit_accountsUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$seller_customer_credit_accountsPayload>[]
+          }
+          upsert: {
+            args: Prisma.seller_customer_credit_accountsUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$seller_customer_credit_accountsPayload>
+          }
+          aggregate: {
+            args: Prisma.Seller_customer_credit_accountsAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateSeller_customer_credit_accounts>
+          }
+          groupBy: {
+            args: Prisma.seller_customer_credit_accountsGroupByArgs<ExtArgs>
+            result: $Utils.Optional<Seller_customer_credit_accountsGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.seller_customer_credit_accountsCountArgs<ExtArgs>
+            result: $Utils.Optional<Seller_customer_credit_accountsCountAggregateOutputType> | number
+          }
+        }
+      }
+      seller_customer_credit_transactions: {
+        payload: Prisma.$seller_customer_credit_transactionsPayload<ExtArgs>
+        fields: Prisma.seller_customer_credit_transactionsFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.seller_customer_credit_transactionsFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$seller_customer_credit_transactionsPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.seller_customer_credit_transactionsFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$seller_customer_credit_transactionsPayload>
+          }
+          findFirst: {
+            args: Prisma.seller_customer_credit_transactionsFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$seller_customer_credit_transactionsPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.seller_customer_credit_transactionsFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$seller_customer_credit_transactionsPayload>
+          }
+          findMany: {
+            args: Prisma.seller_customer_credit_transactionsFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$seller_customer_credit_transactionsPayload>[]
+          }
+          create: {
+            args: Prisma.seller_customer_credit_transactionsCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$seller_customer_credit_transactionsPayload>
+          }
+          createMany: {
+            args: Prisma.seller_customer_credit_transactionsCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.seller_customer_credit_transactionsCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$seller_customer_credit_transactionsPayload>[]
+          }
+          delete: {
+            args: Prisma.seller_customer_credit_transactionsDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$seller_customer_credit_transactionsPayload>
+          }
+          update: {
+            args: Prisma.seller_customer_credit_transactionsUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$seller_customer_credit_transactionsPayload>
+          }
+          deleteMany: {
+            args: Prisma.seller_customer_credit_transactionsDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.seller_customer_credit_transactionsUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.seller_customer_credit_transactionsUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$seller_customer_credit_transactionsPayload>[]
+          }
+          upsert: {
+            args: Prisma.seller_customer_credit_transactionsUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$seller_customer_credit_transactionsPayload>
+          }
+          aggregate: {
+            args: Prisma.Seller_customer_credit_transactionsAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateSeller_customer_credit_transactions>
+          }
+          groupBy: {
+            args: Prisma.seller_customer_credit_transactionsGroupByArgs<ExtArgs>
+            result: $Utils.Optional<Seller_customer_credit_transactionsGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.seller_customer_credit_transactionsCountArgs<ExtArgs>
+            result: $Utils.Optional<Seller_customer_credit_transactionsCountAggregateOutputType> | number
+          }
+        }
+      }
+      seller_ai_audit_logs: {
+        payload: Prisma.$seller_ai_audit_logsPayload<ExtArgs>
+        fields: Prisma.seller_ai_audit_logsFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.seller_ai_audit_logsFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$seller_ai_audit_logsPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.seller_ai_audit_logsFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$seller_ai_audit_logsPayload>
+          }
+          findFirst: {
+            args: Prisma.seller_ai_audit_logsFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$seller_ai_audit_logsPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.seller_ai_audit_logsFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$seller_ai_audit_logsPayload>
+          }
+          findMany: {
+            args: Prisma.seller_ai_audit_logsFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$seller_ai_audit_logsPayload>[]
+          }
+          create: {
+            args: Prisma.seller_ai_audit_logsCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$seller_ai_audit_logsPayload>
+          }
+          createMany: {
+            args: Prisma.seller_ai_audit_logsCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.seller_ai_audit_logsCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$seller_ai_audit_logsPayload>[]
+          }
+          delete: {
+            args: Prisma.seller_ai_audit_logsDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$seller_ai_audit_logsPayload>
+          }
+          update: {
+            args: Prisma.seller_ai_audit_logsUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$seller_ai_audit_logsPayload>
+          }
+          deleteMany: {
+            args: Prisma.seller_ai_audit_logsDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.seller_ai_audit_logsUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.seller_ai_audit_logsUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$seller_ai_audit_logsPayload>[]
+          }
+          upsert: {
+            args: Prisma.seller_ai_audit_logsUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$seller_ai_audit_logsPayload>
+          }
+          aggregate: {
+            args: Prisma.Seller_ai_audit_logsAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateSeller_ai_audit_logs>
+          }
+          groupBy: {
+            args: Prisma.seller_ai_audit_logsGroupByArgs<ExtArgs>
+            result: $Utils.Optional<Seller_ai_audit_logsGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.seller_ai_audit_logsCountArgs<ExtArgs>
+            result: $Utils.Optional<Seller_ai_audit_logsCountAggregateOutputType> | number
+          }
+        }
+      }
+      seller_product_profit_snapshots: {
+        payload: Prisma.$seller_product_profit_snapshotsPayload<ExtArgs>
+        fields: Prisma.seller_product_profit_snapshotsFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.seller_product_profit_snapshotsFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$seller_product_profit_snapshotsPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.seller_product_profit_snapshotsFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$seller_product_profit_snapshotsPayload>
+          }
+          findFirst: {
+            args: Prisma.seller_product_profit_snapshotsFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$seller_product_profit_snapshotsPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.seller_product_profit_snapshotsFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$seller_product_profit_snapshotsPayload>
+          }
+          findMany: {
+            args: Prisma.seller_product_profit_snapshotsFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$seller_product_profit_snapshotsPayload>[]
+          }
+          create: {
+            args: Prisma.seller_product_profit_snapshotsCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$seller_product_profit_snapshotsPayload>
+          }
+          createMany: {
+            args: Prisma.seller_product_profit_snapshotsCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.seller_product_profit_snapshotsCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$seller_product_profit_snapshotsPayload>[]
+          }
+          delete: {
+            args: Prisma.seller_product_profit_snapshotsDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$seller_product_profit_snapshotsPayload>
+          }
+          update: {
+            args: Prisma.seller_product_profit_snapshotsUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$seller_product_profit_snapshotsPayload>
+          }
+          deleteMany: {
+            args: Prisma.seller_product_profit_snapshotsDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.seller_product_profit_snapshotsUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.seller_product_profit_snapshotsUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$seller_product_profit_snapshotsPayload>[]
+          }
+          upsert: {
+            args: Prisma.seller_product_profit_snapshotsUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$seller_product_profit_snapshotsPayload>
+          }
+          aggregate: {
+            args: Prisma.Seller_product_profit_snapshotsAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateSeller_product_profit_snapshots>
+          }
+          groupBy: {
+            args: Prisma.seller_product_profit_snapshotsGroupByArgs<ExtArgs>
+            result: $Utils.Optional<Seller_product_profit_snapshotsGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.seller_product_profit_snapshotsCountArgs<ExtArgs>
+            result: $Utils.Optional<Seller_product_profit_snapshotsCountAggregateOutputType> | number
+          }
+        }
+      }
+      seller_demand_signals: {
+        payload: Prisma.$seller_demand_signalsPayload<ExtArgs>
+        fields: Prisma.seller_demand_signalsFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.seller_demand_signalsFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$seller_demand_signalsPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.seller_demand_signalsFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$seller_demand_signalsPayload>
+          }
+          findFirst: {
+            args: Prisma.seller_demand_signalsFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$seller_demand_signalsPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.seller_demand_signalsFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$seller_demand_signalsPayload>
+          }
+          findMany: {
+            args: Prisma.seller_demand_signalsFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$seller_demand_signalsPayload>[]
+          }
+          create: {
+            args: Prisma.seller_demand_signalsCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$seller_demand_signalsPayload>
+          }
+          createMany: {
+            args: Prisma.seller_demand_signalsCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.seller_demand_signalsCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$seller_demand_signalsPayload>[]
+          }
+          delete: {
+            args: Prisma.seller_demand_signalsDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$seller_demand_signalsPayload>
+          }
+          update: {
+            args: Prisma.seller_demand_signalsUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$seller_demand_signalsPayload>
+          }
+          deleteMany: {
+            args: Prisma.seller_demand_signalsDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.seller_demand_signalsUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.seller_demand_signalsUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$seller_demand_signalsPayload>[]
+          }
+          upsert: {
+            args: Prisma.seller_demand_signalsUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$seller_demand_signalsPayload>
+          }
+          aggregate: {
+            args: Prisma.Seller_demand_signalsAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateSeller_demand_signals>
+          }
+          groupBy: {
+            args: Prisma.seller_demand_signalsGroupByArgs<ExtArgs>
+            result: $Utils.Optional<Seller_demand_signalsGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.seller_demand_signalsCountArgs<ExtArgs>
+            result: $Utils.Optional<Seller_demand_signalsCountAggregateOutputType> | number
+          }
+        }
+      }
+      seller_product_import_jobs: {
+        payload: Prisma.$seller_product_import_jobsPayload<ExtArgs>
+        fields: Prisma.seller_product_import_jobsFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.seller_product_import_jobsFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$seller_product_import_jobsPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.seller_product_import_jobsFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$seller_product_import_jobsPayload>
+          }
+          findFirst: {
+            args: Prisma.seller_product_import_jobsFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$seller_product_import_jobsPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.seller_product_import_jobsFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$seller_product_import_jobsPayload>
+          }
+          findMany: {
+            args: Prisma.seller_product_import_jobsFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$seller_product_import_jobsPayload>[]
+          }
+          create: {
+            args: Prisma.seller_product_import_jobsCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$seller_product_import_jobsPayload>
+          }
+          createMany: {
+            args: Prisma.seller_product_import_jobsCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.seller_product_import_jobsCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$seller_product_import_jobsPayload>[]
+          }
+          delete: {
+            args: Prisma.seller_product_import_jobsDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$seller_product_import_jobsPayload>
+          }
+          update: {
+            args: Prisma.seller_product_import_jobsUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$seller_product_import_jobsPayload>
+          }
+          deleteMany: {
+            args: Prisma.seller_product_import_jobsDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.seller_product_import_jobsUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.seller_product_import_jobsUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$seller_product_import_jobsPayload>[]
+          }
+          upsert: {
+            args: Prisma.seller_product_import_jobsUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$seller_product_import_jobsPayload>
+          }
+          aggregate: {
+            args: Prisma.Seller_product_import_jobsAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateSeller_product_import_jobs>
+          }
+          groupBy: {
+            args: Prisma.seller_product_import_jobsGroupByArgs<ExtArgs>
+            result: $Utils.Optional<Seller_product_import_jobsGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.seller_product_import_jobsCountArgs<ExtArgs>
+            result: $Utils.Optional<Seller_product_import_jobsCountAggregateOutputType> | number
+          }
+        }
+      }
+      seller_stock_adjustments: {
+        payload: Prisma.$seller_stock_adjustmentsPayload<ExtArgs>
+        fields: Prisma.seller_stock_adjustmentsFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.seller_stock_adjustmentsFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$seller_stock_adjustmentsPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.seller_stock_adjustmentsFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$seller_stock_adjustmentsPayload>
+          }
+          findFirst: {
+            args: Prisma.seller_stock_adjustmentsFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$seller_stock_adjustmentsPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.seller_stock_adjustmentsFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$seller_stock_adjustmentsPayload>
+          }
+          findMany: {
+            args: Prisma.seller_stock_adjustmentsFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$seller_stock_adjustmentsPayload>[]
+          }
+          create: {
+            args: Prisma.seller_stock_adjustmentsCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$seller_stock_adjustmentsPayload>
+          }
+          createMany: {
+            args: Prisma.seller_stock_adjustmentsCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.seller_stock_adjustmentsCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$seller_stock_adjustmentsPayload>[]
+          }
+          delete: {
+            args: Prisma.seller_stock_adjustmentsDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$seller_stock_adjustmentsPayload>
+          }
+          update: {
+            args: Prisma.seller_stock_adjustmentsUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$seller_stock_adjustmentsPayload>
+          }
+          deleteMany: {
+            args: Prisma.seller_stock_adjustmentsDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.seller_stock_adjustmentsUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.seller_stock_adjustmentsUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$seller_stock_adjustmentsPayload>[]
+          }
+          upsert: {
+            args: Prisma.seller_stock_adjustmentsUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$seller_stock_adjustmentsPayload>
+          }
+          aggregate: {
+            args: Prisma.Seller_stock_adjustmentsAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateSeller_stock_adjustments>
+          }
+          groupBy: {
+            args: Prisma.seller_stock_adjustmentsGroupByArgs<ExtArgs>
+            result: $Utils.Optional<Seller_stock_adjustmentsGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.seller_stock_adjustmentsCountArgs<ExtArgs>
+            result: $Utils.Optional<Seller_stock_adjustmentsCountAggregateOutputType> | number
+          }
+        }
+      }
       hospitality_item_details: {
         payload: Prisma.$hospitality_item_detailsPayload<ExtArgs>
         fields: Prisma.hospitality_item_detailsFieldRefs
@@ -7236,6 +8316,18 @@ export namespace Prisma {
     product_orders?: product_ordersOmit
     product_order_items?: product_order_itemsOmit
     product_order_status_events?: product_order_status_eventsOmit
+    seller_owner_approvals?: seller_owner_approvalsOmit
+    seller_store_settings?: seller_store_settingsOmit
+    seller_stock_reservations?: seller_stock_reservationsOmit
+    seller_return_cases?: seller_return_casesOmit
+    seller_deliveries?: seller_deliveriesOmit
+    seller_customer_credit_accounts?: seller_customer_credit_accountsOmit
+    seller_customer_credit_transactions?: seller_customer_credit_transactionsOmit
+    seller_ai_audit_logs?: seller_ai_audit_logsOmit
+    seller_product_profit_snapshots?: seller_product_profit_snapshotsOmit
+    seller_demand_signals?: seller_demand_signalsOmit
+    seller_product_import_jobs?: seller_product_import_jobsOmit
+    seller_stock_adjustments?: seller_stock_adjustmentsOmit
     hospitality_item_details?: hospitality_item_detailsOmit
     vehicle_item_details?: vehicle_item_detailsOmit
     hospitality_inquiries?: hospitality_inquiriesOmit
@@ -8862,6 +9954,10 @@ export namespace Prisma {
     tenant_id: string | null
     business_name: string | null
     business_type: string | null
+    business_group: string | null
+    communication_mode: string | null
+    blueprint_seeded: boolean | null
+    blueprint_seeded_at: Date | null
     whatsapp_number: string | null
     created_at: Date | null
     updated_at: Date | null
@@ -8882,6 +9978,10 @@ export namespace Prisma {
     tenant_id: string | null
     business_name: string | null
     business_type: string | null
+    business_group: string | null
+    communication_mode: string | null
+    blueprint_seeded: boolean | null
+    blueprint_seeded_at: Date | null
     whatsapp_number: string | null
     created_at: Date | null
     updated_at: Date | null
@@ -8902,6 +10002,10 @@ export namespace Prisma {
     tenant_id: number
     business_name: number
     business_type: number
+    business_group: number
+    communication_mode: number
+    blueprint_seeded: number
+    blueprint_seeded_at: number
     whatsapp_number: number
     created_at: number
     updated_at: number
@@ -8924,6 +10028,10 @@ export namespace Prisma {
     tenant_id?: true
     business_name?: true
     business_type?: true
+    business_group?: true
+    communication_mode?: true
+    blueprint_seeded?: true
+    blueprint_seeded_at?: true
     whatsapp_number?: true
     created_at?: true
     updated_at?: true
@@ -8944,6 +10052,10 @@ export namespace Prisma {
     tenant_id?: true
     business_name?: true
     business_type?: true
+    business_group?: true
+    communication_mode?: true
+    blueprint_seeded?: true
+    blueprint_seeded_at?: true
     whatsapp_number?: true
     created_at?: true
     updated_at?: true
@@ -8964,6 +10076,10 @@ export namespace Prisma {
     tenant_id?: true
     business_name?: true
     business_type?: true
+    business_group?: true
+    communication_mode?: true
+    blueprint_seeded?: true
+    blueprint_seeded_at?: true
     whatsapp_number?: true
     created_at?: true
     updated_at?: true
@@ -9057,6 +10173,10 @@ export namespace Prisma {
     tenant_id: string
     business_name: string
     business_type: string | null
+    business_group: string | null
+    communication_mode: string
+    blueprint_seeded: boolean
+    blueprint_seeded_at: Date | null
     whatsapp_number: string | null
     created_at: Date
     updated_at: Date
@@ -9094,6 +10214,10 @@ export namespace Prisma {
     tenant_id?: boolean
     business_name?: boolean
     business_type?: boolean
+    business_group?: boolean
+    communication_mode?: boolean
+    blueprint_seeded?: boolean
+    blueprint_seeded_at?: boolean
     whatsapp_number?: boolean
     created_at?: boolean
     updated_at?: boolean
@@ -9146,6 +10270,10 @@ export namespace Prisma {
     tenant_id?: boolean
     business_name?: boolean
     business_type?: boolean
+    business_group?: boolean
+    communication_mode?: boolean
+    blueprint_seeded?: boolean
+    blueprint_seeded_at?: boolean
     whatsapp_number?: boolean
     created_at?: boolean
     updated_at?: boolean
@@ -9167,6 +10295,10 @@ export namespace Prisma {
     tenant_id?: boolean
     business_name?: boolean
     business_type?: boolean
+    business_group?: boolean
+    communication_mode?: boolean
+    blueprint_seeded?: boolean
+    blueprint_seeded_at?: boolean
     whatsapp_number?: boolean
     created_at?: boolean
     updated_at?: boolean
@@ -9188,6 +10320,10 @@ export namespace Prisma {
     tenant_id?: boolean
     business_name?: boolean
     business_type?: boolean
+    business_group?: boolean
+    communication_mode?: boolean
+    blueprint_seeded?: boolean
+    blueprint_seeded_at?: boolean
     whatsapp_number?: boolean
     created_at?: boolean
     updated_at?: boolean
@@ -9203,7 +10339,7 @@ export namespace Prisma {
     deleted_at?: boolean
   }
 
-  export type businessesOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"business_id" | "tenant_id" | "business_name" | "business_type" | "whatsapp_number" | "created_at" | "updated_at" | "email" | "phone" | "website" | "public_booking_slug" | "city" | "address" | "country" | "gst_number" | "pan_number" | "deleted_at", ExtArgs["result"]["businesses"]>
+  export type businessesOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"business_id" | "tenant_id" | "business_name" | "business_type" | "business_group" | "communication_mode" | "blueprint_seeded" | "blueprint_seeded_at" | "whatsapp_number" | "created_at" | "updated_at" | "email" | "phone" | "website" | "public_booking_slug" | "city" | "address" | "country" | "gst_number" | "pan_number" | "deleted_at", ExtArgs["result"]["businesses"]>
   export type businessesInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     business_employees?: boolean | businesses$business_employeesArgs<ExtArgs>
     business_workflows?: boolean | businesses$business_workflowsArgs<ExtArgs>
@@ -9285,6 +10421,10 @@ export namespace Prisma {
       tenant_id: string
       business_name: string
       business_type: string | null
+      business_group: string | null
+      communication_mode: string
+      blueprint_seeded: boolean
+      blueprint_seeded_at: Date | null
       whatsapp_number: string | null
       created_at: Date
       updated_at: Date
@@ -9756,6 +10896,10 @@ export namespace Prisma {
     readonly tenant_id: FieldRef<"businesses", 'String'>
     readonly business_name: FieldRef<"businesses", 'String'>
     readonly business_type: FieldRef<"businesses", 'String'>
+    readonly business_group: FieldRef<"businesses", 'String'>
+    readonly communication_mode: FieldRef<"businesses", 'String'>
+    readonly blueprint_seeded: FieldRef<"businesses", 'Boolean'>
+    readonly blueprint_seeded_at: FieldRef<"businesses", 'DateTime'>
     readonly whatsapp_number: FieldRef<"businesses", 'String'>
     readonly created_at: FieldRef<"businesses", 'DateTime'>
     readonly updated_at: FieldRef<"businesses", 'DateTime'>
@@ -32489,6 +33633,10 @@ export namespace Prisma {
     channel: string | null
     content_template: string | null
     sent_at: Date | null
+    approved_at: Date | null
+    approved_by: string | null
+    auto_approve_at: Date | null
+    deduplication_key: string | null
     tenant_id: string | null
     audience_type: string | null
     clicked_count: number | null
@@ -32518,6 +33666,10 @@ export namespace Prisma {
     channel: string | null
     content_template: string | null
     sent_at: Date | null
+    approved_at: Date | null
+    approved_by: string | null
+    auto_approve_at: Date | null
+    deduplication_key: string | null
     tenant_id: string | null
     audience_type: string | null
     clicked_count: number | null
@@ -32547,6 +33699,10 @@ export namespace Prisma {
     channel: number
     content_template: number
     sent_at: number
+    approved_at: number
+    approved_by: number
+    auto_approve_at: number
+    deduplication_key: number
     target_segment: number
     tenant_id: number
     audience_filter: number
@@ -32599,6 +33755,10 @@ export namespace Prisma {
     channel?: true
     content_template?: true
     sent_at?: true
+    approved_at?: true
+    approved_by?: true
+    auto_approve_at?: true
+    deduplication_key?: true
     tenant_id?: true
     audience_type?: true
     clicked_count?: true
@@ -32628,6 +33788,10 @@ export namespace Prisma {
     channel?: true
     content_template?: true
     sent_at?: true
+    approved_at?: true
+    approved_by?: true
+    auto_approve_at?: true
+    deduplication_key?: true
     tenant_id?: true
     audience_type?: true
     clicked_count?: true
@@ -32657,6 +33821,10 @@ export namespace Prisma {
     channel?: true
     content_template?: true
     sent_at?: true
+    approved_at?: true
+    approved_by?: true
+    auto_approve_at?: true
+    deduplication_key?: true
     target_segment?: true
     tenant_id?: true
     audience_filter?: true
@@ -32776,6 +33944,10 @@ export namespace Prisma {
     channel: string
     content_template: string | null
     sent_at: Date | null
+    approved_at: Date | null
+    approved_by: string | null
+    auto_approve_at: Date | null
+    deduplication_key: string | null
     target_segment: JsonValue | null
     tenant_id: string
     audience_filter: JsonValue | null
@@ -32827,6 +33999,10 @@ export namespace Prisma {
     channel?: boolean
     content_template?: boolean
     sent_at?: boolean
+    approved_at?: boolean
+    approved_by?: boolean
+    auto_approve_at?: boolean
+    deduplication_key?: boolean
     target_segment?: boolean
     tenant_id?: boolean
     audience_filter?: boolean
@@ -32860,6 +34036,10 @@ export namespace Prisma {
     channel?: boolean
     content_template?: boolean
     sent_at?: boolean
+    approved_at?: boolean
+    approved_by?: boolean
+    auto_approve_at?: boolean
+    deduplication_key?: boolean
     target_segment?: boolean
     tenant_id?: boolean
     audience_filter?: boolean
@@ -32893,6 +34073,10 @@ export namespace Prisma {
     channel?: boolean
     content_template?: boolean
     sent_at?: boolean
+    approved_at?: boolean
+    approved_by?: boolean
+    auto_approve_at?: boolean
+    deduplication_key?: boolean
     target_segment?: boolean
     tenant_id?: boolean
     audience_filter?: boolean
@@ -32926,6 +34110,10 @@ export namespace Prisma {
     channel?: boolean
     content_template?: boolean
     sent_at?: boolean
+    approved_at?: boolean
+    approved_by?: boolean
+    auto_approve_at?: boolean
+    deduplication_key?: boolean
     target_segment?: boolean
     tenant_id?: boolean
     audience_filter?: boolean
@@ -32947,7 +34135,7 @@ export namespace Prisma {
     whatsapp_template_name?: boolean
   }
 
-  export type campaignsOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"campaign_id" | "business_id" | "scheduled_at" | "status" | "created_at" | "campaign_name" | "campaign_type" | "channel" | "content_template" | "sent_at" | "target_segment" | "tenant_id" | "audience_filter" | "audience_type" | "clicked_count" | "completed_at" | "converted_count" | "delivered_count" | "failed_count" | "media_type" | "media_url" | "product_id" | "sent_count" | "template_id" | "template_parameters" | "total_recipients" | "updated_at" | "whatsapp_template_language" | "whatsapp_template_name", ExtArgs["result"]["campaigns"]>
+  export type campaignsOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"campaign_id" | "business_id" | "scheduled_at" | "status" | "created_at" | "campaign_name" | "campaign_type" | "channel" | "content_template" | "sent_at" | "approved_at" | "approved_by" | "auto_approve_at" | "deduplication_key" | "target_segment" | "tenant_id" | "audience_filter" | "audience_type" | "clicked_count" | "completed_at" | "converted_count" | "delivered_count" | "failed_count" | "media_type" | "media_url" | "product_id" | "sent_count" | "template_id" | "template_parameters" | "total_recipients" | "updated_at" | "whatsapp_template_language" | "whatsapp_template_name", ExtArgs["result"]["campaigns"]>
   export type campaignsInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     notification_templates?: boolean | campaigns$notification_templatesArgs<ExtArgs>
   }
@@ -32974,6 +34162,10 @@ export namespace Prisma {
       channel: string
       content_template: string | null
       sent_at: Date | null
+      approved_at: Date | null
+      approved_by: string | null
+      auto_approve_at: Date | null
+      deduplication_key: string | null
       target_segment: Prisma.JsonValue | null
       tenant_id: string
       audience_filter: Prisma.JsonValue | null
@@ -33427,6 +34619,10 @@ export namespace Prisma {
     readonly channel: FieldRef<"campaigns", 'String'>
     readonly content_template: FieldRef<"campaigns", 'String'>
     readonly sent_at: FieldRef<"campaigns", 'DateTime'>
+    readonly approved_at: FieldRef<"campaigns", 'DateTime'>
+    readonly approved_by: FieldRef<"campaigns", 'String'>
+    readonly auto_approve_at: FieldRef<"campaigns", 'DateTime'>
+    readonly deduplication_key: FieldRef<"campaigns", 'String'>
     readonly target_segment: FieldRef<"campaigns", 'Json'>
     readonly tenant_id: FieldRef<"campaigns", 'String'>
     readonly audience_filter: FieldRef<"campaigns", 'Json'>
@@ -71372,6 +72568,13930 @@ export namespace Prisma {
 
 
   /**
+   * Model seller_owner_approvals
+   */
+
+  export type AggregateSeller_owner_approvals = {
+    _count: Seller_owner_approvalsCountAggregateOutputType | null
+    _min: Seller_owner_approvalsMinAggregateOutputType | null
+    _max: Seller_owner_approvalsMaxAggregateOutputType | null
+  }
+
+  export type Seller_owner_approvalsMinAggregateOutputType = {
+    approval_id: string | null
+    business_id: string | null
+    tenant_id: string | null
+    title: string | null
+    simple_summary: string | null
+    action_type: string | null
+    risk_level: string | null
+    status: string | null
+    source: string | null
+    entity_type: string | null
+    entity_id: string | null
+    requested_by: string | null
+    decided_by: string | null
+    due_at: Date | null
+    decided_at: Date | null
+    expires_at: Date | null
+    created_at: Date | null
+    updated_at: Date | null
+  }
+
+  export type Seller_owner_approvalsMaxAggregateOutputType = {
+    approval_id: string | null
+    business_id: string | null
+    tenant_id: string | null
+    title: string | null
+    simple_summary: string | null
+    action_type: string | null
+    risk_level: string | null
+    status: string | null
+    source: string | null
+    entity_type: string | null
+    entity_id: string | null
+    requested_by: string | null
+    decided_by: string | null
+    due_at: Date | null
+    decided_at: Date | null
+    expires_at: Date | null
+    created_at: Date | null
+    updated_at: Date | null
+  }
+
+  export type Seller_owner_approvalsCountAggregateOutputType = {
+    approval_id: number
+    business_id: number
+    tenant_id: number
+    title: number
+    simple_summary: number
+    action_type: number
+    risk_level: number
+    status: number
+    source: number
+    entity_type: number
+    entity_id: number
+    requested_by: number
+    decided_by: number
+    payload: number
+    guardrails: number
+    due_at: number
+    decided_at: number
+    expires_at: number
+    created_at: number
+    updated_at: number
+    _all: number
+  }
+
+
+  export type Seller_owner_approvalsMinAggregateInputType = {
+    approval_id?: true
+    business_id?: true
+    tenant_id?: true
+    title?: true
+    simple_summary?: true
+    action_type?: true
+    risk_level?: true
+    status?: true
+    source?: true
+    entity_type?: true
+    entity_id?: true
+    requested_by?: true
+    decided_by?: true
+    due_at?: true
+    decided_at?: true
+    expires_at?: true
+    created_at?: true
+    updated_at?: true
+  }
+
+  export type Seller_owner_approvalsMaxAggregateInputType = {
+    approval_id?: true
+    business_id?: true
+    tenant_id?: true
+    title?: true
+    simple_summary?: true
+    action_type?: true
+    risk_level?: true
+    status?: true
+    source?: true
+    entity_type?: true
+    entity_id?: true
+    requested_by?: true
+    decided_by?: true
+    due_at?: true
+    decided_at?: true
+    expires_at?: true
+    created_at?: true
+    updated_at?: true
+  }
+
+  export type Seller_owner_approvalsCountAggregateInputType = {
+    approval_id?: true
+    business_id?: true
+    tenant_id?: true
+    title?: true
+    simple_summary?: true
+    action_type?: true
+    risk_level?: true
+    status?: true
+    source?: true
+    entity_type?: true
+    entity_id?: true
+    requested_by?: true
+    decided_by?: true
+    payload?: true
+    guardrails?: true
+    due_at?: true
+    decided_at?: true
+    expires_at?: true
+    created_at?: true
+    updated_at?: true
+    _all?: true
+  }
+
+  export type Seller_owner_approvalsAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which seller_owner_approvals to aggregate.
+     */
+    where?: seller_owner_approvalsWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of seller_owner_approvals to fetch.
+     */
+    orderBy?: seller_owner_approvalsOrderByWithRelationInput | seller_owner_approvalsOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: seller_owner_approvalsWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` seller_owner_approvals from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` seller_owner_approvals.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned seller_owner_approvals
+    **/
+    _count?: true | Seller_owner_approvalsCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: Seller_owner_approvalsMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: Seller_owner_approvalsMaxAggregateInputType
+  }
+
+  export type GetSeller_owner_approvalsAggregateType<T extends Seller_owner_approvalsAggregateArgs> = {
+        [P in keyof T & keyof AggregateSeller_owner_approvals]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateSeller_owner_approvals[P]>
+      : GetScalarType<T[P], AggregateSeller_owner_approvals[P]>
+  }
+
+
+
+
+  export type seller_owner_approvalsGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: seller_owner_approvalsWhereInput
+    orderBy?: seller_owner_approvalsOrderByWithAggregationInput | seller_owner_approvalsOrderByWithAggregationInput[]
+    by: Seller_owner_approvalsScalarFieldEnum[] | Seller_owner_approvalsScalarFieldEnum
+    having?: seller_owner_approvalsScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: Seller_owner_approvalsCountAggregateInputType | true
+    _min?: Seller_owner_approvalsMinAggregateInputType
+    _max?: Seller_owner_approvalsMaxAggregateInputType
+  }
+
+  export type Seller_owner_approvalsGroupByOutputType = {
+    approval_id: string
+    business_id: string
+    tenant_id: string | null
+    title: string
+    simple_summary: string | null
+    action_type: string
+    risk_level: string
+    status: string
+    source: string
+    entity_type: string | null
+    entity_id: string | null
+    requested_by: string | null
+    decided_by: string | null
+    payload: JsonValue | null
+    guardrails: JsonValue | null
+    due_at: Date | null
+    decided_at: Date | null
+    expires_at: Date | null
+    created_at: Date
+    updated_at: Date
+    _count: Seller_owner_approvalsCountAggregateOutputType | null
+    _min: Seller_owner_approvalsMinAggregateOutputType | null
+    _max: Seller_owner_approvalsMaxAggregateOutputType | null
+  }
+
+  type GetSeller_owner_approvalsGroupByPayload<T extends seller_owner_approvalsGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<Seller_owner_approvalsGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof Seller_owner_approvalsGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], Seller_owner_approvalsGroupByOutputType[P]>
+            : GetScalarType<T[P], Seller_owner_approvalsGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type seller_owner_approvalsSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    approval_id?: boolean
+    business_id?: boolean
+    tenant_id?: boolean
+    title?: boolean
+    simple_summary?: boolean
+    action_type?: boolean
+    risk_level?: boolean
+    status?: boolean
+    source?: boolean
+    entity_type?: boolean
+    entity_id?: boolean
+    requested_by?: boolean
+    decided_by?: boolean
+    payload?: boolean
+    guardrails?: boolean
+    due_at?: boolean
+    decided_at?: boolean
+    expires_at?: boolean
+    created_at?: boolean
+    updated_at?: boolean
+  }, ExtArgs["result"]["seller_owner_approvals"]>
+
+  export type seller_owner_approvalsSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    approval_id?: boolean
+    business_id?: boolean
+    tenant_id?: boolean
+    title?: boolean
+    simple_summary?: boolean
+    action_type?: boolean
+    risk_level?: boolean
+    status?: boolean
+    source?: boolean
+    entity_type?: boolean
+    entity_id?: boolean
+    requested_by?: boolean
+    decided_by?: boolean
+    payload?: boolean
+    guardrails?: boolean
+    due_at?: boolean
+    decided_at?: boolean
+    expires_at?: boolean
+    created_at?: boolean
+    updated_at?: boolean
+  }, ExtArgs["result"]["seller_owner_approvals"]>
+
+  export type seller_owner_approvalsSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    approval_id?: boolean
+    business_id?: boolean
+    tenant_id?: boolean
+    title?: boolean
+    simple_summary?: boolean
+    action_type?: boolean
+    risk_level?: boolean
+    status?: boolean
+    source?: boolean
+    entity_type?: boolean
+    entity_id?: boolean
+    requested_by?: boolean
+    decided_by?: boolean
+    payload?: boolean
+    guardrails?: boolean
+    due_at?: boolean
+    decided_at?: boolean
+    expires_at?: boolean
+    created_at?: boolean
+    updated_at?: boolean
+  }, ExtArgs["result"]["seller_owner_approvals"]>
+
+  export type seller_owner_approvalsSelectScalar = {
+    approval_id?: boolean
+    business_id?: boolean
+    tenant_id?: boolean
+    title?: boolean
+    simple_summary?: boolean
+    action_type?: boolean
+    risk_level?: boolean
+    status?: boolean
+    source?: boolean
+    entity_type?: boolean
+    entity_id?: boolean
+    requested_by?: boolean
+    decided_by?: boolean
+    payload?: boolean
+    guardrails?: boolean
+    due_at?: boolean
+    decided_at?: boolean
+    expires_at?: boolean
+    created_at?: boolean
+    updated_at?: boolean
+  }
+
+  export type seller_owner_approvalsOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"approval_id" | "business_id" | "tenant_id" | "title" | "simple_summary" | "action_type" | "risk_level" | "status" | "source" | "entity_type" | "entity_id" | "requested_by" | "decided_by" | "payload" | "guardrails" | "due_at" | "decided_at" | "expires_at" | "created_at" | "updated_at", ExtArgs["result"]["seller_owner_approvals"]>
+
+  export type $seller_owner_approvalsPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "seller_owner_approvals"
+    objects: {}
+    scalars: $Extensions.GetPayloadResult<{
+      approval_id: string
+      business_id: string
+      tenant_id: string | null
+      title: string
+      simple_summary: string | null
+      action_type: string
+      risk_level: string
+      status: string
+      source: string
+      entity_type: string | null
+      entity_id: string | null
+      requested_by: string | null
+      decided_by: string | null
+      payload: Prisma.JsonValue | null
+      guardrails: Prisma.JsonValue | null
+      due_at: Date | null
+      decided_at: Date | null
+      expires_at: Date | null
+      created_at: Date
+      updated_at: Date
+    }, ExtArgs["result"]["seller_owner_approvals"]>
+    composites: {}
+  }
+
+  type seller_owner_approvalsGetPayload<S extends boolean | null | undefined | seller_owner_approvalsDefaultArgs> = $Result.GetResult<Prisma.$seller_owner_approvalsPayload, S>
+
+  type seller_owner_approvalsCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<seller_owner_approvalsFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: Seller_owner_approvalsCountAggregateInputType | true
+    }
+
+  export interface seller_owner_approvalsDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['seller_owner_approvals'], meta: { name: 'seller_owner_approvals' } }
+    /**
+     * Find zero or one Seller_owner_approvals that matches the filter.
+     * @param {seller_owner_approvalsFindUniqueArgs} args - Arguments to find a Seller_owner_approvals
+     * @example
+     * // Get one Seller_owner_approvals
+     * const seller_owner_approvals = await prisma.seller_owner_approvals.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends seller_owner_approvalsFindUniqueArgs>(args: SelectSubset<T, seller_owner_approvalsFindUniqueArgs<ExtArgs>>): Prisma__seller_owner_approvalsClient<$Result.GetResult<Prisma.$seller_owner_approvalsPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one Seller_owner_approvals that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {seller_owner_approvalsFindUniqueOrThrowArgs} args - Arguments to find a Seller_owner_approvals
+     * @example
+     * // Get one Seller_owner_approvals
+     * const seller_owner_approvals = await prisma.seller_owner_approvals.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends seller_owner_approvalsFindUniqueOrThrowArgs>(args: SelectSubset<T, seller_owner_approvalsFindUniqueOrThrowArgs<ExtArgs>>): Prisma__seller_owner_approvalsClient<$Result.GetResult<Prisma.$seller_owner_approvalsPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Seller_owner_approvals that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {seller_owner_approvalsFindFirstArgs} args - Arguments to find a Seller_owner_approvals
+     * @example
+     * // Get one Seller_owner_approvals
+     * const seller_owner_approvals = await prisma.seller_owner_approvals.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends seller_owner_approvalsFindFirstArgs>(args?: SelectSubset<T, seller_owner_approvalsFindFirstArgs<ExtArgs>>): Prisma__seller_owner_approvalsClient<$Result.GetResult<Prisma.$seller_owner_approvalsPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Seller_owner_approvals that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {seller_owner_approvalsFindFirstOrThrowArgs} args - Arguments to find a Seller_owner_approvals
+     * @example
+     * // Get one Seller_owner_approvals
+     * const seller_owner_approvals = await prisma.seller_owner_approvals.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends seller_owner_approvalsFindFirstOrThrowArgs>(args?: SelectSubset<T, seller_owner_approvalsFindFirstOrThrowArgs<ExtArgs>>): Prisma__seller_owner_approvalsClient<$Result.GetResult<Prisma.$seller_owner_approvalsPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more Seller_owner_approvals that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {seller_owner_approvalsFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all Seller_owner_approvals
+     * const seller_owner_approvals = await prisma.seller_owner_approvals.findMany()
+     * 
+     * // Get first 10 Seller_owner_approvals
+     * const seller_owner_approvals = await prisma.seller_owner_approvals.findMany({ take: 10 })
+     * 
+     * // Only select the `approval_id`
+     * const seller_owner_approvalsWithApproval_idOnly = await prisma.seller_owner_approvals.findMany({ select: { approval_id: true } })
+     * 
+     */
+    findMany<T extends seller_owner_approvalsFindManyArgs>(args?: SelectSubset<T, seller_owner_approvalsFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$seller_owner_approvalsPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a Seller_owner_approvals.
+     * @param {seller_owner_approvalsCreateArgs} args - Arguments to create a Seller_owner_approvals.
+     * @example
+     * // Create one Seller_owner_approvals
+     * const Seller_owner_approvals = await prisma.seller_owner_approvals.create({
+     *   data: {
+     *     // ... data to create a Seller_owner_approvals
+     *   }
+     * })
+     * 
+     */
+    create<T extends seller_owner_approvalsCreateArgs>(args: SelectSubset<T, seller_owner_approvalsCreateArgs<ExtArgs>>): Prisma__seller_owner_approvalsClient<$Result.GetResult<Prisma.$seller_owner_approvalsPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many Seller_owner_approvals.
+     * @param {seller_owner_approvalsCreateManyArgs} args - Arguments to create many Seller_owner_approvals.
+     * @example
+     * // Create many Seller_owner_approvals
+     * const seller_owner_approvals = await prisma.seller_owner_approvals.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends seller_owner_approvalsCreateManyArgs>(args?: SelectSubset<T, seller_owner_approvalsCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many Seller_owner_approvals and returns the data saved in the database.
+     * @param {seller_owner_approvalsCreateManyAndReturnArgs} args - Arguments to create many Seller_owner_approvals.
+     * @example
+     * // Create many Seller_owner_approvals
+     * const seller_owner_approvals = await prisma.seller_owner_approvals.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many Seller_owner_approvals and only return the `approval_id`
+     * const seller_owner_approvalsWithApproval_idOnly = await prisma.seller_owner_approvals.createManyAndReturn({
+     *   select: { approval_id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends seller_owner_approvalsCreateManyAndReturnArgs>(args?: SelectSubset<T, seller_owner_approvalsCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$seller_owner_approvalsPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a Seller_owner_approvals.
+     * @param {seller_owner_approvalsDeleteArgs} args - Arguments to delete one Seller_owner_approvals.
+     * @example
+     * // Delete one Seller_owner_approvals
+     * const Seller_owner_approvals = await prisma.seller_owner_approvals.delete({
+     *   where: {
+     *     // ... filter to delete one Seller_owner_approvals
+     *   }
+     * })
+     * 
+     */
+    delete<T extends seller_owner_approvalsDeleteArgs>(args: SelectSubset<T, seller_owner_approvalsDeleteArgs<ExtArgs>>): Prisma__seller_owner_approvalsClient<$Result.GetResult<Prisma.$seller_owner_approvalsPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one Seller_owner_approvals.
+     * @param {seller_owner_approvalsUpdateArgs} args - Arguments to update one Seller_owner_approvals.
+     * @example
+     * // Update one Seller_owner_approvals
+     * const seller_owner_approvals = await prisma.seller_owner_approvals.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends seller_owner_approvalsUpdateArgs>(args: SelectSubset<T, seller_owner_approvalsUpdateArgs<ExtArgs>>): Prisma__seller_owner_approvalsClient<$Result.GetResult<Prisma.$seller_owner_approvalsPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more Seller_owner_approvals.
+     * @param {seller_owner_approvalsDeleteManyArgs} args - Arguments to filter Seller_owner_approvals to delete.
+     * @example
+     * // Delete a few Seller_owner_approvals
+     * const { count } = await prisma.seller_owner_approvals.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends seller_owner_approvalsDeleteManyArgs>(args?: SelectSubset<T, seller_owner_approvalsDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Seller_owner_approvals.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {seller_owner_approvalsUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many Seller_owner_approvals
+     * const seller_owner_approvals = await prisma.seller_owner_approvals.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends seller_owner_approvalsUpdateManyArgs>(args: SelectSubset<T, seller_owner_approvalsUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Seller_owner_approvals and returns the data updated in the database.
+     * @param {seller_owner_approvalsUpdateManyAndReturnArgs} args - Arguments to update many Seller_owner_approvals.
+     * @example
+     * // Update many Seller_owner_approvals
+     * const seller_owner_approvals = await prisma.seller_owner_approvals.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more Seller_owner_approvals and only return the `approval_id`
+     * const seller_owner_approvalsWithApproval_idOnly = await prisma.seller_owner_approvals.updateManyAndReturn({
+     *   select: { approval_id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends seller_owner_approvalsUpdateManyAndReturnArgs>(args: SelectSubset<T, seller_owner_approvalsUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$seller_owner_approvalsPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one Seller_owner_approvals.
+     * @param {seller_owner_approvalsUpsertArgs} args - Arguments to update or create a Seller_owner_approvals.
+     * @example
+     * // Update or create a Seller_owner_approvals
+     * const seller_owner_approvals = await prisma.seller_owner_approvals.upsert({
+     *   create: {
+     *     // ... data to create a Seller_owner_approvals
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the Seller_owner_approvals we want to update
+     *   }
+     * })
+     */
+    upsert<T extends seller_owner_approvalsUpsertArgs>(args: SelectSubset<T, seller_owner_approvalsUpsertArgs<ExtArgs>>): Prisma__seller_owner_approvalsClient<$Result.GetResult<Prisma.$seller_owner_approvalsPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of Seller_owner_approvals.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {seller_owner_approvalsCountArgs} args - Arguments to filter Seller_owner_approvals to count.
+     * @example
+     * // Count the number of Seller_owner_approvals
+     * const count = await prisma.seller_owner_approvals.count({
+     *   where: {
+     *     // ... the filter for the Seller_owner_approvals we want to count
+     *   }
+     * })
+    **/
+    count<T extends seller_owner_approvalsCountArgs>(
+      args?: Subset<T, seller_owner_approvalsCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], Seller_owner_approvalsCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a Seller_owner_approvals.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {Seller_owner_approvalsAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends Seller_owner_approvalsAggregateArgs>(args: Subset<T, Seller_owner_approvalsAggregateArgs>): Prisma.PrismaPromise<GetSeller_owner_approvalsAggregateType<T>>
+
+    /**
+     * Group by Seller_owner_approvals.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {seller_owner_approvalsGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends seller_owner_approvalsGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: seller_owner_approvalsGroupByArgs['orderBy'] }
+        : { orderBy?: seller_owner_approvalsGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, seller_owner_approvalsGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetSeller_owner_approvalsGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the seller_owner_approvals model
+   */
+  readonly fields: seller_owner_approvalsFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for seller_owner_approvals.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__seller_owner_approvalsClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the seller_owner_approvals model
+   */
+  interface seller_owner_approvalsFieldRefs {
+    readonly approval_id: FieldRef<"seller_owner_approvals", 'String'>
+    readonly business_id: FieldRef<"seller_owner_approvals", 'String'>
+    readonly tenant_id: FieldRef<"seller_owner_approvals", 'String'>
+    readonly title: FieldRef<"seller_owner_approvals", 'String'>
+    readonly simple_summary: FieldRef<"seller_owner_approvals", 'String'>
+    readonly action_type: FieldRef<"seller_owner_approvals", 'String'>
+    readonly risk_level: FieldRef<"seller_owner_approvals", 'String'>
+    readonly status: FieldRef<"seller_owner_approvals", 'String'>
+    readonly source: FieldRef<"seller_owner_approvals", 'String'>
+    readonly entity_type: FieldRef<"seller_owner_approvals", 'String'>
+    readonly entity_id: FieldRef<"seller_owner_approvals", 'String'>
+    readonly requested_by: FieldRef<"seller_owner_approvals", 'String'>
+    readonly decided_by: FieldRef<"seller_owner_approvals", 'String'>
+    readonly payload: FieldRef<"seller_owner_approvals", 'Json'>
+    readonly guardrails: FieldRef<"seller_owner_approvals", 'Json'>
+    readonly due_at: FieldRef<"seller_owner_approvals", 'DateTime'>
+    readonly decided_at: FieldRef<"seller_owner_approvals", 'DateTime'>
+    readonly expires_at: FieldRef<"seller_owner_approvals", 'DateTime'>
+    readonly created_at: FieldRef<"seller_owner_approvals", 'DateTime'>
+    readonly updated_at: FieldRef<"seller_owner_approvals", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * seller_owner_approvals findUnique
+   */
+  export type seller_owner_approvalsFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the seller_owner_approvals
+     */
+    select?: seller_owner_approvalsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the seller_owner_approvals
+     */
+    omit?: seller_owner_approvalsOmit<ExtArgs> | null
+    /**
+     * Filter, which seller_owner_approvals to fetch.
+     */
+    where: seller_owner_approvalsWhereUniqueInput
+  }
+
+  /**
+   * seller_owner_approvals findUniqueOrThrow
+   */
+  export type seller_owner_approvalsFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the seller_owner_approvals
+     */
+    select?: seller_owner_approvalsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the seller_owner_approvals
+     */
+    omit?: seller_owner_approvalsOmit<ExtArgs> | null
+    /**
+     * Filter, which seller_owner_approvals to fetch.
+     */
+    where: seller_owner_approvalsWhereUniqueInput
+  }
+
+  /**
+   * seller_owner_approvals findFirst
+   */
+  export type seller_owner_approvalsFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the seller_owner_approvals
+     */
+    select?: seller_owner_approvalsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the seller_owner_approvals
+     */
+    omit?: seller_owner_approvalsOmit<ExtArgs> | null
+    /**
+     * Filter, which seller_owner_approvals to fetch.
+     */
+    where?: seller_owner_approvalsWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of seller_owner_approvals to fetch.
+     */
+    orderBy?: seller_owner_approvalsOrderByWithRelationInput | seller_owner_approvalsOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for seller_owner_approvals.
+     */
+    cursor?: seller_owner_approvalsWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` seller_owner_approvals from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` seller_owner_approvals.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of seller_owner_approvals.
+     */
+    distinct?: Seller_owner_approvalsScalarFieldEnum | Seller_owner_approvalsScalarFieldEnum[]
+  }
+
+  /**
+   * seller_owner_approvals findFirstOrThrow
+   */
+  export type seller_owner_approvalsFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the seller_owner_approvals
+     */
+    select?: seller_owner_approvalsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the seller_owner_approvals
+     */
+    omit?: seller_owner_approvalsOmit<ExtArgs> | null
+    /**
+     * Filter, which seller_owner_approvals to fetch.
+     */
+    where?: seller_owner_approvalsWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of seller_owner_approvals to fetch.
+     */
+    orderBy?: seller_owner_approvalsOrderByWithRelationInput | seller_owner_approvalsOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for seller_owner_approvals.
+     */
+    cursor?: seller_owner_approvalsWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` seller_owner_approvals from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` seller_owner_approvals.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of seller_owner_approvals.
+     */
+    distinct?: Seller_owner_approvalsScalarFieldEnum | Seller_owner_approvalsScalarFieldEnum[]
+  }
+
+  /**
+   * seller_owner_approvals findMany
+   */
+  export type seller_owner_approvalsFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the seller_owner_approvals
+     */
+    select?: seller_owner_approvalsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the seller_owner_approvals
+     */
+    omit?: seller_owner_approvalsOmit<ExtArgs> | null
+    /**
+     * Filter, which seller_owner_approvals to fetch.
+     */
+    where?: seller_owner_approvalsWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of seller_owner_approvals to fetch.
+     */
+    orderBy?: seller_owner_approvalsOrderByWithRelationInput | seller_owner_approvalsOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing seller_owner_approvals.
+     */
+    cursor?: seller_owner_approvalsWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` seller_owner_approvals from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` seller_owner_approvals.
+     */
+    skip?: number
+    distinct?: Seller_owner_approvalsScalarFieldEnum | Seller_owner_approvalsScalarFieldEnum[]
+  }
+
+  /**
+   * seller_owner_approvals create
+   */
+  export type seller_owner_approvalsCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the seller_owner_approvals
+     */
+    select?: seller_owner_approvalsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the seller_owner_approvals
+     */
+    omit?: seller_owner_approvalsOmit<ExtArgs> | null
+    /**
+     * The data needed to create a seller_owner_approvals.
+     */
+    data: XOR<seller_owner_approvalsCreateInput, seller_owner_approvalsUncheckedCreateInput>
+  }
+
+  /**
+   * seller_owner_approvals createMany
+   */
+  export type seller_owner_approvalsCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many seller_owner_approvals.
+     */
+    data: seller_owner_approvalsCreateManyInput | seller_owner_approvalsCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * seller_owner_approvals createManyAndReturn
+   */
+  export type seller_owner_approvalsCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the seller_owner_approvals
+     */
+    select?: seller_owner_approvalsSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the seller_owner_approvals
+     */
+    omit?: seller_owner_approvalsOmit<ExtArgs> | null
+    /**
+     * The data used to create many seller_owner_approvals.
+     */
+    data: seller_owner_approvalsCreateManyInput | seller_owner_approvalsCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * seller_owner_approvals update
+   */
+  export type seller_owner_approvalsUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the seller_owner_approvals
+     */
+    select?: seller_owner_approvalsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the seller_owner_approvals
+     */
+    omit?: seller_owner_approvalsOmit<ExtArgs> | null
+    /**
+     * The data needed to update a seller_owner_approvals.
+     */
+    data: XOR<seller_owner_approvalsUpdateInput, seller_owner_approvalsUncheckedUpdateInput>
+    /**
+     * Choose, which seller_owner_approvals to update.
+     */
+    where: seller_owner_approvalsWhereUniqueInput
+  }
+
+  /**
+   * seller_owner_approvals updateMany
+   */
+  export type seller_owner_approvalsUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update seller_owner_approvals.
+     */
+    data: XOR<seller_owner_approvalsUpdateManyMutationInput, seller_owner_approvalsUncheckedUpdateManyInput>
+    /**
+     * Filter which seller_owner_approvals to update
+     */
+    where?: seller_owner_approvalsWhereInput
+    /**
+     * Limit how many seller_owner_approvals to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * seller_owner_approvals updateManyAndReturn
+   */
+  export type seller_owner_approvalsUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the seller_owner_approvals
+     */
+    select?: seller_owner_approvalsSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the seller_owner_approvals
+     */
+    omit?: seller_owner_approvalsOmit<ExtArgs> | null
+    /**
+     * The data used to update seller_owner_approvals.
+     */
+    data: XOR<seller_owner_approvalsUpdateManyMutationInput, seller_owner_approvalsUncheckedUpdateManyInput>
+    /**
+     * Filter which seller_owner_approvals to update
+     */
+    where?: seller_owner_approvalsWhereInput
+    /**
+     * Limit how many seller_owner_approvals to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * seller_owner_approvals upsert
+   */
+  export type seller_owner_approvalsUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the seller_owner_approvals
+     */
+    select?: seller_owner_approvalsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the seller_owner_approvals
+     */
+    omit?: seller_owner_approvalsOmit<ExtArgs> | null
+    /**
+     * The filter to search for the seller_owner_approvals to update in case it exists.
+     */
+    where: seller_owner_approvalsWhereUniqueInput
+    /**
+     * In case the seller_owner_approvals found by the `where` argument doesn't exist, create a new seller_owner_approvals with this data.
+     */
+    create: XOR<seller_owner_approvalsCreateInput, seller_owner_approvalsUncheckedCreateInput>
+    /**
+     * In case the seller_owner_approvals was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<seller_owner_approvalsUpdateInput, seller_owner_approvalsUncheckedUpdateInput>
+  }
+
+  /**
+   * seller_owner_approvals delete
+   */
+  export type seller_owner_approvalsDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the seller_owner_approvals
+     */
+    select?: seller_owner_approvalsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the seller_owner_approvals
+     */
+    omit?: seller_owner_approvalsOmit<ExtArgs> | null
+    /**
+     * Filter which seller_owner_approvals to delete.
+     */
+    where: seller_owner_approvalsWhereUniqueInput
+  }
+
+  /**
+   * seller_owner_approvals deleteMany
+   */
+  export type seller_owner_approvalsDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which seller_owner_approvals to delete
+     */
+    where?: seller_owner_approvalsWhereInput
+    /**
+     * Limit how many seller_owner_approvals to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * seller_owner_approvals without action
+   */
+  export type seller_owner_approvalsDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the seller_owner_approvals
+     */
+    select?: seller_owner_approvalsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the seller_owner_approvals
+     */
+    omit?: seller_owner_approvalsOmit<ExtArgs> | null
+  }
+
+
+  /**
+   * Model seller_store_settings
+   */
+
+  export type AggregateSeller_store_settings = {
+    _count: Seller_store_settingsCountAggregateOutputType | null
+    _avg: Seller_store_settingsAvgAggregateOutputType | null
+    _sum: Seller_store_settingsSumAggregateOutputType | null
+    _min: Seller_store_settingsMinAggregateOutputType | null
+    _max: Seller_store_settingsMaxAggregateOutputType | null
+  }
+
+  export type Seller_store_settingsAvgAggregateOutputType = {
+    low_stock_threshold: number | null
+    stock_hold_minutes: number | null
+  }
+
+  export type Seller_store_settingsSumAggregateOutputType = {
+    low_stock_threshold: number | null
+    stock_hold_minutes: number | null
+  }
+
+  export type Seller_store_settingsMinAggregateOutputType = {
+    seller_store_settings_id: string | null
+    business_id: string | null
+    tenant_id: string | null
+    store_type: string | null
+    onboarding_status: string | null
+    default_currency: string | null
+    low_stock_threshold: number | null
+    stock_hold_minutes: number | null
+    created_at: Date | null
+    updated_at: Date | null
+  }
+
+  export type Seller_store_settingsMaxAggregateOutputType = {
+    seller_store_settings_id: string | null
+    business_id: string | null
+    tenant_id: string | null
+    store_type: string | null
+    onboarding_status: string | null
+    default_currency: string | null
+    low_stock_threshold: number | null
+    stock_hold_minutes: number | null
+    created_at: Date | null
+    updated_at: Date | null
+  }
+
+  export type Seller_store_settingsCountAggregateOutputType = {
+    seller_store_settings_id: number
+    business_id: number
+    tenant_id: number
+    store_type: number
+    onboarding_status: number
+    default_currency: number
+    low_stock_threshold: number
+    stock_hold_minutes: number
+    payment_modes: number
+    delivery_modes: number
+    delivery_areas: number
+    credit_defaults: number
+    ai_guardrails: number
+    setup_checklist: number
+    created_at: number
+    updated_at: number
+    _all: number
+  }
+
+
+  export type Seller_store_settingsAvgAggregateInputType = {
+    low_stock_threshold?: true
+    stock_hold_minutes?: true
+  }
+
+  export type Seller_store_settingsSumAggregateInputType = {
+    low_stock_threshold?: true
+    stock_hold_minutes?: true
+  }
+
+  export type Seller_store_settingsMinAggregateInputType = {
+    seller_store_settings_id?: true
+    business_id?: true
+    tenant_id?: true
+    store_type?: true
+    onboarding_status?: true
+    default_currency?: true
+    low_stock_threshold?: true
+    stock_hold_minutes?: true
+    created_at?: true
+    updated_at?: true
+  }
+
+  export type Seller_store_settingsMaxAggregateInputType = {
+    seller_store_settings_id?: true
+    business_id?: true
+    tenant_id?: true
+    store_type?: true
+    onboarding_status?: true
+    default_currency?: true
+    low_stock_threshold?: true
+    stock_hold_minutes?: true
+    created_at?: true
+    updated_at?: true
+  }
+
+  export type Seller_store_settingsCountAggregateInputType = {
+    seller_store_settings_id?: true
+    business_id?: true
+    tenant_id?: true
+    store_type?: true
+    onboarding_status?: true
+    default_currency?: true
+    low_stock_threshold?: true
+    stock_hold_minutes?: true
+    payment_modes?: true
+    delivery_modes?: true
+    delivery_areas?: true
+    credit_defaults?: true
+    ai_guardrails?: true
+    setup_checklist?: true
+    created_at?: true
+    updated_at?: true
+    _all?: true
+  }
+
+  export type Seller_store_settingsAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which seller_store_settings to aggregate.
+     */
+    where?: seller_store_settingsWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of seller_store_settings to fetch.
+     */
+    orderBy?: seller_store_settingsOrderByWithRelationInput | seller_store_settingsOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: seller_store_settingsWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` seller_store_settings from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` seller_store_settings.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned seller_store_settings
+    **/
+    _count?: true | Seller_store_settingsCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: Seller_store_settingsAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: Seller_store_settingsSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: Seller_store_settingsMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: Seller_store_settingsMaxAggregateInputType
+  }
+
+  export type GetSeller_store_settingsAggregateType<T extends Seller_store_settingsAggregateArgs> = {
+        [P in keyof T & keyof AggregateSeller_store_settings]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateSeller_store_settings[P]>
+      : GetScalarType<T[P], AggregateSeller_store_settings[P]>
+  }
+
+
+
+
+  export type seller_store_settingsGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: seller_store_settingsWhereInput
+    orderBy?: seller_store_settingsOrderByWithAggregationInput | seller_store_settingsOrderByWithAggregationInput[]
+    by: Seller_store_settingsScalarFieldEnum[] | Seller_store_settingsScalarFieldEnum
+    having?: seller_store_settingsScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: Seller_store_settingsCountAggregateInputType | true
+    _avg?: Seller_store_settingsAvgAggregateInputType
+    _sum?: Seller_store_settingsSumAggregateInputType
+    _min?: Seller_store_settingsMinAggregateInputType
+    _max?: Seller_store_settingsMaxAggregateInputType
+  }
+
+  export type Seller_store_settingsGroupByOutputType = {
+    seller_store_settings_id: string
+    business_id: string
+    tenant_id: string | null
+    store_type: string
+    onboarding_status: string
+    default_currency: string
+    low_stock_threshold: number
+    stock_hold_minutes: number
+    payment_modes: string[]
+    delivery_modes: string[]
+    delivery_areas: JsonValue | null
+    credit_defaults: JsonValue | null
+    ai_guardrails: JsonValue | null
+    setup_checklist: JsonValue | null
+    created_at: Date
+    updated_at: Date
+    _count: Seller_store_settingsCountAggregateOutputType | null
+    _avg: Seller_store_settingsAvgAggregateOutputType | null
+    _sum: Seller_store_settingsSumAggregateOutputType | null
+    _min: Seller_store_settingsMinAggregateOutputType | null
+    _max: Seller_store_settingsMaxAggregateOutputType | null
+  }
+
+  type GetSeller_store_settingsGroupByPayload<T extends seller_store_settingsGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<Seller_store_settingsGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof Seller_store_settingsGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], Seller_store_settingsGroupByOutputType[P]>
+            : GetScalarType<T[P], Seller_store_settingsGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type seller_store_settingsSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    seller_store_settings_id?: boolean
+    business_id?: boolean
+    tenant_id?: boolean
+    store_type?: boolean
+    onboarding_status?: boolean
+    default_currency?: boolean
+    low_stock_threshold?: boolean
+    stock_hold_minutes?: boolean
+    payment_modes?: boolean
+    delivery_modes?: boolean
+    delivery_areas?: boolean
+    credit_defaults?: boolean
+    ai_guardrails?: boolean
+    setup_checklist?: boolean
+    created_at?: boolean
+    updated_at?: boolean
+  }, ExtArgs["result"]["seller_store_settings"]>
+
+  export type seller_store_settingsSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    seller_store_settings_id?: boolean
+    business_id?: boolean
+    tenant_id?: boolean
+    store_type?: boolean
+    onboarding_status?: boolean
+    default_currency?: boolean
+    low_stock_threshold?: boolean
+    stock_hold_minutes?: boolean
+    payment_modes?: boolean
+    delivery_modes?: boolean
+    delivery_areas?: boolean
+    credit_defaults?: boolean
+    ai_guardrails?: boolean
+    setup_checklist?: boolean
+    created_at?: boolean
+    updated_at?: boolean
+  }, ExtArgs["result"]["seller_store_settings"]>
+
+  export type seller_store_settingsSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    seller_store_settings_id?: boolean
+    business_id?: boolean
+    tenant_id?: boolean
+    store_type?: boolean
+    onboarding_status?: boolean
+    default_currency?: boolean
+    low_stock_threshold?: boolean
+    stock_hold_minutes?: boolean
+    payment_modes?: boolean
+    delivery_modes?: boolean
+    delivery_areas?: boolean
+    credit_defaults?: boolean
+    ai_guardrails?: boolean
+    setup_checklist?: boolean
+    created_at?: boolean
+    updated_at?: boolean
+  }, ExtArgs["result"]["seller_store_settings"]>
+
+  export type seller_store_settingsSelectScalar = {
+    seller_store_settings_id?: boolean
+    business_id?: boolean
+    tenant_id?: boolean
+    store_type?: boolean
+    onboarding_status?: boolean
+    default_currency?: boolean
+    low_stock_threshold?: boolean
+    stock_hold_minutes?: boolean
+    payment_modes?: boolean
+    delivery_modes?: boolean
+    delivery_areas?: boolean
+    credit_defaults?: boolean
+    ai_guardrails?: boolean
+    setup_checklist?: boolean
+    created_at?: boolean
+    updated_at?: boolean
+  }
+
+  export type seller_store_settingsOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"seller_store_settings_id" | "business_id" | "tenant_id" | "store_type" | "onboarding_status" | "default_currency" | "low_stock_threshold" | "stock_hold_minutes" | "payment_modes" | "delivery_modes" | "delivery_areas" | "credit_defaults" | "ai_guardrails" | "setup_checklist" | "created_at" | "updated_at", ExtArgs["result"]["seller_store_settings"]>
+
+  export type $seller_store_settingsPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "seller_store_settings"
+    objects: {}
+    scalars: $Extensions.GetPayloadResult<{
+      seller_store_settings_id: string
+      business_id: string
+      tenant_id: string | null
+      store_type: string
+      onboarding_status: string
+      default_currency: string
+      low_stock_threshold: number
+      stock_hold_minutes: number
+      payment_modes: string[]
+      delivery_modes: string[]
+      delivery_areas: Prisma.JsonValue | null
+      credit_defaults: Prisma.JsonValue | null
+      ai_guardrails: Prisma.JsonValue | null
+      setup_checklist: Prisma.JsonValue | null
+      created_at: Date
+      updated_at: Date
+    }, ExtArgs["result"]["seller_store_settings"]>
+    composites: {}
+  }
+
+  type seller_store_settingsGetPayload<S extends boolean | null | undefined | seller_store_settingsDefaultArgs> = $Result.GetResult<Prisma.$seller_store_settingsPayload, S>
+
+  type seller_store_settingsCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<seller_store_settingsFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: Seller_store_settingsCountAggregateInputType | true
+    }
+
+  export interface seller_store_settingsDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['seller_store_settings'], meta: { name: 'seller_store_settings' } }
+    /**
+     * Find zero or one Seller_store_settings that matches the filter.
+     * @param {seller_store_settingsFindUniqueArgs} args - Arguments to find a Seller_store_settings
+     * @example
+     * // Get one Seller_store_settings
+     * const seller_store_settings = await prisma.seller_store_settings.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends seller_store_settingsFindUniqueArgs>(args: SelectSubset<T, seller_store_settingsFindUniqueArgs<ExtArgs>>): Prisma__seller_store_settingsClient<$Result.GetResult<Prisma.$seller_store_settingsPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one Seller_store_settings that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {seller_store_settingsFindUniqueOrThrowArgs} args - Arguments to find a Seller_store_settings
+     * @example
+     * // Get one Seller_store_settings
+     * const seller_store_settings = await prisma.seller_store_settings.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends seller_store_settingsFindUniqueOrThrowArgs>(args: SelectSubset<T, seller_store_settingsFindUniqueOrThrowArgs<ExtArgs>>): Prisma__seller_store_settingsClient<$Result.GetResult<Prisma.$seller_store_settingsPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Seller_store_settings that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {seller_store_settingsFindFirstArgs} args - Arguments to find a Seller_store_settings
+     * @example
+     * // Get one Seller_store_settings
+     * const seller_store_settings = await prisma.seller_store_settings.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends seller_store_settingsFindFirstArgs>(args?: SelectSubset<T, seller_store_settingsFindFirstArgs<ExtArgs>>): Prisma__seller_store_settingsClient<$Result.GetResult<Prisma.$seller_store_settingsPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Seller_store_settings that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {seller_store_settingsFindFirstOrThrowArgs} args - Arguments to find a Seller_store_settings
+     * @example
+     * // Get one Seller_store_settings
+     * const seller_store_settings = await prisma.seller_store_settings.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends seller_store_settingsFindFirstOrThrowArgs>(args?: SelectSubset<T, seller_store_settingsFindFirstOrThrowArgs<ExtArgs>>): Prisma__seller_store_settingsClient<$Result.GetResult<Prisma.$seller_store_settingsPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more Seller_store_settings that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {seller_store_settingsFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all Seller_store_settings
+     * const seller_store_settings = await prisma.seller_store_settings.findMany()
+     * 
+     * // Get first 10 Seller_store_settings
+     * const seller_store_settings = await prisma.seller_store_settings.findMany({ take: 10 })
+     * 
+     * // Only select the `seller_store_settings_id`
+     * const seller_store_settingsWithSeller_store_settings_idOnly = await prisma.seller_store_settings.findMany({ select: { seller_store_settings_id: true } })
+     * 
+     */
+    findMany<T extends seller_store_settingsFindManyArgs>(args?: SelectSubset<T, seller_store_settingsFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$seller_store_settingsPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a Seller_store_settings.
+     * @param {seller_store_settingsCreateArgs} args - Arguments to create a Seller_store_settings.
+     * @example
+     * // Create one Seller_store_settings
+     * const Seller_store_settings = await prisma.seller_store_settings.create({
+     *   data: {
+     *     // ... data to create a Seller_store_settings
+     *   }
+     * })
+     * 
+     */
+    create<T extends seller_store_settingsCreateArgs>(args: SelectSubset<T, seller_store_settingsCreateArgs<ExtArgs>>): Prisma__seller_store_settingsClient<$Result.GetResult<Prisma.$seller_store_settingsPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many Seller_store_settings.
+     * @param {seller_store_settingsCreateManyArgs} args - Arguments to create many Seller_store_settings.
+     * @example
+     * // Create many Seller_store_settings
+     * const seller_store_settings = await prisma.seller_store_settings.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends seller_store_settingsCreateManyArgs>(args?: SelectSubset<T, seller_store_settingsCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many Seller_store_settings and returns the data saved in the database.
+     * @param {seller_store_settingsCreateManyAndReturnArgs} args - Arguments to create many Seller_store_settings.
+     * @example
+     * // Create many Seller_store_settings
+     * const seller_store_settings = await prisma.seller_store_settings.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many Seller_store_settings and only return the `seller_store_settings_id`
+     * const seller_store_settingsWithSeller_store_settings_idOnly = await prisma.seller_store_settings.createManyAndReturn({
+     *   select: { seller_store_settings_id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends seller_store_settingsCreateManyAndReturnArgs>(args?: SelectSubset<T, seller_store_settingsCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$seller_store_settingsPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a Seller_store_settings.
+     * @param {seller_store_settingsDeleteArgs} args - Arguments to delete one Seller_store_settings.
+     * @example
+     * // Delete one Seller_store_settings
+     * const Seller_store_settings = await prisma.seller_store_settings.delete({
+     *   where: {
+     *     // ... filter to delete one Seller_store_settings
+     *   }
+     * })
+     * 
+     */
+    delete<T extends seller_store_settingsDeleteArgs>(args: SelectSubset<T, seller_store_settingsDeleteArgs<ExtArgs>>): Prisma__seller_store_settingsClient<$Result.GetResult<Prisma.$seller_store_settingsPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one Seller_store_settings.
+     * @param {seller_store_settingsUpdateArgs} args - Arguments to update one Seller_store_settings.
+     * @example
+     * // Update one Seller_store_settings
+     * const seller_store_settings = await prisma.seller_store_settings.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends seller_store_settingsUpdateArgs>(args: SelectSubset<T, seller_store_settingsUpdateArgs<ExtArgs>>): Prisma__seller_store_settingsClient<$Result.GetResult<Prisma.$seller_store_settingsPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more Seller_store_settings.
+     * @param {seller_store_settingsDeleteManyArgs} args - Arguments to filter Seller_store_settings to delete.
+     * @example
+     * // Delete a few Seller_store_settings
+     * const { count } = await prisma.seller_store_settings.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends seller_store_settingsDeleteManyArgs>(args?: SelectSubset<T, seller_store_settingsDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Seller_store_settings.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {seller_store_settingsUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many Seller_store_settings
+     * const seller_store_settings = await prisma.seller_store_settings.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends seller_store_settingsUpdateManyArgs>(args: SelectSubset<T, seller_store_settingsUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Seller_store_settings and returns the data updated in the database.
+     * @param {seller_store_settingsUpdateManyAndReturnArgs} args - Arguments to update many Seller_store_settings.
+     * @example
+     * // Update many Seller_store_settings
+     * const seller_store_settings = await prisma.seller_store_settings.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more Seller_store_settings and only return the `seller_store_settings_id`
+     * const seller_store_settingsWithSeller_store_settings_idOnly = await prisma.seller_store_settings.updateManyAndReturn({
+     *   select: { seller_store_settings_id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends seller_store_settingsUpdateManyAndReturnArgs>(args: SelectSubset<T, seller_store_settingsUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$seller_store_settingsPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one Seller_store_settings.
+     * @param {seller_store_settingsUpsertArgs} args - Arguments to update or create a Seller_store_settings.
+     * @example
+     * // Update or create a Seller_store_settings
+     * const seller_store_settings = await prisma.seller_store_settings.upsert({
+     *   create: {
+     *     // ... data to create a Seller_store_settings
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the Seller_store_settings we want to update
+     *   }
+     * })
+     */
+    upsert<T extends seller_store_settingsUpsertArgs>(args: SelectSubset<T, seller_store_settingsUpsertArgs<ExtArgs>>): Prisma__seller_store_settingsClient<$Result.GetResult<Prisma.$seller_store_settingsPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of Seller_store_settings.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {seller_store_settingsCountArgs} args - Arguments to filter Seller_store_settings to count.
+     * @example
+     * // Count the number of Seller_store_settings
+     * const count = await prisma.seller_store_settings.count({
+     *   where: {
+     *     // ... the filter for the Seller_store_settings we want to count
+     *   }
+     * })
+    **/
+    count<T extends seller_store_settingsCountArgs>(
+      args?: Subset<T, seller_store_settingsCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], Seller_store_settingsCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a Seller_store_settings.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {Seller_store_settingsAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends Seller_store_settingsAggregateArgs>(args: Subset<T, Seller_store_settingsAggregateArgs>): Prisma.PrismaPromise<GetSeller_store_settingsAggregateType<T>>
+
+    /**
+     * Group by Seller_store_settings.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {seller_store_settingsGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends seller_store_settingsGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: seller_store_settingsGroupByArgs['orderBy'] }
+        : { orderBy?: seller_store_settingsGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, seller_store_settingsGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetSeller_store_settingsGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the seller_store_settings model
+   */
+  readonly fields: seller_store_settingsFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for seller_store_settings.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__seller_store_settingsClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the seller_store_settings model
+   */
+  interface seller_store_settingsFieldRefs {
+    readonly seller_store_settings_id: FieldRef<"seller_store_settings", 'String'>
+    readonly business_id: FieldRef<"seller_store_settings", 'String'>
+    readonly tenant_id: FieldRef<"seller_store_settings", 'String'>
+    readonly store_type: FieldRef<"seller_store_settings", 'String'>
+    readonly onboarding_status: FieldRef<"seller_store_settings", 'String'>
+    readonly default_currency: FieldRef<"seller_store_settings", 'String'>
+    readonly low_stock_threshold: FieldRef<"seller_store_settings", 'Int'>
+    readonly stock_hold_minutes: FieldRef<"seller_store_settings", 'Int'>
+    readonly payment_modes: FieldRef<"seller_store_settings", 'String[]'>
+    readonly delivery_modes: FieldRef<"seller_store_settings", 'String[]'>
+    readonly delivery_areas: FieldRef<"seller_store_settings", 'Json'>
+    readonly credit_defaults: FieldRef<"seller_store_settings", 'Json'>
+    readonly ai_guardrails: FieldRef<"seller_store_settings", 'Json'>
+    readonly setup_checklist: FieldRef<"seller_store_settings", 'Json'>
+    readonly created_at: FieldRef<"seller_store_settings", 'DateTime'>
+    readonly updated_at: FieldRef<"seller_store_settings", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * seller_store_settings findUnique
+   */
+  export type seller_store_settingsFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the seller_store_settings
+     */
+    select?: seller_store_settingsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the seller_store_settings
+     */
+    omit?: seller_store_settingsOmit<ExtArgs> | null
+    /**
+     * Filter, which seller_store_settings to fetch.
+     */
+    where: seller_store_settingsWhereUniqueInput
+  }
+
+  /**
+   * seller_store_settings findUniqueOrThrow
+   */
+  export type seller_store_settingsFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the seller_store_settings
+     */
+    select?: seller_store_settingsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the seller_store_settings
+     */
+    omit?: seller_store_settingsOmit<ExtArgs> | null
+    /**
+     * Filter, which seller_store_settings to fetch.
+     */
+    where: seller_store_settingsWhereUniqueInput
+  }
+
+  /**
+   * seller_store_settings findFirst
+   */
+  export type seller_store_settingsFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the seller_store_settings
+     */
+    select?: seller_store_settingsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the seller_store_settings
+     */
+    omit?: seller_store_settingsOmit<ExtArgs> | null
+    /**
+     * Filter, which seller_store_settings to fetch.
+     */
+    where?: seller_store_settingsWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of seller_store_settings to fetch.
+     */
+    orderBy?: seller_store_settingsOrderByWithRelationInput | seller_store_settingsOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for seller_store_settings.
+     */
+    cursor?: seller_store_settingsWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` seller_store_settings from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` seller_store_settings.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of seller_store_settings.
+     */
+    distinct?: Seller_store_settingsScalarFieldEnum | Seller_store_settingsScalarFieldEnum[]
+  }
+
+  /**
+   * seller_store_settings findFirstOrThrow
+   */
+  export type seller_store_settingsFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the seller_store_settings
+     */
+    select?: seller_store_settingsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the seller_store_settings
+     */
+    omit?: seller_store_settingsOmit<ExtArgs> | null
+    /**
+     * Filter, which seller_store_settings to fetch.
+     */
+    where?: seller_store_settingsWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of seller_store_settings to fetch.
+     */
+    orderBy?: seller_store_settingsOrderByWithRelationInput | seller_store_settingsOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for seller_store_settings.
+     */
+    cursor?: seller_store_settingsWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` seller_store_settings from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` seller_store_settings.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of seller_store_settings.
+     */
+    distinct?: Seller_store_settingsScalarFieldEnum | Seller_store_settingsScalarFieldEnum[]
+  }
+
+  /**
+   * seller_store_settings findMany
+   */
+  export type seller_store_settingsFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the seller_store_settings
+     */
+    select?: seller_store_settingsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the seller_store_settings
+     */
+    omit?: seller_store_settingsOmit<ExtArgs> | null
+    /**
+     * Filter, which seller_store_settings to fetch.
+     */
+    where?: seller_store_settingsWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of seller_store_settings to fetch.
+     */
+    orderBy?: seller_store_settingsOrderByWithRelationInput | seller_store_settingsOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing seller_store_settings.
+     */
+    cursor?: seller_store_settingsWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` seller_store_settings from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` seller_store_settings.
+     */
+    skip?: number
+    distinct?: Seller_store_settingsScalarFieldEnum | Seller_store_settingsScalarFieldEnum[]
+  }
+
+  /**
+   * seller_store_settings create
+   */
+  export type seller_store_settingsCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the seller_store_settings
+     */
+    select?: seller_store_settingsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the seller_store_settings
+     */
+    omit?: seller_store_settingsOmit<ExtArgs> | null
+    /**
+     * The data needed to create a seller_store_settings.
+     */
+    data: XOR<seller_store_settingsCreateInput, seller_store_settingsUncheckedCreateInput>
+  }
+
+  /**
+   * seller_store_settings createMany
+   */
+  export type seller_store_settingsCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many seller_store_settings.
+     */
+    data: seller_store_settingsCreateManyInput | seller_store_settingsCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * seller_store_settings createManyAndReturn
+   */
+  export type seller_store_settingsCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the seller_store_settings
+     */
+    select?: seller_store_settingsSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the seller_store_settings
+     */
+    omit?: seller_store_settingsOmit<ExtArgs> | null
+    /**
+     * The data used to create many seller_store_settings.
+     */
+    data: seller_store_settingsCreateManyInput | seller_store_settingsCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * seller_store_settings update
+   */
+  export type seller_store_settingsUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the seller_store_settings
+     */
+    select?: seller_store_settingsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the seller_store_settings
+     */
+    omit?: seller_store_settingsOmit<ExtArgs> | null
+    /**
+     * The data needed to update a seller_store_settings.
+     */
+    data: XOR<seller_store_settingsUpdateInput, seller_store_settingsUncheckedUpdateInput>
+    /**
+     * Choose, which seller_store_settings to update.
+     */
+    where: seller_store_settingsWhereUniqueInput
+  }
+
+  /**
+   * seller_store_settings updateMany
+   */
+  export type seller_store_settingsUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update seller_store_settings.
+     */
+    data: XOR<seller_store_settingsUpdateManyMutationInput, seller_store_settingsUncheckedUpdateManyInput>
+    /**
+     * Filter which seller_store_settings to update
+     */
+    where?: seller_store_settingsWhereInput
+    /**
+     * Limit how many seller_store_settings to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * seller_store_settings updateManyAndReturn
+   */
+  export type seller_store_settingsUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the seller_store_settings
+     */
+    select?: seller_store_settingsSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the seller_store_settings
+     */
+    omit?: seller_store_settingsOmit<ExtArgs> | null
+    /**
+     * The data used to update seller_store_settings.
+     */
+    data: XOR<seller_store_settingsUpdateManyMutationInput, seller_store_settingsUncheckedUpdateManyInput>
+    /**
+     * Filter which seller_store_settings to update
+     */
+    where?: seller_store_settingsWhereInput
+    /**
+     * Limit how many seller_store_settings to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * seller_store_settings upsert
+   */
+  export type seller_store_settingsUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the seller_store_settings
+     */
+    select?: seller_store_settingsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the seller_store_settings
+     */
+    omit?: seller_store_settingsOmit<ExtArgs> | null
+    /**
+     * The filter to search for the seller_store_settings to update in case it exists.
+     */
+    where: seller_store_settingsWhereUniqueInput
+    /**
+     * In case the seller_store_settings found by the `where` argument doesn't exist, create a new seller_store_settings with this data.
+     */
+    create: XOR<seller_store_settingsCreateInput, seller_store_settingsUncheckedCreateInput>
+    /**
+     * In case the seller_store_settings was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<seller_store_settingsUpdateInput, seller_store_settingsUncheckedUpdateInput>
+  }
+
+  /**
+   * seller_store_settings delete
+   */
+  export type seller_store_settingsDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the seller_store_settings
+     */
+    select?: seller_store_settingsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the seller_store_settings
+     */
+    omit?: seller_store_settingsOmit<ExtArgs> | null
+    /**
+     * Filter which seller_store_settings to delete.
+     */
+    where: seller_store_settingsWhereUniqueInput
+  }
+
+  /**
+   * seller_store_settings deleteMany
+   */
+  export type seller_store_settingsDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which seller_store_settings to delete
+     */
+    where?: seller_store_settingsWhereInput
+    /**
+     * Limit how many seller_store_settings to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * seller_store_settings without action
+   */
+  export type seller_store_settingsDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the seller_store_settings
+     */
+    select?: seller_store_settingsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the seller_store_settings
+     */
+    omit?: seller_store_settingsOmit<ExtArgs> | null
+  }
+
+
+  /**
+   * Model seller_stock_reservations
+   */
+
+  export type AggregateSeller_stock_reservations = {
+    _count: Seller_stock_reservationsCountAggregateOutputType | null
+    _avg: Seller_stock_reservationsAvgAggregateOutputType | null
+    _sum: Seller_stock_reservationsSumAggregateOutputType | null
+    _min: Seller_stock_reservationsMinAggregateOutputType | null
+    _max: Seller_stock_reservationsMaxAggregateOutputType | null
+  }
+
+  export type Seller_stock_reservationsAvgAggregateOutputType = {
+    quantity: number | null
+  }
+
+  export type Seller_stock_reservationsSumAggregateOutputType = {
+    quantity: number | null
+  }
+
+  export type Seller_stock_reservationsMinAggregateOutputType = {
+    reservation_id: string | null
+    business_id: string | null
+    tenant_id: string | null
+    customer_id: string | null
+    lead_id: string | null
+    item_id: string | null
+    variant_id: string | null
+    quantity: number | null
+    status: string | null
+    reason: string | null
+    source: string | null
+    expires_at: Date | null
+    released_at: Date | null
+    converted_at: Date | null
+    created_by: string | null
+    created_at: Date | null
+    updated_at: Date | null
+  }
+
+  export type Seller_stock_reservationsMaxAggregateOutputType = {
+    reservation_id: string | null
+    business_id: string | null
+    tenant_id: string | null
+    customer_id: string | null
+    lead_id: string | null
+    item_id: string | null
+    variant_id: string | null
+    quantity: number | null
+    status: string | null
+    reason: string | null
+    source: string | null
+    expires_at: Date | null
+    released_at: Date | null
+    converted_at: Date | null
+    created_by: string | null
+    created_at: Date | null
+    updated_at: Date | null
+  }
+
+  export type Seller_stock_reservationsCountAggregateOutputType = {
+    reservation_id: number
+    business_id: number
+    tenant_id: number
+    customer_id: number
+    lead_id: number
+    item_id: number
+    variant_id: number
+    quantity: number
+    status: number
+    reason: number
+    source: number
+    expires_at: number
+    released_at: number
+    converted_at: number
+    created_by: number
+    metadata: number
+    created_at: number
+    updated_at: number
+    _all: number
+  }
+
+
+  export type Seller_stock_reservationsAvgAggregateInputType = {
+    quantity?: true
+  }
+
+  export type Seller_stock_reservationsSumAggregateInputType = {
+    quantity?: true
+  }
+
+  export type Seller_stock_reservationsMinAggregateInputType = {
+    reservation_id?: true
+    business_id?: true
+    tenant_id?: true
+    customer_id?: true
+    lead_id?: true
+    item_id?: true
+    variant_id?: true
+    quantity?: true
+    status?: true
+    reason?: true
+    source?: true
+    expires_at?: true
+    released_at?: true
+    converted_at?: true
+    created_by?: true
+    created_at?: true
+    updated_at?: true
+  }
+
+  export type Seller_stock_reservationsMaxAggregateInputType = {
+    reservation_id?: true
+    business_id?: true
+    tenant_id?: true
+    customer_id?: true
+    lead_id?: true
+    item_id?: true
+    variant_id?: true
+    quantity?: true
+    status?: true
+    reason?: true
+    source?: true
+    expires_at?: true
+    released_at?: true
+    converted_at?: true
+    created_by?: true
+    created_at?: true
+    updated_at?: true
+  }
+
+  export type Seller_stock_reservationsCountAggregateInputType = {
+    reservation_id?: true
+    business_id?: true
+    tenant_id?: true
+    customer_id?: true
+    lead_id?: true
+    item_id?: true
+    variant_id?: true
+    quantity?: true
+    status?: true
+    reason?: true
+    source?: true
+    expires_at?: true
+    released_at?: true
+    converted_at?: true
+    created_by?: true
+    metadata?: true
+    created_at?: true
+    updated_at?: true
+    _all?: true
+  }
+
+  export type Seller_stock_reservationsAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which seller_stock_reservations to aggregate.
+     */
+    where?: seller_stock_reservationsWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of seller_stock_reservations to fetch.
+     */
+    orderBy?: seller_stock_reservationsOrderByWithRelationInput | seller_stock_reservationsOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: seller_stock_reservationsWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` seller_stock_reservations from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` seller_stock_reservations.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned seller_stock_reservations
+    **/
+    _count?: true | Seller_stock_reservationsCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: Seller_stock_reservationsAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: Seller_stock_reservationsSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: Seller_stock_reservationsMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: Seller_stock_reservationsMaxAggregateInputType
+  }
+
+  export type GetSeller_stock_reservationsAggregateType<T extends Seller_stock_reservationsAggregateArgs> = {
+        [P in keyof T & keyof AggregateSeller_stock_reservations]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateSeller_stock_reservations[P]>
+      : GetScalarType<T[P], AggregateSeller_stock_reservations[P]>
+  }
+
+
+
+
+  export type seller_stock_reservationsGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: seller_stock_reservationsWhereInput
+    orderBy?: seller_stock_reservationsOrderByWithAggregationInput | seller_stock_reservationsOrderByWithAggregationInput[]
+    by: Seller_stock_reservationsScalarFieldEnum[] | Seller_stock_reservationsScalarFieldEnum
+    having?: seller_stock_reservationsScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: Seller_stock_reservationsCountAggregateInputType | true
+    _avg?: Seller_stock_reservationsAvgAggregateInputType
+    _sum?: Seller_stock_reservationsSumAggregateInputType
+    _min?: Seller_stock_reservationsMinAggregateInputType
+    _max?: Seller_stock_reservationsMaxAggregateInputType
+  }
+
+  export type Seller_stock_reservationsGroupByOutputType = {
+    reservation_id: string
+    business_id: string
+    tenant_id: string | null
+    customer_id: string | null
+    lead_id: string | null
+    item_id: string
+    variant_id: string | null
+    quantity: number
+    status: string
+    reason: string | null
+    source: string
+    expires_at: Date
+    released_at: Date | null
+    converted_at: Date | null
+    created_by: string | null
+    metadata: JsonValue | null
+    created_at: Date
+    updated_at: Date
+    _count: Seller_stock_reservationsCountAggregateOutputType | null
+    _avg: Seller_stock_reservationsAvgAggregateOutputType | null
+    _sum: Seller_stock_reservationsSumAggregateOutputType | null
+    _min: Seller_stock_reservationsMinAggregateOutputType | null
+    _max: Seller_stock_reservationsMaxAggregateOutputType | null
+  }
+
+  type GetSeller_stock_reservationsGroupByPayload<T extends seller_stock_reservationsGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<Seller_stock_reservationsGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof Seller_stock_reservationsGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], Seller_stock_reservationsGroupByOutputType[P]>
+            : GetScalarType<T[P], Seller_stock_reservationsGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type seller_stock_reservationsSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    reservation_id?: boolean
+    business_id?: boolean
+    tenant_id?: boolean
+    customer_id?: boolean
+    lead_id?: boolean
+    item_id?: boolean
+    variant_id?: boolean
+    quantity?: boolean
+    status?: boolean
+    reason?: boolean
+    source?: boolean
+    expires_at?: boolean
+    released_at?: boolean
+    converted_at?: boolean
+    created_by?: boolean
+    metadata?: boolean
+    created_at?: boolean
+    updated_at?: boolean
+  }, ExtArgs["result"]["seller_stock_reservations"]>
+
+  export type seller_stock_reservationsSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    reservation_id?: boolean
+    business_id?: boolean
+    tenant_id?: boolean
+    customer_id?: boolean
+    lead_id?: boolean
+    item_id?: boolean
+    variant_id?: boolean
+    quantity?: boolean
+    status?: boolean
+    reason?: boolean
+    source?: boolean
+    expires_at?: boolean
+    released_at?: boolean
+    converted_at?: boolean
+    created_by?: boolean
+    metadata?: boolean
+    created_at?: boolean
+    updated_at?: boolean
+  }, ExtArgs["result"]["seller_stock_reservations"]>
+
+  export type seller_stock_reservationsSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    reservation_id?: boolean
+    business_id?: boolean
+    tenant_id?: boolean
+    customer_id?: boolean
+    lead_id?: boolean
+    item_id?: boolean
+    variant_id?: boolean
+    quantity?: boolean
+    status?: boolean
+    reason?: boolean
+    source?: boolean
+    expires_at?: boolean
+    released_at?: boolean
+    converted_at?: boolean
+    created_by?: boolean
+    metadata?: boolean
+    created_at?: boolean
+    updated_at?: boolean
+  }, ExtArgs["result"]["seller_stock_reservations"]>
+
+  export type seller_stock_reservationsSelectScalar = {
+    reservation_id?: boolean
+    business_id?: boolean
+    tenant_id?: boolean
+    customer_id?: boolean
+    lead_id?: boolean
+    item_id?: boolean
+    variant_id?: boolean
+    quantity?: boolean
+    status?: boolean
+    reason?: boolean
+    source?: boolean
+    expires_at?: boolean
+    released_at?: boolean
+    converted_at?: boolean
+    created_by?: boolean
+    metadata?: boolean
+    created_at?: boolean
+    updated_at?: boolean
+  }
+
+  export type seller_stock_reservationsOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"reservation_id" | "business_id" | "tenant_id" | "customer_id" | "lead_id" | "item_id" | "variant_id" | "quantity" | "status" | "reason" | "source" | "expires_at" | "released_at" | "converted_at" | "created_by" | "metadata" | "created_at" | "updated_at", ExtArgs["result"]["seller_stock_reservations"]>
+
+  export type $seller_stock_reservationsPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "seller_stock_reservations"
+    objects: {}
+    scalars: $Extensions.GetPayloadResult<{
+      reservation_id: string
+      business_id: string
+      tenant_id: string | null
+      customer_id: string | null
+      lead_id: string | null
+      item_id: string
+      variant_id: string | null
+      quantity: number
+      status: string
+      reason: string | null
+      source: string
+      expires_at: Date
+      released_at: Date | null
+      converted_at: Date | null
+      created_by: string | null
+      metadata: Prisma.JsonValue | null
+      created_at: Date
+      updated_at: Date
+    }, ExtArgs["result"]["seller_stock_reservations"]>
+    composites: {}
+  }
+
+  type seller_stock_reservationsGetPayload<S extends boolean | null | undefined | seller_stock_reservationsDefaultArgs> = $Result.GetResult<Prisma.$seller_stock_reservationsPayload, S>
+
+  type seller_stock_reservationsCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<seller_stock_reservationsFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: Seller_stock_reservationsCountAggregateInputType | true
+    }
+
+  export interface seller_stock_reservationsDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['seller_stock_reservations'], meta: { name: 'seller_stock_reservations' } }
+    /**
+     * Find zero or one Seller_stock_reservations that matches the filter.
+     * @param {seller_stock_reservationsFindUniqueArgs} args - Arguments to find a Seller_stock_reservations
+     * @example
+     * // Get one Seller_stock_reservations
+     * const seller_stock_reservations = await prisma.seller_stock_reservations.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends seller_stock_reservationsFindUniqueArgs>(args: SelectSubset<T, seller_stock_reservationsFindUniqueArgs<ExtArgs>>): Prisma__seller_stock_reservationsClient<$Result.GetResult<Prisma.$seller_stock_reservationsPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one Seller_stock_reservations that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {seller_stock_reservationsFindUniqueOrThrowArgs} args - Arguments to find a Seller_stock_reservations
+     * @example
+     * // Get one Seller_stock_reservations
+     * const seller_stock_reservations = await prisma.seller_stock_reservations.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends seller_stock_reservationsFindUniqueOrThrowArgs>(args: SelectSubset<T, seller_stock_reservationsFindUniqueOrThrowArgs<ExtArgs>>): Prisma__seller_stock_reservationsClient<$Result.GetResult<Prisma.$seller_stock_reservationsPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Seller_stock_reservations that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {seller_stock_reservationsFindFirstArgs} args - Arguments to find a Seller_stock_reservations
+     * @example
+     * // Get one Seller_stock_reservations
+     * const seller_stock_reservations = await prisma.seller_stock_reservations.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends seller_stock_reservationsFindFirstArgs>(args?: SelectSubset<T, seller_stock_reservationsFindFirstArgs<ExtArgs>>): Prisma__seller_stock_reservationsClient<$Result.GetResult<Prisma.$seller_stock_reservationsPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Seller_stock_reservations that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {seller_stock_reservationsFindFirstOrThrowArgs} args - Arguments to find a Seller_stock_reservations
+     * @example
+     * // Get one Seller_stock_reservations
+     * const seller_stock_reservations = await prisma.seller_stock_reservations.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends seller_stock_reservationsFindFirstOrThrowArgs>(args?: SelectSubset<T, seller_stock_reservationsFindFirstOrThrowArgs<ExtArgs>>): Prisma__seller_stock_reservationsClient<$Result.GetResult<Prisma.$seller_stock_reservationsPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more Seller_stock_reservations that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {seller_stock_reservationsFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all Seller_stock_reservations
+     * const seller_stock_reservations = await prisma.seller_stock_reservations.findMany()
+     * 
+     * // Get first 10 Seller_stock_reservations
+     * const seller_stock_reservations = await prisma.seller_stock_reservations.findMany({ take: 10 })
+     * 
+     * // Only select the `reservation_id`
+     * const seller_stock_reservationsWithReservation_idOnly = await prisma.seller_stock_reservations.findMany({ select: { reservation_id: true } })
+     * 
+     */
+    findMany<T extends seller_stock_reservationsFindManyArgs>(args?: SelectSubset<T, seller_stock_reservationsFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$seller_stock_reservationsPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a Seller_stock_reservations.
+     * @param {seller_stock_reservationsCreateArgs} args - Arguments to create a Seller_stock_reservations.
+     * @example
+     * // Create one Seller_stock_reservations
+     * const Seller_stock_reservations = await prisma.seller_stock_reservations.create({
+     *   data: {
+     *     // ... data to create a Seller_stock_reservations
+     *   }
+     * })
+     * 
+     */
+    create<T extends seller_stock_reservationsCreateArgs>(args: SelectSubset<T, seller_stock_reservationsCreateArgs<ExtArgs>>): Prisma__seller_stock_reservationsClient<$Result.GetResult<Prisma.$seller_stock_reservationsPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many Seller_stock_reservations.
+     * @param {seller_stock_reservationsCreateManyArgs} args - Arguments to create many Seller_stock_reservations.
+     * @example
+     * // Create many Seller_stock_reservations
+     * const seller_stock_reservations = await prisma.seller_stock_reservations.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends seller_stock_reservationsCreateManyArgs>(args?: SelectSubset<T, seller_stock_reservationsCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many Seller_stock_reservations and returns the data saved in the database.
+     * @param {seller_stock_reservationsCreateManyAndReturnArgs} args - Arguments to create many Seller_stock_reservations.
+     * @example
+     * // Create many Seller_stock_reservations
+     * const seller_stock_reservations = await prisma.seller_stock_reservations.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many Seller_stock_reservations and only return the `reservation_id`
+     * const seller_stock_reservationsWithReservation_idOnly = await prisma.seller_stock_reservations.createManyAndReturn({
+     *   select: { reservation_id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends seller_stock_reservationsCreateManyAndReturnArgs>(args?: SelectSubset<T, seller_stock_reservationsCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$seller_stock_reservationsPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a Seller_stock_reservations.
+     * @param {seller_stock_reservationsDeleteArgs} args - Arguments to delete one Seller_stock_reservations.
+     * @example
+     * // Delete one Seller_stock_reservations
+     * const Seller_stock_reservations = await prisma.seller_stock_reservations.delete({
+     *   where: {
+     *     // ... filter to delete one Seller_stock_reservations
+     *   }
+     * })
+     * 
+     */
+    delete<T extends seller_stock_reservationsDeleteArgs>(args: SelectSubset<T, seller_stock_reservationsDeleteArgs<ExtArgs>>): Prisma__seller_stock_reservationsClient<$Result.GetResult<Prisma.$seller_stock_reservationsPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one Seller_stock_reservations.
+     * @param {seller_stock_reservationsUpdateArgs} args - Arguments to update one Seller_stock_reservations.
+     * @example
+     * // Update one Seller_stock_reservations
+     * const seller_stock_reservations = await prisma.seller_stock_reservations.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends seller_stock_reservationsUpdateArgs>(args: SelectSubset<T, seller_stock_reservationsUpdateArgs<ExtArgs>>): Prisma__seller_stock_reservationsClient<$Result.GetResult<Prisma.$seller_stock_reservationsPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more Seller_stock_reservations.
+     * @param {seller_stock_reservationsDeleteManyArgs} args - Arguments to filter Seller_stock_reservations to delete.
+     * @example
+     * // Delete a few Seller_stock_reservations
+     * const { count } = await prisma.seller_stock_reservations.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends seller_stock_reservationsDeleteManyArgs>(args?: SelectSubset<T, seller_stock_reservationsDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Seller_stock_reservations.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {seller_stock_reservationsUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many Seller_stock_reservations
+     * const seller_stock_reservations = await prisma.seller_stock_reservations.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends seller_stock_reservationsUpdateManyArgs>(args: SelectSubset<T, seller_stock_reservationsUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Seller_stock_reservations and returns the data updated in the database.
+     * @param {seller_stock_reservationsUpdateManyAndReturnArgs} args - Arguments to update many Seller_stock_reservations.
+     * @example
+     * // Update many Seller_stock_reservations
+     * const seller_stock_reservations = await prisma.seller_stock_reservations.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more Seller_stock_reservations and only return the `reservation_id`
+     * const seller_stock_reservationsWithReservation_idOnly = await prisma.seller_stock_reservations.updateManyAndReturn({
+     *   select: { reservation_id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends seller_stock_reservationsUpdateManyAndReturnArgs>(args: SelectSubset<T, seller_stock_reservationsUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$seller_stock_reservationsPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one Seller_stock_reservations.
+     * @param {seller_stock_reservationsUpsertArgs} args - Arguments to update or create a Seller_stock_reservations.
+     * @example
+     * // Update or create a Seller_stock_reservations
+     * const seller_stock_reservations = await prisma.seller_stock_reservations.upsert({
+     *   create: {
+     *     // ... data to create a Seller_stock_reservations
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the Seller_stock_reservations we want to update
+     *   }
+     * })
+     */
+    upsert<T extends seller_stock_reservationsUpsertArgs>(args: SelectSubset<T, seller_stock_reservationsUpsertArgs<ExtArgs>>): Prisma__seller_stock_reservationsClient<$Result.GetResult<Prisma.$seller_stock_reservationsPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of Seller_stock_reservations.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {seller_stock_reservationsCountArgs} args - Arguments to filter Seller_stock_reservations to count.
+     * @example
+     * // Count the number of Seller_stock_reservations
+     * const count = await prisma.seller_stock_reservations.count({
+     *   where: {
+     *     // ... the filter for the Seller_stock_reservations we want to count
+     *   }
+     * })
+    **/
+    count<T extends seller_stock_reservationsCountArgs>(
+      args?: Subset<T, seller_stock_reservationsCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], Seller_stock_reservationsCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a Seller_stock_reservations.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {Seller_stock_reservationsAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends Seller_stock_reservationsAggregateArgs>(args: Subset<T, Seller_stock_reservationsAggregateArgs>): Prisma.PrismaPromise<GetSeller_stock_reservationsAggregateType<T>>
+
+    /**
+     * Group by Seller_stock_reservations.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {seller_stock_reservationsGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends seller_stock_reservationsGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: seller_stock_reservationsGroupByArgs['orderBy'] }
+        : { orderBy?: seller_stock_reservationsGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, seller_stock_reservationsGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetSeller_stock_reservationsGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the seller_stock_reservations model
+   */
+  readonly fields: seller_stock_reservationsFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for seller_stock_reservations.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__seller_stock_reservationsClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the seller_stock_reservations model
+   */
+  interface seller_stock_reservationsFieldRefs {
+    readonly reservation_id: FieldRef<"seller_stock_reservations", 'String'>
+    readonly business_id: FieldRef<"seller_stock_reservations", 'String'>
+    readonly tenant_id: FieldRef<"seller_stock_reservations", 'String'>
+    readonly customer_id: FieldRef<"seller_stock_reservations", 'String'>
+    readonly lead_id: FieldRef<"seller_stock_reservations", 'String'>
+    readonly item_id: FieldRef<"seller_stock_reservations", 'String'>
+    readonly variant_id: FieldRef<"seller_stock_reservations", 'String'>
+    readonly quantity: FieldRef<"seller_stock_reservations", 'Int'>
+    readonly status: FieldRef<"seller_stock_reservations", 'String'>
+    readonly reason: FieldRef<"seller_stock_reservations", 'String'>
+    readonly source: FieldRef<"seller_stock_reservations", 'String'>
+    readonly expires_at: FieldRef<"seller_stock_reservations", 'DateTime'>
+    readonly released_at: FieldRef<"seller_stock_reservations", 'DateTime'>
+    readonly converted_at: FieldRef<"seller_stock_reservations", 'DateTime'>
+    readonly created_by: FieldRef<"seller_stock_reservations", 'String'>
+    readonly metadata: FieldRef<"seller_stock_reservations", 'Json'>
+    readonly created_at: FieldRef<"seller_stock_reservations", 'DateTime'>
+    readonly updated_at: FieldRef<"seller_stock_reservations", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * seller_stock_reservations findUnique
+   */
+  export type seller_stock_reservationsFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the seller_stock_reservations
+     */
+    select?: seller_stock_reservationsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the seller_stock_reservations
+     */
+    omit?: seller_stock_reservationsOmit<ExtArgs> | null
+    /**
+     * Filter, which seller_stock_reservations to fetch.
+     */
+    where: seller_stock_reservationsWhereUniqueInput
+  }
+
+  /**
+   * seller_stock_reservations findUniqueOrThrow
+   */
+  export type seller_stock_reservationsFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the seller_stock_reservations
+     */
+    select?: seller_stock_reservationsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the seller_stock_reservations
+     */
+    omit?: seller_stock_reservationsOmit<ExtArgs> | null
+    /**
+     * Filter, which seller_stock_reservations to fetch.
+     */
+    where: seller_stock_reservationsWhereUniqueInput
+  }
+
+  /**
+   * seller_stock_reservations findFirst
+   */
+  export type seller_stock_reservationsFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the seller_stock_reservations
+     */
+    select?: seller_stock_reservationsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the seller_stock_reservations
+     */
+    omit?: seller_stock_reservationsOmit<ExtArgs> | null
+    /**
+     * Filter, which seller_stock_reservations to fetch.
+     */
+    where?: seller_stock_reservationsWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of seller_stock_reservations to fetch.
+     */
+    orderBy?: seller_stock_reservationsOrderByWithRelationInput | seller_stock_reservationsOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for seller_stock_reservations.
+     */
+    cursor?: seller_stock_reservationsWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` seller_stock_reservations from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` seller_stock_reservations.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of seller_stock_reservations.
+     */
+    distinct?: Seller_stock_reservationsScalarFieldEnum | Seller_stock_reservationsScalarFieldEnum[]
+  }
+
+  /**
+   * seller_stock_reservations findFirstOrThrow
+   */
+  export type seller_stock_reservationsFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the seller_stock_reservations
+     */
+    select?: seller_stock_reservationsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the seller_stock_reservations
+     */
+    omit?: seller_stock_reservationsOmit<ExtArgs> | null
+    /**
+     * Filter, which seller_stock_reservations to fetch.
+     */
+    where?: seller_stock_reservationsWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of seller_stock_reservations to fetch.
+     */
+    orderBy?: seller_stock_reservationsOrderByWithRelationInput | seller_stock_reservationsOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for seller_stock_reservations.
+     */
+    cursor?: seller_stock_reservationsWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` seller_stock_reservations from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` seller_stock_reservations.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of seller_stock_reservations.
+     */
+    distinct?: Seller_stock_reservationsScalarFieldEnum | Seller_stock_reservationsScalarFieldEnum[]
+  }
+
+  /**
+   * seller_stock_reservations findMany
+   */
+  export type seller_stock_reservationsFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the seller_stock_reservations
+     */
+    select?: seller_stock_reservationsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the seller_stock_reservations
+     */
+    omit?: seller_stock_reservationsOmit<ExtArgs> | null
+    /**
+     * Filter, which seller_stock_reservations to fetch.
+     */
+    where?: seller_stock_reservationsWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of seller_stock_reservations to fetch.
+     */
+    orderBy?: seller_stock_reservationsOrderByWithRelationInput | seller_stock_reservationsOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing seller_stock_reservations.
+     */
+    cursor?: seller_stock_reservationsWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` seller_stock_reservations from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` seller_stock_reservations.
+     */
+    skip?: number
+    distinct?: Seller_stock_reservationsScalarFieldEnum | Seller_stock_reservationsScalarFieldEnum[]
+  }
+
+  /**
+   * seller_stock_reservations create
+   */
+  export type seller_stock_reservationsCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the seller_stock_reservations
+     */
+    select?: seller_stock_reservationsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the seller_stock_reservations
+     */
+    omit?: seller_stock_reservationsOmit<ExtArgs> | null
+    /**
+     * The data needed to create a seller_stock_reservations.
+     */
+    data: XOR<seller_stock_reservationsCreateInput, seller_stock_reservationsUncheckedCreateInput>
+  }
+
+  /**
+   * seller_stock_reservations createMany
+   */
+  export type seller_stock_reservationsCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many seller_stock_reservations.
+     */
+    data: seller_stock_reservationsCreateManyInput | seller_stock_reservationsCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * seller_stock_reservations createManyAndReturn
+   */
+  export type seller_stock_reservationsCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the seller_stock_reservations
+     */
+    select?: seller_stock_reservationsSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the seller_stock_reservations
+     */
+    omit?: seller_stock_reservationsOmit<ExtArgs> | null
+    /**
+     * The data used to create many seller_stock_reservations.
+     */
+    data: seller_stock_reservationsCreateManyInput | seller_stock_reservationsCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * seller_stock_reservations update
+   */
+  export type seller_stock_reservationsUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the seller_stock_reservations
+     */
+    select?: seller_stock_reservationsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the seller_stock_reservations
+     */
+    omit?: seller_stock_reservationsOmit<ExtArgs> | null
+    /**
+     * The data needed to update a seller_stock_reservations.
+     */
+    data: XOR<seller_stock_reservationsUpdateInput, seller_stock_reservationsUncheckedUpdateInput>
+    /**
+     * Choose, which seller_stock_reservations to update.
+     */
+    where: seller_stock_reservationsWhereUniqueInput
+  }
+
+  /**
+   * seller_stock_reservations updateMany
+   */
+  export type seller_stock_reservationsUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update seller_stock_reservations.
+     */
+    data: XOR<seller_stock_reservationsUpdateManyMutationInput, seller_stock_reservationsUncheckedUpdateManyInput>
+    /**
+     * Filter which seller_stock_reservations to update
+     */
+    where?: seller_stock_reservationsWhereInput
+    /**
+     * Limit how many seller_stock_reservations to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * seller_stock_reservations updateManyAndReturn
+   */
+  export type seller_stock_reservationsUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the seller_stock_reservations
+     */
+    select?: seller_stock_reservationsSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the seller_stock_reservations
+     */
+    omit?: seller_stock_reservationsOmit<ExtArgs> | null
+    /**
+     * The data used to update seller_stock_reservations.
+     */
+    data: XOR<seller_stock_reservationsUpdateManyMutationInput, seller_stock_reservationsUncheckedUpdateManyInput>
+    /**
+     * Filter which seller_stock_reservations to update
+     */
+    where?: seller_stock_reservationsWhereInput
+    /**
+     * Limit how many seller_stock_reservations to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * seller_stock_reservations upsert
+   */
+  export type seller_stock_reservationsUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the seller_stock_reservations
+     */
+    select?: seller_stock_reservationsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the seller_stock_reservations
+     */
+    omit?: seller_stock_reservationsOmit<ExtArgs> | null
+    /**
+     * The filter to search for the seller_stock_reservations to update in case it exists.
+     */
+    where: seller_stock_reservationsWhereUniqueInput
+    /**
+     * In case the seller_stock_reservations found by the `where` argument doesn't exist, create a new seller_stock_reservations with this data.
+     */
+    create: XOR<seller_stock_reservationsCreateInput, seller_stock_reservationsUncheckedCreateInput>
+    /**
+     * In case the seller_stock_reservations was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<seller_stock_reservationsUpdateInput, seller_stock_reservationsUncheckedUpdateInput>
+  }
+
+  /**
+   * seller_stock_reservations delete
+   */
+  export type seller_stock_reservationsDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the seller_stock_reservations
+     */
+    select?: seller_stock_reservationsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the seller_stock_reservations
+     */
+    omit?: seller_stock_reservationsOmit<ExtArgs> | null
+    /**
+     * Filter which seller_stock_reservations to delete.
+     */
+    where: seller_stock_reservationsWhereUniqueInput
+  }
+
+  /**
+   * seller_stock_reservations deleteMany
+   */
+  export type seller_stock_reservationsDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which seller_stock_reservations to delete
+     */
+    where?: seller_stock_reservationsWhereInput
+    /**
+     * Limit how many seller_stock_reservations to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * seller_stock_reservations without action
+   */
+  export type seller_stock_reservationsDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the seller_stock_reservations
+     */
+    select?: seller_stock_reservationsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the seller_stock_reservations
+     */
+    omit?: seller_stock_reservationsOmit<ExtArgs> | null
+  }
+
+
+  /**
+   * Model seller_return_cases
+   */
+
+  export type AggregateSeller_return_cases = {
+    _count: Seller_return_casesCountAggregateOutputType | null
+    _avg: Seller_return_casesAvgAggregateOutputType | null
+    _sum: Seller_return_casesSumAggregateOutputType | null
+    _min: Seller_return_casesMinAggregateOutputType | null
+    _max: Seller_return_casesMaxAggregateOutputType | null
+  }
+
+  export type Seller_return_casesAvgAggregateOutputType = {
+    requested_amount: Decimal | null
+    approved_amount: Decimal | null
+  }
+
+  export type Seller_return_casesSumAggregateOutputType = {
+    requested_amount: Decimal | null
+    approved_amount: Decimal | null
+  }
+
+  export type Seller_return_casesMinAggregateOutputType = {
+    return_id: string | null
+    business_id: string | null
+    tenant_id: string | null
+    order_id: string | null
+    product_order_id: string | null
+    customer_id: string | null
+    return_type: string | null
+    status: string | null
+    reason: string | null
+    requested_amount: Decimal | null
+    approved_amount: Decimal | null
+    handled_by: string | null
+    created_at: Date | null
+    updated_at: Date | null
+    closed_at: Date | null
+  }
+
+  export type Seller_return_casesMaxAggregateOutputType = {
+    return_id: string | null
+    business_id: string | null
+    tenant_id: string | null
+    order_id: string | null
+    product_order_id: string | null
+    customer_id: string | null
+    return_type: string | null
+    status: string | null
+    reason: string | null
+    requested_amount: Decimal | null
+    approved_amount: Decimal | null
+    handled_by: string | null
+    created_at: Date | null
+    updated_at: Date | null
+    closed_at: Date | null
+  }
+
+  export type Seller_return_casesCountAggregateOutputType = {
+    return_id: number
+    business_id: number
+    tenant_id: number
+    order_id: number
+    product_order_id: number
+    customer_id: number
+    return_type: number
+    status: number
+    reason: number
+    requested_amount: number
+    approved_amount: number
+    items: number
+    resolution: number
+    handled_by: number
+    created_at: number
+    updated_at: number
+    closed_at: number
+    _all: number
+  }
+
+
+  export type Seller_return_casesAvgAggregateInputType = {
+    requested_amount?: true
+    approved_amount?: true
+  }
+
+  export type Seller_return_casesSumAggregateInputType = {
+    requested_amount?: true
+    approved_amount?: true
+  }
+
+  export type Seller_return_casesMinAggregateInputType = {
+    return_id?: true
+    business_id?: true
+    tenant_id?: true
+    order_id?: true
+    product_order_id?: true
+    customer_id?: true
+    return_type?: true
+    status?: true
+    reason?: true
+    requested_amount?: true
+    approved_amount?: true
+    handled_by?: true
+    created_at?: true
+    updated_at?: true
+    closed_at?: true
+  }
+
+  export type Seller_return_casesMaxAggregateInputType = {
+    return_id?: true
+    business_id?: true
+    tenant_id?: true
+    order_id?: true
+    product_order_id?: true
+    customer_id?: true
+    return_type?: true
+    status?: true
+    reason?: true
+    requested_amount?: true
+    approved_amount?: true
+    handled_by?: true
+    created_at?: true
+    updated_at?: true
+    closed_at?: true
+  }
+
+  export type Seller_return_casesCountAggregateInputType = {
+    return_id?: true
+    business_id?: true
+    tenant_id?: true
+    order_id?: true
+    product_order_id?: true
+    customer_id?: true
+    return_type?: true
+    status?: true
+    reason?: true
+    requested_amount?: true
+    approved_amount?: true
+    items?: true
+    resolution?: true
+    handled_by?: true
+    created_at?: true
+    updated_at?: true
+    closed_at?: true
+    _all?: true
+  }
+
+  export type Seller_return_casesAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which seller_return_cases to aggregate.
+     */
+    where?: seller_return_casesWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of seller_return_cases to fetch.
+     */
+    orderBy?: seller_return_casesOrderByWithRelationInput | seller_return_casesOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: seller_return_casesWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` seller_return_cases from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` seller_return_cases.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned seller_return_cases
+    **/
+    _count?: true | Seller_return_casesCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: Seller_return_casesAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: Seller_return_casesSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: Seller_return_casesMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: Seller_return_casesMaxAggregateInputType
+  }
+
+  export type GetSeller_return_casesAggregateType<T extends Seller_return_casesAggregateArgs> = {
+        [P in keyof T & keyof AggregateSeller_return_cases]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateSeller_return_cases[P]>
+      : GetScalarType<T[P], AggregateSeller_return_cases[P]>
+  }
+
+
+
+
+  export type seller_return_casesGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: seller_return_casesWhereInput
+    orderBy?: seller_return_casesOrderByWithAggregationInput | seller_return_casesOrderByWithAggregationInput[]
+    by: Seller_return_casesScalarFieldEnum[] | Seller_return_casesScalarFieldEnum
+    having?: seller_return_casesScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: Seller_return_casesCountAggregateInputType | true
+    _avg?: Seller_return_casesAvgAggregateInputType
+    _sum?: Seller_return_casesSumAggregateInputType
+    _min?: Seller_return_casesMinAggregateInputType
+    _max?: Seller_return_casesMaxAggregateInputType
+  }
+
+  export type Seller_return_casesGroupByOutputType = {
+    return_id: string
+    business_id: string
+    tenant_id: string | null
+    order_id: string | null
+    product_order_id: string | null
+    customer_id: string | null
+    return_type: string
+    status: string
+    reason: string | null
+    requested_amount: Decimal | null
+    approved_amount: Decimal | null
+    items: JsonValue | null
+    resolution: JsonValue | null
+    handled_by: string | null
+    created_at: Date
+    updated_at: Date
+    closed_at: Date | null
+    _count: Seller_return_casesCountAggregateOutputType | null
+    _avg: Seller_return_casesAvgAggregateOutputType | null
+    _sum: Seller_return_casesSumAggregateOutputType | null
+    _min: Seller_return_casesMinAggregateOutputType | null
+    _max: Seller_return_casesMaxAggregateOutputType | null
+  }
+
+  type GetSeller_return_casesGroupByPayload<T extends seller_return_casesGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<Seller_return_casesGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof Seller_return_casesGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], Seller_return_casesGroupByOutputType[P]>
+            : GetScalarType<T[P], Seller_return_casesGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type seller_return_casesSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    return_id?: boolean
+    business_id?: boolean
+    tenant_id?: boolean
+    order_id?: boolean
+    product_order_id?: boolean
+    customer_id?: boolean
+    return_type?: boolean
+    status?: boolean
+    reason?: boolean
+    requested_amount?: boolean
+    approved_amount?: boolean
+    items?: boolean
+    resolution?: boolean
+    handled_by?: boolean
+    created_at?: boolean
+    updated_at?: boolean
+    closed_at?: boolean
+  }, ExtArgs["result"]["seller_return_cases"]>
+
+  export type seller_return_casesSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    return_id?: boolean
+    business_id?: boolean
+    tenant_id?: boolean
+    order_id?: boolean
+    product_order_id?: boolean
+    customer_id?: boolean
+    return_type?: boolean
+    status?: boolean
+    reason?: boolean
+    requested_amount?: boolean
+    approved_amount?: boolean
+    items?: boolean
+    resolution?: boolean
+    handled_by?: boolean
+    created_at?: boolean
+    updated_at?: boolean
+    closed_at?: boolean
+  }, ExtArgs["result"]["seller_return_cases"]>
+
+  export type seller_return_casesSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    return_id?: boolean
+    business_id?: boolean
+    tenant_id?: boolean
+    order_id?: boolean
+    product_order_id?: boolean
+    customer_id?: boolean
+    return_type?: boolean
+    status?: boolean
+    reason?: boolean
+    requested_amount?: boolean
+    approved_amount?: boolean
+    items?: boolean
+    resolution?: boolean
+    handled_by?: boolean
+    created_at?: boolean
+    updated_at?: boolean
+    closed_at?: boolean
+  }, ExtArgs["result"]["seller_return_cases"]>
+
+  export type seller_return_casesSelectScalar = {
+    return_id?: boolean
+    business_id?: boolean
+    tenant_id?: boolean
+    order_id?: boolean
+    product_order_id?: boolean
+    customer_id?: boolean
+    return_type?: boolean
+    status?: boolean
+    reason?: boolean
+    requested_amount?: boolean
+    approved_amount?: boolean
+    items?: boolean
+    resolution?: boolean
+    handled_by?: boolean
+    created_at?: boolean
+    updated_at?: boolean
+    closed_at?: boolean
+  }
+
+  export type seller_return_casesOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"return_id" | "business_id" | "tenant_id" | "order_id" | "product_order_id" | "customer_id" | "return_type" | "status" | "reason" | "requested_amount" | "approved_amount" | "items" | "resolution" | "handled_by" | "created_at" | "updated_at" | "closed_at", ExtArgs["result"]["seller_return_cases"]>
+
+  export type $seller_return_casesPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "seller_return_cases"
+    objects: {}
+    scalars: $Extensions.GetPayloadResult<{
+      return_id: string
+      business_id: string
+      tenant_id: string | null
+      order_id: string | null
+      product_order_id: string | null
+      customer_id: string | null
+      return_type: string
+      status: string
+      reason: string | null
+      requested_amount: Prisma.Decimal | null
+      approved_amount: Prisma.Decimal | null
+      items: Prisma.JsonValue | null
+      resolution: Prisma.JsonValue | null
+      handled_by: string | null
+      created_at: Date
+      updated_at: Date
+      closed_at: Date | null
+    }, ExtArgs["result"]["seller_return_cases"]>
+    composites: {}
+  }
+
+  type seller_return_casesGetPayload<S extends boolean | null | undefined | seller_return_casesDefaultArgs> = $Result.GetResult<Prisma.$seller_return_casesPayload, S>
+
+  type seller_return_casesCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<seller_return_casesFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: Seller_return_casesCountAggregateInputType | true
+    }
+
+  export interface seller_return_casesDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['seller_return_cases'], meta: { name: 'seller_return_cases' } }
+    /**
+     * Find zero or one Seller_return_cases that matches the filter.
+     * @param {seller_return_casesFindUniqueArgs} args - Arguments to find a Seller_return_cases
+     * @example
+     * // Get one Seller_return_cases
+     * const seller_return_cases = await prisma.seller_return_cases.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends seller_return_casesFindUniqueArgs>(args: SelectSubset<T, seller_return_casesFindUniqueArgs<ExtArgs>>): Prisma__seller_return_casesClient<$Result.GetResult<Prisma.$seller_return_casesPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one Seller_return_cases that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {seller_return_casesFindUniqueOrThrowArgs} args - Arguments to find a Seller_return_cases
+     * @example
+     * // Get one Seller_return_cases
+     * const seller_return_cases = await prisma.seller_return_cases.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends seller_return_casesFindUniqueOrThrowArgs>(args: SelectSubset<T, seller_return_casesFindUniqueOrThrowArgs<ExtArgs>>): Prisma__seller_return_casesClient<$Result.GetResult<Prisma.$seller_return_casesPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Seller_return_cases that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {seller_return_casesFindFirstArgs} args - Arguments to find a Seller_return_cases
+     * @example
+     * // Get one Seller_return_cases
+     * const seller_return_cases = await prisma.seller_return_cases.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends seller_return_casesFindFirstArgs>(args?: SelectSubset<T, seller_return_casesFindFirstArgs<ExtArgs>>): Prisma__seller_return_casesClient<$Result.GetResult<Prisma.$seller_return_casesPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Seller_return_cases that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {seller_return_casesFindFirstOrThrowArgs} args - Arguments to find a Seller_return_cases
+     * @example
+     * // Get one Seller_return_cases
+     * const seller_return_cases = await prisma.seller_return_cases.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends seller_return_casesFindFirstOrThrowArgs>(args?: SelectSubset<T, seller_return_casesFindFirstOrThrowArgs<ExtArgs>>): Prisma__seller_return_casesClient<$Result.GetResult<Prisma.$seller_return_casesPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more Seller_return_cases that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {seller_return_casesFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all Seller_return_cases
+     * const seller_return_cases = await prisma.seller_return_cases.findMany()
+     * 
+     * // Get first 10 Seller_return_cases
+     * const seller_return_cases = await prisma.seller_return_cases.findMany({ take: 10 })
+     * 
+     * // Only select the `return_id`
+     * const seller_return_casesWithReturn_idOnly = await prisma.seller_return_cases.findMany({ select: { return_id: true } })
+     * 
+     */
+    findMany<T extends seller_return_casesFindManyArgs>(args?: SelectSubset<T, seller_return_casesFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$seller_return_casesPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a Seller_return_cases.
+     * @param {seller_return_casesCreateArgs} args - Arguments to create a Seller_return_cases.
+     * @example
+     * // Create one Seller_return_cases
+     * const Seller_return_cases = await prisma.seller_return_cases.create({
+     *   data: {
+     *     // ... data to create a Seller_return_cases
+     *   }
+     * })
+     * 
+     */
+    create<T extends seller_return_casesCreateArgs>(args: SelectSubset<T, seller_return_casesCreateArgs<ExtArgs>>): Prisma__seller_return_casesClient<$Result.GetResult<Prisma.$seller_return_casesPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many Seller_return_cases.
+     * @param {seller_return_casesCreateManyArgs} args - Arguments to create many Seller_return_cases.
+     * @example
+     * // Create many Seller_return_cases
+     * const seller_return_cases = await prisma.seller_return_cases.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends seller_return_casesCreateManyArgs>(args?: SelectSubset<T, seller_return_casesCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many Seller_return_cases and returns the data saved in the database.
+     * @param {seller_return_casesCreateManyAndReturnArgs} args - Arguments to create many Seller_return_cases.
+     * @example
+     * // Create many Seller_return_cases
+     * const seller_return_cases = await prisma.seller_return_cases.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many Seller_return_cases and only return the `return_id`
+     * const seller_return_casesWithReturn_idOnly = await prisma.seller_return_cases.createManyAndReturn({
+     *   select: { return_id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends seller_return_casesCreateManyAndReturnArgs>(args?: SelectSubset<T, seller_return_casesCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$seller_return_casesPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a Seller_return_cases.
+     * @param {seller_return_casesDeleteArgs} args - Arguments to delete one Seller_return_cases.
+     * @example
+     * // Delete one Seller_return_cases
+     * const Seller_return_cases = await prisma.seller_return_cases.delete({
+     *   where: {
+     *     // ... filter to delete one Seller_return_cases
+     *   }
+     * })
+     * 
+     */
+    delete<T extends seller_return_casesDeleteArgs>(args: SelectSubset<T, seller_return_casesDeleteArgs<ExtArgs>>): Prisma__seller_return_casesClient<$Result.GetResult<Prisma.$seller_return_casesPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one Seller_return_cases.
+     * @param {seller_return_casesUpdateArgs} args - Arguments to update one Seller_return_cases.
+     * @example
+     * // Update one Seller_return_cases
+     * const seller_return_cases = await prisma.seller_return_cases.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends seller_return_casesUpdateArgs>(args: SelectSubset<T, seller_return_casesUpdateArgs<ExtArgs>>): Prisma__seller_return_casesClient<$Result.GetResult<Prisma.$seller_return_casesPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more Seller_return_cases.
+     * @param {seller_return_casesDeleteManyArgs} args - Arguments to filter Seller_return_cases to delete.
+     * @example
+     * // Delete a few Seller_return_cases
+     * const { count } = await prisma.seller_return_cases.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends seller_return_casesDeleteManyArgs>(args?: SelectSubset<T, seller_return_casesDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Seller_return_cases.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {seller_return_casesUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many Seller_return_cases
+     * const seller_return_cases = await prisma.seller_return_cases.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends seller_return_casesUpdateManyArgs>(args: SelectSubset<T, seller_return_casesUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Seller_return_cases and returns the data updated in the database.
+     * @param {seller_return_casesUpdateManyAndReturnArgs} args - Arguments to update many Seller_return_cases.
+     * @example
+     * // Update many Seller_return_cases
+     * const seller_return_cases = await prisma.seller_return_cases.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more Seller_return_cases and only return the `return_id`
+     * const seller_return_casesWithReturn_idOnly = await prisma.seller_return_cases.updateManyAndReturn({
+     *   select: { return_id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends seller_return_casesUpdateManyAndReturnArgs>(args: SelectSubset<T, seller_return_casesUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$seller_return_casesPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one Seller_return_cases.
+     * @param {seller_return_casesUpsertArgs} args - Arguments to update or create a Seller_return_cases.
+     * @example
+     * // Update or create a Seller_return_cases
+     * const seller_return_cases = await prisma.seller_return_cases.upsert({
+     *   create: {
+     *     // ... data to create a Seller_return_cases
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the Seller_return_cases we want to update
+     *   }
+     * })
+     */
+    upsert<T extends seller_return_casesUpsertArgs>(args: SelectSubset<T, seller_return_casesUpsertArgs<ExtArgs>>): Prisma__seller_return_casesClient<$Result.GetResult<Prisma.$seller_return_casesPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of Seller_return_cases.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {seller_return_casesCountArgs} args - Arguments to filter Seller_return_cases to count.
+     * @example
+     * // Count the number of Seller_return_cases
+     * const count = await prisma.seller_return_cases.count({
+     *   where: {
+     *     // ... the filter for the Seller_return_cases we want to count
+     *   }
+     * })
+    **/
+    count<T extends seller_return_casesCountArgs>(
+      args?: Subset<T, seller_return_casesCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], Seller_return_casesCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a Seller_return_cases.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {Seller_return_casesAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends Seller_return_casesAggregateArgs>(args: Subset<T, Seller_return_casesAggregateArgs>): Prisma.PrismaPromise<GetSeller_return_casesAggregateType<T>>
+
+    /**
+     * Group by Seller_return_cases.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {seller_return_casesGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends seller_return_casesGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: seller_return_casesGroupByArgs['orderBy'] }
+        : { orderBy?: seller_return_casesGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, seller_return_casesGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetSeller_return_casesGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the seller_return_cases model
+   */
+  readonly fields: seller_return_casesFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for seller_return_cases.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__seller_return_casesClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the seller_return_cases model
+   */
+  interface seller_return_casesFieldRefs {
+    readonly return_id: FieldRef<"seller_return_cases", 'String'>
+    readonly business_id: FieldRef<"seller_return_cases", 'String'>
+    readonly tenant_id: FieldRef<"seller_return_cases", 'String'>
+    readonly order_id: FieldRef<"seller_return_cases", 'String'>
+    readonly product_order_id: FieldRef<"seller_return_cases", 'String'>
+    readonly customer_id: FieldRef<"seller_return_cases", 'String'>
+    readonly return_type: FieldRef<"seller_return_cases", 'String'>
+    readonly status: FieldRef<"seller_return_cases", 'String'>
+    readonly reason: FieldRef<"seller_return_cases", 'String'>
+    readonly requested_amount: FieldRef<"seller_return_cases", 'Decimal'>
+    readonly approved_amount: FieldRef<"seller_return_cases", 'Decimal'>
+    readonly items: FieldRef<"seller_return_cases", 'Json'>
+    readonly resolution: FieldRef<"seller_return_cases", 'Json'>
+    readonly handled_by: FieldRef<"seller_return_cases", 'String'>
+    readonly created_at: FieldRef<"seller_return_cases", 'DateTime'>
+    readonly updated_at: FieldRef<"seller_return_cases", 'DateTime'>
+    readonly closed_at: FieldRef<"seller_return_cases", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * seller_return_cases findUnique
+   */
+  export type seller_return_casesFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the seller_return_cases
+     */
+    select?: seller_return_casesSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the seller_return_cases
+     */
+    omit?: seller_return_casesOmit<ExtArgs> | null
+    /**
+     * Filter, which seller_return_cases to fetch.
+     */
+    where: seller_return_casesWhereUniqueInput
+  }
+
+  /**
+   * seller_return_cases findUniqueOrThrow
+   */
+  export type seller_return_casesFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the seller_return_cases
+     */
+    select?: seller_return_casesSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the seller_return_cases
+     */
+    omit?: seller_return_casesOmit<ExtArgs> | null
+    /**
+     * Filter, which seller_return_cases to fetch.
+     */
+    where: seller_return_casesWhereUniqueInput
+  }
+
+  /**
+   * seller_return_cases findFirst
+   */
+  export type seller_return_casesFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the seller_return_cases
+     */
+    select?: seller_return_casesSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the seller_return_cases
+     */
+    omit?: seller_return_casesOmit<ExtArgs> | null
+    /**
+     * Filter, which seller_return_cases to fetch.
+     */
+    where?: seller_return_casesWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of seller_return_cases to fetch.
+     */
+    orderBy?: seller_return_casesOrderByWithRelationInput | seller_return_casesOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for seller_return_cases.
+     */
+    cursor?: seller_return_casesWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` seller_return_cases from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` seller_return_cases.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of seller_return_cases.
+     */
+    distinct?: Seller_return_casesScalarFieldEnum | Seller_return_casesScalarFieldEnum[]
+  }
+
+  /**
+   * seller_return_cases findFirstOrThrow
+   */
+  export type seller_return_casesFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the seller_return_cases
+     */
+    select?: seller_return_casesSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the seller_return_cases
+     */
+    omit?: seller_return_casesOmit<ExtArgs> | null
+    /**
+     * Filter, which seller_return_cases to fetch.
+     */
+    where?: seller_return_casesWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of seller_return_cases to fetch.
+     */
+    orderBy?: seller_return_casesOrderByWithRelationInput | seller_return_casesOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for seller_return_cases.
+     */
+    cursor?: seller_return_casesWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` seller_return_cases from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` seller_return_cases.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of seller_return_cases.
+     */
+    distinct?: Seller_return_casesScalarFieldEnum | Seller_return_casesScalarFieldEnum[]
+  }
+
+  /**
+   * seller_return_cases findMany
+   */
+  export type seller_return_casesFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the seller_return_cases
+     */
+    select?: seller_return_casesSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the seller_return_cases
+     */
+    omit?: seller_return_casesOmit<ExtArgs> | null
+    /**
+     * Filter, which seller_return_cases to fetch.
+     */
+    where?: seller_return_casesWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of seller_return_cases to fetch.
+     */
+    orderBy?: seller_return_casesOrderByWithRelationInput | seller_return_casesOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing seller_return_cases.
+     */
+    cursor?: seller_return_casesWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` seller_return_cases from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` seller_return_cases.
+     */
+    skip?: number
+    distinct?: Seller_return_casesScalarFieldEnum | Seller_return_casesScalarFieldEnum[]
+  }
+
+  /**
+   * seller_return_cases create
+   */
+  export type seller_return_casesCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the seller_return_cases
+     */
+    select?: seller_return_casesSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the seller_return_cases
+     */
+    omit?: seller_return_casesOmit<ExtArgs> | null
+    /**
+     * The data needed to create a seller_return_cases.
+     */
+    data: XOR<seller_return_casesCreateInput, seller_return_casesUncheckedCreateInput>
+  }
+
+  /**
+   * seller_return_cases createMany
+   */
+  export type seller_return_casesCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many seller_return_cases.
+     */
+    data: seller_return_casesCreateManyInput | seller_return_casesCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * seller_return_cases createManyAndReturn
+   */
+  export type seller_return_casesCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the seller_return_cases
+     */
+    select?: seller_return_casesSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the seller_return_cases
+     */
+    omit?: seller_return_casesOmit<ExtArgs> | null
+    /**
+     * The data used to create many seller_return_cases.
+     */
+    data: seller_return_casesCreateManyInput | seller_return_casesCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * seller_return_cases update
+   */
+  export type seller_return_casesUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the seller_return_cases
+     */
+    select?: seller_return_casesSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the seller_return_cases
+     */
+    omit?: seller_return_casesOmit<ExtArgs> | null
+    /**
+     * The data needed to update a seller_return_cases.
+     */
+    data: XOR<seller_return_casesUpdateInput, seller_return_casesUncheckedUpdateInput>
+    /**
+     * Choose, which seller_return_cases to update.
+     */
+    where: seller_return_casesWhereUniqueInput
+  }
+
+  /**
+   * seller_return_cases updateMany
+   */
+  export type seller_return_casesUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update seller_return_cases.
+     */
+    data: XOR<seller_return_casesUpdateManyMutationInput, seller_return_casesUncheckedUpdateManyInput>
+    /**
+     * Filter which seller_return_cases to update
+     */
+    where?: seller_return_casesWhereInput
+    /**
+     * Limit how many seller_return_cases to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * seller_return_cases updateManyAndReturn
+   */
+  export type seller_return_casesUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the seller_return_cases
+     */
+    select?: seller_return_casesSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the seller_return_cases
+     */
+    omit?: seller_return_casesOmit<ExtArgs> | null
+    /**
+     * The data used to update seller_return_cases.
+     */
+    data: XOR<seller_return_casesUpdateManyMutationInput, seller_return_casesUncheckedUpdateManyInput>
+    /**
+     * Filter which seller_return_cases to update
+     */
+    where?: seller_return_casesWhereInput
+    /**
+     * Limit how many seller_return_cases to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * seller_return_cases upsert
+   */
+  export type seller_return_casesUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the seller_return_cases
+     */
+    select?: seller_return_casesSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the seller_return_cases
+     */
+    omit?: seller_return_casesOmit<ExtArgs> | null
+    /**
+     * The filter to search for the seller_return_cases to update in case it exists.
+     */
+    where: seller_return_casesWhereUniqueInput
+    /**
+     * In case the seller_return_cases found by the `where` argument doesn't exist, create a new seller_return_cases with this data.
+     */
+    create: XOR<seller_return_casesCreateInput, seller_return_casesUncheckedCreateInput>
+    /**
+     * In case the seller_return_cases was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<seller_return_casesUpdateInput, seller_return_casesUncheckedUpdateInput>
+  }
+
+  /**
+   * seller_return_cases delete
+   */
+  export type seller_return_casesDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the seller_return_cases
+     */
+    select?: seller_return_casesSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the seller_return_cases
+     */
+    omit?: seller_return_casesOmit<ExtArgs> | null
+    /**
+     * Filter which seller_return_cases to delete.
+     */
+    where: seller_return_casesWhereUniqueInput
+  }
+
+  /**
+   * seller_return_cases deleteMany
+   */
+  export type seller_return_casesDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which seller_return_cases to delete
+     */
+    where?: seller_return_casesWhereInput
+    /**
+     * Limit how many seller_return_cases to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * seller_return_cases without action
+   */
+  export type seller_return_casesDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the seller_return_cases
+     */
+    select?: seller_return_casesSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the seller_return_cases
+     */
+    omit?: seller_return_casesOmit<ExtArgs> | null
+  }
+
+
+  /**
+   * Model seller_deliveries
+   */
+
+  export type AggregateSeller_deliveries = {
+    _count: Seller_deliveriesCountAggregateOutputType | null
+    _min: Seller_deliveriesMinAggregateOutputType | null
+    _max: Seller_deliveriesMaxAggregateOutputType | null
+  }
+
+  export type Seller_deliveriesMinAggregateOutputType = {
+    delivery_id: string | null
+    business_id: string | null
+    tenant_id: string | null
+    order_id: string | null
+    product_order_id: string | null
+    customer_id: string | null
+    status: string | null
+    delivery_mode: string | null
+    delivery_person: string | null
+    phone: string | null
+    address: string | null
+    pincode: string | null
+    scheduled_at: Date | null
+    picked_at: Date | null
+    delivered_at: Date | null
+    notes: string | null
+    created_at: Date | null
+    updated_at: Date | null
+  }
+
+  export type Seller_deliveriesMaxAggregateOutputType = {
+    delivery_id: string | null
+    business_id: string | null
+    tenant_id: string | null
+    order_id: string | null
+    product_order_id: string | null
+    customer_id: string | null
+    status: string | null
+    delivery_mode: string | null
+    delivery_person: string | null
+    phone: string | null
+    address: string | null
+    pincode: string | null
+    scheduled_at: Date | null
+    picked_at: Date | null
+    delivered_at: Date | null
+    notes: string | null
+    created_at: Date | null
+    updated_at: Date | null
+  }
+
+  export type Seller_deliveriesCountAggregateOutputType = {
+    delivery_id: number
+    business_id: number
+    tenant_id: number
+    order_id: number
+    product_order_id: number
+    customer_id: number
+    status: number
+    delivery_mode: number
+    delivery_person: number
+    phone: number
+    address: number
+    pincode: number
+    scheduled_at: number
+    picked_at: number
+    delivered_at: number
+    notes: number
+    metadata: number
+    created_at: number
+    updated_at: number
+    _all: number
+  }
+
+
+  export type Seller_deliveriesMinAggregateInputType = {
+    delivery_id?: true
+    business_id?: true
+    tenant_id?: true
+    order_id?: true
+    product_order_id?: true
+    customer_id?: true
+    status?: true
+    delivery_mode?: true
+    delivery_person?: true
+    phone?: true
+    address?: true
+    pincode?: true
+    scheduled_at?: true
+    picked_at?: true
+    delivered_at?: true
+    notes?: true
+    created_at?: true
+    updated_at?: true
+  }
+
+  export type Seller_deliveriesMaxAggregateInputType = {
+    delivery_id?: true
+    business_id?: true
+    tenant_id?: true
+    order_id?: true
+    product_order_id?: true
+    customer_id?: true
+    status?: true
+    delivery_mode?: true
+    delivery_person?: true
+    phone?: true
+    address?: true
+    pincode?: true
+    scheduled_at?: true
+    picked_at?: true
+    delivered_at?: true
+    notes?: true
+    created_at?: true
+    updated_at?: true
+  }
+
+  export type Seller_deliveriesCountAggregateInputType = {
+    delivery_id?: true
+    business_id?: true
+    tenant_id?: true
+    order_id?: true
+    product_order_id?: true
+    customer_id?: true
+    status?: true
+    delivery_mode?: true
+    delivery_person?: true
+    phone?: true
+    address?: true
+    pincode?: true
+    scheduled_at?: true
+    picked_at?: true
+    delivered_at?: true
+    notes?: true
+    metadata?: true
+    created_at?: true
+    updated_at?: true
+    _all?: true
+  }
+
+  export type Seller_deliveriesAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which seller_deliveries to aggregate.
+     */
+    where?: seller_deliveriesWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of seller_deliveries to fetch.
+     */
+    orderBy?: seller_deliveriesOrderByWithRelationInput | seller_deliveriesOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: seller_deliveriesWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` seller_deliveries from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` seller_deliveries.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned seller_deliveries
+    **/
+    _count?: true | Seller_deliveriesCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: Seller_deliveriesMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: Seller_deliveriesMaxAggregateInputType
+  }
+
+  export type GetSeller_deliveriesAggregateType<T extends Seller_deliveriesAggregateArgs> = {
+        [P in keyof T & keyof AggregateSeller_deliveries]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateSeller_deliveries[P]>
+      : GetScalarType<T[P], AggregateSeller_deliveries[P]>
+  }
+
+
+
+
+  export type seller_deliveriesGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: seller_deliveriesWhereInput
+    orderBy?: seller_deliveriesOrderByWithAggregationInput | seller_deliveriesOrderByWithAggregationInput[]
+    by: Seller_deliveriesScalarFieldEnum[] | Seller_deliveriesScalarFieldEnum
+    having?: seller_deliveriesScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: Seller_deliveriesCountAggregateInputType | true
+    _min?: Seller_deliveriesMinAggregateInputType
+    _max?: Seller_deliveriesMaxAggregateInputType
+  }
+
+  export type Seller_deliveriesGroupByOutputType = {
+    delivery_id: string
+    business_id: string
+    tenant_id: string | null
+    order_id: string | null
+    product_order_id: string | null
+    customer_id: string | null
+    status: string
+    delivery_mode: string
+    delivery_person: string | null
+    phone: string | null
+    address: string | null
+    pincode: string | null
+    scheduled_at: Date | null
+    picked_at: Date | null
+    delivered_at: Date | null
+    notes: string | null
+    metadata: JsonValue | null
+    created_at: Date
+    updated_at: Date
+    _count: Seller_deliveriesCountAggregateOutputType | null
+    _min: Seller_deliveriesMinAggregateOutputType | null
+    _max: Seller_deliveriesMaxAggregateOutputType | null
+  }
+
+  type GetSeller_deliveriesGroupByPayload<T extends seller_deliveriesGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<Seller_deliveriesGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof Seller_deliveriesGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], Seller_deliveriesGroupByOutputType[P]>
+            : GetScalarType<T[P], Seller_deliveriesGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type seller_deliveriesSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    delivery_id?: boolean
+    business_id?: boolean
+    tenant_id?: boolean
+    order_id?: boolean
+    product_order_id?: boolean
+    customer_id?: boolean
+    status?: boolean
+    delivery_mode?: boolean
+    delivery_person?: boolean
+    phone?: boolean
+    address?: boolean
+    pincode?: boolean
+    scheduled_at?: boolean
+    picked_at?: boolean
+    delivered_at?: boolean
+    notes?: boolean
+    metadata?: boolean
+    created_at?: boolean
+    updated_at?: boolean
+  }, ExtArgs["result"]["seller_deliveries"]>
+
+  export type seller_deliveriesSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    delivery_id?: boolean
+    business_id?: boolean
+    tenant_id?: boolean
+    order_id?: boolean
+    product_order_id?: boolean
+    customer_id?: boolean
+    status?: boolean
+    delivery_mode?: boolean
+    delivery_person?: boolean
+    phone?: boolean
+    address?: boolean
+    pincode?: boolean
+    scheduled_at?: boolean
+    picked_at?: boolean
+    delivered_at?: boolean
+    notes?: boolean
+    metadata?: boolean
+    created_at?: boolean
+    updated_at?: boolean
+  }, ExtArgs["result"]["seller_deliveries"]>
+
+  export type seller_deliveriesSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    delivery_id?: boolean
+    business_id?: boolean
+    tenant_id?: boolean
+    order_id?: boolean
+    product_order_id?: boolean
+    customer_id?: boolean
+    status?: boolean
+    delivery_mode?: boolean
+    delivery_person?: boolean
+    phone?: boolean
+    address?: boolean
+    pincode?: boolean
+    scheduled_at?: boolean
+    picked_at?: boolean
+    delivered_at?: boolean
+    notes?: boolean
+    metadata?: boolean
+    created_at?: boolean
+    updated_at?: boolean
+  }, ExtArgs["result"]["seller_deliveries"]>
+
+  export type seller_deliveriesSelectScalar = {
+    delivery_id?: boolean
+    business_id?: boolean
+    tenant_id?: boolean
+    order_id?: boolean
+    product_order_id?: boolean
+    customer_id?: boolean
+    status?: boolean
+    delivery_mode?: boolean
+    delivery_person?: boolean
+    phone?: boolean
+    address?: boolean
+    pincode?: boolean
+    scheduled_at?: boolean
+    picked_at?: boolean
+    delivered_at?: boolean
+    notes?: boolean
+    metadata?: boolean
+    created_at?: boolean
+    updated_at?: boolean
+  }
+
+  export type seller_deliveriesOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"delivery_id" | "business_id" | "tenant_id" | "order_id" | "product_order_id" | "customer_id" | "status" | "delivery_mode" | "delivery_person" | "phone" | "address" | "pincode" | "scheduled_at" | "picked_at" | "delivered_at" | "notes" | "metadata" | "created_at" | "updated_at", ExtArgs["result"]["seller_deliveries"]>
+
+  export type $seller_deliveriesPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "seller_deliveries"
+    objects: {}
+    scalars: $Extensions.GetPayloadResult<{
+      delivery_id: string
+      business_id: string
+      tenant_id: string | null
+      order_id: string | null
+      product_order_id: string | null
+      customer_id: string | null
+      status: string
+      delivery_mode: string
+      delivery_person: string | null
+      phone: string | null
+      address: string | null
+      pincode: string | null
+      scheduled_at: Date | null
+      picked_at: Date | null
+      delivered_at: Date | null
+      notes: string | null
+      metadata: Prisma.JsonValue | null
+      created_at: Date
+      updated_at: Date
+    }, ExtArgs["result"]["seller_deliveries"]>
+    composites: {}
+  }
+
+  type seller_deliveriesGetPayload<S extends boolean | null | undefined | seller_deliveriesDefaultArgs> = $Result.GetResult<Prisma.$seller_deliveriesPayload, S>
+
+  type seller_deliveriesCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<seller_deliveriesFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: Seller_deliveriesCountAggregateInputType | true
+    }
+
+  export interface seller_deliveriesDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['seller_deliveries'], meta: { name: 'seller_deliveries' } }
+    /**
+     * Find zero or one Seller_deliveries that matches the filter.
+     * @param {seller_deliveriesFindUniqueArgs} args - Arguments to find a Seller_deliveries
+     * @example
+     * // Get one Seller_deliveries
+     * const seller_deliveries = await prisma.seller_deliveries.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends seller_deliveriesFindUniqueArgs>(args: SelectSubset<T, seller_deliveriesFindUniqueArgs<ExtArgs>>): Prisma__seller_deliveriesClient<$Result.GetResult<Prisma.$seller_deliveriesPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one Seller_deliveries that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {seller_deliveriesFindUniqueOrThrowArgs} args - Arguments to find a Seller_deliveries
+     * @example
+     * // Get one Seller_deliveries
+     * const seller_deliveries = await prisma.seller_deliveries.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends seller_deliveriesFindUniqueOrThrowArgs>(args: SelectSubset<T, seller_deliveriesFindUniqueOrThrowArgs<ExtArgs>>): Prisma__seller_deliveriesClient<$Result.GetResult<Prisma.$seller_deliveriesPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Seller_deliveries that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {seller_deliveriesFindFirstArgs} args - Arguments to find a Seller_deliveries
+     * @example
+     * // Get one Seller_deliveries
+     * const seller_deliveries = await prisma.seller_deliveries.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends seller_deliveriesFindFirstArgs>(args?: SelectSubset<T, seller_deliveriesFindFirstArgs<ExtArgs>>): Prisma__seller_deliveriesClient<$Result.GetResult<Prisma.$seller_deliveriesPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Seller_deliveries that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {seller_deliveriesFindFirstOrThrowArgs} args - Arguments to find a Seller_deliveries
+     * @example
+     * // Get one Seller_deliveries
+     * const seller_deliveries = await prisma.seller_deliveries.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends seller_deliveriesFindFirstOrThrowArgs>(args?: SelectSubset<T, seller_deliveriesFindFirstOrThrowArgs<ExtArgs>>): Prisma__seller_deliveriesClient<$Result.GetResult<Prisma.$seller_deliveriesPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more Seller_deliveries that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {seller_deliveriesFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all Seller_deliveries
+     * const seller_deliveries = await prisma.seller_deliveries.findMany()
+     * 
+     * // Get first 10 Seller_deliveries
+     * const seller_deliveries = await prisma.seller_deliveries.findMany({ take: 10 })
+     * 
+     * // Only select the `delivery_id`
+     * const seller_deliveriesWithDelivery_idOnly = await prisma.seller_deliveries.findMany({ select: { delivery_id: true } })
+     * 
+     */
+    findMany<T extends seller_deliveriesFindManyArgs>(args?: SelectSubset<T, seller_deliveriesFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$seller_deliveriesPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a Seller_deliveries.
+     * @param {seller_deliveriesCreateArgs} args - Arguments to create a Seller_deliveries.
+     * @example
+     * // Create one Seller_deliveries
+     * const Seller_deliveries = await prisma.seller_deliveries.create({
+     *   data: {
+     *     // ... data to create a Seller_deliveries
+     *   }
+     * })
+     * 
+     */
+    create<T extends seller_deliveriesCreateArgs>(args: SelectSubset<T, seller_deliveriesCreateArgs<ExtArgs>>): Prisma__seller_deliveriesClient<$Result.GetResult<Prisma.$seller_deliveriesPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many Seller_deliveries.
+     * @param {seller_deliveriesCreateManyArgs} args - Arguments to create many Seller_deliveries.
+     * @example
+     * // Create many Seller_deliveries
+     * const seller_deliveries = await prisma.seller_deliveries.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends seller_deliveriesCreateManyArgs>(args?: SelectSubset<T, seller_deliveriesCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many Seller_deliveries and returns the data saved in the database.
+     * @param {seller_deliveriesCreateManyAndReturnArgs} args - Arguments to create many Seller_deliveries.
+     * @example
+     * // Create many Seller_deliveries
+     * const seller_deliveries = await prisma.seller_deliveries.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many Seller_deliveries and only return the `delivery_id`
+     * const seller_deliveriesWithDelivery_idOnly = await prisma.seller_deliveries.createManyAndReturn({
+     *   select: { delivery_id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends seller_deliveriesCreateManyAndReturnArgs>(args?: SelectSubset<T, seller_deliveriesCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$seller_deliveriesPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a Seller_deliveries.
+     * @param {seller_deliveriesDeleteArgs} args - Arguments to delete one Seller_deliveries.
+     * @example
+     * // Delete one Seller_deliveries
+     * const Seller_deliveries = await prisma.seller_deliveries.delete({
+     *   where: {
+     *     // ... filter to delete one Seller_deliveries
+     *   }
+     * })
+     * 
+     */
+    delete<T extends seller_deliveriesDeleteArgs>(args: SelectSubset<T, seller_deliveriesDeleteArgs<ExtArgs>>): Prisma__seller_deliveriesClient<$Result.GetResult<Prisma.$seller_deliveriesPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one Seller_deliveries.
+     * @param {seller_deliveriesUpdateArgs} args - Arguments to update one Seller_deliveries.
+     * @example
+     * // Update one Seller_deliveries
+     * const seller_deliveries = await prisma.seller_deliveries.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends seller_deliveriesUpdateArgs>(args: SelectSubset<T, seller_deliveriesUpdateArgs<ExtArgs>>): Prisma__seller_deliveriesClient<$Result.GetResult<Prisma.$seller_deliveriesPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more Seller_deliveries.
+     * @param {seller_deliveriesDeleteManyArgs} args - Arguments to filter Seller_deliveries to delete.
+     * @example
+     * // Delete a few Seller_deliveries
+     * const { count } = await prisma.seller_deliveries.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends seller_deliveriesDeleteManyArgs>(args?: SelectSubset<T, seller_deliveriesDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Seller_deliveries.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {seller_deliveriesUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many Seller_deliveries
+     * const seller_deliveries = await prisma.seller_deliveries.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends seller_deliveriesUpdateManyArgs>(args: SelectSubset<T, seller_deliveriesUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Seller_deliveries and returns the data updated in the database.
+     * @param {seller_deliveriesUpdateManyAndReturnArgs} args - Arguments to update many Seller_deliveries.
+     * @example
+     * // Update many Seller_deliveries
+     * const seller_deliveries = await prisma.seller_deliveries.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more Seller_deliveries and only return the `delivery_id`
+     * const seller_deliveriesWithDelivery_idOnly = await prisma.seller_deliveries.updateManyAndReturn({
+     *   select: { delivery_id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends seller_deliveriesUpdateManyAndReturnArgs>(args: SelectSubset<T, seller_deliveriesUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$seller_deliveriesPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one Seller_deliveries.
+     * @param {seller_deliveriesUpsertArgs} args - Arguments to update or create a Seller_deliveries.
+     * @example
+     * // Update or create a Seller_deliveries
+     * const seller_deliveries = await prisma.seller_deliveries.upsert({
+     *   create: {
+     *     // ... data to create a Seller_deliveries
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the Seller_deliveries we want to update
+     *   }
+     * })
+     */
+    upsert<T extends seller_deliveriesUpsertArgs>(args: SelectSubset<T, seller_deliveriesUpsertArgs<ExtArgs>>): Prisma__seller_deliveriesClient<$Result.GetResult<Prisma.$seller_deliveriesPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of Seller_deliveries.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {seller_deliveriesCountArgs} args - Arguments to filter Seller_deliveries to count.
+     * @example
+     * // Count the number of Seller_deliveries
+     * const count = await prisma.seller_deliveries.count({
+     *   where: {
+     *     // ... the filter for the Seller_deliveries we want to count
+     *   }
+     * })
+    **/
+    count<T extends seller_deliveriesCountArgs>(
+      args?: Subset<T, seller_deliveriesCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], Seller_deliveriesCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a Seller_deliveries.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {Seller_deliveriesAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends Seller_deliveriesAggregateArgs>(args: Subset<T, Seller_deliveriesAggregateArgs>): Prisma.PrismaPromise<GetSeller_deliveriesAggregateType<T>>
+
+    /**
+     * Group by Seller_deliveries.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {seller_deliveriesGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends seller_deliveriesGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: seller_deliveriesGroupByArgs['orderBy'] }
+        : { orderBy?: seller_deliveriesGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, seller_deliveriesGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetSeller_deliveriesGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the seller_deliveries model
+   */
+  readonly fields: seller_deliveriesFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for seller_deliveries.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__seller_deliveriesClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the seller_deliveries model
+   */
+  interface seller_deliveriesFieldRefs {
+    readonly delivery_id: FieldRef<"seller_deliveries", 'String'>
+    readonly business_id: FieldRef<"seller_deliveries", 'String'>
+    readonly tenant_id: FieldRef<"seller_deliveries", 'String'>
+    readonly order_id: FieldRef<"seller_deliveries", 'String'>
+    readonly product_order_id: FieldRef<"seller_deliveries", 'String'>
+    readonly customer_id: FieldRef<"seller_deliveries", 'String'>
+    readonly status: FieldRef<"seller_deliveries", 'String'>
+    readonly delivery_mode: FieldRef<"seller_deliveries", 'String'>
+    readonly delivery_person: FieldRef<"seller_deliveries", 'String'>
+    readonly phone: FieldRef<"seller_deliveries", 'String'>
+    readonly address: FieldRef<"seller_deliveries", 'String'>
+    readonly pincode: FieldRef<"seller_deliveries", 'String'>
+    readonly scheduled_at: FieldRef<"seller_deliveries", 'DateTime'>
+    readonly picked_at: FieldRef<"seller_deliveries", 'DateTime'>
+    readonly delivered_at: FieldRef<"seller_deliveries", 'DateTime'>
+    readonly notes: FieldRef<"seller_deliveries", 'String'>
+    readonly metadata: FieldRef<"seller_deliveries", 'Json'>
+    readonly created_at: FieldRef<"seller_deliveries", 'DateTime'>
+    readonly updated_at: FieldRef<"seller_deliveries", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * seller_deliveries findUnique
+   */
+  export type seller_deliveriesFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the seller_deliveries
+     */
+    select?: seller_deliveriesSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the seller_deliveries
+     */
+    omit?: seller_deliveriesOmit<ExtArgs> | null
+    /**
+     * Filter, which seller_deliveries to fetch.
+     */
+    where: seller_deliveriesWhereUniqueInput
+  }
+
+  /**
+   * seller_deliveries findUniqueOrThrow
+   */
+  export type seller_deliveriesFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the seller_deliveries
+     */
+    select?: seller_deliveriesSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the seller_deliveries
+     */
+    omit?: seller_deliveriesOmit<ExtArgs> | null
+    /**
+     * Filter, which seller_deliveries to fetch.
+     */
+    where: seller_deliveriesWhereUniqueInput
+  }
+
+  /**
+   * seller_deliveries findFirst
+   */
+  export type seller_deliveriesFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the seller_deliveries
+     */
+    select?: seller_deliveriesSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the seller_deliveries
+     */
+    omit?: seller_deliveriesOmit<ExtArgs> | null
+    /**
+     * Filter, which seller_deliveries to fetch.
+     */
+    where?: seller_deliveriesWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of seller_deliveries to fetch.
+     */
+    orderBy?: seller_deliveriesOrderByWithRelationInput | seller_deliveriesOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for seller_deliveries.
+     */
+    cursor?: seller_deliveriesWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` seller_deliveries from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` seller_deliveries.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of seller_deliveries.
+     */
+    distinct?: Seller_deliveriesScalarFieldEnum | Seller_deliveriesScalarFieldEnum[]
+  }
+
+  /**
+   * seller_deliveries findFirstOrThrow
+   */
+  export type seller_deliveriesFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the seller_deliveries
+     */
+    select?: seller_deliveriesSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the seller_deliveries
+     */
+    omit?: seller_deliveriesOmit<ExtArgs> | null
+    /**
+     * Filter, which seller_deliveries to fetch.
+     */
+    where?: seller_deliveriesWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of seller_deliveries to fetch.
+     */
+    orderBy?: seller_deliveriesOrderByWithRelationInput | seller_deliveriesOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for seller_deliveries.
+     */
+    cursor?: seller_deliveriesWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` seller_deliveries from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` seller_deliveries.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of seller_deliveries.
+     */
+    distinct?: Seller_deliveriesScalarFieldEnum | Seller_deliveriesScalarFieldEnum[]
+  }
+
+  /**
+   * seller_deliveries findMany
+   */
+  export type seller_deliveriesFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the seller_deliveries
+     */
+    select?: seller_deliveriesSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the seller_deliveries
+     */
+    omit?: seller_deliveriesOmit<ExtArgs> | null
+    /**
+     * Filter, which seller_deliveries to fetch.
+     */
+    where?: seller_deliveriesWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of seller_deliveries to fetch.
+     */
+    orderBy?: seller_deliveriesOrderByWithRelationInput | seller_deliveriesOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing seller_deliveries.
+     */
+    cursor?: seller_deliveriesWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` seller_deliveries from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` seller_deliveries.
+     */
+    skip?: number
+    distinct?: Seller_deliveriesScalarFieldEnum | Seller_deliveriesScalarFieldEnum[]
+  }
+
+  /**
+   * seller_deliveries create
+   */
+  export type seller_deliveriesCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the seller_deliveries
+     */
+    select?: seller_deliveriesSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the seller_deliveries
+     */
+    omit?: seller_deliveriesOmit<ExtArgs> | null
+    /**
+     * The data needed to create a seller_deliveries.
+     */
+    data: XOR<seller_deliveriesCreateInput, seller_deliveriesUncheckedCreateInput>
+  }
+
+  /**
+   * seller_deliveries createMany
+   */
+  export type seller_deliveriesCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many seller_deliveries.
+     */
+    data: seller_deliveriesCreateManyInput | seller_deliveriesCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * seller_deliveries createManyAndReturn
+   */
+  export type seller_deliveriesCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the seller_deliveries
+     */
+    select?: seller_deliveriesSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the seller_deliveries
+     */
+    omit?: seller_deliveriesOmit<ExtArgs> | null
+    /**
+     * The data used to create many seller_deliveries.
+     */
+    data: seller_deliveriesCreateManyInput | seller_deliveriesCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * seller_deliveries update
+   */
+  export type seller_deliveriesUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the seller_deliveries
+     */
+    select?: seller_deliveriesSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the seller_deliveries
+     */
+    omit?: seller_deliveriesOmit<ExtArgs> | null
+    /**
+     * The data needed to update a seller_deliveries.
+     */
+    data: XOR<seller_deliveriesUpdateInput, seller_deliveriesUncheckedUpdateInput>
+    /**
+     * Choose, which seller_deliveries to update.
+     */
+    where: seller_deliveriesWhereUniqueInput
+  }
+
+  /**
+   * seller_deliveries updateMany
+   */
+  export type seller_deliveriesUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update seller_deliveries.
+     */
+    data: XOR<seller_deliveriesUpdateManyMutationInput, seller_deliveriesUncheckedUpdateManyInput>
+    /**
+     * Filter which seller_deliveries to update
+     */
+    where?: seller_deliveriesWhereInput
+    /**
+     * Limit how many seller_deliveries to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * seller_deliveries updateManyAndReturn
+   */
+  export type seller_deliveriesUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the seller_deliveries
+     */
+    select?: seller_deliveriesSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the seller_deliveries
+     */
+    omit?: seller_deliveriesOmit<ExtArgs> | null
+    /**
+     * The data used to update seller_deliveries.
+     */
+    data: XOR<seller_deliveriesUpdateManyMutationInput, seller_deliveriesUncheckedUpdateManyInput>
+    /**
+     * Filter which seller_deliveries to update
+     */
+    where?: seller_deliveriesWhereInput
+    /**
+     * Limit how many seller_deliveries to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * seller_deliveries upsert
+   */
+  export type seller_deliveriesUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the seller_deliveries
+     */
+    select?: seller_deliveriesSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the seller_deliveries
+     */
+    omit?: seller_deliveriesOmit<ExtArgs> | null
+    /**
+     * The filter to search for the seller_deliveries to update in case it exists.
+     */
+    where: seller_deliveriesWhereUniqueInput
+    /**
+     * In case the seller_deliveries found by the `where` argument doesn't exist, create a new seller_deliveries with this data.
+     */
+    create: XOR<seller_deliveriesCreateInput, seller_deliveriesUncheckedCreateInput>
+    /**
+     * In case the seller_deliveries was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<seller_deliveriesUpdateInput, seller_deliveriesUncheckedUpdateInput>
+  }
+
+  /**
+   * seller_deliveries delete
+   */
+  export type seller_deliveriesDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the seller_deliveries
+     */
+    select?: seller_deliveriesSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the seller_deliveries
+     */
+    omit?: seller_deliveriesOmit<ExtArgs> | null
+    /**
+     * Filter which seller_deliveries to delete.
+     */
+    where: seller_deliveriesWhereUniqueInput
+  }
+
+  /**
+   * seller_deliveries deleteMany
+   */
+  export type seller_deliveriesDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which seller_deliveries to delete
+     */
+    where?: seller_deliveriesWhereInput
+    /**
+     * Limit how many seller_deliveries to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * seller_deliveries without action
+   */
+  export type seller_deliveriesDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the seller_deliveries
+     */
+    select?: seller_deliveriesSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the seller_deliveries
+     */
+    omit?: seller_deliveriesOmit<ExtArgs> | null
+  }
+
+
+  /**
+   * Model seller_customer_credit_accounts
+   */
+
+  export type AggregateSeller_customer_credit_accounts = {
+    _count: Seller_customer_credit_accountsCountAggregateOutputType | null
+    _avg: Seller_customer_credit_accountsAvgAggregateOutputType | null
+    _sum: Seller_customer_credit_accountsSumAggregateOutputType | null
+    _min: Seller_customer_credit_accountsMinAggregateOutputType | null
+    _max: Seller_customer_credit_accountsMaxAggregateOutputType | null
+  }
+
+  export type Seller_customer_credit_accountsAvgAggregateOutputType = {
+    credit_limit: Decimal | null
+    current_balance: Decimal | null
+    due_days: number | null
+  }
+
+  export type Seller_customer_credit_accountsSumAggregateOutputType = {
+    credit_limit: Decimal | null
+    current_balance: Decimal | null
+    due_days: number | null
+  }
+
+  export type Seller_customer_credit_accountsMinAggregateOutputType = {
+    credit_account_id: string | null
+    business_id: string | null
+    tenant_id: string | null
+    customer_id: string | null
+    customer_name: string | null
+    phone: string | null
+    status: string | null
+    credit_limit: Decimal | null
+    current_balance: Decimal | null
+    due_days: number | null
+    approved_by: string | null
+    approved_at: Date | null
+    notes: string | null
+    created_at: Date | null
+    updated_at: Date | null
+  }
+
+  export type Seller_customer_credit_accountsMaxAggregateOutputType = {
+    credit_account_id: string | null
+    business_id: string | null
+    tenant_id: string | null
+    customer_id: string | null
+    customer_name: string | null
+    phone: string | null
+    status: string | null
+    credit_limit: Decimal | null
+    current_balance: Decimal | null
+    due_days: number | null
+    approved_by: string | null
+    approved_at: Date | null
+    notes: string | null
+    created_at: Date | null
+    updated_at: Date | null
+  }
+
+  export type Seller_customer_credit_accountsCountAggregateOutputType = {
+    credit_account_id: number
+    business_id: number
+    tenant_id: number
+    customer_id: number
+    customer_name: number
+    phone: number
+    status: number
+    credit_limit: number
+    current_balance: number
+    due_days: number
+    approved_by: number
+    approved_at: number
+    notes: number
+    metadata: number
+    created_at: number
+    updated_at: number
+    _all: number
+  }
+
+
+  export type Seller_customer_credit_accountsAvgAggregateInputType = {
+    credit_limit?: true
+    current_balance?: true
+    due_days?: true
+  }
+
+  export type Seller_customer_credit_accountsSumAggregateInputType = {
+    credit_limit?: true
+    current_balance?: true
+    due_days?: true
+  }
+
+  export type Seller_customer_credit_accountsMinAggregateInputType = {
+    credit_account_id?: true
+    business_id?: true
+    tenant_id?: true
+    customer_id?: true
+    customer_name?: true
+    phone?: true
+    status?: true
+    credit_limit?: true
+    current_balance?: true
+    due_days?: true
+    approved_by?: true
+    approved_at?: true
+    notes?: true
+    created_at?: true
+    updated_at?: true
+  }
+
+  export type Seller_customer_credit_accountsMaxAggregateInputType = {
+    credit_account_id?: true
+    business_id?: true
+    tenant_id?: true
+    customer_id?: true
+    customer_name?: true
+    phone?: true
+    status?: true
+    credit_limit?: true
+    current_balance?: true
+    due_days?: true
+    approved_by?: true
+    approved_at?: true
+    notes?: true
+    created_at?: true
+    updated_at?: true
+  }
+
+  export type Seller_customer_credit_accountsCountAggregateInputType = {
+    credit_account_id?: true
+    business_id?: true
+    tenant_id?: true
+    customer_id?: true
+    customer_name?: true
+    phone?: true
+    status?: true
+    credit_limit?: true
+    current_balance?: true
+    due_days?: true
+    approved_by?: true
+    approved_at?: true
+    notes?: true
+    metadata?: true
+    created_at?: true
+    updated_at?: true
+    _all?: true
+  }
+
+  export type Seller_customer_credit_accountsAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which seller_customer_credit_accounts to aggregate.
+     */
+    where?: seller_customer_credit_accountsWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of seller_customer_credit_accounts to fetch.
+     */
+    orderBy?: seller_customer_credit_accountsOrderByWithRelationInput | seller_customer_credit_accountsOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: seller_customer_credit_accountsWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` seller_customer_credit_accounts from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` seller_customer_credit_accounts.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned seller_customer_credit_accounts
+    **/
+    _count?: true | Seller_customer_credit_accountsCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: Seller_customer_credit_accountsAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: Seller_customer_credit_accountsSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: Seller_customer_credit_accountsMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: Seller_customer_credit_accountsMaxAggregateInputType
+  }
+
+  export type GetSeller_customer_credit_accountsAggregateType<T extends Seller_customer_credit_accountsAggregateArgs> = {
+        [P in keyof T & keyof AggregateSeller_customer_credit_accounts]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateSeller_customer_credit_accounts[P]>
+      : GetScalarType<T[P], AggregateSeller_customer_credit_accounts[P]>
+  }
+
+
+
+
+  export type seller_customer_credit_accountsGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: seller_customer_credit_accountsWhereInput
+    orderBy?: seller_customer_credit_accountsOrderByWithAggregationInput | seller_customer_credit_accountsOrderByWithAggregationInput[]
+    by: Seller_customer_credit_accountsScalarFieldEnum[] | Seller_customer_credit_accountsScalarFieldEnum
+    having?: seller_customer_credit_accountsScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: Seller_customer_credit_accountsCountAggregateInputType | true
+    _avg?: Seller_customer_credit_accountsAvgAggregateInputType
+    _sum?: Seller_customer_credit_accountsSumAggregateInputType
+    _min?: Seller_customer_credit_accountsMinAggregateInputType
+    _max?: Seller_customer_credit_accountsMaxAggregateInputType
+  }
+
+  export type Seller_customer_credit_accountsGroupByOutputType = {
+    credit_account_id: string
+    business_id: string
+    tenant_id: string | null
+    customer_id: string | null
+    customer_name: string | null
+    phone: string
+    status: string
+    credit_limit: Decimal
+    current_balance: Decimal
+    due_days: number
+    approved_by: string | null
+    approved_at: Date | null
+    notes: string | null
+    metadata: JsonValue | null
+    created_at: Date
+    updated_at: Date
+    _count: Seller_customer_credit_accountsCountAggregateOutputType | null
+    _avg: Seller_customer_credit_accountsAvgAggregateOutputType | null
+    _sum: Seller_customer_credit_accountsSumAggregateOutputType | null
+    _min: Seller_customer_credit_accountsMinAggregateOutputType | null
+    _max: Seller_customer_credit_accountsMaxAggregateOutputType | null
+  }
+
+  type GetSeller_customer_credit_accountsGroupByPayload<T extends seller_customer_credit_accountsGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<Seller_customer_credit_accountsGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof Seller_customer_credit_accountsGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], Seller_customer_credit_accountsGroupByOutputType[P]>
+            : GetScalarType<T[P], Seller_customer_credit_accountsGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type seller_customer_credit_accountsSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    credit_account_id?: boolean
+    business_id?: boolean
+    tenant_id?: boolean
+    customer_id?: boolean
+    customer_name?: boolean
+    phone?: boolean
+    status?: boolean
+    credit_limit?: boolean
+    current_balance?: boolean
+    due_days?: boolean
+    approved_by?: boolean
+    approved_at?: boolean
+    notes?: boolean
+    metadata?: boolean
+    created_at?: boolean
+    updated_at?: boolean
+  }, ExtArgs["result"]["seller_customer_credit_accounts"]>
+
+  export type seller_customer_credit_accountsSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    credit_account_id?: boolean
+    business_id?: boolean
+    tenant_id?: boolean
+    customer_id?: boolean
+    customer_name?: boolean
+    phone?: boolean
+    status?: boolean
+    credit_limit?: boolean
+    current_balance?: boolean
+    due_days?: boolean
+    approved_by?: boolean
+    approved_at?: boolean
+    notes?: boolean
+    metadata?: boolean
+    created_at?: boolean
+    updated_at?: boolean
+  }, ExtArgs["result"]["seller_customer_credit_accounts"]>
+
+  export type seller_customer_credit_accountsSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    credit_account_id?: boolean
+    business_id?: boolean
+    tenant_id?: boolean
+    customer_id?: boolean
+    customer_name?: boolean
+    phone?: boolean
+    status?: boolean
+    credit_limit?: boolean
+    current_balance?: boolean
+    due_days?: boolean
+    approved_by?: boolean
+    approved_at?: boolean
+    notes?: boolean
+    metadata?: boolean
+    created_at?: boolean
+    updated_at?: boolean
+  }, ExtArgs["result"]["seller_customer_credit_accounts"]>
+
+  export type seller_customer_credit_accountsSelectScalar = {
+    credit_account_id?: boolean
+    business_id?: boolean
+    tenant_id?: boolean
+    customer_id?: boolean
+    customer_name?: boolean
+    phone?: boolean
+    status?: boolean
+    credit_limit?: boolean
+    current_balance?: boolean
+    due_days?: boolean
+    approved_by?: boolean
+    approved_at?: boolean
+    notes?: boolean
+    metadata?: boolean
+    created_at?: boolean
+    updated_at?: boolean
+  }
+
+  export type seller_customer_credit_accountsOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"credit_account_id" | "business_id" | "tenant_id" | "customer_id" | "customer_name" | "phone" | "status" | "credit_limit" | "current_balance" | "due_days" | "approved_by" | "approved_at" | "notes" | "metadata" | "created_at" | "updated_at", ExtArgs["result"]["seller_customer_credit_accounts"]>
+
+  export type $seller_customer_credit_accountsPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "seller_customer_credit_accounts"
+    objects: {}
+    scalars: $Extensions.GetPayloadResult<{
+      credit_account_id: string
+      business_id: string
+      tenant_id: string | null
+      customer_id: string | null
+      customer_name: string | null
+      phone: string
+      status: string
+      credit_limit: Prisma.Decimal
+      current_balance: Prisma.Decimal
+      due_days: number
+      approved_by: string | null
+      approved_at: Date | null
+      notes: string | null
+      metadata: Prisma.JsonValue | null
+      created_at: Date
+      updated_at: Date
+    }, ExtArgs["result"]["seller_customer_credit_accounts"]>
+    composites: {}
+  }
+
+  type seller_customer_credit_accountsGetPayload<S extends boolean | null | undefined | seller_customer_credit_accountsDefaultArgs> = $Result.GetResult<Prisma.$seller_customer_credit_accountsPayload, S>
+
+  type seller_customer_credit_accountsCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<seller_customer_credit_accountsFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: Seller_customer_credit_accountsCountAggregateInputType | true
+    }
+
+  export interface seller_customer_credit_accountsDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['seller_customer_credit_accounts'], meta: { name: 'seller_customer_credit_accounts' } }
+    /**
+     * Find zero or one Seller_customer_credit_accounts that matches the filter.
+     * @param {seller_customer_credit_accountsFindUniqueArgs} args - Arguments to find a Seller_customer_credit_accounts
+     * @example
+     * // Get one Seller_customer_credit_accounts
+     * const seller_customer_credit_accounts = await prisma.seller_customer_credit_accounts.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends seller_customer_credit_accountsFindUniqueArgs>(args: SelectSubset<T, seller_customer_credit_accountsFindUniqueArgs<ExtArgs>>): Prisma__seller_customer_credit_accountsClient<$Result.GetResult<Prisma.$seller_customer_credit_accountsPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one Seller_customer_credit_accounts that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {seller_customer_credit_accountsFindUniqueOrThrowArgs} args - Arguments to find a Seller_customer_credit_accounts
+     * @example
+     * // Get one Seller_customer_credit_accounts
+     * const seller_customer_credit_accounts = await prisma.seller_customer_credit_accounts.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends seller_customer_credit_accountsFindUniqueOrThrowArgs>(args: SelectSubset<T, seller_customer_credit_accountsFindUniqueOrThrowArgs<ExtArgs>>): Prisma__seller_customer_credit_accountsClient<$Result.GetResult<Prisma.$seller_customer_credit_accountsPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Seller_customer_credit_accounts that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {seller_customer_credit_accountsFindFirstArgs} args - Arguments to find a Seller_customer_credit_accounts
+     * @example
+     * // Get one Seller_customer_credit_accounts
+     * const seller_customer_credit_accounts = await prisma.seller_customer_credit_accounts.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends seller_customer_credit_accountsFindFirstArgs>(args?: SelectSubset<T, seller_customer_credit_accountsFindFirstArgs<ExtArgs>>): Prisma__seller_customer_credit_accountsClient<$Result.GetResult<Prisma.$seller_customer_credit_accountsPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Seller_customer_credit_accounts that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {seller_customer_credit_accountsFindFirstOrThrowArgs} args - Arguments to find a Seller_customer_credit_accounts
+     * @example
+     * // Get one Seller_customer_credit_accounts
+     * const seller_customer_credit_accounts = await prisma.seller_customer_credit_accounts.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends seller_customer_credit_accountsFindFirstOrThrowArgs>(args?: SelectSubset<T, seller_customer_credit_accountsFindFirstOrThrowArgs<ExtArgs>>): Prisma__seller_customer_credit_accountsClient<$Result.GetResult<Prisma.$seller_customer_credit_accountsPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more Seller_customer_credit_accounts that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {seller_customer_credit_accountsFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all Seller_customer_credit_accounts
+     * const seller_customer_credit_accounts = await prisma.seller_customer_credit_accounts.findMany()
+     * 
+     * // Get first 10 Seller_customer_credit_accounts
+     * const seller_customer_credit_accounts = await prisma.seller_customer_credit_accounts.findMany({ take: 10 })
+     * 
+     * // Only select the `credit_account_id`
+     * const seller_customer_credit_accountsWithCredit_account_idOnly = await prisma.seller_customer_credit_accounts.findMany({ select: { credit_account_id: true } })
+     * 
+     */
+    findMany<T extends seller_customer_credit_accountsFindManyArgs>(args?: SelectSubset<T, seller_customer_credit_accountsFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$seller_customer_credit_accountsPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a Seller_customer_credit_accounts.
+     * @param {seller_customer_credit_accountsCreateArgs} args - Arguments to create a Seller_customer_credit_accounts.
+     * @example
+     * // Create one Seller_customer_credit_accounts
+     * const Seller_customer_credit_accounts = await prisma.seller_customer_credit_accounts.create({
+     *   data: {
+     *     // ... data to create a Seller_customer_credit_accounts
+     *   }
+     * })
+     * 
+     */
+    create<T extends seller_customer_credit_accountsCreateArgs>(args: SelectSubset<T, seller_customer_credit_accountsCreateArgs<ExtArgs>>): Prisma__seller_customer_credit_accountsClient<$Result.GetResult<Prisma.$seller_customer_credit_accountsPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many Seller_customer_credit_accounts.
+     * @param {seller_customer_credit_accountsCreateManyArgs} args - Arguments to create many Seller_customer_credit_accounts.
+     * @example
+     * // Create many Seller_customer_credit_accounts
+     * const seller_customer_credit_accounts = await prisma.seller_customer_credit_accounts.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends seller_customer_credit_accountsCreateManyArgs>(args?: SelectSubset<T, seller_customer_credit_accountsCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many Seller_customer_credit_accounts and returns the data saved in the database.
+     * @param {seller_customer_credit_accountsCreateManyAndReturnArgs} args - Arguments to create many Seller_customer_credit_accounts.
+     * @example
+     * // Create many Seller_customer_credit_accounts
+     * const seller_customer_credit_accounts = await prisma.seller_customer_credit_accounts.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many Seller_customer_credit_accounts and only return the `credit_account_id`
+     * const seller_customer_credit_accountsWithCredit_account_idOnly = await prisma.seller_customer_credit_accounts.createManyAndReturn({
+     *   select: { credit_account_id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends seller_customer_credit_accountsCreateManyAndReturnArgs>(args?: SelectSubset<T, seller_customer_credit_accountsCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$seller_customer_credit_accountsPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a Seller_customer_credit_accounts.
+     * @param {seller_customer_credit_accountsDeleteArgs} args - Arguments to delete one Seller_customer_credit_accounts.
+     * @example
+     * // Delete one Seller_customer_credit_accounts
+     * const Seller_customer_credit_accounts = await prisma.seller_customer_credit_accounts.delete({
+     *   where: {
+     *     // ... filter to delete one Seller_customer_credit_accounts
+     *   }
+     * })
+     * 
+     */
+    delete<T extends seller_customer_credit_accountsDeleteArgs>(args: SelectSubset<T, seller_customer_credit_accountsDeleteArgs<ExtArgs>>): Prisma__seller_customer_credit_accountsClient<$Result.GetResult<Prisma.$seller_customer_credit_accountsPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one Seller_customer_credit_accounts.
+     * @param {seller_customer_credit_accountsUpdateArgs} args - Arguments to update one Seller_customer_credit_accounts.
+     * @example
+     * // Update one Seller_customer_credit_accounts
+     * const seller_customer_credit_accounts = await prisma.seller_customer_credit_accounts.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends seller_customer_credit_accountsUpdateArgs>(args: SelectSubset<T, seller_customer_credit_accountsUpdateArgs<ExtArgs>>): Prisma__seller_customer_credit_accountsClient<$Result.GetResult<Prisma.$seller_customer_credit_accountsPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more Seller_customer_credit_accounts.
+     * @param {seller_customer_credit_accountsDeleteManyArgs} args - Arguments to filter Seller_customer_credit_accounts to delete.
+     * @example
+     * // Delete a few Seller_customer_credit_accounts
+     * const { count } = await prisma.seller_customer_credit_accounts.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends seller_customer_credit_accountsDeleteManyArgs>(args?: SelectSubset<T, seller_customer_credit_accountsDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Seller_customer_credit_accounts.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {seller_customer_credit_accountsUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many Seller_customer_credit_accounts
+     * const seller_customer_credit_accounts = await prisma.seller_customer_credit_accounts.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends seller_customer_credit_accountsUpdateManyArgs>(args: SelectSubset<T, seller_customer_credit_accountsUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Seller_customer_credit_accounts and returns the data updated in the database.
+     * @param {seller_customer_credit_accountsUpdateManyAndReturnArgs} args - Arguments to update many Seller_customer_credit_accounts.
+     * @example
+     * // Update many Seller_customer_credit_accounts
+     * const seller_customer_credit_accounts = await prisma.seller_customer_credit_accounts.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more Seller_customer_credit_accounts and only return the `credit_account_id`
+     * const seller_customer_credit_accountsWithCredit_account_idOnly = await prisma.seller_customer_credit_accounts.updateManyAndReturn({
+     *   select: { credit_account_id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends seller_customer_credit_accountsUpdateManyAndReturnArgs>(args: SelectSubset<T, seller_customer_credit_accountsUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$seller_customer_credit_accountsPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one Seller_customer_credit_accounts.
+     * @param {seller_customer_credit_accountsUpsertArgs} args - Arguments to update or create a Seller_customer_credit_accounts.
+     * @example
+     * // Update or create a Seller_customer_credit_accounts
+     * const seller_customer_credit_accounts = await prisma.seller_customer_credit_accounts.upsert({
+     *   create: {
+     *     // ... data to create a Seller_customer_credit_accounts
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the Seller_customer_credit_accounts we want to update
+     *   }
+     * })
+     */
+    upsert<T extends seller_customer_credit_accountsUpsertArgs>(args: SelectSubset<T, seller_customer_credit_accountsUpsertArgs<ExtArgs>>): Prisma__seller_customer_credit_accountsClient<$Result.GetResult<Prisma.$seller_customer_credit_accountsPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of Seller_customer_credit_accounts.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {seller_customer_credit_accountsCountArgs} args - Arguments to filter Seller_customer_credit_accounts to count.
+     * @example
+     * // Count the number of Seller_customer_credit_accounts
+     * const count = await prisma.seller_customer_credit_accounts.count({
+     *   where: {
+     *     // ... the filter for the Seller_customer_credit_accounts we want to count
+     *   }
+     * })
+    **/
+    count<T extends seller_customer_credit_accountsCountArgs>(
+      args?: Subset<T, seller_customer_credit_accountsCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], Seller_customer_credit_accountsCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a Seller_customer_credit_accounts.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {Seller_customer_credit_accountsAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends Seller_customer_credit_accountsAggregateArgs>(args: Subset<T, Seller_customer_credit_accountsAggregateArgs>): Prisma.PrismaPromise<GetSeller_customer_credit_accountsAggregateType<T>>
+
+    /**
+     * Group by Seller_customer_credit_accounts.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {seller_customer_credit_accountsGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends seller_customer_credit_accountsGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: seller_customer_credit_accountsGroupByArgs['orderBy'] }
+        : { orderBy?: seller_customer_credit_accountsGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, seller_customer_credit_accountsGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetSeller_customer_credit_accountsGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the seller_customer_credit_accounts model
+   */
+  readonly fields: seller_customer_credit_accountsFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for seller_customer_credit_accounts.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__seller_customer_credit_accountsClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the seller_customer_credit_accounts model
+   */
+  interface seller_customer_credit_accountsFieldRefs {
+    readonly credit_account_id: FieldRef<"seller_customer_credit_accounts", 'String'>
+    readonly business_id: FieldRef<"seller_customer_credit_accounts", 'String'>
+    readonly tenant_id: FieldRef<"seller_customer_credit_accounts", 'String'>
+    readonly customer_id: FieldRef<"seller_customer_credit_accounts", 'String'>
+    readonly customer_name: FieldRef<"seller_customer_credit_accounts", 'String'>
+    readonly phone: FieldRef<"seller_customer_credit_accounts", 'String'>
+    readonly status: FieldRef<"seller_customer_credit_accounts", 'String'>
+    readonly credit_limit: FieldRef<"seller_customer_credit_accounts", 'Decimal'>
+    readonly current_balance: FieldRef<"seller_customer_credit_accounts", 'Decimal'>
+    readonly due_days: FieldRef<"seller_customer_credit_accounts", 'Int'>
+    readonly approved_by: FieldRef<"seller_customer_credit_accounts", 'String'>
+    readonly approved_at: FieldRef<"seller_customer_credit_accounts", 'DateTime'>
+    readonly notes: FieldRef<"seller_customer_credit_accounts", 'String'>
+    readonly metadata: FieldRef<"seller_customer_credit_accounts", 'Json'>
+    readonly created_at: FieldRef<"seller_customer_credit_accounts", 'DateTime'>
+    readonly updated_at: FieldRef<"seller_customer_credit_accounts", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * seller_customer_credit_accounts findUnique
+   */
+  export type seller_customer_credit_accountsFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the seller_customer_credit_accounts
+     */
+    select?: seller_customer_credit_accountsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the seller_customer_credit_accounts
+     */
+    omit?: seller_customer_credit_accountsOmit<ExtArgs> | null
+    /**
+     * Filter, which seller_customer_credit_accounts to fetch.
+     */
+    where: seller_customer_credit_accountsWhereUniqueInput
+  }
+
+  /**
+   * seller_customer_credit_accounts findUniqueOrThrow
+   */
+  export type seller_customer_credit_accountsFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the seller_customer_credit_accounts
+     */
+    select?: seller_customer_credit_accountsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the seller_customer_credit_accounts
+     */
+    omit?: seller_customer_credit_accountsOmit<ExtArgs> | null
+    /**
+     * Filter, which seller_customer_credit_accounts to fetch.
+     */
+    where: seller_customer_credit_accountsWhereUniqueInput
+  }
+
+  /**
+   * seller_customer_credit_accounts findFirst
+   */
+  export type seller_customer_credit_accountsFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the seller_customer_credit_accounts
+     */
+    select?: seller_customer_credit_accountsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the seller_customer_credit_accounts
+     */
+    omit?: seller_customer_credit_accountsOmit<ExtArgs> | null
+    /**
+     * Filter, which seller_customer_credit_accounts to fetch.
+     */
+    where?: seller_customer_credit_accountsWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of seller_customer_credit_accounts to fetch.
+     */
+    orderBy?: seller_customer_credit_accountsOrderByWithRelationInput | seller_customer_credit_accountsOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for seller_customer_credit_accounts.
+     */
+    cursor?: seller_customer_credit_accountsWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` seller_customer_credit_accounts from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` seller_customer_credit_accounts.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of seller_customer_credit_accounts.
+     */
+    distinct?: Seller_customer_credit_accountsScalarFieldEnum | Seller_customer_credit_accountsScalarFieldEnum[]
+  }
+
+  /**
+   * seller_customer_credit_accounts findFirstOrThrow
+   */
+  export type seller_customer_credit_accountsFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the seller_customer_credit_accounts
+     */
+    select?: seller_customer_credit_accountsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the seller_customer_credit_accounts
+     */
+    omit?: seller_customer_credit_accountsOmit<ExtArgs> | null
+    /**
+     * Filter, which seller_customer_credit_accounts to fetch.
+     */
+    where?: seller_customer_credit_accountsWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of seller_customer_credit_accounts to fetch.
+     */
+    orderBy?: seller_customer_credit_accountsOrderByWithRelationInput | seller_customer_credit_accountsOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for seller_customer_credit_accounts.
+     */
+    cursor?: seller_customer_credit_accountsWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` seller_customer_credit_accounts from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` seller_customer_credit_accounts.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of seller_customer_credit_accounts.
+     */
+    distinct?: Seller_customer_credit_accountsScalarFieldEnum | Seller_customer_credit_accountsScalarFieldEnum[]
+  }
+
+  /**
+   * seller_customer_credit_accounts findMany
+   */
+  export type seller_customer_credit_accountsFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the seller_customer_credit_accounts
+     */
+    select?: seller_customer_credit_accountsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the seller_customer_credit_accounts
+     */
+    omit?: seller_customer_credit_accountsOmit<ExtArgs> | null
+    /**
+     * Filter, which seller_customer_credit_accounts to fetch.
+     */
+    where?: seller_customer_credit_accountsWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of seller_customer_credit_accounts to fetch.
+     */
+    orderBy?: seller_customer_credit_accountsOrderByWithRelationInput | seller_customer_credit_accountsOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing seller_customer_credit_accounts.
+     */
+    cursor?: seller_customer_credit_accountsWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` seller_customer_credit_accounts from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` seller_customer_credit_accounts.
+     */
+    skip?: number
+    distinct?: Seller_customer_credit_accountsScalarFieldEnum | Seller_customer_credit_accountsScalarFieldEnum[]
+  }
+
+  /**
+   * seller_customer_credit_accounts create
+   */
+  export type seller_customer_credit_accountsCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the seller_customer_credit_accounts
+     */
+    select?: seller_customer_credit_accountsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the seller_customer_credit_accounts
+     */
+    omit?: seller_customer_credit_accountsOmit<ExtArgs> | null
+    /**
+     * The data needed to create a seller_customer_credit_accounts.
+     */
+    data: XOR<seller_customer_credit_accountsCreateInput, seller_customer_credit_accountsUncheckedCreateInput>
+  }
+
+  /**
+   * seller_customer_credit_accounts createMany
+   */
+  export type seller_customer_credit_accountsCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many seller_customer_credit_accounts.
+     */
+    data: seller_customer_credit_accountsCreateManyInput | seller_customer_credit_accountsCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * seller_customer_credit_accounts createManyAndReturn
+   */
+  export type seller_customer_credit_accountsCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the seller_customer_credit_accounts
+     */
+    select?: seller_customer_credit_accountsSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the seller_customer_credit_accounts
+     */
+    omit?: seller_customer_credit_accountsOmit<ExtArgs> | null
+    /**
+     * The data used to create many seller_customer_credit_accounts.
+     */
+    data: seller_customer_credit_accountsCreateManyInput | seller_customer_credit_accountsCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * seller_customer_credit_accounts update
+   */
+  export type seller_customer_credit_accountsUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the seller_customer_credit_accounts
+     */
+    select?: seller_customer_credit_accountsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the seller_customer_credit_accounts
+     */
+    omit?: seller_customer_credit_accountsOmit<ExtArgs> | null
+    /**
+     * The data needed to update a seller_customer_credit_accounts.
+     */
+    data: XOR<seller_customer_credit_accountsUpdateInput, seller_customer_credit_accountsUncheckedUpdateInput>
+    /**
+     * Choose, which seller_customer_credit_accounts to update.
+     */
+    where: seller_customer_credit_accountsWhereUniqueInput
+  }
+
+  /**
+   * seller_customer_credit_accounts updateMany
+   */
+  export type seller_customer_credit_accountsUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update seller_customer_credit_accounts.
+     */
+    data: XOR<seller_customer_credit_accountsUpdateManyMutationInput, seller_customer_credit_accountsUncheckedUpdateManyInput>
+    /**
+     * Filter which seller_customer_credit_accounts to update
+     */
+    where?: seller_customer_credit_accountsWhereInput
+    /**
+     * Limit how many seller_customer_credit_accounts to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * seller_customer_credit_accounts updateManyAndReturn
+   */
+  export type seller_customer_credit_accountsUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the seller_customer_credit_accounts
+     */
+    select?: seller_customer_credit_accountsSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the seller_customer_credit_accounts
+     */
+    omit?: seller_customer_credit_accountsOmit<ExtArgs> | null
+    /**
+     * The data used to update seller_customer_credit_accounts.
+     */
+    data: XOR<seller_customer_credit_accountsUpdateManyMutationInput, seller_customer_credit_accountsUncheckedUpdateManyInput>
+    /**
+     * Filter which seller_customer_credit_accounts to update
+     */
+    where?: seller_customer_credit_accountsWhereInput
+    /**
+     * Limit how many seller_customer_credit_accounts to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * seller_customer_credit_accounts upsert
+   */
+  export type seller_customer_credit_accountsUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the seller_customer_credit_accounts
+     */
+    select?: seller_customer_credit_accountsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the seller_customer_credit_accounts
+     */
+    omit?: seller_customer_credit_accountsOmit<ExtArgs> | null
+    /**
+     * The filter to search for the seller_customer_credit_accounts to update in case it exists.
+     */
+    where: seller_customer_credit_accountsWhereUniqueInput
+    /**
+     * In case the seller_customer_credit_accounts found by the `where` argument doesn't exist, create a new seller_customer_credit_accounts with this data.
+     */
+    create: XOR<seller_customer_credit_accountsCreateInput, seller_customer_credit_accountsUncheckedCreateInput>
+    /**
+     * In case the seller_customer_credit_accounts was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<seller_customer_credit_accountsUpdateInput, seller_customer_credit_accountsUncheckedUpdateInput>
+  }
+
+  /**
+   * seller_customer_credit_accounts delete
+   */
+  export type seller_customer_credit_accountsDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the seller_customer_credit_accounts
+     */
+    select?: seller_customer_credit_accountsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the seller_customer_credit_accounts
+     */
+    omit?: seller_customer_credit_accountsOmit<ExtArgs> | null
+    /**
+     * Filter which seller_customer_credit_accounts to delete.
+     */
+    where: seller_customer_credit_accountsWhereUniqueInput
+  }
+
+  /**
+   * seller_customer_credit_accounts deleteMany
+   */
+  export type seller_customer_credit_accountsDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which seller_customer_credit_accounts to delete
+     */
+    where?: seller_customer_credit_accountsWhereInput
+    /**
+     * Limit how many seller_customer_credit_accounts to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * seller_customer_credit_accounts without action
+   */
+  export type seller_customer_credit_accountsDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the seller_customer_credit_accounts
+     */
+    select?: seller_customer_credit_accountsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the seller_customer_credit_accounts
+     */
+    omit?: seller_customer_credit_accountsOmit<ExtArgs> | null
+  }
+
+
+  /**
+   * Model seller_customer_credit_transactions
+   */
+
+  export type AggregateSeller_customer_credit_transactions = {
+    _count: Seller_customer_credit_transactionsCountAggregateOutputType | null
+    _avg: Seller_customer_credit_transactionsAvgAggregateOutputType | null
+    _sum: Seller_customer_credit_transactionsSumAggregateOutputType | null
+    _min: Seller_customer_credit_transactionsMinAggregateOutputType | null
+    _max: Seller_customer_credit_transactionsMaxAggregateOutputType | null
+  }
+
+  export type Seller_customer_credit_transactionsAvgAggregateOutputType = {
+    amount: Decimal | null
+    balance_after: Decimal | null
+  }
+
+  export type Seller_customer_credit_transactionsSumAggregateOutputType = {
+    amount: Decimal | null
+    balance_after: Decimal | null
+  }
+
+  export type Seller_customer_credit_transactionsMinAggregateOutputType = {
+    credit_transaction_id: string | null
+    credit_account_id: string | null
+    business_id: string | null
+    order_id: string | null
+    transaction_type: string | null
+    amount: Decimal | null
+    balance_after: Decimal | null
+    note: string | null
+    created_by: string | null
+    created_at: Date | null
+  }
+
+  export type Seller_customer_credit_transactionsMaxAggregateOutputType = {
+    credit_transaction_id: string | null
+    credit_account_id: string | null
+    business_id: string | null
+    order_id: string | null
+    transaction_type: string | null
+    amount: Decimal | null
+    balance_after: Decimal | null
+    note: string | null
+    created_by: string | null
+    created_at: Date | null
+  }
+
+  export type Seller_customer_credit_transactionsCountAggregateOutputType = {
+    credit_transaction_id: number
+    credit_account_id: number
+    business_id: number
+    order_id: number
+    transaction_type: number
+    amount: number
+    balance_after: number
+    note: number
+    created_by: number
+    metadata: number
+    created_at: number
+    _all: number
+  }
+
+
+  export type Seller_customer_credit_transactionsAvgAggregateInputType = {
+    amount?: true
+    balance_after?: true
+  }
+
+  export type Seller_customer_credit_transactionsSumAggregateInputType = {
+    amount?: true
+    balance_after?: true
+  }
+
+  export type Seller_customer_credit_transactionsMinAggregateInputType = {
+    credit_transaction_id?: true
+    credit_account_id?: true
+    business_id?: true
+    order_id?: true
+    transaction_type?: true
+    amount?: true
+    balance_after?: true
+    note?: true
+    created_by?: true
+    created_at?: true
+  }
+
+  export type Seller_customer_credit_transactionsMaxAggregateInputType = {
+    credit_transaction_id?: true
+    credit_account_id?: true
+    business_id?: true
+    order_id?: true
+    transaction_type?: true
+    amount?: true
+    balance_after?: true
+    note?: true
+    created_by?: true
+    created_at?: true
+  }
+
+  export type Seller_customer_credit_transactionsCountAggregateInputType = {
+    credit_transaction_id?: true
+    credit_account_id?: true
+    business_id?: true
+    order_id?: true
+    transaction_type?: true
+    amount?: true
+    balance_after?: true
+    note?: true
+    created_by?: true
+    metadata?: true
+    created_at?: true
+    _all?: true
+  }
+
+  export type Seller_customer_credit_transactionsAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which seller_customer_credit_transactions to aggregate.
+     */
+    where?: seller_customer_credit_transactionsWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of seller_customer_credit_transactions to fetch.
+     */
+    orderBy?: seller_customer_credit_transactionsOrderByWithRelationInput | seller_customer_credit_transactionsOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: seller_customer_credit_transactionsWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` seller_customer_credit_transactions from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` seller_customer_credit_transactions.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned seller_customer_credit_transactions
+    **/
+    _count?: true | Seller_customer_credit_transactionsCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: Seller_customer_credit_transactionsAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: Seller_customer_credit_transactionsSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: Seller_customer_credit_transactionsMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: Seller_customer_credit_transactionsMaxAggregateInputType
+  }
+
+  export type GetSeller_customer_credit_transactionsAggregateType<T extends Seller_customer_credit_transactionsAggregateArgs> = {
+        [P in keyof T & keyof AggregateSeller_customer_credit_transactions]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateSeller_customer_credit_transactions[P]>
+      : GetScalarType<T[P], AggregateSeller_customer_credit_transactions[P]>
+  }
+
+
+
+
+  export type seller_customer_credit_transactionsGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: seller_customer_credit_transactionsWhereInput
+    orderBy?: seller_customer_credit_transactionsOrderByWithAggregationInput | seller_customer_credit_transactionsOrderByWithAggregationInput[]
+    by: Seller_customer_credit_transactionsScalarFieldEnum[] | Seller_customer_credit_transactionsScalarFieldEnum
+    having?: seller_customer_credit_transactionsScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: Seller_customer_credit_transactionsCountAggregateInputType | true
+    _avg?: Seller_customer_credit_transactionsAvgAggregateInputType
+    _sum?: Seller_customer_credit_transactionsSumAggregateInputType
+    _min?: Seller_customer_credit_transactionsMinAggregateInputType
+    _max?: Seller_customer_credit_transactionsMaxAggregateInputType
+  }
+
+  export type Seller_customer_credit_transactionsGroupByOutputType = {
+    credit_transaction_id: string
+    credit_account_id: string
+    business_id: string
+    order_id: string | null
+    transaction_type: string
+    amount: Decimal
+    balance_after: Decimal
+    note: string | null
+    created_by: string | null
+    metadata: JsonValue | null
+    created_at: Date
+    _count: Seller_customer_credit_transactionsCountAggregateOutputType | null
+    _avg: Seller_customer_credit_transactionsAvgAggregateOutputType | null
+    _sum: Seller_customer_credit_transactionsSumAggregateOutputType | null
+    _min: Seller_customer_credit_transactionsMinAggregateOutputType | null
+    _max: Seller_customer_credit_transactionsMaxAggregateOutputType | null
+  }
+
+  type GetSeller_customer_credit_transactionsGroupByPayload<T extends seller_customer_credit_transactionsGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<Seller_customer_credit_transactionsGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof Seller_customer_credit_transactionsGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], Seller_customer_credit_transactionsGroupByOutputType[P]>
+            : GetScalarType<T[P], Seller_customer_credit_transactionsGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type seller_customer_credit_transactionsSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    credit_transaction_id?: boolean
+    credit_account_id?: boolean
+    business_id?: boolean
+    order_id?: boolean
+    transaction_type?: boolean
+    amount?: boolean
+    balance_after?: boolean
+    note?: boolean
+    created_by?: boolean
+    metadata?: boolean
+    created_at?: boolean
+  }, ExtArgs["result"]["seller_customer_credit_transactions"]>
+
+  export type seller_customer_credit_transactionsSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    credit_transaction_id?: boolean
+    credit_account_id?: boolean
+    business_id?: boolean
+    order_id?: boolean
+    transaction_type?: boolean
+    amount?: boolean
+    balance_after?: boolean
+    note?: boolean
+    created_by?: boolean
+    metadata?: boolean
+    created_at?: boolean
+  }, ExtArgs["result"]["seller_customer_credit_transactions"]>
+
+  export type seller_customer_credit_transactionsSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    credit_transaction_id?: boolean
+    credit_account_id?: boolean
+    business_id?: boolean
+    order_id?: boolean
+    transaction_type?: boolean
+    amount?: boolean
+    balance_after?: boolean
+    note?: boolean
+    created_by?: boolean
+    metadata?: boolean
+    created_at?: boolean
+  }, ExtArgs["result"]["seller_customer_credit_transactions"]>
+
+  export type seller_customer_credit_transactionsSelectScalar = {
+    credit_transaction_id?: boolean
+    credit_account_id?: boolean
+    business_id?: boolean
+    order_id?: boolean
+    transaction_type?: boolean
+    amount?: boolean
+    balance_after?: boolean
+    note?: boolean
+    created_by?: boolean
+    metadata?: boolean
+    created_at?: boolean
+  }
+
+  export type seller_customer_credit_transactionsOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"credit_transaction_id" | "credit_account_id" | "business_id" | "order_id" | "transaction_type" | "amount" | "balance_after" | "note" | "created_by" | "metadata" | "created_at", ExtArgs["result"]["seller_customer_credit_transactions"]>
+
+  export type $seller_customer_credit_transactionsPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "seller_customer_credit_transactions"
+    objects: {}
+    scalars: $Extensions.GetPayloadResult<{
+      credit_transaction_id: string
+      credit_account_id: string
+      business_id: string
+      order_id: string | null
+      transaction_type: string
+      amount: Prisma.Decimal
+      balance_after: Prisma.Decimal
+      note: string | null
+      created_by: string | null
+      metadata: Prisma.JsonValue | null
+      created_at: Date
+    }, ExtArgs["result"]["seller_customer_credit_transactions"]>
+    composites: {}
+  }
+
+  type seller_customer_credit_transactionsGetPayload<S extends boolean | null | undefined | seller_customer_credit_transactionsDefaultArgs> = $Result.GetResult<Prisma.$seller_customer_credit_transactionsPayload, S>
+
+  type seller_customer_credit_transactionsCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<seller_customer_credit_transactionsFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: Seller_customer_credit_transactionsCountAggregateInputType | true
+    }
+
+  export interface seller_customer_credit_transactionsDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['seller_customer_credit_transactions'], meta: { name: 'seller_customer_credit_transactions' } }
+    /**
+     * Find zero or one Seller_customer_credit_transactions that matches the filter.
+     * @param {seller_customer_credit_transactionsFindUniqueArgs} args - Arguments to find a Seller_customer_credit_transactions
+     * @example
+     * // Get one Seller_customer_credit_transactions
+     * const seller_customer_credit_transactions = await prisma.seller_customer_credit_transactions.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends seller_customer_credit_transactionsFindUniqueArgs>(args: SelectSubset<T, seller_customer_credit_transactionsFindUniqueArgs<ExtArgs>>): Prisma__seller_customer_credit_transactionsClient<$Result.GetResult<Prisma.$seller_customer_credit_transactionsPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one Seller_customer_credit_transactions that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {seller_customer_credit_transactionsFindUniqueOrThrowArgs} args - Arguments to find a Seller_customer_credit_transactions
+     * @example
+     * // Get one Seller_customer_credit_transactions
+     * const seller_customer_credit_transactions = await prisma.seller_customer_credit_transactions.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends seller_customer_credit_transactionsFindUniqueOrThrowArgs>(args: SelectSubset<T, seller_customer_credit_transactionsFindUniqueOrThrowArgs<ExtArgs>>): Prisma__seller_customer_credit_transactionsClient<$Result.GetResult<Prisma.$seller_customer_credit_transactionsPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Seller_customer_credit_transactions that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {seller_customer_credit_transactionsFindFirstArgs} args - Arguments to find a Seller_customer_credit_transactions
+     * @example
+     * // Get one Seller_customer_credit_transactions
+     * const seller_customer_credit_transactions = await prisma.seller_customer_credit_transactions.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends seller_customer_credit_transactionsFindFirstArgs>(args?: SelectSubset<T, seller_customer_credit_transactionsFindFirstArgs<ExtArgs>>): Prisma__seller_customer_credit_transactionsClient<$Result.GetResult<Prisma.$seller_customer_credit_transactionsPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Seller_customer_credit_transactions that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {seller_customer_credit_transactionsFindFirstOrThrowArgs} args - Arguments to find a Seller_customer_credit_transactions
+     * @example
+     * // Get one Seller_customer_credit_transactions
+     * const seller_customer_credit_transactions = await prisma.seller_customer_credit_transactions.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends seller_customer_credit_transactionsFindFirstOrThrowArgs>(args?: SelectSubset<T, seller_customer_credit_transactionsFindFirstOrThrowArgs<ExtArgs>>): Prisma__seller_customer_credit_transactionsClient<$Result.GetResult<Prisma.$seller_customer_credit_transactionsPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more Seller_customer_credit_transactions that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {seller_customer_credit_transactionsFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all Seller_customer_credit_transactions
+     * const seller_customer_credit_transactions = await prisma.seller_customer_credit_transactions.findMany()
+     * 
+     * // Get first 10 Seller_customer_credit_transactions
+     * const seller_customer_credit_transactions = await prisma.seller_customer_credit_transactions.findMany({ take: 10 })
+     * 
+     * // Only select the `credit_transaction_id`
+     * const seller_customer_credit_transactionsWithCredit_transaction_idOnly = await prisma.seller_customer_credit_transactions.findMany({ select: { credit_transaction_id: true } })
+     * 
+     */
+    findMany<T extends seller_customer_credit_transactionsFindManyArgs>(args?: SelectSubset<T, seller_customer_credit_transactionsFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$seller_customer_credit_transactionsPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a Seller_customer_credit_transactions.
+     * @param {seller_customer_credit_transactionsCreateArgs} args - Arguments to create a Seller_customer_credit_transactions.
+     * @example
+     * // Create one Seller_customer_credit_transactions
+     * const Seller_customer_credit_transactions = await prisma.seller_customer_credit_transactions.create({
+     *   data: {
+     *     // ... data to create a Seller_customer_credit_transactions
+     *   }
+     * })
+     * 
+     */
+    create<T extends seller_customer_credit_transactionsCreateArgs>(args: SelectSubset<T, seller_customer_credit_transactionsCreateArgs<ExtArgs>>): Prisma__seller_customer_credit_transactionsClient<$Result.GetResult<Prisma.$seller_customer_credit_transactionsPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many Seller_customer_credit_transactions.
+     * @param {seller_customer_credit_transactionsCreateManyArgs} args - Arguments to create many Seller_customer_credit_transactions.
+     * @example
+     * // Create many Seller_customer_credit_transactions
+     * const seller_customer_credit_transactions = await prisma.seller_customer_credit_transactions.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends seller_customer_credit_transactionsCreateManyArgs>(args?: SelectSubset<T, seller_customer_credit_transactionsCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many Seller_customer_credit_transactions and returns the data saved in the database.
+     * @param {seller_customer_credit_transactionsCreateManyAndReturnArgs} args - Arguments to create many Seller_customer_credit_transactions.
+     * @example
+     * // Create many Seller_customer_credit_transactions
+     * const seller_customer_credit_transactions = await prisma.seller_customer_credit_transactions.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many Seller_customer_credit_transactions and only return the `credit_transaction_id`
+     * const seller_customer_credit_transactionsWithCredit_transaction_idOnly = await prisma.seller_customer_credit_transactions.createManyAndReturn({
+     *   select: { credit_transaction_id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends seller_customer_credit_transactionsCreateManyAndReturnArgs>(args?: SelectSubset<T, seller_customer_credit_transactionsCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$seller_customer_credit_transactionsPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a Seller_customer_credit_transactions.
+     * @param {seller_customer_credit_transactionsDeleteArgs} args - Arguments to delete one Seller_customer_credit_transactions.
+     * @example
+     * // Delete one Seller_customer_credit_transactions
+     * const Seller_customer_credit_transactions = await prisma.seller_customer_credit_transactions.delete({
+     *   where: {
+     *     // ... filter to delete one Seller_customer_credit_transactions
+     *   }
+     * })
+     * 
+     */
+    delete<T extends seller_customer_credit_transactionsDeleteArgs>(args: SelectSubset<T, seller_customer_credit_transactionsDeleteArgs<ExtArgs>>): Prisma__seller_customer_credit_transactionsClient<$Result.GetResult<Prisma.$seller_customer_credit_transactionsPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one Seller_customer_credit_transactions.
+     * @param {seller_customer_credit_transactionsUpdateArgs} args - Arguments to update one Seller_customer_credit_transactions.
+     * @example
+     * // Update one Seller_customer_credit_transactions
+     * const seller_customer_credit_transactions = await prisma.seller_customer_credit_transactions.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends seller_customer_credit_transactionsUpdateArgs>(args: SelectSubset<T, seller_customer_credit_transactionsUpdateArgs<ExtArgs>>): Prisma__seller_customer_credit_transactionsClient<$Result.GetResult<Prisma.$seller_customer_credit_transactionsPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more Seller_customer_credit_transactions.
+     * @param {seller_customer_credit_transactionsDeleteManyArgs} args - Arguments to filter Seller_customer_credit_transactions to delete.
+     * @example
+     * // Delete a few Seller_customer_credit_transactions
+     * const { count } = await prisma.seller_customer_credit_transactions.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends seller_customer_credit_transactionsDeleteManyArgs>(args?: SelectSubset<T, seller_customer_credit_transactionsDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Seller_customer_credit_transactions.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {seller_customer_credit_transactionsUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many Seller_customer_credit_transactions
+     * const seller_customer_credit_transactions = await prisma.seller_customer_credit_transactions.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends seller_customer_credit_transactionsUpdateManyArgs>(args: SelectSubset<T, seller_customer_credit_transactionsUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Seller_customer_credit_transactions and returns the data updated in the database.
+     * @param {seller_customer_credit_transactionsUpdateManyAndReturnArgs} args - Arguments to update many Seller_customer_credit_transactions.
+     * @example
+     * // Update many Seller_customer_credit_transactions
+     * const seller_customer_credit_transactions = await prisma.seller_customer_credit_transactions.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more Seller_customer_credit_transactions and only return the `credit_transaction_id`
+     * const seller_customer_credit_transactionsWithCredit_transaction_idOnly = await prisma.seller_customer_credit_transactions.updateManyAndReturn({
+     *   select: { credit_transaction_id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends seller_customer_credit_transactionsUpdateManyAndReturnArgs>(args: SelectSubset<T, seller_customer_credit_transactionsUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$seller_customer_credit_transactionsPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one Seller_customer_credit_transactions.
+     * @param {seller_customer_credit_transactionsUpsertArgs} args - Arguments to update or create a Seller_customer_credit_transactions.
+     * @example
+     * // Update or create a Seller_customer_credit_transactions
+     * const seller_customer_credit_transactions = await prisma.seller_customer_credit_transactions.upsert({
+     *   create: {
+     *     // ... data to create a Seller_customer_credit_transactions
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the Seller_customer_credit_transactions we want to update
+     *   }
+     * })
+     */
+    upsert<T extends seller_customer_credit_transactionsUpsertArgs>(args: SelectSubset<T, seller_customer_credit_transactionsUpsertArgs<ExtArgs>>): Prisma__seller_customer_credit_transactionsClient<$Result.GetResult<Prisma.$seller_customer_credit_transactionsPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of Seller_customer_credit_transactions.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {seller_customer_credit_transactionsCountArgs} args - Arguments to filter Seller_customer_credit_transactions to count.
+     * @example
+     * // Count the number of Seller_customer_credit_transactions
+     * const count = await prisma.seller_customer_credit_transactions.count({
+     *   where: {
+     *     // ... the filter for the Seller_customer_credit_transactions we want to count
+     *   }
+     * })
+    **/
+    count<T extends seller_customer_credit_transactionsCountArgs>(
+      args?: Subset<T, seller_customer_credit_transactionsCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], Seller_customer_credit_transactionsCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a Seller_customer_credit_transactions.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {Seller_customer_credit_transactionsAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends Seller_customer_credit_transactionsAggregateArgs>(args: Subset<T, Seller_customer_credit_transactionsAggregateArgs>): Prisma.PrismaPromise<GetSeller_customer_credit_transactionsAggregateType<T>>
+
+    /**
+     * Group by Seller_customer_credit_transactions.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {seller_customer_credit_transactionsGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends seller_customer_credit_transactionsGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: seller_customer_credit_transactionsGroupByArgs['orderBy'] }
+        : { orderBy?: seller_customer_credit_transactionsGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, seller_customer_credit_transactionsGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetSeller_customer_credit_transactionsGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the seller_customer_credit_transactions model
+   */
+  readonly fields: seller_customer_credit_transactionsFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for seller_customer_credit_transactions.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__seller_customer_credit_transactionsClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the seller_customer_credit_transactions model
+   */
+  interface seller_customer_credit_transactionsFieldRefs {
+    readonly credit_transaction_id: FieldRef<"seller_customer_credit_transactions", 'String'>
+    readonly credit_account_id: FieldRef<"seller_customer_credit_transactions", 'String'>
+    readonly business_id: FieldRef<"seller_customer_credit_transactions", 'String'>
+    readonly order_id: FieldRef<"seller_customer_credit_transactions", 'String'>
+    readonly transaction_type: FieldRef<"seller_customer_credit_transactions", 'String'>
+    readonly amount: FieldRef<"seller_customer_credit_transactions", 'Decimal'>
+    readonly balance_after: FieldRef<"seller_customer_credit_transactions", 'Decimal'>
+    readonly note: FieldRef<"seller_customer_credit_transactions", 'String'>
+    readonly created_by: FieldRef<"seller_customer_credit_transactions", 'String'>
+    readonly metadata: FieldRef<"seller_customer_credit_transactions", 'Json'>
+    readonly created_at: FieldRef<"seller_customer_credit_transactions", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * seller_customer_credit_transactions findUnique
+   */
+  export type seller_customer_credit_transactionsFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the seller_customer_credit_transactions
+     */
+    select?: seller_customer_credit_transactionsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the seller_customer_credit_transactions
+     */
+    omit?: seller_customer_credit_transactionsOmit<ExtArgs> | null
+    /**
+     * Filter, which seller_customer_credit_transactions to fetch.
+     */
+    where: seller_customer_credit_transactionsWhereUniqueInput
+  }
+
+  /**
+   * seller_customer_credit_transactions findUniqueOrThrow
+   */
+  export type seller_customer_credit_transactionsFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the seller_customer_credit_transactions
+     */
+    select?: seller_customer_credit_transactionsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the seller_customer_credit_transactions
+     */
+    omit?: seller_customer_credit_transactionsOmit<ExtArgs> | null
+    /**
+     * Filter, which seller_customer_credit_transactions to fetch.
+     */
+    where: seller_customer_credit_transactionsWhereUniqueInput
+  }
+
+  /**
+   * seller_customer_credit_transactions findFirst
+   */
+  export type seller_customer_credit_transactionsFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the seller_customer_credit_transactions
+     */
+    select?: seller_customer_credit_transactionsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the seller_customer_credit_transactions
+     */
+    omit?: seller_customer_credit_transactionsOmit<ExtArgs> | null
+    /**
+     * Filter, which seller_customer_credit_transactions to fetch.
+     */
+    where?: seller_customer_credit_transactionsWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of seller_customer_credit_transactions to fetch.
+     */
+    orderBy?: seller_customer_credit_transactionsOrderByWithRelationInput | seller_customer_credit_transactionsOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for seller_customer_credit_transactions.
+     */
+    cursor?: seller_customer_credit_transactionsWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` seller_customer_credit_transactions from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` seller_customer_credit_transactions.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of seller_customer_credit_transactions.
+     */
+    distinct?: Seller_customer_credit_transactionsScalarFieldEnum | Seller_customer_credit_transactionsScalarFieldEnum[]
+  }
+
+  /**
+   * seller_customer_credit_transactions findFirstOrThrow
+   */
+  export type seller_customer_credit_transactionsFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the seller_customer_credit_transactions
+     */
+    select?: seller_customer_credit_transactionsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the seller_customer_credit_transactions
+     */
+    omit?: seller_customer_credit_transactionsOmit<ExtArgs> | null
+    /**
+     * Filter, which seller_customer_credit_transactions to fetch.
+     */
+    where?: seller_customer_credit_transactionsWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of seller_customer_credit_transactions to fetch.
+     */
+    orderBy?: seller_customer_credit_transactionsOrderByWithRelationInput | seller_customer_credit_transactionsOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for seller_customer_credit_transactions.
+     */
+    cursor?: seller_customer_credit_transactionsWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` seller_customer_credit_transactions from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` seller_customer_credit_transactions.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of seller_customer_credit_transactions.
+     */
+    distinct?: Seller_customer_credit_transactionsScalarFieldEnum | Seller_customer_credit_transactionsScalarFieldEnum[]
+  }
+
+  /**
+   * seller_customer_credit_transactions findMany
+   */
+  export type seller_customer_credit_transactionsFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the seller_customer_credit_transactions
+     */
+    select?: seller_customer_credit_transactionsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the seller_customer_credit_transactions
+     */
+    omit?: seller_customer_credit_transactionsOmit<ExtArgs> | null
+    /**
+     * Filter, which seller_customer_credit_transactions to fetch.
+     */
+    where?: seller_customer_credit_transactionsWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of seller_customer_credit_transactions to fetch.
+     */
+    orderBy?: seller_customer_credit_transactionsOrderByWithRelationInput | seller_customer_credit_transactionsOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing seller_customer_credit_transactions.
+     */
+    cursor?: seller_customer_credit_transactionsWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` seller_customer_credit_transactions from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` seller_customer_credit_transactions.
+     */
+    skip?: number
+    distinct?: Seller_customer_credit_transactionsScalarFieldEnum | Seller_customer_credit_transactionsScalarFieldEnum[]
+  }
+
+  /**
+   * seller_customer_credit_transactions create
+   */
+  export type seller_customer_credit_transactionsCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the seller_customer_credit_transactions
+     */
+    select?: seller_customer_credit_transactionsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the seller_customer_credit_transactions
+     */
+    omit?: seller_customer_credit_transactionsOmit<ExtArgs> | null
+    /**
+     * The data needed to create a seller_customer_credit_transactions.
+     */
+    data: XOR<seller_customer_credit_transactionsCreateInput, seller_customer_credit_transactionsUncheckedCreateInput>
+  }
+
+  /**
+   * seller_customer_credit_transactions createMany
+   */
+  export type seller_customer_credit_transactionsCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many seller_customer_credit_transactions.
+     */
+    data: seller_customer_credit_transactionsCreateManyInput | seller_customer_credit_transactionsCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * seller_customer_credit_transactions createManyAndReturn
+   */
+  export type seller_customer_credit_transactionsCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the seller_customer_credit_transactions
+     */
+    select?: seller_customer_credit_transactionsSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the seller_customer_credit_transactions
+     */
+    omit?: seller_customer_credit_transactionsOmit<ExtArgs> | null
+    /**
+     * The data used to create many seller_customer_credit_transactions.
+     */
+    data: seller_customer_credit_transactionsCreateManyInput | seller_customer_credit_transactionsCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * seller_customer_credit_transactions update
+   */
+  export type seller_customer_credit_transactionsUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the seller_customer_credit_transactions
+     */
+    select?: seller_customer_credit_transactionsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the seller_customer_credit_transactions
+     */
+    omit?: seller_customer_credit_transactionsOmit<ExtArgs> | null
+    /**
+     * The data needed to update a seller_customer_credit_transactions.
+     */
+    data: XOR<seller_customer_credit_transactionsUpdateInput, seller_customer_credit_transactionsUncheckedUpdateInput>
+    /**
+     * Choose, which seller_customer_credit_transactions to update.
+     */
+    where: seller_customer_credit_transactionsWhereUniqueInput
+  }
+
+  /**
+   * seller_customer_credit_transactions updateMany
+   */
+  export type seller_customer_credit_transactionsUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update seller_customer_credit_transactions.
+     */
+    data: XOR<seller_customer_credit_transactionsUpdateManyMutationInput, seller_customer_credit_transactionsUncheckedUpdateManyInput>
+    /**
+     * Filter which seller_customer_credit_transactions to update
+     */
+    where?: seller_customer_credit_transactionsWhereInput
+    /**
+     * Limit how many seller_customer_credit_transactions to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * seller_customer_credit_transactions updateManyAndReturn
+   */
+  export type seller_customer_credit_transactionsUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the seller_customer_credit_transactions
+     */
+    select?: seller_customer_credit_transactionsSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the seller_customer_credit_transactions
+     */
+    omit?: seller_customer_credit_transactionsOmit<ExtArgs> | null
+    /**
+     * The data used to update seller_customer_credit_transactions.
+     */
+    data: XOR<seller_customer_credit_transactionsUpdateManyMutationInput, seller_customer_credit_transactionsUncheckedUpdateManyInput>
+    /**
+     * Filter which seller_customer_credit_transactions to update
+     */
+    where?: seller_customer_credit_transactionsWhereInput
+    /**
+     * Limit how many seller_customer_credit_transactions to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * seller_customer_credit_transactions upsert
+   */
+  export type seller_customer_credit_transactionsUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the seller_customer_credit_transactions
+     */
+    select?: seller_customer_credit_transactionsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the seller_customer_credit_transactions
+     */
+    omit?: seller_customer_credit_transactionsOmit<ExtArgs> | null
+    /**
+     * The filter to search for the seller_customer_credit_transactions to update in case it exists.
+     */
+    where: seller_customer_credit_transactionsWhereUniqueInput
+    /**
+     * In case the seller_customer_credit_transactions found by the `where` argument doesn't exist, create a new seller_customer_credit_transactions with this data.
+     */
+    create: XOR<seller_customer_credit_transactionsCreateInput, seller_customer_credit_transactionsUncheckedCreateInput>
+    /**
+     * In case the seller_customer_credit_transactions was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<seller_customer_credit_transactionsUpdateInput, seller_customer_credit_transactionsUncheckedUpdateInput>
+  }
+
+  /**
+   * seller_customer_credit_transactions delete
+   */
+  export type seller_customer_credit_transactionsDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the seller_customer_credit_transactions
+     */
+    select?: seller_customer_credit_transactionsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the seller_customer_credit_transactions
+     */
+    omit?: seller_customer_credit_transactionsOmit<ExtArgs> | null
+    /**
+     * Filter which seller_customer_credit_transactions to delete.
+     */
+    where: seller_customer_credit_transactionsWhereUniqueInput
+  }
+
+  /**
+   * seller_customer_credit_transactions deleteMany
+   */
+  export type seller_customer_credit_transactionsDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which seller_customer_credit_transactions to delete
+     */
+    where?: seller_customer_credit_transactionsWhereInput
+    /**
+     * Limit how many seller_customer_credit_transactions to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * seller_customer_credit_transactions without action
+   */
+  export type seller_customer_credit_transactionsDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the seller_customer_credit_transactions
+     */
+    select?: seller_customer_credit_transactionsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the seller_customer_credit_transactions
+     */
+    omit?: seller_customer_credit_transactionsOmit<ExtArgs> | null
+  }
+
+
+  /**
+   * Model seller_ai_audit_logs
+   */
+
+  export type AggregateSeller_ai_audit_logs = {
+    _count: Seller_ai_audit_logsCountAggregateOutputType | null
+    _avg: Seller_ai_audit_logsAvgAggregateOutputType | null
+    _sum: Seller_ai_audit_logsSumAggregateOutputType | null
+    _min: Seller_ai_audit_logsMinAggregateOutputType | null
+    _max: Seller_ai_audit_logsMaxAggregateOutputType | null
+  }
+
+  export type Seller_ai_audit_logsAvgAggregateOutputType = {
+    confidence: Decimal | null
+  }
+
+  export type Seller_ai_audit_logsSumAggregateOutputType = {
+    confidence: Decimal | null
+  }
+
+  export type Seller_ai_audit_logsMinAggregateOutputType = {
+    ai_audit_id: string | null
+    business_id: string | null
+    tenant_id: string | null
+    ai_employee: string | null
+    action: string | null
+    decision: string | null
+    confidence: Decimal | null
+    risk_level: string | null
+    entity_type: string | null
+    entity_id: string | null
+    input_summary: string | null
+    output_summary: string | null
+    owner_visible: boolean | null
+    created_at: Date | null
+  }
+
+  export type Seller_ai_audit_logsMaxAggregateOutputType = {
+    ai_audit_id: string | null
+    business_id: string | null
+    tenant_id: string | null
+    ai_employee: string | null
+    action: string | null
+    decision: string | null
+    confidence: Decimal | null
+    risk_level: string | null
+    entity_type: string | null
+    entity_id: string | null
+    input_summary: string | null
+    output_summary: string | null
+    owner_visible: boolean | null
+    created_at: Date | null
+  }
+
+  export type Seller_ai_audit_logsCountAggregateOutputType = {
+    ai_audit_id: number
+    business_id: number
+    tenant_id: number
+    ai_employee: number
+    action: number
+    decision: number
+    confidence: number
+    risk_level: number
+    entity_type: number
+    entity_id: number
+    input_summary: number
+    output_summary: number
+    guardrails: number
+    owner_visible: number
+    created_at: number
+    _all: number
+  }
+
+
+  export type Seller_ai_audit_logsAvgAggregateInputType = {
+    confidence?: true
+  }
+
+  export type Seller_ai_audit_logsSumAggregateInputType = {
+    confidence?: true
+  }
+
+  export type Seller_ai_audit_logsMinAggregateInputType = {
+    ai_audit_id?: true
+    business_id?: true
+    tenant_id?: true
+    ai_employee?: true
+    action?: true
+    decision?: true
+    confidence?: true
+    risk_level?: true
+    entity_type?: true
+    entity_id?: true
+    input_summary?: true
+    output_summary?: true
+    owner_visible?: true
+    created_at?: true
+  }
+
+  export type Seller_ai_audit_logsMaxAggregateInputType = {
+    ai_audit_id?: true
+    business_id?: true
+    tenant_id?: true
+    ai_employee?: true
+    action?: true
+    decision?: true
+    confidence?: true
+    risk_level?: true
+    entity_type?: true
+    entity_id?: true
+    input_summary?: true
+    output_summary?: true
+    owner_visible?: true
+    created_at?: true
+  }
+
+  export type Seller_ai_audit_logsCountAggregateInputType = {
+    ai_audit_id?: true
+    business_id?: true
+    tenant_id?: true
+    ai_employee?: true
+    action?: true
+    decision?: true
+    confidence?: true
+    risk_level?: true
+    entity_type?: true
+    entity_id?: true
+    input_summary?: true
+    output_summary?: true
+    guardrails?: true
+    owner_visible?: true
+    created_at?: true
+    _all?: true
+  }
+
+  export type Seller_ai_audit_logsAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which seller_ai_audit_logs to aggregate.
+     */
+    where?: seller_ai_audit_logsWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of seller_ai_audit_logs to fetch.
+     */
+    orderBy?: seller_ai_audit_logsOrderByWithRelationInput | seller_ai_audit_logsOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: seller_ai_audit_logsWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` seller_ai_audit_logs from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` seller_ai_audit_logs.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned seller_ai_audit_logs
+    **/
+    _count?: true | Seller_ai_audit_logsCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: Seller_ai_audit_logsAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: Seller_ai_audit_logsSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: Seller_ai_audit_logsMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: Seller_ai_audit_logsMaxAggregateInputType
+  }
+
+  export type GetSeller_ai_audit_logsAggregateType<T extends Seller_ai_audit_logsAggregateArgs> = {
+        [P in keyof T & keyof AggregateSeller_ai_audit_logs]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateSeller_ai_audit_logs[P]>
+      : GetScalarType<T[P], AggregateSeller_ai_audit_logs[P]>
+  }
+
+
+
+
+  export type seller_ai_audit_logsGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: seller_ai_audit_logsWhereInput
+    orderBy?: seller_ai_audit_logsOrderByWithAggregationInput | seller_ai_audit_logsOrderByWithAggregationInput[]
+    by: Seller_ai_audit_logsScalarFieldEnum[] | Seller_ai_audit_logsScalarFieldEnum
+    having?: seller_ai_audit_logsScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: Seller_ai_audit_logsCountAggregateInputType | true
+    _avg?: Seller_ai_audit_logsAvgAggregateInputType
+    _sum?: Seller_ai_audit_logsSumAggregateInputType
+    _min?: Seller_ai_audit_logsMinAggregateInputType
+    _max?: Seller_ai_audit_logsMaxAggregateInputType
+  }
+
+  export type Seller_ai_audit_logsGroupByOutputType = {
+    ai_audit_id: string
+    business_id: string
+    tenant_id: string | null
+    ai_employee: string
+    action: string
+    decision: string
+    confidence: Decimal | null
+    risk_level: string
+    entity_type: string | null
+    entity_id: string | null
+    input_summary: string | null
+    output_summary: string | null
+    guardrails: JsonValue | null
+    owner_visible: boolean
+    created_at: Date
+    _count: Seller_ai_audit_logsCountAggregateOutputType | null
+    _avg: Seller_ai_audit_logsAvgAggregateOutputType | null
+    _sum: Seller_ai_audit_logsSumAggregateOutputType | null
+    _min: Seller_ai_audit_logsMinAggregateOutputType | null
+    _max: Seller_ai_audit_logsMaxAggregateOutputType | null
+  }
+
+  type GetSeller_ai_audit_logsGroupByPayload<T extends seller_ai_audit_logsGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<Seller_ai_audit_logsGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof Seller_ai_audit_logsGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], Seller_ai_audit_logsGroupByOutputType[P]>
+            : GetScalarType<T[P], Seller_ai_audit_logsGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type seller_ai_audit_logsSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    ai_audit_id?: boolean
+    business_id?: boolean
+    tenant_id?: boolean
+    ai_employee?: boolean
+    action?: boolean
+    decision?: boolean
+    confidence?: boolean
+    risk_level?: boolean
+    entity_type?: boolean
+    entity_id?: boolean
+    input_summary?: boolean
+    output_summary?: boolean
+    guardrails?: boolean
+    owner_visible?: boolean
+    created_at?: boolean
+  }, ExtArgs["result"]["seller_ai_audit_logs"]>
+
+  export type seller_ai_audit_logsSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    ai_audit_id?: boolean
+    business_id?: boolean
+    tenant_id?: boolean
+    ai_employee?: boolean
+    action?: boolean
+    decision?: boolean
+    confidence?: boolean
+    risk_level?: boolean
+    entity_type?: boolean
+    entity_id?: boolean
+    input_summary?: boolean
+    output_summary?: boolean
+    guardrails?: boolean
+    owner_visible?: boolean
+    created_at?: boolean
+  }, ExtArgs["result"]["seller_ai_audit_logs"]>
+
+  export type seller_ai_audit_logsSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    ai_audit_id?: boolean
+    business_id?: boolean
+    tenant_id?: boolean
+    ai_employee?: boolean
+    action?: boolean
+    decision?: boolean
+    confidence?: boolean
+    risk_level?: boolean
+    entity_type?: boolean
+    entity_id?: boolean
+    input_summary?: boolean
+    output_summary?: boolean
+    guardrails?: boolean
+    owner_visible?: boolean
+    created_at?: boolean
+  }, ExtArgs["result"]["seller_ai_audit_logs"]>
+
+  export type seller_ai_audit_logsSelectScalar = {
+    ai_audit_id?: boolean
+    business_id?: boolean
+    tenant_id?: boolean
+    ai_employee?: boolean
+    action?: boolean
+    decision?: boolean
+    confidence?: boolean
+    risk_level?: boolean
+    entity_type?: boolean
+    entity_id?: boolean
+    input_summary?: boolean
+    output_summary?: boolean
+    guardrails?: boolean
+    owner_visible?: boolean
+    created_at?: boolean
+  }
+
+  export type seller_ai_audit_logsOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"ai_audit_id" | "business_id" | "tenant_id" | "ai_employee" | "action" | "decision" | "confidence" | "risk_level" | "entity_type" | "entity_id" | "input_summary" | "output_summary" | "guardrails" | "owner_visible" | "created_at", ExtArgs["result"]["seller_ai_audit_logs"]>
+
+  export type $seller_ai_audit_logsPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "seller_ai_audit_logs"
+    objects: {}
+    scalars: $Extensions.GetPayloadResult<{
+      ai_audit_id: string
+      business_id: string
+      tenant_id: string | null
+      ai_employee: string
+      action: string
+      decision: string
+      confidence: Prisma.Decimal | null
+      risk_level: string
+      entity_type: string | null
+      entity_id: string | null
+      input_summary: string | null
+      output_summary: string | null
+      guardrails: Prisma.JsonValue | null
+      owner_visible: boolean
+      created_at: Date
+    }, ExtArgs["result"]["seller_ai_audit_logs"]>
+    composites: {}
+  }
+
+  type seller_ai_audit_logsGetPayload<S extends boolean | null | undefined | seller_ai_audit_logsDefaultArgs> = $Result.GetResult<Prisma.$seller_ai_audit_logsPayload, S>
+
+  type seller_ai_audit_logsCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<seller_ai_audit_logsFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: Seller_ai_audit_logsCountAggregateInputType | true
+    }
+
+  export interface seller_ai_audit_logsDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['seller_ai_audit_logs'], meta: { name: 'seller_ai_audit_logs' } }
+    /**
+     * Find zero or one Seller_ai_audit_logs that matches the filter.
+     * @param {seller_ai_audit_logsFindUniqueArgs} args - Arguments to find a Seller_ai_audit_logs
+     * @example
+     * // Get one Seller_ai_audit_logs
+     * const seller_ai_audit_logs = await prisma.seller_ai_audit_logs.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends seller_ai_audit_logsFindUniqueArgs>(args: SelectSubset<T, seller_ai_audit_logsFindUniqueArgs<ExtArgs>>): Prisma__seller_ai_audit_logsClient<$Result.GetResult<Prisma.$seller_ai_audit_logsPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one Seller_ai_audit_logs that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {seller_ai_audit_logsFindUniqueOrThrowArgs} args - Arguments to find a Seller_ai_audit_logs
+     * @example
+     * // Get one Seller_ai_audit_logs
+     * const seller_ai_audit_logs = await prisma.seller_ai_audit_logs.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends seller_ai_audit_logsFindUniqueOrThrowArgs>(args: SelectSubset<T, seller_ai_audit_logsFindUniqueOrThrowArgs<ExtArgs>>): Prisma__seller_ai_audit_logsClient<$Result.GetResult<Prisma.$seller_ai_audit_logsPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Seller_ai_audit_logs that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {seller_ai_audit_logsFindFirstArgs} args - Arguments to find a Seller_ai_audit_logs
+     * @example
+     * // Get one Seller_ai_audit_logs
+     * const seller_ai_audit_logs = await prisma.seller_ai_audit_logs.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends seller_ai_audit_logsFindFirstArgs>(args?: SelectSubset<T, seller_ai_audit_logsFindFirstArgs<ExtArgs>>): Prisma__seller_ai_audit_logsClient<$Result.GetResult<Prisma.$seller_ai_audit_logsPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Seller_ai_audit_logs that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {seller_ai_audit_logsFindFirstOrThrowArgs} args - Arguments to find a Seller_ai_audit_logs
+     * @example
+     * // Get one Seller_ai_audit_logs
+     * const seller_ai_audit_logs = await prisma.seller_ai_audit_logs.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends seller_ai_audit_logsFindFirstOrThrowArgs>(args?: SelectSubset<T, seller_ai_audit_logsFindFirstOrThrowArgs<ExtArgs>>): Prisma__seller_ai_audit_logsClient<$Result.GetResult<Prisma.$seller_ai_audit_logsPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more Seller_ai_audit_logs that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {seller_ai_audit_logsFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all Seller_ai_audit_logs
+     * const seller_ai_audit_logs = await prisma.seller_ai_audit_logs.findMany()
+     * 
+     * // Get first 10 Seller_ai_audit_logs
+     * const seller_ai_audit_logs = await prisma.seller_ai_audit_logs.findMany({ take: 10 })
+     * 
+     * // Only select the `ai_audit_id`
+     * const seller_ai_audit_logsWithAi_audit_idOnly = await prisma.seller_ai_audit_logs.findMany({ select: { ai_audit_id: true } })
+     * 
+     */
+    findMany<T extends seller_ai_audit_logsFindManyArgs>(args?: SelectSubset<T, seller_ai_audit_logsFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$seller_ai_audit_logsPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a Seller_ai_audit_logs.
+     * @param {seller_ai_audit_logsCreateArgs} args - Arguments to create a Seller_ai_audit_logs.
+     * @example
+     * // Create one Seller_ai_audit_logs
+     * const Seller_ai_audit_logs = await prisma.seller_ai_audit_logs.create({
+     *   data: {
+     *     // ... data to create a Seller_ai_audit_logs
+     *   }
+     * })
+     * 
+     */
+    create<T extends seller_ai_audit_logsCreateArgs>(args: SelectSubset<T, seller_ai_audit_logsCreateArgs<ExtArgs>>): Prisma__seller_ai_audit_logsClient<$Result.GetResult<Prisma.$seller_ai_audit_logsPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many Seller_ai_audit_logs.
+     * @param {seller_ai_audit_logsCreateManyArgs} args - Arguments to create many Seller_ai_audit_logs.
+     * @example
+     * // Create many Seller_ai_audit_logs
+     * const seller_ai_audit_logs = await prisma.seller_ai_audit_logs.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends seller_ai_audit_logsCreateManyArgs>(args?: SelectSubset<T, seller_ai_audit_logsCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many Seller_ai_audit_logs and returns the data saved in the database.
+     * @param {seller_ai_audit_logsCreateManyAndReturnArgs} args - Arguments to create many Seller_ai_audit_logs.
+     * @example
+     * // Create many Seller_ai_audit_logs
+     * const seller_ai_audit_logs = await prisma.seller_ai_audit_logs.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many Seller_ai_audit_logs and only return the `ai_audit_id`
+     * const seller_ai_audit_logsWithAi_audit_idOnly = await prisma.seller_ai_audit_logs.createManyAndReturn({
+     *   select: { ai_audit_id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends seller_ai_audit_logsCreateManyAndReturnArgs>(args?: SelectSubset<T, seller_ai_audit_logsCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$seller_ai_audit_logsPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a Seller_ai_audit_logs.
+     * @param {seller_ai_audit_logsDeleteArgs} args - Arguments to delete one Seller_ai_audit_logs.
+     * @example
+     * // Delete one Seller_ai_audit_logs
+     * const Seller_ai_audit_logs = await prisma.seller_ai_audit_logs.delete({
+     *   where: {
+     *     // ... filter to delete one Seller_ai_audit_logs
+     *   }
+     * })
+     * 
+     */
+    delete<T extends seller_ai_audit_logsDeleteArgs>(args: SelectSubset<T, seller_ai_audit_logsDeleteArgs<ExtArgs>>): Prisma__seller_ai_audit_logsClient<$Result.GetResult<Prisma.$seller_ai_audit_logsPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one Seller_ai_audit_logs.
+     * @param {seller_ai_audit_logsUpdateArgs} args - Arguments to update one Seller_ai_audit_logs.
+     * @example
+     * // Update one Seller_ai_audit_logs
+     * const seller_ai_audit_logs = await prisma.seller_ai_audit_logs.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends seller_ai_audit_logsUpdateArgs>(args: SelectSubset<T, seller_ai_audit_logsUpdateArgs<ExtArgs>>): Prisma__seller_ai_audit_logsClient<$Result.GetResult<Prisma.$seller_ai_audit_logsPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more Seller_ai_audit_logs.
+     * @param {seller_ai_audit_logsDeleteManyArgs} args - Arguments to filter Seller_ai_audit_logs to delete.
+     * @example
+     * // Delete a few Seller_ai_audit_logs
+     * const { count } = await prisma.seller_ai_audit_logs.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends seller_ai_audit_logsDeleteManyArgs>(args?: SelectSubset<T, seller_ai_audit_logsDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Seller_ai_audit_logs.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {seller_ai_audit_logsUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many Seller_ai_audit_logs
+     * const seller_ai_audit_logs = await prisma.seller_ai_audit_logs.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends seller_ai_audit_logsUpdateManyArgs>(args: SelectSubset<T, seller_ai_audit_logsUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Seller_ai_audit_logs and returns the data updated in the database.
+     * @param {seller_ai_audit_logsUpdateManyAndReturnArgs} args - Arguments to update many Seller_ai_audit_logs.
+     * @example
+     * // Update many Seller_ai_audit_logs
+     * const seller_ai_audit_logs = await prisma.seller_ai_audit_logs.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more Seller_ai_audit_logs and only return the `ai_audit_id`
+     * const seller_ai_audit_logsWithAi_audit_idOnly = await prisma.seller_ai_audit_logs.updateManyAndReturn({
+     *   select: { ai_audit_id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends seller_ai_audit_logsUpdateManyAndReturnArgs>(args: SelectSubset<T, seller_ai_audit_logsUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$seller_ai_audit_logsPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one Seller_ai_audit_logs.
+     * @param {seller_ai_audit_logsUpsertArgs} args - Arguments to update or create a Seller_ai_audit_logs.
+     * @example
+     * // Update or create a Seller_ai_audit_logs
+     * const seller_ai_audit_logs = await prisma.seller_ai_audit_logs.upsert({
+     *   create: {
+     *     // ... data to create a Seller_ai_audit_logs
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the Seller_ai_audit_logs we want to update
+     *   }
+     * })
+     */
+    upsert<T extends seller_ai_audit_logsUpsertArgs>(args: SelectSubset<T, seller_ai_audit_logsUpsertArgs<ExtArgs>>): Prisma__seller_ai_audit_logsClient<$Result.GetResult<Prisma.$seller_ai_audit_logsPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of Seller_ai_audit_logs.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {seller_ai_audit_logsCountArgs} args - Arguments to filter Seller_ai_audit_logs to count.
+     * @example
+     * // Count the number of Seller_ai_audit_logs
+     * const count = await prisma.seller_ai_audit_logs.count({
+     *   where: {
+     *     // ... the filter for the Seller_ai_audit_logs we want to count
+     *   }
+     * })
+    **/
+    count<T extends seller_ai_audit_logsCountArgs>(
+      args?: Subset<T, seller_ai_audit_logsCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], Seller_ai_audit_logsCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a Seller_ai_audit_logs.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {Seller_ai_audit_logsAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends Seller_ai_audit_logsAggregateArgs>(args: Subset<T, Seller_ai_audit_logsAggregateArgs>): Prisma.PrismaPromise<GetSeller_ai_audit_logsAggregateType<T>>
+
+    /**
+     * Group by Seller_ai_audit_logs.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {seller_ai_audit_logsGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends seller_ai_audit_logsGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: seller_ai_audit_logsGroupByArgs['orderBy'] }
+        : { orderBy?: seller_ai_audit_logsGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, seller_ai_audit_logsGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetSeller_ai_audit_logsGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the seller_ai_audit_logs model
+   */
+  readonly fields: seller_ai_audit_logsFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for seller_ai_audit_logs.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__seller_ai_audit_logsClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the seller_ai_audit_logs model
+   */
+  interface seller_ai_audit_logsFieldRefs {
+    readonly ai_audit_id: FieldRef<"seller_ai_audit_logs", 'String'>
+    readonly business_id: FieldRef<"seller_ai_audit_logs", 'String'>
+    readonly tenant_id: FieldRef<"seller_ai_audit_logs", 'String'>
+    readonly ai_employee: FieldRef<"seller_ai_audit_logs", 'String'>
+    readonly action: FieldRef<"seller_ai_audit_logs", 'String'>
+    readonly decision: FieldRef<"seller_ai_audit_logs", 'String'>
+    readonly confidence: FieldRef<"seller_ai_audit_logs", 'Decimal'>
+    readonly risk_level: FieldRef<"seller_ai_audit_logs", 'String'>
+    readonly entity_type: FieldRef<"seller_ai_audit_logs", 'String'>
+    readonly entity_id: FieldRef<"seller_ai_audit_logs", 'String'>
+    readonly input_summary: FieldRef<"seller_ai_audit_logs", 'String'>
+    readonly output_summary: FieldRef<"seller_ai_audit_logs", 'String'>
+    readonly guardrails: FieldRef<"seller_ai_audit_logs", 'Json'>
+    readonly owner_visible: FieldRef<"seller_ai_audit_logs", 'Boolean'>
+    readonly created_at: FieldRef<"seller_ai_audit_logs", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * seller_ai_audit_logs findUnique
+   */
+  export type seller_ai_audit_logsFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the seller_ai_audit_logs
+     */
+    select?: seller_ai_audit_logsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the seller_ai_audit_logs
+     */
+    omit?: seller_ai_audit_logsOmit<ExtArgs> | null
+    /**
+     * Filter, which seller_ai_audit_logs to fetch.
+     */
+    where: seller_ai_audit_logsWhereUniqueInput
+  }
+
+  /**
+   * seller_ai_audit_logs findUniqueOrThrow
+   */
+  export type seller_ai_audit_logsFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the seller_ai_audit_logs
+     */
+    select?: seller_ai_audit_logsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the seller_ai_audit_logs
+     */
+    omit?: seller_ai_audit_logsOmit<ExtArgs> | null
+    /**
+     * Filter, which seller_ai_audit_logs to fetch.
+     */
+    where: seller_ai_audit_logsWhereUniqueInput
+  }
+
+  /**
+   * seller_ai_audit_logs findFirst
+   */
+  export type seller_ai_audit_logsFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the seller_ai_audit_logs
+     */
+    select?: seller_ai_audit_logsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the seller_ai_audit_logs
+     */
+    omit?: seller_ai_audit_logsOmit<ExtArgs> | null
+    /**
+     * Filter, which seller_ai_audit_logs to fetch.
+     */
+    where?: seller_ai_audit_logsWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of seller_ai_audit_logs to fetch.
+     */
+    orderBy?: seller_ai_audit_logsOrderByWithRelationInput | seller_ai_audit_logsOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for seller_ai_audit_logs.
+     */
+    cursor?: seller_ai_audit_logsWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` seller_ai_audit_logs from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` seller_ai_audit_logs.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of seller_ai_audit_logs.
+     */
+    distinct?: Seller_ai_audit_logsScalarFieldEnum | Seller_ai_audit_logsScalarFieldEnum[]
+  }
+
+  /**
+   * seller_ai_audit_logs findFirstOrThrow
+   */
+  export type seller_ai_audit_logsFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the seller_ai_audit_logs
+     */
+    select?: seller_ai_audit_logsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the seller_ai_audit_logs
+     */
+    omit?: seller_ai_audit_logsOmit<ExtArgs> | null
+    /**
+     * Filter, which seller_ai_audit_logs to fetch.
+     */
+    where?: seller_ai_audit_logsWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of seller_ai_audit_logs to fetch.
+     */
+    orderBy?: seller_ai_audit_logsOrderByWithRelationInput | seller_ai_audit_logsOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for seller_ai_audit_logs.
+     */
+    cursor?: seller_ai_audit_logsWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` seller_ai_audit_logs from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` seller_ai_audit_logs.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of seller_ai_audit_logs.
+     */
+    distinct?: Seller_ai_audit_logsScalarFieldEnum | Seller_ai_audit_logsScalarFieldEnum[]
+  }
+
+  /**
+   * seller_ai_audit_logs findMany
+   */
+  export type seller_ai_audit_logsFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the seller_ai_audit_logs
+     */
+    select?: seller_ai_audit_logsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the seller_ai_audit_logs
+     */
+    omit?: seller_ai_audit_logsOmit<ExtArgs> | null
+    /**
+     * Filter, which seller_ai_audit_logs to fetch.
+     */
+    where?: seller_ai_audit_logsWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of seller_ai_audit_logs to fetch.
+     */
+    orderBy?: seller_ai_audit_logsOrderByWithRelationInput | seller_ai_audit_logsOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing seller_ai_audit_logs.
+     */
+    cursor?: seller_ai_audit_logsWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` seller_ai_audit_logs from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` seller_ai_audit_logs.
+     */
+    skip?: number
+    distinct?: Seller_ai_audit_logsScalarFieldEnum | Seller_ai_audit_logsScalarFieldEnum[]
+  }
+
+  /**
+   * seller_ai_audit_logs create
+   */
+  export type seller_ai_audit_logsCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the seller_ai_audit_logs
+     */
+    select?: seller_ai_audit_logsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the seller_ai_audit_logs
+     */
+    omit?: seller_ai_audit_logsOmit<ExtArgs> | null
+    /**
+     * The data needed to create a seller_ai_audit_logs.
+     */
+    data: XOR<seller_ai_audit_logsCreateInput, seller_ai_audit_logsUncheckedCreateInput>
+  }
+
+  /**
+   * seller_ai_audit_logs createMany
+   */
+  export type seller_ai_audit_logsCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many seller_ai_audit_logs.
+     */
+    data: seller_ai_audit_logsCreateManyInput | seller_ai_audit_logsCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * seller_ai_audit_logs createManyAndReturn
+   */
+  export type seller_ai_audit_logsCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the seller_ai_audit_logs
+     */
+    select?: seller_ai_audit_logsSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the seller_ai_audit_logs
+     */
+    omit?: seller_ai_audit_logsOmit<ExtArgs> | null
+    /**
+     * The data used to create many seller_ai_audit_logs.
+     */
+    data: seller_ai_audit_logsCreateManyInput | seller_ai_audit_logsCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * seller_ai_audit_logs update
+   */
+  export type seller_ai_audit_logsUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the seller_ai_audit_logs
+     */
+    select?: seller_ai_audit_logsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the seller_ai_audit_logs
+     */
+    omit?: seller_ai_audit_logsOmit<ExtArgs> | null
+    /**
+     * The data needed to update a seller_ai_audit_logs.
+     */
+    data: XOR<seller_ai_audit_logsUpdateInput, seller_ai_audit_logsUncheckedUpdateInput>
+    /**
+     * Choose, which seller_ai_audit_logs to update.
+     */
+    where: seller_ai_audit_logsWhereUniqueInput
+  }
+
+  /**
+   * seller_ai_audit_logs updateMany
+   */
+  export type seller_ai_audit_logsUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update seller_ai_audit_logs.
+     */
+    data: XOR<seller_ai_audit_logsUpdateManyMutationInput, seller_ai_audit_logsUncheckedUpdateManyInput>
+    /**
+     * Filter which seller_ai_audit_logs to update
+     */
+    where?: seller_ai_audit_logsWhereInput
+    /**
+     * Limit how many seller_ai_audit_logs to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * seller_ai_audit_logs updateManyAndReturn
+   */
+  export type seller_ai_audit_logsUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the seller_ai_audit_logs
+     */
+    select?: seller_ai_audit_logsSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the seller_ai_audit_logs
+     */
+    omit?: seller_ai_audit_logsOmit<ExtArgs> | null
+    /**
+     * The data used to update seller_ai_audit_logs.
+     */
+    data: XOR<seller_ai_audit_logsUpdateManyMutationInput, seller_ai_audit_logsUncheckedUpdateManyInput>
+    /**
+     * Filter which seller_ai_audit_logs to update
+     */
+    where?: seller_ai_audit_logsWhereInput
+    /**
+     * Limit how many seller_ai_audit_logs to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * seller_ai_audit_logs upsert
+   */
+  export type seller_ai_audit_logsUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the seller_ai_audit_logs
+     */
+    select?: seller_ai_audit_logsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the seller_ai_audit_logs
+     */
+    omit?: seller_ai_audit_logsOmit<ExtArgs> | null
+    /**
+     * The filter to search for the seller_ai_audit_logs to update in case it exists.
+     */
+    where: seller_ai_audit_logsWhereUniqueInput
+    /**
+     * In case the seller_ai_audit_logs found by the `where` argument doesn't exist, create a new seller_ai_audit_logs with this data.
+     */
+    create: XOR<seller_ai_audit_logsCreateInput, seller_ai_audit_logsUncheckedCreateInput>
+    /**
+     * In case the seller_ai_audit_logs was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<seller_ai_audit_logsUpdateInput, seller_ai_audit_logsUncheckedUpdateInput>
+  }
+
+  /**
+   * seller_ai_audit_logs delete
+   */
+  export type seller_ai_audit_logsDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the seller_ai_audit_logs
+     */
+    select?: seller_ai_audit_logsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the seller_ai_audit_logs
+     */
+    omit?: seller_ai_audit_logsOmit<ExtArgs> | null
+    /**
+     * Filter which seller_ai_audit_logs to delete.
+     */
+    where: seller_ai_audit_logsWhereUniqueInput
+  }
+
+  /**
+   * seller_ai_audit_logs deleteMany
+   */
+  export type seller_ai_audit_logsDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which seller_ai_audit_logs to delete
+     */
+    where?: seller_ai_audit_logsWhereInput
+    /**
+     * Limit how many seller_ai_audit_logs to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * seller_ai_audit_logs without action
+   */
+  export type seller_ai_audit_logsDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the seller_ai_audit_logs
+     */
+    select?: seller_ai_audit_logsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the seller_ai_audit_logs
+     */
+    omit?: seller_ai_audit_logsOmit<ExtArgs> | null
+  }
+
+
+  /**
+   * Model seller_product_profit_snapshots
+   */
+
+  export type AggregateSeller_product_profit_snapshots = {
+    _count: Seller_product_profit_snapshotsCountAggregateOutputType | null
+    _avg: Seller_product_profit_snapshotsAvgAggregateOutputType | null
+    _sum: Seller_product_profit_snapshotsSumAggregateOutputType | null
+    _min: Seller_product_profit_snapshotsMinAggregateOutputType | null
+    _max: Seller_product_profit_snapshotsMaxAggregateOutputType | null
+  }
+
+  export type Seller_product_profit_snapshotsAvgAggregateOutputType = {
+    cost_price: Decimal | null
+    selling_price: Decimal | null
+    gross_margin: Decimal | null
+    margin_percentage: Decimal | null
+  }
+
+  export type Seller_product_profit_snapshotsSumAggregateOutputType = {
+    cost_price: Decimal | null
+    selling_price: Decimal | null
+    gross_margin: Decimal | null
+    margin_percentage: Decimal | null
+  }
+
+  export type Seller_product_profit_snapshotsMinAggregateOutputType = {
+    profit_snapshot_id: string | null
+    business_id: string | null
+    item_id: string | null
+    variant_id: string | null
+    cost_price: Decimal | null
+    selling_price: Decimal | null
+    gross_margin: Decimal | null
+    margin_percentage: Decimal | null
+    source: string | null
+    recommendation: string | null
+    created_at: Date | null
+  }
+
+  export type Seller_product_profit_snapshotsMaxAggregateOutputType = {
+    profit_snapshot_id: string | null
+    business_id: string | null
+    item_id: string | null
+    variant_id: string | null
+    cost_price: Decimal | null
+    selling_price: Decimal | null
+    gross_margin: Decimal | null
+    margin_percentage: Decimal | null
+    source: string | null
+    recommendation: string | null
+    created_at: Date | null
+  }
+
+  export type Seller_product_profit_snapshotsCountAggregateOutputType = {
+    profit_snapshot_id: number
+    business_id: number
+    item_id: number
+    variant_id: number
+    cost_price: number
+    selling_price: number
+    gross_margin: number
+    margin_percentage: number
+    source: number
+    recommendation: number
+    created_at: number
+    _all: number
+  }
+
+
+  export type Seller_product_profit_snapshotsAvgAggregateInputType = {
+    cost_price?: true
+    selling_price?: true
+    gross_margin?: true
+    margin_percentage?: true
+  }
+
+  export type Seller_product_profit_snapshotsSumAggregateInputType = {
+    cost_price?: true
+    selling_price?: true
+    gross_margin?: true
+    margin_percentage?: true
+  }
+
+  export type Seller_product_profit_snapshotsMinAggregateInputType = {
+    profit_snapshot_id?: true
+    business_id?: true
+    item_id?: true
+    variant_id?: true
+    cost_price?: true
+    selling_price?: true
+    gross_margin?: true
+    margin_percentage?: true
+    source?: true
+    recommendation?: true
+    created_at?: true
+  }
+
+  export type Seller_product_profit_snapshotsMaxAggregateInputType = {
+    profit_snapshot_id?: true
+    business_id?: true
+    item_id?: true
+    variant_id?: true
+    cost_price?: true
+    selling_price?: true
+    gross_margin?: true
+    margin_percentage?: true
+    source?: true
+    recommendation?: true
+    created_at?: true
+  }
+
+  export type Seller_product_profit_snapshotsCountAggregateInputType = {
+    profit_snapshot_id?: true
+    business_id?: true
+    item_id?: true
+    variant_id?: true
+    cost_price?: true
+    selling_price?: true
+    gross_margin?: true
+    margin_percentage?: true
+    source?: true
+    recommendation?: true
+    created_at?: true
+    _all?: true
+  }
+
+  export type Seller_product_profit_snapshotsAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which seller_product_profit_snapshots to aggregate.
+     */
+    where?: seller_product_profit_snapshotsWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of seller_product_profit_snapshots to fetch.
+     */
+    orderBy?: seller_product_profit_snapshotsOrderByWithRelationInput | seller_product_profit_snapshotsOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: seller_product_profit_snapshotsWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` seller_product_profit_snapshots from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` seller_product_profit_snapshots.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned seller_product_profit_snapshots
+    **/
+    _count?: true | Seller_product_profit_snapshotsCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: Seller_product_profit_snapshotsAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: Seller_product_profit_snapshotsSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: Seller_product_profit_snapshotsMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: Seller_product_profit_snapshotsMaxAggregateInputType
+  }
+
+  export type GetSeller_product_profit_snapshotsAggregateType<T extends Seller_product_profit_snapshotsAggregateArgs> = {
+        [P in keyof T & keyof AggregateSeller_product_profit_snapshots]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateSeller_product_profit_snapshots[P]>
+      : GetScalarType<T[P], AggregateSeller_product_profit_snapshots[P]>
+  }
+
+
+
+
+  export type seller_product_profit_snapshotsGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: seller_product_profit_snapshotsWhereInput
+    orderBy?: seller_product_profit_snapshotsOrderByWithAggregationInput | seller_product_profit_snapshotsOrderByWithAggregationInput[]
+    by: Seller_product_profit_snapshotsScalarFieldEnum[] | Seller_product_profit_snapshotsScalarFieldEnum
+    having?: seller_product_profit_snapshotsScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: Seller_product_profit_snapshotsCountAggregateInputType | true
+    _avg?: Seller_product_profit_snapshotsAvgAggregateInputType
+    _sum?: Seller_product_profit_snapshotsSumAggregateInputType
+    _min?: Seller_product_profit_snapshotsMinAggregateInputType
+    _max?: Seller_product_profit_snapshotsMaxAggregateInputType
+  }
+
+  export type Seller_product_profit_snapshotsGroupByOutputType = {
+    profit_snapshot_id: string
+    business_id: string
+    item_id: string
+    variant_id: string | null
+    cost_price: Decimal | null
+    selling_price: Decimal
+    gross_margin: Decimal | null
+    margin_percentage: Decimal | null
+    source: string
+    recommendation: string | null
+    created_at: Date
+    _count: Seller_product_profit_snapshotsCountAggregateOutputType | null
+    _avg: Seller_product_profit_snapshotsAvgAggregateOutputType | null
+    _sum: Seller_product_profit_snapshotsSumAggregateOutputType | null
+    _min: Seller_product_profit_snapshotsMinAggregateOutputType | null
+    _max: Seller_product_profit_snapshotsMaxAggregateOutputType | null
+  }
+
+  type GetSeller_product_profit_snapshotsGroupByPayload<T extends seller_product_profit_snapshotsGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<Seller_product_profit_snapshotsGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof Seller_product_profit_snapshotsGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], Seller_product_profit_snapshotsGroupByOutputType[P]>
+            : GetScalarType<T[P], Seller_product_profit_snapshotsGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type seller_product_profit_snapshotsSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    profit_snapshot_id?: boolean
+    business_id?: boolean
+    item_id?: boolean
+    variant_id?: boolean
+    cost_price?: boolean
+    selling_price?: boolean
+    gross_margin?: boolean
+    margin_percentage?: boolean
+    source?: boolean
+    recommendation?: boolean
+    created_at?: boolean
+  }, ExtArgs["result"]["seller_product_profit_snapshots"]>
+
+  export type seller_product_profit_snapshotsSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    profit_snapshot_id?: boolean
+    business_id?: boolean
+    item_id?: boolean
+    variant_id?: boolean
+    cost_price?: boolean
+    selling_price?: boolean
+    gross_margin?: boolean
+    margin_percentage?: boolean
+    source?: boolean
+    recommendation?: boolean
+    created_at?: boolean
+  }, ExtArgs["result"]["seller_product_profit_snapshots"]>
+
+  export type seller_product_profit_snapshotsSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    profit_snapshot_id?: boolean
+    business_id?: boolean
+    item_id?: boolean
+    variant_id?: boolean
+    cost_price?: boolean
+    selling_price?: boolean
+    gross_margin?: boolean
+    margin_percentage?: boolean
+    source?: boolean
+    recommendation?: boolean
+    created_at?: boolean
+  }, ExtArgs["result"]["seller_product_profit_snapshots"]>
+
+  export type seller_product_profit_snapshotsSelectScalar = {
+    profit_snapshot_id?: boolean
+    business_id?: boolean
+    item_id?: boolean
+    variant_id?: boolean
+    cost_price?: boolean
+    selling_price?: boolean
+    gross_margin?: boolean
+    margin_percentage?: boolean
+    source?: boolean
+    recommendation?: boolean
+    created_at?: boolean
+  }
+
+  export type seller_product_profit_snapshotsOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"profit_snapshot_id" | "business_id" | "item_id" | "variant_id" | "cost_price" | "selling_price" | "gross_margin" | "margin_percentage" | "source" | "recommendation" | "created_at", ExtArgs["result"]["seller_product_profit_snapshots"]>
+
+  export type $seller_product_profit_snapshotsPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "seller_product_profit_snapshots"
+    objects: {}
+    scalars: $Extensions.GetPayloadResult<{
+      profit_snapshot_id: string
+      business_id: string
+      item_id: string
+      variant_id: string | null
+      cost_price: Prisma.Decimal | null
+      selling_price: Prisma.Decimal
+      gross_margin: Prisma.Decimal | null
+      margin_percentage: Prisma.Decimal | null
+      source: string
+      recommendation: string | null
+      created_at: Date
+    }, ExtArgs["result"]["seller_product_profit_snapshots"]>
+    composites: {}
+  }
+
+  type seller_product_profit_snapshotsGetPayload<S extends boolean | null | undefined | seller_product_profit_snapshotsDefaultArgs> = $Result.GetResult<Prisma.$seller_product_profit_snapshotsPayload, S>
+
+  type seller_product_profit_snapshotsCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<seller_product_profit_snapshotsFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: Seller_product_profit_snapshotsCountAggregateInputType | true
+    }
+
+  export interface seller_product_profit_snapshotsDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['seller_product_profit_snapshots'], meta: { name: 'seller_product_profit_snapshots' } }
+    /**
+     * Find zero or one Seller_product_profit_snapshots that matches the filter.
+     * @param {seller_product_profit_snapshotsFindUniqueArgs} args - Arguments to find a Seller_product_profit_snapshots
+     * @example
+     * // Get one Seller_product_profit_snapshots
+     * const seller_product_profit_snapshots = await prisma.seller_product_profit_snapshots.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends seller_product_profit_snapshotsFindUniqueArgs>(args: SelectSubset<T, seller_product_profit_snapshotsFindUniqueArgs<ExtArgs>>): Prisma__seller_product_profit_snapshotsClient<$Result.GetResult<Prisma.$seller_product_profit_snapshotsPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one Seller_product_profit_snapshots that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {seller_product_profit_snapshotsFindUniqueOrThrowArgs} args - Arguments to find a Seller_product_profit_snapshots
+     * @example
+     * // Get one Seller_product_profit_snapshots
+     * const seller_product_profit_snapshots = await prisma.seller_product_profit_snapshots.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends seller_product_profit_snapshotsFindUniqueOrThrowArgs>(args: SelectSubset<T, seller_product_profit_snapshotsFindUniqueOrThrowArgs<ExtArgs>>): Prisma__seller_product_profit_snapshotsClient<$Result.GetResult<Prisma.$seller_product_profit_snapshotsPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Seller_product_profit_snapshots that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {seller_product_profit_snapshotsFindFirstArgs} args - Arguments to find a Seller_product_profit_snapshots
+     * @example
+     * // Get one Seller_product_profit_snapshots
+     * const seller_product_profit_snapshots = await prisma.seller_product_profit_snapshots.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends seller_product_profit_snapshotsFindFirstArgs>(args?: SelectSubset<T, seller_product_profit_snapshotsFindFirstArgs<ExtArgs>>): Prisma__seller_product_profit_snapshotsClient<$Result.GetResult<Prisma.$seller_product_profit_snapshotsPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Seller_product_profit_snapshots that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {seller_product_profit_snapshotsFindFirstOrThrowArgs} args - Arguments to find a Seller_product_profit_snapshots
+     * @example
+     * // Get one Seller_product_profit_snapshots
+     * const seller_product_profit_snapshots = await prisma.seller_product_profit_snapshots.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends seller_product_profit_snapshotsFindFirstOrThrowArgs>(args?: SelectSubset<T, seller_product_profit_snapshotsFindFirstOrThrowArgs<ExtArgs>>): Prisma__seller_product_profit_snapshotsClient<$Result.GetResult<Prisma.$seller_product_profit_snapshotsPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more Seller_product_profit_snapshots that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {seller_product_profit_snapshotsFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all Seller_product_profit_snapshots
+     * const seller_product_profit_snapshots = await prisma.seller_product_profit_snapshots.findMany()
+     * 
+     * // Get first 10 Seller_product_profit_snapshots
+     * const seller_product_profit_snapshots = await prisma.seller_product_profit_snapshots.findMany({ take: 10 })
+     * 
+     * // Only select the `profit_snapshot_id`
+     * const seller_product_profit_snapshotsWithProfit_snapshot_idOnly = await prisma.seller_product_profit_snapshots.findMany({ select: { profit_snapshot_id: true } })
+     * 
+     */
+    findMany<T extends seller_product_profit_snapshotsFindManyArgs>(args?: SelectSubset<T, seller_product_profit_snapshotsFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$seller_product_profit_snapshotsPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a Seller_product_profit_snapshots.
+     * @param {seller_product_profit_snapshotsCreateArgs} args - Arguments to create a Seller_product_profit_snapshots.
+     * @example
+     * // Create one Seller_product_profit_snapshots
+     * const Seller_product_profit_snapshots = await prisma.seller_product_profit_snapshots.create({
+     *   data: {
+     *     // ... data to create a Seller_product_profit_snapshots
+     *   }
+     * })
+     * 
+     */
+    create<T extends seller_product_profit_snapshotsCreateArgs>(args: SelectSubset<T, seller_product_profit_snapshotsCreateArgs<ExtArgs>>): Prisma__seller_product_profit_snapshotsClient<$Result.GetResult<Prisma.$seller_product_profit_snapshotsPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many Seller_product_profit_snapshots.
+     * @param {seller_product_profit_snapshotsCreateManyArgs} args - Arguments to create many Seller_product_profit_snapshots.
+     * @example
+     * // Create many Seller_product_profit_snapshots
+     * const seller_product_profit_snapshots = await prisma.seller_product_profit_snapshots.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends seller_product_profit_snapshotsCreateManyArgs>(args?: SelectSubset<T, seller_product_profit_snapshotsCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many Seller_product_profit_snapshots and returns the data saved in the database.
+     * @param {seller_product_profit_snapshotsCreateManyAndReturnArgs} args - Arguments to create many Seller_product_profit_snapshots.
+     * @example
+     * // Create many Seller_product_profit_snapshots
+     * const seller_product_profit_snapshots = await prisma.seller_product_profit_snapshots.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many Seller_product_profit_snapshots and only return the `profit_snapshot_id`
+     * const seller_product_profit_snapshotsWithProfit_snapshot_idOnly = await prisma.seller_product_profit_snapshots.createManyAndReturn({
+     *   select: { profit_snapshot_id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends seller_product_profit_snapshotsCreateManyAndReturnArgs>(args?: SelectSubset<T, seller_product_profit_snapshotsCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$seller_product_profit_snapshotsPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a Seller_product_profit_snapshots.
+     * @param {seller_product_profit_snapshotsDeleteArgs} args - Arguments to delete one Seller_product_profit_snapshots.
+     * @example
+     * // Delete one Seller_product_profit_snapshots
+     * const Seller_product_profit_snapshots = await prisma.seller_product_profit_snapshots.delete({
+     *   where: {
+     *     // ... filter to delete one Seller_product_profit_snapshots
+     *   }
+     * })
+     * 
+     */
+    delete<T extends seller_product_profit_snapshotsDeleteArgs>(args: SelectSubset<T, seller_product_profit_snapshotsDeleteArgs<ExtArgs>>): Prisma__seller_product_profit_snapshotsClient<$Result.GetResult<Prisma.$seller_product_profit_snapshotsPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one Seller_product_profit_snapshots.
+     * @param {seller_product_profit_snapshotsUpdateArgs} args - Arguments to update one Seller_product_profit_snapshots.
+     * @example
+     * // Update one Seller_product_profit_snapshots
+     * const seller_product_profit_snapshots = await prisma.seller_product_profit_snapshots.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends seller_product_profit_snapshotsUpdateArgs>(args: SelectSubset<T, seller_product_profit_snapshotsUpdateArgs<ExtArgs>>): Prisma__seller_product_profit_snapshotsClient<$Result.GetResult<Prisma.$seller_product_profit_snapshotsPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more Seller_product_profit_snapshots.
+     * @param {seller_product_profit_snapshotsDeleteManyArgs} args - Arguments to filter Seller_product_profit_snapshots to delete.
+     * @example
+     * // Delete a few Seller_product_profit_snapshots
+     * const { count } = await prisma.seller_product_profit_snapshots.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends seller_product_profit_snapshotsDeleteManyArgs>(args?: SelectSubset<T, seller_product_profit_snapshotsDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Seller_product_profit_snapshots.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {seller_product_profit_snapshotsUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many Seller_product_profit_snapshots
+     * const seller_product_profit_snapshots = await prisma.seller_product_profit_snapshots.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends seller_product_profit_snapshotsUpdateManyArgs>(args: SelectSubset<T, seller_product_profit_snapshotsUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Seller_product_profit_snapshots and returns the data updated in the database.
+     * @param {seller_product_profit_snapshotsUpdateManyAndReturnArgs} args - Arguments to update many Seller_product_profit_snapshots.
+     * @example
+     * // Update many Seller_product_profit_snapshots
+     * const seller_product_profit_snapshots = await prisma.seller_product_profit_snapshots.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more Seller_product_profit_snapshots and only return the `profit_snapshot_id`
+     * const seller_product_profit_snapshotsWithProfit_snapshot_idOnly = await prisma.seller_product_profit_snapshots.updateManyAndReturn({
+     *   select: { profit_snapshot_id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends seller_product_profit_snapshotsUpdateManyAndReturnArgs>(args: SelectSubset<T, seller_product_profit_snapshotsUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$seller_product_profit_snapshotsPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one Seller_product_profit_snapshots.
+     * @param {seller_product_profit_snapshotsUpsertArgs} args - Arguments to update or create a Seller_product_profit_snapshots.
+     * @example
+     * // Update or create a Seller_product_profit_snapshots
+     * const seller_product_profit_snapshots = await prisma.seller_product_profit_snapshots.upsert({
+     *   create: {
+     *     // ... data to create a Seller_product_profit_snapshots
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the Seller_product_profit_snapshots we want to update
+     *   }
+     * })
+     */
+    upsert<T extends seller_product_profit_snapshotsUpsertArgs>(args: SelectSubset<T, seller_product_profit_snapshotsUpsertArgs<ExtArgs>>): Prisma__seller_product_profit_snapshotsClient<$Result.GetResult<Prisma.$seller_product_profit_snapshotsPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of Seller_product_profit_snapshots.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {seller_product_profit_snapshotsCountArgs} args - Arguments to filter Seller_product_profit_snapshots to count.
+     * @example
+     * // Count the number of Seller_product_profit_snapshots
+     * const count = await prisma.seller_product_profit_snapshots.count({
+     *   where: {
+     *     // ... the filter for the Seller_product_profit_snapshots we want to count
+     *   }
+     * })
+    **/
+    count<T extends seller_product_profit_snapshotsCountArgs>(
+      args?: Subset<T, seller_product_profit_snapshotsCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], Seller_product_profit_snapshotsCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a Seller_product_profit_snapshots.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {Seller_product_profit_snapshotsAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends Seller_product_profit_snapshotsAggregateArgs>(args: Subset<T, Seller_product_profit_snapshotsAggregateArgs>): Prisma.PrismaPromise<GetSeller_product_profit_snapshotsAggregateType<T>>
+
+    /**
+     * Group by Seller_product_profit_snapshots.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {seller_product_profit_snapshotsGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends seller_product_profit_snapshotsGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: seller_product_profit_snapshotsGroupByArgs['orderBy'] }
+        : { orderBy?: seller_product_profit_snapshotsGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, seller_product_profit_snapshotsGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetSeller_product_profit_snapshotsGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the seller_product_profit_snapshots model
+   */
+  readonly fields: seller_product_profit_snapshotsFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for seller_product_profit_snapshots.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__seller_product_profit_snapshotsClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the seller_product_profit_snapshots model
+   */
+  interface seller_product_profit_snapshotsFieldRefs {
+    readonly profit_snapshot_id: FieldRef<"seller_product_profit_snapshots", 'String'>
+    readonly business_id: FieldRef<"seller_product_profit_snapshots", 'String'>
+    readonly item_id: FieldRef<"seller_product_profit_snapshots", 'String'>
+    readonly variant_id: FieldRef<"seller_product_profit_snapshots", 'String'>
+    readonly cost_price: FieldRef<"seller_product_profit_snapshots", 'Decimal'>
+    readonly selling_price: FieldRef<"seller_product_profit_snapshots", 'Decimal'>
+    readonly gross_margin: FieldRef<"seller_product_profit_snapshots", 'Decimal'>
+    readonly margin_percentage: FieldRef<"seller_product_profit_snapshots", 'Decimal'>
+    readonly source: FieldRef<"seller_product_profit_snapshots", 'String'>
+    readonly recommendation: FieldRef<"seller_product_profit_snapshots", 'String'>
+    readonly created_at: FieldRef<"seller_product_profit_snapshots", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * seller_product_profit_snapshots findUnique
+   */
+  export type seller_product_profit_snapshotsFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the seller_product_profit_snapshots
+     */
+    select?: seller_product_profit_snapshotsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the seller_product_profit_snapshots
+     */
+    omit?: seller_product_profit_snapshotsOmit<ExtArgs> | null
+    /**
+     * Filter, which seller_product_profit_snapshots to fetch.
+     */
+    where: seller_product_profit_snapshotsWhereUniqueInput
+  }
+
+  /**
+   * seller_product_profit_snapshots findUniqueOrThrow
+   */
+  export type seller_product_profit_snapshotsFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the seller_product_profit_snapshots
+     */
+    select?: seller_product_profit_snapshotsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the seller_product_profit_snapshots
+     */
+    omit?: seller_product_profit_snapshotsOmit<ExtArgs> | null
+    /**
+     * Filter, which seller_product_profit_snapshots to fetch.
+     */
+    where: seller_product_profit_snapshotsWhereUniqueInput
+  }
+
+  /**
+   * seller_product_profit_snapshots findFirst
+   */
+  export type seller_product_profit_snapshotsFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the seller_product_profit_snapshots
+     */
+    select?: seller_product_profit_snapshotsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the seller_product_profit_snapshots
+     */
+    omit?: seller_product_profit_snapshotsOmit<ExtArgs> | null
+    /**
+     * Filter, which seller_product_profit_snapshots to fetch.
+     */
+    where?: seller_product_profit_snapshotsWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of seller_product_profit_snapshots to fetch.
+     */
+    orderBy?: seller_product_profit_snapshotsOrderByWithRelationInput | seller_product_profit_snapshotsOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for seller_product_profit_snapshots.
+     */
+    cursor?: seller_product_profit_snapshotsWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` seller_product_profit_snapshots from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` seller_product_profit_snapshots.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of seller_product_profit_snapshots.
+     */
+    distinct?: Seller_product_profit_snapshotsScalarFieldEnum | Seller_product_profit_snapshotsScalarFieldEnum[]
+  }
+
+  /**
+   * seller_product_profit_snapshots findFirstOrThrow
+   */
+  export type seller_product_profit_snapshotsFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the seller_product_profit_snapshots
+     */
+    select?: seller_product_profit_snapshotsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the seller_product_profit_snapshots
+     */
+    omit?: seller_product_profit_snapshotsOmit<ExtArgs> | null
+    /**
+     * Filter, which seller_product_profit_snapshots to fetch.
+     */
+    where?: seller_product_profit_snapshotsWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of seller_product_profit_snapshots to fetch.
+     */
+    orderBy?: seller_product_profit_snapshotsOrderByWithRelationInput | seller_product_profit_snapshotsOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for seller_product_profit_snapshots.
+     */
+    cursor?: seller_product_profit_snapshotsWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` seller_product_profit_snapshots from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` seller_product_profit_snapshots.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of seller_product_profit_snapshots.
+     */
+    distinct?: Seller_product_profit_snapshotsScalarFieldEnum | Seller_product_profit_snapshotsScalarFieldEnum[]
+  }
+
+  /**
+   * seller_product_profit_snapshots findMany
+   */
+  export type seller_product_profit_snapshotsFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the seller_product_profit_snapshots
+     */
+    select?: seller_product_profit_snapshotsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the seller_product_profit_snapshots
+     */
+    omit?: seller_product_profit_snapshotsOmit<ExtArgs> | null
+    /**
+     * Filter, which seller_product_profit_snapshots to fetch.
+     */
+    where?: seller_product_profit_snapshotsWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of seller_product_profit_snapshots to fetch.
+     */
+    orderBy?: seller_product_profit_snapshotsOrderByWithRelationInput | seller_product_profit_snapshotsOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing seller_product_profit_snapshots.
+     */
+    cursor?: seller_product_profit_snapshotsWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` seller_product_profit_snapshots from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` seller_product_profit_snapshots.
+     */
+    skip?: number
+    distinct?: Seller_product_profit_snapshotsScalarFieldEnum | Seller_product_profit_snapshotsScalarFieldEnum[]
+  }
+
+  /**
+   * seller_product_profit_snapshots create
+   */
+  export type seller_product_profit_snapshotsCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the seller_product_profit_snapshots
+     */
+    select?: seller_product_profit_snapshotsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the seller_product_profit_snapshots
+     */
+    omit?: seller_product_profit_snapshotsOmit<ExtArgs> | null
+    /**
+     * The data needed to create a seller_product_profit_snapshots.
+     */
+    data: XOR<seller_product_profit_snapshotsCreateInput, seller_product_profit_snapshotsUncheckedCreateInput>
+  }
+
+  /**
+   * seller_product_profit_snapshots createMany
+   */
+  export type seller_product_profit_snapshotsCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many seller_product_profit_snapshots.
+     */
+    data: seller_product_profit_snapshotsCreateManyInput | seller_product_profit_snapshotsCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * seller_product_profit_snapshots createManyAndReturn
+   */
+  export type seller_product_profit_snapshotsCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the seller_product_profit_snapshots
+     */
+    select?: seller_product_profit_snapshotsSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the seller_product_profit_snapshots
+     */
+    omit?: seller_product_profit_snapshotsOmit<ExtArgs> | null
+    /**
+     * The data used to create many seller_product_profit_snapshots.
+     */
+    data: seller_product_profit_snapshotsCreateManyInput | seller_product_profit_snapshotsCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * seller_product_profit_snapshots update
+   */
+  export type seller_product_profit_snapshotsUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the seller_product_profit_snapshots
+     */
+    select?: seller_product_profit_snapshotsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the seller_product_profit_snapshots
+     */
+    omit?: seller_product_profit_snapshotsOmit<ExtArgs> | null
+    /**
+     * The data needed to update a seller_product_profit_snapshots.
+     */
+    data: XOR<seller_product_profit_snapshotsUpdateInput, seller_product_profit_snapshotsUncheckedUpdateInput>
+    /**
+     * Choose, which seller_product_profit_snapshots to update.
+     */
+    where: seller_product_profit_snapshotsWhereUniqueInput
+  }
+
+  /**
+   * seller_product_profit_snapshots updateMany
+   */
+  export type seller_product_profit_snapshotsUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update seller_product_profit_snapshots.
+     */
+    data: XOR<seller_product_profit_snapshotsUpdateManyMutationInput, seller_product_profit_snapshotsUncheckedUpdateManyInput>
+    /**
+     * Filter which seller_product_profit_snapshots to update
+     */
+    where?: seller_product_profit_snapshotsWhereInput
+    /**
+     * Limit how many seller_product_profit_snapshots to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * seller_product_profit_snapshots updateManyAndReturn
+   */
+  export type seller_product_profit_snapshotsUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the seller_product_profit_snapshots
+     */
+    select?: seller_product_profit_snapshotsSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the seller_product_profit_snapshots
+     */
+    omit?: seller_product_profit_snapshotsOmit<ExtArgs> | null
+    /**
+     * The data used to update seller_product_profit_snapshots.
+     */
+    data: XOR<seller_product_profit_snapshotsUpdateManyMutationInput, seller_product_profit_snapshotsUncheckedUpdateManyInput>
+    /**
+     * Filter which seller_product_profit_snapshots to update
+     */
+    where?: seller_product_profit_snapshotsWhereInput
+    /**
+     * Limit how many seller_product_profit_snapshots to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * seller_product_profit_snapshots upsert
+   */
+  export type seller_product_profit_snapshotsUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the seller_product_profit_snapshots
+     */
+    select?: seller_product_profit_snapshotsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the seller_product_profit_snapshots
+     */
+    omit?: seller_product_profit_snapshotsOmit<ExtArgs> | null
+    /**
+     * The filter to search for the seller_product_profit_snapshots to update in case it exists.
+     */
+    where: seller_product_profit_snapshotsWhereUniqueInput
+    /**
+     * In case the seller_product_profit_snapshots found by the `where` argument doesn't exist, create a new seller_product_profit_snapshots with this data.
+     */
+    create: XOR<seller_product_profit_snapshotsCreateInput, seller_product_profit_snapshotsUncheckedCreateInput>
+    /**
+     * In case the seller_product_profit_snapshots was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<seller_product_profit_snapshotsUpdateInput, seller_product_profit_snapshotsUncheckedUpdateInput>
+  }
+
+  /**
+   * seller_product_profit_snapshots delete
+   */
+  export type seller_product_profit_snapshotsDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the seller_product_profit_snapshots
+     */
+    select?: seller_product_profit_snapshotsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the seller_product_profit_snapshots
+     */
+    omit?: seller_product_profit_snapshotsOmit<ExtArgs> | null
+    /**
+     * Filter which seller_product_profit_snapshots to delete.
+     */
+    where: seller_product_profit_snapshotsWhereUniqueInput
+  }
+
+  /**
+   * seller_product_profit_snapshots deleteMany
+   */
+  export type seller_product_profit_snapshotsDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which seller_product_profit_snapshots to delete
+     */
+    where?: seller_product_profit_snapshotsWhereInput
+    /**
+     * Limit how many seller_product_profit_snapshots to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * seller_product_profit_snapshots without action
+   */
+  export type seller_product_profit_snapshotsDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the seller_product_profit_snapshots
+     */
+    select?: seller_product_profit_snapshotsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the seller_product_profit_snapshots
+     */
+    omit?: seller_product_profit_snapshotsOmit<ExtArgs> | null
+  }
+
+
+  /**
+   * Model seller_demand_signals
+   */
+
+  export type AggregateSeller_demand_signals = {
+    _count: Seller_demand_signalsCountAggregateOutputType | null
+    _avg: Seller_demand_signalsAvgAggregateOutputType | null
+    _sum: Seller_demand_signalsSumAggregateOutputType | null
+    _min: Seller_demand_signalsMinAggregateOutputType | null
+    _max: Seller_demand_signalsMaxAggregateOutputType | null
+  }
+
+  export type Seller_demand_signalsAvgAggregateOutputType = {
+    signal_count: number | null
+  }
+
+  export type Seller_demand_signalsSumAggregateOutputType = {
+    signal_count: number | null
+  }
+
+  export type Seller_demand_signalsMinAggregateOutputType = {
+    demand_signal_id: string | null
+    business_id: string | null
+    item_id: string | null
+    category: string | null
+    signal_type: string | null
+    signal_count: number | null
+    period_start: Date | null
+    period_end: Date | null
+    source: string | null
+    created_at: Date | null
+  }
+
+  export type Seller_demand_signalsMaxAggregateOutputType = {
+    demand_signal_id: string | null
+    business_id: string | null
+    item_id: string | null
+    category: string | null
+    signal_type: string | null
+    signal_count: number | null
+    period_start: Date | null
+    period_end: Date | null
+    source: string | null
+    created_at: Date | null
+  }
+
+  export type Seller_demand_signalsCountAggregateOutputType = {
+    demand_signal_id: number
+    business_id: number
+    item_id: number
+    category: number
+    signal_type: number
+    signal_count: number
+    period_start: number
+    period_end: number
+    source: number
+    metadata: number
+    created_at: number
+    _all: number
+  }
+
+
+  export type Seller_demand_signalsAvgAggregateInputType = {
+    signal_count?: true
+  }
+
+  export type Seller_demand_signalsSumAggregateInputType = {
+    signal_count?: true
+  }
+
+  export type Seller_demand_signalsMinAggregateInputType = {
+    demand_signal_id?: true
+    business_id?: true
+    item_id?: true
+    category?: true
+    signal_type?: true
+    signal_count?: true
+    period_start?: true
+    period_end?: true
+    source?: true
+    created_at?: true
+  }
+
+  export type Seller_demand_signalsMaxAggregateInputType = {
+    demand_signal_id?: true
+    business_id?: true
+    item_id?: true
+    category?: true
+    signal_type?: true
+    signal_count?: true
+    period_start?: true
+    period_end?: true
+    source?: true
+    created_at?: true
+  }
+
+  export type Seller_demand_signalsCountAggregateInputType = {
+    demand_signal_id?: true
+    business_id?: true
+    item_id?: true
+    category?: true
+    signal_type?: true
+    signal_count?: true
+    period_start?: true
+    period_end?: true
+    source?: true
+    metadata?: true
+    created_at?: true
+    _all?: true
+  }
+
+  export type Seller_demand_signalsAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which seller_demand_signals to aggregate.
+     */
+    where?: seller_demand_signalsWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of seller_demand_signals to fetch.
+     */
+    orderBy?: seller_demand_signalsOrderByWithRelationInput | seller_demand_signalsOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: seller_demand_signalsWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` seller_demand_signals from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` seller_demand_signals.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned seller_demand_signals
+    **/
+    _count?: true | Seller_demand_signalsCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: Seller_demand_signalsAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: Seller_demand_signalsSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: Seller_demand_signalsMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: Seller_demand_signalsMaxAggregateInputType
+  }
+
+  export type GetSeller_demand_signalsAggregateType<T extends Seller_demand_signalsAggregateArgs> = {
+        [P in keyof T & keyof AggregateSeller_demand_signals]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateSeller_demand_signals[P]>
+      : GetScalarType<T[P], AggregateSeller_demand_signals[P]>
+  }
+
+
+
+
+  export type seller_demand_signalsGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: seller_demand_signalsWhereInput
+    orderBy?: seller_demand_signalsOrderByWithAggregationInput | seller_demand_signalsOrderByWithAggregationInput[]
+    by: Seller_demand_signalsScalarFieldEnum[] | Seller_demand_signalsScalarFieldEnum
+    having?: seller_demand_signalsScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: Seller_demand_signalsCountAggregateInputType | true
+    _avg?: Seller_demand_signalsAvgAggregateInputType
+    _sum?: Seller_demand_signalsSumAggregateInputType
+    _min?: Seller_demand_signalsMinAggregateInputType
+    _max?: Seller_demand_signalsMaxAggregateInputType
+  }
+
+  export type Seller_demand_signalsGroupByOutputType = {
+    demand_signal_id: string
+    business_id: string
+    item_id: string | null
+    category: string | null
+    signal_type: string
+    signal_count: number
+    period_start: Date
+    period_end: Date
+    source: string
+    metadata: JsonValue | null
+    created_at: Date
+    _count: Seller_demand_signalsCountAggregateOutputType | null
+    _avg: Seller_demand_signalsAvgAggregateOutputType | null
+    _sum: Seller_demand_signalsSumAggregateOutputType | null
+    _min: Seller_demand_signalsMinAggregateOutputType | null
+    _max: Seller_demand_signalsMaxAggregateOutputType | null
+  }
+
+  type GetSeller_demand_signalsGroupByPayload<T extends seller_demand_signalsGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<Seller_demand_signalsGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof Seller_demand_signalsGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], Seller_demand_signalsGroupByOutputType[P]>
+            : GetScalarType<T[P], Seller_demand_signalsGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type seller_demand_signalsSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    demand_signal_id?: boolean
+    business_id?: boolean
+    item_id?: boolean
+    category?: boolean
+    signal_type?: boolean
+    signal_count?: boolean
+    period_start?: boolean
+    period_end?: boolean
+    source?: boolean
+    metadata?: boolean
+    created_at?: boolean
+  }, ExtArgs["result"]["seller_demand_signals"]>
+
+  export type seller_demand_signalsSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    demand_signal_id?: boolean
+    business_id?: boolean
+    item_id?: boolean
+    category?: boolean
+    signal_type?: boolean
+    signal_count?: boolean
+    period_start?: boolean
+    period_end?: boolean
+    source?: boolean
+    metadata?: boolean
+    created_at?: boolean
+  }, ExtArgs["result"]["seller_demand_signals"]>
+
+  export type seller_demand_signalsSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    demand_signal_id?: boolean
+    business_id?: boolean
+    item_id?: boolean
+    category?: boolean
+    signal_type?: boolean
+    signal_count?: boolean
+    period_start?: boolean
+    period_end?: boolean
+    source?: boolean
+    metadata?: boolean
+    created_at?: boolean
+  }, ExtArgs["result"]["seller_demand_signals"]>
+
+  export type seller_demand_signalsSelectScalar = {
+    demand_signal_id?: boolean
+    business_id?: boolean
+    item_id?: boolean
+    category?: boolean
+    signal_type?: boolean
+    signal_count?: boolean
+    period_start?: boolean
+    period_end?: boolean
+    source?: boolean
+    metadata?: boolean
+    created_at?: boolean
+  }
+
+  export type seller_demand_signalsOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"demand_signal_id" | "business_id" | "item_id" | "category" | "signal_type" | "signal_count" | "period_start" | "period_end" | "source" | "metadata" | "created_at", ExtArgs["result"]["seller_demand_signals"]>
+
+  export type $seller_demand_signalsPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "seller_demand_signals"
+    objects: {}
+    scalars: $Extensions.GetPayloadResult<{
+      demand_signal_id: string
+      business_id: string
+      item_id: string | null
+      category: string | null
+      signal_type: string
+      signal_count: number
+      period_start: Date
+      period_end: Date
+      source: string
+      metadata: Prisma.JsonValue | null
+      created_at: Date
+    }, ExtArgs["result"]["seller_demand_signals"]>
+    composites: {}
+  }
+
+  type seller_demand_signalsGetPayload<S extends boolean | null | undefined | seller_demand_signalsDefaultArgs> = $Result.GetResult<Prisma.$seller_demand_signalsPayload, S>
+
+  type seller_demand_signalsCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<seller_demand_signalsFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: Seller_demand_signalsCountAggregateInputType | true
+    }
+
+  export interface seller_demand_signalsDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['seller_demand_signals'], meta: { name: 'seller_demand_signals' } }
+    /**
+     * Find zero or one Seller_demand_signals that matches the filter.
+     * @param {seller_demand_signalsFindUniqueArgs} args - Arguments to find a Seller_demand_signals
+     * @example
+     * // Get one Seller_demand_signals
+     * const seller_demand_signals = await prisma.seller_demand_signals.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends seller_demand_signalsFindUniqueArgs>(args: SelectSubset<T, seller_demand_signalsFindUniqueArgs<ExtArgs>>): Prisma__seller_demand_signalsClient<$Result.GetResult<Prisma.$seller_demand_signalsPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one Seller_demand_signals that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {seller_demand_signalsFindUniqueOrThrowArgs} args - Arguments to find a Seller_demand_signals
+     * @example
+     * // Get one Seller_demand_signals
+     * const seller_demand_signals = await prisma.seller_demand_signals.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends seller_demand_signalsFindUniqueOrThrowArgs>(args: SelectSubset<T, seller_demand_signalsFindUniqueOrThrowArgs<ExtArgs>>): Prisma__seller_demand_signalsClient<$Result.GetResult<Prisma.$seller_demand_signalsPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Seller_demand_signals that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {seller_demand_signalsFindFirstArgs} args - Arguments to find a Seller_demand_signals
+     * @example
+     * // Get one Seller_demand_signals
+     * const seller_demand_signals = await prisma.seller_demand_signals.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends seller_demand_signalsFindFirstArgs>(args?: SelectSubset<T, seller_demand_signalsFindFirstArgs<ExtArgs>>): Prisma__seller_demand_signalsClient<$Result.GetResult<Prisma.$seller_demand_signalsPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Seller_demand_signals that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {seller_demand_signalsFindFirstOrThrowArgs} args - Arguments to find a Seller_demand_signals
+     * @example
+     * // Get one Seller_demand_signals
+     * const seller_demand_signals = await prisma.seller_demand_signals.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends seller_demand_signalsFindFirstOrThrowArgs>(args?: SelectSubset<T, seller_demand_signalsFindFirstOrThrowArgs<ExtArgs>>): Prisma__seller_demand_signalsClient<$Result.GetResult<Prisma.$seller_demand_signalsPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more Seller_demand_signals that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {seller_demand_signalsFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all Seller_demand_signals
+     * const seller_demand_signals = await prisma.seller_demand_signals.findMany()
+     * 
+     * // Get first 10 Seller_demand_signals
+     * const seller_demand_signals = await prisma.seller_demand_signals.findMany({ take: 10 })
+     * 
+     * // Only select the `demand_signal_id`
+     * const seller_demand_signalsWithDemand_signal_idOnly = await prisma.seller_demand_signals.findMany({ select: { demand_signal_id: true } })
+     * 
+     */
+    findMany<T extends seller_demand_signalsFindManyArgs>(args?: SelectSubset<T, seller_demand_signalsFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$seller_demand_signalsPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a Seller_demand_signals.
+     * @param {seller_demand_signalsCreateArgs} args - Arguments to create a Seller_demand_signals.
+     * @example
+     * // Create one Seller_demand_signals
+     * const Seller_demand_signals = await prisma.seller_demand_signals.create({
+     *   data: {
+     *     // ... data to create a Seller_demand_signals
+     *   }
+     * })
+     * 
+     */
+    create<T extends seller_demand_signalsCreateArgs>(args: SelectSubset<T, seller_demand_signalsCreateArgs<ExtArgs>>): Prisma__seller_demand_signalsClient<$Result.GetResult<Prisma.$seller_demand_signalsPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many Seller_demand_signals.
+     * @param {seller_demand_signalsCreateManyArgs} args - Arguments to create many Seller_demand_signals.
+     * @example
+     * // Create many Seller_demand_signals
+     * const seller_demand_signals = await prisma.seller_demand_signals.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends seller_demand_signalsCreateManyArgs>(args?: SelectSubset<T, seller_demand_signalsCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many Seller_demand_signals and returns the data saved in the database.
+     * @param {seller_demand_signalsCreateManyAndReturnArgs} args - Arguments to create many Seller_demand_signals.
+     * @example
+     * // Create many Seller_demand_signals
+     * const seller_demand_signals = await prisma.seller_demand_signals.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many Seller_demand_signals and only return the `demand_signal_id`
+     * const seller_demand_signalsWithDemand_signal_idOnly = await prisma.seller_demand_signals.createManyAndReturn({
+     *   select: { demand_signal_id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends seller_demand_signalsCreateManyAndReturnArgs>(args?: SelectSubset<T, seller_demand_signalsCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$seller_demand_signalsPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a Seller_demand_signals.
+     * @param {seller_demand_signalsDeleteArgs} args - Arguments to delete one Seller_demand_signals.
+     * @example
+     * // Delete one Seller_demand_signals
+     * const Seller_demand_signals = await prisma.seller_demand_signals.delete({
+     *   where: {
+     *     // ... filter to delete one Seller_demand_signals
+     *   }
+     * })
+     * 
+     */
+    delete<T extends seller_demand_signalsDeleteArgs>(args: SelectSubset<T, seller_demand_signalsDeleteArgs<ExtArgs>>): Prisma__seller_demand_signalsClient<$Result.GetResult<Prisma.$seller_demand_signalsPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one Seller_demand_signals.
+     * @param {seller_demand_signalsUpdateArgs} args - Arguments to update one Seller_demand_signals.
+     * @example
+     * // Update one Seller_demand_signals
+     * const seller_demand_signals = await prisma.seller_demand_signals.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends seller_demand_signalsUpdateArgs>(args: SelectSubset<T, seller_demand_signalsUpdateArgs<ExtArgs>>): Prisma__seller_demand_signalsClient<$Result.GetResult<Prisma.$seller_demand_signalsPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more Seller_demand_signals.
+     * @param {seller_demand_signalsDeleteManyArgs} args - Arguments to filter Seller_demand_signals to delete.
+     * @example
+     * // Delete a few Seller_demand_signals
+     * const { count } = await prisma.seller_demand_signals.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends seller_demand_signalsDeleteManyArgs>(args?: SelectSubset<T, seller_demand_signalsDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Seller_demand_signals.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {seller_demand_signalsUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many Seller_demand_signals
+     * const seller_demand_signals = await prisma.seller_demand_signals.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends seller_demand_signalsUpdateManyArgs>(args: SelectSubset<T, seller_demand_signalsUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Seller_demand_signals and returns the data updated in the database.
+     * @param {seller_demand_signalsUpdateManyAndReturnArgs} args - Arguments to update many Seller_demand_signals.
+     * @example
+     * // Update many Seller_demand_signals
+     * const seller_demand_signals = await prisma.seller_demand_signals.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more Seller_demand_signals and only return the `demand_signal_id`
+     * const seller_demand_signalsWithDemand_signal_idOnly = await prisma.seller_demand_signals.updateManyAndReturn({
+     *   select: { demand_signal_id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends seller_demand_signalsUpdateManyAndReturnArgs>(args: SelectSubset<T, seller_demand_signalsUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$seller_demand_signalsPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one Seller_demand_signals.
+     * @param {seller_demand_signalsUpsertArgs} args - Arguments to update or create a Seller_demand_signals.
+     * @example
+     * // Update or create a Seller_demand_signals
+     * const seller_demand_signals = await prisma.seller_demand_signals.upsert({
+     *   create: {
+     *     // ... data to create a Seller_demand_signals
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the Seller_demand_signals we want to update
+     *   }
+     * })
+     */
+    upsert<T extends seller_demand_signalsUpsertArgs>(args: SelectSubset<T, seller_demand_signalsUpsertArgs<ExtArgs>>): Prisma__seller_demand_signalsClient<$Result.GetResult<Prisma.$seller_demand_signalsPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of Seller_demand_signals.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {seller_demand_signalsCountArgs} args - Arguments to filter Seller_demand_signals to count.
+     * @example
+     * // Count the number of Seller_demand_signals
+     * const count = await prisma.seller_demand_signals.count({
+     *   where: {
+     *     // ... the filter for the Seller_demand_signals we want to count
+     *   }
+     * })
+    **/
+    count<T extends seller_demand_signalsCountArgs>(
+      args?: Subset<T, seller_demand_signalsCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], Seller_demand_signalsCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a Seller_demand_signals.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {Seller_demand_signalsAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends Seller_demand_signalsAggregateArgs>(args: Subset<T, Seller_demand_signalsAggregateArgs>): Prisma.PrismaPromise<GetSeller_demand_signalsAggregateType<T>>
+
+    /**
+     * Group by Seller_demand_signals.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {seller_demand_signalsGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends seller_demand_signalsGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: seller_demand_signalsGroupByArgs['orderBy'] }
+        : { orderBy?: seller_demand_signalsGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, seller_demand_signalsGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetSeller_demand_signalsGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the seller_demand_signals model
+   */
+  readonly fields: seller_demand_signalsFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for seller_demand_signals.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__seller_demand_signalsClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the seller_demand_signals model
+   */
+  interface seller_demand_signalsFieldRefs {
+    readonly demand_signal_id: FieldRef<"seller_demand_signals", 'String'>
+    readonly business_id: FieldRef<"seller_demand_signals", 'String'>
+    readonly item_id: FieldRef<"seller_demand_signals", 'String'>
+    readonly category: FieldRef<"seller_demand_signals", 'String'>
+    readonly signal_type: FieldRef<"seller_demand_signals", 'String'>
+    readonly signal_count: FieldRef<"seller_demand_signals", 'Int'>
+    readonly period_start: FieldRef<"seller_demand_signals", 'DateTime'>
+    readonly period_end: FieldRef<"seller_demand_signals", 'DateTime'>
+    readonly source: FieldRef<"seller_demand_signals", 'String'>
+    readonly metadata: FieldRef<"seller_demand_signals", 'Json'>
+    readonly created_at: FieldRef<"seller_demand_signals", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * seller_demand_signals findUnique
+   */
+  export type seller_demand_signalsFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the seller_demand_signals
+     */
+    select?: seller_demand_signalsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the seller_demand_signals
+     */
+    omit?: seller_demand_signalsOmit<ExtArgs> | null
+    /**
+     * Filter, which seller_demand_signals to fetch.
+     */
+    where: seller_demand_signalsWhereUniqueInput
+  }
+
+  /**
+   * seller_demand_signals findUniqueOrThrow
+   */
+  export type seller_demand_signalsFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the seller_demand_signals
+     */
+    select?: seller_demand_signalsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the seller_demand_signals
+     */
+    omit?: seller_demand_signalsOmit<ExtArgs> | null
+    /**
+     * Filter, which seller_demand_signals to fetch.
+     */
+    where: seller_demand_signalsWhereUniqueInput
+  }
+
+  /**
+   * seller_demand_signals findFirst
+   */
+  export type seller_demand_signalsFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the seller_demand_signals
+     */
+    select?: seller_demand_signalsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the seller_demand_signals
+     */
+    omit?: seller_demand_signalsOmit<ExtArgs> | null
+    /**
+     * Filter, which seller_demand_signals to fetch.
+     */
+    where?: seller_demand_signalsWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of seller_demand_signals to fetch.
+     */
+    orderBy?: seller_demand_signalsOrderByWithRelationInput | seller_demand_signalsOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for seller_demand_signals.
+     */
+    cursor?: seller_demand_signalsWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` seller_demand_signals from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` seller_demand_signals.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of seller_demand_signals.
+     */
+    distinct?: Seller_demand_signalsScalarFieldEnum | Seller_demand_signalsScalarFieldEnum[]
+  }
+
+  /**
+   * seller_demand_signals findFirstOrThrow
+   */
+  export type seller_demand_signalsFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the seller_demand_signals
+     */
+    select?: seller_demand_signalsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the seller_demand_signals
+     */
+    omit?: seller_demand_signalsOmit<ExtArgs> | null
+    /**
+     * Filter, which seller_demand_signals to fetch.
+     */
+    where?: seller_demand_signalsWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of seller_demand_signals to fetch.
+     */
+    orderBy?: seller_demand_signalsOrderByWithRelationInput | seller_demand_signalsOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for seller_demand_signals.
+     */
+    cursor?: seller_demand_signalsWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` seller_demand_signals from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` seller_demand_signals.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of seller_demand_signals.
+     */
+    distinct?: Seller_demand_signalsScalarFieldEnum | Seller_demand_signalsScalarFieldEnum[]
+  }
+
+  /**
+   * seller_demand_signals findMany
+   */
+  export type seller_demand_signalsFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the seller_demand_signals
+     */
+    select?: seller_demand_signalsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the seller_demand_signals
+     */
+    omit?: seller_demand_signalsOmit<ExtArgs> | null
+    /**
+     * Filter, which seller_demand_signals to fetch.
+     */
+    where?: seller_demand_signalsWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of seller_demand_signals to fetch.
+     */
+    orderBy?: seller_demand_signalsOrderByWithRelationInput | seller_demand_signalsOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing seller_demand_signals.
+     */
+    cursor?: seller_demand_signalsWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` seller_demand_signals from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` seller_demand_signals.
+     */
+    skip?: number
+    distinct?: Seller_demand_signalsScalarFieldEnum | Seller_demand_signalsScalarFieldEnum[]
+  }
+
+  /**
+   * seller_demand_signals create
+   */
+  export type seller_demand_signalsCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the seller_demand_signals
+     */
+    select?: seller_demand_signalsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the seller_demand_signals
+     */
+    omit?: seller_demand_signalsOmit<ExtArgs> | null
+    /**
+     * The data needed to create a seller_demand_signals.
+     */
+    data: XOR<seller_demand_signalsCreateInput, seller_demand_signalsUncheckedCreateInput>
+  }
+
+  /**
+   * seller_demand_signals createMany
+   */
+  export type seller_demand_signalsCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many seller_demand_signals.
+     */
+    data: seller_demand_signalsCreateManyInput | seller_demand_signalsCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * seller_demand_signals createManyAndReturn
+   */
+  export type seller_demand_signalsCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the seller_demand_signals
+     */
+    select?: seller_demand_signalsSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the seller_demand_signals
+     */
+    omit?: seller_demand_signalsOmit<ExtArgs> | null
+    /**
+     * The data used to create many seller_demand_signals.
+     */
+    data: seller_demand_signalsCreateManyInput | seller_demand_signalsCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * seller_demand_signals update
+   */
+  export type seller_demand_signalsUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the seller_demand_signals
+     */
+    select?: seller_demand_signalsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the seller_demand_signals
+     */
+    omit?: seller_demand_signalsOmit<ExtArgs> | null
+    /**
+     * The data needed to update a seller_demand_signals.
+     */
+    data: XOR<seller_demand_signalsUpdateInput, seller_demand_signalsUncheckedUpdateInput>
+    /**
+     * Choose, which seller_demand_signals to update.
+     */
+    where: seller_demand_signalsWhereUniqueInput
+  }
+
+  /**
+   * seller_demand_signals updateMany
+   */
+  export type seller_demand_signalsUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update seller_demand_signals.
+     */
+    data: XOR<seller_demand_signalsUpdateManyMutationInput, seller_demand_signalsUncheckedUpdateManyInput>
+    /**
+     * Filter which seller_demand_signals to update
+     */
+    where?: seller_demand_signalsWhereInput
+    /**
+     * Limit how many seller_demand_signals to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * seller_demand_signals updateManyAndReturn
+   */
+  export type seller_demand_signalsUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the seller_demand_signals
+     */
+    select?: seller_demand_signalsSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the seller_demand_signals
+     */
+    omit?: seller_demand_signalsOmit<ExtArgs> | null
+    /**
+     * The data used to update seller_demand_signals.
+     */
+    data: XOR<seller_demand_signalsUpdateManyMutationInput, seller_demand_signalsUncheckedUpdateManyInput>
+    /**
+     * Filter which seller_demand_signals to update
+     */
+    where?: seller_demand_signalsWhereInput
+    /**
+     * Limit how many seller_demand_signals to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * seller_demand_signals upsert
+   */
+  export type seller_demand_signalsUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the seller_demand_signals
+     */
+    select?: seller_demand_signalsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the seller_demand_signals
+     */
+    omit?: seller_demand_signalsOmit<ExtArgs> | null
+    /**
+     * The filter to search for the seller_demand_signals to update in case it exists.
+     */
+    where: seller_demand_signalsWhereUniqueInput
+    /**
+     * In case the seller_demand_signals found by the `where` argument doesn't exist, create a new seller_demand_signals with this data.
+     */
+    create: XOR<seller_demand_signalsCreateInput, seller_demand_signalsUncheckedCreateInput>
+    /**
+     * In case the seller_demand_signals was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<seller_demand_signalsUpdateInput, seller_demand_signalsUncheckedUpdateInput>
+  }
+
+  /**
+   * seller_demand_signals delete
+   */
+  export type seller_demand_signalsDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the seller_demand_signals
+     */
+    select?: seller_demand_signalsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the seller_demand_signals
+     */
+    omit?: seller_demand_signalsOmit<ExtArgs> | null
+    /**
+     * Filter which seller_demand_signals to delete.
+     */
+    where: seller_demand_signalsWhereUniqueInput
+  }
+
+  /**
+   * seller_demand_signals deleteMany
+   */
+  export type seller_demand_signalsDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which seller_demand_signals to delete
+     */
+    where?: seller_demand_signalsWhereInput
+    /**
+     * Limit how many seller_demand_signals to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * seller_demand_signals without action
+   */
+  export type seller_demand_signalsDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the seller_demand_signals
+     */
+    select?: seller_demand_signalsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the seller_demand_signals
+     */
+    omit?: seller_demand_signalsOmit<ExtArgs> | null
+  }
+
+
+  /**
+   * Model seller_product_import_jobs
+   */
+
+  export type AggregateSeller_product_import_jobs = {
+    _count: Seller_product_import_jobsCountAggregateOutputType | null
+    _avg: Seller_product_import_jobsAvgAggregateOutputType | null
+    _sum: Seller_product_import_jobsSumAggregateOutputType | null
+    _min: Seller_product_import_jobsMinAggregateOutputType | null
+    _max: Seller_product_import_jobsMaxAggregateOutputType | null
+  }
+
+  export type Seller_product_import_jobsAvgAggregateOutputType = {
+    total_rows: number | null
+    created_count: number | null
+    updated_count: number | null
+    skipped_count: number | null
+    failed_count: number | null
+  }
+
+  export type Seller_product_import_jobsSumAggregateOutputType = {
+    total_rows: number | null
+    created_count: number | null
+    updated_count: number | null
+    skipped_count: number | null
+    failed_count: number | null
+  }
+
+  export type Seller_product_import_jobsMinAggregateOutputType = {
+    import_job_id: string | null
+    business_id: string | null
+    tenant_id: string | null
+    source: string | null
+    status: string | null
+    total_rows: number | null
+    created_count: number | null
+    updated_count: number | null
+    skipped_count: number | null
+    failed_count: number | null
+    created_by: string | null
+    started_at: Date | null
+    finished_at: Date | null
+    created_at: Date | null
+    updated_at: Date | null
+  }
+
+  export type Seller_product_import_jobsMaxAggregateOutputType = {
+    import_job_id: string | null
+    business_id: string | null
+    tenant_id: string | null
+    source: string | null
+    status: string | null
+    total_rows: number | null
+    created_count: number | null
+    updated_count: number | null
+    skipped_count: number | null
+    failed_count: number | null
+    created_by: string | null
+    started_at: Date | null
+    finished_at: Date | null
+    created_at: Date | null
+    updated_at: Date | null
+  }
+
+  export type Seller_product_import_jobsCountAggregateOutputType = {
+    import_job_id: number
+    business_id: number
+    tenant_id: number
+    source: number
+    status: number
+    total_rows: number
+    created_count: number
+    updated_count: number
+    skipped_count: number
+    failed_count: number
+    errors: number
+    summary: number
+    created_by: number
+    started_at: number
+    finished_at: number
+    created_at: number
+    updated_at: number
+    _all: number
+  }
+
+
+  export type Seller_product_import_jobsAvgAggregateInputType = {
+    total_rows?: true
+    created_count?: true
+    updated_count?: true
+    skipped_count?: true
+    failed_count?: true
+  }
+
+  export type Seller_product_import_jobsSumAggregateInputType = {
+    total_rows?: true
+    created_count?: true
+    updated_count?: true
+    skipped_count?: true
+    failed_count?: true
+  }
+
+  export type Seller_product_import_jobsMinAggregateInputType = {
+    import_job_id?: true
+    business_id?: true
+    tenant_id?: true
+    source?: true
+    status?: true
+    total_rows?: true
+    created_count?: true
+    updated_count?: true
+    skipped_count?: true
+    failed_count?: true
+    created_by?: true
+    started_at?: true
+    finished_at?: true
+    created_at?: true
+    updated_at?: true
+  }
+
+  export type Seller_product_import_jobsMaxAggregateInputType = {
+    import_job_id?: true
+    business_id?: true
+    tenant_id?: true
+    source?: true
+    status?: true
+    total_rows?: true
+    created_count?: true
+    updated_count?: true
+    skipped_count?: true
+    failed_count?: true
+    created_by?: true
+    started_at?: true
+    finished_at?: true
+    created_at?: true
+    updated_at?: true
+  }
+
+  export type Seller_product_import_jobsCountAggregateInputType = {
+    import_job_id?: true
+    business_id?: true
+    tenant_id?: true
+    source?: true
+    status?: true
+    total_rows?: true
+    created_count?: true
+    updated_count?: true
+    skipped_count?: true
+    failed_count?: true
+    errors?: true
+    summary?: true
+    created_by?: true
+    started_at?: true
+    finished_at?: true
+    created_at?: true
+    updated_at?: true
+    _all?: true
+  }
+
+  export type Seller_product_import_jobsAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which seller_product_import_jobs to aggregate.
+     */
+    where?: seller_product_import_jobsWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of seller_product_import_jobs to fetch.
+     */
+    orderBy?: seller_product_import_jobsOrderByWithRelationInput | seller_product_import_jobsOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: seller_product_import_jobsWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` seller_product_import_jobs from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` seller_product_import_jobs.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned seller_product_import_jobs
+    **/
+    _count?: true | Seller_product_import_jobsCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: Seller_product_import_jobsAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: Seller_product_import_jobsSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: Seller_product_import_jobsMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: Seller_product_import_jobsMaxAggregateInputType
+  }
+
+  export type GetSeller_product_import_jobsAggregateType<T extends Seller_product_import_jobsAggregateArgs> = {
+        [P in keyof T & keyof AggregateSeller_product_import_jobs]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateSeller_product_import_jobs[P]>
+      : GetScalarType<T[P], AggregateSeller_product_import_jobs[P]>
+  }
+
+
+
+
+  export type seller_product_import_jobsGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: seller_product_import_jobsWhereInput
+    orderBy?: seller_product_import_jobsOrderByWithAggregationInput | seller_product_import_jobsOrderByWithAggregationInput[]
+    by: Seller_product_import_jobsScalarFieldEnum[] | Seller_product_import_jobsScalarFieldEnum
+    having?: seller_product_import_jobsScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: Seller_product_import_jobsCountAggregateInputType | true
+    _avg?: Seller_product_import_jobsAvgAggregateInputType
+    _sum?: Seller_product_import_jobsSumAggregateInputType
+    _min?: Seller_product_import_jobsMinAggregateInputType
+    _max?: Seller_product_import_jobsMaxAggregateInputType
+  }
+
+  export type Seller_product_import_jobsGroupByOutputType = {
+    import_job_id: string
+    business_id: string
+    tenant_id: string
+    source: string
+    status: string
+    total_rows: number
+    created_count: number
+    updated_count: number
+    skipped_count: number
+    failed_count: number
+    errors: JsonValue | null
+    summary: JsonValue | null
+    created_by: string | null
+    started_at: Date
+    finished_at: Date | null
+    created_at: Date
+    updated_at: Date
+    _count: Seller_product_import_jobsCountAggregateOutputType | null
+    _avg: Seller_product_import_jobsAvgAggregateOutputType | null
+    _sum: Seller_product_import_jobsSumAggregateOutputType | null
+    _min: Seller_product_import_jobsMinAggregateOutputType | null
+    _max: Seller_product_import_jobsMaxAggregateOutputType | null
+  }
+
+  type GetSeller_product_import_jobsGroupByPayload<T extends seller_product_import_jobsGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<Seller_product_import_jobsGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof Seller_product_import_jobsGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], Seller_product_import_jobsGroupByOutputType[P]>
+            : GetScalarType<T[P], Seller_product_import_jobsGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type seller_product_import_jobsSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    import_job_id?: boolean
+    business_id?: boolean
+    tenant_id?: boolean
+    source?: boolean
+    status?: boolean
+    total_rows?: boolean
+    created_count?: boolean
+    updated_count?: boolean
+    skipped_count?: boolean
+    failed_count?: boolean
+    errors?: boolean
+    summary?: boolean
+    created_by?: boolean
+    started_at?: boolean
+    finished_at?: boolean
+    created_at?: boolean
+    updated_at?: boolean
+  }, ExtArgs["result"]["seller_product_import_jobs"]>
+
+  export type seller_product_import_jobsSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    import_job_id?: boolean
+    business_id?: boolean
+    tenant_id?: boolean
+    source?: boolean
+    status?: boolean
+    total_rows?: boolean
+    created_count?: boolean
+    updated_count?: boolean
+    skipped_count?: boolean
+    failed_count?: boolean
+    errors?: boolean
+    summary?: boolean
+    created_by?: boolean
+    started_at?: boolean
+    finished_at?: boolean
+    created_at?: boolean
+    updated_at?: boolean
+  }, ExtArgs["result"]["seller_product_import_jobs"]>
+
+  export type seller_product_import_jobsSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    import_job_id?: boolean
+    business_id?: boolean
+    tenant_id?: boolean
+    source?: boolean
+    status?: boolean
+    total_rows?: boolean
+    created_count?: boolean
+    updated_count?: boolean
+    skipped_count?: boolean
+    failed_count?: boolean
+    errors?: boolean
+    summary?: boolean
+    created_by?: boolean
+    started_at?: boolean
+    finished_at?: boolean
+    created_at?: boolean
+    updated_at?: boolean
+  }, ExtArgs["result"]["seller_product_import_jobs"]>
+
+  export type seller_product_import_jobsSelectScalar = {
+    import_job_id?: boolean
+    business_id?: boolean
+    tenant_id?: boolean
+    source?: boolean
+    status?: boolean
+    total_rows?: boolean
+    created_count?: boolean
+    updated_count?: boolean
+    skipped_count?: boolean
+    failed_count?: boolean
+    errors?: boolean
+    summary?: boolean
+    created_by?: boolean
+    started_at?: boolean
+    finished_at?: boolean
+    created_at?: boolean
+    updated_at?: boolean
+  }
+
+  export type seller_product_import_jobsOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"import_job_id" | "business_id" | "tenant_id" | "source" | "status" | "total_rows" | "created_count" | "updated_count" | "skipped_count" | "failed_count" | "errors" | "summary" | "created_by" | "started_at" | "finished_at" | "created_at" | "updated_at", ExtArgs["result"]["seller_product_import_jobs"]>
+
+  export type $seller_product_import_jobsPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "seller_product_import_jobs"
+    objects: {}
+    scalars: $Extensions.GetPayloadResult<{
+      import_job_id: string
+      business_id: string
+      tenant_id: string
+      source: string
+      status: string
+      total_rows: number
+      created_count: number
+      updated_count: number
+      skipped_count: number
+      failed_count: number
+      errors: Prisma.JsonValue | null
+      summary: Prisma.JsonValue | null
+      created_by: string | null
+      started_at: Date
+      finished_at: Date | null
+      created_at: Date
+      updated_at: Date
+    }, ExtArgs["result"]["seller_product_import_jobs"]>
+    composites: {}
+  }
+
+  type seller_product_import_jobsGetPayload<S extends boolean | null | undefined | seller_product_import_jobsDefaultArgs> = $Result.GetResult<Prisma.$seller_product_import_jobsPayload, S>
+
+  type seller_product_import_jobsCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<seller_product_import_jobsFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: Seller_product_import_jobsCountAggregateInputType | true
+    }
+
+  export interface seller_product_import_jobsDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['seller_product_import_jobs'], meta: { name: 'seller_product_import_jobs' } }
+    /**
+     * Find zero or one Seller_product_import_jobs that matches the filter.
+     * @param {seller_product_import_jobsFindUniqueArgs} args - Arguments to find a Seller_product_import_jobs
+     * @example
+     * // Get one Seller_product_import_jobs
+     * const seller_product_import_jobs = await prisma.seller_product_import_jobs.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends seller_product_import_jobsFindUniqueArgs>(args: SelectSubset<T, seller_product_import_jobsFindUniqueArgs<ExtArgs>>): Prisma__seller_product_import_jobsClient<$Result.GetResult<Prisma.$seller_product_import_jobsPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one Seller_product_import_jobs that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {seller_product_import_jobsFindUniqueOrThrowArgs} args - Arguments to find a Seller_product_import_jobs
+     * @example
+     * // Get one Seller_product_import_jobs
+     * const seller_product_import_jobs = await prisma.seller_product_import_jobs.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends seller_product_import_jobsFindUniqueOrThrowArgs>(args: SelectSubset<T, seller_product_import_jobsFindUniqueOrThrowArgs<ExtArgs>>): Prisma__seller_product_import_jobsClient<$Result.GetResult<Prisma.$seller_product_import_jobsPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Seller_product_import_jobs that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {seller_product_import_jobsFindFirstArgs} args - Arguments to find a Seller_product_import_jobs
+     * @example
+     * // Get one Seller_product_import_jobs
+     * const seller_product_import_jobs = await prisma.seller_product_import_jobs.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends seller_product_import_jobsFindFirstArgs>(args?: SelectSubset<T, seller_product_import_jobsFindFirstArgs<ExtArgs>>): Prisma__seller_product_import_jobsClient<$Result.GetResult<Prisma.$seller_product_import_jobsPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Seller_product_import_jobs that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {seller_product_import_jobsFindFirstOrThrowArgs} args - Arguments to find a Seller_product_import_jobs
+     * @example
+     * // Get one Seller_product_import_jobs
+     * const seller_product_import_jobs = await prisma.seller_product_import_jobs.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends seller_product_import_jobsFindFirstOrThrowArgs>(args?: SelectSubset<T, seller_product_import_jobsFindFirstOrThrowArgs<ExtArgs>>): Prisma__seller_product_import_jobsClient<$Result.GetResult<Prisma.$seller_product_import_jobsPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more Seller_product_import_jobs that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {seller_product_import_jobsFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all Seller_product_import_jobs
+     * const seller_product_import_jobs = await prisma.seller_product_import_jobs.findMany()
+     * 
+     * // Get first 10 Seller_product_import_jobs
+     * const seller_product_import_jobs = await prisma.seller_product_import_jobs.findMany({ take: 10 })
+     * 
+     * // Only select the `import_job_id`
+     * const seller_product_import_jobsWithImport_job_idOnly = await prisma.seller_product_import_jobs.findMany({ select: { import_job_id: true } })
+     * 
+     */
+    findMany<T extends seller_product_import_jobsFindManyArgs>(args?: SelectSubset<T, seller_product_import_jobsFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$seller_product_import_jobsPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a Seller_product_import_jobs.
+     * @param {seller_product_import_jobsCreateArgs} args - Arguments to create a Seller_product_import_jobs.
+     * @example
+     * // Create one Seller_product_import_jobs
+     * const Seller_product_import_jobs = await prisma.seller_product_import_jobs.create({
+     *   data: {
+     *     // ... data to create a Seller_product_import_jobs
+     *   }
+     * })
+     * 
+     */
+    create<T extends seller_product_import_jobsCreateArgs>(args: SelectSubset<T, seller_product_import_jobsCreateArgs<ExtArgs>>): Prisma__seller_product_import_jobsClient<$Result.GetResult<Prisma.$seller_product_import_jobsPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many Seller_product_import_jobs.
+     * @param {seller_product_import_jobsCreateManyArgs} args - Arguments to create many Seller_product_import_jobs.
+     * @example
+     * // Create many Seller_product_import_jobs
+     * const seller_product_import_jobs = await prisma.seller_product_import_jobs.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends seller_product_import_jobsCreateManyArgs>(args?: SelectSubset<T, seller_product_import_jobsCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many Seller_product_import_jobs and returns the data saved in the database.
+     * @param {seller_product_import_jobsCreateManyAndReturnArgs} args - Arguments to create many Seller_product_import_jobs.
+     * @example
+     * // Create many Seller_product_import_jobs
+     * const seller_product_import_jobs = await prisma.seller_product_import_jobs.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many Seller_product_import_jobs and only return the `import_job_id`
+     * const seller_product_import_jobsWithImport_job_idOnly = await prisma.seller_product_import_jobs.createManyAndReturn({
+     *   select: { import_job_id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends seller_product_import_jobsCreateManyAndReturnArgs>(args?: SelectSubset<T, seller_product_import_jobsCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$seller_product_import_jobsPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a Seller_product_import_jobs.
+     * @param {seller_product_import_jobsDeleteArgs} args - Arguments to delete one Seller_product_import_jobs.
+     * @example
+     * // Delete one Seller_product_import_jobs
+     * const Seller_product_import_jobs = await prisma.seller_product_import_jobs.delete({
+     *   where: {
+     *     // ... filter to delete one Seller_product_import_jobs
+     *   }
+     * })
+     * 
+     */
+    delete<T extends seller_product_import_jobsDeleteArgs>(args: SelectSubset<T, seller_product_import_jobsDeleteArgs<ExtArgs>>): Prisma__seller_product_import_jobsClient<$Result.GetResult<Prisma.$seller_product_import_jobsPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one Seller_product_import_jobs.
+     * @param {seller_product_import_jobsUpdateArgs} args - Arguments to update one Seller_product_import_jobs.
+     * @example
+     * // Update one Seller_product_import_jobs
+     * const seller_product_import_jobs = await prisma.seller_product_import_jobs.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends seller_product_import_jobsUpdateArgs>(args: SelectSubset<T, seller_product_import_jobsUpdateArgs<ExtArgs>>): Prisma__seller_product_import_jobsClient<$Result.GetResult<Prisma.$seller_product_import_jobsPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more Seller_product_import_jobs.
+     * @param {seller_product_import_jobsDeleteManyArgs} args - Arguments to filter Seller_product_import_jobs to delete.
+     * @example
+     * // Delete a few Seller_product_import_jobs
+     * const { count } = await prisma.seller_product_import_jobs.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends seller_product_import_jobsDeleteManyArgs>(args?: SelectSubset<T, seller_product_import_jobsDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Seller_product_import_jobs.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {seller_product_import_jobsUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many Seller_product_import_jobs
+     * const seller_product_import_jobs = await prisma.seller_product_import_jobs.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends seller_product_import_jobsUpdateManyArgs>(args: SelectSubset<T, seller_product_import_jobsUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Seller_product_import_jobs and returns the data updated in the database.
+     * @param {seller_product_import_jobsUpdateManyAndReturnArgs} args - Arguments to update many Seller_product_import_jobs.
+     * @example
+     * // Update many Seller_product_import_jobs
+     * const seller_product_import_jobs = await prisma.seller_product_import_jobs.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more Seller_product_import_jobs and only return the `import_job_id`
+     * const seller_product_import_jobsWithImport_job_idOnly = await prisma.seller_product_import_jobs.updateManyAndReturn({
+     *   select: { import_job_id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends seller_product_import_jobsUpdateManyAndReturnArgs>(args: SelectSubset<T, seller_product_import_jobsUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$seller_product_import_jobsPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one Seller_product_import_jobs.
+     * @param {seller_product_import_jobsUpsertArgs} args - Arguments to update or create a Seller_product_import_jobs.
+     * @example
+     * // Update or create a Seller_product_import_jobs
+     * const seller_product_import_jobs = await prisma.seller_product_import_jobs.upsert({
+     *   create: {
+     *     // ... data to create a Seller_product_import_jobs
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the Seller_product_import_jobs we want to update
+     *   }
+     * })
+     */
+    upsert<T extends seller_product_import_jobsUpsertArgs>(args: SelectSubset<T, seller_product_import_jobsUpsertArgs<ExtArgs>>): Prisma__seller_product_import_jobsClient<$Result.GetResult<Prisma.$seller_product_import_jobsPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of Seller_product_import_jobs.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {seller_product_import_jobsCountArgs} args - Arguments to filter Seller_product_import_jobs to count.
+     * @example
+     * // Count the number of Seller_product_import_jobs
+     * const count = await prisma.seller_product_import_jobs.count({
+     *   where: {
+     *     // ... the filter for the Seller_product_import_jobs we want to count
+     *   }
+     * })
+    **/
+    count<T extends seller_product_import_jobsCountArgs>(
+      args?: Subset<T, seller_product_import_jobsCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], Seller_product_import_jobsCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a Seller_product_import_jobs.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {Seller_product_import_jobsAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends Seller_product_import_jobsAggregateArgs>(args: Subset<T, Seller_product_import_jobsAggregateArgs>): Prisma.PrismaPromise<GetSeller_product_import_jobsAggregateType<T>>
+
+    /**
+     * Group by Seller_product_import_jobs.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {seller_product_import_jobsGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends seller_product_import_jobsGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: seller_product_import_jobsGroupByArgs['orderBy'] }
+        : { orderBy?: seller_product_import_jobsGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, seller_product_import_jobsGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetSeller_product_import_jobsGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the seller_product_import_jobs model
+   */
+  readonly fields: seller_product_import_jobsFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for seller_product_import_jobs.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__seller_product_import_jobsClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the seller_product_import_jobs model
+   */
+  interface seller_product_import_jobsFieldRefs {
+    readonly import_job_id: FieldRef<"seller_product_import_jobs", 'String'>
+    readonly business_id: FieldRef<"seller_product_import_jobs", 'String'>
+    readonly tenant_id: FieldRef<"seller_product_import_jobs", 'String'>
+    readonly source: FieldRef<"seller_product_import_jobs", 'String'>
+    readonly status: FieldRef<"seller_product_import_jobs", 'String'>
+    readonly total_rows: FieldRef<"seller_product_import_jobs", 'Int'>
+    readonly created_count: FieldRef<"seller_product_import_jobs", 'Int'>
+    readonly updated_count: FieldRef<"seller_product_import_jobs", 'Int'>
+    readonly skipped_count: FieldRef<"seller_product_import_jobs", 'Int'>
+    readonly failed_count: FieldRef<"seller_product_import_jobs", 'Int'>
+    readonly errors: FieldRef<"seller_product_import_jobs", 'Json'>
+    readonly summary: FieldRef<"seller_product_import_jobs", 'Json'>
+    readonly created_by: FieldRef<"seller_product_import_jobs", 'String'>
+    readonly started_at: FieldRef<"seller_product_import_jobs", 'DateTime'>
+    readonly finished_at: FieldRef<"seller_product_import_jobs", 'DateTime'>
+    readonly created_at: FieldRef<"seller_product_import_jobs", 'DateTime'>
+    readonly updated_at: FieldRef<"seller_product_import_jobs", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * seller_product_import_jobs findUnique
+   */
+  export type seller_product_import_jobsFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the seller_product_import_jobs
+     */
+    select?: seller_product_import_jobsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the seller_product_import_jobs
+     */
+    omit?: seller_product_import_jobsOmit<ExtArgs> | null
+    /**
+     * Filter, which seller_product_import_jobs to fetch.
+     */
+    where: seller_product_import_jobsWhereUniqueInput
+  }
+
+  /**
+   * seller_product_import_jobs findUniqueOrThrow
+   */
+  export type seller_product_import_jobsFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the seller_product_import_jobs
+     */
+    select?: seller_product_import_jobsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the seller_product_import_jobs
+     */
+    omit?: seller_product_import_jobsOmit<ExtArgs> | null
+    /**
+     * Filter, which seller_product_import_jobs to fetch.
+     */
+    where: seller_product_import_jobsWhereUniqueInput
+  }
+
+  /**
+   * seller_product_import_jobs findFirst
+   */
+  export type seller_product_import_jobsFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the seller_product_import_jobs
+     */
+    select?: seller_product_import_jobsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the seller_product_import_jobs
+     */
+    omit?: seller_product_import_jobsOmit<ExtArgs> | null
+    /**
+     * Filter, which seller_product_import_jobs to fetch.
+     */
+    where?: seller_product_import_jobsWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of seller_product_import_jobs to fetch.
+     */
+    orderBy?: seller_product_import_jobsOrderByWithRelationInput | seller_product_import_jobsOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for seller_product_import_jobs.
+     */
+    cursor?: seller_product_import_jobsWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` seller_product_import_jobs from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` seller_product_import_jobs.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of seller_product_import_jobs.
+     */
+    distinct?: Seller_product_import_jobsScalarFieldEnum | Seller_product_import_jobsScalarFieldEnum[]
+  }
+
+  /**
+   * seller_product_import_jobs findFirstOrThrow
+   */
+  export type seller_product_import_jobsFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the seller_product_import_jobs
+     */
+    select?: seller_product_import_jobsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the seller_product_import_jobs
+     */
+    omit?: seller_product_import_jobsOmit<ExtArgs> | null
+    /**
+     * Filter, which seller_product_import_jobs to fetch.
+     */
+    where?: seller_product_import_jobsWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of seller_product_import_jobs to fetch.
+     */
+    orderBy?: seller_product_import_jobsOrderByWithRelationInput | seller_product_import_jobsOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for seller_product_import_jobs.
+     */
+    cursor?: seller_product_import_jobsWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` seller_product_import_jobs from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` seller_product_import_jobs.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of seller_product_import_jobs.
+     */
+    distinct?: Seller_product_import_jobsScalarFieldEnum | Seller_product_import_jobsScalarFieldEnum[]
+  }
+
+  /**
+   * seller_product_import_jobs findMany
+   */
+  export type seller_product_import_jobsFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the seller_product_import_jobs
+     */
+    select?: seller_product_import_jobsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the seller_product_import_jobs
+     */
+    omit?: seller_product_import_jobsOmit<ExtArgs> | null
+    /**
+     * Filter, which seller_product_import_jobs to fetch.
+     */
+    where?: seller_product_import_jobsWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of seller_product_import_jobs to fetch.
+     */
+    orderBy?: seller_product_import_jobsOrderByWithRelationInput | seller_product_import_jobsOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing seller_product_import_jobs.
+     */
+    cursor?: seller_product_import_jobsWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` seller_product_import_jobs from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` seller_product_import_jobs.
+     */
+    skip?: number
+    distinct?: Seller_product_import_jobsScalarFieldEnum | Seller_product_import_jobsScalarFieldEnum[]
+  }
+
+  /**
+   * seller_product_import_jobs create
+   */
+  export type seller_product_import_jobsCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the seller_product_import_jobs
+     */
+    select?: seller_product_import_jobsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the seller_product_import_jobs
+     */
+    omit?: seller_product_import_jobsOmit<ExtArgs> | null
+    /**
+     * The data needed to create a seller_product_import_jobs.
+     */
+    data: XOR<seller_product_import_jobsCreateInput, seller_product_import_jobsUncheckedCreateInput>
+  }
+
+  /**
+   * seller_product_import_jobs createMany
+   */
+  export type seller_product_import_jobsCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many seller_product_import_jobs.
+     */
+    data: seller_product_import_jobsCreateManyInput | seller_product_import_jobsCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * seller_product_import_jobs createManyAndReturn
+   */
+  export type seller_product_import_jobsCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the seller_product_import_jobs
+     */
+    select?: seller_product_import_jobsSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the seller_product_import_jobs
+     */
+    omit?: seller_product_import_jobsOmit<ExtArgs> | null
+    /**
+     * The data used to create many seller_product_import_jobs.
+     */
+    data: seller_product_import_jobsCreateManyInput | seller_product_import_jobsCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * seller_product_import_jobs update
+   */
+  export type seller_product_import_jobsUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the seller_product_import_jobs
+     */
+    select?: seller_product_import_jobsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the seller_product_import_jobs
+     */
+    omit?: seller_product_import_jobsOmit<ExtArgs> | null
+    /**
+     * The data needed to update a seller_product_import_jobs.
+     */
+    data: XOR<seller_product_import_jobsUpdateInput, seller_product_import_jobsUncheckedUpdateInput>
+    /**
+     * Choose, which seller_product_import_jobs to update.
+     */
+    where: seller_product_import_jobsWhereUniqueInput
+  }
+
+  /**
+   * seller_product_import_jobs updateMany
+   */
+  export type seller_product_import_jobsUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update seller_product_import_jobs.
+     */
+    data: XOR<seller_product_import_jobsUpdateManyMutationInput, seller_product_import_jobsUncheckedUpdateManyInput>
+    /**
+     * Filter which seller_product_import_jobs to update
+     */
+    where?: seller_product_import_jobsWhereInput
+    /**
+     * Limit how many seller_product_import_jobs to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * seller_product_import_jobs updateManyAndReturn
+   */
+  export type seller_product_import_jobsUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the seller_product_import_jobs
+     */
+    select?: seller_product_import_jobsSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the seller_product_import_jobs
+     */
+    omit?: seller_product_import_jobsOmit<ExtArgs> | null
+    /**
+     * The data used to update seller_product_import_jobs.
+     */
+    data: XOR<seller_product_import_jobsUpdateManyMutationInput, seller_product_import_jobsUncheckedUpdateManyInput>
+    /**
+     * Filter which seller_product_import_jobs to update
+     */
+    where?: seller_product_import_jobsWhereInput
+    /**
+     * Limit how many seller_product_import_jobs to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * seller_product_import_jobs upsert
+   */
+  export type seller_product_import_jobsUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the seller_product_import_jobs
+     */
+    select?: seller_product_import_jobsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the seller_product_import_jobs
+     */
+    omit?: seller_product_import_jobsOmit<ExtArgs> | null
+    /**
+     * The filter to search for the seller_product_import_jobs to update in case it exists.
+     */
+    where: seller_product_import_jobsWhereUniqueInput
+    /**
+     * In case the seller_product_import_jobs found by the `where` argument doesn't exist, create a new seller_product_import_jobs with this data.
+     */
+    create: XOR<seller_product_import_jobsCreateInput, seller_product_import_jobsUncheckedCreateInput>
+    /**
+     * In case the seller_product_import_jobs was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<seller_product_import_jobsUpdateInput, seller_product_import_jobsUncheckedUpdateInput>
+  }
+
+  /**
+   * seller_product_import_jobs delete
+   */
+  export type seller_product_import_jobsDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the seller_product_import_jobs
+     */
+    select?: seller_product_import_jobsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the seller_product_import_jobs
+     */
+    omit?: seller_product_import_jobsOmit<ExtArgs> | null
+    /**
+     * Filter which seller_product_import_jobs to delete.
+     */
+    where: seller_product_import_jobsWhereUniqueInput
+  }
+
+  /**
+   * seller_product_import_jobs deleteMany
+   */
+  export type seller_product_import_jobsDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which seller_product_import_jobs to delete
+     */
+    where?: seller_product_import_jobsWhereInput
+    /**
+     * Limit how many seller_product_import_jobs to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * seller_product_import_jobs without action
+   */
+  export type seller_product_import_jobsDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the seller_product_import_jobs
+     */
+    select?: seller_product_import_jobsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the seller_product_import_jobs
+     */
+    omit?: seller_product_import_jobsOmit<ExtArgs> | null
+  }
+
+
+  /**
+   * Model seller_stock_adjustments
+   */
+
+  export type AggregateSeller_stock_adjustments = {
+    _count: Seller_stock_adjustmentsCountAggregateOutputType | null
+    _avg: Seller_stock_adjustmentsAvgAggregateOutputType | null
+    _sum: Seller_stock_adjustmentsSumAggregateOutputType | null
+    _min: Seller_stock_adjustmentsMinAggregateOutputType | null
+    _max: Seller_stock_adjustmentsMaxAggregateOutputType | null
+  }
+
+  export type Seller_stock_adjustmentsAvgAggregateOutputType = {
+    quantity_change: number | null
+    quantity_before: number | null
+    quantity_after: number | null
+  }
+
+  export type Seller_stock_adjustmentsSumAggregateOutputType = {
+    quantity_change: number | null
+    quantity_before: number | null
+    quantity_after: number | null
+  }
+
+  export type Seller_stock_adjustmentsMinAggregateOutputType = {
+    adjustment_id: string | null
+    business_id: string | null
+    tenant_id: string | null
+    item_id: string | null
+    variant_id: string | null
+    import_job_id: string | null
+    adjustment_type: string | null
+    quantity_change: number | null
+    quantity_before: number | null
+    quantity_after: number | null
+    reason: string | null
+    source: string | null
+    reference: string | null
+    note: string | null
+    created_by: string | null
+    created_at: Date | null
+  }
+
+  export type Seller_stock_adjustmentsMaxAggregateOutputType = {
+    adjustment_id: string | null
+    business_id: string | null
+    tenant_id: string | null
+    item_id: string | null
+    variant_id: string | null
+    import_job_id: string | null
+    adjustment_type: string | null
+    quantity_change: number | null
+    quantity_before: number | null
+    quantity_after: number | null
+    reason: string | null
+    source: string | null
+    reference: string | null
+    note: string | null
+    created_by: string | null
+    created_at: Date | null
+  }
+
+  export type Seller_stock_adjustmentsCountAggregateOutputType = {
+    adjustment_id: number
+    business_id: number
+    tenant_id: number
+    item_id: number
+    variant_id: number
+    import_job_id: number
+    adjustment_type: number
+    quantity_change: number
+    quantity_before: number
+    quantity_after: number
+    reason: number
+    source: number
+    reference: number
+    note: number
+    created_by: number
+    metadata: number
+    created_at: number
+    _all: number
+  }
+
+
+  export type Seller_stock_adjustmentsAvgAggregateInputType = {
+    quantity_change?: true
+    quantity_before?: true
+    quantity_after?: true
+  }
+
+  export type Seller_stock_adjustmentsSumAggregateInputType = {
+    quantity_change?: true
+    quantity_before?: true
+    quantity_after?: true
+  }
+
+  export type Seller_stock_adjustmentsMinAggregateInputType = {
+    adjustment_id?: true
+    business_id?: true
+    tenant_id?: true
+    item_id?: true
+    variant_id?: true
+    import_job_id?: true
+    adjustment_type?: true
+    quantity_change?: true
+    quantity_before?: true
+    quantity_after?: true
+    reason?: true
+    source?: true
+    reference?: true
+    note?: true
+    created_by?: true
+    created_at?: true
+  }
+
+  export type Seller_stock_adjustmentsMaxAggregateInputType = {
+    adjustment_id?: true
+    business_id?: true
+    tenant_id?: true
+    item_id?: true
+    variant_id?: true
+    import_job_id?: true
+    adjustment_type?: true
+    quantity_change?: true
+    quantity_before?: true
+    quantity_after?: true
+    reason?: true
+    source?: true
+    reference?: true
+    note?: true
+    created_by?: true
+    created_at?: true
+  }
+
+  export type Seller_stock_adjustmentsCountAggregateInputType = {
+    adjustment_id?: true
+    business_id?: true
+    tenant_id?: true
+    item_id?: true
+    variant_id?: true
+    import_job_id?: true
+    adjustment_type?: true
+    quantity_change?: true
+    quantity_before?: true
+    quantity_after?: true
+    reason?: true
+    source?: true
+    reference?: true
+    note?: true
+    created_by?: true
+    metadata?: true
+    created_at?: true
+    _all?: true
+  }
+
+  export type Seller_stock_adjustmentsAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which seller_stock_adjustments to aggregate.
+     */
+    where?: seller_stock_adjustmentsWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of seller_stock_adjustments to fetch.
+     */
+    orderBy?: seller_stock_adjustmentsOrderByWithRelationInput | seller_stock_adjustmentsOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: seller_stock_adjustmentsWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` seller_stock_adjustments from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` seller_stock_adjustments.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned seller_stock_adjustments
+    **/
+    _count?: true | Seller_stock_adjustmentsCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: Seller_stock_adjustmentsAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: Seller_stock_adjustmentsSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: Seller_stock_adjustmentsMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: Seller_stock_adjustmentsMaxAggregateInputType
+  }
+
+  export type GetSeller_stock_adjustmentsAggregateType<T extends Seller_stock_adjustmentsAggregateArgs> = {
+        [P in keyof T & keyof AggregateSeller_stock_adjustments]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateSeller_stock_adjustments[P]>
+      : GetScalarType<T[P], AggregateSeller_stock_adjustments[P]>
+  }
+
+
+
+
+  export type seller_stock_adjustmentsGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: seller_stock_adjustmentsWhereInput
+    orderBy?: seller_stock_adjustmentsOrderByWithAggregationInput | seller_stock_adjustmentsOrderByWithAggregationInput[]
+    by: Seller_stock_adjustmentsScalarFieldEnum[] | Seller_stock_adjustmentsScalarFieldEnum
+    having?: seller_stock_adjustmentsScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: Seller_stock_adjustmentsCountAggregateInputType | true
+    _avg?: Seller_stock_adjustmentsAvgAggregateInputType
+    _sum?: Seller_stock_adjustmentsSumAggregateInputType
+    _min?: Seller_stock_adjustmentsMinAggregateInputType
+    _max?: Seller_stock_adjustmentsMaxAggregateInputType
+  }
+
+  export type Seller_stock_adjustmentsGroupByOutputType = {
+    adjustment_id: string
+    business_id: string
+    tenant_id: string
+    item_id: string
+    variant_id: string | null
+    import_job_id: string | null
+    adjustment_type: string
+    quantity_change: number
+    quantity_before: number
+    quantity_after: number
+    reason: string
+    source: string
+    reference: string | null
+    note: string | null
+    created_by: string | null
+    metadata: JsonValue | null
+    created_at: Date
+    _count: Seller_stock_adjustmentsCountAggregateOutputType | null
+    _avg: Seller_stock_adjustmentsAvgAggregateOutputType | null
+    _sum: Seller_stock_adjustmentsSumAggregateOutputType | null
+    _min: Seller_stock_adjustmentsMinAggregateOutputType | null
+    _max: Seller_stock_adjustmentsMaxAggregateOutputType | null
+  }
+
+  type GetSeller_stock_adjustmentsGroupByPayload<T extends seller_stock_adjustmentsGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<Seller_stock_adjustmentsGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof Seller_stock_adjustmentsGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], Seller_stock_adjustmentsGroupByOutputType[P]>
+            : GetScalarType<T[P], Seller_stock_adjustmentsGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type seller_stock_adjustmentsSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    adjustment_id?: boolean
+    business_id?: boolean
+    tenant_id?: boolean
+    item_id?: boolean
+    variant_id?: boolean
+    import_job_id?: boolean
+    adjustment_type?: boolean
+    quantity_change?: boolean
+    quantity_before?: boolean
+    quantity_after?: boolean
+    reason?: boolean
+    source?: boolean
+    reference?: boolean
+    note?: boolean
+    created_by?: boolean
+    metadata?: boolean
+    created_at?: boolean
+  }, ExtArgs["result"]["seller_stock_adjustments"]>
+
+  export type seller_stock_adjustmentsSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    adjustment_id?: boolean
+    business_id?: boolean
+    tenant_id?: boolean
+    item_id?: boolean
+    variant_id?: boolean
+    import_job_id?: boolean
+    adjustment_type?: boolean
+    quantity_change?: boolean
+    quantity_before?: boolean
+    quantity_after?: boolean
+    reason?: boolean
+    source?: boolean
+    reference?: boolean
+    note?: boolean
+    created_by?: boolean
+    metadata?: boolean
+    created_at?: boolean
+  }, ExtArgs["result"]["seller_stock_adjustments"]>
+
+  export type seller_stock_adjustmentsSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    adjustment_id?: boolean
+    business_id?: boolean
+    tenant_id?: boolean
+    item_id?: boolean
+    variant_id?: boolean
+    import_job_id?: boolean
+    adjustment_type?: boolean
+    quantity_change?: boolean
+    quantity_before?: boolean
+    quantity_after?: boolean
+    reason?: boolean
+    source?: boolean
+    reference?: boolean
+    note?: boolean
+    created_by?: boolean
+    metadata?: boolean
+    created_at?: boolean
+  }, ExtArgs["result"]["seller_stock_adjustments"]>
+
+  export type seller_stock_adjustmentsSelectScalar = {
+    adjustment_id?: boolean
+    business_id?: boolean
+    tenant_id?: boolean
+    item_id?: boolean
+    variant_id?: boolean
+    import_job_id?: boolean
+    adjustment_type?: boolean
+    quantity_change?: boolean
+    quantity_before?: boolean
+    quantity_after?: boolean
+    reason?: boolean
+    source?: boolean
+    reference?: boolean
+    note?: boolean
+    created_by?: boolean
+    metadata?: boolean
+    created_at?: boolean
+  }
+
+  export type seller_stock_adjustmentsOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"adjustment_id" | "business_id" | "tenant_id" | "item_id" | "variant_id" | "import_job_id" | "adjustment_type" | "quantity_change" | "quantity_before" | "quantity_after" | "reason" | "source" | "reference" | "note" | "created_by" | "metadata" | "created_at", ExtArgs["result"]["seller_stock_adjustments"]>
+
+  export type $seller_stock_adjustmentsPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "seller_stock_adjustments"
+    objects: {}
+    scalars: $Extensions.GetPayloadResult<{
+      adjustment_id: string
+      business_id: string
+      tenant_id: string
+      item_id: string
+      variant_id: string | null
+      import_job_id: string | null
+      adjustment_type: string
+      quantity_change: number
+      quantity_before: number
+      quantity_after: number
+      reason: string
+      source: string
+      reference: string | null
+      note: string | null
+      created_by: string | null
+      metadata: Prisma.JsonValue | null
+      created_at: Date
+    }, ExtArgs["result"]["seller_stock_adjustments"]>
+    composites: {}
+  }
+
+  type seller_stock_adjustmentsGetPayload<S extends boolean | null | undefined | seller_stock_adjustmentsDefaultArgs> = $Result.GetResult<Prisma.$seller_stock_adjustmentsPayload, S>
+
+  type seller_stock_adjustmentsCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<seller_stock_adjustmentsFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: Seller_stock_adjustmentsCountAggregateInputType | true
+    }
+
+  export interface seller_stock_adjustmentsDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['seller_stock_adjustments'], meta: { name: 'seller_stock_adjustments' } }
+    /**
+     * Find zero or one Seller_stock_adjustments that matches the filter.
+     * @param {seller_stock_adjustmentsFindUniqueArgs} args - Arguments to find a Seller_stock_adjustments
+     * @example
+     * // Get one Seller_stock_adjustments
+     * const seller_stock_adjustments = await prisma.seller_stock_adjustments.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends seller_stock_adjustmentsFindUniqueArgs>(args: SelectSubset<T, seller_stock_adjustmentsFindUniqueArgs<ExtArgs>>): Prisma__seller_stock_adjustmentsClient<$Result.GetResult<Prisma.$seller_stock_adjustmentsPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one Seller_stock_adjustments that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {seller_stock_adjustmentsFindUniqueOrThrowArgs} args - Arguments to find a Seller_stock_adjustments
+     * @example
+     * // Get one Seller_stock_adjustments
+     * const seller_stock_adjustments = await prisma.seller_stock_adjustments.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends seller_stock_adjustmentsFindUniqueOrThrowArgs>(args: SelectSubset<T, seller_stock_adjustmentsFindUniqueOrThrowArgs<ExtArgs>>): Prisma__seller_stock_adjustmentsClient<$Result.GetResult<Prisma.$seller_stock_adjustmentsPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Seller_stock_adjustments that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {seller_stock_adjustmentsFindFirstArgs} args - Arguments to find a Seller_stock_adjustments
+     * @example
+     * // Get one Seller_stock_adjustments
+     * const seller_stock_adjustments = await prisma.seller_stock_adjustments.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends seller_stock_adjustmentsFindFirstArgs>(args?: SelectSubset<T, seller_stock_adjustmentsFindFirstArgs<ExtArgs>>): Prisma__seller_stock_adjustmentsClient<$Result.GetResult<Prisma.$seller_stock_adjustmentsPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Seller_stock_adjustments that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {seller_stock_adjustmentsFindFirstOrThrowArgs} args - Arguments to find a Seller_stock_adjustments
+     * @example
+     * // Get one Seller_stock_adjustments
+     * const seller_stock_adjustments = await prisma.seller_stock_adjustments.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends seller_stock_adjustmentsFindFirstOrThrowArgs>(args?: SelectSubset<T, seller_stock_adjustmentsFindFirstOrThrowArgs<ExtArgs>>): Prisma__seller_stock_adjustmentsClient<$Result.GetResult<Prisma.$seller_stock_adjustmentsPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more Seller_stock_adjustments that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {seller_stock_adjustmentsFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all Seller_stock_adjustments
+     * const seller_stock_adjustments = await prisma.seller_stock_adjustments.findMany()
+     * 
+     * // Get first 10 Seller_stock_adjustments
+     * const seller_stock_adjustments = await prisma.seller_stock_adjustments.findMany({ take: 10 })
+     * 
+     * // Only select the `adjustment_id`
+     * const seller_stock_adjustmentsWithAdjustment_idOnly = await prisma.seller_stock_adjustments.findMany({ select: { adjustment_id: true } })
+     * 
+     */
+    findMany<T extends seller_stock_adjustmentsFindManyArgs>(args?: SelectSubset<T, seller_stock_adjustmentsFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$seller_stock_adjustmentsPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a Seller_stock_adjustments.
+     * @param {seller_stock_adjustmentsCreateArgs} args - Arguments to create a Seller_stock_adjustments.
+     * @example
+     * // Create one Seller_stock_adjustments
+     * const Seller_stock_adjustments = await prisma.seller_stock_adjustments.create({
+     *   data: {
+     *     // ... data to create a Seller_stock_adjustments
+     *   }
+     * })
+     * 
+     */
+    create<T extends seller_stock_adjustmentsCreateArgs>(args: SelectSubset<T, seller_stock_adjustmentsCreateArgs<ExtArgs>>): Prisma__seller_stock_adjustmentsClient<$Result.GetResult<Prisma.$seller_stock_adjustmentsPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many Seller_stock_adjustments.
+     * @param {seller_stock_adjustmentsCreateManyArgs} args - Arguments to create many Seller_stock_adjustments.
+     * @example
+     * // Create many Seller_stock_adjustments
+     * const seller_stock_adjustments = await prisma.seller_stock_adjustments.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends seller_stock_adjustmentsCreateManyArgs>(args?: SelectSubset<T, seller_stock_adjustmentsCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many Seller_stock_adjustments and returns the data saved in the database.
+     * @param {seller_stock_adjustmentsCreateManyAndReturnArgs} args - Arguments to create many Seller_stock_adjustments.
+     * @example
+     * // Create many Seller_stock_adjustments
+     * const seller_stock_adjustments = await prisma.seller_stock_adjustments.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many Seller_stock_adjustments and only return the `adjustment_id`
+     * const seller_stock_adjustmentsWithAdjustment_idOnly = await prisma.seller_stock_adjustments.createManyAndReturn({
+     *   select: { adjustment_id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends seller_stock_adjustmentsCreateManyAndReturnArgs>(args?: SelectSubset<T, seller_stock_adjustmentsCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$seller_stock_adjustmentsPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a Seller_stock_adjustments.
+     * @param {seller_stock_adjustmentsDeleteArgs} args - Arguments to delete one Seller_stock_adjustments.
+     * @example
+     * // Delete one Seller_stock_adjustments
+     * const Seller_stock_adjustments = await prisma.seller_stock_adjustments.delete({
+     *   where: {
+     *     // ... filter to delete one Seller_stock_adjustments
+     *   }
+     * })
+     * 
+     */
+    delete<T extends seller_stock_adjustmentsDeleteArgs>(args: SelectSubset<T, seller_stock_adjustmentsDeleteArgs<ExtArgs>>): Prisma__seller_stock_adjustmentsClient<$Result.GetResult<Prisma.$seller_stock_adjustmentsPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one Seller_stock_adjustments.
+     * @param {seller_stock_adjustmentsUpdateArgs} args - Arguments to update one Seller_stock_adjustments.
+     * @example
+     * // Update one Seller_stock_adjustments
+     * const seller_stock_adjustments = await prisma.seller_stock_adjustments.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends seller_stock_adjustmentsUpdateArgs>(args: SelectSubset<T, seller_stock_adjustmentsUpdateArgs<ExtArgs>>): Prisma__seller_stock_adjustmentsClient<$Result.GetResult<Prisma.$seller_stock_adjustmentsPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more Seller_stock_adjustments.
+     * @param {seller_stock_adjustmentsDeleteManyArgs} args - Arguments to filter Seller_stock_adjustments to delete.
+     * @example
+     * // Delete a few Seller_stock_adjustments
+     * const { count } = await prisma.seller_stock_adjustments.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends seller_stock_adjustmentsDeleteManyArgs>(args?: SelectSubset<T, seller_stock_adjustmentsDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Seller_stock_adjustments.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {seller_stock_adjustmentsUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many Seller_stock_adjustments
+     * const seller_stock_adjustments = await prisma.seller_stock_adjustments.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends seller_stock_adjustmentsUpdateManyArgs>(args: SelectSubset<T, seller_stock_adjustmentsUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Seller_stock_adjustments and returns the data updated in the database.
+     * @param {seller_stock_adjustmentsUpdateManyAndReturnArgs} args - Arguments to update many Seller_stock_adjustments.
+     * @example
+     * // Update many Seller_stock_adjustments
+     * const seller_stock_adjustments = await prisma.seller_stock_adjustments.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more Seller_stock_adjustments and only return the `adjustment_id`
+     * const seller_stock_adjustmentsWithAdjustment_idOnly = await prisma.seller_stock_adjustments.updateManyAndReturn({
+     *   select: { adjustment_id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends seller_stock_adjustmentsUpdateManyAndReturnArgs>(args: SelectSubset<T, seller_stock_adjustmentsUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$seller_stock_adjustmentsPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one Seller_stock_adjustments.
+     * @param {seller_stock_adjustmentsUpsertArgs} args - Arguments to update or create a Seller_stock_adjustments.
+     * @example
+     * // Update or create a Seller_stock_adjustments
+     * const seller_stock_adjustments = await prisma.seller_stock_adjustments.upsert({
+     *   create: {
+     *     // ... data to create a Seller_stock_adjustments
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the Seller_stock_adjustments we want to update
+     *   }
+     * })
+     */
+    upsert<T extends seller_stock_adjustmentsUpsertArgs>(args: SelectSubset<T, seller_stock_adjustmentsUpsertArgs<ExtArgs>>): Prisma__seller_stock_adjustmentsClient<$Result.GetResult<Prisma.$seller_stock_adjustmentsPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of Seller_stock_adjustments.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {seller_stock_adjustmentsCountArgs} args - Arguments to filter Seller_stock_adjustments to count.
+     * @example
+     * // Count the number of Seller_stock_adjustments
+     * const count = await prisma.seller_stock_adjustments.count({
+     *   where: {
+     *     // ... the filter for the Seller_stock_adjustments we want to count
+     *   }
+     * })
+    **/
+    count<T extends seller_stock_adjustmentsCountArgs>(
+      args?: Subset<T, seller_stock_adjustmentsCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], Seller_stock_adjustmentsCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a Seller_stock_adjustments.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {Seller_stock_adjustmentsAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends Seller_stock_adjustmentsAggregateArgs>(args: Subset<T, Seller_stock_adjustmentsAggregateArgs>): Prisma.PrismaPromise<GetSeller_stock_adjustmentsAggregateType<T>>
+
+    /**
+     * Group by Seller_stock_adjustments.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {seller_stock_adjustmentsGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends seller_stock_adjustmentsGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: seller_stock_adjustmentsGroupByArgs['orderBy'] }
+        : { orderBy?: seller_stock_adjustmentsGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, seller_stock_adjustmentsGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetSeller_stock_adjustmentsGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the seller_stock_adjustments model
+   */
+  readonly fields: seller_stock_adjustmentsFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for seller_stock_adjustments.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__seller_stock_adjustmentsClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the seller_stock_adjustments model
+   */
+  interface seller_stock_adjustmentsFieldRefs {
+    readonly adjustment_id: FieldRef<"seller_stock_adjustments", 'String'>
+    readonly business_id: FieldRef<"seller_stock_adjustments", 'String'>
+    readonly tenant_id: FieldRef<"seller_stock_adjustments", 'String'>
+    readonly item_id: FieldRef<"seller_stock_adjustments", 'String'>
+    readonly variant_id: FieldRef<"seller_stock_adjustments", 'String'>
+    readonly import_job_id: FieldRef<"seller_stock_adjustments", 'String'>
+    readonly adjustment_type: FieldRef<"seller_stock_adjustments", 'String'>
+    readonly quantity_change: FieldRef<"seller_stock_adjustments", 'Int'>
+    readonly quantity_before: FieldRef<"seller_stock_adjustments", 'Int'>
+    readonly quantity_after: FieldRef<"seller_stock_adjustments", 'Int'>
+    readonly reason: FieldRef<"seller_stock_adjustments", 'String'>
+    readonly source: FieldRef<"seller_stock_adjustments", 'String'>
+    readonly reference: FieldRef<"seller_stock_adjustments", 'String'>
+    readonly note: FieldRef<"seller_stock_adjustments", 'String'>
+    readonly created_by: FieldRef<"seller_stock_adjustments", 'String'>
+    readonly metadata: FieldRef<"seller_stock_adjustments", 'Json'>
+    readonly created_at: FieldRef<"seller_stock_adjustments", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * seller_stock_adjustments findUnique
+   */
+  export type seller_stock_adjustmentsFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the seller_stock_adjustments
+     */
+    select?: seller_stock_adjustmentsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the seller_stock_adjustments
+     */
+    omit?: seller_stock_adjustmentsOmit<ExtArgs> | null
+    /**
+     * Filter, which seller_stock_adjustments to fetch.
+     */
+    where: seller_stock_adjustmentsWhereUniqueInput
+  }
+
+  /**
+   * seller_stock_adjustments findUniqueOrThrow
+   */
+  export type seller_stock_adjustmentsFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the seller_stock_adjustments
+     */
+    select?: seller_stock_adjustmentsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the seller_stock_adjustments
+     */
+    omit?: seller_stock_adjustmentsOmit<ExtArgs> | null
+    /**
+     * Filter, which seller_stock_adjustments to fetch.
+     */
+    where: seller_stock_adjustmentsWhereUniqueInput
+  }
+
+  /**
+   * seller_stock_adjustments findFirst
+   */
+  export type seller_stock_adjustmentsFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the seller_stock_adjustments
+     */
+    select?: seller_stock_adjustmentsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the seller_stock_adjustments
+     */
+    omit?: seller_stock_adjustmentsOmit<ExtArgs> | null
+    /**
+     * Filter, which seller_stock_adjustments to fetch.
+     */
+    where?: seller_stock_adjustmentsWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of seller_stock_adjustments to fetch.
+     */
+    orderBy?: seller_stock_adjustmentsOrderByWithRelationInput | seller_stock_adjustmentsOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for seller_stock_adjustments.
+     */
+    cursor?: seller_stock_adjustmentsWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` seller_stock_adjustments from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` seller_stock_adjustments.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of seller_stock_adjustments.
+     */
+    distinct?: Seller_stock_adjustmentsScalarFieldEnum | Seller_stock_adjustmentsScalarFieldEnum[]
+  }
+
+  /**
+   * seller_stock_adjustments findFirstOrThrow
+   */
+  export type seller_stock_adjustmentsFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the seller_stock_adjustments
+     */
+    select?: seller_stock_adjustmentsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the seller_stock_adjustments
+     */
+    omit?: seller_stock_adjustmentsOmit<ExtArgs> | null
+    /**
+     * Filter, which seller_stock_adjustments to fetch.
+     */
+    where?: seller_stock_adjustmentsWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of seller_stock_adjustments to fetch.
+     */
+    orderBy?: seller_stock_adjustmentsOrderByWithRelationInput | seller_stock_adjustmentsOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for seller_stock_adjustments.
+     */
+    cursor?: seller_stock_adjustmentsWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` seller_stock_adjustments from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` seller_stock_adjustments.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of seller_stock_adjustments.
+     */
+    distinct?: Seller_stock_adjustmentsScalarFieldEnum | Seller_stock_adjustmentsScalarFieldEnum[]
+  }
+
+  /**
+   * seller_stock_adjustments findMany
+   */
+  export type seller_stock_adjustmentsFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the seller_stock_adjustments
+     */
+    select?: seller_stock_adjustmentsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the seller_stock_adjustments
+     */
+    omit?: seller_stock_adjustmentsOmit<ExtArgs> | null
+    /**
+     * Filter, which seller_stock_adjustments to fetch.
+     */
+    where?: seller_stock_adjustmentsWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of seller_stock_adjustments to fetch.
+     */
+    orderBy?: seller_stock_adjustmentsOrderByWithRelationInput | seller_stock_adjustmentsOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing seller_stock_adjustments.
+     */
+    cursor?: seller_stock_adjustmentsWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` seller_stock_adjustments from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` seller_stock_adjustments.
+     */
+    skip?: number
+    distinct?: Seller_stock_adjustmentsScalarFieldEnum | Seller_stock_adjustmentsScalarFieldEnum[]
+  }
+
+  /**
+   * seller_stock_adjustments create
+   */
+  export type seller_stock_adjustmentsCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the seller_stock_adjustments
+     */
+    select?: seller_stock_adjustmentsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the seller_stock_adjustments
+     */
+    omit?: seller_stock_adjustmentsOmit<ExtArgs> | null
+    /**
+     * The data needed to create a seller_stock_adjustments.
+     */
+    data: XOR<seller_stock_adjustmentsCreateInput, seller_stock_adjustmentsUncheckedCreateInput>
+  }
+
+  /**
+   * seller_stock_adjustments createMany
+   */
+  export type seller_stock_adjustmentsCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many seller_stock_adjustments.
+     */
+    data: seller_stock_adjustmentsCreateManyInput | seller_stock_adjustmentsCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * seller_stock_adjustments createManyAndReturn
+   */
+  export type seller_stock_adjustmentsCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the seller_stock_adjustments
+     */
+    select?: seller_stock_adjustmentsSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the seller_stock_adjustments
+     */
+    omit?: seller_stock_adjustmentsOmit<ExtArgs> | null
+    /**
+     * The data used to create many seller_stock_adjustments.
+     */
+    data: seller_stock_adjustmentsCreateManyInput | seller_stock_adjustmentsCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * seller_stock_adjustments update
+   */
+  export type seller_stock_adjustmentsUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the seller_stock_adjustments
+     */
+    select?: seller_stock_adjustmentsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the seller_stock_adjustments
+     */
+    omit?: seller_stock_adjustmentsOmit<ExtArgs> | null
+    /**
+     * The data needed to update a seller_stock_adjustments.
+     */
+    data: XOR<seller_stock_adjustmentsUpdateInput, seller_stock_adjustmentsUncheckedUpdateInput>
+    /**
+     * Choose, which seller_stock_adjustments to update.
+     */
+    where: seller_stock_adjustmentsWhereUniqueInput
+  }
+
+  /**
+   * seller_stock_adjustments updateMany
+   */
+  export type seller_stock_adjustmentsUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update seller_stock_adjustments.
+     */
+    data: XOR<seller_stock_adjustmentsUpdateManyMutationInput, seller_stock_adjustmentsUncheckedUpdateManyInput>
+    /**
+     * Filter which seller_stock_adjustments to update
+     */
+    where?: seller_stock_adjustmentsWhereInput
+    /**
+     * Limit how many seller_stock_adjustments to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * seller_stock_adjustments updateManyAndReturn
+   */
+  export type seller_stock_adjustmentsUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the seller_stock_adjustments
+     */
+    select?: seller_stock_adjustmentsSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the seller_stock_adjustments
+     */
+    omit?: seller_stock_adjustmentsOmit<ExtArgs> | null
+    /**
+     * The data used to update seller_stock_adjustments.
+     */
+    data: XOR<seller_stock_adjustmentsUpdateManyMutationInput, seller_stock_adjustmentsUncheckedUpdateManyInput>
+    /**
+     * Filter which seller_stock_adjustments to update
+     */
+    where?: seller_stock_adjustmentsWhereInput
+    /**
+     * Limit how many seller_stock_adjustments to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * seller_stock_adjustments upsert
+   */
+  export type seller_stock_adjustmentsUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the seller_stock_adjustments
+     */
+    select?: seller_stock_adjustmentsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the seller_stock_adjustments
+     */
+    omit?: seller_stock_adjustmentsOmit<ExtArgs> | null
+    /**
+     * The filter to search for the seller_stock_adjustments to update in case it exists.
+     */
+    where: seller_stock_adjustmentsWhereUniqueInput
+    /**
+     * In case the seller_stock_adjustments found by the `where` argument doesn't exist, create a new seller_stock_adjustments with this data.
+     */
+    create: XOR<seller_stock_adjustmentsCreateInput, seller_stock_adjustmentsUncheckedCreateInput>
+    /**
+     * In case the seller_stock_adjustments was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<seller_stock_adjustmentsUpdateInput, seller_stock_adjustmentsUncheckedUpdateInput>
+  }
+
+  /**
+   * seller_stock_adjustments delete
+   */
+  export type seller_stock_adjustmentsDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the seller_stock_adjustments
+     */
+    select?: seller_stock_adjustmentsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the seller_stock_adjustments
+     */
+    omit?: seller_stock_adjustmentsOmit<ExtArgs> | null
+    /**
+     * Filter which seller_stock_adjustments to delete.
+     */
+    where: seller_stock_adjustmentsWhereUniqueInput
+  }
+
+  /**
+   * seller_stock_adjustments deleteMany
+   */
+  export type seller_stock_adjustmentsDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which seller_stock_adjustments to delete
+     */
+    where?: seller_stock_adjustmentsWhereInput
+    /**
+     * Limit how many seller_stock_adjustments to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * seller_stock_adjustments without action
+   */
+  export type seller_stock_adjustmentsDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the seller_stock_adjustments
+     */
+    select?: seller_stock_adjustmentsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the seller_stock_adjustments
+     */
+    omit?: seller_stock_adjustmentsOmit<ExtArgs> | null
+  }
+
+
+  /**
    * Model hospitality_item_details
    */
 
@@ -98093,6 +113213,10 @@ export namespace Prisma {
     tenant_id: 'tenant_id',
     business_name: 'business_name',
     business_type: 'business_type',
+    business_group: 'business_group',
+    communication_mode: 'communication_mode',
+    blueprint_seeded: 'blueprint_seeded',
+    blueprint_seeded_at: 'blueprint_seeded_at',
     whatsapp_number: 'whatsapp_number',
     created_at: 'created_at',
     updated_at: 'updated_at',
@@ -98446,6 +113570,10 @@ export namespace Prisma {
     channel: 'channel',
     content_template: 'content_template',
     sent_at: 'sent_at',
+    approved_at: 'approved_at',
+    approved_by: 'approved_by',
+    auto_approve_at: 'auto_approve_at',
+    deduplication_key: 'deduplication_key',
     target_segment: 'target_segment',
     tenant_id: 'tenant_id',
     audience_filter: 'audience_filter',
@@ -99090,6 +114218,266 @@ export namespace Prisma {
   export type Product_order_status_eventsScalarFieldEnum = (typeof Product_order_status_eventsScalarFieldEnum)[keyof typeof Product_order_status_eventsScalarFieldEnum]
 
 
+  export const Seller_owner_approvalsScalarFieldEnum: {
+    approval_id: 'approval_id',
+    business_id: 'business_id',
+    tenant_id: 'tenant_id',
+    title: 'title',
+    simple_summary: 'simple_summary',
+    action_type: 'action_type',
+    risk_level: 'risk_level',
+    status: 'status',
+    source: 'source',
+    entity_type: 'entity_type',
+    entity_id: 'entity_id',
+    requested_by: 'requested_by',
+    decided_by: 'decided_by',
+    payload: 'payload',
+    guardrails: 'guardrails',
+    due_at: 'due_at',
+    decided_at: 'decided_at',
+    expires_at: 'expires_at',
+    created_at: 'created_at',
+    updated_at: 'updated_at'
+  };
+
+  export type Seller_owner_approvalsScalarFieldEnum = (typeof Seller_owner_approvalsScalarFieldEnum)[keyof typeof Seller_owner_approvalsScalarFieldEnum]
+
+
+  export const Seller_store_settingsScalarFieldEnum: {
+    seller_store_settings_id: 'seller_store_settings_id',
+    business_id: 'business_id',
+    tenant_id: 'tenant_id',
+    store_type: 'store_type',
+    onboarding_status: 'onboarding_status',
+    default_currency: 'default_currency',
+    low_stock_threshold: 'low_stock_threshold',
+    stock_hold_minutes: 'stock_hold_minutes',
+    payment_modes: 'payment_modes',
+    delivery_modes: 'delivery_modes',
+    delivery_areas: 'delivery_areas',
+    credit_defaults: 'credit_defaults',
+    ai_guardrails: 'ai_guardrails',
+    setup_checklist: 'setup_checklist',
+    created_at: 'created_at',
+    updated_at: 'updated_at'
+  };
+
+  export type Seller_store_settingsScalarFieldEnum = (typeof Seller_store_settingsScalarFieldEnum)[keyof typeof Seller_store_settingsScalarFieldEnum]
+
+
+  export const Seller_stock_reservationsScalarFieldEnum: {
+    reservation_id: 'reservation_id',
+    business_id: 'business_id',
+    tenant_id: 'tenant_id',
+    customer_id: 'customer_id',
+    lead_id: 'lead_id',
+    item_id: 'item_id',
+    variant_id: 'variant_id',
+    quantity: 'quantity',
+    status: 'status',
+    reason: 'reason',
+    source: 'source',
+    expires_at: 'expires_at',
+    released_at: 'released_at',
+    converted_at: 'converted_at',
+    created_by: 'created_by',
+    metadata: 'metadata',
+    created_at: 'created_at',
+    updated_at: 'updated_at'
+  };
+
+  export type Seller_stock_reservationsScalarFieldEnum = (typeof Seller_stock_reservationsScalarFieldEnum)[keyof typeof Seller_stock_reservationsScalarFieldEnum]
+
+
+  export const Seller_return_casesScalarFieldEnum: {
+    return_id: 'return_id',
+    business_id: 'business_id',
+    tenant_id: 'tenant_id',
+    order_id: 'order_id',
+    product_order_id: 'product_order_id',
+    customer_id: 'customer_id',
+    return_type: 'return_type',
+    status: 'status',
+    reason: 'reason',
+    requested_amount: 'requested_amount',
+    approved_amount: 'approved_amount',
+    items: 'items',
+    resolution: 'resolution',
+    handled_by: 'handled_by',
+    created_at: 'created_at',
+    updated_at: 'updated_at',
+    closed_at: 'closed_at'
+  };
+
+  export type Seller_return_casesScalarFieldEnum = (typeof Seller_return_casesScalarFieldEnum)[keyof typeof Seller_return_casesScalarFieldEnum]
+
+
+  export const Seller_deliveriesScalarFieldEnum: {
+    delivery_id: 'delivery_id',
+    business_id: 'business_id',
+    tenant_id: 'tenant_id',
+    order_id: 'order_id',
+    product_order_id: 'product_order_id',
+    customer_id: 'customer_id',
+    status: 'status',
+    delivery_mode: 'delivery_mode',
+    delivery_person: 'delivery_person',
+    phone: 'phone',
+    address: 'address',
+    pincode: 'pincode',
+    scheduled_at: 'scheduled_at',
+    picked_at: 'picked_at',
+    delivered_at: 'delivered_at',
+    notes: 'notes',
+    metadata: 'metadata',
+    created_at: 'created_at',
+    updated_at: 'updated_at'
+  };
+
+  export type Seller_deliveriesScalarFieldEnum = (typeof Seller_deliveriesScalarFieldEnum)[keyof typeof Seller_deliveriesScalarFieldEnum]
+
+
+  export const Seller_customer_credit_accountsScalarFieldEnum: {
+    credit_account_id: 'credit_account_id',
+    business_id: 'business_id',
+    tenant_id: 'tenant_id',
+    customer_id: 'customer_id',
+    customer_name: 'customer_name',
+    phone: 'phone',
+    status: 'status',
+    credit_limit: 'credit_limit',
+    current_balance: 'current_balance',
+    due_days: 'due_days',
+    approved_by: 'approved_by',
+    approved_at: 'approved_at',
+    notes: 'notes',
+    metadata: 'metadata',
+    created_at: 'created_at',
+    updated_at: 'updated_at'
+  };
+
+  export type Seller_customer_credit_accountsScalarFieldEnum = (typeof Seller_customer_credit_accountsScalarFieldEnum)[keyof typeof Seller_customer_credit_accountsScalarFieldEnum]
+
+
+  export const Seller_customer_credit_transactionsScalarFieldEnum: {
+    credit_transaction_id: 'credit_transaction_id',
+    credit_account_id: 'credit_account_id',
+    business_id: 'business_id',
+    order_id: 'order_id',
+    transaction_type: 'transaction_type',
+    amount: 'amount',
+    balance_after: 'balance_after',
+    note: 'note',
+    created_by: 'created_by',
+    metadata: 'metadata',
+    created_at: 'created_at'
+  };
+
+  export type Seller_customer_credit_transactionsScalarFieldEnum = (typeof Seller_customer_credit_transactionsScalarFieldEnum)[keyof typeof Seller_customer_credit_transactionsScalarFieldEnum]
+
+
+  export const Seller_ai_audit_logsScalarFieldEnum: {
+    ai_audit_id: 'ai_audit_id',
+    business_id: 'business_id',
+    tenant_id: 'tenant_id',
+    ai_employee: 'ai_employee',
+    action: 'action',
+    decision: 'decision',
+    confidence: 'confidence',
+    risk_level: 'risk_level',
+    entity_type: 'entity_type',
+    entity_id: 'entity_id',
+    input_summary: 'input_summary',
+    output_summary: 'output_summary',
+    guardrails: 'guardrails',
+    owner_visible: 'owner_visible',
+    created_at: 'created_at'
+  };
+
+  export type Seller_ai_audit_logsScalarFieldEnum = (typeof Seller_ai_audit_logsScalarFieldEnum)[keyof typeof Seller_ai_audit_logsScalarFieldEnum]
+
+
+  export const Seller_product_profit_snapshotsScalarFieldEnum: {
+    profit_snapshot_id: 'profit_snapshot_id',
+    business_id: 'business_id',
+    item_id: 'item_id',
+    variant_id: 'variant_id',
+    cost_price: 'cost_price',
+    selling_price: 'selling_price',
+    gross_margin: 'gross_margin',
+    margin_percentage: 'margin_percentage',
+    source: 'source',
+    recommendation: 'recommendation',
+    created_at: 'created_at'
+  };
+
+  export type Seller_product_profit_snapshotsScalarFieldEnum = (typeof Seller_product_profit_snapshotsScalarFieldEnum)[keyof typeof Seller_product_profit_snapshotsScalarFieldEnum]
+
+
+  export const Seller_demand_signalsScalarFieldEnum: {
+    demand_signal_id: 'demand_signal_id',
+    business_id: 'business_id',
+    item_id: 'item_id',
+    category: 'category',
+    signal_type: 'signal_type',
+    signal_count: 'signal_count',
+    period_start: 'period_start',
+    period_end: 'period_end',
+    source: 'source',
+    metadata: 'metadata',
+    created_at: 'created_at'
+  };
+
+  export type Seller_demand_signalsScalarFieldEnum = (typeof Seller_demand_signalsScalarFieldEnum)[keyof typeof Seller_demand_signalsScalarFieldEnum]
+
+
+  export const Seller_product_import_jobsScalarFieldEnum: {
+    import_job_id: 'import_job_id',
+    business_id: 'business_id',
+    tenant_id: 'tenant_id',
+    source: 'source',
+    status: 'status',
+    total_rows: 'total_rows',
+    created_count: 'created_count',
+    updated_count: 'updated_count',
+    skipped_count: 'skipped_count',
+    failed_count: 'failed_count',
+    errors: 'errors',
+    summary: 'summary',
+    created_by: 'created_by',
+    started_at: 'started_at',
+    finished_at: 'finished_at',
+    created_at: 'created_at',
+    updated_at: 'updated_at'
+  };
+
+  export type Seller_product_import_jobsScalarFieldEnum = (typeof Seller_product_import_jobsScalarFieldEnum)[keyof typeof Seller_product_import_jobsScalarFieldEnum]
+
+
+  export const Seller_stock_adjustmentsScalarFieldEnum: {
+    adjustment_id: 'adjustment_id',
+    business_id: 'business_id',
+    tenant_id: 'tenant_id',
+    item_id: 'item_id',
+    variant_id: 'variant_id',
+    import_job_id: 'import_job_id',
+    adjustment_type: 'adjustment_type',
+    quantity_change: 'quantity_change',
+    quantity_before: 'quantity_before',
+    quantity_after: 'quantity_after',
+    reason: 'reason',
+    source: 'source',
+    reference: 'reference',
+    note: 'note',
+    created_by: 'created_by',
+    metadata: 'metadata',
+    created_at: 'created_at'
+  };
+
+  export type Seller_stock_adjustmentsScalarFieldEnum = (typeof Seller_stock_adjustmentsScalarFieldEnum)[keyof typeof Seller_stock_adjustmentsScalarFieldEnum]
+
+
   export const Hospitality_item_detailsScalarFieldEnum: {
     item_id: 'item_id',
     business_id: 'business_id',
@@ -99547,6 +114935,13 @@ export namespace Prisma {
 
 
   /**
+   * Reference to a field of type 'Boolean'
+   */
+  export type BooleanFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Boolean'>
+    
+
+
+  /**
    * Reference to a field of type 'DateTime'
    */
   export type DateTimeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DateTime'>
@@ -99557,13 +114952,6 @@ export namespace Prisma {
    * Reference to a field of type 'DateTime[]'
    */
   export type ListDateTimeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DateTime[]'>
-    
-
-
-  /**
-   * Reference to a field of type 'Boolean'
-   */
-  export type BooleanFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Boolean'>
     
 
 
@@ -99662,6 +115050,10 @@ export namespace Prisma {
     tenant_id?: UuidFilter<"businesses"> | string
     business_name?: StringFilter<"businesses"> | string
     business_type?: StringNullableFilter<"businesses"> | string | null
+    business_group?: StringNullableFilter<"businesses"> | string | null
+    communication_mode?: StringFilter<"businesses"> | string
+    blueprint_seeded?: BoolFilter<"businesses"> | boolean
+    blueprint_seeded_at?: DateTimeNullableFilter<"businesses"> | Date | string | null
     whatsapp_number?: StringNullableFilter<"businesses"> | string | null
     created_at?: DateTimeFilter<"businesses"> | Date | string
     updated_at?: DateTimeFilter<"businesses"> | Date | string
@@ -99713,6 +115105,10 @@ export namespace Prisma {
     tenant_id?: SortOrder
     business_name?: SortOrder
     business_type?: SortOrderInput | SortOrder
+    business_group?: SortOrderInput | SortOrder
+    communication_mode?: SortOrder
+    blueprint_seeded?: SortOrder
+    blueprint_seeded_at?: SortOrderInput | SortOrder
     whatsapp_number?: SortOrderInput | SortOrder
     created_at?: SortOrder
     updated_at?: SortOrder
@@ -99768,6 +115164,10 @@ export namespace Prisma {
     tenant_id?: UuidFilter<"businesses"> | string
     business_name?: StringFilter<"businesses"> | string
     business_type?: StringNullableFilter<"businesses"> | string | null
+    business_group?: StringNullableFilter<"businesses"> | string | null
+    communication_mode?: StringFilter<"businesses"> | string
+    blueprint_seeded?: BoolFilter<"businesses"> | boolean
+    blueprint_seeded_at?: DateTimeNullableFilter<"businesses"> | Date | string | null
     whatsapp_number?: StringNullableFilter<"businesses"> | string | null
     created_at?: DateTimeFilter<"businesses"> | Date | string
     updated_at?: DateTimeFilter<"businesses"> | Date | string
@@ -99818,6 +115218,10 @@ export namespace Prisma {
     tenant_id?: SortOrder
     business_name?: SortOrder
     business_type?: SortOrderInput | SortOrder
+    business_group?: SortOrderInput | SortOrder
+    communication_mode?: SortOrder
+    blueprint_seeded?: SortOrder
+    blueprint_seeded_at?: SortOrderInput | SortOrder
     whatsapp_number?: SortOrderInput | SortOrder
     created_at?: SortOrder
     updated_at?: SortOrder
@@ -99844,6 +115248,10 @@ export namespace Prisma {
     tenant_id?: UuidWithAggregatesFilter<"businesses"> | string
     business_name?: StringWithAggregatesFilter<"businesses"> | string
     business_type?: StringNullableWithAggregatesFilter<"businesses"> | string | null
+    business_group?: StringNullableWithAggregatesFilter<"businesses"> | string | null
+    communication_mode?: StringWithAggregatesFilter<"businesses"> | string
+    blueprint_seeded?: BoolWithAggregatesFilter<"businesses"> | boolean
+    blueprint_seeded_at?: DateTimeNullableWithAggregatesFilter<"businesses"> | Date | string | null
     whatsapp_number?: StringNullableWithAggregatesFilter<"businesses"> | string | null
     created_at?: DateTimeWithAggregatesFilter<"businesses"> | Date | string
     updated_at?: DateTimeWithAggregatesFilter<"businesses"> | Date | string
@@ -101677,6 +117085,10 @@ export namespace Prisma {
     channel?: StringFilter<"campaigns"> | string
     content_template?: StringNullableFilter<"campaigns"> | string | null
     sent_at?: DateTimeNullableFilter<"campaigns"> | Date | string | null
+    approved_at?: DateTimeNullableFilter<"campaigns"> | Date | string | null
+    approved_by?: StringNullableFilter<"campaigns"> | string | null
+    auto_approve_at?: DateTimeNullableFilter<"campaigns"> | Date | string | null
+    deduplication_key?: StringNullableFilter<"campaigns"> | string | null
     target_segment?: JsonNullableFilter<"campaigns">
     tenant_id?: UuidFilter<"campaigns"> | string
     audience_filter?: JsonNullableFilter<"campaigns">
@@ -101710,6 +117122,10 @@ export namespace Prisma {
     channel?: SortOrder
     content_template?: SortOrderInput | SortOrder
     sent_at?: SortOrderInput | SortOrder
+    approved_at?: SortOrderInput | SortOrder
+    approved_by?: SortOrderInput | SortOrder
+    auto_approve_at?: SortOrderInput | SortOrder
+    deduplication_key?: SortOrderInput | SortOrder
     target_segment?: SortOrderInput | SortOrder
     tenant_id?: SortOrder
     audience_filter?: SortOrderInput | SortOrder
@@ -101734,6 +117150,7 @@ export namespace Prisma {
 
   export type campaignsWhereUniqueInput = Prisma.AtLeast<{
     campaign_id?: string
+    deduplication_key?: string
     AND?: campaignsWhereInput | campaignsWhereInput[]
     OR?: campaignsWhereInput[]
     NOT?: campaignsWhereInput | campaignsWhereInput[]
@@ -101746,6 +117163,9 @@ export namespace Prisma {
     channel?: StringFilter<"campaigns"> | string
     content_template?: StringNullableFilter<"campaigns"> | string | null
     sent_at?: DateTimeNullableFilter<"campaigns"> | Date | string | null
+    approved_at?: DateTimeNullableFilter<"campaigns"> | Date | string | null
+    approved_by?: StringNullableFilter<"campaigns"> | string | null
+    auto_approve_at?: DateTimeNullableFilter<"campaigns"> | Date | string | null
     target_segment?: JsonNullableFilter<"campaigns">
     tenant_id?: UuidFilter<"campaigns"> | string
     audience_filter?: JsonNullableFilter<"campaigns">
@@ -101766,7 +117186,7 @@ export namespace Prisma {
     whatsapp_template_language?: StringNullableFilter<"campaigns"> | string | null
     whatsapp_template_name?: StringNullableFilter<"campaigns"> | string | null
     notification_templates?: XOR<Notification_templatesNullableScalarRelationFilter, notification_templatesWhereInput> | null
-  }, "campaign_id">
+  }, "campaign_id" | "deduplication_key">
 
   export type campaignsOrderByWithAggregationInput = {
     campaign_id?: SortOrder
@@ -101779,6 +117199,10 @@ export namespace Prisma {
     channel?: SortOrder
     content_template?: SortOrderInput | SortOrder
     sent_at?: SortOrderInput | SortOrder
+    approved_at?: SortOrderInput | SortOrder
+    approved_by?: SortOrderInput | SortOrder
+    auto_approve_at?: SortOrderInput | SortOrder
+    deduplication_key?: SortOrderInput | SortOrder
     target_segment?: SortOrderInput | SortOrder
     tenant_id?: SortOrder
     audience_filter?: SortOrderInput | SortOrder
@@ -101819,6 +117243,10 @@ export namespace Prisma {
     channel?: StringWithAggregatesFilter<"campaigns"> | string
     content_template?: StringNullableWithAggregatesFilter<"campaigns"> | string | null
     sent_at?: DateTimeNullableWithAggregatesFilter<"campaigns"> | Date | string | null
+    approved_at?: DateTimeNullableWithAggregatesFilter<"campaigns"> | Date | string | null
+    approved_by?: StringNullableWithAggregatesFilter<"campaigns"> | string | null
+    auto_approve_at?: DateTimeNullableWithAggregatesFilter<"campaigns"> | Date | string | null
+    deduplication_key?: StringNullableWithAggregatesFilter<"campaigns"> | string | null
     target_segment?: JsonNullableWithAggregatesFilter<"campaigns">
     tenant_id?: UuidWithAggregatesFilter<"campaigns"> | string
     audience_filter?: JsonNullableWithAggregatesFilter<"campaigns">
@@ -105163,6 +120591,1291 @@ export namespace Prisma {
     created_at?: DateTimeWithAggregatesFilter<"product_order_status_events"> | Date | string
   }
 
+  export type seller_owner_approvalsWhereInput = {
+    AND?: seller_owner_approvalsWhereInput | seller_owner_approvalsWhereInput[]
+    OR?: seller_owner_approvalsWhereInput[]
+    NOT?: seller_owner_approvalsWhereInput | seller_owner_approvalsWhereInput[]
+    approval_id?: UuidFilter<"seller_owner_approvals"> | string
+    business_id?: UuidFilter<"seller_owner_approvals"> | string
+    tenant_id?: UuidNullableFilter<"seller_owner_approvals"> | string | null
+    title?: StringFilter<"seller_owner_approvals"> | string
+    simple_summary?: StringNullableFilter<"seller_owner_approvals"> | string | null
+    action_type?: StringFilter<"seller_owner_approvals"> | string
+    risk_level?: StringFilter<"seller_owner_approvals"> | string
+    status?: StringFilter<"seller_owner_approvals"> | string
+    source?: StringFilter<"seller_owner_approvals"> | string
+    entity_type?: StringNullableFilter<"seller_owner_approvals"> | string | null
+    entity_id?: StringNullableFilter<"seller_owner_approvals"> | string | null
+    requested_by?: UuidNullableFilter<"seller_owner_approvals"> | string | null
+    decided_by?: UuidNullableFilter<"seller_owner_approvals"> | string | null
+    payload?: JsonNullableFilter<"seller_owner_approvals">
+    guardrails?: JsonNullableFilter<"seller_owner_approvals">
+    due_at?: DateTimeNullableFilter<"seller_owner_approvals"> | Date | string | null
+    decided_at?: DateTimeNullableFilter<"seller_owner_approvals"> | Date | string | null
+    expires_at?: DateTimeNullableFilter<"seller_owner_approvals"> | Date | string | null
+    created_at?: DateTimeFilter<"seller_owner_approvals"> | Date | string
+    updated_at?: DateTimeFilter<"seller_owner_approvals"> | Date | string
+  }
+
+  export type seller_owner_approvalsOrderByWithRelationInput = {
+    approval_id?: SortOrder
+    business_id?: SortOrder
+    tenant_id?: SortOrderInput | SortOrder
+    title?: SortOrder
+    simple_summary?: SortOrderInput | SortOrder
+    action_type?: SortOrder
+    risk_level?: SortOrder
+    status?: SortOrder
+    source?: SortOrder
+    entity_type?: SortOrderInput | SortOrder
+    entity_id?: SortOrderInput | SortOrder
+    requested_by?: SortOrderInput | SortOrder
+    decided_by?: SortOrderInput | SortOrder
+    payload?: SortOrderInput | SortOrder
+    guardrails?: SortOrderInput | SortOrder
+    due_at?: SortOrderInput | SortOrder
+    decided_at?: SortOrderInput | SortOrder
+    expires_at?: SortOrderInput | SortOrder
+    created_at?: SortOrder
+    updated_at?: SortOrder
+  }
+
+  export type seller_owner_approvalsWhereUniqueInput = Prisma.AtLeast<{
+    approval_id?: string
+    AND?: seller_owner_approvalsWhereInput | seller_owner_approvalsWhereInput[]
+    OR?: seller_owner_approvalsWhereInput[]
+    NOT?: seller_owner_approvalsWhereInput | seller_owner_approvalsWhereInput[]
+    business_id?: UuidFilter<"seller_owner_approvals"> | string
+    tenant_id?: UuidNullableFilter<"seller_owner_approvals"> | string | null
+    title?: StringFilter<"seller_owner_approvals"> | string
+    simple_summary?: StringNullableFilter<"seller_owner_approvals"> | string | null
+    action_type?: StringFilter<"seller_owner_approvals"> | string
+    risk_level?: StringFilter<"seller_owner_approvals"> | string
+    status?: StringFilter<"seller_owner_approvals"> | string
+    source?: StringFilter<"seller_owner_approvals"> | string
+    entity_type?: StringNullableFilter<"seller_owner_approvals"> | string | null
+    entity_id?: StringNullableFilter<"seller_owner_approvals"> | string | null
+    requested_by?: UuidNullableFilter<"seller_owner_approvals"> | string | null
+    decided_by?: UuidNullableFilter<"seller_owner_approvals"> | string | null
+    payload?: JsonNullableFilter<"seller_owner_approvals">
+    guardrails?: JsonNullableFilter<"seller_owner_approvals">
+    due_at?: DateTimeNullableFilter<"seller_owner_approvals"> | Date | string | null
+    decided_at?: DateTimeNullableFilter<"seller_owner_approvals"> | Date | string | null
+    expires_at?: DateTimeNullableFilter<"seller_owner_approvals"> | Date | string | null
+    created_at?: DateTimeFilter<"seller_owner_approvals"> | Date | string
+    updated_at?: DateTimeFilter<"seller_owner_approvals"> | Date | string
+  }, "approval_id">
+
+  export type seller_owner_approvalsOrderByWithAggregationInput = {
+    approval_id?: SortOrder
+    business_id?: SortOrder
+    tenant_id?: SortOrderInput | SortOrder
+    title?: SortOrder
+    simple_summary?: SortOrderInput | SortOrder
+    action_type?: SortOrder
+    risk_level?: SortOrder
+    status?: SortOrder
+    source?: SortOrder
+    entity_type?: SortOrderInput | SortOrder
+    entity_id?: SortOrderInput | SortOrder
+    requested_by?: SortOrderInput | SortOrder
+    decided_by?: SortOrderInput | SortOrder
+    payload?: SortOrderInput | SortOrder
+    guardrails?: SortOrderInput | SortOrder
+    due_at?: SortOrderInput | SortOrder
+    decided_at?: SortOrderInput | SortOrder
+    expires_at?: SortOrderInput | SortOrder
+    created_at?: SortOrder
+    updated_at?: SortOrder
+    _count?: seller_owner_approvalsCountOrderByAggregateInput
+    _max?: seller_owner_approvalsMaxOrderByAggregateInput
+    _min?: seller_owner_approvalsMinOrderByAggregateInput
+  }
+
+  export type seller_owner_approvalsScalarWhereWithAggregatesInput = {
+    AND?: seller_owner_approvalsScalarWhereWithAggregatesInput | seller_owner_approvalsScalarWhereWithAggregatesInput[]
+    OR?: seller_owner_approvalsScalarWhereWithAggregatesInput[]
+    NOT?: seller_owner_approvalsScalarWhereWithAggregatesInput | seller_owner_approvalsScalarWhereWithAggregatesInput[]
+    approval_id?: UuidWithAggregatesFilter<"seller_owner_approvals"> | string
+    business_id?: UuidWithAggregatesFilter<"seller_owner_approvals"> | string
+    tenant_id?: UuidNullableWithAggregatesFilter<"seller_owner_approvals"> | string | null
+    title?: StringWithAggregatesFilter<"seller_owner_approvals"> | string
+    simple_summary?: StringNullableWithAggregatesFilter<"seller_owner_approvals"> | string | null
+    action_type?: StringWithAggregatesFilter<"seller_owner_approvals"> | string
+    risk_level?: StringWithAggregatesFilter<"seller_owner_approvals"> | string
+    status?: StringWithAggregatesFilter<"seller_owner_approvals"> | string
+    source?: StringWithAggregatesFilter<"seller_owner_approvals"> | string
+    entity_type?: StringNullableWithAggregatesFilter<"seller_owner_approvals"> | string | null
+    entity_id?: StringNullableWithAggregatesFilter<"seller_owner_approvals"> | string | null
+    requested_by?: UuidNullableWithAggregatesFilter<"seller_owner_approvals"> | string | null
+    decided_by?: UuidNullableWithAggregatesFilter<"seller_owner_approvals"> | string | null
+    payload?: JsonNullableWithAggregatesFilter<"seller_owner_approvals">
+    guardrails?: JsonNullableWithAggregatesFilter<"seller_owner_approvals">
+    due_at?: DateTimeNullableWithAggregatesFilter<"seller_owner_approvals"> | Date | string | null
+    decided_at?: DateTimeNullableWithAggregatesFilter<"seller_owner_approvals"> | Date | string | null
+    expires_at?: DateTimeNullableWithAggregatesFilter<"seller_owner_approvals"> | Date | string | null
+    created_at?: DateTimeWithAggregatesFilter<"seller_owner_approvals"> | Date | string
+    updated_at?: DateTimeWithAggregatesFilter<"seller_owner_approvals"> | Date | string
+  }
+
+  export type seller_store_settingsWhereInput = {
+    AND?: seller_store_settingsWhereInput | seller_store_settingsWhereInput[]
+    OR?: seller_store_settingsWhereInput[]
+    NOT?: seller_store_settingsWhereInput | seller_store_settingsWhereInput[]
+    seller_store_settings_id?: UuidFilter<"seller_store_settings"> | string
+    business_id?: UuidFilter<"seller_store_settings"> | string
+    tenant_id?: UuidNullableFilter<"seller_store_settings"> | string | null
+    store_type?: StringFilter<"seller_store_settings"> | string
+    onboarding_status?: StringFilter<"seller_store_settings"> | string
+    default_currency?: StringFilter<"seller_store_settings"> | string
+    low_stock_threshold?: IntFilter<"seller_store_settings"> | number
+    stock_hold_minutes?: IntFilter<"seller_store_settings"> | number
+    payment_modes?: StringNullableListFilter<"seller_store_settings">
+    delivery_modes?: StringNullableListFilter<"seller_store_settings">
+    delivery_areas?: JsonNullableFilter<"seller_store_settings">
+    credit_defaults?: JsonNullableFilter<"seller_store_settings">
+    ai_guardrails?: JsonNullableFilter<"seller_store_settings">
+    setup_checklist?: JsonNullableFilter<"seller_store_settings">
+    created_at?: DateTimeFilter<"seller_store_settings"> | Date | string
+    updated_at?: DateTimeFilter<"seller_store_settings"> | Date | string
+  }
+
+  export type seller_store_settingsOrderByWithRelationInput = {
+    seller_store_settings_id?: SortOrder
+    business_id?: SortOrder
+    tenant_id?: SortOrderInput | SortOrder
+    store_type?: SortOrder
+    onboarding_status?: SortOrder
+    default_currency?: SortOrder
+    low_stock_threshold?: SortOrder
+    stock_hold_minutes?: SortOrder
+    payment_modes?: SortOrder
+    delivery_modes?: SortOrder
+    delivery_areas?: SortOrderInput | SortOrder
+    credit_defaults?: SortOrderInput | SortOrder
+    ai_guardrails?: SortOrderInput | SortOrder
+    setup_checklist?: SortOrderInput | SortOrder
+    created_at?: SortOrder
+    updated_at?: SortOrder
+  }
+
+  export type seller_store_settingsWhereUniqueInput = Prisma.AtLeast<{
+    seller_store_settings_id?: string
+    business_id?: string
+    AND?: seller_store_settingsWhereInput | seller_store_settingsWhereInput[]
+    OR?: seller_store_settingsWhereInput[]
+    NOT?: seller_store_settingsWhereInput | seller_store_settingsWhereInput[]
+    tenant_id?: UuidNullableFilter<"seller_store_settings"> | string | null
+    store_type?: StringFilter<"seller_store_settings"> | string
+    onboarding_status?: StringFilter<"seller_store_settings"> | string
+    default_currency?: StringFilter<"seller_store_settings"> | string
+    low_stock_threshold?: IntFilter<"seller_store_settings"> | number
+    stock_hold_minutes?: IntFilter<"seller_store_settings"> | number
+    payment_modes?: StringNullableListFilter<"seller_store_settings">
+    delivery_modes?: StringNullableListFilter<"seller_store_settings">
+    delivery_areas?: JsonNullableFilter<"seller_store_settings">
+    credit_defaults?: JsonNullableFilter<"seller_store_settings">
+    ai_guardrails?: JsonNullableFilter<"seller_store_settings">
+    setup_checklist?: JsonNullableFilter<"seller_store_settings">
+    created_at?: DateTimeFilter<"seller_store_settings"> | Date | string
+    updated_at?: DateTimeFilter<"seller_store_settings"> | Date | string
+  }, "seller_store_settings_id" | "business_id">
+
+  export type seller_store_settingsOrderByWithAggregationInput = {
+    seller_store_settings_id?: SortOrder
+    business_id?: SortOrder
+    tenant_id?: SortOrderInput | SortOrder
+    store_type?: SortOrder
+    onboarding_status?: SortOrder
+    default_currency?: SortOrder
+    low_stock_threshold?: SortOrder
+    stock_hold_minutes?: SortOrder
+    payment_modes?: SortOrder
+    delivery_modes?: SortOrder
+    delivery_areas?: SortOrderInput | SortOrder
+    credit_defaults?: SortOrderInput | SortOrder
+    ai_guardrails?: SortOrderInput | SortOrder
+    setup_checklist?: SortOrderInput | SortOrder
+    created_at?: SortOrder
+    updated_at?: SortOrder
+    _count?: seller_store_settingsCountOrderByAggregateInput
+    _avg?: seller_store_settingsAvgOrderByAggregateInput
+    _max?: seller_store_settingsMaxOrderByAggregateInput
+    _min?: seller_store_settingsMinOrderByAggregateInput
+    _sum?: seller_store_settingsSumOrderByAggregateInput
+  }
+
+  export type seller_store_settingsScalarWhereWithAggregatesInput = {
+    AND?: seller_store_settingsScalarWhereWithAggregatesInput | seller_store_settingsScalarWhereWithAggregatesInput[]
+    OR?: seller_store_settingsScalarWhereWithAggregatesInput[]
+    NOT?: seller_store_settingsScalarWhereWithAggregatesInput | seller_store_settingsScalarWhereWithAggregatesInput[]
+    seller_store_settings_id?: UuidWithAggregatesFilter<"seller_store_settings"> | string
+    business_id?: UuidWithAggregatesFilter<"seller_store_settings"> | string
+    tenant_id?: UuidNullableWithAggregatesFilter<"seller_store_settings"> | string | null
+    store_type?: StringWithAggregatesFilter<"seller_store_settings"> | string
+    onboarding_status?: StringWithAggregatesFilter<"seller_store_settings"> | string
+    default_currency?: StringWithAggregatesFilter<"seller_store_settings"> | string
+    low_stock_threshold?: IntWithAggregatesFilter<"seller_store_settings"> | number
+    stock_hold_minutes?: IntWithAggregatesFilter<"seller_store_settings"> | number
+    payment_modes?: StringNullableListFilter<"seller_store_settings">
+    delivery_modes?: StringNullableListFilter<"seller_store_settings">
+    delivery_areas?: JsonNullableWithAggregatesFilter<"seller_store_settings">
+    credit_defaults?: JsonNullableWithAggregatesFilter<"seller_store_settings">
+    ai_guardrails?: JsonNullableWithAggregatesFilter<"seller_store_settings">
+    setup_checklist?: JsonNullableWithAggregatesFilter<"seller_store_settings">
+    created_at?: DateTimeWithAggregatesFilter<"seller_store_settings"> | Date | string
+    updated_at?: DateTimeWithAggregatesFilter<"seller_store_settings"> | Date | string
+  }
+
+  export type seller_stock_reservationsWhereInput = {
+    AND?: seller_stock_reservationsWhereInput | seller_stock_reservationsWhereInput[]
+    OR?: seller_stock_reservationsWhereInput[]
+    NOT?: seller_stock_reservationsWhereInput | seller_stock_reservationsWhereInput[]
+    reservation_id?: UuidFilter<"seller_stock_reservations"> | string
+    business_id?: UuidFilter<"seller_stock_reservations"> | string
+    tenant_id?: UuidNullableFilter<"seller_stock_reservations"> | string | null
+    customer_id?: UuidNullableFilter<"seller_stock_reservations"> | string | null
+    lead_id?: UuidNullableFilter<"seller_stock_reservations"> | string | null
+    item_id?: UuidFilter<"seller_stock_reservations"> | string
+    variant_id?: UuidNullableFilter<"seller_stock_reservations"> | string | null
+    quantity?: IntFilter<"seller_stock_reservations"> | number
+    status?: StringFilter<"seller_stock_reservations"> | string
+    reason?: StringNullableFilter<"seller_stock_reservations"> | string | null
+    source?: StringFilter<"seller_stock_reservations"> | string
+    expires_at?: DateTimeFilter<"seller_stock_reservations"> | Date | string
+    released_at?: DateTimeNullableFilter<"seller_stock_reservations"> | Date | string | null
+    converted_at?: DateTimeNullableFilter<"seller_stock_reservations"> | Date | string | null
+    created_by?: UuidNullableFilter<"seller_stock_reservations"> | string | null
+    metadata?: JsonNullableFilter<"seller_stock_reservations">
+    created_at?: DateTimeFilter<"seller_stock_reservations"> | Date | string
+    updated_at?: DateTimeFilter<"seller_stock_reservations"> | Date | string
+  }
+
+  export type seller_stock_reservationsOrderByWithRelationInput = {
+    reservation_id?: SortOrder
+    business_id?: SortOrder
+    tenant_id?: SortOrderInput | SortOrder
+    customer_id?: SortOrderInput | SortOrder
+    lead_id?: SortOrderInput | SortOrder
+    item_id?: SortOrder
+    variant_id?: SortOrderInput | SortOrder
+    quantity?: SortOrder
+    status?: SortOrder
+    reason?: SortOrderInput | SortOrder
+    source?: SortOrder
+    expires_at?: SortOrder
+    released_at?: SortOrderInput | SortOrder
+    converted_at?: SortOrderInput | SortOrder
+    created_by?: SortOrderInput | SortOrder
+    metadata?: SortOrderInput | SortOrder
+    created_at?: SortOrder
+    updated_at?: SortOrder
+  }
+
+  export type seller_stock_reservationsWhereUniqueInput = Prisma.AtLeast<{
+    reservation_id?: string
+    AND?: seller_stock_reservationsWhereInput | seller_stock_reservationsWhereInput[]
+    OR?: seller_stock_reservationsWhereInput[]
+    NOT?: seller_stock_reservationsWhereInput | seller_stock_reservationsWhereInput[]
+    business_id?: UuidFilter<"seller_stock_reservations"> | string
+    tenant_id?: UuidNullableFilter<"seller_stock_reservations"> | string | null
+    customer_id?: UuidNullableFilter<"seller_stock_reservations"> | string | null
+    lead_id?: UuidNullableFilter<"seller_stock_reservations"> | string | null
+    item_id?: UuidFilter<"seller_stock_reservations"> | string
+    variant_id?: UuidNullableFilter<"seller_stock_reservations"> | string | null
+    quantity?: IntFilter<"seller_stock_reservations"> | number
+    status?: StringFilter<"seller_stock_reservations"> | string
+    reason?: StringNullableFilter<"seller_stock_reservations"> | string | null
+    source?: StringFilter<"seller_stock_reservations"> | string
+    expires_at?: DateTimeFilter<"seller_stock_reservations"> | Date | string
+    released_at?: DateTimeNullableFilter<"seller_stock_reservations"> | Date | string | null
+    converted_at?: DateTimeNullableFilter<"seller_stock_reservations"> | Date | string | null
+    created_by?: UuidNullableFilter<"seller_stock_reservations"> | string | null
+    metadata?: JsonNullableFilter<"seller_stock_reservations">
+    created_at?: DateTimeFilter<"seller_stock_reservations"> | Date | string
+    updated_at?: DateTimeFilter<"seller_stock_reservations"> | Date | string
+  }, "reservation_id">
+
+  export type seller_stock_reservationsOrderByWithAggregationInput = {
+    reservation_id?: SortOrder
+    business_id?: SortOrder
+    tenant_id?: SortOrderInput | SortOrder
+    customer_id?: SortOrderInput | SortOrder
+    lead_id?: SortOrderInput | SortOrder
+    item_id?: SortOrder
+    variant_id?: SortOrderInput | SortOrder
+    quantity?: SortOrder
+    status?: SortOrder
+    reason?: SortOrderInput | SortOrder
+    source?: SortOrder
+    expires_at?: SortOrder
+    released_at?: SortOrderInput | SortOrder
+    converted_at?: SortOrderInput | SortOrder
+    created_by?: SortOrderInput | SortOrder
+    metadata?: SortOrderInput | SortOrder
+    created_at?: SortOrder
+    updated_at?: SortOrder
+    _count?: seller_stock_reservationsCountOrderByAggregateInput
+    _avg?: seller_stock_reservationsAvgOrderByAggregateInput
+    _max?: seller_stock_reservationsMaxOrderByAggregateInput
+    _min?: seller_stock_reservationsMinOrderByAggregateInput
+    _sum?: seller_stock_reservationsSumOrderByAggregateInput
+  }
+
+  export type seller_stock_reservationsScalarWhereWithAggregatesInput = {
+    AND?: seller_stock_reservationsScalarWhereWithAggregatesInput | seller_stock_reservationsScalarWhereWithAggregatesInput[]
+    OR?: seller_stock_reservationsScalarWhereWithAggregatesInput[]
+    NOT?: seller_stock_reservationsScalarWhereWithAggregatesInput | seller_stock_reservationsScalarWhereWithAggregatesInput[]
+    reservation_id?: UuidWithAggregatesFilter<"seller_stock_reservations"> | string
+    business_id?: UuidWithAggregatesFilter<"seller_stock_reservations"> | string
+    tenant_id?: UuidNullableWithAggregatesFilter<"seller_stock_reservations"> | string | null
+    customer_id?: UuidNullableWithAggregatesFilter<"seller_stock_reservations"> | string | null
+    lead_id?: UuidNullableWithAggregatesFilter<"seller_stock_reservations"> | string | null
+    item_id?: UuidWithAggregatesFilter<"seller_stock_reservations"> | string
+    variant_id?: UuidNullableWithAggregatesFilter<"seller_stock_reservations"> | string | null
+    quantity?: IntWithAggregatesFilter<"seller_stock_reservations"> | number
+    status?: StringWithAggregatesFilter<"seller_stock_reservations"> | string
+    reason?: StringNullableWithAggregatesFilter<"seller_stock_reservations"> | string | null
+    source?: StringWithAggregatesFilter<"seller_stock_reservations"> | string
+    expires_at?: DateTimeWithAggregatesFilter<"seller_stock_reservations"> | Date | string
+    released_at?: DateTimeNullableWithAggregatesFilter<"seller_stock_reservations"> | Date | string | null
+    converted_at?: DateTimeNullableWithAggregatesFilter<"seller_stock_reservations"> | Date | string | null
+    created_by?: UuidNullableWithAggregatesFilter<"seller_stock_reservations"> | string | null
+    metadata?: JsonNullableWithAggregatesFilter<"seller_stock_reservations">
+    created_at?: DateTimeWithAggregatesFilter<"seller_stock_reservations"> | Date | string
+    updated_at?: DateTimeWithAggregatesFilter<"seller_stock_reservations"> | Date | string
+  }
+
+  export type seller_return_casesWhereInput = {
+    AND?: seller_return_casesWhereInput | seller_return_casesWhereInput[]
+    OR?: seller_return_casesWhereInput[]
+    NOT?: seller_return_casesWhereInput | seller_return_casesWhereInput[]
+    return_id?: UuidFilter<"seller_return_cases"> | string
+    business_id?: UuidFilter<"seller_return_cases"> | string
+    tenant_id?: UuidNullableFilter<"seller_return_cases"> | string | null
+    order_id?: UuidNullableFilter<"seller_return_cases"> | string | null
+    product_order_id?: UuidNullableFilter<"seller_return_cases"> | string | null
+    customer_id?: UuidNullableFilter<"seller_return_cases"> | string | null
+    return_type?: StringFilter<"seller_return_cases"> | string
+    status?: StringFilter<"seller_return_cases"> | string
+    reason?: StringNullableFilter<"seller_return_cases"> | string | null
+    requested_amount?: DecimalNullableFilter<"seller_return_cases"> | Decimal | DecimalJsLike | number | string | null
+    approved_amount?: DecimalNullableFilter<"seller_return_cases"> | Decimal | DecimalJsLike | number | string | null
+    items?: JsonNullableFilter<"seller_return_cases">
+    resolution?: JsonNullableFilter<"seller_return_cases">
+    handled_by?: UuidNullableFilter<"seller_return_cases"> | string | null
+    created_at?: DateTimeFilter<"seller_return_cases"> | Date | string
+    updated_at?: DateTimeFilter<"seller_return_cases"> | Date | string
+    closed_at?: DateTimeNullableFilter<"seller_return_cases"> | Date | string | null
+  }
+
+  export type seller_return_casesOrderByWithRelationInput = {
+    return_id?: SortOrder
+    business_id?: SortOrder
+    tenant_id?: SortOrderInput | SortOrder
+    order_id?: SortOrderInput | SortOrder
+    product_order_id?: SortOrderInput | SortOrder
+    customer_id?: SortOrderInput | SortOrder
+    return_type?: SortOrder
+    status?: SortOrder
+    reason?: SortOrderInput | SortOrder
+    requested_amount?: SortOrderInput | SortOrder
+    approved_amount?: SortOrderInput | SortOrder
+    items?: SortOrderInput | SortOrder
+    resolution?: SortOrderInput | SortOrder
+    handled_by?: SortOrderInput | SortOrder
+    created_at?: SortOrder
+    updated_at?: SortOrder
+    closed_at?: SortOrderInput | SortOrder
+  }
+
+  export type seller_return_casesWhereUniqueInput = Prisma.AtLeast<{
+    return_id?: string
+    AND?: seller_return_casesWhereInput | seller_return_casesWhereInput[]
+    OR?: seller_return_casesWhereInput[]
+    NOT?: seller_return_casesWhereInput | seller_return_casesWhereInput[]
+    business_id?: UuidFilter<"seller_return_cases"> | string
+    tenant_id?: UuidNullableFilter<"seller_return_cases"> | string | null
+    order_id?: UuidNullableFilter<"seller_return_cases"> | string | null
+    product_order_id?: UuidNullableFilter<"seller_return_cases"> | string | null
+    customer_id?: UuidNullableFilter<"seller_return_cases"> | string | null
+    return_type?: StringFilter<"seller_return_cases"> | string
+    status?: StringFilter<"seller_return_cases"> | string
+    reason?: StringNullableFilter<"seller_return_cases"> | string | null
+    requested_amount?: DecimalNullableFilter<"seller_return_cases"> | Decimal | DecimalJsLike | number | string | null
+    approved_amount?: DecimalNullableFilter<"seller_return_cases"> | Decimal | DecimalJsLike | number | string | null
+    items?: JsonNullableFilter<"seller_return_cases">
+    resolution?: JsonNullableFilter<"seller_return_cases">
+    handled_by?: UuidNullableFilter<"seller_return_cases"> | string | null
+    created_at?: DateTimeFilter<"seller_return_cases"> | Date | string
+    updated_at?: DateTimeFilter<"seller_return_cases"> | Date | string
+    closed_at?: DateTimeNullableFilter<"seller_return_cases"> | Date | string | null
+  }, "return_id">
+
+  export type seller_return_casesOrderByWithAggregationInput = {
+    return_id?: SortOrder
+    business_id?: SortOrder
+    tenant_id?: SortOrderInput | SortOrder
+    order_id?: SortOrderInput | SortOrder
+    product_order_id?: SortOrderInput | SortOrder
+    customer_id?: SortOrderInput | SortOrder
+    return_type?: SortOrder
+    status?: SortOrder
+    reason?: SortOrderInput | SortOrder
+    requested_amount?: SortOrderInput | SortOrder
+    approved_amount?: SortOrderInput | SortOrder
+    items?: SortOrderInput | SortOrder
+    resolution?: SortOrderInput | SortOrder
+    handled_by?: SortOrderInput | SortOrder
+    created_at?: SortOrder
+    updated_at?: SortOrder
+    closed_at?: SortOrderInput | SortOrder
+    _count?: seller_return_casesCountOrderByAggregateInput
+    _avg?: seller_return_casesAvgOrderByAggregateInput
+    _max?: seller_return_casesMaxOrderByAggregateInput
+    _min?: seller_return_casesMinOrderByAggregateInput
+    _sum?: seller_return_casesSumOrderByAggregateInput
+  }
+
+  export type seller_return_casesScalarWhereWithAggregatesInput = {
+    AND?: seller_return_casesScalarWhereWithAggregatesInput | seller_return_casesScalarWhereWithAggregatesInput[]
+    OR?: seller_return_casesScalarWhereWithAggregatesInput[]
+    NOT?: seller_return_casesScalarWhereWithAggregatesInput | seller_return_casesScalarWhereWithAggregatesInput[]
+    return_id?: UuidWithAggregatesFilter<"seller_return_cases"> | string
+    business_id?: UuidWithAggregatesFilter<"seller_return_cases"> | string
+    tenant_id?: UuidNullableWithAggregatesFilter<"seller_return_cases"> | string | null
+    order_id?: UuidNullableWithAggregatesFilter<"seller_return_cases"> | string | null
+    product_order_id?: UuidNullableWithAggregatesFilter<"seller_return_cases"> | string | null
+    customer_id?: UuidNullableWithAggregatesFilter<"seller_return_cases"> | string | null
+    return_type?: StringWithAggregatesFilter<"seller_return_cases"> | string
+    status?: StringWithAggregatesFilter<"seller_return_cases"> | string
+    reason?: StringNullableWithAggregatesFilter<"seller_return_cases"> | string | null
+    requested_amount?: DecimalNullableWithAggregatesFilter<"seller_return_cases"> | Decimal | DecimalJsLike | number | string | null
+    approved_amount?: DecimalNullableWithAggregatesFilter<"seller_return_cases"> | Decimal | DecimalJsLike | number | string | null
+    items?: JsonNullableWithAggregatesFilter<"seller_return_cases">
+    resolution?: JsonNullableWithAggregatesFilter<"seller_return_cases">
+    handled_by?: UuidNullableWithAggregatesFilter<"seller_return_cases"> | string | null
+    created_at?: DateTimeWithAggregatesFilter<"seller_return_cases"> | Date | string
+    updated_at?: DateTimeWithAggregatesFilter<"seller_return_cases"> | Date | string
+    closed_at?: DateTimeNullableWithAggregatesFilter<"seller_return_cases"> | Date | string | null
+  }
+
+  export type seller_deliveriesWhereInput = {
+    AND?: seller_deliveriesWhereInput | seller_deliveriesWhereInput[]
+    OR?: seller_deliveriesWhereInput[]
+    NOT?: seller_deliveriesWhereInput | seller_deliveriesWhereInput[]
+    delivery_id?: UuidFilter<"seller_deliveries"> | string
+    business_id?: UuidFilter<"seller_deliveries"> | string
+    tenant_id?: UuidNullableFilter<"seller_deliveries"> | string | null
+    order_id?: UuidNullableFilter<"seller_deliveries"> | string | null
+    product_order_id?: UuidNullableFilter<"seller_deliveries"> | string | null
+    customer_id?: UuidNullableFilter<"seller_deliveries"> | string | null
+    status?: StringFilter<"seller_deliveries"> | string
+    delivery_mode?: StringFilter<"seller_deliveries"> | string
+    delivery_person?: StringNullableFilter<"seller_deliveries"> | string | null
+    phone?: StringNullableFilter<"seller_deliveries"> | string | null
+    address?: StringNullableFilter<"seller_deliveries"> | string | null
+    pincode?: StringNullableFilter<"seller_deliveries"> | string | null
+    scheduled_at?: DateTimeNullableFilter<"seller_deliveries"> | Date | string | null
+    picked_at?: DateTimeNullableFilter<"seller_deliveries"> | Date | string | null
+    delivered_at?: DateTimeNullableFilter<"seller_deliveries"> | Date | string | null
+    notes?: StringNullableFilter<"seller_deliveries"> | string | null
+    metadata?: JsonNullableFilter<"seller_deliveries">
+    created_at?: DateTimeFilter<"seller_deliveries"> | Date | string
+    updated_at?: DateTimeFilter<"seller_deliveries"> | Date | string
+  }
+
+  export type seller_deliveriesOrderByWithRelationInput = {
+    delivery_id?: SortOrder
+    business_id?: SortOrder
+    tenant_id?: SortOrderInput | SortOrder
+    order_id?: SortOrderInput | SortOrder
+    product_order_id?: SortOrderInput | SortOrder
+    customer_id?: SortOrderInput | SortOrder
+    status?: SortOrder
+    delivery_mode?: SortOrder
+    delivery_person?: SortOrderInput | SortOrder
+    phone?: SortOrderInput | SortOrder
+    address?: SortOrderInput | SortOrder
+    pincode?: SortOrderInput | SortOrder
+    scheduled_at?: SortOrderInput | SortOrder
+    picked_at?: SortOrderInput | SortOrder
+    delivered_at?: SortOrderInput | SortOrder
+    notes?: SortOrderInput | SortOrder
+    metadata?: SortOrderInput | SortOrder
+    created_at?: SortOrder
+    updated_at?: SortOrder
+  }
+
+  export type seller_deliveriesWhereUniqueInput = Prisma.AtLeast<{
+    delivery_id?: string
+    AND?: seller_deliveriesWhereInput | seller_deliveriesWhereInput[]
+    OR?: seller_deliveriesWhereInput[]
+    NOT?: seller_deliveriesWhereInput | seller_deliveriesWhereInput[]
+    business_id?: UuidFilter<"seller_deliveries"> | string
+    tenant_id?: UuidNullableFilter<"seller_deliveries"> | string | null
+    order_id?: UuidNullableFilter<"seller_deliveries"> | string | null
+    product_order_id?: UuidNullableFilter<"seller_deliveries"> | string | null
+    customer_id?: UuidNullableFilter<"seller_deliveries"> | string | null
+    status?: StringFilter<"seller_deliveries"> | string
+    delivery_mode?: StringFilter<"seller_deliveries"> | string
+    delivery_person?: StringNullableFilter<"seller_deliveries"> | string | null
+    phone?: StringNullableFilter<"seller_deliveries"> | string | null
+    address?: StringNullableFilter<"seller_deliveries"> | string | null
+    pincode?: StringNullableFilter<"seller_deliveries"> | string | null
+    scheduled_at?: DateTimeNullableFilter<"seller_deliveries"> | Date | string | null
+    picked_at?: DateTimeNullableFilter<"seller_deliveries"> | Date | string | null
+    delivered_at?: DateTimeNullableFilter<"seller_deliveries"> | Date | string | null
+    notes?: StringNullableFilter<"seller_deliveries"> | string | null
+    metadata?: JsonNullableFilter<"seller_deliveries">
+    created_at?: DateTimeFilter<"seller_deliveries"> | Date | string
+    updated_at?: DateTimeFilter<"seller_deliveries"> | Date | string
+  }, "delivery_id">
+
+  export type seller_deliveriesOrderByWithAggregationInput = {
+    delivery_id?: SortOrder
+    business_id?: SortOrder
+    tenant_id?: SortOrderInput | SortOrder
+    order_id?: SortOrderInput | SortOrder
+    product_order_id?: SortOrderInput | SortOrder
+    customer_id?: SortOrderInput | SortOrder
+    status?: SortOrder
+    delivery_mode?: SortOrder
+    delivery_person?: SortOrderInput | SortOrder
+    phone?: SortOrderInput | SortOrder
+    address?: SortOrderInput | SortOrder
+    pincode?: SortOrderInput | SortOrder
+    scheduled_at?: SortOrderInput | SortOrder
+    picked_at?: SortOrderInput | SortOrder
+    delivered_at?: SortOrderInput | SortOrder
+    notes?: SortOrderInput | SortOrder
+    metadata?: SortOrderInput | SortOrder
+    created_at?: SortOrder
+    updated_at?: SortOrder
+    _count?: seller_deliveriesCountOrderByAggregateInput
+    _max?: seller_deliveriesMaxOrderByAggregateInput
+    _min?: seller_deliveriesMinOrderByAggregateInput
+  }
+
+  export type seller_deliveriesScalarWhereWithAggregatesInput = {
+    AND?: seller_deliveriesScalarWhereWithAggregatesInput | seller_deliveriesScalarWhereWithAggregatesInput[]
+    OR?: seller_deliveriesScalarWhereWithAggregatesInput[]
+    NOT?: seller_deliveriesScalarWhereWithAggregatesInput | seller_deliveriesScalarWhereWithAggregatesInput[]
+    delivery_id?: UuidWithAggregatesFilter<"seller_deliveries"> | string
+    business_id?: UuidWithAggregatesFilter<"seller_deliveries"> | string
+    tenant_id?: UuidNullableWithAggregatesFilter<"seller_deliveries"> | string | null
+    order_id?: UuidNullableWithAggregatesFilter<"seller_deliveries"> | string | null
+    product_order_id?: UuidNullableWithAggregatesFilter<"seller_deliveries"> | string | null
+    customer_id?: UuidNullableWithAggregatesFilter<"seller_deliveries"> | string | null
+    status?: StringWithAggregatesFilter<"seller_deliveries"> | string
+    delivery_mode?: StringWithAggregatesFilter<"seller_deliveries"> | string
+    delivery_person?: StringNullableWithAggregatesFilter<"seller_deliveries"> | string | null
+    phone?: StringNullableWithAggregatesFilter<"seller_deliveries"> | string | null
+    address?: StringNullableWithAggregatesFilter<"seller_deliveries"> | string | null
+    pincode?: StringNullableWithAggregatesFilter<"seller_deliveries"> | string | null
+    scheduled_at?: DateTimeNullableWithAggregatesFilter<"seller_deliveries"> | Date | string | null
+    picked_at?: DateTimeNullableWithAggregatesFilter<"seller_deliveries"> | Date | string | null
+    delivered_at?: DateTimeNullableWithAggregatesFilter<"seller_deliveries"> | Date | string | null
+    notes?: StringNullableWithAggregatesFilter<"seller_deliveries"> | string | null
+    metadata?: JsonNullableWithAggregatesFilter<"seller_deliveries">
+    created_at?: DateTimeWithAggregatesFilter<"seller_deliveries"> | Date | string
+    updated_at?: DateTimeWithAggregatesFilter<"seller_deliveries"> | Date | string
+  }
+
+  export type seller_customer_credit_accountsWhereInput = {
+    AND?: seller_customer_credit_accountsWhereInput | seller_customer_credit_accountsWhereInput[]
+    OR?: seller_customer_credit_accountsWhereInput[]
+    NOT?: seller_customer_credit_accountsWhereInput | seller_customer_credit_accountsWhereInput[]
+    credit_account_id?: UuidFilter<"seller_customer_credit_accounts"> | string
+    business_id?: UuidFilter<"seller_customer_credit_accounts"> | string
+    tenant_id?: UuidNullableFilter<"seller_customer_credit_accounts"> | string | null
+    customer_id?: UuidNullableFilter<"seller_customer_credit_accounts"> | string | null
+    customer_name?: StringNullableFilter<"seller_customer_credit_accounts"> | string | null
+    phone?: StringFilter<"seller_customer_credit_accounts"> | string
+    status?: StringFilter<"seller_customer_credit_accounts"> | string
+    credit_limit?: DecimalFilter<"seller_customer_credit_accounts"> | Decimal | DecimalJsLike | number | string
+    current_balance?: DecimalFilter<"seller_customer_credit_accounts"> | Decimal | DecimalJsLike | number | string
+    due_days?: IntFilter<"seller_customer_credit_accounts"> | number
+    approved_by?: UuidNullableFilter<"seller_customer_credit_accounts"> | string | null
+    approved_at?: DateTimeNullableFilter<"seller_customer_credit_accounts"> | Date | string | null
+    notes?: StringNullableFilter<"seller_customer_credit_accounts"> | string | null
+    metadata?: JsonNullableFilter<"seller_customer_credit_accounts">
+    created_at?: DateTimeFilter<"seller_customer_credit_accounts"> | Date | string
+    updated_at?: DateTimeFilter<"seller_customer_credit_accounts"> | Date | string
+  }
+
+  export type seller_customer_credit_accountsOrderByWithRelationInput = {
+    credit_account_id?: SortOrder
+    business_id?: SortOrder
+    tenant_id?: SortOrderInput | SortOrder
+    customer_id?: SortOrderInput | SortOrder
+    customer_name?: SortOrderInput | SortOrder
+    phone?: SortOrder
+    status?: SortOrder
+    credit_limit?: SortOrder
+    current_balance?: SortOrder
+    due_days?: SortOrder
+    approved_by?: SortOrderInput | SortOrder
+    approved_at?: SortOrderInput | SortOrder
+    notes?: SortOrderInput | SortOrder
+    metadata?: SortOrderInput | SortOrder
+    created_at?: SortOrder
+    updated_at?: SortOrder
+  }
+
+  export type seller_customer_credit_accountsWhereUniqueInput = Prisma.AtLeast<{
+    credit_account_id?: string
+    business_id_phone?: seller_customer_credit_accountsBusiness_idPhoneCompoundUniqueInput
+    AND?: seller_customer_credit_accountsWhereInput | seller_customer_credit_accountsWhereInput[]
+    OR?: seller_customer_credit_accountsWhereInput[]
+    NOT?: seller_customer_credit_accountsWhereInput | seller_customer_credit_accountsWhereInput[]
+    business_id?: UuidFilter<"seller_customer_credit_accounts"> | string
+    tenant_id?: UuidNullableFilter<"seller_customer_credit_accounts"> | string | null
+    customer_id?: UuidNullableFilter<"seller_customer_credit_accounts"> | string | null
+    customer_name?: StringNullableFilter<"seller_customer_credit_accounts"> | string | null
+    phone?: StringFilter<"seller_customer_credit_accounts"> | string
+    status?: StringFilter<"seller_customer_credit_accounts"> | string
+    credit_limit?: DecimalFilter<"seller_customer_credit_accounts"> | Decimal | DecimalJsLike | number | string
+    current_balance?: DecimalFilter<"seller_customer_credit_accounts"> | Decimal | DecimalJsLike | number | string
+    due_days?: IntFilter<"seller_customer_credit_accounts"> | number
+    approved_by?: UuidNullableFilter<"seller_customer_credit_accounts"> | string | null
+    approved_at?: DateTimeNullableFilter<"seller_customer_credit_accounts"> | Date | string | null
+    notes?: StringNullableFilter<"seller_customer_credit_accounts"> | string | null
+    metadata?: JsonNullableFilter<"seller_customer_credit_accounts">
+    created_at?: DateTimeFilter<"seller_customer_credit_accounts"> | Date | string
+    updated_at?: DateTimeFilter<"seller_customer_credit_accounts"> | Date | string
+  }, "credit_account_id" | "business_id_phone">
+
+  export type seller_customer_credit_accountsOrderByWithAggregationInput = {
+    credit_account_id?: SortOrder
+    business_id?: SortOrder
+    tenant_id?: SortOrderInput | SortOrder
+    customer_id?: SortOrderInput | SortOrder
+    customer_name?: SortOrderInput | SortOrder
+    phone?: SortOrder
+    status?: SortOrder
+    credit_limit?: SortOrder
+    current_balance?: SortOrder
+    due_days?: SortOrder
+    approved_by?: SortOrderInput | SortOrder
+    approved_at?: SortOrderInput | SortOrder
+    notes?: SortOrderInput | SortOrder
+    metadata?: SortOrderInput | SortOrder
+    created_at?: SortOrder
+    updated_at?: SortOrder
+    _count?: seller_customer_credit_accountsCountOrderByAggregateInput
+    _avg?: seller_customer_credit_accountsAvgOrderByAggregateInput
+    _max?: seller_customer_credit_accountsMaxOrderByAggregateInput
+    _min?: seller_customer_credit_accountsMinOrderByAggregateInput
+    _sum?: seller_customer_credit_accountsSumOrderByAggregateInput
+  }
+
+  export type seller_customer_credit_accountsScalarWhereWithAggregatesInput = {
+    AND?: seller_customer_credit_accountsScalarWhereWithAggregatesInput | seller_customer_credit_accountsScalarWhereWithAggregatesInput[]
+    OR?: seller_customer_credit_accountsScalarWhereWithAggregatesInput[]
+    NOT?: seller_customer_credit_accountsScalarWhereWithAggregatesInput | seller_customer_credit_accountsScalarWhereWithAggregatesInput[]
+    credit_account_id?: UuidWithAggregatesFilter<"seller_customer_credit_accounts"> | string
+    business_id?: UuidWithAggregatesFilter<"seller_customer_credit_accounts"> | string
+    tenant_id?: UuidNullableWithAggregatesFilter<"seller_customer_credit_accounts"> | string | null
+    customer_id?: UuidNullableWithAggregatesFilter<"seller_customer_credit_accounts"> | string | null
+    customer_name?: StringNullableWithAggregatesFilter<"seller_customer_credit_accounts"> | string | null
+    phone?: StringWithAggregatesFilter<"seller_customer_credit_accounts"> | string
+    status?: StringWithAggregatesFilter<"seller_customer_credit_accounts"> | string
+    credit_limit?: DecimalWithAggregatesFilter<"seller_customer_credit_accounts"> | Decimal | DecimalJsLike | number | string
+    current_balance?: DecimalWithAggregatesFilter<"seller_customer_credit_accounts"> | Decimal | DecimalJsLike | number | string
+    due_days?: IntWithAggregatesFilter<"seller_customer_credit_accounts"> | number
+    approved_by?: UuidNullableWithAggregatesFilter<"seller_customer_credit_accounts"> | string | null
+    approved_at?: DateTimeNullableWithAggregatesFilter<"seller_customer_credit_accounts"> | Date | string | null
+    notes?: StringNullableWithAggregatesFilter<"seller_customer_credit_accounts"> | string | null
+    metadata?: JsonNullableWithAggregatesFilter<"seller_customer_credit_accounts">
+    created_at?: DateTimeWithAggregatesFilter<"seller_customer_credit_accounts"> | Date | string
+    updated_at?: DateTimeWithAggregatesFilter<"seller_customer_credit_accounts"> | Date | string
+  }
+
+  export type seller_customer_credit_transactionsWhereInput = {
+    AND?: seller_customer_credit_transactionsWhereInput | seller_customer_credit_transactionsWhereInput[]
+    OR?: seller_customer_credit_transactionsWhereInput[]
+    NOT?: seller_customer_credit_transactionsWhereInput | seller_customer_credit_transactionsWhereInput[]
+    credit_transaction_id?: UuidFilter<"seller_customer_credit_transactions"> | string
+    credit_account_id?: UuidFilter<"seller_customer_credit_transactions"> | string
+    business_id?: UuidFilter<"seller_customer_credit_transactions"> | string
+    order_id?: UuidNullableFilter<"seller_customer_credit_transactions"> | string | null
+    transaction_type?: StringFilter<"seller_customer_credit_transactions"> | string
+    amount?: DecimalFilter<"seller_customer_credit_transactions"> | Decimal | DecimalJsLike | number | string
+    balance_after?: DecimalFilter<"seller_customer_credit_transactions"> | Decimal | DecimalJsLike | number | string
+    note?: StringNullableFilter<"seller_customer_credit_transactions"> | string | null
+    created_by?: UuidNullableFilter<"seller_customer_credit_transactions"> | string | null
+    metadata?: JsonNullableFilter<"seller_customer_credit_transactions">
+    created_at?: DateTimeFilter<"seller_customer_credit_transactions"> | Date | string
+  }
+
+  export type seller_customer_credit_transactionsOrderByWithRelationInput = {
+    credit_transaction_id?: SortOrder
+    credit_account_id?: SortOrder
+    business_id?: SortOrder
+    order_id?: SortOrderInput | SortOrder
+    transaction_type?: SortOrder
+    amount?: SortOrder
+    balance_after?: SortOrder
+    note?: SortOrderInput | SortOrder
+    created_by?: SortOrderInput | SortOrder
+    metadata?: SortOrderInput | SortOrder
+    created_at?: SortOrder
+  }
+
+  export type seller_customer_credit_transactionsWhereUniqueInput = Prisma.AtLeast<{
+    credit_transaction_id?: string
+    AND?: seller_customer_credit_transactionsWhereInput | seller_customer_credit_transactionsWhereInput[]
+    OR?: seller_customer_credit_transactionsWhereInput[]
+    NOT?: seller_customer_credit_transactionsWhereInput | seller_customer_credit_transactionsWhereInput[]
+    credit_account_id?: UuidFilter<"seller_customer_credit_transactions"> | string
+    business_id?: UuidFilter<"seller_customer_credit_transactions"> | string
+    order_id?: UuidNullableFilter<"seller_customer_credit_transactions"> | string | null
+    transaction_type?: StringFilter<"seller_customer_credit_transactions"> | string
+    amount?: DecimalFilter<"seller_customer_credit_transactions"> | Decimal | DecimalJsLike | number | string
+    balance_after?: DecimalFilter<"seller_customer_credit_transactions"> | Decimal | DecimalJsLike | number | string
+    note?: StringNullableFilter<"seller_customer_credit_transactions"> | string | null
+    created_by?: UuidNullableFilter<"seller_customer_credit_transactions"> | string | null
+    metadata?: JsonNullableFilter<"seller_customer_credit_transactions">
+    created_at?: DateTimeFilter<"seller_customer_credit_transactions"> | Date | string
+  }, "credit_transaction_id">
+
+  export type seller_customer_credit_transactionsOrderByWithAggregationInput = {
+    credit_transaction_id?: SortOrder
+    credit_account_id?: SortOrder
+    business_id?: SortOrder
+    order_id?: SortOrderInput | SortOrder
+    transaction_type?: SortOrder
+    amount?: SortOrder
+    balance_after?: SortOrder
+    note?: SortOrderInput | SortOrder
+    created_by?: SortOrderInput | SortOrder
+    metadata?: SortOrderInput | SortOrder
+    created_at?: SortOrder
+    _count?: seller_customer_credit_transactionsCountOrderByAggregateInput
+    _avg?: seller_customer_credit_transactionsAvgOrderByAggregateInput
+    _max?: seller_customer_credit_transactionsMaxOrderByAggregateInput
+    _min?: seller_customer_credit_transactionsMinOrderByAggregateInput
+    _sum?: seller_customer_credit_transactionsSumOrderByAggregateInput
+  }
+
+  export type seller_customer_credit_transactionsScalarWhereWithAggregatesInput = {
+    AND?: seller_customer_credit_transactionsScalarWhereWithAggregatesInput | seller_customer_credit_transactionsScalarWhereWithAggregatesInput[]
+    OR?: seller_customer_credit_transactionsScalarWhereWithAggregatesInput[]
+    NOT?: seller_customer_credit_transactionsScalarWhereWithAggregatesInput | seller_customer_credit_transactionsScalarWhereWithAggregatesInput[]
+    credit_transaction_id?: UuidWithAggregatesFilter<"seller_customer_credit_transactions"> | string
+    credit_account_id?: UuidWithAggregatesFilter<"seller_customer_credit_transactions"> | string
+    business_id?: UuidWithAggregatesFilter<"seller_customer_credit_transactions"> | string
+    order_id?: UuidNullableWithAggregatesFilter<"seller_customer_credit_transactions"> | string | null
+    transaction_type?: StringWithAggregatesFilter<"seller_customer_credit_transactions"> | string
+    amount?: DecimalWithAggregatesFilter<"seller_customer_credit_transactions"> | Decimal | DecimalJsLike | number | string
+    balance_after?: DecimalWithAggregatesFilter<"seller_customer_credit_transactions"> | Decimal | DecimalJsLike | number | string
+    note?: StringNullableWithAggregatesFilter<"seller_customer_credit_transactions"> | string | null
+    created_by?: UuidNullableWithAggregatesFilter<"seller_customer_credit_transactions"> | string | null
+    metadata?: JsonNullableWithAggregatesFilter<"seller_customer_credit_transactions">
+    created_at?: DateTimeWithAggregatesFilter<"seller_customer_credit_transactions"> | Date | string
+  }
+
+  export type seller_ai_audit_logsWhereInput = {
+    AND?: seller_ai_audit_logsWhereInput | seller_ai_audit_logsWhereInput[]
+    OR?: seller_ai_audit_logsWhereInput[]
+    NOT?: seller_ai_audit_logsWhereInput | seller_ai_audit_logsWhereInput[]
+    ai_audit_id?: UuidFilter<"seller_ai_audit_logs"> | string
+    business_id?: UuidFilter<"seller_ai_audit_logs"> | string
+    tenant_id?: UuidNullableFilter<"seller_ai_audit_logs"> | string | null
+    ai_employee?: StringFilter<"seller_ai_audit_logs"> | string
+    action?: StringFilter<"seller_ai_audit_logs"> | string
+    decision?: StringFilter<"seller_ai_audit_logs"> | string
+    confidence?: DecimalNullableFilter<"seller_ai_audit_logs"> | Decimal | DecimalJsLike | number | string | null
+    risk_level?: StringFilter<"seller_ai_audit_logs"> | string
+    entity_type?: StringNullableFilter<"seller_ai_audit_logs"> | string | null
+    entity_id?: StringNullableFilter<"seller_ai_audit_logs"> | string | null
+    input_summary?: StringNullableFilter<"seller_ai_audit_logs"> | string | null
+    output_summary?: StringNullableFilter<"seller_ai_audit_logs"> | string | null
+    guardrails?: JsonNullableFilter<"seller_ai_audit_logs">
+    owner_visible?: BoolFilter<"seller_ai_audit_logs"> | boolean
+    created_at?: DateTimeFilter<"seller_ai_audit_logs"> | Date | string
+  }
+
+  export type seller_ai_audit_logsOrderByWithRelationInput = {
+    ai_audit_id?: SortOrder
+    business_id?: SortOrder
+    tenant_id?: SortOrderInput | SortOrder
+    ai_employee?: SortOrder
+    action?: SortOrder
+    decision?: SortOrder
+    confidence?: SortOrderInput | SortOrder
+    risk_level?: SortOrder
+    entity_type?: SortOrderInput | SortOrder
+    entity_id?: SortOrderInput | SortOrder
+    input_summary?: SortOrderInput | SortOrder
+    output_summary?: SortOrderInput | SortOrder
+    guardrails?: SortOrderInput | SortOrder
+    owner_visible?: SortOrder
+    created_at?: SortOrder
+  }
+
+  export type seller_ai_audit_logsWhereUniqueInput = Prisma.AtLeast<{
+    ai_audit_id?: string
+    AND?: seller_ai_audit_logsWhereInput | seller_ai_audit_logsWhereInput[]
+    OR?: seller_ai_audit_logsWhereInput[]
+    NOT?: seller_ai_audit_logsWhereInput | seller_ai_audit_logsWhereInput[]
+    business_id?: UuidFilter<"seller_ai_audit_logs"> | string
+    tenant_id?: UuidNullableFilter<"seller_ai_audit_logs"> | string | null
+    ai_employee?: StringFilter<"seller_ai_audit_logs"> | string
+    action?: StringFilter<"seller_ai_audit_logs"> | string
+    decision?: StringFilter<"seller_ai_audit_logs"> | string
+    confidence?: DecimalNullableFilter<"seller_ai_audit_logs"> | Decimal | DecimalJsLike | number | string | null
+    risk_level?: StringFilter<"seller_ai_audit_logs"> | string
+    entity_type?: StringNullableFilter<"seller_ai_audit_logs"> | string | null
+    entity_id?: StringNullableFilter<"seller_ai_audit_logs"> | string | null
+    input_summary?: StringNullableFilter<"seller_ai_audit_logs"> | string | null
+    output_summary?: StringNullableFilter<"seller_ai_audit_logs"> | string | null
+    guardrails?: JsonNullableFilter<"seller_ai_audit_logs">
+    owner_visible?: BoolFilter<"seller_ai_audit_logs"> | boolean
+    created_at?: DateTimeFilter<"seller_ai_audit_logs"> | Date | string
+  }, "ai_audit_id">
+
+  export type seller_ai_audit_logsOrderByWithAggregationInput = {
+    ai_audit_id?: SortOrder
+    business_id?: SortOrder
+    tenant_id?: SortOrderInput | SortOrder
+    ai_employee?: SortOrder
+    action?: SortOrder
+    decision?: SortOrder
+    confidence?: SortOrderInput | SortOrder
+    risk_level?: SortOrder
+    entity_type?: SortOrderInput | SortOrder
+    entity_id?: SortOrderInput | SortOrder
+    input_summary?: SortOrderInput | SortOrder
+    output_summary?: SortOrderInput | SortOrder
+    guardrails?: SortOrderInput | SortOrder
+    owner_visible?: SortOrder
+    created_at?: SortOrder
+    _count?: seller_ai_audit_logsCountOrderByAggregateInput
+    _avg?: seller_ai_audit_logsAvgOrderByAggregateInput
+    _max?: seller_ai_audit_logsMaxOrderByAggregateInput
+    _min?: seller_ai_audit_logsMinOrderByAggregateInput
+    _sum?: seller_ai_audit_logsSumOrderByAggregateInput
+  }
+
+  export type seller_ai_audit_logsScalarWhereWithAggregatesInput = {
+    AND?: seller_ai_audit_logsScalarWhereWithAggregatesInput | seller_ai_audit_logsScalarWhereWithAggregatesInput[]
+    OR?: seller_ai_audit_logsScalarWhereWithAggregatesInput[]
+    NOT?: seller_ai_audit_logsScalarWhereWithAggregatesInput | seller_ai_audit_logsScalarWhereWithAggregatesInput[]
+    ai_audit_id?: UuidWithAggregatesFilter<"seller_ai_audit_logs"> | string
+    business_id?: UuidWithAggregatesFilter<"seller_ai_audit_logs"> | string
+    tenant_id?: UuidNullableWithAggregatesFilter<"seller_ai_audit_logs"> | string | null
+    ai_employee?: StringWithAggregatesFilter<"seller_ai_audit_logs"> | string
+    action?: StringWithAggregatesFilter<"seller_ai_audit_logs"> | string
+    decision?: StringWithAggregatesFilter<"seller_ai_audit_logs"> | string
+    confidence?: DecimalNullableWithAggregatesFilter<"seller_ai_audit_logs"> | Decimal | DecimalJsLike | number | string | null
+    risk_level?: StringWithAggregatesFilter<"seller_ai_audit_logs"> | string
+    entity_type?: StringNullableWithAggregatesFilter<"seller_ai_audit_logs"> | string | null
+    entity_id?: StringNullableWithAggregatesFilter<"seller_ai_audit_logs"> | string | null
+    input_summary?: StringNullableWithAggregatesFilter<"seller_ai_audit_logs"> | string | null
+    output_summary?: StringNullableWithAggregatesFilter<"seller_ai_audit_logs"> | string | null
+    guardrails?: JsonNullableWithAggregatesFilter<"seller_ai_audit_logs">
+    owner_visible?: BoolWithAggregatesFilter<"seller_ai_audit_logs"> | boolean
+    created_at?: DateTimeWithAggregatesFilter<"seller_ai_audit_logs"> | Date | string
+  }
+
+  export type seller_product_profit_snapshotsWhereInput = {
+    AND?: seller_product_profit_snapshotsWhereInput | seller_product_profit_snapshotsWhereInput[]
+    OR?: seller_product_profit_snapshotsWhereInput[]
+    NOT?: seller_product_profit_snapshotsWhereInput | seller_product_profit_snapshotsWhereInput[]
+    profit_snapshot_id?: UuidFilter<"seller_product_profit_snapshots"> | string
+    business_id?: UuidFilter<"seller_product_profit_snapshots"> | string
+    item_id?: UuidFilter<"seller_product_profit_snapshots"> | string
+    variant_id?: UuidNullableFilter<"seller_product_profit_snapshots"> | string | null
+    cost_price?: DecimalNullableFilter<"seller_product_profit_snapshots"> | Decimal | DecimalJsLike | number | string | null
+    selling_price?: DecimalFilter<"seller_product_profit_snapshots"> | Decimal | DecimalJsLike | number | string
+    gross_margin?: DecimalNullableFilter<"seller_product_profit_snapshots"> | Decimal | DecimalJsLike | number | string | null
+    margin_percentage?: DecimalNullableFilter<"seller_product_profit_snapshots"> | Decimal | DecimalJsLike | number | string | null
+    source?: StringFilter<"seller_product_profit_snapshots"> | string
+    recommendation?: StringNullableFilter<"seller_product_profit_snapshots"> | string | null
+    created_at?: DateTimeFilter<"seller_product_profit_snapshots"> | Date | string
+  }
+
+  export type seller_product_profit_snapshotsOrderByWithRelationInput = {
+    profit_snapshot_id?: SortOrder
+    business_id?: SortOrder
+    item_id?: SortOrder
+    variant_id?: SortOrderInput | SortOrder
+    cost_price?: SortOrderInput | SortOrder
+    selling_price?: SortOrder
+    gross_margin?: SortOrderInput | SortOrder
+    margin_percentage?: SortOrderInput | SortOrder
+    source?: SortOrder
+    recommendation?: SortOrderInput | SortOrder
+    created_at?: SortOrder
+  }
+
+  export type seller_product_profit_snapshotsWhereUniqueInput = Prisma.AtLeast<{
+    profit_snapshot_id?: string
+    AND?: seller_product_profit_snapshotsWhereInput | seller_product_profit_snapshotsWhereInput[]
+    OR?: seller_product_profit_snapshotsWhereInput[]
+    NOT?: seller_product_profit_snapshotsWhereInput | seller_product_profit_snapshotsWhereInput[]
+    business_id?: UuidFilter<"seller_product_profit_snapshots"> | string
+    item_id?: UuidFilter<"seller_product_profit_snapshots"> | string
+    variant_id?: UuidNullableFilter<"seller_product_profit_snapshots"> | string | null
+    cost_price?: DecimalNullableFilter<"seller_product_profit_snapshots"> | Decimal | DecimalJsLike | number | string | null
+    selling_price?: DecimalFilter<"seller_product_profit_snapshots"> | Decimal | DecimalJsLike | number | string
+    gross_margin?: DecimalNullableFilter<"seller_product_profit_snapshots"> | Decimal | DecimalJsLike | number | string | null
+    margin_percentage?: DecimalNullableFilter<"seller_product_profit_snapshots"> | Decimal | DecimalJsLike | number | string | null
+    source?: StringFilter<"seller_product_profit_snapshots"> | string
+    recommendation?: StringNullableFilter<"seller_product_profit_snapshots"> | string | null
+    created_at?: DateTimeFilter<"seller_product_profit_snapshots"> | Date | string
+  }, "profit_snapshot_id">
+
+  export type seller_product_profit_snapshotsOrderByWithAggregationInput = {
+    profit_snapshot_id?: SortOrder
+    business_id?: SortOrder
+    item_id?: SortOrder
+    variant_id?: SortOrderInput | SortOrder
+    cost_price?: SortOrderInput | SortOrder
+    selling_price?: SortOrder
+    gross_margin?: SortOrderInput | SortOrder
+    margin_percentage?: SortOrderInput | SortOrder
+    source?: SortOrder
+    recommendation?: SortOrderInput | SortOrder
+    created_at?: SortOrder
+    _count?: seller_product_profit_snapshotsCountOrderByAggregateInput
+    _avg?: seller_product_profit_snapshotsAvgOrderByAggregateInput
+    _max?: seller_product_profit_snapshotsMaxOrderByAggregateInput
+    _min?: seller_product_profit_snapshotsMinOrderByAggregateInput
+    _sum?: seller_product_profit_snapshotsSumOrderByAggregateInput
+  }
+
+  export type seller_product_profit_snapshotsScalarWhereWithAggregatesInput = {
+    AND?: seller_product_profit_snapshotsScalarWhereWithAggregatesInput | seller_product_profit_snapshotsScalarWhereWithAggregatesInput[]
+    OR?: seller_product_profit_snapshotsScalarWhereWithAggregatesInput[]
+    NOT?: seller_product_profit_snapshotsScalarWhereWithAggregatesInput | seller_product_profit_snapshotsScalarWhereWithAggregatesInput[]
+    profit_snapshot_id?: UuidWithAggregatesFilter<"seller_product_profit_snapshots"> | string
+    business_id?: UuidWithAggregatesFilter<"seller_product_profit_snapshots"> | string
+    item_id?: UuidWithAggregatesFilter<"seller_product_profit_snapshots"> | string
+    variant_id?: UuidNullableWithAggregatesFilter<"seller_product_profit_snapshots"> | string | null
+    cost_price?: DecimalNullableWithAggregatesFilter<"seller_product_profit_snapshots"> | Decimal | DecimalJsLike | number | string | null
+    selling_price?: DecimalWithAggregatesFilter<"seller_product_profit_snapshots"> | Decimal | DecimalJsLike | number | string
+    gross_margin?: DecimalNullableWithAggregatesFilter<"seller_product_profit_snapshots"> | Decimal | DecimalJsLike | number | string | null
+    margin_percentage?: DecimalNullableWithAggregatesFilter<"seller_product_profit_snapshots"> | Decimal | DecimalJsLike | number | string | null
+    source?: StringWithAggregatesFilter<"seller_product_profit_snapshots"> | string
+    recommendation?: StringNullableWithAggregatesFilter<"seller_product_profit_snapshots"> | string | null
+    created_at?: DateTimeWithAggregatesFilter<"seller_product_profit_snapshots"> | Date | string
+  }
+
+  export type seller_demand_signalsWhereInput = {
+    AND?: seller_demand_signalsWhereInput | seller_demand_signalsWhereInput[]
+    OR?: seller_demand_signalsWhereInput[]
+    NOT?: seller_demand_signalsWhereInput | seller_demand_signalsWhereInput[]
+    demand_signal_id?: UuidFilter<"seller_demand_signals"> | string
+    business_id?: UuidFilter<"seller_demand_signals"> | string
+    item_id?: UuidNullableFilter<"seller_demand_signals"> | string | null
+    category?: StringNullableFilter<"seller_demand_signals"> | string | null
+    signal_type?: StringFilter<"seller_demand_signals"> | string
+    signal_count?: IntFilter<"seller_demand_signals"> | number
+    period_start?: DateTimeFilter<"seller_demand_signals"> | Date | string
+    period_end?: DateTimeFilter<"seller_demand_signals"> | Date | string
+    source?: StringFilter<"seller_demand_signals"> | string
+    metadata?: JsonNullableFilter<"seller_demand_signals">
+    created_at?: DateTimeFilter<"seller_demand_signals"> | Date | string
+  }
+
+  export type seller_demand_signalsOrderByWithRelationInput = {
+    demand_signal_id?: SortOrder
+    business_id?: SortOrder
+    item_id?: SortOrderInput | SortOrder
+    category?: SortOrderInput | SortOrder
+    signal_type?: SortOrder
+    signal_count?: SortOrder
+    period_start?: SortOrder
+    period_end?: SortOrder
+    source?: SortOrder
+    metadata?: SortOrderInput | SortOrder
+    created_at?: SortOrder
+  }
+
+  export type seller_demand_signalsWhereUniqueInput = Prisma.AtLeast<{
+    demand_signal_id?: string
+    AND?: seller_demand_signalsWhereInput | seller_demand_signalsWhereInput[]
+    OR?: seller_demand_signalsWhereInput[]
+    NOT?: seller_demand_signalsWhereInput | seller_demand_signalsWhereInput[]
+    business_id?: UuidFilter<"seller_demand_signals"> | string
+    item_id?: UuidNullableFilter<"seller_demand_signals"> | string | null
+    category?: StringNullableFilter<"seller_demand_signals"> | string | null
+    signal_type?: StringFilter<"seller_demand_signals"> | string
+    signal_count?: IntFilter<"seller_demand_signals"> | number
+    period_start?: DateTimeFilter<"seller_demand_signals"> | Date | string
+    period_end?: DateTimeFilter<"seller_demand_signals"> | Date | string
+    source?: StringFilter<"seller_demand_signals"> | string
+    metadata?: JsonNullableFilter<"seller_demand_signals">
+    created_at?: DateTimeFilter<"seller_demand_signals"> | Date | string
+  }, "demand_signal_id">
+
+  export type seller_demand_signalsOrderByWithAggregationInput = {
+    demand_signal_id?: SortOrder
+    business_id?: SortOrder
+    item_id?: SortOrderInput | SortOrder
+    category?: SortOrderInput | SortOrder
+    signal_type?: SortOrder
+    signal_count?: SortOrder
+    period_start?: SortOrder
+    period_end?: SortOrder
+    source?: SortOrder
+    metadata?: SortOrderInput | SortOrder
+    created_at?: SortOrder
+    _count?: seller_demand_signalsCountOrderByAggregateInput
+    _avg?: seller_demand_signalsAvgOrderByAggregateInput
+    _max?: seller_demand_signalsMaxOrderByAggregateInput
+    _min?: seller_demand_signalsMinOrderByAggregateInput
+    _sum?: seller_demand_signalsSumOrderByAggregateInput
+  }
+
+  export type seller_demand_signalsScalarWhereWithAggregatesInput = {
+    AND?: seller_demand_signalsScalarWhereWithAggregatesInput | seller_demand_signalsScalarWhereWithAggregatesInput[]
+    OR?: seller_demand_signalsScalarWhereWithAggregatesInput[]
+    NOT?: seller_demand_signalsScalarWhereWithAggregatesInput | seller_demand_signalsScalarWhereWithAggregatesInput[]
+    demand_signal_id?: UuidWithAggregatesFilter<"seller_demand_signals"> | string
+    business_id?: UuidWithAggregatesFilter<"seller_demand_signals"> | string
+    item_id?: UuidNullableWithAggregatesFilter<"seller_demand_signals"> | string | null
+    category?: StringNullableWithAggregatesFilter<"seller_demand_signals"> | string | null
+    signal_type?: StringWithAggregatesFilter<"seller_demand_signals"> | string
+    signal_count?: IntWithAggregatesFilter<"seller_demand_signals"> | number
+    period_start?: DateTimeWithAggregatesFilter<"seller_demand_signals"> | Date | string
+    period_end?: DateTimeWithAggregatesFilter<"seller_demand_signals"> | Date | string
+    source?: StringWithAggregatesFilter<"seller_demand_signals"> | string
+    metadata?: JsonNullableWithAggregatesFilter<"seller_demand_signals">
+    created_at?: DateTimeWithAggregatesFilter<"seller_demand_signals"> | Date | string
+  }
+
+  export type seller_product_import_jobsWhereInput = {
+    AND?: seller_product_import_jobsWhereInput | seller_product_import_jobsWhereInput[]
+    OR?: seller_product_import_jobsWhereInput[]
+    NOT?: seller_product_import_jobsWhereInput | seller_product_import_jobsWhereInput[]
+    import_job_id?: UuidFilter<"seller_product_import_jobs"> | string
+    business_id?: UuidFilter<"seller_product_import_jobs"> | string
+    tenant_id?: UuidFilter<"seller_product_import_jobs"> | string
+    source?: StringFilter<"seller_product_import_jobs"> | string
+    status?: StringFilter<"seller_product_import_jobs"> | string
+    total_rows?: IntFilter<"seller_product_import_jobs"> | number
+    created_count?: IntFilter<"seller_product_import_jobs"> | number
+    updated_count?: IntFilter<"seller_product_import_jobs"> | number
+    skipped_count?: IntFilter<"seller_product_import_jobs"> | number
+    failed_count?: IntFilter<"seller_product_import_jobs"> | number
+    errors?: JsonNullableFilter<"seller_product_import_jobs">
+    summary?: JsonNullableFilter<"seller_product_import_jobs">
+    created_by?: UuidNullableFilter<"seller_product_import_jobs"> | string | null
+    started_at?: DateTimeFilter<"seller_product_import_jobs"> | Date | string
+    finished_at?: DateTimeNullableFilter<"seller_product_import_jobs"> | Date | string | null
+    created_at?: DateTimeFilter<"seller_product_import_jobs"> | Date | string
+    updated_at?: DateTimeFilter<"seller_product_import_jobs"> | Date | string
+  }
+
+  export type seller_product_import_jobsOrderByWithRelationInput = {
+    import_job_id?: SortOrder
+    business_id?: SortOrder
+    tenant_id?: SortOrder
+    source?: SortOrder
+    status?: SortOrder
+    total_rows?: SortOrder
+    created_count?: SortOrder
+    updated_count?: SortOrder
+    skipped_count?: SortOrder
+    failed_count?: SortOrder
+    errors?: SortOrderInput | SortOrder
+    summary?: SortOrderInput | SortOrder
+    created_by?: SortOrderInput | SortOrder
+    started_at?: SortOrder
+    finished_at?: SortOrderInput | SortOrder
+    created_at?: SortOrder
+    updated_at?: SortOrder
+  }
+
+  export type seller_product_import_jobsWhereUniqueInput = Prisma.AtLeast<{
+    import_job_id?: string
+    AND?: seller_product_import_jobsWhereInput | seller_product_import_jobsWhereInput[]
+    OR?: seller_product_import_jobsWhereInput[]
+    NOT?: seller_product_import_jobsWhereInput | seller_product_import_jobsWhereInput[]
+    business_id?: UuidFilter<"seller_product_import_jobs"> | string
+    tenant_id?: UuidFilter<"seller_product_import_jobs"> | string
+    source?: StringFilter<"seller_product_import_jobs"> | string
+    status?: StringFilter<"seller_product_import_jobs"> | string
+    total_rows?: IntFilter<"seller_product_import_jobs"> | number
+    created_count?: IntFilter<"seller_product_import_jobs"> | number
+    updated_count?: IntFilter<"seller_product_import_jobs"> | number
+    skipped_count?: IntFilter<"seller_product_import_jobs"> | number
+    failed_count?: IntFilter<"seller_product_import_jobs"> | number
+    errors?: JsonNullableFilter<"seller_product_import_jobs">
+    summary?: JsonNullableFilter<"seller_product_import_jobs">
+    created_by?: UuidNullableFilter<"seller_product_import_jobs"> | string | null
+    started_at?: DateTimeFilter<"seller_product_import_jobs"> | Date | string
+    finished_at?: DateTimeNullableFilter<"seller_product_import_jobs"> | Date | string | null
+    created_at?: DateTimeFilter<"seller_product_import_jobs"> | Date | string
+    updated_at?: DateTimeFilter<"seller_product_import_jobs"> | Date | string
+  }, "import_job_id">
+
+  export type seller_product_import_jobsOrderByWithAggregationInput = {
+    import_job_id?: SortOrder
+    business_id?: SortOrder
+    tenant_id?: SortOrder
+    source?: SortOrder
+    status?: SortOrder
+    total_rows?: SortOrder
+    created_count?: SortOrder
+    updated_count?: SortOrder
+    skipped_count?: SortOrder
+    failed_count?: SortOrder
+    errors?: SortOrderInput | SortOrder
+    summary?: SortOrderInput | SortOrder
+    created_by?: SortOrderInput | SortOrder
+    started_at?: SortOrder
+    finished_at?: SortOrderInput | SortOrder
+    created_at?: SortOrder
+    updated_at?: SortOrder
+    _count?: seller_product_import_jobsCountOrderByAggregateInput
+    _avg?: seller_product_import_jobsAvgOrderByAggregateInput
+    _max?: seller_product_import_jobsMaxOrderByAggregateInput
+    _min?: seller_product_import_jobsMinOrderByAggregateInput
+    _sum?: seller_product_import_jobsSumOrderByAggregateInput
+  }
+
+  export type seller_product_import_jobsScalarWhereWithAggregatesInput = {
+    AND?: seller_product_import_jobsScalarWhereWithAggregatesInput | seller_product_import_jobsScalarWhereWithAggregatesInput[]
+    OR?: seller_product_import_jobsScalarWhereWithAggregatesInput[]
+    NOT?: seller_product_import_jobsScalarWhereWithAggregatesInput | seller_product_import_jobsScalarWhereWithAggregatesInput[]
+    import_job_id?: UuidWithAggregatesFilter<"seller_product_import_jobs"> | string
+    business_id?: UuidWithAggregatesFilter<"seller_product_import_jobs"> | string
+    tenant_id?: UuidWithAggregatesFilter<"seller_product_import_jobs"> | string
+    source?: StringWithAggregatesFilter<"seller_product_import_jobs"> | string
+    status?: StringWithAggregatesFilter<"seller_product_import_jobs"> | string
+    total_rows?: IntWithAggregatesFilter<"seller_product_import_jobs"> | number
+    created_count?: IntWithAggregatesFilter<"seller_product_import_jobs"> | number
+    updated_count?: IntWithAggregatesFilter<"seller_product_import_jobs"> | number
+    skipped_count?: IntWithAggregatesFilter<"seller_product_import_jobs"> | number
+    failed_count?: IntWithAggregatesFilter<"seller_product_import_jobs"> | number
+    errors?: JsonNullableWithAggregatesFilter<"seller_product_import_jobs">
+    summary?: JsonNullableWithAggregatesFilter<"seller_product_import_jobs">
+    created_by?: UuidNullableWithAggregatesFilter<"seller_product_import_jobs"> | string | null
+    started_at?: DateTimeWithAggregatesFilter<"seller_product_import_jobs"> | Date | string
+    finished_at?: DateTimeNullableWithAggregatesFilter<"seller_product_import_jobs"> | Date | string | null
+    created_at?: DateTimeWithAggregatesFilter<"seller_product_import_jobs"> | Date | string
+    updated_at?: DateTimeWithAggregatesFilter<"seller_product_import_jobs"> | Date | string
+  }
+
+  export type seller_stock_adjustmentsWhereInput = {
+    AND?: seller_stock_adjustmentsWhereInput | seller_stock_adjustmentsWhereInput[]
+    OR?: seller_stock_adjustmentsWhereInput[]
+    NOT?: seller_stock_adjustmentsWhereInput | seller_stock_adjustmentsWhereInput[]
+    adjustment_id?: UuidFilter<"seller_stock_adjustments"> | string
+    business_id?: UuidFilter<"seller_stock_adjustments"> | string
+    tenant_id?: UuidFilter<"seller_stock_adjustments"> | string
+    item_id?: UuidFilter<"seller_stock_adjustments"> | string
+    variant_id?: UuidNullableFilter<"seller_stock_adjustments"> | string | null
+    import_job_id?: UuidNullableFilter<"seller_stock_adjustments"> | string | null
+    adjustment_type?: StringFilter<"seller_stock_adjustments"> | string
+    quantity_change?: IntFilter<"seller_stock_adjustments"> | number
+    quantity_before?: IntFilter<"seller_stock_adjustments"> | number
+    quantity_after?: IntFilter<"seller_stock_adjustments"> | number
+    reason?: StringFilter<"seller_stock_adjustments"> | string
+    source?: StringFilter<"seller_stock_adjustments"> | string
+    reference?: StringNullableFilter<"seller_stock_adjustments"> | string | null
+    note?: StringNullableFilter<"seller_stock_adjustments"> | string | null
+    created_by?: UuidNullableFilter<"seller_stock_adjustments"> | string | null
+    metadata?: JsonNullableFilter<"seller_stock_adjustments">
+    created_at?: DateTimeFilter<"seller_stock_adjustments"> | Date | string
+  }
+
+  export type seller_stock_adjustmentsOrderByWithRelationInput = {
+    adjustment_id?: SortOrder
+    business_id?: SortOrder
+    tenant_id?: SortOrder
+    item_id?: SortOrder
+    variant_id?: SortOrderInput | SortOrder
+    import_job_id?: SortOrderInput | SortOrder
+    adjustment_type?: SortOrder
+    quantity_change?: SortOrder
+    quantity_before?: SortOrder
+    quantity_after?: SortOrder
+    reason?: SortOrder
+    source?: SortOrder
+    reference?: SortOrderInput | SortOrder
+    note?: SortOrderInput | SortOrder
+    created_by?: SortOrderInput | SortOrder
+    metadata?: SortOrderInput | SortOrder
+    created_at?: SortOrder
+  }
+
+  export type seller_stock_adjustmentsWhereUniqueInput = Prisma.AtLeast<{
+    adjustment_id?: string
+    AND?: seller_stock_adjustmentsWhereInput | seller_stock_adjustmentsWhereInput[]
+    OR?: seller_stock_adjustmentsWhereInput[]
+    NOT?: seller_stock_adjustmentsWhereInput | seller_stock_adjustmentsWhereInput[]
+    business_id?: UuidFilter<"seller_stock_adjustments"> | string
+    tenant_id?: UuidFilter<"seller_stock_adjustments"> | string
+    item_id?: UuidFilter<"seller_stock_adjustments"> | string
+    variant_id?: UuidNullableFilter<"seller_stock_adjustments"> | string | null
+    import_job_id?: UuidNullableFilter<"seller_stock_adjustments"> | string | null
+    adjustment_type?: StringFilter<"seller_stock_adjustments"> | string
+    quantity_change?: IntFilter<"seller_stock_adjustments"> | number
+    quantity_before?: IntFilter<"seller_stock_adjustments"> | number
+    quantity_after?: IntFilter<"seller_stock_adjustments"> | number
+    reason?: StringFilter<"seller_stock_adjustments"> | string
+    source?: StringFilter<"seller_stock_adjustments"> | string
+    reference?: StringNullableFilter<"seller_stock_adjustments"> | string | null
+    note?: StringNullableFilter<"seller_stock_adjustments"> | string | null
+    created_by?: UuidNullableFilter<"seller_stock_adjustments"> | string | null
+    metadata?: JsonNullableFilter<"seller_stock_adjustments">
+    created_at?: DateTimeFilter<"seller_stock_adjustments"> | Date | string
+  }, "adjustment_id">
+
+  export type seller_stock_adjustmentsOrderByWithAggregationInput = {
+    adjustment_id?: SortOrder
+    business_id?: SortOrder
+    tenant_id?: SortOrder
+    item_id?: SortOrder
+    variant_id?: SortOrderInput | SortOrder
+    import_job_id?: SortOrderInput | SortOrder
+    adjustment_type?: SortOrder
+    quantity_change?: SortOrder
+    quantity_before?: SortOrder
+    quantity_after?: SortOrder
+    reason?: SortOrder
+    source?: SortOrder
+    reference?: SortOrderInput | SortOrder
+    note?: SortOrderInput | SortOrder
+    created_by?: SortOrderInput | SortOrder
+    metadata?: SortOrderInput | SortOrder
+    created_at?: SortOrder
+    _count?: seller_stock_adjustmentsCountOrderByAggregateInput
+    _avg?: seller_stock_adjustmentsAvgOrderByAggregateInput
+    _max?: seller_stock_adjustmentsMaxOrderByAggregateInput
+    _min?: seller_stock_adjustmentsMinOrderByAggregateInput
+    _sum?: seller_stock_adjustmentsSumOrderByAggregateInput
+  }
+
+  export type seller_stock_adjustmentsScalarWhereWithAggregatesInput = {
+    AND?: seller_stock_adjustmentsScalarWhereWithAggregatesInput | seller_stock_adjustmentsScalarWhereWithAggregatesInput[]
+    OR?: seller_stock_adjustmentsScalarWhereWithAggregatesInput[]
+    NOT?: seller_stock_adjustmentsScalarWhereWithAggregatesInput | seller_stock_adjustmentsScalarWhereWithAggregatesInput[]
+    adjustment_id?: UuidWithAggregatesFilter<"seller_stock_adjustments"> | string
+    business_id?: UuidWithAggregatesFilter<"seller_stock_adjustments"> | string
+    tenant_id?: UuidWithAggregatesFilter<"seller_stock_adjustments"> | string
+    item_id?: UuidWithAggregatesFilter<"seller_stock_adjustments"> | string
+    variant_id?: UuidNullableWithAggregatesFilter<"seller_stock_adjustments"> | string | null
+    import_job_id?: UuidNullableWithAggregatesFilter<"seller_stock_adjustments"> | string | null
+    adjustment_type?: StringWithAggregatesFilter<"seller_stock_adjustments"> | string
+    quantity_change?: IntWithAggregatesFilter<"seller_stock_adjustments"> | number
+    quantity_before?: IntWithAggregatesFilter<"seller_stock_adjustments"> | number
+    quantity_after?: IntWithAggregatesFilter<"seller_stock_adjustments"> | number
+    reason?: StringWithAggregatesFilter<"seller_stock_adjustments"> | string
+    source?: StringWithAggregatesFilter<"seller_stock_adjustments"> | string
+    reference?: StringNullableWithAggregatesFilter<"seller_stock_adjustments"> | string | null
+    note?: StringNullableWithAggregatesFilter<"seller_stock_adjustments"> | string | null
+    created_by?: UuidNullableWithAggregatesFilter<"seller_stock_adjustments"> | string | null
+    metadata?: JsonNullableWithAggregatesFilter<"seller_stock_adjustments">
+    created_at?: DateTimeWithAggregatesFilter<"seller_stock_adjustments"> | Date | string
+  }
+
   export type hospitality_item_detailsWhereInput = {
     AND?: hospitality_item_detailsWhereInput | hospitality_item_detailsWhereInput[]
     OR?: hospitality_item_detailsWhereInput[]
@@ -107186,6 +123899,10 @@ export namespace Prisma {
     business_id?: string
     business_name: string
     business_type?: string | null
+    business_group?: string | null
+    communication_mode?: string
+    blueprint_seeded?: boolean
+    blueprint_seeded_at?: Date | string | null
     whatsapp_number?: string | null
     created_at?: Date | string
     updated_at?: Date | string
@@ -107237,6 +123954,10 @@ export namespace Prisma {
     tenant_id: string
     business_name: string
     business_type?: string | null
+    business_group?: string | null
+    communication_mode?: string
+    blueprint_seeded?: boolean
+    blueprint_seeded_at?: Date | string | null
     whatsapp_number?: string | null
     created_at?: Date | string
     updated_at?: Date | string
@@ -107286,6 +124007,10 @@ export namespace Prisma {
     business_id?: StringFieldUpdateOperationsInput | string
     business_name?: StringFieldUpdateOperationsInput | string
     business_type?: NullableStringFieldUpdateOperationsInput | string | null
+    business_group?: NullableStringFieldUpdateOperationsInput | string | null
+    communication_mode?: StringFieldUpdateOperationsInput | string
+    blueprint_seeded?: BoolFieldUpdateOperationsInput | boolean
+    blueprint_seeded_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     whatsapp_number?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -107337,6 +124062,10 @@ export namespace Prisma {
     tenant_id?: StringFieldUpdateOperationsInput | string
     business_name?: StringFieldUpdateOperationsInput | string
     business_type?: NullableStringFieldUpdateOperationsInput | string | null
+    business_group?: NullableStringFieldUpdateOperationsInput | string | null
+    communication_mode?: StringFieldUpdateOperationsInput | string
+    blueprint_seeded?: BoolFieldUpdateOperationsInput | boolean
+    blueprint_seeded_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     whatsapp_number?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -107387,6 +124116,10 @@ export namespace Prisma {
     tenant_id: string
     business_name: string
     business_type?: string | null
+    business_group?: string | null
+    communication_mode?: string
+    blueprint_seeded?: boolean
+    blueprint_seeded_at?: Date | string | null
     whatsapp_number?: string | null
     created_at?: Date | string
     updated_at?: Date | string
@@ -107406,6 +124139,10 @@ export namespace Prisma {
     business_id?: StringFieldUpdateOperationsInput | string
     business_name?: StringFieldUpdateOperationsInput | string
     business_type?: NullableStringFieldUpdateOperationsInput | string | null
+    business_group?: NullableStringFieldUpdateOperationsInput | string | null
+    communication_mode?: StringFieldUpdateOperationsInput | string
+    blueprint_seeded?: BoolFieldUpdateOperationsInput | boolean
+    blueprint_seeded_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     whatsapp_number?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -107426,6 +124163,10 @@ export namespace Prisma {
     tenant_id?: StringFieldUpdateOperationsInput | string
     business_name?: StringFieldUpdateOperationsInput | string
     business_type?: NullableStringFieldUpdateOperationsInput | string | null
+    business_group?: NullableStringFieldUpdateOperationsInput | string | null
+    communication_mode?: StringFieldUpdateOperationsInput | string
+    blueprint_seeded?: BoolFieldUpdateOperationsInput | boolean
+    blueprint_seeded_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     whatsapp_number?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -109527,6 +126268,10 @@ export namespace Prisma {
     channel: string
     content_template?: string | null
     sent_at?: Date | string | null
+    approved_at?: Date | string | null
+    approved_by?: string | null
+    auto_approve_at?: Date | string | null
+    deduplication_key?: string | null
     target_segment?: NullableJsonNullValueInput | InputJsonValue
     tenant_id: string
     audience_filter?: NullableJsonNullValueInput | InputJsonValue
@@ -109559,6 +126304,10 @@ export namespace Prisma {
     channel: string
     content_template?: string | null
     sent_at?: Date | string | null
+    approved_at?: Date | string | null
+    approved_by?: string | null
+    auto_approve_at?: Date | string | null
+    deduplication_key?: string | null
     target_segment?: NullableJsonNullValueInput | InputJsonValue
     tenant_id: string
     audience_filter?: NullableJsonNullValueInput | InputJsonValue
@@ -109591,6 +126340,10 @@ export namespace Prisma {
     channel?: StringFieldUpdateOperationsInput | string
     content_template?: NullableStringFieldUpdateOperationsInput | string | null
     sent_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    approved_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    approved_by?: NullableStringFieldUpdateOperationsInput | string | null
+    auto_approve_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deduplication_key?: NullableStringFieldUpdateOperationsInput | string | null
     target_segment?: NullableJsonNullValueInput | InputJsonValue
     tenant_id?: StringFieldUpdateOperationsInput | string
     audience_filter?: NullableJsonNullValueInput | InputJsonValue
@@ -109623,6 +126376,10 @@ export namespace Prisma {
     channel?: StringFieldUpdateOperationsInput | string
     content_template?: NullableStringFieldUpdateOperationsInput | string | null
     sent_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    approved_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    approved_by?: NullableStringFieldUpdateOperationsInput | string | null
+    auto_approve_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deduplication_key?: NullableStringFieldUpdateOperationsInput | string | null
     target_segment?: NullableJsonNullValueInput | InputJsonValue
     tenant_id?: StringFieldUpdateOperationsInput | string
     audience_filter?: NullableJsonNullValueInput | InputJsonValue
@@ -109655,6 +126412,10 @@ export namespace Prisma {
     channel: string
     content_template?: string | null
     sent_at?: Date | string | null
+    approved_at?: Date | string | null
+    approved_by?: string | null
+    auto_approve_at?: Date | string | null
+    deduplication_key?: string | null
     target_segment?: NullableJsonNullValueInput | InputJsonValue
     tenant_id: string
     audience_filter?: NullableJsonNullValueInput | InputJsonValue
@@ -109687,6 +126448,10 @@ export namespace Prisma {
     channel?: StringFieldUpdateOperationsInput | string
     content_template?: NullableStringFieldUpdateOperationsInput | string | null
     sent_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    approved_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    approved_by?: NullableStringFieldUpdateOperationsInput | string | null
+    auto_approve_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deduplication_key?: NullableStringFieldUpdateOperationsInput | string | null
     target_segment?: NullableJsonNullValueInput | InputJsonValue
     tenant_id?: StringFieldUpdateOperationsInput | string
     audience_filter?: NullableJsonNullValueInput | InputJsonValue
@@ -109718,6 +126483,10 @@ export namespace Prisma {
     channel?: StringFieldUpdateOperationsInput | string
     content_template?: NullableStringFieldUpdateOperationsInput | string | null
     sent_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    approved_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    approved_by?: NullableStringFieldUpdateOperationsInput | string | null
+    auto_approve_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deduplication_key?: NullableStringFieldUpdateOperationsInput | string | null
     target_segment?: NullableJsonNullValueInput | InputJsonValue
     tenant_id?: StringFieldUpdateOperationsInput | string
     audience_filter?: NullableJsonNullValueInput | InputJsonValue
@@ -113511,6 +130280,1574 @@ export namespace Prisma {
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type seller_owner_approvalsCreateInput = {
+    approval_id?: string
+    business_id: string
+    tenant_id?: string | null
+    title: string
+    simple_summary?: string | null
+    action_type: string
+    risk_level?: string
+    status?: string
+    source?: string
+    entity_type?: string | null
+    entity_id?: string | null
+    requested_by?: string | null
+    decided_by?: string | null
+    payload?: NullableJsonNullValueInput | InputJsonValue
+    guardrails?: NullableJsonNullValueInput | InputJsonValue
+    due_at?: Date | string | null
+    decided_at?: Date | string | null
+    expires_at?: Date | string | null
+    created_at?: Date | string
+    updated_at?: Date | string
+  }
+
+  export type seller_owner_approvalsUncheckedCreateInput = {
+    approval_id?: string
+    business_id: string
+    tenant_id?: string | null
+    title: string
+    simple_summary?: string | null
+    action_type: string
+    risk_level?: string
+    status?: string
+    source?: string
+    entity_type?: string | null
+    entity_id?: string | null
+    requested_by?: string | null
+    decided_by?: string | null
+    payload?: NullableJsonNullValueInput | InputJsonValue
+    guardrails?: NullableJsonNullValueInput | InputJsonValue
+    due_at?: Date | string | null
+    decided_at?: Date | string | null
+    expires_at?: Date | string | null
+    created_at?: Date | string
+    updated_at?: Date | string
+  }
+
+  export type seller_owner_approvalsUpdateInput = {
+    approval_id?: StringFieldUpdateOperationsInput | string
+    business_id?: StringFieldUpdateOperationsInput | string
+    tenant_id?: NullableStringFieldUpdateOperationsInput | string | null
+    title?: StringFieldUpdateOperationsInput | string
+    simple_summary?: NullableStringFieldUpdateOperationsInput | string | null
+    action_type?: StringFieldUpdateOperationsInput | string
+    risk_level?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    source?: StringFieldUpdateOperationsInput | string
+    entity_type?: NullableStringFieldUpdateOperationsInput | string | null
+    entity_id?: NullableStringFieldUpdateOperationsInput | string | null
+    requested_by?: NullableStringFieldUpdateOperationsInput | string | null
+    decided_by?: NullableStringFieldUpdateOperationsInput | string | null
+    payload?: NullableJsonNullValueInput | InputJsonValue
+    guardrails?: NullableJsonNullValueInput | InputJsonValue
+    due_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    decided_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    expires_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type seller_owner_approvalsUncheckedUpdateInput = {
+    approval_id?: StringFieldUpdateOperationsInput | string
+    business_id?: StringFieldUpdateOperationsInput | string
+    tenant_id?: NullableStringFieldUpdateOperationsInput | string | null
+    title?: StringFieldUpdateOperationsInput | string
+    simple_summary?: NullableStringFieldUpdateOperationsInput | string | null
+    action_type?: StringFieldUpdateOperationsInput | string
+    risk_level?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    source?: StringFieldUpdateOperationsInput | string
+    entity_type?: NullableStringFieldUpdateOperationsInput | string | null
+    entity_id?: NullableStringFieldUpdateOperationsInput | string | null
+    requested_by?: NullableStringFieldUpdateOperationsInput | string | null
+    decided_by?: NullableStringFieldUpdateOperationsInput | string | null
+    payload?: NullableJsonNullValueInput | InputJsonValue
+    guardrails?: NullableJsonNullValueInput | InputJsonValue
+    due_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    decided_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    expires_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type seller_owner_approvalsCreateManyInput = {
+    approval_id?: string
+    business_id: string
+    tenant_id?: string | null
+    title: string
+    simple_summary?: string | null
+    action_type: string
+    risk_level?: string
+    status?: string
+    source?: string
+    entity_type?: string | null
+    entity_id?: string | null
+    requested_by?: string | null
+    decided_by?: string | null
+    payload?: NullableJsonNullValueInput | InputJsonValue
+    guardrails?: NullableJsonNullValueInput | InputJsonValue
+    due_at?: Date | string | null
+    decided_at?: Date | string | null
+    expires_at?: Date | string | null
+    created_at?: Date | string
+    updated_at?: Date | string
+  }
+
+  export type seller_owner_approvalsUpdateManyMutationInput = {
+    approval_id?: StringFieldUpdateOperationsInput | string
+    business_id?: StringFieldUpdateOperationsInput | string
+    tenant_id?: NullableStringFieldUpdateOperationsInput | string | null
+    title?: StringFieldUpdateOperationsInput | string
+    simple_summary?: NullableStringFieldUpdateOperationsInput | string | null
+    action_type?: StringFieldUpdateOperationsInput | string
+    risk_level?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    source?: StringFieldUpdateOperationsInput | string
+    entity_type?: NullableStringFieldUpdateOperationsInput | string | null
+    entity_id?: NullableStringFieldUpdateOperationsInput | string | null
+    requested_by?: NullableStringFieldUpdateOperationsInput | string | null
+    decided_by?: NullableStringFieldUpdateOperationsInput | string | null
+    payload?: NullableJsonNullValueInput | InputJsonValue
+    guardrails?: NullableJsonNullValueInput | InputJsonValue
+    due_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    decided_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    expires_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type seller_owner_approvalsUncheckedUpdateManyInput = {
+    approval_id?: StringFieldUpdateOperationsInput | string
+    business_id?: StringFieldUpdateOperationsInput | string
+    tenant_id?: NullableStringFieldUpdateOperationsInput | string | null
+    title?: StringFieldUpdateOperationsInput | string
+    simple_summary?: NullableStringFieldUpdateOperationsInput | string | null
+    action_type?: StringFieldUpdateOperationsInput | string
+    risk_level?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    source?: StringFieldUpdateOperationsInput | string
+    entity_type?: NullableStringFieldUpdateOperationsInput | string | null
+    entity_id?: NullableStringFieldUpdateOperationsInput | string | null
+    requested_by?: NullableStringFieldUpdateOperationsInput | string | null
+    decided_by?: NullableStringFieldUpdateOperationsInput | string | null
+    payload?: NullableJsonNullValueInput | InputJsonValue
+    guardrails?: NullableJsonNullValueInput | InputJsonValue
+    due_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    decided_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    expires_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type seller_store_settingsCreateInput = {
+    seller_store_settings_id?: string
+    business_id: string
+    tenant_id?: string | null
+    store_type?: string
+    onboarding_status?: string
+    default_currency?: string
+    low_stock_threshold?: number
+    stock_hold_minutes?: number
+    payment_modes?: seller_store_settingsCreatepayment_modesInput | string[]
+    delivery_modes?: seller_store_settingsCreatedelivery_modesInput | string[]
+    delivery_areas?: NullableJsonNullValueInput | InputJsonValue
+    credit_defaults?: NullableJsonNullValueInput | InputJsonValue
+    ai_guardrails?: NullableJsonNullValueInput | InputJsonValue
+    setup_checklist?: NullableJsonNullValueInput | InputJsonValue
+    created_at?: Date | string
+    updated_at?: Date | string
+  }
+
+  export type seller_store_settingsUncheckedCreateInput = {
+    seller_store_settings_id?: string
+    business_id: string
+    tenant_id?: string | null
+    store_type?: string
+    onboarding_status?: string
+    default_currency?: string
+    low_stock_threshold?: number
+    stock_hold_minutes?: number
+    payment_modes?: seller_store_settingsCreatepayment_modesInput | string[]
+    delivery_modes?: seller_store_settingsCreatedelivery_modesInput | string[]
+    delivery_areas?: NullableJsonNullValueInput | InputJsonValue
+    credit_defaults?: NullableJsonNullValueInput | InputJsonValue
+    ai_guardrails?: NullableJsonNullValueInput | InputJsonValue
+    setup_checklist?: NullableJsonNullValueInput | InputJsonValue
+    created_at?: Date | string
+    updated_at?: Date | string
+  }
+
+  export type seller_store_settingsUpdateInput = {
+    seller_store_settings_id?: StringFieldUpdateOperationsInput | string
+    business_id?: StringFieldUpdateOperationsInput | string
+    tenant_id?: NullableStringFieldUpdateOperationsInput | string | null
+    store_type?: StringFieldUpdateOperationsInput | string
+    onboarding_status?: StringFieldUpdateOperationsInput | string
+    default_currency?: StringFieldUpdateOperationsInput | string
+    low_stock_threshold?: IntFieldUpdateOperationsInput | number
+    stock_hold_minutes?: IntFieldUpdateOperationsInput | number
+    payment_modes?: seller_store_settingsUpdatepayment_modesInput | string[]
+    delivery_modes?: seller_store_settingsUpdatedelivery_modesInput | string[]
+    delivery_areas?: NullableJsonNullValueInput | InputJsonValue
+    credit_defaults?: NullableJsonNullValueInput | InputJsonValue
+    ai_guardrails?: NullableJsonNullValueInput | InputJsonValue
+    setup_checklist?: NullableJsonNullValueInput | InputJsonValue
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type seller_store_settingsUncheckedUpdateInput = {
+    seller_store_settings_id?: StringFieldUpdateOperationsInput | string
+    business_id?: StringFieldUpdateOperationsInput | string
+    tenant_id?: NullableStringFieldUpdateOperationsInput | string | null
+    store_type?: StringFieldUpdateOperationsInput | string
+    onboarding_status?: StringFieldUpdateOperationsInput | string
+    default_currency?: StringFieldUpdateOperationsInput | string
+    low_stock_threshold?: IntFieldUpdateOperationsInput | number
+    stock_hold_minutes?: IntFieldUpdateOperationsInput | number
+    payment_modes?: seller_store_settingsUpdatepayment_modesInput | string[]
+    delivery_modes?: seller_store_settingsUpdatedelivery_modesInput | string[]
+    delivery_areas?: NullableJsonNullValueInput | InputJsonValue
+    credit_defaults?: NullableJsonNullValueInput | InputJsonValue
+    ai_guardrails?: NullableJsonNullValueInput | InputJsonValue
+    setup_checklist?: NullableJsonNullValueInput | InputJsonValue
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type seller_store_settingsCreateManyInput = {
+    seller_store_settings_id?: string
+    business_id: string
+    tenant_id?: string | null
+    store_type?: string
+    onboarding_status?: string
+    default_currency?: string
+    low_stock_threshold?: number
+    stock_hold_minutes?: number
+    payment_modes?: seller_store_settingsCreatepayment_modesInput | string[]
+    delivery_modes?: seller_store_settingsCreatedelivery_modesInput | string[]
+    delivery_areas?: NullableJsonNullValueInput | InputJsonValue
+    credit_defaults?: NullableJsonNullValueInput | InputJsonValue
+    ai_guardrails?: NullableJsonNullValueInput | InputJsonValue
+    setup_checklist?: NullableJsonNullValueInput | InputJsonValue
+    created_at?: Date | string
+    updated_at?: Date | string
+  }
+
+  export type seller_store_settingsUpdateManyMutationInput = {
+    seller_store_settings_id?: StringFieldUpdateOperationsInput | string
+    business_id?: StringFieldUpdateOperationsInput | string
+    tenant_id?: NullableStringFieldUpdateOperationsInput | string | null
+    store_type?: StringFieldUpdateOperationsInput | string
+    onboarding_status?: StringFieldUpdateOperationsInput | string
+    default_currency?: StringFieldUpdateOperationsInput | string
+    low_stock_threshold?: IntFieldUpdateOperationsInput | number
+    stock_hold_minutes?: IntFieldUpdateOperationsInput | number
+    payment_modes?: seller_store_settingsUpdatepayment_modesInput | string[]
+    delivery_modes?: seller_store_settingsUpdatedelivery_modesInput | string[]
+    delivery_areas?: NullableJsonNullValueInput | InputJsonValue
+    credit_defaults?: NullableJsonNullValueInput | InputJsonValue
+    ai_guardrails?: NullableJsonNullValueInput | InputJsonValue
+    setup_checklist?: NullableJsonNullValueInput | InputJsonValue
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type seller_store_settingsUncheckedUpdateManyInput = {
+    seller_store_settings_id?: StringFieldUpdateOperationsInput | string
+    business_id?: StringFieldUpdateOperationsInput | string
+    tenant_id?: NullableStringFieldUpdateOperationsInput | string | null
+    store_type?: StringFieldUpdateOperationsInput | string
+    onboarding_status?: StringFieldUpdateOperationsInput | string
+    default_currency?: StringFieldUpdateOperationsInput | string
+    low_stock_threshold?: IntFieldUpdateOperationsInput | number
+    stock_hold_minutes?: IntFieldUpdateOperationsInput | number
+    payment_modes?: seller_store_settingsUpdatepayment_modesInput | string[]
+    delivery_modes?: seller_store_settingsUpdatedelivery_modesInput | string[]
+    delivery_areas?: NullableJsonNullValueInput | InputJsonValue
+    credit_defaults?: NullableJsonNullValueInput | InputJsonValue
+    ai_guardrails?: NullableJsonNullValueInput | InputJsonValue
+    setup_checklist?: NullableJsonNullValueInput | InputJsonValue
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type seller_stock_reservationsCreateInput = {
+    reservation_id?: string
+    business_id: string
+    tenant_id?: string | null
+    customer_id?: string | null
+    lead_id?: string | null
+    item_id: string
+    variant_id?: string | null
+    quantity: number
+    status?: string
+    reason?: string | null
+    source?: string
+    expires_at: Date | string
+    released_at?: Date | string | null
+    converted_at?: Date | string | null
+    created_by?: string | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    created_at?: Date | string
+    updated_at?: Date | string
+  }
+
+  export type seller_stock_reservationsUncheckedCreateInput = {
+    reservation_id?: string
+    business_id: string
+    tenant_id?: string | null
+    customer_id?: string | null
+    lead_id?: string | null
+    item_id: string
+    variant_id?: string | null
+    quantity: number
+    status?: string
+    reason?: string | null
+    source?: string
+    expires_at: Date | string
+    released_at?: Date | string | null
+    converted_at?: Date | string | null
+    created_by?: string | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    created_at?: Date | string
+    updated_at?: Date | string
+  }
+
+  export type seller_stock_reservationsUpdateInput = {
+    reservation_id?: StringFieldUpdateOperationsInput | string
+    business_id?: StringFieldUpdateOperationsInput | string
+    tenant_id?: NullableStringFieldUpdateOperationsInput | string | null
+    customer_id?: NullableStringFieldUpdateOperationsInput | string | null
+    lead_id?: NullableStringFieldUpdateOperationsInput | string | null
+    item_id?: StringFieldUpdateOperationsInput | string
+    variant_id?: NullableStringFieldUpdateOperationsInput | string | null
+    quantity?: IntFieldUpdateOperationsInput | number
+    status?: StringFieldUpdateOperationsInput | string
+    reason?: NullableStringFieldUpdateOperationsInput | string | null
+    source?: StringFieldUpdateOperationsInput | string
+    expires_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    released_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    converted_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    created_by?: NullableStringFieldUpdateOperationsInput | string | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type seller_stock_reservationsUncheckedUpdateInput = {
+    reservation_id?: StringFieldUpdateOperationsInput | string
+    business_id?: StringFieldUpdateOperationsInput | string
+    tenant_id?: NullableStringFieldUpdateOperationsInput | string | null
+    customer_id?: NullableStringFieldUpdateOperationsInput | string | null
+    lead_id?: NullableStringFieldUpdateOperationsInput | string | null
+    item_id?: StringFieldUpdateOperationsInput | string
+    variant_id?: NullableStringFieldUpdateOperationsInput | string | null
+    quantity?: IntFieldUpdateOperationsInput | number
+    status?: StringFieldUpdateOperationsInput | string
+    reason?: NullableStringFieldUpdateOperationsInput | string | null
+    source?: StringFieldUpdateOperationsInput | string
+    expires_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    released_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    converted_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    created_by?: NullableStringFieldUpdateOperationsInput | string | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type seller_stock_reservationsCreateManyInput = {
+    reservation_id?: string
+    business_id: string
+    tenant_id?: string | null
+    customer_id?: string | null
+    lead_id?: string | null
+    item_id: string
+    variant_id?: string | null
+    quantity: number
+    status?: string
+    reason?: string | null
+    source?: string
+    expires_at: Date | string
+    released_at?: Date | string | null
+    converted_at?: Date | string | null
+    created_by?: string | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    created_at?: Date | string
+    updated_at?: Date | string
+  }
+
+  export type seller_stock_reservationsUpdateManyMutationInput = {
+    reservation_id?: StringFieldUpdateOperationsInput | string
+    business_id?: StringFieldUpdateOperationsInput | string
+    tenant_id?: NullableStringFieldUpdateOperationsInput | string | null
+    customer_id?: NullableStringFieldUpdateOperationsInput | string | null
+    lead_id?: NullableStringFieldUpdateOperationsInput | string | null
+    item_id?: StringFieldUpdateOperationsInput | string
+    variant_id?: NullableStringFieldUpdateOperationsInput | string | null
+    quantity?: IntFieldUpdateOperationsInput | number
+    status?: StringFieldUpdateOperationsInput | string
+    reason?: NullableStringFieldUpdateOperationsInput | string | null
+    source?: StringFieldUpdateOperationsInput | string
+    expires_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    released_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    converted_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    created_by?: NullableStringFieldUpdateOperationsInput | string | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type seller_stock_reservationsUncheckedUpdateManyInput = {
+    reservation_id?: StringFieldUpdateOperationsInput | string
+    business_id?: StringFieldUpdateOperationsInput | string
+    tenant_id?: NullableStringFieldUpdateOperationsInput | string | null
+    customer_id?: NullableStringFieldUpdateOperationsInput | string | null
+    lead_id?: NullableStringFieldUpdateOperationsInput | string | null
+    item_id?: StringFieldUpdateOperationsInput | string
+    variant_id?: NullableStringFieldUpdateOperationsInput | string | null
+    quantity?: IntFieldUpdateOperationsInput | number
+    status?: StringFieldUpdateOperationsInput | string
+    reason?: NullableStringFieldUpdateOperationsInput | string | null
+    source?: StringFieldUpdateOperationsInput | string
+    expires_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    released_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    converted_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    created_by?: NullableStringFieldUpdateOperationsInput | string | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type seller_return_casesCreateInput = {
+    return_id?: string
+    business_id: string
+    tenant_id?: string | null
+    order_id?: string | null
+    product_order_id?: string | null
+    customer_id?: string | null
+    return_type?: string
+    status?: string
+    reason?: string | null
+    requested_amount?: Decimal | DecimalJsLike | number | string | null
+    approved_amount?: Decimal | DecimalJsLike | number | string | null
+    items?: NullableJsonNullValueInput | InputJsonValue
+    resolution?: NullableJsonNullValueInput | InputJsonValue
+    handled_by?: string | null
+    created_at?: Date | string
+    updated_at?: Date | string
+    closed_at?: Date | string | null
+  }
+
+  export type seller_return_casesUncheckedCreateInput = {
+    return_id?: string
+    business_id: string
+    tenant_id?: string | null
+    order_id?: string | null
+    product_order_id?: string | null
+    customer_id?: string | null
+    return_type?: string
+    status?: string
+    reason?: string | null
+    requested_amount?: Decimal | DecimalJsLike | number | string | null
+    approved_amount?: Decimal | DecimalJsLike | number | string | null
+    items?: NullableJsonNullValueInput | InputJsonValue
+    resolution?: NullableJsonNullValueInput | InputJsonValue
+    handled_by?: string | null
+    created_at?: Date | string
+    updated_at?: Date | string
+    closed_at?: Date | string | null
+  }
+
+  export type seller_return_casesUpdateInput = {
+    return_id?: StringFieldUpdateOperationsInput | string
+    business_id?: StringFieldUpdateOperationsInput | string
+    tenant_id?: NullableStringFieldUpdateOperationsInput | string | null
+    order_id?: NullableStringFieldUpdateOperationsInput | string | null
+    product_order_id?: NullableStringFieldUpdateOperationsInput | string | null
+    customer_id?: NullableStringFieldUpdateOperationsInput | string | null
+    return_type?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    reason?: NullableStringFieldUpdateOperationsInput | string | null
+    requested_amount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    approved_amount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    items?: NullableJsonNullValueInput | InputJsonValue
+    resolution?: NullableJsonNullValueInput | InputJsonValue
+    handled_by?: NullableStringFieldUpdateOperationsInput | string | null
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    closed_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
+  export type seller_return_casesUncheckedUpdateInput = {
+    return_id?: StringFieldUpdateOperationsInput | string
+    business_id?: StringFieldUpdateOperationsInput | string
+    tenant_id?: NullableStringFieldUpdateOperationsInput | string | null
+    order_id?: NullableStringFieldUpdateOperationsInput | string | null
+    product_order_id?: NullableStringFieldUpdateOperationsInput | string | null
+    customer_id?: NullableStringFieldUpdateOperationsInput | string | null
+    return_type?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    reason?: NullableStringFieldUpdateOperationsInput | string | null
+    requested_amount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    approved_amount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    items?: NullableJsonNullValueInput | InputJsonValue
+    resolution?: NullableJsonNullValueInput | InputJsonValue
+    handled_by?: NullableStringFieldUpdateOperationsInput | string | null
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    closed_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
+  export type seller_return_casesCreateManyInput = {
+    return_id?: string
+    business_id: string
+    tenant_id?: string | null
+    order_id?: string | null
+    product_order_id?: string | null
+    customer_id?: string | null
+    return_type?: string
+    status?: string
+    reason?: string | null
+    requested_amount?: Decimal | DecimalJsLike | number | string | null
+    approved_amount?: Decimal | DecimalJsLike | number | string | null
+    items?: NullableJsonNullValueInput | InputJsonValue
+    resolution?: NullableJsonNullValueInput | InputJsonValue
+    handled_by?: string | null
+    created_at?: Date | string
+    updated_at?: Date | string
+    closed_at?: Date | string | null
+  }
+
+  export type seller_return_casesUpdateManyMutationInput = {
+    return_id?: StringFieldUpdateOperationsInput | string
+    business_id?: StringFieldUpdateOperationsInput | string
+    tenant_id?: NullableStringFieldUpdateOperationsInput | string | null
+    order_id?: NullableStringFieldUpdateOperationsInput | string | null
+    product_order_id?: NullableStringFieldUpdateOperationsInput | string | null
+    customer_id?: NullableStringFieldUpdateOperationsInput | string | null
+    return_type?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    reason?: NullableStringFieldUpdateOperationsInput | string | null
+    requested_amount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    approved_amount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    items?: NullableJsonNullValueInput | InputJsonValue
+    resolution?: NullableJsonNullValueInput | InputJsonValue
+    handled_by?: NullableStringFieldUpdateOperationsInput | string | null
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    closed_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
+  export type seller_return_casesUncheckedUpdateManyInput = {
+    return_id?: StringFieldUpdateOperationsInput | string
+    business_id?: StringFieldUpdateOperationsInput | string
+    tenant_id?: NullableStringFieldUpdateOperationsInput | string | null
+    order_id?: NullableStringFieldUpdateOperationsInput | string | null
+    product_order_id?: NullableStringFieldUpdateOperationsInput | string | null
+    customer_id?: NullableStringFieldUpdateOperationsInput | string | null
+    return_type?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    reason?: NullableStringFieldUpdateOperationsInput | string | null
+    requested_amount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    approved_amount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    items?: NullableJsonNullValueInput | InputJsonValue
+    resolution?: NullableJsonNullValueInput | InputJsonValue
+    handled_by?: NullableStringFieldUpdateOperationsInput | string | null
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    closed_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
+  export type seller_deliveriesCreateInput = {
+    delivery_id?: string
+    business_id: string
+    tenant_id?: string | null
+    order_id?: string | null
+    product_order_id?: string | null
+    customer_id?: string | null
+    status?: string
+    delivery_mode?: string
+    delivery_person?: string | null
+    phone?: string | null
+    address?: string | null
+    pincode?: string | null
+    scheduled_at?: Date | string | null
+    picked_at?: Date | string | null
+    delivered_at?: Date | string | null
+    notes?: string | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    created_at?: Date | string
+    updated_at?: Date | string
+  }
+
+  export type seller_deliveriesUncheckedCreateInput = {
+    delivery_id?: string
+    business_id: string
+    tenant_id?: string | null
+    order_id?: string | null
+    product_order_id?: string | null
+    customer_id?: string | null
+    status?: string
+    delivery_mode?: string
+    delivery_person?: string | null
+    phone?: string | null
+    address?: string | null
+    pincode?: string | null
+    scheduled_at?: Date | string | null
+    picked_at?: Date | string | null
+    delivered_at?: Date | string | null
+    notes?: string | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    created_at?: Date | string
+    updated_at?: Date | string
+  }
+
+  export type seller_deliveriesUpdateInput = {
+    delivery_id?: StringFieldUpdateOperationsInput | string
+    business_id?: StringFieldUpdateOperationsInput | string
+    tenant_id?: NullableStringFieldUpdateOperationsInput | string | null
+    order_id?: NullableStringFieldUpdateOperationsInput | string | null
+    product_order_id?: NullableStringFieldUpdateOperationsInput | string | null
+    customer_id?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    delivery_mode?: StringFieldUpdateOperationsInput | string
+    delivery_person?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    pincode?: NullableStringFieldUpdateOperationsInput | string | null
+    scheduled_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    picked_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    delivered_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type seller_deliveriesUncheckedUpdateInput = {
+    delivery_id?: StringFieldUpdateOperationsInput | string
+    business_id?: StringFieldUpdateOperationsInput | string
+    tenant_id?: NullableStringFieldUpdateOperationsInput | string | null
+    order_id?: NullableStringFieldUpdateOperationsInput | string | null
+    product_order_id?: NullableStringFieldUpdateOperationsInput | string | null
+    customer_id?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    delivery_mode?: StringFieldUpdateOperationsInput | string
+    delivery_person?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    pincode?: NullableStringFieldUpdateOperationsInput | string | null
+    scheduled_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    picked_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    delivered_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type seller_deliveriesCreateManyInput = {
+    delivery_id?: string
+    business_id: string
+    tenant_id?: string | null
+    order_id?: string | null
+    product_order_id?: string | null
+    customer_id?: string | null
+    status?: string
+    delivery_mode?: string
+    delivery_person?: string | null
+    phone?: string | null
+    address?: string | null
+    pincode?: string | null
+    scheduled_at?: Date | string | null
+    picked_at?: Date | string | null
+    delivered_at?: Date | string | null
+    notes?: string | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    created_at?: Date | string
+    updated_at?: Date | string
+  }
+
+  export type seller_deliveriesUpdateManyMutationInput = {
+    delivery_id?: StringFieldUpdateOperationsInput | string
+    business_id?: StringFieldUpdateOperationsInput | string
+    tenant_id?: NullableStringFieldUpdateOperationsInput | string | null
+    order_id?: NullableStringFieldUpdateOperationsInput | string | null
+    product_order_id?: NullableStringFieldUpdateOperationsInput | string | null
+    customer_id?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    delivery_mode?: StringFieldUpdateOperationsInput | string
+    delivery_person?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    pincode?: NullableStringFieldUpdateOperationsInput | string | null
+    scheduled_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    picked_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    delivered_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type seller_deliveriesUncheckedUpdateManyInput = {
+    delivery_id?: StringFieldUpdateOperationsInput | string
+    business_id?: StringFieldUpdateOperationsInput | string
+    tenant_id?: NullableStringFieldUpdateOperationsInput | string | null
+    order_id?: NullableStringFieldUpdateOperationsInput | string | null
+    product_order_id?: NullableStringFieldUpdateOperationsInput | string | null
+    customer_id?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    delivery_mode?: StringFieldUpdateOperationsInput | string
+    delivery_person?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    pincode?: NullableStringFieldUpdateOperationsInput | string | null
+    scheduled_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    picked_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    delivered_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type seller_customer_credit_accountsCreateInput = {
+    credit_account_id?: string
+    business_id: string
+    tenant_id?: string | null
+    customer_id?: string | null
+    customer_name?: string | null
+    phone: string
+    status?: string
+    credit_limit?: Decimal | DecimalJsLike | number | string
+    current_balance?: Decimal | DecimalJsLike | number | string
+    due_days?: number
+    approved_by?: string | null
+    approved_at?: Date | string | null
+    notes?: string | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    created_at?: Date | string
+    updated_at?: Date | string
+  }
+
+  export type seller_customer_credit_accountsUncheckedCreateInput = {
+    credit_account_id?: string
+    business_id: string
+    tenant_id?: string | null
+    customer_id?: string | null
+    customer_name?: string | null
+    phone: string
+    status?: string
+    credit_limit?: Decimal | DecimalJsLike | number | string
+    current_balance?: Decimal | DecimalJsLike | number | string
+    due_days?: number
+    approved_by?: string | null
+    approved_at?: Date | string | null
+    notes?: string | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    created_at?: Date | string
+    updated_at?: Date | string
+  }
+
+  export type seller_customer_credit_accountsUpdateInput = {
+    credit_account_id?: StringFieldUpdateOperationsInput | string
+    business_id?: StringFieldUpdateOperationsInput | string
+    tenant_id?: NullableStringFieldUpdateOperationsInput | string | null
+    customer_id?: NullableStringFieldUpdateOperationsInput | string | null
+    customer_name?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    credit_limit?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    current_balance?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    due_days?: IntFieldUpdateOperationsInput | number
+    approved_by?: NullableStringFieldUpdateOperationsInput | string | null
+    approved_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type seller_customer_credit_accountsUncheckedUpdateInput = {
+    credit_account_id?: StringFieldUpdateOperationsInput | string
+    business_id?: StringFieldUpdateOperationsInput | string
+    tenant_id?: NullableStringFieldUpdateOperationsInput | string | null
+    customer_id?: NullableStringFieldUpdateOperationsInput | string | null
+    customer_name?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    credit_limit?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    current_balance?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    due_days?: IntFieldUpdateOperationsInput | number
+    approved_by?: NullableStringFieldUpdateOperationsInput | string | null
+    approved_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type seller_customer_credit_accountsCreateManyInput = {
+    credit_account_id?: string
+    business_id: string
+    tenant_id?: string | null
+    customer_id?: string | null
+    customer_name?: string | null
+    phone: string
+    status?: string
+    credit_limit?: Decimal | DecimalJsLike | number | string
+    current_balance?: Decimal | DecimalJsLike | number | string
+    due_days?: number
+    approved_by?: string | null
+    approved_at?: Date | string | null
+    notes?: string | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    created_at?: Date | string
+    updated_at?: Date | string
+  }
+
+  export type seller_customer_credit_accountsUpdateManyMutationInput = {
+    credit_account_id?: StringFieldUpdateOperationsInput | string
+    business_id?: StringFieldUpdateOperationsInput | string
+    tenant_id?: NullableStringFieldUpdateOperationsInput | string | null
+    customer_id?: NullableStringFieldUpdateOperationsInput | string | null
+    customer_name?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    credit_limit?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    current_balance?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    due_days?: IntFieldUpdateOperationsInput | number
+    approved_by?: NullableStringFieldUpdateOperationsInput | string | null
+    approved_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type seller_customer_credit_accountsUncheckedUpdateManyInput = {
+    credit_account_id?: StringFieldUpdateOperationsInput | string
+    business_id?: StringFieldUpdateOperationsInput | string
+    tenant_id?: NullableStringFieldUpdateOperationsInput | string | null
+    customer_id?: NullableStringFieldUpdateOperationsInput | string | null
+    customer_name?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    credit_limit?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    current_balance?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    due_days?: IntFieldUpdateOperationsInput | number
+    approved_by?: NullableStringFieldUpdateOperationsInput | string | null
+    approved_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type seller_customer_credit_transactionsCreateInput = {
+    credit_transaction_id?: string
+    credit_account_id: string
+    business_id: string
+    order_id?: string | null
+    transaction_type: string
+    amount: Decimal | DecimalJsLike | number | string
+    balance_after: Decimal | DecimalJsLike | number | string
+    note?: string | null
+    created_by?: string | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    created_at?: Date | string
+  }
+
+  export type seller_customer_credit_transactionsUncheckedCreateInput = {
+    credit_transaction_id?: string
+    credit_account_id: string
+    business_id: string
+    order_id?: string | null
+    transaction_type: string
+    amount: Decimal | DecimalJsLike | number | string
+    balance_after: Decimal | DecimalJsLike | number | string
+    note?: string | null
+    created_by?: string | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    created_at?: Date | string
+  }
+
+  export type seller_customer_credit_transactionsUpdateInput = {
+    credit_transaction_id?: StringFieldUpdateOperationsInput | string
+    credit_account_id?: StringFieldUpdateOperationsInput | string
+    business_id?: StringFieldUpdateOperationsInput | string
+    order_id?: NullableStringFieldUpdateOperationsInput | string | null
+    transaction_type?: StringFieldUpdateOperationsInput | string
+    amount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    balance_after?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    note?: NullableStringFieldUpdateOperationsInput | string | null
+    created_by?: NullableStringFieldUpdateOperationsInput | string | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type seller_customer_credit_transactionsUncheckedUpdateInput = {
+    credit_transaction_id?: StringFieldUpdateOperationsInput | string
+    credit_account_id?: StringFieldUpdateOperationsInput | string
+    business_id?: StringFieldUpdateOperationsInput | string
+    order_id?: NullableStringFieldUpdateOperationsInput | string | null
+    transaction_type?: StringFieldUpdateOperationsInput | string
+    amount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    balance_after?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    note?: NullableStringFieldUpdateOperationsInput | string | null
+    created_by?: NullableStringFieldUpdateOperationsInput | string | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type seller_customer_credit_transactionsCreateManyInput = {
+    credit_transaction_id?: string
+    credit_account_id: string
+    business_id: string
+    order_id?: string | null
+    transaction_type: string
+    amount: Decimal | DecimalJsLike | number | string
+    balance_after: Decimal | DecimalJsLike | number | string
+    note?: string | null
+    created_by?: string | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    created_at?: Date | string
+  }
+
+  export type seller_customer_credit_transactionsUpdateManyMutationInput = {
+    credit_transaction_id?: StringFieldUpdateOperationsInput | string
+    credit_account_id?: StringFieldUpdateOperationsInput | string
+    business_id?: StringFieldUpdateOperationsInput | string
+    order_id?: NullableStringFieldUpdateOperationsInput | string | null
+    transaction_type?: StringFieldUpdateOperationsInput | string
+    amount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    balance_after?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    note?: NullableStringFieldUpdateOperationsInput | string | null
+    created_by?: NullableStringFieldUpdateOperationsInput | string | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type seller_customer_credit_transactionsUncheckedUpdateManyInput = {
+    credit_transaction_id?: StringFieldUpdateOperationsInput | string
+    credit_account_id?: StringFieldUpdateOperationsInput | string
+    business_id?: StringFieldUpdateOperationsInput | string
+    order_id?: NullableStringFieldUpdateOperationsInput | string | null
+    transaction_type?: StringFieldUpdateOperationsInput | string
+    amount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    balance_after?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    note?: NullableStringFieldUpdateOperationsInput | string | null
+    created_by?: NullableStringFieldUpdateOperationsInput | string | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type seller_ai_audit_logsCreateInput = {
+    ai_audit_id?: string
+    business_id: string
+    tenant_id?: string | null
+    ai_employee: string
+    action: string
+    decision: string
+    confidence?: Decimal | DecimalJsLike | number | string | null
+    risk_level?: string
+    entity_type?: string | null
+    entity_id?: string | null
+    input_summary?: string | null
+    output_summary?: string | null
+    guardrails?: NullableJsonNullValueInput | InputJsonValue
+    owner_visible?: boolean
+    created_at?: Date | string
+  }
+
+  export type seller_ai_audit_logsUncheckedCreateInput = {
+    ai_audit_id?: string
+    business_id: string
+    tenant_id?: string | null
+    ai_employee: string
+    action: string
+    decision: string
+    confidence?: Decimal | DecimalJsLike | number | string | null
+    risk_level?: string
+    entity_type?: string | null
+    entity_id?: string | null
+    input_summary?: string | null
+    output_summary?: string | null
+    guardrails?: NullableJsonNullValueInput | InputJsonValue
+    owner_visible?: boolean
+    created_at?: Date | string
+  }
+
+  export type seller_ai_audit_logsUpdateInput = {
+    ai_audit_id?: StringFieldUpdateOperationsInput | string
+    business_id?: StringFieldUpdateOperationsInput | string
+    tenant_id?: NullableStringFieldUpdateOperationsInput | string | null
+    ai_employee?: StringFieldUpdateOperationsInput | string
+    action?: StringFieldUpdateOperationsInput | string
+    decision?: StringFieldUpdateOperationsInput | string
+    confidence?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    risk_level?: StringFieldUpdateOperationsInput | string
+    entity_type?: NullableStringFieldUpdateOperationsInput | string | null
+    entity_id?: NullableStringFieldUpdateOperationsInput | string | null
+    input_summary?: NullableStringFieldUpdateOperationsInput | string | null
+    output_summary?: NullableStringFieldUpdateOperationsInput | string | null
+    guardrails?: NullableJsonNullValueInput | InputJsonValue
+    owner_visible?: BoolFieldUpdateOperationsInput | boolean
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type seller_ai_audit_logsUncheckedUpdateInput = {
+    ai_audit_id?: StringFieldUpdateOperationsInput | string
+    business_id?: StringFieldUpdateOperationsInput | string
+    tenant_id?: NullableStringFieldUpdateOperationsInput | string | null
+    ai_employee?: StringFieldUpdateOperationsInput | string
+    action?: StringFieldUpdateOperationsInput | string
+    decision?: StringFieldUpdateOperationsInput | string
+    confidence?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    risk_level?: StringFieldUpdateOperationsInput | string
+    entity_type?: NullableStringFieldUpdateOperationsInput | string | null
+    entity_id?: NullableStringFieldUpdateOperationsInput | string | null
+    input_summary?: NullableStringFieldUpdateOperationsInput | string | null
+    output_summary?: NullableStringFieldUpdateOperationsInput | string | null
+    guardrails?: NullableJsonNullValueInput | InputJsonValue
+    owner_visible?: BoolFieldUpdateOperationsInput | boolean
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type seller_ai_audit_logsCreateManyInput = {
+    ai_audit_id?: string
+    business_id: string
+    tenant_id?: string | null
+    ai_employee: string
+    action: string
+    decision: string
+    confidence?: Decimal | DecimalJsLike | number | string | null
+    risk_level?: string
+    entity_type?: string | null
+    entity_id?: string | null
+    input_summary?: string | null
+    output_summary?: string | null
+    guardrails?: NullableJsonNullValueInput | InputJsonValue
+    owner_visible?: boolean
+    created_at?: Date | string
+  }
+
+  export type seller_ai_audit_logsUpdateManyMutationInput = {
+    ai_audit_id?: StringFieldUpdateOperationsInput | string
+    business_id?: StringFieldUpdateOperationsInput | string
+    tenant_id?: NullableStringFieldUpdateOperationsInput | string | null
+    ai_employee?: StringFieldUpdateOperationsInput | string
+    action?: StringFieldUpdateOperationsInput | string
+    decision?: StringFieldUpdateOperationsInput | string
+    confidence?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    risk_level?: StringFieldUpdateOperationsInput | string
+    entity_type?: NullableStringFieldUpdateOperationsInput | string | null
+    entity_id?: NullableStringFieldUpdateOperationsInput | string | null
+    input_summary?: NullableStringFieldUpdateOperationsInput | string | null
+    output_summary?: NullableStringFieldUpdateOperationsInput | string | null
+    guardrails?: NullableJsonNullValueInput | InputJsonValue
+    owner_visible?: BoolFieldUpdateOperationsInput | boolean
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type seller_ai_audit_logsUncheckedUpdateManyInput = {
+    ai_audit_id?: StringFieldUpdateOperationsInput | string
+    business_id?: StringFieldUpdateOperationsInput | string
+    tenant_id?: NullableStringFieldUpdateOperationsInput | string | null
+    ai_employee?: StringFieldUpdateOperationsInput | string
+    action?: StringFieldUpdateOperationsInput | string
+    decision?: StringFieldUpdateOperationsInput | string
+    confidence?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    risk_level?: StringFieldUpdateOperationsInput | string
+    entity_type?: NullableStringFieldUpdateOperationsInput | string | null
+    entity_id?: NullableStringFieldUpdateOperationsInput | string | null
+    input_summary?: NullableStringFieldUpdateOperationsInput | string | null
+    output_summary?: NullableStringFieldUpdateOperationsInput | string | null
+    guardrails?: NullableJsonNullValueInput | InputJsonValue
+    owner_visible?: BoolFieldUpdateOperationsInput | boolean
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type seller_product_profit_snapshotsCreateInput = {
+    profit_snapshot_id?: string
+    business_id: string
+    item_id: string
+    variant_id?: string | null
+    cost_price?: Decimal | DecimalJsLike | number | string | null
+    selling_price: Decimal | DecimalJsLike | number | string
+    gross_margin?: Decimal | DecimalJsLike | number | string | null
+    margin_percentage?: Decimal | DecimalJsLike | number | string | null
+    source?: string
+    recommendation?: string | null
+    created_at?: Date | string
+  }
+
+  export type seller_product_profit_snapshotsUncheckedCreateInput = {
+    profit_snapshot_id?: string
+    business_id: string
+    item_id: string
+    variant_id?: string | null
+    cost_price?: Decimal | DecimalJsLike | number | string | null
+    selling_price: Decimal | DecimalJsLike | number | string
+    gross_margin?: Decimal | DecimalJsLike | number | string | null
+    margin_percentage?: Decimal | DecimalJsLike | number | string | null
+    source?: string
+    recommendation?: string | null
+    created_at?: Date | string
+  }
+
+  export type seller_product_profit_snapshotsUpdateInput = {
+    profit_snapshot_id?: StringFieldUpdateOperationsInput | string
+    business_id?: StringFieldUpdateOperationsInput | string
+    item_id?: StringFieldUpdateOperationsInput | string
+    variant_id?: NullableStringFieldUpdateOperationsInput | string | null
+    cost_price?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    selling_price?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    gross_margin?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    margin_percentage?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    source?: StringFieldUpdateOperationsInput | string
+    recommendation?: NullableStringFieldUpdateOperationsInput | string | null
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type seller_product_profit_snapshotsUncheckedUpdateInput = {
+    profit_snapshot_id?: StringFieldUpdateOperationsInput | string
+    business_id?: StringFieldUpdateOperationsInput | string
+    item_id?: StringFieldUpdateOperationsInput | string
+    variant_id?: NullableStringFieldUpdateOperationsInput | string | null
+    cost_price?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    selling_price?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    gross_margin?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    margin_percentage?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    source?: StringFieldUpdateOperationsInput | string
+    recommendation?: NullableStringFieldUpdateOperationsInput | string | null
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type seller_product_profit_snapshotsCreateManyInput = {
+    profit_snapshot_id?: string
+    business_id: string
+    item_id: string
+    variant_id?: string | null
+    cost_price?: Decimal | DecimalJsLike | number | string | null
+    selling_price: Decimal | DecimalJsLike | number | string
+    gross_margin?: Decimal | DecimalJsLike | number | string | null
+    margin_percentage?: Decimal | DecimalJsLike | number | string | null
+    source?: string
+    recommendation?: string | null
+    created_at?: Date | string
+  }
+
+  export type seller_product_profit_snapshotsUpdateManyMutationInput = {
+    profit_snapshot_id?: StringFieldUpdateOperationsInput | string
+    business_id?: StringFieldUpdateOperationsInput | string
+    item_id?: StringFieldUpdateOperationsInput | string
+    variant_id?: NullableStringFieldUpdateOperationsInput | string | null
+    cost_price?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    selling_price?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    gross_margin?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    margin_percentage?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    source?: StringFieldUpdateOperationsInput | string
+    recommendation?: NullableStringFieldUpdateOperationsInput | string | null
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type seller_product_profit_snapshotsUncheckedUpdateManyInput = {
+    profit_snapshot_id?: StringFieldUpdateOperationsInput | string
+    business_id?: StringFieldUpdateOperationsInput | string
+    item_id?: StringFieldUpdateOperationsInput | string
+    variant_id?: NullableStringFieldUpdateOperationsInput | string | null
+    cost_price?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    selling_price?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    gross_margin?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    margin_percentage?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    source?: StringFieldUpdateOperationsInput | string
+    recommendation?: NullableStringFieldUpdateOperationsInput | string | null
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type seller_demand_signalsCreateInput = {
+    demand_signal_id?: string
+    business_id: string
+    item_id?: string | null
+    category?: string | null
+    signal_type: string
+    signal_count?: number
+    period_start: Date | string
+    period_end: Date | string
+    source?: string
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    created_at?: Date | string
+  }
+
+  export type seller_demand_signalsUncheckedCreateInput = {
+    demand_signal_id?: string
+    business_id: string
+    item_id?: string | null
+    category?: string | null
+    signal_type: string
+    signal_count?: number
+    period_start: Date | string
+    period_end: Date | string
+    source?: string
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    created_at?: Date | string
+  }
+
+  export type seller_demand_signalsUpdateInput = {
+    demand_signal_id?: StringFieldUpdateOperationsInput | string
+    business_id?: StringFieldUpdateOperationsInput | string
+    item_id?: NullableStringFieldUpdateOperationsInput | string | null
+    category?: NullableStringFieldUpdateOperationsInput | string | null
+    signal_type?: StringFieldUpdateOperationsInput | string
+    signal_count?: IntFieldUpdateOperationsInput | number
+    period_start?: DateTimeFieldUpdateOperationsInput | Date | string
+    period_end?: DateTimeFieldUpdateOperationsInput | Date | string
+    source?: StringFieldUpdateOperationsInput | string
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type seller_demand_signalsUncheckedUpdateInput = {
+    demand_signal_id?: StringFieldUpdateOperationsInput | string
+    business_id?: StringFieldUpdateOperationsInput | string
+    item_id?: NullableStringFieldUpdateOperationsInput | string | null
+    category?: NullableStringFieldUpdateOperationsInput | string | null
+    signal_type?: StringFieldUpdateOperationsInput | string
+    signal_count?: IntFieldUpdateOperationsInput | number
+    period_start?: DateTimeFieldUpdateOperationsInput | Date | string
+    period_end?: DateTimeFieldUpdateOperationsInput | Date | string
+    source?: StringFieldUpdateOperationsInput | string
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type seller_demand_signalsCreateManyInput = {
+    demand_signal_id?: string
+    business_id: string
+    item_id?: string | null
+    category?: string | null
+    signal_type: string
+    signal_count?: number
+    period_start: Date | string
+    period_end: Date | string
+    source?: string
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    created_at?: Date | string
+  }
+
+  export type seller_demand_signalsUpdateManyMutationInput = {
+    demand_signal_id?: StringFieldUpdateOperationsInput | string
+    business_id?: StringFieldUpdateOperationsInput | string
+    item_id?: NullableStringFieldUpdateOperationsInput | string | null
+    category?: NullableStringFieldUpdateOperationsInput | string | null
+    signal_type?: StringFieldUpdateOperationsInput | string
+    signal_count?: IntFieldUpdateOperationsInput | number
+    period_start?: DateTimeFieldUpdateOperationsInput | Date | string
+    period_end?: DateTimeFieldUpdateOperationsInput | Date | string
+    source?: StringFieldUpdateOperationsInput | string
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type seller_demand_signalsUncheckedUpdateManyInput = {
+    demand_signal_id?: StringFieldUpdateOperationsInput | string
+    business_id?: StringFieldUpdateOperationsInput | string
+    item_id?: NullableStringFieldUpdateOperationsInput | string | null
+    category?: NullableStringFieldUpdateOperationsInput | string | null
+    signal_type?: StringFieldUpdateOperationsInput | string
+    signal_count?: IntFieldUpdateOperationsInput | number
+    period_start?: DateTimeFieldUpdateOperationsInput | Date | string
+    period_end?: DateTimeFieldUpdateOperationsInput | Date | string
+    source?: StringFieldUpdateOperationsInput | string
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type seller_product_import_jobsCreateInput = {
+    import_job_id?: string
+    business_id: string
+    tenant_id: string
+    source?: string
+    status?: string
+    total_rows?: number
+    created_count?: number
+    updated_count?: number
+    skipped_count?: number
+    failed_count?: number
+    errors?: NullableJsonNullValueInput | InputJsonValue
+    summary?: NullableJsonNullValueInput | InputJsonValue
+    created_by?: string | null
+    started_at?: Date | string
+    finished_at?: Date | string | null
+    created_at?: Date | string
+    updated_at?: Date | string
+  }
+
+  export type seller_product_import_jobsUncheckedCreateInput = {
+    import_job_id?: string
+    business_id: string
+    tenant_id: string
+    source?: string
+    status?: string
+    total_rows?: number
+    created_count?: number
+    updated_count?: number
+    skipped_count?: number
+    failed_count?: number
+    errors?: NullableJsonNullValueInput | InputJsonValue
+    summary?: NullableJsonNullValueInput | InputJsonValue
+    created_by?: string | null
+    started_at?: Date | string
+    finished_at?: Date | string | null
+    created_at?: Date | string
+    updated_at?: Date | string
+  }
+
+  export type seller_product_import_jobsUpdateInput = {
+    import_job_id?: StringFieldUpdateOperationsInput | string
+    business_id?: StringFieldUpdateOperationsInput | string
+    tenant_id?: StringFieldUpdateOperationsInput | string
+    source?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    total_rows?: IntFieldUpdateOperationsInput | number
+    created_count?: IntFieldUpdateOperationsInput | number
+    updated_count?: IntFieldUpdateOperationsInput | number
+    skipped_count?: IntFieldUpdateOperationsInput | number
+    failed_count?: IntFieldUpdateOperationsInput | number
+    errors?: NullableJsonNullValueInput | InputJsonValue
+    summary?: NullableJsonNullValueInput | InputJsonValue
+    created_by?: NullableStringFieldUpdateOperationsInput | string | null
+    started_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    finished_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type seller_product_import_jobsUncheckedUpdateInput = {
+    import_job_id?: StringFieldUpdateOperationsInput | string
+    business_id?: StringFieldUpdateOperationsInput | string
+    tenant_id?: StringFieldUpdateOperationsInput | string
+    source?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    total_rows?: IntFieldUpdateOperationsInput | number
+    created_count?: IntFieldUpdateOperationsInput | number
+    updated_count?: IntFieldUpdateOperationsInput | number
+    skipped_count?: IntFieldUpdateOperationsInput | number
+    failed_count?: IntFieldUpdateOperationsInput | number
+    errors?: NullableJsonNullValueInput | InputJsonValue
+    summary?: NullableJsonNullValueInput | InputJsonValue
+    created_by?: NullableStringFieldUpdateOperationsInput | string | null
+    started_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    finished_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type seller_product_import_jobsCreateManyInput = {
+    import_job_id?: string
+    business_id: string
+    tenant_id: string
+    source?: string
+    status?: string
+    total_rows?: number
+    created_count?: number
+    updated_count?: number
+    skipped_count?: number
+    failed_count?: number
+    errors?: NullableJsonNullValueInput | InputJsonValue
+    summary?: NullableJsonNullValueInput | InputJsonValue
+    created_by?: string | null
+    started_at?: Date | string
+    finished_at?: Date | string | null
+    created_at?: Date | string
+    updated_at?: Date | string
+  }
+
+  export type seller_product_import_jobsUpdateManyMutationInput = {
+    import_job_id?: StringFieldUpdateOperationsInput | string
+    business_id?: StringFieldUpdateOperationsInput | string
+    tenant_id?: StringFieldUpdateOperationsInput | string
+    source?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    total_rows?: IntFieldUpdateOperationsInput | number
+    created_count?: IntFieldUpdateOperationsInput | number
+    updated_count?: IntFieldUpdateOperationsInput | number
+    skipped_count?: IntFieldUpdateOperationsInput | number
+    failed_count?: IntFieldUpdateOperationsInput | number
+    errors?: NullableJsonNullValueInput | InputJsonValue
+    summary?: NullableJsonNullValueInput | InputJsonValue
+    created_by?: NullableStringFieldUpdateOperationsInput | string | null
+    started_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    finished_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type seller_product_import_jobsUncheckedUpdateManyInput = {
+    import_job_id?: StringFieldUpdateOperationsInput | string
+    business_id?: StringFieldUpdateOperationsInput | string
+    tenant_id?: StringFieldUpdateOperationsInput | string
+    source?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    total_rows?: IntFieldUpdateOperationsInput | number
+    created_count?: IntFieldUpdateOperationsInput | number
+    updated_count?: IntFieldUpdateOperationsInput | number
+    skipped_count?: IntFieldUpdateOperationsInput | number
+    failed_count?: IntFieldUpdateOperationsInput | number
+    errors?: NullableJsonNullValueInput | InputJsonValue
+    summary?: NullableJsonNullValueInput | InputJsonValue
+    created_by?: NullableStringFieldUpdateOperationsInput | string | null
+    started_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    finished_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type seller_stock_adjustmentsCreateInput = {
+    adjustment_id?: string
+    business_id: string
+    tenant_id: string
+    item_id: string
+    variant_id?: string | null
+    import_job_id?: string | null
+    adjustment_type: string
+    quantity_change: number
+    quantity_before: number
+    quantity_after: number
+    reason: string
+    source?: string
+    reference?: string | null
+    note?: string | null
+    created_by?: string | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    created_at?: Date | string
+  }
+
+  export type seller_stock_adjustmentsUncheckedCreateInput = {
+    adjustment_id?: string
+    business_id: string
+    tenant_id: string
+    item_id: string
+    variant_id?: string | null
+    import_job_id?: string | null
+    adjustment_type: string
+    quantity_change: number
+    quantity_before: number
+    quantity_after: number
+    reason: string
+    source?: string
+    reference?: string | null
+    note?: string | null
+    created_by?: string | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    created_at?: Date | string
+  }
+
+  export type seller_stock_adjustmentsUpdateInput = {
+    adjustment_id?: StringFieldUpdateOperationsInput | string
+    business_id?: StringFieldUpdateOperationsInput | string
+    tenant_id?: StringFieldUpdateOperationsInput | string
+    item_id?: StringFieldUpdateOperationsInput | string
+    variant_id?: NullableStringFieldUpdateOperationsInput | string | null
+    import_job_id?: NullableStringFieldUpdateOperationsInput | string | null
+    adjustment_type?: StringFieldUpdateOperationsInput | string
+    quantity_change?: IntFieldUpdateOperationsInput | number
+    quantity_before?: IntFieldUpdateOperationsInput | number
+    quantity_after?: IntFieldUpdateOperationsInput | number
+    reason?: StringFieldUpdateOperationsInput | string
+    source?: StringFieldUpdateOperationsInput | string
+    reference?: NullableStringFieldUpdateOperationsInput | string | null
+    note?: NullableStringFieldUpdateOperationsInput | string | null
+    created_by?: NullableStringFieldUpdateOperationsInput | string | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type seller_stock_adjustmentsUncheckedUpdateInput = {
+    adjustment_id?: StringFieldUpdateOperationsInput | string
+    business_id?: StringFieldUpdateOperationsInput | string
+    tenant_id?: StringFieldUpdateOperationsInput | string
+    item_id?: StringFieldUpdateOperationsInput | string
+    variant_id?: NullableStringFieldUpdateOperationsInput | string | null
+    import_job_id?: NullableStringFieldUpdateOperationsInput | string | null
+    adjustment_type?: StringFieldUpdateOperationsInput | string
+    quantity_change?: IntFieldUpdateOperationsInput | number
+    quantity_before?: IntFieldUpdateOperationsInput | number
+    quantity_after?: IntFieldUpdateOperationsInput | number
+    reason?: StringFieldUpdateOperationsInput | string
+    source?: StringFieldUpdateOperationsInput | string
+    reference?: NullableStringFieldUpdateOperationsInput | string | null
+    note?: NullableStringFieldUpdateOperationsInput | string | null
+    created_by?: NullableStringFieldUpdateOperationsInput | string | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type seller_stock_adjustmentsCreateManyInput = {
+    adjustment_id?: string
+    business_id: string
+    tenant_id: string
+    item_id: string
+    variant_id?: string | null
+    import_job_id?: string | null
+    adjustment_type: string
+    quantity_change: number
+    quantity_before: number
+    quantity_after: number
+    reason: string
+    source?: string
+    reference?: string | null
+    note?: string | null
+    created_by?: string | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    created_at?: Date | string
+  }
+
+  export type seller_stock_adjustmentsUpdateManyMutationInput = {
+    adjustment_id?: StringFieldUpdateOperationsInput | string
+    business_id?: StringFieldUpdateOperationsInput | string
+    tenant_id?: StringFieldUpdateOperationsInput | string
+    item_id?: StringFieldUpdateOperationsInput | string
+    variant_id?: NullableStringFieldUpdateOperationsInput | string | null
+    import_job_id?: NullableStringFieldUpdateOperationsInput | string | null
+    adjustment_type?: StringFieldUpdateOperationsInput | string
+    quantity_change?: IntFieldUpdateOperationsInput | number
+    quantity_before?: IntFieldUpdateOperationsInput | number
+    quantity_after?: IntFieldUpdateOperationsInput | number
+    reason?: StringFieldUpdateOperationsInput | string
+    source?: StringFieldUpdateOperationsInput | string
+    reference?: NullableStringFieldUpdateOperationsInput | string | null
+    note?: NullableStringFieldUpdateOperationsInput | string | null
+    created_by?: NullableStringFieldUpdateOperationsInput | string | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type seller_stock_adjustmentsUncheckedUpdateManyInput = {
+    adjustment_id?: StringFieldUpdateOperationsInput | string
+    business_id?: StringFieldUpdateOperationsInput | string
+    tenant_id?: StringFieldUpdateOperationsInput | string
+    item_id?: StringFieldUpdateOperationsInput | string
+    variant_id?: NullableStringFieldUpdateOperationsInput | string | null
+    import_job_id?: NullableStringFieldUpdateOperationsInput | string | null
+    adjustment_type?: StringFieldUpdateOperationsInput | string
+    quantity_change?: IntFieldUpdateOperationsInput | number
+    quantity_before?: IntFieldUpdateOperationsInput | number
+    quantity_after?: IntFieldUpdateOperationsInput | number
+    reason?: StringFieldUpdateOperationsInput | string
+    source?: StringFieldUpdateOperationsInput | string
+    reference?: NullableStringFieldUpdateOperationsInput | string | null
+    note?: NullableStringFieldUpdateOperationsInput | string | null
+    created_by?: NullableStringFieldUpdateOperationsInput | string | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type hospitality_item_detailsCreateInput = {
     service_type?: string | null
     capacity?: number | null
@@ -115788,15 +134125,9 @@ export namespace Prisma {
     not?: NestedStringNullableFilter<$PrismaModel> | string | null
   }
 
-  export type DateTimeFilter<$PrismaModel = never> = {
-    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
-    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
-    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    not?: NestedDateTimeFilter<$PrismaModel> | Date | string
+  export type BoolFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
+    not?: NestedBoolFilter<$PrismaModel> | boolean
   }
 
   export type DateTimeNullableFilter<$PrismaModel = never> = {
@@ -115808,6 +134139,17 @@ export namespace Prisma {
     gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
     gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
     not?: NestedDateTimeNullableFilter<$PrismaModel> | Date | string | null
+  }
+
+  export type DateTimeFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
+    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeFilter<$PrismaModel> | Date | string
   }
 
   export type Business_employeesListRelationFilter = {
@@ -116110,6 +134452,10 @@ export namespace Prisma {
     tenant_id?: SortOrder
     business_name?: SortOrder
     business_type?: SortOrder
+    business_group?: SortOrder
+    communication_mode?: SortOrder
+    blueprint_seeded?: SortOrder
+    blueprint_seeded_at?: SortOrder
     whatsapp_number?: SortOrder
     created_at?: SortOrder
     updated_at?: SortOrder
@@ -116130,6 +134476,10 @@ export namespace Prisma {
     tenant_id?: SortOrder
     business_name?: SortOrder
     business_type?: SortOrder
+    business_group?: SortOrder
+    communication_mode?: SortOrder
+    blueprint_seeded?: SortOrder
+    blueprint_seeded_at?: SortOrder
     whatsapp_number?: SortOrder
     created_at?: SortOrder
     updated_at?: SortOrder
@@ -116150,6 +134500,10 @@ export namespace Prisma {
     tenant_id?: SortOrder
     business_name?: SortOrder
     business_type?: SortOrder
+    business_group?: SortOrder
+    communication_mode?: SortOrder
+    blueprint_seeded?: SortOrder
+    blueprint_seeded_at?: SortOrder
     whatsapp_number?: SortOrder
     created_at?: SortOrder
     updated_at?: SortOrder
@@ -116216,18 +134570,12 @@ export namespace Prisma {
     _max?: NestedStringNullableFilter<$PrismaModel>
   }
 
-  export type DateTimeWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
-    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
-    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    not?: NestedDateTimeWithAggregatesFilter<$PrismaModel> | Date | string
+  export type BoolWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
+    not?: NestedBoolWithAggregatesFilter<$PrismaModel> | boolean
     _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedDateTimeFilter<$PrismaModel>
-    _max?: NestedDateTimeFilter<$PrismaModel>
+    _min?: NestedBoolFilter<$PrismaModel>
+    _max?: NestedBoolFilter<$PrismaModel>
   }
 
   export type DateTimeNullableWithAggregatesFilter<$PrismaModel = never> = {
@@ -116242,6 +134590,20 @@ export namespace Prisma {
     _count?: NestedIntNullableFilter<$PrismaModel>
     _min?: NestedDateTimeNullableFilter<$PrismaModel>
     _max?: NestedDateTimeNullableFilter<$PrismaModel>
+  }
+
+  export type DateTimeWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
+    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeWithAggregatesFilter<$PrismaModel> | Date | string
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedDateTimeFilter<$PrismaModel>
+    _max?: NestedDateTimeFilter<$PrismaModel>
   }
 
   export type BusinessesScalarRelationFilter = {
@@ -116317,11 +134679,6 @@ export namespace Prisma {
     created_at?: SortOrder
   }
 
-  export type BoolFilter<$PrismaModel = never> = {
-    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
-    not?: NestedBoolFilter<$PrismaModel> | boolean
-  }
-
   export type IntentsScalarRelationFilter = {
     is?: intentsWhereInput
     isNot?: intentsWhereInput
@@ -116357,14 +134714,6 @@ export namespace Prisma {
     message?: SortOrder
     read_status?: SortOrder
     created_at?: SortOrder
-  }
-
-  export type BoolWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
-    not?: NestedBoolWithAggregatesFilter<$PrismaModel> | boolean
-    _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedBoolFilter<$PrismaModel>
-    _max?: NestedBoolFilter<$PrismaModel>
   }
 
   export type role_intentsRole_idIntent_idCompoundUniqueInput = {
@@ -117605,6 +135954,10 @@ export namespace Prisma {
     channel?: SortOrder
     content_template?: SortOrder
     sent_at?: SortOrder
+    approved_at?: SortOrder
+    approved_by?: SortOrder
+    auto_approve_at?: SortOrder
+    deduplication_key?: SortOrder
     target_segment?: SortOrder
     tenant_id?: SortOrder
     audience_filter?: SortOrder
@@ -117646,6 +135999,10 @@ export namespace Prisma {
     channel?: SortOrder
     content_template?: SortOrder
     sent_at?: SortOrder
+    approved_at?: SortOrder
+    approved_by?: SortOrder
+    auto_approve_at?: SortOrder
+    deduplication_key?: SortOrder
     tenant_id?: SortOrder
     audience_type?: SortOrder
     clicked_count?: SortOrder
@@ -117675,6 +136032,10 @@ export namespace Prisma {
     channel?: SortOrder
     content_template?: SortOrder
     sent_at?: SortOrder
+    approved_at?: SortOrder
+    approved_by?: SortOrder
+    auto_approve_at?: SortOrder
+    deduplication_key?: SortOrder
     tenant_id?: SortOrder
     audience_type?: SortOrder
     clicked_count?: SortOrder
@@ -119818,6 +138179,753 @@ export namespace Prisma {
     created_at?: SortOrder
   }
 
+  export type seller_owner_approvalsCountOrderByAggregateInput = {
+    approval_id?: SortOrder
+    business_id?: SortOrder
+    tenant_id?: SortOrder
+    title?: SortOrder
+    simple_summary?: SortOrder
+    action_type?: SortOrder
+    risk_level?: SortOrder
+    status?: SortOrder
+    source?: SortOrder
+    entity_type?: SortOrder
+    entity_id?: SortOrder
+    requested_by?: SortOrder
+    decided_by?: SortOrder
+    payload?: SortOrder
+    guardrails?: SortOrder
+    due_at?: SortOrder
+    decided_at?: SortOrder
+    expires_at?: SortOrder
+    created_at?: SortOrder
+    updated_at?: SortOrder
+  }
+
+  export type seller_owner_approvalsMaxOrderByAggregateInput = {
+    approval_id?: SortOrder
+    business_id?: SortOrder
+    tenant_id?: SortOrder
+    title?: SortOrder
+    simple_summary?: SortOrder
+    action_type?: SortOrder
+    risk_level?: SortOrder
+    status?: SortOrder
+    source?: SortOrder
+    entity_type?: SortOrder
+    entity_id?: SortOrder
+    requested_by?: SortOrder
+    decided_by?: SortOrder
+    due_at?: SortOrder
+    decided_at?: SortOrder
+    expires_at?: SortOrder
+    created_at?: SortOrder
+    updated_at?: SortOrder
+  }
+
+  export type seller_owner_approvalsMinOrderByAggregateInput = {
+    approval_id?: SortOrder
+    business_id?: SortOrder
+    tenant_id?: SortOrder
+    title?: SortOrder
+    simple_summary?: SortOrder
+    action_type?: SortOrder
+    risk_level?: SortOrder
+    status?: SortOrder
+    source?: SortOrder
+    entity_type?: SortOrder
+    entity_id?: SortOrder
+    requested_by?: SortOrder
+    decided_by?: SortOrder
+    due_at?: SortOrder
+    decided_at?: SortOrder
+    expires_at?: SortOrder
+    created_at?: SortOrder
+    updated_at?: SortOrder
+  }
+
+  export type seller_store_settingsCountOrderByAggregateInput = {
+    seller_store_settings_id?: SortOrder
+    business_id?: SortOrder
+    tenant_id?: SortOrder
+    store_type?: SortOrder
+    onboarding_status?: SortOrder
+    default_currency?: SortOrder
+    low_stock_threshold?: SortOrder
+    stock_hold_minutes?: SortOrder
+    payment_modes?: SortOrder
+    delivery_modes?: SortOrder
+    delivery_areas?: SortOrder
+    credit_defaults?: SortOrder
+    ai_guardrails?: SortOrder
+    setup_checklist?: SortOrder
+    created_at?: SortOrder
+    updated_at?: SortOrder
+  }
+
+  export type seller_store_settingsAvgOrderByAggregateInput = {
+    low_stock_threshold?: SortOrder
+    stock_hold_minutes?: SortOrder
+  }
+
+  export type seller_store_settingsMaxOrderByAggregateInput = {
+    seller_store_settings_id?: SortOrder
+    business_id?: SortOrder
+    tenant_id?: SortOrder
+    store_type?: SortOrder
+    onboarding_status?: SortOrder
+    default_currency?: SortOrder
+    low_stock_threshold?: SortOrder
+    stock_hold_minutes?: SortOrder
+    created_at?: SortOrder
+    updated_at?: SortOrder
+  }
+
+  export type seller_store_settingsMinOrderByAggregateInput = {
+    seller_store_settings_id?: SortOrder
+    business_id?: SortOrder
+    tenant_id?: SortOrder
+    store_type?: SortOrder
+    onboarding_status?: SortOrder
+    default_currency?: SortOrder
+    low_stock_threshold?: SortOrder
+    stock_hold_minutes?: SortOrder
+    created_at?: SortOrder
+    updated_at?: SortOrder
+  }
+
+  export type seller_store_settingsSumOrderByAggregateInput = {
+    low_stock_threshold?: SortOrder
+    stock_hold_minutes?: SortOrder
+  }
+
+  export type seller_stock_reservationsCountOrderByAggregateInput = {
+    reservation_id?: SortOrder
+    business_id?: SortOrder
+    tenant_id?: SortOrder
+    customer_id?: SortOrder
+    lead_id?: SortOrder
+    item_id?: SortOrder
+    variant_id?: SortOrder
+    quantity?: SortOrder
+    status?: SortOrder
+    reason?: SortOrder
+    source?: SortOrder
+    expires_at?: SortOrder
+    released_at?: SortOrder
+    converted_at?: SortOrder
+    created_by?: SortOrder
+    metadata?: SortOrder
+    created_at?: SortOrder
+    updated_at?: SortOrder
+  }
+
+  export type seller_stock_reservationsAvgOrderByAggregateInput = {
+    quantity?: SortOrder
+  }
+
+  export type seller_stock_reservationsMaxOrderByAggregateInput = {
+    reservation_id?: SortOrder
+    business_id?: SortOrder
+    tenant_id?: SortOrder
+    customer_id?: SortOrder
+    lead_id?: SortOrder
+    item_id?: SortOrder
+    variant_id?: SortOrder
+    quantity?: SortOrder
+    status?: SortOrder
+    reason?: SortOrder
+    source?: SortOrder
+    expires_at?: SortOrder
+    released_at?: SortOrder
+    converted_at?: SortOrder
+    created_by?: SortOrder
+    created_at?: SortOrder
+    updated_at?: SortOrder
+  }
+
+  export type seller_stock_reservationsMinOrderByAggregateInput = {
+    reservation_id?: SortOrder
+    business_id?: SortOrder
+    tenant_id?: SortOrder
+    customer_id?: SortOrder
+    lead_id?: SortOrder
+    item_id?: SortOrder
+    variant_id?: SortOrder
+    quantity?: SortOrder
+    status?: SortOrder
+    reason?: SortOrder
+    source?: SortOrder
+    expires_at?: SortOrder
+    released_at?: SortOrder
+    converted_at?: SortOrder
+    created_by?: SortOrder
+    created_at?: SortOrder
+    updated_at?: SortOrder
+  }
+
+  export type seller_stock_reservationsSumOrderByAggregateInput = {
+    quantity?: SortOrder
+  }
+
+  export type seller_return_casesCountOrderByAggregateInput = {
+    return_id?: SortOrder
+    business_id?: SortOrder
+    tenant_id?: SortOrder
+    order_id?: SortOrder
+    product_order_id?: SortOrder
+    customer_id?: SortOrder
+    return_type?: SortOrder
+    status?: SortOrder
+    reason?: SortOrder
+    requested_amount?: SortOrder
+    approved_amount?: SortOrder
+    items?: SortOrder
+    resolution?: SortOrder
+    handled_by?: SortOrder
+    created_at?: SortOrder
+    updated_at?: SortOrder
+    closed_at?: SortOrder
+  }
+
+  export type seller_return_casesAvgOrderByAggregateInput = {
+    requested_amount?: SortOrder
+    approved_amount?: SortOrder
+  }
+
+  export type seller_return_casesMaxOrderByAggregateInput = {
+    return_id?: SortOrder
+    business_id?: SortOrder
+    tenant_id?: SortOrder
+    order_id?: SortOrder
+    product_order_id?: SortOrder
+    customer_id?: SortOrder
+    return_type?: SortOrder
+    status?: SortOrder
+    reason?: SortOrder
+    requested_amount?: SortOrder
+    approved_amount?: SortOrder
+    handled_by?: SortOrder
+    created_at?: SortOrder
+    updated_at?: SortOrder
+    closed_at?: SortOrder
+  }
+
+  export type seller_return_casesMinOrderByAggregateInput = {
+    return_id?: SortOrder
+    business_id?: SortOrder
+    tenant_id?: SortOrder
+    order_id?: SortOrder
+    product_order_id?: SortOrder
+    customer_id?: SortOrder
+    return_type?: SortOrder
+    status?: SortOrder
+    reason?: SortOrder
+    requested_amount?: SortOrder
+    approved_amount?: SortOrder
+    handled_by?: SortOrder
+    created_at?: SortOrder
+    updated_at?: SortOrder
+    closed_at?: SortOrder
+  }
+
+  export type seller_return_casesSumOrderByAggregateInput = {
+    requested_amount?: SortOrder
+    approved_amount?: SortOrder
+  }
+
+  export type seller_deliveriesCountOrderByAggregateInput = {
+    delivery_id?: SortOrder
+    business_id?: SortOrder
+    tenant_id?: SortOrder
+    order_id?: SortOrder
+    product_order_id?: SortOrder
+    customer_id?: SortOrder
+    status?: SortOrder
+    delivery_mode?: SortOrder
+    delivery_person?: SortOrder
+    phone?: SortOrder
+    address?: SortOrder
+    pincode?: SortOrder
+    scheduled_at?: SortOrder
+    picked_at?: SortOrder
+    delivered_at?: SortOrder
+    notes?: SortOrder
+    metadata?: SortOrder
+    created_at?: SortOrder
+    updated_at?: SortOrder
+  }
+
+  export type seller_deliveriesMaxOrderByAggregateInput = {
+    delivery_id?: SortOrder
+    business_id?: SortOrder
+    tenant_id?: SortOrder
+    order_id?: SortOrder
+    product_order_id?: SortOrder
+    customer_id?: SortOrder
+    status?: SortOrder
+    delivery_mode?: SortOrder
+    delivery_person?: SortOrder
+    phone?: SortOrder
+    address?: SortOrder
+    pincode?: SortOrder
+    scheduled_at?: SortOrder
+    picked_at?: SortOrder
+    delivered_at?: SortOrder
+    notes?: SortOrder
+    created_at?: SortOrder
+    updated_at?: SortOrder
+  }
+
+  export type seller_deliveriesMinOrderByAggregateInput = {
+    delivery_id?: SortOrder
+    business_id?: SortOrder
+    tenant_id?: SortOrder
+    order_id?: SortOrder
+    product_order_id?: SortOrder
+    customer_id?: SortOrder
+    status?: SortOrder
+    delivery_mode?: SortOrder
+    delivery_person?: SortOrder
+    phone?: SortOrder
+    address?: SortOrder
+    pincode?: SortOrder
+    scheduled_at?: SortOrder
+    picked_at?: SortOrder
+    delivered_at?: SortOrder
+    notes?: SortOrder
+    created_at?: SortOrder
+    updated_at?: SortOrder
+  }
+
+  export type seller_customer_credit_accountsBusiness_idPhoneCompoundUniqueInput = {
+    business_id: string
+    phone: string
+  }
+
+  export type seller_customer_credit_accountsCountOrderByAggregateInput = {
+    credit_account_id?: SortOrder
+    business_id?: SortOrder
+    tenant_id?: SortOrder
+    customer_id?: SortOrder
+    customer_name?: SortOrder
+    phone?: SortOrder
+    status?: SortOrder
+    credit_limit?: SortOrder
+    current_balance?: SortOrder
+    due_days?: SortOrder
+    approved_by?: SortOrder
+    approved_at?: SortOrder
+    notes?: SortOrder
+    metadata?: SortOrder
+    created_at?: SortOrder
+    updated_at?: SortOrder
+  }
+
+  export type seller_customer_credit_accountsAvgOrderByAggregateInput = {
+    credit_limit?: SortOrder
+    current_balance?: SortOrder
+    due_days?: SortOrder
+  }
+
+  export type seller_customer_credit_accountsMaxOrderByAggregateInput = {
+    credit_account_id?: SortOrder
+    business_id?: SortOrder
+    tenant_id?: SortOrder
+    customer_id?: SortOrder
+    customer_name?: SortOrder
+    phone?: SortOrder
+    status?: SortOrder
+    credit_limit?: SortOrder
+    current_balance?: SortOrder
+    due_days?: SortOrder
+    approved_by?: SortOrder
+    approved_at?: SortOrder
+    notes?: SortOrder
+    created_at?: SortOrder
+    updated_at?: SortOrder
+  }
+
+  export type seller_customer_credit_accountsMinOrderByAggregateInput = {
+    credit_account_id?: SortOrder
+    business_id?: SortOrder
+    tenant_id?: SortOrder
+    customer_id?: SortOrder
+    customer_name?: SortOrder
+    phone?: SortOrder
+    status?: SortOrder
+    credit_limit?: SortOrder
+    current_balance?: SortOrder
+    due_days?: SortOrder
+    approved_by?: SortOrder
+    approved_at?: SortOrder
+    notes?: SortOrder
+    created_at?: SortOrder
+    updated_at?: SortOrder
+  }
+
+  export type seller_customer_credit_accountsSumOrderByAggregateInput = {
+    credit_limit?: SortOrder
+    current_balance?: SortOrder
+    due_days?: SortOrder
+  }
+
+  export type seller_customer_credit_transactionsCountOrderByAggregateInput = {
+    credit_transaction_id?: SortOrder
+    credit_account_id?: SortOrder
+    business_id?: SortOrder
+    order_id?: SortOrder
+    transaction_type?: SortOrder
+    amount?: SortOrder
+    balance_after?: SortOrder
+    note?: SortOrder
+    created_by?: SortOrder
+    metadata?: SortOrder
+    created_at?: SortOrder
+  }
+
+  export type seller_customer_credit_transactionsAvgOrderByAggregateInput = {
+    amount?: SortOrder
+    balance_after?: SortOrder
+  }
+
+  export type seller_customer_credit_transactionsMaxOrderByAggregateInput = {
+    credit_transaction_id?: SortOrder
+    credit_account_id?: SortOrder
+    business_id?: SortOrder
+    order_id?: SortOrder
+    transaction_type?: SortOrder
+    amount?: SortOrder
+    balance_after?: SortOrder
+    note?: SortOrder
+    created_by?: SortOrder
+    created_at?: SortOrder
+  }
+
+  export type seller_customer_credit_transactionsMinOrderByAggregateInput = {
+    credit_transaction_id?: SortOrder
+    credit_account_id?: SortOrder
+    business_id?: SortOrder
+    order_id?: SortOrder
+    transaction_type?: SortOrder
+    amount?: SortOrder
+    balance_after?: SortOrder
+    note?: SortOrder
+    created_by?: SortOrder
+    created_at?: SortOrder
+  }
+
+  export type seller_customer_credit_transactionsSumOrderByAggregateInput = {
+    amount?: SortOrder
+    balance_after?: SortOrder
+  }
+
+  export type seller_ai_audit_logsCountOrderByAggregateInput = {
+    ai_audit_id?: SortOrder
+    business_id?: SortOrder
+    tenant_id?: SortOrder
+    ai_employee?: SortOrder
+    action?: SortOrder
+    decision?: SortOrder
+    confidence?: SortOrder
+    risk_level?: SortOrder
+    entity_type?: SortOrder
+    entity_id?: SortOrder
+    input_summary?: SortOrder
+    output_summary?: SortOrder
+    guardrails?: SortOrder
+    owner_visible?: SortOrder
+    created_at?: SortOrder
+  }
+
+  export type seller_ai_audit_logsAvgOrderByAggregateInput = {
+    confidence?: SortOrder
+  }
+
+  export type seller_ai_audit_logsMaxOrderByAggregateInput = {
+    ai_audit_id?: SortOrder
+    business_id?: SortOrder
+    tenant_id?: SortOrder
+    ai_employee?: SortOrder
+    action?: SortOrder
+    decision?: SortOrder
+    confidence?: SortOrder
+    risk_level?: SortOrder
+    entity_type?: SortOrder
+    entity_id?: SortOrder
+    input_summary?: SortOrder
+    output_summary?: SortOrder
+    owner_visible?: SortOrder
+    created_at?: SortOrder
+  }
+
+  export type seller_ai_audit_logsMinOrderByAggregateInput = {
+    ai_audit_id?: SortOrder
+    business_id?: SortOrder
+    tenant_id?: SortOrder
+    ai_employee?: SortOrder
+    action?: SortOrder
+    decision?: SortOrder
+    confidence?: SortOrder
+    risk_level?: SortOrder
+    entity_type?: SortOrder
+    entity_id?: SortOrder
+    input_summary?: SortOrder
+    output_summary?: SortOrder
+    owner_visible?: SortOrder
+    created_at?: SortOrder
+  }
+
+  export type seller_ai_audit_logsSumOrderByAggregateInput = {
+    confidence?: SortOrder
+  }
+
+  export type seller_product_profit_snapshotsCountOrderByAggregateInput = {
+    profit_snapshot_id?: SortOrder
+    business_id?: SortOrder
+    item_id?: SortOrder
+    variant_id?: SortOrder
+    cost_price?: SortOrder
+    selling_price?: SortOrder
+    gross_margin?: SortOrder
+    margin_percentage?: SortOrder
+    source?: SortOrder
+    recommendation?: SortOrder
+    created_at?: SortOrder
+  }
+
+  export type seller_product_profit_snapshotsAvgOrderByAggregateInput = {
+    cost_price?: SortOrder
+    selling_price?: SortOrder
+    gross_margin?: SortOrder
+    margin_percentage?: SortOrder
+  }
+
+  export type seller_product_profit_snapshotsMaxOrderByAggregateInput = {
+    profit_snapshot_id?: SortOrder
+    business_id?: SortOrder
+    item_id?: SortOrder
+    variant_id?: SortOrder
+    cost_price?: SortOrder
+    selling_price?: SortOrder
+    gross_margin?: SortOrder
+    margin_percentage?: SortOrder
+    source?: SortOrder
+    recommendation?: SortOrder
+    created_at?: SortOrder
+  }
+
+  export type seller_product_profit_snapshotsMinOrderByAggregateInput = {
+    profit_snapshot_id?: SortOrder
+    business_id?: SortOrder
+    item_id?: SortOrder
+    variant_id?: SortOrder
+    cost_price?: SortOrder
+    selling_price?: SortOrder
+    gross_margin?: SortOrder
+    margin_percentage?: SortOrder
+    source?: SortOrder
+    recommendation?: SortOrder
+    created_at?: SortOrder
+  }
+
+  export type seller_product_profit_snapshotsSumOrderByAggregateInput = {
+    cost_price?: SortOrder
+    selling_price?: SortOrder
+    gross_margin?: SortOrder
+    margin_percentage?: SortOrder
+  }
+
+  export type seller_demand_signalsCountOrderByAggregateInput = {
+    demand_signal_id?: SortOrder
+    business_id?: SortOrder
+    item_id?: SortOrder
+    category?: SortOrder
+    signal_type?: SortOrder
+    signal_count?: SortOrder
+    period_start?: SortOrder
+    period_end?: SortOrder
+    source?: SortOrder
+    metadata?: SortOrder
+    created_at?: SortOrder
+  }
+
+  export type seller_demand_signalsAvgOrderByAggregateInput = {
+    signal_count?: SortOrder
+  }
+
+  export type seller_demand_signalsMaxOrderByAggregateInput = {
+    demand_signal_id?: SortOrder
+    business_id?: SortOrder
+    item_id?: SortOrder
+    category?: SortOrder
+    signal_type?: SortOrder
+    signal_count?: SortOrder
+    period_start?: SortOrder
+    period_end?: SortOrder
+    source?: SortOrder
+    created_at?: SortOrder
+  }
+
+  export type seller_demand_signalsMinOrderByAggregateInput = {
+    demand_signal_id?: SortOrder
+    business_id?: SortOrder
+    item_id?: SortOrder
+    category?: SortOrder
+    signal_type?: SortOrder
+    signal_count?: SortOrder
+    period_start?: SortOrder
+    period_end?: SortOrder
+    source?: SortOrder
+    created_at?: SortOrder
+  }
+
+  export type seller_demand_signalsSumOrderByAggregateInput = {
+    signal_count?: SortOrder
+  }
+
+  export type seller_product_import_jobsCountOrderByAggregateInput = {
+    import_job_id?: SortOrder
+    business_id?: SortOrder
+    tenant_id?: SortOrder
+    source?: SortOrder
+    status?: SortOrder
+    total_rows?: SortOrder
+    created_count?: SortOrder
+    updated_count?: SortOrder
+    skipped_count?: SortOrder
+    failed_count?: SortOrder
+    errors?: SortOrder
+    summary?: SortOrder
+    created_by?: SortOrder
+    started_at?: SortOrder
+    finished_at?: SortOrder
+    created_at?: SortOrder
+    updated_at?: SortOrder
+  }
+
+  export type seller_product_import_jobsAvgOrderByAggregateInput = {
+    total_rows?: SortOrder
+    created_count?: SortOrder
+    updated_count?: SortOrder
+    skipped_count?: SortOrder
+    failed_count?: SortOrder
+  }
+
+  export type seller_product_import_jobsMaxOrderByAggregateInput = {
+    import_job_id?: SortOrder
+    business_id?: SortOrder
+    tenant_id?: SortOrder
+    source?: SortOrder
+    status?: SortOrder
+    total_rows?: SortOrder
+    created_count?: SortOrder
+    updated_count?: SortOrder
+    skipped_count?: SortOrder
+    failed_count?: SortOrder
+    created_by?: SortOrder
+    started_at?: SortOrder
+    finished_at?: SortOrder
+    created_at?: SortOrder
+    updated_at?: SortOrder
+  }
+
+  export type seller_product_import_jobsMinOrderByAggregateInput = {
+    import_job_id?: SortOrder
+    business_id?: SortOrder
+    tenant_id?: SortOrder
+    source?: SortOrder
+    status?: SortOrder
+    total_rows?: SortOrder
+    created_count?: SortOrder
+    updated_count?: SortOrder
+    skipped_count?: SortOrder
+    failed_count?: SortOrder
+    created_by?: SortOrder
+    started_at?: SortOrder
+    finished_at?: SortOrder
+    created_at?: SortOrder
+    updated_at?: SortOrder
+  }
+
+  export type seller_product_import_jobsSumOrderByAggregateInput = {
+    total_rows?: SortOrder
+    created_count?: SortOrder
+    updated_count?: SortOrder
+    skipped_count?: SortOrder
+    failed_count?: SortOrder
+  }
+
+  export type seller_stock_adjustmentsCountOrderByAggregateInput = {
+    adjustment_id?: SortOrder
+    business_id?: SortOrder
+    tenant_id?: SortOrder
+    item_id?: SortOrder
+    variant_id?: SortOrder
+    import_job_id?: SortOrder
+    adjustment_type?: SortOrder
+    quantity_change?: SortOrder
+    quantity_before?: SortOrder
+    quantity_after?: SortOrder
+    reason?: SortOrder
+    source?: SortOrder
+    reference?: SortOrder
+    note?: SortOrder
+    created_by?: SortOrder
+    metadata?: SortOrder
+    created_at?: SortOrder
+  }
+
+  export type seller_stock_adjustmentsAvgOrderByAggregateInput = {
+    quantity_change?: SortOrder
+    quantity_before?: SortOrder
+    quantity_after?: SortOrder
+  }
+
+  export type seller_stock_adjustmentsMaxOrderByAggregateInput = {
+    adjustment_id?: SortOrder
+    business_id?: SortOrder
+    tenant_id?: SortOrder
+    item_id?: SortOrder
+    variant_id?: SortOrder
+    import_job_id?: SortOrder
+    adjustment_type?: SortOrder
+    quantity_change?: SortOrder
+    quantity_before?: SortOrder
+    quantity_after?: SortOrder
+    reason?: SortOrder
+    source?: SortOrder
+    reference?: SortOrder
+    note?: SortOrder
+    created_by?: SortOrder
+    created_at?: SortOrder
+  }
+
+  export type seller_stock_adjustmentsMinOrderByAggregateInput = {
+    adjustment_id?: SortOrder
+    business_id?: SortOrder
+    tenant_id?: SortOrder
+    item_id?: SortOrder
+    variant_id?: SortOrder
+    import_job_id?: SortOrder
+    adjustment_type?: SortOrder
+    quantity_change?: SortOrder
+    quantity_before?: SortOrder
+    quantity_after?: SortOrder
+    reason?: SortOrder
+    source?: SortOrder
+    reference?: SortOrder
+    note?: SortOrder
+    created_by?: SortOrder
+    created_at?: SortOrder
+  }
+
+  export type seller_stock_adjustmentsSumOrderByAggregateInput = {
+    quantity_change?: SortOrder
+    quantity_before?: SortOrder
+    quantity_after?: SortOrder
+  }
+
   export type hospitality_item_detailsCountOrderByAggregateInput = {
     item_id?: SortOrder
     business_id?: SortOrder
@@ -121453,12 +140561,16 @@ export namespace Prisma {
     set?: string | null
   }
 
-  export type DateTimeFieldUpdateOperationsInput = {
-    set?: Date | string
+  export type BoolFieldUpdateOperationsInput = {
+    set?: boolean
   }
 
   export type NullableDateTimeFieldUpdateOperationsInput = {
     set?: Date | string | null
+  }
+
+  export type DateTimeFieldUpdateOperationsInput = {
+    set?: Date | string
   }
 
   export type business_employeesUpdateManyWithoutBusinessesNestedInput = {
@@ -122393,10 +141505,6 @@ export namespace Prisma {
     create?: XOR<usersCreateWithoutNotificationsInput, usersUncheckedCreateWithoutNotificationsInput>
     connectOrCreate?: usersCreateOrConnectWithoutNotificationsInput
     connect?: usersWhereUniqueInput
-  }
-
-  export type BoolFieldUpdateOperationsInput = {
-    set?: boolean
   }
 
   export type intentsUpdateOneRequiredWithoutNotificationsNestedInput = {
@@ -126761,6 +145869,24 @@ export namespace Prisma {
     update?: XOR<XOR<product_ordersUpdateToOneWithWhereWithoutEventsInput, product_ordersUpdateWithoutEventsInput>, product_ordersUncheckedUpdateWithoutEventsInput>
   }
 
+  export type seller_store_settingsCreatepayment_modesInput = {
+    set: string[]
+  }
+
+  export type seller_store_settingsCreatedelivery_modesInput = {
+    set: string[]
+  }
+
+  export type seller_store_settingsUpdatepayment_modesInput = {
+    set?: string[]
+    push?: string | string[]
+  }
+
+  export type seller_store_settingsUpdatedelivery_modesInput = {
+    set?: string[]
+    push?: string | string[]
+  }
+
   export type businessesCreateNestedOneWithoutHospitality_item_detailsInput = {
     create?: XOR<businessesCreateWithoutHospitality_item_detailsInput, businessesUncheckedCreateWithoutHospitality_item_detailsInput>
     connectOrCreate?: businessesCreateOrConnectWithoutHospitality_item_detailsInput
@@ -127478,15 +146604,9 @@ export namespace Prisma {
     not?: NestedStringNullableFilter<$PrismaModel> | string | null
   }
 
-  export type NestedDateTimeFilter<$PrismaModel = never> = {
-    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
-    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
-    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    not?: NestedDateTimeFilter<$PrismaModel> | Date | string
+  export type NestedBoolFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
+    not?: NestedBoolFilter<$PrismaModel> | boolean
   }
 
   export type NestedDateTimeNullableFilter<$PrismaModel = never> = {
@@ -127498,6 +146618,17 @@ export namespace Prisma {
     gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
     gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
     not?: NestedDateTimeNullableFilter<$PrismaModel> | Date | string | null
+  }
+
+  export type NestedDateTimeFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
+    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeFilter<$PrismaModel> | Date | string
   }
 
   export type NestedUuidWithAggregatesFilter<$PrismaModel = never> = {
@@ -127570,18 +146701,12 @@ export namespace Prisma {
     not?: NestedIntNullableFilter<$PrismaModel> | number | null
   }
 
-  export type NestedDateTimeWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
-    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
-    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    not?: NestedDateTimeWithAggregatesFilter<$PrismaModel> | Date | string
+  export type NestedBoolWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
+    not?: NestedBoolWithAggregatesFilter<$PrismaModel> | boolean
     _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedDateTimeFilter<$PrismaModel>
-    _max?: NestedDateTimeFilter<$PrismaModel>
+    _min?: NestedBoolFilter<$PrismaModel>
+    _max?: NestedBoolFilter<$PrismaModel>
   }
 
   export type NestedDateTimeNullableWithAggregatesFilter<$PrismaModel = never> = {
@@ -127598,17 +146723,18 @@ export namespace Prisma {
     _max?: NestedDateTimeNullableFilter<$PrismaModel>
   }
 
-  export type NestedBoolFilter<$PrismaModel = never> = {
-    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
-    not?: NestedBoolFilter<$PrismaModel> | boolean
-  }
-
-  export type NestedBoolWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
-    not?: NestedBoolWithAggregatesFilter<$PrismaModel> | boolean
+  export type NestedDateTimeWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
+    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeWithAggregatesFilter<$PrismaModel> | Date | string
     _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedBoolFilter<$PrismaModel>
-    _max?: NestedBoolFilter<$PrismaModel>
+    _min?: NestedDateTimeFilter<$PrismaModel>
+    _max?: NestedDateTimeFilter<$PrismaModel>
   }
   export type NestedJsonNullableFilter<$PrismaModel = never> =
     | PatchUndefined<
@@ -130644,6 +149770,10 @@ export namespace Prisma {
     business_id?: string
     business_name: string
     business_type?: string | null
+    business_group?: string | null
+    communication_mode?: string
+    blueprint_seeded?: boolean
+    blueprint_seeded_at?: Date | string | null
     whatsapp_number?: string | null
     created_at?: Date | string
     updated_at?: Date | string
@@ -130694,6 +149824,10 @@ export namespace Prisma {
     tenant_id: string
     business_name: string
     business_type?: string | null
+    business_group?: string | null
+    communication_mode?: string
+    blueprint_seeded?: boolean
+    blueprint_seeded_at?: Date | string | null
     whatsapp_number?: string | null
     created_at?: Date | string
     updated_at?: Date | string
@@ -130758,6 +149892,10 @@ export namespace Prisma {
     business_id?: StringFieldUpdateOperationsInput | string
     business_name?: StringFieldUpdateOperationsInput | string
     business_type?: NullableStringFieldUpdateOperationsInput | string | null
+    business_group?: NullableStringFieldUpdateOperationsInput | string | null
+    communication_mode?: StringFieldUpdateOperationsInput | string
+    blueprint_seeded?: BoolFieldUpdateOperationsInput | boolean
+    blueprint_seeded_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     whatsapp_number?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -130808,6 +149946,10 @@ export namespace Prisma {
     tenant_id?: StringFieldUpdateOperationsInput | string
     business_name?: StringFieldUpdateOperationsInput | string
     business_type?: NullableStringFieldUpdateOperationsInput | string | null
+    business_group?: NullableStringFieldUpdateOperationsInput | string | null
+    communication_mode?: StringFieldUpdateOperationsInput | string
+    blueprint_seeded?: BoolFieldUpdateOperationsInput | boolean
+    blueprint_seeded_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     whatsapp_number?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -131307,6 +150449,10 @@ export namespace Prisma {
     business_id?: string
     business_name: string
     business_type?: string | null
+    business_group?: string | null
+    communication_mode?: string
+    blueprint_seeded?: boolean
+    blueprint_seeded_at?: Date | string | null
     whatsapp_number?: string | null
     created_at?: Date | string
     updated_at?: Date | string
@@ -131357,6 +150503,10 @@ export namespace Prisma {
     tenant_id: string
     business_name: string
     business_type?: string | null
+    business_group?: string | null
+    communication_mode?: string
+    blueprint_seeded?: boolean
+    blueprint_seeded_at?: Date | string | null
     whatsapp_number?: string | null
     created_at?: Date | string
     updated_at?: Date | string
@@ -131457,6 +150607,10 @@ export namespace Prisma {
     business_id?: StringFieldUpdateOperationsInput | string
     business_name?: StringFieldUpdateOperationsInput | string
     business_type?: NullableStringFieldUpdateOperationsInput | string | null
+    business_group?: NullableStringFieldUpdateOperationsInput | string | null
+    communication_mode?: StringFieldUpdateOperationsInput | string
+    blueprint_seeded?: BoolFieldUpdateOperationsInput | boolean
+    blueprint_seeded_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     whatsapp_number?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -131507,6 +150661,10 @@ export namespace Prisma {
     tenant_id?: StringFieldUpdateOperationsInput | string
     business_name?: StringFieldUpdateOperationsInput | string
     business_type?: NullableStringFieldUpdateOperationsInput | string | null
+    business_group?: NullableStringFieldUpdateOperationsInput | string | null
+    communication_mode?: StringFieldUpdateOperationsInput | string
+    blueprint_seeded?: BoolFieldUpdateOperationsInput | boolean
+    blueprint_seeded_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     whatsapp_number?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -131585,6 +150743,10 @@ export namespace Prisma {
     business_id?: string
     business_name: string
     business_type?: string | null
+    business_group?: string | null
+    communication_mode?: string
+    blueprint_seeded?: boolean
+    blueprint_seeded_at?: Date | string | null
     whatsapp_number?: string | null
     created_at?: Date | string
     updated_at?: Date | string
@@ -131634,6 +150796,10 @@ export namespace Prisma {
     business_id?: string
     business_name: string
     business_type?: string | null
+    business_group?: string | null
+    communication_mode?: string
+    blueprint_seeded?: boolean
+    blueprint_seeded_at?: Date | string | null
     whatsapp_number?: string | null
     created_at?: Date | string
     updated_at?: Date | string
@@ -132369,6 +151535,10 @@ export namespace Prisma {
     tenant_id?: UuidFilter<"businesses"> | string
     business_name?: StringFilter<"businesses"> | string
     business_type?: StringNullableFilter<"businesses"> | string | null
+    business_group?: StringNullableFilter<"businesses"> | string | null
+    communication_mode?: StringFilter<"businesses"> | string
+    blueprint_seeded?: BoolFilter<"businesses"> | boolean
+    blueprint_seeded_at?: DateTimeNullableFilter<"businesses"> | Date | string | null
     whatsapp_number?: StringNullableFilter<"businesses"> | string | null
     created_at?: DateTimeFilter<"businesses"> | Date | string
     updated_at?: DateTimeFilter<"businesses"> | Date | string
@@ -132722,6 +151892,10 @@ export namespace Prisma {
     business_id?: string
     business_name: string
     business_type?: string | null
+    business_group?: string | null
+    communication_mode?: string
+    blueprint_seeded?: boolean
+    blueprint_seeded_at?: Date | string | null
     whatsapp_number?: string | null
     created_at?: Date | string
     updated_at?: Date | string
@@ -132772,6 +151946,10 @@ export namespace Prisma {
     tenant_id: string
     business_name: string
     business_type?: string | null
+    business_group?: string | null
+    communication_mode?: string
+    blueprint_seeded?: boolean
+    blueprint_seeded_at?: Date | string | null
     whatsapp_number?: string | null
     created_at?: Date | string
     updated_at?: Date | string
@@ -132956,6 +152134,10 @@ export namespace Prisma {
     business_id?: StringFieldUpdateOperationsInput | string
     business_name?: StringFieldUpdateOperationsInput | string
     business_type?: NullableStringFieldUpdateOperationsInput | string | null
+    business_group?: NullableStringFieldUpdateOperationsInput | string | null
+    communication_mode?: StringFieldUpdateOperationsInput | string
+    blueprint_seeded?: BoolFieldUpdateOperationsInput | boolean
+    blueprint_seeded_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     whatsapp_number?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -133006,6 +152188,10 @@ export namespace Prisma {
     tenant_id?: StringFieldUpdateOperationsInput | string
     business_name?: StringFieldUpdateOperationsInput | string
     business_type?: NullableStringFieldUpdateOperationsInput | string | null
+    business_group?: NullableStringFieldUpdateOperationsInput | string | null
+    communication_mode?: StringFieldUpdateOperationsInput | string
+    blueprint_seeded?: BoolFieldUpdateOperationsInput | boolean
+    blueprint_seeded_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     whatsapp_number?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -133578,6 +152764,10 @@ export namespace Prisma {
     business_id?: string
     business_name: string
     business_type?: string | null
+    business_group?: string | null
+    communication_mode?: string
+    blueprint_seeded?: boolean
+    blueprint_seeded_at?: Date | string | null
     whatsapp_number?: string | null
     created_at?: Date | string
     updated_at?: Date | string
@@ -133628,6 +152818,10 @@ export namespace Prisma {
     tenant_id: string
     business_name: string
     business_type?: string | null
+    business_group?: string | null
+    communication_mode?: string
+    blueprint_seeded?: boolean
+    blueprint_seeded_at?: Date | string | null
     whatsapp_number?: string | null
     created_at?: Date | string
     updated_at?: Date | string
@@ -134251,6 +153445,10 @@ export namespace Prisma {
     business_id?: StringFieldUpdateOperationsInput | string
     business_name?: StringFieldUpdateOperationsInput | string
     business_type?: NullableStringFieldUpdateOperationsInput | string | null
+    business_group?: NullableStringFieldUpdateOperationsInput | string | null
+    communication_mode?: StringFieldUpdateOperationsInput | string
+    blueprint_seeded?: BoolFieldUpdateOperationsInput | boolean
+    blueprint_seeded_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     whatsapp_number?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -134301,6 +153499,10 @@ export namespace Prisma {
     tenant_id?: StringFieldUpdateOperationsInput | string
     business_name?: StringFieldUpdateOperationsInput | string
     business_type?: NullableStringFieldUpdateOperationsInput | string | null
+    business_group?: NullableStringFieldUpdateOperationsInput | string | null
+    communication_mode?: StringFieldUpdateOperationsInput | string
+    blueprint_seeded?: BoolFieldUpdateOperationsInput | boolean
+    blueprint_seeded_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     whatsapp_number?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -134557,6 +153759,10 @@ export namespace Prisma {
     business_id?: string
     business_name: string
     business_type?: string | null
+    business_group?: string | null
+    communication_mode?: string
+    blueprint_seeded?: boolean
+    blueprint_seeded_at?: Date | string | null
     whatsapp_number?: string | null
     created_at?: Date | string
     updated_at?: Date | string
@@ -134607,6 +153813,10 @@ export namespace Prisma {
     tenant_id: string
     business_name: string
     business_type?: string | null
+    business_group?: string | null
+    communication_mode?: string
+    blueprint_seeded?: boolean
+    blueprint_seeded_at?: Date | string | null
     whatsapp_number?: string | null
     created_at?: Date | string
     updated_at?: Date | string
@@ -134803,6 +154013,10 @@ export namespace Prisma {
     business_id?: StringFieldUpdateOperationsInput | string
     business_name?: StringFieldUpdateOperationsInput | string
     business_type?: NullableStringFieldUpdateOperationsInput | string | null
+    business_group?: NullableStringFieldUpdateOperationsInput | string | null
+    communication_mode?: StringFieldUpdateOperationsInput | string
+    blueprint_seeded?: BoolFieldUpdateOperationsInput | boolean
+    blueprint_seeded_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     whatsapp_number?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -134853,6 +154067,10 @@ export namespace Prisma {
     tenant_id?: StringFieldUpdateOperationsInput | string
     business_name?: StringFieldUpdateOperationsInput | string
     business_type?: NullableStringFieldUpdateOperationsInput | string | null
+    business_group?: NullableStringFieldUpdateOperationsInput | string | null
+    communication_mode?: StringFieldUpdateOperationsInput | string
+    blueprint_seeded?: BoolFieldUpdateOperationsInput | boolean
+    blueprint_seeded_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     whatsapp_number?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -137814,6 +157032,10 @@ export namespace Prisma {
     channel: string
     content_template?: string | null
     sent_at?: Date | string | null
+    approved_at?: Date | string | null
+    approved_by?: string | null
+    auto_approve_at?: Date | string | null
+    deduplication_key?: string | null
     target_segment?: NullableJsonNullValueInput | InputJsonValue
     tenant_id: string
     audience_filter?: NullableJsonNullValueInput | InputJsonValue
@@ -137845,6 +157067,10 @@ export namespace Prisma {
     channel: string
     content_template?: string | null
     sent_at?: Date | string | null
+    approved_at?: Date | string | null
+    approved_by?: string | null
+    auto_approve_at?: Date | string | null
+    deduplication_key?: string | null
     target_segment?: NullableJsonNullValueInput | InputJsonValue
     tenant_id: string
     audience_filter?: NullableJsonNullValueInput | InputJsonValue
@@ -137963,6 +157189,10 @@ export namespace Prisma {
     business_id?: string
     business_name: string
     business_type?: string | null
+    business_group?: string | null
+    communication_mode?: string
+    blueprint_seeded?: boolean
+    blueprint_seeded_at?: Date | string | null
     whatsapp_number?: string | null
     created_at?: Date | string
     updated_at?: Date | string
@@ -138013,6 +157243,10 @@ export namespace Prisma {
     tenant_id: string
     business_name: string
     business_type?: string | null
+    business_group?: string | null
+    communication_mode?: string
+    blueprint_seeded?: boolean
+    blueprint_seeded_at?: Date | string | null
     whatsapp_number?: string | null
     created_at?: Date | string
     updated_at?: Date | string
@@ -138147,6 +157381,10 @@ export namespace Prisma {
     channel?: StringFilter<"campaigns"> | string
     content_template?: StringNullableFilter<"campaigns"> | string | null
     sent_at?: DateTimeNullableFilter<"campaigns"> | Date | string | null
+    approved_at?: DateTimeNullableFilter<"campaigns"> | Date | string | null
+    approved_by?: StringNullableFilter<"campaigns"> | string | null
+    auto_approve_at?: DateTimeNullableFilter<"campaigns"> | Date | string | null
+    deduplication_key?: StringNullableFilter<"campaigns"> | string | null
     target_segment?: JsonNullableFilter<"campaigns">
     tenant_id?: UuidFilter<"campaigns"> | string
     audience_filter?: JsonNullableFilter<"campaigns">
@@ -138199,6 +157437,10 @@ export namespace Prisma {
     business_id?: StringFieldUpdateOperationsInput | string
     business_name?: StringFieldUpdateOperationsInput | string
     business_type?: NullableStringFieldUpdateOperationsInput | string | null
+    business_group?: NullableStringFieldUpdateOperationsInput | string | null
+    communication_mode?: StringFieldUpdateOperationsInput | string
+    blueprint_seeded?: BoolFieldUpdateOperationsInput | boolean
+    blueprint_seeded_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     whatsapp_number?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -138249,6 +157491,10 @@ export namespace Prisma {
     tenant_id?: StringFieldUpdateOperationsInput | string
     business_name?: StringFieldUpdateOperationsInput | string
     business_type?: NullableStringFieldUpdateOperationsInput | string | null
+    business_group?: NullableStringFieldUpdateOperationsInput | string | null
+    communication_mode?: StringFieldUpdateOperationsInput | string
+    blueprint_seeded?: BoolFieldUpdateOperationsInput | boolean
+    blueprint_seeded_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     whatsapp_number?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -138386,6 +157632,10 @@ export namespace Prisma {
     business_id?: string
     business_name: string
     business_type?: string | null
+    business_group?: string | null
+    communication_mode?: string
+    blueprint_seeded?: boolean
+    blueprint_seeded_at?: Date | string | null
     whatsapp_number?: string | null
     created_at?: Date | string
     updated_at?: Date | string
@@ -138436,6 +157686,10 @@ export namespace Prisma {
     tenant_id: string
     business_name: string
     business_type?: string | null
+    business_group?: string | null
+    communication_mode?: string
+    blueprint_seeded?: boolean
+    blueprint_seeded_at?: Date | string | null
     whatsapp_number?: string | null
     created_at?: Date | string
     updated_at?: Date | string
@@ -138690,6 +157944,10 @@ export namespace Prisma {
     business_id?: StringFieldUpdateOperationsInput | string
     business_name?: StringFieldUpdateOperationsInput | string
     business_type?: NullableStringFieldUpdateOperationsInput | string | null
+    business_group?: NullableStringFieldUpdateOperationsInput | string | null
+    communication_mode?: StringFieldUpdateOperationsInput | string
+    blueprint_seeded?: BoolFieldUpdateOperationsInput | boolean
+    blueprint_seeded_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     whatsapp_number?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -138740,6 +157998,10 @@ export namespace Prisma {
     tenant_id?: StringFieldUpdateOperationsInput | string
     business_name?: StringFieldUpdateOperationsInput | string
     business_type?: NullableStringFieldUpdateOperationsInput | string | null
+    business_group?: NullableStringFieldUpdateOperationsInput | string | null
+    communication_mode?: StringFieldUpdateOperationsInput | string
+    blueprint_seeded?: BoolFieldUpdateOperationsInput | boolean
+    blueprint_seeded_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     whatsapp_number?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -138967,6 +158229,10 @@ export namespace Prisma {
     business_id?: string
     business_name: string
     business_type?: string | null
+    business_group?: string | null
+    communication_mode?: string
+    blueprint_seeded?: boolean
+    blueprint_seeded_at?: Date | string | null
     whatsapp_number?: string | null
     created_at?: Date | string
     updated_at?: Date | string
@@ -139017,6 +158283,10 @@ export namespace Prisma {
     tenant_id: string
     business_name: string
     business_type?: string | null
+    business_group?: string | null
+    communication_mode?: string
+    blueprint_seeded?: boolean
+    blueprint_seeded_at?: Date | string | null
     whatsapp_number?: string | null
     created_at?: Date | string
     updated_at?: Date | string
@@ -139134,6 +158404,10 @@ export namespace Prisma {
     business_id?: StringFieldUpdateOperationsInput | string
     business_name?: StringFieldUpdateOperationsInput | string
     business_type?: NullableStringFieldUpdateOperationsInput | string | null
+    business_group?: NullableStringFieldUpdateOperationsInput | string | null
+    communication_mode?: StringFieldUpdateOperationsInput | string
+    blueprint_seeded?: BoolFieldUpdateOperationsInput | boolean
+    blueprint_seeded_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     whatsapp_number?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -139184,6 +158458,10 @@ export namespace Prisma {
     tenant_id?: StringFieldUpdateOperationsInput | string
     business_name?: StringFieldUpdateOperationsInput | string
     business_type?: NullableStringFieldUpdateOperationsInput | string | null
+    business_group?: NullableStringFieldUpdateOperationsInput | string | null
+    communication_mode?: StringFieldUpdateOperationsInput | string
+    blueprint_seeded?: BoolFieldUpdateOperationsInput | boolean
+    blueprint_seeded_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     whatsapp_number?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -139329,6 +158607,10 @@ export namespace Prisma {
     business_id?: string
     business_name: string
     business_type?: string | null
+    business_group?: string | null
+    communication_mode?: string
+    blueprint_seeded?: boolean
+    blueprint_seeded_at?: Date | string | null
     whatsapp_number?: string | null
     created_at?: Date | string
     updated_at?: Date | string
@@ -139379,6 +158661,10 @@ export namespace Prisma {
     tenant_id: string
     business_name: string
     business_type?: string | null
+    business_group?: string | null
+    communication_mode?: string
+    blueprint_seeded?: boolean
+    blueprint_seeded_at?: Date | string | null
     whatsapp_number?: string | null
     created_at?: Date | string
     updated_at?: Date | string
@@ -139621,6 +158907,10 @@ export namespace Prisma {
     business_id?: StringFieldUpdateOperationsInput | string
     business_name?: StringFieldUpdateOperationsInput | string
     business_type?: NullableStringFieldUpdateOperationsInput | string | null
+    business_group?: NullableStringFieldUpdateOperationsInput | string | null
+    communication_mode?: StringFieldUpdateOperationsInput | string
+    blueprint_seeded?: BoolFieldUpdateOperationsInput | boolean
+    blueprint_seeded_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     whatsapp_number?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -139671,6 +158961,10 @@ export namespace Prisma {
     tenant_id?: StringFieldUpdateOperationsInput | string
     business_name?: StringFieldUpdateOperationsInput | string
     business_type?: NullableStringFieldUpdateOperationsInput | string | null
+    business_group?: NullableStringFieldUpdateOperationsInput | string | null
+    communication_mode?: StringFieldUpdateOperationsInput | string
+    blueprint_seeded?: BoolFieldUpdateOperationsInput | boolean
+    blueprint_seeded_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     whatsapp_number?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -139875,6 +159169,10 @@ export namespace Prisma {
     business_id?: string
     business_name: string
     business_type?: string | null
+    business_group?: string | null
+    communication_mode?: string
+    blueprint_seeded?: boolean
+    blueprint_seeded_at?: Date | string | null
     whatsapp_number?: string | null
     created_at?: Date | string
     updated_at?: Date | string
@@ -139925,6 +159223,10 @@ export namespace Prisma {
     tenant_id: string
     business_name: string
     business_type?: string | null
+    business_group?: string | null
+    communication_mode?: string
+    blueprint_seeded?: boolean
+    blueprint_seeded_at?: Date | string | null
     whatsapp_number?: string | null
     created_at?: Date | string
     updated_at?: Date | string
@@ -139989,6 +159291,10 @@ export namespace Prisma {
     business_id?: StringFieldUpdateOperationsInput | string
     business_name?: StringFieldUpdateOperationsInput | string
     business_type?: NullableStringFieldUpdateOperationsInput | string | null
+    business_group?: NullableStringFieldUpdateOperationsInput | string | null
+    communication_mode?: StringFieldUpdateOperationsInput | string
+    blueprint_seeded?: BoolFieldUpdateOperationsInput | boolean
+    blueprint_seeded_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     whatsapp_number?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -140039,6 +159345,10 @@ export namespace Prisma {
     tenant_id?: StringFieldUpdateOperationsInput | string
     business_name?: StringFieldUpdateOperationsInput | string
     business_type?: NullableStringFieldUpdateOperationsInput | string | null
+    business_group?: NullableStringFieldUpdateOperationsInput | string | null
+    communication_mode?: StringFieldUpdateOperationsInput | string
+    blueprint_seeded?: BoolFieldUpdateOperationsInput | boolean
+    blueprint_seeded_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     whatsapp_number?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -140755,6 +160065,10 @@ export namespace Prisma {
     business_id?: string
     business_name: string
     business_type?: string | null
+    business_group?: string | null
+    communication_mode?: string
+    blueprint_seeded?: boolean
+    blueprint_seeded_at?: Date | string | null
     whatsapp_number?: string | null
     created_at?: Date | string
     updated_at?: Date | string
@@ -140805,6 +160119,10 @@ export namespace Prisma {
     tenant_id: string
     business_name: string
     business_type?: string | null
+    business_group?: string | null
+    communication_mode?: string
+    blueprint_seeded?: boolean
+    blueprint_seeded_at?: Date | string | null
     whatsapp_number?: string | null
     created_at?: Date | string
     updated_at?: Date | string
@@ -140963,6 +160281,10 @@ export namespace Prisma {
     business_id?: StringFieldUpdateOperationsInput | string
     business_name?: StringFieldUpdateOperationsInput | string
     business_type?: NullableStringFieldUpdateOperationsInput | string | null
+    business_group?: NullableStringFieldUpdateOperationsInput | string | null
+    communication_mode?: StringFieldUpdateOperationsInput | string
+    blueprint_seeded?: BoolFieldUpdateOperationsInput | boolean
+    blueprint_seeded_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     whatsapp_number?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -141013,6 +160335,10 @@ export namespace Prisma {
     tenant_id?: StringFieldUpdateOperationsInput | string
     business_name?: StringFieldUpdateOperationsInput | string
     business_type?: NullableStringFieldUpdateOperationsInput | string | null
+    business_group?: NullableStringFieldUpdateOperationsInput | string | null
+    communication_mode?: StringFieldUpdateOperationsInput | string
+    blueprint_seeded?: BoolFieldUpdateOperationsInput | boolean
+    blueprint_seeded_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     whatsapp_number?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -141167,6 +160493,10 @@ export namespace Prisma {
     business_id?: string
     business_name: string
     business_type?: string | null
+    business_group?: string | null
+    communication_mode?: string
+    blueprint_seeded?: boolean
+    blueprint_seeded_at?: Date | string | null
     whatsapp_number?: string | null
     created_at?: Date | string
     updated_at?: Date | string
@@ -141217,6 +160547,10 @@ export namespace Prisma {
     tenant_id: string
     business_name: string
     business_type?: string | null
+    business_group?: string | null
+    communication_mode?: string
+    blueprint_seeded?: boolean
+    blueprint_seeded_at?: Date | string | null
     whatsapp_number?: string | null
     created_at?: Date | string
     updated_at?: Date | string
@@ -141560,6 +160894,10 @@ export namespace Prisma {
     business_id?: StringFieldUpdateOperationsInput | string
     business_name?: StringFieldUpdateOperationsInput | string
     business_type?: NullableStringFieldUpdateOperationsInput | string | null
+    business_group?: NullableStringFieldUpdateOperationsInput | string | null
+    communication_mode?: StringFieldUpdateOperationsInput | string
+    blueprint_seeded?: BoolFieldUpdateOperationsInput | boolean
+    blueprint_seeded_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     whatsapp_number?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -141610,6 +160948,10 @@ export namespace Prisma {
     tenant_id?: StringFieldUpdateOperationsInput | string
     business_name?: StringFieldUpdateOperationsInput | string
     business_type?: NullableStringFieldUpdateOperationsInput | string | null
+    business_group?: NullableStringFieldUpdateOperationsInput | string | null
+    communication_mode?: StringFieldUpdateOperationsInput | string
+    blueprint_seeded?: BoolFieldUpdateOperationsInput | boolean
+    blueprint_seeded_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     whatsapp_number?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -141944,6 +161286,10 @@ export namespace Prisma {
     business_id?: string
     business_name: string
     business_type?: string | null
+    business_group?: string | null
+    communication_mode?: string
+    blueprint_seeded?: boolean
+    blueprint_seeded_at?: Date | string | null
     whatsapp_number?: string | null
     created_at?: Date | string
     updated_at?: Date | string
@@ -141994,6 +161340,10 @@ export namespace Prisma {
     tenant_id: string
     business_name: string
     business_type?: string | null
+    business_group?: string | null
+    communication_mode?: string
+    blueprint_seeded?: boolean
+    blueprint_seeded_at?: Date | string | null
     whatsapp_number?: string | null
     created_at?: Date | string
     updated_at?: Date | string
@@ -142209,6 +161559,10 @@ export namespace Prisma {
     business_id?: StringFieldUpdateOperationsInput | string
     business_name?: StringFieldUpdateOperationsInput | string
     business_type?: NullableStringFieldUpdateOperationsInput | string | null
+    business_group?: NullableStringFieldUpdateOperationsInput | string | null
+    communication_mode?: StringFieldUpdateOperationsInput | string
+    blueprint_seeded?: BoolFieldUpdateOperationsInput | boolean
+    blueprint_seeded_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     whatsapp_number?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -142259,6 +161613,10 @@ export namespace Prisma {
     tenant_id?: StringFieldUpdateOperationsInput | string
     business_name?: StringFieldUpdateOperationsInput | string
     business_type?: NullableStringFieldUpdateOperationsInput | string | null
+    business_group?: NullableStringFieldUpdateOperationsInput | string | null
+    communication_mode?: StringFieldUpdateOperationsInput | string
+    blueprint_seeded?: BoolFieldUpdateOperationsInput | boolean
+    blueprint_seeded_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     whatsapp_number?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -142413,6 +161771,10 @@ export namespace Prisma {
     business_id?: string
     business_name: string
     business_type?: string | null
+    business_group?: string | null
+    communication_mode?: string
+    blueprint_seeded?: boolean
+    blueprint_seeded_at?: Date | string | null
     whatsapp_number?: string | null
     created_at?: Date | string
     updated_at?: Date | string
@@ -142463,6 +161825,10 @@ export namespace Prisma {
     tenant_id: string
     business_name: string
     business_type?: string | null
+    business_group?: string | null
+    communication_mode?: string
+    blueprint_seeded?: boolean
+    blueprint_seeded_at?: Date | string | null
     whatsapp_number?: string | null
     created_at?: Date | string
     updated_at?: Date | string
@@ -142672,6 +162038,10 @@ export namespace Prisma {
     business_id?: StringFieldUpdateOperationsInput | string
     business_name?: StringFieldUpdateOperationsInput | string
     business_type?: NullableStringFieldUpdateOperationsInput | string | null
+    business_group?: NullableStringFieldUpdateOperationsInput | string | null
+    communication_mode?: StringFieldUpdateOperationsInput | string
+    blueprint_seeded?: BoolFieldUpdateOperationsInput | boolean
+    blueprint_seeded_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     whatsapp_number?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -142722,6 +162092,10 @@ export namespace Prisma {
     tenant_id?: StringFieldUpdateOperationsInput | string
     business_name?: StringFieldUpdateOperationsInput | string
     business_type?: NullableStringFieldUpdateOperationsInput | string | null
+    business_group?: NullableStringFieldUpdateOperationsInput | string | null
+    communication_mode?: StringFieldUpdateOperationsInput | string
+    blueprint_seeded?: BoolFieldUpdateOperationsInput | boolean
+    blueprint_seeded_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     whatsapp_number?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -143275,6 +162649,10 @@ export namespace Prisma {
     business_id?: string
     business_name: string
     business_type?: string | null
+    business_group?: string | null
+    communication_mode?: string
+    blueprint_seeded?: boolean
+    blueprint_seeded_at?: Date | string | null
     whatsapp_number?: string | null
     created_at?: Date | string
     updated_at?: Date | string
@@ -143325,6 +162703,10 @@ export namespace Prisma {
     tenant_id: string
     business_name: string
     business_type?: string | null
+    business_group?: string | null
+    communication_mode?: string
+    blueprint_seeded?: boolean
+    blueprint_seeded_at?: Date | string | null
     whatsapp_number?: string | null
     created_at?: Date | string
     updated_at?: Date | string
@@ -143622,6 +163004,10 @@ export namespace Prisma {
     business_id?: StringFieldUpdateOperationsInput | string
     business_name?: StringFieldUpdateOperationsInput | string
     business_type?: NullableStringFieldUpdateOperationsInput | string | null
+    business_group?: NullableStringFieldUpdateOperationsInput | string | null
+    communication_mode?: StringFieldUpdateOperationsInput | string
+    blueprint_seeded?: BoolFieldUpdateOperationsInput | boolean
+    blueprint_seeded_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     whatsapp_number?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -143672,6 +163058,10 @@ export namespace Prisma {
     tenant_id?: StringFieldUpdateOperationsInput | string
     business_name?: StringFieldUpdateOperationsInput | string
     business_type?: NullableStringFieldUpdateOperationsInput | string | null
+    business_group?: NullableStringFieldUpdateOperationsInput | string | null
+    communication_mode?: StringFieldUpdateOperationsInput | string
+    blueprint_seeded?: BoolFieldUpdateOperationsInput | boolean
+    blueprint_seeded_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     whatsapp_number?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -144440,6 +163830,10 @@ export namespace Prisma {
     business_id?: string
     business_name: string
     business_type?: string | null
+    business_group?: string | null
+    communication_mode?: string
+    blueprint_seeded?: boolean
+    blueprint_seeded_at?: Date | string | null
     whatsapp_number?: string | null
     created_at?: Date | string
     updated_at?: Date | string
@@ -144490,6 +163884,10 @@ export namespace Prisma {
     tenant_id: string
     business_name: string
     business_type?: string | null
+    business_group?: string | null
+    communication_mode?: string
+    blueprint_seeded?: boolean
+    blueprint_seeded_at?: Date | string | null
     whatsapp_number?: string | null
     created_at?: Date | string
     updated_at?: Date | string
@@ -144972,6 +164370,10 @@ export namespace Prisma {
     business_id?: StringFieldUpdateOperationsInput | string
     business_name?: StringFieldUpdateOperationsInput | string
     business_type?: NullableStringFieldUpdateOperationsInput | string | null
+    business_group?: NullableStringFieldUpdateOperationsInput | string | null
+    communication_mode?: StringFieldUpdateOperationsInput | string
+    blueprint_seeded?: BoolFieldUpdateOperationsInput | boolean
+    blueprint_seeded_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     whatsapp_number?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -145022,6 +164424,10 @@ export namespace Prisma {
     tenant_id?: StringFieldUpdateOperationsInput | string
     business_name?: StringFieldUpdateOperationsInput | string
     business_type?: NullableStringFieldUpdateOperationsInput | string | null
+    business_group?: NullableStringFieldUpdateOperationsInput | string | null
+    communication_mode?: StringFieldUpdateOperationsInput | string
+    blueprint_seeded?: BoolFieldUpdateOperationsInput | boolean
+    blueprint_seeded_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     whatsapp_number?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -145641,6 +165047,10 @@ export namespace Prisma {
     business_id?: string
     business_name: string
     business_type?: string | null
+    business_group?: string | null
+    communication_mode?: string
+    blueprint_seeded?: boolean
+    blueprint_seeded_at?: Date | string | null
     whatsapp_number?: string | null
     created_at?: Date | string
     updated_at?: Date | string
@@ -145691,6 +165101,10 @@ export namespace Prisma {
     tenant_id: string
     business_name: string
     business_type?: string | null
+    business_group?: string | null
+    communication_mode?: string
+    blueprint_seeded?: boolean
+    blueprint_seeded_at?: Date | string | null
     whatsapp_number?: string | null
     created_at?: Date | string
     updated_at?: Date | string
@@ -145828,6 +165242,10 @@ export namespace Prisma {
     business_id?: StringFieldUpdateOperationsInput | string
     business_name?: StringFieldUpdateOperationsInput | string
     business_type?: NullableStringFieldUpdateOperationsInput | string | null
+    business_group?: NullableStringFieldUpdateOperationsInput | string | null
+    communication_mode?: StringFieldUpdateOperationsInput | string
+    blueprint_seeded?: BoolFieldUpdateOperationsInput | boolean
+    blueprint_seeded_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     whatsapp_number?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -145878,6 +165296,10 @@ export namespace Prisma {
     tenant_id?: StringFieldUpdateOperationsInput | string
     business_name?: StringFieldUpdateOperationsInput | string
     business_type?: NullableStringFieldUpdateOperationsInput | string | null
+    business_group?: NullableStringFieldUpdateOperationsInput | string | null
+    communication_mode?: StringFieldUpdateOperationsInput | string
+    blueprint_seeded?: BoolFieldUpdateOperationsInput | boolean
+    blueprint_seeded_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     whatsapp_number?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -146005,6 +165427,10 @@ export namespace Prisma {
     business_id?: string
     business_name: string
     business_type?: string | null
+    business_group?: string | null
+    communication_mode?: string
+    blueprint_seeded?: boolean
+    blueprint_seeded_at?: Date | string | null
     whatsapp_number?: string | null
     created_at?: Date | string
     updated_at?: Date | string
@@ -146055,6 +165481,10 @@ export namespace Prisma {
     tenant_id: string
     business_name: string
     business_type?: string | null
+    business_group?: string | null
+    communication_mode?: string
+    blueprint_seeded?: boolean
+    blueprint_seeded_at?: Date | string | null
     whatsapp_number?: string | null
     created_at?: Date | string
     updated_at?: Date | string
@@ -146192,6 +165622,10 @@ export namespace Prisma {
     business_id?: StringFieldUpdateOperationsInput | string
     business_name?: StringFieldUpdateOperationsInput | string
     business_type?: NullableStringFieldUpdateOperationsInput | string | null
+    business_group?: NullableStringFieldUpdateOperationsInput | string | null
+    communication_mode?: StringFieldUpdateOperationsInput | string
+    blueprint_seeded?: BoolFieldUpdateOperationsInput | boolean
+    blueprint_seeded_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     whatsapp_number?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -146242,6 +165676,10 @@ export namespace Prisma {
     tenant_id?: StringFieldUpdateOperationsInput | string
     business_name?: StringFieldUpdateOperationsInput | string
     business_type?: NullableStringFieldUpdateOperationsInput | string | null
+    business_group?: NullableStringFieldUpdateOperationsInput | string | null
+    communication_mode?: StringFieldUpdateOperationsInput | string
+    blueprint_seeded?: BoolFieldUpdateOperationsInput | boolean
+    blueprint_seeded_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     whatsapp_number?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -146369,6 +165807,10 @@ export namespace Prisma {
     business_id?: string
     business_name: string
     business_type?: string | null
+    business_group?: string | null
+    communication_mode?: string
+    blueprint_seeded?: boolean
+    blueprint_seeded_at?: Date | string | null
     whatsapp_number?: string | null
     created_at?: Date | string
     updated_at?: Date | string
@@ -146419,6 +165861,10 @@ export namespace Prisma {
     tenant_id: string
     business_name: string
     business_type?: string | null
+    business_group?: string | null
+    communication_mode?: string
+    blueprint_seeded?: boolean
+    blueprint_seeded_at?: Date | string | null
     whatsapp_number?: string | null
     created_at?: Date | string
     updated_at?: Date | string
@@ -146702,6 +166148,10 @@ export namespace Prisma {
     business_id?: StringFieldUpdateOperationsInput | string
     business_name?: StringFieldUpdateOperationsInput | string
     business_type?: NullableStringFieldUpdateOperationsInput | string | null
+    business_group?: NullableStringFieldUpdateOperationsInput | string | null
+    communication_mode?: StringFieldUpdateOperationsInput | string
+    blueprint_seeded?: BoolFieldUpdateOperationsInput | boolean
+    blueprint_seeded_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     whatsapp_number?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -146752,6 +166202,10 @@ export namespace Prisma {
     tenant_id?: StringFieldUpdateOperationsInput | string
     business_name?: StringFieldUpdateOperationsInput | string
     business_type?: NullableStringFieldUpdateOperationsInput | string | null
+    business_group?: NullableStringFieldUpdateOperationsInput | string | null
+    communication_mode?: StringFieldUpdateOperationsInput | string
+    blueprint_seeded?: BoolFieldUpdateOperationsInput | boolean
+    blueprint_seeded_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     whatsapp_number?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -147037,6 +166491,10 @@ export namespace Prisma {
     business_id?: string
     business_name: string
     business_type?: string | null
+    business_group?: string | null
+    communication_mode?: string
+    blueprint_seeded?: boolean
+    blueprint_seeded_at?: Date | string | null
     whatsapp_number?: string | null
     created_at?: Date | string
     updated_at?: Date | string
@@ -147087,6 +166545,10 @@ export namespace Prisma {
     tenant_id: string
     business_name: string
     business_type?: string | null
+    business_group?: string | null
+    communication_mode?: string
+    blueprint_seeded?: boolean
+    blueprint_seeded_at?: Date | string | null
     whatsapp_number?: string | null
     created_at?: Date | string
     updated_at?: Date | string
@@ -147515,6 +166977,10 @@ export namespace Prisma {
     business_id?: StringFieldUpdateOperationsInput | string
     business_name?: StringFieldUpdateOperationsInput | string
     business_type?: NullableStringFieldUpdateOperationsInput | string | null
+    business_group?: NullableStringFieldUpdateOperationsInput | string | null
+    communication_mode?: StringFieldUpdateOperationsInput | string
+    blueprint_seeded?: BoolFieldUpdateOperationsInput | boolean
+    blueprint_seeded_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     whatsapp_number?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -147565,6 +167031,10 @@ export namespace Prisma {
     tenant_id?: StringFieldUpdateOperationsInput | string
     business_name?: StringFieldUpdateOperationsInput | string
     business_type?: NullableStringFieldUpdateOperationsInput | string | null
+    business_group?: NullableStringFieldUpdateOperationsInput | string | null
+    communication_mode?: StringFieldUpdateOperationsInput | string
+    blueprint_seeded?: BoolFieldUpdateOperationsInput | boolean
+    blueprint_seeded_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     whatsapp_number?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -148478,6 +167948,10 @@ export namespace Prisma {
     business_id?: string
     business_name: string
     business_type?: string | null
+    business_group?: string | null
+    communication_mode?: string
+    blueprint_seeded?: boolean
+    blueprint_seeded_at?: Date | string | null
     whatsapp_number?: string | null
     created_at?: Date | string
     updated_at?: Date | string
@@ -148528,6 +168002,10 @@ export namespace Prisma {
     tenant_id: string
     business_name: string
     business_type?: string | null
+    business_group?: string | null
+    communication_mode?: string
+    blueprint_seeded?: boolean
+    blueprint_seeded_at?: Date | string | null
     whatsapp_number?: string | null
     created_at?: Date | string
     updated_at?: Date | string
@@ -148665,6 +168143,10 @@ export namespace Prisma {
     business_id?: StringFieldUpdateOperationsInput | string
     business_name?: StringFieldUpdateOperationsInput | string
     business_type?: NullableStringFieldUpdateOperationsInput | string | null
+    business_group?: NullableStringFieldUpdateOperationsInput | string | null
+    communication_mode?: StringFieldUpdateOperationsInput | string
+    blueprint_seeded?: BoolFieldUpdateOperationsInput | boolean
+    blueprint_seeded_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     whatsapp_number?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -148715,6 +168197,10 @@ export namespace Prisma {
     tenant_id?: StringFieldUpdateOperationsInput | string
     business_name?: StringFieldUpdateOperationsInput | string
     business_type?: NullableStringFieldUpdateOperationsInput | string | null
+    business_group?: NullableStringFieldUpdateOperationsInput | string | null
+    communication_mode?: StringFieldUpdateOperationsInput | string
+    blueprint_seeded?: BoolFieldUpdateOperationsInput | boolean
+    blueprint_seeded_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     whatsapp_number?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -148842,6 +168328,10 @@ export namespace Prisma {
     business_id?: string
     business_name: string
     business_type?: string | null
+    business_group?: string | null
+    communication_mode?: string
+    blueprint_seeded?: boolean
+    blueprint_seeded_at?: Date | string | null
     whatsapp_number?: string | null
     created_at?: Date | string
     updated_at?: Date | string
@@ -148892,6 +168382,10 @@ export namespace Prisma {
     tenant_id: string
     business_name: string
     business_type?: string | null
+    business_group?: string | null
+    communication_mode?: string
+    blueprint_seeded?: boolean
+    blueprint_seeded_at?: Date | string | null
     whatsapp_number?: string | null
     created_at?: Date | string
     updated_at?: Date | string
@@ -149029,6 +168523,10 @@ export namespace Prisma {
     business_id?: StringFieldUpdateOperationsInput | string
     business_name?: StringFieldUpdateOperationsInput | string
     business_type?: NullableStringFieldUpdateOperationsInput | string | null
+    business_group?: NullableStringFieldUpdateOperationsInput | string | null
+    communication_mode?: StringFieldUpdateOperationsInput | string
+    blueprint_seeded?: BoolFieldUpdateOperationsInput | boolean
+    blueprint_seeded_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     whatsapp_number?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -149079,6 +168577,10 @@ export namespace Prisma {
     tenant_id?: StringFieldUpdateOperationsInput | string
     business_name?: StringFieldUpdateOperationsInput | string
     business_type?: NullableStringFieldUpdateOperationsInput | string | null
+    business_group?: NullableStringFieldUpdateOperationsInput | string | null
+    communication_mode?: StringFieldUpdateOperationsInput | string
+    blueprint_seeded?: BoolFieldUpdateOperationsInput | boolean
+    blueprint_seeded_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     whatsapp_number?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -149206,6 +168708,10 @@ export namespace Prisma {
     business_id?: string
     business_name: string
     business_type?: string | null
+    business_group?: string | null
+    communication_mode?: string
+    blueprint_seeded?: boolean
+    blueprint_seeded_at?: Date | string | null
     whatsapp_number?: string | null
     created_at?: Date | string
     updated_at?: Date | string
@@ -149256,6 +168762,10 @@ export namespace Prisma {
     tenant_id: string
     business_name: string
     business_type?: string | null
+    business_group?: string | null
+    communication_mode?: string
+    blueprint_seeded?: boolean
+    blueprint_seeded_at?: Date | string | null
     whatsapp_number?: string | null
     created_at?: Date | string
     updated_at?: Date | string
@@ -149539,6 +169049,10 @@ export namespace Prisma {
     business_id?: StringFieldUpdateOperationsInput | string
     business_name?: StringFieldUpdateOperationsInput | string
     business_type?: NullableStringFieldUpdateOperationsInput | string | null
+    business_group?: NullableStringFieldUpdateOperationsInput | string | null
+    communication_mode?: StringFieldUpdateOperationsInput | string
+    blueprint_seeded?: BoolFieldUpdateOperationsInput | boolean
+    blueprint_seeded_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     whatsapp_number?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -149589,6 +169103,10 @@ export namespace Prisma {
     tenant_id?: StringFieldUpdateOperationsInput | string
     business_name?: StringFieldUpdateOperationsInput | string
     business_type?: NullableStringFieldUpdateOperationsInput | string | null
+    business_group?: NullableStringFieldUpdateOperationsInput | string | null
+    communication_mode?: StringFieldUpdateOperationsInput | string
+    blueprint_seeded?: BoolFieldUpdateOperationsInput | boolean
+    blueprint_seeded_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     whatsapp_number?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -149874,6 +169392,10 @@ export namespace Prisma {
     business_id?: string
     business_name: string
     business_type?: string | null
+    business_group?: string | null
+    communication_mode?: string
+    blueprint_seeded?: boolean
+    blueprint_seeded_at?: Date | string | null
     whatsapp_number?: string | null
     created_at?: Date | string
     updated_at?: Date | string
@@ -149924,6 +169446,10 @@ export namespace Prisma {
     tenant_id: string
     business_name: string
     business_type?: string | null
+    business_group?: string | null
+    communication_mode?: string
+    blueprint_seeded?: boolean
+    blueprint_seeded_at?: Date | string | null
     whatsapp_number?: string | null
     created_at?: Date | string
     updated_at?: Date | string
@@ -150378,6 +169904,10 @@ export namespace Prisma {
     business_id?: StringFieldUpdateOperationsInput | string
     business_name?: StringFieldUpdateOperationsInput | string
     business_type?: NullableStringFieldUpdateOperationsInput | string | null
+    business_group?: NullableStringFieldUpdateOperationsInput | string | null
+    communication_mode?: StringFieldUpdateOperationsInput | string
+    blueprint_seeded?: BoolFieldUpdateOperationsInput | boolean
+    blueprint_seeded_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     whatsapp_number?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -150428,6 +169958,10 @@ export namespace Prisma {
     tenant_id?: StringFieldUpdateOperationsInput | string
     business_name?: StringFieldUpdateOperationsInput | string
     business_type?: NullableStringFieldUpdateOperationsInput | string | null
+    business_group?: NullableStringFieldUpdateOperationsInput | string | null
+    communication_mode?: StringFieldUpdateOperationsInput | string
+    blueprint_seeded?: BoolFieldUpdateOperationsInput | boolean
+    blueprint_seeded_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     whatsapp_number?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -151478,6 +171012,10 @@ export namespace Prisma {
     business_id?: string
     business_name: string
     business_type?: string | null
+    business_group?: string | null
+    communication_mode?: string
+    blueprint_seeded?: boolean
+    blueprint_seeded_at?: Date | string | null
     whatsapp_number?: string | null
     created_at?: Date | string
     updated_at?: Date | string
@@ -151528,6 +171066,10 @@ export namespace Prisma {
     tenant_id: string
     business_name: string
     business_type?: string | null
+    business_group?: string | null
+    communication_mode?: string
+    blueprint_seeded?: boolean
+    blueprint_seeded_at?: Date | string | null
     whatsapp_number?: string | null
     created_at?: Date | string
     updated_at?: Date | string
@@ -151665,6 +171207,10 @@ export namespace Prisma {
     business_id?: StringFieldUpdateOperationsInput | string
     business_name?: StringFieldUpdateOperationsInput | string
     business_type?: NullableStringFieldUpdateOperationsInput | string | null
+    business_group?: NullableStringFieldUpdateOperationsInput | string | null
+    communication_mode?: StringFieldUpdateOperationsInput | string
+    blueprint_seeded?: BoolFieldUpdateOperationsInput | boolean
+    blueprint_seeded_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     whatsapp_number?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -151715,6 +171261,10 @@ export namespace Prisma {
     tenant_id?: StringFieldUpdateOperationsInput | string
     business_name?: StringFieldUpdateOperationsInput | string
     business_type?: NullableStringFieldUpdateOperationsInput | string | null
+    business_group?: NullableStringFieldUpdateOperationsInput | string | null
+    communication_mode?: StringFieldUpdateOperationsInput | string
+    blueprint_seeded?: BoolFieldUpdateOperationsInput | boolean
+    blueprint_seeded_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     whatsapp_number?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -151820,6 +171370,10 @@ export namespace Prisma {
     business_id?: string
     business_name: string
     business_type?: string | null
+    business_group?: string | null
+    communication_mode?: string
+    blueprint_seeded?: boolean
+    blueprint_seeded_at?: Date | string | null
     whatsapp_number?: string | null
     created_at?: Date | string
     updated_at?: Date | string
@@ -151870,6 +171424,10 @@ export namespace Prisma {
     tenant_id: string
     business_name: string
     business_type?: string | null
+    business_group?: string | null
+    communication_mode?: string
+    blueprint_seeded?: boolean
+    blueprint_seeded_at?: Date | string | null
     whatsapp_number?: string | null
     created_at?: Date | string
     updated_at?: Date | string
@@ -151974,6 +171532,10 @@ export namespace Prisma {
     business_id?: StringFieldUpdateOperationsInput | string
     business_name?: StringFieldUpdateOperationsInput | string
     business_type?: NullableStringFieldUpdateOperationsInput | string | null
+    business_group?: NullableStringFieldUpdateOperationsInput | string | null
+    communication_mode?: StringFieldUpdateOperationsInput | string
+    blueprint_seeded?: BoolFieldUpdateOperationsInput | boolean
+    blueprint_seeded_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     whatsapp_number?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -152024,6 +171586,10 @@ export namespace Prisma {
     tenant_id?: StringFieldUpdateOperationsInput | string
     business_name?: StringFieldUpdateOperationsInput | string
     business_type?: NullableStringFieldUpdateOperationsInput | string | null
+    business_group?: NullableStringFieldUpdateOperationsInput | string | null
+    communication_mode?: StringFieldUpdateOperationsInput | string
+    blueprint_seeded?: BoolFieldUpdateOperationsInput | boolean
+    blueprint_seeded_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     whatsapp_number?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -152159,6 +171725,10 @@ export namespace Prisma {
     business_id?: string
     business_name: string
     business_type?: string | null
+    business_group?: string | null
+    communication_mode?: string
+    blueprint_seeded?: boolean
+    blueprint_seeded_at?: Date | string | null
     whatsapp_number?: string | null
     created_at?: Date | string
     updated_at?: Date | string
@@ -152209,6 +171779,10 @@ export namespace Prisma {
     tenant_id: string
     business_name: string
     business_type?: string | null
+    business_group?: string | null
+    communication_mode?: string
+    blueprint_seeded?: boolean
+    blueprint_seeded_at?: Date | string | null
     whatsapp_number?: string | null
     created_at?: Date | string
     updated_at?: Date | string
@@ -152273,6 +171847,10 @@ export namespace Prisma {
     business_id?: StringFieldUpdateOperationsInput | string
     business_name?: StringFieldUpdateOperationsInput | string
     business_type?: NullableStringFieldUpdateOperationsInput | string | null
+    business_group?: NullableStringFieldUpdateOperationsInput | string | null
+    communication_mode?: StringFieldUpdateOperationsInput | string
+    blueprint_seeded?: BoolFieldUpdateOperationsInput | boolean
+    blueprint_seeded_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     whatsapp_number?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -152323,6 +171901,10 @@ export namespace Prisma {
     tenant_id?: StringFieldUpdateOperationsInput | string
     business_name?: StringFieldUpdateOperationsInput | string
     business_type?: NullableStringFieldUpdateOperationsInput | string | null
+    business_group?: NullableStringFieldUpdateOperationsInput | string | null
+    communication_mode?: StringFieldUpdateOperationsInput | string
+    blueprint_seeded?: BoolFieldUpdateOperationsInput | boolean
+    blueprint_seeded_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     whatsapp_number?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -152371,6 +171953,10 @@ export namespace Prisma {
     business_id?: string
     business_name: string
     business_type?: string | null
+    business_group?: string | null
+    communication_mode?: string
+    blueprint_seeded?: boolean
+    blueprint_seeded_at?: Date | string | null
     whatsapp_number?: string | null
     created_at?: Date | string
     updated_at?: Date | string
@@ -152421,6 +172007,10 @@ export namespace Prisma {
     tenant_id: string
     business_name: string
     business_type?: string | null
+    business_group?: string | null
+    communication_mode?: string
+    blueprint_seeded?: boolean
+    blueprint_seeded_at?: Date | string | null
     whatsapp_number?: string | null
     created_at?: Date | string
     updated_at?: Date | string
@@ -152528,6 +172118,10 @@ export namespace Prisma {
     business_id?: StringFieldUpdateOperationsInput | string
     business_name?: StringFieldUpdateOperationsInput | string
     business_type?: NullableStringFieldUpdateOperationsInput | string | null
+    business_group?: NullableStringFieldUpdateOperationsInput | string | null
+    communication_mode?: StringFieldUpdateOperationsInput | string
+    blueprint_seeded?: BoolFieldUpdateOperationsInput | boolean
+    blueprint_seeded_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     whatsapp_number?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -152578,6 +172172,10 @@ export namespace Prisma {
     tenant_id?: StringFieldUpdateOperationsInput | string
     business_name?: StringFieldUpdateOperationsInput | string
     business_type?: NullableStringFieldUpdateOperationsInput | string | null
+    business_group?: NullableStringFieldUpdateOperationsInput | string | null
+    communication_mode?: StringFieldUpdateOperationsInput | string
+    blueprint_seeded?: BoolFieldUpdateOperationsInput | boolean
+    blueprint_seeded_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     whatsapp_number?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -152675,6 +172273,10 @@ export namespace Prisma {
     business_id?: string
     business_name: string
     business_type?: string | null
+    business_group?: string | null
+    communication_mode?: string
+    blueprint_seeded?: boolean
+    blueprint_seeded_at?: Date | string | null
     whatsapp_number?: string | null
     created_at?: Date | string
     updated_at?: Date | string
@@ -152725,6 +172327,10 @@ export namespace Prisma {
     tenant_id: string
     business_name: string
     business_type?: string | null
+    business_group?: string | null
+    communication_mode?: string
+    blueprint_seeded?: boolean
+    blueprint_seeded_at?: Date | string | null
     whatsapp_number?: string | null
     created_at?: Date | string
     updated_at?: Date | string
@@ -152789,6 +172395,10 @@ export namespace Prisma {
     business_id?: StringFieldUpdateOperationsInput | string
     business_name?: StringFieldUpdateOperationsInput | string
     business_type?: NullableStringFieldUpdateOperationsInput | string | null
+    business_group?: NullableStringFieldUpdateOperationsInput | string | null
+    communication_mode?: StringFieldUpdateOperationsInput | string
+    blueprint_seeded?: BoolFieldUpdateOperationsInput | boolean
+    blueprint_seeded_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     whatsapp_number?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -152839,6 +172449,10 @@ export namespace Prisma {
     tenant_id?: StringFieldUpdateOperationsInput | string
     business_name?: StringFieldUpdateOperationsInput | string
     business_type?: NullableStringFieldUpdateOperationsInput | string | null
+    business_group?: NullableStringFieldUpdateOperationsInput | string | null
+    communication_mode?: StringFieldUpdateOperationsInput | string
+    blueprint_seeded?: BoolFieldUpdateOperationsInput | boolean
+    blueprint_seeded_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     whatsapp_number?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -152887,6 +172501,10 @@ export namespace Prisma {
     business_id?: string
     business_name: string
     business_type?: string | null
+    business_group?: string | null
+    communication_mode?: string
+    blueprint_seeded?: boolean
+    blueprint_seeded_at?: Date | string | null
     whatsapp_number?: string | null
     created_at?: Date | string
     updated_at?: Date | string
@@ -152937,6 +172555,10 @@ export namespace Prisma {
     tenant_id: string
     business_name: string
     business_type?: string | null
+    business_group?: string | null
+    communication_mode?: string
+    blueprint_seeded?: boolean
+    blueprint_seeded_at?: Date | string | null
     whatsapp_number?: string | null
     created_at?: Date | string
     updated_at?: Date | string
@@ -153066,6 +172688,10 @@ export namespace Prisma {
     business_id?: StringFieldUpdateOperationsInput | string
     business_name?: StringFieldUpdateOperationsInput | string
     business_type?: NullableStringFieldUpdateOperationsInput | string | null
+    business_group?: NullableStringFieldUpdateOperationsInput | string | null
+    communication_mode?: StringFieldUpdateOperationsInput | string
+    blueprint_seeded?: BoolFieldUpdateOperationsInput | boolean
+    blueprint_seeded_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     whatsapp_number?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -153116,6 +172742,10 @@ export namespace Prisma {
     tenant_id?: StringFieldUpdateOperationsInput | string
     business_name?: StringFieldUpdateOperationsInput | string
     business_type?: NullableStringFieldUpdateOperationsInput | string | null
+    business_group?: NullableStringFieldUpdateOperationsInput | string | null
+    communication_mode?: StringFieldUpdateOperationsInput | string
+    blueprint_seeded?: BoolFieldUpdateOperationsInput | boolean
+    blueprint_seeded_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     whatsapp_number?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -155961,6 +175591,10 @@ export namespace Prisma {
     business_id?: string
     business_name: string
     business_type?: string | null
+    business_group?: string | null
+    communication_mode?: string
+    blueprint_seeded?: boolean
+    blueprint_seeded_at?: Date | string | null
     whatsapp_number?: string | null
     created_at?: Date | string
     updated_at?: Date | string
@@ -156252,6 +175886,10 @@ export namespace Prisma {
     business_id?: StringFieldUpdateOperationsInput | string
     business_name?: StringFieldUpdateOperationsInput | string
     business_type?: NullableStringFieldUpdateOperationsInput | string | null
+    business_group?: NullableStringFieldUpdateOperationsInput | string | null
+    communication_mode?: StringFieldUpdateOperationsInput | string
+    blueprint_seeded?: BoolFieldUpdateOperationsInput | boolean
+    blueprint_seeded_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     whatsapp_number?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -156301,6 +175939,10 @@ export namespace Prisma {
     business_id?: StringFieldUpdateOperationsInput | string
     business_name?: StringFieldUpdateOperationsInput | string
     business_type?: NullableStringFieldUpdateOperationsInput | string | null
+    business_group?: NullableStringFieldUpdateOperationsInput | string | null
+    communication_mode?: StringFieldUpdateOperationsInput | string
+    blueprint_seeded?: BoolFieldUpdateOperationsInput | boolean
+    blueprint_seeded_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     whatsapp_number?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -156350,6 +175992,10 @@ export namespace Prisma {
     business_id?: StringFieldUpdateOperationsInput | string
     business_name?: StringFieldUpdateOperationsInput | string
     business_type?: NullableStringFieldUpdateOperationsInput | string | null
+    business_group?: NullableStringFieldUpdateOperationsInput | string | null
+    communication_mode?: StringFieldUpdateOperationsInput | string
+    blueprint_seeded?: BoolFieldUpdateOperationsInput | boolean
+    blueprint_seeded_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     whatsapp_number?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -159596,6 +179242,10 @@ export namespace Prisma {
     channel: string
     content_template?: string | null
     sent_at?: Date | string | null
+    approved_at?: Date | string | null
+    approved_by?: string | null
+    auto_approve_at?: Date | string | null
+    deduplication_key?: string | null
     target_segment?: NullableJsonNullValueInput | InputJsonValue
     tenant_id: string
     audience_filter?: NullableJsonNullValueInput | InputJsonValue
@@ -159663,6 +179313,10 @@ export namespace Prisma {
     channel?: StringFieldUpdateOperationsInput | string
     content_template?: NullableStringFieldUpdateOperationsInput | string | null
     sent_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    approved_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    approved_by?: NullableStringFieldUpdateOperationsInput | string | null
+    auto_approve_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deduplication_key?: NullableStringFieldUpdateOperationsInput | string | null
     target_segment?: NullableJsonNullValueInput | InputJsonValue
     tenant_id?: StringFieldUpdateOperationsInput | string
     audience_filter?: NullableJsonNullValueInput | InputJsonValue
@@ -159694,6 +179348,10 @@ export namespace Prisma {
     channel?: StringFieldUpdateOperationsInput | string
     content_template?: NullableStringFieldUpdateOperationsInput | string | null
     sent_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    approved_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    approved_by?: NullableStringFieldUpdateOperationsInput | string | null
+    auto_approve_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deduplication_key?: NullableStringFieldUpdateOperationsInput | string | null
     target_segment?: NullableJsonNullValueInput | InputJsonValue
     tenant_id?: StringFieldUpdateOperationsInput | string
     audience_filter?: NullableJsonNullValueInput | InputJsonValue
@@ -159725,6 +179383,10 @@ export namespace Prisma {
     channel?: StringFieldUpdateOperationsInput | string
     content_template?: NullableStringFieldUpdateOperationsInput | string | null
     sent_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    approved_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    approved_by?: NullableStringFieldUpdateOperationsInput | string | null
+    auto_approve_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deduplication_key?: NullableStringFieldUpdateOperationsInput | string | null
     target_segment?: NullableJsonNullValueInput | InputJsonValue
     tenant_id?: StringFieldUpdateOperationsInput | string
     audience_filter?: NullableJsonNullValueInput | InputJsonValue
