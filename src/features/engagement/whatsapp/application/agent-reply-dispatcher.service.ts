@@ -1,10 +1,12 @@
 import { Injectable, Logger } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { AgentContext } from 'src/features/ai/agent/agent.service';
 import { decodeFlow, decodeHandoff, FlowPayload, HandoffPayload } from 'src/features/ai/agent/types/handoff';
 import { ConversationService } from 'src/features/crm/conversation/conversation.service';
 import { HumanHandoffGateway } from 'src/features/crm/human-handoff/human-handoff.gateway';
 import { InboxGateway } from 'src/features/crm/inbox/gateway/inbox.gateway';
+import { BusinessSettingsService } from 'src/features/platform/business-settings/business-settings.service';
 import { HospitalityFlowService } from 'src/features/whatsapp-flows/hospitality-flow.service';
 import { WhatsAppFlowsService } from 'src/features/whatsapp-flows/whatsapp-flows.service';
 import { WhatsAppService } from './whatsapp.service';
@@ -36,6 +38,8 @@ export class AgentReplyDispatcherService {
     private readonly hospitalityFlowService: HospitalityFlowService,
     private readonly whatsappFlowsService: WhatsAppFlowsService,
     private readonly eventEmitter: EventEmitter2,
+    private readonly businessSettingsService: BusinessSettingsService,
+    private readonly configService: ConfigService,
   ) {}
 
   async dispatch(input: AgentReplyDispatchInput): Promise<void> {
@@ -181,6 +185,7 @@ export class AgentReplyDispatcherService {
     const checkIn = this.stringValue(flow.checkIn) || this.stringValue(flow.check_in);
     const checkOut = this.stringValue(flow.checkOut) || this.stringValue(flow.check_out);
     const propertyName = this.stringValue(flow.propertyName) || this.stringValue(flow.property_name);
+    const guests = this.stringValue(flow.guests);
 
     if (!checkIn || !checkOut) {
       await this.whatsappService.sendAgentReply(
@@ -191,6 +196,15 @@ export class AgentReplyDispatcherService {
         replyCtx,
       );
       return;
+    }
+
+    const bookingMethods = await this.businessSettingsService.getBookingMethods(businessId).catch((error) => {
+      this.logger.warn(`Could not load booking methods for business ${businessId}: ${error?.message ?? error}`);
+      return null;
+    });
+    if (bookingMethods?.availability_response.mode === 'website_link') {
+      const sent = await this.sendBookingLinkResponse(input, replyCtx, businessId, checkIn, checkOut, guests, propertyName);
+      if (sent) return;
     }
 
     const flowId = await this.whatsappFlowsService.findHospitalityFlowId(businessId).catch((error) => {
@@ -238,6 +252,66 @@ export class AgentReplyDispatcherService {
     this.emitAvailabilityChecked(input, replyCtx, businessId, checkIn, checkOut, propertyName, 'text_fallback', availability);
   }
 
+  private async sendBookingLinkResponse(
+    input: AgentReplyDispatchInput,
+    replyCtx: ReplyContext,
+    businessId: string,
+    checkIn: string,
+    checkOut: string,
+    guests: string | undefined,
+    propertyName: string | undefined,
+  ): Promise<boolean> {
+    const bookingLink = await this.businessSettingsService.getBookingLink(businessId).catch((error) => {
+      this.logger.warn(`Could not load booking link for business ${businessId}: ${error?.message ?? error}`);
+      return null;
+    });
+
+    if (!bookingLink?.enabled || !bookingLink.slug) {
+      this.logger.warn(`Booking link mode is enabled but public booking link is not active for business ${businessId}`);
+      return false;
+    }
+
+    const url = this.publicBookingUrl(bookingLink.slug, {
+      checkIn,
+      checkOut,
+      guests: guests || '1',
+      leadId: replyCtx.leadId,
+    });
+    const text = [
+      `Rooms are available for ${checkIn} to ${checkOut}.`,
+      propertyName ? `Property: ${propertyName}.` : '',
+      `Please complete your booking here: ${url}`,
+    ].filter(Boolean).join(' ');
+
+    await this.whatsappService.sendAgentReply(
+      businessId,
+      input.phoneNumberId,
+      input.customerPhone,
+      text,
+      replyCtx,
+    );
+
+    this.eventEmitter.emit('workflow.event.booking.link_sent', {
+      business_id: businessId,
+      tenant_id: replyCtx.tenantId,
+      lead_id: replyCtx.leadId,
+      event_name: 'booking.link_sent',
+      payload: {
+        booking_link: url,
+        dates: `${checkIn} to ${checkOut}`,
+        check_in: checkIn,
+        check_out: checkOut,
+        guests: guests || '1',
+        property_name: propertyName,
+        customer_phone: input.customerPhone,
+      },
+      emitted_at: new Date().toISOString(),
+    });
+
+    this.emitAvailabilityChecked(input, replyCtx, businessId, checkIn, checkOut, propertyName, 'booking_link');
+    return true;
+  }
+
   private emitAvailabilityChecked(
     input: AgentReplyDispatchInput,
     replyCtx: ReplyContext,
@@ -245,7 +319,7 @@ export class AgentReplyDispatcherService {
     checkIn: string,
     checkOut: string,
     propertyName: string | undefined,
-    deliveryMode: 'whatsapp_flow' | 'text_fallback',
+    deliveryMode: 'whatsapp_flow' | 'text_fallback' | 'booking_link',
     result?: any,
   ) {
     this.eventEmitter.emit('conversation.availability.checked', {
@@ -288,5 +362,14 @@ export class AgentReplyDispatcherService {
 
   private stringValue(value: unknown): string | undefined {
     return typeof value === 'string' && value.trim().length > 0 ? value.trim() : undefined;
+  }
+
+  private publicBookingUrl(slug: string, params: Record<string, string | undefined>): string {
+    const frontendUrl = this.configService.get<string>('FRONTEND_URL') || 'http://localhost:3000';
+    const url = new URL(`/book/${encodeURIComponent(slug)}`, frontendUrl);
+    for (const [key, value] of Object.entries(params)) {
+      if (value) url.searchParams.set(key, value);
+    }
+    return url.toString();
   }
 }

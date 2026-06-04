@@ -111,6 +111,9 @@ function businessProfileBlock(profile: BusinessProfileSnapshot): string {
   if (contactWa) lines.push(`WhatsApp: ${contactWa}`);
   if (profile.email) lines.push(`Email: ${profile.email}`);
   if (profile.website) lines.push(`Website: ${profile.website}`);
+  if (profile.booking_link.enabled && profile.booking_link.url) {
+    lines.push(`Public booking link: ${profile.booking_link.url}`);
+  }
   lines.push(`Currency: ${profile.currency} | Timezone: ${profile.timezone}`);
   if (profile.payment_mode) {
     const label =

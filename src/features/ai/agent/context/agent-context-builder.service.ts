@@ -1,5 +1,6 @@
 import { CACHE_MANAGER } from '@nestjs/cache-manager';
 import { Inject, Injectable, Logger } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import { Cache } from 'cache-manager';
 import { PrismaService } from '../../../../prisma/prisma.service';
 
@@ -16,6 +17,11 @@ export interface BusinessProfileSnapshot {
   currency: string;
   timezone: string;
   payment_mode: 'manual' | 'advance' | 'full' | null;
+  booking_link: {
+    enabled: boolean;
+    slug: string;
+    url: string;
+  };
   business_hours: any;
   policies: { cancellation: string; refund: string; terms: string };
   contact: { phone: string; whatsapp: string; address: string };
@@ -62,6 +68,7 @@ export class AgentContextBuilder {
 
   constructor(
     private readonly prisma: PrismaService,
+    private readonly configService: ConfigService,
     @Inject(CACHE_MANAGER) private readonly cache: Cache,
   ) {}
 
@@ -106,13 +113,14 @@ export class AgentContextBuilder {
         whatsapp_number: true,
         email: true,
         website: true,
+        public_booking_slug: true,
       },
     });
 
     const settings = await (this.prisma.business_settings as any)
       .findUnique({
         where: { business_id: businessId },
-        select: { currency: true, timezone: true, business_hours: true, booking_link: true },
+        select: { currency: true, timezone: true, business_hours: true, booking_link: true, booking_methods: true },
       })
       .catch(() => null);
     const accommodationItems = await this.prisma.catalog_items.findMany({
@@ -128,6 +136,8 @@ export class AgentContextBuilder {
     });
 
     const bookingLink = (settings?.booking_link as any) ?? {};
+    const slug = String(bookingLink.slug || business?.public_booking_slug || '').trim();
+    const linkEnabled = Boolean(bookingLink.enabled && slug);
     const profile: BusinessProfileSnapshot = {
       business_id: businessId,
       business_name: business?.business_name ?? 'this business',
@@ -141,6 +151,11 @@ export class AgentContextBuilder {
       currency: settings?.currency ?? 'INR',
       timezone: settings?.timezone ?? 'Asia/Kolkata',
       payment_mode: bookingLink.payment_mode ?? null,
+      booking_link: {
+        enabled: linkEnabled,
+        slug,
+        url: linkEnabled ? this.publicBookingUrl(slug) : '',
+      },
       business_hours: settings?.business_hours ?? null,
       policies: {
         cancellation: bookingLink.policies?.cancellation ?? '',
@@ -203,6 +218,11 @@ export class AgentContextBuilder {
     }
 
     return null;
+  }
+
+  private publicBookingUrl(slug: string): string {
+    const frontendUrl = this.configService.get<string>('FRONTEND_URL') || 'http://localhost:3000';
+    return new URL(`/book/${encodeURIComponent(slug)}`, frontendUrl).toString();
   }
 
   private async loadRecentBookings(

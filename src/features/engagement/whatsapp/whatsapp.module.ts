@@ -38,6 +38,7 @@ import { AgentModule } from '../../ai/agent/agent.module';
 import { WorkflowsModule } from '../../automation/workflows/workflows.module';
 import { LeadModule } from '../../crm/lead/lead.module';
 import { BookingsModule } from '../../industries/hospitality/bookings/bookings.module';
+import { BusinessSettingsModule } from '../../platform/business-settings/business-settings.module';
 import { GupshupOnboardingService } from '../gupshup/gupshup-onboarding.service';
 import { Campaign, CampaignSchema } from '../campaign/schemas/campaign.schema';
 
@@ -53,6 +54,7 @@ import { Campaign, CampaignSchema } from '../campaign/schemas/campaign.schema';
     GatewayModule,
     HumanHandoffGatewayModule,
     AgentModule,
+    BusinessSettingsModule,
     forwardRef(() => LeadModule),
     BookingsModule,
     forwardRef(() => WorkflowsModule),
