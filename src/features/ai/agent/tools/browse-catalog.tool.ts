@@ -39,11 +39,11 @@ export function makeBrowseCatalogTool(catalogService: CatalogService) {
     },
     {
       name: 'browse_catalog',
-      description: 'Browse or search the business catalog for products, services, or courses',
+      description: 'Browse or search the business catalog for products, vehicles, properties, services, or courses',
       schema: z.object({
         search: z.string().optional().describe('Search term (product name, keyword, category)'),
         itemType: z
-          .enum(['physical_product', 'service', 'activity', 'accommodation'])
+          .enum(['physical_product', 'service', 'activity', 'accommodation', 'vehicle', 'property'])
           .optional()
           .describe('Filter by item type'),
       }),

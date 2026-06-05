@@ -32,6 +32,13 @@ function sharedTools(deps: ToolDeps) {
   ];
 }
 
+function knowledgeTools(deps: ToolDeps) {
+  return [
+    ...(deps.ragService ? [makeFaqTool(deps.ragService)] : []),
+    handoffTool,
+  ];
+}
+
 // Tool set per business vertical — only expose what's relevant so the LLM isn't confused
 export function buildToolsForVertical(vertical: string, deps: ToolDeps) {
   const shared = sharedTools(deps);
@@ -50,6 +57,10 @@ export function buildToolsForVertical(vertical: string, deps: ToolDeps) {
         makeBrowseCatalogTool(deps.catalogService),
         ...shared,
       ];
+
+    case 'used_cars':
+    case 'real_estate':
+      return [makeBrowseCatalogTool(deps.catalogService), ...knowledgeTools(deps)];
 
     case 'services':
     case 'healthcare':

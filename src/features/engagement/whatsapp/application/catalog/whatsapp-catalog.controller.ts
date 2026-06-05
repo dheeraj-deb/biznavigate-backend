@@ -96,7 +96,7 @@ export class WhatsAppCatalogController {
     @Req() req: any,
     @Body() dto: SyncCatalogDto,
   ) {
-    return this.catalogService.syncToWhatsApp(req.user.business_id);
+    return this.catalogService.syncToWhatsApp(req.user.business_id, dto.productIds);
   }
 
   /**

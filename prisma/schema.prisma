@@ -40,6 +40,7 @@ model businesses {
   product_item_details      product_item_details[]
   hospitality_item_details  hospitality_item_details[]
   vehicle_item_details      vehicle_item_details[]
+  property_item_details     property_item_details[]
   product_orders            product_orders[]
   product_inquiries         product_inquiries[]
   hospitality_bookings      hospitality_bookings[]
@@ -1148,12 +1149,12 @@ model hotel_pricing_notifications {
 }
 
 /// catalog_items - single table for all sellable items across all business types
-/// item_type: "physical_product" | "accommodation" | "activity" | "service" | "vehicle"
+/// item_type: "physical_product" | "accommodation" | "activity" | "service" | "vehicle" | "property"
 model catalog_items {
   item_id                   String                      @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   business_id               String                      @db.Uuid
   tenant_id                 String                      @db.Uuid
-  /// "physical_product" | "accommodation" | "activity" | "service"
+  /// "physical_product" | "accommodation" | "activity" | "service" | "vehicle" | "property"
   item_type                 String                      @db.VarChar(30)
   name                      String                      @db.VarChar(255)
   description               String?
@@ -1182,6 +1183,7 @@ model catalog_items {
   product_detail            product_item_details?
   hospitality_detail        hospitality_item_details?
   vehicle_detail            vehicle_item_details?
+  property_detail           property_item_details?
   product_order_items       product_order_items[]
   hospitality_booking_items hospitality_booking_items[]
   product_inquiries         product_inquiries[]
@@ -1191,6 +1193,7 @@ model catalog_items {
   variants                  item_variants[]
   order_items               order_items[]
   external_catalog_items    external_catalog_items[]
+  appointment_sales_visits  appointment_sales_visits[]
 
   @@index([business_id, item_type, is_active])
   @@index([business_id, created_at(sort: Desc)])
@@ -1692,26 +1695,163 @@ model hospitality_item_details {
 // ─── INDUSTRY EXTENSIONS: AUTOMOTIVE ─────────────────────────────────────────
 
 model vehicle_item_details {
-  item_id      String        @id @db.Uuid
-  business_id  String        @db.Uuid
-  make         String        @db.VarChar(80)
-  model_name   String        @db.VarChar(80)
-  year         Int
-  fuel_type    String?       @db.VarChar(30)
-  transmission String?       @db.VarChar(30)
-  color        String?       @db.VarChar(50)
-  km_driven    Int?
+  item_id                 String        @id @db.Uuid
+  business_id             String        @db.Uuid
+  make                    String        @db.VarChar(80)
+  model_name              String        @db.VarChar(80)
+  year                    Int
+  fuel_type               String?       @db.VarChar(30)
+  transmission            String?       @db.VarChar(30)
+  color                   String?       @db.VarChar(50)
+  km_driven               Int?
   /// new | used | certified_pre_owned
-  condition    String        @default("used") @db.VarChar(30)
-  metadata     Json?
-  created_at   DateTime      @default(now()) @db.Timestamptz(6)
-  updated_at   DateTime      @default(now()) @db.Timestamptz(6)
-  business     businesses    @relation(fields: [business_id], references: [business_id], onDelete: Cascade)
-  item         catalog_items @relation(fields: [item_id], references: [item_id], onDelete: Cascade)
+  condition               String        @default("used") @db.VarChar(30)
+  ownership_count         Int?
+  insurance_valid_until   DateTime?     @db.Date
+  registration_number     String?       @db.VarChar(40)
+  rc_status               String?       @db.VarChar(60)
+  finance_available       Boolean       @default(false)
+  exchange_accepted       Boolean       @default(false)
+  accident_history        String?       @db.VarChar(120)
+  service_history         String?
+  test_drive_available    Boolean       @default(true)
+  metadata                Json?
+  created_at              DateTime      @default(now()) @db.Timestamptz(6)
+  updated_at              DateTime      @default(now()) @db.Timestamptz(6)
+  business                businesses    @relation(fields: [business_id], references: [business_id], onDelete: Cascade)
+  item                    catalog_items @relation(fields: [item_id], references: [item_id], onDelete: Cascade)
 
   @@index([business_id])
   @@index([make, model_name])
   @@index([year])
+  @@index([business_id, registration_number], map: "idx_vehicle_item_details_rc")
+}
+
+model property_item_details {
+  item_id           String        @id @db.Uuid
+  business_id       String        @db.Uuid
+  property_type     String        @db.VarChar(60)
+  listing_type      String        @default("sale") @db.VarChar(30)
+  bedrooms          Int?
+  bathrooms         Int?
+  area_sqft         Int?
+  floor_number      Int?
+  total_floors      Int?
+  locality          String?       @db.VarChar(120)
+  city              String?       @db.VarChar(100)
+  furnishing        String?       @db.VarChar(40)
+  possession_status String?       @db.VarChar(60)
+  facing            String?       @db.VarChar(30)
+  parking           String?       @db.VarChar(60)
+  rera_id           String?       @db.VarChar(80)
+  map_url           String?
+  documents_status  String?       @db.VarChar(80)
+  loan_support_available Boolean  @default(false)
+  visit_landmark    String?       @db.VarChar(160)
+  metadata          Json?
+  created_at        DateTime      @default(now()) @db.Timestamptz(6)
+  updated_at        DateTime      @default(now()) @db.Timestamptz(6)
+  business          businesses    @relation(fields: [business_id], references: [business_id], onDelete: Cascade)
+  item              catalog_items @relation(fields: [item_id], references: [item_id], onDelete: Cascade)
+
+  @@index([business_id])
+  @@index([business_id, city, locality])
+  @@index([business_id, property_type])
+  @@index([business_id, documents_status], map: "idx_property_item_details_documents")
+}
+
+model appointment_sales_settings {
+  appointment_sales_settings_id String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  business_id                   String   @unique @db.Uuid
+  tenant_id                     String?  @db.Uuid
+  vertical_type                 String   @db.VarChar(30)
+  onboarding_status             String   @default("draft") @db.VarChar(30)
+  default_visit_type            String   @default("showroom_visit") @db.VarChar(40)
+  default_visit_location        String?
+  slot_duration_minutes         Int      @default(45)
+  visit_buffer_minutes          Int      @default(15)
+  auto_assign_visits            Boolean  @default(true)
+  reminder_minutes_before       Int      @default(60)
+  escalation_rules              Json?
+  setup_checklist               Json?
+  metadata                      Json?
+  created_at                    DateTime @default(now()) @db.Timestamptz(6)
+  updated_at                    DateTime @default(now()) @db.Timestamptz(6)
+
+  @@index([business_id, onboarding_status], map: "idx_appointment_sales_settings_status")
+}
+
+model appointment_sales_staff {
+  sales_staff_id String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  business_id    String    @db.Uuid
+  tenant_id      String?   @db.Uuid
+  name           String    @db.VarChar(160)
+  phone          String?   @db.VarChar(30)
+  email          String?   @db.VarChar(255)
+  role           String    @default("sales_consultant") @db.VarChar(60)
+  title          String?   @db.VarChar(120)
+  priority       Int       @default(1)
+  is_active      Boolean   @default(true)
+  metadata       Json?
+  created_by     String?   @db.Uuid
+  created_at     DateTime  @default(now()) @db.Timestamptz(6)
+  updated_at     DateTime  @default(now()) @db.Timestamptz(6)
+  availability   appointment_sales_staff_availability[]
+  visits         appointment_sales_visits[]
+
+  @@index([business_id, is_active, priority], map: "idx_appointment_staff_business_active")
+  @@index([business_id, phone], map: "idx_appointment_staff_phone")
+}
+
+model appointment_sales_staff_availability {
+  availability_id String                  @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  sales_staff_id  String                  @db.Uuid
+  business_id     String                  @db.Uuid
+  day_of_week     Int
+  start_time      String                  @db.VarChar(5)
+  end_time        String                  @db.VarChar(5)
+  window_type     String                  @default("working") @db.VarChar(30)
+  label           String?                 @db.VarChar(80)
+  is_active       Boolean                 @default(true)
+  metadata        Json?
+  created_at      DateTime                @default(now()) @db.Timestamptz(6)
+  updated_at      DateTime                @default(now()) @db.Timestamptz(6)
+  staff           appointment_sales_staff @relation(fields: [sales_staff_id], references: [sales_staff_id], onDelete: Cascade)
+
+  @@index([business_id, day_of_week, is_active], map: "idx_appointment_staff_availability_day")
+  @@index([sales_staff_id, day_of_week], map: "idx_appointment_staff_availability_staff_day")
+  @@index([business_id, sales_staff_id, day_of_week, window_type, is_active], map: "idx_appointment_staff_availability_type")
+}
+
+model appointment_sales_visits {
+  visit_id        String                   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  business_id     String                   @db.Uuid
+  tenant_id       String?                  @db.Uuid
+  lead_id         String?                  @db.Uuid
+  customer_id     String?                  @db.Uuid
+  item_id         String?                  @db.Uuid
+  sales_staff_id  String?                  @db.Uuid
+  visit_type      String                   @default("showroom_visit") @db.VarChar(40)
+  status          String                   @default("scheduled") @db.VarChar(30)
+  scheduled_start DateTime                 @db.Timestamptz(6)
+  scheduled_end   DateTime                 @db.Timestamptz(6)
+  customer_name   String?                  @db.VarChar(255)
+  customer_phone  String?                  @db.VarChar(30)
+  location        String?
+  source          String                   @default("owner") @db.VarChar(40)
+  notes           String?
+  metadata        Json?
+  created_by      String?                  @db.Uuid
+  created_at      DateTime                 @default(now()) @db.Timestamptz(6)
+  updated_at      DateTime                 @default(now()) @db.Timestamptz(6)
+  item            catalog_items?           @relation(fields: [item_id], references: [item_id])
+  staff           appointment_sales_staff? @relation(fields: [sales_staff_id], references: [sales_staff_id])
+
+  @@index([business_id, scheduled_start], map: "idx_appointment_visits_business_time")
+  @@index([business_id, status, scheduled_start], map: "idx_appointment_visits_status_time")
+  @@index([sales_staff_id, scheduled_start], map: "idx_appointment_visits_staff_time")
+  @@index([item_id], map: "idx_appointment_visits_item")
+  @@index([lead_id], map: "idx_appointment_visits_lead")
 }
 
 model hospitality_inquiries {

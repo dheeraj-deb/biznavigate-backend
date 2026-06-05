@@ -55,6 +55,11 @@ export type social_accounts = $Result.DefaultSelection<Prisma.$social_accountsPa
  */
 export type tenants = $Result.DefaultSelection<Prisma.$tenantsPayload>
 /**
+ * Model tenant_conversation_configs
+ * 
+ */
+export type tenant_conversation_configs = $Result.DefaultSelection<Prisma.$tenant_conversation_configsPayload>
+/**
  * Model users
  * 
  */
@@ -232,7 +237,7 @@ export type hotel_pricing_notifications = $Result.DefaultSelection<Prisma.$hotel
 /**
  * Model catalog_items
  * catalog_items - single table for all sellable items across all business types
- * item_type: "physical_product" | "accommodation" | "activity" | "service" | "vehicle"
+ * item_type: "physical_product" | "accommodation" | "activity" | "service" | "vehicle" | "property"
  */
 export type catalog_items = $Result.DefaultSelection<Prisma.$catalog_itemsPayload>
 /**
@@ -345,6 +350,31 @@ export type hospitality_item_details = $Result.DefaultSelection<Prisma.$hospital
  * 
  */
 export type vehicle_item_details = $Result.DefaultSelection<Prisma.$vehicle_item_detailsPayload>
+/**
+ * Model property_item_details
+ * 
+ */
+export type property_item_details = $Result.DefaultSelection<Prisma.$property_item_detailsPayload>
+/**
+ * Model appointment_sales_settings
+ * 
+ */
+export type appointment_sales_settings = $Result.DefaultSelection<Prisma.$appointment_sales_settingsPayload>
+/**
+ * Model appointment_sales_staff
+ * 
+ */
+export type appointment_sales_staff = $Result.DefaultSelection<Prisma.$appointment_sales_staffPayload>
+/**
+ * Model appointment_sales_staff_availability
+ * 
+ */
+export type appointment_sales_staff_availability = $Result.DefaultSelection<Prisma.$appointment_sales_staff_availabilityPayload>
+/**
+ * Model appointment_sales_visits
+ * 
+ */
+export type appointment_sales_visits = $Result.DefaultSelection<Prisma.$appointment_sales_visitsPayload>
 /**
  * Model hospitality_inquiries
  * 
@@ -657,6 +687,16 @@ export class PrismaClient<
     * ```
     */
   get tenants(): Prisma.tenantsDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.tenant_conversation_configs`: Exposes CRUD operations for the **tenant_conversation_configs** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more Tenant_conversation_configs
+    * const tenant_conversation_configs = await prisma.tenant_conversation_configs.findMany()
+    * ```
+    */
+  get tenant_conversation_configs(): Prisma.tenant_conversation_configsDelegate<ExtArgs, ClientOptions>;
 
   /**
    * `prisma.users`: Exposes CRUD operations for the **users** model.
@@ -1207,6 +1247,56 @@ export class PrismaClient<
     * ```
     */
   get vehicle_item_details(): Prisma.vehicle_item_detailsDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.property_item_details`: Exposes CRUD operations for the **property_item_details** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more Property_item_details
+    * const property_item_details = await prisma.property_item_details.findMany()
+    * ```
+    */
+  get property_item_details(): Prisma.property_item_detailsDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.appointment_sales_settings`: Exposes CRUD operations for the **appointment_sales_settings** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more Appointment_sales_settings
+    * const appointment_sales_settings = await prisma.appointment_sales_settings.findMany()
+    * ```
+    */
+  get appointment_sales_settings(): Prisma.appointment_sales_settingsDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.appointment_sales_staff`: Exposes CRUD operations for the **appointment_sales_staff** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more Appointment_sales_staffs
+    * const appointment_sales_staffs = await prisma.appointment_sales_staff.findMany()
+    * ```
+    */
+  get appointment_sales_staff(): Prisma.appointment_sales_staffDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.appointment_sales_staff_availability`: Exposes CRUD operations for the **appointment_sales_staff_availability** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more Appointment_sales_staff_availabilities
+    * const appointment_sales_staff_availabilities = await prisma.appointment_sales_staff_availability.findMany()
+    * ```
+    */
+  get appointment_sales_staff_availability(): Prisma.appointment_sales_staff_availabilityDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.appointment_sales_visits`: Exposes CRUD operations for the **appointment_sales_visits** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more Appointment_sales_visits
+    * const appointment_sales_visits = await prisma.appointment_sales_visits.findMany()
+    * ```
+    */
+  get appointment_sales_visits(): Prisma.appointment_sales_visitsDelegate<ExtArgs, ClientOptions>;
 
   /**
    * `prisma.hospitality_inquiries`: Exposes CRUD operations for the **hospitality_inquiries** model.
@@ -1865,6 +1955,7 @@ export namespace Prisma {
     roles: 'roles',
     social_accounts: 'social_accounts',
     tenants: 'tenants',
+    tenant_conversation_configs: 'tenant_conversation_configs',
     users: 'users',
     leads: 'leads',
     pipelines: 'pipelines',
@@ -1920,6 +2011,11 @@ export namespace Prisma {
     seller_stock_adjustments: 'seller_stock_adjustments',
     hospitality_item_details: 'hospitality_item_details',
     vehicle_item_details: 'vehicle_item_details',
+    property_item_details: 'property_item_details',
+    appointment_sales_settings: 'appointment_sales_settings',
+    appointment_sales_staff: 'appointment_sales_staff',
+    appointment_sales_staff_availability: 'appointment_sales_staff_availability',
+    appointment_sales_visits: 'appointment_sales_visits',
     hospitality_inquiries: 'hospitality_inquiries',
     hospitality_bookings: 'hospitality_bookings',
     hospitality_booking_items: 'hospitality_booking_items',
@@ -1959,7 +2055,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "businesses" | "business_employees" | "intents" | "notifications" | "role_intents" | "roles" | "social_accounts" | "tenants" | "users" | "leads" | "pipelines" | "pipeline_stages" | "lead_events" | "lead_followups" | "customers" | "orders" | "order_items" | "cart_reservations" | "campaigns" | "campaign_recipients" | "notification_templates" | "notification_messages" | "notification_preferences" | "payments" | "payment_reconciliation" | "notification_events" | "payment_webhooks" | "instagram_media" | "workflow_definitions" | "business_workflows" | "workflow_executions" | "workflow_execution_steps" | "workflow_idempotency_keys" | "cart_items" | "carts" | "whatsapp_optouts" | "campaign_analytics" | "hotel_pricing_recommendations" | "hotel_booking_outcomes" | "hotel_pricing_notifications" | "catalog_items" | "item_variants" | "item_availability" | "product_item_details" | "external_catalog_items" | "product_inquiries" | "product_orders" | "product_order_items" | "product_order_status_events" | "seller_owner_approvals" | "seller_store_settings" | "seller_stock_reservations" | "seller_return_cases" | "seller_deliveries" | "seller_customer_credit_accounts" | "seller_customer_credit_transactions" | "seller_ai_audit_logs" | "seller_product_profit_snapshots" | "seller_demand_signals" | "seller_product_import_jobs" | "seller_stock_adjustments" | "hospitality_item_details" | "vehicle_item_details" | "hospitality_inquiries" | "hospitality_bookings" | "hospitality_booking_items" | "hospitality_booking_guests" | "hospitality_booking_status_events" | "checkpoint_blobs" | "checkpoint_migrations" | "checkpoint_writes" | "checkpoints" | "billing_plans" | "billing_subscriptions" | "wallets" | "wallet_transactions" | "billing_payments" | "billing_invoices" | "billing_webhook_events" | "credit_pricing" | "business_settings" | "audit_logs" | "lead_item_interests" | "lead_preference_watches"
+      modelProps: "businesses" | "business_employees" | "intents" | "notifications" | "role_intents" | "roles" | "social_accounts" | "tenants" | "tenant_conversation_configs" | "users" | "leads" | "pipelines" | "pipeline_stages" | "lead_events" | "lead_followups" | "customers" | "orders" | "order_items" | "cart_reservations" | "campaigns" | "campaign_recipients" | "notification_templates" | "notification_messages" | "notification_preferences" | "payments" | "payment_reconciliation" | "notification_events" | "payment_webhooks" | "instagram_media" | "workflow_definitions" | "business_workflows" | "workflow_executions" | "workflow_execution_steps" | "workflow_idempotency_keys" | "cart_items" | "carts" | "whatsapp_optouts" | "campaign_analytics" | "hotel_pricing_recommendations" | "hotel_booking_outcomes" | "hotel_pricing_notifications" | "catalog_items" | "item_variants" | "item_availability" | "product_item_details" | "external_catalog_items" | "product_inquiries" | "product_orders" | "product_order_items" | "product_order_status_events" | "seller_owner_approvals" | "seller_store_settings" | "seller_stock_reservations" | "seller_return_cases" | "seller_deliveries" | "seller_customer_credit_accounts" | "seller_customer_credit_transactions" | "seller_ai_audit_logs" | "seller_product_profit_snapshots" | "seller_demand_signals" | "seller_product_import_jobs" | "seller_stock_adjustments" | "hospitality_item_details" | "vehicle_item_details" | "property_item_details" | "appointment_sales_settings" | "appointment_sales_staff" | "appointment_sales_staff_availability" | "appointment_sales_visits" | "hospitality_inquiries" | "hospitality_bookings" | "hospitality_booking_items" | "hospitality_booking_guests" | "hospitality_booking_status_events" | "checkpoint_blobs" | "checkpoint_migrations" | "checkpoint_writes" | "checkpoints" | "billing_plans" | "billing_subscriptions" | "wallets" | "wallet_transactions" | "billing_payments" | "billing_invoices" | "billing_webhook_events" | "credit_pricing" | "business_settings" | "audit_logs" | "lead_item_interests" | "lead_preference_watches"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -2552,6 +2648,80 @@ export namespace Prisma {
           count: {
             args: Prisma.tenantsCountArgs<ExtArgs>
             result: $Utils.Optional<TenantsCountAggregateOutputType> | number
+          }
+        }
+      }
+      tenant_conversation_configs: {
+        payload: Prisma.$tenant_conversation_configsPayload<ExtArgs>
+        fields: Prisma.tenant_conversation_configsFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.tenant_conversation_configsFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$tenant_conversation_configsPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.tenant_conversation_configsFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$tenant_conversation_configsPayload>
+          }
+          findFirst: {
+            args: Prisma.tenant_conversation_configsFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$tenant_conversation_configsPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.tenant_conversation_configsFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$tenant_conversation_configsPayload>
+          }
+          findMany: {
+            args: Prisma.tenant_conversation_configsFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$tenant_conversation_configsPayload>[]
+          }
+          create: {
+            args: Prisma.tenant_conversation_configsCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$tenant_conversation_configsPayload>
+          }
+          createMany: {
+            args: Prisma.tenant_conversation_configsCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.tenant_conversation_configsCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$tenant_conversation_configsPayload>[]
+          }
+          delete: {
+            args: Prisma.tenant_conversation_configsDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$tenant_conversation_configsPayload>
+          }
+          update: {
+            args: Prisma.tenant_conversation_configsUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$tenant_conversation_configsPayload>
+          }
+          deleteMany: {
+            args: Prisma.tenant_conversation_configsDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.tenant_conversation_configsUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.tenant_conversation_configsUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$tenant_conversation_configsPayload>[]
+          }
+          upsert: {
+            args: Prisma.tenant_conversation_configsUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$tenant_conversation_configsPayload>
+          }
+          aggregate: {
+            args: Prisma.Tenant_conversation_configsAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateTenant_conversation_configs>
+          }
+          groupBy: {
+            args: Prisma.tenant_conversation_configsGroupByArgs<ExtArgs>
+            result: $Utils.Optional<Tenant_conversation_configsGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.tenant_conversation_configsCountArgs<ExtArgs>
+            result: $Utils.Optional<Tenant_conversation_configsCountAggregateOutputType> | number
           }
         }
       }
@@ -6625,6 +6795,376 @@ export namespace Prisma {
           }
         }
       }
+      property_item_details: {
+        payload: Prisma.$property_item_detailsPayload<ExtArgs>
+        fields: Prisma.property_item_detailsFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.property_item_detailsFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$property_item_detailsPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.property_item_detailsFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$property_item_detailsPayload>
+          }
+          findFirst: {
+            args: Prisma.property_item_detailsFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$property_item_detailsPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.property_item_detailsFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$property_item_detailsPayload>
+          }
+          findMany: {
+            args: Prisma.property_item_detailsFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$property_item_detailsPayload>[]
+          }
+          create: {
+            args: Prisma.property_item_detailsCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$property_item_detailsPayload>
+          }
+          createMany: {
+            args: Prisma.property_item_detailsCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.property_item_detailsCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$property_item_detailsPayload>[]
+          }
+          delete: {
+            args: Prisma.property_item_detailsDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$property_item_detailsPayload>
+          }
+          update: {
+            args: Prisma.property_item_detailsUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$property_item_detailsPayload>
+          }
+          deleteMany: {
+            args: Prisma.property_item_detailsDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.property_item_detailsUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.property_item_detailsUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$property_item_detailsPayload>[]
+          }
+          upsert: {
+            args: Prisma.property_item_detailsUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$property_item_detailsPayload>
+          }
+          aggregate: {
+            args: Prisma.Property_item_detailsAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateProperty_item_details>
+          }
+          groupBy: {
+            args: Prisma.property_item_detailsGroupByArgs<ExtArgs>
+            result: $Utils.Optional<Property_item_detailsGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.property_item_detailsCountArgs<ExtArgs>
+            result: $Utils.Optional<Property_item_detailsCountAggregateOutputType> | number
+          }
+        }
+      }
+      appointment_sales_settings: {
+        payload: Prisma.$appointment_sales_settingsPayload<ExtArgs>
+        fields: Prisma.appointment_sales_settingsFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.appointment_sales_settingsFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$appointment_sales_settingsPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.appointment_sales_settingsFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$appointment_sales_settingsPayload>
+          }
+          findFirst: {
+            args: Prisma.appointment_sales_settingsFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$appointment_sales_settingsPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.appointment_sales_settingsFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$appointment_sales_settingsPayload>
+          }
+          findMany: {
+            args: Prisma.appointment_sales_settingsFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$appointment_sales_settingsPayload>[]
+          }
+          create: {
+            args: Prisma.appointment_sales_settingsCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$appointment_sales_settingsPayload>
+          }
+          createMany: {
+            args: Prisma.appointment_sales_settingsCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.appointment_sales_settingsCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$appointment_sales_settingsPayload>[]
+          }
+          delete: {
+            args: Prisma.appointment_sales_settingsDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$appointment_sales_settingsPayload>
+          }
+          update: {
+            args: Prisma.appointment_sales_settingsUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$appointment_sales_settingsPayload>
+          }
+          deleteMany: {
+            args: Prisma.appointment_sales_settingsDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.appointment_sales_settingsUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.appointment_sales_settingsUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$appointment_sales_settingsPayload>[]
+          }
+          upsert: {
+            args: Prisma.appointment_sales_settingsUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$appointment_sales_settingsPayload>
+          }
+          aggregate: {
+            args: Prisma.Appointment_sales_settingsAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateAppointment_sales_settings>
+          }
+          groupBy: {
+            args: Prisma.appointment_sales_settingsGroupByArgs<ExtArgs>
+            result: $Utils.Optional<Appointment_sales_settingsGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.appointment_sales_settingsCountArgs<ExtArgs>
+            result: $Utils.Optional<Appointment_sales_settingsCountAggregateOutputType> | number
+          }
+        }
+      }
+      appointment_sales_staff: {
+        payload: Prisma.$appointment_sales_staffPayload<ExtArgs>
+        fields: Prisma.appointment_sales_staffFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.appointment_sales_staffFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$appointment_sales_staffPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.appointment_sales_staffFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$appointment_sales_staffPayload>
+          }
+          findFirst: {
+            args: Prisma.appointment_sales_staffFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$appointment_sales_staffPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.appointment_sales_staffFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$appointment_sales_staffPayload>
+          }
+          findMany: {
+            args: Prisma.appointment_sales_staffFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$appointment_sales_staffPayload>[]
+          }
+          create: {
+            args: Prisma.appointment_sales_staffCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$appointment_sales_staffPayload>
+          }
+          createMany: {
+            args: Prisma.appointment_sales_staffCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.appointment_sales_staffCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$appointment_sales_staffPayload>[]
+          }
+          delete: {
+            args: Prisma.appointment_sales_staffDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$appointment_sales_staffPayload>
+          }
+          update: {
+            args: Prisma.appointment_sales_staffUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$appointment_sales_staffPayload>
+          }
+          deleteMany: {
+            args: Prisma.appointment_sales_staffDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.appointment_sales_staffUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.appointment_sales_staffUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$appointment_sales_staffPayload>[]
+          }
+          upsert: {
+            args: Prisma.appointment_sales_staffUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$appointment_sales_staffPayload>
+          }
+          aggregate: {
+            args: Prisma.Appointment_sales_staffAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateAppointment_sales_staff>
+          }
+          groupBy: {
+            args: Prisma.appointment_sales_staffGroupByArgs<ExtArgs>
+            result: $Utils.Optional<Appointment_sales_staffGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.appointment_sales_staffCountArgs<ExtArgs>
+            result: $Utils.Optional<Appointment_sales_staffCountAggregateOutputType> | number
+          }
+        }
+      }
+      appointment_sales_staff_availability: {
+        payload: Prisma.$appointment_sales_staff_availabilityPayload<ExtArgs>
+        fields: Prisma.appointment_sales_staff_availabilityFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.appointment_sales_staff_availabilityFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$appointment_sales_staff_availabilityPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.appointment_sales_staff_availabilityFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$appointment_sales_staff_availabilityPayload>
+          }
+          findFirst: {
+            args: Prisma.appointment_sales_staff_availabilityFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$appointment_sales_staff_availabilityPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.appointment_sales_staff_availabilityFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$appointment_sales_staff_availabilityPayload>
+          }
+          findMany: {
+            args: Prisma.appointment_sales_staff_availabilityFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$appointment_sales_staff_availabilityPayload>[]
+          }
+          create: {
+            args: Prisma.appointment_sales_staff_availabilityCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$appointment_sales_staff_availabilityPayload>
+          }
+          createMany: {
+            args: Prisma.appointment_sales_staff_availabilityCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.appointment_sales_staff_availabilityCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$appointment_sales_staff_availabilityPayload>[]
+          }
+          delete: {
+            args: Prisma.appointment_sales_staff_availabilityDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$appointment_sales_staff_availabilityPayload>
+          }
+          update: {
+            args: Prisma.appointment_sales_staff_availabilityUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$appointment_sales_staff_availabilityPayload>
+          }
+          deleteMany: {
+            args: Prisma.appointment_sales_staff_availabilityDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.appointment_sales_staff_availabilityUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.appointment_sales_staff_availabilityUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$appointment_sales_staff_availabilityPayload>[]
+          }
+          upsert: {
+            args: Prisma.appointment_sales_staff_availabilityUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$appointment_sales_staff_availabilityPayload>
+          }
+          aggregate: {
+            args: Prisma.Appointment_sales_staff_availabilityAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateAppointment_sales_staff_availability>
+          }
+          groupBy: {
+            args: Prisma.appointment_sales_staff_availabilityGroupByArgs<ExtArgs>
+            result: $Utils.Optional<Appointment_sales_staff_availabilityGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.appointment_sales_staff_availabilityCountArgs<ExtArgs>
+            result: $Utils.Optional<Appointment_sales_staff_availabilityCountAggregateOutputType> | number
+          }
+        }
+      }
+      appointment_sales_visits: {
+        payload: Prisma.$appointment_sales_visitsPayload<ExtArgs>
+        fields: Prisma.appointment_sales_visitsFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.appointment_sales_visitsFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$appointment_sales_visitsPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.appointment_sales_visitsFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$appointment_sales_visitsPayload>
+          }
+          findFirst: {
+            args: Prisma.appointment_sales_visitsFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$appointment_sales_visitsPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.appointment_sales_visitsFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$appointment_sales_visitsPayload>
+          }
+          findMany: {
+            args: Prisma.appointment_sales_visitsFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$appointment_sales_visitsPayload>[]
+          }
+          create: {
+            args: Prisma.appointment_sales_visitsCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$appointment_sales_visitsPayload>
+          }
+          createMany: {
+            args: Prisma.appointment_sales_visitsCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.appointment_sales_visitsCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$appointment_sales_visitsPayload>[]
+          }
+          delete: {
+            args: Prisma.appointment_sales_visitsDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$appointment_sales_visitsPayload>
+          }
+          update: {
+            args: Prisma.appointment_sales_visitsUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$appointment_sales_visitsPayload>
+          }
+          deleteMany: {
+            args: Prisma.appointment_sales_visitsDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.appointment_sales_visitsUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.appointment_sales_visitsUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$appointment_sales_visitsPayload>[]
+          }
+          upsert: {
+            args: Prisma.appointment_sales_visitsUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$appointment_sales_visitsPayload>
+          }
+          aggregate: {
+            args: Prisma.Appointment_sales_visitsAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateAppointment_sales_visits>
+          }
+          groupBy: {
+            args: Prisma.appointment_sales_visitsGroupByArgs<ExtArgs>
+            result: $Utils.Optional<Appointment_sales_visitsGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.appointment_sales_visitsCountArgs<ExtArgs>
+            result: $Utils.Optional<Appointment_sales_visitsCountAggregateOutputType> | number
+          }
+        }
+      }
       hospitality_inquiries: {
         payload: Prisma.$hospitality_inquiriesPayload<ExtArgs>
         fields: Prisma.hospitality_inquiriesFieldRefs
@@ -8275,6 +8815,7 @@ export namespace Prisma {
     roles?: rolesOmit
     social_accounts?: social_accountsOmit
     tenants?: tenantsOmit
+    tenant_conversation_configs?: tenant_conversation_configsOmit
     users?: usersOmit
     leads?: leadsOmit
     pipelines?: pipelinesOmit
@@ -8330,6 +8871,11 @@ export namespace Prisma {
     seller_stock_adjustments?: seller_stock_adjustmentsOmit
     hospitality_item_details?: hospitality_item_detailsOmit
     vehicle_item_details?: vehicle_item_detailsOmit
+    property_item_details?: property_item_detailsOmit
+    appointment_sales_settings?: appointment_sales_settingsOmit
+    appointment_sales_staff?: appointment_sales_staffOmit
+    appointment_sales_staff_availability?: appointment_sales_staff_availabilityOmit
+    appointment_sales_visits?: appointment_sales_visitsOmit
     hospitality_inquiries?: hospitality_inquiriesOmit
     hospitality_bookings?: hospitality_bookingsOmit
     hospitality_booking_items?: hospitality_booking_itemsOmit
@@ -8453,6 +8999,7 @@ export namespace Prisma {
     product_item_details: number
     hospitality_item_details: number
     vehicle_item_details: number
+    property_item_details: number
     product_orders: number
     product_inquiries: number
     hospitality_bookings: number
@@ -8483,6 +9030,7 @@ export namespace Prisma {
     product_item_details?: boolean | BusinessesCountOutputTypeCountProduct_item_detailsArgs
     hospitality_item_details?: boolean | BusinessesCountOutputTypeCountHospitality_item_detailsArgs
     vehicle_item_details?: boolean | BusinessesCountOutputTypeCountVehicle_item_detailsArgs
+    property_item_details?: boolean | BusinessesCountOutputTypeCountProperty_item_detailsArgs
     product_orders?: boolean | BusinessesCountOutputTypeCountProduct_ordersArgs
     product_inquiries?: boolean | BusinessesCountOutputTypeCountProduct_inquiriesArgs
     hospitality_bookings?: boolean | BusinessesCountOutputTypeCountHospitality_bookingsArgs
@@ -8569,6 +9117,13 @@ export namespace Prisma {
    */
   export type BusinessesCountOutputTypeCountVehicle_item_detailsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: vehicle_item_detailsWhereInput
+  }
+
+  /**
+   * BusinessesCountOutputType without action
+   */
+  export type BusinessesCountOutputTypeCountProperty_item_detailsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: property_item_detailsWhereInput
   }
 
   /**
@@ -8825,6 +9380,7 @@ export namespace Prisma {
     hospitality_inquiries: number
     notification_messages: number
     notification_templates: number
+    tenant_conversation_configs: number
   }
 
   export type TenantsCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -8841,6 +9397,7 @@ export namespace Prisma {
     hospitality_inquiries?: boolean | TenantsCountOutputTypeCountHospitality_inquiriesArgs
     notification_messages?: boolean | TenantsCountOutputTypeCountNotification_messagesArgs
     notification_templates?: boolean | TenantsCountOutputTypeCountNotification_templatesArgs
+    tenant_conversation_configs?: boolean | TenantsCountOutputTypeCountTenant_conversation_configsArgs
   }
 
   // Custom InputTypes
@@ -8943,6 +9500,13 @@ export namespace Prisma {
    */
   export type TenantsCountOutputTypeCountNotification_templatesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: notification_templatesWhereInput
+  }
+
+  /**
+   * TenantsCountOutputType without action
+   */
+  export type TenantsCountOutputTypeCountTenant_conversation_configsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: tenant_conversation_configsWhereInput
   }
 
 
@@ -9607,6 +10171,7 @@ export namespace Prisma {
     variants: number
     order_items: number
     external_catalog_items: number
+    appointment_sales_visits: number
   }
 
   export type Catalog_itemsCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -9620,6 +10185,7 @@ export namespace Prisma {
     variants?: boolean | Catalog_itemsCountOutputTypeCountVariantsArgs
     order_items?: boolean | Catalog_itemsCountOutputTypeCountOrder_itemsArgs
     external_catalog_items?: boolean | Catalog_itemsCountOutputTypeCountExternal_catalog_itemsArgs
+    appointment_sales_visits?: boolean | Catalog_itemsCountOutputTypeCountAppointment_sales_visitsArgs
   }
 
   // Custom InputTypes
@@ -9701,6 +10267,13 @@ export namespace Prisma {
    */
   export type Catalog_itemsCountOutputTypeCountExternal_catalog_itemsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: external_catalog_itemsWhereInput
+  }
+
+  /**
+   * Catalog_itemsCountOutputType without action
+   */
+  export type Catalog_itemsCountOutputTypeCountAppointment_sales_visitsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: appointment_sales_visitsWhereInput
   }
 
 
@@ -9790,6 +10363,46 @@ export namespace Prisma {
    */
   export type Product_ordersCountOutputTypeCountEventsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: product_order_status_eventsWhereInput
+  }
+
+
+  /**
+   * Count Type Appointment_sales_staffCountOutputType
+   */
+
+  export type Appointment_sales_staffCountOutputType = {
+    availability: number
+    visits: number
+  }
+
+  export type Appointment_sales_staffCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    availability?: boolean | Appointment_sales_staffCountOutputTypeCountAvailabilityArgs
+    visits?: boolean | Appointment_sales_staffCountOutputTypeCountVisitsArgs
+  }
+
+  // Custom InputTypes
+  /**
+   * Appointment_sales_staffCountOutputType without action
+   */
+  export type Appointment_sales_staffCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Appointment_sales_staffCountOutputType
+     */
+    select?: Appointment_sales_staffCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * Appointment_sales_staffCountOutputType without action
+   */
+  export type Appointment_sales_staffCountOutputTypeCountAvailabilityArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: appointment_sales_staff_availabilityWhereInput
+  }
+
+  /**
+   * Appointment_sales_staffCountOutputType without action
+   */
+  export type Appointment_sales_staffCountOutputTypeCountVisitsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: appointment_sales_visitsWhereInput
   }
 
 
@@ -10240,6 +10853,7 @@ export namespace Prisma {
     product_item_details?: boolean | businesses$product_item_detailsArgs<ExtArgs>
     hospitality_item_details?: boolean | businesses$hospitality_item_detailsArgs<ExtArgs>
     vehicle_item_details?: boolean | businesses$vehicle_item_detailsArgs<ExtArgs>
+    property_item_details?: boolean | businesses$property_item_detailsArgs<ExtArgs>
     product_orders?: boolean | businesses$product_ordersArgs<ExtArgs>
     product_inquiries?: boolean | businesses$product_inquiriesArgs<ExtArgs>
     hospitality_bookings?: boolean | businesses$hospitality_bookingsArgs<ExtArgs>
@@ -10350,6 +10964,7 @@ export namespace Prisma {
     product_item_details?: boolean | businesses$product_item_detailsArgs<ExtArgs>
     hospitality_item_details?: boolean | businesses$hospitality_item_detailsArgs<ExtArgs>
     vehicle_item_details?: boolean | businesses$vehicle_item_detailsArgs<ExtArgs>
+    property_item_details?: boolean | businesses$property_item_detailsArgs<ExtArgs>
     product_orders?: boolean | businesses$product_ordersArgs<ExtArgs>
     product_inquiries?: boolean | businesses$product_inquiriesArgs<ExtArgs>
     hospitality_bookings?: boolean | businesses$hospitality_bookingsArgs<ExtArgs>
@@ -10393,6 +11008,7 @@ export namespace Prisma {
       product_item_details: Prisma.$product_item_detailsPayload<ExtArgs>[]
       hospitality_item_details: Prisma.$hospitality_item_detailsPayload<ExtArgs>[]
       vehicle_item_details: Prisma.$vehicle_item_detailsPayload<ExtArgs>[]
+      property_item_details: Prisma.$property_item_detailsPayload<ExtArgs>[]
       product_orders: Prisma.$product_ordersPayload<ExtArgs>[]
       product_inquiries: Prisma.$product_inquiriesPayload<ExtArgs>[]
       hospitality_bookings: Prisma.$hospitality_bookingsPayload<ExtArgs>[]
@@ -10841,6 +11457,7 @@ export namespace Prisma {
     product_item_details<T extends businesses$product_item_detailsArgs<ExtArgs> = {}>(args?: Subset<T, businesses$product_item_detailsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$product_item_detailsPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     hospitality_item_details<T extends businesses$hospitality_item_detailsArgs<ExtArgs> = {}>(args?: Subset<T, businesses$hospitality_item_detailsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$hospitality_item_detailsPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     vehicle_item_details<T extends businesses$vehicle_item_detailsArgs<ExtArgs> = {}>(args?: Subset<T, businesses$vehicle_item_detailsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$vehicle_item_detailsPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    property_item_details<T extends businesses$property_item_detailsArgs<ExtArgs> = {}>(args?: Subset<T, businesses$property_item_detailsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$property_item_detailsPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     product_orders<T extends businesses$product_ordersArgs<ExtArgs> = {}>(args?: Subset<T, businesses$product_ordersArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$product_ordersPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     product_inquiries<T extends businesses$product_inquiriesArgs<ExtArgs> = {}>(args?: Subset<T, businesses$product_inquiriesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$product_inquiriesPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     hospitality_bookings<T extends businesses$hospitality_bookingsArgs<ExtArgs> = {}>(args?: Subset<T, businesses$hospitality_bookingsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$hospitality_bookingsPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
@@ -11498,6 +12115,30 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: Vehicle_item_detailsScalarFieldEnum | Vehicle_item_detailsScalarFieldEnum[]
+  }
+
+  /**
+   * businesses.property_item_details
+   */
+  export type businesses$property_item_detailsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the property_item_details
+     */
+    select?: property_item_detailsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the property_item_details
+     */
+    omit?: property_item_detailsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: property_item_detailsInclude<ExtArgs> | null
+    where?: property_item_detailsWhereInput
+    orderBy?: property_item_detailsOrderByWithRelationInput | property_item_detailsOrderByWithRelationInput[]
+    cursor?: property_item_detailsWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: Property_item_detailsScalarFieldEnum | Property_item_detailsScalarFieldEnum[]
   }
 
   /**
@@ -18948,6 +19589,7 @@ export namespace Prisma {
     hospitality_inquiries?: boolean | tenants$hospitality_inquiriesArgs<ExtArgs>
     notification_messages?: boolean | tenants$notification_messagesArgs<ExtArgs>
     notification_templates?: boolean | tenants$notification_templatesArgs<ExtArgs>
+    tenant_conversation_configs?: boolean | tenants$tenant_conversation_configsArgs<ExtArgs>
     _count?: boolean | TenantsCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["tenants"]>
 
@@ -19005,6 +19647,7 @@ export namespace Prisma {
     hospitality_inquiries?: boolean | tenants$hospitality_inquiriesArgs<ExtArgs>
     notification_messages?: boolean | tenants$notification_messagesArgs<ExtArgs>
     notification_templates?: boolean | tenants$notification_templatesArgs<ExtArgs>
+    tenant_conversation_configs?: boolean | tenants$tenant_conversation_configsArgs<ExtArgs>
     _count?: boolean | TenantsCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type tenantsIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
@@ -19026,6 +19669,7 @@ export namespace Prisma {
       hospitality_inquiries: Prisma.$hospitality_inquiriesPayload<ExtArgs>[]
       notification_messages: Prisma.$notification_messagesPayload<ExtArgs>[]
       notification_templates: Prisma.$notification_templatesPayload<ExtArgs>[]
+      tenant_conversation_configs: Prisma.$tenant_conversation_configsPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       tenant_id: string
@@ -19445,6 +20089,7 @@ export namespace Prisma {
     hospitality_inquiries<T extends tenants$hospitality_inquiriesArgs<ExtArgs> = {}>(args?: Subset<T, tenants$hospitality_inquiriesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$hospitality_inquiriesPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     notification_messages<T extends tenants$notification_messagesArgs<ExtArgs> = {}>(args?: Subset<T, tenants$notification_messagesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$notification_messagesPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     notification_templates<T extends tenants$notification_templatesArgs<ExtArgs> = {}>(args?: Subset<T, tenants$notification_templatesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$notification_templatesPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    tenant_conversation_configs<T extends tenants$tenant_conversation_configsArgs<ExtArgs> = {}>(args?: Subset<T, tenants$tenant_conversation_configsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$tenant_conversation_configsPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -20184,6 +20829,30 @@ export namespace Prisma {
   }
 
   /**
+   * tenants.tenant_conversation_configs
+   */
+  export type tenants$tenant_conversation_configsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the tenant_conversation_configs
+     */
+    select?: tenant_conversation_configsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the tenant_conversation_configs
+     */
+    omit?: tenant_conversation_configsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: tenant_conversation_configsInclude<ExtArgs> | null
+    where?: tenant_conversation_configsWhereInput
+    orderBy?: tenant_conversation_configsOrderByWithRelationInput | tenant_conversation_configsOrderByWithRelationInput[]
+    cursor?: tenant_conversation_configsWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: Tenant_conversation_configsScalarFieldEnum | Tenant_conversation_configsScalarFieldEnum[]
+  }
+
+  /**
    * tenants without action
    */
   export type tenantsDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -20199,6 +20868,1121 @@ export namespace Prisma {
      * Choose, which related nodes to fetch as well
      */
     include?: tenantsInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model tenant_conversation_configs
+   */
+
+  export type AggregateTenant_conversation_configs = {
+    _count: Tenant_conversation_configsCountAggregateOutputType | null
+    _min: Tenant_conversation_configsMinAggregateOutputType | null
+    _max: Tenant_conversation_configsMaxAggregateOutputType | null
+  }
+
+  export type Tenant_conversation_configsMinAggregateOutputType = {
+    config_id: string | null
+    tenant_id: string | null
+    waba_id: string | null
+    mode: string | null
+    flow: string | null
+    is_active: boolean | null
+    created_at: Date | null
+    updated_at: Date | null
+  }
+
+  export type Tenant_conversation_configsMaxAggregateOutputType = {
+    config_id: string | null
+    tenant_id: string | null
+    waba_id: string | null
+    mode: string | null
+    flow: string | null
+    is_active: boolean | null
+    created_at: Date | null
+    updated_at: Date | null
+  }
+
+  export type Tenant_conversation_configsCountAggregateOutputType = {
+    config_id: number
+    tenant_id: number
+    waba_id: number
+    mode: number
+    flow: number
+    capabilities: number
+    rules: number
+    is_active: number
+    created_at: number
+    updated_at: number
+    _all: number
+  }
+
+
+  export type Tenant_conversation_configsMinAggregateInputType = {
+    config_id?: true
+    tenant_id?: true
+    waba_id?: true
+    mode?: true
+    flow?: true
+    is_active?: true
+    created_at?: true
+    updated_at?: true
+  }
+
+  export type Tenant_conversation_configsMaxAggregateInputType = {
+    config_id?: true
+    tenant_id?: true
+    waba_id?: true
+    mode?: true
+    flow?: true
+    is_active?: true
+    created_at?: true
+    updated_at?: true
+  }
+
+  export type Tenant_conversation_configsCountAggregateInputType = {
+    config_id?: true
+    tenant_id?: true
+    waba_id?: true
+    mode?: true
+    flow?: true
+    capabilities?: true
+    rules?: true
+    is_active?: true
+    created_at?: true
+    updated_at?: true
+    _all?: true
+  }
+
+  export type Tenant_conversation_configsAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which tenant_conversation_configs to aggregate.
+     */
+    where?: tenant_conversation_configsWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of tenant_conversation_configs to fetch.
+     */
+    orderBy?: tenant_conversation_configsOrderByWithRelationInput | tenant_conversation_configsOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: tenant_conversation_configsWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` tenant_conversation_configs from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` tenant_conversation_configs.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned tenant_conversation_configs
+    **/
+    _count?: true | Tenant_conversation_configsCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: Tenant_conversation_configsMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: Tenant_conversation_configsMaxAggregateInputType
+  }
+
+  export type GetTenant_conversation_configsAggregateType<T extends Tenant_conversation_configsAggregateArgs> = {
+        [P in keyof T & keyof AggregateTenant_conversation_configs]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateTenant_conversation_configs[P]>
+      : GetScalarType<T[P], AggregateTenant_conversation_configs[P]>
+  }
+
+
+
+
+  export type tenant_conversation_configsGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: tenant_conversation_configsWhereInput
+    orderBy?: tenant_conversation_configsOrderByWithAggregationInput | tenant_conversation_configsOrderByWithAggregationInput[]
+    by: Tenant_conversation_configsScalarFieldEnum[] | Tenant_conversation_configsScalarFieldEnum
+    having?: tenant_conversation_configsScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: Tenant_conversation_configsCountAggregateInputType | true
+    _min?: Tenant_conversation_configsMinAggregateInputType
+    _max?: Tenant_conversation_configsMaxAggregateInputType
+  }
+
+  export type Tenant_conversation_configsGroupByOutputType = {
+    config_id: string
+    tenant_id: string
+    waba_id: string
+    mode: string
+    flow: string
+    capabilities: JsonValue
+    rules: JsonValue
+    is_active: boolean
+    created_at: Date
+    updated_at: Date
+    _count: Tenant_conversation_configsCountAggregateOutputType | null
+    _min: Tenant_conversation_configsMinAggregateOutputType | null
+    _max: Tenant_conversation_configsMaxAggregateOutputType | null
+  }
+
+  type GetTenant_conversation_configsGroupByPayload<T extends tenant_conversation_configsGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<Tenant_conversation_configsGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof Tenant_conversation_configsGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], Tenant_conversation_configsGroupByOutputType[P]>
+            : GetScalarType<T[P], Tenant_conversation_configsGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type tenant_conversation_configsSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    config_id?: boolean
+    tenant_id?: boolean
+    waba_id?: boolean
+    mode?: boolean
+    flow?: boolean
+    capabilities?: boolean
+    rules?: boolean
+    is_active?: boolean
+    created_at?: boolean
+    updated_at?: boolean
+    tenant?: boolean | tenantsDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["tenant_conversation_configs"]>
+
+  export type tenant_conversation_configsSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    config_id?: boolean
+    tenant_id?: boolean
+    waba_id?: boolean
+    mode?: boolean
+    flow?: boolean
+    capabilities?: boolean
+    rules?: boolean
+    is_active?: boolean
+    created_at?: boolean
+    updated_at?: boolean
+    tenant?: boolean | tenantsDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["tenant_conversation_configs"]>
+
+  export type tenant_conversation_configsSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    config_id?: boolean
+    tenant_id?: boolean
+    waba_id?: boolean
+    mode?: boolean
+    flow?: boolean
+    capabilities?: boolean
+    rules?: boolean
+    is_active?: boolean
+    created_at?: boolean
+    updated_at?: boolean
+    tenant?: boolean | tenantsDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["tenant_conversation_configs"]>
+
+  export type tenant_conversation_configsSelectScalar = {
+    config_id?: boolean
+    tenant_id?: boolean
+    waba_id?: boolean
+    mode?: boolean
+    flow?: boolean
+    capabilities?: boolean
+    rules?: boolean
+    is_active?: boolean
+    created_at?: boolean
+    updated_at?: boolean
+  }
+
+  export type tenant_conversation_configsOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"config_id" | "tenant_id" | "waba_id" | "mode" | "flow" | "capabilities" | "rules" | "is_active" | "created_at" | "updated_at", ExtArgs["result"]["tenant_conversation_configs"]>
+  export type tenant_conversation_configsInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    tenant?: boolean | tenantsDefaultArgs<ExtArgs>
+  }
+  export type tenant_conversation_configsIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    tenant?: boolean | tenantsDefaultArgs<ExtArgs>
+  }
+  export type tenant_conversation_configsIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    tenant?: boolean | tenantsDefaultArgs<ExtArgs>
+  }
+
+  export type $tenant_conversation_configsPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "tenant_conversation_configs"
+    objects: {
+      tenant: Prisma.$tenantsPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      config_id: string
+      tenant_id: string
+      waba_id: string
+      mode: string
+      flow: string
+      capabilities: Prisma.JsonValue
+      rules: Prisma.JsonValue
+      is_active: boolean
+      created_at: Date
+      updated_at: Date
+    }, ExtArgs["result"]["tenant_conversation_configs"]>
+    composites: {}
+  }
+
+  type tenant_conversation_configsGetPayload<S extends boolean | null | undefined | tenant_conversation_configsDefaultArgs> = $Result.GetResult<Prisma.$tenant_conversation_configsPayload, S>
+
+  type tenant_conversation_configsCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<tenant_conversation_configsFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: Tenant_conversation_configsCountAggregateInputType | true
+    }
+
+  export interface tenant_conversation_configsDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['tenant_conversation_configs'], meta: { name: 'tenant_conversation_configs' } }
+    /**
+     * Find zero or one Tenant_conversation_configs that matches the filter.
+     * @param {tenant_conversation_configsFindUniqueArgs} args - Arguments to find a Tenant_conversation_configs
+     * @example
+     * // Get one Tenant_conversation_configs
+     * const tenant_conversation_configs = await prisma.tenant_conversation_configs.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends tenant_conversation_configsFindUniqueArgs>(args: SelectSubset<T, tenant_conversation_configsFindUniqueArgs<ExtArgs>>): Prisma__tenant_conversation_configsClient<$Result.GetResult<Prisma.$tenant_conversation_configsPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one Tenant_conversation_configs that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {tenant_conversation_configsFindUniqueOrThrowArgs} args - Arguments to find a Tenant_conversation_configs
+     * @example
+     * // Get one Tenant_conversation_configs
+     * const tenant_conversation_configs = await prisma.tenant_conversation_configs.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends tenant_conversation_configsFindUniqueOrThrowArgs>(args: SelectSubset<T, tenant_conversation_configsFindUniqueOrThrowArgs<ExtArgs>>): Prisma__tenant_conversation_configsClient<$Result.GetResult<Prisma.$tenant_conversation_configsPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Tenant_conversation_configs that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {tenant_conversation_configsFindFirstArgs} args - Arguments to find a Tenant_conversation_configs
+     * @example
+     * // Get one Tenant_conversation_configs
+     * const tenant_conversation_configs = await prisma.tenant_conversation_configs.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends tenant_conversation_configsFindFirstArgs>(args?: SelectSubset<T, tenant_conversation_configsFindFirstArgs<ExtArgs>>): Prisma__tenant_conversation_configsClient<$Result.GetResult<Prisma.$tenant_conversation_configsPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Tenant_conversation_configs that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {tenant_conversation_configsFindFirstOrThrowArgs} args - Arguments to find a Tenant_conversation_configs
+     * @example
+     * // Get one Tenant_conversation_configs
+     * const tenant_conversation_configs = await prisma.tenant_conversation_configs.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends tenant_conversation_configsFindFirstOrThrowArgs>(args?: SelectSubset<T, tenant_conversation_configsFindFirstOrThrowArgs<ExtArgs>>): Prisma__tenant_conversation_configsClient<$Result.GetResult<Prisma.$tenant_conversation_configsPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more Tenant_conversation_configs that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {tenant_conversation_configsFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all Tenant_conversation_configs
+     * const tenant_conversation_configs = await prisma.tenant_conversation_configs.findMany()
+     * 
+     * // Get first 10 Tenant_conversation_configs
+     * const tenant_conversation_configs = await prisma.tenant_conversation_configs.findMany({ take: 10 })
+     * 
+     * // Only select the `config_id`
+     * const tenant_conversation_configsWithConfig_idOnly = await prisma.tenant_conversation_configs.findMany({ select: { config_id: true } })
+     * 
+     */
+    findMany<T extends tenant_conversation_configsFindManyArgs>(args?: SelectSubset<T, tenant_conversation_configsFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$tenant_conversation_configsPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a Tenant_conversation_configs.
+     * @param {tenant_conversation_configsCreateArgs} args - Arguments to create a Tenant_conversation_configs.
+     * @example
+     * // Create one Tenant_conversation_configs
+     * const Tenant_conversation_configs = await prisma.tenant_conversation_configs.create({
+     *   data: {
+     *     // ... data to create a Tenant_conversation_configs
+     *   }
+     * })
+     * 
+     */
+    create<T extends tenant_conversation_configsCreateArgs>(args: SelectSubset<T, tenant_conversation_configsCreateArgs<ExtArgs>>): Prisma__tenant_conversation_configsClient<$Result.GetResult<Prisma.$tenant_conversation_configsPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many Tenant_conversation_configs.
+     * @param {tenant_conversation_configsCreateManyArgs} args - Arguments to create many Tenant_conversation_configs.
+     * @example
+     * // Create many Tenant_conversation_configs
+     * const tenant_conversation_configs = await prisma.tenant_conversation_configs.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends tenant_conversation_configsCreateManyArgs>(args?: SelectSubset<T, tenant_conversation_configsCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many Tenant_conversation_configs and returns the data saved in the database.
+     * @param {tenant_conversation_configsCreateManyAndReturnArgs} args - Arguments to create many Tenant_conversation_configs.
+     * @example
+     * // Create many Tenant_conversation_configs
+     * const tenant_conversation_configs = await prisma.tenant_conversation_configs.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many Tenant_conversation_configs and only return the `config_id`
+     * const tenant_conversation_configsWithConfig_idOnly = await prisma.tenant_conversation_configs.createManyAndReturn({
+     *   select: { config_id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends tenant_conversation_configsCreateManyAndReturnArgs>(args?: SelectSubset<T, tenant_conversation_configsCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$tenant_conversation_configsPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a Tenant_conversation_configs.
+     * @param {tenant_conversation_configsDeleteArgs} args - Arguments to delete one Tenant_conversation_configs.
+     * @example
+     * // Delete one Tenant_conversation_configs
+     * const Tenant_conversation_configs = await prisma.tenant_conversation_configs.delete({
+     *   where: {
+     *     // ... filter to delete one Tenant_conversation_configs
+     *   }
+     * })
+     * 
+     */
+    delete<T extends tenant_conversation_configsDeleteArgs>(args: SelectSubset<T, tenant_conversation_configsDeleteArgs<ExtArgs>>): Prisma__tenant_conversation_configsClient<$Result.GetResult<Prisma.$tenant_conversation_configsPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one Tenant_conversation_configs.
+     * @param {tenant_conversation_configsUpdateArgs} args - Arguments to update one Tenant_conversation_configs.
+     * @example
+     * // Update one Tenant_conversation_configs
+     * const tenant_conversation_configs = await prisma.tenant_conversation_configs.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends tenant_conversation_configsUpdateArgs>(args: SelectSubset<T, tenant_conversation_configsUpdateArgs<ExtArgs>>): Prisma__tenant_conversation_configsClient<$Result.GetResult<Prisma.$tenant_conversation_configsPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more Tenant_conversation_configs.
+     * @param {tenant_conversation_configsDeleteManyArgs} args - Arguments to filter Tenant_conversation_configs to delete.
+     * @example
+     * // Delete a few Tenant_conversation_configs
+     * const { count } = await prisma.tenant_conversation_configs.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends tenant_conversation_configsDeleteManyArgs>(args?: SelectSubset<T, tenant_conversation_configsDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Tenant_conversation_configs.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {tenant_conversation_configsUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many Tenant_conversation_configs
+     * const tenant_conversation_configs = await prisma.tenant_conversation_configs.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends tenant_conversation_configsUpdateManyArgs>(args: SelectSubset<T, tenant_conversation_configsUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Tenant_conversation_configs and returns the data updated in the database.
+     * @param {tenant_conversation_configsUpdateManyAndReturnArgs} args - Arguments to update many Tenant_conversation_configs.
+     * @example
+     * // Update many Tenant_conversation_configs
+     * const tenant_conversation_configs = await prisma.tenant_conversation_configs.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more Tenant_conversation_configs and only return the `config_id`
+     * const tenant_conversation_configsWithConfig_idOnly = await prisma.tenant_conversation_configs.updateManyAndReturn({
+     *   select: { config_id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends tenant_conversation_configsUpdateManyAndReturnArgs>(args: SelectSubset<T, tenant_conversation_configsUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$tenant_conversation_configsPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one Tenant_conversation_configs.
+     * @param {tenant_conversation_configsUpsertArgs} args - Arguments to update or create a Tenant_conversation_configs.
+     * @example
+     * // Update or create a Tenant_conversation_configs
+     * const tenant_conversation_configs = await prisma.tenant_conversation_configs.upsert({
+     *   create: {
+     *     // ... data to create a Tenant_conversation_configs
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the Tenant_conversation_configs we want to update
+     *   }
+     * })
+     */
+    upsert<T extends tenant_conversation_configsUpsertArgs>(args: SelectSubset<T, tenant_conversation_configsUpsertArgs<ExtArgs>>): Prisma__tenant_conversation_configsClient<$Result.GetResult<Prisma.$tenant_conversation_configsPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of Tenant_conversation_configs.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {tenant_conversation_configsCountArgs} args - Arguments to filter Tenant_conversation_configs to count.
+     * @example
+     * // Count the number of Tenant_conversation_configs
+     * const count = await prisma.tenant_conversation_configs.count({
+     *   where: {
+     *     // ... the filter for the Tenant_conversation_configs we want to count
+     *   }
+     * })
+    **/
+    count<T extends tenant_conversation_configsCountArgs>(
+      args?: Subset<T, tenant_conversation_configsCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], Tenant_conversation_configsCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a Tenant_conversation_configs.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {Tenant_conversation_configsAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends Tenant_conversation_configsAggregateArgs>(args: Subset<T, Tenant_conversation_configsAggregateArgs>): Prisma.PrismaPromise<GetTenant_conversation_configsAggregateType<T>>
+
+    /**
+     * Group by Tenant_conversation_configs.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {tenant_conversation_configsGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends tenant_conversation_configsGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: tenant_conversation_configsGroupByArgs['orderBy'] }
+        : { orderBy?: tenant_conversation_configsGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, tenant_conversation_configsGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetTenant_conversation_configsGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the tenant_conversation_configs model
+   */
+  readonly fields: tenant_conversation_configsFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for tenant_conversation_configs.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__tenant_conversation_configsClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    tenant<T extends tenantsDefaultArgs<ExtArgs> = {}>(args?: Subset<T, tenantsDefaultArgs<ExtArgs>>): Prisma__tenantsClient<$Result.GetResult<Prisma.$tenantsPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the tenant_conversation_configs model
+   */
+  interface tenant_conversation_configsFieldRefs {
+    readonly config_id: FieldRef<"tenant_conversation_configs", 'String'>
+    readonly tenant_id: FieldRef<"tenant_conversation_configs", 'String'>
+    readonly waba_id: FieldRef<"tenant_conversation_configs", 'String'>
+    readonly mode: FieldRef<"tenant_conversation_configs", 'String'>
+    readonly flow: FieldRef<"tenant_conversation_configs", 'String'>
+    readonly capabilities: FieldRef<"tenant_conversation_configs", 'Json'>
+    readonly rules: FieldRef<"tenant_conversation_configs", 'Json'>
+    readonly is_active: FieldRef<"tenant_conversation_configs", 'Boolean'>
+    readonly created_at: FieldRef<"tenant_conversation_configs", 'DateTime'>
+    readonly updated_at: FieldRef<"tenant_conversation_configs", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * tenant_conversation_configs findUnique
+   */
+  export type tenant_conversation_configsFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the tenant_conversation_configs
+     */
+    select?: tenant_conversation_configsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the tenant_conversation_configs
+     */
+    omit?: tenant_conversation_configsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: tenant_conversation_configsInclude<ExtArgs> | null
+    /**
+     * Filter, which tenant_conversation_configs to fetch.
+     */
+    where: tenant_conversation_configsWhereUniqueInput
+  }
+
+  /**
+   * tenant_conversation_configs findUniqueOrThrow
+   */
+  export type tenant_conversation_configsFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the tenant_conversation_configs
+     */
+    select?: tenant_conversation_configsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the tenant_conversation_configs
+     */
+    omit?: tenant_conversation_configsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: tenant_conversation_configsInclude<ExtArgs> | null
+    /**
+     * Filter, which tenant_conversation_configs to fetch.
+     */
+    where: tenant_conversation_configsWhereUniqueInput
+  }
+
+  /**
+   * tenant_conversation_configs findFirst
+   */
+  export type tenant_conversation_configsFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the tenant_conversation_configs
+     */
+    select?: tenant_conversation_configsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the tenant_conversation_configs
+     */
+    omit?: tenant_conversation_configsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: tenant_conversation_configsInclude<ExtArgs> | null
+    /**
+     * Filter, which tenant_conversation_configs to fetch.
+     */
+    where?: tenant_conversation_configsWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of tenant_conversation_configs to fetch.
+     */
+    orderBy?: tenant_conversation_configsOrderByWithRelationInput | tenant_conversation_configsOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for tenant_conversation_configs.
+     */
+    cursor?: tenant_conversation_configsWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` tenant_conversation_configs from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` tenant_conversation_configs.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of tenant_conversation_configs.
+     */
+    distinct?: Tenant_conversation_configsScalarFieldEnum | Tenant_conversation_configsScalarFieldEnum[]
+  }
+
+  /**
+   * tenant_conversation_configs findFirstOrThrow
+   */
+  export type tenant_conversation_configsFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the tenant_conversation_configs
+     */
+    select?: tenant_conversation_configsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the tenant_conversation_configs
+     */
+    omit?: tenant_conversation_configsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: tenant_conversation_configsInclude<ExtArgs> | null
+    /**
+     * Filter, which tenant_conversation_configs to fetch.
+     */
+    where?: tenant_conversation_configsWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of tenant_conversation_configs to fetch.
+     */
+    orderBy?: tenant_conversation_configsOrderByWithRelationInput | tenant_conversation_configsOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for tenant_conversation_configs.
+     */
+    cursor?: tenant_conversation_configsWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` tenant_conversation_configs from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` tenant_conversation_configs.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of tenant_conversation_configs.
+     */
+    distinct?: Tenant_conversation_configsScalarFieldEnum | Tenant_conversation_configsScalarFieldEnum[]
+  }
+
+  /**
+   * tenant_conversation_configs findMany
+   */
+  export type tenant_conversation_configsFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the tenant_conversation_configs
+     */
+    select?: tenant_conversation_configsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the tenant_conversation_configs
+     */
+    omit?: tenant_conversation_configsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: tenant_conversation_configsInclude<ExtArgs> | null
+    /**
+     * Filter, which tenant_conversation_configs to fetch.
+     */
+    where?: tenant_conversation_configsWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of tenant_conversation_configs to fetch.
+     */
+    orderBy?: tenant_conversation_configsOrderByWithRelationInput | tenant_conversation_configsOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing tenant_conversation_configs.
+     */
+    cursor?: tenant_conversation_configsWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` tenant_conversation_configs from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` tenant_conversation_configs.
+     */
+    skip?: number
+    distinct?: Tenant_conversation_configsScalarFieldEnum | Tenant_conversation_configsScalarFieldEnum[]
+  }
+
+  /**
+   * tenant_conversation_configs create
+   */
+  export type tenant_conversation_configsCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the tenant_conversation_configs
+     */
+    select?: tenant_conversation_configsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the tenant_conversation_configs
+     */
+    omit?: tenant_conversation_configsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: tenant_conversation_configsInclude<ExtArgs> | null
+    /**
+     * The data needed to create a tenant_conversation_configs.
+     */
+    data: XOR<tenant_conversation_configsCreateInput, tenant_conversation_configsUncheckedCreateInput>
+  }
+
+  /**
+   * tenant_conversation_configs createMany
+   */
+  export type tenant_conversation_configsCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many tenant_conversation_configs.
+     */
+    data: tenant_conversation_configsCreateManyInput | tenant_conversation_configsCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * tenant_conversation_configs createManyAndReturn
+   */
+  export type tenant_conversation_configsCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the tenant_conversation_configs
+     */
+    select?: tenant_conversation_configsSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the tenant_conversation_configs
+     */
+    omit?: tenant_conversation_configsOmit<ExtArgs> | null
+    /**
+     * The data used to create many tenant_conversation_configs.
+     */
+    data: tenant_conversation_configsCreateManyInput | tenant_conversation_configsCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: tenant_conversation_configsIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * tenant_conversation_configs update
+   */
+  export type tenant_conversation_configsUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the tenant_conversation_configs
+     */
+    select?: tenant_conversation_configsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the tenant_conversation_configs
+     */
+    omit?: tenant_conversation_configsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: tenant_conversation_configsInclude<ExtArgs> | null
+    /**
+     * The data needed to update a tenant_conversation_configs.
+     */
+    data: XOR<tenant_conversation_configsUpdateInput, tenant_conversation_configsUncheckedUpdateInput>
+    /**
+     * Choose, which tenant_conversation_configs to update.
+     */
+    where: tenant_conversation_configsWhereUniqueInput
+  }
+
+  /**
+   * tenant_conversation_configs updateMany
+   */
+  export type tenant_conversation_configsUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update tenant_conversation_configs.
+     */
+    data: XOR<tenant_conversation_configsUpdateManyMutationInput, tenant_conversation_configsUncheckedUpdateManyInput>
+    /**
+     * Filter which tenant_conversation_configs to update
+     */
+    where?: tenant_conversation_configsWhereInput
+    /**
+     * Limit how many tenant_conversation_configs to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * tenant_conversation_configs updateManyAndReturn
+   */
+  export type tenant_conversation_configsUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the tenant_conversation_configs
+     */
+    select?: tenant_conversation_configsSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the tenant_conversation_configs
+     */
+    omit?: tenant_conversation_configsOmit<ExtArgs> | null
+    /**
+     * The data used to update tenant_conversation_configs.
+     */
+    data: XOR<tenant_conversation_configsUpdateManyMutationInput, tenant_conversation_configsUncheckedUpdateManyInput>
+    /**
+     * Filter which tenant_conversation_configs to update
+     */
+    where?: tenant_conversation_configsWhereInput
+    /**
+     * Limit how many tenant_conversation_configs to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: tenant_conversation_configsIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * tenant_conversation_configs upsert
+   */
+  export type tenant_conversation_configsUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the tenant_conversation_configs
+     */
+    select?: tenant_conversation_configsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the tenant_conversation_configs
+     */
+    omit?: tenant_conversation_configsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: tenant_conversation_configsInclude<ExtArgs> | null
+    /**
+     * The filter to search for the tenant_conversation_configs to update in case it exists.
+     */
+    where: tenant_conversation_configsWhereUniqueInput
+    /**
+     * In case the tenant_conversation_configs found by the `where` argument doesn't exist, create a new tenant_conversation_configs with this data.
+     */
+    create: XOR<tenant_conversation_configsCreateInput, tenant_conversation_configsUncheckedCreateInput>
+    /**
+     * In case the tenant_conversation_configs was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<tenant_conversation_configsUpdateInput, tenant_conversation_configsUncheckedUpdateInput>
+  }
+
+  /**
+   * tenant_conversation_configs delete
+   */
+  export type tenant_conversation_configsDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the tenant_conversation_configs
+     */
+    select?: tenant_conversation_configsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the tenant_conversation_configs
+     */
+    omit?: tenant_conversation_configsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: tenant_conversation_configsInclude<ExtArgs> | null
+    /**
+     * Filter which tenant_conversation_configs to delete.
+     */
+    where: tenant_conversation_configsWhereUniqueInput
+  }
+
+  /**
+   * tenant_conversation_configs deleteMany
+   */
+  export type tenant_conversation_configsDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which tenant_conversation_configs to delete
+     */
+    where?: tenant_conversation_configsWhereInput
+    /**
+     * Limit how many tenant_conversation_configs to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * tenant_conversation_configs without action
+   */
+  export type tenant_conversation_configsDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the tenant_conversation_configs
+     */
+    select?: tenant_conversation_configsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the tenant_conversation_configs
+     */
+    omit?: tenant_conversation_configsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: tenant_conversation_configsInclude<ExtArgs> | null
   }
 
 
@@ -61325,6 +63109,7 @@ export namespace Prisma {
     product_detail?: boolean | catalog_items$product_detailArgs<ExtArgs>
     hospitality_detail?: boolean | catalog_items$hospitality_detailArgs<ExtArgs>
     vehicle_detail?: boolean | catalog_items$vehicle_detailArgs<ExtArgs>
+    property_detail?: boolean | catalog_items$property_detailArgs<ExtArgs>
     product_order_items?: boolean | catalog_items$product_order_itemsArgs<ExtArgs>
     hospitality_booking_items?: boolean | catalog_items$hospitality_booking_itemsArgs<ExtArgs>
     product_inquiries?: boolean | catalog_items$product_inquiriesArgs<ExtArgs>
@@ -61334,6 +63119,7 @@ export namespace Prisma {
     variants?: boolean | catalog_items$variantsArgs<ExtArgs>
     order_items?: boolean | catalog_items$order_itemsArgs<ExtArgs>
     external_catalog_items?: boolean | catalog_items$external_catalog_itemsArgs<ExtArgs>
+    appointment_sales_visits?: boolean | catalog_items$appointment_sales_visitsArgs<ExtArgs>
     _count?: boolean | Catalog_itemsCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["catalog_items"]>
 
@@ -61412,6 +63198,7 @@ export namespace Prisma {
     product_detail?: boolean | catalog_items$product_detailArgs<ExtArgs>
     hospitality_detail?: boolean | catalog_items$hospitality_detailArgs<ExtArgs>
     vehicle_detail?: boolean | catalog_items$vehicle_detailArgs<ExtArgs>
+    property_detail?: boolean | catalog_items$property_detailArgs<ExtArgs>
     product_order_items?: boolean | catalog_items$product_order_itemsArgs<ExtArgs>
     hospitality_booking_items?: boolean | catalog_items$hospitality_booking_itemsArgs<ExtArgs>
     product_inquiries?: boolean | catalog_items$product_inquiriesArgs<ExtArgs>
@@ -61421,6 +63208,7 @@ export namespace Prisma {
     variants?: boolean | catalog_items$variantsArgs<ExtArgs>
     order_items?: boolean | catalog_items$order_itemsArgs<ExtArgs>
     external_catalog_items?: boolean | catalog_items$external_catalog_itemsArgs<ExtArgs>
+    appointment_sales_visits?: boolean | catalog_items$appointment_sales_visitsArgs<ExtArgs>
     _count?: boolean | Catalog_itemsCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type catalog_itemsIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -61438,6 +63226,7 @@ export namespace Prisma {
       product_detail: Prisma.$product_item_detailsPayload<ExtArgs> | null
       hospitality_detail: Prisma.$hospitality_item_detailsPayload<ExtArgs> | null
       vehicle_detail: Prisma.$vehicle_item_detailsPayload<ExtArgs> | null
+      property_detail: Prisma.$property_item_detailsPayload<ExtArgs> | null
       product_order_items: Prisma.$product_order_itemsPayload<ExtArgs>[]
       hospitality_booking_items: Prisma.$hospitality_booking_itemsPayload<ExtArgs>[]
       product_inquiries: Prisma.$product_inquiriesPayload<ExtArgs>[]
@@ -61447,13 +63236,14 @@ export namespace Prisma {
       variants: Prisma.$item_variantsPayload<ExtArgs>[]
       order_items: Prisma.$order_itemsPayload<ExtArgs>[]
       external_catalog_items: Prisma.$external_catalog_itemsPayload<ExtArgs>[]
+      appointment_sales_visits: Prisma.$appointment_sales_visitsPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       item_id: string
       business_id: string
       tenant_id: string
       /**
-       * "physical_product" | "accommodation" | "activity" | "service"
+       * "physical_product" | "accommodation" | "activity" | "service" | "vehicle" | "property"
        */
       item_type: string
       name: string
@@ -61883,6 +63673,7 @@ export namespace Prisma {
     product_detail<T extends catalog_items$product_detailArgs<ExtArgs> = {}>(args?: Subset<T, catalog_items$product_detailArgs<ExtArgs>>): Prisma__product_item_detailsClient<$Result.GetResult<Prisma.$product_item_detailsPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     hospitality_detail<T extends catalog_items$hospitality_detailArgs<ExtArgs> = {}>(args?: Subset<T, catalog_items$hospitality_detailArgs<ExtArgs>>): Prisma__hospitality_item_detailsClient<$Result.GetResult<Prisma.$hospitality_item_detailsPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     vehicle_detail<T extends catalog_items$vehicle_detailArgs<ExtArgs> = {}>(args?: Subset<T, catalog_items$vehicle_detailArgs<ExtArgs>>): Prisma__vehicle_item_detailsClient<$Result.GetResult<Prisma.$vehicle_item_detailsPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    property_detail<T extends catalog_items$property_detailArgs<ExtArgs> = {}>(args?: Subset<T, catalog_items$property_detailArgs<ExtArgs>>): Prisma__property_item_detailsClient<$Result.GetResult<Prisma.$property_item_detailsPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     product_order_items<T extends catalog_items$product_order_itemsArgs<ExtArgs> = {}>(args?: Subset<T, catalog_items$product_order_itemsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$product_order_itemsPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     hospitality_booking_items<T extends catalog_items$hospitality_booking_itemsArgs<ExtArgs> = {}>(args?: Subset<T, catalog_items$hospitality_booking_itemsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$hospitality_booking_itemsPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     product_inquiries<T extends catalog_items$product_inquiriesArgs<ExtArgs> = {}>(args?: Subset<T, catalog_items$product_inquiriesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$product_inquiriesPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
@@ -61892,6 +63683,7 @@ export namespace Prisma {
     variants<T extends catalog_items$variantsArgs<ExtArgs> = {}>(args?: Subset<T, catalog_items$variantsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$item_variantsPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     order_items<T extends catalog_items$order_itemsArgs<ExtArgs> = {}>(args?: Subset<T, catalog_items$order_itemsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$order_itemsPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     external_catalog_items<T extends catalog_items$external_catalog_itemsArgs<ExtArgs> = {}>(args?: Subset<T, catalog_items$external_catalog_itemsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$external_catalog_itemsPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    appointment_sales_visits<T extends catalog_items$appointment_sales_visitsArgs<ExtArgs> = {}>(args?: Subset<T, catalog_items$appointment_sales_visitsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$appointment_sales_visitsPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -62441,6 +64233,25 @@ export namespace Prisma {
   }
 
   /**
+   * catalog_items.property_detail
+   */
+  export type catalog_items$property_detailArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the property_item_details
+     */
+    select?: property_item_detailsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the property_item_details
+     */
+    omit?: property_item_detailsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: property_item_detailsInclude<ExtArgs> | null
+    where?: property_item_detailsWhereInput
+  }
+
+  /**
    * catalog_items.product_order_items
    */
   export type catalog_items$product_order_itemsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -62630,6 +64441,30 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: External_catalog_itemsScalarFieldEnum | External_catalog_itemsScalarFieldEnum[]
+  }
+
+  /**
+   * catalog_items.appointment_sales_visits
+   */
+  export type catalog_items$appointment_sales_visitsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the appointment_sales_visits
+     */
+    select?: appointment_sales_visitsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the appointment_sales_visits
+     */
+    omit?: appointment_sales_visitsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: appointment_sales_visitsInclude<ExtArgs> | null
+    where?: appointment_sales_visitsWhereInput
+    orderBy?: appointment_sales_visitsOrderByWithRelationInput | appointment_sales_visitsOrderByWithRelationInput[]
+    cursor?: appointment_sales_visitsWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: Appointment_sales_visitsScalarFieldEnum | Appointment_sales_visitsScalarFieldEnum[]
   }
 
   /**
@@ -87757,11 +89592,13 @@ export namespace Prisma {
   export type Vehicle_item_detailsAvgAggregateOutputType = {
     year: number | null
     km_driven: number | null
+    ownership_count: number | null
   }
 
   export type Vehicle_item_detailsSumAggregateOutputType = {
     year: number | null
     km_driven: number | null
+    ownership_count: number | null
   }
 
   export type Vehicle_item_detailsMinAggregateOutputType = {
@@ -87775,6 +89612,15 @@ export namespace Prisma {
     color: string | null
     km_driven: number | null
     condition: string | null
+    ownership_count: number | null
+    insurance_valid_until: Date | null
+    registration_number: string | null
+    rc_status: string | null
+    finance_available: boolean | null
+    exchange_accepted: boolean | null
+    accident_history: string | null
+    service_history: string | null
+    test_drive_available: boolean | null
     created_at: Date | null
     updated_at: Date | null
   }
@@ -87790,6 +89636,15 @@ export namespace Prisma {
     color: string | null
     km_driven: number | null
     condition: string | null
+    ownership_count: number | null
+    insurance_valid_until: Date | null
+    registration_number: string | null
+    rc_status: string | null
+    finance_available: boolean | null
+    exchange_accepted: boolean | null
+    accident_history: string | null
+    service_history: string | null
+    test_drive_available: boolean | null
     created_at: Date | null
     updated_at: Date | null
   }
@@ -87805,6 +89660,15 @@ export namespace Prisma {
     color: number
     km_driven: number
     condition: number
+    ownership_count: number
+    insurance_valid_until: number
+    registration_number: number
+    rc_status: number
+    finance_available: number
+    exchange_accepted: number
+    accident_history: number
+    service_history: number
+    test_drive_available: number
     metadata: number
     created_at: number
     updated_at: number
@@ -87815,11 +89679,13 @@ export namespace Prisma {
   export type Vehicle_item_detailsAvgAggregateInputType = {
     year?: true
     km_driven?: true
+    ownership_count?: true
   }
 
   export type Vehicle_item_detailsSumAggregateInputType = {
     year?: true
     km_driven?: true
+    ownership_count?: true
   }
 
   export type Vehicle_item_detailsMinAggregateInputType = {
@@ -87833,6 +89699,15 @@ export namespace Prisma {
     color?: true
     km_driven?: true
     condition?: true
+    ownership_count?: true
+    insurance_valid_until?: true
+    registration_number?: true
+    rc_status?: true
+    finance_available?: true
+    exchange_accepted?: true
+    accident_history?: true
+    service_history?: true
+    test_drive_available?: true
     created_at?: true
     updated_at?: true
   }
@@ -87848,6 +89723,15 @@ export namespace Prisma {
     color?: true
     km_driven?: true
     condition?: true
+    ownership_count?: true
+    insurance_valid_until?: true
+    registration_number?: true
+    rc_status?: true
+    finance_available?: true
+    exchange_accepted?: true
+    accident_history?: true
+    service_history?: true
+    test_drive_available?: true
     created_at?: true
     updated_at?: true
   }
@@ -87863,6 +89747,15 @@ export namespace Prisma {
     color?: true
     km_driven?: true
     condition?: true
+    ownership_count?: true
+    insurance_valid_until?: true
+    registration_number?: true
+    rc_status?: true
+    finance_available?: true
+    exchange_accepted?: true
+    accident_history?: true
+    service_history?: true
+    test_drive_available?: true
     metadata?: true
     created_at?: true
     updated_at?: true
@@ -87966,6 +89859,15 @@ export namespace Prisma {
     color: string | null
     km_driven: number | null
     condition: string
+    ownership_count: number | null
+    insurance_valid_until: Date | null
+    registration_number: string | null
+    rc_status: string | null
+    finance_available: boolean
+    exchange_accepted: boolean
+    accident_history: string | null
+    service_history: string | null
+    test_drive_available: boolean
     metadata: JsonValue | null
     created_at: Date
     updated_at: Date
@@ -88001,6 +89903,15 @@ export namespace Prisma {
     color?: boolean
     km_driven?: boolean
     condition?: boolean
+    ownership_count?: boolean
+    insurance_valid_until?: boolean
+    registration_number?: boolean
+    rc_status?: boolean
+    finance_available?: boolean
+    exchange_accepted?: boolean
+    accident_history?: boolean
+    service_history?: boolean
+    test_drive_available?: boolean
     metadata?: boolean
     created_at?: boolean
     updated_at?: boolean
@@ -88019,6 +89930,15 @@ export namespace Prisma {
     color?: boolean
     km_driven?: boolean
     condition?: boolean
+    ownership_count?: boolean
+    insurance_valid_until?: boolean
+    registration_number?: boolean
+    rc_status?: boolean
+    finance_available?: boolean
+    exchange_accepted?: boolean
+    accident_history?: boolean
+    service_history?: boolean
+    test_drive_available?: boolean
     metadata?: boolean
     created_at?: boolean
     updated_at?: boolean
@@ -88037,6 +89957,15 @@ export namespace Prisma {
     color?: boolean
     km_driven?: boolean
     condition?: boolean
+    ownership_count?: boolean
+    insurance_valid_until?: boolean
+    registration_number?: boolean
+    rc_status?: boolean
+    finance_available?: boolean
+    exchange_accepted?: boolean
+    accident_history?: boolean
+    service_history?: boolean
+    test_drive_available?: boolean
     metadata?: boolean
     created_at?: boolean
     updated_at?: boolean
@@ -88055,12 +89984,21 @@ export namespace Prisma {
     color?: boolean
     km_driven?: boolean
     condition?: boolean
+    ownership_count?: boolean
+    insurance_valid_until?: boolean
+    registration_number?: boolean
+    rc_status?: boolean
+    finance_available?: boolean
+    exchange_accepted?: boolean
+    accident_history?: boolean
+    service_history?: boolean
+    test_drive_available?: boolean
     metadata?: boolean
     created_at?: boolean
     updated_at?: boolean
   }
 
-  export type vehicle_item_detailsOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"item_id" | "business_id" | "make" | "model_name" | "year" | "fuel_type" | "transmission" | "color" | "km_driven" | "condition" | "metadata" | "created_at" | "updated_at", ExtArgs["result"]["vehicle_item_details"]>
+  export type vehicle_item_detailsOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"item_id" | "business_id" | "make" | "model_name" | "year" | "fuel_type" | "transmission" | "color" | "km_driven" | "condition" | "ownership_count" | "insurance_valid_until" | "registration_number" | "rc_status" | "finance_available" | "exchange_accepted" | "accident_history" | "service_history" | "test_drive_available" | "metadata" | "created_at" | "updated_at", ExtArgs["result"]["vehicle_item_details"]>
   export type vehicle_item_detailsInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     business?: boolean | businessesDefaultArgs<ExtArgs>
     item?: boolean | catalog_itemsDefaultArgs<ExtArgs>
@@ -88094,6 +90032,15 @@ export namespace Prisma {
        * new | used | certified_pre_owned
        */
       condition: string
+      ownership_count: number | null
+      insurance_valid_until: Date | null
+      registration_number: string | null
+      rc_status: string | null
+      finance_available: boolean
+      exchange_accepted: boolean
+      accident_history: string | null
+      service_history: string | null
+      test_drive_available: boolean
       metadata: Prisma.JsonValue | null
       created_at: Date
       updated_at: Date
@@ -88532,6 +90479,15 @@ export namespace Prisma {
     readonly color: FieldRef<"vehicle_item_details", 'String'>
     readonly km_driven: FieldRef<"vehicle_item_details", 'Int'>
     readonly condition: FieldRef<"vehicle_item_details", 'String'>
+    readonly ownership_count: FieldRef<"vehicle_item_details", 'Int'>
+    readonly insurance_valid_until: FieldRef<"vehicle_item_details", 'DateTime'>
+    readonly registration_number: FieldRef<"vehicle_item_details", 'String'>
+    readonly rc_status: FieldRef<"vehicle_item_details", 'String'>
+    readonly finance_available: FieldRef<"vehicle_item_details", 'Boolean'>
+    readonly exchange_accepted: FieldRef<"vehicle_item_details", 'Boolean'>
+    readonly accident_history: FieldRef<"vehicle_item_details", 'String'>
+    readonly service_history: FieldRef<"vehicle_item_details", 'String'>
+    readonly test_drive_available: FieldRef<"vehicle_item_details", 'Boolean'>
     readonly metadata: FieldRef<"vehicle_item_details", 'Json'>
     readonly created_at: FieldRef<"vehicle_item_details", 'DateTime'>
     readonly updated_at: FieldRef<"vehicle_item_details", 'DateTime'>
@@ -88946,6 +90902,6239 @@ export namespace Prisma {
      * Choose, which related nodes to fetch as well
      */
     include?: vehicle_item_detailsInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model property_item_details
+   */
+
+  export type AggregateProperty_item_details = {
+    _count: Property_item_detailsCountAggregateOutputType | null
+    _avg: Property_item_detailsAvgAggregateOutputType | null
+    _sum: Property_item_detailsSumAggregateOutputType | null
+    _min: Property_item_detailsMinAggregateOutputType | null
+    _max: Property_item_detailsMaxAggregateOutputType | null
+  }
+
+  export type Property_item_detailsAvgAggregateOutputType = {
+    bedrooms: number | null
+    bathrooms: number | null
+    area_sqft: number | null
+    floor_number: number | null
+    total_floors: number | null
+  }
+
+  export type Property_item_detailsSumAggregateOutputType = {
+    bedrooms: number | null
+    bathrooms: number | null
+    area_sqft: number | null
+    floor_number: number | null
+    total_floors: number | null
+  }
+
+  export type Property_item_detailsMinAggregateOutputType = {
+    item_id: string | null
+    business_id: string | null
+    property_type: string | null
+    listing_type: string | null
+    bedrooms: number | null
+    bathrooms: number | null
+    area_sqft: number | null
+    floor_number: number | null
+    total_floors: number | null
+    locality: string | null
+    city: string | null
+    furnishing: string | null
+    possession_status: string | null
+    facing: string | null
+    parking: string | null
+    rera_id: string | null
+    map_url: string | null
+    documents_status: string | null
+    loan_support_available: boolean | null
+    visit_landmark: string | null
+    created_at: Date | null
+    updated_at: Date | null
+  }
+
+  export type Property_item_detailsMaxAggregateOutputType = {
+    item_id: string | null
+    business_id: string | null
+    property_type: string | null
+    listing_type: string | null
+    bedrooms: number | null
+    bathrooms: number | null
+    area_sqft: number | null
+    floor_number: number | null
+    total_floors: number | null
+    locality: string | null
+    city: string | null
+    furnishing: string | null
+    possession_status: string | null
+    facing: string | null
+    parking: string | null
+    rera_id: string | null
+    map_url: string | null
+    documents_status: string | null
+    loan_support_available: boolean | null
+    visit_landmark: string | null
+    created_at: Date | null
+    updated_at: Date | null
+  }
+
+  export type Property_item_detailsCountAggregateOutputType = {
+    item_id: number
+    business_id: number
+    property_type: number
+    listing_type: number
+    bedrooms: number
+    bathrooms: number
+    area_sqft: number
+    floor_number: number
+    total_floors: number
+    locality: number
+    city: number
+    furnishing: number
+    possession_status: number
+    facing: number
+    parking: number
+    rera_id: number
+    map_url: number
+    documents_status: number
+    loan_support_available: number
+    visit_landmark: number
+    metadata: number
+    created_at: number
+    updated_at: number
+    _all: number
+  }
+
+
+  export type Property_item_detailsAvgAggregateInputType = {
+    bedrooms?: true
+    bathrooms?: true
+    area_sqft?: true
+    floor_number?: true
+    total_floors?: true
+  }
+
+  export type Property_item_detailsSumAggregateInputType = {
+    bedrooms?: true
+    bathrooms?: true
+    area_sqft?: true
+    floor_number?: true
+    total_floors?: true
+  }
+
+  export type Property_item_detailsMinAggregateInputType = {
+    item_id?: true
+    business_id?: true
+    property_type?: true
+    listing_type?: true
+    bedrooms?: true
+    bathrooms?: true
+    area_sqft?: true
+    floor_number?: true
+    total_floors?: true
+    locality?: true
+    city?: true
+    furnishing?: true
+    possession_status?: true
+    facing?: true
+    parking?: true
+    rera_id?: true
+    map_url?: true
+    documents_status?: true
+    loan_support_available?: true
+    visit_landmark?: true
+    created_at?: true
+    updated_at?: true
+  }
+
+  export type Property_item_detailsMaxAggregateInputType = {
+    item_id?: true
+    business_id?: true
+    property_type?: true
+    listing_type?: true
+    bedrooms?: true
+    bathrooms?: true
+    area_sqft?: true
+    floor_number?: true
+    total_floors?: true
+    locality?: true
+    city?: true
+    furnishing?: true
+    possession_status?: true
+    facing?: true
+    parking?: true
+    rera_id?: true
+    map_url?: true
+    documents_status?: true
+    loan_support_available?: true
+    visit_landmark?: true
+    created_at?: true
+    updated_at?: true
+  }
+
+  export type Property_item_detailsCountAggregateInputType = {
+    item_id?: true
+    business_id?: true
+    property_type?: true
+    listing_type?: true
+    bedrooms?: true
+    bathrooms?: true
+    area_sqft?: true
+    floor_number?: true
+    total_floors?: true
+    locality?: true
+    city?: true
+    furnishing?: true
+    possession_status?: true
+    facing?: true
+    parking?: true
+    rera_id?: true
+    map_url?: true
+    documents_status?: true
+    loan_support_available?: true
+    visit_landmark?: true
+    metadata?: true
+    created_at?: true
+    updated_at?: true
+    _all?: true
+  }
+
+  export type Property_item_detailsAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which property_item_details to aggregate.
+     */
+    where?: property_item_detailsWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of property_item_details to fetch.
+     */
+    orderBy?: property_item_detailsOrderByWithRelationInput | property_item_detailsOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: property_item_detailsWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` property_item_details from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` property_item_details.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned property_item_details
+    **/
+    _count?: true | Property_item_detailsCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: Property_item_detailsAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: Property_item_detailsSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: Property_item_detailsMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: Property_item_detailsMaxAggregateInputType
+  }
+
+  export type GetProperty_item_detailsAggregateType<T extends Property_item_detailsAggregateArgs> = {
+        [P in keyof T & keyof AggregateProperty_item_details]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateProperty_item_details[P]>
+      : GetScalarType<T[P], AggregateProperty_item_details[P]>
+  }
+
+
+
+
+  export type property_item_detailsGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: property_item_detailsWhereInput
+    orderBy?: property_item_detailsOrderByWithAggregationInput | property_item_detailsOrderByWithAggregationInput[]
+    by: Property_item_detailsScalarFieldEnum[] | Property_item_detailsScalarFieldEnum
+    having?: property_item_detailsScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: Property_item_detailsCountAggregateInputType | true
+    _avg?: Property_item_detailsAvgAggregateInputType
+    _sum?: Property_item_detailsSumAggregateInputType
+    _min?: Property_item_detailsMinAggregateInputType
+    _max?: Property_item_detailsMaxAggregateInputType
+  }
+
+  export type Property_item_detailsGroupByOutputType = {
+    item_id: string
+    business_id: string
+    property_type: string
+    listing_type: string
+    bedrooms: number | null
+    bathrooms: number | null
+    area_sqft: number | null
+    floor_number: number | null
+    total_floors: number | null
+    locality: string | null
+    city: string | null
+    furnishing: string | null
+    possession_status: string | null
+    facing: string | null
+    parking: string | null
+    rera_id: string | null
+    map_url: string | null
+    documents_status: string | null
+    loan_support_available: boolean
+    visit_landmark: string | null
+    metadata: JsonValue | null
+    created_at: Date
+    updated_at: Date
+    _count: Property_item_detailsCountAggregateOutputType | null
+    _avg: Property_item_detailsAvgAggregateOutputType | null
+    _sum: Property_item_detailsSumAggregateOutputType | null
+    _min: Property_item_detailsMinAggregateOutputType | null
+    _max: Property_item_detailsMaxAggregateOutputType | null
+  }
+
+  type GetProperty_item_detailsGroupByPayload<T extends property_item_detailsGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<Property_item_detailsGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof Property_item_detailsGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], Property_item_detailsGroupByOutputType[P]>
+            : GetScalarType<T[P], Property_item_detailsGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type property_item_detailsSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    item_id?: boolean
+    business_id?: boolean
+    property_type?: boolean
+    listing_type?: boolean
+    bedrooms?: boolean
+    bathrooms?: boolean
+    area_sqft?: boolean
+    floor_number?: boolean
+    total_floors?: boolean
+    locality?: boolean
+    city?: boolean
+    furnishing?: boolean
+    possession_status?: boolean
+    facing?: boolean
+    parking?: boolean
+    rera_id?: boolean
+    map_url?: boolean
+    documents_status?: boolean
+    loan_support_available?: boolean
+    visit_landmark?: boolean
+    metadata?: boolean
+    created_at?: boolean
+    updated_at?: boolean
+    business?: boolean | businessesDefaultArgs<ExtArgs>
+    item?: boolean | catalog_itemsDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["property_item_details"]>
+
+  export type property_item_detailsSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    item_id?: boolean
+    business_id?: boolean
+    property_type?: boolean
+    listing_type?: boolean
+    bedrooms?: boolean
+    bathrooms?: boolean
+    area_sqft?: boolean
+    floor_number?: boolean
+    total_floors?: boolean
+    locality?: boolean
+    city?: boolean
+    furnishing?: boolean
+    possession_status?: boolean
+    facing?: boolean
+    parking?: boolean
+    rera_id?: boolean
+    map_url?: boolean
+    documents_status?: boolean
+    loan_support_available?: boolean
+    visit_landmark?: boolean
+    metadata?: boolean
+    created_at?: boolean
+    updated_at?: boolean
+    business?: boolean | businessesDefaultArgs<ExtArgs>
+    item?: boolean | catalog_itemsDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["property_item_details"]>
+
+  export type property_item_detailsSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    item_id?: boolean
+    business_id?: boolean
+    property_type?: boolean
+    listing_type?: boolean
+    bedrooms?: boolean
+    bathrooms?: boolean
+    area_sqft?: boolean
+    floor_number?: boolean
+    total_floors?: boolean
+    locality?: boolean
+    city?: boolean
+    furnishing?: boolean
+    possession_status?: boolean
+    facing?: boolean
+    parking?: boolean
+    rera_id?: boolean
+    map_url?: boolean
+    documents_status?: boolean
+    loan_support_available?: boolean
+    visit_landmark?: boolean
+    metadata?: boolean
+    created_at?: boolean
+    updated_at?: boolean
+    business?: boolean | businessesDefaultArgs<ExtArgs>
+    item?: boolean | catalog_itemsDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["property_item_details"]>
+
+  export type property_item_detailsSelectScalar = {
+    item_id?: boolean
+    business_id?: boolean
+    property_type?: boolean
+    listing_type?: boolean
+    bedrooms?: boolean
+    bathrooms?: boolean
+    area_sqft?: boolean
+    floor_number?: boolean
+    total_floors?: boolean
+    locality?: boolean
+    city?: boolean
+    furnishing?: boolean
+    possession_status?: boolean
+    facing?: boolean
+    parking?: boolean
+    rera_id?: boolean
+    map_url?: boolean
+    documents_status?: boolean
+    loan_support_available?: boolean
+    visit_landmark?: boolean
+    metadata?: boolean
+    created_at?: boolean
+    updated_at?: boolean
+  }
+
+  export type property_item_detailsOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"item_id" | "business_id" | "property_type" | "listing_type" | "bedrooms" | "bathrooms" | "area_sqft" | "floor_number" | "total_floors" | "locality" | "city" | "furnishing" | "possession_status" | "facing" | "parking" | "rera_id" | "map_url" | "documents_status" | "loan_support_available" | "visit_landmark" | "metadata" | "created_at" | "updated_at", ExtArgs["result"]["property_item_details"]>
+  export type property_item_detailsInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    business?: boolean | businessesDefaultArgs<ExtArgs>
+    item?: boolean | catalog_itemsDefaultArgs<ExtArgs>
+  }
+  export type property_item_detailsIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    business?: boolean | businessesDefaultArgs<ExtArgs>
+    item?: boolean | catalog_itemsDefaultArgs<ExtArgs>
+  }
+  export type property_item_detailsIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    business?: boolean | businessesDefaultArgs<ExtArgs>
+    item?: boolean | catalog_itemsDefaultArgs<ExtArgs>
+  }
+
+  export type $property_item_detailsPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "property_item_details"
+    objects: {
+      business: Prisma.$businessesPayload<ExtArgs>
+      item: Prisma.$catalog_itemsPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      item_id: string
+      business_id: string
+      property_type: string
+      listing_type: string
+      bedrooms: number | null
+      bathrooms: number | null
+      area_sqft: number | null
+      floor_number: number | null
+      total_floors: number | null
+      locality: string | null
+      city: string | null
+      furnishing: string | null
+      possession_status: string | null
+      facing: string | null
+      parking: string | null
+      rera_id: string | null
+      map_url: string | null
+      documents_status: string | null
+      loan_support_available: boolean
+      visit_landmark: string | null
+      metadata: Prisma.JsonValue | null
+      created_at: Date
+      updated_at: Date
+    }, ExtArgs["result"]["property_item_details"]>
+    composites: {}
+  }
+
+  type property_item_detailsGetPayload<S extends boolean | null | undefined | property_item_detailsDefaultArgs> = $Result.GetResult<Prisma.$property_item_detailsPayload, S>
+
+  type property_item_detailsCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<property_item_detailsFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: Property_item_detailsCountAggregateInputType | true
+    }
+
+  export interface property_item_detailsDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['property_item_details'], meta: { name: 'property_item_details' } }
+    /**
+     * Find zero or one Property_item_details that matches the filter.
+     * @param {property_item_detailsFindUniqueArgs} args - Arguments to find a Property_item_details
+     * @example
+     * // Get one Property_item_details
+     * const property_item_details = await prisma.property_item_details.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends property_item_detailsFindUniqueArgs>(args: SelectSubset<T, property_item_detailsFindUniqueArgs<ExtArgs>>): Prisma__property_item_detailsClient<$Result.GetResult<Prisma.$property_item_detailsPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one Property_item_details that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {property_item_detailsFindUniqueOrThrowArgs} args - Arguments to find a Property_item_details
+     * @example
+     * // Get one Property_item_details
+     * const property_item_details = await prisma.property_item_details.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends property_item_detailsFindUniqueOrThrowArgs>(args: SelectSubset<T, property_item_detailsFindUniqueOrThrowArgs<ExtArgs>>): Prisma__property_item_detailsClient<$Result.GetResult<Prisma.$property_item_detailsPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Property_item_details that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {property_item_detailsFindFirstArgs} args - Arguments to find a Property_item_details
+     * @example
+     * // Get one Property_item_details
+     * const property_item_details = await prisma.property_item_details.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends property_item_detailsFindFirstArgs>(args?: SelectSubset<T, property_item_detailsFindFirstArgs<ExtArgs>>): Prisma__property_item_detailsClient<$Result.GetResult<Prisma.$property_item_detailsPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Property_item_details that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {property_item_detailsFindFirstOrThrowArgs} args - Arguments to find a Property_item_details
+     * @example
+     * // Get one Property_item_details
+     * const property_item_details = await prisma.property_item_details.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends property_item_detailsFindFirstOrThrowArgs>(args?: SelectSubset<T, property_item_detailsFindFirstOrThrowArgs<ExtArgs>>): Prisma__property_item_detailsClient<$Result.GetResult<Prisma.$property_item_detailsPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more Property_item_details that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {property_item_detailsFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all Property_item_details
+     * const property_item_details = await prisma.property_item_details.findMany()
+     * 
+     * // Get first 10 Property_item_details
+     * const property_item_details = await prisma.property_item_details.findMany({ take: 10 })
+     * 
+     * // Only select the `item_id`
+     * const property_item_detailsWithItem_idOnly = await prisma.property_item_details.findMany({ select: { item_id: true } })
+     * 
+     */
+    findMany<T extends property_item_detailsFindManyArgs>(args?: SelectSubset<T, property_item_detailsFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$property_item_detailsPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a Property_item_details.
+     * @param {property_item_detailsCreateArgs} args - Arguments to create a Property_item_details.
+     * @example
+     * // Create one Property_item_details
+     * const Property_item_details = await prisma.property_item_details.create({
+     *   data: {
+     *     // ... data to create a Property_item_details
+     *   }
+     * })
+     * 
+     */
+    create<T extends property_item_detailsCreateArgs>(args: SelectSubset<T, property_item_detailsCreateArgs<ExtArgs>>): Prisma__property_item_detailsClient<$Result.GetResult<Prisma.$property_item_detailsPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many Property_item_details.
+     * @param {property_item_detailsCreateManyArgs} args - Arguments to create many Property_item_details.
+     * @example
+     * // Create many Property_item_details
+     * const property_item_details = await prisma.property_item_details.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends property_item_detailsCreateManyArgs>(args?: SelectSubset<T, property_item_detailsCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many Property_item_details and returns the data saved in the database.
+     * @param {property_item_detailsCreateManyAndReturnArgs} args - Arguments to create many Property_item_details.
+     * @example
+     * // Create many Property_item_details
+     * const property_item_details = await prisma.property_item_details.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many Property_item_details and only return the `item_id`
+     * const property_item_detailsWithItem_idOnly = await prisma.property_item_details.createManyAndReturn({
+     *   select: { item_id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends property_item_detailsCreateManyAndReturnArgs>(args?: SelectSubset<T, property_item_detailsCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$property_item_detailsPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a Property_item_details.
+     * @param {property_item_detailsDeleteArgs} args - Arguments to delete one Property_item_details.
+     * @example
+     * // Delete one Property_item_details
+     * const Property_item_details = await prisma.property_item_details.delete({
+     *   where: {
+     *     // ... filter to delete one Property_item_details
+     *   }
+     * })
+     * 
+     */
+    delete<T extends property_item_detailsDeleteArgs>(args: SelectSubset<T, property_item_detailsDeleteArgs<ExtArgs>>): Prisma__property_item_detailsClient<$Result.GetResult<Prisma.$property_item_detailsPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one Property_item_details.
+     * @param {property_item_detailsUpdateArgs} args - Arguments to update one Property_item_details.
+     * @example
+     * // Update one Property_item_details
+     * const property_item_details = await prisma.property_item_details.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends property_item_detailsUpdateArgs>(args: SelectSubset<T, property_item_detailsUpdateArgs<ExtArgs>>): Prisma__property_item_detailsClient<$Result.GetResult<Prisma.$property_item_detailsPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more Property_item_details.
+     * @param {property_item_detailsDeleteManyArgs} args - Arguments to filter Property_item_details to delete.
+     * @example
+     * // Delete a few Property_item_details
+     * const { count } = await prisma.property_item_details.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends property_item_detailsDeleteManyArgs>(args?: SelectSubset<T, property_item_detailsDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Property_item_details.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {property_item_detailsUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many Property_item_details
+     * const property_item_details = await prisma.property_item_details.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends property_item_detailsUpdateManyArgs>(args: SelectSubset<T, property_item_detailsUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Property_item_details and returns the data updated in the database.
+     * @param {property_item_detailsUpdateManyAndReturnArgs} args - Arguments to update many Property_item_details.
+     * @example
+     * // Update many Property_item_details
+     * const property_item_details = await prisma.property_item_details.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more Property_item_details and only return the `item_id`
+     * const property_item_detailsWithItem_idOnly = await prisma.property_item_details.updateManyAndReturn({
+     *   select: { item_id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends property_item_detailsUpdateManyAndReturnArgs>(args: SelectSubset<T, property_item_detailsUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$property_item_detailsPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one Property_item_details.
+     * @param {property_item_detailsUpsertArgs} args - Arguments to update or create a Property_item_details.
+     * @example
+     * // Update or create a Property_item_details
+     * const property_item_details = await prisma.property_item_details.upsert({
+     *   create: {
+     *     // ... data to create a Property_item_details
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the Property_item_details we want to update
+     *   }
+     * })
+     */
+    upsert<T extends property_item_detailsUpsertArgs>(args: SelectSubset<T, property_item_detailsUpsertArgs<ExtArgs>>): Prisma__property_item_detailsClient<$Result.GetResult<Prisma.$property_item_detailsPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of Property_item_details.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {property_item_detailsCountArgs} args - Arguments to filter Property_item_details to count.
+     * @example
+     * // Count the number of Property_item_details
+     * const count = await prisma.property_item_details.count({
+     *   where: {
+     *     // ... the filter for the Property_item_details we want to count
+     *   }
+     * })
+    **/
+    count<T extends property_item_detailsCountArgs>(
+      args?: Subset<T, property_item_detailsCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], Property_item_detailsCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a Property_item_details.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {Property_item_detailsAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends Property_item_detailsAggregateArgs>(args: Subset<T, Property_item_detailsAggregateArgs>): Prisma.PrismaPromise<GetProperty_item_detailsAggregateType<T>>
+
+    /**
+     * Group by Property_item_details.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {property_item_detailsGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends property_item_detailsGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: property_item_detailsGroupByArgs['orderBy'] }
+        : { orderBy?: property_item_detailsGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, property_item_detailsGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetProperty_item_detailsGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the property_item_details model
+   */
+  readonly fields: property_item_detailsFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for property_item_details.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__property_item_detailsClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    business<T extends businessesDefaultArgs<ExtArgs> = {}>(args?: Subset<T, businessesDefaultArgs<ExtArgs>>): Prisma__businessesClient<$Result.GetResult<Prisma.$businessesPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    item<T extends catalog_itemsDefaultArgs<ExtArgs> = {}>(args?: Subset<T, catalog_itemsDefaultArgs<ExtArgs>>): Prisma__catalog_itemsClient<$Result.GetResult<Prisma.$catalog_itemsPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the property_item_details model
+   */
+  interface property_item_detailsFieldRefs {
+    readonly item_id: FieldRef<"property_item_details", 'String'>
+    readonly business_id: FieldRef<"property_item_details", 'String'>
+    readonly property_type: FieldRef<"property_item_details", 'String'>
+    readonly listing_type: FieldRef<"property_item_details", 'String'>
+    readonly bedrooms: FieldRef<"property_item_details", 'Int'>
+    readonly bathrooms: FieldRef<"property_item_details", 'Int'>
+    readonly area_sqft: FieldRef<"property_item_details", 'Int'>
+    readonly floor_number: FieldRef<"property_item_details", 'Int'>
+    readonly total_floors: FieldRef<"property_item_details", 'Int'>
+    readonly locality: FieldRef<"property_item_details", 'String'>
+    readonly city: FieldRef<"property_item_details", 'String'>
+    readonly furnishing: FieldRef<"property_item_details", 'String'>
+    readonly possession_status: FieldRef<"property_item_details", 'String'>
+    readonly facing: FieldRef<"property_item_details", 'String'>
+    readonly parking: FieldRef<"property_item_details", 'String'>
+    readonly rera_id: FieldRef<"property_item_details", 'String'>
+    readonly map_url: FieldRef<"property_item_details", 'String'>
+    readonly documents_status: FieldRef<"property_item_details", 'String'>
+    readonly loan_support_available: FieldRef<"property_item_details", 'Boolean'>
+    readonly visit_landmark: FieldRef<"property_item_details", 'String'>
+    readonly metadata: FieldRef<"property_item_details", 'Json'>
+    readonly created_at: FieldRef<"property_item_details", 'DateTime'>
+    readonly updated_at: FieldRef<"property_item_details", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * property_item_details findUnique
+   */
+  export type property_item_detailsFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the property_item_details
+     */
+    select?: property_item_detailsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the property_item_details
+     */
+    omit?: property_item_detailsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: property_item_detailsInclude<ExtArgs> | null
+    /**
+     * Filter, which property_item_details to fetch.
+     */
+    where: property_item_detailsWhereUniqueInput
+  }
+
+  /**
+   * property_item_details findUniqueOrThrow
+   */
+  export type property_item_detailsFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the property_item_details
+     */
+    select?: property_item_detailsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the property_item_details
+     */
+    omit?: property_item_detailsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: property_item_detailsInclude<ExtArgs> | null
+    /**
+     * Filter, which property_item_details to fetch.
+     */
+    where: property_item_detailsWhereUniqueInput
+  }
+
+  /**
+   * property_item_details findFirst
+   */
+  export type property_item_detailsFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the property_item_details
+     */
+    select?: property_item_detailsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the property_item_details
+     */
+    omit?: property_item_detailsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: property_item_detailsInclude<ExtArgs> | null
+    /**
+     * Filter, which property_item_details to fetch.
+     */
+    where?: property_item_detailsWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of property_item_details to fetch.
+     */
+    orderBy?: property_item_detailsOrderByWithRelationInput | property_item_detailsOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for property_item_details.
+     */
+    cursor?: property_item_detailsWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` property_item_details from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` property_item_details.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of property_item_details.
+     */
+    distinct?: Property_item_detailsScalarFieldEnum | Property_item_detailsScalarFieldEnum[]
+  }
+
+  /**
+   * property_item_details findFirstOrThrow
+   */
+  export type property_item_detailsFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the property_item_details
+     */
+    select?: property_item_detailsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the property_item_details
+     */
+    omit?: property_item_detailsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: property_item_detailsInclude<ExtArgs> | null
+    /**
+     * Filter, which property_item_details to fetch.
+     */
+    where?: property_item_detailsWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of property_item_details to fetch.
+     */
+    orderBy?: property_item_detailsOrderByWithRelationInput | property_item_detailsOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for property_item_details.
+     */
+    cursor?: property_item_detailsWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` property_item_details from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` property_item_details.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of property_item_details.
+     */
+    distinct?: Property_item_detailsScalarFieldEnum | Property_item_detailsScalarFieldEnum[]
+  }
+
+  /**
+   * property_item_details findMany
+   */
+  export type property_item_detailsFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the property_item_details
+     */
+    select?: property_item_detailsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the property_item_details
+     */
+    omit?: property_item_detailsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: property_item_detailsInclude<ExtArgs> | null
+    /**
+     * Filter, which property_item_details to fetch.
+     */
+    where?: property_item_detailsWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of property_item_details to fetch.
+     */
+    orderBy?: property_item_detailsOrderByWithRelationInput | property_item_detailsOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing property_item_details.
+     */
+    cursor?: property_item_detailsWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` property_item_details from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` property_item_details.
+     */
+    skip?: number
+    distinct?: Property_item_detailsScalarFieldEnum | Property_item_detailsScalarFieldEnum[]
+  }
+
+  /**
+   * property_item_details create
+   */
+  export type property_item_detailsCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the property_item_details
+     */
+    select?: property_item_detailsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the property_item_details
+     */
+    omit?: property_item_detailsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: property_item_detailsInclude<ExtArgs> | null
+    /**
+     * The data needed to create a property_item_details.
+     */
+    data: XOR<property_item_detailsCreateInput, property_item_detailsUncheckedCreateInput>
+  }
+
+  /**
+   * property_item_details createMany
+   */
+  export type property_item_detailsCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many property_item_details.
+     */
+    data: property_item_detailsCreateManyInput | property_item_detailsCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * property_item_details createManyAndReturn
+   */
+  export type property_item_detailsCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the property_item_details
+     */
+    select?: property_item_detailsSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the property_item_details
+     */
+    omit?: property_item_detailsOmit<ExtArgs> | null
+    /**
+     * The data used to create many property_item_details.
+     */
+    data: property_item_detailsCreateManyInput | property_item_detailsCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: property_item_detailsIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * property_item_details update
+   */
+  export type property_item_detailsUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the property_item_details
+     */
+    select?: property_item_detailsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the property_item_details
+     */
+    omit?: property_item_detailsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: property_item_detailsInclude<ExtArgs> | null
+    /**
+     * The data needed to update a property_item_details.
+     */
+    data: XOR<property_item_detailsUpdateInput, property_item_detailsUncheckedUpdateInput>
+    /**
+     * Choose, which property_item_details to update.
+     */
+    where: property_item_detailsWhereUniqueInput
+  }
+
+  /**
+   * property_item_details updateMany
+   */
+  export type property_item_detailsUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update property_item_details.
+     */
+    data: XOR<property_item_detailsUpdateManyMutationInput, property_item_detailsUncheckedUpdateManyInput>
+    /**
+     * Filter which property_item_details to update
+     */
+    where?: property_item_detailsWhereInput
+    /**
+     * Limit how many property_item_details to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * property_item_details updateManyAndReturn
+   */
+  export type property_item_detailsUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the property_item_details
+     */
+    select?: property_item_detailsSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the property_item_details
+     */
+    omit?: property_item_detailsOmit<ExtArgs> | null
+    /**
+     * The data used to update property_item_details.
+     */
+    data: XOR<property_item_detailsUpdateManyMutationInput, property_item_detailsUncheckedUpdateManyInput>
+    /**
+     * Filter which property_item_details to update
+     */
+    where?: property_item_detailsWhereInput
+    /**
+     * Limit how many property_item_details to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: property_item_detailsIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * property_item_details upsert
+   */
+  export type property_item_detailsUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the property_item_details
+     */
+    select?: property_item_detailsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the property_item_details
+     */
+    omit?: property_item_detailsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: property_item_detailsInclude<ExtArgs> | null
+    /**
+     * The filter to search for the property_item_details to update in case it exists.
+     */
+    where: property_item_detailsWhereUniqueInput
+    /**
+     * In case the property_item_details found by the `where` argument doesn't exist, create a new property_item_details with this data.
+     */
+    create: XOR<property_item_detailsCreateInput, property_item_detailsUncheckedCreateInput>
+    /**
+     * In case the property_item_details was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<property_item_detailsUpdateInput, property_item_detailsUncheckedUpdateInput>
+  }
+
+  /**
+   * property_item_details delete
+   */
+  export type property_item_detailsDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the property_item_details
+     */
+    select?: property_item_detailsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the property_item_details
+     */
+    omit?: property_item_detailsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: property_item_detailsInclude<ExtArgs> | null
+    /**
+     * Filter which property_item_details to delete.
+     */
+    where: property_item_detailsWhereUniqueInput
+  }
+
+  /**
+   * property_item_details deleteMany
+   */
+  export type property_item_detailsDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which property_item_details to delete
+     */
+    where?: property_item_detailsWhereInput
+    /**
+     * Limit how many property_item_details to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * property_item_details without action
+   */
+  export type property_item_detailsDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the property_item_details
+     */
+    select?: property_item_detailsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the property_item_details
+     */
+    omit?: property_item_detailsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: property_item_detailsInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model appointment_sales_settings
+   */
+
+  export type AggregateAppointment_sales_settings = {
+    _count: Appointment_sales_settingsCountAggregateOutputType | null
+    _avg: Appointment_sales_settingsAvgAggregateOutputType | null
+    _sum: Appointment_sales_settingsSumAggregateOutputType | null
+    _min: Appointment_sales_settingsMinAggregateOutputType | null
+    _max: Appointment_sales_settingsMaxAggregateOutputType | null
+  }
+
+  export type Appointment_sales_settingsAvgAggregateOutputType = {
+    slot_duration_minutes: number | null
+    visit_buffer_minutes: number | null
+    reminder_minutes_before: number | null
+  }
+
+  export type Appointment_sales_settingsSumAggregateOutputType = {
+    slot_duration_minutes: number | null
+    visit_buffer_minutes: number | null
+    reminder_minutes_before: number | null
+  }
+
+  export type Appointment_sales_settingsMinAggregateOutputType = {
+    appointment_sales_settings_id: string | null
+    business_id: string | null
+    tenant_id: string | null
+    vertical_type: string | null
+    onboarding_status: string | null
+    default_visit_type: string | null
+    default_visit_location: string | null
+    slot_duration_minutes: number | null
+    visit_buffer_minutes: number | null
+    auto_assign_visits: boolean | null
+    reminder_minutes_before: number | null
+    created_at: Date | null
+    updated_at: Date | null
+  }
+
+  export type Appointment_sales_settingsMaxAggregateOutputType = {
+    appointment_sales_settings_id: string | null
+    business_id: string | null
+    tenant_id: string | null
+    vertical_type: string | null
+    onboarding_status: string | null
+    default_visit_type: string | null
+    default_visit_location: string | null
+    slot_duration_minutes: number | null
+    visit_buffer_minutes: number | null
+    auto_assign_visits: boolean | null
+    reminder_minutes_before: number | null
+    created_at: Date | null
+    updated_at: Date | null
+  }
+
+  export type Appointment_sales_settingsCountAggregateOutputType = {
+    appointment_sales_settings_id: number
+    business_id: number
+    tenant_id: number
+    vertical_type: number
+    onboarding_status: number
+    default_visit_type: number
+    default_visit_location: number
+    slot_duration_minutes: number
+    visit_buffer_minutes: number
+    auto_assign_visits: number
+    reminder_minutes_before: number
+    escalation_rules: number
+    setup_checklist: number
+    metadata: number
+    created_at: number
+    updated_at: number
+    _all: number
+  }
+
+
+  export type Appointment_sales_settingsAvgAggregateInputType = {
+    slot_duration_minutes?: true
+    visit_buffer_minutes?: true
+    reminder_minutes_before?: true
+  }
+
+  export type Appointment_sales_settingsSumAggregateInputType = {
+    slot_duration_minutes?: true
+    visit_buffer_minutes?: true
+    reminder_minutes_before?: true
+  }
+
+  export type Appointment_sales_settingsMinAggregateInputType = {
+    appointment_sales_settings_id?: true
+    business_id?: true
+    tenant_id?: true
+    vertical_type?: true
+    onboarding_status?: true
+    default_visit_type?: true
+    default_visit_location?: true
+    slot_duration_minutes?: true
+    visit_buffer_minutes?: true
+    auto_assign_visits?: true
+    reminder_minutes_before?: true
+    created_at?: true
+    updated_at?: true
+  }
+
+  export type Appointment_sales_settingsMaxAggregateInputType = {
+    appointment_sales_settings_id?: true
+    business_id?: true
+    tenant_id?: true
+    vertical_type?: true
+    onboarding_status?: true
+    default_visit_type?: true
+    default_visit_location?: true
+    slot_duration_minutes?: true
+    visit_buffer_minutes?: true
+    auto_assign_visits?: true
+    reminder_minutes_before?: true
+    created_at?: true
+    updated_at?: true
+  }
+
+  export type Appointment_sales_settingsCountAggregateInputType = {
+    appointment_sales_settings_id?: true
+    business_id?: true
+    tenant_id?: true
+    vertical_type?: true
+    onboarding_status?: true
+    default_visit_type?: true
+    default_visit_location?: true
+    slot_duration_minutes?: true
+    visit_buffer_minutes?: true
+    auto_assign_visits?: true
+    reminder_minutes_before?: true
+    escalation_rules?: true
+    setup_checklist?: true
+    metadata?: true
+    created_at?: true
+    updated_at?: true
+    _all?: true
+  }
+
+  export type Appointment_sales_settingsAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which appointment_sales_settings to aggregate.
+     */
+    where?: appointment_sales_settingsWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of appointment_sales_settings to fetch.
+     */
+    orderBy?: appointment_sales_settingsOrderByWithRelationInput | appointment_sales_settingsOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: appointment_sales_settingsWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` appointment_sales_settings from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` appointment_sales_settings.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned appointment_sales_settings
+    **/
+    _count?: true | Appointment_sales_settingsCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: Appointment_sales_settingsAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: Appointment_sales_settingsSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: Appointment_sales_settingsMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: Appointment_sales_settingsMaxAggregateInputType
+  }
+
+  export type GetAppointment_sales_settingsAggregateType<T extends Appointment_sales_settingsAggregateArgs> = {
+        [P in keyof T & keyof AggregateAppointment_sales_settings]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateAppointment_sales_settings[P]>
+      : GetScalarType<T[P], AggregateAppointment_sales_settings[P]>
+  }
+
+
+
+
+  export type appointment_sales_settingsGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: appointment_sales_settingsWhereInput
+    orderBy?: appointment_sales_settingsOrderByWithAggregationInput | appointment_sales_settingsOrderByWithAggregationInput[]
+    by: Appointment_sales_settingsScalarFieldEnum[] | Appointment_sales_settingsScalarFieldEnum
+    having?: appointment_sales_settingsScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: Appointment_sales_settingsCountAggregateInputType | true
+    _avg?: Appointment_sales_settingsAvgAggregateInputType
+    _sum?: Appointment_sales_settingsSumAggregateInputType
+    _min?: Appointment_sales_settingsMinAggregateInputType
+    _max?: Appointment_sales_settingsMaxAggregateInputType
+  }
+
+  export type Appointment_sales_settingsGroupByOutputType = {
+    appointment_sales_settings_id: string
+    business_id: string
+    tenant_id: string | null
+    vertical_type: string
+    onboarding_status: string
+    default_visit_type: string
+    default_visit_location: string | null
+    slot_duration_minutes: number
+    visit_buffer_minutes: number
+    auto_assign_visits: boolean
+    reminder_minutes_before: number
+    escalation_rules: JsonValue | null
+    setup_checklist: JsonValue | null
+    metadata: JsonValue | null
+    created_at: Date
+    updated_at: Date
+    _count: Appointment_sales_settingsCountAggregateOutputType | null
+    _avg: Appointment_sales_settingsAvgAggregateOutputType | null
+    _sum: Appointment_sales_settingsSumAggregateOutputType | null
+    _min: Appointment_sales_settingsMinAggregateOutputType | null
+    _max: Appointment_sales_settingsMaxAggregateOutputType | null
+  }
+
+  type GetAppointment_sales_settingsGroupByPayload<T extends appointment_sales_settingsGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<Appointment_sales_settingsGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof Appointment_sales_settingsGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], Appointment_sales_settingsGroupByOutputType[P]>
+            : GetScalarType<T[P], Appointment_sales_settingsGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type appointment_sales_settingsSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    appointment_sales_settings_id?: boolean
+    business_id?: boolean
+    tenant_id?: boolean
+    vertical_type?: boolean
+    onboarding_status?: boolean
+    default_visit_type?: boolean
+    default_visit_location?: boolean
+    slot_duration_minutes?: boolean
+    visit_buffer_minutes?: boolean
+    auto_assign_visits?: boolean
+    reminder_minutes_before?: boolean
+    escalation_rules?: boolean
+    setup_checklist?: boolean
+    metadata?: boolean
+    created_at?: boolean
+    updated_at?: boolean
+  }, ExtArgs["result"]["appointment_sales_settings"]>
+
+  export type appointment_sales_settingsSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    appointment_sales_settings_id?: boolean
+    business_id?: boolean
+    tenant_id?: boolean
+    vertical_type?: boolean
+    onboarding_status?: boolean
+    default_visit_type?: boolean
+    default_visit_location?: boolean
+    slot_duration_minutes?: boolean
+    visit_buffer_minutes?: boolean
+    auto_assign_visits?: boolean
+    reminder_minutes_before?: boolean
+    escalation_rules?: boolean
+    setup_checklist?: boolean
+    metadata?: boolean
+    created_at?: boolean
+    updated_at?: boolean
+  }, ExtArgs["result"]["appointment_sales_settings"]>
+
+  export type appointment_sales_settingsSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    appointment_sales_settings_id?: boolean
+    business_id?: boolean
+    tenant_id?: boolean
+    vertical_type?: boolean
+    onboarding_status?: boolean
+    default_visit_type?: boolean
+    default_visit_location?: boolean
+    slot_duration_minutes?: boolean
+    visit_buffer_minutes?: boolean
+    auto_assign_visits?: boolean
+    reminder_minutes_before?: boolean
+    escalation_rules?: boolean
+    setup_checklist?: boolean
+    metadata?: boolean
+    created_at?: boolean
+    updated_at?: boolean
+  }, ExtArgs["result"]["appointment_sales_settings"]>
+
+  export type appointment_sales_settingsSelectScalar = {
+    appointment_sales_settings_id?: boolean
+    business_id?: boolean
+    tenant_id?: boolean
+    vertical_type?: boolean
+    onboarding_status?: boolean
+    default_visit_type?: boolean
+    default_visit_location?: boolean
+    slot_duration_minutes?: boolean
+    visit_buffer_minutes?: boolean
+    auto_assign_visits?: boolean
+    reminder_minutes_before?: boolean
+    escalation_rules?: boolean
+    setup_checklist?: boolean
+    metadata?: boolean
+    created_at?: boolean
+    updated_at?: boolean
+  }
+
+  export type appointment_sales_settingsOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"appointment_sales_settings_id" | "business_id" | "tenant_id" | "vertical_type" | "onboarding_status" | "default_visit_type" | "default_visit_location" | "slot_duration_minutes" | "visit_buffer_minutes" | "auto_assign_visits" | "reminder_minutes_before" | "escalation_rules" | "setup_checklist" | "metadata" | "created_at" | "updated_at", ExtArgs["result"]["appointment_sales_settings"]>
+
+  export type $appointment_sales_settingsPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "appointment_sales_settings"
+    objects: {}
+    scalars: $Extensions.GetPayloadResult<{
+      appointment_sales_settings_id: string
+      business_id: string
+      tenant_id: string | null
+      vertical_type: string
+      onboarding_status: string
+      default_visit_type: string
+      default_visit_location: string | null
+      slot_duration_minutes: number
+      visit_buffer_minutes: number
+      auto_assign_visits: boolean
+      reminder_minutes_before: number
+      escalation_rules: Prisma.JsonValue | null
+      setup_checklist: Prisma.JsonValue | null
+      metadata: Prisma.JsonValue | null
+      created_at: Date
+      updated_at: Date
+    }, ExtArgs["result"]["appointment_sales_settings"]>
+    composites: {}
+  }
+
+  type appointment_sales_settingsGetPayload<S extends boolean | null | undefined | appointment_sales_settingsDefaultArgs> = $Result.GetResult<Prisma.$appointment_sales_settingsPayload, S>
+
+  type appointment_sales_settingsCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<appointment_sales_settingsFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: Appointment_sales_settingsCountAggregateInputType | true
+    }
+
+  export interface appointment_sales_settingsDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['appointment_sales_settings'], meta: { name: 'appointment_sales_settings' } }
+    /**
+     * Find zero or one Appointment_sales_settings that matches the filter.
+     * @param {appointment_sales_settingsFindUniqueArgs} args - Arguments to find a Appointment_sales_settings
+     * @example
+     * // Get one Appointment_sales_settings
+     * const appointment_sales_settings = await prisma.appointment_sales_settings.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends appointment_sales_settingsFindUniqueArgs>(args: SelectSubset<T, appointment_sales_settingsFindUniqueArgs<ExtArgs>>): Prisma__appointment_sales_settingsClient<$Result.GetResult<Prisma.$appointment_sales_settingsPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one Appointment_sales_settings that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {appointment_sales_settingsFindUniqueOrThrowArgs} args - Arguments to find a Appointment_sales_settings
+     * @example
+     * // Get one Appointment_sales_settings
+     * const appointment_sales_settings = await prisma.appointment_sales_settings.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends appointment_sales_settingsFindUniqueOrThrowArgs>(args: SelectSubset<T, appointment_sales_settingsFindUniqueOrThrowArgs<ExtArgs>>): Prisma__appointment_sales_settingsClient<$Result.GetResult<Prisma.$appointment_sales_settingsPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Appointment_sales_settings that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {appointment_sales_settingsFindFirstArgs} args - Arguments to find a Appointment_sales_settings
+     * @example
+     * // Get one Appointment_sales_settings
+     * const appointment_sales_settings = await prisma.appointment_sales_settings.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends appointment_sales_settingsFindFirstArgs>(args?: SelectSubset<T, appointment_sales_settingsFindFirstArgs<ExtArgs>>): Prisma__appointment_sales_settingsClient<$Result.GetResult<Prisma.$appointment_sales_settingsPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Appointment_sales_settings that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {appointment_sales_settingsFindFirstOrThrowArgs} args - Arguments to find a Appointment_sales_settings
+     * @example
+     * // Get one Appointment_sales_settings
+     * const appointment_sales_settings = await prisma.appointment_sales_settings.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends appointment_sales_settingsFindFirstOrThrowArgs>(args?: SelectSubset<T, appointment_sales_settingsFindFirstOrThrowArgs<ExtArgs>>): Prisma__appointment_sales_settingsClient<$Result.GetResult<Prisma.$appointment_sales_settingsPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more Appointment_sales_settings that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {appointment_sales_settingsFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all Appointment_sales_settings
+     * const appointment_sales_settings = await prisma.appointment_sales_settings.findMany()
+     * 
+     * // Get first 10 Appointment_sales_settings
+     * const appointment_sales_settings = await prisma.appointment_sales_settings.findMany({ take: 10 })
+     * 
+     * // Only select the `appointment_sales_settings_id`
+     * const appointment_sales_settingsWithAppointment_sales_settings_idOnly = await prisma.appointment_sales_settings.findMany({ select: { appointment_sales_settings_id: true } })
+     * 
+     */
+    findMany<T extends appointment_sales_settingsFindManyArgs>(args?: SelectSubset<T, appointment_sales_settingsFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$appointment_sales_settingsPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a Appointment_sales_settings.
+     * @param {appointment_sales_settingsCreateArgs} args - Arguments to create a Appointment_sales_settings.
+     * @example
+     * // Create one Appointment_sales_settings
+     * const Appointment_sales_settings = await prisma.appointment_sales_settings.create({
+     *   data: {
+     *     // ... data to create a Appointment_sales_settings
+     *   }
+     * })
+     * 
+     */
+    create<T extends appointment_sales_settingsCreateArgs>(args: SelectSubset<T, appointment_sales_settingsCreateArgs<ExtArgs>>): Prisma__appointment_sales_settingsClient<$Result.GetResult<Prisma.$appointment_sales_settingsPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many Appointment_sales_settings.
+     * @param {appointment_sales_settingsCreateManyArgs} args - Arguments to create many Appointment_sales_settings.
+     * @example
+     * // Create many Appointment_sales_settings
+     * const appointment_sales_settings = await prisma.appointment_sales_settings.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends appointment_sales_settingsCreateManyArgs>(args?: SelectSubset<T, appointment_sales_settingsCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many Appointment_sales_settings and returns the data saved in the database.
+     * @param {appointment_sales_settingsCreateManyAndReturnArgs} args - Arguments to create many Appointment_sales_settings.
+     * @example
+     * // Create many Appointment_sales_settings
+     * const appointment_sales_settings = await prisma.appointment_sales_settings.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many Appointment_sales_settings and only return the `appointment_sales_settings_id`
+     * const appointment_sales_settingsWithAppointment_sales_settings_idOnly = await prisma.appointment_sales_settings.createManyAndReturn({
+     *   select: { appointment_sales_settings_id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends appointment_sales_settingsCreateManyAndReturnArgs>(args?: SelectSubset<T, appointment_sales_settingsCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$appointment_sales_settingsPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a Appointment_sales_settings.
+     * @param {appointment_sales_settingsDeleteArgs} args - Arguments to delete one Appointment_sales_settings.
+     * @example
+     * // Delete one Appointment_sales_settings
+     * const Appointment_sales_settings = await prisma.appointment_sales_settings.delete({
+     *   where: {
+     *     // ... filter to delete one Appointment_sales_settings
+     *   }
+     * })
+     * 
+     */
+    delete<T extends appointment_sales_settingsDeleteArgs>(args: SelectSubset<T, appointment_sales_settingsDeleteArgs<ExtArgs>>): Prisma__appointment_sales_settingsClient<$Result.GetResult<Prisma.$appointment_sales_settingsPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one Appointment_sales_settings.
+     * @param {appointment_sales_settingsUpdateArgs} args - Arguments to update one Appointment_sales_settings.
+     * @example
+     * // Update one Appointment_sales_settings
+     * const appointment_sales_settings = await prisma.appointment_sales_settings.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends appointment_sales_settingsUpdateArgs>(args: SelectSubset<T, appointment_sales_settingsUpdateArgs<ExtArgs>>): Prisma__appointment_sales_settingsClient<$Result.GetResult<Prisma.$appointment_sales_settingsPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more Appointment_sales_settings.
+     * @param {appointment_sales_settingsDeleteManyArgs} args - Arguments to filter Appointment_sales_settings to delete.
+     * @example
+     * // Delete a few Appointment_sales_settings
+     * const { count } = await prisma.appointment_sales_settings.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends appointment_sales_settingsDeleteManyArgs>(args?: SelectSubset<T, appointment_sales_settingsDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Appointment_sales_settings.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {appointment_sales_settingsUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many Appointment_sales_settings
+     * const appointment_sales_settings = await prisma.appointment_sales_settings.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends appointment_sales_settingsUpdateManyArgs>(args: SelectSubset<T, appointment_sales_settingsUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Appointment_sales_settings and returns the data updated in the database.
+     * @param {appointment_sales_settingsUpdateManyAndReturnArgs} args - Arguments to update many Appointment_sales_settings.
+     * @example
+     * // Update many Appointment_sales_settings
+     * const appointment_sales_settings = await prisma.appointment_sales_settings.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more Appointment_sales_settings and only return the `appointment_sales_settings_id`
+     * const appointment_sales_settingsWithAppointment_sales_settings_idOnly = await prisma.appointment_sales_settings.updateManyAndReturn({
+     *   select: { appointment_sales_settings_id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends appointment_sales_settingsUpdateManyAndReturnArgs>(args: SelectSubset<T, appointment_sales_settingsUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$appointment_sales_settingsPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one Appointment_sales_settings.
+     * @param {appointment_sales_settingsUpsertArgs} args - Arguments to update or create a Appointment_sales_settings.
+     * @example
+     * // Update or create a Appointment_sales_settings
+     * const appointment_sales_settings = await prisma.appointment_sales_settings.upsert({
+     *   create: {
+     *     // ... data to create a Appointment_sales_settings
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the Appointment_sales_settings we want to update
+     *   }
+     * })
+     */
+    upsert<T extends appointment_sales_settingsUpsertArgs>(args: SelectSubset<T, appointment_sales_settingsUpsertArgs<ExtArgs>>): Prisma__appointment_sales_settingsClient<$Result.GetResult<Prisma.$appointment_sales_settingsPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of Appointment_sales_settings.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {appointment_sales_settingsCountArgs} args - Arguments to filter Appointment_sales_settings to count.
+     * @example
+     * // Count the number of Appointment_sales_settings
+     * const count = await prisma.appointment_sales_settings.count({
+     *   where: {
+     *     // ... the filter for the Appointment_sales_settings we want to count
+     *   }
+     * })
+    **/
+    count<T extends appointment_sales_settingsCountArgs>(
+      args?: Subset<T, appointment_sales_settingsCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], Appointment_sales_settingsCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a Appointment_sales_settings.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {Appointment_sales_settingsAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends Appointment_sales_settingsAggregateArgs>(args: Subset<T, Appointment_sales_settingsAggregateArgs>): Prisma.PrismaPromise<GetAppointment_sales_settingsAggregateType<T>>
+
+    /**
+     * Group by Appointment_sales_settings.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {appointment_sales_settingsGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends appointment_sales_settingsGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: appointment_sales_settingsGroupByArgs['orderBy'] }
+        : { orderBy?: appointment_sales_settingsGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, appointment_sales_settingsGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetAppointment_sales_settingsGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the appointment_sales_settings model
+   */
+  readonly fields: appointment_sales_settingsFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for appointment_sales_settings.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__appointment_sales_settingsClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the appointment_sales_settings model
+   */
+  interface appointment_sales_settingsFieldRefs {
+    readonly appointment_sales_settings_id: FieldRef<"appointment_sales_settings", 'String'>
+    readonly business_id: FieldRef<"appointment_sales_settings", 'String'>
+    readonly tenant_id: FieldRef<"appointment_sales_settings", 'String'>
+    readonly vertical_type: FieldRef<"appointment_sales_settings", 'String'>
+    readonly onboarding_status: FieldRef<"appointment_sales_settings", 'String'>
+    readonly default_visit_type: FieldRef<"appointment_sales_settings", 'String'>
+    readonly default_visit_location: FieldRef<"appointment_sales_settings", 'String'>
+    readonly slot_duration_minutes: FieldRef<"appointment_sales_settings", 'Int'>
+    readonly visit_buffer_minutes: FieldRef<"appointment_sales_settings", 'Int'>
+    readonly auto_assign_visits: FieldRef<"appointment_sales_settings", 'Boolean'>
+    readonly reminder_minutes_before: FieldRef<"appointment_sales_settings", 'Int'>
+    readonly escalation_rules: FieldRef<"appointment_sales_settings", 'Json'>
+    readonly setup_checklist: FieldRef<"appointment_sales_settings", 'Json'>
+    readonly metadata: FieldRef<"appointment_sales_settings", 'Json'>
+    readonly created_at: FieldRef<"appointment_sales_settings", 'DateTime'>
+    readonly updated_at: FieldRef<"appointment_sales_settings", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * appointment_sales_settings findUnique
+   */
+  export type appointment_sales_settingsFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the appointment_sales_settings
+     */
+    select?: appointment_sales_settingsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the appointment_sales_settings
+     */
+    omit?: appointment_sales_settingsOmit<ExtArgs> | null
+    /**
+     * Filter, which appointment_sales_settings to fetch.
+     */
+    where: appointment_sales_settingsWhereUniqueInput
+  }
+
+  /**
+   * appointment_sales_settings findUniqueOrThrow
+   */
+  export type appointment_sales_settingsFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the appointment_sales_settings
+     */
+    select?: appointment_sales_settingsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the appointment_sales_settings
+     */
+    omit?: appointment_sales_settingsOmit<ExtArgs> | null
+    /**
+     * Filter, which appointment_sales_settings to fetch.
+     */
+    where: appointment_sales_settingsWhereUniqueInput
+  }
+
+  /**
+   * appointment_sales_settings findFirst
+   */
+  export type appointment_sales_settingsFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the appointment_sales_settings
+     */
+    select?: appointment_sales_settingsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the appointment_sales_settings
+     */
+    omit?: appointment_sales_settingsOmit<ExtArgs> | null
+    /**
+     * Filter, which appointment_sales_settings to fetch.
+     */
+    where?: appointment_sales_settingsWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of appointment_sales_settings to fetch.
+     */
+    orderBy?: appointment_sales_settingsOrderByWithRelationInput | appointment_sales_settingsOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for appointment_sales_settings.
+     */
+    cursor?: appointment_sales_settingsWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` appointment_sales_settings from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` appointment_sales_settings.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of appointment_sales_settings.
+     */
+    distinct?: Appointment_sales_settingsScalarFieldEnum | Appointment_sales_settingsScalarFieldEnum[]
+  }
+
+  /**
+   * appointment_sales_settings findFirstOrThrow
+   */
+  export type appointment_sales_settingsFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the appointment_sales_settings
+     */
+    select?: appointment_sales_settingsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the appointment_sales_settings
+     */
+    omit?: appointment_sales_settingsOmit<ExtArgs> | null
+    /**
+     * Filter, which appointment_sales_settings to fetch.
+     */
+    where?: appointment_sales_settingsWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of appointment_sales_settings to fetch.
+     */
+    orderBy?: appointment_sales_settingsOrderByWithRelationInput | appointment_sales_settingsOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for appointment_sales_settings.
+     */
+    cursor?: appointment_sales_settingsWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` appointment_sales_settings from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` appointment_sales_settings.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of appointment_sales_settings.
+     */
+    distinct?: Appointment_sales_settingsScalarFieldEnum | Appointment_sales_settingsScalarFieldEnum[]
+  }
+
+  /**
+   * appointment_sales_settings findMany
+   */
+  export type appointment_sales_settingsFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the appointment_sales_settings
+     */
+    select?: appointment_sales_settingsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the appointment_sales_settings
+     */
+    omit?: appointment_sales_settingsOmit<ExtArgs> | null
+    /**
+     * Filter, which appointment_sales_settings to fetch.
+     */
+    where?: appointment_sales_settingsWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of appointment_sales_settings to fetch.
+     */
+    orderBy?: appointment_sales_settingsOrderByWithRelationInput | appointment_sales_settingsOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing appointment_sales_settings.
+     */
+    cursor?: appointment_sales_settingsWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` appointment_sales_settings from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` appointment_sales_settings.
+     */
+    skip?: number
+    distinct?: Appointment_sales_settingsScalarFieldEnum | Appointment_sales_settingsScalarFieldEnum[]
+  }
+
+  /**
+   * appointment_sales_settings create
+   */
+  export type appointment_sales_settingsCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the appointment_sales_settings
+     */
+    select?: appointment_sales_settingsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the appointment_sales_settings
+     */
+    omit?: appointment_sales_settingsOmit<ExtArgs> | null
+    /**
+     * The data needed to create a appointment_sales_settings.
+     */
+    data: XOR<appointment_sales_settingsCreateInput, appointment_sales_settingsUncheckedCreateInput>
+  }
+
+  /**
+   * appointment_sales_settings createMany
+   */
+  export type appointment_sales_settingsCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many appointment_sales_settings.
+     */
+    data: appointment_sales_settingsCreateManyInput | appointment_sales_settingsCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * appointment_sales_settings createManyAndReturn
+   */
+  export type appointment_sales_settingsCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the appointment_sales_settings
+     */
+    select?: appointment_sales_settingsSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the appointment_sales_settings
+     */
+    omit?: appointment_sales_settingsOmit<ExtArgs> | null
+    /**
+     * The data used to create many appointment_sales_settings.
+     */
+    data: appointment_sales_settingsCreateManyInput | appointment_sales_settingsCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * appointment_sales_settings update
+   */
+  export type appointment_sales_settingsUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the appointment_sales_settings
+     */
+    select?: appointment_sales_settingsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the appointment_sales_settings
+     */
+    omit?: appointment_sales_settingsOmit<ExtArgs> | null
+    /**
+     * The data needed to update a appointment_sales_settings.
+     */
+    data: XOR<appointment_sales_settingsUpdateInput, appointment_sales_settingsUncheckedUpdateInput>
+    /**
+     * Choose, which appointment_sales_settings to update.
+     */
+    where: appointment_sales_settingsWhereUniqueInput
+  }
+
+  /**
+   * appointment_sales_settings updateMany
+   */
+  export type appointment_sales_settingsUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update appointment_sales_settings.
+     */
+    data: XOR<appointment_sales_settingsUpdateManyMutationInput, appointment_sales_settingsUncheckedUpdateManyInput>
+    /**
+     * Filter which appointment_sales_settings to update
+     */
+    where?: appointment_sales_settingsWhereInput
+    /**
+     * Limit how many appointment_sales_settings to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * appointment_sales_settings updateManyAndReturn
+   */
+  export type appointment_sales_settingsUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the appointment_sales_settings
+     */
+    select?: appointment_sales_settingsSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the appointment_sales_settings
+     */
+    omit?: appointment_sales_settingsOmit<ExtArgs> | null
+    /**
+     * The data used to update appointment_sales_settings.
+     */
+    data: XOR<appointment_sales_settingsUpdateManyMutationInput, appointment_sales_settingsUncheckedUpdateManyInput>
+    /**
+     * Filter which appointment_sales_settings to update
+     */
+    where?: appointment_sales_settingsWhereInput
+    /**
+     * Limit how many appointment_sales_settings to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * appointment_sales_settings upsert
+   */
+  export type appointment_sales_settingsUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the appointment_sales_settings
+     */
+    select?: appointment_sales_settingsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the appointment_sales_settings
+     */
+    omit?: appointment_sales_settingsOmit<ExtArgs> | null
+    /**
+     * The filter to search for the appointment_sales_settings to update in case it exists.
+     */
+    where: appointment_sales_settingsWhereUniqueInput
+    /**
+     * In case the appointment_sales_settings found by the `where` argument doesn't exist, create a new appointment_sales_settings with this data.
+     */
+    create: XOR<appointment_sales_settingsCreateInput, appointment_sales_settingsUncheckedCreateInput>
+    /**
+     * In case the appointment_sales_settings was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<appointment_sales_settingsUpdateInput, appointment_sales_settingsUncheckedUpdateInput>
+  }
+
+  /**
+   * appointment_sales_settings delete
+   */
+  export type appointment_sales_settingsDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the appointment_sales_settings
+     */
+    select?: appointment_sales_settingsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the appointment_sales_settings
+     */
+    omit?: appointment_sales_settingsOmit<ExtArgs> | null
+    /**
+     * Filter which appointment_sales_settings to delete.
+     */
+    where: appointment_sales_settingsWhereUniqueInput
+  }
+
+  /**
+   * appointment_sales_settings deleteMany
+   */
+  export type appointment_sales_settingsDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which appointment_sales_settings to delete
+     */
+    where?: appointment_sales_settingsWhereInput
+    /**
+     * Limit how many appointment_sales_settings to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * appointment_sales_settings without action
+   */
+  export type appointment_sales_settingsDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the appointment_sales_settings
+     */
+    select?: appointment_sales_settingsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the appointment_sales_settings
+     */
+    omit?: appointment_sales_settingsOmit<ExtArgs> | null
+  }
+
+
+  /**
+   * Model appointment_sales_staff
+   */
+
+  export type AggregateAppointment_sales_staff = {
+    _count: Appointment_sales_staffCountAggregateOutputType | null
+    _avg: Appointment_sales_staffAvgAggregateOutputType | null
+    _sum: Appointment_sales_staffSumAggregateOutputType | null
+    _min: Appointment_sales_staffMinAggregateOutputType | null
+    _max: Appointment_sales_staffMaxAggregateOutputType | null
+  }
+
+  export type Appointment_sales_staffAvgAggregateOutputType = {
+    priority: number | null
+  }
+
+  export type Appointment_sales_staffSumAggregateOutputType = {
+    priority: number | null
+  }
+
+  export type Appointment_sales_staffMinAggregateOutputType = {
+    sales_staff_id: string | null
+    business_id: string | null
+    tenant_id: string | null
+    name: string | null
+    phone: string | null
+    email: string | null
+    role: string | null
+    title: string | null
+    priority: number | null
+    is_active: boolean | null
+    created_by: string | null
+    created_at: Date | null
+    updated_at: Date | null
+  }
+
+  export type Appointment_sales_staffMaxAggregateOutputType = {
+    sales_staff_id: string | null
+    business_id: string | null
+    tenant_id: string | null
+    name: string | null
+    phone: string | null
+    email: string | null
+    role: string | null
+    title: string | null
+    priority: number | null
+    is_active: boolean | null
+    created_by: string | null
+    created_at: Date | null
+    updated_at: Date | null
+  }
+
+  export type Appointment_sales_staffCountAggregateOutputType = {
+    sales_staff_id: number
+    business_id: number
+    tenant_id: number
+    name: number
+    phone: number
+    email: number
+    role: number
+    title: number
+    priority: number
+    is_active: number
+    metadata: number
+    created_by: number
+    created_at: number
+    updated_at: number
+    _all: number
+  }
+
+
+  export type Appointment_sales_staffAvgAggregateInputType = {
+    priority?: true
+  }
+
+  export type Appointment_sales_staffSumAggregateInputType = {
+    priority?: true
+  }
+
+  export type Appointment_sales_staffMinAggregateInputType = {
+    sales_staff_id?: true
+    business_id?: true
+    tenant_id?: true
+    name?: true
+    phone?: true
+    email?: true
+    role?: true
+    title?: true
+    priority?: true
+    is_active?: true
+    created_by?: true
+    created_at?: true
+    updated_at?: true
+  }
+
+  export type Appointment_sales_staffMaxAggregateInputType = {
+    sales_staff_id?: true
+    business_id?: true
+    tenant_id?: true
+    name?: true
+    phone?: true
+    email?: true
+    role?: true
+    title?: true
+    priority?: true
+    is_active?: true
+    created_by?: true
+    created_at?: true
+    updated_at?: true
+  }
+
+  export type Appointment_sales_staffCountAggregateInputType = {
+    sales_staff_id?: true
+    business_id?: true
+    tenant_id?: true
+    name?: true
+    phone?: true
+    email?: true
+    role?: true
+    title?: true
+    priority?: true
+    is_active?: true
+    metadata?: true
+    created_by?: true
+    created_at?: true
+    updated_at?: true
+    _all?: true
+  }
+
+  export type Appointment_sales_staffAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which appointment_sales_staff to aggregate.
+     */
+    where?: appointment_sales_staffWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of appointment_sales_staffs to fetch.
+     */
+    orderBy?: appointment_sales_staffOrderByWithRelationInput | appointment_sales_staffOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: appointment_sales_staffWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` appointment_sales_staffs from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` appointment_sales_staffs.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned appointment_sales_staffs
+    **/
+    _count?: true | Appointment_sales_staffCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: Appointment_sales_staffAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: Appointment_sales_staffSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: Appointment_sales_staffMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: Appointment_sales_staffMaxAggregateInputType
+  }
+
+  export type GetAppointment_sales_staffAggregateType<T extends Appointment_sales_staffAggregateArgs> = {
+        [P in keyof T & keyof AggregateAppointment_sales_staff]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateAppointment_sales_staff[P]>
+      : GetScalarType<T[P], AggregateAppointment_sales_staff[P]>
+  }
+
+
+
+
+  export type appointment_sales_staffGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: appointment_sales_staffWhereInput
+    orderBy?: appointment_sales_staffOrderByWithAggregationInput | appointment_sales_staffOrderByWithAggregationInput[]
+    by: Appointment_sales_staffScalarFieldEnum[] | Appointment_sales_staffScalarFieldEnum
+    having?: appointment_sales_staffScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: Appointment_sales_staffCountAggregateInputType | true
+    _avg?: Appointment_sales_staffAvgAggregateInputType
+    _sum?: Appointment_sales_staffSumAggregateInputType
+    _min?: Appointment_sales_staffMinAggregateInputType
+    _max?: Appointment_sales_staffMaxAggregateInputType
+  }
+
+  export type Appointment_sales_staffGroupByOutputType = {
+    sales_staff_id: string
+    business_id: string
+    tenant_id: string | null
+    name: string
+    phone: string | null
+    email: string | null
+    role: string
+    title: string | null
+    priority: number
+    is_active: boolean
+    metadata: JsonValue | null
+    created_by: string | null
+    created_at: Date
+    updated_at: Date
+    _count: Appointment_sales_staffCountAggregateOutputType | null
+    _avg: Appointment_sales_staffAvgAggregateOutputType | null
+    _sum: Appointment_sales_staffSumAggregateOutputType | null
+    _min: Appointment_sales_staffMinAggregateOutputType | null
+    _max: Appointment_sales_staffMaxAggregateOutputType | null
+  }
+
+  type GetAppointment_sales_staffGroupByPayload<T extends appointment_sales_staffGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<Appointment_sales_staffGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof Appointment_sales_staffGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], Appointment_sales_staffGroupByOutputType[P]>
+            : GetScalarType<T[P], Appointment_sales_staffGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type appointment_sales_staffSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    sales_staff_id?: boolean
+    business_id?: boolean
+    tenant_id?: boolean
+    name?: boolean
+    phone?: boolean
+    email?: boolean
+    role?: boolean
+    title?: boolean
+    priority?: boolean
+    is_active?: boolean
+    metadata?: boolean
+    created_by?: boolean
+    created_at?: boolean
+    updated_at?: boolean
+    availability?: boolean | appointment_sales_staff$availabilityArgs<ExtArgs>
+    visits?: boolean | appointment_sales_staff$visitsArgs<ExtArgs>
+    _count?: boolean | Appointment_sales_staffCountOutputTypeDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["appointment_sales_staff"]>
+
+  export type appointment_sales_staffSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    sales_staff_id?: boolean
+    business_id?: boolean
+    tenant_id?: boolean
+    name?: boolean
+    phone?: boolean
+    email?: boolean
+    role?: boolean
+    title?: boolean
+    priority?: boolean
+    is_active?: boolean
+    metadata?: boolean
+    created_by?: boolean
+    created_at?: boolean
+    updated_at?: boolean
+  }, ExtArgs["result"]["appointment_sales_staff"]>
+
+  export type appointment_sales_staffSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    sales_staff_id?: boolean
+    business_id?: boolean
+    tenant_id?: boolean
+    name?: boolean
+    phone?: boolean
+    email?: boolean
+    role?: boolean
+    title?: boolean
+    priority?: boolean
+    is_active?: boolean
+    metadata?: boolean
+    created_by?: boolean
+    created_at?: boolean
+    updated_at?: boolean
+  }, ExtArgs["result"]["appointment_sales_staff"]>
+
+  export type appointment_sales_staffSelectScalar = {
+    sales_staff_id?: boolean
+    business_id?: boolean
+    tenant_id?: boolean
+    name?: boolean
+    phone?: boolean
+    email?: boolean
+    role?: boolean
+    title?: boolean
+    priority?: boolean
+    is_active?: boolean
+    metadata?: boolean
+    created_by?: boolean
+    created_at?: boolean
+    updated_at?: boolean
+  }
+
+  export type appointment_sales_staffOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"sales_staff_id" | "business_id" | "tenant_id" | "name" | "phone" | "email" | "role" | "title" | "priority" | "is_active" | "metadata" | "created_by" | "created_at" | "updated_at", ExtArgs["result"]["appointment_sales_staff"]>
+  export type appointment_sales_staffInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    availability?: boolean | appointment_sales_staff$availabilityArgs<ExtArgs>
+    visits?: boolean | appointment_sales_staff$visitsArgs<ExtArgs>
+    _count?: boolean | Appointment_sales_staffCountOutputTypeDefaultArgs<ExtArgs>
+  }
+  export type appointment_sales_staffIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
+  export type appointment_sales_staffIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
+
+  export type $appointment_sales_staffPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "appointment_sales_staff"
+    objects: {
+      availability: Prisma.$appointment_sales_staff_availabilityPayload<ExtArgs>[]
+      visits: Prisma.$appointment_sales_visitsPayload<ExtArgs>[]
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      sales_staff_id: string
+      business_id: string
+      tenant_id: string | null
+      name: string
+      phone: string | null
+      email: string | null
+      role: string
+      title: string | null
+      priority: number
+      is_active: boolean
+      metadata: Prisma.JsonValue | null
+      created_by: string | null
+      created_at: Date
+      updated_at: Date
+    }, ExtArgs["result"]["appointment_sales_staff"]>
+    composites: {}
+  }
+
+  type appointment_sales_staffGetPayload<S extends boolean | null | undefined | appointment_sales_staffDefaultArgs> = $Result.GetResult<Prisma.$appointment_sales_staffPayload, S>
+
+  type appointment_sales_staffCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<appointment_sales_staffFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: Appointment_sales_staffCountAggregateInputType | true
+    }
+
+  export interface appointment_sales_staffDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['appointment_sales_staff'], meta: { name: 'appointment_sales_staff' } }
+    /**
+     * Find zero or one Appointment_sales_staff that matches the filter.
+     * @param {appointment_sales_staffFindUniqueArgs} args - Arguments to find a Appointment_sales_staff
+     * @example
+     * // Get one Appointment_sales_staff
+     * const appointment_sales_staff = await prisma.appointment_sales_staff.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends appointment_sales_staffFindUniqueArgs>(args: SelectSubset<T, appointment_sales_staffFindUniqueArgs<ExtArgs>>): Prisma__appointment_sales_staffClient<$Result.GetResult<Prisma.$appointment_sales_staffPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one Appointment_sales_staff that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {appointment_sales_staffFindUniqueOrThrowArgs} args - Arguments to find a Appointment_sales_staff
+     * @example
+     * // Get one Appointment_sales_staff
+     * const appointment_sales_staff = await prisma.appointment_sales_staff.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends appointment_sales_staffFindUniqueOrThrowArgs>(args: SelectSubset<T, appointment_sales_staffFindUniqueOrThrowArgs<ExtArgs>>): Prisma__appointment_sales_staffClient<$Result.GetResult<Prisma.$appointment_sales_staffPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Appointment_sales_staff that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {appointment_sales_staffFindFirstArgs} args - Arguments to find a Appointment_sales_staff
+     * @example
+     * // Get one Appointment_sales_staff
+     * const appointment_sales_staff = await prisma.appointment_sales_staff.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends appointment_sales_staffFindFirstArgs>(args?: SelectSubset<T, appointment_sales_staffFindFirstArgs<ExtArgs>>): Prisma__appointment_sales_staffClient<$Result.GetResult<Prisma.$appointment_sales_staffPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Appointment_sales_staff that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {appointment_sales_staffFindFirstOrThrowArgs} args - Arguments to find a Appointment_sales_staff
+     * @example
+     * // Get one Appointment_sales_staff
+     * const appointment_sales_staff = await prisma.appointment_sales_staff.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends appointment_sales_staffFindFirstOrThrowArgs>(args?: SelectSubset<T, appointment_sales_staffFindFirstOrThrowArgs<ExtArgs>>): Prisma__appointment_sales_staffClient<$Result.GetResult<Prisma.$appointment_sales_staffPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more Appointment_sales_staffs that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {appointment_sales_staffFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all Appointment_sales_staffs
+     * const appointment_sales_staffs = await prisma.appointment_sales_staff.findMany()
+     * 
+     * // Get first 10 Appointment_sales_staffs
+     * const appointment_sales_staffs = await prisma.appointment_sales_staff.findMany({ take: 10 })
+     * 
+     * // Only select the `sales_staff_id`
+     * const appointment_sales_staffWithSales_staff_idOnly = await prisma.appointment_sales_staff.findMany({ select: { sales_staff_id: true } })
+     * 
+     */
+    findMany<T extends appointment_sales_staffFindManyArgs>(args?: SelectSubset<T, appointment_sales_staffFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$appointment_sales_staffPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a Appointment_sales_staff.
+     * @param {appointment_sales_staffCreateArgs} args - Arguments to create a Appointment_sales_staff.
+     * @example
+     * // Create one Appointment_sales_staff
+     * const Appointment_sales_staff = await prisma.appointment_sales_staff.create({
+     *   data: {
+     *     // ... data to create a Appointment_sales_staff
+     *   }
+     * })
+     * 
+     */
+    create<T extends appointment_sales_staffCreateArgs>(args: SelectSubset<T, appointment_sales_staffCreateArgs<ExtArgs>>): Prisma__appointment_sales_staffClient<$Result.GetResult<Prisma.$appointment_sales_staffPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many Appointment_sales_staffs.
+     * @param {appointment_sales_staffCreateManyArgs} args - Arguments to create many Appointment_sales_staffs.
+     * @example
+     * // Create many Appointment_sales_staffs
+     * const appointment_sales_staff = await prisma.appointment_sales_staff.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends appointment_sales_staffCreateManyArgs>(args?: SelectSubset<T, appointment_sales_staffCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many Appointment_sales_staffs and returns the data saved in the database.
+     * @param {appointment_sales_staffCreateManyAndReturnArgs} args - Arguments to create many Appointment_sales_staffs.
+     * @example
+     * // Create many Appointment_sales_staffs
+     * const appointment_sales_staff = await prisma.appointment_sales_staff.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many Appointment_sales_staffs and only return the `sales_staff_id`
+     * const appointment_sales_staffWithSales_staff_idOnly = await prisma.appointment_sales_staff.createManyAndReturn({
+     *   select: { sales_staff_id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends appointment_sales_staffCreateManyAndReturnArgs>(args?: SelectSubset<T, appointment_sales_staffCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$appointment_sales_staffPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a Appointment_sales_staff.
+     * @param {appointment_sales_staffDeleteArgs} args - Arguments to delete one Appointment_sales_staff.
+     * @example
+     * // Delete one Appointment_sales_staff
+     * const Appointment_sales_staff = await prisma.appointment_sales_staff.delete({
+     *   where: {
+     *     // ... filter to delete one Appointment_sales_staff
+     *   }
+     * })
+     * 
+     */
+    delete<T extends appointment_sales_staffDeleteArgs>(args: SelectSubset<T, appointment_sales_staffDeleteArgs<ExtArgs>>): Prisma__appointment_sales_staffClient<$Result.GetResult<Prisma.$appointment_sales_staffPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one Appointment_sales_staff.
+     * @param {appointment_sales_staffUpdateArgs} args - Arguments to update one Appointment_sales_staff.
+     * @example
+     * // Update one Appointment_sales_staff
+     * const appointment_sales_staff = await prisma.appointment_sales_staff.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends appointment_sales_staffUpdateArgs>(args: SelectSubset<T, appointment_sales_staffUpdateArgs<ExtArgs>>): Prisma__appointment_sales_staffClient<$Result.GetResult<Prisma.$appointment_sales_staffPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more Appointment_sales_staffs.
+     * @param {appointment_sales_staffDeleteManyArgs} args - Arguments to filter Appointment_sales_staffs to delete.
+     * @example
+     * // Delete a few Appointment_sales_staffs
+     * const { count } = await prisma.appointment_sales_staff.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends appointment_sales_staffDeleteManyArgs>(args?: SelectSubset<T, appointment_sales_staffDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Appointment_sales_staffs.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {appointment_sales_staffUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many Appointment_sales_staffs
+     * const appointment_sales_staff = await prisma.appointment_sales_staff.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends appointment_sales_staffUpdateManyArgs>(args: SelectSubset<T, appointment_sales_staffUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Appointment_sales_staffs and returns the data updated in the database.
+     * @param {appointment_sales_staffUpdateManyAndReturnArgs} args - Arguments to update many Appointment_sales_staffs.
+     * @example
+     * // Update many Appointment_sales_staffs
+     * const appointment_sales_staff = await prisma.appointment_sales_staff.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more Appointment_sales_staffs and only return the `sales_staff_id`
+     * const appointment_sales_staffWithSales_staff_idOnly = await prisma.appointment_sales_staff.updateManyAndReturn({
+     *   select: { sales_staff_id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends appointment_sales_staffUpdateManyAndReturnArgs>(args: SelectSubset<T, appointment_sales_staffUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$appointment_sales_staffPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one Appointment_sales_staff.
+     * @param {appointment_sales_staffUpsertArgs} args - Arguments to update or create a Appointment_sales_staff.
+     * @example
+     * // Update or create a Appointment_sales_staff
+     * const appointment_sales_staff = await prisma.appointment_sales_staff.upsert({
+     *   create: {
+     *     // ... data to create a Appointment_sales_staff
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the Appointment_sales_staff we want to update
+     *   }
+     * })
+     */
+    upsert<T extends appointment_sales_staffUpsertArgs>(args: SelectSubset<T, appointment_sales_staffUpsertArgs<ExtArgs>>): Prisma__appointment_sales_staffClient<$Result.GetResult<Prisma.$appointment_sales_staffPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of Appointment_sales_staffs.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {appointment_sales_staffCountArgs} args - Arguments to filter Appointment_sales_staffs to count.
+     * @example
+     * // Count the number of Appointment_sales_staffs
+     * const count = await prisma.appointment_sales_staff.count({
+     *   where: {
+     *     // ... the filter for the Appointment_sales_staffs we want to count
+     *   }
+     * })
+    **/
+    count<T extends appointment_sales_staffCountArgs>(
+      args?: Subset<T, appointment_sales_staffCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], Appointment_sales_staffCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a Appointment_sales_staff.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {Appointment_sales_staffAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends Appointment_sales_staffAggregateArgs>(args: Subset<T, Appointment_sales_staffAggregateArgs>): Prisma.PrismaPromise<GetAppointment_sales_staffAggregateType<T>>
+
+    /**
+     * Group by Appointment_sales_staff.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {appointment_sales_staffGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends appointment_sales_staffGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: appointment_sales_staffGroupByArgs['orderBy'] }
+        : { orderBy?: appointment_sales_staffGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, appointment_sales_staffGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetAppointment_sales_staffGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the appointment_sales_staff model
+   */
+  readonly fields: appointment_sales_staffFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for appointment_sales_staff.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__appointment_sales_staffClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    availability<T extends appointment_sales_staff$availabilityArgs<ExtArgs> = {}>(args?: Subset<T, appointment_sales_staff$availabilityArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$appointment_sales_staff_availabilityPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    visits<T extends appointment_sales_staff$visitsArgs<ExtArgs> = {}>(args?: Subset<T, appointment_sales_staff$visitsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$appointment_sales_visitsPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the appointment_sales_staff model
+   */
+  interface appointment_sales_staffFieldRefs {
+    readonly sales_staff_id: FieldRef<"appointment_sales_staff", 'String'>
+    readonly business_id: FieldRef<"appointment_sales_staff", 'String'>
+    readonly tenant_id: FieldRef<"appointment_sales_staff", 'String'>
+    readonly name: FieldRef<"appointment_sales_staff", 'String'>
+    readonly phone: FieldRef<"appointment_sales_staff", 'String'>
+    readonly email: FieldRef<"appointment_sales_staff", 'String'>
+    readonly role: FieldRef<"appointment_sales_staff", 'String'>
+    readonly title: FieldRef<"appointment_sales_staff", 'String'>
+    readonly priority: FieldRef<"appointment_sales_staff", 'Int'>
+    readonly is_active: FieldRef<"appointment_sales_staff", 'Boolean'>
+    readonly metadata: FieldRef<"appointment_sales_staff", 'Json'>
+    readonly created_by: FieldRef<"appointment_sales_staff", 'String'>
+    readonly created_at: FieldRef<"appointment_sales_staff", 'DateTime'>
+    readonly updated_at: FieldRef<"appointment_sales_staff", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * appointment_sales_staff findUnique
+   */
+  export type appointment_sales_staffFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the appointment_sales_staff
+     */
+    select?: appointment_sales_staffSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the appointment_sales_staff
+     */
+    omit?: appointment_sales_staffOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: appointment_sales_staffInclude<ExtArgs> | null
+    /**
+     * Filter, which appointment_sales_staff to fetch.
+     */
+    where: appointment_sales_staffWhereUniqueInput
+  }
+
+  /**
+   * appointment_sales_staff findUniqueOrThrow
+   */
+  export type appointment_sales_staffFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the appointment_sales_staff
+     */
+    select?: appointment_sales_staffSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the appointment_sales_staff
+     */
+    omit?: appointment_sales_staffOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: appointment_sales_staffInclude<ExtArgs> | null
+    /**
+     * Filter, which appointment_sales_staff to fetch.
+     */
+    where: appointment_sales_staffWhereUniqueInput
+  }
+
+  /**
+   * appointment_sales_staff findFirst
+   */
+  export type appointment_sales_staffFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the appointment_sales_staff
+     */
+    select?: appointment_sales_staffSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the appointment_sales_staff
+     */
+    omit?: appointment_sales_staffOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: appointment_sales_staffInclude<ExtArgs> | null
+    /**
+     * Filter, which appointment_sales_staff to fetch.
+     */
+    where?: appointment_sales_staffWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of appointment_sales_staffs to fetch.
+     */
+    orderBy?: appointment_sales_staffOrderByWithRelationInput | appointment_sales_staffOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for appointment_sales_staffs.
+     */
+    cursor?: appointment_sales_staffWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` appointment_sales_staffs from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` appointment_sales_staffs.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of appointment_sales_staffs.
+     */
+    distinct?: Appointment_sales_staffScalarFieldEnum | Appointment_sales_staffScalarFieldEnum[]
+  }
+
+  /**
+   * appointment_sales_staff findFirstOrThrow
+   */
+  export type appointment_sales_staffFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the appointment_sales_staff
+     */
+    select?: appointment_sales_staffSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the appointment_sales_staff
+     */
+    omit?: appointment_sales_staffOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: appointment_sales_staffInclude<ExtArgs> | null
+    /**
+     * Filter, which appointment_sales_staff to fetch.
+     */
+    where?: appointment_sales_staffWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of appointment_sales_staffs to fetch.
+     */
+    orderBy?: appointment_sales_staffOrderByWithRelationInput | appointment_sales_staffOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for appointment_sales_staffs.
+     */
+    cursor?: appointment_sales_staffWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` appointment_sales_staffs from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` appointment_sales_staffs.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of appointment_sales_staffs.
+     */
+    distinct?: Appointment_sales_staffScalarFieldEnum | Appointment_sales_staffScalarFieldEnum[]
+  }
+
+  /**
+   * appointment_sales_staff findMany
+   */
+  export type appointment_sales_staffFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the appointment_sales_staff
+     */
+    select?: appointment_sales_staffSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the appointment_sales_staff
+     */
+    omit?: appointment_sales_staffOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: appointment_sales_staffInclude<ExtArgs> | null
+    /**
+     * Filter, which appointment_sales_staffs to fetch.
+     */
+    where?: appointment_sales_staffWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of appointment_sales_staffs to fetch.
+     */
+    orderBy?: appointment_sales_staffOrderByWithRelationInput | appointment_sales_staffOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing appointment_sales_staffs.
+     */
+    cursor?: appointment_sales_staffWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` appointment_sales_staffs from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` appointment_sales_staffs.
+     */
+    skip?: number
+    distinct?: Appointment_sales_staffScalarFieldEnum | Appointment_sales_staffScalarFieldEnum[]
+  }
+
+  /**
+   * appointment_sales_staff create
+   */
+  export type appointment_sales_staffCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the appointment_sales_staff
+     */
+    select?: appointment_sales_staffSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the appointment_sales_staff
+     */
+    omit?: appointment_sales_staffOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: appointment_sales_staffInclude<ExtArgs> | null
+    /**
+     * The data needed to create a appointment_sales_staff.
+     */
+    data: XOR<appointment_sales_staffCreateInput, appointment_sales_staffUncheckedCreateInput>
+  }
+
+  /**
+   * appointment_sales_staff createMany
+   */
+  export type appointment_sales_staffCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many appointment_sales_staffs.
+     */
+    data: appointment_sales_staffCreateManyInput | appointment_sales_staffCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * appointment_sales_staff createManyAndReturn
+   */
+  export type appointment_sales_staffCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the appointment_sales_staff
+     */
+    select?: appointment_sales_staffSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the appointment_sales_staff
+     */
+    omit?: appointment_sales_staffOmit<ExtArgs> | null
+    /**
+     * The data used to create many appointment_sales_staffs.
+     */
+    data: appointment_sales_staffCreateManyInput | appointment_sales_staffCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * appointment_sales_staff update
+   */
+  export type appointment_sales_staffUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the appointment_sales_staff
+     */
+    select?: appointment_sales_staffSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the appointment_sales_staff
+     */
+    omit?: appointment_sales_staffOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: appointment_sales_staffInclude<ExtArgs> | null
+    /**
+     * The data needed to update a appointment_sales_staff.
+     */
+    data: XOR<appointment_sales_staffUpdateInput, appointment_sales_staffUncheckedUpdateInput>
+    /**
+     * Choose, which appointment_sales_staff to update.
+     */
+    where: appointment_sales_staffWhereUniqueInput
+  }
+
+  /**
+   * appointment_sales_staff updateMany
+   */
+  export type appointment_sales_staffUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update appointment_sales_staffs.
+     */
+    data: XOR<appointment_sales_staffUpdateManyMutationInput, appointment_sales_staffUncheckedUpdateManyInput>
+    /**
+     * Filter which appointment_sales_staffs to update
+     */
+    where?: appointment_sales_staffWhereInput
+    /**
+     * Limit how many appointment_sales_staffs to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * appointment_sales_staff updateManyAndReturn
+   */
+  export type appointment_sales_staffUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the appointment_sales_staff
+     */
+    select?: appointment_sales_staffSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the appointment_sales_staff
+     */
+    omit?: appointment_sales_staffOmit<ExtArgs> | null
+    /**
+     * The data used to update appointment_sales_staffs.
+     */
+    data: XOR<appointment_sales_staffUpdateManyMutationInput, appointment_sales_staffUncheckedUpdateManyInput>
+    /**
+     * Filter which appointment_sales_staffs to update
+     */
+    where?: appointment_sales_staffWhereInput
+    /**
+     * Limit how many appointment_sales_staffs to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * appointment_sales_staff upsert
+   */
+  export type appointment_sales_staffUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the appointment_sales_staff
+     */
+    select?: appointment_sales_staffSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the appointment_sales_staff
+     */
+    omit?: appointment_sales_staffOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: appointment_sales_staffInclude<ExtArgs> | null
+    /**
+     * The filter to search for the appointment_sales_staff to update in case it exists.
+     */
+    where: appointment_sales_staffWhereUniqueInput
+    /**
+     * In case the appointment_sales_staff found by the `where` argument doesn't exist, create a new appointment_sales_staff with this data.
+     */
+    create: XOR<appointment_sales_staffCreateInput, appointment_sales_staffUncheckedCreateInput>
+    /**
+     * In case the appointment_sales_staff was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<appointment_sales_staffUpdateInput, appointment_sales_staffUncheckedUpdateInput>
+  }
+
+  /**
+   * appointment_sales_staff delete
+   */
+  export type appointment_sales_staffDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the appointment_sales_staff
+     */
+    select?: appointment_sales_staffSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the appointment_sales_staff
+     */
+    omit?: appointment_sales_staffOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: appointment_sales_staffInclude<ExtArgs> | null
+    /**
+     * Filter which appointment_sales_staff to delete.
+     */
+    where: appointment_sales_staffWhereUniqueInput
+  }
+
+  /**
+   * appointment_sales_staff deleteMany
+   */
+  export type appointment_sales_staffDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which appointment_sales_staffs to delete
+     */
+    where?: appointment_sales_staffWhereInput
+    /**
+     * Limit how many appointment_sales_staffs to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * appointment_sales_staff.availability
+   */
+  export type appointment_sales_staff$availabilityArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the appointment_sales_staff_availability
+     */
+    select?: appointment_sales_staff_availabilitySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the appointment_sales_staff_availability
+     */
+    omit?: appointment_sales_staff_availabilityOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: appointment_sales_staff_availabilityInclude<ExtArgs> | null
+    where?: appointment_sales_staff_availabilityWhereInput
+    orderBy?: appointment_sales_staff_availabilityOrderByWithRelationInput | appointment_sales_staff_availabilityOrderByWithRelationInput[]
+    cursor?: appointment_sales_staff_availabilityWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: Appointment_sales_staff_availabilityScalarFieldEnum | Appointment_sales_staff_availabilityScalarFieldEnum[]
+  }
+
+  /**
+   * appointment_sales_staff.visits
+   */
+  export type appointment_sales_staff$visitsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the appointment_sales_visits
+     */
+    select?: appointment_sales_visitsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the appointment_sales_visits
+     */
+    omit?: appointment_sales_visitsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: appointment_sales_visitsInclude<ExtArgs> | null
+    where?: appointment_sales_visitsWhereInput
+    orderBy?: appointment_sales_visitsOrderByWithRelationInput | appointment_sales_visitsOrderByWithRelationInput[]
+    cursor?: appointment_sales_visitsWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: Appointment_sales_visitsScalarFieldEnum | Appointment_sales_visitsScalarFieldEnum[]
+  }
+
+  /**
+   * appointment_sales_staff without action
+   */
+  export type appointment_sales_staffDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the appointment_sales_staff
+     */
+    select?: appointment_sales_staffSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the appointment_sales_staff
+     */
+    omit?: appointment_sales_staffOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: appointment_sales_staffInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model appointment_sales_staff_availability
+   */
+
+  export type AggregateAppointment_sales_staff_availability = {
+    _count: Appointment_sales_staff_availabilityCountAggregateOutputType | null
+    _avg: Appointment_sales_staff_availabilityAvgAggregateOutputType | null
+    _sum: Appointment_sales_staff_availabilitySumAggregateOutputType | null
+    _min: Appointment_sales_staff_availabilityMinAggregateOutputType | null
+    _max: Appointment_sales_staff_availabilityMaxAggregateOutputType | null
+  }
+
+  export type Appointment_sales_staff_availabilityAvgAggregateOutputType = {
+    day_of_week: number | null
+  }
+
+  export type Appointment_sales_staff_availabilitySumAggregateOutputType = {
+    day_of_week: number | null
+  }
+
+  export type Appointment_sales_staff_availabilityMinAggregateOutputType = {
+    availability_id: string | null
+    sales_staff_id: string | null
+    business_id: string | null
+    day_of_week: number | null
+    start_time: string | null
+    end_time: string | null
+    window_type: string | null
+    label: string | null
+    is_active: boolean | null
+    created_at: Date | null
+    updated_at: Date | null
+  }
+
+  export type Appointment_sales_staff_availabilityMaxAggregateOutputType = {
+    availability_id: string | null
+    sales_staff_id: string | null
+    business_id: string | null
+    day_of_week: number | null
+    start_time: string | null
+    end_time: string | null
+    window_type: string | null
+    label: string | null
+    is_active: boolean | null
+    created_at: Date | null
+    updated_at: Date | null
+  }
+
+  export type Appointment_sales_staff_availabilityCountAggregateOutputType = {
+    availability_id: number
+    sales_staff_id: number
+    business_id: number
+    day_of_week: number
+    start_time: number
+    end_time: number
+    window_type: number
+    label: number
+    is_active: number
+    metadata: number
+    created_at: number
+    updated_at: number
+    _all: number
+  }
+
+
+  export type Appointment_sales_staff_availabilityAvgAggregateInputType = {
+    day_of_week?: true
+  }
+
+  export type Appointment_sales_staff_availabilitySumAggregateInputType = {
+    day_of_week?: true
+  }
+
+  export type Appointment_sales_staff_availabilityMinAggregateInputType = {
+    availability_id?: true
+    sales_staff_id?: true
+    business_id?: true
+    day_of_week?: true
+    start_time?: true
+    end_time?: true
+    window_type?: true
+    label?: true
+    is_active?: true
+    created_at?: true
+    updated_at?: true
+  }
+
+  export type Appointment_sales_staff_availabilityMaxAggregateInputType = {
+    availability_id?: true
+    sales_staff_id?: true
+    business_id?: true
+    day_of_week?: true
+    start_time?: true
+    end_time?: true
+    window_type?: true
+    label?: true
+    is_active?: true
+    created_at?: true
+    updated_at?: true
+  }
+
+  export type Appointment_sales_staff_availabilityCountAggregateInputType = {
+    availability_id?: true
+    sales_staff_id?: true
+    business_id?: true
+    day_of_week?: true
+    start_time?: true
+    end_time?: true
+    window_type?: true
+    label?: true
+    is_active?: true
+    metadata?: true
+    created_at?: true
+    updated_at?: true
+    _all?: true
+  }
+
+  export type Appointment_sales_staff_availabilityAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which appointment_sales_staff_availability to aggregate.
+     */
+    where?: appointment_sales_staff_availabilityWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of appointment_sales_staff_availabilities to fetch.
+     */
+    orderBy?: appointment_sales_staff_availabilityOrderByWithRelationInput | appointment_sales_staff_availabilityOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: appointment_sales_staff_availabilityWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` appointment_sales_staff_availabilities from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` appointment_sales_staff_availabilities.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned appointment_sales_staff_availabilities
+    **/
+    _count?: true | Appointment_sales_staff_availabilityCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: Appointment_sales_staff_availabilityAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: Appointment_sales_staff_availabilitySumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: Appointment_sales_staff_availabilityMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: Appointment_sales_staff_availabilityMaxAggregateInputType
+  }
+
+  export type GetAppointment_sales_staff_availabilityAggregateType<T extends Appointment_sales_staff_availabilityAggregateArgs> = {
+        [P in keyof T & keyof AggregateAppointment_sales_staff_availability]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateAppointment_sales_staff_availability[P]>
+      : GetScalarType<T[P], AggregateAppointment_sales_staff_availability[P]>
+  }
+
+
+
+
+  export type appointment_sales_staff_availabilityGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: appointment_sales_staff_availabilityWhereInput
+    orderBy?: appointment_sales_staff_availabilityOrderByWithAggregationInput | appointment_sales_staff_availabilityOrderByWithAggregationInput[]
+    by: Appointment_sales_staff_availabilityScalarFieldEnum[] | Appointment_sales_staff_availabilityScalarFieldEnum
+    having?: appointment_sales_staff_availabilityScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: Appointment_sales_staff_availabilityCountAggregateInputType | true
+    _avg?: Appointment_sales_staff_availabilityAvgAggregateInputType
+    _sum?: Appointment_sales_staff_availabilitySumAggregateInputType
+    _min?: Appointment_sales_staff_availabilityMinAggregateInputType
+    _max?: Appointment_sales_staff_availabilityMaxAggregateInputType
+  }
+
+  export type Appointment_sales_staff_availabilityGroupByOutputType = {
+    availability_id: string
+    sales_staff_id: string
+    business_id: string
+    day_of_week: number
+    start_time: string
+    end_time: string
+    window_type: string
+    label: string | null
+    is_active: boolean
+    metadata: JsonValue | null
+    created_at: Date
+    updated_at: Date
+    _count: Appointment_sales_staff_availabilityCountAggregateOutputType | null
+    _avg: Appointment_sales_staff_availabilityAvgAggregateOutputType | null
+    _sum: Appointment_sales_staff_availabilitySumAggregateOutputType | null
+    _min: Appointment_sales_staff_availabilityMinAggregateOutputType | null
+    _max: Appointment_sales_staff_availabilityMaxAggregateOutputType | null
+  }
+
+  type GetAppointment_sales_staff_availabilityGroupByPayload<T extends appointment_sales_staff_availabilityGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<Appointment_sales_staff_availabilityGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof Appointment_sales_staff_availabilityGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], Appointment_sales_staff_availabilityGroupByOutputType[P]>
+            : GetScalarType<T[P], Appointment_sales_staff_availabilityGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type appointment_sales_staff_availabilitySelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    availability_id?: boolean
+    sales_staff_id?: boolean
+    business_id?: boolean
+    day_of_week?: boolean
+    start_time?: boolean
+    end_time?: boolean
+    window_type?: boolean
+    label?: boolean
+    is_active?: boolean
+    metadata?: boolean
+    created_at?: boolean
+    updated_at?: boolean
+    staff?: boolean | appointment_sales_staffDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["appointment_sales_staff_availability"]>
+
+  export type appointment_sales_staff_availabilitySelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    availability_id?: boolean
+    sales_staff_id?: boolean
+    business_id?: boolean
+    day_of_week?: boolean
+    start_time?: boolean
+    end_time?: boolean
+    window_type?: boolean
+    label?: boolean
+    is_active?: boolean
+    metadata?: boolean
+    created_at?: boolean
+    updated_at?: boolean
+    staff?: boolean | appointment_sales_staffDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["appointment_sales_staff_availability"]>
+
+  export type appointment_sales_staff_availabilitySelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    availability_id?: boolean
+    sales_staff_id?: boolean
+    business_id?: boolean
+    day_of_week?: boolean
+    start_time?: boolean
+    end_time?: boolean
+    window_type?: boolean
+    label?: boolean
+    is_active?: boolean
+    metadata?: boolean
+    created_at?: boolean
+    updated_at?: boolean
+    staff?: boolean | appointment_sales_staffDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["appointment_sales_staff_availability"]>
+
+  export type appointment_sales_staff_availabilitySelectScalar = {
+    availability_id?: boolean
+    sales_staff_id?: boolean
+    business_id?: boolean
+    day_of_week?: boolean
+    start_time?: boolean
+    end_time?: boolean
+    window_type?: boolean
+    label?: boolean
+    is_active?: boolean
+    metadata?: boolean
+    created_at?: boolean
+    updated_at?: boolean
+  }
+
+  export type appointment_sales_staff_availabilityOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"availability_id" | "sales_staff_id" | "business_id" | "day_of_week" | "start_time" | "end_time" | "window_type" | "label" | "is_active" | "metadata" | "created_at" | "updated_at", ExtArgs["result"]["appointment_sales_staff_availability"]>
+  export type appointment_sales_staff_availabilityInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    staff?: boolean | appointment_sales_staffDefaultArgs<ExtArgs>
+  }
+  export type appointment_sales_staff_availabilityIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    staff?: boolean | appointment_sales_staffDefaultArgs<ExtArgs>
+  }
+  export type appointment_sales_staff_availabilityIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    staff?: boolean | appointment_sales_staffDefaultArgs<ExtArgs>
+  }
+
+  export type $appointment_sales_staff_availabilityPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "appointment_sales_staff_availability"
+    objects: {
+      staff: Prisma.$appointment_sales_staffPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      availability_id: string
+      sales_staff_id: string
+      business_id: string
+      day_of_week: number
+      start_time: string
+      end_time: string
+      window_type: string
+      label: string | null
+      is_active: boolean
+      metadata: Prisma.JsonValue | null
+      created_at: Date
+      updated_at: Date
+    }, ExtArgs["result"]["appointment_sales_staff_availability"]>
+    composites: {}
+  }
+
+  type appointment_sales_staff_availabilityGetPayload<S extends boolean | null | undefined | appointment_sales_staff_availabilityDefaultArgs> = $Result.GetResult<Prisma.$appointment_sales_staff_availabilityPayload, S>
+
+  type appointment_sales_staff_availabilityCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<appointment_sales_staff_availabilityFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: Appointment_sales_staff_availabilityCountAggregateInputType | true
+    }
+
+  export interface appointment_sales_staff_availabilityDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['appointment_sales_staff_availability'], meta: { name: 'appointment_sales_staff_availability' } }
+    /**
+     * Find zero or one Appointment_sales_staff_availability that matches the filter.
+     * @param {appointment_sales_staff_availabilityFindUniqueArgs} args - Arguments to find a Appointment_sales_staff_availability
+     * @example
+     * // Get one Appointment_sales_staff_availability
+     * const appointment_sales_staff_availability = await prisma.appointment_sales_staff_availability.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends appointment_sales_staff_availabilityFindUniqueArgs>(args: SelectSubset<T, appointment_sales_staff_availabilityFindUniqueArgs<ExtArgs>>): Prisma__appointment_sales_staff_availabilityClient<$Result.GetResult<Prisma.$appointment_sales_staff_availabilityPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one Appointment_sales_staff_availability that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {appointment_sales_staff_availabilityFindUniqueOrThrowArgs} args - Arguments to find a Appointment_sales_staff_availability
+     * @example
+     * // Get one Appointment_sales_staff_availability
+     * const appointment_sales_staff_availability = await prisma.appointment_sales_staff_availability.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends appointment_sales_staff_availabilityFindUniqueOrThrowArgs>(args: SelectSubset<T, appointment_sales_staff_availabilityFindUniqueOrThrowArgs<ExtArgs>>): Prisma__appointment_sales_staff_availabilityClient<$Result.GetResult<Prisma.$appointment_sales_staff_availabilityPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Appointment_sales_staff_availability that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {appointment_sales_staff_availabilityFindFirstArgs} args - Arguments to find a Appointment_sales_staff_availability
+     * @example
+     * // Get one Appointment_sales_staff_availability
+     * const appointment_sales_staff_availability = await prisma.appointment_sales_staff_availability.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends appointment_sales_staff_availabilityFindFirstArgs>(args?: SelectSubset<T, appointment_sales_staff_availabilityFindFirstArgs<ExtArgs>>): Prisma__appointment_sales_staff_availabilityClient<$Result.GetResult<Prisma.$appointment_sales_staff_availabilityPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Appointment_sales_staff_availability that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {appointment_sales_staff_availabilityFindFirstOrThrowArgs} args - Arguments to find a Appointment_sales_staff_availability
+     * @example
+     * // Get one Appointment_sales_staff_availability
+     * const appointment_sales_staff_availability = await prisma.appointment_sales_staff_availability.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends appointment_sales_staff_availabilityFindFirstOrThrowArgs>(args?: SelectSubset<T, appointment_sales_staff_availabilityFindFirstOrThrowArgs<ExtArgs>>): Prisma__appointment_sales_staff_availabilityClient<$Result.GetResult<Prisma.$appointment_sales_staff_availabilityPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more Appointment_sales_staff_availabilities that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {appointment_sales_staff_availabilityFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all Appointment_sales_staff_availabilities
+     * const appointment_sales_staff_availabilities = await prisma.appointment_sales_staff_availability.findMany()
+     * 
+     * // Get first 10 Appointment_sales_staff_availabilities
+     * const appointment_sales_staff_availabilities = await prisma.appointment_sales_staff_availability.findMany({ take: 10 })
+     * 
+     * // Only select the `availability_id`
+     * const appointment_sales_staff_availabilityWithAvailability_idOnly = await prisma.appointment_sales_staff_availability.findMany({ select: { availability_id: true } })
+     * 
+     */
+    findMany<T extends appointment_sales_staff_availabilityFindManyArgs>(args?: SelectSubset<T, appointment_sales_staff_availabilityFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$appointment_sales_staff_availabilityPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a Appointment_sales_staff_availability.
+     * @param {appointment_sales_staff_availabilityCreateArgs} args - Arguments to create a Appointment_sales_staff_availability.
+     * @example
+     * // Create one Appointment_sales_staff_availability
+     * const Appointment_sales_staff_availability = await prisma.appointment_sales_staff_availability.create({
+     *   data: {
+     *     // ... data to create a Appointment_sales_staff_availability
+     *   }
+     * })
+     * 
+     */
+    create<T extends appointment_sales_staff_availabilityCreateArgs>(args: SelectSubset<T, appointment_sales_staff_availabilityCreateArgs<ExtArgs>>): Prisma__appointment_sales_staff_availabilityClient<$Result.GetResult<Prisma.$appointment_sales_staff_availabilityPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many Appointment_sales_staff_availabilities.
+     * @param {appointment_sales_staff_availabilityCreateManyArgs} args - Arguments to create many Appointment_sales_staff_availabilities.
+     * @example
+     * // Create many Appointment_sales_staff_availabilities
+     * const appointment_sales_staff_availability = await prisma.appointment_sales_staff_availability.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends appointment_sales_staff_availabilityCreateManyArgs>(args?: SelectSubset<T, appointment_sales_staff_availabilityCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many Appointment_sales_staff_availabilities and returns the data saved in the database.
+     * @param {appointment_sales_staff_availabilityCreateManyAndReturnArgs} args - Arguments to create many Appointment_sales_staff_availabilities.
+     * @example
+     * // Create many Appointment_sales_staff_availabilities
+     * const appointment_sales_staff_availability = await prisma.appointment_sales_staff_availability.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many Appointment_sales_staff_availabilities and only return the `availability_id`
+     * const appointment_sales_staff_availabilityWithAvailability_idOnly = await prisma.appointment_sales_staff_availability.createManyAndReturn({
+     *   select: { availability_id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends appointment_sales_staff_availabilityCreateManyAndReturnArgs>(args?: SelectSubset<T, appointment_sales_staff_availabilityCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$appointment_sales_staff_availabilityPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a Appointment_sales_staff_availability.
+     * @param {appointment_sales_staff_availabilityDeleteArgs} args - Arguments to delete one Appointment_sales_staff_availability.
+     * @example
+     * // Delete one Appointment_sales_staff_availability
+     * const Appointment_sales_staff_availability = await prisma.appointment_sales_staff_availability.delete({
+     *   where: {
+     *     // ... filter to delete one Appointment_sales_staff_availability
+     *   }
+     * })
+     * 
+     */
+    delete<T extends appointment_sales_staff_availabilityDeleteArgs>(args: SelectSubset<T, appointment_sales_staff_availabilityDeleteArgs<ExtArgs>>): Prisma__appointment_sales_staff_availabilityClient<$Result.GetResult<Prisma.$appointment_sales_staff_availabilityPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one Appointment_sales_staff_availability.
+     * @param {appointment_sales_staff_availabilityUpdateArgs} args - Arguments to update one Appointment_sales_staff_availability.
+     * @example
+     * // Update one Appointment_sales_staff_availability
+     * const appointment_sales_staff_availability = await prisma.appointment_sales_staff_availability.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends appointment_sales_staff_availabilityUpdateArgs>(args: SelectSubset<T, appointment_sales_staff_availabilityUpdateArgs<ExtArgs>>): Prisma__appointment_sales_staff_availabilityClient<$Result.GetResult<Prisma.$appointment_sales_staff_availabilityPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more Appointment_sales_staff_availabilities.
+     * @param {appointment_sales_staff_availabilityDeleteManyArgs} args - Arguments to filter Appointment_sales_staff_availabilities to delete.
+     * @example
+     * // Delete a few Appointment_sales_staff_availabilities
+     * const { count } = await prisma.appointment_sales_staff_availability.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends appointment_sales_staff_availabilityDeleteManyArgs>(args?: SelectSubset<T, appointment_sales_staff_availabilityDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Appointment_sales_staff_availabilities.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {appointment_sales_staff_availabilityUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many Appointment_sales_staff_availabilities
+     * const appointment_sales_staff_availability = await prisma.appointment_sales_staff_availability.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends appointment_sales_staff_availabilityUpdateManyArgs>(args: SelectSubset<T, appointment_sales_staff_availabilityUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Appointment_sales_staff_availabilities and returns the data updated in the database.
+     * @param {appointment_sales_staff_availabilityUpdateManyAndReturnArgs} args - Arguments to update many Appointment_sales_staff_availabilities.
+     * @example
+     * // Update many Appointment_sales_staff_availabilities
+     * const appointment_sales_staff_availability = await prisma.appointment_sales_staff_availability.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more Appointment_sales_staff_availabilities and only return the `availability_id`
+     * const appointment_sales_staff_availabilityWithAvailability_idOnly = await prisma.appointment_sales_staff_availability.updateManyAndReturn({
+     *   select: { availability_id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends appointment_sales_staff_availabilityUpdateManyAndReturnArgs>(args: SelectSubset<T, appointment_sales_staff_availabilityUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$appointment_sales_staff_availabilityPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one Appointment_sales_staff_availability.
+     * @param {appointment_sales_staff_availabilityUpsertArgs} args - Arguments to update or create a Appointment_sales_staff_availability.
+     * @example
+     * // Update or create a Appointment_sales_staff_availability
+     * const appointment_sales_staff_availability = await prisma.appointment_sales_staff_availability.upsert({
+     *   create: {
+     *     // ... data to create a Appointment_sales_staff_availability
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the Appointment_sales_staff_availability we want to update
+     *   }
+     * })
+     */
+    upsert<T extends appointment_sales_staff_availabilityUpsertArgs>(args: SelectSubset<T, appointment_sales_staff_availabilityUpsertArgs<ExtArgs>>): Prisma__appointment_sales_staff_availabilityClient<$Result.GetResult<Prisma.$appointment_sales_staff_availabilityPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of Appointment_sales_staff_availabilities.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {appointment_sales_staff_availabilityCountArgs} args - Arguments to filter Appointment_sales_staff_availabilities to count.
+     * @example
+     * // Count the number of Appointment_sales_staff_availabilities
+     * const count = await prisma.appointment_sales_staff_availability.count({
+     *   where: {
+     *     // ... the filter for the Appointment_sales_staff_availabilities we want to count
+     *   }
+     * })
+    **/
+    count<T extends appointment_sales_staff_availabilityCountArgs>(
+      args?: Subset<T, appointment_sales_staff_availabilityCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], Appointment_sales_staff_availabilityCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a Appointment_sales_staff_availability.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {Appointment_sales_staff_availabilityAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends Appointment_sales_staff_availabilityAggregateArgs>(args: Subset<T, Appointment_sales_staff_availabilityAggregateArgs>): Prisma.PrismaPromise<GetAppointment_sales_staff_availabilityAggregateType<T>>
+
+    /**
+     * Group by Appointment_sales_staff_availability.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {appointment_sales_staff_availabilityGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends appointment_sales_staff_availabilityGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: appointment_sales_staff_availabilityGroupByArgs['orderBy'] }
+        : { orderBy?: appointment_sales_staff_availabilityGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, appointment_sales_staff_availabilityGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetAppointment_sales_staff_availabilityGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the appointment_sales_staff_availability model
+   */
+  readonly fields: appointment_sales_staff_availabilityFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for appointment_sales_staff_availability.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__appointment_sales_staff_availabilityClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    staff<T extends appointment_sales_staffDefaultArgs<ExtArgs> = {}>(args?: Subset<T, appointment_sales_staffDefaultArgs<ExtArgs>>): Prisma__appointment_sales_staffClient<$Result.GetResult<Prisma.$appointment_sales_staffPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the appointment_sales_staff_availability model
+   */
+  interface appointment_sales_staff_availabilityFieldRefs {
+    readonly availability_id: FieldRef<"appointment_sales_staff_availability", 'String'>
+    readonly sales_staff_id: FieldRef<"appointment_sales_staff_availability", 'String'>
+    readonly business_id: FieldRef<"appointment_sales_staff_availability", 'String'>
+    readonly day_of_week: FieldRef<"appointment_sales_staff_availability", 'Int'>
+    readonly start_time: FieldRef<"appointment_sales_staff_availability", 'String'>
+    readonly end_time: FieldRef<"appointment_sales_staff_availability", 'String'>
+    readonly window_type: FieldRef<"appointment_sales_staff_availability", 'String'>
+    readonly label: FieldRef<"appointment_sales_staff_availability", 'String'>
+    readonly is_active: FieldRef<"appointment_sales_staff_availability", 'Boolean'>
+    readonly metadata: FieldRef<"appointment_sales_staff_availability", 'Json'>
+    readonly created_at: FieldRef<"appointment_sales_staff_availability", 'DateTime'>
+    readonly updated_at: FieldRef<"appointment_sales_staff_availability", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * appointment_sales_staff_availability findUnique
+   */
+  export type appointment_sales_staff_availabilityFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the appointment_sales_staff_availability
+     */
+    select?: appointment_sales_staff_availabilitySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the appointment_sales_staff_availability
+     */
+    omit?: appointment_sales_staff_availabilityOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: appointment_sales_staff_availabilityInclude<ExtArgs> | null
+    /**
+     * Filter, which appointment_sales_staff_availability to fetch.
+     */
+    where: appointment_sales_staff_availabilityWhereUniqueInput
+  }
+
+  /**
+   * appointment_sales_staff_availability findUniqueOrThrow
+   */
+  export type appointment_sales_staff_availabilityFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the appointment_sales_staff_availability
+     */
+    select?: appointment_sales_staff_availabilitySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the appointment_sales_staff_availability
+     */
+    omit?: appointment_sales_staff_availabilityOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: appointment_sales_staff_availabilityInclude<ExtArgs> | null
+    /**
+     * Filter, which appointment_sales_staff_availability to fetch.
+     */
+    where: appointment_sales_staff_availabilityWhereUniqueInput
+  }
+
+  /**
+   * appointment_sales_staff_availability findFirst
+   */
+  export type appointment_sales_staff_availabilityFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the appointment_sales_staff_availability
+     */
+    select?: appointment_sales_staff_availabilitySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the appointment_sales_staff_availability
+     */
+    omit?: appointment_sales_staff_availabilityOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: appointment_sales_staff_availabilityInclude<ExtArgs> | null
+    /**
+     * Filter, which appointment_sales_staff_availability to fetch.
+     */
+    where?: appointment_sales_staff_availabilityWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of appointment_sales_staff_availabilities to fetch.
+     */
+    orderBy?: appointment_sales_staff_availabilityOrderByWithRelationInput | appointment_sales_staff_availabilityOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for appointment_sales_staff_availabilities.
+     */
+    cursor?: appointment_sales_staff_availabilityWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` appointment_sales_staff_availabilities from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` appointment_sales_staff_availabilities.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of appointment_sales_staff_availabilities.
+     */
+    distinct?: Appointment_sales_staff_availabilityScalarFieldEnum | Appointment_sales_staff_availabilityScalarFieldEnum[]
+  }
+
+  /**
+   * appointment_sales_staff_availability findFirstOrThrow
+   */
+  export type appointment_sales_staff_availabilityFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the appointment_sales_staff_availability
+     */
+    select?: appointment_sales_staff_availabilitySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the appointment_sales_staff_availability
+     */
+    omit?: appointment_sales_staff_availabilityOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: appointment_sales_staff_availabilityInclude<ExtArgs> | null
+    /**
+     * Filter, which appointment_sales_staff_availability to fetch.
+     */
+    where?: appointment_sales_staff_availabilityWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of appointment_sales_staff_availabilities to fetch.
+     */
+    orderBy?: appointment_sales_staff_availabilityOrderByWithRelationInput | appointment_sales_staff_availabilityOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for appointment_sales_staff_availabilities.
+     */
+    cursor?: appointment_sales_staff_availabilityWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` appointment_sales_staff_availabilities from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` appointment_sales_staff_availabilities.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of appointment_sales_staff_availabilities.
+     */
+    distinct?: Appointment_sales_staff_availabilityScalarFieldEnum | Appointment_sales_staff_availabilityScalarFieldEnum[]
+  }
+
+  /**
+   * appointment_sales_staff_availability findMany
+   */
+  export type appointment_sales_staff_availabilityFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the appointment_sales_staff_availability
+     */
+    select?: appointment_sales_staff_availabilitySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the appointment_sales_staff_availability
+     */
+    omit?: appointment_sales_staff_availabilityOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: appointment_sales_staff_availabilityInclude<ExtArgs> | null
+    /**
+     * Filter, which appointment_sales_staff_availabilities to fetch.
+     */
+    where?: appointment_sales_staff_availabilityWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of appointment_sales_staff_availabilities to fetch.
+     */
+    orderBy?: appointment_sales_staff_availabilityOrderByWithRelationInput | appointment_sales_staff_availabilityOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing appointment_sales_staff_availabilities.
+     */
+    cursor?: appointment_sales_staff_availabilityWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` appointment_sales_staff_availabilities from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` appointment_sales_staff_availabilities.
+     */
+    skip?: number
+    distinct?: Appointment_sales_staff_availabilityScalarFieldEnum | Appointment_sales_staff_availabilityScalarFieldEnum[]
+  }
+
+  /**
+   * appointment_sales_staff_availability create
+   */
+  export type appointment_sales_staff_availabilityCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the appointment_sales_staff_availability
+     */
+    select?: appointment_sales_staff_availabilitySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the appointment_sales_staff_availability
+     */
+    omit?: appointment_sales_staff_availabilityOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: appointment_sales_staff_availabilityInclude<ExtArgs> | null
+    /**
+     * The data needed to create a appointment_sales_staff_availability.
+     */
+    data: XOR<appointment_sales_staff_availabilityCreateInput, appointment_sales_staff_availabilityUncheckedCreateInput>
+  }
+
+  /**
+   * appointment_sales_staff_availability createMany
+   */
+  export type appointment_sales_staff_availabilityCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many appointment_sales_staff_availabilities.
+     */
+    data: appointment_sales_staff_availabilityCreateManyInput | appointment_sales_staff_availabilityCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * appointment_sales_staff_availability createManyAndReturn
+   */
+  export type appointment_sales_staff_availabilityCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the appointment_sales_staff_availability
+     */
+    select?: appointment_sales_staff_availabilitySelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the appointment_sales_staff_availability
+     */
+    omit?: appointment_sales_staff_availabilityOmit<ExtArgs> | null
+    /**
+     * The data used to create many appointment_sales_staff_availabilities.
+     */
+    data: appointment_sales_staff_availabilityCreateManyInput | appointment_sales_staff_availabilityCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: appointment_sales_staff_availabilityIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * appointment_sales_staff_availability update
+   */
+  export type appointment_sales_staff_availabilityUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the appointment_sales_staff_availability
+     */
+    select?: appointment_sales_staff_availabilitySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the appointment_sales_staff_availability
+     */
+    omit?: appointment_sales_staff_availabilityOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: appointment_sales_staff_availabilityInclude<ExtArgs> | null
+    /**
+     * The data needed to update a appointment_sales_staff_availability.
+     */
+    data: XOR<appointment_sales_staff_availabilityUpdateInput, appointment_sales_staff_availabilityUncheckedUpdateInput>
+    /**
+     * Choose, which appointment_sales_staff_availability to update.
+     */
+    where: appointment_sales_staff_availabilityWhereUniqueInput
+  }
+
+  /**
+   * appointment_sales_staff_availability updateMany
+   */
+  export type appointment_sales_staff_availabilityUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update appointment_sales_staff_availabilities.
+     */
+    data: XOR<appointment_sales_staff_availabilityUpdateManyMutationInput, appointment_sales_staff_availabilityUncheckedUpdateManyInput>
+    /**
+     * Filter which appointment_sales_staff_availabilities to update
+     */
+    where?: appointment_sales_staff_availabilityWhereInput
+    /**
+     * Limit how many appointment_sales_staff_availabilities to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * appointment_sales_staff_availability updateManyAndReturn
+   */
+  export type appointment_sales_staff_availabilityUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the appointment_sales_staff_availability
+     */
+    select?: appointment_sales_staff_availabilitySelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the appointment_sales_staff_availability
+     */
+    omit?: appointment_sales_staff_availabilityOmit<ExtArgs> | null
+    /**
+     * The data used to update appointment_sales_staff_availabilities.
+     */
+    data: XOR<appointment_sales_staff_availabilityUpdateManyMutationInput, appointment_sales_staff_availabilityUncheckedUpdateManyInput>
+    /**
+     * Filter which appointment_sales_staff_availabilities to update
+     */
+    where?: appointment_sales_staff_availabilityWhereInput
+    /**
+     * Limit how many appointment_sales_staff_availabilities to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: appointment_sales_staff_availabilityIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * appointment_sales_staff_availability upsert
+   */
+  export type appointment_sales_staff_availabilityUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the appointment_sales_staff_availability
+     */
+    select?: appointment_sales_staff_availabilitySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the appointment_sales_staff_availability
+     */
+    omit?: appointment_sales_staff_availabilityOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: appointment_sales_staff_availabilityInclude<ExtArgs> | null
+    /**
+     * The filter to search for the appointment_sales_staff_availability to update in case it exists.
+     */
+    where: appointment_sales_staff_availabilityWhereUniqueInput
+    /**
+     * In case the appointment_sales_staff_availability found by the `where` argument doesn't exist, create a new appointment_sales_staff_availability with this data.
+     */
+    create: XOR<appointment_sales_staff_availabilityCreateInput, appointment_sales_staff_availabilityUncheckedCreateInput>
+    /**
+     * In case the appointment_sales_staff_availability was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<appointment_sales_staff_availabilityUpdateInput, appointment_sales_staff_availabilityUncheckedUpdateInput>
+  }
+
+  /**
+   * appointment_sales_staff_availability delete
+   */
+  export type appointment_sales_staff_availabilityDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the appointment_sales_staff_availability
+     */
+    select?: appointment_sales_staff_availabilitySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the appointment_sales_staff_availability
+     */
+    omit?: appointment_sales_staff_availabilityOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: appointment_sales_staff_availabilityInclude<ExtArgs> | null
+    /**
+     * Filter which appointment_sales_staff_availability to delete.
+     */
+    where: appointment_sales_staff_availabilityWhereUniqueInput
+  }
+
+  /**
+   * appointment_sales_staff_availability deleteMany
+   */
+  export type appointment_sales_staff_availabilityDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which appointment_sales_staff_availabilities to delete
+     */
+    where?: appointment_sales_staff_availabilityWhereInput
+    /**
+     * Limit how many appointment_sales_staff_availabilities to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * appointment_sales_staff_availability without action
+   */
+  export type appointment_sales_staff_availabilityDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the appointment_sales_staff_availability
+     */
+    select?: appointment_sales_staff_availabilitySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the appointment_sales_staff_availability
+     */
+    omit?: appointment_sales_staff_availabilityOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: appointment_sales_staff_availabilityInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model appointment_sales_visits
+   */
+
+  export type AggregateAppointment_sales_visits = {
+    _count: Appointment_sales_visitsCountAggregateOutputType | null
+    _min: Appointment_sales_visitsMinAggregateOutputType | null
+    _max: Appointment_sales_visitsMaxAggregateOutputType | null
+  }
+
+  export type Appointment_sales_visitsMinAggregateOutputType = {
+    visit_id: string | null
+    business_id: string | null
+    tenant_id: string | null
+    lead_id: string | null
+    customer_id: string | null
+    item_id: string | null
+    sales_staff_id: string | null
+    visit_type: string | null
+    status: string | null
+    scheduled_start: Date | null
+    scheduled_end: Date | null
+    customer_name: string | null
+    customer_phone: string | null
+    location: string | null
+    source: string | null
+    notes: string | null
+    created_by: string | null
+    created_at: Date | null
+    updated_at: Date | null
+  }
+
+  export type Appointment_sales_visitsMaxAggregateOutputType = {
+    visit_id: string | null
+    business_id: string | null
+    tenant_id: string | null
+    lead_id: string | null
+    customer_id: string | null
+    item_id: string | null
+    sales_staff_id: string | null
+    visit_type: string | null
+    status: string | null
+    scheduled_start: Date | null
+    scheduled_end: Date | null
+    customer_name: string | null
+    customer_phone: string | null
+    location: string | null
+    source: string | null
+    notes: string | null
+    created_by: string | null
+    created_at: Date | null
+    updated_at: Date | null
+  }
+
+  export type Appointment_sales_visitsCountAggregateOutputType = {
+    visit_id: number
+    business_id: number
+    tenant_id: number
+    lead_id: number
+    customer_id: number
+    item_id: number
+    sales_staff_id: number
+    visit_type: number
+    status: number
+    scheduled_start: number
+    scheduled_end: number
+    customer_name: number
+    customer_phone: number
+    location: number
+    source: number
+    notes: number
+    metadata: number
+    created_by: number
+    created_at: number
+    updated_at: number
+    _all: number
+  }
+
+
+  export type Appointment_sales_visitsMinAggregateInputType = {
+    visit_id?: true
+    business_id?: true
+    tenant_id?: true
+    lead_id?: true
+    customer_id?: true
+    item_id?: true
+    sales_staff_id?: true
+    visit_type?: true
+    status?: true
+    scheduled_start?: true
+    scheduled_end?: true
+    customer_name?: true
+    customer_phone?: true
+    location?: true
+    source?: true
+    notes?: true
+    created_by?: true
+    created_at?: true
+    updated_at?: true
+  }
+
+  export type Appointment_sales_visitsMaxAggregateInputType = {
+    visit_id?: true
+    business_id?: true
+    tenant_id?: true
+    lead_id?: true
+    customer_id?: true
+    item_id?: true
+    sales_staff_id?: true
+    visit_type?: true
+    status?: true
+    scheduled_start?: true
+    scheduled_end?: true
+    customer_name?: true
+    customer_phone?: true
+    location?: true
+    source?: true
+    notes?: true
+    created_by?: true
+    created_at?: true
+    updated_at?: true
+  }
+
+  export type Appointment_sales_visitsCountAggregateInputType = {
+    visit_id?: true
+    business_id?: true
+    tenant_id?: true
+    lead_id?: true
+    customer_id?: true
+    item_id?: true
+    sales_staff_id?: true
+    visit_type?: true
+    status?: true
+    scheduled_start?: true
+    scheduled_end?: true
+    customer_name?: true
+    customer_phone?: true
+    location?: true
+    source?: true
+    notes?: true
+    metadata?: true
+    created_by?: true
+    created_at?: true
+    updated_at?: true
+    _all?: true
+  }
+
+  export type Appointment_sales_visitsAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which appointment_sales_visits to aggregate.
+     */
+    where?: appointment_sales_visitsWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of appointment_sales_visits to fetch.
+     */
+    orderBy?: appointment_sales_visitsOrderByWithRelationInput | appointment_sales_visitsOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: appointment_sales_visitsWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` appointment_sales_visits from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` appointment_sales_visits.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned appointment_sales_visits
+    **/
+    _count?: true | Appointment_sales_visitsCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: Appointment_sales_visitsMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: Appointment_sales_visitsMaxAggregateInputType
+  }
+
+  export type GetAppointment_sales_visitsAggregateType<T extends Appointment_sales_visitsAggregateArgs> = {
+        [P in keyof T & keyof AggregateAppointment_sales_visits]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateAppointment_sales_visits[P]>
+      : GetScalarType<T[P], AggregateAppointment_sales_visits[P]>
+  }
+
+
+
+
+  export type appointment_sales_visitsGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: appointment_sales_visitsWhereInput
+    orderBy?: appointment_sales_visitsOrderByWithAggregationInput | appointment_sales_visitsOrderByWithAggregationInput[]
+    by: Appointment_sales_visitsScalarFieldEnum[] | Appointment_sales_visitsScalarFieldEnum
+    having?: appointment_sales_visitsScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: Appointment_sales_visitsCountAggregateInputType | true
+    _min?: Appointment_sales_visitsMinAggregateInputType
+    _max?: Appointment_sales_visitsMaxAggregateInputType
+  }
+
+  export type Appointment_sales_visitsGroupByOutputType = {
+    visit_id: string
+    business_id: string
+    tenant_id: string | null
+    lead_id: string | null
+    customer_id: string | null
+    item_id: string | null
+    sales_staff_id: string | null
+    visit_type: string
+    status: string
+    scheduled_start: Date
+    scheduled_end: Date
+    customer_name: string | null
+    customer_phone: string | null
+    location: string | null
+    source: string
+    notes: string | null
+    metadata: JsonValue | null
+    created_by: string | null
+    created_at: Date
+    updated_at: Date
+    _count: Appointment_sales_visitsCountAggregateOutputType | null
+    _min: Appointment_sales_visitsMinAggregateOutputType | null
+    _max: Appointment_sales_visitsMaxAggregateOutputType | null
+  }
+
+  type GetAppointment_sales_visitsGroupByPayload<T extends appointment_sales_visitsGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<Appointment_sales_visitsGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof Appointment_sales_visitsGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], Appointment_sales_visitsGroupByOutputType[P]>
+            : GetScalarType<T[P], Appointment_sales_visitsGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type appointment_sales_visitsSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    visit_id?: boolean
+    business_id?: boolean
+    tenant_id?: boolean
+    lead_id?: boolean
+    customer_id?: boolean
+    item_id?: boolean
+    sales_staff_id?: boolean
+    visit_type?: boolean
+    status?: boolean
+    scheduled_start?: boolean
+    scheduled_end?: boolean
+    customer_name?: boolean
+    customer_phone?: boolean
+    location?: boolean
+    source?: boolean
+    notes?: boolean
+    metadata?: boolean
+    created_by?: boolean
+    created_at?: boolean
+    updated_at?: boolean
+    item?: boolean | appointment_sales_visits$itemArgs<ExtArgs>
+    staff?: boolean | appointment_sales_visits$staffArgs<ExtArgs>
+  }, ExtArgs["result"]["appointment_sales_visits"]>
+
+  export type appointment_sales_visitsSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    visit_id?: boolean
+    business_id?: boolean
+    tenant_id?: boolean
+    lead_id?: boolean
+    customer_id?: boolean
+    item_id?: boolean
+    sales_staff_id?: boolean
+    visit_type?: boolean
+    status?: boolean
+    scheduled_start?: boolean
+    scheduled_end?: boolean
+    customer_name?: boolean
+    customer_phone?: boolean
+    location?: boolean
+    source?: boolean
+    notes?: boolean
+    metadata?: boolean
+    created_by?: boolean
+    created_at?: boolean
+    updated_at?: boolean
+    item?: boolean | appointment_sales_visits$itemArgs<ExtArgs>
+    staff?: boolean | appointment_sales_visits$staffArgs<ExtArgs>
+  }, ExtArgs["result"]["appointment_sales_visits"]>
+
+  export type appointment_sales_visitsSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    visit_id?: boolean
+    business_id?: boolean
+    tenant_id?: boolean
+    lead_id?: boolean
+    customer_id?: boolean
+    item_id?: boolean
+    sales_staff_id?: boolean
+    visit_type?: boolean
+    status?: boolean
+    scheduled_start?: boolean
+    scheduled_end?: boolean
+    customer_name?: boolean
+    customer_phone?: boolean
+    location?: boolean
+    source?: boolean
+    notes?: boolean
+    metadata?: boolean
+    created_by?: boolean
+    created_at?: boolean
+    updated_at?: boolean
+    item?: boolean | appointment_sales_visits$itemArgs<ExtArgs>
+    staff?: boolean | appointment_sales_visits$staffArgs<ExtArgs>
+  }, ExtArgs["result"]["appointment_sales_visits"]>
+
+  export type appointment_sales_visitsSelectScalar = {
+    visit_id?: boolean
+    business_id?: boolean
+    tenant_id?: boolean
+    lead_id?: boolean
+    customer_id?: boolean
+    item_id?: boolean
+    sales_staff_id?: boolean
+    visit_type?: boolean
+    status?: boolean
+    scheduled_start?: boolean
+    scheduled_end?: boolean
+    customer_name?: boolean
+    customer_phone?: boolean
+    location?: boolean
+    source?: boolean
+    notes?: boolean
+    metadata?: boolean
+    created_by?: boolean
+    created_at?: boolean
+    updated_at?: boolean
+  }
+
+  export type appointment_sales_visitsOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"visit_id" | "business_id" | "tenant_id" | "lead_id" | "customer_id" | "item_id" | "sales_staff_id" | "visit_type" | "status" | "scheduled_start" | "scheduled_end" | "customer_name" | "customer_phone" | "location" | "source" | "notes" | "metadata" | "created_by" | "created_at" | "updated_at", ExtArgs["result"]["appointment_sales_visits"]>
+  export type appointment_sales_visitsInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    item?: boolean | appointment_sales_visits$itemArgs<ExtArgs>
+    staff?: boolean | appointment_sales_visits$staffArgs<ExtArgs>
+  }
+  export type appointment_sales_visitsIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    item?: boolean | appointment_sales_visits$itemArgs<ExtArgs>
+    staff?: boolean | appointment_sales_visits$staffArgs<ExtArgs>
+  }
+  export type appointment_sales_visitsIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    item?: boolean | appointment_sales_visits$itemArgs<ExtArgs>
+    staff?: boolean | appointment_sales_visits$staffArgs<ExtArgs>
+  }
+
+  export type $appointment_sales_visitsPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "appointment_sales_visits"
+    objects: {
+      item: Prisma.$catalog_itemsPayload<ExtArgs> | null
+      staff: Prisma.$appointment_sales_staffPayload<ExtArgs> | null
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      visit_id: string
+      business_id: string
+      tenant_id: string | null
+      lead_id: string | null
+      customer_id: string | null
+      item_id: string | null
+      sales_staff_id: string | null
+      visit_type: string
+      status: string
+      scheduled_start: Date
+      scheduled_end: Date
+      customer_name: string | null
+      customer_phone: string | null
+      location: string | null
+      source: string
+      notes: string | null
+      metadata: Prisma.JsonValue | null
+      created_by: string | null
+      created_at: Date
+      updated_at: Date
+    }, ExtArgs["result"]["appointment_sales_visits"]>
+    composites: {}
+  }
+
+  type appointment_sales_visitsGetPayload<S extends boolean | null | undefined | appointment_sales_visitsDefaultArgs> = $Result.GetResult<Prisma.$appointment_sales_visitsPayload, S>
+
+  type appointment_sales_visitsCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<appointment_sales_visitsFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: Appointment_sales_visitsCountAggregateInputType | true
+    }
+
+  export interface appointment_sales_visitsDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['appointment_sales_visits'], meta: { name: 'appointment_sales_visits' } }
+    /**
+     * Find zero or one Appointment_sales_visits that matches the filter.
+     * @param {appointment_sales_visitsFindUniqueArgs} args - Arguments to find a Appointment_sales_visits
+     * @example
+     * // Get one Appointment_sales_visits
+     * const appointment_sales_visits = await prisma.appointment_sales_visits.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends appointment_sales_visitsFindUniqueArgs>(args: SelectSubset<T, appointment_sales_visitsFindUniqueArgs<ExtArgs>>): Prisma__appointment_sales_visitsClient<$Result.GetResult<Prisma.$appointment_sales_visitsPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one Appointment_sales_visits that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {appointment_sales_visitsFindUniqueOrThrowArgs} args - Arguments to find a Appointment_sales_visits
+     * @example
+     * // Get one Appointment_sales_visits
+     * const appointment_sales_visits = await prisma.appointment_sales_visits.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends appointment_sales_visitsFindUniqueOrThrowArgs>(args: SelectSubset<T, appointment_sales_visitsFindUniqueOrThrowArgs<ExtArgs>>): Prisma__appointment_sales_visitsClient<$Result.GetResult<Prisma.$appointment_sales_visitsPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Appointment_sales_visits that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {appointment_sales_visitsFindFirstArgs} args - Arguments to find a Appointment_sales_visits
+     * @example
+     * // Get one Appointment_sales_visits
+     * const appointment_sales_visits = await prisma.appointment_sales_visits.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends appointment_sales_visitsFindFirstArgs>(args?: SelectSubset<T, appointment_sales_visitsFindFirstArgs<ExtArgs>>): Prisma__appointment_sales_visitsClient<$Result.GetResult<Prisma.$appointment_sales_visitsPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Appointment_sales_visits that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {appointment_sales_visitsFindFirstOrThrowArgs} args - Arguments to find a Appointment_sales_visits
+     * @example
+     * // Get one Appointment_sales_visits
+     * const appointment_sales_visits = await prisma.appointment_sales_visits.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends appointment_sales_visitsFindFirstOrThrowArgs>(args?: SelectSubset<T, appointment_sales_visitsFindFirstOrThrowArgs<ExtArgs>>): Prisma__appointment_sales_visitsClient<$Result.GetResult<Prisma.$appointment_sales_visitsPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more Appointment_sales_visits that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {appointment_sales_visitsFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all Appointment_sales_visits
+     * const appointment_sales_visits = await prisma.appointment_sales_visits.findMany()
+     * 
+     * // Get first 10 Appointment_sales_visits
+     * const appointment_sales_visits = await prisma.appointment_sales_visits.findMany({ take: 10 })
+     * 
+     * // Only select the `visit_id`
+     * const appointment_sales_visitsWithVisit_idOnly = await prisma.appointment_sales_visits.findMany({ select: { visit_id: true } })
+     * 
+     */
+    findMany<T extends appointment_sales_visitsFindManyArgs>(args?: SelectSubset<T, appointment_sales_visitsFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$appointment_sales_visitsPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a Appointment_sales_visits.
+     * @param {appointment_sales_visitsCreateArgs} args - Arguments to create a Appointment_sales_visits.
+     * @example
+     * // Create one Appointment_sales_visits
+     * const Appointment_sales_visits = await prisma.appointment_sales_visits.create({
+     *   data: {
+     *     // ... data to create a Appointment_sales_visits
+     *   }
+     * })
+     * 
+     */
+    create<T extends appointment_sales_visitsCreateArgs>(args: SelectSubset<T, appointment_sales_visitsCreateArgs<ExtArgs>>): Prisma__appointment_sales_visitsClient<$Result.GetResult<Prisma.$appointment_sales_visitsPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many Appointment_sales_visits.
+     * @param {appointment_sales_visitsCreateManyArgs} args - Arguments to create many Appointment_sales_visits.
+     * @example
+     * // Create many Appointment_sales_visits
+     * const appointment_sales_visits = await prisma.appointment_sales_visits.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends appointment_sales_visitsCreateManyArgs>(args?: SelectSubset<T, appointment_sales_visitsCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many Appointment_sales_visits and returns the data saved in the database.
+     * @param {appointment_sales_visitsCreateManyAndReturnArgs} args - Arguments to create many Appointment_sales_visits.
+     * @example
+     * // Create many Appointment_sales_visits
+     * const appointment_sales_visits = await prisma.appointment_sales_visits.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many Appointment_sales_visits and only return the `visit_id`
+     * const appointment_sales_visitsWithVisit_idOnly = await prisma.appointment_sales_visits.createManyAndReturn({
+     *   select: { visit_id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends appointment_sales_visitsCreateManyAndReturnArgs>(args?: SelectSubset<T, appointment_sales_visitsCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$appointment_sales_visitsPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a Appointment_sales_visits.
+     * @param {appointment_sales_visitsDeleteArgs} args - Arguments to delete one Appointment_sales_visits.
+     * @example
+     * // Delete one Appointment_sales_visits
+     * const Appointment_sales_visits = await prisma.appointment_sales_visits.delete({
+     *   where: {
+     *     // ... filter to delete one Appointment_sales_visits
+     *   }
+     * })
+     * 
+     */
+    delete<T extends appointment_sales_visitsDeleteArgs>(args: SelectSubset<T, appointment_sales_visitsDeleteArgs<ExtArgs>>): Prisma__appointment_sales_visitsClient<$Result.GetResult<Prisma.$appointment_sales_visitsPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one Appointment_sales_visits.
+     * @param {appointment_sales_visitsUpdateArgs} args - Arguments to update one Appointment_sales_visits.
+     * @example
+     * // Update one Appointment_sales_visits
+     * const appointment_sales_visits = await prisma.appointment_sales_visits.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends appointment_sales_visitsUpdateArgs>(args: SelectSubset<T, appointment_sales_visitsUpdateArgs<ExtArgs>>): Prisma__appointment_sales_visitsClient<$Result.GetResult<Prisma.$appointment_sales_visitsPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more Appointment_sales_visits.
+     * @param {appointment_sales_visitsDeleteManyArgs} args - Arguments to filter Appointment_sales_visits to delete.
+     * @example
+     * // Delete a few Appointment_sales_visits
+     * const { count } = await prisma.appointment_sales_visits.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends appointment_sales_visitsDeleteManyArgs>(args?: SelectSubset<T, appointment_sales_visitsDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Appointment_sales_visits.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {appointment_sales_visitsUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many Appointment_sales_visits
+     * const appointment_sales_visits = await prisma.appointment_sales_visits.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends appointment_sales_visitsUpdateManyArgs>(args: SelectSubset<T, appointment_sales_visitsUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Appointment_sales_visits and returns the data updated in the database.
+     * @param {appointment_sales_visitsUpdateManyAndReturnArgs} args - Arguments to update many Appointment_sales_visits.
+     * @example
+     * // Update many Appointment_sales_visits
+     * const appointment_sales_visits = await prisma.appointment_sales_visits.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more Appointment_sales_visits and only return the `visit_id`
+     * const appointment_sales_visitsWithVisit_idOnly = await prisma.appointment_sales_visits.updateManyAndReturn({
+     *   select: { visit_id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends appointment_sales_visitsUpdateManyAndReturnArgs>(args: SelectSubset<T, appointment_sales_visitsUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$appointment_sales_visitsPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one Appointment_sales_visits.
+     * @param {appointment_sales_visitsUpsertArgs} args - Arguments to update or create a Appointment_sales_visits.
+     * @example
+     * // Update or create a Appointment_sales_visits
+     * const appointment_sales_visits = await prisma.appointment_sales_visits.upsert({
+     *   create: {
+     *     // ... data to create a Appointment_sales_visits
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the Appointment_sales_visits we want to update
+     *   }
+     * })
+     */
+    upsert<T extends appointment_sales_visitsUpsertArgs>(args: SelectSubset<T, appointment_sales_visitsUpsertArgs<ExtArgs>>): Prisma__appointment_sales_visitsClient<$Result.GetResult<Prisma.$appointment_sales_visitsPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of Appointment_sales_visits.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {appointment_sales_visitsCountArgs} args - Arguments to filter Appointment_sales_visits to count.
+     * @example
+     * // Count the number of Appointment_sales_visits
+     * const count = await prisma.appointment_sales_visits.count({
+     *   where: {
+     *     // ... the filter for the Appointment_sales_visits we want to count
+     *   }
+     * })
+    **/
+    count<T extends appointment_sales_visitsCountArgs>(
+      args?: Subset<T, appointment_sales_visitsCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], Appointment_sales_visitsCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a Appointment_sales_visits.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {Appointment_sales_visitsAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends Appointment_sales_visitsAggregateArgs>(args: Subset<T, Appointment_sales_visitsAggregateArgs>): Prisma.PrismaPromise<GetAppointment_sales_visitsAggregateType<T>>
+
+    /**
+     * Group by Appointment_sales_visits.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {appointment_sales_visitsGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends appointment_sales_visitsGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: appointment_sales_visitsGroupByArgs['orderBy'] }
+        : { orderBy?: appointment_sales_visitsGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, appointment_sales_visitsGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetAppointment_sales_visitsGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the appointment_sales_visits model
+   */
+  readonly fields: appointment_sales_visitsFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for appointment_sales_visits.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__appointment_sales_visitsClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    item<T extends appointment_sales_visits$itemArgs<ExtArgs> = {}>(args?: Subset<T, appointment_sales_visits$itemArgs<ExtArgs>>): Prisma__catalog_itemsClient<$Result.GetResult<Prisma.$catalog_itemsPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    staff<T extends appointment_sales_visits$staffArgs<ExtArgs> = {}>(args?: Subset<T, appointment_sales_visits$staffArgs<ExtArgs>>): Prisma__appointment_sales_staffClient<$Result.GetResult<Prisma.$appointment_sales_staffPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the appointment_sales_visits model
+   */
+  interface appointment_sales_visitsFieldRefs {
+    readonly visit_id: FieldRef<"appointment_sales_visits", 'String'>
+    readonly business_id: FieldRef<"appointment_sales_visits", 'String'>
+    readonly tenant_id: FieldRef<"appointment_sales_visits", 'String'>
+    readonly lead_id: FieldRef<"appointment_sales_visits", 'String'>
+    readonly customer_id: FieldRef<"appointment_sales_visits", 'String'>
+    readonly item_id: FieldRef<"appointment_sales_visits", 'String'>
+    readonly sales_staff_id: FieldRef<"appointment_sales_visits", 'String'>
+    readonly visit_type: FieldRef<"appointment_sales_visits", 'String'>
+    readonly status: FieldRef<"appointment_sales_visits", 'String'>
+    readonly scheduled_start: FieldRef<"appointment_sales_visits", 'DateTime'>
+    readonly scheduled_end: FieldRef<"appointment_sales_visits", 'DateTime'>
+    readonly customer_name: FieldRef<"appointment_sales_visits", 'String'>
+    readonly customer_phone: FieldRef<"appointment_sales_visits", 'String'>
+    readonly location: FieldRef<"appointment_sales_visits", 'String'>
+    readonly source: FieldRef<"appointment_sales_visits", 'String'>
+    readonly notes: FieldRef<"appointment_sales_visits", 'String'>
+    readonly metadata: FieldRef<"appointment_sales_visits", 'Json'>
+    readonly created_by: FieldRef<"appointment_sales_visits", 'String'>
+    readonly created_at: FieldRef<"appointment_sales_visits", 'DateTime'>
+    readonly updated_at: FieldRef<"appointment_sales_visits", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * appointment_sales_visits findUnique
+   */
+  export type appointment_sales_visitsFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the appointment_sales_visits
+     */
+    select?: appointment_sales_visitsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the appointment_sales_visits
+     */
+    omit?: appointment_sales_visitsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: appointment_sales_visitsInclude<ExtArgs> | null
+    /**
+     * Filter, which appointment_sales_visits to fetch.
+     */
+    where: appointment_sales_visitsWhereUniqueInput
+  }
+
+  /**
+   * appointment_sales_visits findUniqueOrThrow
+   */
+  export type appointment_sales_visitsFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the appointment_sales_visits
+     */
+    select?: appointment_sales_visitsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the appointment_sales_visits
+     */
+    omit?: appointment_sales_visitsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: appointment_sales_visitsInclude<ExtArgs> | null
+    /**
+     * Filter, which appointment_sales_visits to fetch.
+     */
+    where: appointment_sales_visitsWhereUniqueInput
+  }
+
+  /**
+   * appointment_sales_visits findFirst
+   */
+  export type appointment_sales_visitsFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the appointment_sales_visits
+     */
+    select?: appointment_sales_visitsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the appointment_sales_visits
+     */
+    omit?: appointment_sales_visitsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: appointment_sales_visitsInclude<ExtArgs> | null
+    /**
+     * Filter, which appointment_sales_visits to fetch.
+     */
+    where?: appointment_sales_visitsWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of appointment_sales_visits to fetch.
+     */
+    orderBy?: appointment_sales_visitsOrderByWithRelationInput | appointment_sales_visitsOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for appointment_sales_visits.
+     */
+    cursor?: appointment_sales_visitsWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` appointment_sales_visits from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` appointment_sales_visits.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of appointment_sales_visits.
+     */
+    distinct?: Appointment_sales_visitsScalarFieldEnum | Appointment_sales_visitsScalarFieldEnum[]
+  }
+
+  /**
+   * appointment_sales_visits findFirstOrThrow
+   */
+  export type appointment_sales_visitsFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the appointment_sales_visits
+     */
+    select?: appointment_sales_visitsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the appointment_sales_visits
+     */
+    omit?: appointment_sales_visitsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: appointment_sales_visitsInclude<ExtArgs> | null
+    /**
+     * Filter, which appointment_sales_visits to fetch.
+     */
+    where?: appointment_sales_visitsWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of appointment_sales_visits to fetch.
+     */
+    orderBy?: appointment_sales_visitsOrderByWithRelationInput | appointment_sales_visitsOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for appointment_sales_visits.
+     */
+    cursor?: appointment_sales_visitsWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` appointment_sales_visits from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` appointment_sales_visits.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of appointment_sales_visits.
+     */
+    distinct?: Appointment_sales_visitsScalarFieldEnum | Appointment_sales_visitsScalarFieldEnum[]
+  }
+
+  /**
+   * appointment_sales_visits findMany
+   */
+  export type appointment_sales_visitsFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the appointment_sales_visits
+     */
+    select?: appointment_sales_visitsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the appointment_sales_visits
+     */
+    omit?: appointment_sales_visitsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: appointment_sales_visitsInclude<ExtArgs> | null
+    /**
+     * Filter, which appointment_sales_visits to fetch.
+     */
+    where?: appointment_sales_visitsWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of appointment_sales_visits to fetch.
+     */
+    orderBy?: appointment_sales_visitsOrderByWithRelationInput | appointment_sales_visitsOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing appointment_sales_visits.
+     */
+    cursor?: appointment_sales_visitsWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` appointment_sales_visits from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` appointment_sales_visits.
+     */
+    skip?: number
+    distinct?: Appointment_sales_visitsScalarFieldEnum | Appointment_sales_visitsScalarFieldEnum[]
+  }
+
+  /**
+   * appointment_sales_visits create
+   */
+  export type appointment_sales_visitsCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the appointment_sales_visits
+     */
+    select?: appointment_sales_visitsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the appointment_sales_visits
+     */
+    omit?: appointment_sales_visitsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: appointment_sales_visitsInclude<ExtArgs> | null
+    /**
+     * The data needed to create a appointment_sales_visits.
+     */
+    data: XOR<appointment_sales_visitsCreateInput, appointment_sales_visitsUncheckedCreateInput>
+  }
+
+  /**
+   * appointment_sales_visits createMany
+   */
+  export type appointment_sales_visitsCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many appointment_sales_visits.
+     */
+    data: appointment_sales_visitsCreateManyInput | appointment_sales_visitsCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * appointment_sales_visits createManyAndReturn
+   */
+  export type appointment_sales_visitsCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the appointment_sales_visits
+     */
+    select?: appointment_sales_visitsSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the appointment_sales_visits
+     */
+    omit?: appointment_sales_visitsOmit<ExtArgs> | null
+    /**
+     * The data used to create many appointment_sales_visits.
+     */
+    data: appointment_sales_visitsCreateManyInput | appointment_sales_visitsCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: appointment_sales_visitsIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * appointment_sales_visits update
+   */
+  export type appointment_sales_visitsUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the appointment_sales_visits
+     */
+    select?: appointment_sales_visitsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the appointment_sales_visits
+     */
+    omit?: appointment_sales_visitsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: appointment_sales_visitsInclude<ExtArgs> | null
+    /**
+     * The data needed to update a appointment_sales_visits.
+     */
+    data: XOR<appointment_sales_visitsUpdateInput, appointment_sales_visitsUncheckedUpdateInput>
+    /**
+     * Choose, which appointment_sales_visits to update.
+     */
+    where: appointment_sales_visitsWhereUniqueInput
+  }
+
+  /**
+   * appointment_sales_visits updateMany
+   */
+  export type appointment_sales_visitsUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update appointment_sales_visits.
+     */
+    data: XOR<appointment_sales_visitsUpdateManyMutationInput, appointment_sales_visitsUncheckedUpdateManyInput>
+    /**
+     * Filter which appointment_sales_visits to update
+     */
+    where?: appointment_sales_visitsWhereInput
+    /**
+     * Limit how many appointment_sales_visits to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * appointment_sales_visits updateManyAndReturn
+   */
+  export type appointment_sales_visitsUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the appointment_sales_visits
+     */
+    select?: appointment_sales_visitsSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the appointment_sales_visits
+     */
+    omit?: appointment_sales_visitsOmit<ExtArgs> | null
+    /**
+     * The data used to update appointment_sales_visits.
+     */
+    data: XOR<appointment_sales_visitsUpdateManyMutationInput, appointment_sales_visitsUncheckedUpdateManyInput>
+    /**
+     * Filter which appointment_sales_visits to update
+     */
+    where?: appointment_sales_visitsWhereInput
+    /**
+     * Limit how many appointment_sales_visits to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: appointment_sales_visitsIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * appointment_sales_visits upsert
+   */
+  export type appointment_sales_visitsUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the appointment_sales_visits
+     */
+    select?: appointment_sales_visitsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the appointment_sales_visits
+     */
+    omit?: appointment_sales_visitsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: appointment_sales_visitsInclude<ExtArgs> | null
+    /**
+     * The filter to search for the appointment_sales_visits to update in case it exists.
+     */
+    where: appointment_sales_visitsWhereUniqueInput
+    /**
+     * In case the appointment_sales_visits found by the `where` argument doesn't exist, create a new appointment_sales_visits with this data.
+     */
+    create: XOR<appointment_sales_visitsCreateInput, appointment_sales_visitsUncheckedCreateInput>
+    /**
+     * In case the appointment_sales_visits was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<appointment_sales_visitsUpdateInput, appointment_sales_visitsUncheckedUpdateInput>
+  }
+
+  /**
+   * appointment_sales_visits delete
+   */
+  export type appointment_sales_visitsDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the appointment_sales_visits
+     */
+    select?: appointment_sales_visitsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the appointment_sales_visits
+     */
+    omit?: appointment_sales_visitsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: appointment_sales_visitsInclude<ExtArgs> | null
+    /**
+     * Filter which appointment_sales_visits to delete.
+     */
+    where: appointment_sales_visitsWhereUniqueInput
+  }
+
+  /**
+   * appointment_sales_visits deleteMany
+   */
+  export type appointment_sales_visitsDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which appointment_sales_visits to delete
+     */
+    where?: appointment_sales_visitsWhereInput
+    /**
+     * Limit how many appointment_sales_visits to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * appointment_sales_visits.item
+   */
+  export type appointment_sales_visits$itemArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the catalog_items
+     */
+    select?: catalog_itemsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the catalog_items
+     */
+    omit?: catalog_itemsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: catalog_itemsInclude<ExtArgs> | null
+    where?: catalog_itemsWhereInput
+  }
+
+  /**
+   * appointment_sales_visits.staff
+   */
+  export type appointment_sales_visits$staffArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the appointment_sales_staff
+     */
+    select?: appointment_sales_staffSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the appointment_sales_staff
+     */
+    omit?: appointment_sales_staffOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: appointment_sales_staffInclude<ExtArgs> | null
+    where?: appointment_sales_staffWhereInput
+  }
+
+  /**
+   * appointment_sales_visits without action
+   */
+  export type appointment_sales_visitsDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the appointment_sales_visits
+     */
+    select?: appointment_sales_visitsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the appointment_sales_visits
+     */
+    omit?: appointment_sales_visitsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: appointment_sales_visitsInclude<ExtArgs> | null
   }
 
 
@@ -113334,6 +121523,22 @@ export namespace Prisma {
   export type TenantsScalarFieldEnum = (typeof TenantsScalarFieldEnum)[keyof typeof TenantsScalarFieldEnum]
 
 
+  export const Tenant_conversation_configsScalarFieldEnum: {
+    config_id: 'config_id',
+    tenant_id: 'tenant_id',
+    waba_id: 'waba_id',
+    mode: 'mode',
+    flow: 'flow',
+    capabilities: 'capabilities',
+    rules: 'rules',
+    is_active: 'is_active',
+    created_at: 'created_at',
+    updated_at: 'updated_at'
+  };
+
+  export type Tenant_conversation_configsScalarFieldEnum = (typeof Tenant_conversation_configsScalarFieldEnum)[keyof typeof Tenant_conversation_configsScalarFieldEnum]
+
+
   export const UsersScalarFieldEnum: {
     user_id: 'user_id',
     business_id: 'business_id',
@@ -114511,12 +122716,136 @@ export namespace Prisma {
     color: 'color',
     km_driven: 'km_driven',
     condition: 'condition',
+    ownership_count: 'ownership_count',
+    insurance_valid_until: 'insurance_valid_until',
+    registration_number: 'registration_number',
+    rc_status: 'rc_status',
+    finance_available: 'finance_available',
+    exchange_accepted: 'exchange_accepted',
+    accident_history: 'accident_history',
+    service_history: 'service_history',
+    test_drive_available: 'test_drive_available',
     metadata: 'metadata',
     created_at: 'created_at',
     updated_at: 'updated_at'
   };
 
   export type Vehicle_item_detailsScalarFieldEnum = (typeof Vehicle_item_detailsScalarFieldEnum)[keyof typeof Vehicle_item_detailsScalarFieldEnum]
+
+
+  export const Property_item_detailsScalarFieldEnum: {
+    item_id: 'item_id',
+    business_id: 'business_id',
+    property_type: 'property_type',
+    listing_type: 'listing_type',
+    bedrooms: 'bedrooms',
+    bathrooms: 'bathrooms',
+    area_sqft: 'area_sqft',
+    floor_number: 'floor_number',
+    total_floors: 'total_floors',
+    locality: 'locality',
+    city: 'city',
+    furnishing: 'furnishing',
+    possession_status: 'possession_status',
+    facing: 'facing',
+    parking: 'parking',
+    rera_id: 'rera_id',
+    map_url: 'map_url',
+    documents_status: 'documents_status',
+    loan_support_available: 'loan_support_available',
+    visit_landmark: 'visit_landmark',
+    metadata: 'metadata',
+    created_at: 'created_at',
+    updated_at: 'updated_at'
+  };
+
+  export type Property_item_detailsScalarFieldEnum = (typeof Property_item_detailsScalarFieldEnum)[keyof typeof Property_item_detailsScalarFieldEnum]
+
+
+  export const Appointment_sales_settingsScalarFieldEnum: {
+    appointment_sales_settings_id: 'appointment_sales_settings_id',
+    business_id: 'business_id',
+    tenant_id: 'tenant_id',
+    vertical_type: 'vertical_type',
+    onboarding_status: 'onboarding_status',
+    default_visit_type: 'default_visit_type',
+    default_visit_location: 'default_visit_location',
+    slot_duration_minutes: 'slot_duration_minutes',
+    visit_buffer_minutes: 'visit_buffer_minutes',
+    auto_assign_visits: 'auto_assign_visits',
+    reminder_minutes_before: 'reminder_minutes_before',
+    escalation_rules: 'escalation_rules',
+    setup_checklist: 'setup_checklist',
+    metadata: 'metadata',
+    created_at: 'created_at',
+    updated_at: 'updated_at'
+  };
+
+  export type Appointment_sales_settingsScalarFieldEnum = (typeof Appointment_sales_settingsScalarFieldEnum)[keyof typeof Appointment_sales_settingsScalarFieldEnum]
+
+
+  export const Appointment_sales_staffScalarFieldEnum: {
+    sales_staff_id: 'sales_staff_id',
+    business_id: 'business_id',
+    tenant_id: 'tenant_id',
+    name: 'name',
+    phone: 'phone',
+    email: 'email',
+    role: 'role',
+    title: 'title',
+    priority: 'priority',
+    is_active: 'is_active',
+    metadata: 'metadata',
+    created_by: 'created_by',
+    created_at: 'created_at',
+    updated_at: 'updated_at'
+  };
+
+  export type Appointment_sales_staffScalarFieldEnum = (typeof Appointment_sales_staffScalarFieldEnum)[keyof typeof Appointment_sales_staffScalarFieldEnum]
+
+
+  export const Appointment_sales_staff_availabilityScalarFieldEnum: {
+    availability_id: 'availability_id',
+    sales_staff_id: 'sales_staff_id',
+    business_id: 'business_id',
+    day_of_week: 'day_of_week',
+    start_time: 'start_time',
+    end_time: 'end_time',
+    window_type: 'window_type',
+    label: 'label',
+    is_active: 'is_active',
+    metadata: 'metadata',
+    created_at: 'created_at',
+    updated_at: 'updated_at'
+  };
+
+  export type Appointment_sales_staff_availabilityScalarFieldEnum = (typeof Appointment_sales_staff_availabilityScalarFieldEnum)[keyof typeof Appointment_sales_staff_availabilityScalarFieldEnum]
+
+
+  export const Appointment_sales_visitsScalarFieldEnum: {
+    visit_id: 'visit_id',
+    business_id: 'business_id',
+    tenant_id: 'tenant_id',
+    lead_id: 'lead_id',
+    customer_id: 'customer_id',
+    item_id: 'item_id',
+    sales_staff_id: 'sales_staff_id',
+    visit_type: 'visit_type',
+    status: 'status',
+    scheduled_start: 'scheduled_start',
+    scheduled_end: 'scheduled_end',
+    customer_name: 'customer_name',
+    customer_phone: 'customer_phone',
+    location: 'location',
+    source: 'source',
+    notes: 'notes',
+    metadata: 'metadata',
+    created_by: 'created_by',
+    created_at: 'created_at',
+    updated_at: 'updated_at'
+  };
+
+  export type Appointment_sales_visitsScalarFieldEnum = (typeof Appointment_sales_visitsScalarFieldEnum)[keyof typeof Appointment_sales_visitsScalarFieldEnum]
 
 
   export const Hospitality_inquiriesScalarFieldEnum: {
@@ -115076,6 +123405,7 @@ export namespace Prisma {
     product_item_details?: Product_item_detailsListRelationFilter
     hospitality_item_details?: Hospitality_item_detailsListRelationFilter
     vehicle_item_details?: Vehicle_item_detailsListRelationFilter
+    property_item_details?: Property_item_detailsListRelationFilter
     product_orders?: Product_ordersListRelationFilter
     product_inquiries?: Product_inquiriesListRelationFilter
     hospitality_bookings?: Hospitality_bookingsListRelationFilter
@@ -115131,6 +123461,7 @@ export namespace Prisma {
     product_item_details?: product_item_detailsOrderByRelationAggregateInput
     hospitality_item_details?: hospitality_item_detailsOrderByRelationAggregateInput
     vehicle_item_details?: vehicle_item_detailsOrderByRelationAggregateInput
+    property_item_details?: property_item_detailsOrderByRelationAggregateInput
     product_orders?: product_ordersOrderByRelationAggregateInput
     product_inquiries?: product_inquiriesOrderByRelationAggregateInput
     hospitality_bookings?: hospitality_bookingsOrderByRelationAggregateInput
@@ -115189,6 +123520,7 @@ export namespace Prisma {
     product_item_details?: Product_item_detailsListRelationFilter
     hospitality_item_details?: Hospitality_item_detailsListRelationFilter
     vehicle_item_details?: Vehicle_item_detailsListRelationFilter
+    property_item_details?: Property_item_detailsListRelationFilter
     product_orders?: Product_ordersListRelationFilter
     product_inquiries?: Product_inquiriesListRelationFilter
     hospitality_bookings?: Hospitality_bookingsListRelationFilter
@@ -115721,6 +124053,7 @@ export namespace Prisma {
     hospitality_inquiries?: Hospitality_inquiriesListRelationFilter
     notification_messages?: Notification_messagesListRelationFilter
     notification_templates?: Notification_templatesListRelationFilter
+    tenant_conversation_configs?: Tenant_conversation_configsListRelationFilter
   }
 
   export type tenantsOrderByWithRelationInput = {
@@ -115747,6 +124080,7 @@ export namespace Prisma {
     hospitality_inquiries?: hospitality_inquiriesOrderByRelationAggregateInput
     notification_messages?: notification_messagesOrderByRelationAggregateInput
     notification_templates?: notification_templatesOrderByRelationAggregateInput
+    tenant_conversation_configs?: tenant_conversation_configsOrderByRelationAggregateInput
   }
 
   export type tenantsWhereUniqueInput = Prisma.AtLeast<{
@@ -115776,6 +124110,7 @@ export namespace Prisma {
     hospitality_inquiries?: Hospitality_inquiriesListRelationFilter
     notification_messages?: Notification_messagesListRelationFilter
     notification_templates?: Notification_templatesListRelationFilter
+    tenant_conversation_configs?: Tenant_conversation_configsListRelationFilter
   }, "tenant_id" | "email">
 
   export type tenantsOrderByWithAggregationInput = {
@@ -115808,6 +124143,87 @@ export namespace Prisma {
     gst_number?: StringNullableWithAggregatesFilter<"tenants"> | string | null
     pan_number?: StringNullableWithAggregatesFilter<"tenants"> | string | null
     registration_no?: StringNullableWithAggregatesFilter<"tenants"> | string | null
+  }
+
+  export type tenant_conversation_configsWhereInput = {
+    AND?: tenant_conversation_configsWhereInput | tenant_conversation_configsWhereInput[]
+    OR?: tenant_conversation_configsWhereInput[]
+    NOT?: tenant_conversation_configsWhereInput | tenant_conversation_configsWhereInput[]
+    config_id?: UuidFilter<"tenant_conversation_configs"> | string
+    tenant_id?: UuidFilter<"tenant_conversation_configs"> | string
+    waba_id?: StringFilter<"tenant_conversation_configs"> | string
+    mode?: StringFilter<"tenant_conversation_configs"> | string
+    flow?: StringFilter<"tenant_conversation_configs"> | string
+    capabilities?: JsonFilter<"tenant_conversation_configs">
+    rules?: JsonFilter<"tenant_conversation_configs">
+    is_active?: BoolFilter<"tenant_conversation_configs"> | boolean
+    created_at?: DateTimeFilter<"tenant_conversation_configs"> | Date | string
+    updated_at?: DateTimeFilter<"tenant_conversation_configs"> | Date | string
+    tenant?: XOR<TenantsScalarRelationFilter, tenantsWhereInput>
+  }
+
+  export type tenant_conversation_configsOrderByWithRelationInput = {
+    config_id?: SortOrder
+    tenant_id?: SortOrder
+    waba_id?: SortOrder
+    mode?: SortOrder
+    flow?: SortOrder
+    capabilities?: SortOrder
+    rules?: SortOrder
+    is_active?: SortOrder
+    created_at?: SortOrder
+    updated_at?: SortOrder
+    tenant?: tenantsOrderByWithRelationInput
+  }
+
+  export type tenant_conversation_configsWhereUniqueInput = Prisma.AtLeast<{
+    config_id?: string
+    tenant_id_waba_id?: tenant_conversation_configsTenant_idWaba_idCompoundUniqueInput
+    AND?: tenant_conversation_configsWhereInput | tenant_conversation_configsWhereInput[]
+    OR?: tenant_conversation_configsWhereInput[]
+    NOT?: tenant_conversation_configsWhereInput | tenant_conversation_configsWhereInput[]
+    tenant_id?: UuidFilter<"tenant_conversation_configs"> | string
+    waba_id?: StringFilter<"tenant_conversation_configs"> | string
+    mode?: StringFilter<"tenant_conversation_configs"> | string
+    flow?: StringFilter<"tenant_conversation_configs"> | string
+    capabilities?: JsonFilter<"tenant_conversation_configs">
+    rules?: JsonFilter<"tenant_conversation_configs">
+    is_active?: BoolFilter<"tenant_conversation_configs"> | boolean
+    created_at?: DateTimeFilter<"tenant_conversation_configs"> | Date | string
+    updated_at?: DateTimeFilter<"tenant_conversation_configs"> | Date | string
+    tenant?: XOR<TenantsScalarRelationFilter, tenantsWhereInput>
+  }, "config_id" | "tenant_id_waba_id">
+
+  export type tenant_conversation_configsOrderByWithAggregationInput = {
+    config_id?: SortOrder
+    tenant_id?: SortOrder
+    waba_id?: SortOrder
+    mode?: SortOrder
+    flow?: SortOrder
+    capabilities?: SortOrder
+    rules?: SortOrder
+    is_active?: SortOrder
+    created_at?: SortOrder
+    updated_at?: SortOrder
+    _count?: tenant_conversation_configsCountOrderByAggregateInput
+    _max?: tenant_conversation_configsMaxOrderByAggregateInput
+    _min?: tenant_conversation_configsMinOrderByAggregateInput
+  }
+
+  export type tenant_conversation_configsScalarWhereWithAggregatesInput = {
+    AND?: tenant_conversation_configsScalarWhereWithAggregatesInput | tenant_conversation_configsScalarWhereWithAggregatesInput[]
+    OR?: tenant_conversation_configsScalarWhereWithAggregatesInput[]
+    NOT?: tenant_conversation_configsScalarWhereWithAggregatesInput | tenant_conversation_configsScalarWhereWithAggregatesInput[]
+    config_id?: UuidWithAggregatesFilter<"tenant_conversation_configs"> | string
+    tenant_id?: UuidWithAggregatesFilter<"tenant_conversation_configs"> | string
+    waba_id?: StringWithAggregatesFilter<"tenant_conversation_configs"> | string
+    mode?: StringWithAggregatesFilter<"tenant_conversation_configs"> | string
+    flow?: StringWithAggregatesFilter<"tenant_conversation_configs"> | string
+    capabilities?: JsonWithAggregatesFilter<"tenant_conversation_configs">
+    rules?: JsonWithAggregatesFilter<"tenant_conversation_configs">
+    is_active?: BoolWithAggregatesFilter<"tenant_conversation_configs"> | boolean
+    created_at?: DateTimeWithAggregatesFilter<"tenant_conversation_configs"> | Date | string
+    updated_at?: DateTimeWithAggregatesFilter<"tenant_conversation_configs"> | Date | string
   }
 
   export type usersWhereInput = {
@@ -119611,6 +128027,7 @@ export namespace Prisma {
     product_detail?: XOR<Product_item_detailsNullableScalarRelationFilter, product_item_detailsWhereInput> | null
     hospitality_detail?: XOR<Hospitality_item_detailsNullableScalarRelationFilter, hospitality_item_detailsWhereInput> | null
     vehicle_detail?: XOR<Vehicle_item_detailsNullableScalarRelationFilter, vehicle_item_detailsWhereInput> | null
+    property_detail?: XOR<Property_item_detailsNullableScalarRelationFilter, property_item_detailsWhereInput> | null
     product_order_items?: Product_order_itemsListRelationFilter
     hospitality_booking_items?: Hospitality_booking_itemsListRelationFilter
     product_inquiries?: Product_inquiriesListRelationFilter
@@ -119620,6 +128037,7 @@ export namespace Prisma {
     variants?: Item_variantsListRelationFilter
     order_items?: Order_itemsListRelationFilter
     external_catalog_items?: External_catalog_itemsListRelationFilter
+    appointment_sales_visits?: Appointment_sales_visitsListRelationFilter
   }
 
   export type catalog_itemsOrderByWithRelationInput = {
@@ -119647,6 +128065,7 @@ export namespace Prisma {
     product_detail?: product_item_detailsOrderByWithRelationInput
     hospitality_detail?: hospitality_item_detailsOrderByWithRelationInput
     vehicle_detail?: vehicle_item_detailsOrderByWithRelationInput
+    property_detail?: property_item_detailsOrderByWithRelationInput
     product_order_items?: product_order_itemsOrderByRelationAggregateInput
     hospitality_booking_items?: hospitality_booking_itemsOrderByRelationAggregateInput
     product_inquiries?: product_inquiriesOrderByRelationAggregateInput
@@ -119656,6 +128075,7 @@ export namespace Prisma {
     variants?: item_variantsOrderByRelationAggregateInput
     order_items?: order_itemsOrderByRelationAggregateInput
     external_catalog_items?: external_catalog_itemsOrderByRelationAggregateInput
+    appointment_sales_visits?: appointment_sales_visitsOrderByRelationAggregateInput
   }
 
   export type catalog_itemsWhereUniqueInput = Prisma.AtLeast<{
@@ -119686,6 +128106,7 @@ export namespace Prisma {
     product_detail?: XOR<Product_item_detailsNullableScalarRelationFilter, product_item_detailsWhereInput> | null
     hospitality_detail?: XOR<Hospitality_item_detailsNullableScalarRelationFilter, hospitality_item_detailsWhereInput> | null
     vehicle_detail?: XOR<Vehicle_item_detailsNullableScalarRelationFilter, vehicle_item_detailsWhereInput> | null
+    property_detail?: XOR<Property_item_detailsNullableScalarRelationFilter, property_item_detailsWhereInput> | null
     product_order_items?: Product_order_itemsListRelationFilter
     hospitality_booking_items?: Hospitality_booking_itemsListRelationFilter
     product_inquiries?: Product_inquiriesListRelationFilter
@@ -119695,6 +128116,7 @@ export namespace Prisma {
     variants?: Item_variantsListRelationFilter
     order_items?: Order_itemsListRelationFilter
     external_catalog_items?: External_catalog_itemsListRelationFilter
+    appointment_sales_visits?: Appointment_sales_visitsListRelationFilter
   }, "item_id">
 
   export type catalog_itemsOrderByWithAggregationInput = {
@@ -122005,6 +130427,15 @@ export namespace Prisma {
     color?: StringNullableFilter<"vehicle_item_details"> | string | null
     km_driven?: IntNullableFilter<"vehicle_item_details"> | number | null
     condition?: StringFilter<"vehicle_item_details"> | string
+    ownership_count?: IntNullableFilter<"vehicle_item_details"> | number | null
+    insurance_valid_until?: DateTimeNullableFilter<"vehicle_item_details"> | Date | string | null
+    registration_number?: StringNullableFilter<"vehicle_item_details"> | string | null
+    rc_status?: StringNullableFilter<"vehicle_item_details"> | string | null
+    finance_available?: BoolFilter<"vehicle_item_details"> | boolean
+    exchange_accepted?: BoolFilter<"vehicle_item_details"> | boolean
+    accident_history?: StringNullableFilter<"vehicle_item_details"> | string | null
+    service_history?: StringNullableFilter<"vehicle_item_details"> | string | null
+    test_drive_available?: BoolFilter<"vehicle_item_details"> | boolean
     metadata?: JsonNullableFilter<"vehicle_item_details">
     created_at?: DateTimeFilter<"vehicle_item_details"> | Date | string
     updated_at?: DateTimeFilter<"vehicle_item_details"> | Date | string
@@ -122023,6 +130454,15 @@ export namespace Prisma {
     color?: SortOrderInput | SortOrder
     km_driven?: SortOrderInput | SortOrder
     condition?: SortOrder
+    ownership_count?: SortOrderInput | SortOrder
+    insurance_valid_until?: SortOrderInput | SortOrder
+    registration_number?: SortOrderInput | SortOrder
+    rc_status?: SortOrderInput | SortOrder
+    finance_available?: SortOrder
+    exchange_accepted?: SortOrder
+    accident_history?: SortOrderInput | SortOrder
+    service_history?: SortOrderInput | SortOrder
+    test_drive_available?: SortOrder
     metadata?: SortOrderInput | SortOrder
     created_at?: SortOrder
     updated_at?: SortOrder
@@ -122044,6 +130484,15 @@ export namespace Prisma {
     color?: StringNullableFilter<"vehicle_item_details"> | string | null
     km_driven?: IntNullableFilter<"vehicle_item_details"> | number | null
     condition?: StringFilter<"vehicle_item_details"> | string
+    ownership_count?: IntNullableFilter<"vehicle_item_details"> | number | null
+    insurance_valid_until?: DateTimeNullableFilter<"vehicle_item_details"> | Date | string | null
+    registration_number?: StringNullableFilter<"vehicle_item_details"> | string | null
+    rc_status?: StringNullableFilter<"vehicle_item_details"> | string | null
+    finance_available?: BoolFilter<"vehicle_item_details"> | boolean
+    exchange_accepted?: BoolFilter<"vehicle_item_details"> | boolean
+    accident_history?: StringNullableFilter<"vehicle_item_details"> | string | null
+    service_history?: StringNullableFilter<"vehicle_item_details"> | string | null
+    test_drive_available?: BoolFilter<"vehicle_item_details"> | boolean
     metadata?: JsonNullableFilter<"vehicle_item_details">
     created_at?: DateTimeFilter<"vehicle_item_details"> | Date | string
     updated_at?: DateTimeFilter<"vehicle_item_details"> | Date | string
@@ -122062,6 +130511,15 @@ export namespace Prisma {
     color?: SortOrderInput | SortOrder
     km_driven?: SortOrderInput | SortOrder
     condition?: SortOrder
+    ownership_count?: SortOrderInput | SortOrder
+    insurance_valid_until?: SortOrderInput | SortOrder
+    registration_number?: SortOrderInput | SortOrder
+    rc_status?: SortOrderInput | SortOrder
+    finance_available?: SortOrder
+    exchange_accepted?: SortOrder
+    accident_history?: SortOrderInput | SortOrder
+    service_history?: SortOrderInput | SortOrder
+    test_drive_available?: SortOrder
     metadata?: SortOrderInput | SortOrder
     created_at?: SortOrder
     updated_at?: SortOrder
@@ -122086,9 +130544,607 @@ export namespace Prisma {
     color?: StringNullableWithAggregatesFilter<"vehicle_item_details"> | string | null
     km_driven?: IntNullableWithAggregatesFilter<"vehicle_item_details"> | number | null
     condition?: StringWithAggregatesFilter<"vehicle_item_details"> | string
+    ownership_count?: IntNullableWithAggregatesFilter<"vehicle_item_details"> | number | null
+    insurance_valid_until?: DateTimeNullableWithAggregatesFilter<"vehicle_item_details"> | Date | string | null
+    registration_number?: StringNullableWithAggregatesFilter<"vehicle_item_details"> | string | null
+    rc_status?: StringNullableWithAggregatesFilter<"vehicle_item_details"> | string | null
+    finance_available?: BoolWithAggregatesFilter<"vehicle_item_details"> | boolean
+    exchange_accepted?: BoolWithAggregatesFilter<"vehicle_item_details"> | boolean
+    accident_history?: StringNullableWithAggregatesFilter<"vehicle_item_details"> | string | null
+    service_history?: StringNullableWithAggregatesFilter<"vehicle_item_details"> | string | null
+    test_drive_available?: BoolWithAggregatesFilter<"vehicle_item_details"> | boolean
     metadata?: JsonNullableWithAggregatesFilter<"vehicle_item_details">
     created_at?: DateTimeWithAggregatesFilter<"vehicle_item_details"> | Date | string
     updated_at?: DateTimeWithAggregatesFilter<"vehicle_item_details"> | Date | string
+  }
+
+  export type property_item_detailsWhereInput = {
+    AND?: property_item_detailsWhereInput | property_item_detailsWhereInput[]
+    OR?: property_item_detailsWhereInput[]
+    NOT?: property_item_detailsWhereInput | property_item_detailsWhereInput[]
+    item_id?: UuidFilter<"property_item_details"> | string
+    business_id?: UuidFilter<"property_item_details"> | string
+    property_type?: StringFilter<"property_item_details"> | string
+    listing_type?: StringFilter<"property_item_details"> | string
+    bedrooms?: IntNullableFilter<"property_item_details"> | number | null
+    bathrooms?: IntNullableFilter<"property_item_details"> | number | null
+    area_sqft?: IntNullableFilter<"property_item_details"> | number | null
+    floor_number?: IntNullableFilter<"property_item_details"> | number | null
+    total_floors?: IntNullableFilter<"property_item_details"> | number | null
+    locality?: StringNullableFilter<"property_item_details"> | string | null
+    city?: StringNullableFilter<"property_item_details"> | string | null
+    furnishing?: StringNullableFilter<"property_item_details"> | string | null
+    possession_status?: StringNullableFilter<"property_item_details"> | string | null
+    facing?: StringNullableFilter<"property_item_details"> | string | null
+    parking?: StringNullableFilter<"property_item_details"> | string | null
+    rera_id?: StringNullableFilter<"property_item_details"> | string | null
+    map_url?: StringNullableFilter<"property_item_details"> | string | null
+    documents_status?: StringNullableFilter<"property_item_details"> | string | null
+    loan_support_available?: BoolFilter<"property_item_details"> | boolean
+    visit_landmark?: StringNullableFilter<"property_item_details"> | string | null
+    metadata?: JsonNullableFilter<"property_item_details">
+    created_at?: DateTimeFilter<"property_item_details"> | Date | string
+    updated_at?: DateTimeFilter<"property_item_details"> | Date | string
+    business?: XOR<BusinessesScalarRelationFilter, businessesWhereInput>
+    item?: XOR<Catalog_itemsScalarRelationFilter, catalog_itemsWhereInput>
+  }
+
+  export type property_item_detailsOrderByWithRelationInput = {
+    item_id?: SortOrder
+    business_id?: SortOrder
+    property_type?: SortOrder
+    listing_type?: SortOrder
+    bedrooms?: SortOrderInput | SortOrder
+    bathrooms?: SortOrderInput | SortOrder
+    area_sqft?: SortOrderInput | SortOrder
+    floor_number?: SortOrderInput | SortOrder
+    total_floors?: SortOrderInput | SortOrder
+    locality?: SortOrderInput | SortOrder
+    city?: SortOrderInput | SortOrder
+    furnishing?: SortOrderInput | SortOrder
+    possession_status?: SortOrderInput | SortOrder
+    facing?: SortOrderInput | SortOrder
+    parking?: SortOrderInput | SortOrder
+    rera_id?: SortOrderInput | SortOrder
+    map_url?: SortOrderInput | SortOrder
+    documents_status?: SortOrderInput | SortOrder
+    loan_support_available?: SortOrder
+    visit_landmark?: SortOrderInput | SortOrder
+    metadata?: SortOrderInput | SortOrder
+    created_at?: SortOrder
+    updated_at?: SortOrder
+    business?: businessesOrderByWithRelationInput
+    item?: catalog_itemsOrderByWithRelationInput
+  }
+
+  export type property_item_detailsWhereUniqueInput = Prisma.AtLeast<{
+    item_id?: string
+    AND?: property_item_detailsWhereInput | property_item_detailsWhereInput[]
+    OR?: property_item_detailsWhereInput[]
+    NOT?: property_item_detailsWhereInput | property_item_detailsWhereInput[]
+    business_id?: UuidFilter<"property_item_details"> | string
+    property_type?: StringFilter<"property_item_details"> | string
+    listing_type?: StringFilter<"property_item_details"> | string
+    bedrooms?: IntNullableFilter<"property_item_details"> | number | null
+    bathrooms?: IntNullableFilter<"property_item_details"> | number | null
+    area_sqft?: IntNullableFilter<"property_item_details"> | number | null
+    floor_number?: IntNullableFilter<"property_item_details"> | number | null
+    total_floors?: IntNullableFilter<"property_item_details"> | number | null
+    locality?: StringNullableFilter<"property_item_details"> | string | null
+    city?: StringNullableFilter<"property_item_details"> | string | null
+    furnishing?: StringNullableFilter<"property_item_details"> | string | null
+    possession_status?: StringNullableFilter<"property_item_details"> | string | null
+    facing?: StringNullableFilter<"property_item_details"> | string | null
+    parking?: StringNullableFilter<"property_item_details"> | string | null
+    rera_id?: StringNullableFilter<"property_item_details"> | string | null
+    map_url?: StringNullableFilter<"property_item_details"> | string | null
+    documents_status?: StringNullableFilter<"property_item_details"> | string | null
+    loan_support_available?: BoolFilter<"property_item_details"> | boolean
+    visit_landmark?: StringNullableFilter<"property_item_details"> | string | null
+    metadata?: JsonNullableFilter<"property_item_details">
+    created_at?: DateTimeFilter<"property_item_details"> | Date | string
+    updated_at?: DateTimeFilter<"property_item_details"> | Date | string
+    business?: XOR<BusinessesScalarRelationFilter, businessesWhereInput>
+    item?: XOR<Catalog_itemsScalarRelationFilter, catalog_itemsWhereInput>
+  }, "item_id">
+
+  export type property_item_detailsOrderByWithAggregationInput = {
+    item_id?: SortOrder
+    business_id?: SortOrder
+    property_type?: SortOrder
+    listing_type?: SortOrder
+    bedrooms?: SortOrderInput | SortOrder
+    bathrooms?: SortOrderInput | SortOrder
+    area_sqft?: SortOrderInput | SortOrder
+    floor_number?: SortOrderInput | SortOrder
+    total_floors?: SortOrderInput | SortOrder
+    locality?: SortOrderInput | SortOrder
+    city?: SortOrderInput | SortOrder
+    furnishing?: SortOrderInput | SortOrder
+    possession_status?: SortOrderInput | SortOrder
+    facing?: SortOrderInput | SortOrder
+    parking?: SortOrderInput | SortOrder
+    rera_id?: SortOrderInput | SortOrder
+    map_url?: SortOrderInput | SortOrder
+    documents_status?: SortOrderInput | SortOrder
+    loan_support_available?: SortOrder
+    visit_landmark?: SortOrderInput | SortOrder
+    metadata?: SortOrderInput | SortOrder
+    created_at?: SortOrder
+    updated_at?: SortOrder
+    _count?: property_item_detailsCountOrderByAggregateInput
+    _avg?: property_item_detailsAvgOrderByAggregateInput
+    _max?: property_item_detailsMaxOrderByAggregateInput
+    _min?: property_item_detailsMinOrderByAggregateInput
+    _sum?: property_item_detailsSumOrderByAggregateInput
+  }
+
+  export type property_item_detailsScalarWhereWithAggregatesInput = {
+    AND?: property_item_detailsScalarWhereWithAggregatesInput | property_item_detailsScalarWhereWithAggregatesInput[]
+    OR?: property_item_detailsScalarWhereWithAggregatesInput[]
+    NOT?: property_item_detailsScalarWhereWithAggregatesInput | property_item_detailsScalarWhereWithAggregatesInput[]
+    item_id?: UuidWithAggregatesFilter<"property_item_details"> | string
+    business_id?: UuidWithAggregatesFilter<"property_item_details"> | string
+    property_type?: StringWithAggregatesFilter<"property_item_details"> | string
+    listing_type?: StringWithAggregatesFilter<"property_item_details"> | string
+    bedrooms?: IntNullableWithAggregatesFilter<"property_item_details"> | number | null
+    bathrooms?: IntNullableWithAggregatesFilter<"property_item_details"> | number | null
+    area_sqft?: IntNullableWithAggregatesFilter<"property_item_details"> | number | null
+    floor_number?: IntNullableWithAggregatesFilter<"property_item_details"> | number | null
+    total_floors?: IntNullableWithAggregatesFilter<"property_item_details"> | number | null
+    locality?: StringNullableWithAggregatesFilter<"property_item_details"> | string | null
+    city?: StringNullableWithAggregatesFilter<"property_item_details"> | string | null
+    furnishing?: StringNullableWithAggregatesFilter<"property_item_details"> | string | null
+    possession_status?: StringNullableWithAggregatesFilter<"property_item_details"> | string | null
+    facing?: StringNullableWithAggregatesFilter<"property_item_details"> | string | null
+    parking?: StringNullableWithAggregatesFilter<"property_item_details"> | string | null
+    rera_id?: StringNullableWithAggregatesFilter<"property_item_details"> | string | null
+    map_url?: StringNullableWithAggregatesFilter<"property_item_details"> | string | null
+    documents_status?: StringNullableWithAggregatesFilter<"property_item_details"> | string | null
+    loan_support_available?: BoolWithAggregatesFilter<"property_item_details"> | boolean
+    visit_landmark?: StringNullableWithAggregatesFilter<"property_item_details"> | string | null
+    metadata?: JsonNullableWithAggregatesFilter<"property_item_details">
+    created_at?: DateTimeWithAggregatesFilter<"property_item_details"> | Date | string
+    updated_at?: DateTimeWithAggregatesFilter<"property_item_details"> | Date | string
+  }
+
+  export type appointment_sales_settingsWhereInput = {
+    AND?: appointment_sales_settingsWhereInput | appointment_sales_settingsWhereInput[]
+    OR?: appointment_sales_settingsWhereInput[]
+    NOT?: appointment_sales_settingsWhereInput | appointment_sales_settingsWhereInput[]
+    appointment_sales_settings_id?: UuidFilter<"appointment_sales_settings"> | string
+    business_id?: UuidFilter<"appointment_sales_settings"> | string
+    tenant_id?: UuidNullableFilter<"appointment_sales_settings"> | string | null
+    vertical_type?: StringFilter<"appointment_sales_settings"> | string
+    onboarding_status?: StringFilter<"appointment_sales_settings"> | string
+    default_visit_type?: StringFilter<"appointment_sales_settings"> | string
+    default_visit_location?: StringNullableFilter<"appointment_sales_settings"> | string | null
+    slot_duration_minutes?: IntFilter<"appointment_sales_settings"> | number
+    visit_buffer_minutes?: IntFilter<"appointment_sales_settings"> | number
+    auto_assign_visits?: BoolFilter<"appointment_sales_settings"> | boolean
+    reminder_minutes_before?: IntFilter<"appointment_sales_settings"> | number
+    escalation_rules?: JsonNullableFilter<"appointment_sales_settings">
+    setup_checklist?: JsonNullableFilter<"appointment_sales_settings">
+    metadata?: JsonNullableFilter<"appointment_sales_settings">
+    created_at?: DateTimeFilter<"appointment_sales_settings"> | Date | string
+    updated_at?: DateTimeFilter<"appointment_sales_settings"> | Date | string
+  }
+
+  export type appointment_sales_settingsOrderByWithRelationInput = {
+    appointment_sales_settings_id?: SortOrder
+    business_id?: SortOrder
+    tenant_id?: SortOrderInput | SortOrder
+    vertical_type?: SortOrder
+    onboarding_status?: SortOrder
+    default_visit_type?: SortOrder
+    default_visit_location?: SortOrderInput | SortOrder
+    slot_duration_minutes?: SortOrder
+    visit_buffer_minutes?: SortOrder
+    auto_assign_visits?: SortOrder
+    reminder_minutes_before?: SortOrder
+    escalation_rules?: SortOrderInput | SortOrder
+    setup_checklist?: SortOrderInput | SortOrder
+    metadata?: SortOrderInput | SortOrder
+    created_at?: SortOrder
+    updated_at?: SortOrder
+  }
+
+  export type appointment_sales_settingsWhereUniqueInput = Prisma.AtLeast<{
+    appointment_sales_settings_id?: string
+    business_id?: string
+    AND?: appointment_sales_settingsWhereInput | appointment_sales_settingsWhereInput[]
+    OR?: appointment_sales_settingsWhereInput[]
+    NOT?: appointment_sales_settingsWhereInput | appointment_sales_settingsWhereInput[]
+    tenant_id?: UuidNullableFilter<"appointment_sales_settings"> | string | null
+    vertical_type?: StringFilter<"appointment_sales_settings"> | string
+    onboarding_status?: StringFilter<"appointment_sales_settings"> | string
+    default_visit_type?: StringFilter<"appointment_sales_settings"> | string
+    default_visit_location?: StringNullableFilter<"appointment_sales_settings"> | string | null
+    slot_duration_minutes?: IntFilter<"appointment_sales_settings"> | number
+    visit_buffer_minutes?: IntFilter<"appointment_sales_settings"> | number
+    auto_assign_visits?: BoolFilter<"appointment_sales_settings"> | boolean
+    reminder_minutes_before?: IntFilter<"appointment_sales_settings"> | number
+    escalation_rules?: JsonNullableFilter<"appointment_sales_settings">
+    setup_checklist?: JsonNullableFilter<"appointment_sales_settings">
+    metadata?: JsonNullableFilter<"appointment_sales_settings">
+    created_at?: DateTimeFilter<"appointment_sales_settings"> | Date | string
+    updated_at?: DateTimeFilter<"appointment_sales_settings"> | Date | string
+  }, "appointment_sales_settings_id" | "business_id">
+
+  export type appointment_sales_settingsOrderByWithAggregationInput = {
+    appointment_sales_settings_id?: SortOrder
+    business_id?: SortOrder
+    tenant_id?: SortOrderInput | SortOrder
+    vertical_type?: SortOrder
+    onboarding_status?: SortOrder
+    default_visit_type?: SortOrder
+    default_visit_location?: SortOrderInput | SortOrder
+    slot_duration_minutes?: SortOrder
+    visit_buffer_minutes?: SortOrder
+    auto_assign_visits?: SortOrder
+    reminder_minutes_before?: SortOrder
+    escalation_rules?: SortOrderInput | SortOrder
+    setup_checklist?: SortOrderInput | SortOrder
+    metadata?: SortOrderInput | SortOrder
+    created_at?: SortOrder
+    updated_at?: SortOrder
+    _count?: appointment_sales_settingsCountOrderByAggregateInput
+    _avg?: appointment_sales_settingsAvgOrderByAggregateInput
+    _max?: appointment_sales_settingsMaxOrderByAggregateInput
+    _min?: appointment_sales_settingsMinOrderByAggregateInput
+    _sum?: appointment_sales_settingsSumOrderByAggregateInput
+  }
+
+  export type appointment_sales_settingsScalarWhereWithAggregatesInput = {
+    AND?: appointment_sales_settingsScalarWhereWithAggregatesInput | appointment_sales_settingsScalarWhereWithAggregatesInput[]
+    OR?: appointment_sales_settingsScalarWhereWithAggregatesInput[]
+    NOT?: appointment_sales_settingsScalarWhereWithAggregatesInput | appointment_sales_settingsScalarWhereWithAggregatesInput[]
+    appointment_sales_settings_id?: UuidWithAggregatesFilter<"appointment_sales_settings"> | string
+    business_id?: UuidWithAggregatesFilter<"appointment_sales_settings"> | string
+    tenant_id?: UuidNullableWithAggregatesFilter<"appointment_sales_settings"> | string | null
+    vertical_type?: StringWithAggregatesFilter<"appointment_sales_settings"> | string
+    onboarding_status?: StringWithAggregatesFilter<"appointment_sales_settings"> | string
+    default_visit_type?: StringWithAggregatesFilter<"appointment_sales_settings"> | string
+    default_visit_location?: StringNullableWithAggregatesFilter<"appointment_sales_settings"> | string | null
+    slot_duration_minutes?: IntWithAggregatesFilter<"appointment_sales_settings"> | number
+    visit_buffer_minutes?: IntWithAggregatesFilter<"appointment_sales_settings"> | number
+    auto_assign_visits?: BoolWithAggregatesFilter<"appointment_sales_settings"> | boolean
+    reminder_minutes_before?: IntWithAggregatesFilter<"appointment_sales_settings"> | number
+    escalation_rules?: JsonNullableWithAggregatesFilter<"appointment_sales_settings">
+    setup_checklist?: JsonNullableWithAggregatesFilter<"appointment_sales_settings">
+    metadata?: JsonNullableWithAggregatesFilter<"appointment_sales_settings">
+    created_at?: DateTimeWithAggregatesFilter<"appointment_sales_settings"> | Date | string
+    updated_at?: DateTimeWithAggregatesFilter<"appointment_sales_settings"> | Date | string
+  }
+
+  export type appointment_sales_staffWhereInput = {
+    AND?: appointment_sales_staffWhereInput | appointment_sales_staffWhereInput[]
+    OR?: appointment_sales_staffWhereInput[]
+    NOT?: appointment_sales_staffWhereInput | appointment_sales_staffWhereInput[]
+    sales_staff_id?: UuidFilter<"appointment_sales_staff"> | string
+    business_id?: UuidFilter<"appointment_sales_staff"> | string
+    tenant_id?: UuidNullableFilter<"appointment_sales_staff"> | string | null
+    name?: StringFilter<"appointment_sales_staff"> | string
+    phone?: StringNullableFilter<"appointment_sales_staff"> | string | null
+    email?: StringNullableFilter<"appointment_sales_staff"> | string | null
+    role?: StringFilter<"appointment_sales_staff"> | string
+    title?: StringNullableFilter<"appointment_sales_staff"> | string | null
+    priority?: IntFilter<"appointment_sales_staff"> | number
+    is_active?: BoolFilter<"appointment_sales_staff"> | boolean
+    metadata?: JsonNullableFilter<"appointment_sales_staff">
+    created_by?: UuidNullableFilter<"appointment_sales_staff"> | string | null
+    created_at?: DateTimeFilter<"appointment_sales_staff"> | Date | string
+    updated_at?: DateTimeFilter<"appointment_sales_staff"> | Date | string
+    availability?: Appointment_sales_staff_availabilityListRelationFilter
+    visits?: Appointment_sales_visitsListRelationFilter
+  }
+
+  export type appointment_sales_staffOrderByWithRelationInput = {
+    sales_staff_id?: SortOrder
+    business_id?: SortOrder
+    tenant_id?: SortOrderInput | SortOrder
+    name?: SortOrder
+    phone?: SortOrderInput | SortOrder
+    email?: SortOrderInput | SortOrder
+    role?: SortOrder
+    title?: SortOrderInput | SortOrder
+    priority?: SortOrder
+    is_active?: SortOrder
+    metadata?: SortOrderInput | SortOrder
+    created_by?: SortOrderInput | SortOrder
+    created_at?: SortOrder
+    updated_at?: SortOrder
+    availability?: appointment_sales_staff_availabilityOrderByRelationAggregateInput
+    visits?: appointment_sales_visitsOrderByRelationAggregateInput
+  }
+
+  export type appointment_sales_staffWhereUniqueInput = Prisma.AtLeast<{
+    sales_staff_id?: string
+    AND?: appointment_sales_staffWhereInput | appointment_sales_staffWhereInput[]
+    OR?: appointment_sales_staffWhereInput[]
+    NOT?: appointment_sales_staffWhereInput | appointment_sales_staffWhereInput[]
+    business_id?: UuidFilter<"appointment_sales_staff"> | string
+    tenant_id?: UuidNullableFilter<"appointment_sales_staff"> | string | null
+    name?: StringFilter<"appointment_sales_staff"> | string
+    phone?: StringNullableFilter<"appointment_sales_staff"> | string | null
+    email?: StringNullableFilter<"appointment_sales_staff"> | string | null
+    role?: StringFilter<"appointment_sales_staff"> | string
+    title?: StringNullableFilter<"appointment_sales_staff"> | string | null
+    priority?: IntFilter<"appointment_sales_staff"> | number
+    is_active?: BoolFilter<"appointment_sales_staff"> | boolean
+    metadata?: JsonNullableFilter<"appointment_sales_staff">
+    created_by?: UuidNullableFilter<"appointment_sales_staff"> | string | null
+    created_at?: DateTimeFilter<"appointment_sales_staff"> | Date | string
+    updated_at?: DateTimeFilter<"appointment_sales_staff"> | Date | string
+    availability?: Appointment_sales_staff_availabilityListRelationFilter
+    visits?: Appointment_sales_visitsListRelationFilter
+  }, "sales_staff_id">
+
+  export type appointment_sales_staffOrderByWithAggregationInput = {
+    sales_staff_id?: SortOrder
+    business_id?: SortOrder
+    tenant_id?: SortOrderInput | SortOrder
+    name?: SortOrder
+    phone?: SortOrderInput | SortOrder
+    email?: SortOrderInput | SortOrder
+    role?: SortOrder
+    title?: SortOrderInput | SortOrder
+    priority?: SortOrder
+    is_active?: SortOrder
+    metadata?: SortOrderInput | SortOrder
+    created_by?: SortOrderInput | SortOrder
+    created_at?: SortOrder
+    updated_at?: SortOrder
+    _count?: appointment_sales_staffCountOrderByAggregateInput
+    _avg?: appointment_sales_staffAvgOrderByAggregateInput
+    _max?: appointment_sales_staffMaxOrderByAggregateInput
+    _min?: appointment_sales_staffMinOrderByAggregateInput
+    _sum?: appointment_sales_staffSumOrderByAggregateInput
+  }
+
+  export type appointment_sales_staffScalarWhereWithAggregatesInput = {
+    AND?: appointment_sales_staffScalarWhereWithAggregatesInput | appointment_sales_staffScalarWhereWithAggregatesInput[]
+    OR?: appointment_sales_staffScalarWhereWithAggregatesInput[]
+    NOT?: appointment_sales_staffScalarWhereWithAggregatesInput | appointment_sales_staffScalarWhereWithAggregatesInput[]
+    sales_staff_id?: UuidWithAggregatesFilter<"appointment_sales_staff"> | string
+    business_id?: UuidWithAggregatesFilter<"appointment_sales_staff"> | string
+    tenant_id?: UuidNullableWithAggregatesFilter<"appointment_sales_staff"> | string | null
+    name?: StringWithAggregatesFilter<"appointment_sales_staff"> | string
+    phone?: StringNullableWithAggregatesFilter<"appointment_sales_staff"> | string | null
+    email?: StringNullableWithAggregatesFilter<"appointment_sales_staff"> | string | null
+    role?: StringWithAggregatesFilter<"appointment_sales_staff"> | string
+    title?: StringNullableWithAggregatesFilter<"appointment_sales_staff"> | string | null
+    priority?: IntWithAggregatesFilter<"appointment_sales_staff"> | number
+    is_active?: BoolWithAggregatesFilter<"appointment_sales_staff"> | boolean
+    metadata?: JsonNullableWithAggregatesFilter<"appointment_sales_staff">
+    created_by?: UuidNullableWithAggregatesFilter<"appointment_sales_staff"> | string | null
+    created_at?: DateTimeWithAggregatesFilter<"appointment_sales_staff"> | Date | string
+    updated_at?: DateTimeWithAggregatesFilter<"appointment_sales_staff"> | Date | string
+  }
+
+  export type appointment_sales_staff_availabilityWhereInput = {
+    AND?: appointment_sales_staff_availabilityWhereInput | appointment_sales_staff_availabilityWhereInput[]
+    OR?: appointment_sales_staff_availabilityWhereInput[]
+    NOT?: appointment_sales_staff_availabilityWhereInput | appointment_sales_staff_availabilityWhereInput[]
+    availability_id?: UuidFilter<"appointment_sales_staff_availability"> | string
+    sales_staff_id?: UuidFilter<"appointment_sales_staff_availability"> | string
+    business_id?: UuidFilter<"appointment_sales_staff_availability"> | string
+    day_of_week?: IntFilter<"appointment_sales_staff_availability"> | number
+    start_time?: StringFilter<"appointment_sales_staff_availability"> | string
+    end_time?: StringFilter<"appointment_sales_staff_availability"> | string
+    window_type?: StringFilter<"appointment_sales_staff_availability"> | string
+    label?: StringNullableFilter<"appointment_sales_staff_availability"> | string | null
+    is_active?: BoolFilter<"appointment_sales_staff_availability"> | boolean
+    metadata?: JsonNullableFilter<"appointment_sales_staff_availability">
+    created_at?: DateTimeFilter<"appointment_sales_staff_availability"> | Date | string
+    updated_at?: DateTimeFilter<"appointment_sales_staff_availability"> | Date | string
+    staff?: XOR<Appointment_sales_staffScalarRelationFilter, appointment_sales_staffWhereInput>
+  }
+
+  export type appointment_sales_staff_availabilityOrderByWithRelationInput = {
+    availability_id?: SortOrder
+    sales_staff_id?: SortOrder
+    business_id?: SortOrder
+    day_of_week?: SortOrder
+    start_time?: SortOrder
+    end_time?: SortOrder
+    window_type?: SortOrder
+    label?: SortOrderInput | SortOrder
+    is_active?: SortOrder
+    metadata?: SortOrderInput | SortOrder
+    created_at?: SortOrder
+    updated_at?: SortOrder
+    staff?: appointment_sales_staffOrderByWithRelationInput
+  }
+
+  export type appointment_sales_staff_availabilityWhereUniqueInput = Prisma.AtLeast<{
+    availability_id?: string
+    AND?: appointment_sales_staff_availabilityWhereInput | appointment_sales_staff_availabilityWhereInput[]
+    OR?: appointment_sales_staff_availabilityWhereInput[]
+    NOT?: appointment_sales_staff_availabilityWhereInput | appointment_sales_staff_availabilityWhereInput[]
+    sales_staff_id?: UuidFilter<"appointment_sales_staff_availability"> | string
+    business_id?: UuidFilter<"appointment_sales_staff_availability"> | string
+    day_of_week?: IntFilter<"appointment_sales_staff_availability"> | number
+    start_time?: StringFilter<"appointment_sales_staff_availability"> | string
+    end_time?: StringFilter<"appointment_sales_staff_availability"> | string
+    window_type?: StringFilter<"appointment_sales_staff_availability"> | string
+    label?: StringNullableFilter<"appointment_sales_staff_availability"> | string | null
+    is_active?: BoolFilter<"appointment_sales_staff_availability"> | boolean
+    metadata?: JsonNullableFilter<"appointment_sales_staff_availability">
+    created_at?: DateTimeFilter<"appointment_sales_staff_availability"> | Date | string
+    updated_at?: DateTimeFilter<"appointment_sales_staff_availability"> | Date | string
+    staff?: XOR<Appointment_sales_staffScalarRelationFilter, appointment_sales_staffWhereInput>
+  }, "availability_id">
+
+  export type appointment_sales_staff_availabilityOrderByWithAggregationInput = {
+    availability_id?: SortOrder
+    sales_staff_id?: SortOrder
+    business_id?: SortOrder
+    day_of_week?: SortOrder
+    start_time?: SortOrder
+    end_time?: SortOrder
+    window_type?: SortOrder
+    label?: SortOrderInput | SortOrder
+    is_active?: SortOrder
+    metadata?: SortOrderInput | SortOrder
+    created_at?: SortOrder
+    updated_at?: SortOrder
+    _count?: appointment_sales_staff_availabilityCountOrderByAggregateInput
+    _avg?: appointment_sales_staff_availabilityAvgOrderByAggregateInput
+    _max?: appointment_sales_staff_availabilityMaxOrderByAggregateInput
+    _min?: appointment_sales_staff_availabilityMinOrderByAggregateInput
+    _sum?: appointment_sales_staff_availabilitySumOrderByAggregateInput
+  }
+
+  export type appointment_sales_staff_availabilityScalarWhereWithAggregatesInput = {
+    AND?: appointment_sales_staff_availabilityScalarWhereWithAggregatesInput | appointment_sales_staff_availabilityScalarWhereWithAggregatesInput[]
+    OR?: appointment_sales_staff_availabilityScalarWhereWithAggregatesInput[]
+    NOT?: appointment_sales_staff_availabilityScalarWhereWithAggregatesInput | appointment_sales_staff_availabilityScalarWhereWithAggregatesInput[]
+    availability_id?: UuidWithAggregatesFilter<"appointment_sales_staff_availability"> | string
+    sales_staff_id?: UuidWithAggregatesFilter<"appointment_sales_staff_availability"> | string
+    business_id?: UuidWithAggregatesFilter<"appointment_sales_staff_availability"> | string
+    day_of_week?: IntWithAggregatesFilter<"appointment_sales_staff_availability"> | number
+    start_time?: StringWithAggregatesFilter<"appointment_sales_staff_availability"> | string
+    end_time?: StringWithAggregatesFilter<"appointment_sales_staff_availability"> | string
+    window_type?: StringWithAggregatesFilter<"appointment_sales_staff_availability"> | string
+    label?: StringNullableWithAggregatesFilter<"appointment_sales_staff_availability"> | string | null
+    is_active?: BoolWithAggregatesFilter<"appointment_sales_staff_availability"> | boolean
+    metadata?: JsonNullableWithAggregatesFilter<"appointment_sales_staff_availability">
+    created_at?: DateTimeWithAggregatesFilter<"appointment_sales_staff_availability"> | Date | string
+    updated_at?: DateTimeWithAggregatesFilter<"appointment_sales_staff_availability"> | Date | string
+  }
+
+  export type appointment_sales_visitsWhereInput = {
+    AND?: appointment_sales_visitsWhereInput | appointment_sales_visitsWhereInput[]
+    OR?: appointment_sales_visitsWhereInput[]
+    NOT?: appointment_sales_visitsWhereInput | appointment_sales_visitsWhereInput[]
+    visit_id?: UuidFilter<"appointment_sales_visits"> | string
+    business_id?: UuidFilter<"appointment_sales_visits"> | string
+    tenant_id?: UuidNullableFilter<"appointment_sales_visits"> | string | null
+    lead_id?: UuidNullableFilter<"appointment_sales_visits"> | string | null
+    customer_id?: UuidNullableFilter<"appointment_sales_visits"> | string | null
+    item_id?: UuidNullableFilter<"appointment_sales_visits"> | string | null
+    sales_staff_id?: UuidNullableFilter<"appointment_sales_visits"> | string | null
+    visit_type?: StringFilter<"appointment_sales_visits"> | string
+    status?: StringFilter<"appointment_sales_visits"> | string
+    scheduled_start?: DateTimeFilter<"appointment_sales_visits"> | Date | string
+    scheduled_end?: DateTimeFilter<"appointment_sales_visits"> | Date | string
+    customer_name?: StringNullableFilter<"appointment_sales_visits"> | string | null
+    customer_phone?: StringNullableFilter<"appointment_sales_visits"> | string | null
+    location?: StringNullableFilter<"appointment_sales_visits"> | string | null
+    source?: StringFilter<"appointment_sales_visits"> | string
+    notes?: StringNullableFilter<"appointment_sales_visits"> | string | null
+    metadata?: JsonNullableFilter<"appointment_sales_visits">
+    created_by?: UuidNullableFilter<"appointment_sales_visits"> | string | null
+    created_at?: DateTimeFilter<"appointment_sales_visits"> | Date | string
+    updated_at?: DateTimeFilter<"appointment_sales_visits"> | Date | string
+    item?: XOR<Catalog_itemsNullableScalarRelationFilter, catalog_itemsWhereInput> | null
+    staff?: XOR<Appointment_sales_staffNullableScalarRelationFilter, appointment_sales_staffWhereInput> | null
+  }
+
+  export type appointment_sales_visitsOrderByWithRelationInput = {
+    visit_id?: SortOrder
+    business_id?: SortOrder
+    tenant_id?: SortOrderInput | SortOrder
+    lead_id?: SortOrderInput | SortOrder
+    customer_id?: SortOrderInput | SortOrder
+    item_id?: SortOrderInput | SortOrder
+    sales_staff_id?: SortOrderInput | SortOrder
+    visit_type?: SortOrder
+    status?: SortOrder
+    scheduled_start?: SortOrder
+    scheduled_end?: SortOrder
+    customer_name?: SortOrderInput | SortOrder
+    customer_phone?: SortOrderInput | SortOrder
+    location?: SortOrderInput | SortOrder
+    source?: SortOrder
+    notes?: SortOrderInput | SortOrder
+    metadata?: SortOrderInput | SortOrder
+    created_by?: SortOrderInput | SortOrder
+    created_at?: SortOrder
+    updated_at?: SortOrder
+    item?: catalog_itemsOrderByWithRelationInput
+    staff?: appointment_sales_staffOrderByWithRelationInput
+  }
+
+  export type appointment_sales_visitsWhereUniqueInput = Prisma.AtLeast<{
+    visit_id?: string
+    AND?: appointment_sales_visitsWhereInput | appointment_sales_visitsWhereInput[]
+    OR?: appointment_sales_visitsWhereInput[]
+    NOT?: appointment_sales_visitsWhereInput | appointment_sales_visitsWhereInput[]
+    business_id?: UuidFilter<"appointment_sales_visits"> | string
+    tenant_id?: UuidNullableFilter<"appointment_sales_visits"> | string | null
+    lead_id?: UuidNullableFilter<"appointment_sales_visits"> | string | null
+    customer_id?: UuidNullableFilter<"appointment_sales_visits"> | string | null
+    item_id?: UuidNullableFilter<"appointment_sales_visits"> | string | null
+    sales_staff_id?: UuidNullableFilter<"appointment_sales_visits"> | string | null
+    visit_type?: StringFilter<"appointment_sales_visits"> | string
+    status?: StringFilter<"appointment_sales_visits"> | string
+    scheduled_start?: DateTimeFilter<"appointment_sales_visits"> | Date | string
+    scheduled_end?: DateTimeFilter<"appointment_sales_visits"> | Date | string
+    customer_name?: StringNullableFilter<"appointment_sales_visits"> | string | null
+    customer_phone?: StringNullableFilter<"appointment_sales_visits"> | string | null
+    location?: StringNullableFilter<"appointment_sales_visits"> | string | null
+    source?: StringFilter<"appointment_sales_visits"> | string
+    notes?: StringNullableFilter<"appointment_sales_visits"> | string | null
+    metadata?: JsonNullableFilter<"appointment_sales_visits">
+    created_by?: UuidNullableFilter<"appointment_sales_visits"> | string | null
+    created_at?: DateTimeFilter<"appointment_sales_visits"> | Date | string
+    updated_at?: DateTimeFilter<"appointment_sales_visits"> | Date | string
+    item?: XOR<Catalog_itemsNullableScalarRelationFilter, catalog_itemsWhereInput> | null
+    staff?: XOR<Appointment_sales_staffNullableScalarRelationFilter, appointment_sales_staffWhereInput> | null
+  }, "visit_id">
+
+  export type appointment_sales_visitsOrderByWithAggregationInput = {
+    visit_id?: SortOrder
+    business_id?: SortOrder
+    tenant_id?: SortOrderInput | SortOrder
+    lead_id?: SortOrderInput | SortOrder
+    customer_id?: SortOrderInput | SortOrder
+    item_id?: SortOrderInput | SortOrder
+    sales_staff_id?: SortOrderInput | SortOrder
+    visit_type?: SortOrder
+    status?: SortOrder
+    scheduled_start?: SortOrder
+    scheduled_end?: SortOrder
+    customer_name?: SortOrderInput | SortOrder
+    customer_phone?: SortOrderInput | SortOrder
+    location?: SortOrderInput | SortOrder
+    source?: SortOrder
+    notes?: SortOrderInput | SortOrder
+    metadata?: SortOrderInput | SortOrder
+    created_by?: SortOrderInput | SortOrder
+    created_at?: SortOrder
+    updated_at?: SortOrder
+    _count?: appointment_sales_visitsCountOrderByAggregateInput
+    _max?: appointment_sales_visitsMaxOrderByAggregateInput
+    _min?: appointment_sales_visitsMinOrderByAggregateInput
+  }
+
+  export type appointment_sales_visitsScalarWhereWithAggregatesInput = {
+    AND?: appointment_sales_visitsScalarWhereWithAggregatesInput | appointment_sales_visitsScalarWhereWithAggregatesInput[]
+    OR?: appointment_sales_visitsScalarWhereWithAggregatesInput[]
+    NOT?: appointment_sales_visitsScalarWhereWithAggregatesInput | appointment_sales_visitsScalarWhereWithAggregatesInput[]
+    visit_id?: UuidWithAggregatesFilter<"appointment_sales_visits"> | string
+    business_id?: UuidWithAggregatesFilter<"appointment_sales_visits"> | string
+    tenant_id?: UuidNullableWithAggregatesFilter<"appointment_sales_visits"> | string | null
+    lead_id?: UuidNullableWithAggregatesFilter<"appointment_sales_visits"> | string | null
+    customer_id?: UuidNullableWithAggregatesFilter<"appointment_sales_visits"> | string | null
+    item_id?: UuidNullableWithAggregatesFilter<"appointment_sales_visits"> | string | null
+    sales_staff_id?: UuidNullableWithAggregatesFilter<"appointment_sales_visits"> | string | null
+    visit_type?: StringWithAggregatesFilter<"appointment_sales_visits"> | string
+    status?: StringWithAggregatesFilter<"appointment_sales_visits"> | string
+    scheduled_start?: DateTimeWithAggregatesFilter<"appointment_sales_visits"> | Date | string
+    scheduled_end?: DateTimeWithAggregatesFilter<"appointment_sales_visits"> | Date | string
+    customer_name?: StringNullableWithAggregatesFilter<"appointment_sales_visits"> | string | null
+    customer_phone?: StringNullableWithAggregatesFilter<"appointment_sales_visits"> | string | null
+    location?: StringNullableWithAggregatesFilter<"appointment_sales_visits"> | string | null
+    source?: StringWithAggregatesFilter<"appointment_sales_visits"> | string
+    notes?: StringNullableWithAggregatesFilter<"appointment_sales_visits"> | string | null
+    metadata?: JsonNullableWithAggregatesFilter<"appointment_sales_visits">
+    created_by?: UuidNullableWithAggregatesFilter<"appointment_sales_visits"> | string | null
+    created_at?: DateTimeWithAggregatesFilter<"appointment_sales_visits"> | Date | string
+    updated_at?: DateTimeWithAggregatesFilter<"appointment_sales_visits"> | Date | string
   }
 
   export type hospitality_inquiriesWhereInput = {
@@ -123925,6 +132981,7 @@ export namespace Prisma {
     product_item_details?: product_item_detailsCreateNestedManyWithoutBusinessInput
     hospitality_item_details?: hospitality_item_detailsCreateNestedManyWithoutBusinessInput
     vehicle_item_details?: vehicle_item_detailsCreateNestedManyWithoutBusinessInput
+    property_item_details?: property_item_detailsCreateNestedManyWithoutBusinessInput
     product_orders?: product_ordersCreateNestedManyWithoutBusinessInput
     product_inquiries?: product_inquiriesCreateNestedManyWithoutBusinessInput
     hospitality_bookings?: hospitality_bookingsCreateNestedManyWithoutBusinessInput
@@ -123979,6 +133036,7 @@ export namespace Prisma {
     product_item_details?: product_item_detailsUncheckedCreateNestedManyWithoutBusinessInput
     hospitality_item_details?: hospitality_item_detailsUncheckedCreateNestedManyWithoutBusinessInput
     vehicle_item_details?: vehicle_item_detailsUncheckedCreateNestedManyWithoutBusinessInput
+    property_item_details?: property_item_detailsUncheckedCreateNestedManyWithoutBusinessInput
     product_orders?: product_ordersUncheckedCreateNestedManyWithoutBusinessInput
     product_inquiries?: product_inquiriesUncheckedCreateNestedManyWithoutBusinessInput
     hospitality_bookings?: hospitality_bookingsUncheckedCreateNestedManyWithoutBusinessInput
@@ -124033,6 +133091,7 @@ export namespace Prisma {
     product_item_details?: product_item_detailsUpdateManyWithoutBusinessNestedInput
     hospitality_item_details?: hospitality_item_detailsUpdateManyWithoutBusinessNestedInput
     vehicle_item_details?: vehicle_item_detailsUpdateManyWithoutBusinessNestedInput
+    property_item_details?: property_item_detailsUpdateManyWithoutBusinessNestedInput
     product_orders?: product_ordersUpdateManyWithoutBusinessNestedInput
     product_inquiries?: product_inquiriesUpdateManyWithoutBusinessNestedInput
     hospitality_bookings?: hospitality_bookingsUpdateManyWithoutBusinessNestedInput
@@ -124087,6 +133146,7 @@ export namespace Prisma {
     product_item_details?: product_item_detailsUncheckedUpdateManyWithoutBusinessNestedInput
     hospitality_item_details?: hospitality_item_detailsUncheckedUpdateManyWithoutBusinessNestedInput
     vehicle_item_details?: vehicle_item_detailsUncheckedUpdateManyWithoutBusinessNestedInput
+    property_item_details?: property_item_detailsUncheckedUpdateManyWithoutBusinessNestedInput
     product_orders?: product_ordersUncheckedUpdateManyWithoutBusinessNestedInput
     product_inquiries?: product_inquiriesUncheckedUpdateManyWithoutBusinessNestedInput
     hospitality_bookings?: hospitality_bookingsUncheckedUpdateManyWithoutBusinessNestedInput
@@ -124672,6 +133732,7 @@ export namespace Prisma {
     hospitality_inquiries?: hospitality_inquiriesCreateNestedManyWithoutTenantInput
     notification_messages?: notification_messagesCreateNestedManyWithoutTenantsInput
     notification_templates?: notification_templatesCreateNestedManyWithoutTenantsInput
+    tenant_conversation_configs?: tenant_conversation_configsCreateNestedManyWithoutTenantInput
   }
 
   export type tenantsUncheckedCreateInput = {
@@ -124698,6 +133759,7 @@ export namespace Prisma {
     hospitality_inquiries?: hospitality_inquiriesUncheckedCreateNestedManyWithoutTenantInput
     notification_messages?: notification_messagesUncheckedCreateNestedManyWithoutTenantsInput
     notification_templates?: notification_templatesUncheckedCreateNestedManyWithoutTenantsInput
+    tenant_conversation_configs?: tenant_conversation_configsUncheckedCreateNestedManyWithoutTenantInput
   }
 
   export type tenantsUpdateInput = {
@@ -124724,6 +133786,7 @@ export namespace Prisma {
     hospitality_inquiries?: hospitality_inquiriesUpdateManyWithoutTenantNestedInput
     notification_messages?: notification_messagesUpdateManyWithoutTenantsNestedInput
     notification_templates?: notification_templatesUpdateManyWithoutTenantsNestedInput
+    tenant_conversation_configs?: tenant_conversation_configsUpdateManyWithoutTenantNestedInput
   }
 
   export type tenantsUncheckedUpdateInput = {
@@ -124750,6 +133813,7 @@ export namespace Prisma {
     hospitality_inquiries?: hospitality_inquiriesUncheckedUpdateManyWithoutTenantNestedInput
     notification_messages?: notification_messagesUncheckedUpdateManyWithoutTenantsNestedInput
     notification_templates?: notification_templatesUncheckedUpdateManyWithoutTenantsNestedInput
+    tenant_conversation_configs?: tenant_conversation_configsUncheckedUpdateManyWithoutTenantNestedInput
   }
 
   export type tenantsCreateManyInput = {
@@ -124789,6 +133853,96 @@ export namespace Prisma {
     gst_number?: NullableStringFieldUpdateOperationsInput | string | null
     pan_number?: NullableStringFieldUpdateOperationsInput | string | null
     registration_no?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type tenant_conversation_configsCreateInput = {
+    config_id?: string
+    waba_id: string
+    mode?: string
+    flow?: string
+    capabilities?: JsonNullValueInput | InputJsonValue
+    rules?: JsonNullValueInput | InputJsonValue
+    is_active?: boolean
+    created_at?: Date | string
+    updated_at?: Date | string
+    tenant: tenantsCreateNestedOneWithoutTenant_conversation_configsInput
+  }
+
+  export type tenant_conversation_configsUncheckedCreateInput = {
+    config_id?: string
+    tenant_id: string
+    waba_id: string
+    mode?: string
+    flow?: string
+    capabilities?: JsonNullValueInput | InputJsonValue
+    rules?: JsonNullValueInput | InputJsonValue
+    is_active?: boolean
+    created_at?: Date | string
+    updated_at?: Date | string
+  }
+
+  export type tenant_conversation_configsUpdateInput = {
+    config_id?: StringFieldUpdateOperationsInput | string
+    waba_id?: StringFieldUpdateOperationsInput | string
+    mode?: StringFieldUpdateOperationsInput | string
+    flow?: StringFieldUpdateOperationsInput | string
+    capabilities?: JsonNullValueInput | InputJsonValue
+    rules?: JsonNullValueInput | InputJsonValue
+    is_active?: BoolFieldUpdateOperationsInput | boolean
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    tenant?: tenantsUpdateOneRequiredWithoutTenant_conversation_configsNestedInput
+  }
+
+  export type tenant_conversation_configsUncheckedUpdateInput = {
+    config_id?: StringFieldUpdateOperationsInput | string
+    tenant_id?: StringFieldUpdateOperationsInput | string
+    waba_id?: StringFieldUpdateOperationsInput | string
+    mode?: StringFieldUpdateOperationsInput | string
+    flow?: StringFieldUpdateOperationsInput | string
+    capabilities?: JsonNullValueInput | InputJsonValue
+    rules?: JsonNullValueInput | InputJsonValue
+    is_active?: BoolFieldUpdateOperationsInput | boolean
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type tenant_conversation_configsCreateManyInput = {
+    config_id?: string
+    tenant_id: string
+    waba_id: string
+    mode?: string
+    flow?: string
+    capabilities?: JsonNullValueInput | InputJsonValue
+    rules?: JsonNullValueInput | InputJsonValue
+    is_active?: boolean
+    created_at?: Date | string
+    updated_at?: Date | string
+  }
+
+  export type tenant_conversation_configsUpdateManyMutationInput = {
+    config_id?: StringFieldUpdateOperationsInput | string
+    waba_id?: StringFieldUpdateOperationsInput | string
+    mode?: StringFieldUpdateOperationsInput | string
+    flow?: StringFieldUpdateOperationsInput | string
+    capabilities?: JsonNullValueInput | InputJsonValue
+    rules?: JsonNullValueInput | InputJsonValue
+    is_active?: BoolFieldUpdateOperationsInput | boolean
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type tenant_conversation_configsUncheckedUpdateManyInput = {
+    config_id?: StringFieldUpdateOperationsInput | string
+    tenant_id?: StringFieldUpdateOperationsInput | string
+    waba_id?: StringFieldUpdateOperationsInput | string
+    mode?: StringFieldUpdateOperationsInput | string
+    flow?: StringFieldUpdateOperationsInput | string
+    capabilities?: JsonNullValueInput | InputJsonValue
+    rules?: JsonNullValueInput | InputJsonValue
+    is_active?: BoolFieldUpdateOperationsInput | boolean
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type usersCreateInput = {
@@ -129174,6 +138328,7 @@ export namespace Prisma {
     product_detail?: product_item_detailsCreateNestedOneWithoutItemInput
     hospitality_detail?: hospitality_item_detailsCreateNestedOneWithoutItemInput
     vehicle_detail?: vehicle_item_detailsCreateNestedOneWithoutItemInput
+    property_detail?: property_item_detailsCreateNestedOneWithoutItemInput
     product_order_items?: product_order_itemsCreateNestedManyWithoutItemInput
     hospitality_booking_items?: hospitality_booking_itemsCreateNestedManyWithoutItemInput
     product_inquiries?: product_inquiriesCreateNestedManyWithoutItemInput
@@ -129183,6 +138338,7 @@ export namespace Prisma {
     variants?: item_variantsCreateNestedManyWithoutItemInput
     order_items?: order_itemsCreateNestedManyWithoutCatalog_itemInput
     external_catalog_items?: external_catalog_itemsCreateNestedManyWithoutItemInput
+    appointment_sales_visits?: appointment_sales_visitsCreateNestedManyWithoutItemInput
   }
 
   export type catalog_itemsUncheckedCreateInput = {
@@ -129210,6 +138366,7 @@ export namespace Prisma {
     product_detail?: product_item_detailsUncheckedCreateNestedOneWithoutItemInput
     hospitality_detail?: hospitality_item_detailsUncheckedCreateNestedOneWithoutItemInput
     vehicle_detail?: vehicle_item_detailsUncheckedCreateNestedOneWithoutItemInput
+    property_detail?: property_item_detailsUncheckedCreateNestedOneWithoutItemInput
     product_order_items?: product_order_itemsUncheckedCreateNestedManyWithoutItemInput
     hospitality_booking_items?: hospitality_booking_itemsUncheckedCreateNestedManyWithoutItemInput
     product_inquiries?: product_inquiriesUncheckedCreateNestedManyWithoutItemInput
@@ -129218,6 +138375,7 @@ export namespace Prisma {
     variants?: item_variantsUncheckedCreateNestedManyWithoutItemInput
     order_items?: order_itemsUncheckedCreateNestedManyWithoutCatalog_itemInput
     external_catalog_items?: external_catalog_itemsUncheckedCreateNestedManyWithoutItemInput
+    appointment_sales_visits?: appointment_sales_visitsUncheckedCreateNestedManyWithoutItemInput
   }
 
   export type catalog_itemsUpdateInput = {
@@ -129244,6 +138402,7 @@ export namespace Prisma {
     product_detail?: product_item_detailsUpdateOneWithoutItemNestedInput
     hospitality_detail?: hospitality_item_detailsUpdateOneWithoutItemNestedInput
     vehicle_detail?: vehicle_item_detailsUpdateOneWithoutItemNestedInput
+    property_detail?: property_item_detailsUpdateOneWithoutItemNestedInput
     product_order_items?: product_order_itemsUpdateManyWithoutItemNestedInput
     hospitality_booking_items?: hospitality_booking_itemsUpdateManyWithoutItemNestedInput
     product_inquiries?: product_inquiriesUpdateManyWithoutItemNestedInput
@@ -129253,6 +138412,7 @@ export namespace Prisma {
     variants?: item_variantsUpdateManyWithoutItemNestedInput
     order_items?: order_itemsUpdateManyWithoutCatalog_itemNestedInput
     external_catalog_items?: external_catalog_itemsUpdateManyWithoutItemNestedInput
+    appointment_sales_visits?: appointment_sales_visitsUpdateManyWithoutItemNestedInput
   }
 
   export type catalog_itemsUncheckedUpdateInput = {
@@ -129280,6 +138440,7 @@ export namespace Prisma {
     product_detail?: product_item_detailsUncheckedUpdateOneWithoutItemNestedInput
     hospitality_detail?: hospitality_item_detailsUncheckedUpdateOneWithoutItemNestedInput
     vehicle_detail?: vehicle_item_detailsUncheckedUpdateOneWithoutItemNestedInput
+    property_detail?: property_item_detailsUncheckedUpdateOneWithoutItemNestedInput
     product_order_items?: product_order_itemsUncheckedUpdateManyWithoutItemNestedInput
     hospitality_booking_items?: hospitality_booking_itemsUncheckedUpdateManyWithoutItemNestedInput
     product_inquiries?: product_inquiriesUncheckedUpdateManyWithoutItemNestedInput
@@ -129288,6 +138449,7 @@ export namespace Prisma {
     variants?: item_variantsUncheckedUpdateManyWithoutItemNestedInput
     order_items?: order_itemsUncheckedUpdateManyWithoutCatalog_itemNestedInput
     external_catalog_items?: external_catalog_itemsUncheckedUpdateManyWithoutItemNestedInput
+    appointment_sales_visits?: appointment_sales_visitsUncheckedUpdateManyWithoutItemNestedInput
   }
 
   export type catalog_itemsCreateManyInput = {
@@ -131988,6 +141150,15 @@ export namespace Prisma {
     color?: string | null
     km_driven?: number | null
     condition?: string
+    ownership_count?: number | null
+    insurance_valid_until?: Date | string | null
+    registration_number?: string | null
+    rc_status?: string | null
+    finance_available?: boolean
+    exchange_accepted?: boolean
+    accident_history?: string | null
+    service_history?: string | null
+    test_drive_available?: boolean
     metadata?: NullableJsonNullValueInput | InputJsonValue
     created_at?: Date | string
     updated_at?: Date | string
@@ -132006,6 +141177,15 @@ export namespace Prisma {
     color?: string | null
     km_driven?: number | null
     condition?: string
+    ownership_count?: number | null
+    insurance_valid_until?: Date | string | null
+    registration_number?: string | null
+    rc_status?: string | null
+    finance_available?: boolean
+    exchange_accepted?: boolean
+    accident_history?: string | null
+    service_history?: string | null
+    test_drive_available?: boolean
     metadata?: NullableJsonNullValueInput | InputJsonValue
     created_at?: Date | string
     updated_at?: Date | string
@@ -132020,6 +141200,15 @@ export namespace Prisma {
     color?: NullableStringFieldUpdateOperationsInput | string | null
     km_driven?: NullableIntFieldUpdateOperationsInput | number | null
     condition?: StringFieldUpdateOperationsInput | string
+    ownership_count?: NullableIntFieldUpdateOperationsInput | number | null
+    insurance_valid_until?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    registration_number?: NullableStringFieldUpdateOperationsInput | string | null
+    rc_status?: NullableStringFieldUpdateOperationsInput | string | null
+    finance_available?: BoolFieldUpdateOperationsInput | boolean
+    exchange_accepted?: BoolFieldUpdateOperationsInput | boolean
+    accident_history?: NullableStringFieldUpdateOperationsInput | string | null
+    service_history?: NullableStringFieldUpdateOperationsInput | string | null
+    test_drive_available?: BoolFieldUpdateOperationsInput | boolean
     metadata?: NullableJsonNullValueInput | InputJsonValue
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -132038,6 +141227,15 @@ export namespace Prisma {
     color?: NullableStringFieldUpdateOperationsInput | string | null
     km_driven?: NullableIntFieldUpdateOperationsInput | number | null
     condition?: StringFieldUpdateOperationsInput | string
+    ownership_count?: NullableIntFieldUpdateOperationsInput | number | null
+    insurance_valid_until?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    registration_number?: NullableStringFieldUpdateOperationsInput | string | null
+    rc_status?: NullableStringFieldUpdateOperationsInput | string | null
+    finance_available?: BoolFieldUpdateOperationsInput | boolean
+    exchange_accepted?: BoolFieldUpdateOperationsInput | boolean
+    accident_history?: NullableStringFieldUpdateOperationsInput | string | null
+    service_history?: NullableStringFieldUpdateOperationsInput | string | null
+    test_drive_available?: BoolFieldUpdateOperationsInput | boolean
     metadata?: NullableJsonNullValueInput | InputJsonValue
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -132054,6 +141252,15 @@ export namespace Prisma {
     color?: string | null
     km_driven?: number | null
     condition?: string
+    ownership_count?: number | null
+    insurance_valid_until?: Date | string | null
+    registration_number?: string | null
+    rc_status?: string | null
+    finance_available?: boolean
+    exchange_accepted?: boolean
+    accident_history?: string | null
+    service_history?: string | null
+    test_drive_available?: boolean
     metadata?: NullableJsonNullValueInput | InputJsonValue
     created_at?: Date | string
     updated_at?: Date | string
@@ -132068,6 +141275,15 @@ export namespace Prisma {
     color?: NullableStringFieldUpdateOperationsInput | string | null
     km_driven?: NullableIntFieldUpdateOperationsInput | number | null
     condition?: StringFieldUpdateOperationsInput | string
+    ownership_count?: NullableIntFieldUpdateOperationsInput | number | null
+    insurance_valid_until?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    registration_number?: NullableStringFieldUpdateOperationsInput | string | null
+    rc_status?: NullableStringFieldUpdateOperationsInput | string | null
+    finance_available?: BoolFieldUpdateOperationsInput | boolean
+    exchange_accepted?: BoolFieldUpdateOperationsInput | boolean
+    accident_history?: NullableStringFieldUpdateOperationsInput | string | null
+    service_history?: NullableStringFieldUpdateOperationsInput | string | null
+    test_drive_available?: BoolFieldUpdateOperationsInput | boolean
     metadata?: NullableJsonNullValueInput | InputJsonValue
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -132084,7 +141300,719 @@ export namespace Prisma {
     color?: NullableStringFieldUpdateOperationsInput | string | null
     km_driven?: NullableIntFieldUpdateOperationsInput | number | null
     condition?: StringFieldUpdateOperationsInput | string
+    ownership_count?: NullableIntFieldUpdateOperationsInput | number | null
+    insurance_valid_until?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    registration_number?: NullableStringFieldUpdateOperationsInput | string | null
+    rc_status?: NullableStringFieldUpdateOperationsInput | string | null
+    finance_available?: BoolFieldUpdateOperationsInput | boolean
+    exchange_accepted?: BoolFieldUpdateOperationsInput | boolean
+    accident_history?: NullableStringFieldUpdateOperationsInput | string | null
+    service_history?: NullableStringFieldUpdateOperationsInput | string | null
+    test_drive_available?: BoolFieldUpdateOperationsInput | boolean
     metadata?: NullableJsonNullValueInput | InputJsonValue
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type property_item_detailsCreateInput = {
+    property_type: string
+    listing_type?: string
+    bedrooms?: number | null
+    bathrooms?: number | null
+    area_sqft?: number | null
+    floor_number?: number | null
+    total_floors?: number | null
+    locality?: string | null
+    city?: string | null
+    furnishing?: string | null
+    possession_status?: string | null
+    facing?: string | null
+    parking?: string | null
+    rera_id?: string | null
+    map_url?: string | null
+    documents_status?: string | null
+    loan_support_available?: boolean
+    visit_landmark?: string | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    created_at?: Date | string
+    updated_at?: Date | string
+    business: businessesCreateNestedOneWithoutProperty_item_detailsInput
+    item: catalog_itemsCreateNestedOneWithoutProperty_detailInput
+  }
+
+  export type property_item_detailsUncheckedCreateInput = {
+    item_id: string
+    business_id: string
+    property_type: string
+    listing_type?: string
+    bedrooms?: number | null
+    bathrooms?: number | null
+    area_sqft?: number | null
+    floor_number?: number | null
+    total_floors?: number | null
+    locality?: string | null
+    city?: string | null
+    furnishing?: string | null
+    possession_status?: string | null
+    facing?: string | null
+    parking?: string | null
+    rera_id?: string | null
+    map_url?: string | null
+    documents_status?: string | null
+    loan_support_available?: boolean
+    visit_landmark?: string | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    created_at?: Date | string
+    updated_at?: Date | string
+  }
+
+  export type property_item_detailsUpdateInput = {
+    property_type?: StringFieldUpdateOperationsInput | string
+    listing_type?: StringFieldUpdateOperationsInput | string
+    bedrooms?: NullableIntFieldUpdateOperationsInput | number | null
+    bathrooms?: NullableIntFieldUpdateOperationsInput | number | null
+    area_sqft?: NullableIntFieldUpdateOperationsInput | number | null
+    floor_number?: NullableIntFieldUpdateOperationsInput | number | null
+    total_floors?: NullableIntFieldUpdateOperationsInput | number | null
+    locality?: NullableStringFieldUpdateOperationsInput | string | null
+    city?: NullableStringFieldUpdateOperationsInput | string | null
+    furnishing?: NullableStringFieldUpdateOperationsInput | string | null
+    possession_status?: NullableStringFieldUpdateOperationsInput | string | null
+    facing?: NullableStringFieldUpdateOperationsInput | string | null
+    parking?: NullableStringFieldUpdateOperationsInput | string | null
+    rera_id?: NullableStringFieldUpdateOperationsInput | string | null
+    map_url?: NullableStringFieldUpdateOperationsInput | string | null
+    documents_status?: NullableStringFieldUpdateOperationsInput | string | null
+    loan_support_available?: BoolFieldUpdateOperationsInput | boolean
+    visit_landmark?: NullableStringFieldUpdateOperationsInput | string | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    business?: businessesUpdateOneRequiredWithoutProperty_item_detailsNestedInput
+    item?: catalog_itemsUpdateOneRequiredWithoutProperty_detailNestedInput
+  }
+
+  export type property_item_detailsUncheckedUpdateInput = {
+    item_id?: StringFieldUpdateOperationsInput | string
+    business_id?: StringFieldUpdateOperationsInput | string
+    property_type?: StringFieldUpdateOperationsInput | string
+    listing_type?: StringFieldUpdateOperationsInput | string
+    bedrooms?: NullableIntFieldUpdateOperationsInput | number | null
+    bathrooms?: NullableIntFieldUpdateOperationsInput | number | null
+    area_sqft?: NullableIntFieldUpdateOperationsInput | number | null
+    floor_number?: NullableIntFieldUpdateOperationsInput | number | null
+    total_floors?: NullableIntFieldUpdateOperationsInput | number | null
+    locality?: NullableStringFieldUpdateOperationsInput | string | null
+    city?: NullableStringFieldUpdateOperationsInput | string | null
+    furnishing?: NullableStringFieldUpdateOperationsInput | string | null
+    possession_status?: NullableStringFieldUpdateOperationsInput | string | null
+    facing?: NullableStringFieldUpdateOperationsInput | string | null
+    parking?: NullableStringFieldUpdateOperationsInput | string | null
+    rera_id?: NullableStringFieldUpdateOperationsInput | string | null
+    map_url?: NullableStringFieldUpdateOperationsInput | string | null
+    documents_status?: NullableStringFieldUpdateOperationsInput | string | null
+    loan_support_available?: BoolFieldUpdateOperationsInput | boolean
+    visit_landmark?: NullableStringFieldUpdateOperationsInput | string | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type property_item_detailsCreateManyInput = {
+    item_id: string
+    business_id: string
+    property_type: string
+    listing_type?: string
+    bedrooms?: number | null
+    bathrooms?: number | null
+    area_sqft?: number | null
+    floor_number?: number | null
+    total_floors?: number | null
+    locality?: string | null
+    city?: string | null
+    furnishing?: string | null
+    possession_status?: string | null
+    facing?: string | null
+    parking?: string | null
+    rera_id?: string | null
+    map_url?: string | null
+    documents_status?: string | null
+    loan_support_available?: boolean
+    visit_landmark?: string | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    created_at?: Date | string
+    updated_at?: Date | string
+  }
+
+  export type property_item_detailsUpdateManyMutationInput = {
+    property_type?: StringFieldUpdateOperationsInput | string
+    listing_type?: StringFieldUpdateOperationsInput | string
+    bedrooms?: NullableIntFieldUpdateOperationsInput | number | null
+    bathrooms?: NullableIntFieldUpdateOperationsInput | number | null
+    area_sqft?: NullableIntFieldUpdateOperationsInput | number | null
+    floor_number?: NullableIntFieldUpdateOperationsInput | number | null
+    total_floors?: NullableIntFieldUpdateOperationsInput | number | null
+    locality?: NullableStringFieldUpdateOperationsInput | string | null
+    city?: NullableStringFieldUpdateOperationsInput | string | null
+    furnishing?: NullableStringFieldUpdateOperationsInput | string | null
+    possession_status?: NullableStringFieldUpdateOperationsInput | string | null
+    facing?: NullableStringFieldUpdateOperationsInput | string | null
+    parking?: NullableStringFieldUpdateOperationsInput | string | null
+    rera_id?: NullableStringFieldUpdateOperationsInput | string | null
+    map_url?: NullableStringFieldUpdateOperationsInput | string | null
+    documents_status?: NullableStringFieldUpdateOperationsInput | string | null
+    loan_support_available?: BoolFieldUpdateOperationsInput | boolean
+    visit_landmark?: NullableStringFieldUpdateOperationsInput | string | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type property_item_detailsUncheckedUpdateManyInput = {
+    item_id?: StringFieldUpdateOperationsInput | string
+    business_id?: StringFieldUpdateOperationsInput | string
+    property_type?: StringFieldUpdateOperationsInput | string
+    listing_type?: StringFieldUpdateOperationsInput | string
+    bedrooms?: NullableIntFieldUpdateOperationsInput | number | null
+    bathrooms?: NullableIntFieldUpdateOperationsInput | number | null
+    area_sqft?: NullableIntFieldUpdateOperationsInput | number | null
+    floor_number?: NullableIntFieldUpdateOperationsInput | number | null
+    total_floors?: NullableIntFieldUpdateOperationsInput | number | null
+    locality?: NullableStringFieldUpdateOperationsInput | string | null
+    city?: NullableStringFieldUpdateOperationsInput | string | null
+    furnishing?: NullableStringFieldUpdateOperationsInput | string | null
+    possession_status?: NullableStringFieldUpdateOperationsInput | string | null
+    facing?: NullableStringFieldUpdateOperationsInput | string | null
+    parking?: NullableStringFieldUpdateOperationsInput | string | null
+    rera_id?: NullableStringFieldUpdateOperationsInput | string | null
+    map_url?: NullableStringFieldUpdateOperationsInput | string | null
+    documents_status?: NullableStringFieldUpdateOperationsInput | string | null
+    loan_support_available?: BoolFieldUpdateOperationsInput | boolean
+    visit_landmark?: NullableStringFieldUpdateOperationsInput | string | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type appointment_sales_settingsCreateInput = {
+    appointment_sales_settings_id?: string
+    business_id: string
+    tenant_id?: string | null
+    vertical_type: string
+    onboarding_status?: string
+    default_visit_type?: string
+    default_visit_location?: string | null
+    slot_duration_minutes?: number
+    visit_buffer_minutes?: number
+    auto_assign_visits?: boolean
+    reminder_minutes_before?: number
+    escalation_rules?: NullableJsonNullValueInput | InputJsonValue
+    setup_checklist?: NullableJsonNullValueInput | InputJsonValue
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    created_at?: Date | string
+    updated_at?: Date | string
+  }
+
+  export type appointment_sales_settingsUncheckedCreateInput = {
+    appointment_sales_settings_id?: string
+    business_id: string
+    tenant_id?: string | null
+    vertical_type: string
+    onboarding_status?: string
+    default_visit_type?: string
+    default_visit_location?: string | null
+    slot_duration_minutes?: number
+    visit_buffer_minutes?: number
+    auto_assign_visits?: boolean
+    reminder_minutes_before?: number
+    escalation_rules?: NullableJsonNullValueInput | InputJsonValue
+    setup_checklist?: NullableJsonNullValueInput | InputJsonValue
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    created_at?: Date | string
+    updated_at?: Date | string
+  }
+
+  export type appointment_sales_settingsUpdateInput = {
+    appointment_sales_settings_id?: StringFieldUpdateOperationsInput | string
+    business_id?: StringFieldUpdateOperationsInput | string
+    tenant_id?: NullableStringFieldUpdateOperationsInput | string | null
+    vertical_type?: StringFieldUpdateOperationsInput | string
+    onboarding_status?: StringFieldUpdateOperationsInput | string
+    default_visit_type?: StringFieldUpdateOperationsInput | string
+    default_visit_location?: NullableStringFieldUpdateOperationsInput | string | null
+    slot_duration_minutes?: IntFieldUpdateOperationsInput | number
+    visit_buffer_minutes?: IntFieldUpdateOperationsInput | number
+    auto_assign_visits?: BoolFieldUpdateOperationsInput | boolean
+    reminder_minutes_before?: IntFieldUpdateOperationsInput | number
+    escalation_rules?: NullableJsonNullValueInput | InputJsonValue
+    setup_checklist?: NullableJsonNullValueInput | InputJsonValue
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type appointment_sales_settingsUncheckedUpdateInput = {
+    appointment_sales_settings_id?: StringFieldUpdateOperationsInput | string
+    business_id?: StringFieldUpdateOperationsInput | string
+    tenant_id?: NullableStringFieldUpdateOperationsInput | string | null
+    vertical_type?: StringFieldUpdateOperationsInput | string
+    onboarding_status?: StringFieldUpdateOperationsInput | string
+    default_visit_type?: StringFieldUpdateOperationsInput | string
+    default_visit_location?: NullableStringFieldUpdateOperationsInput | string | null
+    slot_duration_minutes?: IntFieldUpdateOperationsInput | number
+    visit_buffer_minutes?: IntFieldUpdateOperationsInput | number
+    auto_assign_visits?: BoolFieldUpdateOperationsInput | boolean
+    reminder_minutes_before?: IntFieldUpdateOperationsInput | number
+    escalation_rules?: NullableJsonNullValueInput | InputJsonValue
+    setup_checklist?: NullableJsonNullValueInput | InputJsonValue
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type appointment_sales_settingsCreateManyInput = {
+    appointment_sales_settings_id?: string
+    business_id: string
+    tenant_id?: string | null
+    vertical_type: string
+    onboarding_status?: string
+    default_visit_type?: string
+    default_visit_location?: string | null
+    slot_duration_minutes?: number
+    visit_buffer_minutes?: number
+    auto_assign_visits?: boolean
+    reminder_minutes_before?: number
+    escalation_rules?: NullableJsonNullValueInput | InputJsonValue
+    setup_checklist?: NullableJsonNullValueInput | InputJsonValue
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    created_at?: Date | string
+    updated_at?: Date | string
+  }
+
+  export type appointment_sales_settingsUpdateManyMutationInput = {
+    appointment_sales_settings_id?: StringFieldUpdateOperationsInput | string
+    business_id?: StringFieldUpdateOperationsInput | string
+    tenant_id?: NullableStringFieldUpdateOperationsInput | string | null
+    vertical_type?: StringFieldUpdateOperationsInput | string
+    onboarding_status?: StringFieldUpdateOperationsInput | string
+    default_visit_type?: StringFieldUpdateOperationsInput | string
+    default_visit_location?: NullableStringFieldUpdateOperationsInput | string | null
+    slot_duration_minutes?: IntFieldUpdateOperationsInput | number
+    visit_buffer_minutes?: IntFieldUpdateOperationsInput | number
+    auto_assign_visits?: BoolFieldUpdateOperationsInput | boolean
+    reminder_minutes_before?: IntFieldUpdateOperationsInput | number
+    escalation_rules?: NullableJsonNullValueInput | InputJsonValue
+    setup_checklist?: NullableJsonNullValueInput | InputJsonValue
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type appointment_sales_settingsUncheckedUpdateManyInput = {
+    appointment_sales_settings_id?: StringFieldUpdateOperationsInput | string
+    business_id?: StringFieldUpdateOperationsInput | string
+    tenant_id?: NullableStringFieldUpdateOperationsInput | string | null
+    vertical_type?: StringFieldUpdateOperationsInput | string
+    onboarding_status?: StringFieldUpdateOperationsInput | string
+    default_visit_type?: StringFieldUpdateOperationsInput | string
+    default_visit_location?: NullableStringFieldUpdateOperationsInput | string | null
+    slot_duration_minutes?: IntFieldUpdateOperationsInput | number
+    visit_buffer_minutes?: IntFieldUpdateOperationsInput | number
+    auto_assign_visits?: BoolFieldUpdateOperationsInput | boolean
+    reminder_minutes_before?: IntFieldUpdateOperationsInput | number
+    escalation_rules?: NullableJsonNullValueInput | InputJsonValue
+    setup_checklist?: NullableJsonNullValueInput | InputJsonValue
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type appointment_sales_staffCreateInput = {
+    sales_staff_id?: string
+    business_id: string
+    tenant_id?: string | null
+    name: string
+    phone?: string | null
+    email?: string | null
+    role?: string
+    title?: string | null
+    priority?: number
+    is_active?: boolean
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    created_by?: string | null
+    created_at?: Date | string
+    updated_at?: Date | string
+    availability?: appointment_sales_staff_availabilityCreateNestedManyWithoutStaffInput
+    visits?: appointment_sales_visitsCreateNestedManyWithoutStaffInput
+  }
+
+  export type appointment_sales_staffUncheckedCreateInput = {
+    sales_staff_id?: string
+    business_id: string
+    tenant_id?: string | null
+    name: string
+    phone?: string | null
+    email?: string | null
+    role?: string
+    title?: string | null
+    priority?: number
+    is_active?: boolean
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    created_by?: string | null
+    created_at?: Date | string
+    updated_at?: Date | string
+    availability?: appointment_sales_staff_availabilityUncheckedCreateNestedManyWithoutStaffInput
+    visits?: appointment_sales_visitsUncheckedCreateNestedManyWithoutStaffInput
+  }
+
+  export type appointment_sales_staffUpdateInput = {
+    sales_staff_id?: StringFieldUpdateOperationsInput | string
+    business_id?: StringFieldUpdateOperationsInput | string
+    tenant_id?: NullableStringFieldUpdateOperationsInput | string | null
+    name?: StringFieldUpdateOperationsInput | string
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: StringFieldUpdateOperationsInput | string
+    title?: NullableStringFieldUpdateOperationsInput | string | null
+    priority?: IntFieldUpdateOperationsInput | number
+    is_active?: BoolFieldUpdateOperationsInput | boolean
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    created_by?: NullableStringFieldUpdateOperationsInput | string | null
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    availability?: appointment_sales_staff_availabilityUpdateManyWithoutStaffNestedInput
+    visits?: appointment_sales_visitsUpdateManyWithoutStaffNestedInput
+  }
+
+  export type appointment_sales_staffUncheckedUpdateInput = {
+    sales_staff_id?: StringFieldUpdateOperationsInput | string
+    business_id?: StringFieldUpdateOperationsInput | string
+    tenant_id?: NullableStringFieldUpdateOperationsInput | string | null
+    name?: StringFieldUpdateOperationsInput | string
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: StringFieldUpdateOperationsInput | string
+    title?: NullableStringFieldUpdateOperationsInput | string | null
+    priority?: IntFieldUpdateOperationsInput | number
+    is_active?: BoolFieldUpdateOperationsInput | boolean
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    created_by?: NullableStringFieldUpdateOperationsInput | string | null
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    availability?: appointment_sales_staff_availabilityUncheckedUpdateManyWithoutStaffNestedInput
+    visits?: appointment_sales_visitsUncheckedUpdateManyWithoutStaffNestedInput
+  }
+
+  export type appointment_sales_staffCreateManyInput = {
+    sales_staff_id?: string
+    business_id: string
+    tenant_id?: string | null
+    name: string
+    phone?: string | null
+    email?: string | null
+    role?: string
+    title?: string | null
+    priority?: number
+    is_active?: boolean
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    created_by?: string | null
+    created_at?: Date | string
+    updated_at?: Date | string
+  }
+
+  export type appointment_sales_staffUpdateManyMutationInput = {
+    sales_staff_id?: StringFieldUpdateOperationsInput | string
+    business_id?: StringFieldUpdateOperationsInput | string
+    tenant_id?: NullableStringFieldUpdateOperationsInput | string | null
+    name?: StringFieldUpdateOperationsInput | string
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: StringFieldUpdateOperationsInput | string
+    title?: NullableStringFieldUpdateOperationsInput | string | null
+    priority?: IntFieldUpdateOperationsInput | number
+    is_active?: BoolFieldUpdateOperationsInput | boolean
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    created_by?: NullableStringFieldUpdateOperationsInput | string | null
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type appointment_sales_staffUncheckedUpdateManyInput = {
+    sales_staff_id?: StringFieldUpdateOperationsInput | string
+    business_id?: StringFieldUpdateOperationsInput | string
+    tenant_id?: NullableStringFieldUpdateOperationsInput | string | null
+    name?: StringFieldUpdateOperationsInput | string
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: StringFieldUpdateOperationsInput | string
+    title?: NullableStringFieldUpdateOperationsInput | string | null
+    priority?: IntFieldUpdateOperationsInput | number
+    is_active?: BoolFieldUpdateOperationsInput | boolean
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    created_by?: NullableStringFieldUpdateOperationsInput | string | null
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type appointment_sales_staff_availabilityCreateInput = {
+    availability_id?: string
+    business_id: string
+    day_of_week: number
+    start_time: string
+    end_time: string
+    window_type?: string
+    label?: string | null
+    is_active?: boolean
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    created_at?: Date | string
+    updated_at?: Date | string
+    staff: appointment_sales_staffCreateNestedOneWithoutAvailabilityInput
+  }
+
+  export type appointment_sales_staff_availabilityUncheckedCreateInput = {
+    availability_id?: string
+    sales_staff_id: string
+    business_id: string
+    day_of_week: number
+    start_time: string
+    end_time: string
+    window_type?: string
+    label?: string | null
+    is_active?: boolean
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    created_at?: Date | string
+    updated_at?: Date | string
+  }
+
+  export type appointment_sales_staff_availabilityUpdateInput = {
+    availability_id?: StringFieldUpdateOperationsInput | string
+    business_id?: StringFieldUpdateOperationsInput | string
+    day_of_week?: IntFieldUpdateOperationsInput | number
+    start_time?: StringFieldUpdateOperationsInput | string
+    end_time?: StringFieldUpdateOperationsInput | string
+    window_type?: StringFieldUpdateOperationsInput | string
+    label?: NullableStringFieldUpdateOperationsInput | string | null
+    is_active?: BoolFieldUpdateOperationsInput | boolean
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    staff?: appointment_sales_staffUpdateOneRequiredWithoutAvailabilityNestedInput
+  }
+
+  export type appointment_sales_staff_availabilityUncheckedUpdateInput = {
+    availability_id?: StringFieldUpdateOperationsInput | string
+    sales_staff_id?: StringFieldUpdateOperationsInput | string
+    business_id?: StringFieldUpdateOperationsInput | string
+    day_of_week?: IntFieldUpdateOperationsInput | number
+    start_time?: StringFieldUpdateOperationsInput | string
+    end_time?: StringFieldUpdateOperationsInput | string
+    window_type?: StringFieldUpdateOperationsInput | string
+    label?: NullableStringFieldUpdateOperationsInput | string | null
+    is_active?: BoolFieldUpdateOperationsInput | boolean
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type appointment_sales_staff_availabilityCreateManyInput = {
+    availability_id?: string
+    sales_staff_id: string
+    business_id: string
+    day_of_week: number
+    start_time: string
+    end_time: string
+    window_type?: string
+    label?: string | null
+    is_active?: boolean
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    created_at?: Date | string
+    updated_at?: Date | string
+  }
+
+  export type appointment_sales_staff_availabilityUpdateManyMutationInput = {
+    availability_id?: StringFieldUpdateOperationsInput | string
+    business_id?: StringFieldUpdateOperationsInput | string
+    day_of_week?: IntFieldUpdateOperationsInput | number
+    start_time?: StringFieldUpdateOperationsInput | string
+    end_time?: StringFieldUpdateOperationsInput | string
+    window_type?: StringFieldUpdateOperationsInput | string
+    label?: NullableStringFieldUpdateOperationsInput | string | null
+    is_active?: BoolFieldUpdateOperationsInput | boolean
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type appointment_sales_staff_availabilityUncheckedUpdateManyInput = {
+    availability_id?: StringFieldUpdateOperationsInput | string
+    sales_staff_id?: StringFieldUpdateOperationsInput | string
+    business_id?: StringFieldUpdateOperationsInput | string
+    day_of_week?: IntFieldUpdateOperationsInput | number
+    start_time?: StringFieldUpdateOperationsInput | string
+    end_time?: StringFieldUpdateOperationsInput | string
+    window_type?: StringFieldUpdateOperationsInput | string
+    label?: NullableStringFieldUpdateOperationsInput | string | null
+    is_active?: BoolFieldUpdateOperationsInput | boolean
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type appointment_sales_visitsCreateInput = {
+    visit_id?: string
+    business_id: string
+    tenant_id?: string | null
+    lead_id?: string | null
+    customer_id?: string | null
+    visit_type?: string
+    status?: string
+    scheduled_start: Date | string
+    scheduled_end: Date | string
+    customer_name?: string | null
+    customer_phone?: string | null
+    location?: string | null
+    source?: string
+    notes?: string | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    created_by?: string | null
+    created_at?: Date | string
+    updated_at?: Date | string
+    item?: catalog_itemsCreateNestedOneWithoutAppointment_sales_visitsInput
+    staff?: appointment_sales_staffCreateNestedOneWithoutVisitsInput
+  }
+
+  export type appointment_sales_visitsUncheckedCreateInput = {
+    visit_id?: string
+    business_id: string
+    tenant_id?: string | null
+    lead_id?: string | null
+    customer_id?: string | null
+    item_id?: string | null
+    sales_staff_id?: string | null
+    visit_type?: string
+    status?: string
+    scheduled_start: Date | string
+    scheduled_end: Date | string
+    customer_name?: string | null
+    customer_phone?: string | null
+    location?: string | null
+    source?: string
+    notes?: string | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    created_by?: string | null
+    created_at?: Date | string
+    updated_at?: Date | string
+  }
+
+  export type appointment_sales_visitsUpdateInput = {
+    visit_id?: StringFieldUpdateOperationsInput | string
+    business_id?: StringFieldUpdateOperationsInput | string
+    tenant_id?: NullableStringFieldUpdateOperationsInput | string | null
+    lead_id?: NullableStringFieldUpdateOperationsInput | string | null
+    customer_id?: NullableStringFieldUpdateOperationsInput | string | null
+    visit_type?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    scheduled_start?: DateTimeFieldUpdateOperationsInput | Date | string
+    scheduled_end?: DateTimeFieldUpdateOperationsInput | Date | string
+    customer_name?: NullableStringFieldUpdateOperationsInput | string | null
+    customer_phone?: NullableStringFieldUpdateOperationsInput | string | null
+    location?: NullableStringFieldUpdateOperationsInput | string | null
+    source?: StringFieldUpdateOperationsInput | string
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    created_by?: NullableStringFieldUpdateOperationsInput | string | null
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    item?: catalog_itemsUpdateOneWithoutAppointment_sales_visitsNestedInput
+    staff?: appointment_sales_staffUpdateOneWithoutVisitsNestedInput
+  }
+
+  export type appointment_sales_visitsUncheckedUpdateInput = {
+    visit_id?: StringFieldUpdateOperationsInput | string
+    business_id?: StringFieldUpdateOperationsInput | string
+    tenant_id?: NullableStringFieldUpdateOperationsInput | string | null
+    lead_id?: NullableStringFieldUpdateOperationsInput | string | null
+    customer_id?: NullableStringFieldUpdateOperationsInput | string | null
+    item_id?: NullableStringFieldUpdateOperationsInput | string | null
+    sales_staff_id?: NullableStringFieldUpdateOperationsInput | string | null
+    visit_type?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    scheduled_start?: DateTimeFieldUpdateOperationsInput | Date | string
+    scheduled_end?: DateTimeFieldUpdateOperationsInput | Date | string
+    customer_name?: NullableStringFieldUpdateOperationsInput | string | null
+    customer_phone?: NullableStringFieldUpdateOperationsInput | string | null
+    location?: NullableStringFieldUpdateOperationsInput | string | null
+    source?: StringFieldUpdateOperationsInput | string
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    created_by?: NullableStringFieldUpdateOperationsInput | string | null
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type appointment_sales_visitsCreateManyInput = {
+    visit_id?: string
+    business_id: string
+    tenant_id?: string | null
+    lead_id?: string | null
+    customer_id?: string | null
+    item_id?: string | null
+    sales_staff_id?: string | null
+    visit_type?: string
+    status?: string
+    scheduled_start: Date | string
+    scheduled_end: Date | string
+    customer_name?: string | null
+    customer_phone?: string | null
+    location?: string | null
+    source?: string
+    notes?: string | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    created_by?: string | null
+    created_at?: Date | string
+    updated_at?: Date | string
+  }
+
+  export type appointment_sales_visitsUpdateManyMutationInput = {
+    visit_id?: StringFieldUpdateOperationsInput | string
+    business_id?: StringFieldUpdateOperationsInput | string
+    tenant_id?: NullableStringFieldUpdateOperationsInput | string | null
+    lead_id?: NullableStringFieldUpdateOperationsInput | string | null
+    customer_id?: NullableStringFieldUpdateOperationsInput | string | null
+    visit_type?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    scheduled_start?: DateTimeFieldUpdateOperationsInput | Date | string
+    scheduled_end?: DateTimeFieldUpdateOperationsInput | Date | string
+    customer_name?: NullableStringFieldUpdateOperationsInput | string | null
+    customer_phone?: NullableStringFieldUpdateOperationsInput | string | null
+    location?: NullableStringFieldUpdateOperationsInput | string | null
+    source?: StringFieldUpdateOperationsInput | string
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    created_by?: NullableStringFieldUpdateOperationsInput | string | null
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type appointment_sales_visitsUncheckedUpdateManyInput = {
+    visit_id?: StringFieldUpdateOperationsInput | string
+    business_id?: StringFieldUpdateOperationsInput | string
+    tenant_id?: NullableStringFieldUpdateOperationsInput | string | null
+    lead_id?: NullableStringFieldUpdateOperationsInput | string | null
+    customer_id?: NullableStringFieldUpdateOperationsInput | string | null
+    item_id?: NullableStringFieldUpdateOperationsInput | string | null
+    sales_staff_id?: NullableStringFieldUpdateOperationsInput | string | null
+    visit_type?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    scheduled_start?: DateTimeFieldUpdateOperationsInput | Date | string
+    scheduled_end?: DateTimeFieldUpdateOperationsInput | Date | string
+    customer_name?: NullableStringFieldUpdateOperationsInput | string | null
+    customer_phone?: NullableStringFieldUpdateOperationsInput | string | null
+    location?: NullableStringFieldUpdateOperationsInput | string | null
+    source?: StringFieldUpdateOperationsInput | string
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    created_by?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -134205,6 +144133,12 @@ export namespace Prisma {
     none?: vehicle_item_detailsWhereInput
   }
 
+  export type Property_item_detailsListRelationFilter = {
+    every?: property_item_detailsWhereInput
+    some?: property_item_detailsWhereInput
+    none?: property_item_detailsWhereInput
+  }
+
   export type Product_ordersListRelationFilter = {
     every?: product_ordersWhereInput
     some?: product_ordersWhereInput
@@ -134368,6 +144302,10 @@ export namespace Prisma {
   }
 
   export type vehicle_item_detailsOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type property_item_detailsOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -134954,7 +144892,17 @@ export namespace Prisma {
     none?: businessesWhereInput
   }
 
+  export type Tenant_conversation_configsListRelationFilter = {
+    every?: tenant_conversation_configsWhereInput
+    some?: tenant_conversation_configsWhereInput
+    none?: tenant_conversation_configsWhereInput
+  }
+
   export type businessesOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type tenant_conversation_configsOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -134995,6 +144943,95 @@ export namespace Prisma {
     gst_number?: SortOrder
     pan_number?: SortOrder
     registration_no?: SortOrder
+  }
+  export type JsonFilter<$PrismaModel = never> =
+    | PatchUndefined<
+        Either<Required<JsonFilterBase<$PrismaModel>>, Exclude<keyof Required<JsonFilterBase<$PrismaModel>>, 'path'>>,
+        Required<JsonFilterBase<$PrismaModel>>
+      >
+    | OptionalFlat<Omit<Required<JsonFilterBase<$PrismaModel>>, 'path'>>
+
+  export type JsonFilterBase<$PrismaModel = never> = {
+    equals?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+    path?: string[]
+    mode?: QueryMode | EnumQueryModeFieldRefInput<$PrismaModel>
+    string_contains?: string | StringFieldRefInput<$PrismaModel>
+    string_starts_with?: string | StringFieldRefInput<$PrismaModel>
+    string_ends_with?: string | StringFieldRefInput<$PrismaModel>
+    array_starts_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_ends_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_contains?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    lt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    lte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    gt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    gte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    not?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+  }
+
+  export type tenant_conversation_configsTenant_idWaba_idCompoundUniqueInput = {
+    tenant_id: string
+    waba_id: string
+  }
+
+  export type tenant_conversation_configsCountOrderByAggregateInput = {
+    config_id?: SortOrder
+    tenant_id?: SortOrder
+    waba_id?: SortOrder
+    mode?: SortOrder
+    flow?: SortOrder
+    capabilities?: SortOrder
+    rules?: SortOrder
+    is_active?: SortOrder
+    created_at?: SortOrder
+    updated_at?: SortOrder
+  }
+
+  export type tenant_conversation_configsMaxOrderByAggregateInput = {
+    config_id?: SortOrder
+    tenant_id?: SortOrder
+    waba_id?: SortOrder
+    mode?: SortOrder
+    flow?: SortOrder
+    is_active?: SortOrder
+    created_at?: SortOrder
+    updated_at?: SortOrder
+  }
+
+  export type tenant_conversation_configsMinOrderByAggregateInput = {
+    config_id?: SortOrder
+    tenant_id?: SortOrder
+    waba_id?: SortOrder
+    mode?: SortOrder
+    flow?: SortOrder
+    is_active?: SortOrder
+    created_at?: SortOrder
+    updated_at?: SortOrder
+  }
+  export type JsonWithAggregatesFilter<$PrismaModel = never> =
+    | PatchUndefined<
+        Either<Required<JsonWithAggregatesFilterBase<$PrismaModel>>, Exclude<keyof Required<JsonWithAggregatesFilterBase<$PrismaModel>>, 'path'>>,
+        Required<JsonWithAggregatesFilterBase<$PrismaModel>>
+      >
+    | OptionalFlat<Omit<Required<JsonWithAggregatesFilterBase<$PrismaModel>>, 'path'>>
+
+  export type JsonWithAggregatesFilterBase<$PrismaModel = never> = {
+    equals?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+    path?: string[]
+    mode?: QueryMode | EnumQueryModeFieldRefInput<$PrismaModel>
+    string_contains?: string | StringFieldRefInput<$PrismaModel>
+    string_starts_with?: string | StringFieldRefInput<$PrismaModel>
+    string_ends_with?: string | StringFieldRefInput<$PrismaModel>
+    array_starts_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_ends_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_contains?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    lt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    lte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    gt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    gte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    not?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedJsonFilter<$PrismaModel>
+    _max?: NestedJsonFilter<$PrismaModel>
   }
 
   export type Lead_followupsListRelationFilter = {
@@ -136073,29 +146110,6 @@ export namespace Prisma {
     gte?: bigint | number | BigIntFieldRefInput<$PrismaModel>
     not?: NestedBigIntFilter<$PrismaModel> | bigint | number
   }
-  export type JsonFilter<$PrismaModel = never> =
-    | PatchUndefined<
-        Either<Required<JsonFilterBase<$PrismaModel>>, Exclude<keyof Required<JsonFilterBase<$PrismaModel>>, 'path'>>,
-        Required<JsonFilterBase<$PrismaModel>>
-      >
-    | OptionalFlat<Omit<Required<JsonFilterBase<$PrismaModel>>, 'path'>>
-
-  export type JsonFilterBase<$PrismaModel = never> = {
-    equals?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
-    path?: string[]
-    mode?: QueryMode | EnumQueryModeFieldRefInput<$PrismaModel>
-    string_contains?: string | StringFieldRefInput<$PrismaModel>
-    string_starts_with?: string | StringFieldRefInput<$PrismaModel>
-    string_ends_with?: string | StringFieldRefInput<$PrismaModel>
-    array_starts_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
-    array_ends_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
-    array_contains?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
-    lt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
-    lte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
-    gt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
-    gte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
-    not?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
-  }
 
   export type campaign_recipientsCountOrderByAggregateInput = {
     id?: SortOrder
@@ -136182,32 +146196,6 @@ export namespace Prisma {
     _sum?: NestedBigIntFilter<$PrismaModel>
     _min?: NestedBigIntFilter<$PrismaModel>
     _max?: NestedBigIntFilter<$PrismaModel>
-  }
-  export type JsonWithAggregatesFilter<$PrismaModel = never> =
-    | PatchUndefined<
-        Either<Required<JsonWithAggregatesFilterBase<$PrismaModel>>, Exclude<keyof Required<JsonWithAggregatesFilterBase<$PrismaModel>>, 'path'>>,
-        Required<JsonWithAggregatesFilterBase<$PrismaModel>>
-      >
-    | OptionalFlat<Omit<Required<JsonWithAggregatesFilterBase<$PrismaModel>>, 'path'>>
-
-  export type JsonWithAggregatesFilterBase<$PrismaModel = never> = {
-    equals?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
-    path?: string[]
-    mode?: QueryMode | EnumQueryModeFieldRefInput<$PrismaModel>
-    string_contains?: string | StringFieldRefInput<$PrismaModel>
-    string_starts_with?: string | StringFieldRefInput<$PrismaModel>
-    string_ends_with?: string | StringFieldRefInput<$PrismaModel>
-    array_starts_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
-    array_ends_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
-    array_contains?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
-    lt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
-    lte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
-    gt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
-    gte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
-    not?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
-    _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedJsonFilter<$PrismaModel>
-    _max?: NestedJsonFilter<$PrismaModel>
   }
 
   export type CampaignsListRelationFilter = {
@@ -137581,6 +147569,11 @@ export namespace Prisma {
     isNot?: vehicle_item_detailsWhereInput | null
   }
 
+  export type Property_item_detailsNullableScalarRelationFilter = {
+    is?: property_item_detailsWhereInput | null
+    isNot?: property_item_detailsWhereInput | null
+  }
+
   export type Product_order_itemsListRelationFilter = {
     every?: product_order_itemsWhereInput
     some?: product_order_itemsWhereInput
@@ -137605,6 +147598,12 @@ export namespace Prisma {
     none?: item_variantsWhereInput
   }
 
+  export type Appointment_sales_visitsListRelationFilter = {
+    every?: appointment_sales_visitsWhereInput
+    some?: appointment_sales_visitsWhereInput
+    none?: appointment_sales_visitsWhereInput
+  }
+
   export type product_order_itemsOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
@@ -137618,6 +147617,10 @@ export namespace Prisma {
   }
 
   export type item_variantsOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type appointment_sales_visitsOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -139006,6 +149009,15 @@ export namespace Prisma {
     color?: SortOrder
     km_driven?: SortOrder
     condition?: SortOrder
+    ownership_count?: SortOrder
+    insurance_valid_until?: SortOrder
+    registration_number?: SortOrder
+    rc_status?: SortOrder
+    finance_available?: SortOrder
+    exchange_accepted?: SortOrder
+    accident_history?: SortOrder
+    service_history?: SortOrder
+    test_drive_available?: SortOrder
     metadata?: SortOrder
     created_at?: SortOrder
     updated_at?: SortOrder
@@ -139014,6 +149026,7 @@ export namespace Prisma {
   export type vehicle_item_detailsAvgOrderByAggregateInput = {
     year?: SortOrder
     km_driven?: SortOrder
+    ownership_count?: SortOrder
   }
 
   export type vehicle_item_detailsMaxOrderByAggregateInput = {
@@ -139027,6 +149040,15 @@ export namespace Prisma {
     color?: SortOrder
     km_driven?: SortOrder
     condition?: SortOrder
+    ownership_count?: SortOrder
+    insurance_valid_until?: SortOrder
+    registration_number?: SortOrder
+    rc_status?: SortOrder
+    finance_available?: SortOrder
+    exchange_accepted?: SortOrder
+    accident_history?: SortOrder
+    service_history?: SortOrder
+    test_drive_available?: SortOrder
     created_at?: SortOrder
     updated_at?: SortOrder
   }
@@ -139042,6 +149064,15 @@ export namespace Prisma {
     color?: SortOrder
     km_driven?: SortOrder
     condition?: SortOrder
+    ownership_count?: SortOrder
+    insurance_valid_until?: SortOrder
+    registration_number?: SortOrder
+    rc_status?: SortOrder
+    finance_available?: SortOrder
+    exchange_accepted?: SortOrder
+    accident_history?: SortOrder
+    service_history?: SortOrder
+    test_drive_available?: SortOrder
     created_at?: SortOrder
     updated_at?: SortOrder
   }
@@ -139049,6 +149080,357 @@ export namespace Prisma {
   export type vehicle_item_detailsSumOrderByAggregateInput = {
     year?: SortOrder
     km_driven?: SortOrder
+    ownership_count?: SortOrder
+  }
+
+  export type property_item_detailsCountOrderByAggregateInput = {
+    item_id?: SortOrder
+    business_id?: SortOrder
+    property_type?: SortOrder
+    listing_type?: SortOrder
+    bedrooms?: SortOrder
+    bathrooms?: SortOrder
+    area_sqft?: SortOrder
+    floor_number?: SortOrder
+    total_floors?: SortOrder
+    locality?: SortOrder
+    city?: SortOrder
+    furnishing?: SortOrder
+    possession_status?: SortOrder
+    facing?: SortOrder
+    parking?: SortOrder
+    rera_id?: SortOrder
+    map_url?: SortOrder
+    documents_status?: SortOrder
+    loan_support_available?: SortOrder
+    visit_landmark?: SortOrder
+    metadata?: SortOrder
+    created_at?: SortOrder
+    updated_at?: SortOrder
+  }
+
+  export type property_item_detailsAvgOrderByAggregateInput = {
+    bedrooms?: SortOrder
+    bathrooms?: SortOrder
+    area_sqft?: SortOrder
+    floor_number?: SortOrder
+    total_floors?: SortOrder
+  }
+
+  export type property_item_detailsMaxOrderByAggregateInput = {
+    item_id?: SortOrder
+    business_id?: SortOrder
+    property_type?: SortOrder
+    listing_type?: SortOrder
+    bedrooms?: SortOrder
+    bathrooms?: SortOrder
+    area_sqft?: SortOrder
+    floor_number?: SortOrder
+    total_floors?: SortOrder
+    locality?: SortOrder
+    city?: SortOrder
+    furnishing?: SortOrder
+    possession_status?: SortOrder
+    facing?: SortOrder
+    parking?: SortOrder
+    rera_id?: SortOrder
+    map_url?: SortOrder
+    documents_status?: SortOrder
+    loan_support_available?: SortOrder
+    visit_landmark?: SortOrder
+    created_at?: SortOrder
+    updated_at?: SortOrder
+  }
+
+  export type property_item_detailsMinOrderByAggregateInput = {
+    item_id?: SortOrder
+    business_id?: SortOrder
+    property_type?: SortOrder
+    listing_type?: SortOrder
+    bedrooms?: SortOrder
+    bathrooms?: SortOrder
+    area_sqft?: SortOrder
+    floor_number?: SortOrder
+    total_floors?: SortOrder
+    locality?: SortOrder
+    city?: SortOrder
+    furnishing?: SortOrder
+    possession_status?: SortOrder
+    facing?: SortOrder
+    parking?: SortOrder
+    rera_id?: SortOrder
+    map_url?: SortOrder
+    documents_status?: SortOrder
+    loan_support_available?: SortOrder
+    visit_landmark?: SortOrder
+    created_at?: SortOrder
+    updated_at?: SortOrder
+  }
+
+  export type property_item_detailsSumOrderByAggregateInput = {
+    bedrooms?: SortOrder
+    bathrooms?: SortOrder
+    area_sqft?: SortOrder
+    floor_number?: SortOrder
+    total_floors?: SortOrder
+  }
+
+  export type appointment_sales_settingsCountOrderByAggregateInput = {
+    appointment_sales_settings_id?: SortOrder
+    business_id?: SortOrder
+    tenant_id?: SortOrder
+    vertical_type?: SortOrder
+    onboarding_status?: SortOrder
+    default_visit_type?: SortOrder
+    default_visit_location?: SortOrder
+    slot_duration_minutes?: SortOrder
+    visit_buffer_minutes?: SortOrder
+    auto_assign_visits?: SortOrder
+    reminder_minutes_before?: SortOrder
+    escalation_rules?: SortOrder
+    setup_checklist?: SortOrder
+    metadata?: SortOrder
+    created_at?: SortOrder
+    updated_at?: SortOrder
+  }
+
+  export type appointment_sales_settingsAvgOrderByAggregateInput = {
+    slot_duration_minutes?: SortOrder
+    visit_buffer_minutes?: SortOrder
+    reminder_minutes_before?: SortOrder
+  }
+
+  export type appointment_sales_settingsMaxOrderByAggregateInput = {
+    appointment_sales_settings_id?: SortOrder
+    business_id?: SortOrder
+    tenant_id?: SortOrder
+    vertical_type?: SortOrder
+    onboarding_status?: SortOrder
+    default_visit_type?: SortOrder
+    default_visit_location?: SortOrder
+    slot_duration_minutes?: SortOrder
+    visit_buffer_minutes?: SortOrder
+    auto_assign_visits?: SortOrder
+    reminder_minutes_before?: SortOrder
+    created_at?: SortOrder
+    updated_at?: SortOrder
+  }
+
+  export type appointment_sales_settingsMinOrderByAggregateInput = {
+    appointment_sales_settings_id?: SortOrder
+    business_id?: SortOrder
+    tenant_id?: SortOrder
+    vertical_type?: SortOrder
+    onboarding_status?: SortOrder
+    default_visit_type?: SortOrder
+    default_visit_location?: SortOrder
+    slot_duration_minutes?: SortOrder
+    visit_buffer_minutes?: SortOrder
+    auto_assign_visits?: SortOrder
+    reminder_minutes_before?: SortOrder
+    created_at?: SortOrder
+    updated_at?: SortOrder
+  }
+
+  export type appointment_sales_settingsSumOrderByAggregateInput = {
+    slot_duration_minutes?: SortOrder
+    visit_buffer_minutes?: SortOrder
+    reminder_minutes_before?: SortOrder
+  }
+
+  export type Appointment_sales_staff_availabilityListRelationFilter = {
+    every?: appointment_sales_staff_availabilityWhereInput
+    some?: appointment_sales_staff_availabilityWhereInput
+    none?: appointment_sales_staff_availabilityWhereInput
+  }
+
+  export type appointment_sales_staff_availabilityOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type appointment_sales_staffCountOrderByAggregateInput = {
+    sales_staff_id?: SortOrder
+    business_id?: SortOrder
+    tenant_id?: SortOrder
+    name?: SortOrder
+    phone?: SortOrder
+    email?: SortOrder
+    role?: SortOrder
+    title?: SortOrder
+    priority?: SortOrder
+    is_active?: SortOrder
+    metadata?: SortOrder
+    created_by?: SortOrder
+    created_at?: SortOrder
+    updated_at?: SortOrder
+  }
+
+  export type appointment_sales_staffAvgOrderByAggregateInput = {
+    priority?: SortOrder
+  }
+
+  export type appointment_sales_staffMaxOrderByAggregateInput = {
+    sales_staff_id?: SortOrder
+    business_id?: SortOrder
+    tenant_id?: SortOrder
+    name?: SortOrder
+    phone?: SortOrder
+    email?: SortOrder
+    role?: SortOrder
+    title?: SortOrder
+    priority?: SortOrder
+    is_active?: SortOrder
+    created_by?: SortOrder
+    created_at?: SortOrder
+    updated_at?: SortOrder
+  }
+
+  export type appointment_sales_staffMinOrderByAggregateInput = {
+    sales_staff_id?: SortOrder
+    business_id?: SortOrder
+    tenant_id?: SortOrder
+    name?: SortOrder
+    phone?: SortOrder
+    email?: SortOrder
+    role?: SortOrder
+    title?: SortOrder
+    priority?: SortOrder
+    is_active?: SortOrder
+    created_by?: SortOrder
+    created_at?: SortOrder
+    updated_at?: SortOrder
+  }
+
+  export type appointment_sales_staffSumOrderByAggregateInput = {
+    priority?: SortOrder
+  }
+
+  export type Appointment_sales_staffScalarRelationFilter = {
+    is?: appointment_sales_staffWhereInput
+    isNot?: appointment_sales_staffWhereInput
+  }
+
+  export type appointment_sales_staff_availabilityCountOrderByAggregateInput = {
+    availability_id?: SortOrder
+    sales_staff_id?: SortOrder
+    business_id?: SortOrder
+    day_of_week?: SortOrder
+    start_time?: SortOrder
+    end_time?: SortOrder
+    window_type?: SortOrder
+    label?: SortOrder
+    is_active?: SortOrder
+    metadata?: SortOrder
+    created_at?: SortOrder
+    updated_at?: SortOrder
+  }
+
+  export type appointment_sales_staff_availabilityAvgOrderByAggregateInput = {
+    day_of_week?: SortOrder
+  }
+
+  export type appointment_sales_staff_availabilityMaxOrderByAggregateInput = {
+    availability_id?: SortOrder
+    sales_staff_id?: SortOrder
+    business_id?: SortOrder
+    day_of_week?: SortOrder
+    start_time?: SortOrder
+    end_time?: SortOrder
+    window_type?: SortOrder
+    label?: SortOrder
+    is_active?: SortOrder
+    created_at?: SortOrder
+    updated_at?: SortOrder
+  }
+
+  export type appointment_sales_staff_availabilityMinOrderByAggregateInput = {
+    availability_id?: SortOrder
+    sales_staff_id?: SortOrder
+    business_id?: SortOrder
+    day_of_week?: SortOrder
+    start_time?: SortOrder
+    end_time?: SortOrder
+    window_type?: SortOrder
+    label?: SortOrder
+    is_active?: SortOrder
+    created_at?: SortOrder
+    updated_at?: SortOrder
+  }
+
+  export type appointment_sales_staff_availabilitySumOrderByAggregateInput = {
+    day_of_week?: SortOrder
+  }
+
+  export type Appointment_sales_staffNullableScalarRelationFilter = {
+    is?: appointment_sales_staffWhereInput | null
+    isNot?: appointment_sales_staffWhereInput | null
+  }
+
+  export type appointment_sales_visitsCountOrderByAggregateInput = {
+    visit_id?: SortOrder
+    business_id?: SortOrder
+    tenant_id?: SortOrder
+    lead_id?: SortOrder
+    customer_id?: SortOrder
+    item_id?: SortOrder
+    sales_staff_id?: SortOrder
+    visit_type?: SortOrder
+    status?: SortOrder
+    scheduled_start?: SortOrder
+    scheduled_end?: SortOrder
+    customer_name?: SortOrder
+    customer_phone?: SortOrder
+    location?: SortOrder
+    source?: SortOrder
+    notes?: SortOrder
+    metadata?: SortOrder
+    created_by?: SortOrder
+    created_at?: SortOrder
+    updated_at?: SortOrder
+  }
+
+  export type appointment_sales_visitsMaxOrderByAggregateInput = {
+    visit_id?: SortOrder
+    business_id?: SortOrder
+    tenant_id?: SortOrder
+    lead_id?: SortOrder
+    customer_id?: SortOrder
+    item_id?: SortOrder
+    sales_staff_id?: SortOrder
+    visit_type?: SortOrder
+    status?: SortOrder
+    scheduled_start?: SortOrder
+    scheduled_end?: SortOrder
+    customer_name?: SortOrder
+    customer_phone?: SortOrder
+    location?: SortOrder
+    source?: SortOrder
+    notes?: SortOrder
+    created_by?: SortOrder
+    created_at?: SortOrder
+    updated_at?: SortOrder
+  }
+
+  export type appointment_sales_visitsMinOrderByAggregateInput = {
+    visit_id?: SortOrder
+    business_id?: SortOrder
+    tenant_id?: SortOrder
+    lead_id?: SortOrder
+    customer_id?: SortOrder
+    item_id?: SortOrder
+    sales_staff_id?: SortOrder
+    visit_type?: SortOrder
+    status?: SortOrder
+    scheduled_start?: SortOrder
+    scheduled_end?: SortOrder
+    customer_name?: SortOrder
+    customer_phone?: SortOrder
+    location?: SortOrder
+    source?: SortOrder
+    notes?: SortOrder
+    created_by?: SortOrder
+    created_at?: SortOrder
+    updated_at?: SortOrder
   }
 
   export type hospitality_inquiriesCountOrderByAggregateInput = {
@@ -140195,6 +150577,13 @@ export namespace Prisma {
     connect?: vehicle_item_detailsWhereUniqueInput | vehicle_item_detailsWhereUniqueInput[]
   }
 
+  export type property_item_detailsCreateNestedManyWithoutBusinessInput = {
+    create?: XOR<property_item_detailsCreateWithoutBusinessInput, property_item_detailsUncheckedCreateWithoutBusinessInput> | property_item_detailsCreateWithoutBusinessInput[] | property_item_detailsUncheckedCreateWithoutBusinessInput[]
+    connectOrCreate?: property_item_detailsCreateOrConnectWithoutBusinessInput | property_item_detailsCreateOrConnectWithoutBusinessInput[]
+    createMany?: property_item_detailsCreateManyBusinessInputEnvelope
+    connect?: property_item_detailsWhereUniqueInput | property_item_detailsWhereUniqueInput[]
+  }
+
   export type product_ordersCreateNestedManyWithoutBusinessInput = {
     create?: XOR<product_ordersCreateWithoutBusinessInput, product_ordersUncheckedCreateWithoutBusinessInput> | product_ordersCreateWithoutBusinessInput[] | product_ordersUncheckedCreateWithoutBusinessInput[]
     connectOrCreate?: product_ordersCreateOrConnectWithoutBusinessInput | product_ordersCreateOrConnectWithoutBusinessInput[]
@@ -140400,6 +150789,13 @@ export namespace Prisma {
     connectOrCreate?: vehicle_item_detailsCreateOrConnectWithoutBusinessInput | vehicle_item_detailsCreateOrConnectWithoutBusinessInput[]
     createMany?: vehicle_item_detailsCreateManyBusinessInputEnvelope
     connect?: vehicle_item_detailsWhereUniqueInput | vehicle_item_detailsWhereUniqueInput[]
+  }
+
+  export type property_item_detailsUncheckedCreateNestedManyWithoutBusinessInput = {
+    create?: XOR<property_item_detailsCreateWithoutBusinessInput, property_item_detailsUncheckedCreateWithoutBusinessInput> | property_item_detailsCreateWithoutBusinessInput[] | property_item_detailsUncheckedCreateWithoutBusinessInput[]
+    connectOrCreate?: property_item_detailsCreateOrConnectWithoutBusinessInput | property_item_detailsCreateOrConnectWithoutBusinessInput[]
+    createMany?: property_item_detailsCreateManyBusinessInputEnvelope
+    connect?: property_item_detailsWhereUniqueInput | property_item_detailsWhereUniqueInput[]
   }
 
   export type product_ordersUncheckedCreateNestedManyWithoutBusinessInput = {
@@ -140691,6 +151087,20 @@ export namespace Prisma {
     update?: vehicle_item_detailsUpdateWithWhereUniqueWithoutBusinessInput | vehicle_item_detailsUpdateWithWhereUniqueWithoutBusinessInput[]
     updateMany?: vehicle_item_detailsUpdateManyWithWhereWithoutBusinessInput | vehicle_item_detailsUpdateManyWithWhereWithoutBusinessInput[]
     deleteMany?: vehicle_item_detailsScalarWhereInput | vehicle_item_detailsScalarWhereInput[]
+  }
+
+  export type property_item_detailsUpdateManyWithoutBusinessNestedInput = {
+    create?: XOR<property_item_detailsCreateWithoutBusinessInput, property_item_detailsUncheckedCreateWithoutBusinessInput> | property_item_detailsCreateWithoutBusinessInput[] | property_item_detailsUncheckedCreateWithoutBusinessInput[]
+    connectOrCreate?: property_item_detailsCreateOrConnectWithoutBusinessInput | property_item_detailsCreateOrConnectWithoutBusinessInput[]
+    upsert?: property_item_detailsUpsertWithWhereUniqueWithoutBusinessInput | property_item_detailsUpsertWithWhereUniqueWithoutBusinessInput[]
+    createMany?: property_item_detailsCreateManyBusinessInputEnvelope
+    set?: property_item_detailsWhereUniqueInput | property_item_detailsWhereUniqueInput[]
+    disconnect?: property_item_detailsWhereUniqueInput | property_item_detailsWhereUniqueInput[]
+    delete?: property_item_detailsWhereUniqueInput | property_item_detailsWhereUniqueInput[]
+    connect?: property_item_detailsWhereUniqueInput | property_item_detailsWhereUniqueInput[]
+    update?: property_item_detailsUpdateWithWhereUniqueWithoutBusinessInput | property_item_detailsUpdateWithWhereUniqueWithoutBusinessInput[]
+    updateMany?: property_item_detailsUpdateManyWithWhereWithoutBusinessInput | property_item_detailsUpdateManyWithWhereWithoutBusinessInput[]
+    deleteMany?: property_item_detailsScalarWhereInput | property_item_detailsScalarWhereInput[]
   }
 
   export type product_ordersUpdateManyWithoutBusinessNestedInput = {
@@ -141099,6 +151509,20 @@ export namespace Prisma {
     update?: vehicle_item_detailsUpdateWithWhereUniqueWithoutBusinessInput | vehicle_item_detailsUpdateWithWhereUniqueWithoutBusinessInput[]
     updateMany?: vehicle_item_detailsUpdateManyWithWhereWithoutBusinessInput | vehicle_item_detailsUpdateManyWithWhereWithoutBusinessInput[]
     deleteMany?: vehicle_item_detailsScalarWhereInput | vehicle_item_detailsScalarWhereInput[]
+  }
+
+  export type property_item_detailsUncheckedUpdateManyWithoutBusinessNestedInput = {
+    create?: XOR<property_item_detailsCreateWithoutBusinessInput, property_item_detailsUncheckedCreateWithoutBusinessInput> | property_item_detailsCreateWithoutBusinessInput[] | property_item_detailsUncheckedCreateWithoutBusinessInput[]
+    connectOrCreate?: property_item_detailsCreateOrConnectWithoutBusinessInput | property_item_detailsCreateOrConnectWithoutBusinessInput[]
+    upsert?: property_item_detailsUpsertWithWhereUniqueWithoutBusinessInput | property_item_detailsUpsertWithWhereUniqueWithoutBusinessInput[]
+    createMany?: property_item_detailsCreateManyBusinessInputEnvelope
+    set?: property_item_detailsWhereUniqueInput | property_item_detailsWhereUniqueInput[]
+    disconnect?: property_item_detailsWhereUniqueInput | property_item_detailsWhereUniqueInput[]
+    delete?: property_item_detailsWhereUniqueInput | property_item_detailsWhereUniqueInput[]
+    connect?: property_item_detailsWhereUniqueInput | property_item_detailsWhereUniqueInput[]
+    update?: property_item_detailsUpdateWithWhereUniqueWithoutBusinessInput | property_item_detailsUpdateWithWhereUniqueWithoutBusinessInput[]
+    updateMany?: property_item_detailsUpdateManyWithWhereWithoutBusinessInput | property_item_detailsUpdateManyWithWhereWithoutBusinessInput[]
+    deleteMany?: property_item_detailsScalarWhereInput | property_item_detailsScalarWhereInput[]
   }
 
   export type product_ordersUncheckedUpdateManyWithoutBusinessNestedInput = {
@@ -141738,6 +152162,13 @@ export namespace Prisma {
     connect?: notification_templatesWhereUniqueInput | notification_templatesWhereUniqueInput[]
   }
 
+  export type tenant_conversation_configsCreateNestedManyWithoutTenantInput = {
+    create?: XOR<tenant_conversation_configsCreateWithoutTenantInput, tenant_conversation_configsUncheckedCreateWithoutTenantInput> | tenant_conversation_configsCreateWithoutTenantInput[] | tenant_conversation_configsUncheckedCreateWithoutTenantInput[]
+    connectOrCreate?: tenant_conversation_configsCreateOrConnectWithoutTenantInput | tenant_conversation_configsCreateOrConnectWithoutTenantInput[]
+    createMany?: tenant_conversation_configsCreateManyTenantInputEnvelope
+    connect?: tenant_conversation_configsWhereUniqueInput | tenant_conversation_configsWhereUniqueInput[]
+  }
+
   export type business_workflowsUncheckedCreateNestedManyWithoutTenantsInput = {
     create?: XOR<business_workflowsCreateWithoutTenantsInput, business_workflowsUncheckedCreateWithoutTenantsInput> | business_workflowsCreateWithoutTenantsInput[] | business_workflowsUncheckedCreateWithoutTenantsInput[]
     connectOrCreate?: business_workflowsCreateOrConnectWithoutTenantsInput | business_workflowsCreateOrConnectWithoutTenantsInput[]
@@ -141827,6 +152258,13 @@ export namespace Prisma {
     connectOrCreate?: notification_templatesCreateOrConnectWithoutTenantsInput | notification_templatesCreateOrConnectWithoutTenantsInput[]
     createMany?: notification_templatesCreateManyTenantsInputEnvelope
     connect?: notification_templatesWhereUniqueInput | notification_templatesWhereUniqueInput[]
+  }
+
+  export type tenant_conversation_configsUncheckedCreateNestedManyWithoutTenantInput = {
+    create?: XOR<tenant_conversation_configsCreateWithoutTenantInput, tenant_conversation_configsUncheckedCreateWithoutTenantInput> | tenant_conversation_configsCreateWithoutTenantInput[] | tenant_conversation_configsUncheckedCreateWithoutTenantInput[]
+    connectOrCreate?: tenant_conversation_configsCreateOrConnectWithoutTenantInput | tenant_conversation_configsCreateOrConnectWithoutTenantInput[]
+    createMany?: tenant_conversation_configsCreateManyTenantInputEnvelope
+    connect?: tenant_conversation_configsWhereUniqueInput | tenant_conversation_configsWhereUniqueInput[]
   }
 
   export type business_workflowsUpdateManyWithoutTenantsNestedInput = {
@@ -142011,6 +152449,20 @@ export namespace Prisma {
     deleteMany?: notification_templatesScalarWhereInput | notification_templatesScalarWhereInput[]
   }
 
+  export type tenant_conversation_configsUpdateManyWithoutTenantNestedInput = {
+    create?: XOR<tenant_conversation_configsCreateWithoutTenantInput, tenant_conversation_configsUncheckedCreateWithoutTenantInput> | tenant_conversation_configsCreateWithoutTenantInput[] | tenant_conversation_configsUncheckedCreateWithoutTenantInput[]
+    connectOrCreate?: tenant_conversation_configsCreateOrConnectWithoutTenantInput | tenant_conversation_configsCreateOrConnectWithoutTenantInput[]
+    upsert?: tenant_conversation_configsUpsertWithWhereUniqueWithoutTenantInput | tenant_conversation_configsUpsertWithWhereUniqueWithoutTenantInput[]
+    createMany?: tenant_conversation_configsCreateManyTenantInputEnvelope
+    set?: tenant_conversation_configsWhereUniqueInput | tenant_conversation_configsWhereUniqueInput[]
+    disconnect?: tenant_conversation_configsWhereUniqueInput | tenant_conversation_configsWhereUniqueInput[]
+    delete?: tenant_conversation_configsWhereUniqueInput | tenant_conversation_configsWhereUniqueInput[]
+    connect?: tenant_conversation_configsWhereUniqueInput | tenant_conversation_configsWhereUniqueInput[]
+    update?: tenant_conversation_configsUpdateWithWhereUniqueWithoutTenantInput | tenant_conversation_configsUpdateWithWhereUniqueWithoutTenantInput[]
+    updateMany?: tenant_conversation_configsUpdateManyWithWhereWithoutTenantInput | tenant_conversation_configsUpdateManyWithWhereWithoutTenantInput[]
+    deleteMany?: tenant_conversation_configsScalarWhereInput | tenant_conversation_configsScalarWhereInput[]
+  }
+
   export type business_workflowsUncheckedUpdateManyWithoutTenantsNestedInput = {
     create?: XOR<business_workflowsCreateWithoutTenantsInput, business_workflowsUncheckedCreateWithoutTenantsInput> | business_workflowsCreateWithoutTenantsInput[] | business_workflowsUncheckedCreateWithoutTenantsInput[]
     connectOrCreate?: business_workflowsCreateOrConnectWithoutTenantsInput | business_workflowsCreateOrConnectWithoutTenantsInput[]
@@ -142191,6 +152643,34 @@ export namespace Prisma {
     update?: notification_templatesUpdateWithWhereUniqueWithoutTenantsInput | notification_templatesUpdateWithWhereUniqueWithoutTenantsInput[]
     updateMany?: notification_templatesUpdateManyWithWhereWithoutTenantsInput | notification_templatesUpdateManyWithWhereWithoutTenantsInput[]
     deleteMany?: notification_templatesScalarWhereInput | notification_templatesScalarWhereInput[]
+  }
+
+  export type tenant_conversation_configsUncheckedUpdateManyWithoutTenantNestedInput = {
+    create?: XOR<tenant_conversation_configsCreateWithoutTenantInput, tenant_conversation_configsUncheckedCreateWithoutTenantInput> | tenant_conversation_configsCreateWithoutTenantInput[] | tenant_conversation_configsUncheckedCreateWithoutTenantInput[]
+    connectOrCreate?: tenant_conversation_configsCreateOrConnectWithoutTenantInput | tenant_conversation_configsCreateOrConnectWithoutTenantInput[]
+    upsert?: tenant_conversation_configsUpsertWithWhereUniqueWithoutTenantInput | tenant_conversation_configsUpsertWithWhereUniqueWithoutTenantInput[]
+    createMany?: tenant_conversation_configsCreateManyTenantInputEnvelope
+    set?: tenant_conversation_configsWhereUniqueInput | tenant_conversation_configsWhereUniqueInput[]
+    disconnect?: tenant_conversation_configsWhereUniqueInput | tenant_conversation_configsWhereUniqueInput[]
+    delete?: tenant_conversation_configsWhereUniqueInput | tenant_conversation_configsWhereUniqueInput[]
+    connect?: tenant_conversation_configsWhereUniqueInput | tenant_conversation_configsWhereUniqueInput[]
+    update?: tenant_conversation_configsUpdateWithWhereUniqueWithoutTenantInput | tenant_conversation_configsUpdateWithWhereUniqueWithoutTenantInput[]
+    updateMany?: tenant_conversation_configsUpdateManyWithWhereWithoutTenantInput | tenant_conversation_configsUpdateManyWithWhereWithoutTenantInput[]
+    deleteMany?: tenant_conversation_configsScalarWhereInput | tenant_conversation_configsScalarWhereInput[]
+  }
+
+  export type tenantsCreateNestedOneWithoutTenant_conversation_configsInput = {
+    create?: XOR<tenantsCreateWithoutTenant_conversation_configsInput, tenantsUncheckedCreateWithoutTenant_conversation_configsInput>
+    connectOrCreate?: tenantsCreateOrConnectWithoutTenant_conversation_configsInput
+    connect?: tenantsWhereUniqueInput
+  }
+
+  export type tenantsUpdateOneRequiredWithoutTenant_conversation_configsNestedInput = {
+    create?: XOR<tenantsCreateWithoutTenant_conversation_configsInput, tenantsUncheckedCreateWithoutTenant_conversation_configsInput>
+    connectOrCreate?: tenantsCreateOrConnectWithoutTenant_conversation_configsInput
+    upsert?: tenantsUpsertWithoutTenant_conversation_configsInput
+    connect?: tenantsWhereUniqueInput
+    update?: XOR<XOR<tenantsUpdateToOneWithWhereWithoutTenant_conversation_configsInput, tenantsUpdateWithoutTenant_conversation_configsInput>, tenantsUncheckedUpdateWithoutTenant_conversation_configsInput>
   }
 
   export type lead_followupsCreateNestedManyWithoutAssigneeInput = {
@@ -144878,6 +155358,12 @@ export namespace Prisma {
     connect?: vehicle_item_detailsWhereUniqueInput
   }
 
+  export type property_item_detailsCreateNestedOneWithoutItemInput = {
+    create?: XOR<property_item_detailsCreateWithoutItemInput, property_item_detailsUncheckedCreateWithoutItemInput>
+    connectOrCreate?: property_item_detailsCreateOrConnectWithoutItemInput
+    connect?: property_item_detailsWhereUniqueInput
+  }
+
   export type product_order_itemsCreateNestedManyWithoutItemInput = {
     create?: XOR<product_order_itemsCreateWithoutItemInput, product_order_itemsUncheckedCreateWithoutItemInput> | product_order_itemsCreateWithoutItemInput[] | product_order_itemsUncheckedCreateWithoutItemInput[]
     connectOrCreate?: product_order_itemsCreateOrConnectWithoutItemInput | product_order_itemsCreateOrConnectWithoutItemInput[]
@@ -144940,6 +155426,13 @@ export namespace Prisma {
     connect?: external_catalog_itemsWhereUniqueInput | external_catalog_itemsWhereUniqueInput[]
   }
 
+  export type appointment_sales_visitsCreateNestedManyWithoutItemInput = {
+    create?: XOR<appointment_sales_visitsCreateWithoutItemInput, appointment_sales_visitsUncheckedCreateWithoutItemInput> | appointment_sales_visitsCreateWithoutItemInput[] | appointment_sales_visitsUncheckedCreateWithoutItemInput[]
+    connectOrCreate?: appointment_sales_visitsCreateOrConnectWithoutItemInput | appointment_sales_visitsCreateOrConnectWithoutItemInput[]
+    createMany?: appointment_sales_visitsCreateManyItemInputEnvelope
+    connect?: appointment_sales_visitsWhereUniqueInput | appointment_sales_visitsWhereUniqueInput[]
+  }
+
   export type cart_itemsUncheckedCreateNestedManyWithoutCatalog_itemInput = {
     create?: XOR<cart_itemsCreateWithoutCatalog_itemInput, cart_itemsUncheckedCreateWithoutCatalog_itemInput> | cart_itemsCreateWithoutCatalog_itemInput[] | cart_itemsUncheckedCreateWithoutCatalog_itemInput[]
     connectOrCreate?: cart_itemsCreateOrConnectWithoutCatalog_itemInput | cart_itemsCreateOrConnectWithoutCatalog_itemInput[]
@@ -144970,6 +155463,12 @@ export namespace Prisma {
     create?: XOR<vehicle_item_detailsCreateWithoutItemInput, vehicle_item_detailsUncheckedCreateWithoutItemInput>
     connectOrCreate?: vehicle_item_detailsCreateOrConnectWithoutItemInput
     connect?: vehicle_item_detailsWhereUniqueInput
+  }
+
+  export type property_item_detailsUncheckedCreateNestedOneWithoutItemInput = {
+    create?: XOR<property_item_detailsCreateWithoutItemInput, property_item_detailsUncheckedCreateWithoutItemInput>
+    connectOrCreate?: property_item_detailsCreateOrConnectWithoutItemInput
+    connect?: property_item_detailsWhereUniqueInput
   }
 
   export type product_order_itemsUncheckedCreateNestedManyWithoutItemInput = {
@@ -145026,6 +155525,13 @@ export namespace Prisma {
     connectOrCreate?: external_catalog_itemsCreateOrConnectWithoutItemInput | external_catalog_itemsCreateOrConnectWithoutItemInput[]
     createMany?: external_catalog_itemsCreateManyItemInputEnvelope
     connect?: external_catalog_itemsWhereUniqueInput | external_catalog_itemsWhereUniqueInput[]
+  }
+
+  export type appointment_sales_visitsUncheckedCreateNestedManyWithoutItemInput = {
+    create?: XOR<appointment_sales_visitsCreateWithoutItemInput, appointment_sales_visitsUncheckedCreateWithoutItemInput> | appointment_sales_visitsCreateWithoutItemInput[] | appointment_sales_visitsUncheckedCreateWithoutItemInput[]
+    connectOrCreate?: appointment_sales_visitsCreateOrConnectWithoutItemInput | appointment_sales_visitsCreateOrConnectWithoutItemInput[]
+    createMany?: appointment_sales_visitsCreateManyItemInputEnvelope
+    connect?: appointment_sales_visitsWhereUniqueInput | appointment_sales_visitsWhereUniqueInput[]
   }
 
   export type catalog_itemsUpdateai_tagsInput = {
@@ -145089,6 +155595,16 @@ export namespace Prisma {
     delete?: vehicle_item_detailsWhereInput | boolean
     connect?: vehicle_item_detailsWhereUniqueInput
     update?: XOR<XOR<vehicle_item_detailsUpdateToOneWithWhereWithoutItemInput, vehicle_item_detailsUpdateWithoutItemInput>, vehicle_item_detailsUncheckedUpdateWithoutItemInput>
+  }
+
+  export type property_item_detailsUpdateOneWithoutItemNestedInput = {
+    create?: XOR<property_item_detailsCreateWithoutItemInput, property_item_detailsUncheckedCreateWithoutItemInput>
+    connectOrCreate?: property_item_detailsCreateOrConnectWithoutItemInput
+    upsert?: property_item_detailsUpsertWithoutItemInput
+    disconnect?: property_item_detailsWhereInput | boolean
+    delete?: property_item_detailsWhereInput | boolean
+    connect?: property_item_detailsWhereUniqueInput
+    update?: XOR<XOR<property_item_detailsUpdateToOneWithWhereWithoutItemInput, property_item_detailsUpdateWithoutItemInput>, property_item_detailsUncheckedUpdateWithoutItemInput>
   }
 
   export type product_order_itemsUpdateManyWithoutItemNestedInput = {
@@ -145211,6 +155727,20 @@ export namespace Prisma {
     deleteMany?: external_catalog_itemsScalarWhereInput | external_catalog_itemsScalarWhereInput[]
   }
 
+  export type appointment_sales_visitsUpdateManyWithoutItemNestedInput = {
+    create?: XOR<appointment_sales_visitsCreateWithoutItemInput, appointment_sales_visitsUncheckedCreateWithoutItemInput> | appointment_sales_visitsCreateWithoutItemInput[] | appointment_sales_visitsUncheckedCreateWithoutItemInput[]
+    connectOrCreate?: appointment_sales_visitsCreateOrConnectWithoutItemInput | appointment_sales_visitsCreateOrConnectWithoutItemInput[]
+    upsert?: appointment_sales_visitsUpsertWithWhereUniqueWithoutItemInput | appointment_sales_visitsUpsertWithWhereUniqueWithoutItemInput[]
+    createMany?: appointment_sales_visitsCreateManyItemInputEnvelope
+    set?: appointment_sales_visitsWhereUniqueInput | appointment_sales_visitsWhereUniqueInput[]
+    disconnect?: appointment_sales_visitsWhereUniqueInput | appointment_sales_visitsWhereUniqueInput[]
+    delete?: appointment_sales_visitsWhereUniqueInput | appointment_sales_visitsWhereUniqueInput[]
+    connect?: appointment_sales_visitsWhereUniqueInput | appointment_sales_visitsWhereUniqueInput[]
+    update?: appointment_sales_visitsUpdateWithWhereUniqueWithoutItemInput | appointment_sales_visitsUpdateWithWhereUniqueWithoutItemInput[]
+    updateMany?: appointment_sales_visitsUpdateManyWithWhereWithoutItemInput | appointment_sales_visitsUpdateManyWithWhereWithoutItemInput[]
+    deleteMany?: appointment_sales_visitsScalarWhereInput | appointment_sales_visitsScalarWhereInput[]
+  }
+
   export type cart_itemsUncheckedUpdateManyWithoutCatalog_itemNestedInput = {
     create?: XOR<cart_itemsCreateWithoutCatalog_itemInput, cart_itemsUncheckedCreateWithoutCatalog_itemInput> | cart_itemsCreateWithoutCatalog_itemInput[] | cart_itemsUncheckedCreateWithoutCatalog_itemInput[]
     connectOrCreate?: cart_itemsCreateOrConnectWithoutCatalog_itemInput | cart_itemsCreateOrConnectWithoutCatalog_itemInput[]
@@ -145267,6 +155797,16 @@ export namespace Prisma {
     delete?: vehicle_item_detailsWhereInput | boolean
     connect?: vehicle_item_detailsWhereUniqueInput
     update?: XOR<XOR<vehicle_item_detailsUpdateToOneWithWhereWithoutItemInput, vehicle_item_detailsUpdateWithoutItemInput>, vehicle_item_detailsUncheckedUpdateWithoutItemInput>
+  }
+
+  export type property_item_detailsUncheckedUpdateOneWithoutItemNestedInput = {
+    create?: XOR<property_item_detailsCreateWithoutItemInput, property_item_detailsUncheckedCreateWithoutItemInput>
+    connectOrCreate?: property_item_detailsCreateOrConnectWithoutItemInput
+    upsert?: property_item_detailsUpsertWithoutItemInput
+    disconnect?: property_item_detailsWhereInput | boolean
+    delete?: property_item_detailsWhereInput | boolean
+    connect?: property_item_detailsWhereUniqueInput
+    update?: XOR<XOR<property_item_detailsUpdateToOneWithWhereWithoutItemInput, property_item_detailsUpdateWithoutItemInput>, property_item_detailsUncheckedUpdateWithoutItemInput>
   }
 
   export type product_order_itemsUncheckedUpdateManyWithoutItemNestedInput = {
@@ -145379,6 +155919,20 @@ export namespace Prisma {
     update?: external_catalog_itemsUpdateWithWhereUniqueWithoutItemInput | external_catalog_itemsUpdateWithWhereUniqueWithoutItemInput[]
     updateMany?: external_catalog_itemsUpdateManyWithWhereWithoutItemInput | external_catalog_itemsUpdateManyWithWhereWithoutItemInput[]
     deleteMany?: external_catalog_itemsScalarWhereInput | external_catalog_itemsScalarWhereInput[]
+  }
+
+  export type appointment_sales_visitsUncheckedUpdateManyWithoutItemNestedInput = {
+    create?: XOR<appointment_sales_visitsCreateWithoutItemInput, appointment_sales_visitsUncheckedCreateWithoutItemInput> | appointment_sales_visitsCreateWithoutItemInput[] | appointment_sales_visitsUncheckedCreateWithoutItemInput[]
+    connectOrCreate?: appointment_sales_visitsCreateOrConnectWithoutItemInput | appointment_sales_visitsCreateOrConnectWithoutItemInput[]
+    upsert?: appointment_sales_visitsUpsertWithWhereUniqueWithoutItemInput | appointment_sales_visitsUpsertWithWhereUniqueWithoutItemInput[]
+    createMany?: appointment_sales_visitsCreateManyItemInputEnvelope
+    set?: appointment_sales_visitsWhereUniqueInput | appointment_sales_visitsWhereUniqueInput[]
+    disconnect?: appointment_sales_visitsWhereUniqueInput | appointment_sales_visitsWhereUniqueInput[]
+    delete?: appointment_sales_visitsWhereUniqueInput | appointment_sales_visitsWhereUniqueInput[]
+    connect?: appointment_sales_visitsWhereUniqueInput | appointment_sales_visitsWhereUniqueInput[]
+    update?: appointment_sales_visitsUpdateWithWhereUniqueWithoutItemInput | appointment_sales_visitsUpdateWithWhereUniqueWithoutItemInput[]
+    updateMany?: appointment_sales_visitsUpdateManyWithWhereWithoutItemInput | appointment_sales_visitsUpdateManyWithWhereWithoutItemInput[]
+    deleteMany?: appointment_sales_visitsScalarWhereInput | appointment_sales_visitsScalarWhereInput[]
   }
 
   export type cart_itemsCreateNestedManyWithoutItem_variantInput = {
@@ -145941,6 +156495,164 @@ export namespace Prisma {
     upsert?: catalog_itemsUpsertWithoutVehicle_detailInput
     connect?: catalog_itemsWhereUniqueInput
     update?: XOR<XOR<catalog_itemsUpdateToOneWithWhereWithoutVehicle_detailInput, catalog_itemsUpdateWithoutVehicle_detailInput>, catalog_itemsUncheckedUpdateWithoutVehicle_detailInput>
+  }
+
+  export type businessesCreateNestedOneWithoutProperty_item_detailsInput = {
+    create?: XOR<businessesCreateWithoutProperty_item_detailsInput, businessesUncheckedCreateWithoutProperty_item_detailsInput>
+    connectOrCreate?: businessesCreateOrConnectWithoutProperty_item_detailsInput
+    connect?: businessesWhereUniqueInput
+  }
+
+  export type catalog_itemsCreateNestedOneWithoutProperty_detailInput = {
+    create?: XOR<catalog_itemsCreateWithoutProperty_detailInput, catalog_itemsUncheckedCreateWithoutProperty_detailInput>
+    connectOrCreate?: catalog_itemsCreateOrConnectWithoutProperty_detailInput
+    connect?: catalog_itemsWhereUniqueInput
+  }
+
+  export type businessesUpdateOneRequiredWithoutProperty_item_detailsNestedInput = {
+    create?: XOR<businessesCreateWithoutProperty_item_detailsInput, businessesUncheckedCreateWithoutProperty_item_detailsInput>
+    connectOrCreate?: businessesCreateOrConnectWithoutProperty_item_detailsInput
+    upsert?: businessesUpsertWithoutProperty_item_detailsInput
+    connect?: businessesWhereUniqueInput
+    update?: XOR<XOR<businessesUpdateToOneWithWhereWithoutProperty_item_detailsInput, businessesUpdateWithoutProperty_item_detailsInput>, businessesUncheckedUpdateWithoutProperty_item_detailsInput>
+  }
+
+  export type catalog_itemsUpdateOneRequiredWithoutProperty_detailNestedInput = {
+    create?: XOR<catalog_itemsCreateWithoutProperty_detailInput, catalog_itemsUncheckedCreateWithoutProperty_detailInput>
+    connectOrCreate?: catalog_itemsCreateOrConnectWithoutProperty_detailInput
+    upsert?: catalog_itemsUpsertWithoutProperty_detailInput
+    connect?: catalog_itemsWhereUniqueInput
+    update?: XOR<XOR<catalog_itemsUpdateToOneWithWhereWithoutProperty_detailInput, catalog_itemsUpdateWithoutProperty_detailInput>, catalog_itemsUncheckedUpdateWithoutProperty_detailInput>
+  }
+
+  export type appointment_sales_staff_availabilityCreateNestedManyWithoutStaffInput = {
+    create?: XOR<appointment_sales_staff_availabilityCreateWithoutStaffInput, appointment_sales_staff_availabilityUncheckedCreateWithoutStaffInput> | appointment_sales_staff_availabilityCreateWithoutStaffInput[] | appointment_sales_staff_availabilityUncheckedCreateWithoutStaffInput[]
+    connectOrCreate?: appointment_sales_staff_availabilityCreateOrConnectWithoutStaffInput | appointment_sales_staff_availabilityCreateOrConnectWithoutStaffInput[]
+    createMany?: appointment_sales_staff_availabilityCreateManyStaffInputEnvelope
+    connect?: appointment_sales_staff_availabilityWhereUniqueInput | appointment_sales_staff_availabilityWhereUniqueInput[]
+  }
+
+  export type appointment_sales_visitsCreateNestedManyWithoutStaffInput = {
+    create?: XOR<appointment_sales_visitsCreateWithoutStaffInput, appointment_sales_visitsUncheckedCreateWithoutStaffInput> | appointment_sales_visitsCreateWithoutStaffInput[] | appointment_sales_visitsUncheckedCreateWithoutStaffInput[]
+    connectOrCreate?: appointment_sales_visitsCreateOrConnectWithoutStaffInput | appointment_sales_visitsCreateOrConnectWithoutStaffInput[]
+    createMany?: appointment_sales_visitsCreateManyStaffInputEnvelope
+    connect?: appointment_sales_visitsWhereUniqueInput | appointment_sales_visitsWhereUniqueInput[]
+  }
+
+  export type appointment_sales_staff_availabilityUncheckedCreateNestedManyWithoutStaffInput = {
+    create?: XOR<appointment_sales_staff_availabilityCreateWithoutStaffInput, appointment_sales_staff_availabilityUncheckedCreateWithoutStaffInput> | appointment_sales_staff_availabilityCreateWithoutStaffInput[] | appointment_sales_staff_availabilityUncheckedCreateWithoutStaffInput[]
+    connectOrCreate?: appointment_sales_staff_availabilityCreateOrConnectWithoutStaffInput | appointment_sales_staff_availabilityCreateOrConnectWithoutStaffInput[]
+    createMany?: appointment_sales_staff_availabilityCreateManyStaffInputEnvelope
+    connect?: appointment_sales_staff_availabilityWhereUniqueInput | appointment_sales_staff_availabilityWhereUniqueInput[]
+  }
+
+  export type appointment_sales_visitsUncheckedCreateNestedManyWithoutStaffInput = {
+    create?: XOR<appointment_sales_visitsCreateWithoutStaffInput, appointment_sales_visitsUncheckedCreateWithoutStaffInput> | appointment_sales_visitsCreateWithoutStaffInput[] | appointment_sales_visitsUncheckedCreateWithoutStaffInput[]
+    connectOrCreate?: appointment_sales_visitsCreateOrConnectWithoutStaffInput | appointment_sales_visitsCreateOrConnectWithoutStaffInput[]
+    createMany?: appointment_sales_visitsCreateManyStaffInputEnvelope
+    connect?: appointment_sales_visitsWhereUniqueInput | appointment_sales_visitsWhereUniqueInput[]
+  }
+
+  export type appointment_sales_staff_availabilityUpdateManyWithoutStaffNestedInput = {
+    create?: XOR<appointment_sales_staff_availabilityCreateWithoutStaffInput, appointment_sales_staff_availabilityUncheckedCreateWithoutStaffInput> | appointment_sales_staff_availabilityCreateWithoutStaffInput[] | appointment_sales_staff_availabilityUncheckedCreateWithoutStaffInput[]
+    connectOrCreate?: appointment_sales_staff_availabilityCreateOrConnectWithoutStaffInput | appointment_sales_staff_availabilityCreateOrConnectWithoutStaffInput[]
+    upsert?: appointment_sales_staff_availabilityUpsertWithWhereUniqueWithoutStaffInput | appointment_sales_staff_availabilityUpsertWithWhereUniqueWithoutStaffInput[]
+    createMany?: appointment_sales_staff_availabilityCreateManyStaffInputEnvelope
+    set?: appointment_sales_staff_availabilityWhereUniqueInput | appointment_sales_staff_availabilityWhereUniqueInput[]
+    disconnect?: appointment_sales_staff_availabilityWhereUniqueInput | appointment_sales_staff_availabilityWhereUniqueInput[]
+    delete?: appointment_sales_staff_availabilityWhereUniqueInput | appointment_sales_staff_availabilityWhereUniqueInput[]
+    connect?: appointment_sales_staff_availabilityWhereUniqueInput | appointment_sales_staff_availabilityWhereUniqueInput[]
+    update?: appointment_sales_staff_availabilityUpdateWithWhereUniqueWithoutStaffInput | appointment_sales_staff_availabilityUpdateWithWhereUniqueWithoutStaffInput[]
+    updateMany?: appointment_sales_staff_availabilityUpdateManyWithWhereWithoutStaffInput | appointment_sales_staff_availabilityUpdateManyWithWhereWithoutStaffInput[]
+    deleteMany?: appointment_sales_staff_availabilityScalarWhereInput | appointment_sales_staff_availabilityScalarWhereInput[]
+  }
+
+  export type appointment_sales_visitsUpdateManyWithoutStaffNestedInput = {
+    create?: XOR<appointment_sales_visitsCreateWithoutStaffInput, appointment_sales_visitsUncheckedCreateWithoutStaffInput> | appointment_sales_visitsCreateWithoutStaffInput[] | appointment_sales_visitsUncheckedCreateWithoutStaffInput[]
+    connectOrCreate?: appointment_sales_visitsCreateOrConnectWithoutStaffInput | appointment_sales_visitsCreateOrConnectWithoutStaffInput[]
+    upsert?: appointment_sales_visitsUpsertWithWhereUniqueWithoutStaffInput | appointment_sales_visitsUpsertWithWhereUniqueWithoutStaffInput[]
+    createMany?: appointment_sales_visitsCreateManyStaffInputEnvelope
+    set?: appointment_sales_visitsWhereUniqueInput | appointment_sales_visitsWhereUniqueInput[]
+    disconnect?: appointment_sales_visitsWhereUniqueInput | appointment_sales_visitsWhereUniqueInput[]
+    delete?: appointment_sales_visitsWhereUniqueInput | appointment_sales_visitsWhereUniqueInput[]
+    connect?: appointment_sales_visitsWhereUniqueInput | appointment_sales_visitsWhereUniqueInput[]
+    update?: appointment_sales_visitsUpdateWithWhereUniqueWithoutStaffInput | appointment_sales_visitsUpdateWithWhereUniqueWithoutStaffInput[]
+    updateMany?: appointment_sales_visitsUpdateManyWithWhereWithoutStaffInput | appointment_sales_visitsUpdateManyWithWhereWithoutStaffInput[]
+    deleteMany?: appointment_sales_visitsScalarWhereInput | appointment_sales_visitsScalarWhereInput[]
+  }
+
+  export type appointment_sales_staff_availabilityUncheckedUpdateManyWithoutStaffNestedInput = {
+    create?: XOR<appointment_sales_staff_availabilityCreateWithoutStaffInput, appointment_sales_staff_availabilityUncheckedCreateWithoutStaffInput> | appointment_sales_staff_availabilityCreateWithoutStaffInput[] | appointment_sales_staff_availabilityUncheckedCreateWithoutStaffInput[]
+    connectOrCreate?: appointment_sales_staff_availabilityCreateOrConnectWithoutStaffInput | appointment_sales_staff_availabilityCreateOrConnectWithoutStaffInput[]
+    upsert?: appointment_sales_staff_availabilityUpsertWithWhereUniqueWithoutStaffInput | appointment_sales_staff_availabilityUpsertWithWhereUniqueWithoutStaffInput[]
+    createMany?: appointment_sales_staff_availabilityCreateManyStaffInputEnvelope
+    set?: appointment_sales_staff_availabilityWhereUniqueInput | appointment_sales_staff_availabilityWhereUniqueInput[]
+    disconnect?: appointment_sales_staff_availabilityWhereUniqueInput | appointment_sales_staff_availabilityWhereUniqueInput[]
+    delete?: appointment_sales_staff_availabilityWhereUniqueInput | appointment_sales_staff_availabilityWhereUniqueInput[]
+    connect?: appointment_sales_staff_availabilityWhereUniqueInput | appointment_sales_staff_availabilityWhereUniqueInput[]
+    update?: appointment_sales_staff_availabilityUpdateWithWhereUniqueWithoutStaffInput | appointment_sales_staff_availabilityUpdateWithWhereUniqueWithoutStaffInput[]
+    updateMany?: appointment_sales_staff_availabilityUpdateManyWithWhereWithoutStaffInput | appointment_sales_staff_availabilityUpdateManyWithWhereWithoutStaffInput[]
+    deleteMany?: appointment_sales_staff_availabilityScalarWhereInput | appointment_sales_staff_availabilityScalarWhereInput[]
+  }
+
+  export type appointment_sales_visitsUncheckedUpdateManyWithoutStaffNestedInput = {
+    create?: XOR<appointment_sales_visitsCreateWithoutStaffInput, appointment_sales_visitsUncheckedCreateWithoutStaffInput> | appointment_sales_visitsCreateWithoutStaffInput[] | appointment_sales_visitsUncheckedCreateWithoutStaffInput[]
+    connectOrCreate?: appointment_sales_visitsCreateOrConnectWithoutStaffInput | appointment_sales_visitsCreateOrConnectWithoutStaffInput[]
+    upsert?: appointment_sales_visitsUpsertWithWhereUniqueWithoutStaffInput | appointment_sales_visitsUpsertWithWhereUniqueWithoutStaffInput[]
+    createMany?: appointment_sales_visitsCreateManyStaffInputEnvelope
+    set?: appointment_sales_visitsWhereUniqueInput | appointment_sales_visitsWhereUniqueInput[]
+    disconnect?: appointment_sales_visitsWhereUniqueInput | appointment_sales_visitsWhereUniqueInput[]
+    delete?: appointment_sales_visitsWhereUniqueInput | appointment_sales_visitsWhereUniqueInput[]
+    connect?: appointment_sales_visitsWhereUniqueInput | appointment_sales_visitsWhereUniqueInput[]
+    update?: appointment_sales_visitsUpdateWithWhereUniqueWithoutStaffInput | appointment_sales_visitsUpdateWithWhereUniqueWithoutStaffInput[]
+    updateMany?: appointment_sales_visitsUpdateManyWithWhereWithoutStaffInput | appointment_sales_visitsUpdateManyWithWhereWithoutStaffInput[]
+    deleteMany?: appointment_sales_visitsScalarWhereInput | appointment_sales_visitsScalarWhereInput[]
+  }
+
+  export type appointment_sales_staffCreateNestedOneWithoutAvailabilityInput = {
+    create?: XOR<appointment_sales_staffCreateWithoutAvailabilityInput, appointment_sales_staffUncheckedCreateWithoutAvailabilityInput>
+    connectOrCreate?: appointment_sales_staffCreateOrConnectWithoutAvailabilityInput
+    connect?: appointment_sales_staffWhereUniqueInput
+  }
+
+  export type appointment_sales_staffUpdateOneRequiredWithoutAvailabilityNestedInput = {
+    create?: XOR<appointment_sales_staffCreateWithoutAvailabilityInput, appointment_sales_staffUncheckedCreateWithoutAvailabilityInput>
+    connectOrCreate?: appointment_sales_staffCreateOrConnectWithoutAvailabilityInput
+    upsert?: appointment_sales_staffUpsertWithoutAvailabilityInput
+    connect?: appointment_sales_staffWhereUniqueInput
+    update?: XOR<XOR<appointment_sales_staffUpdateToOneWithWhereWithoutAvailabilityInput, appointment_sales_staffUpdateWithoutAvailabilityInput>, appointment_sales_staffUncheckedUpdateWithoutAvailabilityInput>
+  }
+
+  export type catalog_itemsCreateNestedOneWithoutAppointment_sales_visitsInput = {
+    create?: XOR<catalog_itemsCreateWithoutAppointment_sales_visitsInput, catalog_itemsUncheckedCreateWithoutAppointment_sales_visitsInput>
+    connectOrCreate?: catalog_itemsCreateOrConnectWithoutAppointment_sales_visitsInput
+    connect?: catalog_itemsWhereUniqueInput
+  }
+
+  export type appointment_sales_staffCreateNestedOneWithoutVisitsInput = {
+    create?: XOR<appointment_sales_staffCreateWithoutVisitsInput, appointment_sales_staffUncheckedCreateWithoutVisitsInput>
+    connectOrCreate?: appointment_sales_staffCreateOrConnectWithoutVisitsInput
+    connect?: appointment_sales_staffWhereUniqueInput
+  }
+
+  export type catalog_itemsUpdateOneWithoutAppointment_sales_visitsNestedInput = {
+    create?: XOR<catalog_itemsCreateWithoutAppointment_sales_visitsInput, catalog_itemsUncheckedCreateWithoutAppointment_sales_visitsInput>
+    connectOrCreate?: catalog_itemsCreateOrConnectWithoutAppointment_sales_visitsInput
+    upsert?: catalog_itemsUpsertWithoutAppointment_sales_visitsInput
+    disconnect?: catalog_itemsWhereInput | boolean
+    delete?: catalog_itemsWhereInput | boolean
+    connect?: catalog_itemsWhereUniqueInput
+    update?: XOR<XOR<catalog_itemsUpdateToOneWithWhereWithoutAppointment_sales_visitsInput, catalog_itemsUpdateWithoutAppointment_sales_visitsInput>, catalog_itemsUncheckedUpdateWithoutAppointment_sales_visitsInput>
+  }
+
+  export type appointment_sales_staffUpdateOneWithoutVisitsNestedInput = {
+    create?: XOR<appointment_sales_staffCreateWithoutVisitsInput, appointment_sales_staffUncheckedCreateWithoutVisitsInput>
+    connectOrCreate?: appointment_sales_staffCreateOrConnectWithoutVisitsInput
+    upsert?: appointment_sales_staffUpsertWithoutVisitsInput
+    disconnect?: appointment_sales_staffWhereInput | boolean
+    delete?: appointment_sales_staffWhereInput | boolean
+    connect?: appointment_sales_staffWhereUniqueInput
+    update?: XOR<XOR<appointment_sales_staffUpdateToOneWithWhereWithoutVisitsInput, appointment_sales_staffUpdateWithoutVisitsInput>, appointment_sales_staffUncheckedUpdateWithoutVisitsInput>
   }
 
   export type businessesCreateNestedOneWithoutHospitality_inquiriesInput = {
@@ -146799,6 +157511,29 @@ export namespace Prisma {
     gte?: number | FloatFieldRefInput<$PrismaModel>
     not?: NestedFloatNullableFilter<$PrismaModel> | number | null
   }
+  export type NestedJsonFilter<$PrismaModel = never> =
+    | PatchUndefined<
+        Either<Required<NestedJsonFilterBase<$PrismaModel>>, Exclude<keyof Required<NestedJsonFilterBase<$PrismaModel>>, 'path'>>,
+        Required<NestedJsonFilterBase<$PrismaModel>>
+      >
+    | OptionalFlat<Omit<Required<NestedJsonFilterBase<$PrismaModel>>, 'path'>>
+
+  export type NestedJsonFilterBase<$PrismaModel = never> = {
+    equals?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+    path?: string[]
+    mode?: QueryMode | EnumQueryModeFieldRefInput<$PrismaModel>
+    string_contains?: string | StringFieldRefInput<$PrismaModel>
+    string_starts_with?: string | StringFieldRefInput<$PrismaModel>
+    string_ends_with?: string | StringFieldRefInput<$PrismaModel>
+    array_starts_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_ends_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_contains?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    lt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    lte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    gt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    gte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    not?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+  }
 
   export type NestedUuidNullableFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel> | null
@@ -146932,29 +157667,6 @@ export namespace Prisma {
     _min?: NestedBigIntFilter<$PrismaModel>
     _max?: NestedBigIntFilter<$PrismaModel>
   }
-  export type NestedJsonFilter<$PrismaModel = never> =
-    | PatchUndefined<
-        Either<Required<NestedJsonFilterBase<$PrismaModel>>, Exclude<keyof Required<NestedJsonFilterBase<$PrismaModel>>, 'path'>>,
-        Required<NestedJsonFilterBase<$PrismaModel>>
-      >
-    | OptionalFlat<Omit<Required<NestedJsonFilterBase<$PrismaModel>>, 'path'>>
-
-  export type NestedJsonFilterBase<$PrismaModel = never> = {
-    equals?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
-    path?: string[]
-    mode?: QueryMode | EnumQueryModeFieldRefInput<$PrismaModel>
-    string_contains?: string | StringFieldRefInput<$PrismaModel>
-    string_starts_with?: string | StringFieldRefInput<$PrismaModel>
-    string_ends_with?: string | StringFieldRefInput<$PrismaModel>
-    array_starts_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
-    array_ends_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
-    array_contains?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
-    lt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
-    lte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
-    gt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
-    gte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
-    not?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
-  }
 
   export type NestedFloatWithAggregatesFilter<$PrismaModel = never> = {
     equals?: number | FloatFieldRefInput<$PrismaModel>
@@ -147087,6 +157799,7 @@ export namespace Prisma {
     hospitality_inquiries?: hospitality_inquiriesCreateNestedManyWithoutTenantInput
     notification_messages?: notification_messagesCreateNestedManyWithoutTenantsInput
     notification_templates?: notification_templatesCreateNestedManyWithoutTenantsInput
+    tenant_conversation_configs?: tenant_conversation_configsCreateNestedManyWithoutTenantInput
   }
 
   export type tenantsUncheckedCreateWithoutBusinessesInput = {
@@ -147112,6 +157825,7 @@ export namespace Prisma {
     hospitality_inquiries?: hospitality_inquiriesUncheckedCreateNestedManyWithoutTenantInput
     notification_messages?: notification_messagesUncheckedCreateNestedManyWithoutTenantsInput
     notification_templates?: notification_templatesUncheckedCreateNestedManyWithoutTenantsInput
+    tenant_conversation_configs?: tenant_conversation_configsUncheckedCreateNestedManyWithoutTenantInput
   }
 
   export type tenantsCreateOrConnectWithoutBusinessesInput = {
@@ -147181,6 +157895,7 @@ export namespace Prisma {
     product_detail?: product_item_detailsCreateNestedOneWithoutItemInput
     hospitality_detail?: hospitality_item_detailsCreateNestedOneWithoutItemInput
     vehicle_detail?: vehicle_item_detailsCreateNestedOneWithoutItemInput
+    property_detail?: property_item_detailsCreateNestedOneWithoutItemInput
     product_order_items?: product_order_itemsCreateNestedManyWithoutItemInput
     hospitality_booking_items?: hospitality_booking_itemsCreateNestedManyWithoutItemInput
     product_inquiries?: product_inquiriesCreateNestedManyWithoutItemInput
@@ -147189,6 +157904,7 @@ export namespace Prisma {
     variants?: item_variantsCreateNestedManyWithoutItemInput
     order_items?: order_itemsCreateNestedManyWithoutCatalog_itemInput
     external_catalog_items?: external_catalog_itemsCreateNestedManyWithoutItemInput
+    appointment_sales_visits?: appointment_sales_visitsCreateNestedManyWithoutItemInput
   }
 
   export type catalog_itemsUncheckedCreateWithoutBusinessesInput = {
@@ -147215,6 +157931,7 @@ export namespace Prisma {
     product_detail?: product_item_detailsUncheckedCreateNestedOneWithoutItemInput
     hospitality_detail?: hospitality_item_detailsUncheckedCreateNestedOneWithoutItemInput
     vehicle_detail?: vehicle_item_detailsUncheckedCreateNestedOneWithoutItemInput
+    property_detail?: property_item_detailsUncheckedCreateNestedOneWithoutItemInput
     product_order_items?: product_order_itemsUncheckedCreateNestedManyWithoutItemInput
     hospitality_booking_items?: hospitality_booking_itemsUncheckedCreateNestedManyWithoutItemInput
     product_inquiries?: product_inquiriesUncheckedCreateNestedManyWithoutItemInput
@@ -147223,6 +157940,7 @@ export namespace Prisma {
     variants?: item_variantsUncheckedCreateNestedManyWithoutItemInput
     order_items?: order_itemsUncheckedCreateNestedManyWithoutCatalog_itemInput
     external_catalog_items?: external_catalog_itemsUncheckedCreateNestedManyWithoutItemInput
+    appointment_sales_visits?: appointment_sales_visitsUncheckedCreateNestedManyWithoutItemInput
   }
 
   export type catalog_itemsCreateOrConnectWithoutBusinessesInput = {
@@ -147368,6 +158086,15 @@ export namespace Prisma {
     color?: string | null
     km_driven?: number | null
     condition?: string
+    ownership_count?: number | null
+    insurance_valid_until?: Date | string | null
+    registration_number?: string | null
+    rc_status?: string | null
+    finance_available?: boolean
+    exchange_accepted?: boolean
+    accident_history?: string | null
+    service_history?: string | null
+    test_drive_available?: boolean
     metadata?: NullableJsonNullValueInput | InputJsonValue
     created_at?: Date | string
     updated_at?: Date | string
@@ -147384,6 +158111,15 @@ export namespace Prisma {
     color?: string | null
     km_driven?: number | null
     condition?: string
+    ownership_count?: number | null
+    insurance_valid_until?: Date | string | null
+    registration_number?: string | null
+    rc_status?: string | null
+    finance_available?: boolean
+    exchange_accepted?: boolean
+    accident_history?: string | null
+    service_history?: string | null
+    test_drive_available?: boolean
     metadata?: NullableJsonNullValueInput | InputJsonValue
     created_at?: Date | string
     updated_at?: Date | string
@@ -147396,6 +158132,66 @@ export namespace Prisma {
 
   export type vehicle_item_detailsCreateManyBusinessInputEnvelope = {
     data: vehicle_item_detailsCreateManyBusinessInput | vehicle_item_detailsCreateManyBusinessInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type property_item_detailsCreateWithoutBusinessInput = {
+    property_type: string
+    listing_type?: string
+    bedrooms?: number | null
+    bathrooms?: number | null
+    area_sqft?: number | null
+    floor_number?: number | null
+    total_floors?: number | null
+    locality?: string | null
+    city?: string | null
+    furnishing?: string | null
+    possession_status?: string | null
+    facing?: string | null
+    parking?: string | null
+    rera_id?: string | null
+    map_url?: string | null
+    documents_status?: string | null
+    loan_support_available?: boolean
+    visit_landmark?: string | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    created_at?: Date | string
+    updated_at?: Date | string
+    item: catalog_itemsCreateNestedOneWithoutProperty_detailInput
+  }
+
+  export type property_item_detailsUncheckedCreateWithoutBusinessInput = {
+    item_id: string
+    property_type: string
+    listing_type?: string
+    bedrooms?: number | null
+    bathrooms?: number | null
+    area_sqft?: number | null
+    floor_number?: number | null
+    total_floors?: number | null
+    locality?: string | null
+    city?: string | null
+    furnishing?: string | null
+    possession_status?: string | null
+    facing?: string | null
+    parking?: string | null
+    rera_id?: string | null
+    map_url?: string | null
+    documents_status?: string | null
+    loan_support_available?: boolean
+    visit_landmark?: string | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    created_at?: Date | string
+    updated_at?: Date | string
+  }
+
+  export type property_item_detailsCreateOrConnectWithoutBusinessInput = {
+    where: property_item_detailsWhereUniqueInput
+    create: XOR<property_item_detailsCreateWithoutBusinessInput, property_item_detailsUncheckedCreateWithoutBusinessInput>
+  }
+
+  export type property_item_detailsCreateManyBusinessInputEnvelope = {
+    data: property_item_detailsCreateManyBusinessInput | property_item_detailsCreateManyBusinessInput[]
     skipDuplicates?: boolean
   }
 
@@ -148629,6 +159425,7 @@ export namespace Prisma {
     hospitality_inquiries?: hospitality_inquiriesUpdateManyWithoutTenantNestedInput
     notification_messages?: notification_messagesUpdateManyWithoutTenantsNestedInput
     notification_templates?: notification_templatesUpdateManyWithoutTenantsNestedInput
+    tenant_conversation_configs?: tenant_conversation_configsUpdateManyWithoutTenantNestedInput
   }
 
   export type tenantsUncheckedUpdateWithoutBusinessesInput = {
@@ -148654,6 +159451,7 @@ export namespace Prisma {
     hospitality_inquiries?: hospitality_inquiriesUncheckedUpdateManyWithoutTenantNestedInput
     notification_messages?: notification_messagesUncheckedUpdateManyWithoutTenantsNestedInput
     notification_templates?: notification_templatesUncheckedUpdateManyWithoutTenantsNestedInput
+    tenant_conversation_configs?: tenant_conversation_configsUncheckedUpdateManyWithoutTenantNestedInput
   }
 
   export type cartsUpsertWithWhereUniqueWithoutBusinessesInput = {
@@ -148867,9 +159665,63 @@ export namespace Prisma {
     color?: StringNullableFilter<"vehicle_item_details"> | string | null
     km_driven?: IntNullableFilter<"vehicle_item_details"> | number | null
     condition?: StringFilter<"vehicle_item_details"> | string
+    ownership_count?: IntNullableFilter<"vehicle_item_details"> | number | null
+    insurance_valid_until?: DateTimeNullableFilter<"vehicle_item_details"> | Date | string | null
+    registration_number?: StringNullableFilter<"vehicle_item_details"> | string | null
+    rc_status?: StringNullableFilter<"vehicle_item_details"> | string | null
+    finance_available?: BoolFilter<"vehicle_item_details"> | boolean
+    exchange_accepted?: BoolFilter<"vehicle_item_details"> | boolean
+    accident_history?: StringNullableFilter<"vehicle_item_details"> | string | null
+    service_history?: StringNullableFilter<"vehicle_item_details"> | string | null
+    test_drive_available?: BoolFilter<"vehicle_item_details"> | boolean
     metadata?: JsonNullableFilter<"vehicle_item_details">
     created_at?: DateTimeFilter<"vehicle_item_details"> | Date | string
     updated_at?: DateTimeFilter<"vehicle_item_details"> | Date | string
+  }
+
+  export type property_item_detailsUpsertWithWhereUniqueWithoutBusinessInput = {
+    where: property_item_detailsWhereUniqueInput
+    update: XOR<property_item_detailsUpdateWithoutBusinessInput, property_item_detailsUncheckedUpdateWithoutBusinessInput>
+    create: XOR<property_item_detailsCreateWithoutBusinessInput, property_item_detailsUncheckedCreateWithoutBusinessInput>
+  }
+
+  export type property_item_detailsUpdateWithWhereUniqueWithoutBusinessInput = {
+    where: property_item_detailsWhereUniqueInput
+    data: XOR<property_item_detailsUpdateWithoutBusinessInput, property_item_detailsUncheckedUpdateWithoutBusinessInput>
+  }
+
+  export type property_item_detailsUpdateManyWithWhereWithoutBusinessInput = {
+    where: property_item_detailsScalarWhereInput
+    data: XOR<property_item_detailsUpdateManyMutationInput, property_item_detailsUncheckedUpdateManyWithoutBusinessInput>
+  }
+
+  export type property_item_detailsScalarWhereInput = {
+    AND?: property_item_detailsScalarWhereInput | property_item_detailsScalarWhereInput[]
+    OR?: property_item_detailsScalarWhereInput[]
+    NOT?: property_item_detailsScalarWhereInput | property_item_detailsScalarWhereInput[]
+    item_id?: UuidFilter<"property_item_details"> | string
+    business_id?: UuidFilter<"property_item_details"> | string
+    property_type?: StringFilter<"property_item_details"> | string
+    listing_type?: StringFilter<"property_item_details"> | string
+    bedrooms?: IntNullableFilter<"property_item_details"> | number | null
+    bathrooms?: IntNullableFilter<"property_item_details"> | number | null
+    area_sqft?: IntNullableFilter<"property_item_details"> | number | null
+    floor_number?: IntNullableFilter<"property_item_details"> | number | null
+    total_floors?: IntNullableFilter<"property_item_details"> | number | null
+    locality?: StringNullableFilter<"property_item_details"> | string | null
+    city?: StringNullableFilter<"property_item_details"> | string | null
+    furnishing?: StringNullableFilter<"property_item_details"> | string | null
+    possession_status?: StringNullableFilter<"property_item_details"> | string | null
+    facing?: StringNullableFilter<"property_item_details"> | string | null
+    parking?: StringNullableFilter<"property_item_details"> | string | null
+    rera_id?: StringNullableFilter<"property_item_details"> | string | null
+    map_url?: StringNullableFilter<"property_item_details"> | string | null
+    documents_status?: StringNullableFilter<"property_item_details"> | string | null
+    loan_support_available?: BoolFilter<"property_item_details"> | boolean
+    visit_landmark?: StringNullableFilter<"property_item_details"> | string | null
+    metadata?: JsonNullableFilter<"property_item_details">
+    created_at?: DateTimeFilter<"property_item_details"> | Date | string
+    updated_at?: DateTimeFilter<"property_item_details"> | Date | string
   }
 
   export type product_ordersUpsertWithWhereUniqueWithoutBusinessInput = {
@@ -149795,6 +160647,7 @@ export namespace Prisma {
     product_item_details?: product_item_detailsCreateNestedManyWithoutBusinessInput
     hospitality_item_details?: hospitality_item_detailsCreateNestedManyWithoutBusinessInput
     vehicle_item_details?: vehicle_item_detailsCreateNestedManyWithoutBusinessInput
+    property_item_details?: property_item_detailsCreateNestedManyWithoutBusinessInput
     product_orders?: product_ordersCreateNestedManyWithoutBusinessInput
     product_inquiries?: product_inquiriesCreateNestedManyWithoutBusinessInput
     hospitality_bookings?: hospitality_bookingsCreateNestedManyWithoutBusinessInput
@@ -149848,6 +160701,7 @@ export namespace Prisma {
     product_item_details?: product_item_detailsUncheckedCreateNestedManyWithoutBusinessInput
     hospitality_item_details?: hospitality_item_detailsUncheckedCreateNestedManyWithoutBusinessInput
     vehicle_item_details?: vehicle_item_detailsUncheckedCreateNestedManyWithoutBusinessInput
+    property_item_details?: property_item_detailsUncheckedCreateNestedManyWithoutBusinessInput
     product_orders?: product_ordersUncheckedCreateNestedManyWithoutBusinessInput
     product_inquiries?: product_inquiriesUncheckedCreateNestedManyWithoutBusinessInput
     hospitality_bookings?: hospitality_bookingsUncheckedCreateNestedManyWithoutBusinessInput
@@ -149917,6 +160771,7 @@ export namespace Prisma {
     product_item_details?: product_item_detailsUpdateManyWithoutBusinessNestedInput
     hospitality_item_details?: hospitality_item_detailsUpdateManyWithoutBusinessNestedInput
     vehicle_item_details?: vehicle_item_detailsUpdateManyWithoutBusinessNestedInput
+    property_item_details?: property_item_detailsUpdateManyWithoutBusinessNestedInput
     product_orders?: product_ordersUpdateManyWithoutBusinessNestedInput
     product_inquiries?: product_inquiriesUpdateManyWithoutBusinessNestedInput
     hospitality_bookings?: hospitality_bookingsUpdateManyWithoutBusinessNestedInput
@@ -149970,6 +160825,7 @@ export namespace Prisma {
     product_item_details?: product_item_detailsUncheckedUpdateManyWithoutBusinessNestedInput
     hospitality_item_details?: hospitality_item_detailsUncheckedUpdateManyWithoutBusinessNestedInput
     vehicle_item_details?: vehicle_item_detailsUncheckedUpdateManyWithoutBusinessNestedInput
+    property_item_details?: property_item_detailsUncheckedUpdateManyWithoutBusinessNestedInput
     product_orders?: product_ordersUncheckedUpdateManyWithoutBusinessNestedInput
     product_inquiries?: product_inquiriesUncheckedUpdateManyWithoutBusinessNestedInput
     hospitality_bookings?: hospitality_bookingsUncheckedUpdateManyWithoutBusinessNestedInput
@@ -150475,6 +161331,7 @@ export namespace Prisma {
     product_item_details?: product_item_detailsCreateNestedManyWithoutBusinessInput
     hospitality_item_details?: hospitality_item_detailsCreateNestedManyWithoutBusinessInput
     vehicle_item_details?: vehicle_item_detailsCreateNestedManyWithoutBusinessInput
+    property_item_details?: property_item_detailsCreateNestedManyWithoutBusinessInput
     product_orders?: product_ordersCreateNestedManyWithoutBusinessInput
     product_inquiries?: product_inquiriesCreateNestedManyWithoutBusinessInput
     hospitality_bookings?: hospitality_bookingsCreateNestedManyWithoutBusinessInput
@@ -150528,6 +161385,7 @@ export namespace Prisma {
     product_item_details?: product_item_detailsUncheckedCreateNestedManyWithoutBusinessInput
     hospitality_item_details?: hospitality_item_detailsUncheckedCreateNestedManyWithoutBusinessInput
     vehicle_item_details?: vehicle_item_detailsUncheckedCreateNestedManyWithoutBusinessInput
+    property_item_details?: property_item_detailsUncheckedCreateNestedManyWithoutBusinessInput
     product_orders?: product_ordersUncheckedCreateNestedManyWithoutBusinessInput
     product_inquiries?: product_inquiriesUncheckedCreateNestedManyWithoutBusinessInput
     hospitality_bookings?: hospitality_bookingsUncheckedCreateNestedManyWithoutBusinessInput
@@ -150633,6 +161491,7 @@ export namespace Prisma {
     product_item_details?: product_item_detailsUpdateManyWithoutBusinessNestedInput
     hospitality_item_details?: hospitality_item_detailsUpdateManyWithoutBusinessNestedInput
     vehicle_item_details?: vehicle_item_detailsUpdateManyWithoutBusinessNestedInput
+    property_item_details?: property_item_detailsUpdateManyWithoutBusinessNestedInput
     product_orders?: product_ordersUpdateManyWithoutBusinessNestedInput
     product_inquiries?: product_inquiriesUpdateManyWithoutBusinessNestedInput
     hospitality_bookings?: hospitality_bookingsUpdateManyWithoutBusinessNestedInput
@@ -150686,6 +161545,7 @@ export namespace Prisma {
     product_item_details?: product_item_detailsUncheckedUpdateManyWithoutBusinessNestedInput
     hospitality_item_details?: hospitality_item_detailsUncheckedUpdateManyWithoutBusinessNestedInput
     vehicle_item_details?: vehicle_item_detailsUncheckedUpdateManyWithoutBusinessNestedInput
+    property_item_details?: property_item_detailsUncheckedUpdateManyWithoutBusinessNestedInput
     product_orders?: product_ordersUncheckedUpdateManyWithoutBusinessNestedInput
     product_inquiries?: product_inquiriesUncheckedUpdateManyWithoutBusinessNestedInput
     hospitality_bookings?: hospitality_bookingsUncheckedUpdateManyWithoutBusinessNestedInput
@@ -150768,6 +161628,7 @@ export namespace Prisma {
     product_item_details?: product_item_detailsCreateNestedManyWithoutBusinessInput
     hospitality_item_details?: hospitality_item_detailsCreateNestedManyWithoutBusinessInput
     vehicle_item_details?: vehicle_item_detailsCreateNestedManyWithoutBusinessInput
+    property_item_details?: property_item_detailsCreateNestedManyWithoutBusinessInput
     product_orders?: product_ordersCreateNestedManyWithoutBusinessInput
     product_inquiries?: product_inquiriesCreateNestedManyWithoutBusinessInput
     hospitality_bookings?: hospitality_bookingsCreateNestedManyWithoutBusinessInput
@@ -150821,6 +161682,7 @@ export namespace Prisma {
     product_item_details?: product_item_detailsUncheckedCreateNestedManyWithoutBusinessInput
     hospitality_item_details?: hospitality_item_detailsUncheckedCreateNestedManyWithoutBusinessInput
     vehicle_item_details?: vehicle_item_detailsUncheckedCreateNestedManyWithoutBusinessInput
+    property_item_details?: property_item_detailsUncheckedCreateNestedManyWithoutBusinessInput
     product_orders?: product_ordersUncheckedCreateNestedManyWithoutBusinessInput
     product_inquiries?: product_inquiriesUncheckedCreateNestedManyWithoutBusinessInput
     hospitality_bookings?: hospitality_bookingsUncheckedCreateNestedManyWithoutBusinessInput
@@ -151495,6 +162357,40 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type tenant_conversation_configsCreateWithoutTenantInput = {
+    config_id?: string
+    waba_id: string
+    mode?: string
+    flow?: string
+    capabilities?: JsonNullValueInput | InputJsonValue
+    rules?: JsonNullValueInput | InputJsonValue
+    is_active?: boolean
+    created_at?: Date | string
+    updated_at?: Date | string
+  }
+
+  export type tenant_conversation_configsUncheckedCreateWithoutTenantInput = {
+    config_id?: string
+    waba_id: string
+    mode?: string
+    flow?: string
+    capabilities?: JsonNullValueInput | InputJsonValue
+    rules?: JsonNullValueInput | InputJsonValue
+    is_active?: boolean
+    created_at?: Date | string
+    updated_at?: Date | string
+  }
+
+  export type tenant_conversation_configsCreateOrConnectWithoutTenantInput = {
+    where: tenant_conversation_configsWhereUniqueInput
+    create: XOR<tenant_conversation_configsCreateWithoutTenantInput, tenant_conversation_configsUncheckedCreateWithoutTenantInput>
+  }
+
+  export type tenant_conversation_configsCreateManyTenantInputEnvelope = {
+    data: tenant_conversation_configsCreateManyTenantInput | tenant_conversation_configsCreateManyTenantInput[]
+    skipDuplicates?: boolean
+  }
+
   export type business_workflowsUpsertWithWhereUniqueWithoutTenantsInput = {
     where: business_workflowsWhereUniqueInput
     update: XOR<business_workflowsUpdateWithoutTenantsInput, business_workflowsUncheckedUpdateWithoutTenantsInput>
@@ -151730,6 +162626,158 @@ export namespace Prisma {
     data: XOR<notification_templatesUpdateManyMutationInput, notification_templatesUncheckedUpdateManyWithoutTenantsInput>
   }
 
+  export type tenant_conversation_configsUpsertWithWhereUniqueWithoutTenantInput = {
+    where: tenant_conversation_configsWhereUniqueInput
+    update: XOR<tenant_conversation_configsUpdateWithoutTenantInput, tenant_conversation_configsUncheckedUpdateWithoutTenantInput>
+    create: XOR<tenant_conversation_configsCreateWithoutTenantInput, tenant_conversation_configsUncheckedCreateWithoutTenantInput>
+  }
+
+  export type tenant_conversation_configsUpdateWithWhereUniqueWithoutTenantInput = {
+    where: tenant_conversation_configsWhereUniqueInput
+    data: XOR<tenant_conversation_configsUpdateWithoutTenantInput, tenant_conversation_configsUncheckedUpdateWithoutTenantInput>
+  }
+
+  export type tenant_conversation_configsUpdateManyWithWhereWithoutTenantInput = {
+    where: tenant_conversation_configsScalarWhereInput
+    data: XOR<tenant_conversation_configsUpdateManyMutationInput, tenant_conversation_configsUncheckedUpdateManyWithoutTenantInput>
+  }
+
+  export type tenant_conversation_configsScalarWhereInput = {
+    AND?: tenant_conversation_configsScalarWhereInput | tenant_conversation_configsScalarWhereInput[]
+    OR?: tenant_conversation_configsScalarWhereInput[]
+    NOT?: tenant_conversation_configsScalarWhereInput | tenant_conversation_configsScalarWhereInput[]
+    config_id?: UuidFilter<"tenant_conversation_configs"> | string
+    tenant_id?: UuidFilter<"tenant_conversation_configs"> | string
+    waba_id?: StringFilter<"tenant_conversation_configs"> | string
+    mode?: StringFilter<"tenant_conversation_configs"> | string
+    flow?: StringFilter<"tenant_conversation_configs"> | string
+    capabilities?: JsonFilter<"tenant_conversation_configs">
+    rules?: JsonFilter<"tenant_conversation_configs">
+    is_active?: BoolFilter<"tenant_conversation_configs"> | boolean
+    created_at?: DateTimeFilter<"tenant_conversation_configs"> | Date | string
+    updated_at?: DateTimeFilter<"tenant_conversation_configs"> | Date | string
+  }
+
+  export type tenantsCreateWithoutTenant_conversation_configsInput = {
+    tenant_id?: string
+    tenant_name: string
+    email: string
+    phone_number?: string | null
+    created_at?: Date | string
+    updated_at?: Date | string
+    address?: string | null
+    gst_number?: string | null
+    pan_number?: string | null
+    registration_no?: string | null
+    business_workflows?: business_workflowsCreateNestedManyWithoutTenantsInput
+    businesses?: businessesCreateNestedManyWithoutTenantsInput
+    carts?: cartsCreateNestedManyWithoutTenantsInput
+    leads?: leadsCreateNestedManyWithoutTenantsInput
+    workflow_executions?: workflow_executionsCreateNestedManyWithoutTenantsInput
+    workflow_execution_steps?: workflow_execution_stepsCreateNestedManyWithoutTenantInput
+    workflow_idempotency_keys?: workflow_idempotency_keysCreateNestedManyWithoutTenantInput
+    product_orders?: product_ordersCreateNestedManyWithoutTenantInput
+    product_inquiries?: product_inquiriesCreateNestedManyWithoutTenantInput
+    hospitality_bookings?: hospitality_bookingsCreateNestedManyWithoutTenantInput
+    hospitality_inquiries?: hospitality_inquiriesCreateNestedManyWithoutTenantInput
+    notification_messages?: notification_messagesCreateNestedManyWithoutTenantsInput
+    notification_templates?: notification_templatesCreateNestedManyWithoutTenantsInput
+  }
+
+  export type tenantsUncheckedCreateWithoutTenant_conversation_configsInput = {
+    tenant_id?: string
+    tenant_name: string
+    email: string
+    phone_number?: string | null
+    created_at?: Date | string
+    updated_at?: Date | string
+    address?: string | null
+    gst_number?: string | null
+    pan_number?: string | null
+    registration_no?: string | null
+    business_workflows?: business_workflowsUncheckedCreateNestedManyWithoutTenantsInput
+    businesses?: businessesUncheckedCreateNestedManyWithoutTenantsInput
+    carts?: cartsUncheckedCreateNestedManyWithoutTenantsInput
+    leads?: leadsUncheckedCreateNestedManyWithoutTenantsInput
+    workflow_executions?: workflow_executionsUncheckedCreateNestedManyWithoutTenantsInput
+    workflow_execution_steps?: workflow_execution_stepsUncheckedCreateNestedManyWithoutTenantInput
+    workflow_idempotency_keys?: workflow_idempotency_keysUncheckedCreateNestedManyWithoutTenantInput
+    product_orders?: product_ordersUncheckedCreateNestedManyWithoutTenantInput
+    product_inquiries?: product_inquiriesUncheckedCreateNestedManyWithoutTenantInput
+    hospitality_bookings?: hospitality_bookingsUncheckedCreateNestedManyWithoutTenantInput
+    hospitality_inquiries?: hospitality_inquiriesUncheckedCreateNestedManyWithoutTenantInput
+    notification_messages?: notification_messagesUncheckedCreateNestedManyWithoutTenantsInput
+    notification_templates?: notification_templatesUncheckedCreateNestedManyWithoutTenantsInput
+  }
+
+  export type tenantsCreateOrConnectWithoutTenant_conversation_configsInput = {
+    where: tenantsWhereUniqueInput
+    create: XOR<tenantsCreateWithoutTenant_conversation_configsInput, tenantsUncheckedCreateWithoutTenant_conversation_configsInput>
+  }
+
+  export type tenantsUpsertWithoutTenant_conversation_configsInput = {
+    update: XOR<tenantsUpdateWithoutTenant_conversation_configsInput, tenantsUncheckedUpdateWithoutTenant_conversation_configsInput>
+    create: XOR<tenantsCreateWithoutTenant_conversation_configsInput, tenantsUncheckedCreateWithoutTenant_conversation_configsInput>
+    where?: tenantsWhereInput
+  }
+
+  export type tenantsUpdateToOneWithWhereWithoutTenant_conversation_configsInput = {
+    where?: tenantsWhereInput
+    data: XOR<tenantsUpdateWithoutTenant_conversation_configsInput, tenantsUncheckedUpdateWithoutTenant_conversation_configsInput>
+  }
+
+  export type tenantsUpdateWithoutTenant_conversation_configsInput = {
+    tenant_id?: StringFieldUpdateOperationsInput | string
+    tenant_name?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    phone_number?: NullableStringFieldUpdateOperationsInput | string | null
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    gst_number?: NullableStringFieldUpdateOperationsInput | string | null
+    pan_number?: NullableStringFieldUpdateOperationsInput | string | null
+    registration_no?: NullableStringFieldUpdateOperationsInput | string | null
+    business_workflows?: business_workflowsUpdateManyWithoutTenantsNestedInput
+    businesses?: businessesUpdateManyWithoutTenantsNestedInput
+    carts?: cartsUpdateManyWithoutTenantsNestedInput
+    leads?: leadsUpdateManyWithoutTenantsNestedInput
+    workflow_executions?: workflow_executionsUpdateManyWithoutTenantsNestedInput
+    workflow_execution_steps?: workflow_execution_stepsUpdateManyWithoutTenantNestedInput
+    workflow_idempotency_keys?: workflow_idempotency_keysUpdateManyWithoutTenantNestedInput
+    product_orders?: product_ordersUpdateManyWithoutTenantNestedInput
+    product_inquiries?: product_inquiriesUpdateManyWithoutTenantNestedInput
+    hospitality_bookings?: hospitality_bookingsUpdateManyWithoutTenantNestedInput
+    hospitality_inquiries?: hospitality_inquiriesUpdateManyWithoutTenantNestedInput
+    notification_messages?: notification_messagesUpdateManyWithoutTenantsNestedInput
+    notification_templates?: notification_templatesUpdateManyWithoutTenantsNestedInput
+  }
+
+  export type tenantsUncheckedUpdateWithoutTenant_conversation_configsInput = {
+    tenant_id?: StringFieldUpdateOperationsInput | string
+    tenant_name?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    phone_number?: NullableStringFieldUpdateOperationsInput | string | null
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    gst_number?: NullableStringFieldUpdateOperationsInput | string | null
+    pan_number?: NullableStringFieldUpdateOperationsInput | string | null
+    registration_no?: NullableStringFieldUpdateOperationsInput | string | null
+    business_workflows?: business_workflowsUncheckedUpdateManyWithoutTenantsNestedInput
+    businesses?: businessesUncheckedUpdateManyWithoutTenantsNestedInput
+    carts?: cartsUncheckedUpdateManyWithoutTenantsNestedInput
+    leads?: leadsUncheckedUpdateManyWithoutTenantsNestedInput
+    workflow_executions?: workflow_executionsUncheckedUpdateManyWithoutTenantsNestedInput
+    workflow_execution_steps?: workflow_execution_stepsUncheckedUpdateManyWithoutTenantNestedInput
+    workflow_idempotency_keys?: workflow_idempotency_keysUncheckedUpdateManyWithoutTenantNestedInput
+    product_orders?: product_ordersUncheckedUpdateManyWithoutTenantNestedInput
+    product_inquiries?: product_inquiriesUncheckedUpdateManyWithoutTenantNestedInput
+    hospitality_bookings?: hospitality_bookingsUncheckedUpdateManyWithoutTenantNestedInput
+    hospitality_inquiries?: hospitality_inquiriesUncheckedUpdateManyWithoutTenantNestedInput
+    notification_messages?: notification_messagesUncheckedUpdateManyWithoutTenantsNestedInput
+    notification_templates?: notification_templatesUncheckedUpdateManyWithoutTenantsNestedInput
+  }
+
   export type lead_followupsCreateWithoutAssigneeInput = {
     followup_id?: string
     business_id: string
@@ -151918,6 +162966,7 @@ export namespace Prisma {
     product_item_details?: product_item_detailsCreateNestedManyWithoutBusinessInput
     hospitality_item_details?: hospitality_item_detailsCreateNestedManyWithoutBusinessInput
     vehicle_item_details?: vehicle_item_detailsCreateNestedManyWithoutBusinessInput
+    property_item_details?: property_item_detailsCreateNestedManyWithoutBusinessInput
     product_orders?: product_ordersCreateNestedManyWithoutBusinessInput
     product_inquiries?: product_inquiriesCreateNestedManyWithoutBusinessInput
     hospitality_bookings?: hospitality_bookingsCreateNestedManyWithoutBusinessInput
@@ -151971,6 +163020,7 @@ export namespace Prisma {
     product_item_details?: product_item_detailsUncheckedCreateNestedManyWithoutBusinessInput
     hospitality_item_details?: hospitality_item_detailsUncheckedCreateNestedManyWithoutBusinessInput
     vehicle_item_details?: vehicle_item_detailsUncheckedCreateNestedManyWithoutBusinessInput
+    property_item_details?: property_item_detailsUncheckedCreateNestedManyWithoutBusinessInput
     product_orders?: product_ordersUncheckedCreateNestedManyWithoutBusinessInput
     product_inquiries?: product_inquiriesUncheckedCreateNestedManyWithoutBusinessInput
     hospitality_bookings?: hospitality_bookingsUncheckedCreateNestedManyWithoutBusinessInput
@@ -152160,6 +163210,7 @@ export namespace Prisma {
     product_item_details?: product_item_detailsUpdateManyWithoutBusinessNestedInput
     hospitality_item_details?: hospitality_item_detailsUpdateManyWithoutBusinessNestedInput
     vehicle_item_details?: vehicle_item_detailsUpdateManyWithoutBusinessNestedInput
+    property_item_details?: property_item_detailsUpdateManyWithoutBusinessNestedInput
     product_orders?: product_ordersUpdateManyWithoutBusinessNestedInput
     product_inquiries?: product_inquiriesUpdateManyWithoutBusinessNestedInput
     hospitality_bookings?: hospitality_bookingsUpdateManyWithoutBusinessNestedInput
@@ -152213,6 +163264,7 @@ export namespace Prisma {
     product_item_details?: product_item_detailsUncheckedUpdateManyWithoutBusinessNestedInput
     hospitality_item_details?: hospitality_item_detailsUncheckedUpdateManyWithoutBusinessNestedInput
     vehicle_item_details?: vehicle_item_detailsUncheckedUpdateManyWithoutBusinessNestedInput
+    property_item_details?: property_item_detailsUncheckedUpdateManyWithoutBusinessNestedInput
     product_orders?: product_ordersUncheckedUpdateManyWithoutBusinessNestedInput
     product_inquiries?: product_inquiriesUncheckedUpdateManyWithoutBusinessNestedInput
     hospitality_bookings?: hospitality_bookingsUncheckedUpdateManyWithoutBusinessNestedInput
@@ -152790,6 +163842,7 @@ export namespace Prisma {
     product_item_details?: product_item_detailsCreateNestedManyWithoutBusinessInput
     hospitality_item_details?: hospitality_item_detailsCreateNestedManyWithoutBusinessInput
     vehicle_item_details?: vehicle_item_detailsCreateNestedManyWithoutBusinessInput
+    property_item_details?: property_item_detailsCreateNestedManyWithoutBusinessInput
     product_orders?: product_ordersCreateNestedManyWithoutBusinessInput
     product_inquiries?: product_inquiriesCreateNestedManyWithoutBusinessInput
     hospitality_bookings?: hospitality_bookingsCreateNestedManyWithoutBusinessInput
@@ -152843,6 +163896,7 @@ export namespace Prisma {
     product_item_details?: product_item_detailsUncheckedCreateNestedManyWithoutBusinessInput
     hospitality_item_details?: hospitality_item_detailsUncheckedCreateNestedManyWithoutBusinessInput
     vehicle_item_details?: vehicle_item_detailsUncheckedCreateNestedManyWithoutBusinessInput
+    property_item_details?: property_item_detailsUncheckedCreateNestedManyWithoutBusinessInput
     product_orders?: product_ordersUncheckedCreateNestedManyWithoutBusinessInput
     product_inquiries?: product_inquiriesUncheckedCreateNestedManyWithoutBusinessInput
     hospitality_bookings?: hospitality_bookingsUncheckedCreateNestedManyWithoutBusinessInput
@@ -152894,6 +163948,7 @@ export namespace Prisma {
     hospitality_inquiries?: hospitality_inquiriesCreateNestedManyWithoutTenantInput
     notification_messages?: notification_messagesCreateNestedManyWithoutTenantsInput
     notification_templates?: notification_templatesCreateNestedManyWithoutTenantsInput
+    tenant_conversation_configs?: tenant_conversation_configsCreateNestedManyWithoutTenantInput
   }
 
   export type tenantsUncheckedCreateWithoutLeadsInput = {
@@ -152919,6 +163974,7 @@ export namespace Prisma {
     hospitality_inquiries?: hospitality_inquiriesUncheckedCreateNestedManyWithoutTenantInput
     notification_messages?: notification_messagesUncheckedCreateNestedManyWithoutTenantsInput
     notification_templates?: notification_templatesUncheckedCreateNestedManyWithoutTenantsInput
+    tenant_conversation_configs?: tenant_conversation_configsUncheckedCreateNestedManyWithoutTenantInput
   }
 
   export type tenantsCreateOrConnectWithoutLeadsInput = {
@@ -153471,6 +164527,7 @@ export namespace Prisma {
     product_item_details?: product_item_detailsUpdateManyWithoutBusinessNestedInput
     hospitality_item_details?: hospitality_item_detailsUpdateManyWithoutBusinessNestedInput
     vehicle_item_details?: vehicle_item_detailsUpdateManyWithoutBusinessNestedInput
+    property_item_details?: property_item_detailsUpdateManyWithoutBusinessNestedInput
     product_orders?: product_ordersUpdateManyWithoutBusinessNestedInput
     product_inquiries?: product_inquiriesUpdateManyWithoutBusinessNestedInput
     hospitality_bookings?: hospitality_bookingsUpdateManyWithoutBusinessNestedInput
@@ -153524,6 +164581,7 @@ export namespace Prisma {
     product_item_details?: product_item_detailsUncheckedUpdateManyWithoutBusinessNestedInput
     hospitality_item_details?: hospitality_item_detailsUncheckedUpdateManyWithoutBusinessNestedInput
     vehicle_item_details?: vehicle_item_detailsUncheckedUpdateManyWithoutBusinessNestedInput
+    property_item_details?: property_item_detailsUncheckedUpdateManyWithoutBusinessNestedInput
     product_orders?: product_ordersUncheckedUpdateManyWithoutBusinessNestedInput
     product_inquiries?: product_inquiriesUncheckedUpdateManyWithoutBusinessNestedInput
     hospitality_bookings?: hospitality_bookingsUncheckedUpdateManyWithoutBusinessNestedInput
@@ -153581,6 +164639,7 @@ export namespace Prisma {
     hospitality_inquiries?: hospitality_inquiriesUpdateManyWithoutTenantNestedInput
     notification_messages?: notification_messagesUpdateManyWithoutTenantsNestedInput
     notification_templates?: notification_templatesUpdateManyWithoutTenantsNestedInput
+    tenant_conversation_configs?: tenant_conversation_configsUpdateManyWithoutTenantNestedInput
   }
 
   export type tenantsUncheckedUpdateWithoutLeadsInput = {
@@ -153606,6 +164665,7 @@ export namespace Prisma {
     hospitality_inquiries?: hospitality_inquiriesUncheckedUpdateManyWithoutTenantNestedInput
     notification_messages?: notification_messagesUncheckedUpdateManyWithoutTenantsNestedInput
     notification_templates?: notification_templatesUncheckedUpdateManyWithoutTenantsNestedInput
+    tenant_conversation_configs?: tenant_conversation_configsUncheckedUpdateManyWithoutTenantNestedInput
   }
 
   export type pipelinesUpsertWithoutLeadsInput = {
@@ -153785,6 +164845,7 @@ export namespace Prisma {
     product_item_details?: product_item_detailsCreateNestedManyWithoutBusinessInput
     hospitality_item_details?: hospitality_item_detailsCreateNestedManyWithoutBusinessInput
     vehicle_item_details?: vehicle_item_detailsCreateNestedManyWithoutBusinessInput
+    property_item_details?: property_item_detailsCreateNestedManyWithoutBusinessInput
     product_orders?: product_ordersCreateNestedManyWithoutBusinessInput
     product_inquiries?: product_inquiriesCreateNestedManyWithoutBusinessInput
     hospitality_bookings?: hospitality_bookingsCreateNestedManyWithoutBusinessInput
@@ -153838,6 +164899,7 @@ export namespace Prisma {
     product_item_details?: product_item_detailsUncheckedCreateNestedManyWithoutBusinessInput
     hospitality_item_details?: hospitality_item_detailsUncheckedCreateNestedManyWithoutBusinessInput
     vehicle_item_details?: vehicle_item_detailsUncheckedCreateNestedManyWithoutBusinessInput
+    property_item_details?: property_item_detailsUncheckedCreateNestedManyWithoutBusinessInput
     product_orders?: product_ordersUncheckedCreateNestedManyWithoutBusinessInput
     product_inquiries?: product_inquiriesUncheckedCreateNestedManyWithoutBusinessInput
     hospitality_bookings?: hospitality_bookingsUncheckedCreateNestedManyWithoutBusinessInput
@@ -154039,6 +165101,7 @@ export namespace Prisma {
     product_item_details?: product_item_detailsUpdateManyWithoutBusinessNestedInput
     hospitality_item_details?: hospitality_item_detailsUpdateManyWithoutBusinessNestedInput
     vehicle_item_details?: vehicle_item_detailsUpdateManyWithoutBusinessNestedInput
+    property_item_details?: property_item_detailsUpdateManyWithoutBusinessNestedInput
     product_orders?: product_ordersUpdateManyWithoutBusinessNestedInput
     product_inquiries?: product_inquiriesUpdateManyWithoutBusinessNestedInput
     hospitality_bookings?: hospitality_bookingsUpdateManyWithoutBusinessNestedInput
@@ -154092,6 +165155,7 @@ export namespace Prisma {
     product_item_details?: product_item_detailsUncheckedUpdateManyWithoutBusinessNestedInput
     hospitality_item_details?: hospitality_item_detailsUncheckedUpdateManyWithoutBusinessNestedInput
     vehicle_item_details?: vehicle_item_detailsUncheckedUpdateManyWithoutBusinessNestedInput
+    property_item_details?: property_item_detailsUncheckedUpdateManyWithoutBusinessNestedInput
     product_orders?: product_ordersUncheckedUpdateManyWithoutBusinessNestedInput
     product_inquiries?: product_inquiriesUncheckedUpdateManyWithoutBusinessNestedInput
     hospitality_bookings?: hospitality_bookingsUncheckedUpdateManyWithoutBusinessNestedInput
@@ -156173,6 +167237,7 @@ export namespace Prisma {
     product_detail?: product_item_detailsCreateNestedOneWithoutItemInput
     hospitality_detail?: hospitality_item_detailsCreateNestedOneWithoutItemInput
     vehicle_detail?: vehicle_item_detailsCreateNestedOneWithoutItemInput
+    property_detail?: property_item_detailsCreateNestedOneWithoutItemInput
     product_order_items?: product_order_itemsCreateNestedManyWithoutItemInput
     hospitality_booking_items?: hospitality_booking_itemsCreateNestedManyWithoutItemInput
     product_inquiries?: product_inquiriesCreateNestedManyWithoutItemInput
@@ -156181,6 +167246,7 @@ export namespace Prisma {
     availability?: item_availabilityCreateNestedManyWithoutItemInput
     variants?: item_variantsCreateNestedManyWithoutItemInput
     external_catalog_items?: external_catalog_itemsCreateNestedManyWithoutItemInput
+    appointment_sales_visits?: appointment_sales_visitsCreateNestedManyWithoutItemInput
   }
 
   export type catalog_itemsUncheckedCreateWithoutOrder_itemsInput = {
@@ -156208,6 +167274,7 @@ export namespace Prisma {
     product_detail?: product_item_detailsUncheckedCreateNestedOneWithoutItemInput
     hospitality_detail?: hospitality_item_detailsUncheckedCreateNestedOneWithoutItemInput
     vehicle_detail?: vehicle_item_detailsUncheckedCreateNestedOneWithoutItemInput
+    property_detail?: property_item_detailsUncheckedCreateNestedOneWithoutItemInput
     product_order_items?: product_order_itemsUncheckedCreateNestedManyWithoutItemInput
     hospitality_booking_items?: hospitality_booking_itemsUncheckedCreateNestedManyWithoutItemInput
     product_inquiries?: product_inquiriesUncheckedCreateNestedManyWithoutItemInput
@@ -156215,6 +167282,7 @@ export namespace Prisma {
     availability?: item_availabilityUncheckedCreateNestedManyWithoutItemInput
     variants?: item_variantsUncheckedCreateNestedManyWithoutItemInput
     external_catalog_items?: external_catalog_itemsUncheckedCreateNestedManyWithoutItemInput
+    appointment_sales_visits?: appointment_sales_visitsUncheckedCreateNestedManyWithoutItemInput
   }
 
   export type catalog_itemsCreateOrConnectWithoutOrder_itemsInput = {
@@ -156385,6 +167453,7 @@ export namespace Prisma {
     product_detail?: product_item_detailsUpdateOneWithoutItemNestedInput
     hospitality_detail?: hospitality_item_detailsUpdateOneWithoutItemNestedInput
     vehicle_detail?: vehicle_item_detailsUpdateOneWithoutItemNestedInput
+    property_detail?: property_item_detailsUpdateOneWithoutItemNestedInput
     product_order_items?: product_order_itemsUpdateManyWithoutItemNestedInput
     hospitality_booking_items?: hospitality_booking_itemsUpdateManyWithoutItemNestedInput
     product_inquiries?: product_inquiriesUpdateManyWithoutItemNestedInput
@@ -156393,6 +167462,7 @@ export namespace Prisma {
     availability?: item_availabilityUpdateManyWithoutItemNestedInput
     variants?: item_variantsUpdateManyWithoutItemNestedInput
     external_catalog_items?: external_catalog_itemsUpdateManyWithoutItemNestedInput
+    appointment_sales_visits?: appointment_sales_visitsUpdateManyWithoutItemNestedInput
   }
 
   export type catalog_itemsUncheckedUpdateWithoutOrder_itemsInput = {
@@ -156420,6 +167490,7 @@ export namespace Prisma {
     product_detail?: product_item_detailsUncheckedUpdateOneWithoutItemNestedInput
     hospitality_detail?: hospitality_item_detailsUncheckedUpdateOneWithoutItemNestedInput
     vehicle_detail?: vehicle_item_detailsUncheckedUpdateOneWithoutItemNestedInput
+    property_detail?: property_item_detailsUncheckedUpdateOneWithoutItemNestedInput
     product_order_items?: product_order_itemsUncheckedUpdateManyWithoutItemNestedInput
     hospitality_booking_items?: hospitality_booking_itemsUncheckedUpdateManyWithoutItemNestedInput
     product_inquiries?: product_inquiriesUncheckedUpdateManyWithoutItemNestedInput
@@ -156427,6 +167498,7 @@ export namespace Prisma {
     availability?: item_availabilityUncheckedUpdateManyWithoutItemNestedInput
     variants?: item_variantsUncheckedUpdateManyWithoutItemNestedInput
     external_catalog_items?: external_catalog_itemsUncheckedUpdateManyWithoutItemNestedInput
+    appointment_sales_visits?: appointment_sales_visitsUncheckedUpdateManyWithoutItemNestedInput
   }
 
   export type ordersUpsertWithoutOrder_itemsInput = {
@@ -156592,6 +167664,7 @@ export namespace Prisma {
     product_detail?: product_item_detailsCreateNestedOneWithoutItemInput
     hospitality_detail?: hospitality_item_detailsCreateNestedOneWithoutItemInput
     vehicle_detail?: vehicle_item_detailsCreateNestedOneWithoutItemInput
+    property_detail?: property_item_detailsCreateNestedOneWithoutItemInput
     product_order_items?: product_order_itemsCreateNestedManyWithoutItemInput
     hospitality_booking_items?: hospitality_booking_itemsCreateNestedManyWithoutItemInput
     product_inquiries?: product_inquiriesCreateNestedManyWithoutItemInput
@@ -156601,6 +167674,7 @@ export namespace Prisma {
     variants?: item_variantsCreateNestedManyWithoutItemInput
     order_items?: order_itemsCreateNestedManyWithoutCatalog_itemInput
     external_catalog_items?: external_catalog_itemsCreateNestedManyWithoutItemInput
+    appointment_sales_visits?: appointment_sales_visitsCreateNestedManyWithoutItemInput
   }
 
   export type catalog_itemsUncheckedCreateWithoutCart_reservationsInput = {
@@ -156627,6 +167701,7 @@ export namespace Prisma {
     product_detail?: product_item_detailsUncheckedCreateNestedOneWithoutItemInput
     hospitality_detail?: hospitality_item_detailsUncheckedCreateNestedOneWithoutItemInput
     vehicle_detail?: vehicle_item_detailsUncheckedCreateNestedOneWithoutItemInput
+    property_detail?: property_item_detailsUncheckedCreateNestedOneWithoutItemInput
     product_order_items?: product_order_itemsUncheckedCreateNestedManyWithoutItemInput
     hospitality_booking_items?: hospitality_booking_itemsUncheckedCreateNestedManyWithoutItemInput
     product_inquiries?: product_inquiriesUncheckedCreateNestedManyWithoutItemInput
@@ -156635,6 +167710,7 @@ export namespace Prisma {
     variants?: item_variantsUncheckedCreateNestedManyWithoutItemInput
     order_items?: order_itemsUncheckedCreateNestedManyWithoutCatalog_itemInput
     external_catalog_items?: external_catalog_itemsUncheckedCreateNestedManyWithoutItemInput
+    appointment_sales_visits?: appointment_sales_visitsUncheckedCreateNestedManyWithoutItemInput
   }
 
   export type catalog_itemsCreateOrConnectWithoutCart_reservationsInput = {
@@ -156767,6 +167843,7 @@ export namespace Prisma {
     product_detail?: product_item_detailsUpdateOneWithoutItemNestedInput
     hospitality_detail?: hospitality_item_detailsUpdateOneWithoutItemNestedInput
     vehicle_detail?: vehicle_item_detailsUpdateOneWithoutItemNestedInput
+    property_detail?: property_item_detailsUpdateOneWithoutItemNestedInput
     product_order_items?: product_order_itemsUpdateManyWithoutItemNestedInput
     hospitality_booking_items?: hospitality_booking_itemsUpdateManyWithoutItemNestedInput
     product_inquiries?: product_inquiriesUpdateManyWithoutItemNestedInput
@@ -156776,6 +167853,7 @@ export namespace Prisma {
     variants?: item_variantsUpdateManyWithoutItemNestedInput
     order_items?: order_itemsUpdateManyWithoutCatalog_itemNestedInput
     external_catalog_items?: external_catalog_itemsUpdateManyWithoutItemNestedInput
+    appointment_sales_visits?: appointment_sales_visitsUpdateManyWithoutItemNestedInput
   }
 
   export type catalog_itemsUncheckedUpdateWithoutCart_reservationsInput = {
@@ -156802,6 +167880,7 @@ export namespace Prisma {
     product_detail?: product_item_detailsUncheckedUpdateOneWithoutItemNestedInput
     hospitality_detail?: hospitality_item_detailsUncheckedUpdateOneWithoutItemNestedInput
     vehicle_detail?: vehicle_item_detailsUncheckedUpdateOneWithoutItemNestedInput
+    property_detail?: property_item_detailsUncheckedUpdateOneWithoutItemNestedInput
     product_order_items?: product_order_itemsUncheckedUpdateManyWithoutItemNestedInput
     hospitality_booking_items?: hospitality_booking_itemsUncheckedUpdateManyWithoutItemNestedInput
     product_inquiries?: product_inquiriesUncheckedUpdateManyWithoutItemNestedInput
@@ -156810,6 +167889,7 @@ export namespace Prisma {
     variants?: item_variantsUncheckedUpdateManyWithoutItemNestedInput
     order_items?: order_itemsUncheckedUpdateManyWithoutCatalog_itemNestedInput
     external_catalog_items?: external_catalog_itemsUncheckedUpdateManyWithoutItemNestedInput
+    appointment_sales_visits?: appointment_sales_visitsUncheckedUpdateManyWithoutItemNestedInput
   }
 
   export type leadsUpsertWithoutCart_reservationsInput = {
@@ -157215,6 +168295,7 @@ export namespace Prisma {
     product_item_details?: product_item_detailsCreateNestedManyWithoutBusinessInput
     hospitality_item_details?: hospitality_item_detailsCreateNestedManyWithoutBusinessInput
     vehicle_item_details?: vehicle_item_detailsCreateNestedManyWithoutBusinessInput
+    property_item_details?: property_item_detailsCreateNestedManyWithoutBusinessInput
     product_orders?: product_ordersCreateNestedManyWithoutBusinessInput
     product_inquiries?: product_inquiriesCreateNestedManyWithoutBusinessInput
     hospitality_bookings?: hospitality_bookingsCreateNestedManyWithoutBusinessInput
@@ -157268,6 +168349,7 @@ export namespace Prisma {
     product_item_details?: product_item_detailsUncheckedCreateNestedManyWithoutBusinessInput
     hospitality_item_details?: hospitality_item_detailsUncheckedCreateNestedManyWithoutBusinessInput
     vehicle_item_details?: vehicle_item_detailsUncheckedCreateNestedManyWithoutBusinessInput
+    property_item_details?: property_item_detailsUncheckedCreateNestedManyWithoutBusinessInput
     product_orders?: product_ordersUncheckedCreateNestedManyWithoutBusinessInput
     product_inquiries?: product_inquiriesUncheckedCreateNestedManyWithoutBusinessInput
     hospitality_bookings?: hospitality_bookingsUncheckedCreateNestedManyWithoutBusinessInput
@@ -157319,6 +168401,7 @@ export namespace Prisma {
     hospitality_bookings?: hospitality_bookingsCreateNestedManyWithoutTenantInput
     hospitality_inquiries?: hospitality_inquiriesCreateNestedManyWithoutTenantInput
     notification_messages?: notification_messagesCreateNestedManyWithoutTenantsInput
+    tenant_conversation_configs?: tenant_conversation_configsCreateNestedManyWithoutTenantInput
   }
 
   export type tenantsUncheckedCreateWithoutNotification_templatesInput = {
@@ -157344,6 +168427,7 @@ export namespace Prisma {
     hospitality_bookings?: hospitality_bookingsUncheckedCreateNestedManyWithoutTenantInput
     hospitality_inquiries?: hospitality_inquiriesUncheckedCreateNestedManyWithoutTenantInput
     notification_messages?: notification_messagesUncheckedCreateNestedManyWithoutTenantsInput
+    tenant_conversation_configs?: tenant_conversation_configsUncheckedCreateNestedManyWithoutTenantInput
   }
 
   export type tenantsCreateOrConnectWithoutNotification_templatesInput = {
@@ -157463,6 +168547,7 @@ export namespace Prisma {
     product_item_details?: product_item_detailsUpdateManyWithoutBusinessNestedInput
     hospitality_item_details?: hospitality_item_detailsUpdateManyWithoutBusinessNestedInput
     vehicle_item_details?: vehicle_item_detailsUpdateManyWithoutBusinessNestedInput
+    property_item_details?: property_item_detailsUpdateManyWithoutBusinessNestedInput
     product_orders?: product_ordersUpdateManyWithoutBusinessNestedInput
     product_inquiries?: product_inquiriesUpdateManyWithoutBusinessNestedInput
     hospitality_bookings?: hospitality_bookingsUpdateManyWithoutBusinessNestedInput
@@ -157516,6 +168601,7 @@ export namespace Prisma {
     product_item_details?: product_item_detailsUncheckedUpdateManyWithoutBusinessNestedInput
     hospitality_item_details?: hospitality_item_detailsUncheckedUpdateManyWithoutBusinessNestedInput
     vehicle_item_details?: vehicle_item_detailsUncheckedUpdateManyWithoutBusinessNestedInput
+    property_item_details?: property_item_detailsUncheckedUpdateManyWithoutBusinessNestedInput
     product_orders?: product_ordersUncheckedUpdateManyWithoutBusinessNestedInput
     product_inquiries?: product_inquiriesUncheckedUpdateManyWithoutBusinessNestedInput
     hospitality_bookings?: hospitality_bookingsUncheckedUpdateManyWithoutBusinessNestedInput
@@ -157573,6 +168659,7 @@ export namespace Prisma {
     hospitality_bookings?: hospitality_bookingsUpdateManyWithoutTenantNestedInput
     hospitality_inquiries?: hospitality_inquiriesUpdateManyWithoutTenantNestedInput
     notification_messages?: notification_messagesUpdateManyWithoutTenantsNestedInput
+    tenant_conversation_configs?: tenant_conversation_configsUpdateManyWithoutTenantNestedInput
   }
 
   export type tenantsUncheckedUpdateWithoutNotification_templatesInput = {
@@ -157598,6 +168685,7 @@ export namespace Prisma {
     hospitality_bookings?: hospitality_bookingsUncheckedUpdateManyWithoutTenantNestedInput
     hospitality_inquiries?: hospitality_inquiriesUncheckedUpdateManyWithoutTenantNestedInput
     notification_messages?: notification_messagesUncheckedUpdateManyWithoutTenantsNestedInput
+    tenant_conversation_configs?: tenant_conversation_configsUncheckedUpdateManyWithoutTenantNestedInput
   }
 
   export type notification_eventsCreateWithoutNotification_messagesInput = {
@@ -157658,6 +168746,7 @@ export namespace Prisma {
     product_item_details?: product_item_detailsCreateNestedManyWithoutBusinessInput
     hospitality_item_details?: hospitality_item_detailsCreateNestedManyWithoutBusinessInput
     vehicle_item_details?: vehicle_item_detailsCreateNestedManyWithoutBusinessInput
+    property_item_details?: property_item_detailsCreateNestedManyWithoutBusinessInput
     product_orders?: product_ordersCreateNestedManyWithoutBusinessInput
     product_inquiries?: product_inquiriesCreateNestedManyWithoutBusinessInput
     hospitality_bookings?: hospitality_bookingsCreateNestedManyWithoutBusinessInput
@@ -157711,6 +168800,7 @@ export namespace Prisma {
     product_item_details?: product_item_detailsUncheckedCreateNestedManyWithoutBusinessInput
     hospitality_item_details?: hospitality_item_detailsUncheckedCreateNestedManyWithoutBusinessInput
     vehicle_item_details?: vehicle_item_detailsUncheckedCreateNestedManyWithoutBusinessInput
+    property_item_details?: property_item_detailsUncheckedCreateNestedManyWithoutBusinessInput
     product_orders?: product_ordersUncheckedCreateNestedManyWithoutBusinessInput
     product_inquiries?: product_inquiriesUncheckedCreateNestedManyWithoutBusinessInput
     hospitality_bookings?: hospitality_bookingsUncheckedCreateNestedManyWithoutBusinessInput
@@ -157868,6 +168958,7 @@ export namespace Prisma {
     hospitality_bookings?: hospitality_bookingsCreateNestedManyWithoutTenantInput
     hospitality_inquiries?: hospitality_inquiriesCreateNestedManyWithoutTenantInput
     notification_templates?: notification_templatesCreateNestedManyWithoutTenantsInput
+    tenant_conversation_configs?: tenant_conversation_configsCreateNestedManyWithoutTenantInput
   }
 
   export type tenantsUncheckedCreateWithoutNotification_messagesInput = {
@@ -157893,6 +168984,7 @@ export namespace Prisma {
     hospitality_bookings?: hospitality_bookingsUncheckedCreateNestedManyWithoutTenantInput
     hospitality_inquiries?: hospitality_inquiriesUncheckedCreateNestedManyWithoutTenantInput
     notification_templates?: notification_templatesUncheckedCreateNestedManyWithoutTenantsInput
+    tenant_conversation_configs?: tenant_conversation_configsUncheckedCreateNestedManyWithoutTenantInput
   }
 
   export type tenantsCreateOrConnectWithoutNotification_messagesInput = {
@@ -157970,6 +169062,7 @@ export namespace Prisma {
     product_item_details?: product_item_detailsUpdateManyWithoutBusinessNestedInput
     hospitality_item_details?: hospitality_item_detailsUpdateManyWithoutBusinessNestedInput
     vehicle_item_details?: vehicle_item_detailsUpdateManyWithoutBusinessNestedInput
+    property_item_details?: property_item_detailsUpdateManyWithoutBusinessNestedInput
     product_orders?: product_ordersUpdateManyWithoutBusinessNestedInput
     product_inquiries?: product_inquiriesUpdateManyWithoutBusinessNestedInput
     hospitality_bookings?: hospitality_bookingsUpdateManyWithoutBusinessNestedInput
@@ -158023,6 +169116,7 @@ export namespace Prisma {
     product_item_details?: product_item_detailsUncheckedUpdateManyWithoutBusinessNestedInput
     hospitality_item_details?: hospitality_item_detailsUncheckedUpdateManyWithoutBusinessNestedInput
     vehicle_item_details?: vehicle_item_detailsUncheckedUpdateManyWithoutBusinessNestedInput
+    property_item_details?: property_item_detailsUncheckedUpdateManyWithoutBusinessNestedInput
     product_orders?: product_ordersUncheckedUpdateManyWithoutBusinessNestedInput
     product_inquiries?: product_inquiriesUncheckedUpdateManyWithoutBusinessNestedInput
     hospitality_bookings?: hospitality_bookingsUncheckedUpdateManyWithoutBusinessNestedInput
@@ -158198,6 +169292,7 @@ export namespace Prisma {
     hospitality_bookings?: hospitality_bookingsUpdateManyWithoutTenantNestedInput
     hospitality_inquiries?: hospitality_inquiriesUpdateManyWithoutTenantNestedInput
     notification_templates?: notification_templatesUpdateManyWithoutTenantsNestedInput
+    tenant_conversation_configs?: tenant_conversation_configsUpdateManyWithoutTenantNestedInput
   }
 
   export type tenantsUncheckedUpdateWithoutNotification_messagesInput = {
@@ -158223,6 +169318,7 @@ export namespace Prisma {
     hospitality_bookings?: hospitality_bookingsUncheckedUpdateManyWithoutTenantNestedInput
     hospitality_inquiries?: hospitality_inquiriesUncheckedUpdateManyWithoutTenantNestedInput
     notification_templates?: notification_templatesUncheckedUpdateManyWithoutTenantsNestedInput
+    tenant_conversation_configs?: tenant_conversation_configsUncheckedUpdateManyWithoutTenantNestedInput
   }
 
   export type businessesCreateWithoutNotification_preferencesInput = {
@@ -158255,6 +169351,7 @@ export namespace Prisma {
     product_item_details?: product_item_detailsCreateNestedManyWithoutBusinessInput
     hospitality_item_details?: hospitality_item_detailsCreateNestedManyWithoutBusinessInput
     vehicle_item_details?: vehicle_item_detailsCreateNestedManyWithoutBusinessInput
+    property_item_details?: property_item_detailsCreateNestedManyWithoutBusinessInput
     product_orders?: product_ordersCreateNestedManyWithoutBusinessInput
     product_inquiries?: product_inquiriesCreateNestedManyWithoutBusinessInput
     hospitality_bookings?: hospitality_bookingsCreateNestedManyWithoutBusinessInput
@@ -158308,6 +169405,7 @@ export namespace Prisma {
     product_item_details?: product_item_detailsUncheckedCreateNestedManyWithoutBusinessInput
     hospitality_item_details?: hospitality_item_detailsUncheckedCreateNestedManyWithoutBusinessInput
     vehicle_item_details?: vehicle_item_detailsUncheckedCreateNestedManyWithoutBusinessInput
+    property_item_details?: property_item_detailsUncheckedCreateNestedManyWithoutBusinessInput
     product_orders?: product_ordersUncheckedCreateNestedManyWithoutBusinessInput
     product_inquiries?: product_inquiriesUncheckedCreateNestedManyWithoutBusinessInput
     hospitality_bookings?: hospitality_bookingsUncheckedCreateNestedManyWithoutBusinessInput
@@ -158430,6 +169528,7 @@ export namespace Prisma {
     product_item_details?: product_item_detailsUpdateManyWithoutBusinessNestedInput
     hospitality_item_details?: hospitality_item_detailsUpdateManyWithoutBusinessNestedInput
     vehicle_item_details?: vehicle_item_detailsUpdateManyWithoutBusinessNestedInput
+    property_item_details?: property_item_detailsUpdateManyWithoutBusinessNestedInput
     product_orders?: product_ordersUpdateManyWithoutBusinessNestedInput
     product_inquiries?: product_inquiriesUpdateManyWithoutBusinessNestedInput
     hospitality_bookings?: hospitality_bookingsUpdateManyWithoutBusinessNestedInput
@@ -158483,6 +169582,7 @@ export namespace Prisma {
     product_item_details?: product_item_detailsUncheckedUpdateManyWithoutBusinessNestedInput
     hospitality_item_details?: hospitality_item_detailsUncheckedUpdateManyWithoutBusinessNestedInput
     vehicle_item_details?: vehicle_item_detailsUncheckedUpdateManyWithoutBusinessNestedInput
+    property_item_details?: property_item_detailsUncheckedUpdateManyWithoutBusinessNestedInput
     product_orders?: product_ordersUncheckedUpdateManyWithoutBusinessNestedInput
     product_inquiries?: product_inquiriesUncheckedUpdateManyWithoutBusinessNestedInput
     hospitality_bookings?: hospitality_bookingsUncheckedUpdateManyWithoutBusinessNestedInput
@@ -158633,6 +169733,7 @@ export namespace Prisma {
     product_item_details?: product_item_detailsCreateNestedManyWithoutBusinessInput
     hospitality_item_details?: hospitality_item_detailsCreateNestedManyWithoutBusinessInput
     vehicle_item_details?: vehicle_item_detailsCreateNestedManyWithoutBusinessInput
+    property_item_details?: property_item_detailsCreateNestedManyWithoutBusinessInput
     product_orders?: product_ordersCreateNestedManyWithoutBusinessInput
     product_inquiries?: product_inquiriesCreateNestedManyWithoutBusinessInput
     hospitality_bookings?: hospitality_bookingsCreateNestedManyWithoutBusinessInput
@@ -158686,6 +169787,7 @@ export namespace Prisma {
     product_item_details?: product_item_detailsUncheckedCreateNestedManyWithoutBusinessInput
     hospitality_item_details?: hospitality_item_detailsUncheckedCreateNestedManyWithoutBusinessInput
     vehicle_item_details?: vehicle_item_detailsUncheckedCreateNestedManyWithoutBusinessInput
+    property_item_details?: property_item_detailsUncheckedCreateNestedManyWithoutBusinessInput
     product_orders?: product_ordersUncheckedCreateNestedManyWithoutBusinessInput
     product_inquiries?: product_inquiriesUncheckedCreateNestedManyWithoutBusinessInput
     hospitality_bookings?: hospitality_bookingsUncheckedCreateNestedManyWithoutBusinessInput
@@ -158933,6 +170035,7 @@ export namespace Prisma {
     product_item_details?: product_item_detailsUpdateManyWithoutBusinessNestedInput
     hospitality_item_details?: hospitality_item_detailsUpdateManyWithoutBusinessNestedInput
     vehicle_item_details?: vehicle_item_detailsUpdateManyWithoutBusinessNestedInput
+    property_item_details?: property_item_detailsUpdateManyWithoutBusinessNestedInput
     product_orders?: product_ordersUpdateManyWithoutBusinessNestedInput
     product_inquiries?: product_inquiriesUpdateManyWithoutBusinessNestedInput
     hospitality_bookings?: hospitality_bookingsUpdateManyWithoutBusinessNestedInput
@@ -158986,6 +170089,7 @@ export namespace Prisma {
     product_item_details?: product_item_detailsUncheckedUpdateManyWithoutBusinessNestedInput
     hospitality_item_details?: hospitality_item_detailsUncheckedUpdateManyWithoutBusinessNestedInput
     vehicle_item_details?: vehicle_item_detailsUncheckedUpdateManyWithoutBusinessNestedInput
+    property_item_details?: property_item_detailsUncheckedUpdateManyWithoutBusinessNestedInput
     product_orders?: product_ordersUncheckedUpdateManyWithoutBusinessNestedInput
     product_inquiries?: product_inquiriesUncheckedUpdateManyWithoutBusinessNestedInput
     hospitality_bookings?: hospitality_bookingsUncheckedUpdateManyWithoutBusinessNestedInput
@@ -159195,6 +170299,7 @@ export namespace Prisma {
     product_item_details?: product_item_detailsCreateNestedManyWithoutBusinessInput
     hospitality_item_details?: hospitality_item_detailsCreateNestedManyWithoutBusinessInput
     vehicle_item_details?: vehicle_item_detailsCreateNestedManyWithoutBusinessInput
+    property_item_details?: property_item_detailsCreateNestedManyWithoutBusinessInput
     product_orders?: product_ordersCreateNestedManyWithoutBusinessInput
     product_inquiries?: product_inquiriesCreateNestedManyWithoutBusinessInput
     hospitality_bookings?: hospitality_bookingsCreateNestedManyWithoutBusinessInput
@@ -159248,6 +170353,7 @@ export namespace Prisma {
     product_item_details?: product_item_detailsUncheckedCreateNestedManyWithoutBusinessInput
     hospitality_item_details?: hospitality_item_detailsUncheckedCreateNestedManyWithoutBusinessInput
     vehicle_item_details?: vehicle_item_detailsUncheckedCreateNestedManyWithoutBusinessInput
+    property_item_details?: property_item_detailsUncheckedCreateNestedManyWithoutBusinessInput
     product_orders?: product_ordersUncheckedCreateNestedManyWithoutBusinessInput
     product_inquiries?: product_inquiriesUncheckedCreateNestedManyWithoutBusinessInput
     hospitality_bookings?: hospitality_bookingsUncheckedCreateNestedManyWithoutBusinessInput
@@ -159317,6 +170423,7 @@ export namespace Prisma {
     product_item_details?: product_item_detailsUpdateManyWithoutBusinessNestedInput
     hospitality_item_details?: hospitality_item_detailsUpdateManyWithoutBusinessNestedInput
     vehicle_item_details?: vehicle_item_detailsUpdateManyWithoutBusinessNestedInput
+    property_item_details?: property_item_detailsUpdateManyWithoutBusinessNestedInput
     product_orders?: product_ordersUpdateManyWithoutBusinessNestedInput
     product_inquiries?: product_inquiriesUpdateManyWithoutBusinessNestedInput
     hospitality_bookings?: hospitality_bookingsUpdateManyWithoutBusinessNestedInput
@@ -159370,6 +170477,7 @@ export namespace Prisma {
     product_item_details?: product_item_detailsUncheckedUpdateManyWithoutBusinessNestedInput
     hospitality_item_details?: hospitality_item_detailsUncheckedUpdateManyWithoutBusinessNestedInput
     vehicle_item_details?: vehicle_item_detailsUncheckedUpdateManyWithoutBusinessNestedInput
+    property_item_details?: property_item_detailsUncheckedUpdateManyWithoutBusinessNestedInput
     product_orders?: product_ordersUncheckedUpdateManyWithoutBusinessNestedInput
     product_inquiries?: product_inquiriesUncheckedUpdateManyWithoutBusinessNestedInput
     hospitality_bookings?: hospitality_bookingsUncheckedUpdateManyWithoutBusinessNestedInput
@@ -160090,6 +171198,7 @@ export namespace Prisma {
     product_item_details?: product_item_detailsCreateNestedManyWithoutBusinessInput
     hospitality_item_details?: hospitality_item_detailsCreateNestedManyWithoutBusinessInput
     vehicle_item_details?: vehicle_item_detailsCreateNestedManyWithoutBusinessInput
+    property_item_details?: property_item_detailsCreateNestedManyWithoutBusinessInput
     product_orders?: product_ordersCreateNestedManyWithoutBusinessInput
     product_inquiries?: product_inquiriesCreateNestedManyWithoutBusinessInput
     hospitality_bookings?: hospitality_bookingsCreateNestedManyWithoutBusinessInput
@@ -160143,6 +171252,7 @@ export namespace Prisma {
     product_item_details?: product_item_detailsUncheckedCreateNestedManyWithoutBusinessInput
     hospitality_item_details?: hospitality_item_detailsUncheckedCreateNestedManyWithoutBusinessInput
     vehicle_item_details?: vehicle_item_detailsUncheckedCreateNestedManyWithoutBusinessInput
+    property_item_details?: property_item_detailsUncheckedCreateNestedManyWithoutBusinessInput
     product_orders?: product_ordersUncheckedCreateNestedManyWithoutBusinessInput
     product_inquiries?: product_inquiriesUncheckedCreateNestedManyWithoutBusinessInput
     hospitality_bookings?: hospitality_bookingsUncheckedCreateNestedManyWithoutBusinessInput
@@ -160195,6 +171305,7 @@ export namespace Prisma {
     hospitality_inquiries?: hospitality_inquiriesCreateNestedManyWithoutTenantInput
     notification_messages?: notification_messagesCreateNestedManyWithoutTenantsInput
     notification_templates?: notification_templatesCreateNestedManyWithoutTenantsInput
+    tenant_conversation_configs?: tenant_conversation_configsCreateNestedManyWithoutTenantInput
   }
 
   export type tenantsUncheckedCreateWithoutBusiness_workflowsInput = {
@@ -160220,6 +171331,7 @@ export namespace Prisma {
     hospitality_inquiries?: hospitality_inquiriesUncheckedCreateNestedManyWithoutTenantInput
     notification_messages?: notification_messagesUncheckedCreateNestedManyWithoutTenantsInput
     notification_templates?: notification_templatesUncheckedCreateNestedManyWithoutTenantsInput
+    tenant_conversation_configs?: tenant_conversation_configsUncheckedCreateNestedManyWithoutTenantInput
   }
 
   export type tenantsCreateOrConnectWithoutBusiness_workflowsInput = {
@@ -160306,6 +171418,7 @@ export namespace Prisma {
     product_item_details?: product_item_detailsUpdateManyWithoutBusinessNestedInput
     hospitality_item_details?: hospitality_item_detailsUpdateManyWithoutBusinessNestedInput
     vehicle_item_details?: vehicle_item_detailsUpdateManyWithoutBusinessNestedInput
+    property_item_details?: property_item_detailsUpdateManyWithoutBusinessNestedInput
     product_orders?: product_ordersUpdateManyWithoutBusinessNestedInput
     product_inquiries?: product_inquiriesUpdateManyWithoutBusinessNestedInput
     hospitality_bookings?: hospitality_bookingsUpdateManyWithoutBusinessNestedInput
@@ -160359,6 +171472,7 @@ export namespace Prisma {
     product_item_details?: product_item_detailsUncheckedUpdateManyWithoutBusinessNestedInput
     hospitality_item_details?: hospitality_item_detailsUncheckedUpdateManyWithoutBusinessNestedInput
     vehicle_item_details?: vehicle_item_detailsUncheckedUpdateManyWithoutBusinessNestedInput
+    property_item_details?: property_item_detailsUncheckedUpdateManyWithoutBusinessNestedInput
     product_orders?: product_ordersUncheckedUpdateManyWithoutBusinessNestedInput
     product_inquiries?: product_inquiriesUncheckedUpdateManyWithoutBusinessNestedInput
     hospitality_bookings?: hospitality_bookingsUncheckedUpdateManyWithoutBusinessNestedInput
@@ -160417,6 +171531,7 @@ export namespace Prisma {
     hospitality_inquiries?: hospitality_inquiriesUpdateManyWithoutTenantNestedInput
     notification_messages?: notification_messagesUpdateManyWithoutTenantsNestedInput
     notification_templates?: notification_templatesUpdateManyWithoutTenantsNestedInput
+    tenant_conversation_configs?: tenant_conversation_configsUpdateManyWithoutTenantNestedInput
   }
 
   export type tenantsUncheckedUpdateWithoutBusiness_workflowsInput = {
@@ -160442,6 +171557,7 @@ export namespace Prisma {
     hospitality_inquiries?: hospitality_inquiriesUncheckedUpdateManyWithoutTenantNestedInput
     notification_messages?: notification_messagesUncheckedUpdateManyWithoutTenantsNestedInput
     notification_templates?: notification_templatesUncheckedUpdateManyWithoutTenantsNestedInput
+    tenant_conversation_configs?: tenant_conversation_configsUncheckedUpdateManyWithoutTenantNestedInput
   }
 
   export type workflow_definitionsUpsertWithoutBusiness_workflowsInput = {
@@ -160519,6 +171635,7 @@ export namespace Prisma {
     product_item_details?: product_item_detailsCreateNestedManyWithoutBusinessInput
     hospitality_item_details?: hospitality_item_detailsCreateNestedManyWithoutBusinessInput
     vehicle_item_details?: vehicle_item_detailsCreateNestedManyWithoutBusinessInput
+    property_item_details?: property_item_detailsCreateNestedManyWithoutBusinessInput
     product_orders?: product_ordersCreateNestedManyWithoutBusinessInput
     product_inquiries?: product_inquiriesCreateNestedManyWithoutBusinessInput
     hospitality_bookings?: hospitality_bookingsCreateNestedManyWithoutBusinessInput
@@ -160572,6 +171689,7 @@ export namespace Prisma {
     product_item_details?: product_item_detailsUncheckedCreateNestedManyWithoutBusinessInput
     hospitality_item_details?: hospitality_item_detailsUncheckedCreateNestedManyWithoutBusinessInput
     vehicle_item_details?: vehicle_item_detailsUncheckedCreateNestedManyWithoutBusinessInput
+    property_item_details?: property_item_detailsUncheckedCreateNestedManyWithoutBusinessInput
     product_orders?: product_ordersUncheckedCreateNestedManyWithoutBusinessInput
     product_inquiries?: product_inquiriesUncheckedCreateNestedManyWithoutBusinessInput
     hospitality_bookings?: hospitality_bookingsUncheckedCreateNestedManyWithoutBusinessInput
@@ -160623,6 +171741,7 @@ export namespace Prisma {
     hospitality_inquiries?: hospitality_inquiriesCreateNestedManyWithoutTenantInput
     notification_messages?: notification_messagesCreateNestedManyWithoutTenantsInput
     notification_templates?: notification_templatesCreateNestedManyWithoutTenantsInput
+    tenant_conversation_configs?: tenant_conversation_configsCreateNestedManyWithoutTenantInput
   }
 
   export type tenantsUncheckedCreateWithoutWorkflow_executionsInput = {
@@ -160648,6 +171767,7 @@ export namespace Prisma {
     hospitality_inquiries?: hospitality_inquiriesUncheckedCreateNestedManyWithoutTenantInput
     notification_messages?: notification_messagesUncheckedCreateNestedManyWithoutTenantsInput
     notification_templates?: notification_templatesUncheckedCreateNestedManyWithoutTenantsInput
+    tenant_conversation_configs?: tenant_conversation_configsUncheckedCreateNestedManyWithoutTenantInput
   }
 
   export type tenantsCreateOrConnectWithoutWorkflow_executionsInput = {
@@ -160920,6 +172040,7 @@ export namespace Prisma {
     product_item_details?: product_item_detailsUpdateManyWithoutBusinessNestedInput
     hospitality_item_details?: hospitality_item_detailsUpdateManyWithoutBusinessNestedInput
     vehicle_item_details?: vehicle_item_detailsUpdateManyWithoutBusinessNestedInput
+    property_item_details?: property_item_detailsUpdateManyWithoutBusinessNestedInput
     product_orders?: product_ordersUpdateManyWithoutBusinessNestedInput
     product_inquiries?: product_inquiriesUpdateManyWithoutBusinessNestedInput
     hospitality_bookings?: hospitality_bookingsUpdateManyWithoutBusinessNestedInput
@@ -160973,6 +172094,7 @@ export namespace Prisma {
     product_item_details?: product_item_detailsUncheckedUpdateManyWithoutBusinessNestedInput
     hospitality_item_details?: hospitality_item_detailsUncheckedUpdateManyWithoutBusinessNestedInput
     vehicle_item_details?: vehicle_item_detailsUncheckedUpdateManyWithoutBusinessNestedInput
+    property_item_details?: property_item_detailsUncheckedUpdateManyWithoutBusinessNestedInput
     product_orders?: product_ordersUncheckedUpdateManyWithoutBusinessNestedInput
     product_inquiries?: product_inquiriesUncheckedUpdateManyWithoutBusinessNestedInput
     hospitality_bookings?: hospitality_bookingsUncheckedUpdateManyWithoutBusinessNestedInput
@@ -161030,6 +172152,7 @@ export namespace Prisma {
     hospitality_inquiries?: hospitality_inquiriesUpdateManyWithoutTenantNestedInput
     notification_messages?: notification_messagesUpdateManyWithoutTenantsNestedInput
     notification_templates?: notification_templatesUpdateManyWithoutTenantsNestedInput
+    tenant_conversation_configs?: tenant_conversation_configsUpdateManyWithoutTenantNestedInput
   }
 
   export type tenantsUncheckedUpdateWithoutWorkflow_executionsInput = {
@@ -161055,6 +172178,7 @@ export namespace Prisma {
     hospitality_inquiries?: hospitality_inquiriesUncheckedUpdateManyWithoutTenantNestedInput
     notification_messages?: notification_messagesUncheckedUpdateManyWithoutTenantsNestedInput
     notification_templates?: notification_templatesUncheckedUpdateManyWithoutTenantsNestedInput
+    tenant_conversation_configs?: tenant_conversation_configsUncheckedUpdateManyWithoutTenantNestedInput
   }
 
   export type leadsUpsertWithoutWorkflow_executionsInput = {
@@ -161312,6 +172436,7 @@ export namespace Prisma {
     product_item_details?: product_item_detailsCreateNestedManyWithoutBusinessInput
     hospitality_item_details?: hospitality_item_detailsCreateNestedManyWithoutBusinessInput
     vehicle_item_details?: vehicle_item_detailsCreateNestedManyWithoutBusinessInput
+    property_item_details?: property_item_detailsCreateNestedManyWithoutBusinessInput
     product_orders?: product_ordersCreateNestedManyWithoutBusinessInput
     product_inquiries?: product_inquiriesCreateNestedManyWithoutBusinessInput
     hospitality_bookings?: hospitality_bookingsCreateNestedManyWithoutBusinessInput
@@ -161365,6 +172490,7 @@ export namespace Prisma {
     product_item_details?: product_item_detailsUncheckedCreateNestedManyWithoutBusinessInput
     hospitality_item_details?: hospitality_item_detailsUncheckedCreateNestedManyWithoutBusinessInput
     vehicle_item_details?: vehicle_item_detailsUncheckedCreateNestedManyWithoutBusinessInput
+    property_item_details?: property_item_detailsUncheckedCreateNestedManyWithoutBusinessInput
     product_orders?: product_ordersUncheckedCreateNestedManyWithoutBusinessInput
     product_inquiries?: product_inquiriesUncheckedCreateNestedManyWithoutBusinessInput
     hospitality_bookings?: hospitality_bookingsUncheckedCreateNestedManyWithoutBusinessInput
@@ -161416,6 +172542,7 @@ export namespace Prisma {
     hospitality_inquiries?: hospitality_inquiriesCreateNestedManyWithoutTenantInput
     notification_messages?: notification_messagesCreateNestedManyWithoutTenantsInput
     notification_templates?: notification_templatesCreateNestedManyWithoutTenantsInput
+    tenant_conversation_configs?: tenant_conversation_configsCreateNestedManyWithoutTenantInput
   }
 
   export type tenantsUncheckedCreateWithoutWorkflow_execution_stepsInput = {
@@ -161441,6 +172568,7 @@ export namespace Prisma {
     hospitality_inquiries?: hospitality_inquiriesUncheckedCreateNestedManyWithoutTenantInput
     notification_messages?: notification_messagesUncheckedCreateNestedManyWithoutTenantsInput
     notification_templates?: notification_templatesUncheckedCreateNestedManyWithoutTenantsInput
+    tenant_conversation_configs?: tenant_conversation_configsUncheckedCreateNestedManyWithoutTenantInput
   }
 
   export type tenantsCreateOrConnectWithoutWorkflow_execution_stepsInput = {
@@ -161585,6 +172713,7 @@ export namespace Prisma {
     product_item_details?: product_item_detailsUpdateManyWithoutBusinessNestedInput
     hospitality_item_details?: hospitality_item_detailsUpdateManyWithoutBusinessNestedInput
     vehicle_item_details?: vehicle_item_detailsUpdateManyWithoutBusinessNestedInput
+    property_item_details?: property_item_detailsUpdateManyWithoutBusinessNestedInput
     product_orders?: product_ordersUpdateManyWithoutBusinessNestedInput
     product_inquiries?: product_inquiriesUpdateManyWithoutBusinessNestedInput
     hospitality_bookings?: hospitality_bookingsUpdateManyWithoutBusinessNestedInput
@@ -161638,6 +172767,7 @@ export namespace Prisma {
     product_item_details?: product_item_detailsUncheckedUpdateManyWithoutBusinessNestedInput
     hospitality_item_details?: hospitality_item_detailsUncheckedUpdateManyWithoutBusinessNestedInput
     vehicle_item_details?: vehicle_item_detailsUncheckedUpdateManyWithoutBusinessNestedInput
+    property_item_details?: property_item_detailsUncheckedUpdateManyWithoutBusinessNestedInput
     product_orders?: product_ordersUncheckedUpdateManyWithoutBusinessNestedInput
     product_inquiries?: product_inquiriesUncheckedUpdateManyWithoutBusinessNestedInput
     hospitality_bookings?: hospitality_bookingsUncheckedUpdateManyWithoutBusinessNestedInput
@@ -161695,6 +172825,7 @@ export namespace Prisma {
     hospitality_inquiries?: hospitality_inquiriesUpdateManyWithoutTenantNestedInput
     notification_messages?: notification_messagesUpdateManyWithoutTenantsNestedInput
     notification_templates?: notification_templatesUpdateManyWithoutTenantsNestedInput
+    tenant_conversation_configs?: tenant_conversation_configsUpdateManyWithoutTenantNestedInput
   }
 
   export type tenantsUncheckedUpdateWithoutWorkflow_execution_stepsInput = {
@@ -161720,6 +172851,7 @@ export namespace Prisma {
     hospitality_inquiries?: hospitality_inquiriesUncheckedUpdateManyWithoutTenantNestedInput
     notification_messages?: notification_messagesUncheckedUpdateManyWithoutTenantsNestedInput
     notification_templates?: notification_templatesUncheckedUpdateManyWithoutTenantsNestedInput
+    tenant_conversation_configs?: tenant_conversation_configsUncheckedUpdateManyWithoutTenantNestedInput
   }
 
   export type workflow_definitionsUpsertWithoutWorkflow_execution_stepsInput = {
@@ -161797,6 +172929,7 @@ export namespace Prisma {
     product_item_details?: product_item_detailsCreateNestedManyWithoutBusinessInput
     hospitality_item_details?: hospitality_item_detailsCreateNestedManyWithoutBusinessInput
     vehicle_item_details?: vehicle_item_detailsCreateNestedManyWithoutBusinessInput
+    property_item_details?: property_item_detailsCreateNestedManyWithoutBusinessInput
     product_orders?: product_ordersCreateNestedManyWithoutBusinessInput
     product_inquiries?: product_inquiriesCreateNestedManyWithoutBusinessInput
     hospitality_bookings?: hospitality_bookingsCreateNestedManyWithoutBusinessInput
@@ -161850,6 +172983,7 @@ export namespace Prisma {
     product_item_details?: product_item_detailsUncheckedCreateNestedManyWithoutBusinessInput
     hospitality_item_details?: hospitality_item_detailsUncheckedCreateNestedManyWithoutBusinessInput
     vehicle_item_details?: vehicle_item_detailsUncheckedCreateNestedManyWithoutBusinessInput
+    property_item_details?: property_item_detailsUncheckedCreateNestedManyWithoutBusinessInput
     product_orders?: product_ordersUncheckedCreateNestedManyWithoutBusinessInput
     product_inquiries?: product_inquiriesUncheckedCreateNestedManyWithoutBusinessInput
     hospitality_bookings?: hospitality_bookingsUncheckedCreateNestedManyWithoutBusinessInput
@@ -161901,6 +173035,7 @@ export namespace Prisma {
     hospitality_inquiries?: hospitality_inquiriesCreateNestedManyWithoutTenantInput
     notification_messages?: notification_messagesCreateNestedManyWithoutTenantsInput
     notification_templates?: notification_templatesCreateNestedManyWithoutTenantsInput
+    tenant_conversation_configs?: tenant_conversation_configsCreateNestedManyWithoutTenantInput
   }
 
   export type tenantsUncheckedCreateWithoutWorkflow_idempotency_keysInput = {
@@ -161926,6 +173061,7 @@ export namespace Prisma {
     hospitality_inquiries?: hospitality_inquiriesUncheckedCreateNestedManyWithoutTenantInput
     notification_messages?: notification_messagesUncheckedCreateNestedManyWithoutTenantsInput
     notification_templates?: notification_templatesUncheckedCreateNestedManyWithoutTenantsInput
+    tenant_conversation_configs?: tenant_conversation_configsUncheckedCreateNestedManyWithoutTenantInput
   }
 
   export type tenantsCreateOrConnectWithoutWorkflow_idempotency_keysInput = {
@@ -162064,6 +173200,7 @@ export namespace Prisma {
     product_item_details?: product_item_detailsUpdateManyWithoutBusinessNestedInput
     hospitality_item_details?: hospitality_item_detailsUpdateManyWithoutBusinessNestedInput
     vehicle_item_details?: vehicle_item_detailsUpdateManyWithoutBusinessNestedInput
+    property_item_details?: property_item_detailsUpdateManyWithoutBusinessNestedInput
     product_orders?: product_ordersUpdateManyWithoutBusinessNestedInput
     product_inquiries?: product_inquiriesUpdateManyWithoutBusinessNestedInput
     hospitality_bookings?: hospitality_bookingsUpdateManyWithoutBusinessNestedInput
@@ -162117,6 +173254,7 @@ export namespace Prisma {
     product_item_details?: product_item_detailsUncheckedUpdateManyWithoutBusinessNestedInput
     hospitality_item_details?: hospitality_item_detailsUncheckedUpdateManyWithoutBusinessNestedInput
     vehicle_item_details?: vehicle_item_detailsUncheckedUpdateManyWithoutBusinessNestedInput
+    property_item_details?: property_item_detailsUncheckedUpdateManyWithoutBusinessNestedInput
     product_orders?: product_ordersUncheckedUpdateManyWithoutBusinessNestedInput
     product_inquiries?: product_inquiriesUncheckedUpdateManyWithoutBusinessNestedInput
     hospitality_bookings?: hospitality_bookingsUncheckedUpdateManyWithoutBusinessNestedInput
@@ -162174,6 +173312,7 @@ export namespace Prisma {
     hospitality_inquiries?: hospitality_inquiriesUpdateManyWithoutTenantNestedInput
     notification_messages?: notification_messagesUpdateManyWithoutTenantsNestedInput
     notification_templates?: notification_templatesUpdateManyWithoutTenantsNestedInput
+    tenant_conversation_configs?: tenant_conversation_configsUpdateManyWithoutTenantNestedInput
   }
 
   export type tenantsUncheckedUpdateWithoutWorkflow_idempotency_keysInput = {
@@ -162199,6 +173338,7 @@ export namespace Prisma {
     hospitality_inquiries?: hospitality_inquiriesUncheckedUpdateManyWithoutTenantNestedInput
     notification_messages?: notification_messagesUncheckedUpdateManyWithoutTenantsNestedInput
     notification_templates?: notification_templatesUncheckedUpdateManyWithoutTenantsNestedInput
+    tenant_conversation_configs?: tenant_conversation_configsUncheckedUpdateManyWithoutTenantNestedInput
   }
 
   export type workflow_definitionsUpsertWithoutWorkflow_idempotency_keysInput = {
@@ -162359,6 +173499,7 @@ export namespace Prisma {
     product_detail?: product_item_detailsCreateNestedOneWithoutItemInput
     hospitality_detail?: hospitality_item_detailsCreateNestedOneWithoutItemInput
     vehicle_detail?: vehicle_item_detailsCreateNestedOneWithoutItemInput
+    property_detail?: property_item_detailsCreateNestedOneWithoutItemInput
     product_order_items?: product_order_itemsCreateNestedManyWithoutItemInput
     hospitality_booking_items?: hospitality_booking_itemsCreateNestedManyWithoutItemInput
     product_inquiries?: product_inquiriesCreateNestedManyWithoutItemInput
@@ -162368,6 +173509,7 @@ export namespace Prisma {
     variants?: item_variantsCreateNestedManyWithoutItemInput
     order_items?: order_itemsCreateNestedManyWithoutCatalog_itemInput
     external_catalog_items?: external_catalog_itemsCreateNestedManyWithoutItemInput
+    appointment_sales_visits?: appointment_sales_visitsCreateNestedManyWithoutItemInput
   }
 
   export type catalog_itemsUncheckedCreateWithoutCart_itemsInput = {
@@ -162394,6 +173536,7 @@ export namespace Prisma {
     product_detail?: product_item_detailsUncheckedCreateNestedOneWithoutItemInput
     hospitality_detail?: hospitality_item_detailsUncheckedCreateNestedOneWithoutItemInput
     vehicle_detail?: vehicle_item_detailsUncheckedCreateNestedOneWithoutItemInput
+    property_detail?: property_item_detailsUncheckedCreateNestedOneWithoutItemInput
     product_order_items?: product_order_itemsUncheckedCreateNestedManyWithoutItemInput
     hospitality_booking_items?: hospitality_booking_itemsUncheckedCreateNestedManyWithoutItemInput
     product_inquiries?: product_inquiriesUncheckedCreateNestedManyWithoutItemInput
@@ -162402,6 +173545,7 @@ export namespace Prisma {
     variants?: item_variantsUncheckedCreateNestedManyWithoutItemInput
     order_items?: order_itemsUncheckedCreateNestedManyWithoutCatalog_itemInput
     external_catalog_items?: external_catalog_itemsUncheckedCreateNestedManyWithoutItemInput
+    appointment_sales_visits?: appointment_sales_visitsUncheckedCreateNestedManyWithoutItemInput
   }
 
   export type catalog_itemsCreateOrConnectWithoutCart_itemsInput = {
@@ -162519,6 +173663,7 @@ export namespace Prisma {
     product_detail?: product_item_detailsUpdateOneWithoutItemNestedInput
     hospitality_detail?: hospitality_item_detailsUpdateOneWithoutItemNestedInput
     vehicle_detail?: vehicle_item_detailsUpdateOneWithoutItemNestedInput
+    property_detail?: property_item_detailsUpdateOneWithoutItemNestedInput
     product_order_items?: product_order_itemsUpdateManyWithoutItemNestedInput
     hospitality_booking_items?: hospitality_booking_itemsUpdateManyWithoutItemNestedInput
     product_inquiries?: product_inquiriesUpdateManyWithoutItemNestedInput
@@ -162528,6 +173673,7 @@ export namespace Prisma {
     variants?: item_variantsUpdateManyWithoutItemNestedInput
     order_items?: order_itemsUpdateManyWithoutCatalog_itemNestedInput
     external_catalog_items?: external_catalog_itemsUpdateManyWithoutItemNestedInput
+    appointment_sales_visits?: appointment_sales_visitsUpdateManyWithoutItemNestedInput
   }
 
   export type catalog_itemsUncheckedUpdateWithoutCart_itemsInput = {
@@ -162554,6 +173700,7 @@ export namespace Prisma {
     product_detail?: product_item_detailsUncheckedUpdateOneWithoutItemNestedInput
     hospitality_detail?: hospitality_item_detailsUncheckedUpdateOneWithoutItemNestedInput
     vehicle_detail?: vehicle_item_detailsUncheckedUpdateOneWithoutItemNestedInput
+    property_detail?: property_item_detailsUncheckedUpdateOneWithoutItemNestedInput
     product_order_items?: product_order_itemsUncheckedUpdateManyWithoutItemNestedInput
     hospitality_booking_items?: hospitality_booking_itemsUncheckedUpdateManyWithoutItemNestedInput
     product_inquiries?: product_inquiriesUncheckedUpdateManyWithoutItemNestedInput
@@ -162562,6 +173709,7 @@ export namespace Prisma {
     variants?: item_variantsUncheckedUpdateManyWithoutItemNestedInput
     order_items?: order_itemsUncheckedUpdateManyWithoutCatalog_itemNestedInput
     external_catalog_items?: external_catalog_itemsUncheckedUpdateManyWithoutItemNestedInput
+    appointment_sales_visits?: appointment_sales_visitsUncheckedUpdateManyWithoutItemNestedInput
   }
 
   export type item_variantsUpsertWithoutCart_itemsInput = {
@@ -162674,6 +173822,7 @@ export namespace Prisma {
     product_item_details?: product_item_detailsCreateNestedManyWithoutBusinessInput
     hospitality_item_details?: hospitality_item_detailsCreateNestedManyWithoutBusinessInput
     vehicle_item_details?: vehicle_item_detailsCreateNestedManyWithoutBusinessInput
+    property_item_details?: property_item_detailsCreateNestedManyWithoutBusinessInput
     product_orders?: product_ordersCreateNestedManyWithoutBusinessInput
     product_inquiries?: product_inquiriesCreateNestedManyWithoutBusinessInput
     hospitality_bookings?: hospitality_bookingsCreateNestedManyWithoutBusinessInput
@@ -162727,6 +173876,7 @@ export namespace Prisma {
     product_item_details?: product_item_detailsUncheckedCreateNestedManyWithoutBusinessInput
     hospitality_item_details?: hospitality_item_detailsUncheckedCreateNestedManyWithoutBusinessInput
     vehicle_item_details?: vehicle_item_detailsUncheckedCreateNestedManyWithoutBusinessInput
+    property_item_details?: property_item_detailsUncheckedCreateNestedManyWithoutBusinessInput
     product_orders?: product_ordersUncheckedCreateNestedManyWithoutBusinessInput
     product_inquiries?: product_inquiriesUncheckedCreateNestedManyWithoutBusinessInput
     hospitality_bookings?: hospitality_bookingsUncheckedCreateNestedManyWithoutBusinessInput
@@ -162923,6 +174073,7 @@ export namespace Prisma {
     hospitality_inquiries?: hospitality_inquiriesCreateNestedManyWithoutTenantInput
     notification_messages?: notification_messagesCreateNestedManyWithoutTenantsInput
     notification_templates?: notification_templatesCreateNestedManyWithoutTenantsInput
+    tenant_conversation_configs?: tenant_conversation_configsCreateNestedManyWithoutTenantInput
   }
 
   export type tenantsUncheckedCreateWithoutCartsInput = {
@@ -162948,6 +174099,7 @@ export namespace Prisma {
     hospitality_inquiries?: hospitality_inquiriesUncheckedCreateNestedManyWithoutTenantInput
     notification_messages?: notification_messagesUncheckedCreateNestedManyWithoutTenantsInput
     notification_templates?: notification_templatesUncheckedCreateNestedManyWithoutTenantsInput
+    tenant_conversation_configs?: tenant_conversation_configsUncheckedCreateNestedManyWithoutTenantInput
   }
 
   export type tenantsCreateOrConnectWithoutCartsInput = {
@@ -163029,6 +174181,7 @@ export namespace Prisma {
     product_item_details?: product_item_detailsUpdateManyWithoutBusinessNestedInput
     hospitality_item_details?: hospitality_item_detailsUpdateManyWithoutBusinessNestedInput
     vehicle_item_details?: vehicle_item_detailsUpdateManyWithoutBusinessNestedInput
+    property_item_details?: property_item_detailsUpdateManyWithoutBusinessNestedInput
     product_orders?: product_ordersUpdateManyWithoutBusinessNestedInput
     product_inquiries?: product_inquiriesUpdateManyWithoutBusinessNestedInput
     hospitality_bookings?: hospitality_bookingsUpdateManyWithoutBusinessNestedInput
@@ -163082,6 +174235,7 @@ export namespace Prisma {
     product_item_details?: product_item_detailsUncheckedUpdateManyWithoutBusinessNestedInput
     hospitality_item_details?: hospitality_item_detailsUncheckedUpdateManyWithoutBusinessNestedInput
     vehicle_item_details?: vehicle_item_detailsUncheckedUpdateManyWithoutBusinessNestedInput
+    property_item_details?: property_item_detailsUncheckedUpdateManyWithoutBusinessNestedInput
     product_orders?: product_ordersUncheckedUpdateManyWithoutBusinessNestedInput
     product_inquiries?: product_inquiriesUncheckedUpdateManyWithoutBusinessNestedInput
     hospitality_bookings?: hospitality_bookingsUncheckedUpdateManyWithoutBusinessNestedInput
@@ -163296,6 +174450,7 @@ export namespace Prisma {
     hospitality_inquiries?: hospitality_inquiriesUpdateManyWithoutTenantNestedInput
     notification_messages?: notification_messagesUpdateManyWithoutTenantsNestedInput
     notification_templates?: notification_templatesUpdateManyWithoutTenantsNestedInput
+    tenant_conversation_configs?: tenant_conversation_configsUpdateManyWithoutTenantNestedInput
   }
 
   export type tenantsUncheckedUpdateWithoutCartsInput = {
@@ -163321,6 +174476,7 @@ export namespace Prisma {
     hospitality_inquiries?: hospitality_inquiriesUncheckedUpdateManyWithoutTenantNestedInput
     notification_messages?: notification_messagesUncheckedUpdateManyWithoutTenantsNestedInput
     notification_templates?: notification_templatesUncheckedUpdateManyWithoutTenantsNestedInput
+    tenant_conversation_configs?: tenant_conversation_configsUncheckedUpdateManyWithoutTenantNestedInput
   }
 
   export type hotel_booking_outcomesCreateWithoutRecommendationInput = {
@@ -163642,6 +174798,15 @@ export namespace Prisma {
     color?: string | null
     km_driven?: number | null
     condition?: string
+    ownership_count?: number | null
+    insurance_valid_until?: Date | string | null
+    registration_number?: string | null
+    rc_status?: string | null
+    finance_available?: boolean
+    exchange_accepted?: boolean
+    accident_history?: string | null
+    service_history?: string | null
+    test_drive_available?: boolean
     metadata?: NullableJsonNullValueInput | InputJsonValue
     created_at?: Date | string
     updated_at?: Date | string
@@ -163658,6 +174823,15 @@ export namespace Prisma {
     color?: string | null
     km_driven?: number | null
     condition?: string
+    ownership_count?: number | null
+    insurance_valid_until?: Date | string | null
+    registration_number?: string | null
+    rc_status?: string | null
+    finance_available?: boolean
+    exchange_accepted?: boolean
+    accident_history?: string | null
+    service_history?: string | null
+    test_drive_available?: boolean
     metadata?: NullableJsonNullValueInput | InputJsonValue
     created_at?: Date | string
     updated_at?: Date | string
@@ -163666,6 +174840,61 @@ export namespace Prisma {
   export type vehicle_item_detailsCreateOrConnectWithoutItemInput = {
     where: vehicle_item_detailsWhereUniqueInput
     create: XOR<vehicle_item_detailsCreateWithoutItemInput, vehicle_item_detailsUncheckedCreateWithoutItemInput>
+  }
+
+  export type property_item_detailsCreateWithoutItemInput = {
+    property_type: string
+    listing_type?: string
+    bedrooms?: number | null
+    bathrooms?: number | null
+    area_sqft?: number | null
+    floor_number?: number | null
+    total_floors?: number | null
+    locality?: string | null
+    city?: string | null
+    furnishing?: string | null
+    possession_status?: string | null
+    facing?: string | null
+    parking?: string | null
+    rera_id?: string | null
+    map_url?: string | null
+    documents_status?: string | null
+    loan_support_available?: boolean
+    visit_landmark?: string | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    created_at?: Date | string
+    updated_at?: Date | string
+    business: businessesCreateNestedOneWithoutProperty_item_detailsInput
+  }
+
+  export type property_item_detailsUncheckedCreateWithoutItemInput = {
+    business_id: string
+    property_type: string
+    listing_type?: string
+    bedrooms?: number | null
+    bathrooms?: number | null
+    area_sqft?: number | null
+    floor_number?: number | null
+    total_floors?: number | null
+    locality?: string | null
+    city?: string | null
+    furnishing?: string | null
+    possession_status?: string | null
+    facing?: string | null
+    parking?: string | null
+    rera_id?: string | null
+    map_url?: string | null
+    documents_status?: string | null
+    loan_support_available?: boolean
+    visit_landmark?: string | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    created_at?: Date | string
+    updated_at?: Date | string
+  }
+
+  export type property_item_detailsCreateOrConnectWithoutItemInput = {
+    where: property_item_detailsWhereUniqueInput
+    create: XOR<property_item_detailsCreateWithoutItemInput, property_item_detailsUncheckedCreateWithoutItemInput>
   }
 
   export type product_order_itemsCreateWithoutItemInput = {
@@ -163855,6 +175084,7 @@ export namespace Prisma {
     product_item_details?: product_item_detailsCreateNestedManyWithoutBusinessInput
     hospitality_item_details?: hospitality_item_detailsCreateNestedManyWithoutBusinessInput
     vehicle_item_details?: vehicle_item_detailsCreateNestedManyWithoutBusinessInput
+    property_item_details?: property_item_detailsCreateNestedManyWithoutBusinessInput
     product_orders?: product_ordersCreateNestedManyWithoutBusinessInput
     product_inquiries?: product_inquiriesCreateNestedManyWithoutBusinessInput
     hospitality_bookings?: hospitality_bookingsCreateNestedManyWithoutBusinessInput
@@ -163908,6 +175138,7 @@ export namespace Prisma {
     product_item_details?: product_item_detailsUncheckedCreateNestedManyWithoutBusinessInput
     hospitality_item_details?: hospitality_item_detailsUncheckedCreateNestedManyWithoutBusinessInput
     vehicle_item_details?: vehicle_item_detailsUncheckedCreateNestedManyWithoutBusinessInput
+    property_item_details?: property_item_detailsUncheckedCreateNestedManyWithoutBusinessInput
     product_orders?: product_ordersUncheckedCreateNestedManyWithoutBusinessInput
     product_inquiries?: product_inquiriesUncheckedCreateNestedManyWithoutBusinessInput
     hospitality_bookings?: hospitality_bookingsUncheckedCreateNestedManyWithoutBusinessInput
@@ -164097,6 +175328,60 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type appointment_sales_visitsCreateWithoutItemInput = {
+    visit_id?: string
+    business_id: string
+    tenant_id?: string | null
+    lead_id?: string | null
+    customer_id?: string | null
+    visit_type?: string
+    status?: string
+    scheduled_start: Date | string
+    scheduled_end: Date | string
+    customer_name?: string | null
+    customer_phone?: string | null
+    location?: string | null
+    source?: string
+    notes?: string | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    created_by?: string | null
+    created_at?: Date | string
+    updated_at?: Date | string
+    staff?: appointment_sales_staffCreateNestedOneWithoutVisitsInput
+  }
+
+  export type appointment_sales_visitsUncheckedCreateWithoutItemInput = {
+    visit_id?: string
+    business_id: string
+    tenant_id?: string | null
+    lead_id?: string | null
+    customer_id?: string | null
+    sales_staff_id?: string | null
+    visit_type?: string
+    status?: string
+    scheduled_start: Date | string
+    scheduled_end: Date | string
+    customer_name?: string | null
+    customer_phone?: string | null
+    location?: string | null
+    source?: string
+    notes?: string | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    created_by?: string | null
+    created_at?: Date | string
+    updated_at?: Date | string
+  }
+
+  export type appointment_sales_visitsCreateOrConnectWithoutItemInput = {
+    where: appointment_sales_visitsWhereUniqueInput
+    create: XOR<appointment_sales_visitsCreateWithoutItemInput, appointment_sales_visitsUncheckedCreateWithoutItemInput>
+  }
+
+  export type appointment_sales_visitsCreateManyItemInputEnvelope = {
+    data: appointment_sales_visitsCreateManyItemInput | appointment_sales_visitsCreateManyItemInput[]
+    skipDuplicates?: boolean
+  }
+
   export type cart_itemsUpsertWithWhereUniqueWithoutCatalog_itemInput = {
     where: cart_itemsWhereUniqueInput
     update: XOR<cart_itemsUpdateWithoutCatalog_itemInput, cart_itemsUncheckedUpdateWithoutCatalog_itemInput>
@@ -164233,6 +175518,15 @@ export namespace Prisma {
     color?: NullableStringFieldUpdateOperationsInput | string | null
     km_driven?: NullableIntFieldUpdateOperationsInput | number | null
     condition?: StringFieldUpdateOperationsInput | string
+    ownership_count?: NullableIntFieldUpdateOperationsInput | number | null
+    insurance_valid_until?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    registration_number?: NullableStringFieldUpdateOperationsInput | string | null
+    rc_status?: NullableStringFieldUpdateOperationsInput | string | null
+    finance_available?: BoolFieldUpdateOperationsInput | boolean
+    exchange_accepted?: BoolFieldUpdateOperationsInput | boolean
+    accident_history?: NullableStringFieldUpdateOperationsInput | string | null
+    service_history?: NullableStringFieldUpdateOperationsInput | string | null
+    test_drive_available?: BoolFieldUpdateOperationsInput | boolean
     metadata?: NullableJsonNullValueInput | InputJsonValue
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -164249,6 +175543,76 @@ export namespace Prisma {
     color?: NullableStringFieldUpdateOperationsInput | string | null
     km_driven?: NullableIntFieldUpdateOperationsInput | number | null
     condition?: StringFieldUpdateOperationsInput | string
+    ownership_count?: NullableIntFieldUpdateOperationsInput | number | null
+    insurance_valid_until?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    registration_number?: NullableStringFieldUpdateOperationsInput | string | null
+    rc_status?: NullableStringFieldUpdateOperationsInput | string | null
+    finance_available?: BoolFieldUpdateOperationsInput | boolean
+    exchange_accepted?: BoolFieldUpdateOperationsInput | boolean
+    accident_history?: NullableStringFieldUpdateOperationsInput | string | null
+    service_history?: NullableStringFieldUpdateOperationsInput | string | null
+    test_drive_available?: BoolFieldUpdateOperationsInput | boolean
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type property_item_detailsUpsertWithoutItemInput = {
+    update: XOR<property_item_detailsUpdateWithoutItemInput, property_item_detailsUncheckedUpdateWithoutItemInput>
+    create: XOR<property_item_detailsCreateWithoutItemInput, property_item_detailsUncheckedCreateWithoutItemInput>
+    where?: property_item_detailsWhereInput
+  }
+
+  export type property_item_detailsUpdateToOneWithWhereWithoutItemInput = {
+    where?: property_item_detailsWhereInput
+    data: XOR<property_item_detailsUpdateWithoutItemInput, property_item_detailsUncheckedUpdateWithoutItemInput>
+  }
+
+  export type property_item_detailsUpdateWithoutItemInput = {
+    property_type?: StringFieldUpdateOperationsInput | string
+    listing_type?: StringFieldUpdateOperationsInput | string
+    bedrooms?: NullableIntFieldUpdateOperationsInput | number | null
+    bathrooms?: NullableIntFieldUpdateOperationsInput | number | null
+    area_sqft?: NullableIntFieldUpdateOperationsInput | number | null
+    floor_number?: NullableIntFieldUpdateOperationsInput | number | null
+    total_floors?: NullableIntFieldUpdateOperationsInput | number | null
+    locality?: NullableStringFieldUpdateOperationsInput | string | null
+    city?: NullableStringFieldUpdateOperationsInput | string | null
+    furnishing?: NullableStringFieldUpdateOperationsInput | string | null
+    possession_status?: NullableStringFieldUpdateOperationsInput | string | null
+    facing?: NullableStringFieldUpdateOperationsInput | string | null
+    parking?: NullableStringFieldUpdateOperationsInput | string | null
+    rera_id?: NullableStringFieldUpdateOperationsInput | string | null
+    map_url?: NullableStringFieldUpdateOperationsInput | string | null
+    documents_status?: NullableStringFieldUpdateOperationsInput | string | null
+    loan_support_available?: BoolFieldUpdateOperationsInput | boolean
+    visit_landmark?: NullableStringFieldUpdateOperationsInput | string | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    business?: businessesUpdateOneRequiredWithoutProperty_item_detailsNestedInput
+  }
+
+  export type property_item_detailsUncheckedUpdateWithoutItemInput = {
+    business_id?: StringFieldUpdateOperationsInput | string
+    property_type?: StringFieldUpdateOperationsInput | string
+    listing_type?: StringFieldUpdateOperationsInput | string
+    bedrooms?: NullableIntFieldUpdateOperationsInput | number | null
+    bathrooms?: NullableIntFieldUpdateOperationsInput | number | null
+    area_sqft?: NullableIntFieldUpdateOperationsInput | number | null
+    floor_number?: NullableIntFieldUpdateOperationsInput | number | null
+    total_floors?: NullableIntFieldUpdateOperationsInput | number | null
+    locality?: NullableStringFieldUpdateOperationsInput | string | null
+    city?: NullableStringFieldUpdateOperationsInput | string | null
+    furnishing?: NullableStringFieldUpdateOperationsInput | string | null
+    possession_status?: NullableStringFieldUpdateOperationsInput | string | null
+    facing?: NullableStringFieldUpdateOperationsInput | string | null
+    parking?: NullableStringFieldUpdateOperationsInput | string | null
+    rera_id?: NullableStringFieldUpdateOperationsInput | string | null
+    map_url?: NullableStringFieldUpdateOperationsInput | string | null
+    documents_status?: NullableStringFieldUpdateOperationsInput | string | null
+    loan_support_available?: BoolFieldUpdateOperationsInput | boolean
+    visit_landmark?: NullableStringFieldUpdateOperationsInput | string | null
     metadata?: NullableJsonNullValueInput | InputJsonValue
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -164395,6 +175759,7 @@ export namespace Prisma {
     product_item_details?: product_item_detailsUpdateManyWithoutBusinessNestedInput
     hospitality_item_details?: hospitality_item_detailsUpdateManyWithoutBusinessNestedInput
     vehicle_item_details?: vehicle_item_detailsUpdateManyWithoutBusinessNestedInput
+    property_item_details?: property_item_detailsUpdateManyWithoutBusinessNestedInput
     product_orders?: product_ordersUpdateManyWithoutBusinessNestedInput
     product_inquiries?: product_inquiriesUpdateManyWithoutBusinessNestedInput
     hospitality_bookings?: hospitality_bookingsUpdateManyWithoutBusinessNestedInput
@@ -164448,6 +175813,7 @@ export namespace Prisma {
     product_item_details?: product_item_detailsUncheckedUpdateManyWithoutBusinessNestedInput
     hospitality_item_details?: hospitality_item_detailsUncheckedUpdateManyWithoutBusinessNestedInput
     vehicle_item_details?: vehicle_item_detailsUncheckedUpdateManyWithoutBusinessNestedInput
+    property_item_details?: property_item_detailsUncheckedUpdateManyWithoutBusinessNestedInput
     product_orders?: product_ordersUncheckedUpdateManyWithoutBusinessNestedInput
     product_inquiries?: product_inquiriesUncheckedUpdateManyWithoutBusinessNestedInput
     hospitality_bookings?: hospitality_bookingsUncheckedUpdateManyWithoutBusinessNestedInput
@@ -164569,6 +175935,48 @@ export namespace Prisma {
     data: XOR<external_catalog_itemsUpdateManyMutationInput, external_catalog_itemsUncheckedUpdateManyWithoutItemInput>
   }
 
+  export type appointment_sales_visitsUpsertWithWhereUniqueWithoutItemInput = {
+    where: appointment_sales_visitsWhereUniqueInput
+    update: XOR<appointment_sales_visitsUpdateWithoutItemInput, appointment_sales_visitsUncheckedUpdateWithoutItemInput>
+    create: XOR<appointment_sales_visitsCreateWithoutItemInput, appointment_sales_visitsUncheckedCreateWithoutItemInput>
+  }
+
+  export type appointment_sales_visitsUpdateWithWhereUniqueWithoutItemInput = {
+    where: appointment_sales_visitsWhereUniqueInput
+    data: XOR<appointment_sales_visitsUpdateWithoutItemInput, appointment_sales_visitsUncheckedUpdateWithoutItemInput>
+  }
+
+  export type appointment_sales_visitsUpdateManyWithWhereWithoutItemInput = {
+    where: appointment_sales_visitsScalarWhereInput
+    data: XOR<appointment_sales_visitsUpdateManyMutationInput, appointment_sales_visitsUncheckedUpdateManyWithoutItemInput>
+  }
+
+  export type appointment_sales_visitsScalarWhereInput = {
+    AND?: appointment_sales_visitsScalarWhereInput | appointment_sales_visitsScalarWhereInput[]
+    OR?: appointment_sales_visitsScalarWhereInput[]
+    NOT?: appointment_sales_visitsScalarWhereInput | appointment_sales_visitsScalarWhereInput[]
+    visit_id?: UuidFilter<"appointment_sales_visits"> | string
+    business_id?: UuidFilter<"appointment_sales_visits"> | string
+    tenant_id?: UuidNullableFilter<"appointment_sales_visits"> | string | null
+    lead_id?: UuidNullableFilter<"appointment_sales_visits"> | string | null
+    customer_id?: UuidNullableFilter<"appointment_sales_visits"> | string | null
+    item_id?: UuidNullableFilter<"appointment_sales_visits"> | string | null
+    sales_staff_id?: UuidNullableFilter<"appointment_sales_visits"> | string | null
+    visit_type?: StringFilter<"appointment_sales_visits"> | string
+    status?: StringFilter<"appointment_sales_visits"> | string
+    scheduled_start?: DateTimeFilter<"appointment_sales_visits"> | Date | string
+    scheduled_end?: DateTimeFilter<"appointment_sales_visits"> | Date | string
+    customer_name?: StringNullableFilter<"appointment_sales_visits"> | string | null
+    customer_phone?: StringNullableFilter<"appointment_sales_visits"> | string | null
+    location?: StringNullableFilter<"appointment_sales_visits"> | string | null
+    source?: StringFilter<"appointment_sales_visits"> | string
+    notes?: StringNullableFilter<"appointment_sales_visits"> | string | null
+    metadata?: JsonNullableFilter<"appointment_sales_visits">
+    created_by?: UuidNullableFilter<"appointment_sales_visits"> | string | null
+    created_at?: DateTimeFilter<"appointment_sales_visits"> | Date | string
+    updated_at?: DateTimeFilter<"appointment_sales_visits"> | Date | string
+  }
+
   export type cart_itemsCreateWithoutItem_variantInput = {
     cart_item_id?: string
     product_name: string
@@ -164631,6 +176039,7 @@ export namespace Prisma {
     product_detail?: product_item_detailsCreateNestedOneWithoutItemInput
     hospitality_detail?: hospitality_item_detailsCreateNestedOneWithoutItemInput
     vehicle_detail?: vehicle_item_detailsCreateNestedOneWithoutItemInput
+    property_detail?: property_item_detailsCreateNestedOneWithoutItemInput
     product_order_items?: product_order_itemsCreateNestedManyWithoutItemInput
     hospitality_booking_items?: hospitality_booking_itemsCreateNestedManyWithoutItemInput
     product_inquiries?: product_inquiriesCreateNestedManyWithoutItemInput
@@ -164639,6 +176048,7 @@ export namespace Prisma {
     availability?: item_availabilityCreateNestedManyWithoutItemInput
     order_items?: order_itemsCreateNestedManyWithoutCatalog_itemInput
     external_catalog_items?: external_catalog_itemsCreateNestedManyWithoutItemInput
+    appointment_sales_visits?: appointment_sales_visitsCreateNestedManyWithoutItemInput
   }
 
   export type catalog_itemsUncheckedCreateWithoutVariantsInput = {
@@ -164666,6 +176076,7 @@ export namespace Prisma {
     product_detail?: product_item_detailsUncheckedCreateNestedOneWithoutItemInput
     hospitality_detail?: hospitality_item_detailsUncheckedCreateNestedOneWithoutItemInput
     vehicle_detail?: vehicle_item_detailsUncheckedCreateNestedOneWithoutItemInput
+    property_detail?: property_item_detailsUncheckedCreateNestedOneWithoutItemInput
     product_order_items?: product_order_itemsUncheckedCreateNestedManyWithoutItemInput
     hospitality_booking_items?: hospitality_booking_itemsUncheckedCreateNestedManyWithoutItemInput
     product_inquiries?: product_inquiriesUncheckedCreateNestedManyWithoutItemInput
@@ -164673,6 +176084,7 @@ export namespace Prisma {
     availability?: item_availabilityUncheckedCreateNestedManyWithoutItemInput
     order_items?: order_itemsUncheckedCreateNestedManyWithoutCatalog_itemInput
     external_catalog_items?: external_catalog_itemsUncheckedCreateNestedManyWithoutItemInput
+    appointment_sales_visits?: appointment_sales_visitsUncheckedCreateNestedManyWithoutItemInput
   }
 
   export type catalog_itemsCreateOrConnectWithoutVariantsInput = {
@@ -164815,6 +176227,7 @@ export namespace Prisma {
     product_detail?: product_item_detailsUpdateOneWithoutItemNestedInput
     hospitality_detail?: hospitality_item_detailsUpdateOneWithoutItemNestedInput
     vehicle_detail?: vehicle_item_detailsUpdateOneWithoutItemNestedInput
+    property_detail?: property_item_detailsUpdateOneWithoutItemNestedInput
     product_order_items?: product_order_itemsUpdateManyWithoutItemNestedInput
     hospitality_booking_items?: hospitality_booking_itemsUpdateManyWithoutItemNestedInput
     product_inquiries?: product_inquiriesUpdateManyWithoutItemNestedInput
@@ -164823,6 +176236,7 @@ export namespace Prisma {
     availability?: item_availabilityUpdateManyWithoutItemNestedInput
     order_items?: order_itemsUpdateManyWithoutCatalog_itemNestedInput
     external_catalog_items?: external_catalog_itemsUpdateManyWithoutItemNestedInput
+    appointment_sales_visits?: appointment_sales_visitsUpdateManyWithoutItemNestedInput
   }
 
   export type catalog_itemsUncheckedUpdateWithoutVariantsInput = {
@@ -164850,6 +176264,7 @@ export namespace Prisma {
     product_detail?: product_item_detailsUncheckedUpdateOneWithoutItemNestedInput
     hospitality_detail?: hospitality_item_detailsUncheckedUpdateOneWithoutItemNestedInput
     vehicle_detail?: vehicle_item_detailsUncheckedUpdateOneWithoutItemNestedInput
+    property_detail?: property_item_detailsUncheckedUpdateOneWithoutItemNestedInput
     product_order_items?: product_order_itemsUncheckedUpdateManyWithoutItemNestedInput
     hospitality_booking_items?: hospitality_booking_itemsUncheckedUpdateManyWithoutItemNestedInput
     product_inquiries?: product_inquiriesUncheckedUpdateManyWithoutItemNestedInput
@@ -164857,6 +176272,7 @@ export namespace Prisma {
     availability?: item_availabilityUncheckedUpdateManyWithoutItemNestedInput
     order_items?: order_itemsUncheckedUpdateManyWithoutCatalog_itemNestedInput
     external_catalog_items?: external_catalog_itemsUncheckedUpdateManyWithoutItemNestedInput
+    appointment_sales_visits?: appointment_sales_visitsUncheckedUpdateManyWithoutItemNestedInput
   }
 
   export type order_itemsUpsertWithWhereUniqueWithoutItem_variantInput = {
@@ -164915,6 +176331,7 @@ export namespace Prisma {
     product_detail?: product_item_detailsCreateNestedOneWithoutItemInput
     hospitality_detail?: hospitality_item_detailsCreateNestedOneWithoutItemInput
     vehicle_detail?: vehicle_item_detailsCreateNestedOneWithoutItemInput
+    property_detail?: property_item_detailsCreateNestedOneWithoutItemInput
     product_order_items?: product_order_itemsCreateNestedManyWithoutItemInput
     hospitality_booking_items?: hospitality_booking_itemsCreateNestedManyWithoutItemInput
     product_inquiries?: product_inquiriesCreateNestedManyWithoutItemInput
@@ -164923,6 +176340,7 @@ export namespace Prisma {
     variants?: item_variantsCreateNestedManyWithoutItemInput
     order_items?: order_itemsCreateNestedManyWithoutCatalog_itemInput
     external_catalog_items?: external_catalog_itemsCreateNestedManyWithoutItemInput
+    appointment_sales_visits?: appointment_sales_visitsCreateNestedManyWithoutItemInput
   }
 
   export type catalog_itemsUncheckedCreateWithoutAvailabilityInput = {
@@ -164950,6 +176368,7 @@ export namespace Prisma {
     product_detail?: product_item_detailsUncheckedCreateNestedOneWithoutItemInput
     hospitality_detail?: hospitality_item_detailsUncheckedCreateNestedOneWithoutItemInput
     vehicle_detail?: vehicle_item_detailsUncheckedCreateNestedOneWithoutItemInput
+    property_detail?: property_item_detailsUncheckedCreateNestedOneWithoutItemInput
     product_order_items?: product_order_itemsUncheckedCreateNestedManyWithoutItemInput
     hospitality_booking_items?: hospitality_booking_itemsUncheckedCreateNestedManyWithoutItemInput
     product_inquiries?: product_inquiriesUncheckedCreateNestedManyWithoutItemInput
@@ -164957,6 +176376,7 @@ export namespace Prisma {
     variants?: item_variantsUncheckedCreateNestedManyWithoutItemInput
     order_items?: order_itemsUncheckedCreateNestedManyWithoutCatalog_itemInput
     external_catalog_items?: external_catalog_itemsUncheckedCreateNestedManyWithoutItemInput
+    appointment_sales_visits?: appointment_sales_visitsUncheckedCreateNestedManyWithoutItemInput
   }
 
   export type catalog_itemsCreateOrConnectWithoutAvailabilityInput = {
@@ -164999,6 +176419,7 @@ export namespace Prisma {
     product_detail?: product_item_detailsUpdateOneWithoutItemNestedInput
     hospitality_detail?: hospitality_item_detailsUpdateOneWithoutItemNestedInput
     vehicle_detail?: vehicle_item_detailsUpdateOneWithoutItemNestedInput
+    property_detail?: property_item_detailsUpdateOneWithoutItemNestedInput
     product_order_items?: product_order_itemsUpdateManyWithoutItemNestedInput
     hospitality_booking_items?: hospitality_booking_itemsUpdateManyWithoutItemNestedInput
     product_inquiries?: product_inquiriesUpdateManyWithoutItemNestedInput
@@ -165007,6 +176428,7 @@ export namespace Prisma {
     variants?: item_variantsUpdateManyWithoutItemNestedInput
     order_items?: order_itemsUpdateManyWithoutCatalog_itemNestedInput
     external_catalog_items?: external_catalog_itemsUpdateManyWithoutItemNestedInput
+    appointment_sales_visits?: appointment_sales_visitsUpdateManyWithoutItemNestedInput
   }
 
   export type catalog_itemsUncheckedUpdateWithoutAvailabilityInput = {
@@ -165034,6 +176456,7 @@ export namespace Prisma {
     product_detail?: product_item_detailsUncheckedUpdateOneWithoutItemNestedInput
     hospitality_detail?: hospitality_item_detailsUncheckedUpdateOneWithoutItemNestedInput
     vehicle_detail?: vehicle_item_detailsUncheckedUpdateOneWithoutItemNestedInput
+    property_detail?: property_item_detailsUncheckedUpdateOneWithoutItemNestedInput
     product_order_items?: product_order_itemsUncheckedUpdateManyWithoutItemNestedInput
     hospitality_booking_items?: hospitality_booking_itemsUncheckedUpdateManyWithoutItemNestedInput
     product_inquiries?: product_inquiriesUncheckedUpdateManyWithoutItemNestedInput
@@ -165041,6 +176464,7 @@ export namespace Prisma {
     variants?: item_variantsUncheckedUpdateManyWithoutItemNestedInput
     order_items?: order_itemsUncheckedUpdateManyWithoutCatalog_itemNestedInput
     external_catalog_items?: external_catalog_itemsUncheckedUpdateManyWithoutItemNestedInput
+    appointment_sales_visits?: appointment_sales_visitsUncheckedUpdateManyWithoutItemNestedInput
   }
 
   export type businessesCreateWithoutProduct_item_detailsInput = {
@@ -165072,6 +176496,7 @@ export namespace Prisma {
     external_catalog_items?: external_catalog_itemsCreateNestedManyWithoutBusinessInput
     hospitality_item_details?: hospitality_item_detailsCreateNestedManyWithoutBusinessInput
     vehicle_item_details?: vehicle_item_detailsCreateNestedManyWithoutBusinessInput
+    property_item_details?: property_item_detailsCreateNestedManyWithoutBusinessInput
     product_orders?: product_ordersCreateNestedManyWithoutBusinessInput
     product_inquiries?: product_inquiriesCreateNestedManyWithoutBusinessInput
     hospitality_bookings?: hospitality_bookingsCreateNestedManyWithoutBusinessInput
@@ -165125,6 +176550,7 @@ export namespace Prisma {
     external_catalog_items?: external_catalog_itemsUncheckedCreateNestedManyWithoutBusinessInput
     hospitality_item_details?: hospitality_item_detailsUncheckedCreateNestedManyWithoutBusinessInput
     vehicle_item_details?: vehicle_item_detailsUncheckedCreateNestedManyWithoutBusinessInput
+    property_item_details?: property_item_detailsUncheckedCreateNestedManyWithoutBusinessInput
     product_orders?: product_ordersUncheckedCreateNestedManyWithoutBusinessInput
     product_inquiries?: product_inquiriesUncheckedCreateNestedManyWithoutBusinessInput
     hospitality_bookings?: hospitality_bookingsUncheckedCreateNestedManyWithoutBusinessInput
@@ -165177,6 +176603,7 @@ export namespace Prisma {
     cart_reservations?: cart_reservationsCreateNestedManyWithoutCatalog_itemInput
     hospitality_detail?: hospitality_item_detailsCreateNestedOneWithoutItemInput
     vehicle_detail?: vehicle_item_detailsCreateNestedOneWithoutItemInput
+    property_detail?: property_item_detailsCreateNestedOneWithoutItemInput
     product_order_items?: product_order_itemsCreateNestedManyWithoutItemInput
     hospitality_booking_items?: hospitality_booking_itemsCreateNestedManyWithoutItemInput
     product_inquiries?: product_inquiriesCreateNestedManyWithoutItemInput
@@ -165186,6 +176613,7 @@ export namespace Prisma {
     variants?: item_variantsCreateNestedManyWithoutItemInput
     order_items?: order_itemsCreateNestedManyWithoutCatalog_itemInput
     external_catalog_items?: external_catalog_itemsCreateNestedManyWithoutItemInput
+    appointment_sales_visits?: appointment_sales_visitsCreateNestedManyWithoutItemInput
   }
 
   export type catalog_itemsUncheckedCreateWithoutProduct_detailInput = {
@@ -165212,6 +176640,7 @@ export namespace Prisma {
     cart_reservations?: cart_reservationsUncheckedCreateNestedManyWithoutCatalog_itemInput
     hospitality_detail?: hospitality_item_detailsUncheckedCreateNestedOneWithoutItemInput
     vehicle_detail?: vehicle_item_detailsUncheckedCreateNestedOneWithoutItemInput
+    property_detail?: property_item_detailsUncheckedCreateNestedOneWithoutItemInput
     product_order_items?: product_order_itemsUncheckedCreateNestedManyWithoutItemInput
     hospitality_booking_items?: hospitality_booking_itemsUncheckedCreateNestedManyWithoutItemInput
     product_inquiries?: product_inquiriesUncheckedCreateNestedManyWithoutItemInput
@@ -165220,6 +176649,7 @@ export namespace Prisma {
     variants?: item_variantsUncheckedCreateNestedManyWithoutItemInput
     order_items?: order_itemsUncheckedCreateNestedManyWithoutCatalog_itemInput
     external_catalog_items?: external_catalog_itemsUncheckedCreateNestedManyWithoutItemInput
+    appointment_sales_visits?: appointment_sales_visitsUncheckedCreateNestedManyWithoutItemInput
   }
 
   export type catalog_itemsCreateOrConnectWithoutProduct_detailInput = {
@@ -165267,6 +176697,7 @@ export namespace Prisma {
     external_catalog_items?: external_catalog_itemsUpdateManyWithoutBusinessNestedInput
     hospitality_item_details?: hospitality_item_detailsUpdateManyWithoutBusinessNestedInput
     vehicle_item_details?: vehicle_item_detailsUpdateManyWithoutBusinessNestedInput
+    property_item_details?: property_item_detailsUpdateManyWithoutBusinessNestedInput
     product_orders?: product_ordersUpdateManyWithoutBusinessNestedInput
     product_inquiries?: product_inquiriesUpdateManyWithoutBusinessNestedInput
     hospitality_bookings?: hospitality_bookingsUpdateManyWithoutBusinessNestedInput
@@ -165320,6 +176751,7 @@ export namespace Prisma {
     external_catalog_items?: external_catalog_itemsUncheckedUpdateManyWithoutBusinessNestedInput
     hospitality_item_details?: hospitality_item_detailsUncheckedUpdateManyWithoutBusinessNestedInput
     vehicle_item_details?: vehicle_item_detailsUncheckedUpdateManyWithoutBusinessNestedInput
+    property_item_details?: property_item_detailsUncheckedUpdateManyWithoutBusinessNestedInput
     product_orders?: product_ordersUncheckedUpdateManyWithoutBusinessNestedInput
     product_inquiries?: product_inquiriesUncheckedUpdateManyWithoutBusinessNestedInput
     hospitality_bookings?: hospitality_bookingsUncheckedUpdateManyWithoutBusinessNestedInput
@@ -165378,6 +176810,7 @@ export namespace Prisma {
     cart_reservations?: cart_reservationsUpdateManyWithoutCatalog_itemNestedInput
     hospitality_detail?: hospitality_item_detailsUpdateOneWithoutItemNestedInput
     vehicle_detail?: vehicle_item_detailsUpdateOneWithoutItemNestedInput
+    property_detail?: property_item_detailsUpdateOneWithoutItemNestedInput
     product_order_items?: product_order_itemsUpdateManyWithoutItemNestedInput
     hospitality_booking_items?: hospitality_booking_itemsUpdateManyWithoutItemNestedInput
     product_inquiries?: product_inquiriesUpdateManyWithoutItemNestedInput
@@ -165387,6 +176820,7 @@ export namespace Prisma {
     variants?: item_variantsUpdateManyWithoutItemNestedInput
     order_items?: order_itemsUpdateManyWithoutCatalog_itemNestedInput
     external_catalog_items?: external_catalog_itemsUpdateManyWithoutItemNestedInput
+    appointment_sales_visits?: appointment_sales_visitsUpdateManyWithoutItemNestedInput
   }
 
   export type catalog_itemsUncheckedUpdateWithoutProduct_detailInput = {
@@ -165413,6 +176847,7 @@ export namespace Prisma {
     cart_reservations?: cart_reservationsUncheckedUpdateManyWithoutCatalog_itemNestedInput
     hospitality_detail?: hospitality_item_detailsUncheckedUpdateOneWithoutItemNestedInput
     vehicle_detail?: vehicle_item_detailsUncheckedUpdateOneWithoutItemNestedInput
+    property_detail?: property_item_detailsUncheckedUpdateOneWithoutItemNestedInput
     product_order_items?: product_order_itemsUncheckedUpdateManyWithoutItemNestedInput
     hospitality_booking_items?: hospitality_booking_itemsUncheckedUpdateManyWithoutItemNestedInput
     product_inquiries?: product_inquiriesUncheckedUpdateManyWithoutItemNestedInput
@@ -165421,6 +176856,7 @@ export namespace Prisma {
     variants?: item_variantsUncheckedUpdateManyWithoutItemNestedInput
     order_items?: order_itemsUncheckedUpdateManyWithoutCatalog_itemNestedInput
     external_catalog_items?: external_catalog_itemsUncheckedUpdateManyWithoutItemNestedInput
+    appointment_sales_visits?: appointment_sales_visitsUncheckedUpdateManyWithoutItemNestedInput
   }
 
   export type businessesCreateWithoutExternal_catalog_itemsInput = {
@@ -165452,6 +176888,7 @@ export namespace Prisma {
     product_item_details?: product_item_detailsCreateNestedManyWithoutBusinessInput
     hospitality_item_details?: hospitality_item_detailsCreateNestedManyWithoutBusinessInput
     vehicle_item_details?: vehicle_item_detailsCreateNestedManyWithoutBusinessInput
+    property_item_details?: property_item_detailsCreateNestedManyWithoutBusinessInput
     product_orders?: product_ordersCreateNestedManyWithoutBusinessInput
     product_inquiries?: product_inquiriesCreateNestedManyWithoutBusinessInput
     hospitality_bookings?: hospitality_bookingsCreateNestedManyWithoutBusinessInput
@@ -165505,6 +176942,7 @@ export namespace Prisma {
     product_item_details?: product_item_detailsUncheckedCreateNestedManyWithoutBusinessInput
     hospitality_item_details?: hospitality_item_detailsUncheckedCreateNestedManyWithoutBusinessInput
     vehicle_item_details?: vehicle_item_detailsUncheckedCreateNestedManyWithoutBusinessInput
+    property_item_details?: property_item_detailsUncheckedCreateNestedManyWithoutBusinessInput
     product_orders?: product_ordersUncheckedCreateNestedManyWithoutBusinessInput
     product_inquiries?: product_inquiriesUncheckedCreateNestedManyWithoutBusinessInput
     hospitality_bookings?: hospitality_bookingsUncheckedCreateNestedManyWithoutBusinessInput
@@ -165558,6 +176996,7 @@ export namespace Prisma {
     product_detail?: product_item_detailsCreateNestedOneWithoutItemInput
     hospitality_detail?: hospitality_item_detailsCreateNestedOneWithoutItemInput
     vehicle_detail?: vehicle_item_detailsCreateNestedOneWithoutItemInput
+    property_detail?: property_item_detailsCreateNestedOneWithoutItemInput
     product_order_items?: product_order_itemsCreateNestedManyWithoutItemInput
     hospitality_booking_items?: hospitality_booking_itemsCreateNestedManyWithoutItemInput
     product_inquiries?: product_inquiriesCreateNestedManyWithoutItemInput
@@ -165566,6 +177005,7 @@ export namespace Prisma {
     availability?: item_availabilityCreateNestedManyWithoutItemInput
     variants?: item_variantsCreateNestedManyWithoutItemInput
     order_items?: order_itemsCreateNestedManyWithoutCatalog_itemInput
+    appointment_sales_visits?: appointment_sales_visitsCreateNestedManyWithoutItemInput
   }
 
   export type catalog_itemsUncheckedCreateWithoutExternal_catalog_itemsInput = {
@@ -165593,6 +177033,7 @@ export namespace Prisma {
     product_detail?: product_item_detailsUncheckedCreateNestedOneWithoutItemInput
     hospitality_detail?: hospitality_item_detailsUncheckedCreateNestedOneWithoutItemInput
     vehicle_detail?: vehicle_item_detailsUncheckedCreateNestedOneWithoutItemInput
+    property_detail?: property_item_detailsUncheckedCreateNestedOneWithoutItemInput
     product_order_items?: product_order_itemsUncheckedCreateNestedManyWithoutItemInput
     hospitality_booking_items?: hospitality_booking_itemsUncheckedCreateNestedManyWithoutItemInput
     product_inquiries?: product_inquiriesUncheckedCreateNestedManyWithoutItemInput
@@ -165600,6 +177041,7 @@ export namespace Prisma {
     availability?: item_availabilityUncheckedCreateNestedManyWithoutItemInput
     variants?: item_variantsUncheckedCreateNestedManyWithoutItemInput
     order_items?: order_itemsUncheckedCreateNestedManyWithoutCatalog_itemInput
+    appointment_sales_visits?: appointment_sales_visitsUncheckedCreateNestedManyWithoutItemInput
   }
 
   export type catalog_itemsCreateOrConnectWithoutExternal_catalog_itemsInput = {
@@ -165647,6 +177089,7 @@ export namespace Prisma {
     product_item_details?: product_item_detailsUpdateManyWithoutBusinessNestedInput
     hospitality_item_details?: hospitality_item_detailsUpdateManyWithoutBusinessNestedInput
     vehicle_item_details?: vehicle_item_detailsUpdateManyWithoutBusinessNestedInput
+    property_item_details?: property_item_detailsUpdateManyWithoutBusinessNestedInput
     product_orders?: product_ordersUpdateManyWithoutBusinessNestedInput
     product_inquiries?: product_inquiriesUpdateManyWithoutBusinessNestedInput
     hospitality_bookings?: hospitality_bookingsUpdateManyWithoutBusinessNestedInput
@@ -165700,6 +177143,7 @@ export namespace Prisma {
     product_item_details?: product_item_detailsUncheckedUpdateManyWithoutBusinessNestedInput
     hospitality_item_details?: hospitality_item_detailsUncheckedUpdateManyWithoutBusinessNestedInput
     vehicle_item_details?: vehicle_item_detailsUncheckedUpdateManyWithoutBusinessNestedInput
+    property_item_details?: property_item_detailsUncheckedUpdateManyWithoutBusinessNestedInput
     product_orders?: product_ordersUncheckedUpdateManyWithoutBusinessNestedInput
     product_inquiries?: product_inquiriesUncheckedUpdateManyWithoutBusinessNestedInput
     hospitality_bookings?: hospitality_bookingsUncheckedUpdateManyWithoutBusinessNestedInput
@@ -165759,6 +177203,7 @@ export namespace Prisma {
     product_detail?: product_item_detailsUpdateOneWithoutItemNestedInput
     hospitality_detail?: hospitality_item_detailsUpdateOneWithoutItemNestedInput
     vehicle_detail?: vehicle_item_detailsUpdateOneWithoutItemNestedInput
+    property_detail?: property_item_detailsUpdateOneWithoutItemNestedInput
     product_order_items?: product_order_itemsUpdateManyWithoutItemNestedInput
     hospitality_booking_items?: hospitality_booking_itemsUpdateManyWithoutItemNestedInput
     product_inquiries?: product_inquiriesUpdateManyWithoutItemNestedInput
@@ -165767,6 +177212,7 @@ export namespace Prisma {
     availability?: item_availabilityUpdateManyWithoutItemNestedInput
     variants?: item_variantsUpdateManyWithoutItemNestedInput
     order_items?: order_itemsUpdateManyWithoutCatalog_itemNestedInput
+    appointment_sales_visits?: appointment_sales_visitsUpdateManyWithoutItemNestedInput
   }
 
   export type catalog_itemsUncheckedUpdateWithoutExternal_catalog_itemsInput = {
@@ -165794,6 +177240,7 @@ export namespace Prisma {
     product_detail?: product_item_detailsUncheckedUpdateOneWithoutItemNestedInput
     hospitality_detail?: hospitality_item_detailsUncheckedUpdateOneWithoutItemNestedInput
     vehicle_detail?: vehicle_item_detailsUncheckedUpdateOneWithoutItemNestedInput
+    property_detail?: property_item_detailsUncheckedUpdateOneWithoutItemNestedInput
     product_order_items?: product_order_itemsUncheckedUpdateManyWithoutItemNestedInput
     hospitality_booking_items?: hospitality_booking_itemsUncheckedUpdateManyWithoutItemNestedInput
     product_inquiries?: product_inquiriesUncheckedUpdateManyWithoutItemNestedInput
@@ -165801,6 +177248,7 @@ export namespace Prisma {
     availability?: item_availabilityUncheckedUpdateManyWithoutItemNestedInput
     variants?: item_variantsUncheckedUpdateManyWithoutItemNestedInput
     order_items?: order_itemsUncheckedUpdateManyWithoutCatalog_itemNestedInput
+    appointment_sales_visits?: appointment_sales_visitsUncheckedUpdateManyWithoutItemNestedInput
   }
 
   export type businessesCreateWithoutProduct_inquiriesInput = {
@@ -165833,6 +177281,7 @@ export namespace Prisma {
     product_item_details?: product_item_detailsCreateNestedManyWithoutBusinessInput
     hospitality_item_details?: hospitality_item_detailsCreateNestedManyWithoutBusinessInput
     vehicle_item_details?: vehicle_item_detailsCreateNestedManyWithoutBusinessInput
+    property_item_details?: property_item_detailsCreateNestedManyWithoutBusinessInput
     product_orders?: product_ordersCreateNestedManyWithoutBusinessInput
     hospitality_bookings?: hospitality_bookingsCreateNestedManyWithoutBusinessInput
     hospitality_inquiries?: hospitality_inquiriesCreateNestedManyWithoutBusinessInput
@@ -165886,6 +177335,7 @@ export namespace Prisma {
     product_item_details?: product_item_detailsUncheckedCreateNestedManyWithoutBusinessInput
     hospitality_item_details?: hospitality_item_detailsUncheckedCreateNestedManyWithoutBusinessInput
     vehicle_item_details?: vehicle_item_detailsUncheckedCreateNestedManyWithoutBusinessInput
+    property_item_details?: property_item_detailsUncheckedCreateNestedManyWithoutBusinessInput
     product_orders?: product_ordersUncheckedCreateNestedManyWithoutBusinessInput
     hospitality_bookings?: hospitality_bookingsUncheckedCreateNestedManyWithoutBusinessInput
     hospitality_inquiries?: hospitality_inquiriesUncheckedCreateNestedManyWithoutBusinessInput
@@ -165937,6 +177387,7 @@ export namespace Prisma {
     hospitality_inquiries?: hospitality_inquiriesCreateNestedManyWithoutTenantInput
     notification_messages?: notification_messagesCreateNestedManyWithoutTenantsInput
     notification_templates?: notification_templatesCreateNestedManyWithoutTenantsInput
+    tenant_conversation_configs?: tenant_conversation_configsCreateNestedManyWithoutTenantInput
   }
 
   export type tenantsUncheckedCreateWithoutProduct_inquiriesInput = {
@@ -165962,6 +177413,7 @@ export namespace Prisma {
     hospitality_inquiries?: hospitality_inquiriesUncheckedCreateNestedManyWithoutTenantInput
     notification_messages?: notification_messagesUncheckedCreateNestedManyWithoutTenantsInput
     notification_templates?: notification_templatesUncheckedCreateNestedManyWithoutTenantsInput
+    tenant_conversation_configs?: tenant_conversation_configsUncheckedCreateNestedManyWithoutTenantInput
   }
 
   export type tenantsCreateOrConnectWithoutProduct_inquiriesInput = {
@@ -166084,6 +177536,7 @@ export namespace Prisma {
     product_detail?: product_item_detailsCreateNestedOneWithoutItemInput
     hospitality_detail?: hospitality_item_detailsCreateNestedOneWithoutItemInput
     vehicle_detail?: vehicle_item_detailsCreateNestedOneWithoutItemInput
+    property_detail?: property_item_detailsCreateNestedOneWithoutItemInput
     product_order_items?: product_order_itemsCreateNestedManyWithoutItemInput
     hospitality_booking_items?: hospitality_booking_itemsCreateNestedManyWithoutItemInput
     hospitality_inquiries?: hospitality_inquiriesCreateNestedManyWithoutPreferred_itemInput
@@ -166092,6 +177545,7 @@ export namespace Prisma {
     variants?: item_variantsCreateNestedManyWithoutItemInput
     order_items?: order_itemsCreateNestedManyWithoutCatalog_itemInput
     external_catalog_items?: external_catalog_itemsCreateNestedManyWithoutItemInput
+    appointment_sales_visits?: appointment_sales_visitsCreateNestedManyWithoutItemInput
   }
 
   export type catalog_itemsUncheckedCreateWithoutProduct_inquiriesInput = {
@@ -166119,6 +177573,7 @@ export namespace Prisma {
     product_detail?: product_item_detailsUncheckedCreateNestedOneWithoutItemInput
     hospitality_detail?: hospitality_item_detailsUncheckedCreateNestedOneWithoutItemInput
     vehicle_detail?: vehicle_item_detailsUncheckedCreateNestedOneWithoutItemInput
+    property_detail?: property_item_detailsUncheckedCreateNestedOneWithoutItemInput
     product_order_items?: product_order_itemsUncheckedCreateNestedManyWithoutItemInput
     hospitality_booking_items?: hospitality_booking_itemsUncheckedCreateNestedManyWithoutItemInput
     hospitality_inquiries?: hospitality_inquiriesUncheckedCreateNestedManyWithoutPreferred_itemInput
@@ -166126,6 +177581,7 @@ export namespace Prisma {
     variants?: item_variantsUncheckedCreateNestedManyWithoutItemInput
     order_items?: order_itemsUncheckedCreateNestedManyWithoutCatalog_itemInput
     external_catalog_items?: external_catalog_itemsUncheckedCreateNestedManyWithoutItemInput
+    appointment_sales_visits?: appointment_sales_visitsUncheckedCreateNestedManyWithoutItemInput
   }
 
   export type catalog_itemsCreateOrConnectWithoutProduct_inquiriesInput = {
@@ -166174,6 +177630,7 @@ export namespace Prisma {
     product_item_details?: product_item_detailsUpdateManyWithoutBusinessNestedInput
     hospitality_item_details?: hospitality_item_detailsUpdateManyWithoutBusinessNestedInput
     vehicle_item_details?: vehicle_item_detailsUpdateManyWithoutBusinessNestedInput
+    property_item_details?: property_item_detailsUpdateManyWithoutBusinessNestedInput
     product_orders?: product_ordersUpdateManyWithoutBusinessNestedInput
     hospitality_bookings?: hospitality_bookingsUpdateManyWithoutBusinessNestedInput
     hospitality_inquiries?: hospitality_inquiriesUpdateManyWithoutBusinessNestedInput
@@ -166227,6 +177684,7 @@ export namespace Prisma {
     product_item_details?: product_item_detailsUncheckedUpdateManyWithoutBusinessNestedInput
     hospitality_item_details?: hospitality_item_detailsUncheckedUpdateManyWithoutBusinessNestedInput
     vehicle_item_details?: vehicle_item_detailsUncheckedUpdateManyWithoutBusinessNestedInput
+    property_item_details?: property_item_detailsUncheckedUpdateManyWithoutBusinessNestedInput
     product_orders?: product_ordersUncheckedUpdateManyWithoutBusinessNestedInput
     hospitality_bookings?: hospitality_bookingsUncheckedUpdateManyWithoutBusinessNestedInput
     hospitality_inquiries?: hospitality_inquiriesUncheckedUpdateManyWithoutBusinessNestedInput
@@ -166284,6 +177742,7 @@ export namespace Prisma {
     hospitality_inquiries?: hospitality_inquiriesUpdateManyWithoutTenantNestedInput
     notification_messages?: notification_messagesUpdateManyWithoutTenantsNestedInput
     notification_templates?: notification_templatesUpdateManyWithoutTenantsNestedInput
+    tenant_conversation_configs?: tenant_conversation_configsUpdateManyWithoutTenantNestedInput
   }
 
   export type tenantsUncheckedUpdateWithoutProduct_inquiriesInput = {
@@ -166309,6 +177768,7 @@ export namespace Prisma {
     hospitality_inquiries?: hospitality_inquiriesUncheckedUpdateManyWithoutTenantNestedInput
     notification_messages?: notification_messagesUncheckedUpdateManyWithoutTenantsNestedInput
     notification_templates?: notification_templatesUncheckedUpdateManyWithoutTenantsNestedInput
+    tenant_conversation_configs?: tenant_conversation_configsUncheckedUpdateManyWithoutTenantNestedInput
   }
 
   export type leadsUpsertWithoutProduct_inquiriesInput = {
@@ -166443,6 +177903,7 @@ export namespace Prisma {
     product_detail?: product_item_detailsUpdateOneWithoutItemNestedInput
     hospitality_detail?: hospitality_item_detailsUpdateOneWithoutItemNestedInput
     vehicle_detail?: vehicle_item_detailsUpdateOneWithoutItemNestedInput
+    property_detail?: property_item_detailsUpdateOneWithoutItemNestedInput
     product_order_items?: product_order_itemsUpdateManyWithoutItemNestedInput
     hospitality_booking_items?: hospitality_booking_itemsUpdateManyWithoutItemNestedInput
     hospitality_inquiries?: hospitality_inquiriesUpdateManyWithoutPreferred_itemNestedInput
@@ -166451,6 +177912,7 @@ export namespace Prisma {
     variants?: item_variantsUpdateManyWithoutItemNestedInput
     order_items?: order_itemsUpdateManyWithoutCatalog_itemNestedInput
     external_catalog_items?: external_catalog_itemsUpdateManyWithoutItemNestedInput
+    appointment_sales_visits?: appointment_sales_visitsUpdateManyWithoutItemNestedInput
   }
 
   export type catalog_itemsUncheckedUpdateWithoutProduct_inquiriesInput = {
@@ -166478,6 +177940,7 @@ export namespace Prisma {
     product_detail?: product_item_detailsUncheckedUpdateOneWithoutItemNestedInput
     hospitality_detail?: hospitality_item_detailsUncheckedUpdateOneWithoutItemNestedInput
     vehicle_detail?: vehicle_item_detailsUncheckedUpdateOneWithoutItemNestedInput
+    property_detail?: property_item_detailsUncheckedUpdateOneWithoutItemNestedInput
     product_order_items?: product_order_itemsUncheckedUpdateManyWithoutItemNestedInput
     hospitality_booking_items?: hospitality_booking_itemsUncheckedUpdateManyWithoutItemNestedInput
     hospitality_inquiries?: hospitality_inquiriesUncheckedUpdateManyWithoutPreferred_itemNestedInput
@@ -166485,6 +177948,7 @@ export namespace Prisma {
     variants?: item_variantsUncheckedUpdateManyWithoutItemNestedInput
     order_items?: order_itemsUncheckedUpdateManyWithoutCatalog_itemNestedInput
     external_catalog_items?: external_catalog_itemsUncheckedUpdateManyWithoutItemNestedInput
+    appointment_sales_visits?: appointment_sales_visitsUncheckedUpdateManyWithoutItemNestedInput
   }
 
   export type businessesCreateWithoutProduct_ordersInput = {
@@ -166517,6 +177981,7 @@ export namespace Prisma {
     product_item_details?: product_item_detailsCreateNestedManyWithoutBusinessInput
     hospitality_item_details?: hospitality_item_detailsCreateNestedManyWithoutBusinessInput
     vehicle_item_details?: vehicle_item_detailsCreateNestedManyWithoutBusinessInput
+    property_item_details?: property_item_detailsCreateNestedManyWithoutBusinessInput
     product_inquiries?: product_inquiriesCreateNestedManyWithoutBusinessInput
     hospitality_bookings?: hospitality_bookingsCreateNestedManyWithoutBusinessInput
     hospitality_inquiries?: hospitality_inquiriesCreateNestedManyWithoutBusinessInput
@@ -166570,6 +178035,7 @@ export namespace Prisma {
     product_item_details?: product_item_detailsUncheckedCreateNestedManyWithoutBusinessInput
     hospitality_item_details?: hospitality_item_detailsUncheckedCreateNestedManyWithoutBusinessInput
     vehicle_item_details?: vehicle_item_detailsUncheckedCreateNestedManyWithoutBusinessInput
+    property_item_details?: property_item_detailsUncheckedCreateNestedManyWithoutBusinessInput
     product_inquiries?: product_inquiriesUncheckedCreateNestedManyWithoutBusinessInput
     hospitality_bookings?: hospitality_bookingsUncheckedCreateNestedManyWithoutBusinessInput
     hospitality_inquiries?: hospitality_inquiriesUncheckedCreateNestedManyWithoutBusinessInput
@@ -166621,6 +178087,7 @@ export namespace Prisma {
     hospitality_inquiries?: hospitality_inquiriesCreateNestedManyWithoutTenantInput
     notification_messages?: notification_messagesCreateNestedManyWithoutTenantsInput
     notification_templates?: notification_templatesCreateNestedManyWithoutTenantsInput
+    tenant_conversation_configs?: tenant_conversation_configsCreateNestedManyWithoutTenantInput
   }
 
   export type tenantsUncheckedCreateWithoutProduct_ordersInput = {
@@ -166646,6 +178113,7 @@ export namespace Prisma {
     hospitality_inquiries?: hospitality_inquiriesUncheckedCreateNestedManyWithoutTenantInput
     notification_messages?: notification_messagesUncheckedCreateNestedManyWithoutTenantsInput
     notification_templates?: notification_templatesUncheckedCreateNestedManyWithoutTenantsInput
+    tenant_conversation_configs?: tenant_conversation_configsUncheckedCreateNestedManyWithoutTenantInput
   }
 
   export type tenantsCreateOrConnectWithoutProduct_ordersInput = {
@@ -167003,6 +178471,7 @@ export namespace Prisma {
     product_item_details?: product_item_detailsUpdateManyWithoutBusinessNestedInput
     hospitality_item_details?: hospitality_item_detailsUpdateManyWithoutBusinessNestedInput
     vehicle_item_details?: vehicle_item_detailsUpdateManyWithoutBusinessNestedInput
+    property_item_details?: property_item_detailsUpdateManyWithoutBusinessNestedInput
     product_inquiries?: product_inquiriesUpdateManyWithoutBusinessNestedInput
     hospitality_bookings?: hospitality_bookingsUpdateManyWithoutBusinessNestedInput
     hospitality_inquiries?: hospitality_inquiriesUpdateManyWithoutBusinessNestedInput
@@ -167056,6 +178525,7 @@ export namespace Prisma {
     product_item_details?: product_item_detailsUncheckedUpdateManyWithoutBusinessNestedInput
     hospitality_item_details?: hospitality_item_detailsUncheckedUpdateManyWithoutBusinessNestedInput
     vehicle_item_details?: vehicle_item_detailsUncheckedUpdateManyWithoutBusinessNestedInput
+    property_item_details?: property_item_detailsUncheckedUpdateManyWithoutBusinessNestedInput
     product_inquiries?: product_inquiriesUncheckedUpdateManyWithoutBusinessNestedInput
     hospitality_bookings?: hospitality_bookingsUncheckedUpdateManyWithoutBusinessNestedInput
     hospitality_inquiries?: hospitality_inquiriesUncheckedUpdateManyWithoutBusinessNestedInput
@@ -167113,6 +178583,7 @@ export namespace Prisma {
     hospitality_inquiries?: hospitality_inquiriesUpdateManyWithoutTenantNestedInput
     notification_messages?: notification_messagesUpdateManyWithoutTenantsNestedInput
     notification_templates?: notification_templatesUpdateManyWithoutTenantsNestedInput
+    tenant_conversation_configs?: tenant_conversation_configsUpdateManyWithoutTenantNestedInput
   }
 
   export type tenantsUncheckedUpdateWithoutProduct_ordersInput = {
@@ -167138,6 +178609,7 @@ export namespace Prisma {
     hospitality_inquiries?: hospitality_inquiriesUncheckedUpdateManyWithoutTenantNestedInput
     notification_messages?: notification_messagesUncheckedUpdateManyWithoutTenantsNestedInput
     notification_templates?: notification_templatesUncheckedUpdateManyWithoutTenantsNestedInput
+    tenant_conversation_configs?: tenant_conversation_configsUncheckedUpdateManyWithoutTenantNestedInput
   }
 
   export type customersUpsertWithoutProduct_ordersInput = {
@@ -167529,6 +179001,7 @@ export namespace Prisma {
     product_detail?: product_item_detailsCreateNestedOneWithoutItemInput
     hospitality_detail?: hospitality_item_detailsCreateNestedOneWithoutItemInput
     vehicle_detail?: vehicle_item_detailsCreateNestedOneWithoutItemInput
+    property_detail?: property_item_detailsCreateNestedOneWithoutItemInput
     hospitality_booking_items?: hospitality_booking_itemsCreateNestedManyWithoutItemInput
     product_inquiries?: product_inquiriesCreateNestedManyWithoutItemInput
     hospitality_inquiries?: hospitality_inquiriesCreateNestedManyWithoutPreferred_itemInput
@@ -167537,6 +179010,7 @@ export namespace Prisma {
     variants?: item_variantsCreateNestedManyWithoutItemInput
     order_items?: order_itemsCreateNestedManyWithoutCatalog_itemInput
     external_catalog_items?: external_catalog_itemsCreateNestedManyWithoutItemInput
+    appointment_sales_visits?: appointment_sales_visitsCreateNestedManyWithoutItemInput
   }
 
   export type catalog_itemsUncheckedCreateWithoutProduct_order_itemsInput = {
@@ -167564,6 +179038,7 @@ export namespace Prisma {
     product_detail?: product_item_detailsUncheckedCreateNestedOneWithoutItemInput
     hospitality_detail?: hospitality_item_detailsUncheckedCreateNestedOneWithoutItemInput
     vehicle_detail?: vehicle_item_detailsUncheckedCreateNestedOneWithoutItemInput
+    property_detail?: property_item_detailsUncheckedCreateNestedOneWithoutItemInput
     hospitality_booking_items?: hospitality_booking_itemsUncheckedCreateNestedManyWithoutItemInput
     product_inquiries?: product_inquiriesUncheckedCreateNestedManyWithoutItemInput
     hospitality_inquiries?: hospitality_inquiriesUncheckedCreateNestedManyWithoutPreferred_itemInput
@@ -167571,6 +179046,7 @@ export namespace Prisma {
     variants?: item_variantsUncheckedCreateNestedManyWithoutItemInput
     order_items?: order_itemsUncheckedCreateNestedManyWithoutCatalog_itemInput
     external_catalog_items?: external_catalog_itemsUncheckedCreateNestedManyWithoutItemInput
+    appointment_sales_visits?: appointment_sales_visitsUncheckedCreateNestedManyWithoutItemInput
   }
 
   export type catalog_itemsCreateOrConnectWithoutProduct_order_itemsInput = {
@@ -167721,6 +179197,7 @@ export namespace Prisma {
     product_detail?: product_item_detailsUpdateOneWithoutItemNestedInput
     hospitality_detail?: hospitality_item_detailsUpdateOneWithoutItemNestedInput
     vehicle_detail?: vehicle_item_detailsUpdateOneWithoutItemNestedInput
+    property_detail?: property_item_detailsUpdateOneWithoutItemNestedInput
     hospitality_booking_items?: hospitality_booking_itemsUpdateManyWithoutItemNestedInput
     product_inquiries?: product_inquiriesUpdateManyWithoutItemNestedInput
     hospitality_inquiries?: hospitality_inquiriesUpdateManyWithoutPreferred_itemNestedInput
@@ -167729,6 +179206,7 @@ export namespace Prisma {
     variants?: item_variantsUpdateManyWithoutItemNestedInput
     order_items?: order_itemsUpdateManyWithoutCatalog_itemNestedInput
     external_catalog_items?: external_catalog_itemsUpdateManyWithoutItemNestedInput
+    appointment_sales_visits?: appointment_sales_visitsUpdateManyWithoutItemNestedInput
   }
 
   export type catalog_itemsUncheckedUpdateWithoutProduct_order_itemsInput = {
@@ -167756,6 +179234,7 @@ export namespace Prisma {
     product_detail?: product_item_detailsUncheckedUpdateOneWithoutItemNestedInput
     hospitality_detail?: hospitality_item_detailsUncheckedUpdateOneWithoutItemNestedInput
     vehicle_detail?: vehicle_item_detailsUncheckedUpdateOneWithoutItemNestedInput
+    property_detail?: property_item_detailsUncheckedUpdateOneWithoutItemNestedInput
     hospitality_booking_items?: hospitality_booking_itemsUncheckedUpdateManyWithoutItemNestedInput
     product_inquiries?: product_inquiriesUncheckedUpdateManyWithoutItemNestedInput
     hospitality_inquiries?: hospitality_inquiriesUncheckedUpdateManyWithoutPreferred_itemNestedInput
@@ -167763,6 +179242,7 @@ export namespace Prisma {
     variants?: item_variantsUncheckedUpdateManyWithoutItemNestedInput
     order_items?: order_itemsUncheckedUpdateManyWithoutCatalog_itemNestedInput
     external_catalog_items?: external_catalog_itemsUncheckedUpdateManyWithoutItemNestedInput
+    appointment_sales_visits?: appointment_sales_visitsUncheckedUpdateManyWithoutItemNestedInput
   }
 
   export type item_variantsUpsertWithoutProduct_order_itemsInput = {
@@ -167973,6 +179453,7 @@ export namespace Prisma {
     external_catalog_items?: external_catalog_itemsCreateNestedManyWithoutBusinessInput
     product_item_details?: product_item_detailsCreateNestedManyWithoutBusinessInput
     vehicle_item_details?: vehicle_item_detailsCreateNestedManyWithoutBusinessInput
+    property_item_details?: property_item_detailsCreateNestedManyWithoutBusinessInput
     product_orders?: product_ordersCreateNestedManyWithoutBusinessInput
     product_inquiries?: product_inquiriesCreateNestedManyWithoutBusinessInput
     hospitality_bookings?: hospitality_bookingsCreateNestedManyWithoutBusinessInput
@@ -168026,6 +179507,7 @@ export namespace Prisma {
     external_catalog_items?: external_catalog_itemsUncheckedCreateNestedManyWithoutBusinessInput
     product_item_details?: product_item_detailsUncheckedCreateNestedManyWithoutBusinessInput
     vehicle_item_details?: vehicle_item_detailsUncheckedCreateNestedManyWithoutBusinessInput
+    property_item_details?: property_item_detailsUncheckedCreateNestedManyWithoutBusinessInput
     product_orders?: product_ordersUncheckedCreateNestedManyWithoutBusinessInput
     product_inquiries?: product_inquiriesUncheckedCreateNestedManyWithoutBusinessInput
     hospitality_bookings?: hospitality_bookingsUncheckedCreateNestedManyWithoutBusinessInput
@@ -168078,6 +179560,7 @@ export namespace Prisma {
     cart_reservations?: cart_reservationsCreateNestedManyWithoutCatalog_itemInput
     product_detail?: product_item_detailsCreateNestedOneWithoutItemInput
     vehicle_detail?: vehicle_item_detailsCreateNestedOneWithoutItemInput
+    property_detail?: property_item_detailsCreateNestedOneWithoutItemInput
     product_order_items?: product_order_itemsCreateNestedManyWithoutItemInput
     hospitality_booking_items?: hospitality_booking_itemsCreateNestedManyWithoutItemInput
     product_inquiries?: product_inquiriesCreateNestedManyWithoutItemInput
@@ -168087,6 +179570,7 @@ export namespace Prisma {
     variants?: item_variantsCreateNestedManyWithoutItemInput
     order_items?: order_itemsCreateNestedManyWithoutCatalog_itemInput
     external_catalog_items?: external_catalog_itemsCreateNestedManyWithoutItemInput
+    appointment_sales_visits?: appointment_sales_visitsCreateNestedManyWithoutItemInput
   }
 
   export type catalog_itemsUncheckedCreateWithoutHospitality_detailInput = {
@@ -168113,6 +179597,7 @@ export namespace Prisma {
     cart_reservations?: cart_reservationsUncheckedCreateNestedManyWithoutCatalog_itemInput
     product_detail?: product_item_detailsUncheckedCreateNestedOneWithoutItemInput
     vehicle_detail?: vehicle_item_detailsUncheckedCreateNestedOneWithoutItemInput
+    property_detail?: property_item_detailsUncheckedCreateNestedOneWithoutItemInput
     product_order_items?: product_order_itemsUncheckedCreateNestedManyWithoutItemInput
     hospitality_booking_items?: hospitality_booking_itemsUncheckedCreateNestedManyWithoutItemInput
     product_inquiries?: product_inquiriesUncheckedCreateNestedManyWithoutItemInput
@@ -168121,6 +179606,7 @@ export namespace Prisma {
     variants?: item_variantsUncheckedCreateNestedManyWithoutItemInput
     order_items?: order_itemsUncheckedCreateNestedManyWithoutCatalog_itemInput
     external_catalog_items?: external_catalog_itemsUncheckedCreateNestedManyWithoutItemInput
+    appointment_sales_visits?: appointment_sales_visitsUncheckedCreateNestedManyWithoutItemInput
   }
 
   export type catalog_itemsCreateOrConnectWithoutHospitality_detailInput = {
@@ -168168,6 +179654,7 @@ export namespace Prisma {
     external_catalog_items?: external_catalog_itemsUpdateManyWithoutBusinessNestedInput
     product_item_details?: product_item_detailsUpdateManyWithoutBusinessNestedInput
     vehicle_item_details?: vehicle_item_detailsUpdateManyWithoutBusinessNestedInput
+    property_item_details?: property_item_detailsUpdateManyWithoutBusinessNestedInput
     product_orders?: product_ordersUpdateManyWithoutBusinessNestedInput
     product_inquiries?: product_inquiriesUpdateManyWithoutBusinessNestedInput
     hospitality_bookings?: hospitality_bookingsUpdateManyWithoutBusinessNestedInput
@@ -168221,6 +179708,7 @@ export namespace Prisma {
     external_catalog_items?: external_catalog_itemsUncheckedUpdateManyWithoutBusinessNestedInput
     product_item_details?: product_item_detailsUncheckedUpdateManyWithoutBusinessNestedInput
     vehicle_item_details?: vehicle_item_detailsUncheckedUpdateManyWithoutBusinessNestedInput
+    property_item_details?: property_item_detailsUncheckedUpdateManyWithoutBusinessNestedInput
     product_orders?: product_ordersUncheckedUpdateManyWithoutBusinessNestedInput
     product_inquiries?: product_inquiriesUncheckedUpdateManyWithoutBusinessNestedInput
     hospitality_bookings?: hospitality_bookingsUncheckedUpdateManyWithoutBusinessNestedInput
@@ -168279,6 +179767,7 @@ export namespace Prisma {
     cart_reservations?: cart_reservationsUpdateManyWithoutCatalog_itemNestedInput
     product_detail?: product_item_detailsUpdateOneWithoutItemNestedInput
     vehicle_detail?: vehicle_item_detailsUpdateOneWithoutItemNestedInput
+    property_detail?: property_item_detailsUpdateOneWithoutItemNestedInput
     product_order_items?: product_order_itemsUpdateManyWithoutItemNestedInput
     hospitality_booking_items?: hospitality_booking_itemsUpdateManyWithoutItemNestedInput
     product_inquiries?: product_inquiriesUpdateManyWithoutItemNestedInput
@@ -168288,6 +179777,7 @@ export namespace Prisma {
     variants?: item_variantsUpdateManyWithoutItemNestedInput
     order_items?: order_itemsUpdateManyWithoutCatalog_itemNestedInput
     external_catalog_items?: external_catalog_itemsUpdateManyWithoutItemNestedInput
+    appointment_sales_visits?: appointment_sales_visitsUpdateManyWithoutItemNestedInput
   }
 
   export type catalog_itemsUncheckedUpdateWithoutHospitality_detailInput = {
@@ -168314,6 +179804,7 @@ export namespace Prisma {
     cart_reservations?: cart_reservationsUncheckedUpdateManyWithoutCatalog_itemNestedInput
     product_detail?: product_item_detailsUncheckedUpdateOneWithoutItemNestedInput
     vehicle_detail?: vehicle_item_detailsUncheckedUpdateOneWithoutItemNestedInput
+    property_detail?: property_item_detailsUncheckedUpdateOneWithoutItemNestedInput
     product_order_items?: product_order_itemsUncheckedUpdateManyWithoutItemNestedInput
     hospitality_booking_items?: hospitality_booking_itemsUncheckedUpdateManyWithoutItemNestedInput
     product_inquiries?: product_inquiriesUncheckedUpdateManyWithoutItemNestedInput
@@ -168322,6 +179813,7 @@ export namespace Prisma {
     variants?: item_variantsUncheckedUpdateManyWithoutItemNestedInput
     order_items?: order_itemsUncheckedUpdateManyWithoutCatalog_itemNestedInput
     external_catalog_items?: external_catalog_itemsUncheckedUpdateManyWithoutItemNestedInput
+    appointment_sales_visits?: appointment_sales_visitsUncheckedUpdateManyWithoutItemNestedInput
   }
 
   export type businessesCreateWithoutVehicle_item_detailsInput = {
@@ -168353,6 +179845,7 @@ export namespace Prisma {
     external_catalog_items?: external_catalog_itemsCreateNestedManyWithoutBusinessInput
     product_item_details?: product_item_detailsCreateNestedManyWithoutBusinessInput
     hospitality_item_details?: hospitality_item_detailsCreateNestedManyWithoutBusinessInput
+    property_item_details?: property_item_detailsCreateNestedManyWithoutBusinessInput
     product_orders?: product_ordersCreateNestedManyWithoutBusinessInput
     product_inquiries?: product_inquiriesCreateNestedManyWithoutBusinessInput
     hospitality_bookings?: hospitality_bookingsCreateNestedManyWithoutBusinessInput
@@ -168406,6 +179899,7 @@ export namespace Prisma {
     external_catalog_items?: external_catalog_itemsUncheckedCreateNestedManyWithoutBusinessInput
     product_item_details?: product_item_detailsUncheckedCreateNestedManyWithoutBusinessInput
     hospitality_item_details?: hospitality_item_detailsUncheckedCreateNestedManyWithoutBusinessInput
+    property_item_details?: property_item_detailsUncheckedCreateNestedManyWithoutBusinessInput
     product_orders?: product_ordersUncheckedCreateNestedManyWithoutBusinessInput
     product_inquiries?: product_inquiriesUncheckedCreateNestedManyWithoutBusinessInput
     hospitality_bookings?: hospitality_bookingsUncheckedCreateNestedManyWithoutBusinessInput
@@ -168458,6 +179952,7 @@ export namespace Prisma {
     cart_reservations?: cart_reservationsCreateNestedManyWithoutCatalog_itemInput
     product_detail?: product_item_detailsCreateNestedOneWithoutItemInput
     hospitality_detail?: hospitality_item_detailsCreateNestedOneWithoutItemInput
+    property_detail?: property_item_detailsCreateNestedOneWithoutItemInput
     product_order_items?: product_order_itemsCreateNestedManyWithoutItemInput
     hospitality_booking_items?: hospitality_booking_itemsCreateNestedManyWithoutItemInput
     product_inquiries?: product_inquiriesCreateNestedManyWithoutItemInput
@@ -168467,6 +179962,7 @@ export namespace Prisma {
     variants?: item_variantsCreateNestedManyWithoutItemInput
     order_items?: order_itemsCreateNestedManyWithoutCatalog_itemInput
     external_catalog_items?: external_catalog_itemsCreateNestedManyWithoutItemInput
+    appointment_sales_visits?: appointment_sales_visitsCreateNestedManyWithoutItemInput
   }
 
   export type catalog_itemsUncheckedCreateWithoutVehicle_detailInput = {
@@ -168493,6 +179989,7 @@ export namespace Prisma {
     cart_reservations?: cart_reservationsUncheckedCreateNestedManyWithoutCatalog_itemInput
     product_detail?: product_item_detailsUncheckedCreateNestedOneWithoutItemInput
     hospitality_detail?: hospitality_item_detailsUncheckedCreateNestedOneWithoutItemInput
+    property_detail?: property_item_detailsUncheckedCreateNestedOneWithoutItemInput
     product_order_items?: product_order_itemsUncheckedCreateNestedManyWithoutItemInput
     hospitality_booking_items?: hospitality_booking_itemsUncheckedCreateNestedManyWithoutItemInput
     product_inquiries?: product_inquiriesUncheckedCreateNestedManyWithoutItemInput
@@ -168501,6 +179998,7 @@ export namespace Prisma {
     variants?: item_variantsUncheckedCreateNestedManyWithoutItemInput
     order_items?: order_itemsUncheckedCreateNestedManyWithoutCatalog_itemInput
     external_catalog_items?: external_catalog_itemsUncheckedCreateNestedManyWithoutItemInput
+    appointment_sales_visits?: appointment_sales_visitsUncheckedCreateNestedManyWithoutItemInput
   }
 
   export type catalog_itemsCreateOrConnectWithoutVehicle_detailInput = {
@@ -168548,6 +180046,7 @@ export namespace Prisma {
     external_catalog_items?: external_catalog_itemsUpdateManyWithoutBusinessNestedInput
     product_item_details?: product_item_detailsUpdateManyWithoutBusinessNestedInput
     hospitality_item_details?: hospitality_item_detailsUpdateManyWithoutBusinessNestedInput
+    property_item_details?: property_item_detailsUpdateManyWithoutBusinessNestedInput
     product_orders?: product_ordersUpdateManyWithoutBusinessNestedInput
     product_inquiries?: product_inquiriesUpdateManyWithoutBusinessNestedInput
     hospitality_bookings?: hospitality_bookingsUpdateManyWithoutBusinessNestedInput
@@ -168601,6 +180100,7 @@ export namespace Prisma {
     external_catalog_items?: external_catalog_itemsUncheckedUpdateManyWithoutBusinessNestedInput
     product_item_details?: product_item_detailsUncheckedUpdateManyWithoutBusinessNestedInput
     hospitality_item_details?: hospitality_item_detailsUncheckedUpdateManyWithoutBusinessNestedInput
+    property_item_details?: property_item_detailsUncheckedUpdateManyWithoutBusinessNestedInput
     product_orders?: product_ordersUncheckedUpdateManyWithoutBusinessNestedInput
     product_inquiries?: product_inquiriesUncheckedUpdateManyWithoutBusinessNestedInput
     hospitality_bookings?: hospitality_bookingsUncheckedUpdateManyWithoutBusinessNestedInput
@@ -168659,6 +180159,7 @@ export namespace Prisma {
     cart_reservations?: cart_reservationsUpdateManyWithoutCatalog_itemNestedInput
     product_detail?: product_item_detailsUpdateOneWithoutItemNestedInput
     hospitality_detail?: hospitality_item_detailsUpdateOneWithoutItemNestedInput
+    property_detail?: property_item_detailsUpdateOneWithoutItemNestedInput
     product_order_items?: product_order_itemsUpdateManyWithoutItemNestedInput
     hospitality_booking_items?: hospitality_booking_itemsUpdateManyWithoutItemNestedInput
     product_inquiries?: product_inquiriesUpdateManyWithoutItemNestedInput
@@ -168668,6 +180169,7 @@ export namespace Prisma {
     variants?: item_variantsUpdateManyWithoutItemNestedInput
     order_items?: order_itemsUpdateManyWithoutCatalog_itemNestedInput
     external_catalog_items?: external_catalog_itemsUpdateManyWithoutItemNestedInput
+    appointment_sales_visits?: appointment_sales_visitsUpdateManyWithoutItemNestedInput
   }
 
   export type catalog_itemsUncheckedUpdateWithoutVehicle_detailInput = {
@@ -168694,6 +180196,7 @@ export namespace Prisma {
     cart_reservations?: cart_reservationsUncheckedUpdateManyWithoutCatalog_itemNestedInput
     product_detail?: product_item_detailsUncheckedUpdateOneWithoutItemNestedInput
     hospitality_detail?: hospitality_item_detailsUncheckedUpdateOneWithoutItemNestedInput
+    property_detail?: property_item_detailsUncheckedUpdateOneWithoutItemNestedInput
     product_order_items?: product_order_itemsUncheckedUpdateManyWithoutItemNestedInput
     hospitality_booking_items?: hospitality_booking_itemsUncheckedUpdateManyWithoutItemNestedInput
     product_inquiries?: product_inquiriesUncheckedUpdateManyWithoutItemNestedInput
@@ -168702,6 +180205,877 @@ export namespace Prisma {
     variants?: item_variantsUncheckedUpdateManyWithoutItemNestedInput
     order_items?: order_itemsUncheckedUpdateManyWithoutCatalog_itemNestedInput
     external_catalog_items?: external_catalog_itemsUncheckedUpdateManyWithoutItemNestedInput
+    appointment_sales_visits?: appointment_sales_visitsUncheckedUpdateManyWithoutItemNestedInput
+  }
+
+  export type businessesCreateWithoutProperty_item_detailsInput = {
+    business_id?: string
+    business_name: string
+    business_type?: string | null
+    business_group?: string | null
+    communication_mode?: string
+    blueprint_seeded?: boolean
+    blueprint_seeded_at?: Date | string | null
+    whatsapp_number?: string | null
+    created_at?: Date | string
+    updated_at?: Date | string
+    email?: string | null
+    phone?: string | null
+    website?: string | null
+    public_booking_slug?: string | null
+    city?: string | null
+    address?: string | null
+    country?: string | null
+    gst_number?: string | null
+    pan_number?: string | null
+    deleted_at?: Date | string | null
+    business_employees?: business_employeesCreateNestedManyWithoutBusinessesInput
+    business_workflows?: business_workflowsCreateNestedManyWithoutBusinessesInput
+    tenants: tenantsCreateNestedOneWithoutBusinessesInput
+    carts?: cartsCreateNestedManyWithoutBusinessesInput
+    catalog_items?: catalog_itemsCreateNestedManyWithoutBusinessesInput
+    external_catalog_items?: external_catalog_itemsCreateNestedManyWithoutBusinessInput
+    product_item_details?: product_item_detailsCreateNestedManyWithoutBusinessInput
+    hospitality_item_details?: hospitality_item_detailsCreateNestedManyWithoutBusinessInput
+    vehicle_item_details?: vehicle_item_detailsCreateNestedManyWithoutBusinessInput
+    product_orders?: product_ordersCreateNestedManyWithoutBusinessInput
+    product_inquiries?: product_inquiriesCreateNestedManyWithoutBusinessInput
+    hospitality_bookings?: hospitality_bookingsCreateNestedManyWithoutBusinessInput
+    hospitality_inquiries?: hospitality_inquiriesCreateNestedManyWithoutBusinessInput
+    leads?: leadsCreateNestedManyWithoutBusinessesInput
+    pipelines?: pipelinesCreateNestedManyWithoutBusinessesInput
+    notification_messages?: notification_messagesCreateNestedManyWithoutBusinessesInput
+    notification_preferences?: notification_preferencesCreateNestedManyWithoutBusinessesInput
+    notification_templates?: notification_templatesCreateNestedManyWithoutBusinessesInput
+    payment_reconciliation?: payment_reconciliationCreateNestedManyWithoutBusinessesInput
+    payments?: paymentsCreateNestedManyWithoutBusinessesInput
+    social_accounts?: social_accountsCreateNestedManyWithoutBusinessesInput
+    users?: usersCreateNestedManyWithoutBusinessesInput
+    workflow_executions?: workflow_executionsCreateNestedManyWithoutBusinessesInput
+    workflow_execution_steps?: workflow_execution_stepsCreateNestedManyWithoutBusinessInput
+    workflow_idempotency_keys?: workflow_idempotency_keysCreateNestedManyWithoutBusinessInput
+    billing_subscription?: billing_subscriptionsCreateNestedOneWithoutBusinessesInput
+    wallet?: walletsCreateNestedOneWithoutBusinessesInput
+    billing_payments_list?: billing_paymentsCreateNestedManyWithoutBusinessesInput
+    billing_invoices_list?: billing_invoicesCreateNestedManyWithoutBusinessesInput
+    settings?: business_settingsCreateNestedOneWithoutBusinessesInput
+    audit_logs?: audit_logsCreateNestedManyWithoutBusinessesInput
+  }
+
+  export type businessesUncheckedCreateWithoutProperty_item_detailsInput = {
+    business_id?: string
+    tenant_id: string
+    business_name: string
+    business_type?: string | null
+    business_group?: string | null
+    communication_mode?: string
+    blueprint_seeded?: boolean
+    blueprint_seeded_at?: Date | string | null
+    whatsapp_number?: string | null
+    created_at?: Date | string
+    updated_at?: Date | string
+    email?: string | null
+    phone?: string | null
+    website?: string | null
+    public_booking_slug?: string | null
+    city?: string | null
+    address?: string | null
+    country?: string | null
+    gst_number?: string | null
+    pan_number?: string | null
+    deleted_at?: Date | string | null
+    business_employees?: business_employeesUncheckedCreateNestedManyWithoutBusinessesInput
+    business_workflows?: business_workflowsUncheckedCreateNestedManyWithoutBusinessesInput
+    carts?: cartsUncheckedCreateNestedManyWithoutBusinessesInput
+    catalog_items?: catalog_itemsUncheckedCreateNestedManyWithoutBusinessesInput
+    external_catalog_items?: external_catalog_itemsUncheckedCreateNestedManyWithoutBusinessInput
+    product_item_details?: product_item_detailsUncheckedCreateNestedManyWithoutBusinessInput
+    hospitality_item_details?: hospitality_item_detailsUncheckedCreateNestedManyWithoutBusinessInput
+    vehicle_item_details?: vehicle_item_detailsUncheckedCreateNestedManyWithoutBusinessInput
+    product_orders?: product_ordersUncheckedCreateNestedManyWithoutBusinessInput
+    product_inquiries?: product_inquiriesUncheckedCreateNestedManyWithoutBusinessInput
+    hospitality_bookings?: hospitality_bookingsUncheckedCreateNestedManyWithoutBusinessInput
+    hospitality_inquiries?: hospitality_inquiriesUncheckedCreateNestedManyWithoutBusinessInput
+    leads?: leadsUncheckedCreateNestedManyWithoutBusinessesInput
+    pipelines?: pipelinesUncheckedCreateNestedManyWithoutBusinessesInput
+    notification_messages?: notification_messagesUncheckedCreateNestedManyWithoutBusinessesInput
+    notification_preferences?: notification_preferencesUncheckedCreateNestedManyWithoutBusinessesInput
+    notification_templates?: notification_templatesUncheckedCreateNestedManyWithoutBusinessesInput
+    payment_reconciliation?: payment_reconciliationUncheckedCreateNestedManyWithoutBusinessesInput
+    payments?: paymentsUncheckedCreateNestedManyWithoutBusinessesInput
+    social_accounts?: social_accountsUncheckedCreateNestedManyWithoutBusinessesInput
+    users?: usersUncheckedCreateNestedManyWithoutBusinessesInput
+    workflow_executions?: workflow_executionsUncheckedCreateNestedManyWithoutBusinessesInput
+    workflow_execution_steps?: workflow_execution_stepsUncheckedCreateNestedManyWithoutBusinessInput
+    workflow_idempotency_keys?: workflow_idempotency_keysUncheckedCreateNestedManyWithoutBusinessInput
+    billing_subscription?: billing_subscriptionsUncheckedCreateNestedOneWithoutBusinessesInput
+    wallet?: walletsUncheckedCreateNestedOneWithoutBusinessesInput
+    billing_payments_list?: billing_paymentsUncheckedCreateNestedManyWithoutBusinessesInput
+    billing_invoices_list?: billing_invoicesUncheckedCreateNestedManyWithoutBusinessesInput
+    settings?: business_settingsUncheckedCreateNestedOneWithoutBusinessesInput
+    audit_logs?: audit_logsUncheckedCreateNestedManyWithoutBusinessesInput
+  }
+
+  export type businessesCreateOrConnectWithoutProperty_item_detailsInput = {
+    where: businessesWhereUniqueInput
+    create: XOR<businessesCreateWithoutProperty_item_detailsInput, businessesUncheckedCreateWithoutProperty_item_detailsInput>
+  }
+
+  export type catalog_itemsCreateWithoutProperty_detailInput = {
+    item_id?: string
+    tenant_id: string
+    item_type: string
+    name: string
+    description?: string | null
+    category?: string | null
+    base_price: Decimal | DecimalJsLike | number | string
+    compare_price?: Decimal | DecimalJsLike | number | string | null
+    currency?: string
+    stock_quantity?: number | null
+    primary_image_url?: string | null
+    image_urls?: NullableJsonNullValueInput | InputJsonValue
+    attributes?: NullableJsonNullValueInput | InputJsonValue
+    ai_tags?: catalog_itemsCreateai_tagsInput | string[]
+    is_active?: boolean
+    deleted_at?: Date | string | null
+    created_at?: Date | string
+    updated_at?: Date | string
+    cart_items?: cart_itemsCreateNestedManyWithoutCatalog_itemInput
+    cart_reservations?: cart_reservationsCreateNestedManyWithoutCatalog_itemInput
+    product_detail?: product_item_detailsCreateNestedOneWithoutItemInput
+    hospitality_detail?: hospitality_item_detailsCreateNestedOneWithoutItemInput
+    vehicle_detail?: vehicle_item_detailsCreateNestedOneWithoutItemInput
+    product_order_items?: product_order_itemsCreateNestedManyWithoutItemInput
+    hospitality_booking_items?: hospitality_booking_itemsCreateNestedManyWithoutItemInput
+    product_inquiries?: product_inquiriesCreateNestedManyWithoutItemInput
+    hospitality_inquiries?: hospitality_inquiriesCreateNestedManyWithoutPreferred_itemInput
+    businesses: businessesCreateNestedOneWithoutCatalog_itemsInput
+    availability?: item_availabilityCreateNestedManyWithoutItemInput
+    variants?: item_variantsCreateNestedManyWithoutItemInput
+    order_items?: order_itemsCreateNestedManyWithoutCatalog_itemInput
+    external_catalog_items?: external_catalog_itemsCreateNestedManyWithoutItemInput
+    appointment_sales_visits?: appointment_sales_visitsCreateNestedManyWithoutItemInput
+  }
+
+  export type catalog_itemsUncheckedCreateWithoutProperty_detailInput = {
+    item_id?: string
+    business_id: string
+    tenant_id: string
+    item_type: string
+    name: string
+    description?: string | null
+    category?: string | null
+    base_price: Decimal | DecimalJsLike | number | string
+    compare_price?: Decimal | DecimalJsLike | number | string | null
+    currency?: string
+    stock_quantity?: number | null
+    primary_image_url?: string | null
+    image_urls?: NullableJsonNullValueInput | InputJsonValue
+    attributes?: NullableJsonNullValueInput | InputJsonValue
+    ai_tags?: catalog_itemsCreateai_tagsInput | string[]
+    is_active?: boolean
+    deleted_at?: Date | string | null
+    created_at?: Date | string
+    updated_at?: Date | string
+    cart_items?: cart_itemsUncheckedCreateNestedManyWithoutCatalog_itemInput
+    cart_reservations?: cart_reservationsUncheckedCreateNestedManyWithoutCatalog_itemInput
+    product_detail?: product_item_detailsUncheckedCreateNestedOneWithoutItemInput
+    hospitality_detail?: hospitality_item_detailsUncheckedCreateNestedOneWithoutItemInput
+    vehicle_detail?: vehicle_item_detailsUncheckedCreateNestedOneWithoutItemInput
+    product_order_items?: product_order_itemsUncheckedCreateNestedManyWithoutItemInput
+    hospitality_booking_items?: hospitality_booking_itemsUncheckedCreateNestedManyWithoutItemInput
+    product_inquiries?: product_inquiriesUncheckedCreateNestedManyWithoutItemInput
+    hospitality_inquiries?: hospitality_inquiriesUncheckedCreateNestedManyWithoutPreferred_itemInput
+    availability?: item_availabilityUncheckedCreateNestedManyWithoutItemInput
+    variants?: item_variantsUncheckedCreateNestedManyWithoutItemInput
+    order_items?: order_itemsUncheckedCreateNestedManyWithoutCatalog_itemInput
+    external_catalog_items?: external_catalog_itemsUncheckedCreateNestedManyWithoutItemInput
+    appointment_sales_visits?: appointment_sales_visitsUncheckedCreateNestedManyWithoutItemInput
+  }
+
+  export type catalog_itemsCreateOrConnectWithoutProperty_detailInput = {
+    where: catalog_itemsWhereUniqueInput
+    create: XOR<catalog_itemsCreateWithoutProperty_detailInput, catalog_itemsUncheckedCreateWithoutProperty_detailInput>
+  }
+
+  export type businessesUpsertWithoutProperty_item_detailsInput = {
+    update: XOR<businessesUpdateWithoutProperty_item_detailsInput, businessesUncheckedUpdateWithoutProperty_item_detailsInput>
+    create: XOR<businessesCreateWithoutProperty_item_detailsInput, businessesUncheckedCreateWithoutProperty_item_detailsInput>
+    where?: businessesWhereInput
+  }
+
+  export type businessesUpdateToOneWithWhereWithoutProperty_item_detailsInput = {
+    where?: businessesWhereInput
+    data: XOR<businessesUpdateWithoutProperty_item_detailsInput, businessesUncheckedUpdateWithoutProperty_item_detailsInput>
+  }
+
+  export type businessesUpdateWithoutProperty_item_detailsInput = {
+    business_id?: StringFieldUpdateOperationsInput | string
+    business_name?: StringFieldUpdateOperationsInput | string
+    business_type?: NullableStringFieldUpdateOperationsInput | string | null
+    business_group?: NullableStringFieldUpdateOperationsInput | string | null
+    communication_mode?: StringFieldUpdateOperationsInput | string
+    blueprint_seeded?: BoolFieldUpdateOperationsInput | boolean
+    blueprint_seeded_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    whatsapp_number?: NullableStringFieldUpdateOperationsInput | string | null
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    website?: NullableStringFieldUpdateOperationsInput | string | null
+    public_booking_slug?: NullableStringFieldUpdateOperationsInput | string | null
+    city?: NullableStringFieldUpdateOperationsInput | string | null
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    country?: NullableStringFieldUpdateOperationsInput | string | null
+    gst_number?: NullableStringFieldUpdateOperationsInput | string | null
+    pan_number?: NullableStringFieldUpdateOperationsInput | string | null
+    deleted_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    business_employees?: business_employeesUpdateManyWithoutBusinessesNestedInput
+    business_workflows?: business_workflowsUpdateManyWithoutBusinessesNestedInput
+    tenants?: tenantsUpdateOneRequiredWithoutBusinessesNestedInput
+    carts?: cartsUpdateManyWithoutBusinessesNestedInput
+    catalog_items?: catalog_itemsUpdateManyWithoutBusinessesNestedInput
+    external_catalog_items?: external_catalog_itemsUpdateManyWithoutBusinessNestedInput
+    product_item_details?: product_item_detailsUpdateManyWithoutBusinessNestedInput
+    hospitality_item_details?: hospitality_item_detailsUpdateManyWithoutBusinessNestedInput
+    vehicle_item_details?: vehicle_item_detailsUpdateManyWithoutBusinessNestedInput
+    product_orders?: product_ordersUpdateManyWithoutBusinessNestedInput
+    product_inquiries?: product_inquiriesUpdateManyWithoutBusinessNestedInput
+    hospitality_bookings?: hospitality_bookingsUpdateManyWithoutBusinessNestedInput
+    hospitality_inquiries?: hospitality_inquiriesUpdateManyWithoutBusinessNestedInput
+    leads?: leadsUpdateManyWithoutBusinessesNestedInput
+    pipelines?: pipelinesUpdateManyWithoutBusinessesNestedInput
+    notification_messages?: notification_messagesUpdateManyWithoutBusinessesNestedInput
+    notification_preferences?: notification_preferencesUpdateManyWithoutBusinessesNestedInput
+    notification_templates?: notification_templatesUpdateManyWithoutBusinessesNestedInput
+    payment_reconciliation?: payment_reconciliationUpdateManyWithoutBusinessesNestedInput
+    payments?: paymentsUpdateManyWithoutBusinessesNestedInput
+    social_accounts?: social_accountsUpdateManyWithoutBusinessesNestedInput
+    users?: usersUpdateManyWithoutBusinessesNestedInput
+    workflow_executions?: workflow_executionsUpdateManyWithoutBusinessesNestedInput
+    workflow_execution_steps?: workflow_execution_stepsUpdateManyWithoutBusinessNestedInput
+    workflow_idempotency_keys?: workflow_idempotency_keysUpdateManyWithoutBusinessNestedInput
+    billing_subscription?: billing_subscriptionsUpdateOneWithoutBusinessesNestedInput
+    wallet?: walletsUpdateOneWithoutBusinessesNestedInput
+    billing_payments_list?: billing_paymentsUpdateManyWithoutBusinessesNestedInput
+    billing_invoices_list?: billing_invoicesUpdateManyWithoutBusinessesNestedInput
+    settings?: business_settingsUpdateOneWithoutBusinessesNestedInput
+    audit_logs?: audit_logsUpdateManyWithoutBusinessesNestedInput
+  }
+
+  export type businessesUncheckedUpdateWithoutProperty_item_detailsInput = {
+    business_id?: StringFieldUpdateOperationsInput | string
+    tenant_id?: StringFieldUpdateOperationsInput | string
+    business_name?: StringFieldUpdateOperationsInput | string
+    business_type?: NullableStringFieldUpdateOperationsInput | string | null
+    business_group?: NullableStringFieldUpdateOperationsInput | string | null
+    communication_mode?: StringFieldUpdateOperationsInput | string
+    blueprint_seeded?: BoolFieldUpdateOperationsInput | boolean
+    blueprint_seeded_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    whatsapp_number?: NullableStringFieldUpdateOperationsInput | string | null
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    website?: NullableStringFieldUpdateOperationsInput | string | null
+    public_booking_slug?: NullableStringFieldUpdateOperationsInput | string | null
+    city?: NullableStringFieldUpdateOperationsInput | string | null
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    country?: NullableStringFieldUpdateOperationsInput | string | null
+    gst_number?: NullableStringFieldUpdateOperationsInput | string | null
+    pan_number?: NullableStringFieldUpdateOperationsInput | string | null
+    deleted_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    business_employees?: business_employeesUncheckedUpdateManyWithoutBusinessesNestedInput
+    business_workflows?: business_workflowsUncheckedUpdateManyWithoutBusinessesNestedInput
+    carts?: cartsUncheckedUpdateManyWithoutBusinessesNestedInput
+    catalog_items?: catalog_itemsUncheckedUpdateManyWithoutBusinessesNestedInput
+    external_catalog_items?: external_catalog_itemsUncheckedUpdateManyWithoutBusinessNestedInput
+    product_item_details?: product_item_detailsUncheckedUpdateManyWithoutBusinessNestedInput
+    hospitality_item_details?: hospitality_item_detailsUncheckedUpdateManyWithoutBusinessNestedInput
+    vehicle_item_details?: vehicle_item_detailsUncheckedUpdateManyWithoutBusinessNestedInput
+    product_orders?: product_ordersUncheckedUpdateManyWithoutBusinessNestedInput
+    product_inquiries?: product_inquiriesUncheckedUpdateManyWithoutBusinessNestedInput
+    hospitality_bookings?: hospitality_bookingsUncheckedUpdateManyWithoutBusinessNestedInput
+    hospitality_inquiries?: hospitality_inquiriesUncheckedUpdateManyWithoutBusinessNestedInput
+    leads?: leadsUncheckedUpdateManyWithoutBusinessesNestedInput
+    pipelines?: pipelinesUncheckedUpdateManyWithoutBusinessesNestedInput
+    notification_messages?: notification_messagesUncheckedUpdateManyWithoutBusinessesNestedInput
+    notification_preferences?: notification_preferencesUncheckedUpdateManyWithoutBusinessesNestedInput
+    notification_templates?: notification_templatesUncheckedUpdateManyWithoutBusinessesNestedInput
+    payment_reconciliation?: payment_reconciliationUncheckedUpdateManyWithoutBusinessesNestedInput
+    payments?: paymentsUncheckedUpdateManyWithoutBusinessesNestedInput
+    social_accounts?: social_accountsUncheckedUpdateManyWithoutBusinessesNestedInput
+    users?: usersUncheckedUpdateManyWithoutBusinessesNestedInput
+    workflow_executions?: workflow_executionsUncheckedUpdateManyWithoutBusinessesNestedInput
+    workflow_execution_steps?: workflow_execution_stepsUncheckedUpdateManyWithoutBusinessNestedInput
+    workflow_idempotency_keys?: workflow_idempotency_keysUncheckedUpdateManyWithoutBusinessNestedInput
+    billing_subscription?: billing_subscriptionsUncheckedUpdateOneWithoutBusinessesNestedInput
+    wallet?: walletsUncheckedUpdateOneWithoutBusinessesNestedInput
+    billing_payments_list?: billing_paymentsUncheckedUpdateManyWithoutBusinessesNestedInput
+    billing_invoices_list?: billing_invoicesUncheckedUpdateManyWithoutBusinessesNestedInput
+    settings?: business_settingsUncheckedUpdateOneWithoutBusinessesNestedInput
+    audit_logs?: audit_logsUncheckedUpdateManyWithoutBusinessesNestedInput
+  }
+
+  export type catalog_itemsUpsertWithoutProperty_detailInput = {
+    update: XOR<catalog_itemsUpdateWithoutProperty_detailInput, catalog_itemsUncheckedUpdateWithoutProperty_detailInput>
+    create: XOR<catalog_itemsCreateWithoutProperty_detailInput, catalog_itemsUncheckedCreateWithoutProperty_detailInput>
+    where?: catalog_itemsWhereInput
+  }
+
+  export type catalog_itemsUpdateToOneWithWhereWithoutProperty_detailInput = {
+    where?: catalog_itemsWhereInput
+    data: XOR<catalog_itemsUpdateWithoutProperty_detailInput, catalog_itemsUncheckedUpdateWithoutProperty_detailInput>
+  }
+
+  export type catalog_itemsUpdateWithoutProperty_detailInput = {
+    item_id?: StringFieldUpdateOperationsInput | string
+    tenant_id?: StringFieldUpdateOperationsInput | string
+    item_type?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    category?: NullableStringFieldUpdateOperationsInput | string | null
+    base_price?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    compare_price?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    currency?: StringFieldUpdateOperationsInput | string
+    stock_quantity?: NullableIntFieldUpdateOperationsInput | number | null
+    primary_image_url?: NullableStringFieldUpdateOperationsInput | string | null
+    image_urls?: NullableJsonNullValueInput | InputJsonValue
+    attributes?: NullableJsonNullValueInput | InputJsonValue
+    ai_tags?: catalog_itemsUpdateai_tagsInput | string[]
+    is_active?: BoolFieldUpdateOperationsInput | boolean
+    deleted_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    cart_items?: cart_itemsUpdateManyWithoutCatalog_itemNestedInput
+    cart_reservations?: cart_reservationsUpdateManyWithoutCatalog_itemNestedInput
+    product_detail?: product_item_detailsUpdateOneWithoutItemNestedInput
+    hospitality_detail?: hospitality_item_detailsUpdateOneWithoutItemNestedInput
+    vehicle_detail?: vehicle_item_detailsUpdateOneWithoutItemNestedInput
+    product_order_items?: product_order_itemsUpdateManyWithoutItemNestedInput
+    hospitality_booking_items?: hospitality_booking_itemsUpdateManyWithoutItemNestedInput
+    product_inquiries?: product_inquiriesUpdateManyWithoutItemNestedInput
+    hospitality_inquiries?: hospitality_inquiriesUpdateManyWithoutPreferred_itemNestedInput
+    businesses?: businessesUpdateOneRequiredWithoutCatalog_itemsNestedInput
+    availability?: item_availabilityUpdateManyWithoutItemNestedInput
+    variants?: item_variantsUpdateManyWithoutItemNestedInput
+    order_items?: order_itemsUpdateManyWithoutCatalog_itemNestedInput
+    external_catalog_items?: external_catalog_itemsUpdateManyWithoutItemNestedInput
+    appointment_sales_visits?: appointment_sales_visitsUpdateManyWithoutItemNestedInput
+  }
+
+  export type catalog_itemsUncheckedUpdateWithoutProperty_detailInput = {
+    item_id?: StringFieldUpdateOperationsInput | string
+    business_id?: StringFieldUpdateOperationsInput | string
+    tenant_id?: StringFieldUpdateOperationsInput | string
+    item_type?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    category?: NullableStringFieldUpdateOperationsInput | string | null
+    base_price?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    compare_price?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    currency?: StringFieldUpdateOperationsInput | string
+    stock_quantity?: NullableIntFieldUpdateOperationsInput | number | null
+    primary_image_url?: NullableStringFieldUpdateOperationsInput | string | null
+    image_urls?: NullableJsonNullValueInput | InputJsonValue
+    attributes?: NullableJsonNullValueInput | InputJsonValue
+    ai_tags?: catalog_itemsUpdateai_tagsInput | string[]
+    is_active?: BoolFieldUpdateOperationsInput | boolean
+    deleted_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    cart_items?: cart_itemsUncheckedUpdateManyWithoutCatalog_itemNestedInput
+    cart_reservations?: cart_reservationsUncheckedUpdateManyWithoutCatalog_itemNestedInput
+    product_detail?: product_item_detailsUncheckedUpdateOneWithoutItemNestedInput
+    hospitality_detail?: hospitality_item_detailsUncheckedUpdateOneWithoutItemNestedInput
+    vehicle_detail?: vehicle_item_detailsUncheckedUpdateOneWithoutItemNestedInput
+    product_order_items?: product_order_itemsUncheckedUpdateManyWithoutItemNestedInput
+    hospitality_booking_items?: hospitality_booking_itemsUncheckedUpdateManyWithoutItemNestedInput
+    product_inquiries?: product_inquiriesUncheckedUpdateManyWithoutItemNestedInput
+    hospitality_inquiries?: hospitality_inquiriesUncheckedUpdateManyWithoutPreferred_itemNestedInput
+    availability?: item_availabilityUncheckedUpdateManyWithoutItemNestedInput
+    variants?: item_variantsUncheckedUpdateManyWithoutItemNestedInput
+    order_items?: order_itemsUncheckedUpdateManyWithoutCatalog_itemNestedInput
+    external_catalog_items?: external_catalog_itemsUncheckedUpdateManyWithoutItemNestedInput
+    appointment_sales_visits?: appointment_sales_visitsUncheckedUpdateManyWithoutItemNestedInput
+  }
+
+  export type appointment_sales_staff_availabilityCreateWithoutStaffInput = {
+    availability_id?: string
+    business_id: string
+    day_of_week: number
+    start_time: string
+    end_time: string
+    window_type?: string
+    label?: string | null
+    is_active?: boolean
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    created_at?: Date | string
+    updated_at?: Date | string
+  }
+
+  export type appointment_sales_staff_availabilityUncheckedCreateWithoutStaffInput = {
+    availability_id?: string
+    business_id: string
+    day_of_week: number
+    start_time: string
+    end_time: string
+    window_type?: string
+    label?: string | null
+    is_active?: boolean
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    created_at?: Date | string
+    updated_at?: Date | string
+  }
+
+  export type appointment_sales_staff_availabilityCreateOrConnectWithoutStaffInput = {
+    where: appointment_sales_staff_availabilityWhereUniqueInput
+    create: XOR<appointment_sales_staff_availabilityCreateWithoutStaffInput, appointment_sales_staff_availabilityUncheckedCreateWithoutStaffInput>
+  }
+
+  export type appointment_sales_staff_availabilityCreateManyStaffInputEnvelope = {
+    data: appointment_sales_staff_availabilityCreateManyStaffInput | appointment_sales_staff_availabilityCreateManyStaffInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type appointment_sales_visitsCreateWithoutStaffInput = {
+    visit_id?: string
+    business_id: string
+    tenant_id?: string | null
+    lead_id?: string | null
+    customer_id?: string | null
+    visit_type?: string
+    status?: string
+    scheduled_start: Date | string
+    scheduled_end: Date | string
+    customer_name?: string | null
+    customer_phone?: string | null
+    location?: string | null
+    source?: string
+    notes?: string | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    created_by?: string | null
+    created_at?: Date | string
+    updated_at?: Date | string
+    item?: catalog_itemsCreateNestedOneWithoutAppointment_sales_visitsInput
+  }
+
+  export type appointment_sales_visitsUncheckedCreateWithoutStaffInput = {
+    visit_id?: string
+    business_id: string
+    tenant_id?: string | null
+    lead_id?: string | null
+    customer_id?: string | null
+    item_id?: string | null
+    visit_type?: string
+    status?: string
+    scheduled_start: Date | string
+    scheduled_end: Date | string
+    customer_name?: string | null
+    customer_phone?: string | null
+    location?: string | null
+    source?: string
+    notes?: string | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    created_by?: string | null
+    created_at?: Date | string
+    updated_at?: Date | string
+  }
+
+  export type appointment_sales_visitsCreateOrConnectWithoutStaffInput = {
+    where: appointment_sales_visitsWhereUniqueInput
+    create: XOR<appointment_sales_visitsCreateWithoutStaffInput, appointment_sales_visitsUncheckedCreateWithoutStaffInput>
+  }
+
+  export type appointment_sales_visitsCreateManyStaffInputEnvelope = {
+    data: appointment_sales_visitsCreateManyStaffInput | appointment_sales_visitsCreateManyStaffInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type appointment_sales_staff_availabilityUpsertWithWhereUniqueWithoutStaffInput = {
+    where: appointment_sales_staff_availabilityWhereUniqueInput
+    update: XOR<appointment_sales_staff_availabilityUpdateWithoutStaffInput, appointment_sales_staff_availabilityUncheckedUpdateWithoutStaffInput>
+    create: XOR<appointment_sales_staff_availabilityCreateWithoutStaffInput, appointment_sales_staff_availabilityUncheckedCreateWithoutStaffInput>
+  }
+
+  export type appointment_sales_staff_availabilityUpdateWithWhereUniqueWithoutStaffInput = {
+    where: appointment_sales_staff_availabilityWhereUniqueInput
+    data: XOR<appointment_sales_staff_availabilityUpdateWithoutStaffInput, appointment_sales_staff_availabilityUncheckedUpdateWithoutStaffInput>
+  }
+
+  export type appointment_sales_staff_availabilityUpdateManyWithWhereWithoutStaffInput = {
+    where: appointment_sales_staff_availabilityScalarWhereInput
+    data: XOR<appointment_sales_staff_availabilityUpdateManyMutationInput, appointment_sales_staff_availabilityUncheckedUpdateManyWithoutStaffInput>
+  }
+
+  export type appointment_sales_staff_availabilityScalarWhereInput = {
+    AND?: appointment_sales_staff_availabilityScalarWhereInput | appointment_sales_staff_availabilityScalarWhereInput[]
+    OR?: appointment_sales_staff_availabilityScalarWhereInput[]
+    NOT?: appointment_sales_staff_availabilityScalarWhereInput | appointment_sales_staff_availabilityScalarWhereInput[]
+    availability_id?: UuidFilter<"appointment_sales_staff_availability"> | string
+    sales_staff_id?: UuidFilter<"appointment_sales_staff_availability"> | string
+    business_id?: UuidFilter<"appointment_sales_staff_availability"> | string
+    day_of_week?: IntFilter<"appointment_sales_staff_availability"> | number
+    start_time?: StringFilter<"appointment_sales_staff_availability"> | string
+    end_time?: StringFilter<"appointment_sales_staff_availability"> | string
+    window_type?: StringFilter<"appointment_sales_staff_availability"> | string
+    label?: StringNullableFilter<"appointment_sales_staff_availability"> | string | null
+    is_active?: BoolFilter<"appointment_sales_staff_availability"> | boolean
+    metadata?: JsonNullableFilter<"appointment_sales_staff_availability">
+    created_at?: DateTimeFilter<"appointment_sales_staff_availability"> | Date | string
+    updated_at?: DateTimeFilter<"appointment_sales_staff_availability"> | Date | string
+  }
+
+  export type appointment_sales_visitsUpsertWithWhereUniqueWithoutStaffInput = {
+    where: appointment_sales_visitsWhereUniqueInput
+    update: XOR<appointment_sales_visitsUpdateWithoutStaffInput, appointment_sales_visitsUncheckedUpdateWithoutStaffInput>
+    create: XOR<appointment_sales_visitsCreateWithoutStaffInput, appointment_sales_visitsUncheckedCreateWithoutStaffInput>
+  }
+
+  export type appointment_sales_visitsUpdateWithWhereUniqueWithoutStaffInput = {
+    where: appointment_sales_visitsWhereUniqueInput
+    data: XOR<appointment_sales_visitsUpdateWithoutStaffInput, appointment_sales_visitsUncheckedUpdateWithoutStaffInput>
+  }
+
+  export type appointment_sales_visitsUpdateManyWithWhereWithoutStaffInput = {
+    where: appointment_sales_visitsScalarWhereInput
+    data: XOR<appointment_sales_visitsUpdateManyMutationInput, appointment_sales_visitsUncheckedUpdateManyWithoutStaffInput>
+  }
+
+  export type appointment_sales_staffCreateWithoutAvailabilityInput = {
+    sales_staff_id?: string
+    business_id: string
+    tenant_id?: string | null
+    name: string
+    phone?: string | null
+    email?: string | null
+    role?: string
+    title?: string | null
+    priority?: number
+    is_active?: boolean
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    created_by?: string | null
+    created_at?: Date | string
+    updated_at?: Date | string
+    visits?: appointment_sales_visitsCreateNestedManyWithoutStaffInput
+  }
+
+  export type appointment_sales_staffUncheckedCreateWithoutAvailabilityInput = {
+    sales_staff_id?: string
+    business_id: string
+    tenant_id?: string | null
+    name: string
+    phone?: string | null
+    email?: string | null
+    role?: string
+    title?: string | null
+    priority?: number
+    is_active?: boolean
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    created_by?: string | null
+    created_at?: Date | string
+    updated_at?: Date | string
+    visits?: appointment_sales_visitsUncheckedCreateNestedManyWithoutStaffInput
+  }
+
+  export type appointment_sales_staffCreateOrConnectWithoutAvailabilityInput = {
+    where: appointment_sales_staffWhereUniqueInput
+    create: XOR<appointment_sales_staffCreateWithoutAvailabilityInput, appointment_sales_staffUncheckedCreateWithoutAvailabilityInput>
+  }
+
+  export type appointment_sales_staffUpsertWithoutAvailabilityInput = {
+    update: XOR<appointment_sales_staffUpdateWithoutAvailabilityInput, appointment_sales_staffUncheckedUpdateWithoutAvailabilityInput>
+    create: XOR<appointment_sales_staffCreateWithoutAvailabilityInput, appointment_sales_staffUncheckedCreateWithoutAvailabilityInput>
+    where?: appointment_sales_staffWhereInput
+  }
+
+  export type appointment_sales_staffUpdateToOneWithWhereWithoutAvailabilityInput = {
+    where?: appointment_sales_staffWhereInput
+    data: XOR<appointment_sales_staffUpdateWithoutAvailabilityInput, appointment_sales_staffUncheckedUpdateWithoutAvailabilityInput>
+  }
+
+  export type appointment_sales_staffUpdateWithoutAvailabilityInput = {
+    sales_staff_id?: StringFieldUpdateOperationsInput | string
+    business_id?: StringFieldUpdateOperationsInput | string
+    tenant_id?: NullableStringFieldUpdateOperationsInput | string | null
+    name?: StringFieldUpdateOperationsInput | string
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: StringFieldUpdateOperationsInput | string
+    title?: NullableStringFieldUpdateOperationsInput | string | null
+    priority?: IntFieldUpdateOperationsInput | number
+    is_active?: BoolFieldUpdateOperationsInput | boolean
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    created_by?: NullableStringFieldUpdateOperationsInput | string | null
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    visits?: appointment_sales_visitsUpdateManyWithoutStaffNestedInput
+  }
+
+  export type appointment_sales_staffUncheckedUpdateWithoutAvailabilityInput = {
+    sales_staff_id?: StringFieldUpdateOperationsInput | string
+    business_id?: StringFieldUpdateOperationsInput | string
+    tenant_id?: NullableStringFieldUpdateOperationsInput | string | null
+    name?: StringFieldUpdateOperationsInput | string
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: StringFieldUpdateOperationsInput | string
+    title?: NullableStringFieldUpdateOperationsInput | string | null
+    priority?: IntFieldUpdateOperationsInput | number
+    is_active?: BoolFieldUpdateOperationsInput | boolean
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    created_by?: NullableStringFieldUpdateOperationsInput | string | null
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    visits?: appointment_sales_visitsUncheckedUpdateManyWithoutStaffNestedInput
+  }
+
+  export type catalog_itemsCreateWithoutAppointment_sales_visitsInput = {
+    item_id?: string
+    tenant_id: string
+    item_type: string
+    name: string
+    description?: string | null
+    category?: string | null
+    base_price: Decimal | DecimalJsLike | number | string
+    compare_price?: Decimal | DecimalJsLike | number | string | null
+    currency?: string
+    stock_quantity?: number | null
+    primary_image_url?: string | null
+    image_urls?: NullableJsonNullValueInput | InputJsonValue
+    attributes?: NullableJsonNullValueInput | InputJsonValue
+    ai_tags?: catalog_itemsCreateai_tagsInput | string[]
+    is_active?: boolean
+    deleted_at?: Date | string | null
+    created_at?: Date | string
+    updated_at?: Date | string
+    cart_items?: cart_itemsCreateNestedManyWithoutCatalog_itemInput
+    cart_reservations?: cart_reservationsCreateNestedManyWithoutCatalog_itemInput
+    product_detail?: product_item_detailsCreateNestedOneWithoutItemInput
+    hospitality_detail?: hospitality_item_detailsCreateNestedOneWithoutItemInput
+    vehicle_detail?: vehicle_item_detailsCreateNestedOneWithoutItemInput
+    property_detail?: property_item_detailsCreateNestedOneWithoutItemInput
+    product_order_items?: product_order_itemsCreateNestedManyWithoutItemInput
+    hospitality_booking_items?: hospitality_booking_itemsCreateNestedManyWithoutItemInput
+    product_inquiries?: product_inquiriesCreateNestedManyWithoutItemInput
+    hospitality_inquiries?: hospitality_inquiriesCreateNestedManyWithoutPreferred_itemInput
+    businesses: businessesCreateNestedOneWithoutCatalog_itemsInput
+    availability?: item_availabilityCreateNestedManyWithoutItemInput
+    variants?: item_variantsCreateNestedManyWithoutItemInput
+    order_items?: order_itemsCreateNestedManyWithoutCatalog_itemInput
+    external_catalog_items?: external_catalog_itemsCreateNestedManyWithoutItemInput
+  }
+
+  export type catalog_itemsUncheckedCreateWithoutAppointment_sales_visitsInput = {
+    item_id?: string
+    business_id: string
+    tenant_id: string
+    item_type: string
+    name: string
+    description?: string | null
+    category?: string | null
+    base_price: Decimal | DecimalJsLike | number | string
+    compare_price?: Decimal | DecimalJsLike | number | string | null
+    currency?: string
+    stock_quantity?: number | null
+    primary_image_url?: string | null
+    image_urls?: NullableJsonNullValueInput | InputJsonValue
+    attributes?: NullableJsonNullValueInput | InputJsonValue
+    ai_tags?: catalog_itemsCreateai_tagsInput | string[]
+    is_active?: boolean
+    deleted_at?: Date | string | null
+    created_at?: Date | string
+    updated_at?: Date | string
+    cart_items?: cart_itemsUncheckedCreateNestedManyWithoutCatalog_itemInput
+    cart_reservations?: cart_reservationsUncheckedCreateNestedManyWithoutCatalog_itemInput
+    product_detail?: product_item_detailsUncheckedCreateNestedOneWithoutItemInput
+    hospitality_detail?: hospitality_item_detailsUncheckedCreateNestedOneWithoutItemInput
+    vehicle_detail?: vehicle_item_detailsUncheckedCreateNestedOneWithoutItemInput
+    property_detail?: property_item_detailsUncheckedCreateNestedOneWithoutItemInput
+    product_order_items?: product_order_itemsUncheckedCreateNestedManyWithoutItemInput
+    hospitality_booking_items?: hospitality_booking_itemsUncheckedCreateNestedManyWithoutItemInput
+    product_inquiries?: product_inquiriesUncheckedCreateNestedManyWithoutItemInput
+    hospitality_inquiries?: hospitality_inquiriesUncheckedCreateNestedManyWithoutPreferred_itemInput
+    availability?: item_availabilityUncheckedCreateNestedManyWithoutItemInput
+    variants?: item_variantsUncheckedCreateNestedManyWithoutItemInput
+    order_items?: order_itemsUncheckedCreateNestedManyWithoutCatalog_itemInput
+    external_catalog_items?: external_catalog_itemsUncheckedCreateNestedManyWithoutItemInput
+  }
+
+  export type catalog_itemsCreateOrConnectWithoutAppointment_sales_visitsInput = {
+    where: catalog_itemsWhereUniqueInput
+    create: XOR<catalog_itemsCreateWithoutAppointment_sales_visitsInput, catalog_itemsUncheckedCreateWithoutAppointment_sales_visitsInput>
+  }
+
+  export type appointment_sales_staffCreateWithoutVisitsInput = {
+    sales_staff_id?: string
+    business_id: string
+    tenant_id?: string | null
+    name: string
+    phone?: string | null
+    email?: string | null
+    role?: string
+    title?: string | null
+    priority?: number
+    is_active?: boolean
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    created_by?: string | null
+    created_at?: Date | string
+    updated_at?: Date | string
+    availability?: appointment_sales_staff_availabilityCreateNestedManyWithoutStaffInput
+  }
+
+  export type appointment_sales_staffUncheckedCreateWithoutVisitsInput = {
+    sales_staff_id?: string
+    business_id: string
+    tenant_id?: string | null
+    name: string
+    phone?: string | null
+    email?: string | null
+    role?: string
+    title?: string | null
+    priority?: number
+    is_active?: boolean
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    created_by?: string | null
+    created_at?: Date | string
+    updated_at?: Date | string
+    availability?: appointment_sales_staff_availabilityUncheckedCreateNestedManyWithoutStaffInput
+  }
+
+  export type appointment_sales_staffCreateOrConnectWithoutVisitsInput = {
+    where: appointment_sales_staffWhereUniqueInput
+    create: XOR<appointment_sales_staffCreateWithoutVisitsInput, appointment_sales_staffUncheckedCreateWithoutVisitsInput>
+  }
+
+  export type catalog_itemsUpsertWithoutAppointment_sales_visitsInput = {
+    update: XOR<catalog_itemsUpdateWithoutAppointment_sales_visitsInput, catalog_itemsUncheckedUpdateWithoutAppointment_sales_visitsInput>
+    create: XOR<catalog_itemsCreateWithoutAppointment_sales_visitsInput, catalog_itemsUncheckedCreateWithoutAppointment_sales_visitsInput>
+    where?: catalog_itemsWhereInput
+  }
+
+  export type catalog_itemsUpdateToOneWithWhereWithoutAppointment_sales_visitsInput = {
+    where?: catalog_itemsWhereInput
+    data: XOR<catalog_itemsUpdateWithoutAppointment_sales_visitsInput, catalog_itemsUncheckedUpdateWithoutAppointment_sales_visitsInput>
+  }
+
+  export type catalog_itemsUpdateWithoutAppointment_sales_visitsInput = {
+    item_id?: StringFieldUpdateOperationsInput | string
+    tenant_id?: StringFieldUpdateOperationsInput | string
+    item_type?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    category?: NullableStringFieldUpdateOperationsInput | string | null
+    base_price?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    compare_price?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    currency?: StringFieldUpdateOperationsInput | string
+    stock_quantity?: NullableIntFieldUpdateOperationsInput | number | null
+    primary_image_url?: NullableStringFieldUpdateOperationsInput | string | null
+    image_urls?: NullableJsonNullValueInput | InputJsonValue
+    attributes?: NullableJsonNullValueInput | InputJsonValue
+    ai_tags?: catalog_itemsUpdateai_tagsInput | string[]
+    is_active?: BoolFieldUpdateOperationsInput | boolean
+    deleted_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    cart_items?: cart_itemsUpdateManyWithoutCatalog_itemNestedInput
+    cart_reservations?: cart_reservationsUpdateManyWithoutCatalog_itemNestedInput
+    product_detail?: product_item_detailsUpdateOneWithoutItemNestedInput
+    hospitality_detail?: hospitality_item_detailsUpdateOneWithoutItemNestedInput
+    vehicle_detail?: vehicle_item_detailsUpdateOneWithoutItemNestedInput
+    property_detail?: property_item_detailsUpdateOneWithoutItemNestedInput
+    product_order_items?: product_order_itemsUpdateManyWithoutItemNestedInput
+    hospitality_booking_items?: hospitality_booking_itemsUpdateManyWithoutItemNestedInput
+    product_inquiries?: product_inquiriesUpdateManyWithoutItemNestedInput
+    hospitality_inquiries?: hospitality_inquiriesUpdateManyWithoutPreferred_itemNestedInput
+    businesses?: businessesUpdateOneRequiredWithoutCatalog_itemsNestedInput
+    availability?: item_availabilityUpdateManyWithoutItemNestedInput
+    variants?: item_variantsUpdateManyWithoutItemNestedInput
+    order_items?: order_itemsUpdateManyWithoutCatalog_itemNestedInput
+    external_catalog_items?: external_catalog_itemsUpdateManyWithoutItemNestedInput
+  }
+
+  export type catalog_itemsUncheckedUpdateWithoutAppointment_sales_visitsInput = {
+    item_id?: StringFieldUpdateOperationsInput | string
+    business_id?: StringFieldUpdateOperationsInput | string
+    tenant_id?: StringFieldUpdateOperationsInput | string
+    item_type?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    category?: NullableStringFieldUpdateOperationsInput | string | null
+    base_price?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    compare_price?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    currency?: StringFieldUpdateOperationsInput | string
+    stock_quantity?: NullableIntFieldUpdateOperationsInput | number | null
+    primary_image_url?: NullableStringFieldUpdateOperationsInput | string | null
+    image_urls?: NullableJsonNullValueInput | InputJsonValue
+    attributes?: NullableJsonNullValueInput | InputJsonValue
+    ai_tags?: catalog_itemsUpdateai_tagsInput | string[]
+    is_active?: BoolFieldUpdateOperationsInput | boolean
+    deleted_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    cart_items?: cart_itemsUncheckedUpdateManyWithoutCatalog_itemNestedInput
+    cart_reservations?: cart_reservationsUncheckedUpdateManyWithoutCatalog_itemNestedInput
+    product_detail?: product_item_detailsUncheckedUpdateOneWithoutItemNestedInput
+    hospitality_detail?: hospitality_item_detailsUncheckedUpdateOneWithoutItemNestedInput
+    vehicle_detail?: vehicle_item_detailsUncheckedUpdateOneWithoutItemNestedInput
+    property_detail?: property_item_detailsUncheckedUpdateOneWithoutItemNestedInput
+    product_order_items?: product_order_itemsUncheckedUpdateManyWithoutItemNestedInput
+    hospitality_booking_items?: hospitality_booking_itemsUncheckedUpdateManyWithoutItemNestedInput
+    product_inquiries?: product_inquiriesUncheckedUpdateManyWithoutItemNestedInput
+    hospitality_inquiries?: hospitality_inquiriesUncheckedUpdateManyWithoutPreferred_itemNestedInput
+    availability?: item_availabilityUncheckedUpdateManyWithoutItemNestedInput
+    variants?: item_variantsUncheckedUpdateManyWithoutItemNestedInput
+    order_items?: order_itemsUncheckedUpdateManyWithoutCatalog_itemNestedInput
+    external_catalog_items?: external_catalog_itemsUncheckedUpdateManyWithoutItemNestedInput
+  }
+
+  export type appointment_sales_staffUpsertWithoutVisitsInput = {
+    update: XOR<appointment_sales_staffUpdateWithoutVisitsInput, appointment_sales_staffUncheckedUpdateWithoutVisitsInput>
+    create: XOR<appointment_sales_staffCreateWithoutVisitsInput, appointment_sales_staffUncheckedCreateWithoutVisitsInput>
+    where?: appointment_sales_staffWhereInput
+  }
+
+  export type appointment_sales_staffUpdateToOneWithWhereWithoutVisitsInput = {
+    where?: appointment_sales_staffWhereInput
+    data: XOR<appointment_sales_staffUpdateWithoutVisitsInput, appointment_sales_staffUncheckedUpdateWithoutVisitsInput>
+  }
+
+  export type appointment_sales_staffUpdateWithoutVisitsInput = {
+    sales_staff_id?: StringFieldUpdateOperationsInput | string
+    business_id?: StringFieldUpdateOperationsInput | string
+    tenant_id?: NullableStringFieldUpdateOperationsInput | string | null
+    name?: StringFieldUpdateOperationsInput | string
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: StringFieldUpdateOperationsInput | string
+    title?: NullableStringFieldUpdateOperationsInput | string | null
+    priority?: IntFieldUpdateOperationsInput | number
+    is_active?: BoolFieldUpdateOperationsInput | boolean
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    created_by?: NullableStringFieldUpdateOperationsInput | string | null
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    availability?: appointment_sales_staff_availabilityUpdateManyWithoutStaffNestedInput
+  }
+
+  export type appointment_sales_staffUncheckedUpdateWithoutVisitsInput = {
+    sales_staff_id?: StringFieldUpdateOperationsInput | string
+    business_id?: StringFieldUpdateOperationsInput | string
+    tenant_id?: NullableStringFieldUpdateOperationsInput | string | null
+    name?: StringFieldUpdateOperationsInput | string
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: StringFieldUpdateOperationsInput | string
+    title?: NullableStringFieldUpdateOperationsInput | string | null
+    priority?: IntFieldUpdateOperationsInput | number
+    is_active?: BoolFieldUpdateOperationsInput | boolean
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    created_by?: NullableStringFieldUpdateOperationsInput | string | null
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    availability?: appointment_sales_staff_availabilityUncheckedUpdateManyWithoutStaffNestedInput
   }
 
   export type businessesCreateWithoutHospitality_inquiriesInput = {
@@ -168734,6 +181108,7 @@ export namespace Prisma {
     product_item_details?: product_item_detailsCreateNestedManyWithoutBusinessInput
     hospitality_item_details?: hospitality_item_detailsCreateNestedManyWithoutBusinessInput
     vehicle_item_details?: vehicle_item_detailsCreateNestedManyWithoutBusinessInput
+    property_item_details?: property_item_detailsCreateNestedManyWithoutBusinessInput
     product_orders?: product_ordersCreateNestedManyWithoutBusinessInput
     product_inquiries?: product_inquiriesCreateNestedManyWithoutBusinessInput
     hospitality_bookings?: hospitality_bookingsCreateNestedManyWithoutBusinessInput
@@ -168787,6 +181162,7 @@ export namespace Prisma {
     product_item_details?: product_item_detailsUncheckedCreateNestedManyWithoutBusinessInput
     hospitality_item_details?: hospitality_item_detailsUncheckedCreateNestedManyWithoutBusinessInput
     vehicle_item_details?: vehicle_item_detailsUncheckedCreateNestedManyWithoutBusinessInput
+    property_item_details?: property_item_detailsUncheckedCreateNestedManyWithoutBusinessInput
     product_orders?: product_ordersUncheckedCreateNestedManyWithoutBusinessInput
     product_inquiries?: product_inquiriesUncheckedCreateNestedManyWithoutBusinessInput
     hospitality_bookings?: hospitality_bookingsUncheckedCreateNestedManyWithoutBusinessInput
@@ -168838,6 +181214,7 @@ export namespace Prisma {
     hospitality_bookings?: hospitality_bookingsCreateNestedManyWithoutTenantInput
     notification_messages?: notification_messagesCreateNestedManyWithoutTenantsInput
     notification_templates?: notification_templatesCreateNestedManyWithoutTenantsInput
+    tenant_conversation_configs?: tenant_conversation_configsCreateNestedManyWithoutTenantInput
   }
 
   export type tenantsUncheckedCreateWithoutHospitality_inquiriesInput = {
@@ -168863,6 +181240,7 @@ export namespace Prisma {
     hospitality_bookings?: hospitality_bookingsUncheckedCreateNestedManyWithoutTenantInput
     notification_messages?: notification_messagesUncheckedCreateNestedManyWithoutTenantsInput
     notification_templates?: notification_templatesUncheckedCreateNestedManyWithoutTenantsInput
+    tenant_conversation_configs?: tenant_conversation_configsUncheckedCreateNestedManyWithoutTenantInput
   }
 
   export type tenantsCreateOrConnectWithoutHospitality_inquiriesInput = {
@@ -168985,6 +181363,7 @@ export namespace Prisma {
     product_detail?: product_item_detailsCreateNestedOneWithoutItemInput
     hospitality_detail?: hospitality_item_detailsCreateNestedOneWithoutItemInput
     vehicle_detail?: vehicle_item_detailsCreateNestedOneWithoutItemInput
+    property_detail?: property_item_detailsCreateNestedOneWithoutItemInput
     product_order_items?: product_order_itemsCreateNestedManyWithoutItemInput
     hospitality_booking_items?: hospitality_booking_itemsCreateNestedManyWithoutItemInput
     product_inquiries?: product_inquiriesCreateNestedManyWithoutItemInput
@@ -168993,6 +181372,7 @@ export namespace Prisma {
     variants?: item_variantsCreateNestedManyWithoutItemInput
     order_items?: order_itemsCreateNestedManyWithoutCatalog_itemInput
     external_catalog_items?: external_catalog_itemsCreateNestedManyWithoutItemInput
+    appointment_sales_visits?: appointment_sales_visitsCreateNestedManyWithoutItemInput
   }
 
   export type catalog_itemsUncheckedCreateWithoutHospitality_inquiriesInput = {
@@ -169020,6 +181400,7 @@ export namespace Prisma {
     product_detail?: product_item_detailsUncheckedCreateNestedOneWithoutItemInput
     hospitality_detail?: hospitality_item_detailsUncheckedCreateNestedOneWithoutItemInput
     vehicle_detail?: vehicle_item_detailsUncheckedCreateNestedOneWithoutItemInput
+    property_detail?: property_item_detailsUncheckedCreateNestedOneWithoutItemInput
     product_order_items?: product_order_itemsUncheckedCreateNestedManyWithoutItemInput
     hospitality_booking_items?: hospitality_booking_itemsUncheckedCreateNestedManyWithoutItemInput
     product_inquiries?: product_inquiriesUncheckedCreateNestedManyWithoutItemInput
@@ -169027,6 +181408,7 @@ export namespace Prisma {
     variants?: item_variantsUncheckedCreateNestedManyWithoutItemInput
     order_items?: order_itemsUncheckedCreateNestedManyWithoutCatalog_itemInput
     external_catalog_items?: external_catalog_itemsUncheckedCreateNestedManyWithoutItemInput
+    appointment_sales_visits?: appointment_sales_visitsUncheckedCreateNestedManyWithoutItemInput
   }
 
   export type catalog_itemsCreateOrConnectWithoutHospitality_inquiriesInput = {
@@ -169075,6 +181457,7 @@ export namespace Prisma {
     product_item_details?: product_item_detailsUpdateManyWithoutBusinessNestedInput
     hospitality_item_details?: hospitality_item_detailsUpdateManyWithoutBusinessNestedInput
     vehicle_item_details?: vehicle_item_detailsUpdateManyWithoutBusinessNestedInput
+    property_item_details?: property_item_detailsUpdateManyWithoutBusinessNestedInput
     product_orders?: product_ordersUpdateManyWithoutBusinessNestedInput
     product_inquiries?: product_inquiriesUpdateManyWithoutBusinessNestedInput
     hospitality_bookings?: hospitality_bookingsUpdateManyWithoutBusinessNestedInput
@@ -169128,6 +181511,7 @@ export namespace Prisma {
     product_item_details?: product_item_detailsUncheckedUpdateManyWithoutBusinessNestedInput
     hospitality_item_details?: hospitality_item_detailsUncheckedUpdateManyWithoutBusinessNestedInput
     vehicle_item_details?: vehicle_item_detailsUncheckedUpdateManyWithoutBusinessNestedInput
+    property_item_details?: property_item_detailsUncheckedUpdateManyWithoutBusinessNestedInput
     product_orders?: product_ordersUncheckedUpdateManyWithoutBusinessNestedInput
     product_inquiries?: product_inquiriesUncheckedUpdateManyWithoutBusinessNestedInput
     hospitality_bookings?: hospitality_bookingsUncheckedUpdateManyWithoutBusinessNestedInput
@@ -169185,6 +181569,7 @@ export namespace Prisma {
     hospitality_bookings?: hospitality_bookingsUpdateManyWithoutTenantNestedInput
     notification_messages?: notification_messagesUpdateManyWithoutTenantsNestedInput
     notification_templates?: notification_templatesUpdateManyWithoutTenantsNestedInput
+    tenant_conversation_configs?: tenant_conversation_configsUpdateManyWithoutTenantNestedInput
   }
 
   export type tenantsUncheckedUpdateWithoutHospitality_inquiriesInput = {
@@ -169210,6 +181595,7 @@ export namespace Prisma {
     hospitality_bookings?: hospitality_bookingsUncheckedUpdateManyWithoutTenantNestedInput
     notification_messages?: notification_messagesUncheckedUpdateManyWithoutTenantsNestedInput
     notification_templates?: notification_templatesUncheckedUpdateManyWithoutTenantsNestedInput
+    tenant_conversation_configs?: tenant_conversation_configsUncheckedUpdateManyWithoutTenantNestedInput
   }
 
   export type leadsUpsertWithoutHospitality_inquiriesInput = {
@@ -169344,6 +181730,7 @@ export namespace Prisma {
     product_detail?: product_item_detailsUpdateOneWithoutItemNestedInput
     hospitality_detail?: hospitality_item_detailsUpdateOneWithoutItemNestedInput
     vehicle_detail?: vehicle_item_detailsUpdateOneWithoutItemNestedInput
+    property_detail?: property_item_detailsUpdateOneWithoutItemNestedInput
     product_order_items?: product_order_itemsUpdateManyWithoutItemNestedInput
     hospitality_booking_items?: hospitality_booking_itemsUpdateManyWithoutItemNestedInput
     product_inquiries?: product_inquiriesUpdateManyWithoutItemNestedInput
@@ -169352,6 +181739,7 @@ export namespace Prisma {
     variants?: item_variantsUpdateManyWithoutItemNestedInput
     order_items?: order_itemsUpdateManyWithoutCatalog_itemNestedInput
     external_catalog_items?: external_catalog_itemsUpdateManyWithoutItemNestedInput
+    appointment_sales_visits?: appointment_sales_visitsUpdateManyWithoutItemNestedInput
   }
 
   export type catalog_itemsUncheckedUpdateWithoutHospitality_inquiriesInput = {
@@ -169379,6 +181767,7 @@ export namespace Prisma {
     product_detail?: product_item_detailsUncheckedUpdateOneWithoutItemNestedInput
     hospitality_detail?: hospitality_item_detailsUncheckedUpdateOneWithoutItemNestedInput
     vehicle_detail?: vehicle_item_detailsUncheckedUpdateOneWithoutItemNestedInput
+    property_detail?: property_item_detailsUncheckedUpdateOneWithoutItemNestedInput
     product_order_items?: product_order_itemsUncheckedUpdateManyWithoutItemNestedInput
     hospitality_booking_items?: hospitality_booking_itemsUncheckedUpdateManyWithoutItemNestedInput
     product_inquiries?: product_inquiriesUncheckedUpdateManyWithoutItemNestedInput
@@ -169386,6 +181775,7 @@ export namespace Prisma {
     variants?: item_variantsUncheckedUpdateManyWithoutItemNestedInput
     order_items?: order_itemsUncheckedUpdateManyWithoutCatalog_itemNestedInput
     external_catalog_items?: external_catalog_itemsUncheckedUpdateManyWithoutItemNestedInput
+    appointment_sales_visits?: appointment_sales_visitsUncheckedUpdateManyWithoutItemNestedInput
   }
 
   export type businessesCreateWithoutHospitality_bookingsInput = {
@@ -169418,6 +181808,7 @@ export namespace Prisma {
     product_item_details?: product_item_detailsCreateNestedManyWithoutBusinessInput
     hospitality_item_details?: hospitality_item_detailsCreateNestedManyWithoutBusinessInput
     vehicle_item_details?: vehicle_item_detailsCreateNestedManyWithoutBusinessInput
+    property_item_details?: property_item_detailsCreateNestedManyWithoutBusinessInput
     product_orders?: product_ordersCreateNestedManyWithoutBusinessInput
     product_inquiries?: product_inquiriesCreateNestedManyWithoutBusinessInput
     hospitality_inquiries?: hospitality_inquiriesCreateNestedManyWithoutBusinessInput
@@ -169471,6 +181862,7 @@ export namespace Prisma {
     product_item_details?: product_item_detailsUncheckedCreateNestedManyWithoutBusinessInput
     hospitality_item_details?: hospitality_item_detailsUncheckedCreateNestedManyWithoutBusinessInput
     vehicle_item_details?: vehicle_item_detailsUncheckedCreateNestedManyWithoutBusinessInput
+    property_item_details?: property_item_detailsUncheckedCreateNestedManyWithoutBusinessInput
     product_orders?: product_ordersUncheckedCreateNestedManyWithoutBusinessInput
     product_inquiries?: product_inquiriesUncheckedCreateNestedManyWithoutBusinessInput
     hospitality_inquiries?: hospitality_inquiriesUncheckedCreateNestedManyWithoutBusinessInput
@@ -169522,6 +181914,7 @@ export namespace Prisma {
     hospitality_inquiries?: hospitality_inquiriesCreateNestedManyWithoutTenantInput
     notification_messages?: notification_messagesCreateNestedManyWithoutTenantsInput
     notification_templates?: notification_templatesCreateNestedManyWithoutTenantsInput
+    tenant_conversation_configs?: tenant_conversation_configsCreateNestedManyWithoutTenantInput
   }
 
   export type tenantsUncheckedCreateWithoutHospitality_bookingsInput = {
@@ -169547,6 +181940,7 @@ export namespace Prisma {
     hospitality_inquiries?: hospitality_inquiriesUncheckedCreateNestedManyWithoutTenantInput
     notification_messages?: notification_messagesUncheckedCreateNestedManyWithoutTenantsInput
     notification_templates?: notification_templatesUncheckedCreateNestedManyWithoutTenantsInput
+    tenant_conversation_configs?: tenant_conversation_configsUncheckedCreateNestedManyWithoutTenantInput
   }
 
   export type tenantsCreateOrConnectWithoutHospitality_bookingsInput = {
@@ -169930,6 +182324,7 @@ export namespace Prisma {
     product_item_details?: product_item_detailsUpdateManyWithoutBusinessNestedInput
     hospitality_item_details?: hospitality_item_detailsUpdateManyWithoutBusinessNestedInput
     vehicle_item_details?: vehicle_item_detailsUpdateManyWithoutBusinessNestedInput
+    property_item_details?: property_item_detailsUpdateManyWithoutBusinessNestedInput
     product_orders?: product_ordersUpdateManyWithoutBusinessNestedInput
     product_inquiries?: product_inquiriesUpdateManyWithoutBusinessNestedInput
     hospitality_inquiries?: hospitality_inquiriesUpdateManyWithoutBusinessNestedInput
@@ -169983,6 +182378,7 @@ export namespace Prisma {
     product_item_details?: product_item_detailsUncheckedUpdateManyWithoutBusinessNestedInput
     hospitality_item_details?: hospitality_item_detailsUncheckedUpdateManyWithoutBusinessNestedInput
     vehicle_item_details?: vehicle_item_detailsUncheckedUpdateManyWithoutBusinessNestedInput
+    property_item_details?: property_item_detailsUncheckedUpdateManyWithoutBusinessNestedInput
     product_orders?: product_ordersUncheckedUpdateManyWithoutBusinessNestedInput
     product_inquiries?: product_inquiriesUncheckedUpdateManyWithoutBusinessNestedInput
     hospitality_inquiries?: hospitality_inquiriesUncheckedUpdateManyWithoutBusinessNestedInput
@@ -170040,6 +182436,7 @@ export namespace Prisma {
     hospitality_inquiries?: hospitality_inquiriesUpdateManyWithoutTenantNestedInput
     notification_messages?: notification_messagesUpdateManyWithoutTenantsNestedInput
     notification_templates?: notification_templatesUpdateManyWithoutTenantsNestedInput
+    tenant_conversation_configs?: tenant_conversation_configsUpdateManyWithoutTenantNestedInput
   }
 
   export type tenantsUncheckedUpdateWithoutHospitality_bookingsInput = {
@@ -170065,6 +182462,7 @@ export namespace Prisma {
     hospitality_inquiries?: hospitality_inquiriesUncheckedUpdateManyWithoutTenantNestedInput
     notification_messages?: notification_messagesUncheckedUpdateManyWithoutTenantsNestedInput
     notification_templates?: notification_templatesUncheckedUpdateManyWithoutTenantsNestedInput
+    tenant_conversation_configs?: tenant_conversation_configsUncheckedUpdateManyWithoutTenantNestedInput
   }
 
   export type customersUpsertWithoutHospitality_bookingsInput = {
@@ -170481,6 +182879,7 @@ export namespace Prisma {
     product_detail?: product_item_detailsCreateNestedOneWithoutItemInput
     hospitality_detail?: hospitality_item_detailsCreateNestedOneWithoutItemInput
     vehicle_detail?: vehicle_item_detailsCreateNestedOneWithoutItemInput
+    property_detail?: property_item_detailsCreateNestedOneWithoutItemInput
     product_order_items?: product_order_itemsCreateNestedManyWithoutItemInput
     product_inquiries?: product_inquiriesCreateNestedManyWithoutItemInput
     hospitality_inquiries?: hospitality_inquiriesCreateNestedManyWithoutPreferred_itemInput
@@ -170489,6 +182888,7 @@ export namespace Prisma {
     variants?: item_variantsCreateNestedManyWithoutItemInput
     order_items?: order_itemsCreateNestedManyWithoutCatalog_itemInput
     external_catalog_items?: external_catalog_itemsCreateNestedManyWithoutItemInput
+    appointment_sales_visits?: appointment_sales_visitsCreateNestedManyWithoutItemInput
   }
 
   export type catalog_itemsUncheckedCreateWithoutHospitality_booking_itemsInput = {
@@ -170516,6 +182916,7 @@ export namespace Prisma {
     product_detail?: product_item_detailsUncheckedCreateNestedOneWithoutItemInput
     hospitality_detail?: hospitality_item_detailsUncheckedCreateNestedOneWithoutItemInput
     vehicle_detail?: vehicle_item_detailsUncheckedCreateNestedOneWithoutItemInput
+    property_detail?: property_item_detailsUncheckedCreateNestedOneWithoutItemInput
     product_order_items?: product_order_itemsUncheckedCreateNestedManyWithoutItemInput
     product_inquiries?: product_inquiriesUncheckedCreateNestedManyWithoutItemInput
     hospitality_inquiries?: hospitality_inquiriesUncheckedCreateNestedManyWithoutPreferred_itemInput
@@ -170523,6 +182924,7 @@ export namespace Prisma {
     variants?: item_variantsUncheckedCreateNestedManyWithoutItemInput
     order_items?: order_itemsUncheckedCreateNestedManyWithoutCatalog_itemInput
     external_catalog_items?: external_catalog_itemsUncheckedCreateNestedManyWithoutItemInput
+    appointment_sales_visits?: appointment_sales_visitsUncheckedCreateNestedManyWithoutItemInput
   }
 
   export type catalog_itemsCreateOrConnectWithoutHospitality_booking_itemsInput = {
@@ -170630,6 +183032,7 @@ export namespace Prisma {
     product_detail?: product_item_detailsUpdateOneWithoutItemNestedInput
     hospitality_detail?: hospitality_item_detailsUpdateOneWithoutItemNestedInput
     vehicle_detail?: vehicle_item_detailsUpdateOneWithoutItemNestedInput
+    property_detail?: property_item_detailsUpdateOneWithoutItemNestedInput
     product_order_items?: product_order_itemsUpdateManyWithoutItemNestedInput
     product_inquiries?: product_inquiriesUpdateManyWithoutItemNestedInput
     hospitality_inquiries?: hospitality_inquiriesUpdateManyWithoutPreferred_itemNestedInput
@@ -170638,6 +183041,7 @@ export namespace Prisma {
     variants?: item_variantsUpdateManyWithoutItemNestedInput
     order_items?: order_itemsUpdateManyWithoutCatalog_itemNestedInput
     external_catalog_items?: external_catalog_itemsUpdateManyWithoutItemNestedInput
+    appointment_sales_visits?: appointment_sales_visitsUpdateManyWithoutItemNestedInput
   }
 
   export type catalog_itemsUncheckedUpdateWithoutHospitality_booking_itemsInput = {
@@ -170665,6 +183069,7 @@ export namespace Prisma {
     product_detail?: product_item_detailsUncheckedUpdateOneWithoutItemNestedInput
     hospitality_detail?: hospitality_item_detailsUncheckedUpdateOneWithoutItemNestedInput
     vehicle_detail?: vehicle_item_detailsUncheckedUpdateOneWithoutItemNestedInput
+    property_detail?: property_item_detailsUncheckedUpdateOneWithoutItemNestedInput
     product_order_items?: product_order_itemsUncheckedUpdateManyWithoutItemNestedInput
     product_inquiries?: product_inquiriesUncheckedUpdateManyWithoutItemNestedInput
     hospitality_inquiries?: hospitality_inquiriesUncheckedUpdateManyWithoutPreferred_itemNestedInput
@@ -170672,6 +183077,7 @@ export namespace Prisma {
     variants?: item_variantsUncheckedUpdateManyWithoutItemNestedInput
     order_items?: order_itemsUncheckedUpdateManyWithoutCatalog_itemNestedInput
     external_catalog_items?: external_catalog_itemsUncheckedUpdateManyWithoutItemNestedInput
+    appointment_sales_visits?: appointment_sales_visitsUncheckedUpdateManyWithoutItemNestedInput
   }
 
   export type hospitality_bookingsCreateWithoutGuests_listInput = {
@@ -171038,6 +183444,7 @@ export namespace Prisma {
     product_item_details?: product_item_detailsCreateNestedManyWithoutBusinessInput
     hospitality_item_details?: hospitality_item_detailsCreateNestedManyWithoutBusinessInput
     vehicle_item_details?: vehicle_item_detailsCreateNestedManyWithoutBusinessInput
+    property_item_details?: property_item_detailsCreateNestedManyWithoutBusinessInput
     product_orders?: product_ordersCreateNestedManyWithoutBusinessInput
     product_inquiries?: product_inquiriesCreateNestedManyWithoutBusinessInput
     hospitality_bookings?: hospitality_bookingsCreateNestedManyWithoutBusinessInput
@@ -171091,6 +183498,7 @@ export namespace Prisma {
     product_item_details?: product_item_detailsUncheckedCreateNestedManyWithoutBusinessInput
     hospitality_item_details?: hospitality_item_detailsUncheckedCreateNestedManyWithoutBusinessInput
     vehicle_item_details?: vehicle_item_detailsUncheckedCreateNestedManyWithoutBusinessInput
+    property_item_details?: property_item_detailsUncheckedCreateNestedManyWithoutBusinessInput
     product_orders?: product_ordersUncheckedCreateNestedManyWithoutBusinessInput
     product_inquiries?: product_inquiriesUncheckedCreateNestedManyWithoutBusinessInput
     hospitality_bookings?: hospitality_bookingsUncheckedCreateNestedManyWithoutBusinessInput
@@ -171233,6 +183641,7 @@ export namespace Prisma {
     product_item_details?: product_item_detailsUpdateManyWithoutBusinessNestedInput
     hospitality_item_details?: hospitality_item_detailsUpdateManyWithoutBusinessNestedInput
     vehicle_item_details?: vehicle_item_detailsUpdateManyWithoutBusinessNestedInput
+    property_item_details?: property_item_detailsUpdateManyWithoutBusinessNestedInput
     product_orders?: product_ordersUpdateManyWithoutBusinessNestedInput
     product_inquiries?: product_inquiriesUpdateManyWithoutBusinessNestedInput
     hospitality_bookings?: hospitality_bookingsUpdateManyWithoutBusinessNestedInput
@@ -171286,6 +183695,7 @@ export namespace Prisma {
     product_item_details?: product_item_detailsUncheckedUpdateManyWithoutBusinessNestedInput
     hospitality_item_details?: hospitality_item_detailsUncheckedUpdateManyWithoutBusinessNestedInput
     vehicle_item_details?: vehicle_item_detailsUncheckedUpdateManyWithoutBusinessNestedInput
+    property_item_details?: property_item_detailsUncheckedUpdateManyWithoutBusinessNestedInput
     product_orders?: product_ordersUncheckedUpdateManyWithoutBusinessNestedInput
     product_inquiries?: product_inquiriesUncheckedUpdateManyWithoutBusinessNestedInput
     hospitality_bookings?: hospitality_bookingsUncheckedUpdateManyWithoutBusinessNestedInput
@@ -171396,6 +183806,7 @@ export namespace Prisma {
     product_item_details?: product_item_detailsCreateNestedManyWithoutBusinessInput
     hospitality_item_details?: hospitality_item_detailsCreateNestedManyWithoutBusinessInput
     vehicle_item_details?: vehicle_item_detailsCreateNestedManyWithoutBusinessInput
+    property_item_details?: property_item_detailsCreateNestedManyWithoutBusinessInput
     product_orders?: product_ordersCreateNestedManyWithoutBusinessInput
     product_inquiries?: product_inquiriesCreateNestedManyWithoutBusinessInput
     hospitality_bookings?: hospitality_bookingsCreateNestedManyWithoutBusinessInput
@@ -171449,6 +183860,7 @@ export namespace Prisma {
     product_item_details?: product_item_detailsUncheckedCreateNestedManyWithoutBusinessInput
     hospitality_item_details?: hospitality_item_detailsUncheckedCreateNestedManyWithoutBusinessInput
     vehicle_item_details?: vehicle_item_detailsUncheckedCreateNestedManyWithoutBusinessInput
+    property_item_details?: property_item_detailsUncheckedCreateNestedManyWithoutBusinessInput
     product_orders?: product_ordersUncheckedCreateNestedManyWithoutBusinessInput
     product_inquiries?: product_inquiriesUncheckedCreateNestedManyWithoutBusinessInput
     hospitality_bookings?: hospitality_bookingsUncheckedCreateNestedManyWithoutBusinessInput
@@ -171558,6 +183970,7 @@ export namespace Prisma {
     product_item_details?: product_item_detailsUpdateManyWithoutBusinessNestedInput
     hospitality_item_details?: hospitality_item_detailsUpdateManyWithoutBusinessNestedInput
     vehicle_item_details?: vehicle_item_detailsUpdateManyWithoutBusinessNestedInput
+    property_item_details?: property_item_detailsUpdateManyWithoutBusinessNestedInput
     product_orders?: product_ordersUpdateManyWithoutBusinessNestedInput
     product_inquiries?: product_inquiriesUpdateManyWithoutBusinessNestedInput
     hospitality_bookings?: hospitality_bookingsUpdateManyWithoutBusinessNestedInput
@@ -171611,6 +184024,7 @@ export namespace Prisma {
     product_item_details?: product_item_detailsUncheckedUpdateManyWithoutBusinessNestedInput
     hospitality_item_details?: hospitality_item_detailsUncheckedUpdateManyWithoutBusinessNestedInput
     vehicle_item_details?: vehicle_item_detailsUncheckedUpdateManyWithoutBusinessNestedInput
+    property_item_details?: property_item_detailsUncheckedUpdateManyWithoutBusinessNestedInput
     product_orders?: product_ordersUncheckedUpdateManyWithoutBusinessNestedInput
     product_inquiries?: product_inquiriesUncheckedUpdateManyWithoutBusinessNestedInput
     hospitality_bookings?: hospitality_bookingsUncheckedUpdateManyWithoutBusinessNestedInput
@@ -171751,6 +184165,7 @@ export namespace Prisma {
     product_item_details?: product_item_detailsCreateNestedManyWithoutBusinessInput
     hospitality_item_details?: hospitality_item_detailsCreateNestedManyWithoutBusinessInput
     vehicle_item_details?: vehicle_item_detailsCreateNestedManyWithoutBusinessInput
+    property_item_details?: property_item_detailsCreateNestedManyWithoutBusinessInput
     product_orders?: product_ordersCreateNestedManyWithoutBusinessInput
     product_inquiries?: product_inquiriesCreateNestedManyWithoutBusinessInput
     hospitality_bookings?: hospitality_bookingsCreateNestedManyWithoutBusinessInput
@@ -171804,6 +184219,7 @@ export namespace Prisma {
     product_item_details?: product_item_detailsUncheckedCreateNestedManyWithoutBusinessInput
     hospitality_item_details?: hospitality_item_detailsUncheckedCreateNestedManyWithoutBusinessInput
     vehicle_item_details?: vehicle_item_detailsUncheckedCreateNestedManyWithoutBusinessInput
+    property_item_details?: property_item_detailsUncheckedCreateNestedManyWithoutBusinessInput
     product_orders?: product_ordersUncheckedCreateNestedManyWithoutBusinessInput
     product_inquiries?: product_inquiriesUncheckedCreateNestedManyWithoutBusinessInput
     hospitality_bookings?: hospitality_bookingsUncheckedCreateNestedManyWithoutBusinessInput
@@ -171873,6 +184289,7 @@ export namespace Prisma {
     product_item_details?: product_item_detailsUpdateManyWithoutBusinessNestedInput
     hospitality_item_details?: hospitality_item_detailsUpdateManyWithoutBusinessNestedInput
     vehicle_item_details?: vehicle_item_detailsUpdateManyWithoutBusinessNestedInput
+    property_item_details?: property_item_detailsUpdateManyWithoutBusinessNestedInput
     product_orders?: product_ordersUpdateManyWithoutBusinessNestedInput
     product_inquiries?: product_inquiriesUpdateManyWithoutBusinessNestedInput
     hospitality_bookings?: hospitality_bookingsUpdateManyWithoutBusinessNestedInput
@@ -171926,6 +184343,7 @@ export namespace Prisma {
     product_item_details?: product_item_detailsUncheckedUpdateManyWithoutBusinessNestedInput
     hospitality_item_details?: hospitality_item_detailsUncheckedUpdateManyWithoutBusinessNestedInput
     vehicle_item_details?: vehicle_item_detailsUncheckedUpdateManyWithoutBusinessNestedInput
+    property_item_details?: property_item_detailsUncheckedUpdateManyWithoutBusinessNestedInput
     product_orders?: product_ordersUncheckedUpdateManyWithoutBusinessNestedInput
     product_inquiries?: product_inquiriesUncheckedUpdateManyWithoutBusinessNestedInput
     hospitality_bookings?: hospitality_bookingsUncheckedUpdateManyWithoutBusinessNestedInput
@@ -171979,6 +184397,7 @@ export namespace Prisma {
     product_item_details?: product_item_detailsCreateNestedManyWithoutBusinessInput
     hospitality_item_details?: hospitality_item_detailsCreateNestedManyWithoutBusinessInput
     vehicle_item_details?: vehicle_item_detailsCreateNestedManyWithoutBusinessInput
+    property_item_details?: property_item_detailsCreateNestedManyWithoutBusinessInput
     product_orders?: product_ordersCreateNestedManyWithoutBusinessInput
     product_inquiries?: product_inquiriesCreateNestedManyWithoutBusinessInput
     hospitality_bookings?: hospitality_bookingsCreateNestedManyWithoutBusinessInput
@@ -172032,6 +184451,7 @@ export namespace Prisma {
     product_item_details?: product_item_detailsUncheckedCreateNestedManyWithoutBusinessInput
     hospitality_item_details?: hospitality_item_detailsUncheckedCreateNestedManyWithoutBusinessInput
     vehicle_item_details?: vehicle_item_detailsUncheckedCreateNestedManyWithoutBusinessInput
+    property_item_details?: property_item_detailsUncheckedCreateNestedManyWithoutBusinessInput
     product_orders?: product_ordersUncheckedCreateNestedManyWithoutBusinessInput
     product_inquiries?: product_inquiriesUncheckedCreateNestedManyWithoutBusinessInput
     hospitality_bookings?: hospitality_bookingsUncheckedCreateNestedManyWithoutBusinessInput
@@ -172144,6 +184564,7 @@ export namespace Prisma {
     product_item_details?: product_item_detailsUpdateManyWithoutBusinessNestedInput
     hospitality_item_details?: hospitality_item_detailsUpdateManyWithoutBusinessNestedInput
     vehicle_item_details?: vehicle_item_detailsUpdateManyWithoutBusinessNestedInput
+    property_item_details?: property_item_detailsUpdateManyWithoutBusinessNestedInput
     product_orders?: product_ordersUpdateManyWithoutBusinessNestedInput
     product_inquiries?: product_inquiriesUpdateManyWithoutBusinessNestedInput
     hospitality_bookings?: hospitality_bookingsUpdateManyWithoutBusinessNestedInput
@@ -172197,6 +184618,7 @@ export namespace Prisma {
     product_item_details?: product_item_detailsUncheckedUpdateManyWithoutBusinessNestedInput
     hospitality_item_details?: hospitality_item_detailsUncheckedUpdateManyWithoutBusinessNestedInput
     vehicle_item_details?: vehicle_item_detailsUncheckedUpdateManyWithoutBusinessNestedInput
+    property_item_details?: property_item_detailsUncheckedUpdateManyWithoutBusinessNestedInput
     product_orders?: product_ordersUncheckedUpdateManyWithoutBusinessNestedInput
     product_inquiries?: product_inquiriesUncheckedUpdateManyWithoutBusinessNestedInput
     hospitality_bookings?: hospitality_bookingsUncheckedUpdateManyWithoutBusinessNestedInput
@@ -172299,6 +184721,7 @@ export namespace Prisma {
     product_item_details?: product_item_detailsCreateNestedManyWithoutBusinessInput
     hospitality_item_details?: hospitality_item_detailsCreateNestedManyWithoutBusinessInput
     vehicle_item_details?: vehicle_item_detailsCreateNestedManyWithoutBusinessInput
+    property_item_details?: property_item_detailsCreateNestedManyWithoutBusinessInput
     product_orders?: product_ordersCreateNestedManyWithoutBusinessInput
     product_inquiries?: product_inquiriesCreateNestedManyWithoutBusinessInput
     hospitality_bookings?: hospitality_bookingsCreateNestedManyWithoutBusinessInput
@@ -172352,6 +184775,7 @@ export namespace Prisma {
     product_item_details?: product_item_detailsUncheckedCreateNestedManyWithoutBusinessInput
     hospitality_item_details?: hospitality_item_detailsUncheckedCreateNestedManyWithoutBusinessInput
     vehicle_item_details?: vehicle_item_detailsUncheckedCreateNestedManyWithoutBusinessInput
+    property_item_details?: property_item_detailsUncheckedCreateNestedManyWithoutBusinessInput
     product_orders?: product_ordersUncheckedCreateNestedManyWithoutBusinessInput
     product_inquiries?: product_inquiriesUncheckedCreateNestedManyWithoutBusinessInput
     hospitality_bookings?: hospitality_bookingsUncheckedCreateNestedManyWithoutBusinessInput
@@ -172421,6 +184845,7 @@ export namespace Prisma {
     product_item_details?: product_item_detailsUpdateManyWithoutBusinessNestedInput
     hospitality_item_details?: hospitality_item_detailsUpdateManyWithoutBusinessNestedInput
     vehicle_item_details?: vehicle_item_detailsUpdateManyWithoutBusinessNestedInput
+    property_item_details?: property_item_detailsUpdateManyWithoutBusinessNestedInput
     product_orders?: product_ordersUpdateManyWithoutBusinessNestedInput
     product_inquiries?: product_inquiriesUpdateManyWithoutBusinessNestedInput
     hospitality_bookings?: hospitality_bookingsUpdateManyWithoutBusinessNestedInput
@@ -172474,6 +184899,7 @@ export namespace Prisma {
     product_item_details?: product_item_detailsUncheckedUpdateManyWithoutBusinessNestedInput
     hospitality_item_details?: hospitality_item_detailsUncheckedUpdateManyWithoutBusinessNestedInput
     vehicle_item_details?: vehicle_item_detailsUncheckedUpdateManyWithoutBusinessNestedInput
+    property_item_details?: property_item_detailsUncheckedUpdateManyWithoutBusinessNestedInput
     product_orders?: product_ordersUncheckedUpdateManyWithoutBusinessNestedInput
     product_inquiries?: product_inquiriesUncheckedUpdateManyWithoutBusinessNestedInput
     hospitality_bookings?: hospitality_bookingsUncheckedUpdateManyWithoutBusinessNestedInput
@@ -172527,6 +184953,7 @@ export namespace Prisma {
     product_item_details?: product_item_detailsCreateNestedManyWithoutBusinessInput
     hospitality_item_details?: hospitality_item_detailsCreateNestedManyWithoutBusinessInput
     vehicle_item_details?: vehicle_item_detailsCreateNestedManyWithoutBusinessInput
+    property_item_details?: property_item_detailsCreateNestedManyWithoutBusinessInput
     product_orders?: product_ordersCreateNestedManyWithoutBusinessInput
     product_inquiries?: product_inquiriesCreateNestedManyWithoutBusinessInput
     hospitality_bookings?: hospitality_bookingsCreateNestedManyWithoutBusinessInput
@@ -172580,6 +185007,7 @@ export namespace Prisma {
     product_item_details?: product_item_detailsUncheckedCreateNestedManyWithoutBusinessInput
     hospitality_item_details?: hospitality_item_detailsUncheckedCreateNestedManyWithoutBusinessInput
     vehicle_item_details?: vehicle_item_detailsUncheckedCreateNestedManyWithoutBusinessInput
+    property_item_details?: property_item_detailsUncheckedCreateNestedManyWithoutBusinessInput
     product_orders?: product_ordersUncheckedCreateNestedManyWithoutBusinessInput
     product_inquiries?: product_inquiriesUncheckedCreateNestedManyWithoutBusinessInput
     hospitality_bookings?: hospitality_bookingsUncheckedCreateNestedManyWithoutBusinessInput
@@ -172714,6 +185142,7 @@ export namespace Prisma {
     product_item_details?: product_item_detailsUpdateManyWithoutBusinessNestedInput
     hospitality_item_details?: hospitality_item_detailsUpdateManyWithoutBusinessNestedInput
     vehicle_item_details?: vehicle_item_detailsUpdateManyWithoutBusinessNestedInput
+    property_item_details?: property_item_detailsUpdateManyWithoutBusinessNestedInput
     product_orders?: product_ordersUpdateManyWithoutBusinessNestedInput
     product_inquiries?: product_inquiriesUpdateManyWithoutBusinessNestedInput
     hospitality_bookings?: hospitality_bookingsUpdateManyWithoutBusinessNestedInput
@@ -172767,6 +185196,7 @@ export namespace Prisma {
     product_item_details?: product_item_detailsUncheckedUpdateManyWithoutBusinessNestedInput
     hospitality_item_details?: hospitality_item_detailsUncheckedUpdateManyWithoutBusinessNestedInput
     vehicle_item_details?: vehicle_item_detailsUncheckedUpdateManyWithoutBusinessNestedInput
+    property_item_details?: property_item_detailsUncheckedUpdateManyWithoutBusinessNestedInput
     product_orders?: product_ordersUncheckedUpdateManyWithoutBusinessNestedInput
     product_inquiries?: product_inquiriesUncheckedUpdateManyWithoutBusinessNestedInput
     hospitality_bookings?: hospitality_bookingsUncheckedUpdateManyWithoutBusinessNestedInput
@@ -173347,6 +185777,40 @@ export namespace Prisma {
     color?: string | null
     km_driven?: number | null
     condition?: string
+    ownership_count?: number | null
+    insurance_valid_until?: Date | string | null
+    registration_number?: string | null
+    rc_status?: string | null
+    finance_available?: boolean
+    exchange_accepted?: boolean
+    accident_history?: string | null
+    service_history?: string | null
+    test_drive_available?: boolean
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    created_at?: Date | string
+    updated_at?: Date | string
+  }
+
+  export type property_item_detailsCreateManyBusinessInput = {
+    item_id: string
+    property_type: string
+    listing_type?: string
+    bedrooms?: number | null
+    bathrooms?: number | null
+    area_sqft?: number | null
+    floor_number?: number | null
+    total_floors?: number | null
+    locality?: string | null
+    city?: string | null
+    furnishing?: string | null
+    possession_status?: string | null
+    facing?: string | null
+    parking?: string | null
+    rera_id?: string | null
+    map_url?: string | null
+    documents_status?: string | null
+    loan_support_available?: boolean
+    visit_landmark?: string | null
     metadata?: NullableJsonNullValueInput | InputJsonValue
     created_at?: Date | string
     updated_at?: Date | string
@@ -173865,6 +186329,7 @@ export namespace Prisma {
     product_detail?: product_item_detailsUpdateOneWithoutItemNestedInput
     hospitality_detail?: hospitality_item_detailsUpdateOneWithoutItemNestedInput
     vehicle_detail?: vehicle_item_detailsUpdateOneWithoutItemNestedInput
+    property_detail?: property_item_detailsUpdateOneWithoutItemNestedInput
     product_order_items?: product_order_itemsUpdateManyWithoutItemNestedInput
     hospitality_booking_items?: hospitality_booking_itemsUpdateManyWithoutItemNestedInput
     product_inquiries?: product_inquiriesUpdateManyWithoutItemNestedInput
@@ -173873,6 +186338,7 @@ export namespace Prisma {
     variants?: item_variantsUpdateManyWithoutItemNestedInput
     order_items?: order_itemsUpdateManyWithoutCatalog_itemNestedInput
     external_catalog_items?: external_catalog_itemsUpdateManyWithoutItemNestedInput
+    appointment_sales_visits?: appointment_sales_visitsUpdateManyWithoutItemNestedInput
   }
 
   export type catalog_itemsUncheckedUpdateWithoutBusinessesInput = {
@@ -173899,6 +186365,7 @@ export namespace Prisma {
     product_detail?: product_item_detailsUncheckedUpdateOneWithoutItemNestedInput
     hospitality_detail?: hospitality_item_detailsUncheckedUpdateOneWithoutItemNestedInput
     vehicle_detail?: vehicle_item_detailsUncheckedUpdateOneWithoutItemNestedInput
+    property_detail?: property_item_detailsUncheckedUpdateOneWithoutItemNestedInput
     product_order_items?: product_order_itemsUncheckedUpdateManyWithoutItemNestedInput
     hospitality_booking_items?: hospitality_booking_itemsUncheckedUpdateManyWithoutItemNestedInput
     product_inquiries?: product_inquiriesUncheckedUpdateManyWithoutItemNestedInput
@@ -173907,6 +186374,7 @@ export namespace Prisma {
     variants?: item_variantsUncheckedUpdateManyWithoutItemNestedInput
     order_items?: order_itemsUncheckedUpdateManyWithoutCatalog_itemNestedInput
     external_catalog_items?: external_catalog_itemsUncheckedUpdateManyWithoutItemNestedInput
+    appointment_sales_visits?: appointment_sales_visitsUncheckedUpdateManyWithoutItemNestedInput
   }
 
   export type catalog_itemsUncheckedUpdateManyWithoutBusinessesInput = {
@@ -174080,6 +186548,15 @@ export namespace Prisma {
     color?: NullableStringFieldUpdateOperationsInput | string | null
     km_driven?: NullableIntFieldUpdateOperationsInput | number | null
     condition?: StringFieldUpdateOperationsInput | string
+    ownership_count?: NullableIntFieldUpdateOperationsInput | number | null
+    insurance_valid_until?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    registration_number?: NullableStringFieldUpdateOperationsInput | string | null
+    rc_status?: NullableStringFieldUpdateOperationsInput | string | null
+    finance_available?: BoolFieldUpdateOperationsInput | boolean
+    exchange_accepted?: BoolFieldUpdateOperationsInput | boolean
+    accident_history?: NullableStringFieldUpdateOperationsInput | string | null
+    service_history?: NullableStringFieldUpdateOperationsInput | string | null
+    test_drive_available?: BoolFieldUpdateOperationsInput | boolean
     metadata?: NullableJsonNullValueInput | InputJsonValue
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -174096,6 +186573,15 @@ export namespace Prisma {
     color?: NullableStringFieldUpdateOperationsInput | string | null
     km_driven?: NullableIntFieldUpdateOperationsInput | number | null
     condition?: StringFieldUpdateOperationsInput | string
+    ownership_count?: NullableIntFieldUpdateOperationsInput | number | null
+    insurance_valid_until?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    registration_number?: NullableStringFieldUpdateOperationsInput | string | null
+    rc_status?: NullableStringFieldUpdateOperationsInput | string | null
+    finance_available?: BoolFieldUpdateOperationsInput | boolean
+    exchange_accepted?: BoolFieldUpdateOperationsInput | boolean
+    accident_history?: NullableStringFieldUpdateOperationsInput | string | null
+    service_history?: NullableStringFieldUpdateOperationsInput | string | null
+    test_drive_available?: BoolFieldUpdateOperationsInput | boolean
     metadata?: NullableJsonNullValueInput | InputJsonValue
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -174111,6 +186597,90 @@ export namespace Prisma {
     color?: NullableStringFieldUpdateOperationsInput | string | null
     km_driven?: NullableIntFieldUpdateOperationsInput | number | null
     condition?: StringFieldUpdateOperationsInput | string
+    ownership_count?: NullableIntFieldUpdateOperationsInput | number | null
+    insurance_valid_until?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    registration_number?: NullableStringFieldUpdateOperationsInput | string | null
+    rc_status?: NullableStringFieldUpdateOperationsInput | string | null
+    finance_available?: BoolFieldUpdateOperationsInput | boolean
+    exchange_accepted?: BoolFieldUpdateOperationsInput | boolean
+    accident_history?: NullableStringFieldUpdateOperationsInput | string | null
+    service_history?: NullableStringFieldUpdateOperationsInput | string | null
+    test_drive_available?: BoolFieldUpdateOperationsInput | boolean
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type property_item_detailsUpdateWithoutBusinessInput = {
+    property_type?: StringFieldUpdateOperationsInput | string
+    listing_type?: StringFieldUpdateOperationsInput | string
+    bedrooms?: NullableIntFieldUpdateOperationsInput | number | null
+    bathrooms?: NullableIntFieldUpdateOperationsInput | number | null
+    area_sqft?: NullableIntFieldUpdateOperationsInput | number | null
+    floor_number?: NullableIntFieldUpdateOperationsInput | number | null
+    total_floors?: NullableIntFieldUpdateOperationsInput | number | null
+    locality?: NullableStringFieldUpdateOperationsInput | string | null
+    city?: NullableStringFieldUpdateOperationsInput | string | null
+    furnishing?: NullableStringFieldUpdateOperationsInput | string | null
+    possession_status?: NullableStringFieldUpdateOperationsInput | string | null
+    facing?: NullableStringFieldUpdateOperationsInput | string | null
+    parking?: NullableStringFieldUpdateOperationsInput | string | null
+    rera_id?: NullableStringFieldUpdateOperationsInput | string | null
+    map_url?: NullableStringFieldUpdateOperationsInput | string | null
+    documents_status?: NullableStringFieldUpdateOperationsInput | string | null
+    loan_support_available?: BoolFieldUpdateOperationsInput | boolean
+    visit_landmark?: NullableStringFieldUpdateOperationsInput | string | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    item?: catalog_itemsUpdateOneRequiredWithoutProperty_detailNestedInput
+  }
+
+  export type property_item_detailsUncheckedUpdateWithoutBusinessInput = {
+    item_id?: StringFieldUpdateOperationsInput | string
+    property_type?: StringFieldUpdateOperationsInput | string
+    listing_type?: StringFieldUpdateOperationsInput | string
+    bedrooms?: NullableIntFieldUpdateOperationsInput | number | null
+    bathrooms?: NullableIntFieldUpdateOperationsInput | number | null
+    area_sqft?: NullableIntFieldUpdateOperationsInput | number | null
+    floor_number?: NullableIntFieldUpdateOperationsInput | number | null
+    total_floors?: NullableIntFieldUpdateOperationsInput | number | null
+    locality?: NullableStringFieldUpdateOperationsInput | string | null
+    city?: NullableStringFieldUpdateOperationsInput | string | null
+    furnishing?: NullableStringFieldUpdateOperationsInput | string | null
+    possession_status?: NullableStringFieldUpdateOperationsInput | string | null
+    facing?: NullableStringFieldUpdateOperationsInput | string | null
+    parking?: NullableStringFieldUpdateOperationsInput | string | null
+    rera_id?: NullableStringFieldUpdateOperationsInput | string | null
+    map_url?: NullableStringFieldUpdateOperationsInput | string | null
+    documents_status?: NullableStringFieldUpdateOperationsInput | string | null
+    loan_support_available?: BoolFieldUpdateOperationsInput | boolean
+    visit_landmark?: NullableStringFieldUpdateOperationsInput | string | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type property_item_detailsUncheckedUpdateManyWithoutBusinessInput = {
+    item_id?: StringFieldUpdateOperationsInput | string
+    property_type?: StringFieldUpdateOperationsInput | string
+    listing_type?: StringFieldUpdateOperationsInput | string
+    bedrooms?: NullableIntFieldUpdateOperationsInput | number | null
+    bathrooms?: NullableIntFieldUpdateOperationsInput | number | null
+    area_sqft?: NullableIntFieldUpdateOperationsInput | number | null
+    floor_number?: NullableIntFieldUpdateOperationsInput | number | null
+    total_floors?: NullableIntFieldUpdateOperationsInput | number | null
+    locality?: NullableStringFieldUpdateOperationsInput | string | null
+    city?: NullableStringFieldUpdateOperationsInput | string | null
+    furnishing?: NullableStringFieldUpdateOperationsInput | string | null
+    possession_status?: NullableStringFieldUpdateOperationsInput | string | null
+    facing?: NullableStringFieldUpdateOperationsInput | string | null
+    parking?: NullableStringFieldUpdateOperationsInput | string | null
+    rera_id?: NullableStringFieldUpdateOperationsInput | string | null
+    map_url?: NullableStringFieldUpdateOperationsInput | string | null
+    documents_status?: NullableStringFieldUpdateOperationsInput | string | null
+    loan_support_available?: BoolFieldUpdateOperationsInput | boolean
+    visit_landmark?: NullableStringFieldUpdateOperationsInput | string | null
     metadata?: NullableJsonNullValueInput | InputJsonValue
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -175852,6 +188422,18 @@ export namespace Prisma {
     created_by?: string | null
   }
 
+  export type tenant_conversation_configsCreateManyTenantInput = {
+    config_id?: string
+    waba_id: string
+    mode?: string
+    flow?: string
+    capabilities?: JsonNullValueInput | InputJsonValue
+    rules?: JsonNullValueInput | InputJsonValue
+    is_active?: boolean
+    created_at?: Date | string
+    updated_at?: Date | string
+  }
+
   export type business_workflowsUpdateWithoutTenantsInput = {
     id?: StringFieldUpdateOperationsInput | string
     intent_name?: StringFieldUpdateOperationsInput | string
@@ -175911,6 +188493,7 @@ export namespace Prisma {
     product_item_details?: product_item_detailsUpdateManyWithoutBusinessNestedInput
     hospitality_item_details?: hospitality_item_detailsUpdateManyWithoutBusinessNestedInput
     vehicle_item_details?: vehicle_item_detailsUpdateManyWithoutBusinessNestedInput
+    property_item_details?: property_item_detailsUpdateManyWithoutBusinessNestedInput
     product_orders?: product_ordersUpdateManyWithoutBusinessNestedInput
     product_inquiries?: product_inquiriesUpdateManyWithoutBusinessNestedInput
     hospitality_bookings?: hospitality_bookingsUpdateManyWithoutBusinessNestedInput
@@ -175964,6 +188547,7 @@ export namespace Prisma {
     product_item_details?: product_item_detailsUncheckedUpdateManyWithoutBusinessNestedInput
     hospitality_item_details?: hospitality_item_detailsUncheckedUpdateManyWithoutBusinessNestedInput
     vehicle_item_details?: vehicle_item_detailsUncheckedUpdateManyWithoutBusinessNestedInput
+    property_item_details?: property_item_detailsUncheckedUpdateManyWithoutBusinessNestedInput
     product_orders?: product_ordersUncheckedUpdateManyWithoutBusinessNestedInput
     product_inquiries?: product_inquiriesUncheckedUpdateManyWithoutBusinessNestedInput
     hospitality_bookings?: hospitality_bookingsUncheckedUpdateManyWithoutBusinessNestedInput
@@ -176781,6 +189365,42 @@ export namespace Prisma {
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     created_by?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type tenant_conversation_configsUpdateWithoutTenantInput = {
+    config_id?: StringFieldUpdateOperationsInput | string
+    waba_id?: StringFieldUpdateOperationsInput | string
+    mode?: StringFieldUpdateOperationsInput | string
+    flow?: StringFieldUpdateOperationsInput | string
+    capabilities?: JsonNullValueInput | InputJsonValue
+    rules?: JsonNullValueInput | InputJsonValue
+    is_active?: BoolFieldUpdateOperationsInput | boolean
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type tenant_conversation_configsUncheckedUpdateWithoutTenantInput = {
+    config_id?: StringFieldUpdateOperationsInput | string
+    waba_id?: StringFieldUpdateOperationsInput | string
+    mode?: StringFieldUpdateOperationsInput | string
+    flow?: StringFieldUpdateOperationsInput | string
+    capabilities?: JsonNullValueInput | InputJsonValue
+    rules?: JsonNullValueInput | InputJsonValue
+    is_active?: BoolFieldUpdateOperationsInput | boolean
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type tenant_conversation_configsUncheckedUpdateManyWithoutTenantInput = {
+    config_id?: StringFieldUpdateOperationsInput | string
+    waba_id?: StringFieldUpdateOperationsInput | string
+    mode?: StringFieldUpdateOperationsInput | string
+    flow?: StringFieldUpdateOperationsInput | string
+    capabilities?: JsonNullValueInput | InputJsonValue
+    rules?: JsonNullValueInput | InputJsonValue
+    is_active?: BoolFieldUpdateOperationsInput | boolean
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type lead_followupsCreateManyAssigneeInput = {
@@ -180286,6 +192906,28 @@ export namespace Prisma {
     updated_at?: Date | string
   }
 
+  export type appointment_sales_visitsCreateManyItemInput = {
+    visit_id?: string
+    business_id: string
+    tenant_id?: string | null
+    lead_id?: string | null
+    customer_id?: string | null
+    sales_staff_id?: string | null
+    visit_type?: string
+    status?: string
+    scheduled_start: Date | string
+    scheduled_end: Date | string
+    customer_name?: string | null
+    customer_phone?: string | null
+    location?: string | null
+    source?: string
+    notes?: string | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    created_by?: string | null
+    created_at?: Date | string
+    updated_at?: Date | string
+  }
+
   export type cart_itemsUpdateWithoutCatalog_itemInput = {
     cart_item_id?: StringFieldUpdateOperationsInput | string
     product_name?: StringFieldUpdateOperationsInput | string
@@ -180715,6 +193357,72 @@ export namespace Prisma {
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type appointment_sales_visitsUpdateWithoutItemInput = {
+    visit_id?: StringFieldUpdateOperationsInput | string
+    business_id?: StringFieldUpdateOperationsInput | string
+    tenant_id?: NullableStringFieldUpdateOperationsInput | string | null
+    lead_id?: NullableStringFieldUpdateOperationsInput | string | null
+    customer_id?: NullableStringFieldUpdateOperationsInput | string | null
+    visit_type?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    scheduled_start?: DateTimeFieldUpdateOperationsInput | Date | string
+    scheduled_end?: DateTimeFieldUpdateOperationsInput | Date | string
+    customer_name?: NullableStringFieldUpdateOperationsInput | string | null
+    customer_phone?: NullableStringFieldUpdateOperationsInput | string | null
+    location?: NullableStringFieldUpdateOperationsInput | string | null
+    source?: StringFieldUpdateOperationsInput | string
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    created_by?: NullableStringFieldUpdateOperationsInput | string | null
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    staff?: appointment_sales_staffUpdateOneWithoutVisitsNestedInput
+  }
+
+  export type appointment_sales_visitsUncheckedUpdateWithoutItemInput = {
+    visit_id?: StringFieldUpdateOperationsInput | string
+    business_id?: StringFieldUpdateOperationsInput | string
+    tenant_id?: NullableStringFieldUpdateOperationsInput | string | null
+    lead_id?: NullableStringFieldUpdateOperationsInput | string | null
+    customer_id?: NullableStringFieldUpdateOperationsInput | string | null
+    sales_staff_id?: NullableStringFieldUpdateOperationsInput | string | null
+    visit_type?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    scheduled_start?: DateTimeFieldUpdateOperationsInput | Date | string
+    scheduled_end?: DateTimeFieldUpdateOperationsInput | Date | string
+    customer_name?: NullableStringFieldUpdateOperationsInput | string | null
+    customer_phone?: NullableStringFieldUpdateOperationsInput | string | null
+    location?: NullableStringFieldUpdateOperationsInput | string | null
+    source?: StringFieldUpdateOperationsInput | string
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    created_by?: NullableStringFieldUpdateOperationsInput | string | null
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type appointment_sales_visitsUncheckedUpdateManyWithoutItemInput = {
+    visit_id?: StringFieldUpdateOperationsInput | string
+    business_id?: StringFieldUpdateOperationsInput | string
+    tenant_id?: NullableStringFieldUpdateOperationsInput | string | null
+    lead_id?: NullableStringFieldUpdateOperationsInput | string | null
+    customer_id?: NullableStringFieldUpdateOperationsInput | string | null
+    sales_staff_id?: NullableStringFieldUpdateOperationsInput | string | null
+    visit_type?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    scheduled_start?: DateTimeFieldUpdateOperationsInput | Date | string
+    scheduled_end?: DateTimeFieldUpdateOperationsInput | Date | string
+    customer_name?: NullableStringFieldUpdateOperationsInput | string | null
+    customer_phone?: NullableStringFieldUpdateOperationsInput | string | null
+    location?: NullableStringFieldUpdateOperationsInput | string | null
+    source?: StringFieldUpdateOperationsInput | string
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    created_by?: NullableStringFieldUpdateOperationsInput | string | null
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type cart_itemsCreateManyItem_variantInput = {
     cart_item_id?: string
     cart_id: string
@@ -181005,6 +193713,150 @@ export namespace Prisma {
     actor_id?: NullableStringFieldUpdateOperationsInput | string | null
     data?: NullableJsonNullValueInput | InputJsonValue
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type appointment_sales_staff_availabilityCreateManyStaffInput = {
+    availability_id?: string
+    business_id: string
+    day_of_week: number
+    start_time: string
+    end_time: string
+    window_type?: string
+    label?: string | null
+    is_active?: boolean
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    created_at?: Date | string
+    updated_at?: Date | string
+  }
+
+  export type appointment_sales_visitsCreateManyStaffInput = {
+    visit_id?: string
+    business_id: string
+    tenant_id?: string | null
+    lead_id?: string | null
+    customer_id?: string | null
+    item_id?: string | null
+    visit_type?: string
+    status?: string
+    scheduled_start: Date | string
+    scheduled_end: Date | string
+    customer_name?: string | null
+    customer_phone?: string | null
+    location?: string | null
+    source?: string
+    notes?: string | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    created_by?: string | null
+    created_at?: Date | string
+    updated_at?: Date | string
+  }
+
+  export type appointment_sales_staff_availabilityUpdateWithoutStaffInput = {
+    availability_id?: StringFieldUpdateOperationsInput | string
+    business_id?: StringFieldUpdateOperationsInput | string
+    day_of_week?: IntFieldUpdateOperationsInput | number
+    start_time?: StringFieldUpdateOperationsInput | string
+    end_time?: StringFieldUpdateOperationsInput | string
+    window_type?: StringFieldUpdateOperationsInput | string
+    label?: NullableStringFieldUpdateOperationsInput | string | null
+    is_active?: BoolFieldUpdateOperationsInput | boolean
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type appointment_sales_staff_availabilityUncheckedUpdateWithoutStaffInput = {
+    availability_id?: StringFieldUpdateOperationsInput | string
+    business_id?: StringFieldUpdateOperationsInput | string
+    day_of_week?: IntFieldUpdateOperationsInput | number
+    start_time?: StringFieldUpdateOperationsInput | string
+    end_time?: StringFieldUpdateOperationsInput | string
+    window_type?: StringFieldUpdateOperationsInput | string
+    label?: NullableStringFieldUpdateOperationsInput | string | null
+    is_active?: BoolFieldUpdateOperationsInput | boolean
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type appointment_sales_staff_availabilityUncheckedUpdateManyWithoutStaffInput = {
+    availability_id?: StringFieldUpdateOperationsInput | string
+    business_id?: StringFieldUpdateOperationsInput | string
+    day_of_week?: IntFieldUpdateOperationsInput | number
+    start_time?: StringFieldUpdateOperationsInput | string
+    end_time?: StringFieldUpdateOperationsInput | string
+    window_type?: StringFieldUpdateOperationsInput | string
+    label?: NullableStringFieldUpdateOperationsInput | string | null
+    is_active?: BoolFieldUpdateOperationsInput | boolean
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type appointment_sales_visitsUpdateWithoutStaffInput = {
+    visit_id?: StringFieldUpdateOperationsInput | string
+    business_id?: StringFieldUpdateOperationsInput | string
+    tenant_id?: NullableStringFieldUpdateOperationsInput | string | null
+    lead_id?: NullableStringFieldUpdateOperationsInput | string | null
+    customer_id?: NullableStringFieldUpdateOperationsInput | string | null
+    visit_type?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    scheduled_start?: DateTimeFieldUpdateOperationsInput | Date | string
+    scheduled_end?: DateTimeFieldUpdateOperationsInput | Date | string
+    customer_name?: NullableStringFieldUpdateOperationsInput | string | null
+    customer_phone?: NullableStringFieldUpdateOperationsInput | string | null
+    location?: NullableStringFieldUpdateOperationsInput | string | null
+    source?: StringFieldUpdateOperationsInput | string
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    created_by?: NullableStringFieldUpdateOperationsInput | string | null
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    item?: catalog_itemsUpdateOneWithoutAppointment_sales_visitsNestedInput
+  }
+
+  export type appointment_sales_visitsUncheckedUpdateWithoutStaffInput = {
+    visit_id?: StringFieldUpdateOperationsInput | string
+    business_id?: StringFieldUpdateOperationsInput | string
+    tenant_id?: NullableStringFieldUpdateOperationsInput | string | null
+    lead_id?: NullableStringFieldUpdateOperationsInput | string | null
+    customer_id?: NullableStringFieldUpdateOperationsInput | string | null
+    item_id?: NullableStringFieldUpdateOperationsInput | string | null
+    visit_type?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    scheduled_start?: DateTimeFieldUpdateOperationsInput | Date | string
+    scheduled_end?: DateTimeFieldUpdateOperationsInput | Date | string
+    customer_name?: NullableStringFieldUpdateOperationsInput | string | null
+    customer_phone?: NullableStringFieldUpdateOperationsInput | string | null
+    location?: NullableStringFieldUpdateOperationsInput | string | null
+    source?: StringFieldUpdateOperationsInput | string
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    created_by?: NullableStringFieldUpdateOperationsInput | string | null
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type appointment_sales_visitsUncheckedUpdateManyWithoutStaffInput = {
+    visit_id?: StringFieldUpdateOperationsInput | string
+    business_id?: StringFieldUpdateOperationsInput | string
+    tenant_id?: NullableStringFieldUpdateOperationsInput | string | null
+    lead_id?: NullableStringFieldUpdateOperationsInput | string | null
+    customer_id?: NullableStringFieldUpdateOperationsInput | string | null
+    item_id?: NullableStringFieldUpdateOperationsInput | string | null
+    visit_type?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    scheduled_start?: DateTimeFieldUpdateOperationsInput | Date | string
+    scheduled_end?: DateTimeFieldUpdateOperationsInput | Date | string
+    customer_name?: NullableStringFieldUpdateOperationsInput | string | null
+    customer_phone?: NullableStringFieldUpdateOperationsInput | string | null
+    location?: NullableStringFieldUpdateOperationsInput | string | null
+    source?: StringFieldUpdateOperationsInput | string
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    created_by?: NullableStringFieldUpdateOperationsInput | string | null
+    created_at?: DateTimeFieldUpdateOperationsInput | Date | string
+    updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type hospitality_booking_itemsCreateManyBookingInput = {

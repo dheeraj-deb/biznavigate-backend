@@ -2,7 +2,7 @@ import { IsString, IsNumber, IsOptional, IsArray, IsObject, IsIn, Min } from 'cl
 
 export class CreateCatalogItemDto {
   @IsString()
-  @IsIn(['physical_product', 'accommodation', 'activity', 'service', 'vehicle'])
+  @IsIn(['physical_product', 'accommodation', 'activity', 'service', 'vehicle', 'property'])
   item_type: string;
 
   @IsString()

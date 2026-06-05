@@ -55,6 +55,7 @@ export class CatalogController {
       activity: 'Activities',
       service: 'Services',
       vehicle: 'Vehicles',
+      property: 'Properties',
     };
 
     const attribute_schemas: Record<string, any> = {};

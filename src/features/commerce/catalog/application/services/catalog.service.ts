@@ -386,6 +386,37 @@ export class CatalogService {
     }
 
     // For physical_product — simple stock check
+    if (item_type === 'property') {
+      const items = await this.prisma.catalog_items.findMany({
+        where: search
+          ? { ...where, OR: [
+              { name: { contains: search, mode: 'insensitive' } },
+              { description: { contains: search, mode: 'insensitive' } },
+              { category: { contains: search, mode: 'insensitive' } },
+              { ai_tags: { has: search.toLowerCase() } },
+            ]}
+          : where,
+        include: { property_detail: true },
+        orderBy: { base_price: 'asc' },
+        take: 10,
+      });
+
+      return items.map((i) => ({
+        item_id: i.item_id,
+        item_type: i.item_type,
+        name: i.name,
+        description: i.description,
+        category: i.category,
+        base_price: Number(i.base_price),
+        effective_price: Number(i.base_price),
+        currency: i.currency,
+        attributes: i.attributes,
+        details: { ...((i.attributes as any) ?? {}), ...((i as any).property_detail ?? {}) },
+        primary_image_url: i.primary_image_url,
+        image_urls: i.image_urls,
+      }));
+    }
+
     if (item_type === 'physical_product') {
       const items = await this.prisma.catalog_items.findMany({
         where: search
@@ -654,6 +685,15 @@ export class CatalogService {
       color: detail.color,
       km_driven: detail.km_driven,
       condition: detail.condition,
+      ownership_count: detail.ownership_count,
+      insurance_valid_until: detail.insurance_valid_until,
+      registration_number: detail.registration_number,
+      rc_status: detail.rc_status,
+      finance_available: detail.finance_available,
+      exchange_accepted: detail.exchange_accepted,
+      accident_history: detail.accident_history,
+      service_history: detail.service_history,
+      test_drive_available: detail.test_drive_available,
       metadata: detail.metadata,
     };
   }

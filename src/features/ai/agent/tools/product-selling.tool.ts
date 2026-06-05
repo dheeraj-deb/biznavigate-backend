@@ -442,7 +442,14 @@ export function makeCreateProductOrderTool(prisma: PrismaService) {
           product.tenant_id,
           `${orderNumber} for ${money(total, product.currency)} is waiting for payment confirmation.`,
           productOrder.product_order_id,
-          JSON.stringify({ order_number: orderNumber, payment_method: normalizedPayment, total_amount: total }),
+          JSON.stringify({
+            order_id: order.order_id,
+            legacy_order_id: order.order_id,
+            product_order_id: productOrder.product_order_id,
+            order_number: orderNumber,
+            payment_method: normalizedPayment,
+            total_amount: total,
+          }),
         ).catch(() => undefined);
 
         return `Order ${orderNumber} created for ${product.name} x${qty}. Total ${money(total, product.currency)}. Payment status is pending. Ask the customer to pay by ${normalizedPayment.toUpperCase()} or wait for owner confirmation.`;

@@ -86,6 +86,7 @@ IMPORTANT — TOOL EXECUTION RULES:
 - If the user makes a special/custom/off-menu request that is not explicitly covered by business knowledge: call handoff_to_human. Do not invent refusals.
 - If you have enough information to call a tool, call it now — do not say "let me check".
 - For product seller businesses: use search_products for browsing, reserve_product_stock only after exact product + quantity, and create_product_order only after exact product + quantity + final delivery/payment details.
+- For used car or real estate businesses: use browse_catalog for saved listings, then ask for a preferred visit day/time. Do not create product orders or ask for payment.
 - If required information is missing (e.g. check-in/check-out dates for availability, product name for browsing), do NOT invent or guess values. Instead, respond with a plain text question asking the user for the missing information.
 - NEVER fabricate dates, names, or any data the user has not provided.`;
 
