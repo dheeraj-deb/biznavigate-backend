@@ -7,15 +7,6 @@
     "scripts",
     "test",
     "**/*spec.ts",
-    "**/*.example.ts",
-    "src/features/agent/**/*",
-    "src/features/inventory/**/*",
-    "src/features/lead/**/*",
-    "src/features/messages/**/*",
-    "src/features/orders/**/*",
-    "src/features/payments/**/*",
-    "src/features/subscriptions/**/*",
-    "src/features/whatsapp/**/*",
     "src/features/notifications/**/*"
   ]
 }

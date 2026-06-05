@@ -222,19 +222,6 @@ exports.Prisma.TenantsScalarFieldEnum = {
   registration_no: 'registration_no'
 };
 
-exports.Prisma.Tenant_conversation_configsScalarFieldEnum = {
-  config_id: 'config_id',
-  tenant_id: 'tenant_id',
-  waba_id: 'waba_id',
-  mode: 'mode',
-  flow: 'flow',
-  capabilities: 'capabilities',
-  rules: 'rules',
-  is_active: 'is_active',
-  created_at: 'created_at',
-  updated_at: 'updated_at'
-};
-
 exports.Prisma.UsersScalarFieldEnum = {
   user_id: 'user_id',
   business_id: 'business_id',
@@ -1250,116 +1237,7 @@ exports.Prisma.Vehicle_item_detailsScalarFieldEnum = {
   color: 'color',
   km_driven: 'km_driven',
   condition: 'condition',
-  ownership_count: 'ownership_count',
-  insurance_valid_until: 'insurance_valid_until',
-  registration_number: 'registration_number',
-  rc_status: 'rc_status',
-  finance_available: 'finance_available',
-  exchange_accepted: 'exchange_accepted',
-  accident_history: 'accident_history',
-  service_history: 'service_history',
-  test_drive_available: 'test_drive_available',
   metadata: 'metadata',
-  created_at: 'created_at',
-  updated_at: 'updated_at'
-};
-
-exports.Prisma.Property_item_detailsScalarFieldEnum = {
-  item_id: 'item_id',
-  business_id: 'business_id',
-  property_type: 'property_type',
-  listing_type: 'listing_type',
-  bedrooms: 'bedrooms',
-  bathrooms: 'bathrooms',
-  area_sqft: 'area_sqft',
-  floor_number: 'floor_number',
-  total_floors: 'total_floors',
-  locality: 'locality',
-  city: 'city',
-  furnishing: 'furnishing',
-  possession_status: 'possession_status',
-  facing: 'facing',
-  parking: 'parking',
-  rera_id: 'rera_id',
-  map_url: 'map_url',
-  documents_status: 'documents_status',
-  loan_support_available: 'loan_support_available',
-  visit_landmark: 'visit_landmark',
-  metadata: 'metadata',
-  created_at: 'created_at',
-  updated_at: 'updated_at'
-};
-
-exports.Prisma.Appointment_sales_settingsScalarFieldEnum = {
-  appointment_sales_settings_id: 'appointment_sales_settings_id',
-  business_id: 'business_id',
-  tenant_id: 'tenant_id',
-  vertical_type: 'vertical_type',
-  onboarding_status: 'onboarding_status',
-  default_visit_type: 'default_visit_type',
-  default_visit_location: 'default_visit_location',
-  slot_duration_minutes: 'slot_duration_minutes',
-  visit_buffer_minutes: 'visit_buffer_minutes',
-  auto_assign_visits: 'auto_assign_visits',
-  reminder_minutes_before: 'reminder_minutes_before',
-  escalation_rules: 'escalation_rules',
-  setup_checklist: 'setup_checklist',
-  metadata: 'metadata',
-  created_at: 'created_at',
-  updated_at: 'updated_at'
-};
-
-exports.Prisma.Appointment_sales_staffScalarFieldEnum = {
-  sales_staff_id: 'sales_staff_id',
-  business_id: 'business_id',
-  tenant_id: 'tenant_id',
-  name: 'name',
-  phone: 'phone',
-  email: 'email',
-  role: 'role',
-  title: 'title',
-  priority: 'priority',
-  is_active: 'is_active',
-  metadata: 'metadata',
-  created_by: 'created_by',
-  created_at: 'created_at',
-  updated_at: 'updated_at'
-};
-
-exports.Prisma.Appointment_sales_staff_availabilityScalarFieldEnum = {
-  availability_id: 'availability_id',
-  sales_staff_id: 'sales_staff_id',
-  business_id: 'business_id',
-  day_of_week: 'day_of_week',
-  start_time: 'start_time',
-  end_time: 'end_time',
-  window_type: 'window_type',
-  label: 'label',
-  is_active: 'is_active',
-  metadata: 'metadata',
-  created_at: 'created_at',
-  updated_at: 'updated_at'
-};
-
-exports.Prisma.Appointment_sales_visitsScalarFieldEnum = {
-  visit_id: 'visit_id',
-  business_id: 'business_id',
-  tenant_id: 'tenant_id',
-  lead_id: 'lead_id',
-  customer_id: 'customer_id',
-  item_id: 'item_id',
-  sales_staff_id: 'sales_staff_id',
-  visit_type: 'visit_type',
-  status: 'status',
-  scheduled_start: 'scheduled_start',
-  scheduled_end: 'scheduled_end',
-  customer_name: 'customer_name',
-  customer_phone: 'customer_phone',
-  location: 'location',
-  source: 'source',
-  notes: 'notes',
-  metadata: 'metadata',
-  created_by: 'created_by',
   created_at: 'created_at',
   updated_at: 'updated_at'
 };
@@ -1689,7 +1567,6 @@ exports.Prisma.ModelName = {
   roles: 'roles',
   social_accounts: 'social_accounts',
   tenants: 'tenants',
-  tenant_conversation_configs: 'tenant_conversation_configs',
   users: 'users',
   leads: 'leads',
   pipelines: 'pipelines',
@@ -1745,11 +1622,6 @@ exports.Prisma.ModelName = {
   seller_stock_adjustments: 'seller_stock_adjustments',
   hospitality_item_details: 'hospitality_item_details',
   vehicle_item_details: 'vehicle_item_details',
-  property_item_details: 'property_item_details',
-  appointment_sales_settings: 'appointment_sales_settings',
-  appointment_sales_staff: 'appointment_sales_staff',
-  appointment_sales_staff_availability: 'appointment_sales_staff_availability',
-  appointment_sales_visits: 'appointment_sales_visits',
   hospitality_inquiries: 'hospitality_inquiries',
   hospitality_bookings: 'hospitality_bookings',
   hospitality_booking_items: 'hospitality_booking_items',
