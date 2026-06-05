@@ -52,9 +52,19 @@ describe('ProductOrderService lifecycle', () => {
     };
   }
 
+  function buildService(prisma: any) {
+    const stockReservationService = {
+      releaseReservation: jest.fn(),
+    };
+    return {
+      service: new ProductOrderService(prisma as any, stockReservationService as any),
+      stockReservationService,
+    };
+  }
+
   it('updates product order status, records an event, and syncs legacy order', async () => {
     const prisma = buildPrismaMock(productOrder('pending'), productOrder('packed'));
-    const service = new ProductOrderService(prisma as any);
+    const { service, stockReservationService } = buildService(prisma);
 
     const result = await service.updateStatus(businessId, productOrderId, {
       status: 'packed',
@@ -89,12 +99,13 @@ describe('ProductOrderService lifecycle', () => {
         updated_at: expect.any(Date),
       }),
     });
+    expect(stockReservationService.releaseReservation).not.toHaveBeenCalled();
     expect(result.status).toBe('packed');
   });
 
   it('cancels a product order and syncs cancellation to legacy order', async () => {
     const prisma = buildPrismaMock(productOrder('confirmed'), productOrder('cancelled'));
-    const service = new ProductOrderService(prisma as any);
+    const { service, stockReservationService } = buildService(prisma);
 
     const result = await service.cancel(businessId, productOrderId, 'Customer cancelled');
 
@@ -116,6 +127,7 @@ describe('ProductOrderService lifecycle', () => {
         },
       }),
     });
+    expect(stockReservationService.releaseReservation).toHaveBeenCalledWith(legacyOrderId, prisma.__tx);
     expect(prisma.__tx.orders.update).toHaveBeenCalledWith({
       where: { order_id: legacyOrderId },
       data: expect.objectContaining({
@@ -131,21 +143,23 @@ describe('ProductOrderService lifecycle', () => {
   it('does not write another event when cancelling an already-cancelled product order', async () => {
     const existing = productOrder('cancelled');
     const prisma = buildPrismaMock(existing, existing);
-    const service = new ProductOrderService(prisma as any);
+    const { service, stockReservationService } = buildService(prisma);
 
     const result = await service.cancel(businessId, productOrderId);
 
     expect(prisma.$transaction).not.toHaveBeenCalled();
+    expect(stockReservationService.releaseReservation).not.toHaveBeenCalled();
     expect(result.status).toBe('cancelled');
   });
 
   it('rejects cancellation after delivery', async () => {
     const prisma = buildPrismaMock(productOrder('delivered'), productOrder('cancelled'));
-    const service = new ProductOrderService(prisma as any);
+    const { service, stockReservationService } = buildService(prisma);
 
     await expect(service.cancel(businessId, productOrderId)).rejects.toBeInstanceOf(BadRequestException);
 
     expect(prisma.$transaction).not.toHaveBeenCalled();
+    expect(stockReservationService.releaseReservation).not.toHaveBeenCalled();
   });
 
   it('does not read a product order outside the current business scope', async () => {
@@ -154,7 +168,7 @@ describe('ProductOrderService lifecycle', () => {
         findFirst: jest.fn().mockResolvedValue(null),
       },
     };
-    const service = new ProductOrderService(prisma as any);
+    const { service } = buildService(prisma);
 
     await expect(service.findById(businessId, productOrderId)).rejects.toBeInstanceOf(NotFoundException);
 
@@ -172,7 +186,7 @@ describe('ProductOrderService lifecycle', () => {
       },
       $transaction: jest.fn(),
     };
-    const service = new ProductOrderService(prisma as any);
+    const { service } = buildService(prisma);
 
     await expect(
       service.updateStatus(businessId, productOrderId, { status: 'packed' }),
@@ -185,6 +199,7 @@ describe('ProductOrderService lifecycle', () => {
         business_id: true,
         status: true,
         legacy_order_id: true,
+        legacy_order: { select: { status: true } },
       },
     });
     expect(prisma.$transaction).not.toHaveBeenCalled();

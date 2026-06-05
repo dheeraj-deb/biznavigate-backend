@@ -155,7 +155,14 @@ export function inferExperienceType(businessType?: string | null): BookingLinkEx
     case 'education':
       return 'education';
     case 'products':
+    case 'product_seller':
     case 'retail':
+    case 'ecommerce':
+    case 'online_seller':
+    case 'online_retail':
+    case 'local_retail':
+    case 'wholesale':
+    case 'wholesale_retail':
     case 'used_cars':
       return 'products';
     case 'professional_services':

@@ -2,10 +2,14 @@ import { BadRequestException, Injectable, NotFoundException } from '@nestjs/comm
 import { PrismaService } from '../../../../../prisma/prisma.service';
 import { ProductOrderQueryDto } from '../dto/product-order-query.dto';
 import { ProductOrderStatus, UpdateProductOrderStatusDto } from '../dto/update-product-order-status.dto';
+import { StockReservationService } from './stock-reservation.service';
 
 @Injectable()
 export class ProductOrderService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly stockReservationService: StockReservationService,
+  ) {}
 
   async findAll(businessId: string, query: ProductOrderQueryDto) {
     const page = Math.max(1, Number(query.page) || 1);
@@ -72,6 +76,7 @@ export class ProductOrderService {
         business_id: true,
         status: true,
         legacy_order_id: true,
+        legacy_order: { select: { status: true } },
       },
     });
 
@@ -109,6 +114,10 @@ export class ProductOrderService {
       });
 
       if (existing.legacy_order_id) {
+        if (dto.status === 'cancelled' && existing.legacy_order?.status !== 'cancelled') {
+          await this.stockReservationService.releaseReservation(existing.legacy_order_id, tx);
+        }
+
         await tx.orders.update({
           where: { order_id: existing.legacy_order_id },
           data: this.legacyOrderStatusData(dto.status, now),

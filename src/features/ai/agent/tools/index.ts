@@ -8,6 +8,8 @@ import { makeFaqTool } from './faq.tool';
 import { handoffTool } from './handoff.tool';
 import {
   makeCreateProductOrderTool,
+  makeGetProductOrderTool,
+  makeGetProductPaymentTool,
   makeReserveProductStockTool,
   makeSearchProductsTool,
 } from './product-selling.tool';
@@ -56,8 +58,9 @@ export function buildToolsForVertical(vertical: string, deps: ToolDeps) {
         makeSearchProductsTool(deps.prisma),
         makeReserveProductStockTool(deps.prisma),
         makeCreateProductOrderTool(deps.prisma),
-        makeBrowseCatalogTool(deps.catalogService),
-        ...shared,
+        makeGetProductOrderTool(deps.prisma),
+        makeGetProductPaymentTool(deps.prisma),
+        ...knowledgeTools(deps),
       ];
 
     case 'used_cars':

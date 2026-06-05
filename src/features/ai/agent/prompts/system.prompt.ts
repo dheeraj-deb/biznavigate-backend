@@ -68,8 +68,10 @@ Rules:
 - User asks about a product or category: call search_products with their search term now.
 - Customer chooses exact product + quantity but still needs delivery/payment details: call reserve_product_stock.
 - Customer chooses exact product + quantity and gives delivery/payment details: call create_product_order.
+- Customer asks about an order: call get_product_order.
+- Customer asks about payment: call get_product_payment.
 - Do not reserve stock for vague browsing. Do not create duplicate orders.
-- If stock is low, unavailable, payment is unclear, or customer asks for credit/discount/custom terms: explain briefly and hand off or ask owner confirmation.`.trim(),
+- If stock is low, unavailable, payment is unclear, or customer asks for cancellation, refund, exchange, credit, discount, or custom terms: explain briefly and hand off or ask owner confirmation.`.trim(),
 
   used_cars: `
 Scope: vehicle browsing, availability, price/basic details, finance or exchange questions that need staff confirmation, and showroom or test-drive visit interest.
@@ -191,7 +193,7 @@ function recentBookingsBlock(bookings: RecentBookingSummary[], currency: string)
     if (b.check_in && b.check_out) parts.push(`dates=${b.check_in}→${b.check_out}`);
     return `- ${parts.join(' | ')}`;
   });
-  return `Recent bookings/orders for this customer (most recent first):\n${lines.join('\n')}\nIf the customer references a recent booking, prefer matching it from this list before calling get_booking.`;
+  return `Recent bookings/orders for this customer (most recent first):\n${lines.join('\n')}\nIf the customer references a recent booking or order, prefer matching it from this list before calling a lookup tool.`;
 }
 
 export interface SystemPromptParams {
@@ -201,9 +203,15 @@ export interface SystemPromptParams {
   bookingMethodsSummary?: string;
 }
 
+function promptVerticalFor(businessType: string): string {
+  const normalized = String(businessType ?? '').trim().toLowerCase();
+  if (['products', 'retail', 'ecommerce'].includes(normalized)) return 'products';
+  return normalized;
+}
+
 export const SYSTEM_PROMPT = (params: SystemPromptParams): string => {
   const { businessProfile, lead, recentBookings = [], bookingMethodsSummary } = params;
-  const vertical = businessProfile.business_type;
+  const vertical = promptVerticalFor(businessProfile.business_type);
   const capabilities = VERTICAL_CAPABILITIES[vertical] ?? VERTICAL_CAPABILITIES['default'];
   const assistantFor =
     vertical === 'hospitality' && businessProfile.inventory.accommodation_count > 1

@@ -38,11 +38,8 @@ function shouldContinueAfterTools(state: AgentStateType): string {
   return 'responder';
 }
 
-export async function buildAgentGraph(deps: AgentGraphDeps) {
-  // Build a universal tool set that covers all verticals.
-  // The tool-caller prompt + system prompt adapt based on businessType at runtime.
-  // This means one compiled graph handles every business on the platform.
-  const tools = buildToolsForVertical('default', deps);
+export async function buildAgentGraph(deps: AgentGraphDeps, vertical = 'hospitality') {
+  const tools = buildToolsForVertical(vertical, deps);
 
   const triage = makeTriageNode(deps.modelConfig);
   const toolCaller = makeToolCallerNode(deps.modelConfig, tools);
