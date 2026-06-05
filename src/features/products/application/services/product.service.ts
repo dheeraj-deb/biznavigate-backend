@@ -20,6 +20,7 @@ export class ProductService {
     if (!dto.business_id || !dto.tenant_id) {
       throw new BadRequestException('business_id and tenant_id are required');
     }
+    const price = dto.price ?? dto.base_price ?? 0;
 
     const item = await this.prisma.$transaction(async (tx) => {
       const created = await tx.catalog_items.create({
@@ -30,7 +31,7 @@ export class ProductService {
           name: dto.name,
           description: dto.description,
           category: dto.category,
-          base_price: dto.price,
+          base_price: price,
           compare_price: dto.compare_price,
           currency: dto.currency ?? 'INR',
           stock_quantity: dto.track_inventory === false ? null : (dto.stock_quantity ?? 0),
@@ -42,7 +43,7 @@ export class ProductService {
             dimensions: dto.dimensions,
             weight: dto.weight,
           },
-          ai_tags: this.buildAiTags(dto),
+          ai_tags: this.buildAiTags({ ...dto, price }),
           is_active: dto.is_active ?? true,
         },
       });

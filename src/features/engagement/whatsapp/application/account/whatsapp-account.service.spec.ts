@@ -51,12 +51,21 @@ describe('WhatsAppAccountService', () => {
     const circuitBreaker = {
       execute: jest.fn((_key: string, callback: any) => callback()),
     };
+    const whatsappTemplatesService = {
+      applySystemBlueprintTemplates: jest.fn().mockResolvedValue(undefined),
+    };
 
     return {
-      service: new WhatsAppAccountService(prisma as any, apiClient as any, circuitBreaker as any),
+      service: new WhatsAppAccountService(
+        prisma as any,
+        apiClient as any,
+        circuitBreaker as any,
+        whatsappTemplatesService as any,
+      ),
       prisma,
       apiClient,
       circuitBreaker,
+      whatsappTemplatesService,
     };
   }
 
