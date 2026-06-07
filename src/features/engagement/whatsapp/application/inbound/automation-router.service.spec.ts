@@ -108,7 +108,7 @@ describe('AutomationRouter', () => {
       { conversationId },
       {
         jobId: `conv:${conversationId}`,
-        delay: 10000,
+        delay: 1500,
         removeOnComplete: true,
         removeOnFail: true,
       },
