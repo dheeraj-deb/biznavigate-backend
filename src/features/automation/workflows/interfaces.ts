@@ -204,6 +204,8 @@ export interface LeadContext {
     status: LeadStatus;
     phone?: string | null;
     email?: string | null;
+    tags?: string[];
+    source?: string | null;
 }
 
 export interface MessageProcessingContext {
