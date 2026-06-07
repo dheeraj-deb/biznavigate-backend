@@ -74,7 +74,7 @@ export class BusinessesService {
 
   async seedBlueprints(id: string) {
     try {
-      return await this.businessBlueprints.seedForBusiness(id);
+      return await this.businessBlueprints.seedForBusiness(id, { requireWorkflows: true });
     } catch (error) {
       if (error instanceof HttpException) throw error;
       throw new BadRequestException(error.message);

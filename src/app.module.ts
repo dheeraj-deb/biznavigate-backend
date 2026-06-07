@@ -62,19 +62,17 @@ if (MONGODB_REQUIRED && !MONGODB_URI) {
         limit: 1000, // 1000 requests per 15 minutes
       },
     ]),
-    ...(MONGODB_URI
-      ? [MongooseModule.forRootAsync({
-          imports: [ConfigModule],
-          useFactory: async (config: ConfigService) => ({
-            uri: config.get<string>('MONGODB_URI'),
-            maxPoolSize: 10,
-            serverSelectionTimeoutMS: 5000,
-            retryAttempts: 3,
-            retryDelay: 1000,
-          }),
-          inject: [ConfigService],
-        })]
-      : []),
+    MongooseModule.forRootAsync({
+      imports: [ConfigModule],
+      useFactory: async (config: ConfigService) => ({
+        uri: config.get<string>('MONGODB_URI'),
+        maxPoolSize: 10,
+        serverSelectionTimeoutMS: 5000,
+        retryAttempts: 3,
+        retryDelay: 1000,
+      }),
+      inject: [ConfigService],
+    }),
     // Static file serving for uploaded images
     ServeStaticModule.forRoot({
       rootPath: join(__dirname, '..', '..', 'public'),
@@ -98,30 +96,18 @@ if (MONGODB_REQUIRED && !MONGODB_URI) {
     BullMQModule,
     PlatformModule,
     // UploadsModule,
-    ...(MONGODB_URI
-      ? [CrmModule.withRealtime()]
-      : [CrmModule]),
-    ...(MONGODB_URI
-      ? [EngagementModule.withChannels()]
-      : [EngagementModule]),
+    CrmModule.withRealtime(),
+    EngagementModule.withChannels(),
     CommerceModule,
     ProductsModule,
-    ...(MONGODB_URI
-      ? [HospitalityIndustryModule.withPricing()]
-      : [HospitalityIndustryModule]),
+    HospitalityIndustryModule.withPricing(),
     InsightsModule,
     SellerOsModule,
     AppointmentSalesModule,
     PublicBookingModule,
-    ...(MONGODB_URI
-      ? [AiModule.withRag()]
-      : [AiModule]),
-    ...(MONGODB_URI
-      ? [AutomationModule.withWorkflows()]
-      : [AutomationModule]),
-    ...(MONGODB_URI
-      ? [KafkaModule]
-      : []),
+    AiModule.withRag(),
+    AutomationModule.withWorkflows(),
+    KafkaModule
   ],
   controllers: [HealthController],
   providers: [

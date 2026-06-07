@@ -6,6 +6,7 @@ import { SYSTEM_WHATSAPP_TEMPLATE_BLUEPRINTS } from '../../../engagement/whatsap
 
 type BlueprintGroup = 'A' | 'B' | 'C' | 'D';
 type WorkflowBlueprint = { key: string; name: string; description: string; nodes: any[]; connections: any };
+type SeedOptions = { requireWorkflows?: boolean };
 
 function connect(source: string, target: string) {
   return { [source]: { main: [{ node: target }] } };
@@ -257,7 +258,7 @@ export class BusinessBlueprintSeedService {
 
   constructor(private readonly prisma: PrismaService) {}
 
-  async seedForBusiness(businessId: string) {
+  async seedForBusiness(businessId: string, options: SeedOptions = {}) {
     const business = await this.prisma.businesses.findUnique({
       where: { business_id: businessId },
       select: {
@@ -277,23 +278,28 @@ export class BusinessBlueprintSeedService {
 
     const pipeline = await this.ensurePipeline(business.business_id, group);
     const workflowResult = await this.ensureWorkflows(business, group);
+    const workflowsSeeded = workflowResult.status === 'seeded';
+
+    if (options.requireWorkflows && !workflowsSeeded) {
+      throw new Error(`Workflow blueprint seed failed: ${workflowResult.reason ?? workflowResult.status}`);
+    }
 
     const seededAt = new Date();
     await this.prisma.businesses.update({
       where: { business_id: business.business_id },
       data: {
         business_group: group,
-        blueprint_seeded: true,
-        blueprint_seeded_at: seededAt,
+        blueprint_seeded: workflowsSeeded,
+        blueprint_seeded_at: workflowsSeeded ? seededAt : null,
       },
     });
 
     return {
-      status: 'seeded',
+      status: workflowsSeeded ? 'seeded' : 'partial',
       group,
       pipeline_id: pipeline.pipeline_id,
       workflows: workflowResult,
-      blueprint_seeded_at: seededAt,
+      blueprint_seeded_at: workflowsSeeded ? seededAt : null,
     };
   }
 
