@@ -34,15 +34,15 @@ import { SellerOsModule } from "./features/seller-os/seller-os.module";
 import { AppointmentSalesModule } from "./features/appointment-sales/appointment-sales.module";
 import { ProductsModule } from "./features/products/products.module";
 import { HealthController } from "./health.controller";
+import { MongoDbConnectionGuard } from "./core/mongodb/mongodb-connection.guard";
 
 dotenv.config({ path: ".env.local", override: false });
 dotenv.config({ path: ".env", override: false });
 
-const MONGODB_REQUIRED = process.env.MONGODB_REQUIRED !== 'false';
 const MONGODB_URI = process.env.MONGODB_URI;
 
-if (MONGODB_REQUIRED && !MONGODB_URI) {
-  throw new Error('MONGODB_URI is required. Set MONGODB_URI or explicitly set MONGODB_REQUIRED=false to start without Mongo-backed modules.');
+if (!MONGODB_URI) {
+  throw new Error('MONGODB_URI is required.');
 }
 
 @Module({
@@ -70,7 +70,7 @@ if (MONGODB_REQUIRED && !MONGODB_URI) {
       imports: [ConfigModule],
       useFactory: async (config: ConfigService) => {
         const uri = config.get<string>('MONGODB_URI');
-        console.log(`[MongoDB] Startup config: uri=${uri ? 'present' : 'missing'} required=${MONGODB_REQUIRED}`);
+        console.log(`[MongoDB] Startup config: uri=${uri ? 'present' : 'missing'}`);
         return {
           uri,
           maxPoolSize: 10,
@@ -148,6 +148,7 @@ if (MONGODB_REQUIRED && !MONGODB_URI) {
       provide: APP_GUARD,
       useClass: ThrottlerGuard,
     },
+    MongoDbConnectionGuard,
   ],
 })
 export class AppModule {
