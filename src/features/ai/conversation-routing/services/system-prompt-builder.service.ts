@@ -34,6 +34,8 @@ export class SystemPromptBuilderService {
       '- If the user should be moved to another flow, set switch_flow=true and target_flow.',
       '- Keep WhatsApp copy short and clear.',
       '- Customer experience priority: fastest useful answer first, then one clear next step.',
+      '- For simple greetings, do not use generic assistant boilerplate. Use the business name and give concrete next actions.',
+      '- For products/retail/ecommerce businesses, do not say "products or services"; say "products", "items", or "orders".',
       '- Do not ask unnecessary questions. If business context has enough information, answer now.',
       '- Ask at most one question per reply, and only when required to continue accurately.',
       '- Do not end every answer with generic filler like "How can I assist further?" or "let me know".',
@@ -144,6 +146,7 @@ export class SystemPromptBuilderService {
     if (['products', 'retail', 'ecommerce'].includes(normalized)) {
       return [
         'Business-type playbook: products.',
+        '- For greetings: welcome them to the store and offer Browse Products, order help, or support. Do not say "products or services".',
         '- For "what do you offer", "catalog", "products", or similar: list the most relevant active catalog items with prices and stock when available.',
         '- If the customer names a product/category, match it against Active catalog items and answer with exact matches first.',
         '- If there are multiple likely matches, show 2-5 concise options instead of asking a broad question.',

@@ -25,6 +25,7 @@ import { PendingAgentActionService } from '../../../ai/agent/services/pending-ag
 @Injectable()
 export class WhatsAppService {
   private readonly logger = new Logger(WhatsAppService.name);
+  private readonly entryMenuIdleMs = 30 * 60 * 1000;
 
   constructor(
     private readonly prisma: PrismaService,
@@ -292,17 +293,32 @@ export class WhatsAppService {
     replyCtx: { conversationId: string; leadId: string; tenantId: string };
   }): Promise<boolean> {
     if (params.message.is_interactive) return false;
-    if (!this.shouldShowEntryMenu(params.conversation, params.message.user_input)) return false;
+    const entryMenuReason = this.entryMenuReason(params.conversation, params.message.user_input);
+    if (!entryMenuReason) return false;
+
+    if (entryMenuReason === 'returning' && params.conversation?.status === 'handed_off') {
+      await this.conversationService.updateConversation(params.conversation.conversation_id, {
+        is_ai: true,
+        is_ai_handled: true,
+        status: 'open',
+        human_takeover_at: null,
+        human_takeover_reason: null,
+      });
+    }
 
     const businessType = String(params.account.businesses?.business_type ?? '').toLowerCase();
+    const businessName = String(params.account.businesses?.business_name ?? '').trim();
     const browseTitle = ['products', 'retail', 'ecommerce'].includes(businessType)
       ? 'Browse Products'
       : 'Browse Options';
+    const intro = ['products', 'retail', 'ecommerce'].includes(businessType)
+      ? `${entryMenuReason === 'returning' ? 'Welcome back to' : 'Welcome to'} ${businessName || 'our store'}. What would you like to do?`
+      : `${entryMenuReason === 'returning' ? 'Welcome back' : 'Hi'}${params.lead.name ? ` ${params.lead.name}` : ''}! What would you like to do?`;
 
     await this.sendButtonMessage(
       params.phone_number_id,
       params.message.from,
-      `Hi${params.lead.name ? ` ${params.lead.name}` : ''}! What would you like to do?`,
+      intro,
       [
         { id: 'menu_browse', title: browseTitle },
         { id: 'menu_chat', title: 'Chat with Us' },
@@ -314,18 +330,18 @@ export class WhatsAppService {
     return true;
   }
 
-  private shouldShowEntryMenu(conversation: any, input: string): boolean {
+  private entryMenuReason(conversation: any, input: string): 'new' | 'returning' | null {
     const text = String(input ?? '').trim().toLowerCase();
-    if (!text) return false;
-    if (!this.isGenericEntryMessage(text)) return false;
+    if (!text) return null;
+    if (!this.isGenericEntryMessage(text)) return null;
 
     const previousCount = Number(conversation?.message_count ?? 0);
-    if (!previousCount) return true;
+    if (previousCount <= 1) return 'new';
 
     const lastMessageAt = conversation?.last_message_at ? new Date(conversation.last_message_at).getTime() : 0;
-    if (!Number.isFinite(lastMessageAt) || lastMessageAt <= 0) return false;
+    if (!Number.isFinite(lastMessageAt) || lastMessageAt <= 0) return null;
 
-    return Date.now() - lastMessageAt > 30 * 60 * 1000;
+    return Date.now() - lastMessageAt > this.entryMenuIdleMs ? 'returning' : null;
   }
 
   private isGenericEntryMessage(text: string): boolean {
