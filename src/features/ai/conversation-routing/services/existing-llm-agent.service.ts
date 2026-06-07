@@ -51,6 +51,7 @@ export class ExistingLlmAgentService {
               capabilities: context.config.capabilities,
               rules: context.config.rules,
               session: context.session,
+              business: context.business,
             })}`,
             `User message: ${userMessage}`,
           ].join('\n')),
