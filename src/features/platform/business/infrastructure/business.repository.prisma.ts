@@ -49,8 +49,8 @@ export class BusinessesRepositoryPrisma implements BusinessesRepository {
     return this.prisma.businesses.update({
       where: { business_id: id },
       data: {
-        ...dto,
         ...automationDefaults,
+        ...dto,
       },
       include: { business_employees: true },
     });

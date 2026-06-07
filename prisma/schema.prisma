@@ -15,7 +15,7 @@ model businesses {
   business_name             String                      @db.VarChar(255)
   business_type             String?                     @db.VarChar(50)
   business_group            String?                     @db.VarChar(5)
-  communication_mode        String                      @default("WORKFLOW") @db.VarChar(20)
+  communication_mode        String                      @default("AI") @db.VarChar(20)
   blueprint_seeded          Boolean                     @default(false)
   blueprint_seeded_at       DateTime?                   @db.Timestamptz(6)
   whatsapp_number           String?                     @db.VarChar(20)

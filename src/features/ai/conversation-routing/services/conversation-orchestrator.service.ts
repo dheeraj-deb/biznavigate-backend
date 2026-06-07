@@ -35,7 +35,7 @@ export class ConversationOrchestratorService {
       ? { ...resolvedConfig, flow: session.activeFlow }
       : resolvedConfig;
 
-    const packet = this.contextAssembler.assemble({
+    const packet = await this.contextAssembler.assemble({
       resolvedConfig: effectiveConfig,
       session,
       history: input.history,

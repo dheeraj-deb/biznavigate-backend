@@ -11,7 +11,7 @@ export class UpdateBusinessDto {
   business_type?: string;
 
   @IsOptional()
-  @IsIn(["WORKFLOW"])
+  @IsIn(["AI", "WORKFLOW", "HYBRID"])
   communication_mode?: string;
 
   @IsOptional()

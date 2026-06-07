@@ -31,6 +31,26 @@ export interface ResolvedConversationConfig {
   rules: ConversationRules;
 }
 
+export interface BusinessContextCatalogItem {
+  name: string;
+  item_type: string;
+  category?: string | null;
+  base_price?: number | null;
+  currency?: string | null;
+  stock_quantity?: number | null;
+}
+
+export interface BusinessContextSnapshot {
+  businessId: string;
+  name: string;
+  type: string;
+  city?: string | null;
+  address?: string | null;
+  phone?: string | null;
+  website?: string | null;
+  catalogItems: BusinessContextCatalogItem[];
+}
+
 export interface ContactSession {
   conversationId: string;
   contactPhone: string;
@@ -51,6 +71,7 @@ export interface ContextPacket {
   session: ContactSession;
   history: MessageHistoryItem[];
   systemPrompt: string;
+  business?: BusinessContextSnapshot | null;
 }
 
 export interface AgentIntentSignal {
