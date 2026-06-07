@@ -16,6 +16,13 @@ const CATALOG_RULES: Array<{ keywords: string[]; config: CatalogConfig }> = [
     },
   },
   {
+    keywords: ['real estate', 'real_estate', 'property', 'properties', 'flat', 'apartment', 'house', 'plot', 'broker'],
+    config: {
+      item_types: ['property'],
+      labels: { property: 'Properties' },
+    },
+  },
+  {
     keywords: ['hotel', 'resort', 'homestay', 'cottage', 'villa'],
     config: {
       item_types: ['accommodation', 'activity'],
@@ -79,6 +86,7 @@ export const DEFAULT_ITEM_TYPES = [
   'activity',
   'service',
   'vehicle',
+  'property',
 ];
 
 // Keep the named export for any legacy exact-key lookups elsewhere
@@ -136,5 +144,17 @@ export const ATTRIBUTE_SCHEMAS: Record<string, Record<string, any>> = {
     color:        { type: 'string',  label: 'Color' },
     km_driven:    { type: 'number',  label: 'KM Driven' },
     condition:    { type: 'select',  label: 'Condition', options: ['new', 'used', 'certified_pre_owned'] },
+  },
+  property: {
+    property_type:     { type: 'select',  required: true, label: 'Property Type', options: ['flat', 'house', 'villa', 'plot', 'commercial'] },
+    listing_type:      { type: 'select',  label: 'Listing Type', options: ['sale', 'rent', 'lease'] },
+    bedrooms:          { type: 'number',  label: 'Bedrooms' },
+    bathrooms:         { type: 'number',  label: 'Bathrooms' },
+    area_sqft:         { type: 'number',  label: 'Area (sqft)' },
+    locality:          { type: 'string',  label: 'Locality' },
+    city:              { type: 'string',  label: 'City' },
+    furnishing:        { type: 'select',  label: 'Furnishing', options: ['unfurnished', 'semi_furnished', 'furnished'] },
+    possession_status: { type: 'string',  label: 'Possession Status' },
+    rera_id:           { type: 'string',  label: 'RERA ID' },
   },
 };

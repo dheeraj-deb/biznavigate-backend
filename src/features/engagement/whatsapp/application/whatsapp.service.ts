@@ -495,6 +495,69 @@ export class WhatsAppService {
     return this.sendMessage(phoneNumberId, to, message, nodeId);
   }
 
+  async sendFlowMessage(
+    phoneNumberId: string,
+    to: string,
+    bodyText: string,
+    cta: string,
+    flowId: string,
+    headerText?: string,
+    footerText?: string,
+    screen?: string,
+    flowToken?: string,
+    nodeId?: string,
+    flowData?: Record<string, any>,
+  ): Promise<any> {
+    const businessId = flowData?.business_id;
+    const tokenContext: Record<string, any> = {
+      customerPhone: to,
+      phoneNumberId,
+      ...(businessId ? { businessId } : {}),
+      ...(flowData?.check_in ? { check_in: flowData.check_in } : {}),
+      ...(flowData?.check_out ? { check_out: flowData.check_out } : {}),
+    };
+
+    if (businessId && to) {
+      const lead = await this.prisma.leads.findFirst({
+        where: { business_id: businessId, phone: to },
+        select: { lead_id: true },
+      }).catch(() => null);
+      if (lead) tokenContext.leadId = lead.lead_id;
+    }
+
+    try {
+      if (flowToken) Object.assign(tokenContext, JSON.parse(flowToken));
+    } catch {
+      // Non-JSON flow tokens are ignored so callers can pass plain legacy tokens safely.
+    }
+
+    const message: SendWhatsAppMessageDto = {
+      messaging_product: 'whatsapp',
+      to,
+      type: SendMessageType.INTERACTIVE,
+      interactive: {
+        type: 'flow' as any,
+        body: { text: bodyText },
+        action: {
+          name: 'flow',
+          parameters: {
+            flow_message_version: '3',
+            flow_token: JSON.stringify(tokenContext),
+            flow_id: flowId,
+            flow_cta: cta,
+            flow_action: 'data_exchange',
+            ...(screen ? { flow_action_payload: { screen } } : {}),
+          },
+        } as any,
+      },
+    };
+
+    if (headerText) message.interactive!.header = { type: 'text', text: headerText };
+    if (footerText) message.interactive!.footer = { text: footerText };
+
+    return this.sendMessage(phoneNumberId, to, message, nodeId);
+  }
+
   async sendBookingEntryButtons(
     phoneNumberId: string,
     to: string,

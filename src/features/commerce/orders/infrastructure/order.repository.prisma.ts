@@ -432,7 +432,7 @@ export class OrderRepositoryPrisma {
           throw new BadRequestException('Cannot cancel a delivered order — initiate a refund instead');
         }
 
-        await this.stockReservationService.releaseReservation(orderId);
+        await this.stockReservationService.releaseReservation(orderId, tx);
 
         return tx.orders.update({
           where: { order_id: orderId },

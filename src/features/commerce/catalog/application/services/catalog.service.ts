@@ -1,5 +1,6 @@
 import { Injectable, NotFoundException, BadRequestException } from '@nestjs/common';
 import { EventEmitter2 } from '@nestjs/event-emitter';
+import { Prisma } from '../../../../../../generated/prisma';
 import { PrismaService } from '../../../../../prisma/prisma.service';
 import { CreateCatalogItemDto } from '../dto/create-catalog-item.dto';
 import { UpdateCatalogItemDto } from '../dto/update-catalog-item.dto';
@@ -386,17 +387,44 @@ export class CatalogService {
     }
 
     // For physical_product — simple stock check
-    if (item_type === 'physical_product') {
+    if (item_type === 'property') {
       const items = await this.prisma.catalog_items.findMany({
         where: search
           ? { ...where, OR: [
               { name: { contains: search, mode: 'insensitive' } },
+              { description: { contains: search, mode: 'insensitive' } },
+              { category: { contains: search, mode: 'insensitive' } },
               { ai_tags: { has: search.toLowerCase() } },
             ]}
           : where,
-        include: { variants: { where: { is_active: true } }, product_detail: true },
+        include: { property_detail: true },
+        orderBy: { base_price: 'asc' },
         take: 10,
       });
+
+      return items.map((i) => ({
+        item_id: i.item_id,
+        item_type: i.item_type,
+        name: i.name,
+        description: i.description,
+        category: i.category,
+        base_price: Number(i.base_price),
+        effective_price: Number(i.base_price),
+        currency: i.currency,
+        attributes: i.attributes,
+        details: { ...((i.attributes as any) ?? {}), ...((i as any).property_detail ?? {}) },
+        primary_image_url: i.primary_image_url,
+        image_urls: i.image_urls,
+      }));
+    }
+
+    if (item_type === 'physical_product') {
+      const items = await this.findPhysicalProductsForAgent(
+        businessId,
+        search ?? '',
+        Number(budget_max || 0) || undefined,
+        10,
+      );
       return items.map((i) => ({
         item_id: i.item_id,
         item_type: i.item_type,
@@ -496,6 +524,83 @@ export class CatalogService {
     );
 
     return results.filter(Boolean);
+  }
+
+  private async findPhysicalProductsForAgent(
+    businessId?: string,
+    search = '',
+    budgetMax?: number,
+    take = 10,
+  ) {
+    const term = search.trim();
+    const baseWhere: any = {
+      business_id: businessId,
+      item_type: 'physical_product',
+      is_active: true,
+      deleted_at: null,
+      ...(budgetMax ? { base_price: { lte: budgetMax } } : {}),
+    };
+
+    if (term && businessId) {
+      try {
+        const rows = await this.prisma.$queryRaw<{ item_id: string }[]>(Prisma.sql`
+          SELECT ci.item_id::text AS item_id
+          FROM catalog_items ci
+          LEFT JOIN product_item_details pid ON pid.item_id = ci.item_id
+          WHERE ci.business_id = ${businessId}::uuid
+            AND ci.item_type = 'physical_product'
+            AND ci.is_active = true
+            AND ci.deleted_at IS NULL
+            ${budgetMax ? Prisma.sql`AND ci.base_price <= ${budgetMax}` : Prisma.empty}
+            AND (
+              lower(ci.name) LIKE ${`%${term.toLowerCase()}%`}
+              OR lower(coalesce(ci.description, '')) LIKE ${`%${term.toLowerCase()}%`}
+              OR lower(coalesce(ci.category, '')) LIKE ${`%${term.toLowerCase()}%`}
+              OR lower(coalesce(array_to_string(ci.ai_tags, ' '), '')) LIKE ${`%${term.toLowerCase()}%`}
+              OR lower(coalesce(pid.brand, '') || ' ' || coalesce(pid.sku, '')) LIKE ${`%${term.toLowerCase()}%`}
+              OR lower(coalesce(ci.name, '') || ' ' || coalesce(ci.description, '') || ' ' || coalesce(ci.category, '') || ' ' || coalesce(array_to_string(ci.ai_tags, ' '), '')) % ${term.toLowerCase()}
+            )
+          ORDER BY
+            CASE
+              WHEN lower(ci.name) = ${term.toLowerCase()} THEN 0
+              WHEN lower(ci.name) LIKE ${`${term.toLowerCase()}%`} THEN 1
+              WHEN lower(coalesce(pid.brand, '')) = ${term.toLowerCase()} THEN 2
+              ELSE 3
+            END,
+            coalesce(ci.stock_quantity, -1) DESC,
+            similarity(lower(coalesce(ci.name, '') || ' ' || coalesce(ci.description, '') || ' ' || coalesce(ci.category, '')), ${term.toLowerCase()}) DESC,
+            ci.created_at DESC
+          LIMIT ${take}
+        `);
+        const ids = rows.map((row) => row.item_id);
+        if (!ids.length) return [];
+        const items = await this.prisma.catalog_items.findMany({
+          where: { ...baseWhere, item_id: { in: ids } },
+          include: { variants: { where: { is_active: true } }, product_detail: true },
+        });
+        const byId = new Map(items.map((item) => [item.item_id, item]));
+        return ids.map((id) => byId.get(id)).filter(Boolean);
+      } catch {
+        // Keep public product links working even before the search migration runs.
+      }
+    }
+
+    return this.prisma.catalog_items.findMany({
+      where: term
+        ? {
+            ...baseWhere,
+            OR: [
+              { name: { contains: term, mode: 'insensitive' } },
+              { description: { contains: term, mode: 'insensitive' } },
+              { category: { contains: term, mode: 'insensitive' } },
+              { ai_tags: { has: term.toLowerCase() } },
+            ],
+          }
+        : baseWhere,
+      include: { variants: { where: { is_active: true } }, product_detail: true },
+      orderBy: [{ stock_quantity: 'desc' }, { created_at: 'desc' }],
+      take,
+    });
   }
 
   private withDetails(item: any) {
@@ -654,6 +759,15 @@ export class CatalogService {
       color: detail.color,
       km_driven: detail.km_driven,
       condition: detail.condition,
+      ownership_count: detail.ownership_count,
+      insurance_valid_until: detail.insurance_valid_until,
+      registration_number: detail.registration_number,
+      rc_status: detail.rc_status,
+      finance_available: detail.finance_available,
+      exchange_accepted: detail.exchange_accepted,
+      accident_history: detail.accident_history,
+      service_history: detail.service_history,
+      test_drive_available: detail.test_drive_available,
       metadata: detail.metadata,
     };
   }

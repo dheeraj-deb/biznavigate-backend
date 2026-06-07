@@ -33,7 +33,7 @@ export interface AgentContext {
 @Injectable()
 export class AgentService implements OnModuleInit {
   private readonly logger = new Logger(AgentService.name);
-  private graph: Awaited<ReturnType<typeof buildAgentGraph>>;
+  private readonly graphs = new Map<string, Awaited<ReturnType<typeof buildAgentGraph>>>();
 
   // One in-flight GenerationHandle per conversationId — new message cancels previous
   private readonly inFlight = new Map<string, GenerationHandle>();
@@ -54,13 +54,6 @@ export class AgentService implements OnModuleInit {
 
   async onModuleInit() {
     this.agentModelConfig = resolveAgentModelConfig(this.configService);
-    this.graph = await buildAgentGraph({
-      modelConfig: this.agentModelConfig,
-      catalogService: this.catalogService,
-      prisma: this.prisma,
-      pendingActions: this.pendingActions,
-      ragService: this.ragService ?? null,
-    });
     this.logger.log(`Agent graph initialized with primary=${this.agentModelConfig.primaryModel} fast=${this.agentModelConfig.fastModel}`);
   }
 
@@ -97,11 +90,12 @@ export class AgentService implements OnModuleInit {
       const customerLanguage = languageDetection.language;
       await this.rememberConversationLanguage(ctx.conversationId, customerLanguage);
       const bookingMethods = await this.resolveBookingMethods(ctx.businessId);
+      const graph = await this.graphForBusinessType(businessType);
 
       if (!bookingMethods.ai_chat.enabled) {
         return bookingMethods.human_handoff.enabled
-          ? 'I will connect you with our team to help with this booking.'
-          : 'Online booking support is currently disabled. Please contact the business directly.';
+          ? 'I will connect you with our team to help with this request.'
+          : 'Online chat support is currently disabled. Please contact the business directly.';
       }
 
       const result = await agentRunContextStorage.run(
@@ -117,7 +111,7 @@ export class AgentService implements OnModuleInit {
           recentBookings: builtContext.recentBookings,
         },
         () =>
-          this.graph.invoke(
+          graph.invoke(
             {
               messages: [new HumanMessage(text)],
               intent: '',
@@ -170,6 +164,36 @@ export class AgentService implements OnModuleInit {
         this.inFlight.delete(ctx.conversationId);
       }
     }
+  }
+
+  private async graphForBusinessType(businessType?: string | null): Promise<Awaited<ReturnType<typeof buildAgentGraph>>> {
+    const vertical = this.normalizeGraphVertical(businessType);
+    const cached = this.graphs.get(vertical);
+    if (cached) return cached;
+
+    const graph = await buildAgentGraph(
+      {
+        modelConfig: this.agentModelConfig,
+        catalogService: this.catalogService,
+        prisma: this.prisma,
+        pendingActions: this.pendingActions,
+        ragService: this.ragService ?? null,
+      },
+      vertical,
+    );
+    this.graphs.set(vertical, graph);
+    this.logger.log(`Agent graph ready for vertical=${vertical}`);
+    return graph;
+  }
+
+  private normalizeGraphVertical(businessType?: string | null): string {
+    const normalized = String(businessType ?? '').trim().toLowerCase();
+    if (['products', 'retail', 'ecommerce'].includes(normalized)) return 'products';
+    if (['hospitality', 'resort', 'accommodation', 'stay'].includes(normalized)) return 'hospitality';
+    if (['used_cars', 'used_car', 'second_hand_car', 'automotive', 'vehicle'].includes(normalized)) return 'used_cars';
+    if (['real_estate', 'property'].includes(normalized)) return 'real_estate';
+    if (['services', 'healthcare', 'education', 'consulting'].includes(normalized)) return normalized;
+    return 'default';
   }
 
   // ─── Lead event sync (fire-and-forget) ────────────────────────────────────

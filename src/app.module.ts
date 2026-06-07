@@ -30,6 +30,7 @@ import { AiModule } from "./features/ai/ai.module";
 import { InsightsModule } from "./features/insights/insights.module";
 import { PublicBookingModule } from "./features/public-booking/public-booking.module";
 import { SellerOsModule } from "./features/seller-os/seller-os.module";
+import { AppointmentSalesModule } from "./features/appointment-sales/appointment-sales.module";
 import { ProductsModule } from "./features/products/products.module";
 import { HealthController } from "./health.controller";
 
@@ -101,6 +102,7 @@ import { HealthController } from "./health.controller";
       : [HospitalityIndustryModule]),
     InsightsModule,
     SellerOsModule,
+    AppointmentSalesModule,
     PublicBookingModule,
     ...(process.env.MONGODB_URI
       ? [AiModule.withRag()]

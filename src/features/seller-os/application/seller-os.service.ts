@@ -975,7 +975,7 @@ export class SellerOsService {
     const today = new Date();
     today.setHours(0, 0, 0, 0);
 
-    const [pendingRows, holdRows, paidToday] = await Promise.all([
+    const [pendingRows, holdRows, paidRows, paidToday] = await Promise.all([
       this.query<any>(
         `SELECT
            po.product_order_id,
@@ -1032,6 +1032,36 @@ export class SellerOsService {
          LIMIT 50`,
         [businessId],
       ),
+      this.query<any>(
+        `SELECT
+           po.product_order_id,
+           po.legacy_order_id,
+           COALESCE(po.legacy_order_id, po.product_order_id) AS order_id,
+           COALESCE(po.order_number, o.order_number) AS order_number,
+           c.name AS customer_name,
+           COALESCE(c.phone, c.whatsapp_number, po.shipping_phone, o.shipping_phone) AS customer_phone,
+           po.total_amount,
+           po.payment_status,
+           COALESCE(po.metadata->>'payment_method', o.payment_method, 'upi') AS payment_method,
+           o.payment_reference,
+           o.payment_expires_at,
+           po.paid_at,
+           po.status,
+           po.source,
+           COALESCE(po.shipping_address, o.shipping_address) AS shipping_address,
+           po.created_at,
+           NULL::int AS payment_expires_in_minutes
+         FROM product_orders po
+         LEFT JOIN orders o ON o.order_id = po.legacy_order_id
+         LEFT JOIN customers c ON c.customer_id = po.customer_id
+         WHERE po.business_id = $1
+           AND po.payment_status = 'paid'
+           AND po.paid_at >= $2
+           AND po.status NOT IN ('cancelled', 'failed', 'refunded')
+         ORDER BY po.paid_at DESC NULLS LAST, po.updated_at DESC
+         LIMIT 25`,
+        [businessId, today],
+      ),
       this.prisma.product_orders.count({
         where: {
           business_id: businessId,
@@ -1042,9 +1072,10 @@ export class SellerOsService {
     ]);
 
     const itemsByOrder = await this.getPaymentDeskItems(
-      pendingRows.map((row) => row.product_order_id),
+      [...pendingRows, ...paidRows].map((row) => row.product_order_id),
     );
     const pendingOrders = pendingRows.map((row) => this.formatPaymentDeskOrder(row, itemsByOrder));
+    const paidOrders = paidRows.map((row) => this.formatPaymentDeskOrder(row, itemsByOrder));
     const codOrders = pendingOrders.filter((order) => ['cod', 'cash'].includes(String(order.payment_method ?? '').toLowerCase()));
     const activeHolds = holdRows.map((hold) => ({
       reservation_id: hold.reservation_id,
@@ -1069,6 +1100,7 @@ export class SellerOsService {
       },
       pending_orders: pendingOrders,
       cod_orders: codOrders,
+      paid_orders: paidOrders,
       active_holds: activeHolds,
     };
   }

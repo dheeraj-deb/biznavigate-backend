@@ -8,9 +8,67 @@ export class StockReservationService {
   constructor(private readonly prisma: PrismaService) {}
 
   async cleanupExpiredReservations(): Promise<number> {
-    // Order stock is deducted at order creation and is released by cancel flows.
-    // Cart/seller holds are cleaned by the dedicated methods below.
-    return 0;
+    const now = new Date();
+    return this.prisma.$transaction(async (tx) => {
+      const expiredOrders = await tx.orders.findMany({
+        where: {
+          order_type: 'product',
+          payment_expires_at: { lt: now },
+          payment_status: { in: ['pending', 'payment_pending', 'unpaid'] },
+          status: { notIn: ['cancelled', 'delivered', 'refunded'] },
+        },
+        select: { order_id: true, business_id: true },
+        orderBy: { payment_expires_at: 'asc' },
+        take: 200,
+      });
+
+      for (const order of expiredOrders) {
+        const productOrder = await tx.product_orders.findUnique({
+          where: { legacy_order_id: order.order_id },
+          select: { product_order_id: true, business_id: true, status: true },
+        });
+
+        await this.releaseReservation(order.order_id, tx);
+
+        await tx.orders.update({
+          where: { order_id: order.order_id },
+          data: {
+            status: 'cancelled',
+            payment_status: 'cancelled',
+            cancelled_at: now,
+            admin_notes: 'Payment window expired; stock released automatically',
+            updated_at: now,
+          },
+        });
+
+        if (productOrder) {
+          await tx.product_orders.update({
+            where: { product_order_id: productOrder.product_order_id },
+            data: {
+              status: 'cancelled',
+              payment_status: 'cancelled',
+              cancelled_at: now,
+              updated_at: now,
+            },
+          });
+          await tx.product_order_status_events.create({
+            data: {
+              product_order_id: productOrder.product_order_id,
+              business_id: productOrder.business_id,
+              from_status: productOrder.status,
+              to_status: 'cancelled',
+              actor: 'system',
+              data: { reason: 'payment_window_expired', legacy_order_id: order.order_id },
+            },
+          });
+        }
+      }
+
+      if (expiredOrders.length) {
+        this.logger.log(`Cancelled ${expiredOrders.length} expired product orders and restored stock`);
+      }
+      return expiredOrders.length;
+    });
   }
 
   async cleanupExpiredCartHolds(): Promise<{ count: number; restoredProductIds: string[] }> {
@@ -45,6 +103,9 @@ export class StockReservationService {
       }
 
       const restoredProductIds = [...new Set(expired.map((r) => r.item_id))];
+      for (const itemId of restoredProductIds) {
+        await this.markWhatsAppCatalogAvailabilityPending(tx, itemId);
+      }
       this.logger.log(`Released ${updated.count} expired cart holds and restored stock`);
 
       return { count: updated.count, restoredProductIds };
@@ -91,6 +152,9 @@ export class StockReservationService {
       );
 
       const restoredProductIds = [...new Set(expired.map((hold) => hold.item_id))];
+      for (const itemId of restoredProductIds) {
+        await this.markWhatsAppCatalogAvailabilityPending(tx, itemId);
+      }
       this.logger.log(`Released ${expired.length} expired seller holds and restored stock`);
       return { count: expired.length, restoredProductIds };
     });
@@ -134,6 +198,7 @@ export class StockReservationService {
           `Insufficient stock for item ${itemId}, variant ${variantId} on order ${orderId}`,
         );
       }
+      await this.markWhatsAppCatalogAvailabilityPending(tx, itemId);
       return;
     }
 
@@ -151,6 +216,7 @@ export class StockReservationService {
     if (updated.count === 0) {
       throw new ConflictException(`Insufficient stock for item ${itemId} on order ${orderId}`);
     }
+    await this.markWhatsAppCatalogAvailabilityPending(tx, itemId);
   }
 
   /**
@@ -184,6 +250,7 @@ export class StockReservationService {
             updated_at: new Date(),
           },
         });
+        await this.markWhatsAppCatalogAvailabilityPending(tx, item.item_id);
       } else {
         await tx.catalog_items.updateMany({
           where: { item_id: item.item_id, stock_quantity: { not: null } },
@@ -192,9 +259,26 @@ export class StockReservationService {
             updated_at: new Date(),
           },
         });
+        await this.markWhatsAppCatalogAvailabilityPending(tx, item.item_id);
       }
     }
 
     this.logger.debug(`Released stock reservation for order ${orderId}`);
+  }
+
+  private async markWhatsAppCatalogAvailabilityPending(tx: any, itemId: string): Promise<void> {
+    await tx.external_catalog_items.updateMany({
+      where: {
+        item_id: itemId,
+        provider: 'whatsapp',
+        sync_status: { not: 'local_only' },
+      },
+      data: {
+        sync_status: 'pending',
+        updated_at: new Date(),
+      },
+    }).catch((error: any) => {
+      this.logger.warn(`Failed to mark WhatsApp catalog availability pending for ${itemId}: ${error.message}`);
+    });
   }
 }

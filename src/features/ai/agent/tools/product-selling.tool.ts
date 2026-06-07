@@ -1,5 +1,6 @@
 import { tool } from '@langchain/core/tools';
 import { z } from 'zod';
+import { Prisma } from '../../../../../generated/prisma';
 import { PrismaService } from '../../../../prisma/prisma.service';
 import { getRunContext } from '../context/agent-run-context';
 import { appendSignal } from '../types/agent-signal';
@@ -12,6 +13,10 @@ function money(value: unknown, currency = 'INR') {
 
 function normalizePhone(phone?: string | null) {
   return String(phone ?? '').trim().replace(/[^\d+]/g, '');
+}
+
+function isUuid(value?: string | null): boolean {
+  return /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{12}$/i.test(String(value ?? ''));
 }
 
 function makeOrderNumber(prefix = 'WA') {
@@ -39,14 +44,73 @@ async function sellerSettings(prisma: PrismaService, businessId: string) {
   };
 }
 
-async function findProducts(prisma: PrismaService, businessId: string, search: string, take = 5) {
+async function findProducts(
+  prisma: PrismaService,
+  businessId: string,
+  search: string,
+  take = 5,
+  maxPrice?: number,
+) {
   const term = search.trim();
+  const priceWhere = maxPrice ? { base_price: { lte: Number(maxPrice) } } : {};
+  const baseWhere = {
+    business_id: businessId,
+    item_type: 'physical_product',
+    is_active: true,
+    deleted_at: null,
+    ...priceWhere,
+  };
+
+  if (term) {
+    try {
+      const rows = await prisma.$queryRaw<{ item_id: string }[]>(Prisma.sql`
+        SELECT ci.item_id::text AS item_id
+        FROM catalog_items ci
+        LEFT JOIN product_item_details pid ON pid.item_id = ci.item_id
+        WHERE ci.business_id = ${businessId}::uuid
+          AND ci.item_type = 'physical_product'
+          AND ci.is_active = true
+          AND ci.deleted_at IS NULL
+          ${maxPrice ? Prisma.sql`AND ci.base_price <= ${Number(maxPrice)}` : Prisma.empty}
+          AND (
+            lower(ci.name) LIKE ${`%${term.toLowerCase()}%`}
+            OR lower(coalesce(ci.description, '')) LIKE ${`%${term.toLowerCase()}%`}
+            OR lower(coalesce(ci.category, '')) LIKE ${`%${term.toLowerCase()}%`}
+            OR lower(coalesce(array_to_string(ci.ai_tags, ' '), '')) LIKE ${`%${term.toLowerCase()}%`}
+            OR lower(coalesce(pid.brand, '') || ' ' || coalesce(pid.sku, '')) LIKE ${`%${term.toLowerCase()}%`}
+            OR lower(coalesce(ci.name, '') || ' ' || coalesce(ci.description, '') || ' ' || coalesce(ci.category, '') || ' ' || coalesce(array_to_string(ci.ai_tags, ' '), '')) % ${term.toLowerCase()}
+          )
+        ORDER BY
+          CASE
+            WHEN lower(ci.name) = ${term.toLowerCase()} THEN 0
+            WHEN lower(ci.name) LIKE ${`${term.toLowerCase()}%`} THEN 1
+            WHEN lower(coalesce(pid.brand, '')) = ${term.toLowerCase()} THEN 2
+            ELSE 3
+          END,
+          coalesce(ci.stock_quantity, -1) DESC,
+          similarity(lower(coalesce(ci.name, '') || ' ' || coalesce(ci.description, '') || ' ' || coalesce(ci.category, '')), ${term.toLowerCase()}) DESC,
+          ci.created_at DESC
+        LIMIT ${take}
+      `);
+      const ids = rows.map((row) => row.item_id);
+      if (!ids.length) return [];
+      const items = await prisma.catalog_items.findMany({
+        where: { ...baseWhere, item_id: { in: ids } },
+        include: {
+          variants: { where: { is_active: true }, orderBy: { price: 'asc' } },
+          product_detail: true,
+        },
+      });
+      const byId = new Map(items.map((item) => [item.item_id, item]));
+      return ids.map((id) => byId.get(id)).filter(Boolean);
+    } catch {
+      // If pg_trgm migration has not run yet, keep the chatbot functional.
+    }
+  }
+
   return prisma.catalog_items.findMany({
     where: {
-      business_id: businessId,
-      item_type: 'physical_product',
-      is_active: true,
-      deleted_at: null,
+      ...baseWhere,
       ...(term
         ? {
             OR: [
@@ -105,14 +169,80 @@ async function findOrCreateCustomer(prisma: any, businessId: string, tenantId: s
   });
 }
 
+async function markWhatsAppCatalogAvailabilityPending(tx: any, itemId: string) {
+  await tx.external_catalog_items.updateMany({
+    where: {
+      item_id: itemId,
+      provider: 'whatsapp',
+      sync_status: { not: 'local_only' },
+    },
+    data: {
+      sync_status: 'pending',
+      updated_at: new Date(),
+    },
+  }).catch(() => undefined);
+}
+
+async function findProductOrderForCustomer(
+  prisma: PrismaService,
+  businessId: string,
+  params: { orderId?: string; leadId?: string; phone?: string },
+) {
+  const include = {
+    items: true,
+    customer: { select: { customer_id: true, name: true, phone: true, whatsapp_number: true } },
+    legacy_order: { select: { order_id: true, order_number: true, status: true, payment_status: true, payment_method: true } },
+  } as const;
+
+  if (params.orderId) {
+    const orderId = params.orderId.trim();
+    const filters: any[] = [{ order_number: orderId }];
+    if (isUuid(orderId)) {
+      filters.push({ product_order_id: orderId }, { legacy_order_id: orderId });
+    }
+
+    return prisma.product_orders.findFirst({
+      where: { business_id: businessId, OR: filters },
+      include,
+      orderBy: { created_at: 'desc' },
+    });
+  }
+
+  if (params.leadId) {
+    const byLead = await prisma.product_orders.findFirst({
+      where: {
+        business_id: businessId,
+        lead_id: params.leadId,
+        status: { not: 'cancelled' },
+      },
+      include,
+      orderBy: { created_at: 'desc' },
+    });
+    if (byLead) return byLead;
+  }
+
+  const phone = normalizePhone(params.phone);
+  if (!phone) return null;
+
+  return prisma.product_orders.findFirst({
+    where: {
+      business_id: businessId,
+      status: { not: 'cancelled' },
+      OR: [
+        { shipping_phone: phone },
+        { customer: { is: { OR: [{ phone }, { whatsapp_number: phone }] } } },
+      ],
+    },
+    include,
+    orderBy: { created_at: 'desc' },
+  });
+}
+
 export function makeSearchProductsTool(prisma: PrismaService) {
   return tool(
     async ({ search, maxPrice }) => {
       const { businessId } = getRunContext();
-      const results = await findProducts(prisma, businessId, search ?? '', 8);
-      const filtered = maxPrice
-        ? results.filter((item) => Number(item.base_price) <= Number(maxPrice))
-        : results;
+      const filtered = await findProducts(prisma, businessId, search ?? '', 8, maxPrice);
 
       if (!filtered.length) {
         const message = search
@@ -184,6 +314,7 @@ export function makeReserveProductStockTool(prisma: PrismaService) {
             data: { stock_quantity: { decrement: qty }, updated_at: new Date() },
           });
           if (updated.count === 0) return `${product.name} (${variant.name}) has only ${variant.stock_quantity} in stock.`;
+          await markWhatsAppCatalogAvailabilityPending(tx, product.item_id);
         } else {
           const updated = await tx.catalog_items.updateMany({
             where: {
@@ -193,6 +324,7 @@ export function makeReserveProductStockTool(prisma: PrismaService) {
             data: { stock_quantity: { decrement: qty }, updated_at: new Date() },
           });
           if (updated.count === 0) return `${product.name} has only ${product.stock_quantity ?? 0} in stock.`;
+          await markWhatsAppCatalogAvailabilityPending(tx, product.item_id);
         }
 
         const expiresAt = new Date(Date.now() + holdFor * 60 * 1000);
@@ -305,6 +437,7 @@ export function makeCreateProductOrderTool(prisma: PrismaService) {
             data: { stock_quantity: { decrement: qty }, updated_at: new Date() },
           });
           if (updated.count === 0) return `${product.name} (${variant.name}) has only ${variant.stock_quantity} in stock.`;
+          await markWhatsAppCatalogAvailabilityPending(tx, product.item_id);
         } else {
           const updated = await tx.catalog_items.updateMany({
             where: {
@@ -314,6 +447,7 @@ export function makeCreateProductOrderTool(prisma: PrismaService) {
             data: { stock_quantity: { decrement: qty }, updated_at: new Date() },
           });
           if (updated.count === 0) return `${product.name} has only ${product.stock_quantity ?? 0} in stock.`;
+          await markWhatsAppCatalogAvailabilityPending(tx, product.item_id);
         }
 
         const orderNumber = makeOrderNumber('WA');
@@ -442,7 +576,14 @@ export function makeCreateProductOrderTool(prisma: PrismaService) {
           product.tenant_id,
           `${orderNumber} for ${money(total, product.currency)} is waiting for payment confirmation.`,
           productOrder.product_order_id,
-          JSON.stringify({ order_number: orderNumber, payment_method: normalizedPayment, total_amount: total }),
+          JSON.stringify({
+            order_id: order.order_id,
+            legacy_order_id: order.order_id,
+            product_order_id: productOrder.product_order_id,
+            order_number: orderNumber,
+            payment_method: normalizedPayment,
+            total_amount: total,
+          }),
         ).catch(() => undefined);
 
         return `Order ${orderNumber} created for ${product.name} x${qty}. Total ${money(total, product.currency)}. Payment status is pending. Ask the customer to pay by ${normalizedPayment.toUpperCase()} or wait for owner confirmation.`;
@@ -458,6 +599,92 @@ export function makeCreateProductOrderTool(prisma: PrismaService) {
         customerName: z.string().optional().describe('Customer name if known'),
         deliveryAddress: z.string().optional().describe('Delivery address if delivery is required'),
         paymentMethod: z.string().optional().describe('upi, cod, cash, card, or other'),
+      }),
+    },
+  );
+}
+
+export function makeGetProductOrderTool(prisma: PrismaService) {
+  return tool(
+    async ({ orderId }) => {
+      const ctx = getRunContext();
+      const order = await findProductOrderForCustomer(prisma, ctx.businessId, {
+        orderId,
+        leadId: ctx.leadId,
+        phone: ctx.phone,
+      });
+
+      if (!order) {
+        return orderId
+          ? `No order found with ID ${orderId}. Please check the order number.`
+          : 'No recent product order found for this customer.';
+      }
+
+      const itemLines = (order.items ?? [])
+        .map((item: any) => `${item.product_name}${item.variant_name ? ` (${item.variant_name})` : ''} x${item.quantity}`)
+        .join(', ');
+      const customerName = order.customer?.name ? ` | Customer: ${order.customer.name}` : '';
+      const paymentMethod = (order.metadata as any)?.payment_method ?? order.legacy_order?.payment_method ?? null;
+      const paymentText = paymentMethod ? `${order.payment_status} via ${String(paymentMethod).toUpperCase()}` : order.payment_status;
+      const address = order.shipping_address ? ` | Delivery: ${order.shipping_address}` : '';
+
+      return (
+        `Order #${order.order_number}` +
+        ` | Status: ${order.status}` +
+        ` | Payment: ${paymentText}` +
+        ` | Total: ${money(order.total_amount)}` +
+        `${customerName}` +
+        `${itemLines ? ` | Items: ${itemLines}` : ''}` +
+        `${address}`
+      );
+    },
+    {
+      name: 'get_product_order',
+      description:
+        "Look up a product customer's order status. If orderId is omitted, uses the current lead/phone's most recent product order.",
+      schema: z.object({
+        orderId: z.string().optional().describe('Product order number or ID. Optional.'),
+      }),
+    },
+  );
+}
+
+export function makeGetProductPaymentTool(prisma: PrismaService) {
+  return tool(
+    async ({ orderId }) => {
+      const ctx = getRunContext();
+      const order = await findProductOrderForCustomer(prisma, ctx.businessId, {
+        orderId,
+        leadId: ctx.leadId,
+        phone: ctx.phone,
+      });
+
+      if (!order) {
+        return orderId
+          ? `No order found with ID ${orderId}. Please check the order number.`
+          : 'No recent product order found for this customer.';
+      }
+
+      const payment = order.legacy_order_id
+        ? await prisma.payments.findFirst({
+            where: { business_id: ctx.businessId, order_id: order.legacy_order_id },
+            orderBy: { created_at: 'desc' },
+          })
+        : null;
+
+      const method = payment?.method ?? (order.metadata as any)?.payment_method ?? order.legacy_order?.payment_method ?? null;
+      const amount = payment?.amount ?? order.total_amount;
+      const status = payment?.status === 'captured' ? 'paid' : (payment?.status ?? order.payment_status);
+      const methodText = method ? ` via ${String(method).toUpperCase()}` : '';
+
+      return `Payment for order #${order.order_number}: ${status}${methodText}. Amount ${money(amount)}.`;
+    },
+    {
+      name: 'get_product_payment',
+      description:
+        "Look up payment status for a product order. If orderId is omitted, uses the current lead/phone's most recent product order.",
+      schema: z.object({
+        orderId: z.string().optional().describe('Product order number or ID. Optional.'),
       }),
     },
   );

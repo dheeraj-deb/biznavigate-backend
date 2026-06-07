@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable, Logger, NotImplementedException } from '@nestjs/common';
+import { BadRequestException, Injectable, Logger } from '@nestjs/common';
 import { PrismaService } from '../../../../../prisma/prisma.service';
 import { WhatsAppApiClientService } from '../../infrastructure/whatsapp-api-client.service';
 import * as crypto from 'crypto';
@@ -131,6 +131,7 @@ export class WhatsAppCatalogService {
       throw new BadRequestException('No WhatsApp catalog id is connected for this business yet.');
     }
 
+    const itemType = await this.resolveCatalogItemType(businessId);
     const products: ImportedProduct[] = await this.whatsappApiClient.getCatalogProducts(catalogId, limit);
     let created = 0;
     let linked = 0;
@@ -171,7 +172,7 @@ export class WhatsAppCatalogService {
         continue;
       }
 
-      const matched = await this.findLocalMatch(businessId, product);
+      const matched = await this.findLocalMatch(businessId, product, itemType);
       if (matched) {
         linked += 1;
         await this.upsertMapping({
@@ -192,13 +193,15 @@ export class WhatsAppCatalogService {
           data: {
             business_id: businessId,
             tenant_id: tenantId,
-            item_type: 'physical_product',
+            item_type: itemType,
             name: product.name!.trim(),
             description: product.description ?? null,
             category: 'Imported from WhatsApp',
             base_price: price,
             currency: product.currency || 'INR',
-            stock_quantity: this.resolveInitialStock(product.availability),
+            stock_quantity: itemType === 'physical_product' || itemType === 'vehicle'
+              ? this.resolveInitialStock(product.availability)
+              : null,
             primary_image_url: product.image_url ?? null,
             image_urls: product.image_url ? [product.image_url] : undefined,
             attributes: {
@@ -210,17 +213,7 @@ export class WhatsAppCatalogService {
           },
         });
 
-        await tx.product_item_details.create({
-          data: {
-            item_id: createdItem.item_id,
-            business_id: businessId,
-            sku: product.retailer_id ?? null,
-            metadata: {
-              source: 'whatsapp_catalog',
-              external_product_id: product.id,
-            },
-          },
-        });
+        await this.createImportedItemDetails(tx, businessId, createdItem.item_id, itemType, product);
 
         await tx.external_catalog_items.create({
           data: {
@@ -256,11 +249,194 @@ export class WhatsAppCatalogService {
     };
   }
 
-  async syncToWhatsApp(businessId: string) {
-    await this.getWhatsAppAccount(businessId);
-    throw new NotImplementedException(
-      'Sending products back to WhatsApp requires Meta catalog write permissions. Import and local sync tracking are ready.',
-    );
+  async syncToWhatsApp(businessId: string, productIds?: string[]) {
+    const account = await this.getWhatsAppAccount(businessId);
+    const catalogId = account.whatsapp_catalog_id;
+    if (!catalogId) {
+      throw new BadRequestException('No WhatsApp catalog id is connected for this business yet.');
+    }
+
+    const deleteMappings = await this.prisma.external_catalog_items.findMany({
+      where: {
+        business_id: businessId,
+        provider: 'whatsapp',
+        sync_status: 'pending_delete',
+        ...(productIds?.length ? { item_id: { in: productIds } } : {}),
+      },
+      take: 200,
+    });
+
+    const where: any = {
+      business_id: businessId,
+      is_active: true,
+      deleted_at: null,
+      item_type: { in: ['physical_product', 'vehicle', 'property'] },
+      ...(productIds?.length ? { item_id: { in: productIds } } : {
+        external_catalog_items: {
+          some: {
+            provider: 'whatsapp',
+            sync_status: { in: ['pending', 'failed', 'linked', 'synced'] },
+          },
+        },
+      }),
+    };
+
+    const items = await this.prisma.catalog_items.findMany({
+      where,
+      include: {
+        external_catalog_items: {
+          where: { provider: 'whatsapp' },
+          orderBy: { updated_at: 'desc' },
+          take: 1,
+        },
+      },
+      take: 200,
+    });
+
+    let synced = 0;
+    let failed = 0;
+    let deleted = 0;
+    let skipped = 0;
+    const results: any[] = [];
+
+    for (const mapping of deleteMappings) {
+      try {
+        if (mapping.external_product_id && mapping.last_synced_at) {
+          await this.whatsappApiClient.deleteCatalogProduct(mapping.external_product_id);
+        }
+        await this.prisma.external_catalog_items.update({
+          where: { external_catalog_item_id: mapping.external_catalog_item_id },
+          data: {
+            sync_status: 'local_only',
+            updated_at: new Date(),
+          },
+        });
+        deleted += 1;
+        results.push({ item_id: mapping.item_id, status: 'deleted' });
+      } catch (error: any) {
+        failed += 1;
+        await this.prisma.external_catalog_items.update({
+          where: { external_catalog_item_id: mapping.external_catalog_item_id },
+          data: {
+            sync_status: 'failed',
+            raw_payload: {
+              ...((mapping.raw_payload as any) ?? {}),
+              error: error?.response?.data?.error?.message ?? error?.message ?? 'Catalog delete failed',
+            },
+            updated_at: new Date(),
+          },
+        });
+        results.push({
+          item_id: mapping.item_id,
+          status: 'failed',
+          error: error?.response?.data?.error?.message ?? error?.message ?? 'Catalog delete failed',
+        });
+      }
+    }
+
+    for (const item of items) {
+      const mapping = item.external_catalog_items?.[0] ?? null;
+      const retailerId = mapping?.retailer_id ?? item.item_id;
+      const localHash = this.hash(item);
+      const existingProductId = mapping?.external_product_id && mapping.external_product_id !== item.item_id
+        ? mapping.external_product_id
+        : undefined;
+      const readinessMissing = await this.getAppointmentListingReadiness(item);
+
+      if (readinessMissing.length) {
+        skipped += 1;
+        await this.prisma.external_catalog_items.upsert({
+          where: {
+            business_id_provider_external_product_id: {
+              business_id: businessId,
+              provider: 'whatsapp',
+              external_product_id: mapping?.external_product_id ?? item.item_id,
+            },
+          },
+          update: {
+            sync_status: 'needs_review',
+            local_hash: localHash,
+            raw_payload: {
+              ...((mapping?.raw_payload as any) ?? {}),
+              readiness_missing: readinessMissing,
+            },
+            updated_at: new Date(),
+          },
+          create: {
+            business_id: businessId,
+            item_id: item.item_id,
+            provider: 'whatsapp',
+            external_product_id: item.item_id,
+            retailer_id: item.item_id,
+            sync_status: 'needs_review',
+            local_hash: localHash,
+            raw_payload: {
+              source: 'local_catalog_sync',
+              readiness_missing: readinessMissing,
+            },
+          },
+        });
+        results.push({
+          item_id: item.item_id,
+          name: item.name,
+          status: 'needs_review',
+          missing: readinessMissing,
+        });
+        continue;
+      }
+
+      try {
+        const response = await this.whatsappApiClient.syncCatalogProduct(
+          catalogId,
+          {
+            retailer_id: retailerId,
+            name: item.name,
+            description: item.description ?? undefined,
+            price: Number(item.base_price ?? 0),
+            currency: item.currency ?? 'INR',
+            availability: item.stock_quantity === 0 ? 'out of stock' : 'in stock',
+            image_url: item.primary_image_url ?? undefined,
+          },
+          existingProductId,
+        );
+
+        await this.upsertSyncedLocalMapping({
+          businessId,
+          itemId: item.item_id,
+          catalogId,
+          externalProductId: response.id,
+          retailerId,
+          localHash,
+          rawPayload: {
+            source: 'local_catalog_sync',
+            item_type: item.item_type,
+          },
+        });
+
+        synced += 1;
+        results.push({ item_id: item.item_id, name: item.name, status: 'synced', external_product_id: response.id });
+      } catch (error: any) {
+        failed += 1;
+        await this.markLocalSyncFailed(businessId, item.item_id, retailerId, localHash, error);
+        results.push({
+          item_id: item.item_id,
+          name: item.name,
+          status: 'failed',
+          error: error?.response?.data?.error?.message ?? error?.message ?? 'Catalog sync failed',
+        });
+      }
+    }
+
+    return {
+      success: failed === 0,
+      catalogId,
+      scanned: items.length,
+      synced,
+      deleted,
+      skipped,
+      failed,
+      results,
+    };
   }
 
   async removeFromWhatsAppCatalog(productId: string, businessId: string) {
@@ -354,12 +530,12 @@ export class WhatsAppCatalogService {
     return new Map(rows.filter((row) => row.item_id).map((row) => [row.item_id!, row]));
   }
 
-  private async findLocalMatch(businessId: string, product: ImportedProduct) {
-    if (product.retailer_id) {
+  private async findLocalMatch(businessId: string, product: ImportedProduct, itemType = 'physical_product') {
+    if (product.retailer_id && itemType === 'physical_product') {
       const bySku = await this.prisma.catalog_items.findFirst({
         where: {
           business_id: businessId,
-          item_type: 'physical_product',
+          item_type: itemType,
           deleted_at: null,
           product_detail: { is: { sku: product.retailer_id } },
         },
@@ -370,7 +546,7 @@ export class WhatsAppCatalogService {
     return this.prisma.catalog_items.findFirst({
       where: {
         business_id: businessId,
-        item_type: 'physical_product',
+        item_type: itemType,
         deleted_at: null,
         name: { equals: product.name ?? '', mode: 'insensitive' },
       },
@@ -416,6 +592,239 @@ export class WhatsAppCatalogService {
         last_synced_at: new Date(),
       },
     });
+  }
+
+  private async upsertSyncedLocalMapping(params: {
+    businessId: string;
+    itemId: string;
+    catalogId: string;
+    externalProductId: string;
+    retailerId: string;
+    localHash: string;
+    rawPayload: Record<string, any>;
+  }) {
+    const existing = await this.prisma.external_catalog_items.findFirst({
+      where: {
+        business_id: params.businessId,
+        item_id: params.itemId,
+        provider: 'whatsapp',
+      },
+      orderBy: { updated_at: 'desc' },
+    });
+
+    if (existing) {
+      await this.prisma.external_catalog_items.update({
+        where: { external_catalog_item_id: existing.external_catalog_item_id },
+        data: {
+          external_catalog_id: params.catalogId,
+          external_product_id: params.externalProductId,
+          retailer_id: params.retailerId,
+          sync_status: 'synced',
+          local_hash: params.localHash,
+          raw_payload: params.rawPayload,
+          last_synced_at: new Date(),
+          updated_at: new Date(),
+        },
+      });
+      return;
+    }
+
+    await this.prisma.external_catalog_items.create({
+      data: {
+        business_id: params.businessId,
+        item_id: params.itemId,
+        provider: 'whatsapp',
+        external_catalog_id: params.catalogId,
+        external_product_id: params.externalProductId,
+        retailer_id: params.retailerId,
+        sync_status: 'synced',
+        local_hash: params.localHash,
+        raw_payload: params.rawPayload,
+        last_synced_at: new Date(),
+      },
+    });
+  }
+
+  private async markLocalSyncFailed(
+    businessId: string,
+    itemId: string,
+    retailerId: string,
+    localHash: string,
+    error: any,
+  ) {
+    const message = error?.response?.data?.error?.message ?? error?.message ?? 'Catalog sync failed';
+    const existing = await this.prisma.external_catalog_items.findFirst({
+      where: {
+        business_id: businessId,
+        item_id: itemId,
+        provider: 'whatsapp',
+      },
+      orderBy: { updated_at: 'desc' },
+    });
+
+    if (existing) {
+      await this.prisma.external_catalog_items.update({
+        where: { external_catalog_item_id: existing.external_catalog_item_id },
+        data: {
+          retailer_id: existing.retailer_id ?? retailerId,
+          sync_status: 'failed',
+          local_hash: localHash,
+          raw_payload: {
+            ...(existing.raw_payload as any ?? {}),
+            last_error: message,
+          },
+          updated_at: new Date(),
+        },
+      });
+      return;
+    }
+
+    await this.prisma.external_catalog_items.create({
+      data: {
+        business_id: businessId,
+        item_id: itemId,
+        provider: 'whatsapp',
+        external_product_id: itemId,
+        retailer_id: retailerId,
+        sync_status: 'failed',
+        local_hash: localHash,
+        raw_payload: { last_error: message },
+      },
+    });
+  }
+
+  private async resolveCatalogItemType(businessId: string): Promise<'physical_product' | 'vehicle' | 'property'> {
+    const business = await this.prisma.businesses.findUnique({
+      where: { business_id: businessId },
+      select: { business_type: true },
+    });
+    if (business?.business_type === 'used_cars') return 'vehicle';
+    if (business?.business_type === 'real_estate') return 'property';
+    return 'physical_product';
+  }
+
+  private async getAppointmentListingReadiness(item: any): Promise<string[]> {
+    if (item.item_type !== 'vehicle' && item.item_type !== 'property') return [];
+
+    const rows = await this.prisma.$queryRawUnsafe<any[]>(
+      `SELECT
+         row_to_json(vid.*) AS vehicle,
+         row_to_json(pid.*) AS property
+       FROM catalog_items ci
+       LEFT JOIN vehicle_item_details vid ON vid.item_id = ci.item_id
+       LEFT JOIN property_item_details pid ON pid.item_id = ci.item_id
+       WHERE ci.item_id = $1
+       LIMIT 1`,
+      item.item_id,
+    );
+    const details = item.item_type === 'property' ? (rows[0]?.property ?? {}) : (rows[0]?.vehicle ?? {});
+    const missing: string[] = [];
+    const hasText = (value: any) => typeof value === 'string' ? value.trim().length > 0 : Boolean(value);
+
+    if (!hasText(item.primary_image_url)) missing.push('photo');
+    if (Number(item.base_price ?? 0) <= 0) missing.push('price');
+    if (!hasText(item.description)) missing.push('description');
+
+    if (item.item_type === 'property') {
+      if (!hasText(details.property_type)) missing.push('property type');
+      if (!hasText(details.locality) && !hasText(details.city)) missing.push('location');
+      if (!hasText(details.map_url) && !hasText(details.visit_landmark)) missing.push('map or landmark');
+      if (!hasText(details.documents_status)) missing.push('documents');
+      return missing;
+    }
+
+    if (!hasText(details.make)) missing.push('make');
+    if (!hasText(details.model_name)) missing.push('model');
+    if (!details.year) missing.push('year');
+    if (details.km_driven === null || details.km_driven === undefined) missing.push('km driven');
+    if (!hasText(details.registration_number) && !hasText(details.rc_status)) missing.push('RC or registration');
+    if (!hasText(details.insurance_valid_until)) missing.push('insurance');
+    return missing;
+  }
+
+  private async createImportedItemDetails(
+    tx: any,
+    businessId: string,
+    itemId: string,
+    itemType: 'physical_product' | 'vehicle' | 'property',
+    product: ImportedProduct,
+  ) {
+    if (itemType === 'physical_product') {
+      await tx.product_item_details.create({
+        data: {
+          item_id: itemId,
+          business_id: businessId,
+          sku: product.retailer_id ?? null,
+          metadata: {
+            source: 'whatsapp_catalog',
+            external_product_id: product.id,
+          },
+        },
+      });
+      return;
+    }
+
+    if (itemType === 'vehicle') {
+      const vehicle = this.parseVehicleFromCatalogProduct(product);
+      await tx.vehicle_item_details.create({
+        data: {
+          item_id: itemId,
+          business_id: businessId,
+          make: vehicle.make,
+          model_name: vehicle.model_name,
+          year: vehicle.year,
+          fuel_type: vehicle.fuel_type,
+          transmission: vehicle.transmission,
+          km_driven: vehicle.km_driven,
+          condition: 'used',
+          metadata: {
+            source: 'whatsapp_catalog',
+            external_product_id: product.id,
+            retailer_id: product.retailer_id,
+          },
+        },
+      });
+      return;
+    }
+
+    await tx.$queryRawUnsafe(
+      `INSERT INTO property_item_details
+         (item_id, business_id, property_type, listing_type, metadata)
+       VALUES ($1, $2, $3, $4, $5::jsonb)
+       ON CONFLICT (item_id) DO NOTHING`,
+      itemId,
+      businessId,
+      'flat',
+      'sale',
+      JSON.stringify({
+        source: 'whatsapp_catalog',
+        external_product_id: product.id,
+        retailer_id: product.retailer_id,
+      }),
+    );
+  }
+
+  private parseVehicleFromCatalogProduct(product: ImportedProduct) {
+    const text = `${product.name ?? ''} ${product.description ?? ''}`;
+    const yearMatch = text.match(/\b(19\d{2}|20\d{2})\b/);
+    const year = yearMatch ? Number(yearMatch[1]) : new Date().getFullYear();
+    const nameWithoutYear = String(product.name ?? 'Vehicle').replace(/\b(19\d{2}|20\d{2})\b/, '').trim();
+    const parts = nameWithoutYear.split(/\s+/).filter(Boolean);
+    const make = parts[0] ?? 'Vehicle';
+    const modelName = parts.slice(1).join(' ') || nameWithoutYear || 'Vehicle';
+    const fuel = text.match(/\b(petrol|diesel|cng|electric|ev|hybrid)\b/i)?.[1];
+    const transmission = text.match(/\b(manual|automatic|amt)\b/i)?.[1];
+    const kmMatch = text.match(/\b([\d,]+)\s*(km|kms|kilometer|kilometers)\b/i);
+    const km = kmMatch ? Number(kmMatch[1].replace(/,/g, '')) : null;
+
+    return {
+      make,
+      model_name: modelName,
+      year,
+      fuel_type: fuel ? fuel.toLowerCase() : null,
+      transmission: transmission ? transmission.toLowerCase() : null,
+      km_driven: Number.isFinite(km) ? km : null,
+    };
   }
 
   private toPreview(product: ImportedProduct) {
