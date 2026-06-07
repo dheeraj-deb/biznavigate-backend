@@ -75,8 +75,8 @@ export class OnboardingController {
     const business = await this.prisma.businesses.update({
       where: { business_id },
       data: {
-        ...businessData,
         ...automationDefaults,
+        ...businessData,
         ...(employees?.length && {
           business_employees: {
             create: employees,
