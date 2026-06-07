@@ -1095,7 +1095,7 @@ export class WorkflowsService implements OnModuleInit {
       };
     }
 
-    workflowInput.context = {
+    const enrichedContext: Record<string, any> = {
       ...workflowInput.context,
       ...this.eventPayloadContext(workflowInput),
       // Channel needs to live on workflowInput.context (not just system_context)
@@ -1104,6 +1104,19 @@ export class WorkflowsService implements OnModuleInit {
       // `context.channel === 'whatsapp'` skip their send path silently.
       channel,
       ...(syntheticContact ? { contact: syntheticContact } : {}),
+      lead: {
+        id: system_context.lead_id,
+        name: system_context.lead_name ?? 'Customer',
+        phone: system_context.lead_phone,
+        email: system_context.lead_email,
+        status: system_context.lead_status,
+        tags: system_context.lead_tags,
+        source: system_context.lead_source,
+      },
+      lead_id: system_context.lead_id,
+      lead_name: system_context.lead_name ?? 'Customer',
+      lead_phone: system_context.lead_phone,
+      lead_email: system_context.lead_email,
       business: {
         id: system_context.business_id,
         name: system_context.business_name,
@@ -1116,6 +1129,7 @@ export class WorkflowsService implements OnModuleInit {
         country: system_context.business_country,
       },
     };
+    workflowInput.context = enrichedContext as any;
 
     const execution_id = crypto.randomUUID();
     const durableDefinitionReady = await this.ensureDurableWorkflowDefinition(
@@ -1236,11 +1250,17 @@ export class WorkflowsService implements OnModuleInit {
   }
 
   private eventPayloadContext(workflowInput: WorkflowProcessingContext): Record<string, any> {
-    const eventEnvelope = (workflowInput.context as any)?.metadata?.payload;
+    const existingMetadata = (workflowInput.context as any)?.metadata ?? {};
+    const eventEnvelope = existingMetadata?.payload;
     const eventPayload = eventEnvelope?.payload;
     if (!eventPayload || typeof eventPayload !== 'object') return {};
 
     return {
+      metadata: {
+        ...existingMetadata,
+        event: eventEnvelope,
+        payload: eventPayload,
+      },
       event: {
         name: eventEnvelope.event_name ?? eventEnvelope.eventName ?? null,
         payload: eventPayload,
