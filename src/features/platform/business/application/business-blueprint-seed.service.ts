@@ -281,7 +281,7 @@ export class BusinessBlueprintSeedService {
     const workflowsSeeded = workflowResult.status === 'seeded';
 
     if (options.requireWorkflows && !workflowsSeeded) {
-      throw new Error(`Workflow blueprint seed failed: ${workflowResult.reason ?? workflowResult.status}`);
+      throw new Error(`Workflow blueprint seed failed: ${workflowResult.status}`);
     }
 
     const seededAt = new Date();
@@ -337,17 +337,7 @@ export class BusinessBlueprintSeedService {
     business: { business_id: string; tenant_id: string; business_type: string | null },
     group: BlueprintGroup,
   ) {
-    if (!process.env.MONGODB_URI) {
-      return { status: 'skipped', reason: 'mongodb_not_connected' };
-    }
-
-    const mongoReady = await this.waitForMongoReady();
-    if (!mongoReady) {
-      this.logger.warn(
-        `Workflow blueprint seed skipped for business ${business.business_id}: Mongo readyState=${mongoose.connection.readyState}`,
-      );
-      return { status: 'skipped', reason: 'mongodb_not_connected' };
-    }
+    this.assertMongoConnected();
 
     const blueprints = this.getWorkflowBlueprintsForBusiness(business.business_type, group);
     const installed = [];
@@ -389,19 +379,39 @@ export class BusinessBlueprintSeedService {
     return { status: 'seeded', installed };
   }
 
-  private async waitForMongoReady(timeoutMs = 5000): Promise<boolean> {
-    const readyState = () => Number(mongoose.connection.readyState);
-    if (readyState() === 1) return true;
-    if (readyState() === 0 || readyState() === 3) return false;
-
-    const startedAt = Date.now();
-    while (Date.now() - startedAt < timeoutMs) {
-      if (readyState() === 1) return true;
-      if (readyState() === 0 || readyState() === 3) return false;
-      await new Promise((resolve) => setTimeout(resolve, 100));
+  private assertMongoConnected(): void {
+    if (!process.env.MONGODB_URI) {
+      throw new Error('MONGODB_URI is required to seed workflow blueprints');
     }
 
-    return readyState() === 1;
+    if (mongoose.connection.readyState !== 1) {
+      throw new Error(`MongoDB is not connected: ${JSON.stringify(this.mongoDiagnostic())}`);
+    }
+  }
+
+  private mongoDiagnostic() {
+    return {
+      hasUri: Boolean(process.env.MONGODB_URI),
+      readyState: Number(mongoose.connection.readyState),
+      readyStateLabel: this.mongoReadyStateLabel(Number(mongoose.connection.readyState)),
+      dbName: mongoose.connection.name || null,
+      host: mongoose.connection.host || null,
+    };
+  }
+
+  private mongoReadyStateLabel(state: number): string {
+    switch (state) {
+      case 0:
+        return 'disconnected';
+      case 1:
+        return 'connected';
+      case 2:
+        return 'connecting';
+      case 3:
+        return 'disconnecting';
+      default:
+        return 'unknown';
+    }
   }
 
   private getWorkflowBlueprintsForBusiness(businessType: string | null, group: BlueprintGroup): WorkflowBlueprint[] {
