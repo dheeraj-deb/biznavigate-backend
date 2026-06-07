@@ -1,5 +1,6 @@
 import { Injectable, Logger } from '@nestjs/common';
-import mongoose from 'mongoose';
+import { InjectConnection } from '@nestjs/mongoose';
+import { Connection } from 'mongoose';
 import { PrismaService } from '../../../../prisma/prisma.service';
 import { resolveBusinessGroupFromType } from '../domain/business-classification';
 import { SYSTEM_WHATSAPP_TEMPLATE_BLUEPRINTS } from '../../../engagement/whatsapp-templates/system-whatsapp-template-blueprints';
@@ -256,7 +257,10 @@ const GROUP_WORKFLOWS: Record<BlueprintGroup, WorkflowBlueprint[]> = {
 export class BusinessBlueprintSeedService {
   private readonly logger = new Logger(BusinessBlueprintSeedService.name);
 
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    @InjectConnection() private readonly mongoConnection: Connection,
+  ) {}
 
   async seedForBusiness(businessId: string, options: SeedOptions = {}) {
     const business = await this.prisma.businesses.findUnique({
@@ -343,9 +347,9 @@ export class BusinessBlueprintSeedService {
     const installed = [];
     for (const blueprint of blueprints) {
       const workflowId = `bp_${business.business_id}_${blueprint.key}`;
-      const existing = await mongoose.connection.collection('workflow_definitions').findOne({ workflow_id: workflowId });
+      const existing = await this.mongoConnection.collection('workflow_definitions').findOne({ workflow_id: workflowId });
       if (!existing) {
-        await mongoose.connection.collection('workflow_definitions').insertOne({
+        await this.mongoConnection.collection('workflow_definitions').insertOne({
           workflow_id: workflowId,
           workflow_name: blueprint.name,
           business_type: business.business_type ?? 'general',
@@ -359,7 +363,7 @@ export class BusinessBlueprintSeedService {
         });
       }
 
-      await mongoose.connection.collection('business_workflows').updateOne(
+      await this.mongoConnection.collection('business_workflows').updateOne(
         { business_id: business.business_id, workflow_id: workflowId },
         {
           $setOnInsert: {
@@ -384,7 +388,7 @@ export class BusinessBlueprintSeedService {
       throw new Error('MONGODB_URI is required to seed workflow blueprints');
     }
 
-    if (mongoose.connection.readyState !== 1) {
+    if (this.mongoConnection.readyState !== 1) {
       throw new Error(`MongoDB is not connected: ${JSON.stringify(this.mongoDiagnostic())}`);
     }
   }
@@ -392,10 +396,10 @@ export class BusinessBlueprintSeedService {
   private mongoDiagnostic() {
     return {
       hasUri: Boolean(process.env.MONGODB_URI),
-      readyState: Number(mongoose.connection.readyState),
-      readyStateLabel: this.mongoReadyStateLabel(Number(mongoose.connection.readyState)),
-      dbName: mongoose.connection.name || null,
-      host: mongoose.connection.host || null,
+      readyState: Number(this.mongoConnection.readyState),
+      readyStateLabel: this.mongoReadyStateLabel(Number(this.mongoConnection.readyState)),
+      dbName: this.mongoConnection.name || null,
+      host: this.mongoConnection.host || null,
     };
   }
 
