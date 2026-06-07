@@ -34,6 +34,13 @@ import { AppointmentSalesModule } from "./features/appointment-sales/appointment
 import { ProductsModule } from "./features/products/products.module";
 import { HealthController } from "./health.controller";
 
+const MONGODB_REQUIRED = process.env.MONGODB_REQUIRED !== 'false';
+const MONGODB_URI = process.env.MONGODB_URI;
+
+if (MONGODB_REQUIRED && !MONGODB_URI) {
+  throw new Error('MONGODB_URI is required. Set MONGODB_URI or explicitly set MONGODB_REQUIRED=false to start without Mongo-backed modules.');
+}
+
 @Module({
   imports: [
     AppConfigModule,
@@ -55,13 +62,15 @@ import { HealthController } from "./health.controller";
         limit: 1000, // 1000 requests per 15 minutes
       },
     ]),
-    ...(process.env.MONGODB_URI
+    ...(MONGODB_URI
       ? [MongooseModule.forRootAsync({
           imports: [ConfigModule],
           useFactory: async (config: ConfigService) => ({
             uri: config.get<string>('MONGODB_URI'),
             maxPoolSize: 10,
             serverSelectionTimeoutMS: 5000,
+            retryAttempts: 3,
+            retryDelay: 1000,
           }),
           inject: [ConfigService],
         })]
@@ -89,28 +98,28 @@ import { HealthController } from "./health.controller";
     BullMQModule,
     PlatformModule,
     // UploadsModule,
-    ...(process.env.MONGODB_URI
+    ...(MONGODB_URI
       ? [CrmModule.withRealtime()]
       : [CrmModule]),
-    ...(process.env.MONGODB_URI
+    ...(MONGODB_URI
       ? [EngagementModule.withChannels()]
       : [EngagementModule]),
     CommerceModule,
     ProductsModule,
-    ...(process.env.MONGODB_URI
+    ...(MONGODB_URI
       ? [HospitalityIndustryModule.withPricing()]
       : [HospitalityIndustryModule]),
     InsightsModule,
     SellerOsModule,
     AppointmentSalesModule,
     PublicBookingModule,
-    ...(process.env.MONGODB_URI
+    ...(MONGODB_URI
       ? [AiModule.withRag()]
       : [AiModule]),
-    ...(process.env.MONGODB_URI
+    ...(MONGODB_URI
       ? [AutomationModule.withWorkflows()]
       : [AutomationModule]),
-    ...(process.env.MONGODB_URI
+    ...(MONGODB_URI
       ? [KafkaModule]
       : []),
   ],
