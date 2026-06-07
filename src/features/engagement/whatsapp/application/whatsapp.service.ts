@@ -315,6 +315,27 @@ export class WhatsAppService {
       ? `${entryMenuReason === 'returning' ? 'Welcome back to' : 'Welcome to'} ${businessName || 'our store'}. What would you like to do?`
       : `${entryMenuReason === 'returning' ? 'Welcome back' : 'Hi'}${params.lead.name ? ` ${params.lead.name}` : ''}! What would you like to do?`;
 
+    if (['products', 'retail', 'ecommerce'].includes(businessType)) {
+      await this.sendListMessage(
+        params.phone_number_id,
+        params.message.from,
+        intro,
+        'Choose',
+        [
+          {
+            title: 'Store options',
+            rows: [
+              { id: 'menu_browse', title: 'Browse Products' },
+              { id: 'menu_order', title: 'My Order' },
+              { id: 'menu_chat', title: 'Chat with Us' },
+              { id: 'menu_support', title: 'Support' },
+            ],
+          },
+        ],
+      );
+      return true;
+    }
+
     await this.sendButtonMessage(
       params.phone_number_id,
       params.message.from,
@@ -379,6 +400,7 @@ export class WhatsAppService {
     }
 
     if (input === 'menu_chat') return 'I want to chat with the business team';
+    if (input === 'menu_order') return 'I need help with an order';
     if (input === 'menu_support') return 'I need support';
     return null;
   }
