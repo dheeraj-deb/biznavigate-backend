@@ -133,6 +133,11 @@ async function bootstrap() {
   // Widget static files (for widget.js and styles.css)
   app.use("/widget", express.static(join(__dirname, "..", "public", "widget")));
 
+  const server = app.getHttpAdapter().getInstance();
+  server.get(/^\/book\/[^/]+(?:\/.*)?$/, (_req: express.Request, res: express.Response) => {
+    res.sendFile(join(__dirname, "..", "public", "booking", "storefront.html"));
+  });
+
   const port = process.env.PORT ?? 3000;
   await app.listen(port);
 
