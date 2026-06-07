@@ -5,6 +5,8 @@ import { getRedis } from '../../../../../utils/redis';
 import { KafkaProducerService } from '../../../../kafka/kafka-producer.service';
 import { NormalizedWhatsAppMessage } from './whatsapp-message-normalizer.service';
 
+const DEFAULT_MESSAGE_DEBOUNCE_MS = 1500;
+
 @Injectable()
 export class AutomationRouter {
   private readonly logger = new Logger(AutomationRouter.name);
@@ -65,7 +67,7 @@ export class AutomationRouter {
     await this.enqueueDebouncedMessage(params.conversation.conversation_id, workflowPayload);
   }
 
-  private async enqueueDebouncedMessage(conversationId: string, workflowPayload: any, delay = 10000) {
+  private async enqueueDebouncedMessage(conversationId: string, workflowPayload: any, delay = DEFAULT_MESSAGE_DEBOUNCE_MS) {
     const bufferKey = `msg_buffer:${conversationId}`;
     const redis = getRedis();
     await redis.rpush(bufferKey, JSON.stringify(workflowPayload));

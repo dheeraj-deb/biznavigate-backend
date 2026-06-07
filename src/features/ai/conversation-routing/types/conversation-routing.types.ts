@@ -32,12 +32,16 @@ export interface ResolvedConversationConfig {
 }
 
 export interface BusinessContextCatalogItem {
+  item_id: string;
   name: string;
   item_type: string;
   category?: string | null;
   base_price?: number | null;
   currency?: string | null;
   stock_quantity?: number | null;
+  primary_image_url?: string | null;
+  whatsapp_catalog_id?: string | null;
+  whatsapp_product_retailer_id?: string | null;
 }
 
 export interface BusinessContextSnapshot {
@@ -48,6 +52,23 @@ export interface BusinessContextSnapshot {
   address?: string | null;
   phone?: string | null;
   website?: string | null;
+  bookingMethods: {
+    availability_response: {
+      mode: 'interactive' | 'text' | 'website_link';
+    };
+    interactive: {
+      enabled: boolean;
+      send_room_or_service_list: boolean;
+    };
+    catalog: {
+      enabled: boolean;
+      send_product_messages: boolean;
+    };
+  };
+  bookingLink: {
+    enabled: boolean;
+    url: string;
+  };
   catalogItems: BusinessContextCatalogItem[];
 }
 
@@ -107,7 +128,22 @@ export type MappedConversationResponse =
   | { kind: 'text'; text: string }
   | { kind: 'buttons'; body: string; buttons: AgentOption[] }
   | { kind: 'list'; body: string; buttonText: string; sections: Array<{ title: string; rows: AgentItem[] }> }
-  | { kind: 'link'; text: string; url: string; label: string };
+  | { kind: 'link'; text: string; url: string; label: string }
+  | {
+      kind: 'product';
+      body: string;
+      catalogId: string;
+      productRetailerId: string;
+      footerText?: string;
+    }
+  | {
+      kind: 'product_list';
+      body: string;
+      catalogId: string;
+      sections: Array<{ title: string; product_items: { product_retailer_id: string }[] }>;
+      headerText?: string;
+      footerText?: string;
+    };
 
 export interface ConversationOrchestratorInput {
   tenantId: string;

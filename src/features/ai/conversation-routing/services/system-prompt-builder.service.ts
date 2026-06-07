@@ -16,6 +16,9 @@ export class SystemPromptBuilderService {
       `Active mode: ${config.mode}`,
       `Active flow: ${config.flow}`,
       `Tone: ${config.rules.tone ?? 'friendly, concise, and helpful'}`,
+      business ? this.bookingPresentationBlock(business) : '',
+      '',
+      this.businessTypeBlock(business?.type),
       '',
       this.flowBlock(config.flow),
       '',
@@ -26,8 +29,15 @@ export class SystemPromptBuilderService {
       '- Never output raw WhatsApp, Gupshup, Meta, or channel wire-format JSON.',
       '- Return only valid JSON. No markdown. No prose outside JSON.',
       '- Use semantic response types only: text, buttons, list, link.',
+      '- If booking presentation says website link, prefer type="link" with metadata.url set to that URL.',
+      '- If booking presentation says interactive WhatsApp catalog, prefer type="list" for multiple items and type="buttons" for 2-3 clear choices; the backend may upgrade eligible catalog items to product cards.',
       '- If the user should be moved to another flow, set switch_flow=true and target_flow.',
       '- Keep WhatsApp copy short and clear.',
+      '- Customer experience priority: fastest useful answer first, then one clear next step.',
+      '- Do not ask unnecessary questions. If business context has enough information, answer now.',
+      '- Ask at most one question per reply, and only when required to continue accurately.',
+      '- Do not end every answer with generic filler like "How can I assist further?" or "let me know".',
+      '- Do not restart the conversation after the customer already expressed intent; continue from their latest message.',
       '- Answer business offering, product, catalog, stock, and pricing questions only from the Business context above.',
       '- Never describe BizNavigate, this backend, or a WhatsApp Business SaaS platform unless the Business context explicitly says that is what this business sells.',
       '- If catalog items are listed and the user asks what is offered, mention those items/categories directly.',
@@ -58,8 +68,40 @@ export class SystemPromptBuilderService {
     if (location) lines.push(`Location: ${location}`);
     if (business.phone) lines.push(`Phone: ${business.phone}`);
     if (business.website) lines.push(`Website: ${business.website}`);
+    if (business.bookingLink.enabled && business.bookingLink.url) {
+      lines.push(`Public booking/catalog link: ${business.bookingLink.url}`);
+    }
     lines.push(this.catalogBlock(business.catalogItems));
     return lines.join('\n');
+  }
+
+  private bookingPresentationBlock(business: BusinessContextSnapshot): string {
+    const mode = business.bookingMethods.availability_response.mode;
+    if (mode === 'website_link') {
+      return [
+        'Booking presentation:',
+        `Availability Response Format: website_link.`,
+        business.bookingLink.enabled && business.bookingLink.url
+          ? `For availability, catalog, product browsing, or booking next steps, send this link: ${business.bookingLink.url}`
+          : 'Website link mode is configured, but no public booking/catalog link is available. Use concise text and offer team follow-up.',
+      ].join('\n');
+    }
+
+    if (mode === 'interactive') {
+      const hasProductCards = business.catalogItems.some((item) => item.whatsapp_catalog_id && item.whatsapp_product_retailer_id);
+      return [
+        'Booking presentation:',
+        'Availability Response Format: interactive.',
+        hasProductCards
+          ? 'For catalog/product/listing options, provide structured options; backend will send eligible WhatsApp product cards/lists with photos and selection controls.'
+          : 'For catalog/product/listing options, use interactive list/buttons when useful.',
+      ].join('\n');
+    }
+
+    return [
+      'Booking presentation:',
+      'Availability Response Format: text. Use concise plain text.',
+    ].join('\n');
   }
 
   private catalogBlock(items: BusinessContextCatalogItem[]): string {
@@ -95,6 +137,50 @@ export class SystemPromptBuilderService {
       `Lists: max ${maxItems} items.`,
       'Use buttons for 2-3 simple choices. Use list for more choices. Use text for simple answers.',
     ].join(' ');
+  }
+
+  private businessTypeBlock(businessType?: string | null): string {
+    const normalized = String(businessType ?? '').trim().toLowerCase();
+    if (['products', 'retail', 'ecommerce'].includes(normalized)) {
+      return [
+        'Business-type playbook: products.',
+        '- For "what do you offer", "catalog", "products", or similar: list the most relevant active catalog items with prices and stock when available.',
+        '- If the customer names a product/category, match it against Active catalog items and answer with exact matches first.',
+        '- If there are multiple likely matches, show 2-5 concise options instead of asking a broad question.',
+        '- Ask quantity, variant, delivery address, or payment preference only after the customer chooses a specific item.',
+        '- Never call products "services" unless the item_type is service.',
+      ].join('\n');
+    }
+
+    if (['hospitality', 'resort', 'accommodation', 'stay'].includes(normalized)) {
+      return [
+        'Business-type playbook: hospitality.',
+        '- For "what do you offer", list available rooms/properties/activities from Active catalog items.',
+        '- Ask dates only when the customer wants availability, pricing for a stay, or booking.',
+      ].join('\n');
+    }
+
+    if (['used_cars', 'used_car', 'second_hand_car', 'automotive', 'vehicle'].includes(normalized)) {
+      return [
+        'Business-type playbook: vehicles.',
+        '- For "what do you offer", list available vehicles from Active catalog items.',
+        '- Ask budget, model, fuel type, or visit timing only when needed to narrow options.',
+      ].join('\n');
+    }
+
+    if (['real_estate', 'property'].includes(normalized)) {
+      return [
+        'Business-type playbook: real estate.',
+        '- For "what do you offer", list available properties from Active catalog items.',
+        '- Ask location, budget, bedrooms, or visit timing only when needed to narrow options.',
+      ].join('\n');
+    }
+
+    return [
+      'Business-type playbook: general.',
+      '- For "what do you offer", summarize the Active catalog items directly.',
+      '- If catalog data is missing, give a short honest answer and offer team follow-up.',
+    ].join('\n');
   }
 
   private flowBlock(flow: string): string {

@@ -7,6 +7,9 @@ import { ExistingLlmAgentService } from './existing-llm-agent.service';
 import { ComponentMapperService } from './component-mapper.service';
 import { FlowTransitionService } from './flow-transition.service';
 import {
+  AgentStructuredResponse,
+  BusinessContextCatalogItem,
+  ContextPacket,
   ConversationOrchestratorInput,
   MappedConversationResponse,
 } from '../types/conversation-routing.types';
@@ -49,7 +52,12 @@ export class ConversationOrchestratorService {
       response: aiResponse,
     });
 
-    const mapped = this.mapper.map(aiResponse, effectiveConfig.mode);
+    const mapped = this.applyBookingPresentation(
+      input,
+      packet,
+      aiResponse,
+      this.mapper.map(aiResponse, effectiveConfig.mode),
+    );
     await this.send(input, mapped);
   }
 
@@ -84,6 +92,31 @@ export class ConversationOrchestratorService {
       return;
     }
 
+    if (mapped.kind === 'product') {
+      await this.whatsappService.sendSingleProductMessage(
+        input.phoneNumberId,
+        input.customerPhone,
+        mapped.catalogId,
+        mapped.productRetailerId,
+        mapped.body,
+        mapped.footerText,
+      );
+      return;
+    }
+
+    if (mapped.kind === 'product_list') {
+      await this.whatsappService.sendProductListMessage(
+        input.phoneNumberId,
+        input.customerPhone,
+        mapped.catalogId,
+        mapped.sections,
+        mapped.body,
+        mapped.headerText,
+        mapped.footerText,
+      );
+      return;
+    }
+
     const text = mapped.kind === 'link' ? mapped.text : mapped.text;
     if (!text.trim()) {
       this.logger.warn(`AI mapped an empty response for conversation ${input.session.conversationId}`);
@@ -98,6 +131,118 @@ export class ConversationOrchestratorService {
       ctx,
     );
     this.emitBookingLinkSentIfPresent(input, text);
+  }
+
+  private applyBookingPresentation(
+    input: ConversationOrchestratorInput,
+    packet: ContextPacket,
+    response: AgentStructuredResponse,
+    mapped: MappedConversationResponse,
+  ): MappedConversationResponse {
+    const business = packet.business;
+    if (!business) return mapped;
+
+    const mode = business.bookingMethods.availability_response.mode;
+    const isCatalogOrAvailabilityRequest = this.isCatalogOrAvailabilityRequest(input.userMessage, response);
+
+    if (mode === 'website_link' && business.bookingLink.enabled && business.bookingLink.url && isCatalogOrAvailabilityRequest) {
+      const message = response.message?.trim() || `You can view options and continue here:`;
+      return {
+        kind: 'link',
+        text: `${message}\n${business.bookingLink.url}`,
+        url: business.bookingLink.url,
+        label: 'Open',
+      };
+    }
+
+    if (mode !== 'interactive' || !business.bookingMethods.interactive.enabled) {
+      return mapped;
+    }
+
+    const shouldUseCatalogCards =
+      isCatalogOrAvailabilityRequest ||
+      mapped.kind === 'list' ||
+      mapped.kind === 'buttons';
+    if (!shouldUseCatalogCards) return mapped;
+
+    const productItems = this.whatsappCatalogItems(business.catalogItems);
+    if (!productItems.length) return mapped;
+
+    const body = response.message?.trim() || 'Here are the available options.';
+    if (productItems.length === 1) {
+      return {
+        kind: 'product',
+        body,
+        catalogId: productItems[0].catalogId,
+        productRetailerId: productItems[0].productRetailerId,
+        footerText: 'Select the product to continue.',
+      };
+    }
+
+    const catalogId = productItems[0].catalogId;
+    const sameCatalogItems = productItems
+      .filter((item) => item.catalogId === catalogId)
+      .slice(0, 10);
+
+    if (!sameCatalogItems.length) return mapped;
+
+    return {
+      kind: 'product_list',
+      body,
+      catalogId,
+      headerText: business.name.slice(0, 60),
+      footerText: 'Tap an item to view photos and details.',
+      sections: [
+        {
+          title: 'Available options',
+          product_items: sameCatalogItems.map((item) => ({
+            product_retailer_id: item.productRetailerId,
+          })),
+        },
+      ],
+    };
+  }
+
+  private whatsappCatalogItems(items: BusinessContextCatalogItem[]): Array<{
+    catalogId: string;
+    productRetailerId: string;
+  }> {
+    return items
+      .map((item) => ({
+        catalogId: item.whatsapp_catalog_id?.trim() ?? '',
+        productRetailerId: item.whatsapp_product_retailer_id?.trim() ?? '',
+      }))
+      .filter((item) => item.catalogId && item.productRetailerId);
+  }
+
+  private isCatalogOrAvailabilityRequest(message: string, response: AgentStructuredResponse): boolean {
+    const intent = String(response.intent ?? '').toLowerCase();
+    if (['browse', 'catalog', 'availability', 'booking', 'ordering', 'sales', 'product_browse'].includes(intent)) {
+      return true;
+    }
+
+    const text = String(message ?? '').toLowerCase();
+    return [
+      'offer',
+      'offering',
+      'available',
+      'availability',
+      'catalog',
+      'product',
+      'products',
+      'item',
+      'items',
+      'room',
+      'rooms',
+      'property',
+      'properties',
+      'vehicle',
+      'car',
+      'book',
+      'buy',
+      'price',
+      'stock',
+    ].some((token) => text.includes(token));
   }
 
   private emitBookingLinkSentIfPresent(input: ConversationOrchestratorInput, text: string): void {
