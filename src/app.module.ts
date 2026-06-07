@@ -1,4 +1,5 @@
 import { Module } from "@nestjs/common";
+import * as dotenv from "dotenv";
 import { APP_FILTER, APP_INTERCEPTOR, APP_GUARD } from "@nestjs/core";
 import { AppConfigModule } from "./core/config/config.module";
 // import { PrismaModule } from "./core/prisma/prisma.module";
@@ -34,6 +35,9 @@ import { AppointmentSalesModule } from "./features/appointment-sales/appointment
 import { ProductsModule } from "./features/products/products.module";
 import { HealthController } from "./health.controller";
 
+dotenv.config({ path: ".env.local", override: false });
+dotenv.config({ path: ".env", override: false });
+
 const MONGODB_REQUIRED = process.env.MONGODB_REQUIRED !== 'false';
 const MONGODB_URI = process.env.MONGODB_URI;
 
@@ -64,13 +68,34 @@ if (MONGODB_REQUIRED && !MONGODB_URI) {
     ]),
     MongooseModule.forRootAsync({
       imports: [ConfigModule],
-      useFactory: async (config: ConfigService) => ({
-        uri: config.get<string>('MONGODB_URI'),
-        maxPoolSize: 10,
-        serverSelectionTimeoutMS: 5000,
-        retryAttempts: 3,
-        retryDelay: 1000,
-      }),
+      useFactory: async (config: ConfigService) => {
+        const uri = config.get<string>('MONGODB_URI');
+        console.log(`[MongoDB] Startup config: uri=${uri ? 'present' : 'missing'} required=${MONGODB_REQUIRED}`);
+        return {
+          uri,
+          maxPoolSize: 10,
+          serverSelectionTimeoutMS: 5000,
+          retryAttempts: 3,
+          retryDelay: 1000,
+          connectionFactory: (connection) => {
+            console.log(`[MongoDB] Connected: db=${connection.name} host=${connection.host ?? 'unknown'}`);
+            connection.on('error', (error) => {
+              console.error(`[MongoDB] Connection error: ${error?.message ?? error}`);
+            });
+            connection.on('disconnected', () => {
+              console.error('[MongoDB] Disconnected');
+            });
+            connection.on('reconnected', () => {
+              console.log('[MongoDB] Reconnected');
+            });
+            return connection;
+          },
+          connectionErrorFactory: (error) => {
+            console.error(`[MongoDB] Startup connection failed: ${error?.message ?? error}`);
+            return error;
+          },
+        };
+      },
       inject: [ConfigService],
     }),
     // Static file serving for uploaded images
