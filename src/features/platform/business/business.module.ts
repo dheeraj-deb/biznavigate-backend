@@ -16,6 +16,6 @@ import { PrismaModule } from "../../../prisma/prisma.module";
     BusinessesRepositoryPrisma,
     { provide: "BusinessesRepository", useClass: BusinessesRepositoryPrisma },
   ],
-  exports: [BusinessesService],
+  exports: [BusinessesService, BusinessBlueprintSeedService],
 })
 export class BusinessesModule {}

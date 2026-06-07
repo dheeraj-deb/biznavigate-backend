@@ -5,6 +5,7 @@ import { PrismaService } from '../../prisma/prisma.service';
 import { CatalogService } from '../commerce/catalog/application/services/catalog.service';
 import { HospitalityBookingCommandService } from '../industries/hospitality/bookings/application/services/hospitality-booking-command.service';
 import { LeadPhoneResolverService } from '../crm/lead/utils/lead-phone-resolver.service';
+import { BusinessBlueprintSeedService } from '../platform/business/application/business-blueprint-seed.service';
 import {
   BookingLinkConfig,
   inferExperienceType,
@@ -35,6 +36,7 @@ export class PublicBookingService {
     private readonly hospitalityBookingCommandService: HospitalityBookingCommandService,
     private readonly phoneResolver: LeadPhoneResolverService,
     private readonly eventEmitter: EventEmitter2,
+    private readonly businessBlueprints: BusinessBlueprintSeedService,
   ) {}
 
   async getPage(slug: string) {
@@ -591,9 +593,23 @@ export class PublicBookingService {
       };
     });
 
+    await this.ensureOrderWorkflowBlueprints(business.business_id);
     this.emitPublicOrderPlaced(business, leadId, result);
 
     return result;
+  }
+
+  private async ensureOrderWorkflowBlueprints(businessId: string): Promise<void> {
+    try {
+      const result = await this.businessBlueprints.seedForBusiness(businessId);
+      if (result?.status === 'seeded') {
+        this.logger.log(`Ensured workflow blueprints for business ${businessId}`);
+      } else {
+        this.logger.warn(`Workflow blueprint seed skipped for business ${businessId}: ${result?.reason ?? 'unknown'}`);
+      }
+    } catch (error: any) {
+      this.logger.warn(`Workflow blueprint seed failed for business ${businessId}: ${error?.message ?? error}`);
+    }
   }
 
   private emitPublicOrderPlaced(

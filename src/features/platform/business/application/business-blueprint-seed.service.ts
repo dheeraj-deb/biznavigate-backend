@@ -331,7 +331,15 @@ export class BusinessBlueprintSeedService {
     business: { business_id: string; tenant_id: string; business_type: string | null },
     group: BlueprintGroup,
   ) {
-    if (!process.env.MONGODB_URI || mongoose.connection.readyState !== 1) {
+    if (!process.env.MONGODB_URI) {
+      return { status: 'skipped', reason: 'mongodb_not_connected' };
+    }
+
+    const mongoReady = await this.waitForMongoReady();
+    if (!mongoReady) {
+      this.logger.warn(
+        `Workflow blueprint seed skipped for business ${business.business_id}: Mongo readyState=${mongoose.connection.readyState}`,
+      );
       return { status: 'skipped', reason: 'mongodb_not_connected' };
     }
 
@@ -373,6 +381,21 @@ export class BusinessBlueprintSeedService {
     }
 
     return { status: 'seeded', installed };
+  }
+
+  private async waitForMongoReady(timeoutMs = 5000): Promise<boolean> {
+    const readyState = () => Number(mongoose.connection.readyState);
+    if (readyState() === 1) return true;
+    if (readyState() === 0 || readyState() === 3) return false;
+
+    const startedAt = Date.now();
+    while (Date.now() - startedAt < timeoutMs) {
+      if (readyState() === 1) return true;
+      if (readyState() === 0 || readyState() === 3) return false;
+      await new Promise((resolve) => setTimeout(resolve, 100));
+    }
+
+    return readyState() === 1;
   }
 
   private getWorkflowBlueprintsForBusiness(businessType: string | null, group: BlueprintGroup): WorkflowBlueprint[] {
