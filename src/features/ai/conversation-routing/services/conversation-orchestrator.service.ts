@@ -122,6 +122,20 @@ export class ConversationOrchestratorService {
       return;
     }
 
+    if (mapped.kind === 'cta_url') {
+      await this.whatsappService.sendCtaUrlMessage(
+        input.phoneNumberId,
+        input.customerPhone,
+        mapped.body,
+        mapped.buttonText,
+        mapped.url,
+        mapped.headerText,
+        mapped.footerText,
+      );
+      this.emitBookingLinkSentIfPresent(input, mapped.url);
+      return;
+    }
+
     const text = mapped.kind === 'link' ? mapped.text : mapped.text;
     if (!text.trim()) {
       this.logger.warn(`AI mapped an empty response for conversation ${input.session.conversationId}`);
@@ -151,12 +165,14 @@ export class ConversationOrchestratorService {
     const isCatalogOrAvailabilityRequest = this.isCatalogOrAvailabilityRequest(input.userMessage, response);
 
     if (mode === 'website_link' && business.bookingLink.enabled && business.bookingLink.url && isCatalogOrAvailabilityRequest) {
-      const message = response.message?.trim() || `You can view options and continue here:`;
+      const body = this.websiteCatalogDescription(input.userMessage, business.name);
       return {
-        kind: 'link',
-        text: `${message}\n${business.bookingLink.url}`,
+        kind: 'cta_url',
+        body,
         url: business.bookingLink.url,
-        label: 'Open',
+        buttonText: 'Open Catalog',
+        headerText: business.name,
+        footerText: 'Browse, add to cart, and checkout online.',
       };
     }
 
@@ -238,6 +254,29 @@ export class ConversationOrchestratorService {
 
   private isProductsBusiness(type?: string | null): boolean {
     return ['products', 'retail', 'ecommerce'].includes(String(type ?? '').trim().toLowerCase());
+  }
+
+  private websiteCatalogDescription(message: string, businessName: string): string {
+    const text = String(message ?? '').toLowerCase();
+    const generalBrowse = [
+      'catalog',
+      'products',
+      'items',
+      'offer',
+      'offering',
+      'available',
+      'browse',
+      'show me',
+      'what do you have',
+    ].some((token) => text.includes(token));
+    const asksSpecificProduct = !this.isGenericEntryMessage(text) &&
+      !generalBrowse;
+
+    if (asksSpecificProduct) {
+      return `You can view matching items from ${businessName}'s catalog online. See photos, latest price, stock, quantity options, and checkout in one place.`;
+    }
+
+    return `Explore ${businessName}'s online catalog with product photos, prices, stock, wishlist, cart, and checkout in one place.`;
   }
 
   private isGenericEntryMessage(text: string): boolean {

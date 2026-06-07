@@ -84,7 +84,7 @@ export class SystemPromptBuilderService {
         'Booking presentation:',
         `Availability Response Format: website_link.`,
         business.bookingLink.enabled && business.bookingLink.url
-          ? `For availability, catalog, product browsing, or booking next steps, send this link: ${business.bookingLink.url}`
+          ? `For availability, catalog, product browsing, or booking next steps, send a short catalog description with this link: ${business.bookingLink.url}. Do not list individual product rows when sending the website link.`
           : 'Website link mode is configured, but no public booking/catalog link is available. Use concise text and offer team follow-up.',
       ].join('\n');
     }
