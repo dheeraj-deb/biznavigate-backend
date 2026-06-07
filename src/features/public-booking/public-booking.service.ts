@@ -9,6 +9,7 @@ import {
   inferExperienceType,
   normalizeBookingLinkConfig,
 } from '../platform/business-settings/booking-link.config';
+import { normalizeBookingMethodsConfig } from '../platform/business-settings/booking-methods.config';
 
 type PublicBusiness = {
   business_id: string;
@@ -20,7 +21,7 @@ type PublicBusiness = {
   address: string | null;
   city: string | null;
   public_booking_slug: string | null;
-  settings: { booking_link: any; currency: string; timezone: string } | null;
+  settings: { booking_link: any; booking_methods: any; currency: string; timezone: string } | null;
 };
 
 @Injectable()
@@ -135,13 +136,15 @@ export class PublicBookingService {
         address: true,
         city: true,
         public_booking_slug: true,
-        settings: { select: { booking_link: true, currency: true, timezone: true } },
+        settings: { select: { booking_link: true, booking_methods: true, currency: true, timezone: true } },
       },
     });
 
     if (!business) throw new NotFoundException('Booking link not found');
     const config = this.resolveConfig(business);
-    if (!config.enabled) throw new NotFoundException('Booking link is not active');
+    const bookingMethods = normalizeBookingMethodsConfig(business.settings?.booking_methods);
+    const linkActive = config.enabled || bookingMethods.availability_response.mode === 'website_link';
+    if (!linkActive) throw new NotFoundException('Booking link is not active');
 
     const whatsappAccount = await this.prisma.social_accounts.findFirst({
       where: { business_id: business.business_id, platform: 'whatsapp', is_active: true },

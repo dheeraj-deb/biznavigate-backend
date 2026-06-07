@@ -159,6 +159,20 @@ export class WhatsAppService {
       });
       if (handledDeterministically) return;
 
+      const handledByEntryMenu = await this.sendEntryMenuIfUseful({
+        account: resolved.account,
+        lead: resolved.lead,
+        conversation: persisted.conversation,
+        phone_number_id: phoneNumberId,
+        message: normalizedMessage,
+        replyCtx: {
+          conversationId: persisted.conversation.conversation_id,
+          leadId: resolved.lead.lead_id,
+          tenantId: resolved.account.businesses?.tenant_id ?? resolved.lead.tenant_id,
+        },
+      });
+      if (handledByEntryMenu) return;
+
       await this.automationRouter.routeInboundMessage({
         account: resolved.account,
         lead: resolved.lead,
@@ -188,6 +202,14 @@ export class WhatsAppService {
       leadId: params.lead.lead_id,
       tenantId: params.account.businesses?.tenant_id ?? params.lead.tenant_id,
     };
+
+    const menuIntent = this.mapEntryMenuSelection(normalized, params.account.businesses?.business_type);
+    if (menuIntent) {
+      params.message.user_input = menuIntent;
+      params.message.message_text = menuIntent;
+      params.message.is_interactive = false;
+      return false;
+    }
 
     const pending = await this.pendingActions.getPending(params.conversation.conversation_id);
     if (pending) {
@@ -259,6 +281,90 @@ export class WhatsAppService {
     }
 
     return false;
+  }
+
+  private async sendEntryMenuIfUseful(params: {
+    account: any;
+    lead: any;
+    conversation: any;
+    phone_number_id: string;
+    message: ReturnType<WhatsAppMessageNormalizer['normalize']>;
+    replyCtx: { conversationId: string; leadId: string; tenantId: string };
+  }): Promise<boolean> {
+    if (params.message.is_interactive) return false;
+    if (!this.shouldShowEntryMenu(params.conversation, params.message.user_input)) return false;
+
+    const businessType = String(params.account.businesses?.business_type ?? '').toLowerCase();
+    const browseTitle = ['products', 'retail', 'ecommerce'].includes(businessType)
+      ? 'Browse Products'
+      : 'Browse Options';
+
+    await this.sendButtonMessage(
+      params.phone_number_id,
+      params.message.from,
+      `Hi${params.lead.name ? ` ${params.lead.name}` : ''}! What would you like to do?`,
+      [
+        { id: 'menu_browse', title: browseTitle },
+        { id: 'menu_chat', title: 'Chat with Us' },
+        { id: 'menu_support', title: 'Support' },
+      ],
+      undefined,
+      undefined,
+    );
+    return true;
+  }
+
+  private shouldShowEntryMenu(conversation: any, input: string): boolean {
+    const text = String(input ?? '').trim().toLowerCase();
+    if (!text) return false;
+    if (!this.isGenericEntryMessage(text)) return false;
+
+    const previousCount = Number(conversation?.message_count ?? 0);
+    if (!previousCount) return true;
+
+    const lastMessageAt = conversation?.last_message_at ? new Date(conversation.last_message_at).getTime() : 0;
+    if (!Number.isFinite(lastMessageAt) || lastMessageAt <= 0) return false;
+
+    return Date.now() - lastMessageAt > 30 * 60 * 1000;
+  }
+
+  private isGenericEntryMessage(text: string): boolean {
+    const normalized = text.replace(/[!.?,\s]+/g, ' ').trim();
+    return [
+      'hi',
+      'hii',
+      'hello',
+      'hey',
+      'start',
+      'menu',
+      'options',
+      'good morning',
+      'good afternoon',
+      'good evening',
+    ].includes(normalized);
+  }
+
+  private mapEntryMenuSelection(input: string, businessType?: string | null): string | null {
+    if (input === 'menu_browse') {
+      const normalizedType = String(businessType ?? '').toLowerCase();
+      if (['products', 'retail', 'ecommerce'].includes(normalizedType)) {
+        return 'Show me your products';
+      }
+      if (['hospitality', 'resort', 'accommodation', 'stay'].includes(normalizedType)) {
+        return 'Show me available rooms and options';
+      }
+      if (['used_cars', 'used_car', 'automotive', 'vehicle'].includes(normalizedType)) {
+        return 'Show me available vehicles';
+      }
+      if (['real_estate', 'property'].includes(normalizedType)) {
+        return 'Show me available properties';
+      }
+      return 'Show me what you offer';
+    }
+
+    if (input === 'menu_chat') return 'I want to chat with the business team';
+    if (input === 'menu_support') return 'I need support';
+    return null;
   }
 
 
