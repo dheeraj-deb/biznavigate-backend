@@ -1,4 +1,5 @@
-import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Injectable, Logger, NotFoundException } from '@nestjs/common';
+import { EventEmitter2 } from '@nestjs/event-emitter';
 import { randomUUID } from 'node:crypto';
 import { PrismaService } from '../../prisma/prisma.service';
 import { CatalogService } from '../commerce/catalog/application/services/catalog.service';
@@ -26,11 +27,14 @@ type PublicBusiness = {
 
 @Injectable()
 export class PublicBookingService {
+  private readonly logger = new Logger(PublicBookingService.name);
+
   constructor(
     private readonly prisma: PrismaService,
     private readonly catalogService: CatalogService,
     private readonly hospitalityBookingCommandService: HospitalityBookingCommandService,
     private readonly phoneResolver: LeadPhoneResolverService,
+    private readonly eventEmitter: EventEmitter2,
   ) {}
 
   async getPage(slug: string) {
@@ -329,7 +333,7 @@ export class PublicBookingService {
     const phone = await this.normalizeCustomerPhone(business.business_id, customerPayload.phone ?? body.phone);
     if (!phone) throw new BadRequestException('Phone is required to place an order');
 
-    return this.prisma.$transaction(async (tx) => {
+    const result = await this.prisma.$transaction(async (tx) => {
       const freshItem = await tx.catalog_items.findFirst({
         where: {
           business_id: business.business_id,
@@ -577,8 +581,63 @@ export class PublicBookingService {
         payment_status: 'pending',
         payment_expires_at: paymentExpiresAt.toISOString(),
         message: `Your order ${orderNumber} has been received and stock is held. The business will confirm payment shortly.`,
+        customer_phone: phone,
+        customer_name: customer.name,
+        item_name: freshItem.name,
+        variant_name: variant?.name ?? null,
+        quantity,
+        total_amount: total,
+        currency: business.settings?.currency ?? 'INR',
       };
     });
+
+    this.emitPublicOrderPlaced(business, leadId, result);
+
+    return result;
+  }
+
+  private emitPublicOrderPlaced(
+    business: PublicBusiness,
+    leadId: string,
+    order: {
+      reference_id: string;
+      legacy_order_id: string;
+      order_number: string;
+      customer_phone: string;
+      customer_name?: string | null;
+      item_name: string;
+      variant_name?: string | null;
+      quantity: number;
+      total_amount: number;
+      currency: string;
+      payment_expires_at: string;
+    },
+  ): void {
+    const payload = {
+      business_id: business.business_id,
+      tenant_id: business.tenant_id,
+      lead_id: leadId,
+      event_name: 'order.placed',
+      payload: {
+        source: 'public_booking_link',
+        order_id: order.legacy_order_id,
+        product_order_id: order.reference_id,
+        order_number: order.order_number,
+        customer_phone: order.customer_phone,
+        customer_name: order.customer_name,
+        item_name: order.item_name,
+        variant_name: order.variant_name,
+        quantity: order.quantity,
+        total_amount: order.total_amount,
+        currency: order.currency,
+        payment_status: 'pending',
+        payment_expires_at: order.payment_expires_at,
+      },
+      emitted_at: new Date().toISOString(),
+    };
+
+    this.eventEmitter.emit('workflow.event.order.placed', payload);
+    this.logger.log(`Emitted workflow.event.order.placed for ${order.order_number}`);
   }
 
   private async normalizeCustomerPhone(businessId: string, phone: unknown): Promise<string> {

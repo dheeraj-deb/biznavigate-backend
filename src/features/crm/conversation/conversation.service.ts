@@ -252,7 +252,14 @@ export class ConversationService {
   }
 
   async findMessageByPlatformId(platform_message_id: string): Promise<MessagesDocument | null> {
-    return this.messagesModel.findOne({ platform_message_id }).exec();
+    return this.messagesModel
+      .findOne({
+        $or: [
+          { platform_message_id },
+          { 'metadata.provider_message_ids': platform_message_id },
+        ],
+      })
+      .exec();
   }
 
   async getConversationHistory(
@@ -272,7 +279,15 @@ export class ConversationService {
     data: { delivery_status: string; delivered_at?: Date; read_at?: Date; failed_reason?: string },
   ): Promise<void> {
     await this.messagesModel
-      .updateMany({ platform_message_id }, { $set: data })
+      .updateMany(
+        {
+          $or: [
+            { platform_message_id },
+            { 'metadata.provider_message_ids': platform_message_id },
+          ],
+        },
+        { $set: data },
+      )
       .exec();
   }
 
