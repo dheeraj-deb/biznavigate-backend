@@ -52,11 +52,16 @@ export class ConversationOrchestratorService {
       response: aiResponse,
     });
 
-    const mapped = this.applyBookingPresentation(
+    const mapped = this.applyEntryButtons(
       input,
       packet,
       aiResponse,
-      this.mapper.map(aiResponse, effectiveConfig.mode),
+      this.applyBookingPresentation(
+        input,
+        packet,
+        aiResponse,
+        this.mapper.map(aiResponse, effectiveConfig.mode),
+      ),
     );
     await this.send(input, mapped);
   }
@@ -201,6 +206,62 @@ export class ConversationOrchestratorService {
         },
       ],
     };
+  }
+
+  private applyEntryButtons(
+    input: ConversationOrchestratorInput,
+    packet: ContextPacket,
+    response: AgentStructuredResponse,
+    mapped: MappedConversationResponse,
+  ): MappedConversationResponse {
+    const business = packet.business;
+    if (!business || !this.isProductsBusiness(business.type)) return mapped;
+    if (!this.isGenericEntryMessage(input.userMessage) && !this.isStoreOpeningReply(response.message)) return mapped;
+
+    return {
+      kind: 'list',
+      body: `Welcome to ${business.name}. What would you like to do?`,
+      buttonText: 'Choose',
+      sections: [
+        {
+          title: 'Store options',
+          rows: [
+            { id: 'menu_browse', title: 'Browse Products' },
+            { id: 'menu_order', title: 'My Order' },
+            { id: 'menu_chat', title: 'Chat with Us' },
+            { id: 'menu_support', title: 'Support' },
+          ],
+        },
+      ],
+    };
+  }
+
+  private isProductsBusiness(type?: string | null): boolean {
+    return ['products', 'retail', 'ecommerce'].includes(String(type ?? '').trim().toLowerCase());
+  }
+
+  private isGenericEntryMessage(text: string): boolean {
+    const normalized = String(text ?? '').toLowerCase().replace(/[!.?,\s]+/g, ' ').trim();
+    return [
+      'hi',
+      'hii',
+      'hello',
+      'hey',
+      'start',
+      'menu',
+      'options',
+      'good morning',
+      'good afternoon',
+      'good evening',
+    ].includes(normalized);
+  }
+
+  private isStoreOpeningReply(message?: string | null): boolean {
+    const text = String(message ?? '').toLowerCase();
+    return text.includes('welcome to') &&
+      text.includes('browse') &&
+      text.includes('products') &&
+      text.includes('support');
   }
 
   private whatsappCatalogItems(items: BusinessContextCatalogItem[]): Array<{
