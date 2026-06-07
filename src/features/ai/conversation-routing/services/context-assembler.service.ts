@@ -147,7 +147,11 @@ export class ContextAssemblerService {
   }
 
   private publicBookingUrl(slug: string): string {
-    const frontendUrl = this.configService.get<string>('FRONTEND_URL') || 'http://localhost:3000';
-    return new URL(`/book/${encodeURIComponent(slug)}`, frontendUrl).toString();
+    const bookingBaseUrl =
+      this.configService.get<string>('PUBLIC_BOOKING_BASE_URL') ||
+      this.configService.get<string>('BACKEND_URL') ||
+      this.configService.get<string>('FRONTEND_URL') ||
+      'http://localhost:3000';
+    return new URL(`/book/${encodeURIComponent(slug)}`, bookingBaseUrl).toString();
   }
 }
