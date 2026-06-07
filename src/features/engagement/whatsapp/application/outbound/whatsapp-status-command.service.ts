@@ -83,6 +83,12 @@ export class WhatsAppStatusCommandService {
       status?.meta_msg_id,
       status?.messageId,
       status?.message_id,
+      status?.payload?.id,
+      status?.payload?.gsId,
+      status?.payload?.gs_id,
+      status?.payload?.messageId,
+      status?.payload?.message_id,
+      status?.payload?.meta_msg_id,
     ].filter((id): id is string => typeof id === 'string' && id.length > 0)));
   }
 
@@ -115,6 +121,7 @@ export class WhatsAppStatusCommandService {
     const status = {
       id: payload.id,
       gsId: payload.gsId,
+      payload: payload.payload,
       status: statusType,
       timestamp: payload.ts ?? payload.timestamp ?? event.timestamp,
       recipient_id: payload.destination,
@@ -182,6 +189,14 @@ export class WhatsAppStatusCommandService {
       rawStatus?.gsId,
       rawStatus?.gs_id,
       rawStatus?.meta_msg_id,
+      rawStatus?.messageId,
+      rawStatus?.message_id,
+      rawStatus?.payload?.id,
+      rawStatus?.payload?.gsId,
+      rawStatus?.payload?.gs_id,
+      rawStatus?.payload?.messageId,
+      rawStatus?.payload?.message_id,
+      rawStatus?.payload?.meta_msg_id,
     ].filter((id): id is string => typeof id === 'string' && id.length > 0);
 
     let recipient = await this.prisma.campaign_recipients.findFirst({

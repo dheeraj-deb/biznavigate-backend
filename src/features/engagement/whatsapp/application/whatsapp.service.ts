@@ -431,7 +431,8 @@ export class WhatsAppService {
       type: SendMessageType.TEXT,
       text: { body: text },
     });
-    const platformMessageId = this.extractProviderMessageId(apiResult);
+    const providerMessageIds = this.extractProviderMessageIds(apiResult);
+    const platformMessageId = providerMessageIds[0] ?? null;
 
     // If caller didn't supply a context, derive one so persistence still happens.
     let resolvedCtx = ctx;
@@ -469,7 +470,7 @@ export class WhatsAppService {
         platform_message_id: platformMessageId,
         sender_name: 'AI Agent',
         assigned_to: 'bot',
-        metadata: { is_ai: true },
+        metadata: { is_ai: true, provider_message_ids: providerMessageIds },
         conversation_context: {
           conversation_id: resolvedCtx.conversationId,
           lead_id: resolvedCtx.leadId,
@@ -499,20 +500,29 @@ export class WhatsAppService {
     return this.statusCommandService.handleGupshupMessageEvent(event);
   }
 
-  private extractProviderMessageId(result: any): string | null {
+  private extractProviderMessageIds(result: any): string[] {
     const candidates = [
       result?.messages?.[0]?.id,
+      result?.messages?.[0]?.messageId,
+      result?.messages?.[0]?.gsId,
+      result?.messages?.[0]?.gs_id,
       result?.messageId,
       result?.message_id,
       result?.id,
       result?.gsId,
       result?.gs_id,
       result?.data?.messages?.[0]?.id,
+      result?.data?.messages?.[0]?.messageId,
+      result?.data?.messages?.[0]?.gsId,
+      result?.data?.messages?.[0]?.gs_id,
       result?.data?.messageId,
+      result?.data?.message_id,
       result?.data?.id,
+      result?.data?.gsId,
+      result?.data?.gs_id,
     ];
 
-    return candidates.find((value) => typeof value === 'string' && value.length > 0) ?? null;
+    return Array.from(new Set(candidates.filter((value): value is string => typeof value === 'string' && value.length > 0)));
   }
 
   /**
@@ -546,7 +556,8 @@ export class WhatsAppService {
       });
 
       // Extract message ID from WhatsApp API response (format: { messages: [{id: "wamid..."}] })
-      const platformMessageId = this.extractProviderMessageId(result);
+      const providerMessageIds = this.extractProviderMessageIds(result);
+      const platformMessageId = providerMessageIds[0] ?? null;
 
       await this.outboundCommandService.persistSentMessage({
         account,
@@ -556,7 +567,7 @@ export class WhatsAppService {
         message_type: message.type,
         platform_message_id: platformMessageId,
         workflow_node_id: nodeId,
-        metadata: templateMetadata,
+        metadata: { ...(templateMetadata ?? {}), provider_message_ids: providerMessageIds },
       });
 
       return {
