@@ -18,6 +18,7 @@ export enum SendMessageType {
 export enum InteractiveSendType {
   BUTTON = 'button',
   LIST = 'list',
+  CTA_URL = 'cta_url',
   PRODUCT = 'product',
   PRODUCT_LIST = 'product_list',
   ORDER_DETAILS = 'order_details',
@@ -215,6 +216,17 @@ export class SectionDto {
 }
 
 export class ActionDto {
+  @IsString()
+  @IsOptional()
+  name?: string;
+
+  @IsObject()
+  @IsOptional()
+  parameters?: {
+    display_text: string;
+    url: string;
+  };
+
   @IsArray()
   @ValidateNested({ each: true })
   @Type(() => ActionButtonDto)

@@ -129,6 +129,7 @@ export type MappedConversationResponse =
   | { kind: 'buttons'; body: string; buttons: AgentOption[] }
   | { kind: 'list'; body: string; buttonText: string; sections: Array<{ title: string; rows: AgentItem[] }> }
   | { kind: 'link'; text: string; url: string; label: string }
+  | { kind: 'cta_url'; body: string; url: string; buttonText: string; headerText?: string; footerText?: string }
   | {
       kind: 'product';
       body: string;

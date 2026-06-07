@@ -639,6 +639,46 @@ export class WhatsAppService {
     return this.sendMessage(phoneNumberId, to, message, nodeId);
   }
 
+  /**
+   * Send an interactive call-to-action URL message.
+   */
+  async sendCtaUrlMessage(
+    phoneNumberId: string,
+    to: string,
+    bodyText: string,
+    buttonText: string,
+    url: string,
+    headerText?: string,
+    footerText?: string,
+    nodeId?: string,
+  ): Promise<any> {
+    const message: SendWhatsAppMessageDto = {
+      messaging_product: 'whatsapp',
+      to,
+      type: SendMessageType.INTERACTIVE,
+      interactive: {
+        type: InteractiveSendType.CTA_URL,
+        body: { text: bodyText },
+        action: {
+          name: 'cta_url',
+          parameters: {
+            display_text: buttonText.slice(0, 20),
+            url,
+          },
+        },
+      },
+    };
+
+    if (headerText) {
+      message.interactive!.header = { type: 'text', text: headerText.slice(0, 60) };
+    }
+    if (footerText) {
+      message.interactive!.footer = { text: footerText.slice(0, 60) };
+    }
+
+    return this.sendMessage(phoneNumberId, to, message, nodeId);
+  }
+
   async sendFlowMessage(
     phoneNumberId: string,
     to: string,
