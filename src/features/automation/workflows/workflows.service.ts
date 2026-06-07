@@ -278,7 +278,14 @@ export class WorkflowsService implements OnModuleInit {
 
       await this.businessWorkflowModel.findOneAndUpdate(
         { workflow_id },
-        { $set: { is_active: is_active ?? true } },
+        {
+          $set: {
+            business_id,
+            tenant_id: business.tenant_id,
+            workflow_id,
+            is_active: is_active ?? true,
+          },
+        },
         { upsert: true, returnDocument: 'after' },
       );
 
