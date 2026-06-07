@@ -104,6 +104,9 @@ export class WorkflowEventBusService {
 
   @OnEvent('workflow.event.order.placed')
   async onOrderPlaced(payload: ExternalWorkflowEventPayload) {
+    this.logger.log(
+      `Received workflow.event.order.placed business=${payload.business_id} lead=${payload.lead_id ?? 'none'} order=${payload.payload?.order_number ?? payload.payload?.order_id ?? 'unknown'}`,
+    );
     await this.dispatch('trigger.event.order_placed', payload);
   }
 
@@ -188,19 +191,28 @@ export class WorkflowEventBusService {
     const links = await this.businessWorkflowModel
       .find({ business_id: payload.business_id, is_active: true })
       .lean();
-    if (!links.length) return;
+    if (!links.length) {
+      this.logger.warn(`Event ${topic} ignored: no active business workflows for business ${payload.business_id}`);
+      return;
+    }
 
     const workflow_ids = links.map((l) => l.workflow_id);
     const defs = await this.workflowDefinitionModel
       .find({ workflow_id: { $in: workflow_ids }, is_active: true })
       .lean();
+    if (!defs.length) {
+      this.logger.warn(`Event ${topic} ignored: ${links.length} active business workflow link(s), but no active definitions`);
+      return;
+    }
 
+    let matched = 0;
     for (const def of defs) {
       const trigger = (def.workflow_definition?.nodes ?? []).find(
         (n: any) => n?.type === triggerType,
       );
       if (!trigger) continue;
       if (extraFilter && !extraFilter(trigger.params as EventTriggerParams)) continue;
+      matched += 1;
 
       const synthetic = buildSyntheticContext({
         business_id: payload.business_id,
@@ -212,20 +224,30 @@ export class WorkflowEventBusService {
       });
 
       try {
-        await this.workflowsService.startWorkflow(
+        const state = await this.workflowsService.startWorkflow(
           payload.lead_id ?? '',
           '',
           'whatsapp',
           synthetic,
           def.workflow_id,
         );
-        this.logger.log(`Event ${topic} fired workflow ${def.workflow_id}`);
+        if (state) {
+          this.logger.log(`Event ${topic} fired workflow ${def.workflow_id}`);
+        } else {
+          this.logger.warn(`Event ${topic} matched workflow ${def.workflow_id}, but workflow start returned no state`);
+        }
       } catch (err: any) {
         this.logger.error(
           `Event ${topic} dispatch failed for workflow ${def.workflow_id}: ${err.message}`,
           err.stack,
         );
       }
+    }
+
+    if (!matched) {
+      this.logger.warn(
+        `Event ${topic} ignored: no active workflow definition contains trigger ${triggerType} for business ${payload.business_id}`,
+      );
     }
   }
 }

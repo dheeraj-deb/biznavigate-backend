@@ -1090,6 +1090,7 @@ export class WorkflowsService implements OnModuleInit {
 
     workflowInput.context = {
       ...workflowInput.context,
+      ...this.eventPayloadContext(workflowInput),
       // Channel needs to live on workflowInput.context (not just system_context)
       // because Workflow.buildNodeContext only spreads context.context into the
       // node-level execution context. Without this, action nodes that branch on
@@ -1225,6 +1226,21 @@ export class WorkflowsService implements OnModuleInit {
 
     return workflow.getExecutionState();
 
+  }
+
+  private eventPayloadContext(workflowInput: WorkflowProcessingContext): Record<string, any> {
+    const eventEnvelope = (workflowInput.context as any)?.metadata?.payload;
+    const eventPayload = eventEnvelope?.payload;
+    if (!eventPayload || typeof eventPayload !== 'object') return {};
+
+    return {
+      event: {
+        name: eventEnvelope.event_name ?? eventEnvelope.eventName ?? null,
+        payload: eventPayload,
+      },
+      event_payload: eventPayload,
+      ...eventPayload,
+    };
   }
 
   async resumeWorkflow(executionId: string, workflow_id: string, currentNodeId: string, savedContext: any, lead_id: string, chat_id: string, waitingForInput: boolean, newInput: WorkflowProcessingContext) {
