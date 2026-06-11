@@ -4,6 +4,7 @@ import { OrderController } from './application/controllers/order.controller';
 import { ProductOrderController } from './application/controllers/product-order.controller';
 import { OrderService } from './application/services/order.service';
 import { ProductOrderService } from './application/services/product-order.service';
+import { ProductSalesCommandService } from './application/services/product-sales-command.service';
 import { StockReservationService } from './application/services/stock-reservation.service';
 import { ReservationCleanupScheduler } from './application/services/reservation-cleanup.scheduler';
 import { OrderRepositoryPrisma } from './infrastructure/order.repository.prisma';
@@ -11,6 +12,7 @@ import { ReservationCleanupProcessor } from './application/jobs/reservation-clea
 import { OrderNotificationProcessor } from './application/jobs/order-notification.processor';
 import { PrismaModule } from '../../../prisma/prisma.module';
 import { CustomersModule } from '../../crm/customers/customers.module';
+import { LeadModule } from '../../crm/lead/lead.module';
 import { NotificationsModule } from '../../engagement/notifications/notifications.module';
 import { WhatsAppModule } from '../../engagement/whatsapp/whatsapp.module';
 
@@ -23,6 +25,7 @@ import { WhatsAppModule } from '../../engagement/whatsapp/whatsapp.module';
   imports: [
     PrismaModule,
     CustomersModule,
+    LeadModule,
     NotificationsModule,
     WhatsAppModule,
     BullModule.registerQueue({ name: 'reservation-cleanup' }),
@@ -32,12 +35,13 @@ import { WhatsAppModule } from '../../engagement/whatsapp/whatsapp.module';
   providers: [
     OrderService,
     ProductOrderService,
+    ProductSalesCommandService,
     OrderRepositoryPrisma,
     StockReservationService,
     ReservationCleanupScheduler,
     ReservationCleanupProcessor,
     OrderNotificationProcessor,
   ],
-  exports: [OrderService, ProductOrderService, OrderRepositoryPrisma, StockReservationService],
+  exports: [OrderService, ProductOrderService, ProductSalesCommandService, OrderRepositoryPrisma, StockReservationService],
 })
 export class OrdersModule {}

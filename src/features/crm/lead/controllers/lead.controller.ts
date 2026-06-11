@@ -72,6 +72,7 @@ export class LeadController {
     @Query('stage_id') stage_id?: string,
     @Query('pipeline_id') pipeline_id?: string,
     @Query('lead_type') lead_type?: string,
+    @Query('attention') attention?: string,
     @Query('qualification_score_min') qualification_score_min?: string,
     @Query('exit_reason') exit_reason?: string,
     @Query('sortBy') sortBy?: string,
@@ -81,7 +82,7 @@ export class LeadController {
   ) {
     return this.leadQueries.getLeads(req.user.business_id, {
       status, channel, source, assignedTo, search: search ?? q, intent_type, stage_id, pipeline_id,
-      lead_type, exit_reason,
+      lead_type, attention, exit_reason,
       qualification_score_min: qualification_score_min ? Number(qualification_score_min) : undefined,
       sortBy, sortOrder, page, limit,
     });

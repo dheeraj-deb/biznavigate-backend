@@ -3,12 +3,15 @@ import { PrismaService } from '../../../../../prisma/prisma.service';
 import { ProductOrderQueryDto } from '../dto/product-order-query.dto';
 import { ProductOrderStatus, UpdateProductOrderStatusDto } from '../dto/update-product-order-status.dto';
 import { StockReservationService } from './stock-reservation.service';
+import { LeadTypes } from '../../../../crm/lead/application/lead-types';
+import { LeadCommandService } from '../../../../crm/lead/application/services/lead-command.service';
 
 @Injectable()
 export class ProductOrderService {
   constructor(
     private readonly prisma: PrismaService,
     private readonly stockReservationService: StockReservationService,
+    private readonly leadCommands: LeadCommandService,
   ) {}
 
   async findAll(businessId: string, query: ProductOrderQueryDto) {
@@ -75,8 +78,12 @@ export class ProductOrderService {
         product_order_id: true,
         business_id: true,
         status: true,
+        payment_status: true,
+        metadata: true,
+        total_amount: true,
+        lead_id: true,
         legacy_order_id: true,
-        legacy_order: { select: { status: true } },
+        legacy_order: { select: { status: true, payment_method: true, payment_status: true } },
       },
     });
 
@@ -87,6 +94,7 @@ export class ProductOrderService {
     }
 
     this.assertProductStatusTransition(existing.status, dto.status);
+    this.assertPaymentAllowsStatus(existing, dto.status);
     const now = new Date();
 
     await this.prisma.$transaction(async (tx) => {
@@ -95,6 +103,7 @@ export class ProductOrderService {
         data: {
           status: dto.status,
           ...(dto.status === 'cancelled' && { cancelled_at: now }),
+          ...this.productOrderPaymentStatusData(dto.status, existing.payment_status),
           updated_at: now,
         },
       });
@@ -120,10 +129,12 @@ export class ProductOrderService {
 
         await tx.orders.update({
           where: { order_id: existing.legacy_order_id },
-          data: this.legacyOrderStatusData(dto.status, now),
+          data: this.legacyOrderStatusData(dto.status, now, existing.payment_status),
         });
       }
     });
+
+    await this.syncLinkedLead(existing, dto.status, dto.notes);
 
     return this.findById(businessId, productOrderId);
   }
@@ -142,15 +153,112 @@ export class ProductOrderService {
     }
   }
 
-  private legacyOrderStatusData(status: ProductOrderStatus, now: Date) {
+  private assertPaymentAllowsStatus(
+    order: {
+      payment_status?: string | null;
+      metadata?: any;
+      legacy_order?: { payment_method?: string | null; payment_status?: string | null } | null;
+    },
+    nextStatus: ProductOrderStatus,
+  ) {
+    if (nextStatus !== 'delivered') return;
+
+    const paymentMethod = String(
+      order.legacy_order?.payment_method ?? (order.metadata as any)?.payment_method ?? '',
+    ).toLowerCase();
+    const paymentStatus = order.payment_status ?? order.legacy_order?.payment_status;
+
+    if (paymentStatus !== 'paid' && paymentMethod !== 'cod') {
+      throw new BadRequestException('Cannot deliver an unpaid product order unless payment method is COD');
+    }
+  }
+
+  private productOrderPaymentStatusData(status: ProductOrderStatus, paymentStatus?: string | null) {
+    if (status === 'cancelled' && paymentStatus !== 'paid') {
+      return { payment_status: 'cancelled' };
+    }
+    return {};
+  }
+
+  private legacyOrderStatusData(status: ProductOrderStatus, now: Date, paymentStatus?: string | null) {
     return {
       status,
       delivery_status: status,
       ...(status === 'cancelled' && { cancelled_at: now }),
+      ...(status === 'cancelled' && paymentStatus !== 'paid' && { payment_status: 'cancelled' }),
       ...(status === 'shipped' && { shipped_at: now }),
       ...(status === 'delivered' && { delivered_at: now }),
       updated_at: now,
     };
+  }
+
+  private async syncLinkedLead(
+    order: {
+      business_id: string;
+      lead_id?: string | null;
+      status: string;
+      payment_status?: string | null;
+      total_amount?: any;
+      product_order_id: string;
+      legacy_order_id?: string | null;
+    },
+    nextStatus: ProductOrderStatus,
+    notes?: string,
+  ) {
+    if (!order.lead_id) return;
+
+    if (nextStatus === 'cancelled') {
+      await this.leadCommands.updateLeadType({
+        leadId: order.lead_id,
+        businessId: order.business_id,
+        leadType: LeadTypes.PRODUCT_CANCELLED,
+        context: {
+          type: 'product',
+          order_status: 'cancelled',
+          product_order_id: order.product_order_id,
+          order_id: order.legacy_order_id,
+        },
+      });
+      await this.leadCommands.recordLeadEvent({
+        leadId: order.lead_id,
+        businessId: order.business_id,
+        type: 'product_order_cancelled',
+        actor: 'system',
+        data: {
+          product_order_id: order.product_order_id,
+          order_id: order.legacy_order_id,
+          from_status: order.status,
+          notes,
+        },
+      });
+      return;
+    }
+
+    if (nextStatus === 'delivered') {
+      await this.leadCommands.updateLeadType({
+        leadId: order.lead_id,
+        businessId: order.business_id,
+        leadType: LeadTypes.PRODUCT_ORDERED,
+        context: {
+          type: 'product',
+          order_status: 'delivered',
+          payment_status: order.payment_status,
+          product_order_id: order.product_order_id,
+          order_id: order.legacy_order_id,
+        },
+      });
+      await this.leadCommands.recordLeadEvent({
+        leadId: order.lead_id,
+        businessId: order.business_id,
+        type: 'product_order_delivered',
+        actor: 'system',
+        data: {
+          product_order_id: order.product_order_id,
+          order_id: order.legacy_order_id,
+          payment_status: order.payment_status,
+        },
+      });
+    }
   }
 
   private toResponse(order: any) {

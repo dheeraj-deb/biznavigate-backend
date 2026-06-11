@@ -30,6 +30,11 @@ export class HospitalityBookingController {
     return this.bookingService.updateBooking(bookingId, req.user.business_id, dto);
   }
 
+  @Patch(':bookingId/confirm')
+  confirm(@Req() req: any, @Param('bookingId') bookingId: string) {
+    return this.bookingService.updateBooking(bookingId, req.user.business_id, { status: 'confirmed' });
+  }
+
   @Patch(':bookingId/cancel')
   cancel(@Req() req: any, @Param('bookingId') bookingId: string) {
     return this.bookingService.cancelBooking(bookingId, req.user.business_id);

@@ -1,4 +1,4 @@
-import { IsDateString, IsInt, IsNumber, IsOptional, IsString, IsUUID, Min } from 'class-validator';
+import { IsDateString, IsIn, IsInt, IsNumber, IsOptional, IsString, IsUUID, Min } from 'class-validator';
 import { Type } from 'class-transformer';
 
 export class CreateBookingDto {
@@ -30,10 +30,18 @@ export class CreateBookingDto {
   num_guests?: number;
 
   @IsOptional()
+  @Type(() => Number)
+  @IsInt()
+  @Min(1)
+  room_count?: number;
+
+  @IsOptional()
+  @IsIn(['pending', 'paid', 'partial', 'failed', 'refunded', 'cancelled', 'unpaid'])
   @IsString()
   payment_status?: string;
 
   @IsOptional()
+  @IsIn(['pending', 'confirmed', 'checked_in', 'checked_out', 'completed', 'cancelled', 'no_show'])
   @IsString()
   status?: string;
 

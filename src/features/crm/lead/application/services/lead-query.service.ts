@@ -1,10 +1,14 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
+import { Prisma } from '../../../../../../generated/prisma';
 import { PrismaService } from '../../../../../prisma/prisma.service';
 import { Conversation, ConversationDocument } from '../../schemas/conversation.schema';
 import { Message, MessageDocument } from '../../schemas/message.schema';
 import type { LeadContext } from './lead-command.service';
+
+const TERMINAL_LEAD_STATUSES = ['booked', 'won', 'converted', 'lost', 'cancelled', 'canceled'];
+const TERMINAL_RESORT_LEAD_TYPES = ['resort_booking_pending', 'resort_booked', 'resort_cancelled'];
 
 @Injectable()
 export class LeadQueryService {
@@ -24,6 +28,7 @@ export class LeadQueryService {
     stage_id?: string;
     pipeline_id?: string;
     lead_type?: string;
+    attention?: string;
     qualification_score_min?: number;
     exit_reason?: string;
     sortBy?: string;
@@ -42,6 +47,10 @@ export class LeadQueryService {
     if (filters?.stage_id) where.stage_id = filters.stage_id;
     if (filters?.pipeline_id) where.pipeline_id = filters.pipeline_id;
     if (filters?.lead_type) where.lead_type = filters.lead_type;
+    if (filters?.attention === 'awaiting_booking') {
+      const awaitingLeadIds = await this.getAwaitingBookingLeadIds(businessId);
+      where.lead_id = { in: awaitingLeadIds.length ? awaitingLeadIds : ['00000000-0000-0000-0000-000000000000'] };
+    }
     if (filters?.exit_reason) where.exit_reason = filters.exit_reason;
     if (filters?.qualification_score_min !== undefined) {
       where.qualification_score = { gte: filters.qualification_score_min };
@@ -80,7 +89,7 @@ export class LeadQueryService {
     ]);
 
     const leadIds = rows.map((l) => l.lead_id);
-    const [conversations, followups] = await Promise.all([
+    const [conversations, followups, bookingState] = await Promise.all([
       leadIds.length
         ? this.conversationModel
             .find({ business_id: businessId, lead_id: { $in: leadIds }, status: { $in: ['open', 'handed_off', 'active'] } })
@@ -94,6 +103,7 @@ export class LeadQueryService {
             select: { lead_id: true, scheduled_at: true },
           })
         : [],
+      this.loadBookingLinkState(businessId, leadIds),
     ]);
     const conversationByLead = new Map<string, any>();
     for (const conversation of conversations) {
@@ -108,6 +118,7 @@ export class LeadQueryService {
       data: rows.map((l) => this.formatLead(l, {
         conversation: conversationByLead.get(l.lead_id),
         followup: followupByLead.get(l.lead_id),
+        booking: bookingState.get(l.lead_id),
       })),
       meta: {
         total,
@@ -177,15 +188,16 @@ export class LeadQueryService {
   async getLeadById(leadId: string) {
     const lead = await this.prisma.leads.findUnique({ where: { lead_id: leadId } });
     if (!lead) throw new NotFoundException('Lead not found');
-    const [conversation, followup] = await Promise.all([
+    const [conversation, followup, bookingState] = await Promise.all([
       this.getConversationByLead(leadId, lead.business_id),
       this.prisma.lead_followups.findFirst({
         where: { lead_id: leadId, business_id: lead.business_id, done: false },
         orderBy: { scheduled_at: 'asc' },
         select: { scheduled_at: true },
       }),
+      this.loadBookingLinkState(lead.business_id, [leadId]),
     ]);
-    return this.formatLead(lead, { conversation, followup });
+    return this.formatLead(lead, { conversation, followup, booking: bookingState.get(leadId) });
   }
 
   async getLeadEvents(leadId: string) {
@@ -362,6 +374,17 @@ export class LeadQueryService {
 
     const [bookingLinkSent, demandMissed, upcomingBookings, propertyOptions] = await Promise.all([
       this.prisma.$queryRaw<any[]>`
+        WITH latest_link AS (
+          SELECT DISTINCT ON (lead_id)
+            lead_id,
+            created_at AS last_booking_link_sent_at,
+            data
+          FROM lead_events
+          WHERE business_id = ${businessId}::uuid
+            AND type = 'booking_link_sent'
+            AND created_at > ${demandCutoff}
+          ORDER BY lead_id, created_at DESC
+        )
         SELECT
           l.lead_id,
           l.name,
@@ -369,28 +392,29 @@ export class LeadQueryService {
           l.channel,
           l.source,
           l.status,
+          l.lead_type,
           l.context,
           l.updated_at,
-          l.context->>'property_name' AS property_name,
-          l.context->>'item_name' AS item_name,
-          l.context->>'check_in' AS check_in,
-          l.context->>'check_out' AS check_out
-        FROM leads l
+          latest_link.last_booking_link_sent_at,
+          true AS awaiting_booking,
+          'booking_link_sent_no_booking' AS attention_reason,
+          COALESCE(l.context->>'property_name', latest_link.data->>'property_name', latest_link.data->>'service_name') AS property_name,
+          COALESCE(l.context->>'item_name', latest_link.data->>'item_name') AS item_name,
+          COALESCE(l.context->>'check_in', latest_link.data->>'check_in') AS check_in,
+          COALESCE(l.context->>'check_out', latest_link.data->>'check_out') AS check_out
+        FROM latest_link
+        JOIN leads l ON l.lead_id = latest_link.lead_id
+          AND l.business_id = ${businessId}::uuid
         LEFT JOIN hospitality_bookings hb
           ON hb.lead_id = l.lead_id
+          AND hb.business_id = l.business_id
           AND hb.status NOT IN ('cancelled', 'canceled')
         WHERE l.business_id = ${businessId}::uuid
           AND l.deleted_at IS NULL
           AND hb.hospitality_booking_id IS NULL
           AND l.status NOT IN ('booked', 'won', 'converted', 'lost', 'cancelled', 'canceled')
-          AND l.context->>'check_in' IS NOT NULL
-          AND l.context->>'check_out' IS NOT NULL
-          AND (
-            l.context->>'item_id' IS NOT NULL
-            OR l.context->>'item_name' IS NOT NULL
-            OR l.context->>'property_name' IS NOT NULL
-          )
-        ORDER BY l.updated_at DESC
+          AND COALESCE(l.lead_type, '') NOT IN ('resort_booking_pending', 'resort_booked', 'resort_cancelled')
+        ORDER BY latest_link.last_booking_link_sent_at DESC
         LIMIT 20
       `,
       this.prisma.$queryRaw<any[]>`
@@ -467,10 +491,30 @@ export class LeadQueryService {
   async getResortReminderReadiness(businessId: string, days = 14) {
     const safeDays = Math.max(1, Math.min(30, Number(days) || 14));
     const since = new Date(Date.now() - safeDays * 24 * 60 * 60 * 1000);
+    const awaitingLeadIds = await this.getAwaitingBookingLeadIds(businessId, since);
+
+    if (!awaitingLeadIds.length) {
+      return {
+        data: {
+          ready: [],
+          stopped: [],
+          missing_details: [],
+          counts: {
+            ready: 0,
+            stopped: 0,
+            missing_details: 0,
+            total: 0,
+          },
+          rule: 'Booking reminders are shown only after a booking link was sent and live occupancy is checked.',
+          checked_at: new Date().toISOString(),
+        },
+      };
+    }
 
     const leads = await this.prisma.leads.findMany({
       where: {
         business_id: businessId,
+        lead_id: { in: awaitingLeadIds },
         deleted_at: null,
         updated_at: { gte: since },
         status: { notIn: ['booked', 'won', 'converted', 'lost', 'cancelled', 'canceled'] },
@@ -545,7 +589,7 @@ export class LeadQueryService {
           missing_details: missing.length,
           total: rows.length,
         },
-        rule: 'Booking reminders are shown only after live occupancy is checked.',
+        rule: 'Booking reminders are shown only after a booking link was sent and live occupancy is checked.',
         checked_at: new Date().toISOString(),
       },
     };
@@ -1249,6 +1293,93 @@ export class LeadQueryService {
     return dates;
   }
 
+  private async getAwaitingBookingLeadIds(businessId: string, since?: Date): Promise<string[]> {
+    const rows = await this.prisma.$queryRaw<Array<{ lead_id: string }>>(Prisma.sql`
+      WITH latest_link AS (
+        SELECT lead_id, MAX(created_at) AS last_booking_link_sent_at
+        FROM lead_events
+        WHERE business_id = ${businessId}::uuid
+          AND type = 'booking_link_sent'
+          ${since ? Prisma.sql`AND created_at >= ${since}` : Prisma.empty}
+        GROUP BY lead_id
+      )
+      SELECT l.lead_id
+      FROM latest_link
+      JOIN leads l ON l.lead_id = latest_link.lead_id
+        AND l.business_id = ${businessId}::uuid
+      LEFT JOIN hospitality_bookings hb
+        ON hb.lead_id = l.lead_id
+        AND hb.business_id = l.business_id
+        AND hb.status NOT IN ('cancelled', 'canceled')
+      WHERE l.deleted_at IS NULL
+        AND hb.hospitality_booking_id IS NULL
+        AND l.status NOT IN ('booked', 'won', 'converted', 'lost', 'cancelled', 'canceled')
+        AND COALESCE(l.lead_type, '') NOT IN ('resort_booking_pending', 'resort_booked', 'resort_cancelled')
+      ORDER BY latest_link.last_booking_link_sent_at DESC
+    `);
+
+    return rows.map((row) => row.lead_id);
+  }
+
+  private async loadBookingLinkState(businessId: string, leadIds: string[]) {
+    const state = new Map<string, { lastBookingLinkSentAt: Date | null; hasActiveBooking: boolean }>();
+    if (!leadIds.length) return state;
+
+    const [bookingLinkEvents, activeBookings] = await Promise.all([
+      this.prisma.lead_events.findMany({
+        where: {
+          business_id: businessId,
+          lead_id: { in: leadIds },
+          type: 'booking_link_sent',
+        },
+        select: { lead_id: true, created_at: true },
+        orderBy: { created_at: 'desc' },
+      }),
+      this.prisma.hospitality_bookings.findMany({
+        where: {
+          business_id: businessId,
+          lead_id: { in: leadIds },
+          status: { notIn: ['cancelled', 'canceled'] },
+        },
+        select: { lead_id: true },
+      }),
+    ]);
+
+    for (const event of bookingLinkEvents) {
+      if (!state.has(event.lead_id)) {
+        state.set(event.lead_id, { lastBookingLinkSentAt: event.created_at, hasActiveBooking: false });
+      }
+    }
+
+    for (const booking of activeBookings) {
+      if (!booking.lead_id) continue;
+      const current = state.get(booking.lead_id) ?? { lastBookingLinkSentAt: null, hasActiveBooking: false };
+      current.hasActiveBooking = true;
+      state.set(booking.lead_id, current);
+    }
+
+    return state;
+  }
+
+  private isAwaitingBookingLead(lead: any, lastBookingLinkSentAt?: Date | null, hasActiveBooking = false): boolean {
+    return Boolean(
+      lastBookingLinkSentAt &&
+        !hasActiveBooking &&
+        !TERMINAL_LEAD_STATUSES.includes(lead.status) &&
+        !TERMINAL_RESORT_LEAD_TYPES.includes(lead.lead_type ?? ''),
+    );
+  }
+
+  private computeAttentionReason(lead: any, ctx: any, awaitingBooking: boolean, followup?: { scheduled_at: Date } | null): string | null {
+    if (awaitingBooking) return 'booking_link_sent_no_booking';
+    if (lead.lead_type === 'resort_no_availability' || ctx?.availability_status === 'unavailable') return 'no_availability';
+    if (followup?.scheduled_at && followup.scheduled_at.getTime() <= Date.now()) return 'followup_due';
+    if (lead.status === 'new' && lead.created_at && new Date(lead.created_at).getTime() < Date.now() - 3 * 60 * 60 * 1000) {
+      return 'new_uncontacted';
+    }
+    return null;
+  }
+
   private reminderRow(lead: any, ctx: any, readiness: 'ready' | 'stopped' | 'missing_details', reason: string, availability: any) {
     return {
       lead_id: lead.lead_id,
@@ -1272,13 +1403,24 @@ export class LeadQueryService {
     };
   }
 
-  private formatLead(lead: any, related?: { conversation?: any; followup?: { scheduled_at: Date } | null }) {
+  private formatLead(lead: any, related?: {
+    conversation?: any;
+    followup?: { scheduled_at: Date } | null;
+    booking?: { lastBookingLinkSentAt: Date | null; hasActiveBooking: boolean } | null;
+  }) {
     const nameParts = (lead.name ?? '').trim().split(/\s+/);
     const first_name = nameParts[0] || null;
     const last_name = nameParts.slice(1).join(' ') || null;
     const ctx = lead.context as any;
 
     const normalizedContext = ctx ? this.normalizeLeadContext(ctx) : null;
+    const lastBookingLinkSentAt = related?.booking?.lastBookingLinkSentAt ?? null;
+    const awaitingBooking = this.isAwaitingBookingLead(
+      lead,
+      lastBookingLinkSentAt,
+      related?.booking?.hasActiveBooking ?? false,
+    );
+    const attentionReason = this.computeAttentionReason(lead, normalizedContext, awaitingBooking, related?.followup);
 
     const extracted_entities = normalizedContext
       ? {
@@ -1305,7 +1447,10 @@ export class LeadQueryService {
       status: lead.status,
       lead_type: lead.lead_type ?? null,
       qualification_score: lead.qualification_score ?? 0,
-      lead_quality: this.computeLeadQuality(lead),
+      lead_quality: this.computeLeadQuality(lead, awaitingBooking),
+      awaiting_booking: awaitingBooking,
+      last_booking_link_sent_at: lastBookingLinkSentAt,
+      attention_reason: attentionReason,
       intent_type: ctx?.type ?? null,
       extracted_entities,
       is_converted: ['booked', 'won', 'converted'].includes(lead.status),
@@ -1333,9 +1478,10 @@ export class LeadQueryService {
     };
   }
 
-  private computeLeadQuality(lead: any): 'hot' | 'warm' | 'cold' {
+  private computeLeadQuality(lead: any, awaitingBooking = false): 'hot' | 'warm' | 'cold' {
     if (['quoted', 'booked', 'won', 'converted'].includes(lead.status)) return 'hot';
     if (lead.quoted_amount && Number(lead.quoted_amount) > 0) return 'hot';
+    if (awaitingBooking) return 'hot';
     const ctx = lead.context as any;
     if (lead.status === 'active' || lead.status === 'contacted' || lead.status === 'qualified') return 'warm';
     if (ctx?.check_in || ctx?.items?.length > 0 || ctx?.group_size) return 'warm';

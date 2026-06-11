@@ -1,13 +1,28 @@
-import { Body, Controller, Get, Param, Patch, Query, Req, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Param, Patch, Post, Query, Req, UseGuards } from '@nestjs/common';
 import { JwtAuthGuard } from '../../../../../common/guards/jwt-auth.guard';
+import { CreateProductSaleDto } from '../dto/create-product-sale.dto';
 import { ProductOrderQueryDto } from '../dto/product-order-query.dto';
 import { UpdateProductOrderStatusDto } from '../dto/update-product-order-status.dto';
 import { ProductOrderService } from '../services/product-order.service';
+import { ProductSalesCommandService } from '../services/product-sales-command.service';
 
 @Controller('product-orders')
 @UseGuards(JwtAuthGuard)
 export class ProductOrderController {
-  constructor(private readonly productOrderService: ProductOrderService) {}
+  constructor(
+    private readonly productOrderService: ProductOrderService,
+    private readonly productSales: ProductSalesCommandService,
+  ) {}
+
+  @Post('direct-sale')
+  createDirectSale(@Req() req: any, @Body() dto: CreateProductSaleDto) {
+    return this.productSales.createDirectSale(
+      req.user.business_id,
+      req.user.tenant_id,
+      dto,
+      req.user.user_id,
+    );
+  }
 
   @Get()
   findAll(@Req() req: any, @Query() query: ProductOrderQueryDto) {

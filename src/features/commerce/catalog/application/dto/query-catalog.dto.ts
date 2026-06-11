@@ -44,6 +44,12 @@ export class QueryCatalogDto {
   @IsNumber()
   guests?: number;
 
+  @IsOptional()
+  @Type(() => Number)
+  @IsNumber()
+  @Min(1)
+  rooms?: number;
+
   // Vehicle-specific filters
   @IsOptional()
   @IsString()

@@ -1,8 +1,10 @@
 import { BadRequestException, ConflictException, Injectable, Logger } from '@nestjs/common';
 import { EventEmitter2 } from '@nestjs/event-emitter';
-import { createHash } from 'node:crypto';
+import { createHash, randomUUID } from 'node:crypto';
 import { PrismaService } from '../../../../../../prisma/prisma.service';
 import { LeadCommandService } from '../../../../../crm/lead/application/services/lead-command.service';
+import { LeadTypes } from '../../../../../crm/lead/application/lead-types';
+import { HospitalityAvailabilityService } from './hospitality-availability.service';
 
 export interface CreateHospitalityBookingCommand {
   business_id: string;
@@ -14,6 +16,9 @@ export interface CreateHospitalityBookingCommand {
   customer_phone?: string;
   lead_id?: string;
   num_guests?: number | string;
+  room_count?: number | string;
+  rooms?: number | string;
+  units?: number | string;
   age?: number | string;
   address?: string;
   notes?: string;
@@ -22,6 +27,10 @@ export interface CreateHospitalityBookingCommand {
   source?: string;
   actor?: string;
   idempotency_key?: string;
+  status?: string;
+  payment_status?: string;
+  payment_expires_at?: Date | string | null;
+  metadata?: Record<string, any>;
   _flowContext?: {
     leadId?: string;
     customerPhone?: string;
@@ -36,6 +45,7 @@ export class HospitalityBookingCommandService {
     private readonly prisma: PrismaService,
     private readonly leadCommands: LeadCommandService,
     private readonly eventEmitter: EventEmitter2,
+    private readonly availabilityService: HospitalityAvailabilityService,
   ) {}
 
   async createBooking(command: CreateHospitalityBookingCommand) {
@@ -47,6 +57,7 @@ export class HospitalityBookingCommandService {
       guest_name: guestName,
       phone,
       num_guests: numGuests,
+      room_count: roomCountInput,
       age,
       address,
       pin_code: pinCode,
@@ -59,6 +70,14 @@ export class HospitalityBookingCommandService {
 
     const customerPhone = command.customer_phone ?? _flowContext?.customerPhone ?? phone;
     const leadId = command.lead_id ?? _flowContext?.leadId;
+    const bookingStatus = this.normalizeBookingStatus(command.status);
+    const paymentStatus = this.normalizePaymentStatus(command.payment_status);
+    const paymentExpiresAt = this.normalizeOptionalDate(command.payment_expires_at, 'payment_expires_at');
+    const roomCount = this.availabilityService.positiveInt(
+      roomCountInput ?? command.rooms ?? command.units,
+      1,
+      'room_count',
+    );
     const idempotencyKey = command.idempotency_key ?? this.buildBookingIdempotencyKey({
       businessId,
       leadId,
@@ -66,34 +85,19 @@ export class HospitalityBookingCommandService {
       serviceId,
       checkIn,
       checkOut,
+      roomCount,
     });
-
-    const catalogItem = await this.prisma.catalog_items.findFirst({
-      where: {
-        item_id: serviceId,
-        business_id: businessId,
-        deleted_at: null,
-        item_type: { in: ['accommodation', 'activity', 'service'] },
-      },
-      select: {
-        base_price: true,
-        name: true,
-        tenant_id: true,
-        attributes: true,
-        hospitality_detail: { select: { total_units: true } },
-      },
+    const availability = await this.availabilityService.checkAvailability({
+      businessId,
+      itemId: serviceId,
+      checkIn,
+      checkOut,
+      requestedUnits: roomCount,
     });
-
-    if (!catalogItem) {
-      throw new BadRequestException('Cannot create booking without a valid business and catalog item');
-    }
-
-    const nights = Math.max(
-      Math.ceil((new Date(checkOut).getTime() - new Date(checkIn).getTime()) / 86_400_000),
-      1,
-    );
+    const catalogItem = availability.item;
+    const nights = availability.dateRange.nights;
     const guests = Number(numGuests) || 1;
-    const totalAmount = Number(catalogItem.base_price ?? 0) * nights;
+    const totalAmount = availability.totalAmount;
     const existingKey = await this.prisma.workflow_idempotency_keys.findUnique({
       where: { idempotency_key: idempotencyKey },
     });
@@ -150,42 +154,31 @@ export class HospitalityBookingCommandService {
             })
           : null;
 
-        const totalUnits = Math.max(
-          Number(catalogItem.hospitality_detail?.total_units ?? (catalogItem.attributes as any)?.total_slots ?? 1),
-          1,
-        );
+        await this.availabilityService.reserveAvailability(tx, {
+          businessId,
+          itemId: serviceId,
+          dateRange: availability.dateRange,
+          totalUnits: availability.totalUnits,
+          requestedUnits: roomCount,
+        });
 
-        // Sparse calendar: insert row with booked_slots=1 if missing, otherwise
-        // increment. ON CONFLICT WHERE guard ensures we don't overbook a row
-        // that's blocked or already at capacity — those rows are excluded from
-        // the update and won't be counted in the returned set.
-        const bookedRows = await tx.$queryRaw<Array<{ date: Date }>>`
-          INSERT INTO item_availability (item_id, business_id, date, total_slots, booked_slots)
-          SELECT ${serviceId}::uuid, ${businessId}::uuid, d::date, ${totalUnits}::int, 1
-          FROM generate_series(${checkIn}::date, (${checkOut}::date - INTERVAL '1 day'), INTERVAL '1 day') AS d
-          ON CONFLICT (item_id, date) DO UPDATE
-          SET booked_slots = item_availability.booked_slots + 1, updated_at = NOW()
-          WHERE item_availability.is_blocked = false
-            AND item_availability.booked_slots < item_availability.total_slots
-          RETURNING date
-        `;
-
-        if (bookedRows.length !== nights) {
-          throw new ConflictException('Room is no longer available for the selected dates');
-        }
-
+        const bookingNumber = this.makeBookingNumber();
         const legacyOrder = await tx.orders.create({
           data: {
             business_id: businessId,
             tenant_id: catalogItem.tenant_id,
             lead_id: leadId ?? null,
             customer_id: customer?.customer_id ?? null,
+            order_number: bookingNumber,
             order_type: 'accommodation',
             total_amount: totalAmount,
-            payment_status: 'pending',
-            delivery_status: 'confirmed',
-            status: 'confirmed',
+            payment_status: paymentStatus,
+            delivery_status: bookingStatus,
+            service_status: bookingStatus,
+            status: bookingStatus,
+            payment_expires_at: paymentExpiresAt,
             source: command.source ?? 'whatsapp',
+            notes: command.notes ?? null,
           },
         });
 
@@ -193,12 +186,20 @@ export class HospitalityBookingCommandService {
           check_in: checkIn,
           check_out: checkOut,
           nights,
+          room_count: roomCount,
           guest_name: guestName,
           phone: customerPhone,
           num_guests: guests,
           age: age ? Number(age) : null,
           address: address ?? null,
           pin_code: pinCode ?? null,
+          notes: command.notes ?? null,
+          payment_expires_at: paymentExpiresAt?.toISOString() ?? null,
+        };
+        const metadata = {
+          ...snapshot,
+          ...(command.metadata ?? {}),
+          idempotency_key: idempotencyKey,
         };
 
         await tx.order_items.create({
@@ -206,15 +207,14 @@ export class HospitalityBookingCommandService {
             order_id: legacyOrder.order_id,
             item_id: serviceId,
             product_name: catalogItem.name ?? '',
-            quantity: nights,
-            unit_price: catalogItem.base_price ?? 0,
+            quantity: nights * roomCount,
+            unit_price: availability.pricePerNight,
             total_price: totalAmount,
             discount: 0,
             snapshot,
           },
         });
 
-        const bookingNumber = `BK-${new Date().toISOString().slice(0, 10).replace(/-/g, '')}-${legacyOrder.order_id.slice(0, 6).toUpperCase()}`;
         const domainBooking = await tx.hospitality_bookings.create({
           data: {
             business_id: businessId,
@@ -223,15 +223,16 @@ export class HospitalityBookingCommandService {
             customer_id: customer?.customer_id ?? null,
             lead_id: leadId ?? null,
             booking_number: bookingNumber,
-            status: 'confirmed',
-            payment_status: 'pending',
+            status: bookingStatus,
+            payment_status: paymentStatus,
             check_in: new Date(checkIn),
             check_out: new Date(checkOut),
             guests,
             subtotal: totalAmount,
             total_amount: totalAmount,
             source: command.source ?? 'whatsapp',
-            metadata: { ...snapshot, idempotency_key: idempotencyKey },
+            notes: command.notes ?? null,
+            metadata,
           },
         });
 
@@ -240,9 +241,9 @@ export class HospitalityBookingCommandService {
             hospitality_booking_id: domainBooking.hospitality_booking_id,
             item_id: serviceId,
             item_name: catalogItem.name ?? '',
-            quantity: 1,
+            quantity: roomCount,
             nights,
-            unit_price: catalogItem.base_price ?? 0,
+            unit_price: availability.pricePerNight,
             total_price: totalAmount,
             snapshot,
           },
@@ -264,13 +265,18 @@ export class HospitalityBookingCommandService {
             hospitality_booking_id: domainBooking.hospitality_booking_id,
             business_id: businessId,
             from_status: null,
-            to_status: 'confirmed',
+            to_status: bookingStatus,
             actor: command.actor ?? 'ai',
-            data: { legacy_order_id: legacyOrder.order_id },
+            data: {
+              legacy_order_id: legacyOrder.order_id,
+              payment_status: paymentStatus,
+              payment_expires_at: paymentExpiresAt?.toISOString() ?? null,
+            },
           },
         });
 
         if (leadId) {
+          const isConfirmed = bookingStatus === 'confirmed';
           const existingLead = await tx.leads.findUnique({
             where: { lead_id: leadId },
             select: { context: true },
@@ -288,20 +294,20 @@ export class HospitalityBookingCommandService {
               check_in: new Date(checkIn),
               check_out: new Date(checkOut),
               guests,
-              status: 'booked',
-              metadata: snapshot,
+              status: isConfirmed ? 'booked' : 'pending',
+              metadata,
             },
           });
 
           await tx.leads.update({
             where: { lead_id: leadId },
             data: {
-              status: 'booked',
-              converted_value: totalAmount,
-              converted_at: new Date(),
+              status: isConfirmed ? 'booked' : 'contacted',
+              lead_type: isConfirmed ? LeadTypes.RESORT_BOOKED : LeadTypes.RESORT_BOOKING_PENDING,
+              ...(isConfirmed ? { converted_value: totalAmount, converted_at: new Date() } : {}),
               context: {
                 ...existingContext,
-                type: existingContext.type ?? 'resort',
+                type: existingContext.type === 'public_booking' ? 'resort' : (existingContext.type ?? 'resort'),
                 item_id: serviceId,
                 item_name: catalogItem.name ?? null,
                 property_name: existingContext.property_name ?? catalogItem.name ?? null,
@@ -309,8 +315,11 @@ export class HospitalityBookingCommandService {
                 check_out: checkOut,
                 guests,
                 guest_count: guests,
+                room_count: roomCount,
                 nights,
                 special_requests: existingContext.special_requests ?? command.notes ?? null,
+                booking_status: bookingStatus,
+                payment_expires_at: paymentExpiresAt?.toISOString() ?? null,
               },
               updated_at: new Date(),
             },
@@ -319,13 +328,14 @@ export class HospitalityBookingCommandService {
             data: {
               lead_id: leadId,
               business_id: businessId,
-              type: 'booked',
+              type: isConfirmed ? 'booked' : 'booking_pending',
               actor: command.actor ?? 'ai',
               data: {
                 hospitality_booking_id: domainBooking.hospitality_booking_id,
                 legacy_order_id: legacyOrder.order_id,
                 check_in: checkIn,
                 check_out: checkOut,
+                status: bookingStatus,
               } as any,
             },
           });
@@ -335,8 +345,12 @@ export class HospitalityBookingCommandService {
           flow_token: command.flow_token ?? '',
           booking_id: domainBooking.hospitality_booking_id,
           hospitality_booking_id: domainBooking.hospitality_booking_id,
+          booking_number: bookingNumber,
           legacy_order_id: legacyOrder.order_id,
           idempotency_key: idempotencyKey,
+          status: bookingStatus,
+          payment_status: paymentStatus,
+          payment_expires_at: paymentExpiresAt?.toISOString() ?? null,
         };
 
         await tx.workflow_idempotency_keys.update({
@@ -372,6 +386,7 @@ export class HospitalityBookingCommandService {
           lead_id: leadId ?? undefined,
           hospitality_booking_id: booking.hospitality_booking_id,
           booking_number: (booking as any).booking_number ?? null,
+          status: (booking as any).status ?? bookingStatus,
           emitted_at: new Date().toISOString(),
         });
       } catch (err: any) {
@@ -380,7 +395,11 @@ export class HospitalityBookingCommandService {
 
       // Auto-advance lead pipeline to 'booked' stage. Idempotent — safe on retries.
       if (leadId) {
-        await this.leadCommands.autoAdvance({
+        await this.leadCommands.recalculateQualification(leadId);
+      }
+
+      if (leadId && bookingStatus === 'confirmed') {
+        await this.leadCommands.syncStageBySlug({
           leadId,
           toSlug: 'booked',
           reason: 'hospitality_booking_created',
@@ -415,6 +434,7 @@ export class HospitalityBookingCommandService {
     serviceId: string;
     checkIn: string;
     checkOut: string;
+    roomCount?: number;
   }) {
     const raw = [
       params.businessId ?? 'unknown_business',
@@ -422,8 +442,41 @@ export class HospitalityBookingCommandService {
       params.serviceId,
       params.checkIn,
       params.checkOut,
+      params.roomCount ?? 1,
     ].join(':');
 
     return `hospitality_booking:${createHash('sha256').update(raw).digest('hex')}`;
+  }
+
+  private makeBookingNumber(): string {
+    const datePart = new Date().toISOString().slice(0, 10).replace(/-/g, '');
+    return `BK-${datePart}-${randomUUID().slice(0, 10).toUpperCase()}`;
+  }
+
+  private normalizeBookingStatus(value?: string): string {
+    const normalized = String(value ?? 'confirmed').toLowerCase().trim();
+    const allowed = new Set(['pending', 'confirmed', 'checked_in', 'checked_out', 'completed', 'cancelled', 'no_show']);
+    if (!allowed.has(normalized)) {
+      throw new BadRequestException('Invalid booking status');
+    }
+    return normalized;
+  }
+
+  private normalizePaymentStatus(value?: string): string {
+    const normalized = String(value ?? 'pending').toLowerCase().trim();
+    const allowed = new Set(['pending', 'paid', 'partial', 'failed', 'refunded', 'cancelled', 'unpaid']);
+    if (!allowed.has(normalized)) {
+      throw new BadRequestException('Invalid payment status');
+    }
+    return normalized;
+  }
+
+  private normalizeOptionalDate(value: Date | string | null | undefined, fieldName: string): Date | null {
+    if (value === undefined || value === null || value === '') return null;
+    const parsed = value instanceof Date ? value : new Date(value);
+    if (Number.isNaN(parsed.getTime())) {
+      throw new BadRequestException(`${fieldName} must be a valid date`);
+    }
+    return parsed;
   }
 }

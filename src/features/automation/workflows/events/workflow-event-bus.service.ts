@@ -6,6 +6,8 @@ import { WorkflowDefinition, WorkflowDefinitionDocument } from '../schema/workfl
 import { BusinessWorkflow, BusinessWorkflowDocument } from '../schema/business-workflow.schema';
 import { buildSyntheticContext } from '../triggers/synthetic-context';
 import { WorkflowsService } from '../workflows.service';
+import { PrismaService } from '../../../../prisma/prisma.service';
+import { LeadQualificationService } from '../../../crm/lead/application/services/lead-qualification.service';
 import {
   BookingCancelledPayload,
   BookingCreatedPayload,
@@ -39,6 +41,8 @@ export class WorkflowEventBusService {
     @InjectModel(BusinessWorkflow.name) private readonly businessWorkflowModel: Model<BusinessWorkflowDocument>,
     @Inject(forwardRef(() => WorkflowsService))
     private readonly workflowsService: WorkflowsService,
+    private readonly prisma: PrismaService,
+    private readonly leadQualification: LeadQualificationService,
   ) {}
 
   @OnEvent('workflow.event.lead.status_changed')
@@ -64,7 +68,26 @@ export class WorkflowEventBusService {
 
   @OnEvent('workflow.event.booking.link_sent')
   async onBookingLinkSent(payload: ExternalWorkflowEventPayload) {
+    await this.recordBookingLinkSent(payload);
     await this.dispatch('trigger.event.booking_link_sent', payload);
+  }
+
+  private async recordBookingLinkSent(payload: ExternalWorkflowEventPayload) {
+    if (!payload.lead_id || !payload.business_id) return;
+    try {
+      await this.prisma.lead_events.create({
+        data: {
+          lead_id: payload.lead_id,
+          business_id: payload.business_id,
+          type: 'booking_link_sent',
+          actor: 'system',
+          data: payload.payload as any,
+        },
+      });
+      this.leadQualification.recalculate(payload.lead_id);
+    } catch (error: any) {
+      this.logger.warn(`Could not record booking_link_sent for lead ${payload.lead_id}: ${error.message}`);
+    }
   }
 
   @OnEvent('workflow.event.booking.followup_due')

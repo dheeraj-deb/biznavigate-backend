@@ -57,17 +57,18 @@ export class InventoryController {
   @Post('services')
   createService(@Request() req, @Body() dto: CreateServiceDto) {
     const item_type = SERVICE_TYPE_MAP[dto.type] ?? 'service';
+    const totalUnits = dto.total_units ?? dto.capacity;
     return this.catalogService.createItem(req.user.business_id, req.user.tenant_id, {
       item_type,
       name: dto.name,
       description: dto.description,
       base_price: dto.base_price,
-      stock_quantity: dto.total_units,
+      stock_quantity: totalUnits,
       image_urls: dto.image_urls,
       attributes: {
         service_type: dto.type,
         capacity: dto.capacity,
-        total_units: dto.total_units,
+        total_units: totalUnits,
         check_in_time: dto.check_in_time,
         check_out_time: dto.check_out_time,
         cancellation_policy: dto.cancellation_policy,
@@ -96,8 +97,9 @@ export class InventoryController {
   @Patch('services/:serviceId')
   updateService(@Request() req, @Param('serviceId') serviceId: string, @Body() dto: Partial<CreateServiceDto>) {
     const attrs: any = {};
+    const totalUnits = dto.total_units ?? dto.capacity;
     if (dto.capacity !== undefined) attrs.capacity = dto.capacity;
-    if (dto.total_units !== undefined) attrs.total_units = dto.total_units;
+    if (totalUnits !== undefined) attrs.total_units = totalUnits;
     if (dto.check_in_time) attrs.check_in_time = dto.check_in_time;
     if (dto.check_out_time) attrs.check_out_time = dto.check_out_time;
     if (dto.cancellation_policy) attrs.cancellation_policy = dto.cancellation_policy;
@@ -110,7 +112,7 @@ export class InventoryController {
       name: dto.name,
       description: dto.description,
       base_price: dto.base_price,
-      stock_quantity: dto.total_units,
+      stock_quantity: totalUnits,
       image_urls: dto.image_urls,
       ...(Object.keys(attrs).length ? { attributes: attrs } : {}),
     });

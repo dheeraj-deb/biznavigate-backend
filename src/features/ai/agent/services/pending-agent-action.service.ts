@@ -2,6 +2,7 @@ import { CACHE_MANAGER } from '@nestjs/cache-manager';
 import { Inject, Injectable, Logger } from '@nestjs/common';
 import { Cache } from 'cache-manager';
 import { PrismaService } from '../../../../prisma/prisma.service';
+import { BookingService } from '../../../industries/hospitality/bookings/application/services/booking.service';
 
 export type PendingAgentActionType = 'cancel_booking';
 
@@ -37,6 +38,7 @@ export class PendingAgentActionService {
 
   constructor(
     private readonly prisma: PrismaService,
+    private readonly bookingService: BookingService,
     @Inject(CACHE_MANAGER) private readonly cache: Cache,
   ) {}
 
@@ -156,20 +158,14 @@ export class PendingAgentActionService {
       };
     }
 
-    await this.prisma.$transaction(async (tx) => {
-      if (resolved.hospitalityBooking) {
-        await tx.hospitality_bookings.update({
-          where: { hospitality_booking_id: resolved.hospitalityBooking.hospitality_booking_id },
-          data: {
-            status: 'cancelled',
-            payment_status: 'cancelled',
-            cancelled_at: new Date(),
-            updated_at: new Date(),
-          },
-        });
-      }
-
-      if (resolved.order) {
+    if (resolved.hospitalityBooking) {
+      await this.bookingService.cancelBooking(
+        resolved.hospitalityBooking.hospitality_booking_id,
+        action.businessId,
+        'ai',
+      );
+    } else if (resolved.order) {
+      await this.prisma.$transaction(async (tx) => {
         await tx.orders.update({
           where: { order_id: resolved.order.order_id },
           data: {
@@ -179,8 +175,8 @@ export class PendingAgentActionService {
             updated_at: new Date(),
           },
         });
-      }
-    });
+      });
+    }
 
     this.logger.log(`Confirmed cancel_booking executed for ${displayId}`);
     return {
@@ -226,25 +222,36 @@ export class PendingAgentActionService {
       const orderFilters: any[] = [{ order_number: resolvedBookingId }];
       if (this.isUuid(resolvedBookingId)) orderFilters.push({ order_id: resolvedBookingId });
 
-      order = await this.prisma.orders.findFirst({
+      const bookingFilters: any[] = [{ booking_number: resolvedBookingId }];
+      if (this.isUuid(resolvedBookingId)) bookingFilters.push({ hospitality_booking_id: resolvedBookingId });
+
+      hospitalityBooking = await this.prisma.hospitality_bookings.findFirst({
         where: {
           business_id: businessId,
-          OR: orderFilters,
+          OR: bookingFilters,
         },
+        include: { legacy_order: true },
       });
+      order = hospitalityBooking?.legacy_order ?? null;
 
-      if (!order) {
-        const bookingFilters: any[] = [{ booking_number: resolvedBookingId }];
-        if (this.isUuid(resolvedBookingId)) bookingFilters.push({ hospitality_booking_id: resolvedBookingId });
-
-        hospitalityBooking = await this.prisma.hospitality_bookings.findFirst({
+      if (!hospitalityBooking) {
+        order = await this.prisma.orders.findFirst({
           where: {
             business_id: businessId,
-            OR: bookingFilters,
+            OR: orderFilters,
           },
-          include: { legacy_order: true },
         });
-        order = hospitalityBooking?.legacy_order ?? null;
+
+        if (order) {
+          hospitalityBooking = await this.prisma.hospitality_bookings.findFirst({
+            where: {
+              business_id: businessId,
+              legacy_order_id: order.order_id,
+            },
+            include: { legacy_order: true },
+          });
+          order = hospitalityBooking?.legacy_order ?? order;
+        }
       }
     }
 
