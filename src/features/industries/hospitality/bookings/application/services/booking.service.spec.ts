@@ -1,20 +1,23 @@
 import { BadRequestException, NotFoundException } from '@nestjs/common';
 import { BookingService } from './booking.service';
+import { LeadTypes } from '../../../../../crm/lead/application/lead-types';
 
 describe('BookingService cancellation', () => {
   const businessId = '00000000-0000-0000-0000-000000000001';
   const bookingId = '00000000-0000-0000-0000-000000000002';
   const legacyOrderId = '00000000-0000-0000-0000-000000000003';
   const itemId = '00000000-0000-0000-0000-000000000004';
+  const leadId = '00000000-0000-0000-0000-000000000007';
   const checkIn = new Date('2026-06-01T00:00:00.000Z');
   const checkOut = new Date('2026-06-03T00:00:00.000Z');
 
-  function booking(status = 'confirmed') {
+  function booking(status = 'confirmed', overrides: Record<string, any> = {}) {
     return {
       hospitality_booking_id: bookingId,
       business_id: businessId,
       tenant_id: '00000000-0000-0000-0000-000000000005',
       legacy_order_id: legacyOrderId,
+      lead_id: null,
       status,
       payment_status: 'pending',
       check_in: checkIn,
@@ -38,6 +41,7 @@ describe('BookingService cancellation', () => {
       ],
       guests_list: [],
       events: [],
+      ...overrides,
     };
   }
 
@@ -45,6 +49,7 @@ describe('BookingService cancellation', () => {
     const cancelled = { ...existing, status: 'cancelled', cancelled_at: new Date() };
     const tx = {
       $executeRaw: jest.fn().mockResolvedValue(2),
+      $executeRawUnsafe: jest.fn(),
       hospitality_bookings: {
         update: jest.fn().mockResolvedValue(cancelled),
       },
@@ -67,10 +72,16 @@ describe('BookingService cancellation', () => {
     };
   }
 
-  function buildService(prisma: any) {
+  function buildService(prisma: any, leadCommands?: Record<string, any>) {
     return new BookingService(
       prisma,
-      { autoAdvance: jest.fn().mockResolvedValue({ moved: false }) } as any,
+      {
+        autoAdvance: jest.fn().mockResolvedValue({ moved: false }),
+        syncStageBySlug: jest.fn().mockResolvedValue({ moved: false }),
+        updateLeadType: jest.fn().mockResolvedValue(null),
+        recordLeadEvent: jest.fn().mockResolvedValue(null),
+        ...(leadCommands ?? {}),
+      } as any,
       { createBooking: jest.fn() } as any,
       { emit: jest.fn() } as any,
     );
@@ -87,6 +98,7 @@ describe('BookingService cancellation', () => {
       where: { hospitality_booking_id: bookingId },
       data: {
         status: 'cancelled',
+        payment_status: 'cancelled',
         cancelled_at: expect.any(Date),
         updated_at: expect.any(Date),
       },
@@ -107,6 +119,7 @@ describe('BookingService cancellation', () => {
               affected_rows: 2,
             },
           ],
+          payment_status: 'cancelled',
         }),
       }),
     });
@@ -116,11 +129,43 @@ describe('BookingService cancellation', () => {
         status: 'cancelled',
         delivery_status: 'cancelled',
         service_status: 'cancelled',
+        payment_status: 'cancelled',
         cancelled_at: expect.any(Date),
         updated_at: expect.any(Date),
       }),
     });
     expect(result.status).toBe('cancelled');
+  });
+
+  it('marks linked lead as resort_cancelled when booking is cancelled', async () => {
+    const prisma = buildPrismaMock(booking('confirmed', { lead_id: leadId }));
+    const leadCommands = {
+      updateLeadType: jest.fn().mockResolvedValue(null),
+      recordLeadEvent: jest.fn().mockResolvedValue(null),
+      syncStageBySlug: jest.fn().mockResolvedValue({ moved: true }),
+    };
+    const service = buildService(prisma as any, leadCommands);
+
+    await service.cancelBooking(bookingId, businessId);
+
+    expect(leadCommands.updateLeadType).toHaveBeenCalledWith(expect.objectContaining({
+      leadId,
+      businessId,
+      leadType: LeadTypes.RESORT_CANCELLED,
+      force: true,
+      context: expect.objectContaining({ booking_status: 'cancelled' }),
+    }));
+    expect(leadCommands.recordLeadEvent).toHaveBeenCalledWith(expect.objectContaining({
+      leadId,
+      businessId,
+      type: 'booking_cancelled',
+      actor: 'human',
+    }));
+    expect(leadCommands.syncStageBySlug).toHaveBeenCalledWith(expect.objectContaining({
+      leadId,
+      toSlug: 'lost',
+      reason: 'booking_cancelled',
+    }));
   });
 
   it('does not roll back availability again when booking is already cancelled', async () => {

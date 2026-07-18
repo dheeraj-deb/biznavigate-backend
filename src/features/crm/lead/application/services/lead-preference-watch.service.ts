@@ -21,6 +21,8 @@ export interface DateAvailableWatchCriteria {
   date_to: string;
   guests?: number;
   item_id?: string;
+  item_name?: string;
+  room_count?: number;
 }
 
 export interface StockWatchCriteria {
@@ -56,17 +58,40 @@ export class LeadPreferenceWatchService {
     const expiresAt = new Date(
       Date.now() + LeadPreferenceWatchService.EXPIRY_DAYS * 24 * 60 * 60 * 1000,
     );
+    const normalizedCriteria = this.cleanCriteria(criteria);
 
     return this.prisma.lead_preference_watches.create({
       data: {
         lead_id: leadId,
         business_id: businessId,
         watch_type: watchType,
-        criteria: criteria as any,
+        criteria: normalizedCriteria as any,
         is_active: true,
         expires_at: expiresAt,
       },
     });
+  }
+
+  async ensureWatch(
+    leadId: string,
+    businessId: string,
+    watchType: WatchType,
+    criteria: WatchCriteria,
+  ) {
+    const normalizedCriteria = this.cleanCriteria(criteria);
+    const existing = await this.prisma.lead_preference_watches.findFirst({
+      where: {
+        lead_id: leadId,
+        business_id: businessId,
+        watch_type: watchType,
+        is_active: true,
+        notified_at: null,
+        criteria: { equals: normalizedCriteria as any },
+        OR: [{ expires_at: null }, { expires_at: { gt: new Date() } }],
+      },
+    });
+    if (existing) return existing;
+    return this.createWatch(leadId, businessId, watchType, normalizedCriteria as WatchCriteria);
   }
 
   /** Find active watches for a business+type, optionally filtered by criteria match. */
@@ -161,5 +186,11 @@ export class LeadPreferenceWatchService {
     availableTo: string,
   ): boolean {
     return availableFrom <= criteria.date_to && availableTo >= criteria.date_from;
+  }
+
+  private cleanCriteria<T extends Record<string, any>>(criteria: T): T {
+    return Object.fromEntries(
+      Object.entries(criteria).filter(([, value]) => value !== undefined && value !== null && value !== ''),
+    ) as T;
   }
 }

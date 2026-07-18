@@ -6,7 +6,7 @@ describe('ProductOrderService lifecycle', () => {
   const productOrderId = '00000000-0000-0000-0000-000000000002';
   const legacyOrderId = '00000000-0000-0000-0000-000000000003';
 
-  function productOrder(status = 'pending') {
+  function productOrder(status = 'pending', paymentStatus = 'pending', paymentMethod?: string) {
     return {
       product_order_id: productOrderId,
       business_id: businessId,
@@ -16,13 +16,15 @@ describe('ProductOrderService lifecycle', () => {
       lead_id: '00000000-0000-0000-0000-000000000005',
       order_number: 'ORD-1',
       status,
-      payment_status: 'pending',
+      payment_status: paymentStatus,
+      metadata: paymentMethod ? { payment_method: paymentMethod } : {},
       subtotal: 1000,
       discount_amount: 0,
       tax_amount: 0,
       shipping_fee: 0,
       total_amount: 1000,
       source: 'whatsapp',
+      legacy_order: { status, payment_method: paymentMethod ?? null, payment_status: paymentStatus },
       items: [],
       events: [],
     };
@@ -56,9 +58,14 @@ describe('ProductOrderService lifecycle', () => {
     const stockReservationService = {
       releaseReservation: jest.fn(),
     };
+    const leadCommands = {
+      updateLeadType: jest.fn(),
+      recordLeadEvent: jest.fn(),
+    };
     return {
-      service: new ProductOrderService(prisma as any, stockReservationService as any),
+      service: new ProductOrderService(prisma as any, stockReservationService as any, leadCommands as any),
       stockReservationService,
+      leadCommands,
     };
   }
 
@@ -113,6 +120,7 @@ describe('ProductOrderService lifecycle', () => {
       where: { product_order_id: productOrderId },
       data: {
         status: 'cancelled',
+        payment_status: 'cancelled',
         cancelled_at: expect.any(Date),
         updated_at: expect.any(Date),
       },
@@ -133,11 +141,41 @@ describe('ProductOrderService lifecycle', () => {
       data: expect.objectContaining({
         status: 'cancelled',
         delivery_status: 'cancelled',
+        payment_status: 'cancelled',
         cancelled_at: expect.any(Date),
         updated_at: expect.any(Date),
       }),
     });
     expect(result.status).toBe('cancelled');
+  });
+
+  it('rejects delivery for an unpaid non-COD product order', async () => {
+    const prisma = buildPrismaMock(productOrder('shipped', 'pending', 'upi'), productOrder('delivered'));
+    const { service, stockReservationService } = buildService(prisma);
+
+    await expect(
+      service.updateStatus(businessId, productOrderId, { status: 'delivered' }),
+    ).rejects.toBeInstanceOf(BadRequestException);
+
+    expect(prisma.$transaction).not.toHaveBeenCalled();
+    expect(stockReservationService.releaseReservation).not.toHaveBeenCalled();
+  });
+
+  it('allows delivery for a COD product order that is still payment-pending', async () => {
+    const prisma = buildPrismaMock(productOrder('shipped', 'pending', 'cod'), productOrder('delivered', 'pending', 'cod'));
+    const { service } = buildService(prisma);
+
+    const result = await service.updateStatus(businessId, productOrderId, { status: 'delivered' });
+
+    expect(prisma.__tx.orders.update).toHaveBeenCalledWith({
+      where: { order_id: legacyOrderId },
+      data: expect.objectContaining({
+        status: 'delivered',
+        delivery_status: 'delivered',
+        delivered_at: expect.any(Date),
+      }),
+    });
+    expect(result.status).toBe('delivered');
   });
 
   it('does not write another event when cancelling an already-cancelled product order', async () => {
@@ -198,8 +236,12 @@ describe('ProductOrderService lifecycle', () => {
         product_order_id: true,
         business_id: true,
         status: true,
+        payment_status: true,
+        metadata: true,
+        total_amount: true,
+        lead_id: true,
         legacy_order_id: true,
-        legacy_order: { select: { status: true } },
+        legacy_order: { select: { status: true, payment_method: true, payment_status: true } },
       },
     });
     expect(prisma.$transaction).not.toHaveBeenCalled();

@@ -1,4 +1,4 @@
-import { NotFoundException } from '@nestjs/common';
+import { BadRequestException, NotFoundException } from '@nestjs/common';
 import { CatalogService } from './catalog.service';
 
 describe('CatalogService tenant safety', () => {
@@ -106,4 +106,98 @@ describe('CatalogService tenant safety', () => {
       }),
     );
   });
+
+  it('rejects lowering a resort date below already booked rooms', async () => {
+    const tx = {
+      $queryRaw: jest.fn().mockResolvedValue([]),
+      item_availability: {
+        findUnique: jest.fn().mockResolvedValue({ booked_slots: 2 }),
+      },
+    };
+    const prisma = {
+      catalog_items: {
+        findFirst: jest.fn().mockResolvedValue(accommodationItem()),
+      },
+      $transaction: jest.fn((callback) => callback(tx)),
+    };
+    const service = buildService(prisma as any);
+
+    await expect(service.setAvailability(itemId, businessId, {
+      dates: ['2026-06-10'],
+      total_slots: 1,
+    } as any)).rejects.toBeInstanceOf(BadRequestException);
+
+    expect(tx.$queryRaw).toHaveBeenCalled();
+    expect(tx.item_availability.findUnique).toHaveBeenCalled();
+  });
+
+  it('rejects blocking a date with booked resort rooms', async () => {
+    const tx = {
+      $queryRaw: jest.fn().mockResolvedValue([]),
+      item_availability: {
+        findUnique: jest.fn().mockResolvedValue({ booked_slots: 1 }),
+      },
+    };
+    const prisma = {
+      catalog_items: {
+        findFirst: jest.fn().mockResolvedValue(accommodationItem()),
+      },
+      $transaction: jest.fn((callback) => callback(tx)),
+    };
+    const service = buildService(prisma as any);
+
+    await expect(service.blockDate(itemId, businessId, {
+      date: '2026-06-10',
+    } as any)).rejects.toBeInstanceOf(BadRequestException);
+
+    expect(tx.$queryRaw).toHaveBeenCalled();
+    expect(tx.item_availability.findUnique).toHaveBeenCalled();
+  });
+
+  it('rejects reducing resort capacity below active booked or held inventory', async () => {
+    const prisma = {
+      catalog_items: {
+        findFirst: jest.fn().mockResolvedValue(accommodationItem()),
+      },
+      $queryRaw: jest.fn().mockResolvedValue([{ max_booked: 3 }]),
+      $transaction: jest.fn(),
+    };
+    const service = buildService(prisma as any);
+
+    await expect(service.updateItem(itemId, businessId, {
+      stock_quantity: 2,
+      attributes: { total_units: 2 },
+    } as any)).rejects.toBeInstanceOf(BadRequestException);
+
+    expect(prisma.$transaction).not.toHaveBeenCalled();
+  });
+
+  function accommodationItem() {
+    return {
+      item_id: itemId,
+      business_id: businessId,
+      item_type: 'accommodation',
+      name: 'Lake View Room',
+      base_price: 2500,
+      stock_quantity: 5,
+      attributes: { total_units: 5, capacity: 2 },
+      variants: [],
+      product_detail: null,
+      hospitality_detail: {
+        service_type: 'room',
+        capacity: 2,
+        total_units: 5,
+        max_adults: 2,
+        bed_type: null,
+        check_in_time: null,
+        check_out_time: null,
+        amenities: null,
+        cancellation_policy: null,
+        tax_percentage: null,
+        extra_guest_charge: null,
+        metadata: null,
+      },
+      vehicle_detail: null,
+    };
+  }
 });

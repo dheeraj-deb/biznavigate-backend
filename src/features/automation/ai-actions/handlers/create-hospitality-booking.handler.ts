@@ -25,6 +25,7 @@ export class CreateHospitalityBookingHandler implements AiActionHandler {
       customer_phone: dto.params.customer_phone,
       lead_id: dto.lead_id ?? dto.params.lead_id,
       num_guests: dto.params.num_guests ?? dto.params.guests,
+      room_count: dto.params.room_count ?? dto.params.rooms ?? dto.params.units ?? dto.params.quantity,
       age: dto.params.age,
       address: dto.params.address,
       pin_code: dto.params.pin_code,

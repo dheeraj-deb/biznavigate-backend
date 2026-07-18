@@ -10,6 +10,7 @@ import { CartRepositoryPrisma } from '../../infrastructure/cart.repository.prism
 import { PrismaService } from '../../../../../prisma/prisma.service';
 import { Cart, CartWithItems } from '../../domain/entities/cart.entity';
 import { AddToCartDto, UpdateCartItemDto, CheckoutCartDto } from '../dto/cart.dto';
+import { LeadTypes } from '../../../../crm/lead/application/lead-types';
 
 @Injectable()
 export class CartService {
@@ -53,6 +54,9 @@ export class CartService {
       updated_at: order.updated_at instanceof Date ? order.updated_at.toISOString() : order.updated_at,
       paid_at: order.paid_at instanceof Date ? order.paid_at.toISOString() : order.paid_at,
       cancelled_at: order.cancelled_at instanceof Date ? order.cancelled_at.toISOString() : order.cancelled_at,
+      payment_expires_at: order.payment_expires_at instanceof Date
+        ? order.payment_expires_at.toISOString()
+        : order.payment_expires_at,
     };
   }
 
@@ -380,15 +384,21 @@ export class CartService {
     tx: any = this.prisma,
   ): Promise<void> {
     if (variantId) {
-      await tx.item_variants.update({
-        where: { variant_id: variantId },
-        data: { stock_quantity: { decrement: quantity } },
-      });
-    } else {
-      await tx.catalog_items.updateMany({
-        where: { item_id: itemId, stock_quantity: { not: null } },
+      const updated = await tx.item_variants.updateMany({
+        where: { variant_id: variantId, item_id: itemId, stock_quantity: { gte: quantity } },
         data: { stock_quantity: { decrement: quantity }, updated_at: new Date() },
       });
+      if (updated.count === 0) {
+        throw new ConflictException(`Insufficient stock for variant ${variantId}`);
+      }
+    } else {
+      const updated = await tx.catalog_items.updateMany({
+        where: { item_id: itemId, stock_quantity: { not: null, gte: quantity } },
+        data: { stock_quantity: { decrement: quantity }, updated_at: new Date() },
+      });
+      if (updated.count === 0) {
+        throw new ConflictException(`Insufficient stock for item ${itemId}`);
+      }
     }
   }
 
@@ -412,6 +422,8 @@ export class CartService {
     }
 
     return this.prisma.$transaction(async (tx) => {
+      const paymentExpiresAt = await this.resolvePaymentExpiry(tx, cart.business_id);
+
       if (idempotencyKey) {
         if (reclaimFailedKey) {
           await tx.workflow_idempotency_keys.update({
@@ -454,6 +466,7 @@ export class CartService {
           order_type: 'product',
           total_amount: cart.total_amount,
           payment_status: 'pending',
+          payment_expires_at: paymentExpiresAt,
           delivery_status: 'pending',
           status: 'pending',
         },
@@ -475,6 +488,7 @@ export class CartService {
             cart_id: cart.cart_id,
             delivery_address: deliveryAddress,
             payment_method: paymentMethod,
+            payment_expires_at: paymentExpiresAt.toISOString(),
             idempotency_key: idempotencyKey,
           },
         },
@@ -563,9 +577,60 @@ export class CartService {
             },
           });
         }
+
+        await tx.leads.updateMany({
+          where: { business_id: cart.business_id, lead_id: cart.lead_id, deleted_at: null },
+          data: {
+            status: 'contacted',
+            lead_type: LeadTypes.PRODUCT_ORDER_PENDING,
+            quoted_amount: cart.total_amount,
+            context: {
+              type: 'product',
+              cart_id: cart.cart_id,
+              product_order_id: productOrder.product_order_id,
+              order_id: order.order_id,
+              order_status: 'pending',
+              payment_status: 'pending',
+              payment_expires_at: paymentExpiresAt.toISOString(),
+              items: orderItems.map((item) => ({
+                id: item.item_id,
+                variant_id: item.variant_id,
+                name: item.product_name,
+                variant: item.variant_name,
+                qty: item.quantity,
+              })),
+            },
+            updated_at: new Date(),
+          },
+        });
+
+        await tx.lead_events.create({
+          data: {
+            lead_id: cart.lead_id,
+            business_id: cart.business_id,
+            type: 'stock_held',
+            actor: 'system',
+            data: {
+              cart_id: cart.cart_id,
+              order_id: order.order_id,
+              product_order_id: productOrder.product_order_id,
+              total_amount: cart.total_amount,
+              payment_expires_at: paymentExpiresAt.toISOString(),
+            },
+          },
+        });
       }
 
       return response;
     });
+  }
+
+  private async resolvePaymentExpiry(tx: any, businessId: string) {
+    const rows = await tx.$queryRawUnsafe(
+      `SELECT stock_hold_minutes FROM seller_store_settings WHERE business_id = $1 LIMIT 1`,
+      businessId,
+    ).catch(() => []) as Array<{ stock_hold_minutes: number }>;
+    const minutes = Math.max(5, Math.min(Number(rows[0]?.stock_hold_minutes ?? 60), 24 * 60));
+    return new Date(Date.now() + minutes * 60 * 1000);
   }
 }

@@ -5,6 +5,7 @@ import { PrismaService } from '../../../../../../prisma/prisma.service';
 import { CreateBookingDto } from '../dto/create-booking.dto';
 import { HospitalityBookingQueryDto } from '../dto/hospitality-booking-query.dto';
 import { LeadCommandService } from '../../../../../crm/lead/application/services/lead-command.service';
+import { LeadTypes } from '../../../../../crm/lead/application/lead-types';
 import { HospitalityBookingCommandService } from './hospitality-booking-command.service';
 import { UpdateBookingDto } from '../dto/update-booking.dto';
 
@@ -23,6 +24,9 @@ export class BookingService {
     if (new Date(dto.check_out).getTime() <= new Date(dto.check_in).getTime()) {
       throw new BadRequestException('Check-out must be after check-in');
     }
+    if (dto.status === 'cancelled' || dto.status === 'no_show') {
+      throw new BadRequestException('Create the booking first, then use the proper status flow');
+    }
 
     const created = await this.bookingCommands.createBooking({
       business_id: businessId,
@@ -34,16 +38,17 @@ export class BookingService {
       customer_phone: dto.phone,
       lead_id: dto.lead_id,
       num_guests: dto.num_guests,
+      room_count: dto.room_count,
       source: 'dashboard',
       actor: 'human',
       idempotency_key: `dashboard_booking:${randomUUID()}`,
+      status: dto.status,
+      payment_status: dto.payment_status,
+      notes: dto.notes,
     });
 
-    if (dto.status || dto.payment_status || dto.notes || dto.amount_paid !== undefined) {
+    if (dto.amount_paid !== undefined) {
       return this.updateBooking(created.hospitality_booking_id ?? created.booking_id, businessId, {
-        status: dto.status,
-        payment_status: dto.payment_status,
-        notes: dto.notes,
         amount_paid: dto.amount_paid,
       });
     }
@@ -79,6 +84,7 @@ export class BookingService {
           guests_list: true,
           customer: { select: { customer_id: true, name: true, phone: true, email: true } },
           lead: { select: { lead_id: true, name: true, phone: true, status: true } },
+          legacy_order: { select: { order_id: true, order_number: true, status: true, payment_status: true, payment_expires_at: true } },
         },
         orderBy: { created_at: 'desc' },
         skip: (page - 1) * limit,
@@ -107,7 +113,7 @@ export class BookingService {
         events: { orderBy: { created_at: 'desc' } },
         customer: { select: { customer_id: true, name: true, phone: true, email: true } },
         lead: { select: { lead_id: true, name: true, phone: true, status: true } },
-        legacy_order: { select: { order_id: true, order_number: true, status: true, payment_status: true } },
+        legacy_order: { select: { order_id: true, order_number: true, status: true, payment_status: true, payment_expires_at: true } },
       },
     });
 
@@ -115,7 +121,7 @@ export class BookingService {
     return this.toResponse(booking);
   }
 
-  async cancelBooking(bookingId: string, businessId: string): Promise<any> {
+  async cancelBooking(bookingId: string, businessId: string, actor: 'human' | 'ai' | 'system' = 'human'): Promise<any> {
     const existing = await this.prisma.hospitality_bookings.findFirst({
       where: { hospitality_booking_id: bookingId, business_id: businessId },
       include: {
@@ -129,11 +135,12 @@ export class BookingService {
       return this.getBookingById(bookingId, businessId);
     }
 
-    if (existing.status === 'checked_out') {
-      throw new BadRequestException('Cannot cancel a checked-out booking');
+    if (['checked_in', 'checked_out', 'completed'].includes(existing.status)) {
+      throw new BadRequestException('Cannot cancel a booking after check-in from this flow');
     }
 
     const cancelledAt = new Date();
+    const paymentStatus = existing.payment_status === 'paid' ? existing.payment_status : 'cancelled';
     const availabilityRollback: Array<{ item_id: string; quantity: number; affected_rows: number }> = [];
 
     await this.prisma.$transaction(async (tx) => {
@@ -157,7 +164,7 @@ export class BookingService {
 
       await tx.hospitality_bookings.update({
         where: { hospitality_booking_id: bookingId },
-        data: { status: 'cancelled', cancelled_at: cancelledAt, updated_at: cancelledAt },
+        data: { status: 'cancelled', payment_status: paymentStatus, cancelled_at: cancelledAt, updated_at: cancelledAt },
       });
 
       await tx.hospitality_booking_status_events.create({
@@ -166,10 +173,11 @@ export class BookingService {
           business_id: existing.business_id,
           from_status: existing.status,
           to_status: 'cancelled',
-          actor: 'human',
+          actor,
           data: {
             legacy_order_id: existing.legacy_order_id,
             availability_rollback: availabilityRollback,
+            payment_status: paymentStatus,
           },
         },
       });
@@ -181,16 +189,44 @@ export class BookingService {
             status: 'cancelled',
             delivery_status: 'cancelled',
             service_status: 'cancelled',
+            payment_status: paymentStatus,
             cancelled_at: cancelledAt,
             updated_at: cancelledAt,
           },
         });
       }
+
+      await this.closeBookingApproval(tx, existing.business_id, bookingId, 'rejected', 'booking_cancelled');
     });
 
     // Advance the linked lead to 'lost' (idempotent, forward-only).
     if (existing.lead_id) {
-      await this.leadCommands.autoAdvance({
+      await this.leadCommands.updateLeadType({
+        leadId: existing.lead_id,
+        businessId: existing.business_id,
+        leadType: LeadTypes.RESORT_CANCELLED,
+        force: true,
+        context: {
+          type: 'resort',
+          booking_status: 'cancelled',
+          cancelled_booking_id: bookingId,
+          check_in: existing.check_in?.toISOString?.().slice(0, 10),
+          check_out: existing.check_out?.toISOString?.().slice(0, 10),
+        },
+      });
+      await this.leadCommands.recordLeadEvent({
+        leadId: existing.lead_id,
+        businessId: existing.business_id,
+        type: 'booking_cancelled',
+        actor,
+        data: {
+          hospitality_booking_id: bookingId,
+          booking_number: existing.booking_number,
+          from_status: existing.status,
+          payment_status: paymentStatus,
+        },
+      });
+      await this.leadCommands.syncStageBySlug({
         leadId: existing.lead_id,
         toSlug: 'lost',
         reason: 'booking_cancelled',
@@ -215,6 +251,10 @@ export class BookingService {
   }
 
   async updateBooking(bookingId: string, businessId: string, dto: UpdateBookingDto): Promise<any> {
+    if (dto.status === 'cancelled') {
+      return this.cancelBooking(bookingId, businessId, 'human');
+    }
+
     const existing = await this.prisma.hospitality_bookings.findFirst({
       where: { hospitality_booking_id: bookingId, business_id: businessId },
       include: {
@@ -238,6 +278,9 @@ export class BookingService {
 
     const fromStatus = existing.status;
     const nextStatus = dto.status ?? existing.status;
+    if (dto.status !== undefined && nextStatus !== fromStatus) {
+      this.assertStatusTransition(fromStatus, nextStatus);
+    }
 
     await this.prisma.$transaction(async (tx) => {
       await tx.hospitality_bookings.update({
@@ -287,7 +330,12 @@ export class BookingService {
         await tx.orders.update({
           where: { order_id: existing.legacy_order_id },
           data: {
-            ...(dto.status !== undefined ? { status: dto.status, delivery_status: dto.status } : {}),
+            ...(dto.status !== undefined ? {
+              status: dto.status,
+              delivery_status: dto.status,
+              service_status: dto.status,
+              ...(dto.status === 'confirmed' ? { payment_expires_at: null } : {}),
+            } : {}),
             ...(dto.payment_status !== undefined ? { payment_status: dto.payment_status } : {}),
             ...(dto.notes !== undefined ? { notes: dto.notes } : {}),
             updated_at: new Date(),
@@ -309,6 +357,19 @@ export class BookingService {
         }
       }
 
+      if (existing.lead_id && dto.status === 'confirmed' && fromStatus !== 'confirmed') {
+        await tx.leads.updateMany({
+          where: { lead_id: existing.lead_id, business_id: existing.business_id },
+          data: {
+            status: 'booked',
+            lead_type: LeadTypes.RESORT_BOOKED,
+            converted_value: existing.total_amount,
+            converted_at: new Date(),
+            updated_at: new Date(),
+          },
+        });
+      }
+
       if (dto.status !== undefined && nextStatus !== fromStatus) {
         await tx.hospitality_booking_status_events.create({
           data: {
@@ -323,8 +384,47 @@ export class BookingService {
             },
           },
         });
+
+        if (nextStatus === 'confirmed') {
+          await this.closeBookingApproval(tx, existing.business_id, bookingId, 'approved', 'booking_confirmed');
+        }
       }
     });
+
+    if (existing.lead_id && dto.status === 'confirmed' && fromStatus !== 'confirmed') {
+      await this.leadCommands.updateLeadType({
+        leadId: existing.lead_id,
+        businessId: existing.business_id,
+        leadType: LeadTypes.RESORT_BOOKED,
+        force: true,
+        context: {
+          type: 'resort',
+          booking_status: 'confirmed',
+          booking_id: bookingId,
+          check_in: existing.check_in.toISOString().slice(0, 10),
+          check_out: existing.check_out.toISOString().slice(0, 10),
+          guests: existing.guests,
+        },
+      });
+      await this.leadCommands.recordLeadEvent({
+        leadId: existing.lead_id,
+        businessId: existing.business_id,
+        type: 'booked',
+        actor: 'system',
+        data: {
+          hospitality_booking_id: bookingId,
+          booking_number: existing.booking_number,
+          from_status: fromStatus,
+          status: 'confirmed',
+        },
+      });
+      await this.leadCommands.syncStageBySlug({
+        leadId: existing.lead_id,
+        toSlug: 'booked',
+        reason: 'hospitality_booking_confirmed',
+        actor: 'system',
+      });
+    }
 
     return this.getBookingById(bookingId, businessId);
   }
@@ -340,6 +440,7 @@ export class BookingService {
       booking_number: booking.booking_number,
       status: booking.status,
       payment_status: booking.payment_status,
+      payment_expires_at: booking.legacy_order?.payment_expires_at ?? booking.metadata?.payment_expires_at ?? null,
       check_in: booking.check_in,
       check_out: booking.check_out,
       guests: booking.guests,
@@ -369,5 +470,55 @@ export class BookingService {
       guests_list: booking.guests_list ?? [],
       events: booking.events ?? undefined,
     };
+  }
+
+  private async closeBookingApproval(
+    db: any,
+    businessId: string,
+    bookingId: string,
+    nextStatus: 'approved' | 'rejected',
+    resolvedBy: string,
+  ): Promise<void> {
+    try {
+      await db.$executeRawUnsafe(
+        `UPDATE seller_owner_approvals
+         SET status = $3,
+             decided_at = COALESCE(decided_at, now()),
+             updated_at = now(),
+             payload = COALESCE(payload, '{}'::jsonb) || $4::jsonb
+         WHERE business_id = $1
+           AND status = 'pending'
+           AND (
+             (entity_type = 'hospitality_booking' AND entity_id = $2)
+             OR payload->>'hospitality_booking_id' = $2
+             OR payload->>'booking_id' = $2
+           )`,
+        businessId,
+        bookingId,
+        nextStatus,
+        JSON.stringify({ resolved_by: resolvedBy, hospitality_booking_id: bookingId }),
+      );
+    } catch (error: any) {
+      const message = String(error?.message ?? '');
+      if (!message.includes('seller_owner_approvals') && !message.includes('does not exist')) {
+        this.logger.warn(`Could not close booking approval for ${bookingId}: ${message}`);
+      }
+    }
+  }
+
+  private assertStatusTransition(current: string, next: string): void {
+    const allowed: Record<string, string[]> = {
+      pending: ['confirmed', 'cancelled'],
+      confirmed: ['checked_in', 'cancelled', 'completed'],
+      checked_in: ['checked_out'],
+      checked_out: ['completed'],
+      completed: [],
+      cancelled: [],
+      no_show: [],
+    };
+
+    if (!(allowed[current] ?? []).includes(next)) {
+      throw new BadRequestException(`Invalid booking status transition: ${current} to ${next}`);
+    }
   }
 }

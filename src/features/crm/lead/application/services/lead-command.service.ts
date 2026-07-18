@@ -1,4 +1,4 @@
-import { Injectable, Logger, NotFoundException } from '@nestjs/common';
+import { Injectable, Logger, NotFoundException, Optional } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { Model } from 'mongoose';
@@ -7,6 +7,9 @@ import { Conversation, ConversationDocument } from '../../schemas/conversation.s
 import { Message, MessageDocument } from '../../schemas/message.schema';
 import { v4 as uuidv4 } from 'uuid';
 import { assertValidLeadStatus } from '../lead-status';
+import { LeadType, LeadTypes } from '../lead-types';
+import { LeadPreferenceWatchService } from './lead-preference-watch.service';
+import { LeadQualificationService } from './lead-qualification.service';
 
 interface ResortContext {
   type: 'resort';
@@ -115,6 +118,8 @@ export interface InsertMessageInput {
   meta?: Record<string, any>;
 }
 
+type LeadEventActor = 'ai' | 'human' | 'system' | 'customer' | string;
+
 @Injectable()
 export class LeadCommandService {
   private readonly logger = new Logger(LeadCommandService.name);
@@ -124,6 +129,8 @@ export class LeadCommandService {
     @InjectModel(Conversation.name) private conversationModel: Model<ConversationDocument>,
     @InjectModel(Message.name) private messageModel: Model<MessageDocument>,
     private readonly eventEmitter: EventEmitter2,
+    @Optional() private readonly qualificationService?: LeadQualificationService,
+    @Optional() private readonly preferenceWatches?: LeadPreferenceWatchService,
   ) {}
 
   /**
@@ -150,6 +157,175 @@ export class LeadCommandService {
     } catch (err: any) {
       this.logger.warn(`Could not emit lead.status_changed for ${params.lead_id}: ${err.message}`);
     }
+  }
+
+  async recalculateQualification(leadId: string): Promise<void> {
+    this.qualificationService?.recalculate(leadId);
+  }
+
+  async recordLeadEvent(params: {
+    leadId: string;
+    businessId: string;
+    type: string;
+    actor?: LeadEventActor;
+    actorId?: string | null;
+    data?: Record<string, any>;
+  }) {
+    const event = await this.prisma.lead_events.create({
+      data: {
+        event_id: uuidv4(),
+        lead_id: params.leadId,
+        business_id: params.businessId,
+        type: params.type,
+        actor: params.actor ?? 'system',
+        actor_id: params.actorId ?? null,
+        data: this.cleanObject(params.data ?? {}) as any,
+        created_at: new Date(),
+      },
+    });
+    await this.recalculateQualification(params.leadId);
+    return event;
+  }
+
+  async updateLeadType(params: {
+    leadId: string;
+    businessId: string;
+    leadType: LeadType | string | null;
+    context?: Record<string, any>;
+    force?: boolean;
+  }) {
+    const lead = await this.prisma.leads.findFirst({
+      where: { lead_id: params.leadId, business_id: params.businessId, deleted_at: null },
+      select: { lead_id: true, context: true, lead_type: true },
+    });
+    if (!lead) return null;
+
+    const data: Record<string, any> = { updated_at: new Date() };
+    if (this.shouldApplyLeadType(lead.lead_type, params.leadType, params.force ?? false)) {
+      data.lead_type = params.leadType;
+    }
+    if (params.context) {
+      data.context = this.mergeContext(lead.context, params.context);
+    }
+
+    if (Object.keys(data).length === 1) return lead;
+    return this.prisma.leads.update({ where: { lead_id: params.leadId }, data });
+  }
+
+  async recordResortAvailabilityCheck(params: {
+    leadId?: string | null;
+    businessId: string;
+    itemId?: string | null;
+    itemName?: string | null;
+    checkIn?: string | null;
+    checkOut?: string | null;
+    guests?: number | string | null;
+    requestedUnits?: number | string | null;
+    available: boolean;
+    availableSlots?: number | null;
+    actor?: LeadEventActor;
+    data?: Record<string, any>;
+  }) {
+    if (!params.leadId) return null;
+
+    const guests = this.positiveOptionalInt(params.guests);
+    const requestedUnits = this.positiveOptionalInt(params.requestedUnits);
+    const lead = await this.updateLeadType({
+      leadId: params.leadId,
+      businessId: params.businessId,
+      leadType: params.available ? LeadTypes.RESORT_AVAILABILITY : LeadTypes.RESORT_NO_AVAILABILITY,
+      context: this.cleanObject({
+        type: 'resort',
+        item_id: params.itemId,
+        item_name: params.itemName,
+        property_name: params.itemName,
+        check_in: params.checkIn,
+        check_out: params.checkOut,
+        guests,
+        room_count: requestedUnits,
+        availability_status: params.available ? 'available' : 'unavailable',
+        available_slots: params.availableSlots,
+      }),
+    });
+    if (!lead) return null;
+
+    const eventType = params.available ? 'availability_checked' : 'demand_miss';
+    const event = await this.recordLeadEvent({
+      leadId: params.leadId,
+      businessId: params.businessId,
+      type: eventType,
+      actor: params.actor ?? 'ai',
+      data: {
+        ...this.cleanObject(params.data ?? {}),
+        service_id: params.itemId,
+        service_name: params.itemName,
+        item_id: params.itemId,
+        item_name: params.itemName,
+        check_in: params.checkIn,
+        check_out: params.checkOut,
+        date: params.checkIn,
+        guests,
+        requested_units: requestedUnits,
+        available: params.available,
+        available_slots: params.availableSlots,
+      },
+    });
+
+    if (!params.available && params.checkIn && params.checkOut && this.preferenceWatches) {
+      await this.preferenceWatches.ensureWatch(params.leadId, params.businessId, 'date_available', {
+        date_from: params.checkIn,
+        date_to: params.checkOut,
+        ...(guests ? { guests } : {}),
+        ...(params.itemId ? { item_id: params.itemId } : {}),
+        ...(params.itemName ? { item_name: params.itemName } : {}),
+        ...(requestedUnits ? { room_count: requestedUnits } : {}),
+      }).catch((err) =>
+        this.logger.warn(`Could not create date watch for lead ${params.leadId}: ${err.message}`),
+      );
+    }
+
+    return event;
+  }
+
+  private shouldApplyLeadType(current: string | null, next: string | null, force: boolean): boolean {
+    if (force) return true;
+    if (current === next) return false;
+    if (!current) return true;
+    if (!next) return true;
+
+    if (current === LeadTypes.RESORT_BOOKING_PENDING) {
+      return next === LeadTypes.RESORT_BOOKED || next === LeadTypes.RESORT_CANCELLED;
+    }
+    if (current === LeadTypes.RESORT_BOOKED) {
+      return next === LeadTypes.RESORT_CANCELLED;
+    }
+    if (current === LeadTypes.RESORT_CANCELLED) return false;
+    if (current === LeadTypes.PRODUCT_ORDER_PENDING) {
+      return next === LeadTypes.PRODUCT_ORDERED || next === LeadTypes.PRODUCT_CANCELLED;
+    }
+    if (current === LeadTypes.PRODUCT_ORDERED) return false;
+    if (current === LeadTypes.PRODUCT_CANCELLED) return false;
+
+    return true;
+  }
+
+  private mergeContext(current: unknown, patch: Record<string, any>) {
+    const base = current && typeof current === 'object' && !Array.isArray(current)
+      ? current as Record<string, any>
+      : {};
+    return { ...base, ...this.cleanObject(patch) };
+  }
+
+  private cleanObject<T extends Record<string, any>>(value: T): T {
+    return Object.fromEntries(
+      Object.entries(value).filter(([, entry]) => entry !== undefined && entry !== null && entry !== ''),
+    ) as T;
+  }
+
+  private positiveOptionalInt(value: unknown): number | undefined {
+    const parsed = Number(value);
+    if (!Number.isFinite(parsed) || parsed <= 0) return undefined;
+    return Math.floor(parsed);
   }
 
   /**
@@ -231,10 +407,83 @@ export class LeadCommandService {
         to_status: targetStage.slug,
       });
 
+      await this.recalculateQualification(lead.lead_id);
       return { moved: true };
     } catch (err: any) {
       // Auto-advance must never break the calling flow. Log and swallow.
       this.logger.warn(`autoAdvance failed for lead ${params.leadId}: ${err.message}`);
+      return { moved: false, reason: 'error' };
+    }
+  }
+
+  async syncStageBySlug(params: {
+    leadId: string;
+    toSlug: string;
+    reason: string;
+    actor?: 'ai' | 'human' | 'system';
+  }): Promise<{ moved: boolean; reason?: string }> {
+    try {
+      const lead = await this.prisma.leads.findUnique({
+        where: { lead_id: params.leadId },
+        select: { lead_id: true, business_id: true, tenant_id: true, pipeline_id: true, stage_id: true, status: true },
+      });
+      if (!lead) return { moved: false, reason: 'lead_not_found' };
+      if (!lead.pipeline_id) return { moved: false, reason: 'no_pipeline' };
+
+      const targetStage = await this.prisma.pipeline_stages.findFirst({
+        where: { pipeline_id: lead.pipeline_id, slug: params.toSlug },
+        select: { stage_id: true, pipeline_id: true, slug: true, is_won: true },
+      });
+      if (!targetStage) return { moved: false, reason: 'stage_slug_not_in_pipeline' };
+      if (lead.stage_id === targetStage.stage_id && lead.status === targetStage.slug) {
+        return { moved: false, reason: 'already_at_target' };
+      }
+
+      const now = new Date();
+      const updateData: any = {
+        stage_id: targetStage.stage_id,
+        pipeline_id: targetStage.pipeline_id,
+        status: targetStage.slug,
+        updated_at: now,
+      };
+      if (targetStage.is_won) updateData.converted_at = now;
+
+      await this.prisma.$transaction([
+        this.prisma.leads.update({ where: { lead_id: lead.lead_id }, data: updateData }),
+        this.prisma.lead_events.create({
+          data: {
+            event_id: uuidv4(),
+            lead_id: lead.lead_id,
+            business_id: lead.business_id,
+            type: 'stage_changed',
+            actor: params.actor ?? 'system',
+            data: {
+              from_status: lead.status,
+              to_status: targetStage.slug,
+              from_stage_id: lead.stage_id,
+              to_stage_id: targetStage.stage_id,
+              reason: params.reason,
+              forced_sync: true,
+            } as any,
+            created_at: now,
+          },
+        }),
+      ]);
+
+      if (lead.status !== targetStage.slug) {
+        this.emitStatusChanged({
+          business_id: lead.business_id,
+          tenant_id: lead.tenant_id,
+          lead_id: lead.lead_id,
+          from_status: lead.status,
+          to_status: targetStage.slug,
+        });
+      }
+
+      await this.recalculateQualification(lead.lead_id);
+      return { moved: true };
+    } catch (err: any) {
+      this.logger.warn(`syncStageBySlug failed for lead ${params.leadId}: ${err.message}`);
       return { moved: false, reason: 'error' };
     }
   }
@@ -444,6 +693,7 @@ export class LeadCommandService {
       });
     }
 
+    await this.recalculateQualification(leadId);
     return updated;
   }
 
@@ -517,6 +767,7 @@ export class LeadCommandService {
       });
     }
 
+    await this.recalculateQualification(params.leadId);
     return updated;
   }
 
@@ -534,7 +785,7 @@ export class LeadCommandService {
     const lead = await this.prisma.leads.findUnique({ where: { lead_id: leadId } });
     if (!lead) throw new NotFoundException('Lead not found');
 
-    return this.prisma.lead_events.create({
+    const event = await this.prisma.lead_events.create({
       data: {
         event_id: uuidv4(),
         lead_id: leadId,
@@ -546,6 +797,8 @@ export class LeadCommandService {
         created_at: new Date(),
       },
     });
+    await this.recalculateQualification(leadId);
+    return event;
   }
 
   async logDemandMiss(params: {
@@ -556,7 +809,7 @@ export class LeadCommandService {
     date?: string;
     guests?: number;
   }) {
-    return this.prisma.lead_events.create({
+    const event = await this.prisma.lead_events.create({
       data: {
         event_id: uuidv4(),
         lead_id: params.leadId,
@@ -572,6 +825,22 @@ export class LeadCommandService {
         created_at: new Date(),
       },
     });
+    await this.updateLeadType({
+      leadId: params.leadId,
+      businessId: params.businessId,
+      leadType: LeadTypes.RESORT_NO_AVAILABILITY,
+      context: this.cleanObject({
+        type: 'resort',
+        item_id: params.serviceId,
+        item_name: params.serviceName,
+        property_name: params.serviceName,
+        check_in: params.date,
+        availability_status: 'unavailable',
+        guests: params.guests,
+      }),
+    });
+    await this.recalculateQualification(params.leadId);
+    return event;
   }
 
   async assignLead(leadId: string, assignedTo: string, actorId: string) {
@@ -596,6 +865,7 @@ export class LeadCommandService {
         },
       }),
     ]);
+    await this.recalculateQualification(leadId);
     return updated;
   }
 
@@ -634,6 +904,7 @@ export class LeadCommandService {
         },
       }),
     ]);
+    await this.recalculateQualification(leadId);
     return updated;
   }
 
@@ -678,6 +949,7 @@ export class LeadCommandService {
         },
       }),
     ]);
+    await this.recalculateQualification(params.leadId);
     return followup;
   }
 

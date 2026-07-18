@@ -134,8 +134,26 @@ export class CatalogService {
     const oldPrice = Number(existing.base_price);
     const { details, attributes: incomingAttributes, ...catalogData } = dto;
     const attributes = incomingAttributes || details
-      ? this.mergeLegacyAttributes(existing.item_type, incomingAttributes ?? existing.attributes, details)
+      ? this.mergeLegacyAttributes(
+          existing.item_type,
+          { ...((existing.attributes as Record<string, any> | null) ?? {}), ...(incomingAttributes ?? {}) },
+          details,
+        )
       : undefined;
+    const capacityChange = this.resolveAccommodationCapacityChange(
+      existing,
+      attributes,
+      details,
+      dto.stock_quantity,
+    );
+
+    if (existing.item_type === 'accommodation' && dto.is_active === false) {
+      await this.assertNoActiveFutureBookings(itemId, businessId, 'deactivate');
+    }
+
+    if (capacityChange) {
+      await this.assertCapacityCoversExistingBookings(itemId, businessId, capacityChange.nextCapacity);
+    }
 
     const item = await this.prisma.$transaction(async (tx) => {
       await tx.catalog_items.update({
@@ -145,6 +163,16 @@ export class CatalogService {
 
       if (attributes !== undefined || details) {
         await this.upsertItemDetails(tx, itemId, businessId, existing.item_type, attributes ?? existing.attributes, details);
+      }
+
+      if (capacityChange) {
+        await this.syncDefaultAvailabilityCapacity(
+          tx,
+          itemId,
+          businessId,
+          capacityChange.previousCapacity,
+          capacityChange.nextCapacity,
+        );
       }
 
       return tx.catalog_items.findUnique({
@@ -171,7 +199,10 @@ export class CatalogService {
   }
 
   async deleteItem(itemId: string, businessId: string) {
-    await this.getItemById(itemId, businessId);
+    const existing = await this.getItemById(itemId, businessId);
+    if (existing.item_type === 'accommodation') {
+      await this.assertNoActiveFutureBookings(itemId, businessId, 'delete');
+    }
     await this.prisma.catalog_items.update({
       where: { item_id: itemId },
       data: { deleted_at: new Date(), is_active: false },
@@ -286,53 +317,85 @@ export class CatalogService {
     await this.getItemById(itemId, businessId);
 
     // Upsert each date — create if not exists, update total_slots / price_override
-    const ops = dto.dates.map((d) =>
-      this.prisma.item_availability.upsert({
-        where: { item_id_date: { item_id: itemId, date: new Date(d) } },
-        create: {
-          item_id: itemId,
-          business_id: businessId,
-          date: new Date(d),
-          total_slots: dto.total_slots,
-          booked_slots: 0,
-          price_override: dto.price_override ?? null,
-          is_blocked: false,
-        },
-        update: {
-          total_slots: dto.total_slots,
-          price_override: dto.price_override ?? null,
-          updated_at: new Date(),
-        },
-      }),
-    );
+    const dates = this.normalizeAvailabilityDates(dto.dates);
+    const totalSlots = this.positiveInt(dto.total_slots, 'total_slots');
+    const priceOverride = dto.price_override === undefined || dto.price_override === null
+      ? null
+      : Number(dto.price_override);
 
-    await Promise.all(ops);
-    return { message: `Availability set for ${dto.dates.length} date(s)` };
+    if (priceOverride !== null && (!Number.isFinite(priceOverride) || priceOverride < 0)) {
+      throw new BadRequestException('price_override must be a positive number');
+    }
+
+    await this.prisma.$transaction(async (tx) => {
+      for (const date of dates) {
+        const rows = await tx.$queryRaw<Array<{ date: Date }>>`
+          INSERT INTO item_availability
+            (item_id, business_id, date, total_slots, booked_slots, price_override, is_blocked)
+          VALUES
+            (${itemId}::uuid, ${businessId}::uuid, ${date}::date, ${totalSlots}::int, 0, ${priceOverride}::numeric, false)
+          ON CONFLICT (item_id, date) DO UPDATE
+          SET total_slots = EXCLUDED.total_slots,
+              price_override = EXCLUDED.price_override,
+              is_blocked = false,
+              updated_at = NOW()
+          WHERE item_availability.business_id = ${businessId}::uuid
+            AND item_availability.booked_slots <= EXCLUDED.total_slots
+          RETURNING date
+        `;
+
+        if (!rows.length) {
+          const existing = await tx.item_availability.findUnique({
+            where: { item_id_date: { item_id: itemId, date: new Date(`${date}T00:00:00.000Z`) } },
+            select: { booked_slots: true },
+          });
+          throw new BadRequestException(
+            `Cannot set ${date} to ${totalSlots} room(s); ${existing?.booked_slots ?? 'some'} room(s) are already booked or held`,
+          );
+        }
+      }
+    });
+    return { message: `Availability set for ${dates.length} date(s)` };
   }
 
   async blockDate(itemId: string, businessId: string, dto: BlockDateDto) {
     await this.getItemById(itemId, businessId);
-    await this.prisma.item_availability.upsert({
-      where: { item_id_date: { item_id: itemId, date: new Date(dto.date) } },
-      create: {
-        item_id: itemId,
-        business_id: businessId,
-        date: new Date(dto.date),
-        total_slots: 0,
-        booked_slots: 0,
-        is_blocked: true,
-      },
-      update: { is_blocked: true, updated_at: new Date() },
+    const date = this.normalizeDateKey(dto.date, 'date');
+
+    await this.prisma.$transaction(async (tx) => {
+      const rows = await tx.$queryRaw<Array<{ date: Date }>>`
+        INSERT INTO item_availability
+          (item_id, business_id, date, total_slots, booked_slots, is_blocked)
+        VALUES
+          (${itemId}::uuid, ${businessId}::uuid, ${date}::date, 0, 0, true)
+        ON CONFLICT (item_id, date) DO UPDATE
+        SET is_blocked = true,
+            updated_at = NOW()
+        WHERE item_availability.business_id = ${businessId}::uuid
+          AND item_availability.booked_slots = 0
+        RETURNING date
+      `;
+
+      if (!rows.length) {
+        const existing = await tx.item_availability.findUnique({
+          where: { item_id_date: { item_id: itemId, date: new Date(`${date}T00:00:00.000Z`) } },
+          select: { booked_slots: true },
+        });
+        throw new BadRequestException(
+          `Cannot block ${date}; ${existing?.booked_slots ?? 'some'} room(s) are already booked or held`,
+        );
+      }
     });
-    return { message: `Date ${dto.date} blocked` };
+    return { message: `Date ${date} blocked` };
   }
 
   // ─── Agent / Chatbot query ─────────────────────────────────────────────────
   // Optimized read — returns availability-merged results for WhatsApp chatbot
 
   async queryForAgent(filters: QueryCatalogDto) {
-    const { businessId, item_type, check_in, check_out, guests, search,
+    const { businessId, item_type, check_in, check_out, guests, rooms, search,
             make, model, fuel_type, year_min, budget_max, condition } = filters;
+    const requestedRooms = this.positiveInt(rooms ?? 1, 'rooms');
 
     const where: any = {
       business_id: businessId,
@@ -488,7 +551,7 @@ export class CatalogService {
             const minAvailable = Math.min(
               ...avRows.map((r) => r.total_slots - r.booked_slots),
             );
-            if (minAvailable <= 0) return null; // fully booked on at least one night
+            if (minAvailable < requestedRooms) return null; // not enough rooms on at least one night
 
             // Nights with no row default to totalUnits availability.
             availableSlots = totalUnits ? Math.min(totalUnits, minAvailable) : minAvailable;
@@ -499,6 +562,8 @@ export class CatalogService {
             }
           }
         }
+
+        if (availableSlots < requestedRooms) return null;
 
         // Filter by guest capacity if provided
         if (guests && details?.capacity) {
@@ -735,6 +800,100 @@ export class CatalogService {
     }
   }
 
+  private resolveAccommodationCapacityChange(
+    existing: any,
+    attributes?: Record<string, any> | null,
+    details?: Record<string, any> | null,
+    stockQuantity?: number,
+  ): { previousCapacity: number; nextCapacity: number } | null {
+    if (existing.item_type !== 'accommodation') return null;
+
+    const nextDetails = {
+      ...((existing.details as Record<string, any> | null) ?? {}),
+      ...(attributes ?? {}),
+      ...(details ?? {}),
+    };
+    const previousCapacity = this.resolveItemCapacity(existing);
+    const nextCapacity = this.resolveItemCapacity({
+      ...existing,
+      stock_quantity: stockQuantity ?? existing.stock_quantity,
+      attributes: attributes ?? existing.attributes,
+      details: nextDetails,
+      hospitality_detail: nextDetails,
+    });
+
+    if (nextCapacity === previousCapacity) return null;
+
+    if (nextCapacity < 1) {
+      throw new BadRequestException('Total room units must be at least 1 for resort accommodation');
+    }
+
+    return { previousCapacity, nextCapacity };
+  }
+
+  private async assertCapacityCoversExistingBookings(
+    itemId: string,
+    businessId: string,
+    nextCapacity: number,
+  ): Promise<void> {
+    const rows = await this.prisma.$queryRaw<Array<{ max_booked: number }>>`
+      SELECT COALESCE(MAX(booked_slots), 0)::int AS max_booked
+      FROM item_availability
+      WHERE item_id = ${itemId}::uuid
+        AND business_id = ${businessId}::uuid
+        AND date >= ${this.todayKey()}::date
+    `;
+    const maxBooked = Number(rows[0]?.max_booked ?? 0);
+    if (maxBooked > nextCapacity) {
+      throw new BadRequestException(
+        `Cannot reduce total room units to ${nextCapacity}; ${maxBooked} room(s) are already booked or held on at least one future date`,
+      );
+    }
+  }
+
+  private async assertNoActiveFutureBookings(
+    itemId: string,
+    businessId: string,
+    action: 'delete' | 'deactivate',
+  ): Promise<void> {
+    const rows = await this.prisma.$queryRaw<Array<{ booking_number: string | null }>>`
+      SELECT hb.booking_number
+      FROM hospitality_booking_items hbi
+      JOIN hospitality_bookings hb ON hb.hospitality_booking_id = hbi.hospitality_booking_id
+      WHERE hbi.item_id = ${itemId}::uuid
+        AND hb.business_id = ${businessId}::uuid
+        AND hb.status NOT IN ('cancelled', 'checked_out', 'completed', 'no_show')
+        AND hb.check_out > ${this.todayKey()}::date
+      LIMIT 1
+    `;
+
+    if (rows.length) {
+      throw new BadRequestException(
+        `Cannot ${action} this accommodation while active future bookings exist`,
+      );
+    }
+  }
+
+  private async syncDefaultAvailabilityCapacity(
+    tx: any,
+    itemId: string,
+    businessId: string,
+    previousCapacity: number,
+    nextCapacity: number,
+  ): Promise<void> {
+    await tx.$executeRaw`
+      UPDATE item_availability
+      SET total_slots = ${nextCapacity}::int,
+          updated_at = NOW()
+      WHERE item_id = ${itemId}::uuid
+        AND business_id = ${businessId}::uuid
+        AND date >= ${this.todayKey()}::date
+        AND is_blocked = false
+        AND total_slots = ${previousCapacity}::int
+        AND booked_slots <= ${nextCapacity}::int
+    `;
+  }
+
   private productDetails(detail: any, attributes: any) {
     if (!detail) return attributes ?? null;
     return {
@@ -790,6 +949,34 @@ export class CatalogService {
     };
   }
 
+  private normalizeAvailabilityDates(dates?: string[]): string[] {
+    if (!Array.isArray(dates) || dates.length === 0) {
+      throw new BadRequestException('At least one availability date is required');
+    }
+
+    return [...new Set(dates.map((date) => this.normalizeDateKey(date, 'date')))];
+  }
+
+  private normalizeDateKey(value: string, fieldName: string): string {
+    const parsed = new Date(value);
+    if (!value || Number.isNaN(parsed.getTime())) {
+      throw new BadRequestException(`${fieldName} must be a valid date`);
+    }
+    return parsed.toISOString().slice(0, 10);
+  }
+
+  private positiveInt(value: unknown, fieldName: string): number {
+    const parsed = Number(value);
+    if (!Number.isFinite(parsed) || parsed < 1) {
+      throw new BadRequestException(`${fieldName} must be at least 1`);
+    }
+    return Math.trunc(parsed);
+  }
+
+  private todayKey(): string {
+    return new Date().toISOString().slice(0, 10);
+  }
+
   private toOptionalInt(value: any): number | undefined {
     if (value === undefined || value === null || value === '') return undefined;
     const parsed = Number(value);
@@ -798,7 +985,7 @@ export class CatalogService {
 
   private resolveItemCapacity(item: any): number {
     const attrs = (item.attributes ?? {}) as Record<string, any>;
-    const detail = item.hospitality_detail ?? null;
+    const detail = item.hospitality_detail ?? item.details ?? null;
     const roomUnits = Array.isArray(attrs.rooms)
       ? attrs.rooms.reduce((sum, room) => sum + (this.toOptionalInt(room?.qty) ?? 0), 0)
       : 0;
@@ -806,7 +993,12 @@ export class CatalogService {
     return this.toOptionalInt(detail?.total_units)
       ?? this.toOptionalInt(attrs.total_units)
       ?? this.toOptionalInt(attrs.total_slots)
-      ?? roomUnits
+      ?? this.toOptionalInt(attrs.units)
+      ?? this.toOptionalInt(item.stock_quantity)
+      ?? (roomUnits > 0 ? roomUnits : undefined)
+      // Backward compatibility for services created before the dashboard sent
+      // total_units separately from capacity.
+      ?? this.toOptionalInt(attrs.capacity)
       ?? 0;
   }
 

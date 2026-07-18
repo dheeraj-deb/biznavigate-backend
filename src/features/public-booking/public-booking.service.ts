@@ -5,6 +5,7 @@ import { PrismaService } from '../../prisma/prisma.service';
 import { CatalogService } from '../commerce/catalog/application/services/catalog.service';
 import { HospitalityBookingCommandService } from '../industries/hospitality/bookings/application/services/hospitality-booking-command.service';
 import { LeadPhoneResolverService } from '../crm/lead/utils/lead-phone-resolver.service';
+import { LeadTypes, leadTypeForPublicItem } from '../crm/lead/application/lead-types';
 import {
   BookingLinkConfig,
   inferExperienceType,
@@ -244,6 +245,7 @@ export class PublicBookingService {
             ...(normalizedPhone && (!linkedLead.phone || linkedLead.phone === normalizedPhone) ? { phone: normalizedPhone } : {}),
             ...(email ? { email } : {}),
             ...(linkedLead.tags?.includes('public-booking-link') ? {} : { tags: { push: 'public-booking-link' } as any }),
+            ...this.publicLeadTypeUpdate(item, linkedLead.lead_type),
             context: this.leadContext(item, body),
             status: linkedLead.status === 'new' ? 'contacted' : linkedLead.status,
             updated_at: new Date(),
@@ -272,6 +274,7 @@ export class PublicBookingService {
           ...(normalizedPhone ? { phone: normalizedPhone } : {}),
           ...(email ? { email } : {}),
           ...(existing.tags?.includes('public-booking-link') ? {} : { tags: { push: 'public-booking-link' } as any }),
+          ...this.publicLeadTypeUpdate(item, existing.lead_type),
           context: this.leadContext(item, body),
           updated_at: new Date(),
         },
@@ -289,10 +292,26 @@ export class PublicBookingService {
         source: 'public_booking_link',
         platform_id: platformId,
         status: 'new',
+        lead_type: leadTypeForPublicItem(item.item_type) ?? undefined,
         context: this.leadContext(item, body),
         tags: ['public-booking-link'],
       },
     });
+  }
+
+  private publicLeadTypeUpdate(item: any, currentLeadType?: string | null) {
+    const nextLeadType = leadTypeForPublicItem(item.item_type);
+    if (!nextLeadType) return {};
+    if ([
+      LeadTypes.RESORT_BOOKING_PENDING,
+      LeadTypes.RESORT_BOOKED,
+      LeadTypes.RESORT_CANCELLED,
+      LeadTypes.PRODUCT_ORDER_PENDING,
+      LeadTypes.PRODUCT_ORDERED,
+    ].includes(currentLeadType as any)) {
+      return {};
+    }
+    return { lead_type: nextLeadType };
   }
 
   private extractLeadId(body: any): string | null {
@@ -312,7 +331,11 @@ export class PublicBookingService {
 
   private leadContext(item: any, body: any) {
     return {
-      type: item.item_type === 'physical_product' ? 'product' : 'public_booking',
+      type: item.item_type === 'physical_product'
+        ? 'product'
+        : item.item_type === 'accommodation'
+          ? 'resort'
+          : 'public_booking',
       item_id: item.item_id,
       item_name: item.name,
       property_name: item.name,
@@ -320,6 +343,7 @@ export class PublicBookingService {
       check_out: body.check_out ?? body.checkOut,
       guests: Number(body.guests ?? body.quantity ?? 1),
       guest_count: Number(body.guests ?? body.quantity ?? 1),
+      room_count: Number(body.room_count ?? body.roomCount ?? body.rooms ?? 1),
       quantity: Number(body.quantity ?? body.guests ?? 1),
       notes: body.notes ?? body.customer?.notes,
       special_requests: body.special_requests ?? body.customer?.notes ?? body.notes,
@@ -546,9 +570,23 @@ export class PublicBookingService {
       await tx.leads.updateMany({
         where: { business_id: business.business_id, lead_id: leadId },
         data: {
-          status: 'booked',
-          converted_value: total,
-          converted_at: new Date(),
+          status: 'contacted',
+          lead_type: LeadTypes.PRODUCT_ORDER_PENDING,
+          quoted_amount: total,
+          context: {
+            type: 'product',
+            item_id: freshItem.item_id,
+            item_name: freshItem.name,
+            variant_id: variant?.variant_id ?? null,
+            variant_name: variant?.name ?? null,
+            quantity,
+            product_order_id: productOrder.product_order_id,
+            order_id: order.order_id,
+            order_number: orderNumber,
+            order_status: 'pending',
+            payment_status: 'pending',
+            payment_expires_at: paymentExpiresAt.toISOString(),
+          },
           updated_at: new Date(),
         },
       });
@@ -753,6 +791,7 @@ export class PublicBookingService {
     const customer = body.customer ?? {};
     const name = customer.name ?? body.name;
     const phone = customer.phone ?? body.phone;
+    const holdExpiresAt = await this.paymentExpiry(this.prisma, business.business_id);
 
     const booking = await this.hospitalityBookingCommandService.createBooking({
       business_id: business.business_id,
@@ -764,21 +803,78 @@ export class PublicBookingService {
       customer_phone: phone,
       lead_id: leadId,
       num_guests: body.guests ?? body.quantity ?? 1,
+      room_count: body.room_count ?? body.roomCount ?? body.rooms,
       notes: customer.notes ?? body.notes,
       source: 'public_booking_link',
       actor: 'customer',
+      status: 'pending',
+      payment_status: 'pending',
+      payment_expires_at: holdExpiresAt,
+      metadata: {
+        public_booking_slug: business.public_booking_slug,
+        requires_owner_confirmation: true,
+        hold_expires_at: holdExpiresAt.toISOString(),
+      },
     });
+
+    await this.createHospitalityOwnerApproval(
+      business,
+      item,
+      booking,
+      { ...body, check_in: checkIn, check_out: checkOut },
+      holdExpiresAt,
+    );
 
     return {
       type: 'booking',
       reference_id: booking.hospitality_booking_id ?? booking.booking_id,
       legacy_order_id: booking.legacy_order_id,
-      status: 'confirmed',
+      booking_number: booking.booking_number,
+      status: 'pending',
       payment_status: 'pending',
-      message: config.payment_mode === 'manual'
-        ? 'Your booking is confirmed. Payment will be collected by the business.'
-        : 'Your booking is confirmed and is awaiting payment.',
+      hold_expires_at: holdExpiresAt.toISOString(),
+      message: 'Your booking request has been received and rooms are held. The business will confirm shortly.',
     };
+  }
+
+  private async createHospitalityOwnerApproval(
+    business: PublicBusiness,
+    item: any,
+    booking: any,
+    body: any,
+    holdExpiresAt: Date,
+  ) {
+    const bookingId = booking.hospitality_booking_id ?? booking.booking_id;
+    if (!bookingId) return;
+
+    const checkIn = body.check_in ?? body.checkIn ?? body.date;
+    const checkOut = body.check_out ?? body.checkOut;
+    const roomCount = Math.max(Number(body.room_count ?? body.roomCount ?? body.rooms ?? 1) || 1, 1);
+    const guestCount = Math.max(Number(body.guests ?? body.quantity ?? 1) || 1, 1);
+
+    await this.prisma.$queryRawUnsafe(
+      `INSERT INTO seller_owner_approvals
+         (business_id, tenant_id, title, simple_summary, action_type, risk_level, source, entity_type, entity_id, payload, due_at, expires_at)
+       VALUES ($1, $2, 'Confirm resort booking', $3, 'booking_confirmation', 'medium', 'public_link', 'hospitality_booking', $4, $5::jsonb, $6, $6)`,
+      business.business_id,
+      business.tenant_id,
+      `${booking.booking_number ?? 'Booking'} for ${item.name} is waiting for owner confirmation.`,
+      bookingId,
+      JSON.stringify({
+        hospitality_booking_id: bookingId,
+        booking_id: bookingId,
+        legacy_order_id: booking.legacy_order_id ?? null,
+        booking_number: booking.booking_number ?? null,
+        item_id: item.item_id,
+        item_name: item.name,
+        check_in: checkIn,
+        check_out: checkOut,
+        guests: guestCount,
+        room_count: roomCount,
+        hold_expires_at: holdExpiresAt.toISOString(),
+      }),
+      holdExpiresAt,
+    ).catch(() => undefined);
   }
 
   private nextDay(date: string) {

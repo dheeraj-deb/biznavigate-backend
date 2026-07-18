@@ -63,10 +63,10 @@ describe('CartService checkout idempotency', () => {
         update: jest.fn(),
       },
       item_variants: {
-        update: jest.fn(),
+        updateMany: jest.fn().mockResolvedValue({ count: 1 }),
       },
       catalog_items: {
-        updateMany: jest.fn(),
+        updateMany: jest.fn().mockResolvedValue({ count: 1 }),
       },
       orders: {
         create: jest.fn().mockResolvedValue(order),
@@ -91,6 +91,18 @@ describe('CartService checkout idempotency', () => {
       product_inquiries: {
         create: jest.fn(),
       },
+      leads: {
+        updateMany: jest.fn(),
+      },
+      lead_events: {
+        create: jest.fn(),
+      },
+      $queryRawUnsafe: jest.fn((query: string) => {
+        if (String(query).includes('SELECT stock_hold_minutes')) {
+          return Promise.resolve([{ stock_hold_minutes: 30 }]);
+        }
+        return Promise.resolve([]);
+      }),
     };
 
     const prisma = {
@@ -143,7 +155,28 @@ describe('CartService checkout idempotency', () => {
     );
     expect(prisma.__tx.catalog_items.updateMany).toHaveBeenCalledTimes(1);
     expect(prisma.__tx.orders.create).toHaveBeenCalledTimes(1);
+    expect(prisma.__tx.orders.create).toHaveBeenCalledWith({
+      data: expect.objectContaining({
+        payment_status: 'pending',
+        payment_expires_at: expect.any(Date),
+      }),
+    });
     expect(prisma.__tx.product_orders.create).toHaveBeenCalledTimes(1);
+    expect(prisma.__tx.leads.updateMany).toHaveBeenCalledWith({
+      where: { business_id: businessId, lead_id: leadId, deleted_at: null },
+      data: expect.objectContaining({
+        status: 'contacted',
+        lead_type: 'product_order_pending',
+        quoted_amount: 1000,
+      }),
+    });
+    expect(prisma.__tx.lead_events.create).toHaveBeenCalledWith({
+      data: expect.objectContaining({
+        lead_id: leadId,
+        business_id: businessId,
+        type: 'stock_held',
+      }),
+    });
     expect(prisma.__tx.carts.update).toHaveBeenCalledWith({
       where: { cart_id: cartId },
       data: { status: 'converted', updated_at: expect.any(Date) },

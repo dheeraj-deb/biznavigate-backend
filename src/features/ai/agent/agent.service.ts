@@ -11,6 +11,7 @@ import { RagService } from '../rag/rag.service';
 import { agentRunContextStorage } from './context/agent-run-context';
 import { AgentContextBuilder } from './context/agent-context-builder.service';
 import { PendingAgentActionService } from './services/pending-agent-action.service';
+import { LeadCommandService } from '../../crm/lead/application/services/lead-command.service';
 import { GenerationHandle } from './types/generation-handle';
 import { decodeHandoff } from './types/handoff';
 import { AgentSignal } from './types/agent-signal';
@@ -49,6 +50,7 @@ export class AgentService implements OnModuleInit {
     @Inject(CACHE_MANAGER) private readonly cache: Cache,
     private readonly contextBuilder: AgentContextBuilder,
     private readonly pendingActions: PendingAgentActionService,
+    @Optional() private readonly leadCommands: LeadCommandService | null,
     @Optional() private readonly ragService: RagService | null,
   ) {}
 
@@ -152,7 +154,7 @@ export class AgentService implements OnModuleInit {
       } satisfies Partial<AgentTurnMetrics>);
 
       if (ctx.leadId) {
-        this.syncLeadEvents(ctx, result.messages, replyStr).catch((e) =>
+        this.syncLeadEvents(ctx, result.messages, replyStr, businessType).catch((e) =>
           this.logger.error(`syncLeadEvents failed for lead ${ctx.leadId}: ${e.message}`),
         );
       }
@@ -198,7 +200,7 @@ export class AgentService implements OnModuleInit {
 
   // ─── Lead event sync (fire-and-forget) ────────────────────────────────────
 
-  private async syncLeadEvents(ctx: AgentContext, messages: any[], reply: string) {
+  private async syncLeadEvents(ctx: AgentContext, messages: any[], reply: string, businessType?: string | null) {
     const { leadId, businessId } = ctx;
 
     // Activate lead: new → active (idempotent)
@@ -223,6 +225,7 @@ export class AgentService implements OnModuleInit {
           },
         }),
       ]);
+      await this.leadCommands?.recalculateQualification(leadId);
       this.logger.log(`Lead ${leadId} activated (new → active)`);
     }
 
@@ -238,6 +241,7 @@ export class AgentService implements OnModuleInit {
           data: handoff as any,
         },
       });
+      await this.leadCommands?.recalculateQualification(leadId);
       this.logger.log(`Lead ${leadId} handoff event written`);
     }
 
@@ -249,12 +253,39 @@ export class AgentService implements OnModuleInit {
       if (msgType !== 'tool') continue;
       const signals = (msg.additional_kwargs?.signals ?? []) as AgentSignal[];
       for (const signal of signals) {
-        await this.recordSignalAsLeadEvent(leadId, businessId, signal);
+        await this.recordSignalAsLeadEvent(leadId, businessId, signal, businessType);
       }
     }
   }
 
-  private async recordSignalAsLeadEvent(leadId: string, businessId: string, signal: AgentSignal): Promise<void> {
+  private async recordSignalAsLeadEvent(
+    leadId: string,
+    businessId: string,
+    signal: AgentSignal,
+    businessType?: string | null,
+  ): Promise<void> {
+    if (
+      (signal.type === 'demand_miss' || signal.type === 'browse_empty') &&
+      this.normalizeGraphVertical(businessType) === 'hospitality' &&
+      this.leadCommands
+    ) {
+      const payload = signal as any;
+      await this.leadCommands.recordResortAvailabilityCheck({
+        leadId,
+        businessId,
+        itemId: payload.service_id,
+        itemName: payload.service_name ?? payload.query,
+        checkIn: payload.check_in,
+        checkOut: payload.check_out,
+        guests: payload.guests,
+        available: false,
+        actor: 'ai',
+        data: signal as any,
+      });
+      this.logger.log(`Lead ${leadId} demand_miss event written (signal=${signal.type})`);
+      return;
+    }
+
     const eventTypeBySignal: Partial<Record<AgentSignal['type'], string>> = {
       demand_miss: 'demand_miss',
       browse_empty: 'demand_miss',
@@ -273,6 +304,7 @@ export class AgentService implements OnModuleInit {
           data: signal as any,
         },
       });
+      await this.leadCommands?.recalculateQualification(leadId);
       this.logger.log(`Lead ${leadId} ${eventType} event written (signal=${signal.type})`);
     } catch (err: any) {
       this.logger.warn(`Failed to write lead event ${eventType} for ${leadId}: ${err.message}`);

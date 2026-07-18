@@ -56,8 +56,8 @@ export class OrderController {
    * GET /orders/:id
    */
   @Get(':id')
-  async findById(@Param('id') id: string) {
-    return this.orderService.findById(id);
+  async findById(@Req() req: any, @Param('id') id: string) {
+    return this.orderService.findById(id, req.user.business_id);
   }
 
   /**
@@ -66,10 +66,11 @@ export class OrderController {
    */
   @Put(':id')
   async update(
+    @Req() req: any,
     @Param('id') id: string,
     @Body() updateOrderDto: UpdateOrderDto,
   ) {
-    return this.orderService.update(id, updateOrderDto);
+    return this.orderService.update(id, req.user.business_id, updateOrderDto);
   }
 
   /**
@@ -78,10 +79,11 @@ export class OrderController {
    */
   @Patch(':id/status')
   async updateStatus(
+    @Req() req: any,
     @Param('id') id: string,
     @Body() updateStatusDto: UpdateOrderStatusDto,
   ) {
-    return this.orderService.updateStatus(id, updateStatusDto);
+    return this.orderService.updateStatus(id, req.user.business_id, updateStatusDto);
   }
 
   /**
@@ -90,10 +92,11 @@ export class OrderController {
    */
   @Patch(':id/payment')
   async confirmPayment(
+    @Req() req: any,
     @Param('id') id: string,
     @Body() confirmPaymentDto: ConfirmPaymentDto,
   ) {
-    return this.orderService.confirmPayment(id, confirmPaymentDto);
+    return this.orderService.confirmPayment(id, req.user.business_id, confirmPaymentDto);
   }
 
   /**
@@ -102,10 +105,11 @@ export class OrderController {
    */
   @Patch(':id/shipping')
   async updateShipping(
+    @Req() req: any,
     @Param('id') id: string,
     @Body() updateShippingDto: UpdateShippingDto,
   ) {
-    return this.orderService.updateShipping(id, updateShippingDto);
+    return this.orderService.updateShipping(id, req.user.business_id, updateShippingDto);
   }
 
   /**
@@ -114,10 +118,11 @@ export class OrderController {
    */
   @Delete(':id')
   async cancel(
+    @Req() req: any,
     @Param('id') id: string,
     @Body('reason') reason?: string,
   ) {
-    return this.orderService.cancel(id, reason);
+    return this.orderService.cancel(id, req.user.business_id, reason);
   }
 
   /**

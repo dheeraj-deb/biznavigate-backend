@@ -3,6 +3,7 @@ import { PrismaService } from '../../../../prisma/prisma.service';
 import { ExecuteAiActionDto } from '../dto/ai-action.dto';
 import { AiActionHandler } from './ai-action-handler';
 import { LeadCommandService } from '../../../crm/lead/application/services/lead-command.service';
+import { LeadTypes } from '../../../crm/lead/application/lead-types';
 
 @Injectable()
 export class CreateHospitalityInquiryHandler implements AiActionHandler {
@@ -22,17 +23,18 @@ export class CreateHospitalityInquiryHandler implements AiActionHandler {
     });
     if (!lead) throw new NotFoundException('Lead not found');
 
+    let preferredItem: { item_id: string; name: string | null } | null = null;
     if (dto.params.preferred_item_id) {
-      const item = await this.prisma.catalog_items.findFirst({
+      preferredItem = await this.prisma.catalog_items.findFirst({
         where: {
           item_id: dto.params.preferred_item_id,
           business_id: dto.business_id,
           deleted_at: null,
           item_type: { in: ['accommodation', 'activity', 'service'] },
         },
-        select: { item_id: true },
+        select: { item_id: true, name: true },
       });
-      if (!item) throw new NotFoundException('Preferred hospitality item not found');
+      if (!preferredItem) throw new NotFoundException('Preferred hospitality item not found');
     }
 
     const inquiry = await this.prisma.hospitality_inquiries.create({
@@ -53,16 +55,36 @@ export class CreateHospitalityInquiryHandler implements AiActionHandler {
       },
     });
 
-    await this.prisma.lead_events.create({
+    await this.leadCommands.updateLeadType({
+      leadId: lead.lead_id,
+      businessId: dto.business_id,
+      leadType: LeadTypes.RESORT_ENQUIRY,
+      context: {
+        type: 'resort',
+        item_id: preferredItem?.item_id,
+        item_name: preferredItem?.name,
+        property_name: preferredItem?.name,
+        check_in: dto.params.check_in,
+        check_out: dto.params.check_out,
+        guests: dto.params.guests ? Number(dto.params.guests) : undefined,
+        budget: dto.params.budget,
+        inquiry_status: inquiry.status,
+      },
+    });
+
+    await this.leadCommands.recordLeadEvent({
+      leadId: lead.lead_id,
+      businessId: dto.business_id,
+      type: 'hospitality_inquiry_created',
+      actor: 'ai',
       data: {
-        lead_id: lead.lead_id,
-        business_id: dto.business_id,
-        type: 'note',
-        actor: 'ai',
-        data: {
-          note: 'Hospitality inquiry created by AI action router',
-          hospitality_inquiry_id: inquiry.inquiry_id,
-        },
+        hospitality_inquiry_id: inquiry.inquiry_id,
+        preferred_item_id: preferredItem?.item_id,
+        preferred_item_name: preferredItem?.name,
+        check_in: dto.params.check_in,
+        check_out: dto.params.check_out,
+        guests: dto.params.guests ? Number(dto.params.guests) : undefined,
+        status: inquiry.status,
       },
     });
 

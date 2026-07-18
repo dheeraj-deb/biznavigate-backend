@@ -8,10 +8,11 @@ import { encodeHandoff } from '../types/handoff';
 
 export function makeCheckAvailabilityTool(catalogService: CatalogService) {
   return tool(
-    async ({ checkIn, checkOut, propertyName, guests }) => {
+    async ({ checkIn, checkOut, propertyName, guests, rooms }) => {
       const { businessId, businessProfile, lead, phone } = getRunContext();
       const resolvedCheckIn = resolveDate(checkIn);
       const resolvedCheckOut = resolveDate(checkOut);
+      const requestedRooms = Math.max(Number(rooms ?? 1) || 1, 1);
 
       if (!isValidDate(resolvedCheckIn)) {
         return `I couldn't understand the check-in date "${checkIn}". Please say something like "March 25" or "tomorrow".`;
@@ -30,11 +31,12 @@ export function makeCheckAvailabilityTool(catalogService: CatalogService) {
         check_in: resolvedCheckIn,
         check_out: resolvedCheckOut,
         search: propertyName,
+        rooms: requestedRooms,
       });
 
       if (!results || results.length === 0) {
         return appendSignal(
-          `No rooms available from ${resolvedCheckIn} to ${resolvedCheckOut}.`,
+          `No rooms available for ${requestedRooms} room(s) from ${resolvedCheckIn} to ${resolvedCheckOut}.`,
           { type: 'demand_miss', check_in: resolvedCheckIn, check_out: resolvedCheckOut, service_name: propertyName },
         );
       }
@@ -50,6 +52,8 @@ export function makeCheckAvailabilityTool(catalogService: CatalogService) {
             checkIn: resolvedCheckIn,
             checkOut: resolvedCheckOut,
             guests: guests ? String(guests) : '1',
+            rooms: String(requestedRooms),
+            roomCount: String(requestedRooms),
             leadId: lead?.lead_id,
           })
         : '';
@@ -82,6 +86,7 @@ export function makeCheckAvailabilityTool(catalogService: CatalogService) {
         checkOut: z.string().describe('Check-out date in YYYY-MM-DD format'),
         propertyName: z.string().optional().describe('Specific resort/property/room name mentioned by the customer, if any'),
         guests: z.coerce.number().int().positive().optional().describe('Number of guests mentioned by the customer, if any'),
+        rooms: z.coerce.number().int().positive().optional().describe('Number of rooms/units requested by the customer, if mentioned'),
       }),
     },
   );

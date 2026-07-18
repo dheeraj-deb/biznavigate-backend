@@ -2,6 +2,7 @@ import { tool } from '@langchain/core/tools';
 import { z } from 'zod';
 import { Prisma } from '../../../../../generated/prisma';
 import { PrismaService } from '../../../../prisma/prisma.service';
+import { LeadTypes } from '../../../crm/lead/application/lead-types';
 import { getRunContext } from '../context/agent-run-context';
 import { appendSignal } from '../types/agent-signal';
 
@@ -396,6 +397,9 @@ export function makeCreateProductOrderTool(prisma: PrismaService) {
         return 'I need the customer phone and lead context before creating an order.';
       }
 
+      const settings = await sellerSettings(prisma, businessId);
+      const holdFor = Math.max(5, Math.min(Number(settings.stock_hold_minutes ?? 15), 24 * 60));
+
       return prisma.$transaction(async (tx) => {
         const products = await findProducts(tx as any, businessId, productName, 5);
         if (!products.length) return `I could not find "${productName}" to create the order.`;
@@ -452,6 +456,7 @@ export function makeCreateProductOrderTool(prisma: PrismaService) {
 
         const orderNumber = makeOrderNumber('WA');
         const normalizedPayment = String(paymentMethod ?? 'upi').toLowerCase();
+        const paymentExpiresAt = existingHold?.expires_at ?? new Date(Date.now() + holdFor * 60 * 1000);
         const order = await tx.orders.create({
           data: {
             business_id: businessId,
@@ -468,6 +473,7 @@ export function makeCreateProductOrderTool(prisma: PrismaService) {
             total_amount: total,
             payment_status: 'pending',
             payment_method: normalizedPayment,
+            payment_expires_at: paymentExpiresAt,
             shipping_address: deliveryAddress,
             shipping_phone: phone,
             source: 'whatsapp_ai',
@@ -496,6 +502,7 @@ export function makeCreateProductOrderTool(prisma: PrismaService) {
             notes: 'Created by WhatsApp AI product seller flow',
             metadata: {
               payment_method: normalizedPayment,
+              payment_expires_at: paymentExpiresAt.toISOString(),
               converted_hold_id: existingHold?.reservation_id ?? null,
             },
           },
@@ -568,10 +575,56 @@ export function makeCreateProductOrderTool(prisma: PrismaService) {
           },
         });
 
+        await tx.leads.updateMany({
+          where: { business_id: businessId, lead_id: leadId, deleted_at: null },
+          data: {
+            status: 'contacted',
+            lead_type: LeadTypes.PRODUCT_ORDER_PENDING,
+            quoted_amount: total,
+            context: {
+              type: 'product',
+              items: [{
+                id: product.item_id,
+                variant_id: variant?.variant_id ?? null,
+                name: product.name,
+                variant: variant?.name ?? null,
+                qty,
+              }],
+              product_order_id: productOrder.product_order_id,
+              order_id: order.order_id,
+              order_number: orderNumber,
+              order_status: 'pending',
+              payment_status: 'pending',
+              payment_expires_at: paymentExpiresAt.toISOString(),
+            },
+            updated_at: new Date(),
+          },
+        });
+
+        await tx.lead_events.create({
+          data: {
+            lead_id: leadId,
+            business_id: businessId,
+            type: 'stock_held',
+            actor: 'ai',
+            data: {
+              order_id: order.order_id,
+              product_order_id: productOrder.product_order_id,
+              order_number: orderNumber,
+              item_id: product.item_id,
+              item_name: product.name,
+              quantity: qty,
+              total_amount: total,
+              payment_method: normalizedPayment,
+              payment_expires_at: paymentExpiresAt.toISOString(),
+            },
+          },
+        });
+
         await tx.$queryRawUnsafe(
           `INSERT INTO seller_owner_approvals
-             (business_id, tenant_id, title, simple_summary, action_type, risk_level, source, entity_type, entity_id, payload)
-           VALUES ($1, $2, 'Confirm WhatsApp order payment', $3, 'payment_followup', 'medium', 'ai', 'product_order', $4, $5::jsonb)`,
+             (business_id, tenant_id, title, simple_summary, action_type, risk_level, source, entity_type, entity_id, payload, due_at, expires_at)
+           VALUES ($1, $2, 'Confirm WhatsApp order payment', $3, 'payment_followup', 'medium', 'ai', 'product_order', $4, $5::jsonb, $6, $6)`,
           businessId,
           product.tenant_id,
           `${orderNumber} for ${money(total, product.currency)} is waiting for payment confirmation.`,
@@ -583,10 +636,12 @@ export function makeCreateProductOrderTool(prisma: PrismaService) {
             order_number: orderNumber,
             payment_method: normalizedPayment,
             total_amount: total,
+            payment_expires_at: paymentExpiresAt.toISOString(),
           }),
+          paymentExpiresAt,
         ).catch(() => undefined);
 
-        return `Order ${orderNumber} created for ${product.name} x${qty}. Total ${money(total, product.currency)}. Payment status is pending. Ask the customer to pay by ${normalizedPayment.toUpperCase()} or wait for owner confirmation.`;
+        return `Order ${orderNumber} created for ${product.name} x${qty}. Total ${money(total, product.currency)}. Payment status is pending until ${paymentExpiresAt.toISOString()}. Ask the customer to pay by ${normalizedPayment.toUpperCase()} or wait for owner confirmation.`;
       });
     },
     {

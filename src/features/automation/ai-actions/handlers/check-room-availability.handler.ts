@@ -1,13 +1,18 @@
-import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
-import { PrismaService } from '../../../../prisma/prisma.service';
+import { BadRequestException, Injectable, Logger } from '@nestjs/common';
+import { HospitalityAvailabilityService } from '../../../industries/hospitality/bookings/application/services/hospitality-availability.service';
+import { LeadCommandService } from '../../../crm/lead/application/services/lead-command.service';
 import { ExecuteAiActionDto } from '../dto/ai-action.dto';
 import { AiActionHandler } from './ai-action-handler';
 
 @Injectable()
 export class CheckRoomAvailabilityHandler implements AiActionHandler {
   readonly action = 'check_room_availability' as const;
+  private readonly logger = new Logger(CheckRoomAvailabilityHandler.name);
 
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly availabilityService: HospitalityAvailabilityService,
+    private readonly leadCommands: LeadCommandService,
+  ) {}
 
   async execute(dto: ExecuteAiActionDto) {
     const itemId = dto.params.item_id;
@@ -18,54 +23,45 @@ export class CheckRoomAvailabilityHandler implements AiActionHandler {
       throw new BadRequestException('item_id, check_in, and check_out are required');
     }
 
-    const item = await this.prisma.catalog_items.findFirst({
-      where: {
-        item_id: itemId,
-        business_id: dto.business_id,
-        deleted_at: null,
-        item_type: { in: ['accommodation', 'activity', 'service'] },
-      },
-      select: {
-        item_id: true,
-        name: true,
-        base_price: true,
-      },
+    const summary = await this.availabilityService.checkAvailability({
+      businessId: dto.business_id,
+      itemId,
+      checkIn,
+      checkOut,
+      requestedUnits: dto.params.room_count ?? dto.params.rooms ?? dto.params.units ?? dto.params.quantity,
     });
 
-    if (!item) throw new NotFoundException('Bookable catalog item not found');
-
-    const rows = await this.prisma.item_availability.findMany({
-      where: {
-        item_id: itemId,
-        business_id: dto.business_id,
-        date: {
-          gte: new Date(checkIn),
-          lt: new Date(checkOut),
-        },
-      },
-      orderBy: { date: 'asc' },
-    });
-
-    const nights = Math.max(
-      Math.ceil((new Date(checkOut).getTime() - new Date(checkIn).getTime()) / 86_400_000),
-      1,
-    );
-    const availableSlots = rows.map((row) => row.is_blocked ? 0 : row.total_slots - row.booked_slots);
-    const minAvailableSlots = rows.length === nights && availableSlots.length > 0
-      ? Math.min(...availableSlots)
-      : 0;
-    const pricePerNight = rows.find((row) => row.price_override != null)?.price_override ?? item.base_price;
+    if (dto.lead_id) {
+      await this.leadCommands.recordResortAvailabilityCheck({
+        leadId: dto.lead_id,
+        businessId: dto.business_id,
+        itemId: summary.item.item_id,
+        itemName: summary.item.name,
+        checkIn: summary.dateRange.checkIn,
+        checkOut: summary.dateRange.checkOut,
+        guests: dto.params.guests,
+        requestedUnits: summary.requestedUnits,
+        available: summary.available,
+        availableSlots: summary.availableSlots,
+        actor: 'ai',
+      }).catch((err) =>
+        this.logger.warn(`Could not record resort availability lead event for ${dto.lead_id}: ${err.message}`),
+      );
+    }
 
     return {
-      item_id: item.item_id,
-      item_name: item.name,
-      check_in: checkIn,
-      check_out: checkOut,
-      nights,
-      available: minAvailableSlots > 0,
-      available_slots: minAvailableSlots,
-      price_per_night: Number(pricePerNight ?? 0),
-      total_amount: Number(pricePerNight ?? 0) * nights,
+      item_id: summary.item.item_id,
+      item_name: summary.item.name,
+      check_in: summary.dateRange.checkIn,
+      check_out: summary.dateRange.checkOut,
+      nights: summary.dateRange.nights,
+      requested_units: summary.requestedUnits,
+      total_units: summary.totalUnits,
+      available: summary.available,
+      available_slots: summary.availableSlots,
+      price_per_night: summary.pricePerNight,
+      total_amount: summary.totalAmount,
+      daily: summary.daily,
     };
   }
 }

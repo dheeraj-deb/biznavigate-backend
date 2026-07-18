@@ -1,10 +1,27 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { PrismaService } from '../../../../../prisma/prisma.service';
+import { LeadTypes } from '../lead-types';
 
 export type QualificationLevel = 'cold' | 'warm' | 'hot' | 'confirmed_interested' | 'negotiating' | 'lost';
 
 // Scores for events that are actually emitted in the codebase.
 const BASE_SCORES: Record<string, number> = {
+  resort_enquiry:               15,
+  hospitality_inquiry_created:  15,
+  product_inquiry_created:      15,
+  public_booking_requested:     18,
+  booking_link_sent:            18,
+  availability_checked:         10,
+  demand_miss:                  12,
+  booking_pending:              35,
+  booked:                       55,
+  booking_cancelled:           -50,
+  cancelled:                   -40,
+  public_product_order_created: 35,
+  product_order_created:        35,
+  product_order_paid:           45,
+  stock_held:                   30,
+  product_order_cancelled:     -40,
   // Lead replied to an exit-intent prompt — real engagement signal
   exit_intent_captured:          15,
   // Lead opted into an alert — highest explicit intent signal
@@ -27,6 +44,8 @@ const STATUS_SCORES: Record<string, number> = {
   quoted:    20,   // price was shared — strong buying signal
   booked:    30,   // visit/test drive / booking initiated
   won:       50,
+  lost:     -40,
+  cancelled:-40,
 };
 
 @Injectable()
@@ -43,15 +62,17 @@ export class LeadQualificationService {
   }
 
   getLevel(score: number, leadType?: string | null): QualificationLevel {
-    if (leadType === 'lost') return 'lost';
-    if (leadType === 'negotiating') return 'negotiating';
+    if (leadType === LeadTypes.LOST || leadType === LeadTypes.RESORT_CANCELLED || leadType === LeadTypes.PRODUCT_CANCELLED) return 'lost';
+    if (leadType === LeadTypes.NEGOTIATING) return 'negotiating';
     if (
-      leadType === 'price_alert_subscriber' ||
-      leadType === 'match_alert_subscriber' ||
-      leadType === 'slot_alert_subscriber' ||
-      leadType === 'activity_update_subscriber' ||
-      leadType === 'batch_update_subscriber'
+      leadType === LeadTypes.PRICE_ALERT_SUBSCRIBER ||
+      leadType === LeadTypes.MATCH_ALERT_SUBSCRIBER ||
+      leadType === LeadTypes.SLOT_ALERT_SUBSCRIBER ||
+      leadType === LeadTypes.ACTIVITY_UPDATE_SUBSCRIBER ||
+      leadType === LeadTypes.BATCH_UPDATE_SUBSCRIBER ||
+      leadType === LeadTypes.STOCK_ALERT_SUBSCRIBER
     ) return 'confirmed_interested';
+    if (leadType === LeadTypes.RESORT_BOOKED || leadType === LeadTypes.PRODUCT_ORDERED) return 'hot';
     if (score >= 50) return 'hot';
     if (score >= 20) return 'warm';
     return 'cold';
@@ -76,7 +97,7 @@ export class LeadQualificationService {
         score += STATUS_SCORES[to ?? ''] ?? 3;
       }
     }
-    score = Math.min(100, score);
+    score = Math.max(0, Math.min(100, score));
 
     await this.prisma.leads.update({
       where: { lead_id: leadId },

@@ -7,8 +7,9 @@ import { AgentContextBuilder } from './context/agent-context-builder.service';
 import { CatalogModule } from '../../commerce/catalog/catalog.module';
 import { PrismaModule } from '../../../prisma/prisma.module';
 import { RagModule } from '../rag/rag.module';
+import { BookingsModule } from '../../industries/hospitality/bookings/bookings.module';
 @Module({
-  imports: [ConfigModule, CatalogModule, PrismaModule, RagModule],
+  imports: [ConfigModule, CatalogModule, PrismaModule, RagModule, BookingsModule],
   providers: [AgentService, AcknowledgmentService, PendingAgentActionService, AgentContextBuilder],
   exports: [AgentService, AcknowledgmentService, PendingAgentActionService],
 })

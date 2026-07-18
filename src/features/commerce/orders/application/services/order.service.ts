@@ -82,8 +82,9 @@ export class OrderService {
   /**
    * Find order by ID
    */
-  async findById(orderId: string): Promise<Order> {
+  async findById(orderId: string, businessId?: string): Promise<Order> {
     try {
+      if (businessId) await this.requireOrderInBusiness(orderId, businessId);
       const order = await this.orderRepository.findById(orderId);
 
       if (!order) {
@@ -125,8 +126,9 @@ export class OrderService {
   /**
    * Update order details
    */
-  async update(orderId: string, updateOrderDto: UpdateOrderDto): Promise<Order> {
+  async update(orderId: string, businessId: string, updateOrderDto: UpdateOrderDto): Promise<Order> {
     try {
+      await this.requireOrderInBusiness(orderId, businessId);
       // Check if order exists
       const existingOrder = await this.orderRepository.findById(orderId);
       if (!existingOrder) {
@@ -158,9 +160,11 @@ export class OrderService {
    */
   async updateStatus(
     orderId: string,
+    businessId: string,
     updateStatusDto: UpdateOrderStatusDto,
   ): Promise<Order> {
     try {
+      await this.requireOrderInBusiness(orderId, businessId);
       // Check if order exists
       const existingOrder = await this.orderRepository.findById(orderId);
       if (!existingOrder) {
@@ -200,9 +204,11 @@ export class OrderService {
    */
   async confirmPayment(
     orderId: string,
+    businessId: string,
     confirmPaymentDto: ConfirmPaymentDto,
   ): Promise<Order> {
     try {
+      await this.requireOrderInBusiness(orderId, businessId);
       // Check if order exists
       const existingOrder = await this.orderRepository.findById(orderId);
       if (!existingOrder) {
@@ -245,9 +251,11 @@ export class OrderService {
    */
   async updateShipping(
     orderId: string,
+    businessId: string,
     updateShippingDto: UpdateShippingDto,
   ): Promise<Order> {
     try {
+      await this.requireOrderInBusiness(orderId, businessId);
       // Check if order exists
       const existingOrder = await this.orderRepository.findById(orderId);
       if (!existingOrder) {
@@ -290,8 +298,9 @@ export class OrderService {
   /**
    * Cancel order
    */
-  async cancel(orderId: string, reason?: string): Promise<Order> {
+  async cancel(orderId: string, businessId: string, reason?: string): Promise<Order> {
     try {
+      await this.requireOrderInBusiness(orderId, businessId);
       // Check if order exists
       const existingOrder = await this.orderRepository.findById(orderId);
       if (!existingOrder) {
@@ -316,6 +325,14 @@ export class OrderService {
       this.logger.error(`Failed to cancel order: ${error.message}`, error.stack);
       throw error;
     }
+  }
+
+  private async requireOrderInBusiness(orderId: string, businessId: string): Promise<void> {
+    const order = await this.prisma.orders.findFirst({
+      where: { order_id: orderId, business_id: businessId },
+      select: { order_id: true },
+    });
+    if (!order) throw new NotFoundException(`Order not found: ${orderId}`);
   }
 
   /**
